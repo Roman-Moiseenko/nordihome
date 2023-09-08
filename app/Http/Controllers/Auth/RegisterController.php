@@ -3,26 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Mail\VerifyMail;
 use App\Providers\RouteServiceProvider;
-use App\Models\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Entity\User;
+use App\UseCases\Auth\RegisterService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
-    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -30,44 +24,63 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+    private RegisterService $service;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+
+    public function __construct(RegisterService $service)
     {
         $this->middleware('guest');
+        $this->service = $service;
+    }
+
+    public function verify($token)
+    {
+        if (!$user = User::where('verify_token', $token)->first()) {
+            flash('Ошибка верификации', 'danger');
+            //flash()->overlay()
+            return redirect()->route('login');//->with('success', );
+        }
+        try {
+            $this->service->verify($user->id);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'warning');
+            return redirect()->route('login');
+        }
+
+        flash('Успех', 'success');
+        return redirect()->route('login');
+    }
+
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
     }
 
     /**
-     * Get a validator for an incoming registration request.
+     * Handle a registration request for the application.
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    protected function validator(array $data)
+    public function register(RegisterRequest $request)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        //$service = new RegisterService();
+        $this->service->register($request);
+
+        flash('Подтвердите почту', 'success');
+        return redirect()->route('login');
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * Get the guard to be used during registration.
      *
-     * @param  array  $data
-     * @return \App\Models\User
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
-    protected function create(array $data)
+    protected function guard()
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        return Auth::guard();
     }
+
+
 }
