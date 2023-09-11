@@ -31,14 +31,16 @@ class RegisterService
             $request['password']
         );
         //$this->mailer->to($user->email)->send(new VerifyMail($user));
-        Mail::to($user->email)->send(new VerifyMail($user));
+        //Mail::to($user->email)->send(new VerifyMail($user));
         //$this->dispatcher->dispatch(new Registered($user));
         event(new Registered($user));
     }
 
     public function verify($id): void
     {
-        $user = User::findOfFail($id);
+        $user = User::findOrFail($id);
         $user->verify();
+
+        //
     }
 }

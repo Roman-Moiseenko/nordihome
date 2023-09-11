@@ -87,11 +87,7 @@
                     @endif
                 </td>
                 <td>
-                    @if ($user->isAdmin())
-                        <span class="badge bg-danger">Admin</span>
-                    @else
-                        <span class="badge bg-secondary">User</span>
-                    @endif
+                    {!!  \App\Helpers\RoleHelper::html($user) !!}
                 </td>
             </tr>
         @endforeach
@@ -99,5 +95,7 @@
         </tbody>
     </table>
 
+    <div>Пагинация</div>
     {{ $users->links() }}
+    <div>Пагинация</div>
 @endsection

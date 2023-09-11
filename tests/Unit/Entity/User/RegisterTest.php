@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Entity\User;
+namespace Tests\Unit\Entity\User;
 
 use App\Entity\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -28,7 +28,7 @@ class RegisterTest extends TestCase
 
         self::assertTrue($user->isWait());
         self::assertFalse($user->isActive());
-        //self::assertFalse($user->isAdmin());
+        self::assertFalse($user->isAdmin());
     }
 
     public function testVerify(): void

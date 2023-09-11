@@ -45,11 +45,7 @@
         <tr>
             <th>Role</th>
             <td>
-                @if ($user->isAdmin())
-                    <span class="badge bg-danger">Admin</span>
-                @else
-                    <span class="badge bg-secondary">User</span>
-                @endif
+                {!!  \App\Helpers\RoleHelper::html($user) !!}
             </td>
         </tr>
         <tbody>

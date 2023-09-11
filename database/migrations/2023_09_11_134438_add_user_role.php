@@ -14,12 +14,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('status', 16);
-            $table->string('verify_token')->nullable();
+            $table->string('role', 16);
         });
 
         DB::table('users')->update([
-            'status' => User::STATUS_ACTIVE,
+            'role' => User::ROLE_USER,
         ]);
     }
 
@@ -29,8 +28,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('status');
-            $table->dropColumn('verify_token');
+            $table->dropColumn('role');
         });
     }
 };

@@ -35,7 +35,7 @@ Route::group(
         'prefix' => 'Admin',
         'as' => 'admin.',
         'namespace' => 'App\Http\Controllers\Admin',
-        'middleware' => ['auth'],
+        'middleware' => ['auth', 'can:admin-panel'],
     ],
     function () {
         Route::get('/', 'HomeController@index')->name('home');
