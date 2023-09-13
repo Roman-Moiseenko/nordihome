@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Entity\User;
+use App\Entity\User\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -57,6 +57,10 @@ Breadcrumbs::for('admin.users.update', function (BreadcrumbTrail $trail, User $u
     $trail->parent('admin.users.index');
     $trail->push($user->name, route('admin.users.show', $user));
 });
+Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
+    $trail->push('Login', route('admin.login'));
+});
+
 
 
 

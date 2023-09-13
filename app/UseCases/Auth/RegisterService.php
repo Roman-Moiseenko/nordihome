@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\UseCases\Auth;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\VerifyMail;
 use Illuminate\Auth\Events\Registered;

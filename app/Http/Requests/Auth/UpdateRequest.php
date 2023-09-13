@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

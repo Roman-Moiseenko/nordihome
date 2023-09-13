@@ -42,12 +42,7 @@
                 @endif
             </td>
         </tr>
-        <tr>
-            <th>Role</th>
-            <td>
-                {!!  \App\Helpers\RoleHelper::html($user) !!}
-            </td>
-        </tr>
+        <!-- role -->
         <tbody>
         </tbody>
     </table>

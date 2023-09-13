@@ -39,17 +39,9 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="role" class="col-form-label">Role</label>
-                            <select id="role" class="form-control" name="role">
-                                <option value=""></option>
-                                @foreach ($roles as $value => $label)
-                                    <option value="{{ $value }}"{{ $value === request('role') ? ' selected' : '' }}>{{ $label }}</option>
-                                @endforeach;
-                            </select>
-                        </div>
-                    </div>
+
+                    <!-- role -->
+
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label class="col-form-label">&nbsp;</label><br />
@@ -68,7 +60,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Status</th>
-            <th>Role</th>
+            <!--th>Role</th-->
         </tr>
         </thead>
         <tbody>
@@ -86,9 +78,7 @@
                         <span class="badge bg-primary">Active</span>
                     @endif
                 </td>
-                <td>
-                    {!!  \App\Helpers\RoleHelper::html($user) !!}
-                </td>
+                <!-- role -->
             </tr>
         @endforeach
 

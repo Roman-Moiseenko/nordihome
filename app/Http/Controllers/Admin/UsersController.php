@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\UpdateRequest;
@@ -20,7 +20,7 @@ class UsersController extends Controller
 
     public function __construct(RegisterService $service)
     {
-        //$this->middleware('can:admin');
+        $this->middleware('auth:admin');
         $this->middleware('can:user-manager');
         $this->service = $service;
     }
@@ -31,7 +31,7 @@ class UsersController extends Controller
             User::STATUS_WAIT => 'В Ожидании',
             User::STATUS_ACTIVE => 'Подтвержден',
         ];
-        $roles = User::ROLES;
+//        $roles = User::ROLES;
         $query = User::orderByDesc('id');
         if (!empty($value = $request->get('id'))) {
             $query->where('id', $value);
@@ -48,14 +48,14 @@ class UsersController extends Controller
         if (!empty($value = $request->get('status'))) {
             $query->where('status', $value);
         }
-
+/*
         if (!empty($value = $request->get('role'))) {
             $query->where('role', $value);
         }
-
+*/
         $users = $query->paginate(20);
 
-        return view('admin.users.index', compact('users', 'statuses', 'roles'));
+        return view('admin.users.index', compact('users', 'statuses'/*, 'roles'*/));
     }
 
 
@@ -89,8 +89,8 @@ class UsersController extends Controller
             User::STATUS_WAIT => 'В Ожидании',
             User::STATUS_ACTIVE => 'Подтвержден',
         ];
-        $roles = User::ROLES;
-        return view('admin.users.edit', compact('user', 'statuses', 'roles'));
+//        $roles = User::ROLES;
+        return view('admin.users.edit', compact('user', 'statuses'/*, 'roles'*/));
 
     }
 
@@ -98,9 +98,9 @@ class UsersController extends Controller
     {
 
         $user->update($request->only(['name', 'email']));
-       if ($request['role'] !== $user->role) {
+   /*    if ($request['role'] !== $user->role) {
             $user->changeRole($request['role']);
-        }
+        }*/
         return view('admin.users.show', compact('user'));
 
     }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
-
 
 class LoginController extends Controller
 {
@@ -23,7 +24,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/cabinet';//RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -34,8 +35,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-
-
+        $this->middleware('guest:admin')->except('logout');
     }
 
     public function redirectPath(): string
@@ -49,9 +49,13 @@ class LoginController extends Controller
 
     public function showLoginForm(): View
     {
-        return view('auth.login');
+        return view('auth.login'); //TODO Своя форма аутентификации
     }
 
+    public function showAdminLoginForm(): View //TODO Форма в админке
+    {
+        return view('admin.login');
+    }
     /**
      * Handle a login request to the application.
      *
@@ -67,7 +71,7 @@ class LoginController extends Controller
             $this->fireLockoutEvent($request);
             return $this->sendLockoutResponse($request);
         }
-       $authenticate = Auth::attempt(
+       $authenticate = Auth::guard('user')->attempt(
             $request->only(['email', 'password']),
             $request->filled('remember')
         );
@@ -82,12 +86,29 @@ class LoginController extends Controller
                 flash('Не верифицирован', 'danger');
                 return back();
             }
-            return redirect()->intended(route('cabinet'));
+         /*   if ($user->isUser()) {*/
+                return redirect()->intended(route('home'));
+          /*  } else {
+                return redirect()->intended(route('admin.home'));
+            }*/
         }
         $this->incrementLoginAttempts($request);
         throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
     }
 
+    public function adminLogin(Request $request)
+    {
+        $this->validate($request, [
+            'name'   => 'required',
+            'password' => 'required|min:6'
+        ]);
+        if (Auth::guard('admin')->attempt(['name' => $request['name'], 'password' => $request['password']], $request->get('remember'))) {
+            return redirect()->intended('/admin');
+        }
+
+        return back()->withInput($request->only('name', 'remember'));
+
+    }
 
     /**
      * Get the needed authorization credentials from the request.
@@ -144,7 +165,9 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $this->guard()->logout();
+        if (Auth::guard('admin')) $this->guard('admin')->logout();
+        if (Auth::guard('user')) $this->guard('user')->logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
@@ -171,11 +194,11 @@ class LoginController extends Controller
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     * @return StatefulGuard
      */
-    protected function guard()
+    protected function guard($name = null): StatefulGuard
     {
-        return Auth::guard();
+        return Auth::guard($name);
     }
 
 
@@ -183,14 +206,15 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if (!$user->status != User::STATUS_ACTIVE) {
-            $this->guard()->logout();
+            $this->guard('user')->logout();
             flash('Нет подтверждения', 'danger');
             return back();
         }
         return redirect()->intended($this->redirectPath());
     }
-    protected function username()
+    protected function username(): string
     {
+        if (Auth::guard('admin')) return 'name';
         return 'email';
     }
 

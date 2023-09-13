@@ -2,12 +2,12 @@
 
 namespace Database\Factories\Entity;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Entity\User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Entity\User\User>
  */
 class UserFactory extends Factory
 {
@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'verify_token' => !$active ? Str::uuid() : null,
             'status' => $active ? User::STATUS_ACTIVE : User::STATUS_WAIT,
-            'role' => array_rand(User::ROLES),
+//            'role' => array_rand(User::ROLES),
         ];
     }
 

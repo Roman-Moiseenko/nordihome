@@ -8,7 +8,6 @@
                 @else
                     <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb->title }}</li>
                 @endif
-
             @endforeach
         </ul>
     </nav>
