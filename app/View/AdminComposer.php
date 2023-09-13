@@ -15,11 +15,10 @@ class AdminComposer
             $layout = $view->layout ?? '';
             $activeMenu = $this->activeMenu($pageName, $layout);
             if ($layout == 'admin') {
-                $view->with('Menu', AdminMenu::menu());
+                $view->with('sideMenu', AdminMenu::menu());
                 $view->with('firstLevelActiveIndex', $activeMenu['first_level_active_index']);
                 $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
-                //$view->with('colorScheme', "default");
             }
         }
     }

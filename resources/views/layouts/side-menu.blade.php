@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="py-5 md:py-0">
-        <x-mobile-menu />
-        <x-top-bar layout="side-menu" />
+        @include('admin.components.mobile-menu')
+        @include('admin.components.top-bar')
         <div class="flex overflow-hidden">
             <!-- BEGIN: Side Menu -->
             <nav class="side-nav z-50 -mt-4 hidden w-[105px] overflow-x-hidden px-5 pb-16 pt-32 md:block xl:w-[260px]">
@@ -15,36 +15,20 @@
                     <!-- BEGIN: First Child -->
                     @foreach ($sideMenu as $menuKey => $menu)
                         @if ($menu == 'divider')
-                            <li @class([
-                                'side-nav__divider my-6',
-
-                                // Animation
-                                'opacity-0 animate-[0.4s_ease-in-out_0.1s_intro-divider] animate-fill-mode-forwards animate-delay-' .
-                                (array_search($menuKey, array_keys($sideMenu)) + 1) * 10,
-                            ])></li>
+                            <li class="side-nav__divider my-6"></li>
                         @else
                             <li>
-                                <a
-                                    href="{{ isset($menu['route_name']) ? route($menu['route_name'], $menu['params']) : 'javascript:;' }}"
-                                    @class([
-                                        $firstLevelActiveIndex == $menuKey
-                                            ? 'side-menu side-menu--active'
-                                            : 'side-menu',
-
-                                        // Animation
-                                        '[&:not(.side-menu--active)]:opacity-0 [&:not(.side-menu--active)]:translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-' .
-                                        (array_search($menuKey, array_keys($sideMenu)) + 1) * 10,
-                                    ])
-                                >
+                                <a href="{{ isset($menu['route_name']) ? route($menu['route_name'], $menu['params']) : 'javascript:;' }}"
+                                   class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                     <div class="side-menu__icon">
-                                        <x-base.lucide icon="{{ $menu['icon'] }}" />
+                                        <i data-lucide="{{ uncamelize($menu['icon'], '-') }}" width="24" height="24"></i>
                                     </div>
                                     <div class="side-menu__title">
                                         {{ $menu['title'] }}
                                         @if (isset($menu['sub_menu']))
                                             <div
                                                 class="side-menu__sub-icon {{ $firstLevelActiveIndex == $menuKey ? 'transform rotate-180' : '' }}">
-                                                <x-base.lucide icon="ChevronDown" />
+                                                <i data-lucide="chevron-down" width="24" height="24"></i>
                                             </div>
                                         @endif
                                     </div>
@@ -53,27 +37,17 @@
                                     <ul class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu__sub-open' : '' }}">
                                         @foreach ($menu['sub_menu'] as $subMenuKey => $subMenu)
                                             <li>
-                                                <a
-                                                    href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name'], $subMenu['params']) : 'javascript:;' }}"
-                                                    @class([
-                                                        $secondLevelActiveIndex == $subMenuKey
-                                                            ? 'side-menu side-menu--active'
-                                                            : 'side-menu',
-
-                                                        // Animation
-                                                        '[&:not(.side-menu--active)]:opacity-0 [&:not(.side-menu--active)]:translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-' .
-                                                        (array_search($subMenuKey, array_keys($menu['sub_menu'])) + 1) * 10,
-                                                    ])
-                                                >
+                                                <a href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name'], $subMenu['params']) : 'javascript:;' }}"
+                                                   class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                                     <div class="side-menu__icon">
-                                                        <x-base.lucide icon="{{ $subMenu['icon'] }}" />
+                                                        <i data-lucide="{{ uncamelize($subMenu['icon'], '-') }}" width="24" height="24"></i>
                                                     </div>
                                                     <div class="side-menu__title">
                                                         {{ $subMenu['title'] }}
                                                         @if (isset($subMenu['sub_menu']))
                                                             <div
                                                                 class="side-menu__sub-icon {{ $secondLevelActiveIndex == $subMenuKey ? 'transform rotate-180' : '' }}">
-                                                                <x-base.lucide icon="ChevronDown" />
+                                                                <i data-lucide="chevron-down" width="24" height="24"></i>
                                                             </div>
                                                         @endif
                                                     </div>
@@ -83,20 +57,10 @@
                                                         class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu__sub-open' : '' }}">
                                                         @foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu)
                                                             <li>
-                                                                <a
-                                                                    href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name'], $lastSubMenu['params']) : 'javascript:;' }}"
-                                                                    @class([
-                                                                        $thirdLevelActiveIndex == $lastSubMenuKey
-                                                                            ? 'side-menu side-menu--active'
-                                                                            : 'side-menu',
-
-                                                                        // Animation
-                                                                        '[&:not(.side-menu--active)]:opacity-0 [&:not(.side-menu--active)]:translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-' .
-                                                                        (array_search($lastSubMenuKey, array_keys($subMenu['sub_menu'])) + 1) * 10,
-                                                                    ])
-                                                                >
+                                                                <a href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name'], $lastSubMenu['params']) : 'javascript:;' }}"
+                                                                    class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                                                     <div class="side-menu__icon">
-                                                                        <x-base.lucide icon="{{ $lastSubMenu['icon'] }}" />
+                                                                        <i data-lucide="{{ uncamelize($lastSubMenu['icon'], '-') }}" width="24" height="24"></i>
                                                                     </div>
                                                                     <div class="side-menu__title">
                                                                         {{ $lastSubMenu['title'] }}
@@ -118,10 +82,7 @@
             </nav>
             <!-- END: Side Menu -->
             <!-- BEGIN: Content -->
-            <div @class([
-                'max-w-full md:max-w-none rounded-[30px] md:rounded-none px-4 md:px-[22px] min-w-0 min-h-screen bg-slate-100 flex-1 md:pt-20 pb-10 mt-5 md:mt-1 relative dark:bg-darkmode-700',
-                "before:content-[''] before:w-full before:h-px before:block",
-            ])>
+            <div class="content">
                 @yield('subcontent')
             </div>
             <!-- END: Content -->
@@ -129,15 +90,3 @@
     </div>
 
 @endsection
-
-@once
-    @push('scripts')
-        @vite('resources/js/vendor/tippy/index.js')
-    @endpush
-@endonce
-
-@once
-    @push('scripts')
-        @vite('resources/js/layouts/side-menu/index.js')
-    @endpush
-@endonce

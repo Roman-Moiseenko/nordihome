@@ -22,5 +22,6 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', 'App\View\AdminComposer');
+        View::composer('*', 'App\View\FakerComposer');
     }
 }
