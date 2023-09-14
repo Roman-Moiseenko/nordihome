@@ -13,7 +13,7 @@ class AdminComposer
     {
         if (!is_null(request()->route())) {
             $pageName = request()->route()->getName();
-            $layout = substr($pageName, 0, strpos($pageName, '.'));
+            $layout =  (str_contains($pageName, '.')) ? substr($pageName, 0, strpos($pageName, '.')) : 'shop';
             $activeMenu = $this->activeMenu($pageName, $layout);
             if ($layout == 'admin') {
                 $view->with('sideMenu', AdminMenu::menu());
