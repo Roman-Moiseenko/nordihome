@@ -11,7 +11,7 @@
             <img class="w-6" src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""/>
         </a>
         <a class="mobile-menu-toggler" href="#">
-            <x-lucide icon="BarChart2" class="h-8 w-8 -rotate-90 transform text-white"></x-lucide>
+            <i data-lucide="bar-chart-2" width="24" height="24" class="h-8 w-8 -rotate-90 transform text-white"></i>
         </a>
     </div>
     <div @class([
@@ -27,7 +27,7 @@
                 'group-[.mobile-menu--active]:visible group-[.mobile-menu--active]:opacity-100',
             ])
         >
-            <x-lucide icon="XCircle" class="mobile-menu-toggler h-8 w-8 -rotate-90 transform text-white"></x-lucide>
+            <i data-lucide="x-circle" width="24" height="24" class="mobile-menu-toggler h-8 w-8 -rotate-90 transform text-white"></i>
         </a>
         <ul class="py-2">
             <!-- BEGIN: First Child -->
@@ -41,14 +41,14 @@
                             href="{{ isset($menu['route_name']) ? route($menu['route_name']) : 'javascript:;' }}"
                         >
                             <div class="menu__icon">
-                                <x-lucide icon="{{ $menu['icon'] }}"></x-lucide>
+                                <i data-lucide="{{ $menu['icon'] }}" width="24" height="24"></i>
                             </div>
                             <div class="menu__title">
                                 {{ $menu['title'] }}
                                 @if (isset($menu['sub_menu']))
                                     <div
                                         class="menu__sub-icon {{ $firstLevelActiveIndex == $menuKey ? 'transform rotate-180' : '' }}">
-                                        <x-lucide icon="chevron-down"></x-lucide>
+                                        <i data-lucide="chevron-down" width="24" height="24"></i>
                                     </div>
                                 @endif
                             </div>
@@ -60,14 +60,14 @@
                                         <a class="{{ $secondLevelActiveIndex == $subMenuKey ? 'menu menu--active' : 'menu' }}"
                                             href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name']) : 'javascript:;' }}">
                                             <div class="menu__icon">
-                                                <x-lucide icon="{{ $subMenu['icon'] }}"></x-lucide>
+                                                <i data-lucide="{{ $subMenu['icon'] }}" width="24" height="24"></i>
                                             </div>
                                             <div class="menu__title">
                                                 {{ $subMenu['title'] }}
                                                 @if (isset($subMenu['sub_menu']))
                                                     <div
                                                         class="menu__sub-icon {{ $secondLevelActiveIndex == $subMenuKey ? 'transform rotate-180' : '' }}">
-                                                        <x-lucide icon="chevron-down"></x-lucide>
+                                                        <i data-lucide="chevron-down" width="24" height="24"></i>
                                                     </div>
                                                 @endif
                                             </div>
@@ -80,7 +80,7 @@
                                                         <a class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'menu menu--active' : 'menu' }}"
                                                             href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name']) : 'javascript:;' }}">
                                                             <div class="menu__icon">
-                                                                <x-lucide icon="{{ $lastSubMenu['icon'] }}"></x-lucide>
+                                                                <i data-lucide="{{ $lastSubMenu['icon'] }}" width="24" height="24"></i>
                                                             </div>
                                                             <div class="menu__title">{{ $lastSubMenu['title'] }}</div>
                                                         </a>
