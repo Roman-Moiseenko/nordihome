@@ -23,7 +23,7 @@ return [
     |
     */
 
-    'view' => 'partials.bootstrap_my',
+    'view' => 'partials.breadcrumbs',
 
     /*
     |--------------------------------------------------------------------------

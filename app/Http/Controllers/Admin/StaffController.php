@@ -28,10 +28,8 @@ class StaffController extends Controller
             $query->where('role', $value);
         }
         $roles = Admin::ROLES;
-        $admins = $query->paginate(20);
-
-        $layout = 'admin';
-        return view('admin.staff.index', compact('admins', 'roles', 'layout'));
+        $admins = $query->paginate(9);
+        return view('admin.staff.index', compact('admins', 'roles'));
     }
 
     /**
@@ -47,46 +45,46 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        $admin = Admin::register(
+        $staff = Admin::register(
             $request['name'],
             $request['email'],
             $request['phone'],
             $request['password']
         );
-        return redirect()->route('admin.staff.show', $admin);
+        return redirect()->route('admin.staff.show', compact('staff'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Admin $admin)
+    public function show(Admin $staff)
     {
-        return view('admin.staff.show', compact('admin'));
+        return view('admin.staff.show', compact('staff'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Admin $admin)
+    public function edit(Admin $staff)
     {
         $roles = Admin::ROLES;
-        return view('admin.staff.edit', compact('admin', 'roles'));
+        return view('admin.staff.edit', compact('staff', 'roles'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Admin $admin)
+    public function update(Request $request, Admin $staff)
     {
 
-        $admin->update($request->all());
-        return view('admin.staff.show', compact('admin'));
+        $staff->update($request->all());
+        return view('admin.staff.show', compact('staff'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Admin $staff)
     {
         //TODO Проверить на связанны данные, если есть вызвать исключение
         //

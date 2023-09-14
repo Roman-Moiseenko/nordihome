@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Entity\Admin;
 use App\Entity\User\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
@@ -32,10 +33,10 @@ Breadcrumbs::for('other', function (BreadcrumbTrail $trail, $caption) {
 });
 
 Breadcrumbs::for('admin.home', function (BreadcrumbTrail $trail) {
-    $trail->parent('home');
     $trail->push('Admin', route('admin.home'));
 });
 
+//USERS
 Breadcrumbs::for('admin.users.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Users', route('admin.users.index'));
@@ -57,6 +58,33 @@ Breadcrumbs::for('admin.users.update', function (BreadcrumbTrail $trail, User $u
     $trail->parent('admin.users.index');
     $trail->push($user->name, route('admin.users.show', $user));
 });
+//STAFF
+
+Breadcrumbs::for('admin.staff.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Сотрудники', route('admin.staff.index'));
+});
+Breadcrumbs::for('admin.staff.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.staff.index');
+    $trail->push('Создать', route('admin.staff.create'));
+});
+Breadcrumbs::for('admin.staff.show', function (BreadcrumbTrail $trail, Admin $staff) {
+    //$staff = Admin::where('id', $staff)->first();
+    $trail->parent('admin.staff.index');
+    $trail->push($staff->fullName->getShortname(), route('admin.staff.show', $staff));
+});
+Breadcrumbs::for('admin.staff.edit', function (BreadcrumbTrail $trail, Admin $staff) {
+    //$staff = Admin::where('id', $staff)->first();
+    $trail->parent('admin.staff.show', $staff);
+    $trail->push('Редактировать', route('admin.staff.edit', $staff));
+});
+
+Breadcrumbs::for('admin.staff.update', function (BreadcrumbTrail $trail, Admin $staff) {
+    //$staff = Admin::where('id', $staff)->first();
+    $trail->parent('admin.staff.index');
+    $trail->push($staff->fullName->getShortname(), route('admin.staff.show', $staff));
+});
+
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));
 });

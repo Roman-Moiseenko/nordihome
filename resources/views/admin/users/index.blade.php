@@ -4,7 +4,7 @@
     @include('admin.users._nav')
 
     <p><a href="{{ route('admin.users.create') }}" class="btn btn-success">Add User</a></p>
-
+    {{ $users->links('admin.components.count-paginator') }}
     <div class="card mb-3">
         <div class="card-header">Filter</div>
         <div class="card-body">
@@ -85,7 +85,5 @@
         </tbody>
     </table>
 
-    <div>Пагинация</div>
-    {{ $users->links() }}
-    <div>Пагинация</div>
+    {{ $users->links('admin.components.paginator') }}
 @endsection
