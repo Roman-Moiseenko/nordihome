@@ -37,6 +37,13 @@
 <!-- BEGIN: Pages, layouts, components JS Assets-->
 @stack('scripts')
 <!-- END: Pages, layouts, components JS Assets-->
+<script type="text/javascript">
+    /* скрываем окно сообщения ч/з 3 сек */
+    setTimeout(() => {
+        let _alert = document.querySelector('div.alert');
+        _alert.style.display = "none";
+    }, 3000);
+</script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.side-menu')
 
-@section('content')
+@section('subcontent')
     @include('admin.users._nav')
 
     <div class="d-flex flex-row mb-3">

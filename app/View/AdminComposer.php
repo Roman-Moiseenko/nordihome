@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\View;
 
 use App\Menu\AdminMenu;
+use App\Menu\AdminProfileMenu;
 use Illuminate\View\View;
 
 class AdminComposer
@@ -12,10 +13,11 @@ class AdminComposer
     {
         if (!is_null(request()->route())) {
             $pageName = request()->route()->getName();
-            $layout = $view->layout ?? '';
+            $layout = substr($pageName, 0, strpos($pageName, '.'));
             $activeMenu = $this->activeMenu($pageName, $layout);
             if ($layout == 'admin') {
                 $view->with('sideMenu', AdminMenu::menu());
+                $view->with('profileMenu', AdminProfileMenu::menu());
                 $view->with('firstLevelActiveIndex', $activeMenu['first_level_active_index']);
                 $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);

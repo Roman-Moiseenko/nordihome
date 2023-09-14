@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\User\FullName;
+use App\Trait\FullNameTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,11 +19,13 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $phone //  - сложный способ
  * @property string $password
  * @property string $role
+ * @property bool $active //Не заблокирован
+ * @property string $photo
+ * @property string $post //Должность
  */
 class Admin extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
-
+    use HasApiTokens, HasFactory, Notifiable, FullNameTrait;
 
     public const ROLE_CASHIER = 'cashier';
     public const ROLE_LOGISTICS = 'logistics';
@@ -36,6 +40,8 @@ class Admin extends Authenticatable
         self::ROLE_LOGISTICS => 'Логист',
     ];
 
+   // public FullName $fullName;
+
     protected string $guard = 'admin';
 
     protected $fillable = [
@@ -44,7 +50,14 @@ class Admin extends Authenticatable
         'password',
         'phone',
         'role',
+        'active',
+        'post',
+        'fullname_surname',
+        'fullname_firstname',
+        'fullname_secondname',
     ];
+    //TODO протестировать сохранения если удалить fullname_***
+
 
     protected $hidden = [
         'password',
@@ -56,6 +69,12 @@ class Admin extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function __construct(array $attributes = [])
+    {
+        $this->fullName = new FullName();
+        parent::__construct($attributes);
+    }
+
     public static function register(string $name, string $email, string $phone, string $password): self
     {
         return static::create([
@@ -64,22 +83,34 @@ class Admin extends Authenticatable
             'phone' => $phone,
             'password' => Hash::make($password),
             'role' => self::ROLE_COMMODITY,
+            'active' => true,
         ]);
     }
 
-    public static function new(string $name, string $email, string $phone): self
+
+    public static function new(string $name, string $email, string $phone, string $password): self
     {
-        return static::create([
+        return static::make([
             'name' => $name,
             'email' => $email,
             'phone' => $phone,
-            'password' => bcrypt(Str::random()),
+            'password' => Hash::make($password),
             'role' => self::ROLE_COMMODITY,
+            'active' => true,
         ]);
     }
 
-    //Роли
+    public function blocked(): void
+    {
+        $this->active = false;
+    }
 
+    public function isBlocked(): bool
+    {
+        return !$this->active;
+    }
+
+//Роли
     public function isAdmin(): bool
     {
         return $this->role == self::ROLE_ADMIN;
@@ -115,4 +146,37 @@ class Admin extends Authenticatable
         }
         $this->update(['role' => $role]);
     }
+/*
+    public static function saving($callback)
+    {
+
+        parent::saving($callback);
+    }
+    public static function retrieved($callback)
+    {
+        parent::retrieved($callback);
+
+    }*/
+    public function setPhoto(mixed $photo)
+    {
+
+    }
+/* Ушло в трейт
+    public static function boot()
+    {
+        parent::boot();
+        self::saving(function ($admin) {
+            $admin->fullname_surname = $admin->fullName->surname;
+            $admin->fullname_firstname = $admin->fullName->firstname;
+            $admin->fullname_secondname = $admin->fullName->secondname;
+        });
+
+        self::retrieved(function ($admin) {
+            $admin->setFullName(new FullName($admin->fullname_surname, $admin->fullname_firstname, $admin->fullname_secondname));
+        });
+    }
+    public function setFullName(FullName $fullName): void
+    {
+        $this->fullName = $fullName;
+    }    */
 }

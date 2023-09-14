@@ -83,22 +83,12 @@
                     <li>
                         <hr class="dropdown-divider border-white/[0.08]">
                     </li>
+                    @foreach($profileMenu as $item)
                     <li>
-                        <a href="" class="dropdown-item hover:bg-white/5">
-                            <i data-lucide="User" width="24" height="24" class="mr-2 h-4 w-4"></i> Profile</a>
+                        <a href="{{ route($item['route_name']) }}" class="dropdown-item hover:bg-white/5">
+                            <i data-lucide="{{ uncamelize($item['icon'], '-') }}" width="24" height="24" class="mr-2 h-4 w-4"></i> {{ $item['title'] }}</a>
                     </li>
-                    <li>
-                        <a href="" class="dropdown-item hover:bg-white/5">
-                            <i data-lucide="Edit" width="24" height="24" class="mr-2 h-4 w-4"></i> Add Account </a>
-                    </li>
-                    <li>
-                        <a href="" class="dropdown-item hover:bg-white/5">
-                            <i data-lucide="Lock" width="24" height="24" class="mr-2 h-4 w-4"></i> Reset Password </a>
-                    </li>
-                    <li>
-                        <a href="" class="dropdown-item hover:bg-white/5">
-                            <i data-lucide="help-circle" width="24" height="24" class="mr-2 h-4 w-4"></i> Help </a>
-                    </li>
+                    @endforeach
                     <li>
                         <hr class="dropdown-divider border-white/[0.08]">
                     </li>

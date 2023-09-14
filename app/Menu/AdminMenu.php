@@ -8,6 +8,19 @@ class AdminMenu
     public static function menu(): array
     {
         return [
+
+            'staff' => [
+                'icon' => 'contact',
+                'title' => 'Сотрудники',
+                'route_name' => 'admin.staff.index',
+            ],
+            'clients' => [
+                'icon' => 'users',
+                'title' => 'Клиенты',
+                'route_name' => 'admin.users.index',
+            ],
+
+            /* Образцы */
             'dashboard' => [
                 'icon' => 'home',
                 'title' => 'Dashboard',

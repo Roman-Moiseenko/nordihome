@@ -3,7 +3,7 @@
 namespace App\Entity\User;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Entity\User\User\FullName;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,29 +24,12 @@ class User extends Authenticatable
     protected string $guard = 'user';
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
-/*
-    public const ROLE_USER = 'user';
-    public const ROLE_CASHIER = 'cashier';
-    public const ROLE_LOGISTICS = 'logistics';
-    public const ROLE_COMMODITY = 'commodity';
-    public const ROLE_FINANCE = 'finance';
-    public const ROLE_ADMIN = 'admin';
-    public const ROLES = [
-        self::ROLE_ADMIN => 'Администратор',
-        self::ROLE_CASHIER => 'Кассир',
-        self::ROLE_COMMODITY => 'Товаровед',
-        self::ROLE_FINANCE => 'Финансист',
-        self::ROLE_LOGISTICS => 'Логист',
-        self::ROLE_USER => 'Клиент'
-    ];
-*/
 
     protected $fillable = [
         'name',
         'email',
         'password',
         'status',
-//        'role',
         'verify_token',
     ];
 
@@ -85,7 +68,6 @@ class User extends Authenticatable
             'password' => Hash::make($password),
             'verify_token' => Str::uuid(),
             'status' => self::STATUS_WAIT,
-//            'role' => self::ROLE_USER,
         ]);
     }
 
@@ -96,7 +78,6 @@ class User extends Authenticatable
             'email' => $email,
             'password' => bcrypt(Str::random()),
             'status' => self::STATUS_ACTIVE,
-//            'role' => self::ROLE_USER,
         ]);
     }
 
@@ -111,47 +92,4 @@ class User extends Authenticatable
         ]);
     }
 
-    //Роли
- /*
-    public function isAdmin(): bool
-    {
-        return $this->role == self::ROLE_ADMIN;
-    }
-
-    public function isUser(): bool
-    {
-        return $this->role == self::ROLE_USER;
-    }
-
-    public function isLogistics(): bool
-    {
-        return $this->role == self::ROLE_LOGISTICS;
-    }
-
-    public function isCashier(): bool
-    {
-        return $this->role == self::ROLE_CASHIER;
-    }
-
-    public function isCommodity(): bool
-    {
-        return $this->role == self::ROLE_COMMODITY;
-    }
-
-    public function isFinance(): bool
-    {
-        return $this->role == self::ROLE_FINANCE;
-    }
-
-    public function changeRole($role): void
-    {
-        if (!array_key_exists($role, self::ROLES)) {
-            throw new \InvalidArgumentException('Неверная роль пользователя ' . $role);
-        }
-        if ($this->role == $role) {
-            throw new \DomainException('Роль уже назначена.');
-        }
-
-        $this->update(['role' => $role]);
-    }*/
 }

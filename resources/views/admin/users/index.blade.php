@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.side-menu')
 
-@section('content')
+@section('subcontent')
     @include('admin.users._nav')
 
     <p><a href="{{ route('admin.users.create') }}" class="btn btn-success">Add User</a></p>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Entity\Admin;
 use App\Entity\User\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
@@ -79,18 +80,14 @@ class LoginController extends Controller
             $request->session()->regenerate();
             $this->clearLoginAttempts($request);
             /** @var User $user */
-            $user = Auth::user();
+            $user = Auth::user(); //Auth::guard('user')->user();
 
             if ($user->status != User::STATUS_ACTIVE) {
                 Auth::logout();
                 flash('Не верифицирован', 'danger');
                 return back();
             }
-         /*   if ($user->isUser()) {*/
                 return redirect()->intended(route('home'));
-          /*  } else {
-                return redirect()->intended(route('admin.home'));
-            }*/
         }
         $this->incrementLoginAttempts($request);
         throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
@@ -103,6 +100,17 @@ class LoginController extends Controller
             'password' => 'required|min:6'
         ]);
         if (Auth::guard('admin')->attempt(['name' => $request['name'], 'password' => $request['password']], $request->get('remember'))) {
+            /** @var Admin $admin */
+            $admin = Auth::guard('admin')->user();
+            if ($admin->isBlocked()) {
+                Auth::logout();
+                flash('Ваш аккаунт заблокирован', 'danger');
+                return back();
+            }
+            if ($admin->isCashier()) {
+                return redirect()->intended('/admin/cashier');
+            }
+            flash('Добро пожаловать ' . $admin->fullName->getFullname(), 'success');
             return redirect()->intended('/admin');
         }
 

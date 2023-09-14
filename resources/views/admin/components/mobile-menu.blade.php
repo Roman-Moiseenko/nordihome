@@ -1,4 +1,5 @@
 <!-- BEGIN: Mobile Menu -->
+
 <div @class([
     'mobile-menu group w-full fixed bg-primary/90 z-[60] border-b border-white/[0.08] -mt-5 -mx-3 sm:-mx-8 mb-6 dark:bg-darkmode-800/90 md:hidden',
     "before:content-[''] before:w-full before:h-screen before:z-10 before:fixed before:inset-x-0 before:bg-black/90 before:transition-opacity before:duration-200 before:ease-in-out",
@@ -10,7 +11,7 @@
             <img class="w-6" src="{{ Vite::asset('resources/images/logo.svg') }}" alt=""/>
         </a>
         <a class="mobile-menu-toggler" href="#">
-            <i data-lucide="BarChart2" width="24" height="24" class="h-8 w-8 -rotate-90 transform text-white"></i>
+            <x-lucide icon="BarChart2" class="h-8 w-8 -rotate-90 transform text-white"></x-lucide>
         </a>
     </div>
     <div @class([
@@ -26,7 +27,7 @@
                 'group-[.mobile-menu--active]:visible group-[.mobile-menu--active]:opacity-100',
             ])
         >
-            <i data-lucide="XCircle" width="24" height="24" class="mobile-menu-toggler h-8 w-8 -rotate-90 transform text-white"></i>
+            <x-lucide icon="XCircle" class="mobile-menu-toggler h-8 w-8 -rotate-90 transform text-white"></x-lucide>
         </a>
         <ul class="py-2">
             <!-- BEGIN: First Child -->
@@ -37,17 +38,17 @@
                     <li>
                         <a
                             class="{{ $firstLevelActiveIndex == $menuKey ? 'menu menu--active' : 'menu' }}"
-                            href="{{ isset($menu['route_name']) ? route($menu['route_name'], $menu['params']) : 'javascript:;' }}"
+                            href="{{ isset($menu['route_name']) ? route($menu['route_name']) : 'javascript:;' }}"
                         >
                             <div class="menu__icon">
-                                <i data-lucide="{{ $menu['icon'] }}" width="24" height="24"></i>
+                                <x-lucide icon="{{ $menu['icon'] }}"></x-lucide>
                             </div>
                             <div class="menu__title">
                                 {{ $menu['title'] }}
                                 @if (isset($menu['sub_menu']))
                                     <div
                                         class="menu__sub-icon {{ $firstLevelActiveIndex == $menuKey ? 'transform rotate-180' : '' }}">
-                                        <i data-lucide="chevron-down" width="24" height="24"></i>
+                                        <x-lucide icon="chevron-down"></x-lucide>
                                     </div>
                                 @endif
                             </div>
@@ -57,16 +58,16 @@
                                 @foreach ($menu['sub_menu'] as $subMenuKey => $subMenu)
                                     <li>
                                         <a class="{{ $secondLevelActiveIndex == $subMenuKey ? 'menu menu--active' : 'menu' }}"
-                                            href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name'], $subMenu['params']) : 'javascript:;' }}">
+                                            href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name']) : 'javascript:;' }}">
                                             <div class="menu__icon">
-                                                <i data-lucide="{{ $subMenu['icon'] }}" width="24" height="24"></i>
+                                                <x-lucide icon="{{ $subMenu['icon'] }}"></x-lucide>
                                             </div>
                                             <div class="menu__title">
                                                 {{ $subMenu['title'] }}
                                                 @if (isset($subMenu['sub_menu']))
                                                     <div
                                                         class="menu__sub-icon {{ $secondLevelActiveIndex == $subMenuKey ? 'transform rotate-180' : '' }}">
-                                                        <i data-lucide="chevron-down" width="24" height="24"></i>
+                                                        <x-lucide icon="chevron-down"></x-lucide>
                                                     </div>
                                                 @endif
                                             </div>
@@ -77,9 +78,9 @@
                                                 @foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu)
                                                     <li>
                                                         <a class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'menu menu--active' : 'menu' }}"
-                                                            href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name'], $lastSubMenu['params']) : 'javascript:;' }}">
+                                                            href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name']) : 'javascript:;' }}">
                                                             <div class="menu__icon">
-                                                                <i data-lucide="{{ $lastSubMenu['icon'] }}" width="24" height="24"></i>
+                                                                <x-lucide icon="{{ $lastSubMenu['icon'] }}"></x-lucide>
                                                             </div>
                                                             <div class="menu__title">{{ $lastSubMenu['title'] }}</div>
                                                         </a>

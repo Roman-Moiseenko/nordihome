@@ -25,6 +25,7 @@ Route::group(
     function () {
         Route::get('/', 'HomeController@index')->name('home');
         Route::resource('users', 'UsersController'); //CRUD
+        Route::resource('staff', 'StaffController'); //CRUD
 
         Route::post('/users/{user}/verify', 'UsersController@verify')->name('users.verify');
     }
