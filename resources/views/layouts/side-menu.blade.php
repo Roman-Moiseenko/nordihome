@@ -12,7 +12,6 @@
             <!-- BEGIN: Side Menu -->
             <nav class="side-nav z-50 -mt-4 hidden w-[105px] overflow-x-hidden px-5 pb-16 pt-32 md:block xl:w-[260px]">
                 <ul>
-                    <!-- BEGIN: First Child -->
                     @foreach ($sideMenu as $menuKey => $menu)
                         @if ($menu == 'divider')
                             <li class="side-nav__divider my-6"></li>
@@ -26,8 +25,7 @@
                                     <div class="side-menu__title">
                                         {{ $menu['title'] }}
                                         @if (isset($menu['sub_menu']))
-                                            <div
-                                                class="side-menu__sub-icon {{ $firstLevelActiveIndex == $menuKey ? 'transform rotate-180' : '' }}">
+                                            <div class="side-menu__sub-icon {{ $firstLevelActiveIndex == $menuKey ? 'transform rotate-180' : '' }}">
                                                 <i data-lucide="chevron-down" width="24" height="24"></i>
                                             </div>
                                         @endif
@@ -45,8 +43,7 @@
                                                     <div class="side-menu__title">
                                                         {{ $subMenu['title'] }}
                                                         @if (isset($subMenu['sub_menu']))
-                                                            <div
-                                                                class="side-menu__sub-icon {{ $secondLevelActiveIndex == $subMenuKey ? 'transform rotate-180' : '' }}">
+                                                            <div class="side-menu__sub-icon {{ $secondLevelActiveIndex == $subMenuKey ? 'transform rotate-180' : '' }}">
                                                                 <i data-lucide="chevron-down" width="24" height="24"></i>
                                                             </div>
                                                         @endif
@@ -77,7 +74,6 @@
                             </li>
                     @endif
                 @endforeach
-                <!-- END: First Child -->
                 </ul>
             </nav>
             <!-- END: Side Menu -->
@@ -89,5 +85,4 @@
             <!-- END: Content -->
         </div>
     </div>
-
 @endsection

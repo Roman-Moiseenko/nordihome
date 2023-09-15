@@ -6,6 +6,7 @@ use App\Entity\Admin;
 use App\Http\Controllers\Controller;
 use App\UseCases\Admin\RegisterService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StaffController extends Controller
 {
@@ -37,7 +38,8 @@ class StaffController extends Controller
      */
     public function create()
     {
-        return view('admin.staff.create');
+        $roles = Admin::ROLES;
+        return view('admin.staff.create', compact('roles'));
     }
 
     /**
@@ -45,30 +47,46 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        $staff = Admin::register(
-            $request['name'],
-            $request['email'],
-            $request['phone'],
-            $request['password']
-        );
+        $request->validate([
+            'name' => 'required|unique:admins|max:255',
+            'email' => 'required|email|unique:admins',
+            'phone' => 'required|numeric',
+            'password' => 'required|string|min:6',
+            'surname' => 'required|string|max:33',
+            'firstname' => 'required|string|max:33',
+            'secondname' => 'string|max:33',
+            'post' => 'string|max:33',
+            'role' => 'required|string|max:33',
+            'photo' => '', //TODO Photo
+        ]);
+        $staff = $this->service->register($request);
+
         return redirect()->route('admin.staff.show', compact('staff'));
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Admin $staff)
     {
         return view('admin.staff.show', compact('staff'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Admin $staff)
     {
         $roles = Admin::ROLES;
         return view('admin.staff.edit', compact('staff', 'roles'));
+    }
+
+    public function security(Admin $staff)
+    {
+        return view('admin.staff.security', compact('staff'));
+    }
+
+    public function password(Request $request, Admin $staff)
+    {
+        $request->validate([
+            'password' => 'required|string|min:6',
+        ]);
+        flash('Пароль успешно изменен', 'success');
+        return view('admin.staff.show', compact('staff'));
     }
 
     /**
@@ -76,8 +94,19 @@ class StaffController extends Controller
      */
     public function update(Request $request, Admin $staff)
     {
+        $request->validate([
+            'name' => 'required|unique:admins|max:255',
+            'email' => 'required|email|unique:admins',
+            'phone' => 'required|numeric',
+            'surname' => 'required|string|max:33',
+            'firstname' => 'required|string|max:33',
+            'secondname' => 'string|max:33',
+            'post' => 'string|max:33',
+            'role' => 'required|string|max:33',
+            'photo' => '', //TODO Photo
+        ]);
+        $staff = $this->service->update($request, $staff);
 
-        $staff->update($request->all());
         return view('admin.staff.show', compact('staff'));
     }
 
@@ -86,7 +115,33 @@ class StaffController extends Controller
      */
     public function destroy(Admin $staff)
     {
-        //TODO Проверить на связанны данные, если есть вызвать исключение
-        //
+        try {
+            $this->service->blocking($staff);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+            return back();
+        }
+        return redirect('admin/staff');
+    }
+
+    //TODO Нужен ли action для Активации сотрудника ????
+    public function activate(Admin $staff)
+    {
+        try {
+            $this->service->activate( $staff);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+            return back();
+        }
+        return redirect('admin/staff');
+    }
+
+
+
+    public function test(Request $request)
+    {
+        return response()->json([
+            'name' => $request['file'],
+        ]);
     }
 }

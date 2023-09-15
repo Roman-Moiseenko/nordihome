@@ -7,8 +7,8 @@
                     <img class="rounded-full" src="dist/images/profile-6.jpg">
                 </div>
                 <div class="lg:ml-4 text-center lg:text-left mt-3 lg:mt-0">
-                    <a href="" class="font-medium">{{ $staff->fullName->getFullName() }}</a>
-                    <div class="text-slate-500 text-xs mt-0.5">{{ $staff->post }}</div>
+                    <a href="" class="font-medium {{ ($staff->isBlocked() ? 'text-danger' : 'text-info') }}">{{ $staff->fullName->getFullName() }}</a>
+                    <div class="text-slate-500 text-center text-xs mt-0.5 rounded-full text-white {{ \App\Entity\Admin::ROLE_COLORS[$staff->role] }}">{{ $staff->post }}</div>
                 </div>
             </div>
             <div class="absolute right-0 top-0 mr-5 mt-3 dropdown">
@@ -20,9 +20,30 @@
                         <a href="{{ route('admin.staff.edit', $staff) }}" class="dropdown-item">
                             <i data-lucide="edit-2" width="24" height="24" class="lucide lucide-edit-2 w-4 h-4 mr-2"></i>
                             Редактировать </a>
-                        <a href="{{ route('admin.staff.destroy', $staff) }}" class="dropdown-item">
-                            <i data-lucide="trash" width="24" height="24" class="lucide lucide-trash w-4 h-4 mr-2"></i>
-                            Заблокировать </a>
+                        <a href="{{ route('admin.staff.security', $staff) }}" class="dropdown-item">
+                            <i data-lucide="key-round" width="24" height="24" class="lucide lucide-key-round w-4 h-4 mr-2"></i>
+                            Пароль </a>
+                        @if($staff->isBlocked())
+                            <a href="{{ route('admin.staff.activate', $staff) }}" class="dropdown-item"
+                               onclick="event.preventDefault(); document.getElementById('activate-form-{{ $staff->id }}').submit();"
+                            >
+                                <i data-lucide="trash" width="24" height="24" class="lucide lucide-trash w-4 h-4 mr-2"></i>
+                                Активировать </a>
+                            <form id="activate-form-{{ $staff->id }}" action="{{ route('admin.staff.activate', $staff) }}" method="POST" class="hidden">
+                                @csrf
+                            </form>
+                        @else
+                            <a href="{{ route('admin.staff.destroy', $staff) }}" class="dropdown-item"
+                               onclick="event.preventDefault(); document.getElementById('destroy-form-{{ $staff->id }}').submit();"
+                            >
+                                <i data-lucide="trash" width="24" height="24" class="lucide lucide-trash w-4 h-4 mr-2"></i>
+                                Заблокировать </a>
+                            <form id="destroy-form-{{ $staff->id }}" action="{{ route('admin.staff.destroy', $staff) }}" method="POST" class="hidden">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        @endif
+
                     </div>
                 </div>
             </div>

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('role');
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamps(); // $timestamps = true - по умолчанию,
         });
     }
 

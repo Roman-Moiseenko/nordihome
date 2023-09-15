@@ -19,9 +19,37 @@ class AdminMenu
                 'title' => 'Клиенты',
                 'route_name' => 'admin.users.index',
             ],
+            'divider',
+            'company' => [
+                'icon' => 'building',
+                'title' => 'Организация',
+                'route_name' => 'admin.home',
+            ],
+            'providers' => [
+                'icon' => 'building',
+                'title' => 'Поставщики',
+                'route_name' => 'admin.home',
+            ],
+            'shop' => [
+                'icon' => 'store',
+                'title' => 'Магазин',
+                'sub_menu' => [
+                    'category' => [
+                        'icon' => 'package-search',
+                        'title' => 'Категории',
+                        'route_name' => 'admin.home',
+                    ],
+                    'product' => [
+                        'icon' => 'package-open',
+                        'title' => 'Товары',
+                        'route_name' => 'admin.home',
+                    ],
+
+                ],
+            ],
 
             /* Образцы */
-            'dashboard' => [
+          /*  'dashboard' => [
                 'icon' => 'home',
                 'title' => 'Dashboard',
                 'sub_menu' => [
@@ -756,7 +784,7 @@ class AdminMenu
                         'title' => 'Image Zoom'
                     ]
                 ]
-            ]
+            ] */
         ];
     }
 }

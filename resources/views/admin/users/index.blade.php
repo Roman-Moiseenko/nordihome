@@ -2,88 +2,71 @@
 
 @section('subcontent')
     @include('admin.users._nav')
+    <h2 class="intro-y text-lg font-medium mt-10">Клиенты</h2>
+    <div class="grid grid-cols-12 gap-6 mt-5">
 
-    <p><a href="{{ route('admin.users.create') }}" class="btn btn-success">Add User</a></p>
-    {{ $users->links('admin.components.count-paginator') }}
-    <div class="card mb-3">
-        <div class="card-header">Filter</div>
-        <div class="card-body">
-            <form action="?" method="GET">
-                <div class="row">
-                    <div class="col-sm-1">
-                        <div class="form-group">
-                            <label for="id" class="col-form-label">ID</label>
-                            <input id="id" class="form-control" name="id" value="{{ request('id') }}">
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="name" class="col-form-label">Name</label>
-                            <input id="name" class="form-control" name="name" value="{{ request('name') }}">
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="email" class="col-form-label">Email</label>
-                            <input id="email" class="form-control" name="email" value="{{ request('email') }}">
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="status" class="col-form-label">Status</label>
-                            <select id="status" class="form-control" name="status">
-                                <option value=""></option>
-                                @foreach ($statuses as $value => $label)
-                                    <option value="{{ $value }}"{{ $value === request('status') ? ' selected' : '' }}>{{ $label }}</option>
-                                @endforeach;
-                            </select>
-                        </div>
-                    </div>
+        <!-- Управление -->
+        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+            <button class="btn btn-primary shadow-md mr-2"
+                    onclick="window.location.href='{{ route('admin.users.create') }}'">Создать клиента
+            </button>
 
-                    <!-- role -->
+            {{ $users->links('admin.components.count-paginator') }}
 
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label class="col-form-label">&nbsp;</label><br />
+                <form action="?" method="GET">
+                <div class="flex flex-wrap sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
+                        <div class="w-56 relative text-slate-500 mr-2">
+                            <input type="text" class="form-control w-56 box pr-10" name="city"
+                                   placeholder="Поиск по городу">
+                            <i data-lucide="search" width="24" height="24"
+                               class="lucide lucide-search w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0"></i>
+                        </div>
+                        <div class="w-56 relative text-slate-500 mr-2">
+                            <input type="text" class="form-control w-56 box pr-10" name="name" placeholder="Поиск по имени">
+                            <i data-lucide="search" width="24" height="24"
+                               class="lucide lucide-search w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0"></i>
+                        </div>
+                        <div class="relative text-slate-500">
                             <button type="submit" class="btn btn-primary">Search</button>
                         </div>
-                    </div>
-                </div>
-            </form>
+
+                </div></form>
+
         </div>
-    </div>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Status</th>
-            <!--th>Role</th-->
-        </tr>
-        </thead>
-        <tbody>
 
-        @foreach ($users as $user)
+        <table class="table table-bordered table-striped">
+            <thead>
             <tr>
-                <td>{{ $user->id }}</td>
-                <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
-                <td>{{ $user->email }}</td>
-                <td>
-                    @if ($user->isWait())
-                        <span class="badge bg-secondary">Waiting</span>
-                    @endif
-                    @if ($user->isActive())
-                        <span class="badge bg-primary">Active</span>
-                    @endif
-                </td>
-                <!-- role -->
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <!--th>Role</th-->
             </tr>
-        @endforeach
+            </thead>
+            <tbody>
 
-        </tbody>
-    </table>
+            @foreach ($users as $user)
+                <tr>
+                    <td>{{ $user->id }}</td>
+                    <td><a href="{{ route('admin.users.show', $user) }}">{{ $user->name }}</a></td>
+                    <td>{{ $user->email }}</td>
+                    <td>
+                        @if ($user->isWait())
+                            <span class="badge bg-secondary">Waiting</span>
+                        @endif
+                        @if ($user->isActive())
+                            <span class="badge bg-primary">Active</span>
+                        @endif
+                    </td>
+                    <!-- role -->
+                </tr>
+            @endforeach
 
+            </tbody>
+        </table>
+
+    </div>
     {{ $users->links('admin.components.paginator') }}
 @endsection

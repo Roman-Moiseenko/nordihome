@@ -37,7 +37,7 @@ class CreateCommand extends Command
 
         $admin = Admin::register($name, $email, $phone, $password);
         $this->info('Пользователь ' . $name . ' создан');
-        $admin->changeRole(Admin::ROLE_ADMIN);
+        $admin->setRole(Admin::ROLE_ADMIN);
         $this->info('Роль Администратора назначена!');
         return true;
     }

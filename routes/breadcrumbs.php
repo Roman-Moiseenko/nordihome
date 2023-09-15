@@ -58,31 +58,32 @@ Breadcrumbs::for('admin.users.update', function (BreadcrumbTrail $trail, User $u
     $trail->parent('admin.users.index');
     $trail->push($user->name, route('admin.users.show', $user));
 });
-//STAFF
 
+//STAFF
 Breadcrumbs::for('admin.staff.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Сотрудники', route('admin.staff.index'));
 });
 Breadcrumbs::for('admin.staff.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.staff.index');
-    $trail->push('Создать', route('admin.staff.create'));
+    $trail->push('Добавить нового', route('admin.staff.create'));
 });
 Breadcrumbs::for('admin.staff.show', function (BreadcrumbTrail $trail, Admin $staff) {
-    //$staff = Admin::where('id', $staff)->first();
     $trail->parent('admin.staff.index');
     $trail->push($staff->fullName->getShortname(), route('admin.staff.show', $staff));
 });
 Breadcrumbs::for('admin.staff.edit', function (BreadcrumbTrail $trail, Admin $staff) {
-    //$staff = Admin::where('id', $staff)->first();
     $trail->parent('admin.staff.show', $staff);
     $trail->push('Редактировать', route('admin.staff.edit', $staff));
 });
 
 Breadcrumbs::for('admin.staff.update', function (BreadcrumbTrail $trail, Admin $staff) {
-    //$staff = Admin::where('id', $staff)->first();
     $trail->parent('admin.staff.index');
     $trail->push($staff->fullName->getShortname(), route('admin.staff.show', $staff));
+});
+Breadcrumbs::for('admin.staff.security', function (BreadcrumbTrail $trail, Admin $staff) {
+    $trail->parent('admin.staff.show', $staff);
+    $trail->push('Сменить пароль', route('admin.staff.security', $staff));
 });
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
@@ -96,8 +97,9 @@ Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category) { //Без указания главной - home
     if ($category->parent) {
         $trail->parent('category', $category->parent);
+    } else {
+        $trail->parent('shop');
     }
-    $trail->parent('category');
     $trail->push($category->name, route('category', $category));
 });
 //Выводим магазины в крошках, с родительской - Home
