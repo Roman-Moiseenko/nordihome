@@ -8,6 +8,7 @@ use App\Trait\FullNameTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
@@ -65,8 +66,7 @@ class Admin extends Authenticatable
         'fullname_secondname',
     ];
     //TODO протестировать сохранения если удалить fullname_***
-
-
+    
     protected $hidden = [
         'password',
         'remember_token',
@@ -149,47 +149,21 @@ class Admin extends Authenticatable
         if (!array_key_exists($role, self::ROLES)) {
             throw new \InvalidArgumentException('Неверная роль пользователя ' . $role);
         }
-        /*if ($this->role == $role) {
-            throw new \DomainException('Роль уже назначена.');
-        } */
         $this->role = $role;
-        //$this->update(['role' => $role]);
     }
-/*
-    public static function saving($callback)
-    {
-
-        parent::saving($callback);
-    }
-    public static function retrieved($callback)
-    {
-        parent::retrieved($callback);
-
-    }*/
     public function setPhoto(mixed $photo)
     {
 
     }
-/* Ушло в трейт
-    public static function boot()
-    {
-        parent::boot();
-        self::saving(function ($admin) {
-            $admin->fullname_surname = $admin->fullName->surname;
-            $admin->fullname_firstname = $admin->fullName->firstname;
-            $admin->fullname_secondname = $admin->fullName->secondname;
-        });
 
-        self::retrieved(function ($admin) {
-            $admin->setFullName(new FullName($admin->fullname_surname, $admin->fullname_firstname, $admin->fullname_secondname));
-        });
-    }
-    public function setFullName(FullName $fullName): void
-    {
-        $this->fullName = $fullName;
-    }    */
     public function activated()
     {
         $this->active = true;
+    }
+
+
+    public function isCurrent(): bool
+    {
+        return Auth::guard($this->guard)->user()->id == $this->id;
     }
 }

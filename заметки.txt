@@ -1,0 +1,24 @@
+ЗАДАЧА 1
+Создать Классы по представлению вывода/ввода
+                        <div class="input-group">
+                            <div id="input-group-user" class="input-group-text">
+                                <i data-lucide="user" width="16" height="16"></i></div>
+                            <input type="text" name="name" class="form-control" placeholder="Логин" aria-describedby="input-group-user"
+                                   value="{{ old('name') }}">
+                            @error('name')
+                                <div class="pristine-error text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
+
+Сохранение Фото сотрудника:
+1. При создании - сразу добавлять фото?
+
+*****
+action setPhoto -
+2. Отдельным всплывающем окном по фото из карточки (если фото нет, то показываем заглушку)
+
+3. В карточке профиля (заменить фото).
+
+4. В окне редактирования (сохранять сразу)

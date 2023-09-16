@@ -95,8 +95,8 @@ class StaffController extends Controller
     public function update(Request $request, Admin $staff)
     {
         $request->validate([
-            'name' => 'required|unique:admins|max:255',
-            'email' => 'required|email|unique:admins',
+            'name' => 'required|unique:admins,id,' . $staff->id,
+            'email' => 'required|email|unique:admins,id,' . $staff->id,
             'phone' => 'required|numeric',
             'surname' => 'required|string|max:33',
             'firstname' => 'required|string|max:33',

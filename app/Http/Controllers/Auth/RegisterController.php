@@ -38,7 +38,7 @@ class RegisterController extends Controller
         if (!$user = User::where('verify_token', $token)->first()) {
             flash('Ошибка верификации', 'danger');
             //flash()->overlay()
-            return redirect()->route('login');//->with('success', );
+            return redirect()->route('login');
         }
         try {
             $this->service->verify($user->id);
