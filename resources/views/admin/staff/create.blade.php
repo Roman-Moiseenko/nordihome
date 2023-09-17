@@ -6,7 +6,7 @@
             Создание нового сотрудника
         </h2>
     </div>
-    <form method="POST" action="{{ route('admin.staff.store') }}">
+    <form method="POST" action="{{ route('admin.staff.store') }}"  enctype="multipart/form-data">
         @csrf
         <div class="grid grid-cols-12 gap-6 mt-5">
             <!-- Основные данные -->
@@ -27,7 +27,6 @@
                             ->validate($message ?? '')->show() }}
                         {{ \App\Forms\Input::create('password', ['placeholder' => 'Пароль', 'class' => 'mt-3'])->group(['icon' => 'key-round', 'size' => 16])
                             ->validate($message ?? '')->show() }}
-
                     </div>
                 </div>
             </div>
@@ -41,9 +40,15 @@
                         </h2>
                     </div>
                     <div class="p-5">
+                        <div class="grid grid-cols-12 gap-2">
+                            <div class="col-span-12 lg:col-span-8">
                         {{ \App\Forms\Input::create('surname', ['placeholder' => 'Фамилия'])->show() }}
                         {{ \App\Forms\Input::create('firstname', ['placeholder' => 'Имя', 'class' => 'mt-3'])->show() }}
                         {{ \App\Forms\Input::create('secondname', ['placeholder' => 'Отчество', 'class' => 'mt-3'])->show() }}
+                    </div>
+                    <div id="single-file-upload" class="col-span-12 lg:col-span-4">
+                        @include('forms.upload')
+                    </div>
                     </div>
                 </div>
             </div>

@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Entity\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\RegisterRequest;
+use App\Http\Requests\Admin\UpdateRequest;
 use App\UseCases\Admin\RegisterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class StaffController extends Controller
 {
@@ -45,20 +48,8 @@ class StaffController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        $request->validate([
-            'name' => 'required|unique:admins|max:255',
-            'email' => 'required|email|unique:admins',
-            'phone' => 'required|numeric',
-            'password' => 'required|string|min:6',
-            'surname' => 'required|string|max:33',
-            'firstname' => 'required|string|max:33',
-            'secondname' => 'string|max:33',
-            'post' => 'string|max:33',
-            'role' => 'required|string|max:33',
-            'photo' => '', //TODO Photo
-        ]);
         $staff = $this->service->register($request);
 
         return redirect()->route('admin.staff.show', compact('staff'));
@@ -92,19 +83,9 @@ class StaffController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Admin $staff)
+    public function update(UpdateRequest $request, Admin $staff)
     {
-        $request->validate([
-            'name' => 'required|unique:admins,id,' . $staff->id,
-            'email' => 'required|email|unique:admins,id,' . $staff->id,
-            'phone' => 'required|numeric',
-            'surname' => 'required|string|max:33',
-            'firstname' => 'required|string|max:33',
-            'secondname' => 'string|max:33',
-            'post' => 'string|max:33',
-            'role' => 'required|string|max:33',
-            'photo' => '', //TODO Photo
-        ]);
+
         $staff = $this->service->update($request, $staff);
 
         return view('admin.staff.show', compact('staff'));
@@ -124,7 +105,6 @@ class StaffController extends Controller
         return redirect('admin/staff');
     }
 
-    //TODO Нужен ли action для Активации сотрудника ????
     public function activate(Admin $staff)
     {
         try {
@@ -136,7 +116,34 @@ class StaffController extends Controller
         return redirect('admin/staff');
     }
 
+    public function setphoto(Request $request, Admin $staff)
+    {
 
+        try {
+            //TODO В service
+           //$staff = Admin::where('id', $id)->first();
+
+            $file = $request->file('file');
+            $destinationPath = 'uploads/admins/' . $staff->id . '/';
+            if (!file_exists(public_path() . '/' . $destinationPath)) {
+                mkdir(public_path() . '/' . $destinationPath, 0777, true);
+            }
+            $file->move($destinationPath, $file->getClientOriginalName());
+            if (!empty($staff->photo)) {
+                unlink(public_path() . '/' . $staff->photo);
+            }
+            $staff->photo = $destinationPath . $file->getClientOriginalName();//$file;
+            $staff->update();
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'error' => $e->getMessage()
+            ]);
+        }
+        return response()->json([
+            'name' => $staff->photo,
+        ]);
+    }
 
     public function test(Request $request)
     {

@@ -6,8 +6,9 @@
             Редактирование профиля сотрудника
         </h2>
     </div>
-    <form method="POST" action="{{ route('admin.staff.store') }}">
+    <form method="POST" action="{{ route('admin.staff.update', $staff) }}">
         @csrf
+        @method('PUT')
         <div class="grid grid-cols-12 gap-6 mt-5">
             <!-- Основные данные -->
             <div class="intro-y col-span-12 lg:col-span-6">
@@ -47,8 +48,8 @@
                             </div>
                             <div id="single-file-upload" class="col-span-12 lg:col-span-4">
                                 <div class="preview">
-                                    <div data-single="true"  action="/file-upload" class="dropzone dz-clickable">
-                                        <div class="fallback"><input name="photo" type="file"/></div>
+                                    <div method="POST" data-single="true"  action="{{ route('admin.staff.photo', $staff) }}" class="dropzone dz-clickable">
+                                        <div class="fallback"><input name="file" type="file"/></div>
                                         <div class="dz-message" data-dz-message>
                                             <div class="text-lg font-medium">Перетащите файл или кликнете для загрузки.</div>
                                         </div>

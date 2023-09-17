@@ -34,11 +34,11 @@ class RegisterService
         $admin->setRole($request['role']);
 
         //Фото
-/*        $file = $request->file('photo');
+       /* $file = $request->file('file');
         $destinationPath = 'uploads';
         $file->move($destinationPath, $file->getClientOriginalName());
-        $admin->photo = $file;
-*/
+        $admin->photo = ;*/
+
         $admin->save();
         return $admin;
     }
@@ -96,7 +96,7 @@ class RegisterService
         ));
 
         $admin->post = $request['post'];
-        $admin->setRole($request['role']);
+        if (!$admin->isCurrent()) $admin->setRole($request['role']);
         if (!empty($request['photo'])) {
             $admin->setPhoto($request['photo']);
         }

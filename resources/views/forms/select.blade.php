@@ -6,7 +6,7 @@
     @foreach($options as $key => $value)
         <option
             value="{{ $key }}"
-            @if(empty(old($name)))
+            @if(!empty(old($name)))
                 {{ old($name)  == $key ? 'selected' : '' }}
             @else
                 {{ $selected  == $key ? 'selected' : '' }}
