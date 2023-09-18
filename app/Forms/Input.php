@@ -31,19 +31,9 @@ class Input extends BaseForm
     public function show($id = null)
     {
         $this->id = $id ?? 'input-' . $this->name;
-        return view('forms.input', [
-            'id' => $this->id,
-            'class' => $this->class,
-            'type' => $this->type,
-            'name' => $this->name,
-            'value' => $this->value,
+        $params = array_merge($this->loadParams(), [
             'group' => $this->group,
-            'label' => $this->label,
-            'label_pos' => $this->label_pos,
-            'label_description' => $this->label_description,
-            'placeholder' => $this->placeholder,
-            'message' => $this->message,
-            'disabled' => $this->disabled,
         ]);
+        return view('forms.input', $params);
     }
 }

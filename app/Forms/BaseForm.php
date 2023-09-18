@@ -7,7 +7,7 @@ namespace App\Forms;
 abstract class BaseForm
 {
     public string $id;
-    public string $type;
+    public string $type = '';
     public string $name;
     public string $value;
     public string $class;
@@ -55,6 +55,23 @@ abstract class BaseForm
         $form = clone $this;
         $form->disabled = $event ? 'disabled' : '';
         return $form;
+    }
+
+    public function loadParams(): array
+    {
+        return [
+            'id' => $this->id,
+            'class' => $this->class,
+            'type' => $this->type,
+            'name' => $this->name,
+            'value' => $this->value,
+            'label' => $this->label,
+            'label_pos' => $this->label_pos,
+            'label_description' => $this->label_description,
+            'placeholder' => $this->placeholder,
+            'message' => $this->message,
+            'disabled' => $this->disabled,
+        ];
     }
 
     //TODO Сделать массив базовых аттрибутов, в наследниках объединять массивы

@@ -8,8 +8,7 @@ use App\Http\Requests\Admin\RegisterRequest;
 use App\Http\Requests\Admin\UpdateRequest;
 use App\UseCases\Admin\RegisterService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
+
 
 class StaffController extends Controller
 {
@@ -51,7 +50,6 @@ class StaffController extends Controller
     public function store(RegisterRequest $request)
     {
         $staff = $this->service->register($request);
-
         return redirect()->route('admin.staff.show', compact('staff'));
     }
 
@@ -77,7 +75,7 @@ class StaffController extends Controller
             'password' => 'required|string|min:6',
         ]);
         flash('Пароль успешно изменен', 'success');
-        return view('admin.staff.show', compact('staff'));
+        return back();
     }
 
     /**
@@ -85,9 +83,7 @@ class StaffController extends Controller
      */
     public function update(UpdateRequest $request, Admin $staff)
     {
-
         $staff = $this->service->update($request, $staff);
-
         return view('admin.staff.show', compact('staff'));
     }
 
@@ -118,22 +114,8 @@ class StaffController extends Controller
 
     public function setphoto(Request $request, Admin $staff)
     {
-
         try {
-            //TODO В service
-           //$staff = Admin::where('id', $id)->first();
-
-            $file = $request->file('file');
-            $destinationPath = 'uploads/admins/' . $staff->id . '/';
-            if (!file_exists(public_path() . '/' . $destinationPath)) {
-                mkdir(public_path() . '/' . $destinationPath, 0777, true);
-            }
-            $file->move($destinationPath, $file->getClientOriginalName());
-            if (!empty($staff->photo)) {
-                unlink(public_path() . '/' . $staff->photo);
-            }
-            $staff->photo = $destinationPath . $file->getClientOriginalName();//$file;
-            $staff->update();
+            $this->service->setPhoto($request->file('file'), $staff);
         } catch (\Throwable $e) {
 
             return response()->json([

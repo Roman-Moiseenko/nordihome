@@ -22,10 +22,7 @@
                 <span class="invalid-feedback"><strong>{{ $errors->first('email') }}</strong></span>
             @endif
         </div>
-
         <!-- role -->
-
-
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Save</button>
         </div>

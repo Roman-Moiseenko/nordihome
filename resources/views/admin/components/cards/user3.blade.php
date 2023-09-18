@@ -3,8 +3,7 @@
         <div class="flex items-start px-5 pt-5">
             <div class="w-full flex flex-col lg:flex-row items-center">
                 <div class="w-16 h-16 image-fit">
-                    <!-- TODO Фото сотрудника-->
-                    <img class="rounded-full" src="dist/images/profile-6.jpg">
+                    <img class="rounded-full" src="{{ $staff->getPhoto() }}">
                 </div>
                 <div class="lg:ml-4 text-center lg:text-left mt-3 lg:mt-0">
                     <a href="" class="font-medium {{ ($staff->isBlocked() ? 'text-danger' : 'text-info') }}">{{ $staff->fullName->getFullName() }}</a>
@@ -17,10 +16,13 @@
                 </a>
                 <div class="dropdown-menu w-40">
                     <div class="dropdown-content">
-                        <a href="{{ route('admin.staff.edit', $staff) }}" class="dropdown-item">
+                        <a href="{{ $staff->isBlocked() ? '' : route('admin.staff.edit', $staff) }}" class="dropdown-item {{ $staff->isBlocked() ? 'disabled' : '' }}">
                             <i data-lucide="edit-2" width="24" height="24" class="lucide lucide-edit-2 w-4 h-4 mr-2"></i>
                             Редактировать </a>
-                        <a href="{{ route('admin.staff.security', $staff) }}" class="dropdown-item">
+                        <a href="{{ $staff->isBlocked() ? '' : 'javascript:;' }}"
+                           data-staff="{{ route('admin.staff.password', $staff) }}" data-fullname="{{ $staff->fullName->getShortName() }}"
+                           data-tw-toggle="modal" data-tw-target="#password-modal"
+                           class="dropdown-item {{ $staff->isBlocked() ? 'disabled' : '' }} password-modal">
                             <i data-lucide="key-round" width="24" height="24" class="lucide lucide-key-round w-4 h-4 mr-2"></i>
                             Пароль </a>
                         @if($staff->isBlocked())
@@ -57,7 +59,7 @@
                 <i data-lucide="phone" width="24" height="24" class="lucide lucide-phone w-3 h-3 mr-2"></i> {{ $staff->phone }}</div>
         </div>
         <div class="text-center lg:text-right p-5 border-t border-slate-200/60 dark:border-darkmode-400">
-            <button class="btn btn-primary py-1 px-2 mr-2">Сообщение</button>
+            <button class="btn btn-primary py-1 px-2 mr-2 {{ $staff->isBlocked() ? 'disabled' : '' }}" onclick="window.location.href=' {{ $staff->isBlocked() ? '' : route('home') }}'">Сообщение</button>
             <button onclick="window.location.href='{{ route('admin.staff.show', $staff) }}'" class="btn btn-outline-secondary py-1 px-2">Профиль</button>
         </div>
     </div>

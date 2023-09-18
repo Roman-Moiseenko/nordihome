@@ -6,9 +6,10 @@
             Редактирование профиля сотрудника
         </h2>
     </div>
-    <form method="POST" action="{{ route('admin.staff.update', $staff) }}">
+    <form method="POST" action="{{ route('admin.staff.update', $staff) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+
         <div class="grid grid-cols-12 gap-6 mt-5">
             <!-- Основные данные -->
             <div class="intro-y col-span-12 lg:col-span-6">
@@ -26,7 +27,6 @@
                             ->validate($message ?? '')->show() }}
                         {{ \App\Forms\Input::create('phone', ['placeholder' => 'Телефон', 'value' => $staff->phone, 'class' => 'mt-3'])->group(['icon' => 'phone', 'size' => 16])
                             ->validate($message ?? '')->show() }}
-
                     </div>
                 </div>
             </div>
@@ -47,14 +47,7 @@
                                 {{ \App\Forms\Input::create('secondname', ['placeholder' => 'Отчество', 'value' => $staff->fullName->secondname, 'class' => 'mt-3'])->show() }}
                             </div>
                             <div id="single-file-upload" class="col-span-12 lg:col-span-4">
-                                <div class="preview">
-                                    <div method="POST" data-single="true"  action="{{ route('admin.staff.photo', $staff) }}" class="dropzone dz-clickable">
-                                        <div class="fallback"><input name="file" type="file"/></div>
-                                        <div class="dz-message" data-dz-message>
-                                            <div class="text-lg font-medium">Перетащите файл или кликнете для загрузки.</div>
-                                        </div>
-                                    </div>
-                                </div>
+                                {{ \App\Forms\Upload::create('file', $staff->photo)->show() }}
                             </div>
                         </div>
                     </div>

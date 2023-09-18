@@ -6,7 +6,7 @@
             Создание нового сотрудника
         </h2>
     </div>
-    <form method="POST" action="{{ route('admin.staff.store') }}"  enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.staff.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-cols-12 gap-6 mt-5">
             <!-- Основные данные -->
@@ -47,7 +47,7 @@
                         {{ \App\Forms\Input::create('secondname', ['placeholder' => 'Отчество', 'class' => 'mt-3'])->show() }}
                     </div>
                     <div id="single-file-upload" class="col-span-12 lg:col-span-4">
-                        @include('forms.upload')
+                        {{ \App\Forms\Upload::create('file')->show() }}
                     </div>
                     </div>
                 </div>

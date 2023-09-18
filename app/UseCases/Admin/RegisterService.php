@@ -6,6 +6,7 @@ namespace App\UseCases\Admin;
 use App\Entity\Admin;
 use App\Entity\User\FullName;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -32,15 +33,27 @@ class RegisterService
         //Должность и Роли
         $admin->post = $request['post'];
         $admin->setRole($request['role']);
+        $admin->save();
 
         //Фото
-       /* $file = $request->file('file');
-        $destinationPath = 'uploads';
-        $file->move($destinationPath, $file->getClientOriginalName());
-        $admin->photo = ;*/
+        if (!empty($request->file('file')))
+            $this->setPhoto($request->file('file'), $admin);
 
-        $admin->save();
         return $admin;
+    }
+
+    public function setPhoto(UploadedFile $file, Admin $admin): void
+    {
+        $path = $admin->uploads . $admin->id . '/';
+        if (!file_exists(public_path() . '/' . $path)) {
+            mkdir(public_path() . '/' . $path, 0777, true);
+        }
+        $file->move($path, $file->getClientOriginalName());
+        if (!empty($staff->photo)) {
+            unlink(public_path() . $staff->photo);
+        }
+        $admin->photo = '/' . $path . $file->getClientOriginalName();
+        $admin->save();
     }
 
     public function setRole(string $role, Admin $admin): void
@@ -69,10 +82,8 @@ class RegisterService
         //TODO Проверить на связанны данные,
         // если их нет, то удаляем Сотрудника
 
-
-        //Проверка на себя,
         /** @var Admin $current */
-        $current = Auth::guard('admin')->user();
+        $current = Auth::guard('admin')->user();//Проверка на себя,
         if ($current->id == $admin->id) {
             throw new \DomainException('Нельзя заблокировать самого себя');
         }
@@ -97,10 +108,17 @@ class RegisterService
 
         $admin->post = $request['post'];
         if (!$admin->isCurrent()) $admin->setRole($request['role']);
-        if (!empty($request['photo'])) {
-            $admin->setPhoto($request['photo']);
-        }
         $admin->update();
+
+        //Фото
+        if ($request['image-clear'] == 'delete') {
+            unlink(public_path() . '/' . $admin->photo);
+            $admin->photo = '';
+            $admin->save();
+        }
+
+        if (!empty($request->file('file')))
+            $this->setPhoto($request->file('file'), $admin);
 
         return $admin;
     }

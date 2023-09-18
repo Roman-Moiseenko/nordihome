@@ -52,6 +52,7 @@ class Admin extends Authenticatable
    // public FullName $fullName;
 
     protected string $guard = 'admin';
+    public string $uploads = 'uploads/admins/';
 
     protected $fillable = [
         'name',
@@ -66,7 +67,7 @@ class Admin extends Authenticatable
         'fullname_secondname',
     ];
     //TODO протестировать сохранения если удалить fullname_***
-    
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -94,7 +95,6 @@ class Admin extends Authenticatable
             'active' => true,
         ]);
     }
-
 
     public static function new(string $name, string $email, string $phone, string $password): self
     {
@@ -151,10 +151,6 @@ class Admin extends Authenticatable
         }
         $this->role = $role;
     }
-    public function setPhoto(mixed $photo)
-    {
-
-    }
 
     public function activated()
     {
@@ -165,5 +161,14 @@ class Admin extends Authenticatable
     public function isCurrent(): bool
     {
         return Auth::guard($this->guard)->user()->id == $this->id;
+    }
+
+    public function getPhoto(): string
+    {
+        if (empty($this->photo)) {
+            return '/images/default-user.png';
+        } else {
+            return $this->photo;
+        }
     }
 }

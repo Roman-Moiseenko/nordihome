@@ -1,0 +1,9 @@
+a.disabled {
+    cursor: no-drop;
+    color: #a4a5a4;
+}
+button.disabled {
+    cursor: no-drop;
+    background-color: #a4a5a4 !important;
+    border-color: #a4a5a4 !important;
+}

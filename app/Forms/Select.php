@@ -18,19 +18,11 @@ class Select extends BaseForm
     public function show($id = null)
     {
         $this->id = $id ?? 'select-' . $this->name;
-        return view('forms.select', [
-            'id' => $this->id,
-            'class' => $this->class,
-            'name' => $this->name,
+        $params = array_merge($this->loadParams(), [
             'selected' => $this->value,
-            'label' => $this->label,
-            'label_pos' => $this->label_pos,
-            'label_description' => $this->label_description,
-            'placeholder' => $this->placeholder,
             'options' => $this->options,
-            'message' => $this->message,
-            'disabled' => $this->disabled,
         ]);
+        return view('forms.select', $params);
     }
 
 }
