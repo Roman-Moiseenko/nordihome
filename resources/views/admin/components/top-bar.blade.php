@@ -11,18 +11,11 @@
         </a>
         <!-- END: Logo -->
         <!-- BEGIN: Breadcrumb -->
-        <!-- TODO Сделать Хлебные крошки -->
-
         <nav aria-label="breadcrumb" class="-intro-x h-[45px] mr-auto">
-
             @section('breadcrumbs')
                 {{\Diglactic\Breadcrumbs\Breadcrumbs::render()}}
             @show
-
         </nav>
-
-
-
         <!-- END: Breadcrumb -->
         <!-- BEGIN: Search -->
         <div class="intro-x relative mr-3 sm:mr-6">
@@ -76,23 +69,23 @@
         <!-- BEGIN: Account Menu -->
         <div class="intro-x dropdown w-8 h-8">
             <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in scale-110" role="button" aria-expanded="false" data-tw-toggle="dropdown">
-                <img src="{{ Vite::asset($faker['photos'][0]) }}">
+                <img src="{{ $current_user->getPhoto() }}">
             </div>
             <div class="dropdown-menu w-56">
                 <ul class="dropdown-content bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
                     <li class="p-2">
-                        <div class="font-medium">Имя Сотрудника</div>
-                        <div class="text-xs text-white/60 mt-0.5 dark:text-slate-500">Права/Роль</div>
+                        <div class="font-medium">{{ $current_user->fullName->getShortName() }}</div>
+                        <div class="text-xs text-white/60 mt-0.5 dark:text-slate-500">{{ $current_user->post }}</div>
                     </li>
                     <li>
                         <hr class="dropdown-divider border-white/[0.08]">
                     </li>
-                    @foreach($profileMenu as $item)
+
                     <li>
-                        <a href="{{ route($item['route_name']) }}" class="dropdown-item hover:bg-white/5">
-                            <i data-lucide="{{ uncamelize($item['icon'], '-') }}" width="24" height="24" class="mr-2 h-4 w-4"></i> {{ $item['title'] }}</a>
+                        <a href="/" class="dropdown-item hover:bg-white/5">
+                            <i data-lucide="mail" width="24" height="24" class="mr-2 h-4 w-4"></i> Сообщения</a>
                     </li>
-                    @endforeach
+
                     <li>
                         <hr class="dropdown-divider border-white/[0.08]">
                     </li>

@@ -1,8 +1,6 @@
-<select id="{{ $id }}" name="{{ $name }}" class="form-select sm:mr-2 {{ $class }}
-@error($name)
-    has-error
-@enderror
-    " aria-label="{{ $placeholder }}" {{ $disabled }}>
+<select id="{{ $id }}" name="{{ $name }}"
+        class="form-select sm:mr-2 {{ $class }} {{ $errors->has($name) ? 'has-error' : '' }}"
+        aria-label="{{ $placeholder }}" {{ $disabled }}>
     @foreach($options as $key => $value)
         <option
             value="{{ $key }}"

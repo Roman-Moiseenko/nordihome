@@ -4,6 +4,7 @@ namespace App\Entity\User;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Trait\FullNameTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,8 +21,9 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, FullNameTrait;
     protected string $guard = 'user';
+    public string $uploads = 'uploads/users/';
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
 
@@ -31,6 +33,9 @@ class User extends Authenticatable
         'password',
         'status',
         'verify_token',
+        'fullname_surname',
+        'fullname_firstname',
+        'fullname_secondname',
     ];
 
     protected $hidden = [
@@ -45,6 +50,12 @@ class User extends Authenticatable
     ];
 
     public FullName $fullName;
+
+    public function __construct(array $attributes = [])
+    {
+        $this->fullName = new FullName();
+        parent::__construct($attributes);
+    }
 
     public function isWait(): bool
     {

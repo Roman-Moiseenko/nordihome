@@ -43,7 +43,7 @@ class Admin extends Authenticatable
     public const ROLE_COLORS = [
         self::ROLE_ADMIN => 'bg-success',
         self::ROLE_CASHIER => 'bg-warning',
-        self::ROLE_COMMODITY => 'bg-info',
+        self::ROLE_COMMODITY => 'bg-indigo-900',
         self::ROLE_FINANCE => 'bg-pending',
         self::ROLE_LOGISTICS => 'bg-primary',
     ];

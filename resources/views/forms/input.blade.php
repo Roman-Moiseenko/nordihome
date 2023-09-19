@@ -1,8 +1,4 @@
-<div class="{{ !empty($group) ? 'input-group' : 'input-form' }} {{ $class }}
-@error($name)
-    has-error
-@enderror
-    ">
+<div class="{{ !empty($group) ? 'input-group' : 'input-form' }} {{ $class }} {{ $errors->has($name) ? 'has-error' : '' }}">
     @if(!empty($label))
         <label for="{{ $id }}" class="form-label w-full flex flex-col sm:flex-row">{{ $label }}<span
                 class="sm:ml-auto mt-1 sm:mt-0 text-xs text-slate-500">{{ $label_description }}</span> </label>

@@ -1,7 +1,6 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    @include('admin.users._nav')
 
     <form method="POST" action="{{ route('admin.users.update', $user) }}">
         @csrf

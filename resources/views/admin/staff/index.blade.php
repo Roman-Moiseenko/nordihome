@@ -32,7 +32,6 @@
     {{ $admins->links('admin.components.paginator') }}
     <div id="password-modal" data-tw-backdrop="static" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-
             <form id="form-password-modal" method="POST" action="{{ route('admin.home') }}">
                 @csrf
                 <div class="modal-content">

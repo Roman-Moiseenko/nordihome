@@ -10,29 +10,24 @@ class AdminProfileMenu
         return [
             'profile' => [
                 'icon' => 'user',
-                'route_name' => 'home',
+                'route_name' => 'admin.staff.show',
                 'title' => 'Профиль',
             ],
             'password' => [
                 'icon' => 'lock',
-                'route_name' => 'home',
+                'route_name' => 'admin.staff.edit',
                 'title' => 'Сменить пароль',
             ],
             'mailing' => [
                 'icon' => 'Edit',
-                'route_name' => 'home',
-                'title' => 'Редактировать (?)',
+                'route_name' => 'admin.staff.edit',
+                'title' => 'Редактировать',
             ],
             'help' => [
                 'icon' => 'help-circle',
                 'route_name' => 'home',
                 'title' => 'Помощь',
             ],
-           /* 'logout' => [
-                'icon' => 'toggle-right',
-                'route_name' => 'logout',
-                'title' => 'Выход',
-            ],*/
         ];
     }
 }

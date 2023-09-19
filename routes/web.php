@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Auth::routes();
-Route::get('/cabinet', [\App\Http\Controllers\Cabinet\HomeController::class, 'index'])->name('cabinet');
+Route::get('/profile', [\App\Http\Controllers\User\CabinetController::class, 'profile'])->name('user.profile');
+Route::get('/cabinet', [\App\Http\Controllers\User\CabinetController::class, 'index'])->name('user.cabinet');
 
 Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::class, 'verify'])->name('register.verify');
 
@@ -26,7 +27,11 @@ Route::group(
     function () {
         Route::get('/', 'HomeController@index')->name('home');
 
-        Route::resource('users', 'UsersController'); //CRUD
+        //Route::resource('users', 'UsersController');
+        Route::get('/users', 'UsersController@index')->name('users.index');
+        Route::get('/users/{user}', 'UsersController@show')->name('users.show');
+        Route::post('/users/{user}/verify', 'UsersController@verify')->name('users.verify');
+
         Route::resource('staff', 'StaffController'); //CRUD
 
         Route::get('/staff/{staff}/security', 'StaffController@security')->name('staff.security');
@@ -34,7 +39,7 @@ Route::group(
         Route::post('/staff/activate/{staff}', 'StaffController@activate')->name('staff.activate');
         Route::post('/staff/photo/{staff}', 'StaffController@setphoto')->name('staff.photo');
 
-        Route::post('/users/{user}/verify', 'UsersController@verify')->name('users.verify');
+
     }
 );
 

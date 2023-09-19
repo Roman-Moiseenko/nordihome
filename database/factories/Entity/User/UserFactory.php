@@ -20,6 +20,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $active = fake()->boolean;
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
@@ -28,6 +29,9 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'verify_token' => !$active ? Str::uuid() : null,
             'status' => $active ? User::STATUS_ACTIVE : User::STATUS_WAIT,
+            'fullname_surname' => fake()->firstName(),
+            'fullname_firstname' => fake()->lastName(),
+            'fullname_second' => fake()->lastName(),
 //            'role' => array_rand(User::ROLES),
         ];
     }
