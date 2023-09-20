@@ -41,14 +41,17 @@ Breadcrumbs::for('admin.users.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Users', route('admin.users.index'));
 });
+/*
 Breadcrumbs::for('admin.users.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.users.index');
     $trail->push('Create', route('admin.users.create'));
 });
+*/
 Breadcrumbs::for('admin.users.show', function (BreadcrumbTrail $trail, User $user) {
     $trail->parent('admin.users.index');
-    $trail->push($user->name, route('admin.users.show', $user));
+    $trail->push($user->fullName->getShortname(), route('admin.users.show', $user));
 });
+/*
 Breadcrumbs::for('admin.users.edit', function (BreadcrumbTrail $trail, User $user) {
     $trail->parent('admin.users.show', $user);
     $trail->push('Edit', route('admin.users.edit', $user));
@@ -58,7 +61,7 @@ Breadcrumbs::for('admin.users.update', function (BreadcrumbTrail $trail, User $u
     $trail->parent('admin.users.index');
     $trail->push($user->name, route('admin.users.show', $user));
 });
-
+*/
 //STAFF
 Breadcrumbs::for('admin.staff.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');

@@ -37,8 +37,8 @@ class UsersController extends Controller
             $query->where('id', $value);
         }
 
-        if (!empty($value = $request->get('name'))) {
-            $query->where('name', 'like', '%' . $value . '%');
+        if (!empty($value = $request->get('phone'))) {
+            $query->where('phone', 'like', '%' . $value . '%');
         }
 
         if (!empty($value = $request->get('email'))) {
@@ -48,11 +48,7 @@ class UsersController extends Controller
         if (!empty($value = $request->get('status'))) {
             $query->where('status', $value);
         }
-/*
-        if (!empty($value = $request->get('role'))) {
-            $query->where('role', $value);
-        }
-*/
+
         $users = $query->paginate(20);
 
         return view('admin.users.index', compact('users', 'statuses'/*, 'roles'*/));

@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Entity\User;
 
+use App\Entity\User\FullName;
 use App\Entity\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -19,19 +20,21 @@ class UserFactory extends Factory
     protected $model = User::class;
     public function definition(): array
     {
-        $active = fake()->boolean;
+        $faker = \Faker\Factory::create('ru_RU');
+        $active = $faker->boolean;
 
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'email' => $faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'verify_token' => !$active ? Str::uuid() : null,
             'status' => $active ? User::STATUS_ACTIVE : User::STATUS_WAIT,
-            'fullname_surname' => fake()->firstName(),
-            'fullname_firstname' => fake()->lastName(),
-            'fullname_second' => fake()->lastName(),
+            //'fullName' => new FullName($faker->lastName(), $faker->firstName(), $faker->middleName()),
+            'fullname_surname' => 'Фамилия', // $faker->lastName(),
+            'fullname_firstname' => 'Имя', //$faker->firstName(),
+            'fullname_secondname' => 'Отчество', //$faker->middleName(),
+            'phone' => $faker->phoneNumber(),
 //            'role' => array_rand(User::ROLES),
         ];
     }

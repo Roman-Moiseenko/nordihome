@@ -24,7 +24,7 @@
             <th>ID</th><td>{{ $user->id }}</td>
         </tr>
         <tr>
-            <th>Name</th><td>{{ $user->name }}</td>
+            <th>Name</th><td>{{ $user->phone }}</td>
         </tr>
         <tr>
             <th>Email</th><td>{{ $user->email }}</td>

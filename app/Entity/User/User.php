@@ -15,8 +15,8 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * @property int $id
  * @property string $status
- * @property string $name
  * @property string $email
+ * @property string $phone
  * @property string $password
  */
 class User extends Authenticatable
@@ -28,8 +28,8 @@ class User extends Authenticatable
     public const STATUS_ACTIVE = 'active';
 
     protected $fillable = [
-        'name',
         'email',
+        'phone',
         'password',
         'status',
         'verify_token',
@@ -71,22 +71,22 @@ class User extends Authenticatable
      * @return string
      */
 
-    public static function register(string $name, string $email, string $password): self
+    public static function register(string $email, string $phone, string $password): self
     {
         return static::create([
-            'name' => $name,
             'email' => $email,
+            'phone' => $phone,
             'password' => Hash::make($password),
             'verify_token' => Str::uuid(),
             'status' => self::STATUS_WAIT,
         ]);
     }
 
-    public static function new(string $name, string $email): self
+    public static function new(string $email, string $phone): self
     {
         return static::create([
-            'name' => $name,
             'email' => $email,
+            'phone' => $phone,
             'password' => bcrypt(Str::random()),
             'status' => self::STATUS_ACTIVE,
         ]);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Entity\User;
 
+use App\Entity\User\FullName;
 use App\Entity\User\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -14,14 +15,14 @@ class RegisterTest extends TestCase
     public function testRequest(): void
     {
         $user = User::register(
-            $name = 'name',
             $email = 'email',
+            $phone = 'phone-number',
             $password = 'password'
         );
 
         self::assertNotEmpty($user);
 
-        self::assertEquals($name, $user->name);
+        self::assertEquals($phone, $user->phone);
         self::assertEquals($email, $user->email);
         self::assertNotEmpty($user->password);
         self::assertNotEquals($password, $user->password);
@@ -32,7 +33,7 @@ class RegisterTest extends TestCase
 
     public function testVerify(): void
     {
-        $user = User::register('name', 'email', 'password');
+        $user = User::register( 'email', '880000000', 'password');
 
         $user->verify();
 
@@ -42,11 +43,20 @@ class RegisterTest extends TestCase
 
     public function testAlreadyVerified(): void
     {
-        $user = User::register('name', 'email', 'password');
+        $user = User::register('email', '880000000', 'password');
         $user->verify();
 
         $this->expectExceptionMessage('User is already verified.');
         $user->verify();
     }
-
+    public function testFullName(): void
+    {
+        $user = User::new( 'email', 'phone');
+        $fullname = new FullName('surname', 'firstname', 'secondname');
+        $user->setFullname($fullname); //запись в базу
+        $user->save();
+        self::assertEquals($fullname->firstname, $user->fullname_firstname);
+        self::assertEquals($fullname->surname, $user->fullname_surname);
+        self::assertEquals($fullname->secondname, $user->fullname_secondname);
+    }
 }
