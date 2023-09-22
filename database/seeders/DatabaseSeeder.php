@@ -6,7 +6,6 @@ namespace Database\Seeders;
 use App\Entity\User\FullName;
 use App\Entity\User\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,7 +25,6 @@ class DatabaseSeeder extends Seeder
 
         for($i = 0; $i < 100; $i++) {
             $faker = \Faker\Factory::create('ru_RU');
-            $active = $faker->boolean;
             $user = User::new($faker->unique()->safeEmail(), $faker->phoneNumber());
             $user->setFullName(new FullName(
                 $faker->lastName(),

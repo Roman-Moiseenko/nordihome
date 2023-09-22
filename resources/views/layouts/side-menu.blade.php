@@ -16,64 +16,71 @@
                         @if ($menu == 'divider')
                             <li class="side-nav__divider my-6"></li>
                         @else
-                            <li>
-                                <a href="{{ isset($menu['route_name']) ? route($menu['route_name']) : 'javascript:;' }}"
-                                   class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
-                                    <div class="side-menu__icon">
-                                        <i data-lucide="{{ $menu['icon'] }}" width="24" height="24"></i>
-                                    </div>
-                                    <div class="side-menu__title">
-                                        {{ $menu['title'] }}
-                                        @if (isset($menu['sub_menu']))
-                                            <div class="side-menu__sub-icon {{ $firstLevelActiveIndex == $menuKey ? 'transform rotate-180' : '' }}">
-                                                <i data-lucide="chevron-down" width="24" height="24"></i>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </a>
-                                @if (isset($menu['sub_menu']))
-                                    <ul class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu__sub-open' : '' }}">
-                                        @foreach ($menu['sub_menu'] as $subMenuKey => $subMenu)
-                                            <li>
-                                                <a href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name']) : 'javascript:;' }}"
-                                                   class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
-                                                    <div class="side-menu__icon">
-                                                        <i data-lucide="{{ $subMenu['icon'] }}" width="24" height="24"></i>
-                                                    </div>
-                                                    <div class="side-menu__title">
-                                                        {{ $subMenu['title'] }}
-                                                        @if (isset($subMenu['sub_menu']))
-                                                            <div class="side-menu__sub-icon {{ $secondLevelActiveIndex == $subMenuKey ? 'transform rotate-180' : '' }}">
-                                                                <i data-lucide="chevron-down" width="24" height="24"></i>
-                                                            </div>
-                                                        @endif
-                                                    </div>
-                                                </a>
-                                                @if (isset($subMenu['sub_menu']))
-                                                    <ul
-                                                        class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu__sub-open' : '' }}">
-                                                        @foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu)
-                                                            <li>
-                                                                <a href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name']) : 'javascript:;' }}"
-                                                                    class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
-                                                                    <div class="side-menu__icon">
-                                                                        <i data-lucide="{{ $lastSubMenu['icon'] }}" width="24" height="24"></i>
-                                                                    </div>
-                                                                    <div class="side-menu__title">
-                                                                        {{ $lastSubMenu['title'] }}
-                                                                    </div>
-                                                                </a>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                @endif
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </li>
-                    @endif
-                @endforeach
+                            @can($menu['can'] ?? '')
+                                <li>
+                                    <a href="{{ isset($menu['route_name']) ? route($menu['route_name']) : 'javascript:;' }}"
+                                       class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
+                                        <div class="side-menu__icon">
+                                            <i data-lucide="{{ $menu['icon'] }}" width="24" height="24"></i>
+                                        </div>
+                                        <div class="side-menu__title">
+                                            {{ $menu['title'] }}
+                                            @if (isset($menu['sub_menu']))
+                                                <div
+                                                    class="side-menu__sub-icon {{ $firstLevelActiveIndex == $menuKey ? 'transform rotate-180' : '' }}">
+                                                    <i data-lucide="chevron-down" width="24" height="24"></i>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </a>
+                                    @if (isset($menu['sub_menu']))
+                                        <ul class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu__sub-open' : '' }}">
+                                            @foreach ($menu['sub_menu'] as $subMenuKey => $subMenu)
+                                                <li>
+                                                    <a href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name']) : 'javascript:;' }}"
+                                                       class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
+                                                        <div class="side-menu__icon">
+                                                            <i data-lucide="{{ $subMenu['icon'] }}" width="24"
+                                                               height="24"></i>
+                                                        </div>
+                                                        <div class="side-menu__title">
+                                                            {{ $subMenu['title'] }}
+                                                            @if (isset($subMenu['sub_menu']))
+                                                                <div
+                                                                    class="side-menu__sub-icon {{ $secondLevelActiveIndex == $subMenuKey ? 'transform rotate-180' : '' }}">
+                                                                    <i data-lucide="chevron-down" width="24"
+                                                                       height="24"></i>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </a>
+                                                    @if (isset($subMenu['sub_menu']))
+                                                        <ul
+                                                            class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu__sub-open' : '' }}">
+                                                            @foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu)
+                                                                <li>
+                                                                    <a href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name']) : 'javascript:;' }}"
+                                                                       class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
+                                                                        <div class="side-menu__icon">
+                                                                            <i data-lucide="{{ $lastSubMenu['icon'] }}"
+                                                                               width="24" height="24"></i>
+                                                                        </div>
+                                                                        <div class="side-menu__title">
+                                                                            {{ $lastSubMenu['title'] }}
+                                                                        </div>
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </li>
+                            @endcan
+                        @endif
+                    @endforeach
                 </ul>
             </nav>
             <!-- END: Side Menu -->

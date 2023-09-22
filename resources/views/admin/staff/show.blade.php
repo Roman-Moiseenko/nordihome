@@ -22,6 +22,9 @@
                 <div class="font-medium text-center lg:text-left lg:mt-3">Contact Details</div>
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
+                        <i data-lucide="user" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
+                        {{ $staff->name }} </div>
+                    <div class="truncate sm:whitespace-normal flex items-center mt-3">
                         <i data-lucide="mail" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
                         {{ $staff->email }} </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">

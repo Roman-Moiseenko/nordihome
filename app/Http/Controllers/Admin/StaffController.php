@@ -74,7 +74,12 @@ class StaffController extends Controller
         $request->validate([
             'password' => 'required|string|min:6',
         ]);
-        flash('Пароль успешно изменен', 'success');
+        try {
+            $this->service->setPassword($request['password'], $staff);
+            flash('Пароль успешно изменен', 'success');
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        }
         return back();
     }
 

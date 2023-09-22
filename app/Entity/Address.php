@@ -15,9 +15,14 @@ class Address
     public string $build;
     public string $flat;
 
-    public function __construct()
+    public function __construct($code = Region::DEFAULT_REGION)
     {
-        $this->region = Region::getByCode(Region::DEFAULT_REGION);
+        $this->region = Region::getByCode($code);
+    }
+
+    public function setRegion($code)
+    {
+        $this->region = Region::getByCode($code);
     }
 
     public function fullAddress(): string

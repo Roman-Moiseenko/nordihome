@@ -65,6 +65,7 @@ class RegisterService
     public function setPassword(string $password, Admin $admin): void
     {
         //TODO Проверка на пароль
+        // На совпадение
         $admin->update(['password' => Hash::make($password)]);
     }
 

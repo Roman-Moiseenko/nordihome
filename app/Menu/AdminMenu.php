@@ -13,26 +13,31 @@ class AdminMenu
                 'icon' => 'contact',
                 'title' => 'Сотрудники',
                 'route_name' => 'admin.staff.index',
+                'can' => 'user-manager',
             ],
             'clients' => [
                 'icon' => 'users',
                 'title' => 'Клиенты',
                 'route_name' => 'admin.users.index',
+                'can' => '',
             ],
             'divider',
             'company' => [
                 'icon' => 'building',
                 'title' => 'Организация',
                 'route_name' => 'admin.home',
+                'can' => '',
             ],
             'providers' => [
                 'icon' => 'building',
                 'title' => 'Поставщики',
                 'route_name' => 'admin.home',
+                'can' => '',
             ],
             'shop' => [
                 'icon' => 'store',
                 'title' => 'Магазин',
+                'can' => 'user-commodity',
                 'sub_menu' => [
                     'category' => [
                         'icon' => 'package-search',
@@ -44,7 +49,28 @@ class AdminMenu
                         'title' => 'Товары',
                         'route_name' => 'admin.home',
                     ],
-
+                    'attribute' => [
+                        'icon' => 'package-search',
+                        'title' => 'Атрибуты',
+                        'route_name' => 'admin.home',
+                    ],
+                    'tags' => [
+                        'icon' => 'package-search',
+                        'title' => 'Метки',
+                        'route_name' => 'admin.home',
+                    ],
+                ],
+            ],
+            'dictionary' => [
+                'icon' => 'building',
+                'title' => 'Справочники',
+                'can' => 'user-manager',
+                'sub_menu' => [
+                    'regions' => [
+                        'icon' => 'package-search',
+                        'title' => 'Регионы',
+                        'route_name' => 'admin.home',
+                    ],
                 ],
             ],
 
