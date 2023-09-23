@@ -37,7 +37,7 @@ class AdminMenu
             'shop' => [
                 'icon' => 'store',
                 'title' => 'Магазин',
-                'can' => 'user-commodity',
+                'can' => 'commodity',
                 'sub_menu' => [
                     'category' => [
                         'icon' => 'package-search',
@@ -59,6 +59,11 @@ class AdminMenu
                         'title' => 'Метки',
                         'route_name' => 'admin.home',
                     ],
+                    'brands' => [
+                        'icon' => 'package-search',
+                        'title' => 'Бренды',
+                        'route_name' => 'admin.home',
+                    ],
                 ],
             ],
             'dictionary' => [
@@ -69,6 +74,23 @@ class AdminMenu
                     'regions' => [
                         'icon' => 'package-search',
                         'title' => 'Регионы',
+                        'route_name' => 'admin.home',
+                    ],
+                ],
+            ],
+            'commodity' => [
+                'icon' => 'user',
+                'title' => 'Товаровед',
+                'can' => 'commodity',
+                'sub_menu' => [
+                    'arrival' => [
+                        'icon' => 'package-search',
+                        'title' => 'Поступление',
+                        'route_name' => 'admin.home',
+                    ],
+                    'suppliers' => [
+                        'icon' => 'package-search',
+                        'title' => 'Поставщики',
                         'route_name' => 'admin.home',
                     ],
                 ],

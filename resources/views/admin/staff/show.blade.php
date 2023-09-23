@@ -72,9 +72,6 @@
         </ul>
     </div>
 
-
-
-
     <div class="intro-y box px-5 py-5 mt-5">
         Данные связанные с работой по профилю
     </div>

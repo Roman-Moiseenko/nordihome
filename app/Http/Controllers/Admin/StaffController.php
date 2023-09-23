@@ -30,9 +30,10 @@ class StaffController extends Controller
         if (!empty($value = $request->get('role'))) {
             $query->where('role', $value);
         }
+        $selected = $request['role'] ?? '';
         $roles = Admin::ROLES;
         $admins = $query->paginate(9);
-        return view('admin.staff.index', compact('admins', 'roles'));
+        return view('admin.staff.index', compact('admins', 'roles', 'selected'));
     }
 
     /**

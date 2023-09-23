@@ -17,9 +17,9 @@
             {{ $admins->links('admin.components.count-paginator') }}
             <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                 <div class="w-56 relative text-slate-500">
-                    <input type="text" class="form-control w-56 box pr-10" placeholder="Search...">
-                    <i data-lucide="search" width="24" height="24"
-                       class="lucide lucide-search w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0"></i>
+                    <form id="search-role-form" action="?" method="GET">
+                    {{ \App\Forms\Select::create('role', ['placeholder' => 'Доступ', 'value' => $selected])->options(array_merge(['' => ''], \App\Entity\Admin::ROLES))->show() }}
+                    </form>
                 </div>
             </div>
         </div>
@@ -53,6 +53,7 @@
         </div>
     </div>
     <script>
+        /** Модальное окно для изменения пароля */
         let elements = document.getElementsByClassName("password-modal");
         let _user = document.getElementById('fio');
         let _form = document.getElementById('form-password-modal');
@@ -64,7 +65,12 @@
                 _user.innerHTML = _fio;
             });
         });
-
+        /** Фильтр по типу сотрудников */
+        let selectRole = document.getElementById("select-role");
+        let searchForm = document.getElementById("search-role-form");
+        selectRole.addEventListener('change', () => {
+            searchForm.submit();
+        })
     </script>
 @endsection
 

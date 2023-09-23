@@ -33,13 +33,13 @@ Breadcrumbs::for('other', function (BreadcrumbTrail $trail, $caption) {
 });
 
 Breadcrumbs::for('admin.home', function (BreadcrumbTrail $trail) {
-    $trail->push('Admin', route('admin.home'));
+    $trail->push('CRM', route('admin.home'));
 });
 
 //USERS
 Breadcrumbs::for('admin.users.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Users', route('admin.users.index'));
+    $trail->push('Клиенты', route('admin.users.index'));
 });
 /*
 Breadcrumbs::for('admin.users.create', function (BreadcrumbTrail $trail) {
