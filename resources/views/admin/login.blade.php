@@ -42,7 +42,7 @@ login
                         </div>
                         <div class="intro-x mt-8">
                             <input type="text" name="name" class="intro-x login__input form-control py-3 px-4 block"
-                                   placeholder="Name" id="name" value="{{ old('name') }}" required autocomplete="name"
+                                   placeholder="Логин" id="name" value="{{ old('name') }}" required autocomplete="name"
                                    autofocus>
                             @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -51,7 +51,7 @@ login
                             @enderror
                             <input type="password" name="password"
                                    class="intro-x login__input form-control py-3 px-4 block mt-4"
-                                   placeholder="Password">
+                                   placeholder="Пароль">
                             @error('password')
                             <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -62,19 +62,19 @@ login
                             <div class="flex items-center mr-auto">
                                 <input id="remember" name="remember" type="checkbox"
                                        class="form-check-input border mr-2" {{ old('remember') ? 'checked' : '' }}>
-                                <label class="cursor-pointer select-none" for="remember">Remember me</label>
+                                <label class="cursor-pointer select-none" for="remember">Запомнить меня</label>
                             </div>
 
                         </div>
                         <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
-                            <button type="submit" class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Login</button>
+                            <button type="submit" class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Вход</button>
                             <!-- button class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
                                 Register
                             </button -->
                         </div>
                         <div class="intro-x mt-10 xl:mt-24 text-slate-600 dark:text-slate-500 text-center xl:text-left">
-                            Если вы забыли пароль, обратитесь к администратору системы <br>
-                            или к разработчику, для предоставления <br>доступа уровня "Администратор"
+                            Если вы забыли пароль, обратитесь к Администратору <br>
+                            для предоставления доступа.
                         </div>
                     </form>
                 </div>

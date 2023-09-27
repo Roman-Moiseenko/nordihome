@@ -28,7 +28,7 @@
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
                         <i data-lucide="package" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
-                        {{ 5 }} </div>
+                        {{ '5' }} </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
                         <i data-lucide="russian-ruble" width="24" height="24"
                            class="lucide lucide-mail w-4 h-4 mr-2"></i>
@@ -64,91 +64,48 @@
     </div>
 
 
-
-
     <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
         <div class="pt-3 pb-2">
             <h2 class="text-lg">Заказы клиента</h2>
         </div>
         <table class="table table-report -mt-2 dropdown-table">
             <!-- foreach ($user->orders() as $order) -->
-            <tr class="intro-x zoom-in tr-dropdown" target="show-1" show="hide">
-                <td class="w-10">Дата заказа</td>
-                <td class="">Кол-во товаров</td>
-                <td class="">Сумма заказа</td>
-                <td class="">Доставка (куда и чем)</td>
-                <td class="w-10 text-right">
-                    <div>
-                        <i data-lucide="chevron-down" width="24" height="24"
-                           class="lucide lucide-chevron-down w-4 h-4"></i>
-                    </div>
-                </td>
-            </tr>
-            <tr id="show-1" class="hidden">
-                <td colspan="5">
-                    <table class="table table-hover">
-                        <tbody>
-                        <!-- foreach ($order->items() as $item) -->
-                        <tr>
-                            <td>1</td>
-                            <td>IMG</td>
-                            <td>Название</td>
-                            <td>Кол-во</td>
-                            <td>Цена</td>
-                            <td>Сумма</td>
-                        </tr>
-                        <!-- endforeach -->
-                        <tr>
-                            <td>2</td>
-                            <td>IMG</td>
-                            <td>Название</td>
-                            <td>Кол-во</td>
-                            <td>Цена</td>
-                            <td>Сумма</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-
-            </tr>
-            <!-- endforeach -->
-            <tr class="intro-x zoom-in tr-dropdown" target="show-2" show="hide">
-                <td class="w-10">Дата заказа</td>
-                <td class="">Кол-во товаров</td>
-                <td class="">Сумма заказа</td>
-                <td class="">Доставка (куда и чем)</td>
-                <td class="w-10 text-right ">
-                    <div>
-                        <i data-lucide="chevron-down" width="24" height="24"
-                           class="lucide lucide-chevron-down w-4 h-4"></i>
-                    </div>
-                </td>
-            </tr>
-            <tr id="show-2" class="hidden">
-                <td colspan="5">
-                    <table class="table table-hover">
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>IMG</td>
-                            <td>Название</td>
-                            <td>Кол-во</td>
-                            <td>Цена</td>
-                            <td>Сумма</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>IMG</td>
-                            <td>Название</td>
-                            <td>Кол-во</td>
-                            <td>Цена</td>
-                            <td>Сумма</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </td>
-
-            </tr>
+            @for($j =1; $j < random_int(3, 7); $j++)
+                <tr class="intro-x zoom-in tr-dropdown" target="show-{{$j}}" show="hide">
+                    <td class="w-10">{{'Дата заказа'}}</td>
+                    <td class="">{{'Кол-во товаров'}}</td>
+                    <td class="">{{'Сумма заказа'}}</td>
+                    <td class="">{{'Доставка (куда и чем)'}}</td>
+                    <td class="">{{'Статус'}}</td>
+                    <td class="w-10 text-right">
+                        <div>
+                            <i data-lucide="chevron-down" width="24" height="24"
+                               class="lucide lucide-chevron-down w-4 h-4"></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="show-{{$j}}" class="hidden">
+                    <td colspan="6">
+                        <table class="table table-hover">
+                            <tbody>
+                            <!-- foreach ($order->items() as $item) -->
+                            @for($i =1; $i < random_int(2, 10); $i++)
+                                <tr>
+                                    <td>{{ $i }}</td>
+                                    <td>{{ 'IMG' }}</td>
+                                    <td>{{'Название'}}</td>
+                                    <td>{{'Кол-во'}}</td>
+                                    <td>{{'Цена'}}</td>
+                                    <td>{{'Сумма'}}</td>
+                                </tr>
+                            @endfor
+                            <!-- endforeach -->
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+        @endfor
+        <!-- endforeach -->
         </table>
     </div>
 
