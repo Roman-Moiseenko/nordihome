@@ -37,7 +37,7 @@ Route::group(
         Route::get('/staff/{staff}/security', 'StaffController@security')->name('staff.security');
         Route::post('/staff/password/{staff}', 'StaffController@password')->name('staff.password');
         Route::post('/staff/activate/{staff}', 'StaffController@activate')->name('staff.activate');
-        Route::post('/staff/photo/{staff}', 'StaffController@setphoto')->name('staff.photo');
+        Route::post('/staff/photo/{staff}', 'StaffController@setPhoto')->name('staff.photo');
 
 
     }

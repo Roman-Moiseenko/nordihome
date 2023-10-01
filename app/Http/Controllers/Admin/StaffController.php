@@ -36,18 +36,12 @@ class StaffController extends Controller
         return view('admin.staff.index', compact('admins', 'roles', 'selected'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $roles = Admin::ROLES;
         return view('admin.staff.create', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(RegisterRequest $request)
     {
         $staff = $this->service->register($request);
@@ -84,18 +78,12 @@ class StaffController extends Controller
         return back();
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateRequest $request, Admin $staff)
     {
         $staff = $this->service->update($request, $staff);
         return view('admin.staff.show', compact('staff'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Admin $staff)
     {
         try {
@@ -118,7 +106,7 @@ class StaffController extends Controller
         return redirect('admin/staff');
     }
 
-    public function setphoto(Request $request, Admin $staff)
+    public function setPhoto(Request $request, Admin $staff)
     {
         try {
             $this->service->setPhoto($request->file('file'), $staff);

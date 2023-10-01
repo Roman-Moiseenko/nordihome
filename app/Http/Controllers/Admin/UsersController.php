@@ -14,10 +14,6 @@ class UsersController extends Controller
 {
     private RegisterService $service;
 
-    /**
-     * Display a listing of the resource.
-     */
-
     public function __construct(RegisterService $service)
     {
         $this->middleware('auth:admin');
@@ -31,77 +27,29 @@ class UsersController extends Controller
             User::STATUS_WAIT => 'В Ожидании',
             User::STATUS_ACTIVE => 'Подтвержден',
         ];
-//        $roles = User::ROLES;
         $query = User::orderByDesc('id');
         if (!empty($value = $request->get('id'))) {
             $query->where('id', $value);
         }
-
         if (!empty($value = $request->get('phone'))) {
             $query->where('phone', 'like', '%' . $value . '%');
         }
-
         if (!empty($value = $request->get('email'))) {
             $query->where('email', 'like', '%' . $value . '%');
         }
-
         if (!empty($value = $request->get('status'))) {
             $query->where('status', $value);
         }
-
         $users = $query->paginate(20);
 
         return view('admin.users.index', compact('users', 'statuses'/*, 'roles'*/));
     }
 
-/*
-    public function create()
-    {
-        return view('admin.users.create');
-    }
-
-    public function store(RegisterRequest $request)
-    {
-        $user = User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => bcrypt(Str::random()),
-            'status' => User::STATUS_ACTIVE
-        ]);
-
-        return redirect()->route('admin.users.show', $user);
-    }
-*/
     public function show(User $user)
     {
         return view('admin.users.show', compact('user'));
     }
-/*
-    public function edit(User $user)
-    {
-        $statuses = [
-            User::STATUS_WAIT => 'В Ожидании',
-            User::STATUS_ACTIVE => 'Подтвержден',
-        ];
-        return view('admin.users.edit', compact('user', 'statuses'));
-    }
 
-
-    public function update(UpdateRequest $request, User $user)
-    {
-
-        $user->update($request->only(['name', 'email']));
-        return view('admin.users.show', compact('user'));
-
-    }
-
-    public function destroy(User $user)
-    {
-        $user->delete();
-        return redirect()->route('admin.users.index');
-    }
-
-*/
     public function verify(User $user)
     {
         $this->service->verify($user->id);

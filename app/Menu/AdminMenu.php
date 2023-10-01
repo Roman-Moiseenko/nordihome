@@ -19,7 +19,7 @@ class AdminMenu
                 'icon' => 'users',
                 'title' => 'Клиенты',
                 'route_name' => 'admin.users.index',
-                'can' => '',
+                'can' => 'user-manager',
             ],
             'divider',
             'company' => [
