@@ -4,17 +4,17 @@ declare(strict_types=1);
 namespace App\Modules\Product\Service;
 
 use App\Modules\Product\Entity\Brand;
-use App\UseCases\Photo\UploadSinglePhoto;
+use App\UseCases\Uploads\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
 class BrandService
 {
-    private UploadSinglePhoto $uploadSinglePhoto;
+    private UploadService $uploadService;
 
-    public function __construct(UploadSinglePhoto $uploadSinglePhoto)
+    public function __construct(UploadService $uploadService)
     {
-        $this->uploadSinglePhoto = $uploadSinglePhoto;
+        $this->uploadService = $uploadService;
     }
 
     public function register(Request $request): Brand
@@ -26,36 +26,31 @@ class BrandService
             $request['sameAs']
         );
 
-        //Фото
         if (!empty($request->file('file')))
-            $this->uploadSinglePhoto->savePhoto($request->file('file'), $brand);
+            $brand->setPhoto($this->uploadService->singleReplace($request->file('file'), $brand));
 
         return $brand;
     }
 
     public function update(Request $request, Brand $brand)
     {
-
+        $brand->name = $request['name'];
+        $brand->description = $request['description'];
+        $brand->url = $request['url'];
+        $brand->setSameAs($request['sameAs']);
+        if (!empty($request->file('file')))
+            $brand->setPhoto($this->uploadService->singleReplace($request->file('file'), $brand));
+        $brand->save();
         return $brand;
     }
 
     public function delete(Brand $brand)
     {
+        if (empty($brand->products())) {
+            Brand::destroy($brand->id);
+        } else {
+            throw new \DomainException('Нельзя удалить бренд с товарами');
+        }
     }
 
-    ////
-/*
-    public function setPhoto(UploadedFile $file, Brand $brand): void
-    {
-        $path = $brand->uploads . $brand->id . '/';
-        if (!file_exists(public_path() . '/' . $path)) {
-            mkdir(public_path() . '/' . $path, 0777, true);
-        }
-        $file->move($path, $file->getClientOriginalName());
-        if (!empty($brand->photo)) {
-            unlink(public_path() . $brand->photo);
-        }
-        $brand->photo = '/' . $path . $file->getClientOriginalName();
-        $brand->save();
-    }    */
 }

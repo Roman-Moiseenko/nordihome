@@ -19,6 +19,7 @@ return new class extends Migration
             $table->json('sameas_json');
             $table->string('photo')->default('');
         });
+        \App\Modules\Product\Entity\Brand::create(['name' => 'NONAME', 'description' => 'Default Brand']);
     }
 
     /**

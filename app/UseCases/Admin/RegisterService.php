@@ -5,19 +5,18 @@ namespace App\UseCases\Admin;
 
 use App\Entity\Admin;
 use App\Entity\User\FullName;
-use App\UseCases\Photo\UploadSinglePhoto;
+use App\UseCases\Uploads\UploadService;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterService
 {
-    private UploadSinglePhoto $uploadSinglePhoto;
+    private UploadService $uploadService;
 
-    public function __construct(UploadSinglePhoto $uploadSinglePhoto)
+    public function __construct(UploadService $uploadService)
     {
-        $this->uploadSinglePhoto = $uploadSinglePhoto;
+        $this->uploadService = $uploadService;
     }
 
     public function register(Request $request): Admin
@@ -44,27 +43,12 @@ class RegisterService
 
         //Фото
         if (!empty($request->file('file')))
-            $this->uploadSinglePhoto->savePhoto($request->file('file'), $admin);
+            $admin->setPhoto($this->uploadService->singleReplace($request->file('file'), $admin));
 
-//        $this->setPhoto($request->file('file'), $admin);
-
+        $admin->save();
         return $admin;
     }
-/*
-    public function setPhoto(UploadedFile $file, Admin $admin): void
-    {
-        $path = $admin->uploads . $admin->id . '/';
-        if (!file_exists(public_path() . '/' . $path)) {
-            mkdir(public_path() . '/' . $path, 0777, true);
-        }
-        $file->move($path, $file->getClientOriginalName());
-        if (!empty($admin->photo)) {
-            unlink(public_path() . $admin->photo);
-        }
-        $admin->photo = '/' . $path . $file->getClientOriginalName();
-        $admin->save();
-    }
-*/
+
     public function setRole(string $role, Admin $admin): void
     {
         $admin->setRole($role);
@@ -128,9 +112,8 @@ class RegisterService
         }
 
         if (!empty($request->file('file')))
-            $this->uploadSinglePhoto->savePhoto($request->file('file'), $admin);
-
-//        $this->setPhoto($request->file('file'), $admin);
+            $admin->setPhoto($this->uploadService->singleReplace($request->file('file'), $admin));
+        $admin->save();
 
         return $admin;
     }

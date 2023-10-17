@@ -83,9 +83,12 @@ class Product extends Model
         return$this->name;
     }
 
-    public function isVisible()
+    public function isVisible(): bool
     {
-
+        if (!$this->published) return false;
+        if ($this->count_for_sell == 0 and $this->type_sell == self::OFFLINE) return false;
+        if ($this->type_sell == self::OFFLINE) return false;
+        return true;
     }
 
     public function brand()
@@ -111,5 +114,17 @@ class Product extends Model
     public function setMainCategory(Category $category)
     {
         $this->main_category_id = $category->id;
+    }
+
+    public function getMainCategory() //: Category
+    {
+        return $this->belongsTo(Category::class, 'main_category_id', 'id');
+    }
+
+    public function addCategory(Category $category)
+    {
+        //Проверка, если главной категории нет, то назначаем наглавную
+
+        //Проверка на совпадение с главной и второстепенными
     }
 }

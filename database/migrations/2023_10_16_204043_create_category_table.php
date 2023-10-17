@@ -16,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->default('');
             $table->string('slug')->default('');
-            $table->text('title')->default('');
-            $table->text('description')->default('');
+            $table->text('title');
+            $table->text('description');
             $table->string('image')->default('');
             $table->string('icon')->default('');
             NestedSet::columns($table);

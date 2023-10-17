@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Trait\PictureTrait;
-use App\UseCases\Photo\PhotoSingle;
+use App\UseCases\Uploads\UploadsDirectory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -15,8 +16,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $sameas_json
  * @property string $photo
  */
-class Brand extends Model implements PhotoSingle
+class Brand extends Model implements UploadsDirectory
 {
+    const DEFAULT = 1;
+
     private array $sameAs = [];
     protected $fillable = [
         'name',
@@ -58,6 +61,11 @@ class Brand extends Model implements PhotoSingle
     public function setPhoto(string $file): void
     {
         $this->photo = $file;
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'brand_id', 'id');
     }
 
     public static function boot()

@@ -5,8 +5,9 @@ namespace App\Modules\Product\Entity;
 
 use App\Entity\Picture;
 use App\Trait\PictureTrait;
-use App\UseCases\Photo\PhotoSingle;
+use App\UseCases\Uploads\UploadsDirectory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -19,7 +20,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property string $image
  * @property string $icon
  */
-class Category extends Model implements PhotoSingle
+class Category extends Model implements UploadsDirectory
 {
     use NodeTrait;
 
@@ -55,4 +56,22 @@ class Category extends Model implements PhotoSingle
     {
         throw new \DomainException('Функция setPhoto не должна вызываться в Category');
     }
+
+    public function products(): HasMany
+    {
+
+    }
+
+    public function allProducts(int $pagination = null):? Product
+    {
+        $subCategories = []; //Получаем все подкатегории всех уровней вложенности
+        //Ищем товары, у которых category_id IN $subCategories
+        //Ищем по вторичным категориям в таблице CategoryAssignment
+        //Возвращаем
+        //if $pagination == null -> все товары
+        // иначе через пагинацию
+
+        return null;
+    }
+
 }

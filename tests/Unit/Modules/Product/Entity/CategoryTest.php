@@ -29,16 +29,25 @@ class CategoryTest extends TestCase
     {
         $parent = Category::register($name_parent = 'parent category');
         $child = Category::register($name_child = 'child category', $parent);
-
         self::assertNotNull($child->parent());
 
+        $product = Product::register($name = 'name', $code = '7889-GH-987-Y');
+        $product->addCategory($parent);
+
+        self::assertEmpty($parent->products());
+        self::assertNotEmpty($parent->AllProducts());
     }
 
     public function testProductCategory(): void
     {
         $category = Category::register($name_parent = 'parent category');
+
+        self::assertEmpty($category->products());
         $product = Product::register($name = 'name', $code = '7889-GH-987-Y');
         $product->setMainCategory($category);
+        self::assertEmpty($category->products());
+        self::assertNotEmpty($category->products());
+        self::assertNotEmpty($category->AllProducts());
 
         $second1 = Category::register($name_second1 = 'second category 1');
         $second2 = Category::register($name_second2 = 'second category 2');
@@ -48,6 +57,8 @@ class CategoryTest extends TestCase
 
         $product->addCategory($second1);
         $product->addCategory($second2);
+        self::assertNotEmpty($second2->products());
+
 
         $main = $product->getMainCategory();
         self::assertEquals($category->name, $main->name);

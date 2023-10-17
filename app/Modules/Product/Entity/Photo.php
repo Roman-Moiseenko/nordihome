@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\UseCases\Photo\PhotoSingle;
+use App\UseCases\Uploads\UploadsDirectory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  * @property int $sort
  */
-class Photo extends Model implements PhotoSingle
+class Photo extends Model implements UploadsDirectory
 {
     protected $fillable = [
         'photo',

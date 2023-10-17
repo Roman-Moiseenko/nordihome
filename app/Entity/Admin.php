@@ -5,7 +5,7 @@ namespace App\Entity;
 
 use App\Entity\User\FullName;
 use App\Trait\FullNameTrait;
-use App\UseCases\Photo\PhotoSingle;
+use App\UseCases\Uploads\UploadsDirectory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -25,7 +25,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $photo
  * @property string $post //Должность
  */
-class Admin extends Authenticatable implements PhotoSingle
+class Admin extends Authenticatable implements UploadsDirectory
 {
     use HasApiTokens, HasFactory, Notifiable, FullNameTrait;
 

@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\UseCases\Photo;
+namespace App\UseCases\Uploads;
 
 use Illuminate\Http\UploadedFile;
 
-class UploadSinglePhoto
+class UploadService
 {
 
-    public function savePhoto(UploadedFile $file, PhotoSingle $object, string $callback = 'setPhoto'): void
+    public function singleReplace(UploadedFile $file, UploadsDirectory $object): string
     {
         try {
             $path = $object->getUploadsDirectory();
@@ -19,11 +19,10 @@ class UploadSinglePhoto
             if (!empty($object->photo)) {
                 unlink(public_path() . $object->photo);
             }
-            $object->$callback('/' . $path . $file->getClientOriginalName());
-
-            $object->save();
+            return '/' . $path . $file->getClientOriginalName();
         } catch (\Throwable $e) {
             flash($e->getMessage(), 'danger');
         }
+        return '';
     }
 }
