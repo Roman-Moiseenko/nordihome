@@ -19,17 +19,23 @@ class BrandService
 
     public function register(Request $request): Brand
     {
-        $brand = Brand::register(
-            $request['name'],
-            $request['description'],
-            $request['url'],
-            $request['sameAs']
-        );
 
-        if (!empty($request->file('file')))
-            $brand->setPhoto($this->uploadService->singleReplace($request->file('file'), $brand));
+            $brand = Brand::register(
+                $request['name'],
+                $request['description'] ?? '',
+                $request['url'] ?? ''
+            );
+//            flash(json_encode($request['sameAs']), 'danger');
+            if (!empty($request['sameAs']) && is_array($request['sameAs']))
+                $brand->setSameAs($request['sameAs']);
 
-        return $brand;
+            if (!empty($request->file('file')))
+                $brand->setPhoto($this->uploadService->singleReplace($request->file('file'), $brand));
+            $brand->save();
+
+            return $brand;
+
+
     }
 
     public function update(Request $request, Brand $brand)
@@ -38,6 +44,11 @@ class BrandService
         $brand->description = $request['description'];
         $brand->url = $request['url'];
         $brand->setSameAs($request['sameAs']);
+
+        if ($request['image-clear'] == 'delete') {
+            unlink(public_path() . '/' . $brand->photo);
+            $brand->photo = '';
+        }
         if (!empty($request->file('file')))
             $brand->setPhoto($this->uploadService->singleReplace($request->file('file'), $brand));
         $brand->save();

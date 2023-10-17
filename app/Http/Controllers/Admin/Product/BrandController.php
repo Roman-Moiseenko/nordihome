@@ -20,7 +20,7 @@ class BrandController extends Controller
 
     public function index()
     {
-        $brands = Brand::orderBy('id')->paginate(20);
+        $brands = Brand::orderBy('name')->paginate(20);
         return view('admin.product.brand.index', compact('brands'));
     }
 
@@ -31,7 +31,7 @@ class BrandController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $request->validate([
            'name' => 'required|string'
         ]);
         $brand = $this->service->register($request);

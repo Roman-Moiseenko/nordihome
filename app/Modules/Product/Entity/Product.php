@@ -93,6 +93,7 @@ class Product extends Model
 
     public function brand()
     {
+        if (empty($this->brand_id)) return new Brand();
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 

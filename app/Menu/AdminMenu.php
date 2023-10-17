@@ -63,6 +63,7 @@ class AdminMenu
                         'icon' => 'package-search',
                         'title' => 'Бренды',
                         'route_name' => 'admin.product.brand.index',
+                        'action' => true
                     ],
                 ],
             ],

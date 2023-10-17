@@ -37,15 +37,14 @@ class Brand extends Model implements UploadsDirectory
         return 'uploads/product/brands/' . $this->id . '/';
     }
 
-    public static function register($name, $description = '', $url = '', array $sameAs = []): self
+    public static function register($name, $description = '', $url = ''): self
     {
-        $brand = static::create([
+        return static::create([
             'name' => $name,
             'description' => $description,
             'url' => $url,
         ]);
-        $brand->sameAs = $sameAs;
-        return $brand;
+        //return $brand;
     }
 
     public function setSameAs(array $sameAs): void
@@ -63,9 +62,19 @@ class Brand extends Model implements UploadsDirectory
         $this->photo = $file;
     }
 
-    public function products(): HasMany
+    public function getPhoto(): string
     {
-        return $this->hasMany(Product::class, 'brand_id', 'id');
+        if (empty($this->photo)) {
+            return '/images/default-brand.png';
+        } else {
+            return $this->photo;
+        }
+    }
+
+    public function products(): ?HasMany
+    {
+        return null;
+       // return $this->hasMany(Product::class, 'brand_id', 'id');
     }
 
     public static function boot()
