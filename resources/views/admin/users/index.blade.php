@@ -57,9 +57,9 @@
                 <tr>
                     <td>
                         <a href="{{ route('admin.users.show', $user) }}">
-                            <span class="font-medium">{{ $user->fullName->getShortName() }}</span>
+                            <span class="font-medium">{{ $user->email }}</span>
                             <br>
-                            <span class="text-slate-500 text-xs mt-0.5">{{ $user->email }}</span>
+                            <span class="text-slate-500 text-xs mt-0.5">{{ $user->phone }}</span>
                         </a>
                     </td>
                     <td class="text-center">

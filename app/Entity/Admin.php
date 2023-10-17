@@ -5,6 +5,7 @@ namespace App\Entity;
 
 use App\Entity\User\FullName;
 use App\Trait\FullNameTrait;
+use App\UseCases\Photo\PhotoSingle;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,7 +25,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $photo
  * @property string $post //Должность
  */
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements PhotoSingle
 {
     use HasApiTokens, HasFactory, Notifiable, FullNameTrait;
 
@@ -52,7 +53,7 @@ class Admin extends Authenticatable
    // public FullName $fullName;
 
     protected string $guard = 'admin';
-    public string $uploads = 'uploads/admins/';
+    //public string $uploads = 'uploads/admins/';
 
     protected $fillable = [
         'name',
@@ -170,5 +171,15 @@ class Admin extends Authenticatable
         } else {
             return $this->photo;
         }
+    }
+
+    public function getUploadsDirectory(): string
+    {
+        return 'uploads/admins/' . $this->id . '/';
+    }
+
+    public function setPhoto(string $file): void
+    {
+        $this->photo = $file;
     }
 }

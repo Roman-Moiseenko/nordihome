@@ -34,35 +34,35 @@ class AdminMenu
                 'route_name' => 'admin.home',
                 'can' => '',
             ],
-            'shop' => [
+            'products' => [
                 'icon' => 'store',
                 'title' => 'Магазин',
                 'can' => 'commodity',
                 'sub_menu' => [
+                    'product' => [
+                        'icon' => 'package-open',
+                        'title' => 'Все Товары',
+                        'route_name' => 'admin.product.index', // 'admin.product.index'
+                    ],
                     'category' => [
                         'icon' => 'package-search',
                         'title' => 'Категории',
-                        'route_name' => 'admin.home',
-                    ],
-                    'product' => [
-                        'icon' => 'package-open',
-                        'title' => 'Товары',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.home',// 'admin.product.category.index'
                     ],
                     'attribute' => [
                         'icon' => 'package-search',
                         'title' => 'Атрибуты',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.home', // 'admin.product.attribute.index'
                     ],
                     'tags' => [
                         'icon' => 'package-search',
                         'title' => 'Метки',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.home', // 'admin.product.tag.index'
                     ],
                     'brands' => [
                         'icon' => 'package-search',
                         'title' => 'Бренды',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.product.brand.index',
                     ],
                 ],
             ],

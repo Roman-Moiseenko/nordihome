@@ -21,7 +21,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, FullNameTrait;
+    use HasApiTokens, HasFactory, Notifiable;
     protected string $guard = 'user';
     public string $uploads = 'uploads/users/';
     public const STATUS_WAIT = 'wait';
@@ -49,14 +49,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public FullName $fullName;
-
+   // public FullName $fullName;
+/*
     public function __construct(array $attributes = [])
     {
         $this->fullName = new FullName();
         parent::__construct($attributes);
     }
-
+*/
     public function isWait(): bool
     {
         return $this->status === self::STATUS_WAIT;

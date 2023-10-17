@@ -20,9 +20,9 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        //User::factory()->count(10)->create();
+        User::factory()->count(10)->create();
 
-
+/*
         for($i = 0; $i < 100; $i++) {
             $faker = \Faker\Factory::create('ru_RU');
             $user = User::new($faker->unique()->safeEmail(), $faker->phoneNumber());
@@ -32,6 +32,6 @@ class DatabaseSeeder extends Seeder
                 $faker->middleName()
             ));
             $user->save();
-        }
+        }*/
     }
 }

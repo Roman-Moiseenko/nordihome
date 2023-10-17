@@ -3,14 +3,14 @@
 @section('subcontent')
     <div class="intro-y flex items-center mt-8">
         <h1 class="text-xl font-medium mr-auto">
-            {{ $user->fullName->getFullName() }}
+            {{ $user->email }} еще данные?
         </h1>
     </div>
     <div class="intro-y box px-5 pt-5 mt-5">
         <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
             <div class="flex flex-1 flex-col justify-center items-center lg:items-start ml-4 mt-4">
                 <div class="truncate sm:whitespace-normal font-medium text-lg">
-                    {{ $user->fullName->getFullName() }}
+                    {{ $user->email }} еще данные?
                 </div>
                 <div class="truncate sm:whitespace-normal flex items-center mt-3">
                     <i data-lucide="mail" width="24" height="24"
@@ -20,7 +20,7 @@
                     {{ $user->phone }} </div>
                 <div class="truncate sm:whitespace-normal flex mt-3">
                     <i data-lucide="home" width="24" height="24" class="lucide lucide-home w-4 h-4 mr-2"></i>
-                    {{ '236001, Калининградская область, г.Светлогорск, ул.Ленина, д.4, кв.45' }} </div>
+                    {{ 'Калининградская область' }} </div>
             </div>
             <div
                 class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">

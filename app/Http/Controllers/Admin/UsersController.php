@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Entity\User\User;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Requests\Auth\UpdateRequest;
 use App\UseCases\Auth\RegisterService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {

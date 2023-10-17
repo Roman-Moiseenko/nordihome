@@ -39,6 +39,22 @@ Route::group(
         Route::post('/staff/activate/{staff}', 'StaffController@activate')->name('staff.activate');
         Route::post('/staff/photo/{staff}', 'StaffController@setPhoto')->name('staff.photo');
 
+        //**** SHOP
+        //Product
+        Route::group(
+            [
+                'prefix' => 'product',
+                'as' => 'product.',
+                'namespace' => 'Product',
+            ],
+            function () {
+                Route::get('/', 'ProductController@index')->name('index');
+                Route::get('/brands', 'BrandController@index')->name('brand.index');
+                Route::resource('brand', 'BrandController'); //CRUD
+
+            }
+        );
+
 
     }
 );

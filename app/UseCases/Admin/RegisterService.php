@@ -5,6 +5,7 @@ namespace App\UseCases\Admin;
 
 use App\Entity\Admin;
 use App\Entity\User\FullName;
+use App\UseCases\Photo\UploadSinglePhoto;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,12 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterService
 {
+    private UploadSinglePhoto $uploadSinglePhoto;
+
+    public function __construct(UploadSinglePhoto $uploadSinglePhoto)
+    {
+        $this->uploadSinglePhoto = $uploadSinglePhoto;
+    }
 
     public function register(Request $request): Admin
     {
@@ -37,11 +44,13 @@ class RegisterService
 
         //Фото
         if (!empty($request->file('file')))
-            $this->setPhoto($request->file('file'), $admin);
+            $this->uploadSinglePhoto->savePhoto($request->file('file'), $admin);
+
+//        $this->setPhoto($request->file('file'), $admin);
 
         return $admin;
     }
-
+/*
     public function setPhoto(UploadedFile $file, Admin $admin): void
     {
         $path = $admin->uploads . $admin->id . '/';
@@ -49,13 +58,13 @@ class RegisterService
             mkdir(public_path() . '/' . $path, 0777, true);
         }
         $file->move($path, $file->getClientOriginalName());
-        if (!empty($staff->photo)) {
-            unlink(public_path() . $staff->photo);
+        if (!empty($admin->photo)) {
+            unlink(public_path() . $admin->photo);
         }
         $admin->photo = '/' . $path . $file->getClientOriginalName();
         $admin->save();
     }
-
+*/
     public function setRole(string $role, Admin $admin): void
     {
         $admin->setRole($role);
@@ -119,7 +128,9 @@ class RegisterService
         }
 
         if (!empty($request->file('file')))
-            $this->setPhoto($request->file('file'), $admin);
+            $this->uploadSinglePhoto->savePhoto($request->file('file'), $admin);
+
+//        $this->setPhoto($request->file('file'), $admin);
 
         return $admin;
     }
