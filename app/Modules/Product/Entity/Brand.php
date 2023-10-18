@@ -46,9 +46,9 @@ class Brand extends Model implements UploadsDirectory
         ]);
     }
 
-    public function setSameAs(array $sameAs): void
+    public function setSameAs($sameAs): void
     {
-        $this->sameAs = $sameAs;
+        $this->sameAs = $sameAs ?? [];
     }
 
     public function getSameAs(): array

@@ -30,8 +30,7 @@
 </tr>
 @if(count($category->children) != 0)
     <tr id="children-{{ $category->id }}" class="hidden" style="background-color: #e5e7eb !important;">
-        <td colspan="5" style="padding: 0;">
-            <div class="px-3 bg-slate-100">
+        <td colspan="5">
             <table class="table table-report -mt-2">
                 <tbody>
                     @foreach($category->children as $children)
@@ -39,7 +38,6 @@
                     @endforeach
                 </tbody>
             </table>
-            </div>
         </td>
     </tr>
 @endif

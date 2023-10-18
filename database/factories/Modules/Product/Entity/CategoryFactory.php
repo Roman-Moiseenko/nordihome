@@ -14,7 +14,7 @@ class CategoryFactory extends Factory
     {
         $faker = \Faker\Factory::create('ru_RU');
         return [
-            'name' => $faker->unique()->name,
+            'name' => $faker->unique()->company,
             'slug' => $faker->unique()->slug(2),
             'parent_id' => null,
             'title' => '',
