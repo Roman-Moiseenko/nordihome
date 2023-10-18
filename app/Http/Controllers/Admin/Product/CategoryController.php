@@ -20,7 +20,7 @@ class CategoryController extends Controller
         $this->middleware(['auth:admin', 'can:commodity']);
         $this->service = $service;
     }
-
+/*
     private function travers($node): array
     {
         $categories = [];
@@ -37,34 +37,34 @@ class CategoryController extends Controller
         }
         return $categories;
     }
-
+*/
     public function index()
     {
-        $node = Category::defaultOrder()->get()->toTree(); //withDepth()->get();
+        $categories = Category::defaultOrder()->get()->toTree(); //withDepth()->get();
         //TODO Перенести в Репозиторий построение массива:
+        /*
+                try {
+                    $categories = $this->travers($node);
+                } catch (\Throwable $e) {
+                    flash($e->getMessage());
+                  $categories = [];
+                }
 
-        try {
-            $categories = $this->travers($node);
-        } catch (\Throwable $e) {
-            flash($e->getMessage());
-            $categories = [];
-        }
+                /*$travers = function ($_cats) use(&$travers, &$categories) {
+                    foreach ($_cats as $cat){
+                        $_child = $travers($cat->children);
+                        $categories[] = [
+                            'id' => $cat->id,
+                            'name' => $cat->name,
+                            'image' => $cat->image,
+                            'icon' => $cat->icon,
+                            'count' => count($cat->children),
+                            'children'
+                        ];
 
-        /*$travers = function ($_cats) use(&$travers, &$categories) {
-            foreach ($_cats as $cat){
-                $_child = $travers($cat->children);
-                $categories[] = [
-                    'id' => $cat->id,
-                    'name' => $cat->name,
-                    'image' => $cat->image,
-                    'icon' => $cat->icon,
-                    'count' => count($cat->children),
-                    'children'
-                ];
-
-            }
-        };
-        $travers($node);*/
+                    }
+                };
+                $travers($node);*/
         return view('admin.product.category.index', compact('categories'));
     }
 
