@@ -2,21 +2,12 @@
 
 @section('subcontent')
     <h2 class="intro-y text-lg font-medium mt-10">Клиенты</h2>
-
-
-
-
-
     <div class="grid grid-cols-12 gap-6 mt-5">
-
         <!-- Управление -->
         <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-
-
             {{ $users->links('admin.components.count-paginator') }}
-
                 <form action="?" method="GET">
-                <div class="flex flex-wrap sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
+                    <div class="flex flex-wrap sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                         <div class="w-56 relative text-slate-500 mr-2">
                             <input type="text" class="form-control w-56 box pr-10" name="city"
                                    placeholder="Поиск по городу">
@@ -33,9 +24,8 @@
                                 <i data-lucide="filter" width="20" height="20"></i>
                             </button>
                         </div>
-
-                </div></form>
-
+                    </div>
+                </form>
         </div>
 
         <div class="intro-y box col-span-12 p-5">
@@ -52,7 +42,6 @@
             </tr>
             </thead>
             <tbody>
-
             @foreach ($users as $user)
                 <tr>
                     <td>
@@ -75,5 +64,6 @@
         </table></div>
         </div>
     </div>
-    {{ $users->links('admin.components.paginator') }}
+
+    {{ $users->links('admin.components.paginator', ['pagination' => $pagination]) }}
 @endsection

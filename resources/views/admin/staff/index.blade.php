@@ -29,7 +29,9 @@
     <!-- Modal -->
 
     </div>
-    {{ $admins->links('admin.components.paginator') }}
+
+    {{ $admins->links('admin.components.paginator', ['pagination' => $pagination, 'card' => true]) }}
+
     <div id="password-modal" data-tw-backdrop="static" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <form id="form-password-modal" method="POST" action="{{ route('admin.home') }}">

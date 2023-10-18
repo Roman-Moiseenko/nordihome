@@ -49,8 +49,9 @@ Route::group(
             ],
             function () {
                 Route::get('/', 'ProductController@index')->name('index');
-                Route::get('/brands', 'BrandController@index')->name('brand.index');
+                //Route::get('/brands', 'BrandController@index')->name('brand.index');
                 Route::resource('brand', 'BrandController'); //CRUD
+                Route::resource('category', 'CategoryController'); //CRUD
 
             }
         );

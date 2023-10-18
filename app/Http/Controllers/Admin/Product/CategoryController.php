@@ -7,6 +7,7 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Service\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Config;
 
 class CategoryController extends Controller
 {
@@ -20,13 +21,13 @@ class CategoryController extends Controller
         $this->service = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::defaultOrder()->withDepth()->get();
+        $categories = Category::defaultOrder()->get()->toTree(); //withDepth()->get();
         return view('admin.product.category.index', compact('categories'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $parents = Category::defaultOrder()->withDepth()->get();
         return view('admin.product.category.create', compact('parents'));

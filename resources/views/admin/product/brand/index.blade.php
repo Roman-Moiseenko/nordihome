@@ -34,6 +34,9 @@
         </table>
         </div>
     </div>
+
+    {{ $brands->links('admin.components.paginator', ['pagination' => $pagination]) }}
+
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
         'Вы действительно хотите удалить бренд?<br>Этот процесс не может быть отменен.')->show() }}
 

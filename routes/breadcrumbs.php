@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Entity\Admin;
 use App\Entity\User\User;
 use App\Modules\Product\Entity\Brand;
+use App\Modules\Product\Entity\Category;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -101,6 +102,28 @@ Breadcrumbs::for('admin.product.brand.update', function (BreadcrumbTrail $trail,
     $trail->push($brand->name, route('admin.product.brand.show', $brand));
 });
 
+
+//CATEGORY
+Breadcrumbs::for('admin.product.category.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Категории', route('admin.product.category.index'));
+});
+Breadcrumbs::for('admin.product.category.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.category.index');
+    $trail->push('Добавить категорию', route('admin.product.category.create'));
+});
+Breadcrumbs::for('admin.product.category.show', function (BreadcrumbTrail $trail, Category $category) {
+    $trail->parent('admin.product.category.index');
+    $trail->push($category->name, route('admin.product.category.show', $category));
+});
+Breadcrumbs::for('admin.product.category.edit', function (BreadcrumbTrail $trail, Category $category) {
+    $trail->parent('admin.product.category.show', $category);
+    $trail->push('Редактировать', route('admin.product.category.edit', $category));
+});
+Breadcrumbs::for('admin.product.category.update', function (BreadcrumbTrail $trail, Category $category) {
+    $trail->parent('admin.product.category.index');
+    $trail->push($category->name, route('admin.product.category.show', $category));
+});
 
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {

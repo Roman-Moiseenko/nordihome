@@ -8,11 +8,13 @@ use App\Http\Requests\Admin\RegisterRequest;
 use App\Http\Requests\Admin\UpdateRequest;
 use App\UseCases\Admin\RegisterService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 
 class StaffController extends Controller
 {
     private RegisterService $service;
+    private mixed $pagination;
 
     /**
      * Display a listing of the resource.
@@ -22,18 +24,24 @@ class StaffController extends Controller
     {
         $this->middleware(['auth:admin', 'can:user-manager']);
         $this->service = $service;
+        $this->pagination = Config::get('shop-config.p-card');
     }
 
     public function index(Request $request)
     {
+        //TODO в Репозиторий!!!!!
         $query = Admin::orderByDesc('id');
         if (!empty($value = $request->get('role'))) {
             $query->where('role', $value);
         }
         $selected = $request['role'] ?? '';
         $roles = Admin::ROLES;
-        $admins = $query->paginate(9);
-        return view('admin.staff.index', compact('admins', 'roles', 'selected'));
+        $pagination = $request['p'] ?? $this->pagination;
+        $admins = $query->paginate($pagination);
+        if (isset($request['p'])) {
+            $admins->appends(['p' => $pagination]);
+        }
+        return view('admin.staff.index', compact('admins', 'roles', 'selected', 'pagination'));
     }
 
     public function create()

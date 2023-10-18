@@ -47,7 +47,7 @@ class AdminMenu
                     'category' => [
                         'icon' => 'package-search',
                         'title' => 'Категории',
-                        'route_name' => 'admin.home',// 'admin.product.category.index'
+                        'route_name' => 'admin.product.category.index',// 'admin.product.category.index'
                     ],
                     'attribute' => [
                         'icon' => 'package-search',
@@ -63,7 +63,6 @@ class AdminMenu
                         'icon' => 'package-search',
                         'title' => 'Бренды',
                         'route_name' => 'admin.product.brand.index',
-                        'action' => true
                     ],
                 ],
             ],

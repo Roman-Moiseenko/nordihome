@@ -6,6 +6,7 @@ namespace App\Modules\Product\Entity;
 use App\Entity\Picture;
 use App\Trait\PictureTrait;
 use App\UseCases\Uploads\UploadsDirectory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
@@ -22,7 +23,7 @@ use Kalnoy\Nestedset\NodeTrait;
  */
 class Category extends Model implements UploadsDirectory
 {
-    use NodeTrait;
+    use NodeTrait, HasFactory;
 
     public $timestamps = false;
 

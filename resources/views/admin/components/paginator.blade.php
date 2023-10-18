@@ -1,6 +1,6 @@
 
 @if ($paginator->hasPages())
-<div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
+<div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center mt-3">
     <nav class="w-full sm:w-auto sm:mr-auto">
         <ul class="pagination">
             @if ($paginator->onFirstPage())
@@ -66,6 +66,21 @@
                 @endif
         </ul>
     </nav>
+
+    <select id="select-pagination" name="p" class="w-20 form-select box mt-3 sm:mt-0">
+        @foreach(Illuminate\Support\Facades\Config::get((isset($card)) ? 'shop-config.options-card' : 'shop-config.options-list') as $value)
+        <option value="{{ $value }}" {{ ($value == $pagination) ? 'selected' : ''}}>{{ $value }}</option>
+        @endforeach
+    </select>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let select = document.getElementById('select-pagination');
+        select.addEventListener('change', function () {
+            let p = select.options[select.selectedIndex].value;
+            urlParams.set('p', p);
+            window.location.search = urlParams;
+        });
+    </script>
 </div>
 
 @endif

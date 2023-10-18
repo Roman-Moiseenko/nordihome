@@ -44,7 +44,6 @@ class Brand extends Model implements UploadsDirectory
             'description' => $description,
             'url' => $url,
         ]);
-        //return $brand;
     }
 
     public function setSameAs(array $sameAs): void
