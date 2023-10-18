@@ -27,6 +27,19 @@ class CategoryController extends Controller
         return view('admin.product.category.index', compact('categories'));
     }
 
+    public function up(Category $category)
+    {
+        $category->up();
+        return redirect('admin/product/category');
+    }
+
+    public function down(Category $category)
+    {
+        $category->down();
+        return redirect('admin.product.category.index');
+    }
+
+
     public function create(Request $request)
     {
         $parents = Category::defaultOrder()->withDepth()->get();

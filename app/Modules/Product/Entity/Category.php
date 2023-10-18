@@ -48,6 +48,24 @@ class Category extends Model implements UploadsDirectory
         $this->icon = $file;
     }
 
+    public function getImage(): string
+    {
+        if (empty($this->image)) {
+            return '/images/default-catalog.jpg';
+        } else {
+            return $this->image;
+        }
+    }
+
+    public function getIcon(): string
+    {
+        if (empty($this->icon)) {
+            return '/images/default-catalog.png';
+        } else {
+            return $this->icon;
+        }
+    }
+
     public function getUploadsDirectory(): string
     {
         return 'uploads/category/' . $this->id . '/';
