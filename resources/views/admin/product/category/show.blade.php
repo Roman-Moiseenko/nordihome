@@ -73,15 +73,15 @@
         </li>
     </ul>
 </div>
-<div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+<div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-4">
     <button class="btn btn-primary shadow-md mr-2"
             onclick="window.location.href='{{ route('admin.product.category.child', $category) }}'">Добавить Подкатегорию
     </button>
 </div>
 @if(count($category->children) > 0)
-    <table class="table table-report -mt-2">
+    <table class="table table-report">
         <tbody>
-        @foreach($category->children as $children)
+        @foreach($category->children()->defaultOrder()->get() as $children)
             @include('admin.product.category._list', ['category' => $children])
         @endforeach
         </tbody>

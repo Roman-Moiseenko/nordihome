@@ -10,13 +10,13 @@
     </div>
     <div class="mx-auto cursor-pointer relative mt-5">
         <button type="button" class="btn btn-primary w-full">{{ empty($src) ? 'Загрузить фото' : 'Заменить фото' }}</button>
-        <input id="image-upload" name="{{ $name }}" type="file" class="w-full h-full top-0 left-0 absolute opacity-0">
-        <input id="image-clear" name="image-clear" type="hidden">
+        <input id="{{$id_prefix}}-upload" name="{{ $name }}" type="file" class="w-full h-full top-0 left-0 absolute opacity-0">
+        <input id="{{$id_prefix}}-clear" name="image-clear" type="hidden">
     </div>
 </div>
 <script type="text/javascript">
-    let input = document.getElementById('image-upload');
-    let _clear = document.getElementById('image-clear');
+    let input = document.getElementById('{{$id_prefix}}-upload');
+    let _clear = document.getElementById('{{$id_prefix}}-clear');
     let blah = document.getElementById('preview-image');
     let removeDiv = document.getElementById('remove-photo');
     input.onchange = evt => {
