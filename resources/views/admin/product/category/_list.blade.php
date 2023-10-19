@@ -28,7 +28,7 @@
                onclick="event.preventDefault(); document.getElementById('category-down-{{ $category->id }}').submit();">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down w-4 h-4"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
             </a>
-                <form id="category-down-{{ $category->id }}" action="{{ route('admin.product.category.up', $category) }}" method="POST" class="hidden">
+                <form id="category-down-{{ $category->id }}" action="{{ route('admin.product.category.down', $category) }}" method="POST" class="hidden">
                     @csrf
                 </form>
 

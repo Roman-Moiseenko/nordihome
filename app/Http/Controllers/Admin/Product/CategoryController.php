@@ -63,8 +63,6 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        //$category = Category::defaultOrder()->get()->toTree()->find($category->id);
-        //$ch = $category->children()->defaultOrder();
         return view('admin.product.category.show', compact('category'));
     }
 
