@@ -112,10 +112,21 @@ Breadcrumbs::for('admin.product.category.create', function (BreadcrumbTrail $tra
     $trail->parent('admin.product.category.index');
     $trail->push('Добавить категорию', route('admin.product.category.create'));
 });
+Breadcrumbs::for('admin.product.category.child', function (BreadcrumbTrail $trail, Category $category) {
+    $trail->parent('admin.product.category.show', $category->parent());
+    $trail->push('Добавить подкатегорию', route('admin.product.category.create'));
+});
 Breadcrumbs::for('admin.product.category.show', function (BreadcrumbTrail $trail, Category $category) {
-    $trail->parent('admin.product.category.index');
+    if ($category->parent) {
+        $trail->parent('admin.product.category.show', $category->parent);
+    } else {
+        $trail->parent('admin.product.category.index');
+    }
     $trail->push($category->name, route('admin.product.category.show', $category));
 });
+
+
+
 Breadcrumbs::for('admin.product.category.edit', function (BreadcrumbTrail $trail, Category $category) {
     $trail->parent('admin.product.category.show', $category);
     $trail->push('Редактировать', route('admin.product.category.edit', $category));

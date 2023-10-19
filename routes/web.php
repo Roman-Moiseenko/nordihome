@@ -54,6 +54,8 @@ Route::group(
                 Route::resource('category', 'CategoryController'); //CRUD
                 Route::post('/category/up/{category}', 'CategoryController@up')->name('category.up');
                 Route::post('/category/down/{category}', 'CategoryController@down')->name('category.down');
+                Route::get('/category/child/{category}', 'CategoryController@child')->name('category.child');
+
             }
         );
 

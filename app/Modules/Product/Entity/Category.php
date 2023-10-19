@@ -93,4 +93,28 @@ class Category extends Model implements UploadsDirectory
         return null;
     }
 
+    //META
+
+    public function getTitle(): string
+    {
+        if (empty($this->title)){
+            //TODO Генерация автоматического заголовка
+            // при рефакторинге вынести в репозиторий для фронтенда
+            return '';
+        } else {
+            return $this->title;
+        }
+    }
+
+    public function getDescription(): string
+    {
+        if (empty($this->description)){
+            //TODO Генерация автоматического описания
+            // при рефакторинге вынести в репозиторий для фронтенда
+            return '';
+        } else {
+            return $this->description;
+        }
+    }
+
 }

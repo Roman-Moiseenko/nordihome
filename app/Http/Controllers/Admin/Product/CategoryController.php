@@ -30,13 +30,13 @@ class CategoryController extends Controller
     public function up(Category $category)
     {
         $category->up();
-        return redirect('admin/product/category');
+        return back();
     }
 
     public function down(Category $category)
     {
         $category->down();
-        return redirect('admin.product.category.index');
+        return back();
     }
 
 
@@ -44,6 +44,11 @@ class CategoryController extends Controller
     {
         $parents = Category::defaultOrder()->withDepth()->get();
         return view('admin.product.category.create', compact('parents'));
+    }
+
+    public function child(Category $category)
+    {
+        return view('admin.product.category.create', ['parent' => $category]);
     }
 
     public function store(Request $request)
@@ -58,6 +63,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
+        //$category = Category::defaultOrder()->get()->toTree()->find($category->id);
         return view('admin.product.category.show', compact('category'));
     }
 
