@@ -48,7 +48,7 @@ class CategoryController extends Controller
 
     public function child(Category $category)
     {
-        return view('admin.product.category.child', ['parent' => $category]);
+        return view('admin.product.category.child', compact('category'));
     }
 
     public function store(Request $request)

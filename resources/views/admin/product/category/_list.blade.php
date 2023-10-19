@@ -13,7 +13,6 @@
                 </a>
             @endif
         </div>
-
     </td>
     <td class="table-report__action w-72">
         <div class="flex justify-center items-center">
@@ -35,14 +34,13 @@
             <a class="flex items-center mr-3" href="{{ route('admin.product.category.edit', $category) }}" title="Edit">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-square w-4 h-4"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                 Edit </a>
-            <a class="flex items-center mr-3 text-primary" href="{{ route('admin.product.category.store', $category) }}" title="Add">
+            <a class="flex items-center mr-3 text-primary" href="{{ route('admin.product.category.child', $category) }}" title="Add">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-square w-4 h-4"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
                 Add</a>
             <a class="flex items-center text-danger" href="#" title="Delete"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.category.destroy', $category) }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2 w-4 h-4"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                 Delete </a>
-
         </div>
     </td>
 </tr>

@@ -1,6 +1,11 @@
 <?php
 
 return [
+    /* COMMON */
+    'crm' => [
+        'name-crm' => 'shop-L',
+        'version' => '0.1',
+    ],
     /* PAGINATION */
     'p-list' => 20,
     'p-card' => 9,

@@ -78,7 +78,7 @@ class Category extends Model implements UploadsDirectory
 
     public function products(): HasMany
     {
-
+        //TODO
     }
 
     public function allProducts(int $pagination = null):? Product

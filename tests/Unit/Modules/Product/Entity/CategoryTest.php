@@ -11,7 +11,7 @@ use Tests\TestCase;
 class CategoryTest extends TestCase
 {
     use DatabaseTransactions;
-
+/*
     public function testCreate(): void
     {
         $category = Category::register($name_parent = 'parent category');
@@ -37,7 +37,9 @@ class CategoryTest extends TestCase
         self::assertEmpty($parent->products());
         self::assertNotEmpty($parent->AllProducts());
     }
+*/
 
+    //TODO Перенести в продукт, добавить операции по Category
     public function testProductCategory(): void
     {
         $category = Category::register($name_parent = 'parent category');

@@ -52,9 +52,9 @@ Route::group(
                 //Route::get('/brands', 'BrandController@index')->name('brand.index');
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD
-                Route::post('/category/up/{category}', 'CategoryController@up')->name('category.up');
-                Route::post('/category/down/{category}', 'CategoryController@down')->name('category.down');
-                Route::get('/category/child/{category}', 'CategoryController@child')->name('category.child');
+                Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');
+                Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
+                Route::get('/category/{category}/child', 'CategoryController@child')->name('category.child');
 
             }
         );

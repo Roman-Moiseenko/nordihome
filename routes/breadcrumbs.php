@@ -113,7 +113,7 @@ Breadcrumbs::for('admin.product.category.create', function (BreadcrumbTrail $tra
     $trail->push('Добавить категорию', route('admin.product.category.create'));
 });
 Breadcrumbs::for('admin.product.category.child', function (BreadcrumbTrail $trail, Category $category) {
-    $trail->parent('admin.product.category.show', $category->parent());
+    $trail->parent('admin.product.category.show', $category);
     $trail->push('Добавить подкатегорию', route('admin.product.category.create'));
 });
 Breadcrumbs::for('admin.product.category.show', function (BreadcrumbTrail $trail, Category $category) {
