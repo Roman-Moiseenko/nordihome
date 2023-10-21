@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Entity\Dimensions;
-use App\Trait\PictureTrait;
+use App\Entity\Photo;
+use App\Entity\Video;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -14,47 +16,68 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $code
  * @property string $description
  * @property string $short
- * @property int $main_photo_id
  * @property int $main_category_id
  * @property string $dimensions_json
  * @property string $frequency_json
  * @property int $brand_id
  * @property float $current_rating
  * @property float $count_for_sell
- * @property bool $published
- * @property string $type_sell
+ * @property string $status
+ * @property string $sell_method
  */
 class Product extends Model
 {
-    const ONLINE = 'online';
-    const OFFLINE = 'offline';
-    const ORDER = 'order';
+    const SELL_ONLINE = 'online';
+    const SELL_OFFLINE = 'offline';
+    const SELL_ORDER = 'order';
+
+    const STATUS_DRAFT = 'Черновик';
+    const STATUS_MODERATION = 'На модерации';
+    const STATUS_APPROVED = 'Утвержден';
+    const STATUS_PUBLISHED = 'Опубликован';
+
 
     public Dimensions $dimensions;
 
+    protected $attributes = [
+        'short' => '',
+        'description' => '',
+        'delayed' => false,
+        'dimensions_json' => '{}',
+        'frequency_json' => '{}',
+        'sell_method' => self::SELL_ONLINE,
+        'status' => self::STATUS_DRAFT,
+        'count_for_sell' => 0,
+    ];
 
     protected $fillable = [
         'name',
         'slug',
         'code',
+        'status',
         'description',
         'short',
+        'sell_method',
     ];
 
     protected $hidden = [
 
     ];
 
-    public static function register(string $name, string $code): self
+    //РЕГИСТРАТОРЫ
+
+    public static function register(string $name, string $code, string $slug = ''): self
     {
-        $product = self::create([
+        return self::create([
             'name' => $name,
-            'code' => $code
+            'slug' => empty($slug) ? Str::slug($name) : $slug,
+            'code' => $code,
         ]);
 
-        return $product;
     }
 
+
+    //SET и GET
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
@@ -65,12 +88,19 @@ class Product extends Model
         $this->description = $description;
     }
 
-
-    public function published(): void
+    public function setPublished(): void
     {
-        //TODO Проверка на заполнение
+        $this->status = self::STATUS_PUBLISHED;
+    }
 
-        $this->published = true;
+    public function setModeration()
+    {
+        $this->status = self::STATUS_MODERATION;
+    }
+
+    public function setApproved()
+    {
+        $this->status = self::STATUS_APPROVED;
     }
 
     public function getSlug(): string
@@ -83,17 +113,21 @@ class Product extends Model
         return$this->name;
     }
 
+
+    //ФУНЦИИ СОСТОЯНИЯ
     public function isVisible(): bool
     {
-        if (!$this->published) return false;
-        if ($this->count_for_sell == 0 and $this->type_sell == self::OFFLINE) return false;
-        if ($this->type_sell == self::OFFLINE) return false;
+        if ($this->status != self::STATUS_PUBLISHED) return false;
+        if ($this->count_for_sell == 0 and $this->type_sell == self::SELL_OFFLINE) return false;
+        if ($this->type_sell == self::SELL_OFFLINE) return false;
         return true;
     }
 
+
+    //RELATIONSHIP
+
     public function brand()
     {
-        if (empty($this->brand_id)) return new Brand();
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
@@ -102,25 +136,26 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'main_category_id', 'id');
     }
 
+    public function photo()
+    {
+       return $this->morphOne(Photo::class, 'imageable')->where('type', 'main');
+    }
+
+    public function photos()
+    {
+       return $this->morphMany(Photo::class, 'imageable');
+    }
+
+    public function videos()
+    {
+        return $this->hasMany(Video::class, 'product_id', 'id');
+    }
+
     public function categories()
     {
         //TODO return $this->hasMany(CategoryAssignment::class, '','');
     }
 
-    public function setBrand(Brand $brand)
-    {
-        $this->brand_id = $brand->id;
-    }
-
-    public function setMainCategory(Category $category)
-    {
-        $this->main_category_id = $category->id;
-    }
-
-    public function getMainCategory() //: Category
-    {
-        return $this->belongsTo(Category::class, 'main_category_id', 'id');
-    }
 
     public function addCategory(Category $category)
     {
@@ -128,4 +163,6 @@ class Product extends Model
 
         //Проверка на совпадение с главной и второстепенными
     }
+
+
 }

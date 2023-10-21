@@ -11,6 +11,8 @@ use Tests\TestCase;
 class CategoryTest extends TestCase
 {
     use DatabaseTransactions;
+
+
 /*
     public function testCreate(): void
     {
@@ -24,52 +26,26 @@ class CategoryTest extends TestCase
         self::assertEquals($category->name, $child->parent()->name);
         self::assertEquals($category->name, $name_parent);
     }
-
+*/
     public function testChildCategory(): void
     {
-        $parent = Category::register($name_parent = 'parent category');
-        $child = Category::register($name_child = 'child category', $parent);
-        self::assertNotNull($child->parent());
+        $parent = Category::register('parent category');
+        $child1 = Category::register('child category', $parent->id);
+        $child2 = Category::register('child category', $parent->id);
 
-        $product = Product::register($name = 'name', $code = '7889-GH-987-Y');
+        self::assertTrue($child1->equilParent($child2));
+        self::assertTrue($child1->isParent($parent));
+        self::assertFalse($parent->isParent($parent));
+
+
+    /*    $product = Product::register($name = 'name', $code = '7889-GH-987-Y');
         $product->addCategory($parent);
 
         self::assertEmpty($parent->products());
-        self::assertNotEmpty($parent->AllProducts());
+        self::assertNotEmpty($parent->AllProducts());*/
     }
-*/
-
-    //TODO Перенести в продукт, добавить операции по Category
-    public function testProductCategory(): void
-    {
-        $category = Category::register($name_parent = 'parent category');
-
-        self::assertEmpty($category->products());
-        $product = Product::register($name = 'name', $code = '7889-GH-987-Y');
-        $product->setMainCategory($category);
-        self::assertEmpty($category->products());
-        self::assertNotEmpty($category->products());
-        self::assertNotEmpty($category->AllProducts());
-
-        $second1 = Category::register($name_second1 = 'second category 1');
-        $second2 = Category::register($name_second2 = 'second category 2');
-
-        $product->addCategory($category);
-        $this->expectExceptionMessage('Категория уже назначен');
-
-        $product->addCategory($second1);
-        $product->addCategory($second2);
-        self::assertNotEmpty($second2->products());
 
 
-        $main = $product->getMainCategory();
-        self::assertEquals($category->name, $main->name);
 
-        $categories = $product->getCategories();
-
-        self::assertEquals($categories[0]->name, $name_second1);
-        self::assertEquals($categories[1]->name, $name_second2);
-
-    }
 
 }

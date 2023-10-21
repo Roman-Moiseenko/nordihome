@@ -48,8 +48,9 @@ Route::group(
                 'namespace' => 'Product',
             ],
             function () {
-                Route::get('/', 'ProductController@index')->name('index');
-                //Route::get('/brands', 'BrandController@index')->name('brand.index');
+                Route::resource('/', 'ProductController'); //CRUD
+                //Доп. - сменить категорию, добавить фото
+
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD
                 Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');

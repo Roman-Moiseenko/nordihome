@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
+use App\Entity\Photo;
 use App\Entity\Picture;
 use App\Trait\PictureTrait;
 use App\UseCases\Uploads\UploadsDirectory;
@@ -14,17 +15,23 @@ use Kalnoy\Nestedset\NodeTrait;
 
 /**
  * @property int $id
+ * @property int $parent_id
  * @property string $name
  * @property string $slug
  * @property string $title
  * @property string $description
- * @property string $image
- * @property string $icon
+ * @property Photo $image
+ * @property Photo $icon
+ * @property Category $parent
+ * @property Category[] $children
  */
-class Category extends Model implements UploadsDirectory
+class Category extends Model
 {
     use NodeTrait, HasFactory;
 
+    protected $fillable = [
+      'name', 'parent_id', 'slug', 'title', 'description',
+    ];
     public $timestamps = false;
 
     public static function register($name, $parent_id = null, $slug = '', $title = '', $description = ''): self
@@ -38,43 +45,52 @@ class Category extends Model implements UploadsDirectory
         ]);
     }
 
-    public function setImage(string $file): void
+    public function isId(int $id): bool
     {
-        $this->image = $file;
+        return $this->id == $id;
     }
 
-    public function setIcon(string $file): void
+    public function equilParent(Category $category): bool
     {
-        $this->icon = $file;
+        if ($category->parent->id == null) return false;
+        if ($this->parent->id == null) return false;
+        return $category->parent->id == $this->parent->id;
+    }
+
+    public function isParent(Category $category): bool
+    {
+        if ($this->parent_id == null) return false;
+        return $this->parent_id == $category->id;
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Photo::class, 'imageable')->where('type', '=','image')->withDefault();
+    }
+    public function icon()
+    {
+        return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
     }
 
     public function getImage(): string
     {
-        if (empty($this->image)) {
+        if (empty($this->image->file)) {
             return '/images/default-catalog.jpg';
         } else {
-            return $this->image;
+            return $this->image->getUploadUrl();
         }
     }
 
     public function getIcon(): string
     {
-        if (empty($this->icon)) {
+        if (empty($this->icon->file)) {
             return '/images/default-catalog.png';
         } else {
-            return $this->icon;
+            return $this->icon->getUploadUrl();
         }
     }
 
-    public function getUploadsDirectory(): string
-    {
-        return 'uploads/category/' . $this->id . '/';
-    }
 
-    public function setPhoto(string $file): void
-    {
-        throw new \DomainException('Функция setPhoto не должна вызываться в Category');
-    }
 
     public function products(): HasMany
     {

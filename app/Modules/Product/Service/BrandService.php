@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
+use App\Entity\Photo;
 use App\Modules\Product\Entity\Brand;
 use App\UseCases\Uploads\UploadService;
 use Illuminate\Http\Request;
@@ -28,8 +29,7 @@ class BrandService
         if (!empty($request['sameAs']) && is_array($request['sameAs']))
             $brand->setSameAs($request['sameAs']);
 
-        if (!empty($request->file('file')))
-            $brand->setPhoto($this->uploadService->singleReplace($request->file('file'), $brand));
+        $this->photo($brand, $request->file('file'));
         $brand->save();
 
         return $brand;
@@ -42,23 +42,36 @@ class BrandService
         $brand->url = $request['url'];
         $brand->setSameAs($request['sameAs']);
 
-        if ($request['image-clear'] == 'delete') {
-            unlink(public_path() . '/' . $brand->photo);
-            $brand->photo = '';
+        if ($request['file-clear'] == 'delete') {
+            $brand->photo->delete();
+            $brand->refresh();
         }
-        if (!empty($request->file('file')))
-            $brand->setPhoto($this->uploadService->singleReplace($request->file('file'), $brand));
+        $this->photo($brand, $request->file('file'));
+
         $brand->save();
         return $brand;
     }
 
+
     public function delete(Brand $brand)
     {
         if (empty($brand->products())) {
+            $this->uploadService->removeFile($brand->photo);
             Brand::destroy($brand->id);
         } else {
             throw new \DomainException('Нельзя удалить бренд с товарами');
         }
+    }
+
+    public function photo(Brand $brand, $file): void
+    {
+        if (empty($file)) return;
+        if (!empty($brand->photo)) {
+            $brand->photo->newUploadFile($file);
+        } else {
+            $brand->photo()->save(Photo::upload($file));
+        }
+        $brand->refresh();
     }
 
 }

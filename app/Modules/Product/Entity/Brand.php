@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Trait\PictureTrait;
-use App\UseCases\Uploads\UploadsDirectory;
+use App\Entity\Photo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,9 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $description
  * @property string $url
  * @property string $sameas_json
- * @property string $photo
+ * @property Photo $photo
  */
-class Brand extends Model implements UploadsDirectory
+class Brand extends Model
 {
     const DEFAULT = 1;
 
@@ -31,11 +30,6 @@ class Brand extends Model implements UploadsDirectory
         'sameas_json',
     ];
     public $timestamps = false;
-
-    public function getUploadsDirectory(): string
-    {
-        return 'uploads/product/brands/' . $this->id . '/';
-    }
 
     public static function register($name, $description = '', $url = ''): self
     {
@@ -56,17 +50,17 @@ class Brand extends Model implements UploadsDirectory
         return $this->sameAs;
     }
 
-    public function setPhoto(string $file): void
+    public function photo()
     {
-        $this->photo = $file;
+        return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
 
     public function getPhoto(): string
     {
-        if (empty($this->photo)) {
+        if (empty($this->photo->file)) {
             return '/images/default-brand.png';
         } else {
-            return $this->photo;
+            return $this->photo->getUploadUrl();
         }
     }
 

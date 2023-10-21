@@ -53,7 +53,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $request->validate([
             'name' => 'required|string',
             'parent' => 'nullable|integer|exists:categories,id',
         ]);
@@ -68,13 +68,16 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        return view('admin.product.category.edit', compact('category'));
+        $categories = Category::defaultOrder()->withDepth()->get();
+        return view('admin.product.category.edit', compact('category', 'categories'));
     }
 
     public function update(Request $request, Category $category)
     {
         $category = $this->service->update($request, $category);
-        return view('admin.product.category.show', compact('category'));
+
+        return redirect(route('admin.product.category.show', $category));
+        //return view('admin.product.category.show', compact('category'));
     }
 
     public function destroy(Category $category)
@@ -85,7 +88,7 @@ class CategoryController extends Controller
             flash($e->getMessage(), 'danger');
             return back();
         }
-        return redirect('admin/product/categories');
+        return back();
     }
 
 

@@ -10,19 +10,36 @@
             <div class="p-5">
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
-                        {{ \App\Forms\Input::create('name', ['placeholder' => 'Каталог'])->show() }}
-                        {{ \App\Forms\Input::create('slug', ['placeholder' => 'Ссылка/slug', 'class' => 'mt-3'])->show() }}
+                        @if($category)
 
-                        {{ \App\Forms\Input::create('title', ['placeholder' => 'Meta-Title', 'class' => 'mt-5'])->label('Мета теги. Оставьте пустыми для автоматического заполнения')->show() }}
-                        {{ \App\Forms\TextArea::create('description', ['placeholder' => 'Meta-Description', 'class' => 'mt-3'])->rows(5)->show() }}
+                            <select name="parent_id" class="tom-select w-full">
+                                @foreach($categories as $_category)
+                                    <option value="{{ $_category->id }}"
+                                        {{ $category->isParent($_category) ? 'selected' : ''}}
+                                        {{ ($category->isId($_category->id)) ? 'disabled' : ''}}>
+                                        @for($i = 0; $i<$_category->depth; $i++)&mdash;@endfor
+                                        {{ $_category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        @endif
+                        {{ \App\Forms\Input::create('name', ['placeholder' => 'Каталог', 'value' => $category->name ?? '', 'class' => 'mt-5'])->show() }}
+                        {{ \App\Forms\Input::create('slug', ['placeholder' => 'Ссылка/slug', 'value' => $category->slug ?? '', 'class' => 'mt-3'])->show() }}
+
+                        {{ \App\Forms\Input::create('title',
+                            ['placeholder' => 'Meta-Title', 'value' => $category->title ?? '', 'class' => 'mt-5'])
+                            ->show() }}
+                        {{ \App\Forms\TextArea::create('description',
+                            ['placeholder' => 'Meta-Description', 'value' => $category->description ?? '', 'class' => 'mt-3'])
+                            ->rows(3)->show() }}
                     </div>
                     <div class="col-span-12 lg:col-span-6">
                         <div class="grid grid-cols-12 gap-2">
-                            <div id="single-file-upload" class="col-span-12 lg:col-span-6">
-                                {{ \App\Forms\Upload::create('image')->placeholder('Для карточек')->show('image') }}
+                            <div class="col-span-12 lg:col-span-6">
+                                {{ \App\Forms\Upload::create('image', isset($category) ? $category->image->getUploadUrl() : '')->placeholder('Для карточек')->show() }}
                             </div>
-                            <div id="single-file-upload" class="col-span-12 lg:col-span-6">
-                                {{ \App\Forms\Upload::create('icon')->placeholder('Иконка для меню')->show('icon') }}
+                            <div class="col-span-12 lg:col-span-6">
+                                {{ \App\Forms\Upload::create('icon', isset($category) ? $category->icon->getUploadUrl() : '')->placeholder('Иконка для меню')->show() }}
                             </div>
                         </div>
                     </div>
@@ -45,7 +62,7 @@
                 <div class="mt-2">Поле <b>Slug</b> (ссылка на категорию) можно не заполнять, тогда оно заполнится автоматически. При заполнении использовать латинский алфавит.</div>
                 <div class="mt-2">Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</div>
                 <div class="mt-2"><b>Иконки</b> для меню рекомендуется сохранять в форматах разрешающие прозрачный цвет - png, svg. Разрешение не более 200х200.</div>
-
+                <div class="mt-2">Поля <b>Meta</b> используются в SEO. Для того, чтоб они заполнялись автоматически, оставьте их пустыми.</div>
             </div>
         </div>
     </div>

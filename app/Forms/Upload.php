@@ -27,12 +27,12 @@ class Upload
         return $form;
 
     }
-    public function show(string $id_prefix = 'image')
+    public function show()
     {
         return view('forms.upload', [
             'name' => $this->name,
             'src' => $this->src,
-            'id_prefix' => $id_prefix,
+            'id_prefix' => $this->name,
             'placeholder' => $this->placeholder,
         ]);
     }

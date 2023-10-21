@@ -106,7 +106,7 @@ class RegisterService
 
         //Фото
         if ($request['image-clear'] == 'delete') {
-            unlink(public_path() . '/' . $admin->photo);
+            $this->uploadService->removeFile($admin->photo);
             $admin->photo = '';
             $admin->save();
         }

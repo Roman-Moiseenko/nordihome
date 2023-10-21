@@ -8,8 +8,8 @@
     </div>
     <form method="POST" action="{{ route('admin.product.category.store') }}" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="parent">
-        @include('admin.product.category._fields-form')
+        <input type="hidden" name="parent_id">
+        @include('admin.product.category._fields-form', ['category' => null])
     </form>
 
 @endsection

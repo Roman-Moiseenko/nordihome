@@ -25,4 +25,13 @@ class UploadService
         }
         return '';
     }
+
+    public function removeFile($path): void
+    {
+        if (!empty($path)) {
+            $path = ltrim($path, '\\');
+            $path = ltrim($path, '/');
+            unlink(public_path() . '/' . $path);
+        }
+    }
 }

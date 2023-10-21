@@ -5,6 +5,7 @@ use App\Entity\Admin;
 use App\Entity\User\User;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Entity\Product;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -79,6 +80,26 @@ Breadcrumbs::for('admin.product.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Товары', route('admin.product.index'));
 });
+
+Breadcrumbs::for('admin.product.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Добавить новый', route('admin.product.create'));
+});
+Breadcrumbs::for('admin.product.show', function (BreadcrumbTrail $trail, Product $product) {
+    $trail->parent('admin.product.index');
+    $trail->push($product->name, route('admin.product.show', $product));
+});
+Breadcrumbs::for('admin.product.edit', function (BreadcrumbTrail $trail, Product $product) {
+    $trail->parent('admin.product.show', $product);
+    $trail->push('Редактировать', route('admin.product.edit', $product));
+});
+Breadcrumbs::for('admin.product.update', function (BreadcrumbTrail $trail, Product $product) {
+    $trail->parent('admin.product.index');
+    $trail->push($product->name, route('admin.product.show', $product));
+});
+
+
+
 
 //BRAND
 Breadcrumbs::for('admin.product.brand.index', function (BreadcrumbTrail $trail) {

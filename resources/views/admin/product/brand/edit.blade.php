@@ -32,7 +32,7 @@
                                 {{ \App\Forms\TextArea::create('description', ['placeholder' => 'Описание', 'value' => $brand->description])->rows(9)->show() }}
                             </div>
                             <div id="single-file-upload" class="col-span-12 lg:col-span-4">
-                                {{ \App\Forms\Upload::create('file', $brand->photo)->show() }}
+                                {{ \App\Forms\Upload::create('file', $brand->photo->getUploadUrl())->show() }}
                             </div>
                         </div>
                     </div>
