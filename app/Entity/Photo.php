@@ -6,6 +6,8 @@ namespace App\Entity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 
 /**
  * @property int $id
@@ -20,7 +22,7 @@ class Photo extends Model
 {
     protected bool $createThumbsOnSave;
     protected bool $createThumbsOnRequest;
-    protected string $watermark;
+    protected array $watermark;
 
     protected array $thumbs = [];
 
@@ -55,18 +57,21 @@ class Photo extends Model
     {
         parent::__construct($attributes);
 
-        //Конфигурация
+        //TODO Конфигурация перенести в Опции CRM (DB table options) и контейнер зависимости
         $config = Config::get('shop-config.image');
-        if (empty($this->watermark)) $this->watermark = public_path() . $config['watermark'];
+        $this->watermark = $config['watermark'];
+        $this->watermark['file'] = public_path() . $this->watermark['file'];
+
         if (empty($this->thumbs)) $this->thumbs = $config['thumbs'];
 
         $this->createThumbsOnSave = $config['createThumbsOnSave'];
         $this->createThumbsOnRequest = $config['createThumbsOnRequest'];
 
-        $this->catalogUpload = public_path() . '/uploads';
-        $this->catalogThumb = public_path() . '/cache';
-        $this->urlThumb = '/cache';
-        $this->urlUpload = '/uploads';
+        $this->catalogUpload = public_path() . $config['path-uploads'];
+        $this->catalogThumb = public_path() . $config['path-cache'];
+
+        $this->urlUpload = $config['path-uploads'];
+        $this->urlThumb = $config['path-cache'];
     }
 
     public static function upload(UploadedFile $file, string $type = ''): self
@@ -116,7 +121,7 @@ class Photo extends Model
     final public function getThumbUrl(string $thumb): string
     {
         if ($this->createThumbsOnRequest) $this->createThumbs();
-        return $this->urlThumb . $this->patternGeneratePath() . $thumb . '.' . $this->ext();
+        return $this->urlThumb . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
     }
 
     //Путь к файлам для переноса (для Бэкенда)
@@ -128,7 +133,7 @@ class Photo extends Model
 
     final public function getThumbFile(string $thumb): string
     {
-        return $this->catalogThumb . $this->patternGeneratePath() . $thumb . '.' . $this->ext();
+        return $this->catalogThumb . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
     }
 
     public function newUploadFile(UploadedFile $file, string $type = null)
@@ -159,12 +164,18 @@ class Photo extends Model
     {
         foreach ($this->thumbs as $thumb => $params) {
             $thumb_file = $this->getThumbFile($thumb);
-            if (is_file($this->getUploadFile()) && !is_file($thumb_file)) {
-                //Создаем файл с параметрами $params
-                //TODO Установить IMAGE
-                //Изменяем размеры, если указаны,
-                //инсертим вотермарку, если параметр true
-                //Сохраняем $thumb_file
+            if (is_file($this->getUploadFile()) &&
+                !is_file($thumb_file) &&
+                (in_array($this->ext(), ['jpg', 'png', 'jpeg']))) {
+                $manager = new ImageManager(['driver' => 'gd']);
+                $img = $manager->make($this->getUploadFile());
+                if (isset($params['width']) && isset($params['height'])) $img->fit($params['width'], $params['height']);
+                if (isset($params['watermark'])) {
+                    $watermark = $manager->make($this->watermark['file']);
+                    $watermark->resize((int)($img->width() * $this->watermark['size']), (int)($img->width() * $this->watermark['size']));
+                    $img->insert($watermark, $this->watermark['position'], $this->watermark['offset'], $this->watermark['offset']);
+                }
+                $img->save($thumb_file);
             }
         }
     }
@@ -180,6 +191,10 @@ class Photo extends Model
         $path = $this->catalogUpload . $this->patternGeneratePath();
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
+        }
+        $pathThumbs = $this->catalogThumb . $this->patternGeneratePath();
+        if (!file_exists($pathThumbs)) {
+            mkdir($pathThumbs, 0777, true);
         }
         //Переносим Файл
         $this->fileForUpload->move($path, $this->fileForUpload->getClientOriginalName());
@@ -198,13 +213,14 @@ class Photo extends Model
         }
     }
 
+    private function nameFileThumb(string $thumb): string
+    {
+        return $thumb . '_' . $this->id . '.' . $this->ext();
+    }
 
     private function ext(): string
     {
         return pathinfo($this->file, PATHINFO_EXTENSION);
     }
-
-
-
 
 }

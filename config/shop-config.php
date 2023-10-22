@@ -14,7 +14,12 @@ return [
 
     /* IMAGE */
     'image' => [
-        'watermark' => '/images/watermark.png',
+        'watermark' => [
+            'file' => '/images/watermark.png',
+            'size' => 0.2, //от размера изображения
+            'position' => 'bottom-right',
+            'offset' => 20,
+        ],
         'createThumbsOnSave' => true,
         'createThumbsOnRequest' => true,
         'thumbs' => [
@@ -23,11 +28,12 @@ return [
             'card' => ['width' => 700, 'height' => 700,'watermark' => true],
             'original' => ['watermark' => true]
         ],
+        'path-uploads' => '/uploads',
+        'path-cache' => '/cache',
         'default' => [
             'Brand' => '/images/default-brand.png',
             'Catalog.image' => '/images/default-catalog.jpg',
             'Catalog.icon' => '/images/default-catalog.png',
-
 
         ],
         //другие параметры
