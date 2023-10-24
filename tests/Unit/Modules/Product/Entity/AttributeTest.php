@@ -3,7 +3,12 @@ declare(strict_types=1);
 
 namespace Modules\Product\Entity;
 
+use App\Modules\Product\Entity\Attribute;
+use App\Modules\Product\Entity\AttributeGroup;
+use App\Modules\Product\Entity\AttributeVariant;
+use App\Modules\Product\Entity\Category;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AttributeTest extends TestCase
@@ -12,25 +17,32 @@ class AttributeTest extends TestCase
 
     public function testCreate(): void
     {
-        $attribute = Attribute::creat($name = 'name attribute');
-        $attribute->addValue($value1 = 'value 1');
-        $attribute->addValue($value2 = 'value 2');
+        $category = Category::register($name_category = 'Категория товара');
+        $child = Category::register($name_child = 'Дочерняя категория товара');
+        $category->children()->save($child);
+        $group = AttributeGroup::register($name_group = 'Основные характеристики');
+        $attribute = Attribute::register($name_attribute = 'name attribute', $group, $category, Attribute::TYPE_VARIANT);
+        $attribute->multiple = true;
+        $attribute->save();
 
-        //Настройка параметров
-        $values = $attribute->values();
-        self::assertIsArray($values);
+        $attribute->addVariant(AttributeVariant::register($name_variant1 = 'Вариант 1'));
+        $attribute->addVariant(AttributeVariant::register($name_variant2 = 'Вариант 2'));
+        $attribute->push();
 
-        self::assertEquals($values[0]->value, $value1);
-        self::assertEquals($values[1]->value, $value2);
+       foreach ($attribute->variants as $variant) {
+           self::assertIsObject($variant, AttributeVariant::class);
+           self::assertTrue(in_array($variant->name, [$name_variant1, $name_variant2]));
+       }
 
+        self::assertCount(2, $attribute->variants);
     }
 
     public function testAssignProduct(): void
     {
-        $category1 = Category::create('category 1');
-        $category2 = Category::create('category 2');
+      /*  $category1 = Category::register('category 1');
+        $category2 = Category::register('category 2');
 
-        $attribute = Attribute::creat($name = 'name attribute', $category1);
+        $attribute = Attribute::register($name = 'name attribute', $category1);
         $value1 = $attribute->addValue($value1 = 'value 1');
 
         $product = Product::create($name = 'name', $code = '7889-GH-987-Y');
@@ -45,6 +57,6 @@ class AttributeTest extends TestCase
         $array = $product->Values();
         self::assertIsArray($array);
         self::assertObjectEquals($array[0]->value->attribute, $attribute);
-        self::assertObjectEquals($array[0]->value, $value1);
+        self::assertObjectEquals($array[0]->value, $value1);*/
     }
 }

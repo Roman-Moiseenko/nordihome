@@ -49,10 +49,30 @@ class AdminMenu
                         'title' => 'Категории',
                         'route_name' => 'admin.product.category.index',// 'admin.product.category.index'
                     ],
+                    'modification' => [
+                        'icon' => 'package-search',
+                        'title' => 'Модификации',
+                        'route_name' => 'admin.home', // 'admin.product.tag.index'
+                    ],
+                    'option' => [
+                        'icon' => 'package-search',
+                        'title' => 'Опции',
+                        'route_name' => 'admin.home', // 'admin.product.tag.index'
+                    ],
+                    'equivalent' => [
+                        'icon' => 'package-search',
+                        'title' => 'Аналоги',
+                        'route_name' => 'admin.home', // 'admin.product.tag.index'
+                    ],
+                    'group' => [
+                        'icon' => 'package-search',
+                        'title' => 'Группы товаров',
+                        'route_name' => 'admin.home', // 'admin.product.tag.index'
+                    ],
                     'attribute' => [
                         'icon' => 'package-search',
                         'title' => 'Атрибуты',
-                        'route_name' => 'admin.home', // 'admin.product.attribute.index'
+                        'route_name' => 'admin.product.attribute.index',
                     ],
                     'tags' => [
                         'icon' => 'package-search',
@@ -65,6 +85,18 @@ class AdminMenu
                         'route_name' => 'admin.product.brand.index',
                     ],
                 ],
+            ],
+            'discount' => [
+                'icon' => 'building',
+                'title' => 'Акции и скидки',
+                'route_name' => 'admin.home',
+                'can' => '',
+            ],
+            'delivery' => [
+                'icon' => 'building',
+                'title' => 'Доставка',
+                'route_name' => 'admin.home',
+                'can' => '',
             ],
             'dictionary' => [
                 'icon' => 'building',

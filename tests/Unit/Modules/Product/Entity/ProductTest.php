@@ -17,7 +17,7 @@ class ProductTest extends TestCase
 
     public function testCreate(): void
     {
-        //Имя и Слаг
+        //Основные параметры
         $product = Product::register($name = 'name', $code = '7889-GH-987-Y');
 
         self::assertEquals($product->getSlug(), $name);
@@ -63,12 +63,13 @@ class ProductTest extends TestCase
 
 
         //Габариты
-        $dimensions = Dimensions::create($width = 45, $height = 100, $depth = 20, $weight = 12.5); //Для Shop
+        $dimensions = Dimensions::create($width = 45, $height = 100, $depth = 20, $weight = 12500, $measure = Dimensions::MEASURE_G); //Для Shop
         //$package = Dimensions::create($width2 = 20, $height2 = 40, $depth2 = 15, $weight2 = 14); //Для Delivery
         $product->setDimensions($dimensions);
         //$product->setPackage($package);
         $product->getWidth();
-        self::assertEquals($product->getWidth(), $width );
+        self::assertEquals($product->getWidth(), $width);
+        self::assertEquals($product->dimensions->weight(), 12.5);
 
     }
 

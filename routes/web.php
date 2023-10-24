@@ -53,6 +53,8 @@ Route::group(
 
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD
+                Route::resource('attribute', 'AttributeController'); //CRUD
+
                 Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');
                 Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
                 Route::get('/category/{category}/child', 'CategoryController@child')->name('category.child');

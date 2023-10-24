@@ -22,20 +22,25 @@ use Illuminate\Support\Str;
  * @property int $brand_id
  * @property float $current_rating
  * @property float $count_for_sell
- * @property string $status
- * @property string $sell_method
+ * @property bool $published //Опубликован
+ * @property bool $only_offline //Только в магазине
+ * @property bool $pre_order //Установка для всего магазина из опций, после каждый отдельно можно менять
+ * @property bool $not_delivery
+ * @property bool $not_local
  */
 class Product extends Model
 {
-    const SELL_ONLINE = 'online';
-    const SELL_OFFLINE = 'offline';
-    const SELL_ORDER = 'order';
 
-    const STATUS_DRAFT = 'Черновик';
+    //Константы тестировать - делать код и Индексировать Поле!!!
+/*    const STATUS_DRAFT = 'Черновик';
     const STATUS_MODERATION = 'На модерации';
     const STATUS_APPROVED = 'Утвержден';
     const STATUS_PUBLISHED = 'Опубликован';
 
+    const DELIVERY_NOT = 'Нет';
+    const DELIVERY_LOCAL = 'В пределах региона';
+    const DELIVERY_ALL = 'Транспортной компанией';
+*/
 
     public Dimensions $dimensions;
 
@@ -45,8 +50,6 @@ class Product extends Model
         'delayed' => false,
         'dimensions_json' => '{}',
         'frequency_json' => '{}',
-        'sell_method' => self::SELL_ONLINE,
-        'status' => self::STATUS_DRAFT,
         'count_for_sell' => 0,
     ];
 
@@ -57,7 +60,6 @@ class Product extends Model
         'status',
         'description',
         'short',
-        'sell_method',
     ];
 
     protected $hidden = [
@@ -65,6 +67,13 @@ class Product extends Model
     ];
 
     //РЕГИСТРАТОРЫ
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        //Конфигурация
+
+
+    }
 
     public static function register(string $name, string $code, string $slug = ''): self
     {
@@ -118,8 +127,8 @@ class Product extends Model
     public function isVisible(): bool
     {
         if ($this->status != self::STATUS_PUBLISHED) return false;
-        if ($this->count_for_sell == 0 and $this->type_sell == self::SELL_OFFLINE) return false;
-        if ($this->type_sell == self::SELL_OFFLINE) return false;
+        if ($this->count_for_sell == 0 and $this->sell_method == self::SELL_OFFLINE) return false;
+        if ($this->sell_method == self::SELL_OFFLINE) return false;
         return true;
     }
 
@@ -138,17 +147,17 @@ class Product extends Model
 
     public function photo()
     {
-       return $this->morphOne(Photo::class, 'imageable')->where('type', 'main');
+       return $this->morphOne(Photo::class, 'imageable')->where('type', '=','main');
     }
 
     public function photos()
     {
-       return $this->morphMany(Photo::class, 'imageable');
+       return $this->morphMany(Photo::class, 'imageable')->where('type', '<>','main');
     }
 
     public function videos()
     {
-        return $this->hasMany(Video::class, 'product_id', 'id');
+        return $this->morphMany(Video::class, 'videoable');
     }
 
     public function categories()

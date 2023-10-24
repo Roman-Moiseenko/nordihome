@@ -90,15 +90,14 @@ class Category extends Model
         }
     }
 
-
-
     public function products(): HasMany
     {
-        //TODO
+        return $this->hasMany(Product::class, 'main_category_id', 'id');
     }
 
     public function allProducts(int $pagination = null):? Product
     {
+        //TODO Связанные таблицы ......
         $subCategories = []; //Получаем все подкатегории всех уровней вложенности
         //Ищем товары, у которых category_id IN $subCategories
         //Ищем по вторичным категориям в таблице CategoryAssignment

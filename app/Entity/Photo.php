@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Modules\Admin\Entity\Options;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
@@ -49,29 +51,30 @@ class Photo extends Model
     //Генерация пути
     public function patternGeneratePath(): string
     {
-        return '/' . strtolower(class_basename($this->imageable)) . '/' . $this->imageable->id . '/';
+        //strtolower
+        return '/' . Str::slug(class_basename($this->imageable)) . '/' . $this->imageable->id . '/';
     }
 
     //Создание объекта
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-
+        $options = new Options();
         //TODO Конфигурация перенести в Опции CRM (DB table options) и контейнер зависимости
-        $config = Config::get('shop-config.image');
-        $this->watermark = $config['watermark'];
-        $this->watermark['file'] = public_path() . $this->watermark['file'];
+       // $config = Config::get('shop-config.image');
+        $this->watermark = $options->image->watermark;// $config['watermark'];
 
-        if (empty($this->thumbs)) $this->thumbs = $config['thumbs'];
+        if (empty($this->thumbs)) $this->thumbs = $options->image->thumbs;// $config['thumbs'];
 
-        $this->createThumbsOnSave = $config['createThumbsOnSave'];
-        $this->createThumbsOnRequest = $config['createThumbsOnRequest'];
+        $this->createThumbsOnSave = $options->image->createThumbsOnSave;// $config['createThumbsOnSave'];
+        $this->createThumbsOnRequest = $options->image->createThumbsOnRequest;// $config['createThumbsOnRequest'];
 
-        $this->catalogUpload = public_path() . $config['path-uploads'];
-        $this->catalogThumb = public_path() . $config['path-cache'];
+        $this->catalogUpload = $options->image->getPublicPath('uploads');//$config['path-uploads'];
+        $this->catalogThumb =   $options->image->getPublicPath('cache');//public_path() . $config['path-cache'];
 
-        $this->urlUpload = $config['path-uploads'];
-        $this->urlThumb = $config['path-cache'];
+        $this->urlUpload = $options->image->path['uploads'];// $config['path-uploads'];
+        $this->urlThumb = $options->image->path['cache'];//$config['path-cache'];
+
     }
 
     public static function upload(UploadedFile $file, string $type = ''): self
@@ -162,6 +165,7 @@ class Photo extends Model
 
     private function createThumbs(): void
     {
+        if (isset($this->imageable->thumbs) && !$this->imageable->thumbs) return;//В связном объекте запрет на кешированные изображения
         foreach ($this->thumbs as $thumb => $params) {
             $thumb_file = $this->getThumbFile($thumb);
             if (is_file($this->getUploadFile()) &&

@@ -52,7 +52,7 @@ class Picture
             'pathImage' => $this->pathImage,
             'tagIcon' => $this->tagIcon,
             'description' => $this->description,
-            'imageDefault' => $this->imageDefault
+            'imageDefault' => $this->imageDefault,
         ]);
     }
 

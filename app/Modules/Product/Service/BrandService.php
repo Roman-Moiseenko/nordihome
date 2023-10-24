@@ -41,7 +41,7 @@ class BrandService
         $brand->description = $request['description'];
         $brand->url = $request['url'];
         $brand->setSameAs($request['sameAs']);
-
+        $brand->update();
         if ($request['file-clear'] == 'delete') {
             $brand->photo->delete();
             $brand->refresh();

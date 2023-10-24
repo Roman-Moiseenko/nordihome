@@ -6,6 +6,7 @@ use App\Entity\User\User;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Entity\Attribute;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -146,8 +147,6 @@ Breadcrumbs::for('admin.product.category.show', function (BreadcrumbTrail $trail
     $trail->push($category->name, route('admin.product.category.show', $category));
 });
 
-
-
 Breadcrumbs::for('admin.product.category.edit', function (BreadcrumbTrail $trail, Category $category) {
     $trail->parent('admin.product.category.show', $category);
     $trail->push('Редактировать', route('admin.product.category.edit', $category));
@@ -156,6 +155,31 @@ Breadcrumbs::for('admin.product.category.update', function (BreadcrumbTrail $tra
     $trail->parent('admin.product.category.index');
     $trail->push($category->name, route('admin.product.category.show', $category));
 });
+
+//ATTRIBUTE
+Breadcrumbs::for('admin.product.attribute.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Атрибуты', route('admin.product.attribute.index'));
+});
+Breadcrumbs::for('admin.product.attribute.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.attribute.index');
+    $trail->push('Добавить новый', route('admin.product.attribute.create'));
+});
+Breadcrumbs::for('admin.product.attribute.show', function (BreadcrumbTrail $trail, Attribute $attribute) {
+    $trail->parent('admin.product.attribute.index');
+    $trail->push($attribute->name, route('admin.product.attribute.show', $attribute));
+});
+Breadcrumbs::for('admin.product.attribute.edit', function (BreadcrumbTrail $trail, Attribute $attribute) {
+    $trail->parent('admin.product.attribute.show', $attribute);
+    $trail->push('Редактировать', route('admin.product.attribute.edit', $attribute));
+});
+Breadcrumbs::for('admin.product.attribute.update', function (BreadcrumbTrail $trail, Attribute $attribute) {
+    $trail->parent('admin.product.attribute.index');
+    $trail->push($attribute->name, route('admin.product.attribute.show', $attribute));
+});
+
+
+
 
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {

@@ -12,6 +12,8 @@ return [
     'options-list' => [20, 40, 100, 200, 500],
     'options-card' => [3, 9, 15, 30, 90],
 
+    //***  OPTIONS   **//
+
     /* IMAGE */
     'image' => [
         'watermark' => [
@@ -28,14 +30,32 @@ return [
             'card' => ['width' => 700, 'height' => 700,'watermark' => true],
             'original' => ['watermark' => true]
         ],
-        'path-uploads' => '/uploads',
-        'path-cache' => '/cache',
+        'path' => [
+            'uploads' => '/uploads',
+            'cache' => '/cache',
+        ],
+        'path-uploads' => '/uploads', //del
+        'path-cache' => '/cache', //del
         'default' => [
             'Brand' => '/images/default-brand.png',
             'Catalog.image' => '/images/default-catalog.jpg',
             'Catalog.icon' => '/images/default-catalog.png',
 
+        ],//другие параметры
+    ],
+
+    /* SHOP => DB*/
+
+    'shop' => [
+        'preorder' => false,
+        'only-offline' => false,
+        'show-finished' => true,
+        'delivery' => [
+            'local' => true,
+            'all' => true,
         ],
-        //другие параметры
+        'product' => [
+
+        ],
     ],
 ];

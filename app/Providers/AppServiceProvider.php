@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Modules\Admin\Entity\Options;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        App::bind(Options::class, function() {
+            return new Options();
+        });
+
     }
 
     /**
@@ -21,4 +26,5 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
 }
