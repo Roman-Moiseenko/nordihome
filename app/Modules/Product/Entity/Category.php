@@ -132,4 +132,12 @@ class Category extends Model
         }
     }
 
+    public function getSlug()
+    {
+        $slug = '';
+        if (isset($this->parent)) {
+            $slug = $this->parent->getSlug();
+        }
+        return $slug = $slug . '/' . $this->slug;
+    }
 }

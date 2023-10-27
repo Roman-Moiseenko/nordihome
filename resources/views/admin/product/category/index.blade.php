@@ -21,6 +21,7 @@
                 <th class="whitespace-nowrap">IMG</th>
                 <th class="whitespace-nowrap">ICON</th>
                 <th class="whitespace-nowrap">НАЗВАНИЕ</th>
+                <th class="whitespace-nowrap">SLUG</th>
                 <th class="text-center whitespace-nowrap">ВЛОЖЕННЫЕ</th>
                 <th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</th>
             </tr>

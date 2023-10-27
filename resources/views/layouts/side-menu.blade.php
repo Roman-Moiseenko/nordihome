@@ -6,8 +6,9 @@
 
 @section('content')
     <div class="py-5 md:py-0">
+
         @include('admin.components.mobile-menu')
-        @include('admin.components.top-bar', ['current_user' => \Illuminate\Support\Facades\Auth::guard('admin')->user()])
+            @include('admin.components.top-bar', ['current_user' => \Illuminate\Support\Facades\Auth::guard('admin')->user()] )
         <div class="flex overflow-hidden">
             <!-- BEGIN: Side Menu -->
             <nav class="side-nav z-50 -mt-4 hidden w-[105px] overflow-x-hidden px-5 pb-16 pt-32 md:block xl:w-[260px]">
@@ -21,14 +22,14 @@
                                     <a href="{{ isset($menu['route_name']) ? route($menu['route_name']) : 'javascript:;' }}"
                                        class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                         <div class="side-menu__icon">
-                                            <i data-lucide="{{ $menu['icon'] }}" width="24" height="24"></i>
+                                            <x-base.lucide icon="{{ $menu['icon'] }}" />
                                         </div>
                                         <div class="side-menu__title">
                                             {{ $menu['title'] }}
                                             @if (isset($menu['sub_menu']))
                                                 <div
                                                     class="side-menu__sub-icon {{ $firstLevelActiveIndex == $menuKey ? 'transform rotate-180' : '' }}">
-                                                    <i data-lucide="chevron-down" width="24" height="24"></i>
+                                                    <x-base.lucide icon="chevron-down" />
                                                 </div>
                                             @endif
                                         </div>
@@ -40,16 +41,14 @@
                                                     <a href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name']) : 'javascript:;' }}"
                                                        class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                                         <div class="side-menu__icon">
-                                                            <i data-lucide="{{ $subMenu['icon'] }}" width="24"
-                                                               height="24"></i>
+                                                            <x-base.lucide icon="{{ $subMenu['icon'] }}" />
                                                         </div>
                                                         <div class="side-menu__title">
                                                             {{ $subMenu['title'] }}
                                                             @if (isset($subMenu['sub_menu']))
                                                                 <div
                                                                     class="side-menu__sub-icon {{ $secondLevelActiveIndex == $subMenuKey ? 'transform rotate-180' : '' }}">
-                                                                    <i data-lucide="chevron-down" width="24"
-                                                                       height="24"></i>
+                                                                    <x-base.lucide icon="chevron-down" />
                                                                 </div>
                                                             @endif
                                                         </div>
@@ -62,8 +61,7 @@
                                                                     <a href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name']) : 'javascript:;' }}"
                                                                        class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                                                         <div class="side-menu__icon">
-                                                                            <i data-lucide="{{ $lastSubMenu['icon'] }}"
-                                                                               width="24" height="24"></i>
+                                                                            <x-base.lucide icon="{{ $lastSubMenu['icon'] }}" />
                                                                         </div>
                                                                         <div class="side-menu__title">
                                                                             {{ $lastSubMenu['title'] }}
@@ -93,3 +91,14 @@
         </div>
     </div>
 @endsection
+@once
+    @push('scripts')
+        @vite('resources/js/vendor/tippy/index.js')
+    @endpush
+@endonce
+
+@once
+    @push('scripts')
+        @vite('resources/js/layouts/side-menu/index.js')
+    @endpush
+@endonce

@@ -11,13 +11,6 @@ use Illuminate\Http\UploadedFile;
 
 class BrandService
 {
-    private UploadService $uploadService;
-
-    public function __construct(UploadService $uploadService)
-    {
-        $this->uploadService = $uploadService;
-    }
-
     public function register(Request $request): Brand
     {
         $brand = Brand::register(
@@ -56,7 +49,6 @@ class BrandService
     public function delete(Brand $brand)
     {
         if (empty($brand->products())) {
-            $this->uploadService->removeFile($brand->photo);
             Brand::destroy($brand->id);
         } else {
             throw new \DomainException('Нельзя удалить бренд с товарами');

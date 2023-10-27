@@ -28,40 +28,54 @@
                 </form>
         </div>
 
-        <div class="intro-y box col-span-12 p-5">
-            <div class="overflow-x-auto">
-        <table class="table table-hover">
-            <thead class="table-dark">
-            <tr>
-                <th class="whitespace-nowrap">Клиент</th>
-                <th class="whitespace-nowrap text-center">Последний заказ</th>
-                <th class="whitespace-nowrap text-center">Кол-во заказов</th>
-                <th class="whitespace-nowrap text-center">Общая сумма</th>
-                <th class="whitespace-nowrap text-right">Регион</th>
-                <!--th>Role</th-->
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($users as $user)
-                <tr>
-                    <td>
-                        <a href="{{ route('admin.users.show', $user) }}">
-                            <span class="font-medium">{{ $user->email }}</span>
-                            <br>
-                            <span class="text-slate-500 text-xs mt-0.5">{{ $user->phone }}</span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <span class="text-slate-500  text-xs p-1 mt-0.5 rounded-full text-white bg-success">2 дня</span>
-                    </td>
-                    <td class="text-center">2</td>
-                    <td class="text-center">9 999 ₽</td>
-                    <td class="text-right">Калининградская область</td>
-                </tr>
-            @endforeach
+        <div class="intro-y box col-span-12 overflow-auto lg:overflow-visible p-4">
+            <x-base.table class="table table-hover">
+                <x-base.table.thead class="table-dark">
+                    <x-base.table.tr>
+                        <x-base.table.th class="whitespace-nowrap border-b-0">
+                            Клиент
+                        </x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap border-b-0">
+                            Последний заказ
+                        </x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap border-b-0 text-center">
+                            Кол-во заказов
+                        </x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap border-b-0 text-center">
+                            Общая сумма
+                        </x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap border-b-0 text-right">
+                            Регион
+                        </x-base.table.th>
+                    </x-base.table.tr>
+                </x-base.table.thead>
+                <x-base.table.tbody>
+                    @foreach ($users as $user)
+                        <x-base.table.tr class="intro-x">
+                            <x-base.table.td>
+                                <a href="{{ route('admin.users.show', $user) }}">
+                                    <span class="font-medium">{{ $user->email }}</span>
+                                    <br>
+                                    <span class="text-slate-500 text-xs mt-0.5">{{ $user->phone }}</span>
+                                </a>
+                            </x-base.table.td>
+                            <x-base.table.td class="text-center">
+                                <span class="text-slate-500  text-xs p-1 mt-0.5 rounded-full text-white bg-success">2 дня</span>
+                            </x-base.table.td>
+                            <x-base.table.td class="text-center">
+                                2
+                            </x-base.table.td>
+                            <x-base.table.td class="text-center">
+                                9 999 ₽
+                            </x-base.table.td>
+                            <x-base.table.td class="text-right">
+                                Калининградская область
+                            </x-base.table.td>
+                        </x-base.table.tr>
+                    @endforeach
+                </x-base.table.tbody>
 
-            </tbody>
-        </table></div>
+            </x-base.table>
         </div>
     </div>
 

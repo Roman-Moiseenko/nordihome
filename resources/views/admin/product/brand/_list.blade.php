@@ -11,12 +11,11 @@
     <td class="table-report__action w-56">
         <div class="flex justify-center items-center">
             <a class="flex items-center mr-3" href="{{ route('admin.product.brand.edit', $brand) }}">
-                <i data-lucide="check-square" class="w-4 h-4"></i>
+                <x-base.lucide icon="check-square" class="w-4 h-4"/>
                 Edit </a>
             <a class="flex items-center text-danger" href="#"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.brand.destroy', $brand) }}
-               >
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
+               ><x-base.lucide icon="trash-2" class="w-4 h-4"/>
                 Delete </a>
         </div>
     </td>

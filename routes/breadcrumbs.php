@@ -178,7 +178,10 @@ Breadcrumbs::for('admin.product.attribute.update', function (BreadcrumbTrail $tr
     $trail->push($attribute->name, route('admin.product.attribute.show', $attribute));
 });
 
-
+Breadcrumbs::for('admin.product.attribute.groups', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.attribute.index');
+    $trail->push('Группы', route('admin.product.attribute.groups'));
+});
 
 
 

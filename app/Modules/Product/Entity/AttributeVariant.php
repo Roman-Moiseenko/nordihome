@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 class AttributeVariant extends Model
 {
     public $timestamps = false;
+    public $thumbs = false;
     protected $fillable = [
         'name', 'slug', 'attribute_id'
     ];
@@ -36,6 +37,15 @@ class AttributeVariant extends Model
 
     public function image()
     {
-        return $this->morphOne(Photo::class, 'imageable');
+        return $this->morphOne(Photo::class, 'imageable')->withDefault();
+    }
+
+    public function getImage(): string
+    {
+        if (empty($this->image->file)) {
+            return '/images/no-image.jpg';
+        } else {
+            return $this->image->getUploadUrl();
+        }
     }
 }

@@ -27,12 +27,13 @@ class Upload
         return $form;
 
     }
-    public function show()
+    public function show(bool $inline = false, string $prefix = null)
     {
-        return view('forms.upload', [
+        $view = ($inline) ? 'forms.upload-inline' : 'forms.upload';
+        return view($view, [
             'name' => $this->name,
             'src' => $this->src,
-            'id_prefix' => $this->name,
+            'id_prefix' => $prefix ?? $this->name,
             'placeholder' => $this->placeholder,
         ]);
     }

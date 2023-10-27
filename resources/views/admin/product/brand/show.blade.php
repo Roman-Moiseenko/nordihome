@@ -24,15 +24,16 @@
             <div class="font-medium text-center lg:text-left lg:mt-3">Информация о бренде</div>
             <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                 <div class="truncate sm:whitespace-normal flex items-center">
-                    <i data-lucide="link" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
+                    <x-base.lucide icon="external-link" class="w-4 h-4 mr-2"/>
                     {{ $brand->url }} </div>
                 <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                    <i data-lucide="file-text" width="24" height="24" class="lucide lucide-mail w-6 h-6 mr-2"></i>
+                    <x-base.lucide icon="file-text" class="w-4 h-4 mr-2"/>
+
                     {{ $brand->description }} </div>
                 @foreach($brand->getSameAs() as $url_sameAs)
 
                 <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                    <i data-lucide="link" width="24" height="24" class="lucide lucide-phone w-4 h-4 mr-2"></i>
+                    <x-base.lucide icon="link" class="w-4 h-4 mr-2"/>
                     {{ $url_sameAs }} </div>
                 @endforeach
             </div>
@@ -66,7 +67,7 @@
         <li class="nav-item">
             <a href="#" class="btn btn-outline-secondary py-1 px-2"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.brand.destroy', $brand) }}>
-                <i data-lucide="trash-2" width="24" height="24" class="lucide lucide-key-round w-4 h-4 mr-2"></i>
+                <x-base.lucide icon="trash-2" class="w-4 h-4 mr-2"/>
                 Удалить </a>
         </li>
     </ul>

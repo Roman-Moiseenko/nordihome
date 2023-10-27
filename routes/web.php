@@ -48,16 +48,27 @@ Route::group(
                 'namespace' => 'Product',
             ],
             function () {
+
                 Route::resource('/', 'ProductController'); //CRUD
                 //Доп. - сменить категорию, добавить фото
+                Route::get('/attribute/groups', 'AttributeController@groups')->name('attribute.groups');
+                Route::delete('/attribute/group-destroy/{group}', 'AttributeController@group_destroy')->name('attribute.group-destroy');
 
-                Route::resource('brand', 'BrandController'); //CRUD
-                Route::resource('category', 'CategoryController'); //CRUD
-                Route::resource('attribute', 'AttributeController'); //CRUD
+
+                Route::post('/attribute/group-add', 'AttributeController@group_add')->name('attribute.group-add');
+                Route::post('/attribute/group-rename/{group}', 'AttributeController@group_rename')->name('attribute.group-rename');
+                Route::post('/attribute/variant-image/{variant}', 'AttributeController@variant_image')->name('attribute.variant-image');
+
+                Route::post('/attribute/{group}/group-up', 'AttributeController@group_up')->name('attribute.group-up');
+                Route::post('/attribute/{group}/group-down', 'AttributeController@group_down')->name('attribute.group-down');
 
                 Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');
                 Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
                 Route::get('/category/{category}/child', 'CategoryController@child')->name('category.child');
+
+                Route::resource('brand', 'BrandController'); //CRUD
+                Route::resource('category', 'CategoryController'); //CRUD
+                Route::resource('attribute', 'AttributeController'); //CRUD
 
             }
         );

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html class="light" lang="ru-RU">
+<html class="light default" lang="ru-RU" >
 <!-- BEGIN: Head -->
 
 <head>
@@ -19,7 +19,7 @@
 @yield('head')
 
 <!-- BEGIN: CSS Assets-->
-    @vite('resources/sass/admin.scss')
+    @vite('resources/css/admin.css')
 @stack('styles')
 <!-- END: CSS Assets-->
 </head>
@@ -27,7 +27,7 @@
 
 <body class="@yield('body')">
 @yield('content')
-
+@include('flash::message')
 @vite('resources/js/admin.js')
 
 <!-- BEGIN: Vendor JS Assets-->
@@ -39,10 +39,6 @@
 <!-- END: Pages, layouts, components JS Assets-->
 <script type="text/javascript">
     /* скрываем окно сообщения ч/з 3 сек */
-    setTimeout(() => {
-        let _alert = document.querySelector('div.alert');
-        _alert.style.display = "none";
-    }, 3000);
 </script>
 </body>
 

@@ -20,13 +20,14 @@ class AttributeTest extends TestCase
         $category = Category::register($name_category = 'Категория товара');
         $child = Category::register($name_child = 'Дочерняя категория товара');
         $category->children()->save($child);
-        $group = AttributeGroup::register($name_group = 'Основные характеристики');
-        $attribute = Attribute::register($name_attribute = 'name attribute', $group, $category, Attribute::TYPE_VARIANT);
+        $group = AttributeGroup::register($name_group = 'Основные характеристики-2');
+        $attribute = Attribute::register($name_attribute = 'name attribute', $group->id, Attribute::TYPE_VARIANT);
+        $attribute->categories()->attach($category->id);
         $attribute->multiple = true;
         $attribute->save();
 
-        $attribute->addVariant(AttributeVariant::register($name_variant1 = 'Вариант 1'));
-        $attribute->addVariant(AttributeVariant::register($name_variant2 = 'Вариант 2'));
+        $attribute->addVariant($name_variant1 = 'Вариант 1');
+        $attribute->addVariant($name_variant2 = 'Вариант 2');
         $attribute->push();
 
        foreach ($attribute->variants as $variant) {

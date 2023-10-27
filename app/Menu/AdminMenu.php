@@ -45,42 +45,42 @@ class AdminMenu
                         'route_name' => 'admin.product.index', // 'admin.product.index'
                     ],
                     'category' => [
-                        'icon' => 'package-search',
+                        'icon' => 'file-box',
                         'title' => 'Категории',
                         'route_name' => 'admin.product.category.index',// 'admin.product.category.index'
                     ],
                     'modification' => [
-                        'icon' => 'package-search',
+                        'icon' => 'file-cog',
                         'title' => 'Модификации',
                         'route_name' => 'admin.home', // 'admin.product.tag.index'
                     ],
                     'option' => [
-                        'icon' => 'package-search',
+                        'icon' => 'package-plus',
                         'title' => 'Опции',
                         'route_name' => 'admin.home', // 'admin.product.tag.index'
                     ],
                     'equivalent' => [
-                        'icon' => 'package-search',
+                        'icon' => 'package-check',
                         'title' => 'Аналоги',
                         'route_name' => 'admin.home', // 'admin.product.tag.index'
                     ],
                     'group' => [
-                        'icon' => 'package-search',
+                        'icon' => 'boxes',
                         'title' => 'Группы товаров',
                         'route_name' => 'admin.home', // 'admin.product.tag.index'
                     ],
                     'attribute' => [
-                        'icon' => 'package-search',
+                        'icon' => 'blocks',
                         'title' => 'Атрибуты',
                         'route_name' => 'admin.product.attribute.index',
                     ],
                     'tags' => [
-                        'icon' => 'package-search',
+                        'icon' => 'tags',
                         'title' => 'Метки',
                         'route_name' => 'admin.home', // 'admin.product.tag.index'
                     ],
                     'brands' => [
-                        'icon' => 'package-search',
+                        'icon' => 'pocket',
                         'title' => 'Бренды',
                         'route_name' => 'admin.product.brand.index',
                     ],

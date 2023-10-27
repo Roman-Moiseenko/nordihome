@@ -7,7 +7,6 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Service\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Config;
 
 class CategoryController extends Controller
 {

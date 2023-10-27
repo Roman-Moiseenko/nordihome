@@ -6,97 +6,115 @@
             Атрибуты
         </h2>
     </div>
-
-    <div class="flex mt-5">
-        <div class="col-span-1 items-center flex mr-6">
-            <span class="text-base font-medium my-auto">Фильтрация</span>
-        </div>
-
-            <select id="select-category" name="category_id" class="tom-select w-72 mt-3 sm:mt-0">
-                <option value="0"></option>
-                @foreach($categories as $category)
+    <div class="intro-y box p-5 mt-5">
+        <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12 lg:col-span-3">
+                <x-base.form-label for="select-category">Категории</x-base.form-label>
+                <x-base.tom-select id="select-category" name="category_id"
+                                   class="w-full" data-placeholder="Выберите категорию">
+                    <option value="0"></option>
+                    @foreach($categories as $category)
                         <option value="{{ $category->id }}"
-                                {{ $category->id == $category_id ? 'selected' : ''}} >
-                                @for($i = 0; $i<$category->depth; $i++) - @endfor
+                            {{ $category->id == $category_id ? 'selected' : ''}} >
+                            @for($i = 0; $i<$category->depth; $i++) - @endfor
                             {{ $category->name }}
                         </option>
-                @endforeach
-            </select>
-        <select id="select-group" name="group_id" class="tom-select w-72 ml-3 sm:mt-0">
-            <option value="0"></option>
-            @foreach($groups as $group)
-                <option value="{{ $group->id }}" {{ $group->id == $group_id ? 'selected' : ''}}>
-                    {{ $group->name }}
-                </option>
-            @endforeach
-        </select>
-        <div class="text-center">
-            <div id="dropdown-group-add" class="dropdown inline-block" data-tw-placement="bottom-start"> <button class="dropdown-toggle btn btn-primary" aria-expanded="false" data-tw-toggle="dropdown"> Filter Dropdown <i data-lucide="chevron-down" class="w-4 h-4 ml-2"></i> </button>
-                <div class="dropdown-menu">
-                    <div class="dropdown-content">
-                        <div class="p-2">
-                            <div>
-                                <div class="text-xs">From</div> <input type="text" class="form-control mt-2 flex-1" placeholder="example@gmail.com" />
+                    @endforeach
+                </x-base.tom-select>
+            </div>
+            <div class="col-span-12 lg:col-span-3 border-l pl-4">
+                <x-base.form-label for="select-group">Группы</x-base.form-label>
+                <x-base.tom-select id="select-group" name="group_id" class="w-full" data-placeholder="Выберите группу">
+                    <option value="0"></option>
+                    @foreach($groups as $group)
+                        <option value="{{ $group->id }}" {{ $group->id == $group_id ? 'selected' : ''}}>
+                            {{ $group->name }}
+                        </option>
+                    @endforeach
+                </x-base.tom-select>
+            </div>
+            <div class="col-span-12 lg:col-span-3 flex">
+                <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+                    <x-base.popover.button as="x-base.button" variant="primary">Добавить
+                        <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                    </x-base.popover.button>
+
+                    <x-base.popover.panel>
+                        <form action="{{ route('admin.product.attribute.group-add') }}" METHOD="POST">
+                            @csrf
+                            <div class="p-2">
+                                <div>
+                                    <div class="text-xs text-left">Группа</div>
+                                    <x-base.form-input name="name" class="flex-1 mt-2" type="text"
+                                                       placeholder="Уникальное имя"/>
+                                </div>
+                                <div class="flex items-center mt-3">
+                                    <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown"
+                                                   variant="secondary" type="button">
+                                        Отмена
+                                    </x-base.button>
+                                    <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                        Добавить
+                                    </x-base.button>
+                                </div>
                             </div>
-                            <div class="mt-3">
-                                <div class="text-xs">To</div> <input type="text" class="form-control mt-2 flex-1" placeholder="example@gmail.com" />
-                            </div>
-                            <div class="flex items-center mt-3"> <button data-dismiss="dropdown" class="btn btn-secondary w-32 ml-auto">Close</button> <button class="btn btn-primary w-32 ml-2">Search</button> </div>
-                        </div>
-                    </div>
-                </div>
+                        </form>
+                    </x-base.popover.panel>
+
+                </x-base.popover>
+                <x-base.button id="groups"
+                               class="w-32 mt-auto ml-6 w-auto" variant="secondary" type="button"
+                               onclick="window.location.href='{{ route('admin.product.attribute.groups') }}'">
+                    Управление группами
+                </x-base.button>
             </div>
         </div>
-
-
     </div>
+
     <script>
+        /* Filters */
         const urlParams = new URLSearchParams(window.location.search);
-//        const myDropdown = tailwind.Dropdown.getInstance(document.querySelector("#dropdown-group-add"));
         let selectCategory = document.getElementById('select-category');
         selectCategory.addEventListener('change', function () {
             let p = selectCategory.options[selectCategory.selectedIndex].value;
             urlParams.set('category_id', p);
             window.location.search = urlParams;
         });
-        let selectGroup= document.getElementById('select-group');
+        let selectGroup = document.getElementById('select-group');
         selectGroup.addEventListener('change', function () {
             let p = selectGroup.options[selectGroup.selectedIndex].value;
             urlParams.set('group_id', p);
-            myDropdown.hide();
-            //window.location.search = urlParams;
+            window.location.search = urlParams;
         });
 
-        //
     </script>
-
 
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
-        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+        <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <button class="btn btn-primary shadow-md mr-2"
                     onclick="window.location.href='{{ route('admin.product.attribute.create') }}'">Добавить атрибут
             </button>
             {{ $prod_attributes->links('admin.components.count-paginator') }}
         </div>
 
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-        <table class="table -mt-2">
-            <thead>
-            <tr>
-                <th class="whitespace-nowrap">ИКОНКА</th>
-                <th class="whitespace-nowrap">АТРИБУТ</th>
-                <th class="text-center whitespace-nowrap">ТИП</th>
-                <th class="text-center whitespace-nowrap"></th>
-                <th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($prod_attributes as $prod_attribute)
-                @include('admin.product.attribute._list', ['prod_attribute' => $prod_attribute])
-            @endforeach
-            </tbody>
-        </table>
+        <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
+            <x-base.table class="table table-hover">
+                <x-base.table.thead class="table-dark">
+                    <x-base.table.tr>
+                        <x-base.table.th class="whitespace-nowrap">ИКОНКА</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap">АТРИБУТ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ТИП</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ФИЛЬТР</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
+                    </x-base.table.tr>
+                </x-base.table.thead>
+                <x-base.table.tbody>
+                @foreach($prod_attributes as $prod_attribute)
+                    @include('admin.product.attribute._list', ['prod_attribute' => $prod_attribute])
+                @endforeach
+                </x-base.table.tbody>
+            </x-base.table>
         </div>
     </div>
 

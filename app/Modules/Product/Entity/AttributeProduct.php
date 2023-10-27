@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $product_id
  * @property string $value
  */
-class AttributeAssignment extends Model
+class AttributeProduct extends Model
 {
 
     public $timestamps = false;
