@@ -49,7 +49,7 @@ Route::group(
             ],
             function () {
 
-                Route::resource('/', 'ProductController'); //CRUD
+                Route::resource('', 'ProductController'); //CRUD
                 //Доп. - сменить категорию, добавить фото
                 Route::get('/attribute/groups', 'AttributeController@groups')->name('attribute.groups');
                 Route::delete('/attribute/group-destroy/{group}', 'AttributeController@group_destroy')->name('attribute.group-destroy');
