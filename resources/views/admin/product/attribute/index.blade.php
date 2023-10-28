@@ -33,7 +33,7 @@
                     @endforeach
                 </x-base.tom-select>
             </div>
-            <div class="col-span-12 lg:col-span-3 flex">
+            <div class="col-span-12 lg:col-span-6 flex">
                 <x-base.popover class="inline-block mt-auto" placement="bottom-start">
                     <x-base.popover.button as="x-base.button" variant="primary">Добавить
                         <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
