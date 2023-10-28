@@ -42,12 +42,12 @@ class AdminMenu
                     'product' => [
                         'icon' => 'package-open',
                         'title' => 'Все Товары',
-                        'route_name' => 'admin.product.index', // 'admin.product.index'
+                        'route_name' => 'admin.product.index',
                     ],
                     'category' => [
                         'icon' => 'file-box',
                         'title' => 'Категории',
-                        'route_name' => 'admin.product.category.index',// 'admin.product.category.index'
+                        'route_name' => 'admin.product.category.index',
                     ],
                     'modification' => [
                         'icon' => 'file-cog',
@@ -77,7 +77,7 @@ class AdminMenu
                     'tags' => [
                         'icon' => 'tags',
                         'title' => 'Метки',
-                        'route_name' => 'admin.home', // 'admin.product.tag.index'
+                        'route_name' => 'admin.product.tag.index',
                     ],
                     'brands' => [
                         'icon' => 'pocket',

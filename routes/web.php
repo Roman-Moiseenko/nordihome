@@ -54,7 +54,6 @@ Route::group(
                 Route::get('/attribute/groups', 'AttributeController@groups')->name('attribute.groups');
                 Route::delete('/attribute/group-destroy/{group}', 'AttributeController@group_destroy')->name('attribute.group-destroy');
 
-
                 Route::post('/attribute/group-add', 'AttributeController@group_add')->name('attribute.group-add');
                 Route::post('/attribute/group-rename/{group}', 'AttributeController@group_rename')->name('attribute.group-rename');
                 Route::post('/attribute/variant-image/{variant}', 'AttributeController@variant_image')->name('attribute.variant-image');
@@ -65,6 +64,12 @@ Route::group(
                 Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');
                 Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
                 Route::get('/category/{category}/child', 'CategoryController@child')->name('category.child');
+
+                Route::get('/tags', 'TagController@index')->name('tag.index');
+                Route::post('/tag/create', 'TagController@create')->name('tag.create');
+                Route::post('/tag/{tag}/rename', 'TagController@rename')->name('tag.rename');
+                Route::delete('/tag/{tag}/destroy', 'TagController@destroy')->name('tag.destroy');
+
 
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD

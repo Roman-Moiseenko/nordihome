@@ -3,7 +3,7 @@
     <td class="w-20"><div class="image-fit w-10 h-10"><img class="rounded-full" src="{{ $category->getIcon() }}" alt="{{ $category->name }}"></div></td>
     <td><a href="{{ route('admin.product.category.show', $category) }}" class="font-medium">{{ $category->name }}</a></td>
 
-    <td><span class="text-slate-500 flex items-center"><x-base.lucide icon="external-link" class="w-4 h-4"/> /categories{{ $category->getSlug() }}</span></td>
+    <td><span class="text-slate-500 flex items-center"><x-base.lucide icon="external-link" class="w-4 h-4"/> {{ $category->getSlug() }}</span></td>
 
     <td class="w-40">
         <div class="flex justify-center">

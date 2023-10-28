@@ -138,6 +138,6 @@ class Category extends Model
         if (isset($this->parent)) {
             $slug = $this->parent->getSlug();
         }
-        return $slug = $slug . '/' . $this->slug;
+        return '/categories' . $slug . '/' . $this->slug;
     }
 }

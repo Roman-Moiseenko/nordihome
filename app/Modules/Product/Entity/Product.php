@@ -27,6 +27,10 @@ use Illuminate\Support\Str;
  * @property bool $pre_order //Установка для всего магазина из опций, после каждый отдельно можно менять
  * @property bool $not_delivery
  * @property bool $not_local
+ *
+ * @property Tag[] $tags
+ * @property Category[] $categories
+ * @property Attribute[] $prod_attributes
  */
 class Product extends Model
 {
@@ -96,7 +100,7 @@ class Product extends Model
     {
         $this->description = $description;
     }
-
+/*
     public function setPublished(): void
     {
         $this->status = self::STATUS_PUBLISHED;
@@ -111,7 +115,7 @@ class Product extends Model
     {
         $this->status = self::STATUS_APPROVED;
     }
-
+*/
     public function getSlug(): string
     {
         return $this->slug;
@@ -125,10 +129,11 @@ class Product extends Model
 
     //ФУНЦИИ СОСТОЯНИЯ
     public function isVisible(): bool
-    {
+    {/*
         if ($this->status != self::STATUS_PUBLISHED) return false;
         if ($this->count_for_sell == 0 and $this->sell_method == self::SELL_OFFLINE) return false;
         if ($this->sell_method == self::SELL_OFFLINE) return false;
+        return true;*/
         return true;
     }
 
@@ -145,6 +150,22 @@ class Product extends Model
         return $this->belongsTo(Category::class, 'main_category_id', 'id');
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'categories_products', 'product_id', 'category_id');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'tags_products', 'product_id', 'tag_id');
+    }
+
+    public function prod_attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'attributes_products', 'product_id', 'attribute_id');
+
+    }
+
     public function photo()
     {
        return $this->morphOne(Photo::class, 'imageable')->where('type', '=','main');
@@ -158,11 +179,6 @@ class Product extends Model
     public function videos()
     {
         return $this->morphMany(Video::class, 'videoable');
-    }
-
-    public function categories()
-    {
-        //TODO return $this->hasMany(CategoryAssignment::class, '','');
     }
 
 

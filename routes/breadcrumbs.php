@@ -182,7 +182,11 @@ Breadcrumbs::for('admin.product.attribute.groups', function (BreadcrumbTrail $tr
     $trail->parent('admin.product.attribute.index');
     $trail->push('Группы', route('admin.product.attribute.groups'));
 });
-
+//TAGS
+Breadcrumbs::for('admin.product.tag.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Метки (Теги)', route('admin.product.tag.index'));
+});
 
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {

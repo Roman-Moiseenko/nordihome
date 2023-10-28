@@ -14,6 +14,15 @@ class Dimensions
     const MEASURE_G = 'г';
     const MEASURE_KG = 'кг';
 
+    public function __construct()
+    {
+        $this->measure = self::MEASURE_G;
+        $this->width = 0.0;
+        $this->height = 0.0;
+        $this->depth = 0.0;
+        $this->weight = 0.0;
+    }
+
     public static function create($width, $height, $depth, $weight, $measure = self::MEASURE_G): self
     {
         $dimension = new static();
