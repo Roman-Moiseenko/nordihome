@@ -41,6 +41,7 @@ Route::group(
 
         //**** SHOP
         //Product
+
         Route::group(
             [
                 'prefix' => 'product',
@@ -49,7 +50,6 @@ Route::group(
             ],
             function () {
 
-                Route::resource('', 'ProductController'); //CRUD
                 //Доп. - сменить категорию, добавить фото
                 Route::get('/attribute/groups', 'AttributeController@groups')->name('attribute.groups');
                 Route::delete('/attribute/group-destroy/{group}', 'AttributeController@group_destroy')->name('attribute.group-destroy');
@@ -77,7 +77,7 @@ Route::group(
 
             }
         );
-
+        Route::resource('product', 'Product\ProductController'); //CRUD
 
     }
 );

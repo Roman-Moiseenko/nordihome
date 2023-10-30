@@ -6,11 +6,14 @@
             Создать новый товары
         </h2>
     </div>
-    <div class="grid grid-cols-12 gap-x-6 pb-20">
+    <form action="{{ route('admin.product.store') }}" METHOD="POST" enctype="multipart/form-data">
+        @csrf
+    <div class="grid grid-cols-11 gap-x-6 pb-20">
         <!-- PRODUCT -->
-        <div class="intro-y col-span-11 2xl:col-span-9">
-            @foreach($menus as $menu)
-                <div id="{{ $menu['anchor'] }}" class="intro-y box p-5 mt-5 block-menus-product">
+
+            <div class="col-span-11 lg:col-span-9">
+            @foreach($menus as $n => $menu)
+                <div id="{{ $menu['anchor'] }}" data-is-top="{{ $n == 'common' ? 1 : 0 }}" class="intro-y box p-5 mt-5 block-menus-product">
                     <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
                         <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
                             <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/> {{ $menu['caption'] }}
@@ -21,52 +24,90 @@
                     </div>
                 </div>
             @endforeach
-        </div>
+            </div>
 
-        <div class="intro-y col-span-2 hidden 2xl:block">
-            <div class="sticky top-0 pt-10">
+            <div class="col-span-2 hidden lg:block">
+            <div class="fixed fixed-top pt-5">
                 <ul
                     class="relative text-slate-500 before:absolute before:left-0 before:z-[-1] before:h-full before:w-[2px] before:bg-slate-200 before:content-[''] before:dark:bg-darkmode-600">
-                    @foreach($menus as $menu)
-                    <li id="li-{{ $menu['anchor'] }}" class="mb-4 border-l-2 border-primary pl-5 border-transparent dark:border-transparent">
+                    @foreach($menus as $n => $menu)
+                    <li id="li-{{ $menu['anchor'] }}" class="li-menus-product mb-4 border-l-2 border-primary pl-5
+        {{ ($n == 'common') ? 'border-primary dark:border-primary text-primary font-medium' : 'border-transparent dark:border-transparent' }}">
                         <a href="#{{ $menu['anchor'] }}">{{ $menu['caption'] }}</a>
                     </li>
                     @endforeach
                 </ul>
+                <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
+                    <x-base.button
+                        class="w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400"
+                        type="submit"
+                    >
+                        Сохранить и выйти
+                    </x-base.button>
+                    <x-base.button
+                        class="w-full py-3"
+                        type="submit"
+                        variant="primary"
+                    >
+                        Сохранить
+                    </x-base.button>
+
+                </div>
+
                 <div
                     class="relative mt-10 rounded-md border border-warning bg-warning/20 p-5 dark:border-0 dark:bg-darkmode-600">
-                    <x-base.lucide
-                        class="absolute top-0 right-0 mt-5 mr-3 h-12 w-12 text-warning/80"
-                        icon="Lightbulb"
-                    />
+                    <x-base.lucide class="absolute top-0 right-0 mt-5 mr-3 h-12 w-12 text-warning/80" icon="Lightbulb"/>
                     <h2 class="text-lg font-medium">Tips</h2>
                     <div class="mt-5 font-medium">Price</div>
                     <div class="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-500">
                         <div>
-                            The image format is .jpg .jpeg .png and a minimum size of 300 x
-                            300 pixels (For optimal images use a minimum size of 700 x 700
-                            pixels).
+                            Краткая инструкция по заполнению карточки товара
                         </div>
                         <div class="mt-2">
-                            Select product photos or drag and drop up to 5 photos at once
-                            here. Include min. 3 attractive photos to make the product more
-                            attractive to buyers.
+                            Дополнительный текст
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
+    </div>
+    </form>
     <script>
         //Scrolling and ActiveMenu
-        window.scrollTo()
         let blocksScroll = document.querySelectorAll('.block-menus-product');
-        Array.from(blocksScroll).forEach(function (blockScroll) {
+        let menusScroll = document.querySelectorAll('.li-menus-product');
+        const classesSelect = ['border-primary', 'dark:border-primary', 'text-primary', 'font-medium'];
+        const classesUnSelect = ['border-transparent', 'dark:border-transparent'];
 
+        window.addEventListener('scroll', function () {
+            Array.from(blocksScroll).forEach(function (blockScroll) {
+                const _t = blockScroll.getBoundingClientRect().top;
+                if(_t > 20 && _t < 120 && blockScroll.getAttribute('data-is-top') === '0') {
+                    updateMenus(blockScroll.getAttribute('id'))
+                }
+            });
         });
-        //Button To Up
 
-        //Sticky fix
+        function updateMenus(idBlockScroll) {
+            Array.from(menusScroll).forEach(function (menuScroll) {
+                if (menuScroll.getAttribute('id') === 'li-'+idBlockScroll) {
+                    menuScroll.classList.remove(...classesUnSelect);
+                    menuScroll.classList.add(...classesSelect);
+                } else {
+                    if(menuScroll.classList.contains('border-primary')) {
+                        menuScroll.classList.remove(...classesSelect);
+                        menuScroll.classList.add(...classesUnSelect);
+                    }
+                }
+            });
+            Array.from(blocksScroll).forEach(function (blockScroll) {
+                if (blockScroll.getAttribute('id') === idBlockScroll) {
+                    blockScroll.setAttribute('data-is-top', '1');
+                } else {
+                    blockScroll.setAttribute('data-is-top', '0');
+                }
+            });
+        }
     </script>
 @endsection

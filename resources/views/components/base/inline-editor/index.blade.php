@@ -1,6 +1,6 @@
-<div class="editor">
+<textarea name="{{ $name }}" class="editor">
     {{ $slot }}
-</div>
+</textarea>
 
 @once
     @push('vendors')

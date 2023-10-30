@@ -9,15 +9,15 @@ use Illuminate\Support\Str;
 
 class TagService
 {
-    public function create(Request $request): Tag
+    public function create(array $request): Tag
     {
-        $tag = Tag::register($request->get('name'));
+        $tag = Tag::register($request['name']);
         return $tag;
     }
 
     public function rename(Request $request, Tag $tag)
     {
-        $tag->name = $request->get('name');
+        $tag->name = $request['name'];
         $tag->slug = Str::slug($tag->name);
         $tag->save();
     }

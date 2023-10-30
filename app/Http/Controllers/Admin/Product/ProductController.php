@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Product;
 
 use App\Modules\Product\Entity\Attribute;
+use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Helper\ProductHelper;
 use App\Modules\Product\Service\ProductService;
 use Illuminate\Http\Request;
@@ -29,12 +31,15 @@ class ProductController extends Controller
     {
         $categories = Category::defaultOrder()->withDepth()->get();
         $menus = ProductHelper::menuAddProduct();
-        return view('admin.product.product.create', compact('categories', 'menus'));
+        $brands = Brand::orderBy('name')->get();
+        $tags = Tag::orderBy('name')->get();
+        return view('admin.product.product.create', compact('categories', 'menus', 'brands', 'tags'));
     }
 
     public function store(Request $request)
     {
-
+        $product = $this->service->create($request);
+        return redirect()->route('admin.product.show', compact('product'));
     }
 
     public function show(Product $product)
@@ -50,7 +55,9 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        return view('admin.product.product.show', compact('product'));
+        $product = $this->service->update($request, $product);
+
+        return redirect()->route('admin.product.show', compact('product'));
 
     }
 

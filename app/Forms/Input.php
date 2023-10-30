@@ -8,6 +8,7 @@ class Input extends BaseForm
 {
     public string $type = 'text';
     public string $group = '';
+    public string $help = '';
 
     public function group($text): self
     {
@@ -18,6 +19,13 @@ class Input extends BaseForm
                 '" width="' . $text['size'] . '" height="' . $text['size'] .
                 '" class="' . ($text['class'] ?? '') .'" ></i>';
         }
+        return $input;
+    }
+
+    public function help($help): self
+    {
+        $input = clone $this;
+        $input->help = $help;
         return $input;
     }
 
@@ -33,6 +41,7 @@ class Input extends BaseForm
         $this->id = $id ?? 'input-' . $this->name;
         $params = array_merge($this->loadParams(), [
             'group' => $this->group,
+            'help' => $this->help,
         ]);
         return view('forms.input', $params);
     }

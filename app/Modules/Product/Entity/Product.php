@@ -51,10 +51,10 @@ class Product extends Model
     protected $attributes = [
         'short' => '',
         'description' => '',
-        'delayed' => false,
         'dimensions_json' => '{}',
         'frequency_json' => '{}',
         'count_for_sell' => 0,
+        'current_rating' => 0,
     ];
 
     protected $fillable = [
@@ -64,6 +64,15 @@ class Product extends Model
         'status',
         'description',
         'short',
+        'main_category_id',
+        'brand_id',
+        'current_rating',
+        'count_for_sell',
+        'published',
+        'only_offline ',
+        'pre_order',
+        'not_delivery',
+        'not_local',
     ];
 
     protected $hidden = [
@@ -79,12 +88,13 @@ class Product extends Model
 
     }
 
-    public static function register(string $name, string $code, string $slug = ''): self
+    public static function register(string $name, string $code, int $main_category_id, string $slug = ''): self
     {
         return self::create([
             'name' => $name,
             'slug' => empty($slug) ? Str::slug($name) : $slug,
             'code' => $code,
+            'main_category_id' => $main_category_id,
         ]);
 
     }

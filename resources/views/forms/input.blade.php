@@ -10,6 +10,9 @@
     <input id="{{ $id }}" type="{{ $type }}" name="{{ $name }}" class="form-control "
            placeholder="{{ $placeholder }}" @if(!empty($group)) aria-describedby="input-group-{{ $name }}" @endif
            value="{{ old($name) ?? $value }}" {{ $disabled }}>
+    @if(!empty($help))
+            <div class="form-help text-right">{{ $help }}</div>
+    @endif
     @if(empty($group))
         @error($name)
         <div class="pristine-error text-danger mt-2">{{ $message }}</div>
