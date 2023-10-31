@@ -10,7 +10,6 @@
         @csrf
     <div class="grid grid-cols-11 gap-x-6 pb-20">
         <!-- PRODUCT -->
-
             <div class="col-span-11 lg:col-span-9">
             @foreach($menus as $n => $menu)
                 <div id="{{ $menu['anchor'] }}" data-is-top="{{ $n == 'common' ? 1 : 0 }}" class="intro-y box p-5 mt-5 block-menus-product">
@@ -38,24 +37,9 @@
                     @endforeach
                 </ul>
                 <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <x-base.button
-                        class="w-full border-slate-300 py-3 text-slate-500 dark:border-darkmode-400"
-                        type="submit"
-                    >
-                        Сохранить и выйти
-                    </x-base.button>
-                    <x-base.button
-                        class="w-full py-3"
-                        type="submit"
-                        variant="primary"
-                    >
-                        Сохранить
-                    </x-base.button>
-
+                    <x-base.button class="w-full py-3" type="submit" variant="primary">Сохранить</x-base.button>
                 </div>
-
-                <div
-                    class="relative mt-10 rounded-md border border-warning bg-warning/20 p-5 dark:border-0 dark:bg-darkmode-600">
+                <div class="relative mt-10 rounded-md border border-warning bg-warning/20 p-5 dark:border-0 dark:bg-darkmode-600">
                     <x-base.lucide class="absolute top-0 right-0 mt-5 mr-3 h-12 w-12 text-warning/80" icon="Lightbulb"/>
                     <h2 class="text-lg font-medium">Tips</h2>
                     <div class="mt-5 font-medium">Price</div>
@@ -88,7 +72,6 @@
                 }
             });
         });
-
         function updateMenus(idBlockScroll) {
             Array.from(menusScroll).forEach(function (menuScroll) {
                 if (menuScroll.getAttribute('id') === 'li-'+idBlockScroll) {

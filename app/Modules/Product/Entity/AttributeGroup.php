@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property Photo $icon
- * @property Attribute $attributes
+ * @property Attribute[] $attributes
  * @property int $sort
  */
 class AttributeGroup extends Model

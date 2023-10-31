@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $object_id
  * @property string $file
+ * @property string $caption
  * @property string $description
  * @property int $sort
  */
-abstract class Video extends Model
+class Video extends Model
 {
     protected $fillable = [
         'video',
+        'caption',
         'sort',
         'description',
     ];
@@ -23,13 +25,18 @@ abstract class Video extends Model
         'product_id',
     ];
 
-    final public static function register(string $file, int $object_id, string $description = '', int $sort = 0): self
+    final public static function register(string $file, string $caption = '', string $description = '', int $sort = 0): self
     {
-        return self::create([
-            'object_id' => $object_id,
+        return self::new([
             'file' => $file,
+            'caption' => $caption,
             'description' => $description,
             'sort' => $sort,
         ]);
+    }
+
+    public function videoable()
+    {
+        return $this->morphTo();
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Product;
 
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Service\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -13,11 +14,13 @@ class CategoryController extends Controller
 
 
     private CategoryService $service;
+    private CategoryRepository $repository;
 
-    public function __construct(CategoryService $service)
+    public function __construct(CategoryService $service, CategoryRepository $repository)
     {
         $this->middleware(['auth:admin', 'can:commodity']);
         $this->service = $service;
+        $this->repository = $repository;
     }
 
     public function index()
@@ -89,6 +92,11 @@ class CategoryController extends Controller
         }
         return back();
     }
-
+    public function json_attributes(Request $request)
+    {
+        $categories_id = json_decode($request['ids']);
+        $result = $this->repository->relationAttributes($categories_id);
+        return \response()->json($result);
+    }
 
 }

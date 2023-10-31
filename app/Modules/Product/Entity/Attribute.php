@@ -100,7 +100,6 @@ class Attribute extends Model
         return $this->belongsToMany(Category::class, 'attributes_categories', 'attribute_id', 'category_id');
     }
 
-
     public function isCategory(Category $category): bool
     {
         foreach ($this->categories as $_category) {

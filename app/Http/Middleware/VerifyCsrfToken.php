@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/file-upload',
         '/admin/staff/photo/*',
+        //'/admin/product/attribute/get_by_categories',
     ];
 }

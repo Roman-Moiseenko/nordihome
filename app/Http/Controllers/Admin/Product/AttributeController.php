@@ -9,6 +9,7 @@ use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Service\AttributeGroupService;
 use App\Modules\Product\Service\AttributeService;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
@@ -164,4 +165,5 @@ class AttributeController extends Controller
         $this->service->image_variant($variant, $request);
         return back();
     }
+
 }

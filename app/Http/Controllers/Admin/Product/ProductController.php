@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Product;
 
 use App\Modules\Product\Entity\Attribute;
+use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
@@ -39,7 +40,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $product = $this->service->create($request);
-        return redirect()->route('admin.product.show', compact('product'));
+        return redirect()->route('admin.product.edit', compact('product'));
     }
 
     public function show(Product $product)
@@ -49,15 +50,19 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        return view('admin.product.product.edit', compact('product'));
+        $categories = Category::defaultOrder()->withDepth()->get();
+        $menus = ProductHelper::menuUpdateProduct();
+        $brands = Brand::orderBy('name')->get();
+        $tags = Tag::orderBy('name')->get();
+        $groups = AttributeGroup::orderBy('name')->get();
+        return view('admin.product.product.edit', compact('product', 'categories', 'menus', 'brands', 'tags', 'groups'));
 
     }
 
     public function update(Request $request, Product $product)
     {
         $product = $this->service->update($request, $product);
-
-        return redirect()->route('admin.product.show', compact('product'));
+        return redirect()->route('admin.product.edit', compact('product'));
 
     }
 

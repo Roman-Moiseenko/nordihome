@@ -31,6 +31,9 @@ use Illuminate\Support\Str;
  * @property Tag[] $tags
  * @property Category[] $categories
  * @property Attribute[] $prod_attributes
+ * @property Photo $photo
+ * @property Photo[] $photos
+ * @property Video[] $videos
  */
 class Product extends Model
 {
@@ -178,12 +181,12 @@ class Product extends Model
 
     public function photo()
     {
-       return $this->morphOne(Photo::class, 'imageable')->where('type', '=','main');
+       return $this->morphOne(Photo::class, 'imageable')->where('sort', '=',0);
     }
 
     public function photos()
     {
-       return $this->morphMany(Photo::class, 'imageable')->where('type', '<>','main');
+       return $this->morphMany(Photo::class, 'imageable')->where('sort', '>',0);
     }
 
     public function videos()
@@ -192,9 +195,27 @@ class Product extends Model
     }
 
 
+    public function isCategories($category_id): bool
+    {
+        foreach ($this->categories as $category){
+            if ($category->id == (int)$category_id) return true;
+        }
+        return false;
+    }
+
+
+
+    public function isTag($tag_id): bool
+    {
+        foreach ($this->tags as $tag){
+            if ($tag->id == (int)$tag_id) return true;
+        }
+        return false;
+    }
+
     public function addCategory(Category $category)
     {
-        //Проверка, если главной категории нет, то назначаем наглавную
+        //Проверка, если главной категории нет, то назначаем на главную
 
         //Проверка на совпадение с главной и второстепенными
     }

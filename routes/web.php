@@ -57,6 +57,7 @@ Route::group(
                 Route::post('/attribute/group-add', 'AttributeController@group_add')->name('attribute.group-add');
                 Route::post('/attribute/group-rename/{group}', 'AttributeController@group_rename')->name('attribute.group-rename');
                 Route::post('/attribute/variant-image/{variant}', 'AttributeController@variant_image')->name('attribute.variant-image');
+                //Route::post('/attribute/get_by_categories', 'AttributeController@get_by_categories')->name('attribute.get-by-categories');
 
                 Route::post('/attribute/{group}/group-up', 'AttributeController@group_up')->name('attribute.group-up');
                 Route::post('/attribute/{group}/group-down', 'AttributeController@group_down')->name('attribute.group-down');
@@ -64,6 +65,8 @@ Route::group(
                 Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');
                 Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
                 Route::get('/category/{category}/child', 'CategoryController@child')->name('category.child');
+                Route::post('/category/json_attributes', 'CategoryController@json_attributes')->name('attribute.json-attributes');
+
 
                 Route::get('/tags', 'TagController@index')->name('tag.index');
                 Route::post('/tag/create', 'TagController@create')->name('tag.create');

@@ -24,6 +24,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property Photo $icon
  * @property Category $parent
  * @property Category[] $children
+ * @property Attribute[] $attributes
  */
 class Category extends Model
 {
@@ -88,6 +89,11 @@ class Category extends Model
         } else {
             return $this->icon->getUploadUrl();
         }
+    }
+
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'attributes_categories', 'category_id', 'attribute_id');
     }
 
     public function products(): HasMany
