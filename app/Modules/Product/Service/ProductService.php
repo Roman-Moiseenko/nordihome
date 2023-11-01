@@ -119,7 +119,8 @@ class ProductService
             if (!empty($request['video_url'])) {
                 foreach ($request['video_url'] as $i => $item) {
                     $product->videos()->save(Video::register(
-                        $item, $request['video_caption'][$i] ?? '',
+                        $request['video_url'][$i],
+                        $request['video_caption'][$i] ?? '',
                         $request['video_text'][$i] ?? '', $i));
                 }
             }
@@ -149,7 +150,7 @@ class ProductService
                     } else {
                         $value = $request['attribute_' . $key];
                     }
-                    $product->prod_attributes()->attach($attribute->id, ['values' => json_encode($value)]);
+                    $product->prod_attributes()->attach($attribute->id, ['value' => json_encode($value)]);
                 }
             }
 

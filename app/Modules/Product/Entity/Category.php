@@ -24,7 +24,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property Photo $icon
  * @property Category $parent
  * @property Category[] $children
- * @property Attribute[] $attributes
+ * @property Attribute[] $prod_attributes
  *
  * @property int $_lft
  * @property int $_rgt
@@ -100,7 +100,7 @@ class Category extends Model
         return Category::orderBy('id')->where('_lft', '<=', $this->_lft)->where('_rgt', '>=', $this->_rgt)->pluck('id')->toArray();
     }
 
-    public function attributes()
+    public function prod_attributes()
     {
         return $this->belongsToMany(Attribute::class, 'attributes_categories', 'category_id', 'attribute_id');
     }

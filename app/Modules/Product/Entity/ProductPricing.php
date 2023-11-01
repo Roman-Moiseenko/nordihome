@@ -15,6 +15,6 @@ class ProductPricing extends Model
     protected $table = 'product_pricing';
     protected $fillable = [
         'value',
-        'document'
+        'founded'
     ];
 }

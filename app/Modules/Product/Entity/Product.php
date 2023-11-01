@@ -131,7 +131,7 @@ class Product extends Model
         $this->pricing()->create(
             [
                 'value' => $price,
-                'document' => 'In Shop',
+                'founded' => 'In Shop',
                 ]
         );
     }
@@ -197,8 +197,9 @@ class Product extends Model
         }
         $_array_all = array_unique($_array_all);
         $categories = Category::orderBy('id')->whereIn('id', $_array_all)->get();
+        /** @var Category $category */
         foreach ($categories as $category) {
-            foreach ($category->attributes as $attribute) {
+            foreach ($category->prod_attributes as $attribute) {
                 if (!isset($result[$attribute->id])) {
                     $result[$attribute->id] = $attribute;
                 }

@@ -42,7 +42,7 @@ class CategoryRepository
         $array_cats = array_unique($array_cats);
         $categories = Category::orderBy('id')->whereIn('id', $array_cats)->get();
         foreach($categories as $category) { //Собираем атрибуты по всем категориям
-            foreach ($category->attributes as $attribute) {
+            foreach ($category->prod_attributes as $attribute) {
                 if (!isset($result[$attribute->id])) {
                     if (!is_null($product->getProdAttribute($attribute->id))) {
                         //TODO получить Values и заполнить block значениями, и поставить отметку complete в true
