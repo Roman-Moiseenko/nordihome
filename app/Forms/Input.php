@@ -9,6 +9,10 @@ class Input extends BaseForm
     public string $type = 'text';
     public string $group = '';
     public string $help = '';
+    public bool $pos_left = true;
+    public string $group_text = '';
+
+
 
     public function group($text): self
     {
@@ -29,6 +33,14 @@ class Input extends BaseForm
         return $input;
     }
 
+    public function group_text($group_text, $pos_left = true)
+    {
+        $input = clone $this;
+        $input->group_text = $group_text;
+        $input->pos_left = $pos_left;
+        return $input;
+    }
+
     public function type($type): self
     {
         $input = clone $this;
@@ -42,6 +54,8 @@ class Input extends BaseForm
         $params = array_merge($this->loadParams(), [
             'group' => $this->group,
             'help' => $this->help,
+            'group_text' => $this->group_text,
+            'pos_left' => $this->pos_left,
         ]);
         return view('forms.input', $params);
     }

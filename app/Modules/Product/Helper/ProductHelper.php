@@ -85,6 +85,11 @@ class ProductHelper
                 'caption' => 'Описание',
                 'anchor' => 'description'
             ],
+            'dimensions' => [
+                'include' => '_dimensions',
+                'caption' => 'Габариты и доставка',
+                'anchor' => 'dimensions'
+            ],
             'images' => [
                 'include' => '_images',
                 'caption' => 'Изображения',

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Product;
 
+use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\Brand;
@@ -17,11 +18,13 @@ use Illuminate\Routing\Controller;
 class ProductController extends Controller
 {
     private ProductService $service;
+    private Options $options;
 
-    public function __construct(ProductService $service)
+    public function __construct(ProductService $service, Options $options)
     {
         $this->middleware(['auth:admin', 'can:commodity']);
         $this->service = $service;
+        $this->options = $options;
     }
     public function index(Request $request)
     {
@@ -55,7 +58,8 @@ class ProductController extends Controller
         $brands = Brand::orderBy('name')->get();
         $tags = Tag::orderBy('name')->get();
         $groups = AttributeGroup::orderBy('name')->get();
-        return view('admin.product.product.edit', compact('product', 'categories', 'menus', 'brands', 'tags', 'groups'));
+        $options = $this->options;
+        return view('admin.product.product.edit', compact('product', 'categories', 'menus', 'brands', 'tags', 'groups', 'options'));
 
     }
 

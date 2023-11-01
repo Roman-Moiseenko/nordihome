@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
+use App\Entity\Dimensions;
 use App\Entity\Photo;
+use App\Entity\Video;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
@@ -64,6 +66,132 @@ class ProductService
         }
     }
 
+    public function update(Request $request, Product $product): Product
+    {
+        DB::beginTransaction();
+        try {
+            /* SECTION 1*/
+            //Основная
+            $product->name = $request['name'];
+            $product->code = $request['code'];
+            $product->slug = $request['slug'];
+            $product->main_category_id = $request['category_id'];
+            $product->brand_id = $request['brand_id'];
+
+            //Проверить изменения в списке категорий
+            $array_old = [];
+            $array_new = $request['categories'];
+
+            foreach ($product->categories as $category) $array_old[] = $category->id;
+            foreach ($array_old as $key => $item) {
+                if (in_array($item, $array_new)) {
+                    $key_new = array_search($item, $array_new);
+                    unset($array_old[$key]);
+                    unset($array_new[$key_new]);
+                }
+            }
+            foreach ($array_old as $item) {
+                $product->categories()->detach((int)$item);
+            }
+            foreach ($array_new as $item) {
+                if ($this->categories->exists((int)$item)) {
+                    $product->categories()->attach((int)$item);
+                }
+            }
+
+            /* SECTION 2*/
+            //Описание, короткое описание, теги
+            $product->description = $request['description'];
+            $product->short = $request['short'];
+            $product->tags()->detach();
+            foreach ($request->get('tags') as $tag_id) {
+                if ($this->tags->exists($tag_id)) {
+                    $product->tags()->attach((int)$tag_id);
+                } else {
+                    $tag = $this->tagService->create(['name' => $tag_id]);
+                    $product->tags()->attach($tag->id);
+                }
+            }
+
+            /* SECTION 4*/
+            //Видеообзоры
+            $product->videos()->where('id', '=', $product->id)->delete();
+            if (!empty($request['video_url'])) {
+                foreach ($request['video_url'] as $i => $item) {
+                    $product->videos()->save(Video::register(
+                        $item, $request['video_caption'][$i] ?? '',
+                        $request['video_text'][$i] ?? '', $i));
+                }
+            }
+            /* SECTION 5*/
+            //Габариты и доставка
+            $product->dimensions = Dimensions::create(
+                (float)$request['dimensions-width'],
+                (float)$request['dimensions-height'],
+                (float)$request['dimensions-depth'],
+                (float)$request['dimensions-weight'],
+                $request['dimensions-measure']
+            );
+            $product->not_local = !($request['local'] ?? false);
+            $product->not_delivery = !($request['delivery'] ?? false);
+
+
+
+            /* SECTION 6*/
+            //Атрибуты
+            $product->prod_attributes()->detach();
+            foreach ($product->getPossibleAttribute() as $key => $attribute) {
+                if (isset($request['attribute_' . $key])) {
+                    if ($attribute->isVariant()) {
+                        $value = $request['attribute_' . $key];
+                    } elseif ($attribute->isBool()) {
+                        $value = true;
+                    } else {
+                        $value = $request['attribute_' . $key];
+                    }
+                    $product->prod_attributes()->attach($attribute->id, ['values' => json_encode($value)]);
+                }
+            }
+
+
+            /* SECTION 7*/
+            //Цена, кол-во, статус, периодичность
+            $product->count_for_sell = (float)($request['count-for-sell'] ?? 0);
+            if (!empty($request['last-price']) && (float)$request['last-price'] > 0.99) {
+                $product->setPrice((float)$request['last-price']);
+            }
+            $product->pre_order = $request['preorder'] ?? false;
+            $product->only_offline = $request['offline'] ?? false;
+
+            $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
+
+            //TODO **** ПОСЛЕ СОЗДАНИЯ ОБЪЕКТОВ
+
+            /* SECTION 8*/
+            //Модификации - только в режиме update
+
+            /* SECTION 9*/
+            //Аналоги
+
+            /* SECTION 10*/
+            //Сопутствующие
+
+
+            /* SECTION 11*/
+            //Опции
+
+            /* SECTION 13*/
+            //Бонусный товар
+            DB::commit();
+            $product->push();
+            if (isset($request['published'])) $this->published($product);
+            return $product;
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw new \DomainException($e->getMessage());
+        }
+    }
+
     public function published(Product $product): void
     {
         //TODO Проверка на заполнение и на модерацияю
@@ -83,51 +211,10 @@ class ProductService
         $product->setApproved();
     }
 
-
     public function destroy()
     {
         //TODO Проверка на продажи и Отзывы- через сервисы reviewService->isSet($product->id) reviewOrder->isSet($product->id)
         //TODO При удалении, удалять все связанные файлы Фото и Видео
-    }
-
-    public function update(Request $request, Product $product): Product
-    {
-        /* SECTION 1*/
-        //Основная
-        /* SECTION 2*/
-        //Описание, короткое описание, теги
-
-
-
-        /* SECTION 4*/
-        //Видеообзоры
-
-        /* SECTION 5*/
-        //Габариты и доставка
-
-        /* SECTION 6*/
-        //Атрибуты
-
-        /* SECTION 7*/
-        //Цена, кол-во, статус, периодичность
-
-        /* SECTION 8*/
-        //Модификации - только в режиме update
-
-        /* SECTION 9*/
-        //Аналоги
-
-        /* SECTION 10*/
-        //Сопутствующие
-
-
-        /* SECTION 11*/
-        //Опции
-
-        /* SECTION 13*/
-        //Бонусный товар
-
-        return $product;
     }
 
     ///Работа с Фото Продукта

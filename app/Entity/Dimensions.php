@@ -56,11 +56,11 @@ class Dimensions
     {
         $array = json_decode($json, true);
         return self::create(
-            $array['width'],
-            $array['height'],
-            $array['depth'],
-            $array['weight'],
-            $array['measure']
+            $array['width'] ?? 0,
+            $array['height'] ?? 0,
+            $array['depth'] ?? 0,
+            $array['weight'] ?? 0,
+            $array['measure'] ?? self::MEASURE_G
         );
     }
 }

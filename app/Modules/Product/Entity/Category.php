@@ -25,6 +25,9 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property Category $parent
  * @property Category[] $children
  * @property Attribute[] $attributes
+ *
+ * @property int $_lft
+ * @property int $_rgt
  */
 class Category extends Model
 {
@@ -82,6 +85,7 @@ class Category extends Model
         }
     }
 
+
     public function getIcon(): string
     {
         if (empty($this->icon->file)) {
@@ -89,6 +93,11 @@ class Category extends Model
         } else {
             return $this->icon->getUploadUrl();
         }
+    }
+
+    public function getParentIdAll(): array
+    {
+        return Category::orderBy('id')->where('_lft', '<=', $this->_lft)->where('_rgt', '>=', $this->_rgt)->pluck('id')->toArray();
     }
 
     public function attributes()

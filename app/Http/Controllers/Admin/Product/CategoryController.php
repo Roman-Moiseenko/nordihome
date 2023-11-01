@@ -41,7 +41,6 @@ class CategoryController extends Controller
         return back();
     }
 
-
     public function create(Request $request)
     {
         $parents = Category::defaultOrder()->withDepth()->get();
@@ -95,7 +94,8 @@ class CategoryController extends Controller
     public function json_attributes(Request $request)
     {
         $categories_id = json_decode($request['ids']);
-        $result = $this->repository->relationAttributes($categories_id);
+        $product_id = (int)$request['product_id'];
+        $result = $this->repository->relationAttributes($categories_id, $product_id);
         return \response()->json($result);
     }
 

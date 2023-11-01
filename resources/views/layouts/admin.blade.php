@@ -20,6 +20,7 @@
 
 <!-- BEGIN: CSS Assets-->
     @vite('resources/css/admin.css')
+    @vite('resources/js/admin.js')
 @stack('styles')
 <!-- END: CSS Assets-->
 </head>
@@ -28,7 +29,7 @@
 <body class="@yield('body')">
 @yield('content')
 @include('flash::message')
-@vite('resources/js/admin.js')
+
 
 <!-- BEGIN: Vendor JS Assets-->
 @stack('vendors')

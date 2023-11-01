@@ -7,13 +7,14 @@
     <div class="col-span-12 lg:col-span-6">
         <!-- Выбрать главную категорию -->
         <x-base.form-label for="select-category">Главная категория</x-base.form-label>
-        <x-base.tom-select id="select-category" name="category_id" class="w-full" data-placeholder="Выберите главную категорию">
+        <x-base.tom-select id="select-category" name="category_id" class="w-full"
+                           data-placeholder="Выберите главную категорию">
             <option value="0"></option>
             @foreach($categories as $category)
                 <option value="{{ $category->id }}"
                 @if(isset($product))
                     {{ $category->id == $product->category->id ? 'selected' : ''}}
-                @endif
+                    @endif
                 >
                     @for($i = 0; $i<$category->depth; $i++) - @endfor
                     {{ $category->name }}
@@ -23,13 +24,14 @@
 
         <!-- Выбрать категории -->
         <x-base.form-label for="select-categories" class="mt-3">Доп.категории</x-base.form-label>
-        <x-base.tom-select id="select-categories" name="categories[]" class="w-full" data-placeholder="Выберите вторичные категории" multiple>
+        <x-base.tom-select id="select-categories" name="categories[]" class="w-full"
+                           data-placeholder="Выберите вторичные категории" multiple>
             <option value="0"></option>
             @foreach($categories as $category)
                 <option value="{{ $category->id }}"
-                        @if(isset($product))
-                        {{ $product->isCategories($category->id) ? 'selected' : ''}}
-                        @endif
+                @if(isset($product))
+                    {{ $product->isCategories($category->id) ? 'selected' : ''}}
+                    @endif
                 >
                     @for($i = 0; $i<$category->depth; $i++) - @endfor
                     {{ $category->name }}

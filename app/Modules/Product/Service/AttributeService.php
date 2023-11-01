@@ -73,6 +73,7 @@ class AttributeService
             $attribute->multiple = !empty($request['multiple']);
             $attribute->filter = !empty($request['filter']);
             $attribute->show_in = !empty($request['show-in']);
+            $attribute->type = (int)$request['type'];
 
             $attribute->sameAs = $request['sameAs'] ?? '';
             $this->image($attribute, $request->file('file'));
@@ -104,12 +105,12 @@ class AttributeService
                 if (!in_array((string)$variant->id, $request['variants_id']))
                      AttributeVariant::destroy($variant->id);
             }
-
-            foreach ($request['variants_id'] as $key => $item) {
-                if (empty($item) && !empty($request['variants_value'][$key])) {
-                    $attribute->addVariant($request['variants_value'][$key]);
+            if (!empty($request['variants_id']))
+                foreach ($request['variants_id'] as $key => $item) {
+                    if (empty($item) && !empty($request['variants_value'][$key])) {
+                        $attribute->addVariant($request['variants_value'][$key]);
+                    }
                 }
-            }
 
             $attribute->push();
             $attribute->refresh();

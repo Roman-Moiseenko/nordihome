@@ -6,6 +6,7 @@ namespace App\Modules\Product\Entity;
 use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Entity\Video;
+use App\Modules\Product\Repository\CategoryRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -18,7 +19,7 @@ use Illuminate\Support\Str;
  * @property string $short
  * @property int $main_category_id
  * @property string $dimensions_json
- * @property string $frequency_json
+ * @property int $frequency
  * @property int $brand_id
  * @property float $current_rating
  * @property float $count_for_sell
@@ -29,25 +30,32 @@ use Illuminate\Support\Str;
  * @property bool $not_local
  *
  * @property Tag[] $tags
+ * @property Category $category
  * @property Category[] $categories
  * @property Attribute[] $prod_attributes
  * @property Photo $photo
  * @property Photo[] $photos
  * @property Video[] $videos
+ * @property ProductPricing[] $pricing
+ * @property ProductPricing $lastPrice
  */
 class Product extends Model
 {
 
-    //Константы тестировать - делать код и Индексировать Поле!!!
-/*    const STATUS_DRAFT = 'Черновик';
-    const STATUS_MODERATION = 'На модерации';
-    const STATUS_APPROVED = 'Утвержден';
-    const STATUS_PUBLISHED = 'Опубликован';
+    const FREQUENCY_MAJOR = 101;
+    const FREQUENCY_AVERAGE = 102;
+    const FREQUENCY_SMALL = 103;
+    const FREQUENCY_PERIOD = 104;
+    const FREQUENCY_NOT = 105;
 
-    const DELIVERY_NOT = 'Нет';
-    const DELIVERY_LOCAL = 'В пределах региона';
-    const DELIVERY_ALL = 'Транспортной компанией';
-*/
+    const FREQUENCIES = [
+        self::FREQUENCY_MAJOR => 'Крупная покупка (от 3 лет)',
+        self::FREQUENCY_AVERAGE => 'Средняя покупка (1-3 года)',
+        self::FREQUENCY_SMALL => 'Ходовой товар, с небольшим сроком пользования',
+        self::FREQUENCY_PERIOD => 'Расходный товар',
+        self::FREQUENCY_NOT => 'Нет',
+    ];
+
 
     public Dimensions $dimensions;
 
@@ -55,9 +63,10 @@ class Product extends Model
         'short' => '',
         'description' => '',
         'dimensions_json' => '{}',
-        'frequency_json' => '{}',
+        'frequency' => self::FREQUENCY_NOT,
         'count_for_sell' => 0,
         'current_rating' => 0,
+        'published' => false,
     ];
 
     protected $fillable = [
@@ -69,6 +78,7 @@ class Product extends Model
         'short',
         'main_category_id',
         'brand_id',
+        'frequency',
         'current_rating',
         'count_for_sell',
         'published',
@@ -83,11 +93,13 @@ class Product extends Model
     ];
 
     //РЕГИСТРАТОРЫ
+
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+        //$this->dimensions = new Dimensions();
         //Конфигурация
-
 
     }
 
@@ -113,6 +125,17 @@ class Product extends Model
     {
         $this->description = $description;
     }
+
+    public function setPrice(float $price): void
+    {
+        $this->pricing()->create(
+            [
+                'value' => $price,
+                'document' => 'In Shop',
+                ]
+        );
+    }
+
 /*
     public function setPublished(): void
     {
@@ -134,11 +157,55 @@ class Product extends Model
         return $this->slug;
     }
 
+    public function getLastPrice(): float
+    {
+        if (is_null($this->lastPrice)) return 0;
+        return $this->lastPrice->value;
+    }
+
+    public function getPreviousPrice(): float
+    {
+        if (empty($this->pricing)) return 0;
+        if (count($this->pricing) == 1) return $this->getLastPrice();
+        return $this->pricing[1]->value;
+    }
+
     public function getName(): string
     {
         return$this->name;
     }
 
+    public function getProdAttribute(int $id_attr): ?Attribute
+    {
+        //if (empty())
+        foreach ($this->prod_attributes as $attribute) {
+            if ($attribute->id === $id_attr) return $attribute;
+        }
+        return null;
+    }
+
+    /** @return Attribute[] */
+    public function getPossibleAttribute(): array
+    {
+        //TODO Вынести - AttributeRepository->getPossibleForProduct($id)
+        // и переделать на SQL запрос через JOIN Attribute->AttributeCategory->CategoryProduct(product_id = $id)
+        $result = [];
+        $_array_all = $this->category->getParentIdAll();
+
+        foreach ($this->categories as $category) {
+            $_array_all = array_merge($_array_all, $category->getParentIdAll());
+        }
+        $_array_all = array_unique($_array_all);
+        $categories = Category::orderBy('id')->whereIn('id', $_array_all)->get();
+        foreach ($categories as $category) {
+            foreach ($category->attributes as $attribute) {
+                if (!isset($result[$attribute->id])) {
+                    $result[$attribute->id] = $attribute;
+                }
+            }
+        }
+        return $result;
+    }
 
     //ФУНЦИИ СОСТОЯНИЯ
     public function isVisible(): bool
@@ -150,8 +217,47 @@ class Product extends Model
         return true;
     }
 
+    public function isLocal(): bool
+    {
+        return !$this->not_local;
+    }
+
+    public function isDelivery(): bool
+    {
+        return !$this->not_delivery;
+    }
+
+    public function isCategories($category_id): bool
+    {
+        foreach ($this->categories as $category){
+            if ($category->id == (int)$category_id) return true;
+        }
+        return false;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published == true;
+    }
+
+    public function isTag($tag_id): bool
+    {
+        foreach ($this->tags as $tag){
+            if ($tag->id == (int)$tag_id) return true;
+        }
+        return false;
+    }
 
     //RELATIONSHIP
+    public function pricing()
+    {
+        return $this->hasMany(ProductPricing::class, 'product_id', 'id')->orderBy('created_at');
+    }
+
+    public function lastPrice()
+    {
+        return $this->hasOne(ProductPricing::class, 'product_id', 'id')->latestOfMany();
+    }
 
     public function brand()
     {
@@ -175,8 +281,9 @@ class Product extends Model
 
     public function prod_attributes()
     {
-        return $this->belongsToMany(Attribute::class, 'attributes_products', 'product_id', 'attribute_id');
-
+        return $this->belongsToMany(
+            Attribute::class, 'attributes_products',
+            'product_id', 'attribute_id')->withPivot('value');
     }
 
     public function photo()
@@ -195,23 +302,6 @@ class Product extends Model
     }
 
 
-    public function isCategories($category_id): bool
-    {
-        foreach ($this->categories as $category){
-            if ($category->id == (int)$category_id) return true;
-        }
-        return false;
-    }
-
-
-
-    public function isTag($tag_id): bool
-    {
-        foreach ($this->tags as $tag){
-            if ($tag->id == (int)$tag_id) return true;
-        }
-        return false;
-    }
 
     public function addCategory(Category $category)
     {
@@ -220,5 +310,16 @@ class Product extends Model
         //Проверка на совпадение с главной и второстепенными
     }
 
+    public static function boot()
+    {
+        parent::boot();
+        self::saving(function (Product $product) {
+            $product->dimensions_json = $product->dimensions->toSave();
+        });
+
+        self::retrieved(function (Product $product) {
+            $product->dimensions =  Dimensions::load($product->dimensions_json);
+        });
+    }
 
 }

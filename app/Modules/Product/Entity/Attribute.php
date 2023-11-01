@@ -34,8 +34,8 @@ class Attribute extends Model
 
     const ATTRIBUTES = [
         self::TYPE_STRING => 'Строка',
-        self::TYPE_BOOL => 'Число',
-        self::TYPE_INTEGER => 'Флажок',
+        self::TYPE_INTEGER => 'Число',
+        self::TYPE_BOOL => 'Флажок',
         self::TYPE_VARIANT => 'Варианты',
         self::TYPE_FLOAT => 'Дробное',
         self::TYPE_DATE => 'Дата',
@@ -116,6 +116,10 @@ class Attribute extends Model
     public function isVariant(): bool
     {
         return $this->type == self::TYPE_VARIANT;
+    }
+    public function isBool(): bool
+    {
+        return $this->type == self::TYPE_BOOL;
     }
 
     public function getUploadUrl(): string

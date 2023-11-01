@@ -28,6 +28,5 @@ class Options
         $this->shop = Shop::createFromArray($shop);
 
         //TODO сделать для считывания с БД
-
     }
 }
