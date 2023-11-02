@@ -115,9 +115,10 @@ class ProductService
 
             /* SECTION 4*/
             //Видеообзоры
-            $product->videos()->where('id', '=', $product->id)->delete();
+            $product->videos()->delete();
             if (!empty($request['video_url'])) {
                 foreach ($request['video_url'] as $i => $item) {
+                    if (!empty($request['video_url'][$i]))
                     $product->videos()->save(Video::register(
                         $request['video_url'][$i],
                         $request['video_caption'][$i] ?? '',

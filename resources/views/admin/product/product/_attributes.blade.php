@@ -45,6 +45,8 @@
                 for (let key in _ListAttributes) {
                     _selAttr.appendChild(new Option(_ListAttributes[key].attribute, _ListAttributes[key].id));
                 }
+            } else {
+                //console.log(request.responseText);
             }
             if (_preload) {//Только при первом запуске, при обновлениях категорий, не загружаем из базы
                 setTimeout(function () {

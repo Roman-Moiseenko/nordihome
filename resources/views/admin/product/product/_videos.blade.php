@@ -32,9 +32,9 @@
         <script>_set_point_video()</script>
         @foreach($product->videos as $video)
             <script>AddBlock_Video({
-                    url: {{ $video->url }},
-                    caption: {{ $video->caption }},
-                    description: {{ $video->description }}
+                    url: '{{ $video->url }}',
+                    caption: '{{ $video->caption }}',
+                    description: '{{ $video->description }}'
                 })</script>
         @endforeach
         @if(count($product->videos) == 0)

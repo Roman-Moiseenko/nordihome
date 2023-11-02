@@ -54,7 +54,7 @@
             @foreach(App\Modules\Product\Entity\Product::FREQUENCIES as $value => $caption)
                 <div class="form-check mt-2">
                     <input id="frequency-{{ $value }}" class="form-check-input" type="radio" name="frequency"
-                           value="{{ $value }}">
+                           value="{{ $value }}" {{ $product->frequency == $value ? 'checked' : ''}}>
                     <label class="form-check-label" for="frequency-{{ $value }}">{{ $caption }}</label>
                 </div>
             @endforeach

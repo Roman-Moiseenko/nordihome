@@ -12,12 +12,12 @@
     <h2>{{ $attribute->group->name . ' > ' . $attribute->name}}</h2>
     <input type="hidden" name="attribute.id[]" value=" {{ $attribute->id }}">
     @if($attribute->isVariant())
-        <x-base.tom-select id="select-variant-{{ $attribute->id }}" name="attribute_{{ $attribute->id }}[]" class="w-full new-tom-select bg-white"
-                           data-placeholder="Выберите вторичные категории" multiple>
+        <select id="select-variant-{{ $attribute->id }}" name="attribute_{{ $attribute->id }}[]" class="w-full new-tom-select bg-white tom-select"
+                           data-placeholder="Выберите вторичные категории" {{ $attribute->multiple ? 'multiple' : ''}}>
             @foreach($attribute->variants as $variant)
                 <option value="{{ $variant->id }}">{{ $variant->name }}</option>
             @endforeach
-        </x-base.tom-select>
+        </select>
     @else
         <div class="input-form">
             @if ($attribute->isBool())

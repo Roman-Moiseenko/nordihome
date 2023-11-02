@@ -6,8 +6,11 @@
         if (Number(valueType) === {{\App\Modules\Product\Entity\Attribute::TYPE_VARIANT}}) {
             placeVariants.innerHTML = '<p class="mt-3">Варианты</p>' + addVariantButton();
             let addVariant = createButton(); //document.getElementById('add-variant');
+            document.getElementById('checkbox-multiple').disabled = false;
             addVariantBlock(addVariant, ++_counter);
         } else {
+            document.getElementById('checkbox-multiple').disabled = true;
+            document.getElementById('checkbox-multiple').checked = false;
             placeVariants.innerHTML = '';
         }
     }
