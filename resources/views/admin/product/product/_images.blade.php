@@ -98,7 +98,6 @@
                     _updateTippy();
                     return true;
                 }, 1000)
-            } else {
             }
         };
     }
@@ -124,8 +123,6 @@
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 LoadImages();
-            } else {
-                console.log(request.responseText);
             }
         }
     }
@@ -139,8 +136,6 @@
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 LoadImages();
-            } else {
-                console.log(request.responseText);
             }
         }
     }
