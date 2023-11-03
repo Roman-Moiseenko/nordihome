@@ -111,6 +111,11 @@ class ProductController extends Controller
         $this->service->downPhoto($request, $product);
     }
 
+    public function alt_image(Request $request, Product $product)
+    {
+        $this->service->altPhoto($request, $product);
+    }
+
     public function file_upload(Request $request, Product $product)
     {
         try {

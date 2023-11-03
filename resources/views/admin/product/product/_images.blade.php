@@ -4,8 +4,9 @@
 </script>
 <div class="w-full">
     <div>
-    Первое изображение становится основным для продукта. Перемещайте изображения стрелками для выбора главного и сортировки.
-    Для каждого изображения можно установить подпись ALT
+        Первое изображение становится основным для продукта. Перемещайте изображения стрелками для выбора главного и
+        сортировки.
+        Для каждого изображения можно установить подпись ALT
     </div>
     <div id="block-images" class="flex-wrap flex">
         <div id="point-load-images"></div>
@@ -16,28 +17,49 @@
         Загрузить изображения
     </x-base.button>
 </div>
-
 <script>
     const pointLoadImage = document.getElementById('point-load-images');
     const blockImages = document.getElementById('block-images');
     LoadImages(true);
     let _listImages = [];
+
     function _getImageHTML(_image) {
-        let _id= _image.id;
+        let _id = _image.id;
         let block =
-        '<div class="p-5 border-2 border-dashed rounded-md shadow-sm border-slate-200/60 dark:border-darkmode-400">' +
+            '<div class="p-5 border-2 border-dashed rounded-md shadow-sm border-slate-200/60 dark:border-darkmode-400">' +
             '<div class="relative h-40 w-40 mx-auto cursor-pointer image-fit zoom-in">' +
-                '<img class="rounded-md" src="' + _image.url + '" alt="' + _image.alt + '"/>' +
-                '<div id="delete-photo-' + _id + '" data-id="' + _id + '" title="Удалить фотографию?" class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>'+
-            '</div>'+
-            '<div class="relative mx-auto mt-5 cursor-pointer flex" style="justify-content: space-between;">'+
-            '<a href="" id="up-photo-' + _id + '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></a>'+
-                ' ALT '+
-            '<a href="" id="down-photo-' + _id + '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></a>'+
-            '</div>'+
-        '</div>';
+            '<img class="rounded-md" src="' + _image.url + '" alt="' + _image.alt + '" title="' + _image.alt + '"/>' +
+            '<div id="delete-photo-' + _id + '" data-id="' + _id + '" title="Удалить фотографию?" class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>' +
+            '</div>' +
+            '<div class="relative mx-auto mt-5 cursor-pointer flex items-center" style="justify-content: space-between;">' +
+            '<a href="" id="up-photo-' + _id + '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></a>' +
+            _buttonDropDown(_image.id, _image.alt) +
+            '<a href="" id="down-photo-' + _id + '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></a>' +
+            '</div>' +
+            '</div>';
 
         return block;
+    }
+
+    function _buttonDropDown(_id, _alt) {
+        return '<div class="text-center">' +
+                    '<div class="dropdown inline-block" data-tw-placement="bottom-start">' +
+                        '<button class="dropdown-toggle btn btn-primary" aria-expanded="false" data-tw-toggle="dropdown" type="button">ALT</button>' +
+                        '<div class="dropdown-menu">' +
+                            '<div class="dropdown-content">' +
+                                '<div class="p-2">' +
+                                    '<div class="mt-3">' +
+                                        '<input id="input-alt-' + _id + '" type="text" class="form-control mt-2 flex-1" placeholder="ALT" value="' + _alt + '" />' +
+                                    '</div>' +
+                                    '<div class="flex items-center mt-3">' +
+                                        '<button data-tw-dismiss="dropdown" class="btn btn-secondary w-32 ml-auto" type="button">Отмена</button>' +
+                                        '<button data-tw-dismiss="dropdown"  id="alt-photo-' + _id + '" class="btn btn-primary w-32 ml-2" type="button">Сохранить</button>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
     }
 
     //Функция загрузки всех изображений
@@ -67,14 +89,20 @@
                         e.preventDefault();
                         DownImage(item.id)
                     });
+                    document.getElementById('alt-photo-' + item.id).addEventListener('click', function (e) {
+                        e.preventDefault();
+                        AltImage(item.id)
+                    });
                 });
                 setTimeout(function () {
-                        _updateTippy();
-                        return true;}, 1000)
+                    _updateTippy();
+                    return true;
+                }, 1000)
             } else {
             }
         };
     }
+
     //Функция UP и Down
     function UpImage(id_image) {
         let _params = '_token=' + '{{ csrf_token() }}' + '&product_id=' + {{ $product->id }} + '&photo_id=' + id_image;
@@ -101,7 +129,21 @@
             }
         }
     }
-
+    function AltImage(id_image) {
+        let _alt = document.getElementById('input-alt-' + id_image).value;
+        let _params = '_token=' + '{{ csrf_token() }}' + '&product_id=' + {{ $product->id }} + '&photo_id=' + id_image + '&alt=' + _alt;
+        let request = new XMLHttpRequest();
+        request.open('POST', '/admin/product/{{ $product->id }}/alt-image');
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.send(_params);
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                LoadImages();
+            } else {
+                console.log(request.responseText);
+            }
+        }
+    }
     function DeleteImage(id_image) {
         let _params = '_token=' + '{{ csrf_token() }}' + '&product_id=' + {{ $product->id }} + '&photo_id=' + id_image;
         let request = new XMLHttpRequest();
@@ -112,7 +154,13 @@
             if (this.readyState === 4 && this.status === 200) LoadImages();
         }
     }
+
     //Альт - ??
+
+    setTimeout(function () {
+        const myDropdown = tailwind.Dropdown.getOrCreateInstance(document.getElementById('alt-photo-56'));
+        return true;
+    }, 1000);
 
     //Навесить событие на кнопку закрытия меню close-modal-upload
     /*let closeUpload = document.getElementById('close-modal-upload');

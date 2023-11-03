@@ -235,7 +235,6 @@ class ProductService
         $photo->delete();
         foreach ($product->photos as $i => $photo) {
             $photo->update(['sort' => $i]);
-            //$photo->save();
         }
     }
 
@@ -256,16 +255,6 @@ class ProductService
                 $photos[$i - 1]->update(['sort' => $next]);
             }
         }
-        /*
-                 for ($i = 1; $i < count($product->photos); $i++) {
-            if ($product->photos[$i]->id == $photo_id) {
-                $prev = $product->photos[$i - 1]->sort;
-                $next = $product->photos[$i]->sort;
-                $product->photos[$i]->update(['sort' => $prev]);
-                $product->photos[$i - 1]->update(['sort' => $next]);
-            }
-        }
-         */
     }
 
     public function downPhoto(Request $request, Product $product)
@@ -297,6 +286,17 @@ class ProductService
         }
  * */
 
+    }
+
+    public function altPhoto(Request $request, Product $product)
+    {
+        $id = $request['photo_id'];
+        $alt = $request['alt'];
+        foreach ($product->photos as $photo) {
+            if ($photo->id === (int)$id) {
+                $photo->update(['alt' => $alt]);
+            }
+        }
     }
 
 }

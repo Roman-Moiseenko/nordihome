@@ -205,7 +205,8 @@ import dom from "./dom";
         return el.__dropdown;
       },
       getOrCreateInstance(el) {
-        return el.__dropdown === undefined ? createInstance(el) : el.__dropdown;
+          if (el === null) return createInstance(el);
+          return el.__dropdown === undefined ? createInstance(el) : el.__dropdown;
       },
     };
   })();
