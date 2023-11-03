@@ -28,7 +28,8 @@ class ProductController extends Controller
     }
     public function index(Request $request)
     {
-        return view('admin.product.product.index');
+        $products = Product::orderBy('id')->get();
+        return view('admin.product.product.index', compact('products'));
     }
 
     public function create(Request $request)
@@ -72,8 +73,52 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-
+        try {
+            $this->service->destroy($product);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        }
         return redirect(route('admin.product.product.index'));
+    }
+
+    //AJAX для работы с Фото
+
+    public function get_images(Product $product)
+    {
+        $result = [];
+        foreach ($product->photos as $photo) {
+            $result[] = [
+                'id' => $photo->id,
+                'url' => $photo->getUploadUrl(),
+                'alt' => $photo->alt,
+            ];
+        }
+        return \response()->json($result);
+    }
+
+    public function del_image(Request $request, Product $product)
+    {
+        $this->service->delPhoto($request, $product);
+    }
+
+    public function up_image(Request $request, Product $product)
+    {
+        $this->service->upPhoto($request, $product);
+    }
+
+    public function down_image(Request $request, Product $product)
+    {
+        $this->service->downPhoto($request, $product);
+    }
+
+    public function file_upload(Request $request, Product $product)
+    {
+        try {
+            $this->service->addPhoto($request, $product);
+        } catch (\Throwable $e) {
+
+        }
+
     }
 
 }

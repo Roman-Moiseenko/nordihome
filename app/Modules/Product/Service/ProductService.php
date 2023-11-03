@@ -213,10 +213,11 @@ class ProductService
         $product->setApproved();
     }
 
-    public function destroy()
+    public function destroy(Product $product)
     {
         //TODO Проверка на продажи и Отзывы- через сервисы reviewService->isSet($product->id) reviewOrder->isSet($product->id)
         //TODO При удалении, удалять все связанные файлы Фото и Видео
+        throw new \DomainException('Тестируем. Удалить Продукт нельзя');
     }
 
     ///Работа с Фото Продукта
@@ -230,31 +231,62 @@ class ProductService
 
     public function delPhoto(Request $request, Product $product)
     {
-        $photo = Photo::find($request['photo-delete']);
-
+        $photo = Photo::find($request['photo_id']);
         $photo->delete();
         foreach ($product->photos as $i => $photo) {
-            $photo->sort = $i;
-            $photo->save();
+            $photo->update(['sort' => $i]);
+            //$photo->save();
         }
     }
 
     public function upPhoto(Request $request, Product $product)
     {
-        $photo_id = (int)$request['photo-up'];
-        for ($i = 1; $i < count($product->photos); $i++) {
-            if ($product->photos[$i] == $photo_id) {
+        $photo_id = (int)$request['photo_id'];
+
+        $photos = [];
+        foreach ($product->photos as $i => $photo) {
+            $photos[] = $photo;
+        }
+
+        for ($i = 1; $i < count($photos); $i++) {
+            if ($photos[$i]->id == $photo_id) {
+                $prev = $photos[$i - 1]->sort;
+                $next = $photos[$i]->sort;
+                $photos[$i]->update(['sort' => $prev]);
+                $photos[$i - 1]->update(['sort' => $next]);
+            }
+        }
+        /*
+                 for ($i = 1; $i < count($product->photos); $i++) {
+            if ($product->photos[$i]->id == $photo_id) {
                 $prev = $product->photos[$i - 1]->sort;
                 $next = $product->photos[$i]->sort;
                 $product->photos[$i]->update(['sort' => $prev]);
                 $product->photos[$i - 1]->update(['sort' => $next]);
             }
         }
+         */
     }
 
     public function downPhoto(Request $request, Product $product)
     {
-        $photo_id = (int)$request['photo-down'];
+        /** @var Photo[] $photos */
+        $photos = [];
+        foreach ($product->photos as $i => $photo) {
+            $photos[] = $photo;
+        }
+
+        $photo_id = (int)$request['photo_id'];
+        for ($i = 0; $i < count($photos) - 1; $i++) {
+            if ($photos[$i]->id == $photo_id) {
+                $prev = $photos[$i + 1]->sort;
+                $next = $photos[$i]->sort;
+                $photos[$i]->update(['sort' => $prev]);
+                $photos[$i + 1]->update(['sort' => $next]);
+            }
+        }
+/*
+         $photo_id = (int)$request['photo_id'];
         for ($i = 0; $i < count($product->photos) - 1; $i++) {
             if ($product->photos[$i] == $photo_id) {
                 $prev = $product->photos[$i + 1]->sort;
@@ -263,6 +295,8 @@ class ProductService
                 $product->photos[$i + 1]->update(['sort' => $next]);
             }
         }
+ * */
+
     }
 
 }

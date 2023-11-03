@@ -175,6 +175,14 @@ class Product extends Model
         return$this->name;
     }
 
+    public function Value(int $attribute_id)
+    {
+        foreach ($this->prod_attributes as $attribute) {
+            if ($attribute->id === $attribute_id) return $attribute->Value();
+        }
+        return null;
+    }
+
     public function getProdAttribute(int $id_attr): ?Attribute
     {
         //if (empty())
@@ -294,7 +302,7 @@ class Product extends Model
 
     public function photos()
     {
-       return $this->morphMany(Photo::class, 'imageable')->where('sort', '>',0);
+       return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');//->where('sort', '>',0);
     }
 
     public function videos()

@@ -79,7 +79,7 @@ class Photo extends Model
 
     public static function upload(UploadedFile $file, string $type = '', int $sort = 0): self
     {
-        $photo = self::new([
+        $photo = self::make([
             'file' => $file->getClientOriginalName(),
             'sort' => $sort,
             'type' => $type,

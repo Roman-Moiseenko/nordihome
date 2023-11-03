@@ -15,7 +15,12 @@
         <select id="select-variant-{{ $attribute->id }}" name="attribute_{{ $attribute->id }}[]" class="w-full new-tom-select bg-white tom-select"
                            data-placeholder="Выберите вторичные категории" {{ $attribute->multiple ? 'multiple' : ''}}>
             @foreach($attribute->variants as $variant)
-                <option value="{{ $variant->id }}">{{ $variant->name }}</option>
+
+                @if(is_null($value))
+                    <option value="{{ $variant->id }}">{{ $variant->name }}</option>
+                @else
+                    <option value="{{ $variant->id }}" {{ in_array($variant->id, $value) ? 'selected' : '' }}>{{ $variant->name }}</option>
+                @endif
             @endforeach
         </select>
     @else
@@ -23,10 +28,10 @@
             @if ($attribute->isBool())
                 <div class="flex items-center mt-3">
                     <input type="checkbox" class="transition-all duration-100 ease-in-out shadow-sm border-slate-200 cursor-pointer focus:ring-4 focus:ring-offset-0 focus:ring-primary focus:ring-opacity-20 dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700 dark:focus:ring-opacity-50 [&amp;[type='radio']]:checked:bg-primary [&amp;[type='radio']]:checked:border-primary [&amp;[type='radio']]:checked:border-opacity-10 [&amp;[type='checkbox']]:checked:bg-primary [&amp;[type='checkbox']]:checked:border-primary [&amp;[type='checkbox']]:checked:border-opacity-10 [&amp;:disabled:not(:checked)]:bg-slate-100 [&amp;:disabled:not(:checked)]:cursor-not-allowed [&amp;:disabled:not(:checked)]:dark:bg-darkmode-800/50 [&amp;:disabled:checked]:opacity-70 [&amp;:disabled:checked]:cursor-not-allowed [&amp;:disabled:checked]:dark:bg-darkmode-800/50 w-[38px] h-[24px] p-px rounded-full relative before:w-[20px] before:h-[20px] before:shadow-[1px_1px_3px_rgba(0,0,0,0.25)] before:transition-[margin-left] before:duration-200 before:ease-in-out before:absolute before:inset-y-0 before:my-auto before:rounded-full before:dark:bg-darkmode-600 checked:bg-primary checked:border-primary checked:bg-none before:checked:ml-[14px] before:checked:bg-white"
-                           id="checkbox_{{ $attribute->id }}" name="attribute_{{ $attribute->id }}">
+                           id="checkbox_{{ $attribute->id }}" name="attribute_{{ $attribute->id }}" {{ (!is_null($value) && $value) ? 'checked' : '' }}>
                     <label for="checkbox_{{ $attribute->id }}" class="cursor-pointer ml-2">{{ $attribute->name }}</label></div>
             @else
-                <input type="text" name="attribute_{{ $attribute->id }}" class="form-control " placeholder="Значение" value="">
+                <input type="text" name="attribute_{{ $attribute->id }}" class="form-control " placeholder="Значение" value="{{ $value ?? '' }}">
             @endif
         </div>
     @endif

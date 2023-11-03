@@ -13,6 +13,7 @@
         <div class="grid grid-cols-11 gap-x-6 pb-20">
             <!-- PRODUCT -->
             <div class="col-span-11 lg:col-span-9">
+
                 @foreach($menus as $n => $menu)
                     <div id="{{ $menu['anchor'] }}" data-is-top="{{ $n == 'common' ? 1 : 0 }}" class="intro-y box p-5 mt-5 block-menus-product">
                         <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
@@ -25,6 +26,8 @@
                         </div>
                     </div>
                 @endforeach
+
+
             </div>
 
             <div class="col-span-2 hidden lg:block">
@@ -61,6 +64,10 @@
 
         </div>
     </form>
+
+
+
+
     <script>
         //Scrolling and ActiveMenu
         let blocksScroll = document.querySelectorAll('.block-menus-product');
@@ -97,6 +104,41 @@
                 }
             });
         }
-    </script>
 
+
+    </script>
+    <!--Модальное окно для загрузки изображений в товар-->
+    <x-base.dialog id="static-backdrop-modal-preview" staticBackdrop>
+        <x-base.dialog.panel class="px-5 pt-10 pb-5" size="xl">
+            <div class="text-center">
+                <x-base.preview>
+                    <x-base.dropzone
+                        class="dropzone"
+                        action="{{ route('admin.product.file-upload', $product) }}"
+                        multiple
+                    >
+                        @csrf
+                        <div class="text-lg font-medium">
+                            Кликните или перетащите файлы для загрузки
+                        </div>
+                        <div class="text-gray-600">
+                            Изображения автоматически загрузятся в товар.
+                            <div>
+                                Размер изображения 700х700 и не более 500кБ
+                            </div>
+                        </div>
+                    </x-base.dropzone>
+                </x-base.preview>
+                <x-base.button id="close-modal-upload" class="w-24 mt-3" data-tw-dismiss="modal" type="button" variant="primary">
+                    Закрыть
+                </x-base.button>
+            </div>
+        </x-base.dialog.panel>
+    </x-base.dialog>
+    <script>
+        let closeUpload = document.getElementById('close-modal-upload');
+        closeUpload.addEventListener('click', function () {
+            LoadImages();
+        });
+    </script>
 @endsection

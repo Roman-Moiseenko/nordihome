@@ -113,6 +113,19 @@ class Attribute extends Model
         return $this->group_id == $group->id;
     }
 
+    public function ValueJSON():? string
+    {
+        if (!empty($this->pivot)) return $this->pivot->value;
+        return null;
+    }
+
+    public function Value()
+    {
+        if (!empty($this->pivot)) return json_decode($this->pivot->value);
+        return null;
+    }
+
+
     public function isVariant(): bool
     {
         return $this->type == self::TYPE_VARIANT;

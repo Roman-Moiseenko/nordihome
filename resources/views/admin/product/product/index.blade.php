@@ -15,4 +15,36 @@
             </button>
         </div>
     </div>
+
+    @foreach($products as $product)
+        <div>
+            <p>{{ $product->id }}</p>
+            <p>{{ $product->name }}</p>
+            @foreach($product->prod_attributes as $attribute)
+                <div>
+                    <p>{{ $attribute->name }}</p>
+                    <p> {{ $attribute->ValueJSON() }}</p>
+                </div>
+            @endforeach
+
+        </div>
+
+    @endforeach
+
+    <x-base.preview>
+        <x-base.dropzone
+            class="dropzone"
+            multiple
+            action="/file-upload"
+        >
+            <div class="text-lg font-medium">
+                Drop files here or click to upload.
+            </div>
+            <div class="text-gray-600">
+                This is just a demo dropzone. Selected files are
+                <span class="font-medium">not</span> actually
+                uploaded.
+            </div>
+        </x-base.dropzone>
+    </x-base.preview>
 @endsection

@@ -80,6 +80,13 @@ Route::group(
 
             }
         );
+        //AJAX Product-Image
+        Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');
+        Route::post('product/{product}/get-images', 'Product\ProductController@get_images')->name('product.get-images');
+        Route::post('product/{product}/del-image', 'Product\ProductController@del_image')->name('product.del-image');
+        Route::post('product/{product}/up-image', 'Product\ProductController@up_image')->name('product.up-image');
+        Route::post('product/{product}/down-image', 'Product\ProductController@down_image')->name('product.down-image');
+
         Route::resource('product', 'Product\ProductController'); //CRUD
 
     }
