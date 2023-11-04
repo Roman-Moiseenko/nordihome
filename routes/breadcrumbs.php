@@ -5,6 +5,7 @@ use App\Entity\Admin;
 use App\Entity\User\User;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Attribute;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -188,6 +189,32 @@ Breadcrumbs::for('admin.product.tag.index', function (BreadcrumbTrail $trail) {
     $trail->push('Метки (Теги)', route('admin.product.tag.index'));
 });
 
+
+//EQUIVALENT
+Breadcrumbs::for('admin.product.equivalent.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Аналоги', route('admin.product.equivalent.index'));
+});
+/*
+Breadcrumbs::for('admin.product.equivalent.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.equivalent.index');
+    $trail->push('Добавить группу', route('admin.product.equivalent.create'));
+});
+*/
+Breadcrumbs::for('admin.product.equivalent.show', function (BreadcrumbTrail $trail, Equivalent $equivalent) {
+    $trail->parent('admin.product.equivalent.index');
+    $trail->push($equivalent->name, route('admin.product.equivalent.show', $equivalent));
+});
+/*
+Breadcrumbs::for('admin.product.equivalent.edit', function (BreadcrumbTrail $trail, Equivalent $equivalent) {
+    $trail->parent('admin.product.equivalent.show', $equivalent);
+    $trail->push('Редактировать', route('admin.product.equivalent.edit', $equivalent));
+});
+Breadcrumbs::for('admin.product.equivalent.update', function (BreadcrumbTrail $trail, Equivalent $equivalent) {
+    $trail->parent('admin.product.equivalent.index');
+    $trail->push($equivalent->name, route('admin.product.equivalent.show', $equivalent));
+});
+*/
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));

@@ -39,10 +39,11 @@ class ProductService
             /* SECTION 1*/
             $product = Product::register($request['name'], $request['code'], (int)$request['category_id'], $request['slug'] ?? '');
             $product->brand_id = $request['brand_id'];
-            //$product->main_category_id = $request['category_id'];
-            foreach ($request->get('categories') as $category_id) {
-                if ($this->categories->exists((int)$category_id))
-                    $product->categories()->attach((int)$category_id);
+            if (!empty($request['categories'])) {
+                foreach ($request->get('categories') as $category_id) {
+                    if ($this->categories->exists((int)$category_id))
+                        $product->categories()->attach((int)$category_id);
+                }
             }
             /* SECTION 2*/
             //Описание, короткое описание, теги
@@ -80,11 +81,11 @@ class ProductService
 
             //Проверить изменения в списке категорий
             $array_old = [];
-            $array_new = $request['categories'];
+            $array_new = $request['categories'] ?? null;
 
             foreach ($product->categories as $category) $array_old[] = $category->id;
             foreach ($array_old as $key => $item) {
-                if (in_array($item, $array_new)) {
+                if (!is_null($array_new) && in_array($item, $array_new)) {
                     $key_new = array_search($item, $array_new);
                     unset($array_old[$key]);
                     unset($array_new[$key_new]);
@@ -93,12 +94,13 @@ class ProductService
             foreach ($array_old as $item) {
                 $product->categories()->detach((int)$item);
             }
-            foreach ($array_new as $item) {
-                if ($this->categories->exists((int)$item)) {
-                    $product->categories()->attach((int)$item);
+            if (!is_null($array_new)) {
+                foreach ($array_new as $item) {
+                    if ($this->categories->exists((int)$item)) {
+                        $product->categories()->attach((int)$item);
+                    }
                 }
             }
-
             /* SECTION 2*/
             //Описание, короткое описание, теги
             $product->description = $request['description'];

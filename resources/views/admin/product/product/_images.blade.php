@@ -1,7 +1,3 @@
-<script>
-
-
-</script>
 <div class="w-full">
     <div>
         Первое изображение становится основным для продукта. Перемещайте изображения стрелками для выбора главного и
@@ -64,7 +60,6 @@
 
     //Функция загрузки всех изображений
     function LoadImages(preload = false) {
-        //AJAX запрашиваем список файлов
         //AJAX
         let _params = '_token=' + '{{ csrf_token() }}' + '&product_id=' + {{ $product->id }};
         let request = new XMLHttpRequest();
@@ -74,7 +69,6 @@
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 _listImages = JSON.parse(request.responseText);
-                //Очищаем блок
                 blockImages.innerHTML = '';
                 _listImages.forEach(function (item) {
                     blockImages.insertAdjacentHTML('beforeend', _getImageHTML(item));
@@ -126,6 +120,7 @@
             }
         }
     }
+
     function AltImage(id_image) {
         let _alt = document.getElementById('input-alt-' + id_image).value;
         let _params = '_token=' + '{{ csrf_token() }}' + '&product_id=' + {{ $product->id }} + '&photo_id=' + id_image + '&alt=' + _alt;
@@ -139,6 +134,7 @@
             }
         }
     }
+
     function DeleteImage(id_image) {
         let _params = '_token=' + '{{ csrf_token() }}' + '&product_id=' + {{ $product->id }} + '&photo_id=' + id_image;
         let request = new XMLHttpRequest();
@@ -150,18 +146,6 @@
         }
     }
 
-    //Альт - ??
-
-    setTimeout(function () {
-        const myDropdown = tailwind.Dropdown.getOrCreateInstance(document.getElementById('alt-photo-56'));
-        return true;
-    }, 1000);
-
-    //Навесить событие на кнопку закрытия меню close-modal-upload
-    /*let closeUpload = document.getElementById('close-modal-upload');
-    closeUpload.addEventListener('click', function () {
-        LoadImages();
-    }); */
     function _updateTippy() {
         // Tooltips
         window.$(".tooltip").each(function () {

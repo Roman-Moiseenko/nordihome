@@ -38,6 +38,7 @@ use Illuminate\Support\Str;
  * @property Video[] $videos
  * @property ProductPricing[] $pricing
  * @property ProductPricing $lastPrice
+ * @property Equivalent $equivalent
  */
 class Product extends Model
 {
@@ -67,6 +68,7 @@ class Product extends Model
         'count_for_sell' => 0,
         'current_rating' => 0,
         'published' => false,
+        'pre_order' => false,
     ];
 
     protected $fillable = [
@@ -98,7 +100,7 @@ class Product extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        //$this->dimensions = new Dimensions();
+        $this->dimensions = new Dimensions();
         //Конфигурация
 
     }
@@ -128,6 +130,8 @@ class Product extends Model
 
     public function setPrice(float $price): void
     {
+        if ($this->lastPrice->value === $price) return;
+
         $this->pricing()->create(
             [
                 'value' => $price,
@@ -258,6 +262,11 @@ class Product extends Model
     }
 
     //RELATIONSHIP
+    public function equivalent()
+    {
+        $this->hasOneThrough(Equivalent::class, EquivalentProduct::class, 'product_id', 'equivalent_id', 'id', 'id');
+    }
+
     public function pricing()
     {
         return $this->hasMany(ProductPricing::class, 'product_id', 'id')->orderBy('created_at');
@@ -310,6 +319,14 @@ class Product extends Model
         return $this->morphMany(Video::class, 'videoable');
     }
 
+    public function getImage()
+    {
+        if (empty($this->photo->file)) {
+            return '/images/no-image.jpg';
+        } else {
+            return $this->photo->getUploadUrl();
+        }
+    }
 
 
     public function addCategory(Category $category)

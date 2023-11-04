@@ -12,7 +12,6 @@ use Illuminate\Routing\Controller;
 class CategoryController extends Controller
 {
 
-
     private CategoryService $service;
     private CategoryRepository $repository;
 
@@ -91,6 +90,7 @@ class CategoryController extends Controller
         }
         return back();
     }
+
     public function json_attributes(Request $request)
     {
         $categories_id = json_decode($request['ids']);

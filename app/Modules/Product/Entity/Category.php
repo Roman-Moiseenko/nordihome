@@ -100,6 +100,11 @@ class Category extends Model
         return Category::orderBy('id')->where('_lft', '<=', $this->_lft)->where('_rgt', '>=', $this->_rgt)->pluck('id')->toArray();
     }
 
+    public function getParentAll()
+    {
+        return Category::orderBy('_lft')->where('_lft', '<=', $this->_lft)->where('_rgt', '>=', $this->_rgt)->get();
+    }
+
     public function prod_attributes()
     {
         return $this->belongsToMany(Attribute::class, 'attributes_categories', 'category_id', 'attribute_id');

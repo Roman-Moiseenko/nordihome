@@ -62,7 +62,7 @@ class AdminMenu
                     'equivalent' => [
                         'icon' => 'package-check',
                         'title' => 'Аналоги',
-                        'route_name' => 'admin.home', // 'admin.product.tag.index'
+                        'route_name' => 'admin.product.equivalent.index',
                     ],
                     'group' => [
                         'icon' => 'boxes',

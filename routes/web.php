@@ -73,10 +73,18 @@ Route::group(
                 Route::post('/tag/{tag}/rename', 'TagController@rename')->name('tag.rename');
                 Route::delete('/tag/{tag}/destroy', 'TagController@destroy')->name('tag.destroy');
 
+                Route::get('/equivalent', 'EquivalentController@index')->name('equivalent.index');
+                Route::get('/equivalent/show', 'EquivalentController@show')->name('equivalent.show');
+                Route::post('/equivalent/store', 'EquivalentController@create')->name('equivalent.store');
+                Route::post('/equivalent/{equivalent}/rename', 'EquivalentController@rename')->name('equivalent.rename');
+                Route::post('/equivalent/{equivalent}/add-product', 'EquivalentController@add_product')->name('equivalent.add-product');
+                Route::delete('/equivalent/{equivalent}/del-product', 'EquivalentController@del_product')->name('equivalent.del-product');
+                Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
 
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD
                 Route::resource('attribute', 'AttributeController'); //CRUD
+                Route::resource('equivalent', 'EquivalentController'); //CRUD
 
             }
         );
