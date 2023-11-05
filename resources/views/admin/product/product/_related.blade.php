@@ -1,5 +1,6 @@
 <div class="grid grid-cols-12 gap-x-6">
     <div class="col-span-12 lg:col-span-4">
+        Или переделать на input + dropdown
         <x-base.form-label for="select-related">Поиск сопутствующих</x-base.form-label>
         <x-base.tom-select id="select-related" name="related_id" class="w-full"
                            data-placeholder="Введите наименование или артикул товара">
