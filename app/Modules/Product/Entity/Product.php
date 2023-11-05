@@ -262,9 +262,19 @@ class Product extends Model
     }
 
     //RELATIONSHIP
+
+
     public function equivalent()
     {
-        $this->hasOneThrough(Equivalent::class, EquivalentProduct::class, 'product_id', 'equivalent_id', 'id', 'id');
+        //TODO сделать через hasOneThrough
+        $eq_prod = EquivalentProduct::where('product_id', '=', $this->id)->first();
+        if (empty($eq_prod)) return null;
+        return $eq_prod->equivalent();
+
+        //$eq_prod = $this->hasOne(EquivalentProduct::class, 'product_id', 'id');
+
+        //return $e_p->equivalent();
+        //return $this->hasOneThrough(Equivalent::class, EquivalentProduct::class, 'product_id', 'equivalent_id', 'id', 'id');
     }
 
     public function pricing()

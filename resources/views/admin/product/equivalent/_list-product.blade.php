@@ -7,7 +7,7 @@
         <div class="flex justify-center items-center">
 
             <a class="flex items-center text-danger" href="#" title="Delete"
-               data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.equivalent.del-product', $product) }}>
+               data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.equivalent.del-product', [$equivalent, $product]) }}>
                 <x-base.lucide icon="trash-2" class="w-4 h-4"/>
                 Delete </a>
         </div>

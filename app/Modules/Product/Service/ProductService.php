@@ -21,14 +21,16 @@ class ProductService
     private CategoryRepository $categories;
     private TagRepository $tags;
     private TagService $tagService;
+    private EquivalentService $equivalentService;
 
-    public function __construct(Options $options, CategoryRepository $categories, TagRepository $tags, TagService $tagService)
+    public function __construct(Options $options, CategoryRepository $categories, TagRepository $tags, TagService $tagService, EquivalentService $equivalentService)
     {
         //Конфигурация
         $this->options = $options;
         $this->categories = $categories;
         $this->tags = $tags;
         $this->tagService = $tagService;
+        $this->equivalentService = $equivalentService;
     }
 
     public function create(Request $request): Product
@@ -176,6 +178,22 @@ class ProductService
 
             /* SECTION 9*/
             //Аналоги
+            $new_equivalent_id = $request['equivalent_id'] ?? 0;
+
+
+            if ($new_equivalent_id == 0 && !is_null($product->equivalent())) {
+                $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+            }
+                if ($new_equivalent_id != 0) {
+                    if (is_null($product->equivalent())) {
+                        //Доб.новый
+                        $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
+                    } elseif ((int)$new_equivalent_id !== $product->equivalent->id) {
+                        $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+                        $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
+                    }
+
+                }
 
             /* SECTION 10*/
             //Сопутствующие
@@ -186,7 +204,7 @@ class ProductService
 
             /* SECTION 13*/
             //Бонусный товар
-            DB::commit();
+           DB::commit();
             $product->push();
             if (isset($request['published'])) $this->published($product);
             return $product;

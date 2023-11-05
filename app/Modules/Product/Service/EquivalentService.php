@@ -36,10 +36,25 @@ class EquivalentService
         if(!$equivalent->isProduct($id)) $equivalent->products()->attach($id);
     }
 
-    public function del_product(Product $product): Equivalent
+    public function del_product(Equivalent $equivalent, Product $product): Equivalent
     {
-        $equivalent =$product->equivalent;
         $equivalent->products()->detach($product->id);
         return $equivalent;
     }
+
+    public function addProductByIds(int $equivalent_id, int $product_id)
+    {
+        /** @var Equivalent $equivalent */
+        $equivalent = Equivalent::find($equivalent_id);
+        $equivalent->products()->attach($product_id);
+    }
+
+    public function delProductByIds(int $equivalent_id, int $product_id)
+    {
+        /** @var Equivalent $equivalent */
+        $equivalent = Equivalent::find($equivalent_id);
+        $equivalent->products()->detach($product_id);
+    }
+
+
 }

@@ -78,8 +78,10 @@ Route::group(
                 Route::post('/equivalent/store', 'EquivalentController@create')->name('equivalent.store');
                 Route::post('/equivalent/{equivalent}/rename', 'EquivalentController@rename')->name('equivalent.rename');
                 Route::post('/equivalent/{equivalent}/add-product', 'EquivalentController@add_product')->name('equivalent.add-product');
-                Route::delete('/equivalent/{equivalent}/del-product', 'EquivalentController@del_product')->name('equivalent.del-product');
+                Route::delete('/equivalent/{equivalent}/del-product/{product}', 'EquivalentController@del_product')->name('equivalent.del-product');
                 Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
+                Route::post('/equivalent/{equivalent}/json-products', 'EquivalentController@json_products')->name('equivalent.json-products');
+
 
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD

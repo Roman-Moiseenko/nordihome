@@ -8,6 +8,7 @@ use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Helper\ProductHelper;
@@ -60,7 +61,8 @@ class ProductController extends Controller
         $tags = Tag::orderBy('name')->get();
         $groups = AttributeGroup::orderBy('name')->get();
         $options = $this->options;
-        return view('admin.product.product.edit', compact('product', 'categories', 'menus', 'brands', 'tags', 'groups', 'options'));
+        $equivalents = Equivalent::orderBy('name')->where('category_id', '=', $product->main_category_id)->get();
+        return view('admin.product.product.edit', compact('product', 'categories', 'menus', 'brands', 'tags', 'groups', 'options', 'equivalents'));
 
     }
 
@@ -82,6 +84,21 @@ class ProductController extends Controller
     }
 
     //AJAX для работы с Фото
+
+    //TODO Протестировать
+    public function find(Request $request)
+    {
+        $data = $request['search'];
+        $result = [];
+        if (strlen($data) > 2) {
+            $result = Product::orderBy('name')->where(function ($query) use ($data) {
+                $query->where('code', 'LIKE', "%{$data}%")
+                    ->orWhere('name', 'LIKE', "%{$data}%");
+            })->all()->take(10);
+        }
+        return \response()->json($result);
+    }
+
 
     public function get_images(Product $product)
     {

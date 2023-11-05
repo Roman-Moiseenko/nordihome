@@ -74,13 +74,18 @@ class EquivalentController extends Controller
 
     public function add_product(Request $request, Equivalent $equivalent)
     {
-        $this->service->add_product($request, $equivalent);
+        //$this->service->add_product($request, $equivalent);
+        $request->validate([
+            'product_id' => 'required|integer',
+        ]);
+        $this->service->addProductByIds($equivalent->id, (int)$request['product_id']);
         return redirect(route('admin.product.equivalent.show', $equivalent));
     }
 
-    public function del_product(Product $product)
+    public function del_product(Equivalent $equivalent, Product $product)
     {
-        $equivalent = $this->service->del_product($product);
+        //$this->service->del_product($equivalent, $product);
+        $this->service->delProductByIds($equivalent->id, $product->id);
         return redirect(route('admin.product.equivalent.show', $equivalent));
     }
 
@@ -107,6 +112,17 @@ class EquivalentController extends Controller
             return back();
         }
         return back();
+    }
+
+    //AJAX
+
+    public function json_products(Equivalent $equivalent)
+    {
+        $result = [];
+        foreach ($equivalent->products as $product) {
+            $result[] = $product->name;
+        }
+        return \response()->json($result);
     }
 
 }
