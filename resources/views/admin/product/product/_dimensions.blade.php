@@ -16,7 +16,7 @@
         </div>
         <div class="flex mt-3">
             {{ \App\Forms\Input::create('dimensions-width',
-                ['placeholder' => 'Ширина', 'class' => 'ml-0 w-full lg:w-40', 'value' => $product->dimensions->weight])
+                ['placeholder' => 'Ширина', 'class' => 'ml-0 w-full lg:w-40', 'value' => $product->dimensions->width])
                 ->help('Ширина (см)')->show() }}
             {{ \App\Forms\Input::create('dimensions-height',
                 ['placeholder' => 'Высота', 'class' => 'ml-0 w-full lg:ml-4 lg:w-40', 'value' => $product->dimensions->height])

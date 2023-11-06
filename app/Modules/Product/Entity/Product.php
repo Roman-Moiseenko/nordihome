@@ -40,6 +40,7 @@ use Illuminate\Support\Str;
  * @property ProductPricing $lastPrice
  * @property Equivalent $equivalent
  * @property Product[] $related
+ * @property Product[] $bonus
  */
 class Product extends Model
 {
@@ -301,6 +302,11 @@ class Product extends Model
     public function related()
     {
         return $this->belongsToMany(Product::class, 'related_products', 'product_id', 'related_id');
+    }
+
+    public function bonus()
+    {
+        return $this->belongsToMany(Product::class, 'bonus_products', 'product_id', 'bonus_id')->withPivot('discount');
     }
 
     public function categories()
