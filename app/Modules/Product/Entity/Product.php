@@ -39,6 +39,7 @@ use Illuminate\Support\Str;
  * @property ProductPricing[] $pricing
  * @property ProductPricing $lastPrice
  * @property Equivalent $equivalent
+ * @property Product[] $related
  */
 class Product extends Model
 {
@@ -295,6 +296,11 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'main_category_id', 'id');
+    }
+
+    public function related()
+    {
+        return $this->belongsToMany(Product::class, 'related_products', 'product_id', 'related_id');
     }
 
     public function categories()

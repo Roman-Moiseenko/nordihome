@@ -21,20 +21,18 @@
 
     function _getImageHTML(_image) {
         let _id = _image.id;
-        let block =
+        return '' +
             '<div class="p-5 border-2 border-dashed rounded-md shadow-sm border-slate-200/60 dark:border-darkmode-400">' +
-            '<div class="relative h-40 w-40 mx-auto cursor-pointer image-fit zoom-in">' +
-            '<img class="rounded-md" src="' + _image.url + '" alt="' + _image.alt + '" title="' + _image.alt + '"/>' +
-            '<div id="delete-photo-' + _id + '" data-id="' + _id + '" title="Удалить фотографию?" class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>' +
-            '</div>' +
-            '<div class="relative mx-auto mt-5 cursor-pointer flex items-center" style="justify-content: space-between;">' +
-            '<a href="" id="up-photo-' + _id + '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></a>' +
-            _buttonDropDown(_image.id, _image.alt) +
-            '<a href="" id="down-photo-' + _id + '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></a>' +
-            '</div>' +
+                '<div class="relative h-40 w-40 mx-auto cursor-pointer image-fit zoom-in">' +
+                    '<img class="rounded-md" src="' + _image.url + '" alt="' + _image.alt + '" title="' + _image.alt + '"/>' +
+                    '<div id="delete-photo-' + _id + '" data-id="' + _id + '" title="Удалить фотографию?" class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>' +
+                '</div>' +
+                '<div class="relative mx-auto mt-5 cursor-pointer flex items-center" style="justify-content: space-between;">' +
+                    '<a href="" id="up-photo-' + _id + '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></a>' +
+                    _buttonDropDown(_image.id, _image.alt) +
+                    '<a href="" id="down-photo-' + _id + '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></a>' +
+                '</div>' +
             '</div>';
-
-        return block;
     }
 
     function _buttonDropDown(_id, _alt) {

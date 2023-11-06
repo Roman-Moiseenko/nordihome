@@ -27,6 +27,7 @@ class ProductController extends Controller
         $this->service = $service;
         $this->options = $options;
     }
+
     public function index(Request $request)
     {
         $products = Product::orderBy('id')->get();
@@ -85,16 +86,30 @@ class ProductController extends Controller
 
     //AJAX для работы с Фото
 
-    //TODO Протестировать
-    public function find(Request $request)
+    public function search(Request $request)
     {
+        //TODO В Repository
         $data = $request['search'];
         $result = [];
-        if (strlen($data) > 2) {
-            $result = Product::orderBy('name')->where(function ($query) use ($data) {
+        try {
+            $products = Product::orderBy('name')->where(function ($query) use ($data) {
                 $query->where('code', 'LIKE', "%{$data}%")
                     ->orWhere('name', 'LIKE', "%{$data}%");
-            })->all()->take(10);
+            })->take(10)->get();
+
+            /** @var Product $product */
+            foreach ($products as $product) {
+                $result[] = [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'code' => $product->code,
+                    'image' => $product->getImage(),
+                    'price' => $product->lastPrice->value,
+                ];
+            }
+
+        } catch (\Throwable $e) {
+            $result = $e->getMessage();
         }
         return \response()->json($result);
     }

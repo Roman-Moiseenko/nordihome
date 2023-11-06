@@ -70,3 +70,10 @@ button.disabled {
     background-color: #a4a5a4 !important;
     border-color: #a4a5a4 !important;
 }
+.search-product-result .search-option {
+    cursor: pointer;
+    padding: 10px 20px;
+}
+.search-product-result .search-option:hover {
+    background-color: rgb(var(--color-slate-100));
+}

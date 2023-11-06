@@ -97,6 +97,7 @@ Route::group(
         Route::post('product/{product}/up-image', 'Product\ProductController@up_image')->name('product.up-image');
         Route::post('product/{product}/down-image', 'Product\ProductController@down_image')->name('product.down-image');
         Route::post('product/{product}/alt-image', 'Product\ProductController@alt_image')->name('product.alt-image');
+        Route::post('product/search', 'Product\ProductController@search')->name('product.search');
 
         Route::resource('product', 'Product\ProductController'); //CRUD
 

@@ -197,7 +197,10 @@ class ProductService
 
             /* SECTION 10*/
             //Сопутствующие
-
+            $product->related()->detach();
+            foreach($request['related'] as $related) {
+                if ($product->id != (int)$related) $product->related()->attach((int)$related);
+            }
 
             /* SECTION 11*/
             //Опции
