@@ -1,4 +1,31 @@
 <script>
+    let inputData, buttonAddRelated, listRelated;
+
+    function initRelated() {
+        inputData = document.getElementById('related-product');
+        buttonAddRelated = document.getElementById('add-related');
+        listRelated = document.getElementById('list-related');
+        buttonAddRelated.addEventListener('click', function () {
+            let inputRelated = document.querySelectorAll('.input-related');
+            let isRelated = false;
+            if (inputRelated.length !== 0) inputRelated.forEach(function (item) {
+                if (inputData.getAttribute('data-id') === item.value) isRelated = true;
+            });
+            if (inputData.value.length > 0 && !isRelated) {
+                _insertBlockRelated(inputData.getAttribute('data-id'), inputData.getAttribute('data-name'),
+                    inputData.getAttribute('data-img'), inputData.getAttribute('data-code'));
+                inputData.value = '';
+            }
+        });
+    }
+    function _insertBlockRelated(_id, _name, _img, _code) {
+        listRelated.insertAdjacentHTML('afterbegin', _itemRelated(_id, _name, _img, _code));
+        let new_el = document.getElementById('delete-related-' + _id); //Удалить блок
+        new_el.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById(new_el.getAttribute('for')).remove();
+        });
+    }
     function _itemRelated(_id, _name, _img, _code) {
         return ''+
             '<div id="related-'+_id+'" class="relative pt-5 pb-1 py-3 bg-slate-50 dark:bg-transparent dark:border rounded-md mt-3">' +
@@ -23,33 +50,17 @@
     <div class="col-span-12 lg:col-span-8">
         <h3 class="font-medium text-center">Список сопутствующих</h3>
         <div id="list-related">
+            <script>initRelated();</script>
             @foreach($product->related as $related)
-                <script>document.write(_itemRelated("{{ $related->id }}", "{{ $related->name }}", "{{ $related->getImage() }}", "{{ $related->code }}"));</script>
+                <script>_insertBlockRelated("{{ $related->id }}", "{{ $related->name }}", "{{ $related->getImage() }}", "{{ $related->code }}");</script>
             @endforeach
         </div>
     </div>
 </div>
 <script>
-    let inputData = document.getElementById('related-product');
-    let buttonAddRelated = document.getElementById('add-related');
-    let listRelated = document.getElementById('list-related');
-    buttonAddRelated.addEventListener('click', function () {
-        let inputRelated = document.querySelectorAll('.input-related');
-        let isRelated = false;
-        if (inputRelated.length !== 0) inputRelated.forEach(function (item) {
-            if (inputData.getAttribute('data-id') === item.value) isRelated = true;
-        });
-        if (inputData.value.length > 0 && !isRelated) {
-            listRelated.insertAdjacentHTML('afterbegin', _itemRelated(inputData.getAttribute('data-id'), inputData.getAttribute('data-name'),
-                inputData.getAttribute('data-img'), inputData.getAttribute('data-code')));
-            let new_el = document.getElementById('delete-related-' + inputData.getAttribute('data-id')); //Удалить блок
-            new_el.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.getElementById(new_el.getAttribute('for')).remove();
-            });
-            inputData.value = '';
-        }
-    });
+
+
+
 
 
 </script>

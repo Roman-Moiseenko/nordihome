@@ -36,12 +36,13 @@
                 if (search_str.length > 2) _ajax_search_product(route, search_str, listBox);
             });
             $('body').on('click', '.search-option', function () {
-                inputSearch.val($(this).data('name'));
-                inputSearch.attr('data-id', $(this).data('id'));
-                inputSearch.attr('data-name', $(this).data('name'));
-                inputSearch.attr('data-img', $(this).data('img'));
-                inputSearch.attr('data-price', $(this).data('price'));
-                inputSearch.attr('data-code', $(this).data('code'));
+                let _inputSearch = $(this).parent().parent().parent().find('input[name="search"]');
+                _inputSearch.val($(this).data('name'));
+                _inputSearch.attr('data-id', $(this).data('id'));
+                _inputSearch.attr('data-name', $(this).data('name'));
+                _inputSearch.attr('data-img', $(this).data('img'));
+                _inputSearch.attr('data-price', $(this).data('price'));
+                _inputSearch.attr('data-code', $(this).data('code'));
                 resultBlock.removeClass("show");
             });
         });
