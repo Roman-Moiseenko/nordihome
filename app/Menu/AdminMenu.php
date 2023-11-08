@@ -52,7 +52,7 @@ class AdminMenu
                     'modification' => [
                         'icon' => 'file-cog',
                         'title' => 'Модификации',
-                        'route_name' => 'admin.home', // 'admin.product.tag.index'
+                        'route_name' => 'admin.product.modification.index', // 'admin.product.tag.index'
                     ],
                     'option' => [
                         'icon' => 'package-plus',
@@ -67,7 +67,7 @@ class AdminMenu
                     'group' => [
                         'icon' => 'boxes',
                         'title' => 'Группы товаров',
-                        'route_name' => 'admin.home', // 'admin.product.tag.index'
+                        'route_name' => 'admin.product.group.index',
                     ],
                     'attribute' => [
                         'icon' => 'blocks',

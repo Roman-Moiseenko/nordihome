@@ -41,6 +41,8 @@ use Illuminate\Support\Str;
  * @property Equivalent $equivalent
  * @property Product[] $related
  * @property Product[] $bonus
+ * @property Group[] $groups
+ * @property Modification $modification
  */
 class Product extends Model
 {
@@ -109,6 +111,9 @@ class Product extends Model
 
     public static function register(string $name, string $code, int $main_category_id, string $slug = ''): self
     {
+        //$dublicat = Product::where('name', '=', $name)->get();
+        if (!is_null(Product::where('name', '=', $name)->first())) throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
+        if (!is_null(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
         return self::create([
             'name' => $name,
             'slug' => empty($slug) ? Str::slug($name) : $slug,
@@ -132,7 +137,7 @@ class Product extends Model
 
     public function setPrice(float $price): void
     {
-        if ($this->lastPrice->value === $price) return;
+        if (!is_null($this->lastPrice) && $this->lastPrice->value === $price) return;
 
         $this->pricing()->create(
             [
@@ -140,6 +145,7 @@ class Product extends Model
                 'founded' => 'In Shop',
                 ]
         );
+        $this->refresh();
     }
 
 /*
@@ -172,8 +178,9 @@ class Product extends Model
     public function getPreviousPrice(): float
     {
         if (empty($this->pricing)) return 0;
-        if (count($this->pricing) == 1) return $this->getLastPrice();
-        return $this->pricing[1]->value;
+        $count = count($this->pricing);
+        if ($count == 1) return $this->getLastPrice();
+        return $this->pricing[$count - 2]->value;
     }
 
     public function getName(): string
@@ -265,6 +272,19 @@ class Product extends Model
 
     //RELATIONSHIP
 
+    public function modification()
+    {
+        /** @var ModificationProduct $mp */
+        $mp = ModificationProduct::where('product_id', '=', $this->id)->first();
+        if (empty($mp)) return null;
+        return $mp->modification();
+
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'groups_products', 'product_id', 'group_id');
+    }
 
     public function equivalent()
     {
@@ -281,7 +301,7 @@ class Product extends Model
 
     public function pricing()
     {
-        return $this->hasMany(ProductPricing::class, 'product_id', 'id')->orderBy('created_at');
+        return $this->hasMany(ProductPricing::class, 'product_id', 'id')->orderByDesc('created_at');
     }
 
     public function lastPrice()

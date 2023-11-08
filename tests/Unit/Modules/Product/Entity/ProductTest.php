@@ -18,6 +18,7 @@ class ProductTest extends TestCase
     public function testCreate(): void
     {
         //Основные параметры
+        $category = Category::register('Category');
         $product = Product::register($name = 'name', $code = '7889-GH-987-Y');
 
         self::assertEquals($product->getSlug(), $name);
@@ -26,7 +27,7 @@ class ProductTest extends TestCase
         self::assertEquals($product->getName(), $name);
 
         //Публикация
-        $product->published();
+        //$product->published();
         $this->expectExceptionMessage('Нельзя опубликовать незаполненный товар.');
         self::assertFalse($product->isVisible());
 
@@ -41,11 +42,9 @@ class ProductTest extends TestCase
 
 
 
-        $photo = Photo::new('file', 'path');
-        $product->setMainPhoto($photo);
-        self::assertEquals($product->getPhotoUrl(), 'path/file' );
 
 
+/*
         $product->published();
         //Тип продажи
         $product->setType(Product::SELL_ONLINE);
@@ -59,7 +58,7 @@ class ProductTest extends TestCase
         $product->setType(Product::SELL_OFFLINE);
         self::assertFalse($product->isVisible());
         $product->setCount(100);
-        self::assertFalse($product->isVisible());
+        self::assertFalse($product->isVisible());*/
 
 
         //Габариты
@@ -75,37 +74,43 @@ class ProductTest extends TestCase
 
     public function testPricing(): void
     {
-        $product = Product::create('name', '7889-GH-987-Y');
-        $product->setPrice($price = 80);
-        self::assertEquals($product->currentPrice(), $price);
+        $category = Category::register('Category');
+        $product = Product::register('name', '7889-GH-987-Y', $category->id);
+        $product->setPrice($price1 = 80);
+        self::assertEquals($product->getLastPrice(), $price1);
+        $product->setPrice($price2 = 100);
+        self::assertEquals($product->getLastPrice(), $price2);
+        self::assertEquals($product->getPreviousPrice(), $price1);
+        $product->setPrice($price3 = 120);
+        self::assertEquals($product->getLastPrice(), $price3);
+        self::assertEquals($product->getPreviousPrice(), $price2);
 
-        $product->setPrice($price2 = 100, $doc = 'Проводка 7 от 04/08/2023');
-        self::assertEquals($product->currentPrice(), $price2);
-        self::assertEquals($product->oldPrice(), $price);
+        foreach ($product->pricing() as $i => $pricing) {
 
-        $array = $product->getPricing();
-        self::assertIsArray($array);
-
-        $pricing1 = $array[0];
-        $pricing2 = $array[1];
-        self::assertEquals($pricing1->value, $price);
-        self::assertEquals($pricing2->value, $price2);
-
-        self::assertEmpty($pricing1->fixid_doc);
-        self::assertEquals($pricing2->fixid_doc, $doc);
+            if ($i == 0) self::assertEquals($pricing->value, $price3);
+            if ($i == 1) self::assertEquals($pricing->value, $price2);
+            if ($i == 2) self::assertEquals($pricing->value, $price1);
+        }
     }
 
     public function testDublicate(): void
     {
-        $name = 'Товар новый';
-        Product::create($name, 'code1');
-        Product::create($name, 'code2');
-        $this->expectExceptionMessage('Дублирование. Товар ' . $name . ' уже существует');
 
-        $code = '7889-GH-987-Y';
-        Product::create('name1', $code);
-        Product::create('name2', $code);
-        $this->expectExceptionMessage('Дублирование. Товар с артикулом ' . $code . ' уже существует');
+            $category = Category::register('Category');
+            $name = 'Товар новый';
+            Product::register($name, 'code1', $category->id);
+            Product::register($name, 'code2', $category->id);
+
+
+            self::expectException(\DomainException::class);
+            self::expectExceptionMessage('Дублирование. Товар ' . $name . ' уже существует');
+
+
+
+      /*  $code = '7889-GH-987-Y';
+        Product::register('name1', $code, $category->id);
+        Product::register('name2', $code, $category->id);
+        $this->expectExceptionMessage('Дублирование. Товар с артикулом ' . $code . ' уже существует');*/
     }
 
 

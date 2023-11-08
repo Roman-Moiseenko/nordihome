@@ -8,16 +8,16 @@ use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Repository\CategoryRepository;
-use App\Modules\Product\Repository\GroupRepository;
+use App\Modules\Product\Repository\AttributeGroupRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AttributeService
 {
     private CategoryRepository $categories;
-    private GroupRepository $groups;
+    private AttributeGroupRepository $groups;
 
-    public function __construct(CategoryRepository $categories, GroupRepository $groups)
+    public function __construct(CategoryRepository $categories, AttributeGroupRepository $groups)
     {
         $this->categories = $categories;
         $this->groups = $groups;

@@ -207,6 +207,12 @@ class ProductService
 
             /* SECTION 13*/
             //Бонусный товар
+            $product->bonus()->detach();
+            foreach ($request['bonus'] as $bonus) {
+                if ($product->id != (int)$bonus) $product->bonus()->attach((int)$bonus);
+            }
+
+
            DB::commit();
             $product->push();
             if (isset($request['published'])) $this->published($product);

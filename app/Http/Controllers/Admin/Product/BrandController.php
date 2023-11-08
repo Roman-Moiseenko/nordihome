@@ -62,7 +62,7 @@ class BrandController extends Controller
     public function update(Request $request, Brand $brand)
     {
         $brand = $this->service->update($request, $brand);
-        return view('admin.product.brand.show', compact('brand'));
+        return redirect()->route('admin.product.brand.show', compact('brand'));
     }
 
     public function destroy(Brand $brand)
@@ -73,6 +73,6 @@ class BrandController extends Controller
             flash($e->getMessage(), 'danger');
             return back();
         }
-        return redirect('admin/product/brand');
+        return redirect()->route('admin.product.brand.index');
     }
 }

@@ -5,7 +5,7 @@ namespace App\Modules\Product\Repository;
 
 use App\Modules\Product\Entity\AttributeGroup;
 
-class GroupRepository
+class AttributeGroupRepository
 {
     public function getById(int $id): AttributeGroup
     {

@@ -6,6 +6,8 @@ use App\Entity\User\User;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
+use App\Modules\Product\Entity\Group;
+use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Attribute;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -67,6 +69,7 @@ Breadcrumbs::for('admin.staff.edit', function (BreadcrumbTrail $trail, Admin $st
     $trail->parent('admin.staff.show', $staff);
     $trail->push('Редактировать', route('admin.staff.edit', $staff));
 });
+
 Breadcrumbs::for('admin.staff.update', function (BreadcrumbTrail $trail, Admin $staff) {
     $trail->parent('admin.staff.index');
     $trail->push($staff->fullName->getShortname(), route('admin.staff.show', $staff));
@@ -120,12 +123,12 @@ Breadcrumbs::for('admin.product.brand.edit', function (BreadcrumbTrail $trail, B
     $trail->parent('admin.product.brand.show', $brand);
     $trail->push('Редактировать', route('admin.product.brand.edit', $brand));
 });
+/*
 Breadcrumbs::for('admin.product.brand.update', function (BreadcrumbTrail $trail, Brand $brand) {
     $trail->parent('admin.product.brand.index');
     $trail->push($brand->name, route('admin.product.brand.show', $brand));
 });
-
-
+*/
 //CATEGORY
 Breadcrumbs::for('admin.product.category.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.product.index');
@@ -215,6 +218,41 @@ Breadcrumbs::for('admin.product.equivalent.update', function (BreadcrumbTrail $t
     $trail->push($equivalent->name, route('admin.product.equivalent.show', $equivalent));
 });
 */
+//GROUP
+Breadcrumbs::for('admin.product.group.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Группы', route('admin.product.group.index'));
+});
+Breadcrumbs::for('admin.product.group.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.group.index');
+    $trail->push('Добавить новую', route('admin.product.group.create'));
+});
+Breadcrumbs::for('admin.product.group.show', function (BreadcrumbTrail $trail, Group $group) {
+    $trail->parent('admin.product.group.index');
+    $trail->push($group->name, route('admin.product.group.show', $group));
+});
+Breadcrumbs::for('admin.product.group.edit', function (BreadcrumbTrail $trail, Group $group) {
+    $trail->parent('admin.product.group.show', $group);
+    $trail->push('Редактировать', route('admin.product.group.edit', $group));
+});
+
+//MODIFICATION
+Breadcrumbs::for('admin.product.modification.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Модификации', route('admin.product.modification.index'));
+});
+Breadcrumbs::for('admin.product.modification.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.modification.index');
+    $trail->push('Создать новую', route('admin.product.modification.create'));
+});
+Breadcrumbs::for('admin.product.modification.show', function (BreadcrumbTrail $trail, Modification $modification) {
+    $trail->parent('admin.product.modification.index');
+    $trail->push($modification->name, route('admin.product.modification.show', $modification));
+});
+Breadcrumbs::for('admin.product.modification.edit', function (BreadcrumbTrail $trail, Modification $modification) {
+    $trail->parent('admin.product.modification.show', $modification);
+    $trail->push('Редактировать', route('admin.product.modification.edit', $modification));
+});
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));

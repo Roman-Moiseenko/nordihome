@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Product\Entity\Modification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -81,12 +82,15 @@ Route::group(
                 Route::delete('/equivalent/{equivalent}/del-product/{product}', 'EquivalentController@del_product')->name('equivalent.del-product');
                 Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
                 Route::post('/equivalent/{equivalent}/json-products', 'EquivalentController@json_products')->name('equivalent.json-products');
+                Route::post('/modification/{modification}/set-modifications', 'ModificationController@set_modifications')->name('modification.set-modifications');
 
 
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD
                 Route::resource('attribute', 'AttributeController'); //CRUD
                 Route::resource('equivalent', 'EquivalentController'); //CRUD
+                Route::resource('group', 'GroupController'); //CRUD
+                Route::resource('modification', 'ModificationController'); //CRUD
 
             }
         );

@@ -92,7 +92,7 @@ class Attribute extends Model
     {
         $variant = AttributeVariant::register($name);
         if (!empty($file)) $variant->image->newUploadFile($file);
-        $this->variants()->save($variant);
+        return $this->variants()->save($variant);
     }
 
     public function categories()
