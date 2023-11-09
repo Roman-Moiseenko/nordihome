@@ -2,6 +2,7 @@
     "use strict";
     $(".search-product")
         .each(function () {
+
             let resultBlock = $(this).find(".search-product-result"); //Блок отображения результата
             let inputSearch = $(this).find('input[name="search"]');
             let listBox = resultBlock.find('div[role="listbox"]');
@@ -38,6 +39,8 @@
             $('body').on('click', '.search-option', function () {
                 let _inputSearch = $(this).parent().parent().parent().find('input[name="search"]');
                 let _inputHidden = $(this).parent().parent().parent().find('#hidden-id');
+                let callback = $(this).parent().parent().parent().attr('data-callback');
+
                 if (_inputHidden !== undefined) {
                     _inputHidden.val($(this).data('id'));
                 }
@@ -48,6 +51,11 @@
                 _inputSearch.attr('data-price', $(this).data('price'));
                 _inputSearch.attr('data-code', $(this).data('code'));
                 resultBlock.removeClass("show");
+
+                callback = callback.replace(/"/g, '');
+                if (callback !== undefined) { //Колбек при выборе элемента
+                    eval(callback);
+                }
             });
         });
 

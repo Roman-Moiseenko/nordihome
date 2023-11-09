@@ -8,5 +8,8 @@
             </h1>
         </div>
     </div>
+    <div class="font-medium text-xl text-danger mt-6">
+        В разработке. После торгового учета добавится движение товара, продажи и другие отчеты
 
+    </div>
 @endsection

@@ -113,4 +113,12 @@ class Modification extends Model
         }
         return $result;
     }
+
+    public function isProduct(int $id): bool
+    {
+        foreach ($this->products as $product) {
+            if ($product->id == $id) return true;
+        }
+        return false;
+    }
 }

@@ -19,10 +19,10 @@ class ModificationService
     public function create(Request $request)
     {
         $attributes = [];
-        foreach ($request['attributes'] as $id) {
+        foreach ($request['attribute_id'] as $id) {
             if ($_attr = $this->attributes->existAndGet((int)$id)) $attributes[] = $_attr;
         }
-        $modification = Modification::register($request['name'], $request['product_id'], $attributes);
+        $modification = Modification::register($request['name'], (int)$request['product_id'], $attributes);
 
         return $modification;
     }

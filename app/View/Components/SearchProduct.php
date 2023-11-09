@@ -11,15 +11,17 @@ class SearchProduct extends Component
     /**
      * Create a new component instance.
      */
-    public string $route;
-    public string $inputData;
-    public string $hiddenId;
+    public string $route; //адрес ajax-post запроса с возвратом списка товаров
+    public string $inputData; //id input со всеми данными, value = название товара
+    public string $hiddenId; //доп. скрытый input с value = id выбранного товара в id="hidden-id" name="$hiddenId"
+    public mixed $callback;//ф-ция обратного вызова(), срабатывает при выборе элемента из списка
 
-    public function __construct(string $route, string $inputData, string $hiddenId = '')
+    public function __construct(string $route, string $inputData, string $hiddenId = '', string $callback = null)
     {
         $this->route = $route;
         $this->inputData = $inputData;
         $this->hiddenId = $hiddenId;
+        $this->callback = $callback;
     }
 
     /**

@@ -103,16 +103,9 @@ class GroupController extends Controller
             /** @var Product $product */
             foreach ($products as $product) {
                 if (!$group->isProduct($product->id)) {
-                    $result[] = [
-                        'id' => $product->id,
-                        'name' => $product->name,
-                        'code' => $product->code,
-                        'image' => $product->getImage(),
-                        'price' => $product->lastPrice->value,
-                    ];
+                    $result[] = $this->products->toArrayForSearch($product);
                 }
             }
-
         } catch (\Throwable $e) {
             $result = $e->getMessage();
         }

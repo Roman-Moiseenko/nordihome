@@ -1,5 +1,7 @@
-<div class="search-product relative">
-    <!-- It is quality rather than quantity that matters. - Lucius Annaeus Seneca -->
+<div class="search-product relative"
+    {{ !is_null($callback) ? 'data-callback="' . $callback . '"' : '' }}
+    {{ !empty($hiddenId) ? 'data-hidden="' . $hiddenId . '"' : '' }}>
+
     <input id="{{ $inputData }}" type="text" name="search" value="" class="form-control" placeholder="Поиск ..." data-route="{{ $route }}"  data-id="" data-name="" data-img="" data-code="" data-price="">
     @if(!empty($hiddenId))
         <input type="hidden" id="hidden-id" name="{{ $hiddenId }}" value="">

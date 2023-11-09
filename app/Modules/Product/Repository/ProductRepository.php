@@ -16,7 +16,6 @@ class ProductRepository
      */
 
 
-
     public function getProductJSON(int $id): string
     {
         return json_encode([]);
@@ -32,12 +31,28 @@ class ProductRepository
         return json_encode([]);
     }
 
-    public function search(string $search)
+    public function search(string $search, int $take = 10)
     {
-        $products = Product::orderBy('name')->where(function ($query) use ($search) {
+        $query = Product::orderBy('name')->where(function ($query) use ($search) {
             $query->where('code', 'LIKE', "%{$search}%")
                 ->orWhere('name', 'LIKE', "%{$search}%");
-        })->take(10)->get();
-        return $products;
+        });
+        if (!is_null($take)) {
+            $query = $query->take($take);
+        } else {
+            $query = $query->all();
+        }
+        return $query->get();
+    }
+
+    public function toArrayForSearch(Product $product): array
+    {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'code' => $product->code,
+            'image' => $product->getImage(),
+            'price' => $product->lastPrice->value,
+        ];
     }
 }

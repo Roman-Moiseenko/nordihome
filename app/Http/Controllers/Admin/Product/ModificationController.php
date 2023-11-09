@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Modification;
+use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\ModificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -13,11 +15,13 @@ class ModificationController extends Controller
 
     private mixed $pagination;
     private ModificationService $service;
+    private ProductRepository $products;
 
-    public function __construct(ModificationService $service)
+    public function __construct(ModificationService $service, ProductRepository $products)
     {
         $this->pagination = Config::get('shop-config.p-list');
         $this->service = $service;
+        $this->products = $products;
     }
 
     public function index(Request $request)
@@ -26,8 +30,15 @@ class ModificationController extends Controller
         if (!empty($name = $request['name'])) {
             $query = $query->where('name','LIKE',"%{$name}%");
         }
-        $modification = $query->paginate($this->pagination);
-        return view('admin.product.modification.index', compact('modification'));
+        //ПАГИНАЦИЯ
+        if (!empty($pagination = $request->get('p'))) {
+            $modifications = $query->paginate($pagination);
+            $modifications->appends(['p' => $pagination]);
+        } else {
+            $modifications = $query->paginate($this->pagination);
+        }
+
+        return view('admin.product.modification.index', compact('modifications', 'pagination'));
     }
 
 
@@ -42,8 +53,10 @@ class ModificationController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'product_id' => 'integer|required|unique',
+            'product_id' => 'required',
+            'attribute_id' => 'required|array',
         ]);
+
         $modification = $this->service->create($request);
         return redirect()->route('admin.product.modification.show', compact('modification'));
     }
@@ -85,5 +98,24 @@ class ModificationController extends Controller
             return back();
         }
         return redirect()->route('admin.product.modification.index');
+    }
+
+    public function search(Request $request)
+    {
+        $result = [];
+        try {
+            $products = $this->products->search($request['search'], 100000);
+            //TODO Сделать фильтрацию по товарам которые есть в любой модификации (получить все id из ModiRepository и перебрать и проверить in_array($product->id, $array_mod_ids)
+            /** @var Product $product */
+            foreach ($products as $product) {
+                //if ($modification->isProduct($product->id)) {
+                    $result[] = array_merge($this->products->toArrayForSearch($product), ['other_id' => 'mod_id']);
+               // }
+            }
+
+        } catch (\Throwable $e) {
+            $result = $e->getMessage();
+        }
+        return \response()->json($result);
     }
 }

@@ -16,12 +16,14 @@ use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Config;
 
 class ProductController extends Controller
 {
     private ProductService $service;
     private Options $options;
     private ProductRepository $repository;
+    private mixed $pagination;
 
     public function __construct(ProductService $service, Options $options, ProductRepository $repository)
     {
@@ -29,12 +31,31 @@ class ProductController extends Controller
         $this->service = $service;
         $this->options = $options;
         $this->repository = $repository;
+        $this->pagination = Config::get('shop-config.p-list');
+
     }
 
     public function index(Request $request)
     {
-        $products = Product::orderBy('id')->get();
-        return view('admin.product.product.index', compact('products'));
+        $categories = Category::defaultOrder()->withDepth()->get();
+
+        $query = Product::orderBy('name');
+
+        if (!empty($category_id = $request->get('category_id')) && $category_id != 0) {
+            $query->whereHas('categories', function ($q) use ($category_id) {
+                $q->where('id', '=', $category_id);
+            })->orWhere('main_category_id', '=', $category_id);
+        }
+
+        //ПАГИНАЦИЯ
+        if (!empty($pagination = $request->get('p'))) {
+            $products = $query->paginate($pagination);
+            $products->appends(['p' => $pagination]);
+        } else {
+            $products = $query->paginate($this->pagination);
+        }
+
+        return view('admin.product.product.index', compact('products', 'pagination', 'categories', 'category_id'));
     }
 
     public function create(Request $request)
@@ -87,34 +108,36 @@ class ProductController extends Controller
         return redirect(route('admin.product.product.index'));
     }
 
-    //AJAX для работы с Фото
+    //AJAX
 
     public function search(Request $request)
     {
-
         $result = [];
         try {
             $products = $this->repository->search($request['search']);
-
             /** @var Product $product */
-
             foreach ($products as $product) {
-                $result[] = [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'code' => $product->code,
-                    'image' => $product->getImage(),
-                    'price' => $product->lastPrice->value,
-                ];
+                $result[] = $this->repository->toArrayForSearch($product);
             }
-
         } catch (\Throwable $e) {
             $result = $e->getMessage();
         }
         return \response()->json($result);
     }
 
-
+    public function attr_modification(Product $product)
+    {
+        $result = [];
+        foreach ($product->prod_attributes as $attribute) {
+            if ($attribute->isVariant()) {
+                $result[] = [
+                    'id' => $attribute->id,
+                    'name' => $attribute->name,
+                    ];
+            }
+        }
+        return \response()->json($result);
+    }
     public function get_images(Product $product)
     {
         $result = [];

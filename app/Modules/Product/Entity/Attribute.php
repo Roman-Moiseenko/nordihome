@@ -142,4 +142,12 @@ class Attribute extends Model
         }
         return '';
     }
+
+    public function getVariant(int $id): AttributeVariant
+    {
+        foreach ($this->variants as $variant) {
+            if ($variant->id == $id) return $variant;
+        }
+        throw new \DomainException('Не найдет вариант id = ' . $id . ' атрибута ' . $this->name);
+    }
 }

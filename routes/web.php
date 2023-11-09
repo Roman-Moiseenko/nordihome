@@ -86,6 +86,7 @@ Route::group(
                 Route::post('/group/{group}/add-product', 'GroupController@add_product')->name('group.add-product');
                 Route::delete('/group/{group}/del-product', 'GroupController@del_product')->name('group.del-product');
                 Route::post('/group/{group}/search', 'GroupController@search')->name('group.search');
+                Route::post('/modification/search', 'ModificationController@search')->name('modification.search');
 
 
 
@@ -94,6 +95,7 @@ Route::group(
                 Route::resource('attribute', 'AttributeController'); //CRUD
                 Route::resource('equivalent', 'EquivalentController'); //CRUD
                 Route::resource('group', 'GroupController'); //CRUD
+
                 Route::resource('modification', 'ModificationController'); //CRUD
 
             }
@@ -106,6 +108,7 @@ Route::group(
         Route::post('product/{product}/down-image', 'Product\ProductController@down_image')->name('product.down-image');
         Route::post('product/{product}/alt-image', 'Product\ProductController@alt_image')->name('product.alt-image');
         Route::post('product/search', 'Product\ProductController@search')->name('product.search');
+        Route::post('product/{product}/attr-modification', 'Product\ProductController@attr_modification')->name('product.attr-modification');
 
         Route::resource('product', 'Product\ProductController'); //CRUD
 
