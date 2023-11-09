@@ -17,4 +17,6 @@ class Bonus extends Model
     protected $fillable = [
         'discount',
     ];
+
+
 }

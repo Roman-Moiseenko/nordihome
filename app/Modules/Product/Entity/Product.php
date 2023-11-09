@@ -324,7 +324,7 @@ class Product extends Model
         return $this->belongsToMany(Product::class, 'related_products', 'product_id', 'related_id');
     }
 
-    public function bonus()
+    public function bonus() //Для attach и detach
     {
         return $this->belongsToMany(Product::class, 'bonus_products', 'product_id', 'bonus_id')->withPivot('discount');
     }

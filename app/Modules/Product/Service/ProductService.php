@@ -123,10 +123,10 @@ class ProductService
             if (!empty($request['video_url'])) {
                 foreach ($request['video_url'] as $i => $item) {
                     if (!empty($request['video_url'][$i]))
-                    $product->videos()->save(Video::register(
-                        $request['video_url'][$i],
-                        $request['video_caption'][$i] ?? '',
-                        $request['video_text'][$i] ?? '', $i));
+                        $product->videos()->save(Video::register(
+                            $request['video_url'][$i],
+                            $request['video_caption'][$i] ?? '',
+                            $request['video_text'][$i] ?? '', $i));
                 }
             }
             /* SECTION 5*/
@@ -140,7 +140,6 @@ class ProductService
             );
             $product->not_local = !($request['local'] ?? false);
             $product->not_delivery = !($request['delivery'] ?? false);
-
 
 
             /* SECTION 6*/
@@ -184,21 +183,21 @@ class ProductService
             if ($new_equivalent_id == 0 && !is_null($product->equivalent())) {
                 $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
             }
-                if ($new_equivalent_id != 0) {
-                    if (is_null($product->equivalent())) {
-                        //Доб.новый
-                        $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
-                    } elseif ((int)$new_equivalent_id !== $product->equivalent->id) {
-                        $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-                        $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
-                    }
-
+            if ($new_equivalent_id != 0) {
+                if (is_null($product->equivalent())) {
+                    //Доб.новый
+                    $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
+                } elseif ((int)$new_equivalent_id !== $product->equivalent->id) {
+                    $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+                    $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
                 }
+
+            }
 
             /* SECTION 10*/
             //Сопутствующие
             $product->related()->detach();
-            foreach($request['related'] as $related) {
+            foreach ($request['related'] as $related) {
                 if ($product->id != (int)$related) $product->related()->attach((int)$related);
             }
 
@@ -208,12 +207,16 @@ class ProductService
             /* SECTION 13*/
             //Бонусный товар
             $product->bonus()->detach();
-            foreach ($request['bonus'] as $bonus) {
-                if ($product->id != (int)$bonus) $product->bonus()->attach((int)$bonus);
+            if (!empty($request['bonus'])) {
+                foreach ($request['bonus'] as $key => $bonus) {
+                    if ($product->id != (int)$bonus) {
+                        $product->bonus()->attach((int)$bonus, ['discount' => (int)$request['discount'][$key]]);
+                    }
+                }
             }
 
 
-           DB::commit();
+            DB::commit();
             $product->push();
             if (isset($request['published'])) $this->published($product);
             return $product;
@@ -303,17 +306,17 @@ class ProductService
                 $photos[$i + 1]->update(['sort' => $next]);
             }
         }
-/*
-         $photo_id = (int)$request['photo_id'];
-        for ($i = 0; $i < count($product->photos) - 1; $i++) {
-            if ($product->photos[$i] == $photo_id) {
-                $prev = $product->photos[$i + 1]->sort;
-                $next = $product->photos[$i]->sort;
-                $product->photos[$i]->update(['sort' => $prev]);
-                $product->photos[$i + 1]->update(['sort' => $next]);
-            }
-        }
- * */
+        /*
+                 $photo_id = (int)$request['photo_id'];
+                for ($i = 0; $i < count($product->photos) - 1; $i++) {
+                    if ($product->photos[$i] == $photo_id) {
+                        $prev = $product->photos[$i + 1]->sort;
+                        $next = $product->photos[$i]->sort;
+                        $product->photos[$i]->update(['sort' => $prev]);
+                        $product->photos[$i + 1]->update(['sort' => $next]);
+                    }
+                }
+         * */
 
     }
 

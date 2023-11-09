@@ -5,17 +5,29 @@
         inputDataBonus = document.getElementById('bonus-product');
         buttonAddBonus = document.getElementById('add-bonus');
         listBonus = document.getElementById('list-bonus');
+        buttonAddBonus.addEventListener('click', function () {
+            let inputBonus = document.querySelectorAll('.input-bonus');
+            let isBonus = false;
+            if (inputBonus.length !== 0) inputBonus.forEach(function (item) {
+                if (inputDataBonus.getAttribute('data-id') === item.value) isBonus = true;
+            });
+            if (inputDataBonus.value.length > 0 && !isBonus) {
+                _insertBlockBonus(inputDataBonus.getAttribute('data-id'), inputDataBonus.getAttribute('data-name'),
+                    inputDataBonus.getAttribute('data-img'), inputDataBonus.getAttribute('data-code'), inputDataBonus.getAttribute('data-price'));
+                inputDataBonus.value = '';
+            }
+        });
     }
 
-    function _insertBlockBonus(_id, _name, _img, _code, _price) {
-        listBonus.insertAdjacentHTML('afterbegin', _itemBonus(_id, _name, _img, _code, _price));
+    function _insertBlockBonus(_id, _name, _img, _code, _price, _discount = '') {
+        listBonus.insertAdjacentHTML('afterbegin', _itemBonus(_id, _name, _img, _code, _price, _discount));
         let new_el = document.getElementById('delete-bonus-' + _id); //Удалить блок
         new_el.addEventListener('click', function (e) {
             e.preventDefault();
             document.getElementById(new_el.getAttribute('for')).remove();
         });
     }
-    function _itemBonus(_id, _name, _img, _code, _price) {
+    function _itemBonus(_id, _name, _img, _code, _price, _discount) {
         return ''+
             '<div id="bonus-'+_id+'" class="relative pt-5 pb-1 py-3 bg-slate-50 dark:bg-transparent dark:border rounded-md mt-3">' +
             '<a id="delete-bonus-'+_id+'" for="bonus-'+_id+'" data-id="'+_id+'" href="" class="text-slate-300 absolute top-0 right-0 mr-4 mt-4">' +
@@ -23,10 +35,13 @@
             '<div class="flex justify-between items-center m-3">' +
             '<div class="flex items-center">' +
             '<div class="image-fit w-10 h-10"><img class="rounded-full" src="' + _img + '" alt="Светильники"></div>'+
-            '<div class="text-left ml-3">' + _name + '</div>' +
+            '<div class="text-left ml-3">' + _name + '(' + _code + ')' + '</div>' +
             '</div>' +
-            '<div class="text-right font-medium">' + _code + '</div>' +
+            '<div class="text-right font-medium ml-auto mr-3 text-danger"><s>' + _price + ' ₽</s></div>' +
+
+            '<div><input class="form-control form-input w-40 ml-3" type="text" placeholder="Новая цена" name=discount[] value="' + _discount + '"> ₽ </div>'+
             '</div>'+
+
             '<input class="input-bonus" type="hidden" name=bonus[] value="' + _id + '">'+
             '</div>';
     }
@@ -45,7 +60,13 @@
         <div id="list-bonus">
             <script>initBonus();</script>
             @foreach($product->bonus as $bonus)
-                <script>_insertBlockBonus("{{ $bonus->id }}", "{{ $bonus->name }}", "{{ $bonus->getImage() }}", "{{ $bonus->code }}", "{{ $bonus->price }}");</script>
+                <script>
+                    _insertBlockBonus(
+                        "{{ $bonus->id }}", "{{ $bonus->name }}",
+                        "{{ $bonus->getImage() }}", "{{ $bonus->code }}",
+                        "{{ $bonus->getlastPrice() }}", "{{ $bonus->pivot->discount }}"
+                    );
+                </script>
             @endforeach
         </div>
     </div>
