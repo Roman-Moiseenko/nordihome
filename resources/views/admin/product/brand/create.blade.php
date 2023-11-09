@@ -23,9 +23,10 @@
                             <div class="col-span-12 lg:col-span-4">
                                 {{ \App\Forms\Input::create('name', ['placeholder' => 'Бренд'])->show() }}
                                 {{ \App\Forms\Input::create('url', ['placeholder' => 'Ссылка на официальный сайт', 'class' => 'mt-3'])->show() }}
+                                <x-base.tom-select name="sameAs[]" class="w-full mt-3"
+                                                   data-placeholder="Введите ссылку на упоминания бренда" multiple data-header="Поле SameAs">
+                                </x-base.tom-select>
 
-                                {{ \App\Forms\TomSelect::create('sameAs[]', ['placeholder' => 'Введите ссылку на упоминания бренда', 'class' => 'mt-3'])
-                                    ->header('Поле SameAs')->show() }}
                             </div>
                             <div class="col-span-12 lg:col-span-4">
                                 {{ \App\Forms\TextArea::create('description', ['placeholder' => 'Описание'])->rows(9)->show() }}

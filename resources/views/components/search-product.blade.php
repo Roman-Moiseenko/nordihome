@@ -1,6 +1,9 @@
 <div class="search-product relative">
     <!-- It is quality rather than quantity that matters. - Lucius Annaeus Seneca -->
     <input id="{{ $inputData }}" type="text" name="search" value="" class="form-control" placeholder="Поиск ..." data-route="{{ $route }}"  data-id="" data-name="" data-img="" data-code="" data-price="">
+    @if(!empty($hiddenId))
+        <input type="hidden" id="hidden-id" name="{{ $hiddenId }}" value="">
+    @endif
     <x-base.transition
         class="search-product-result absolute right-0 z-10 mt-[3px] hidden w-full"
         selector=".show"

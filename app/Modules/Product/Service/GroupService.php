@@ -14,11 +14,23 @@ class GroupService
         $group = Group::register($request['name'], $request['description']);
 
         $this->photo($group, $request->file('file'));
+/*
         foreach ($request['products'] as $product_id) {
             $group->products()->attach($product_id);
         }
-        $group->push();
+
+        $group->push();*/
         return $group;
+    }
+
+    public function add_product(Request $request, Group $group)
+    {
+        $group->products()->attach((int)$request['product_id']);
+    }
+
+    public function del_product(Request $request, Group $group)
+    {
+        $group->products()->detach((int)$request['product_id']);
     }
 
     public function update(Request $request, Group $group): Group
@@ -29,12 +41,12 @@ class GroupService
         ]);
         $this->photo($group, $request->file('file'));
 
-        $group->products()->detach();
+      /*  $group->products()->detach();
 
         foreach ($request['products'] as $product_id) {
             $group->products()->attach((int)$product_id);
         }
-        $group->push();
+        $group->push();*/
         return $group;
     }
 

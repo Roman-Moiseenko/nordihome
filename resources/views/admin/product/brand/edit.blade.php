@@ -24,9 +24,14 @@
                             <div class="col-span-12 lg:col-span-4">
                                 {{ \App\Forms\Input::create('name', ['placeholder' => 'Бренд', 'value' => $brand->name])->show() }}
                                 {{ \App\Forms\Input::create('url', ['placeholder' => 'Ссылка на официальный сайт', 'value' => $brand->url, 'class' => 'mt-3'])->show() }}
-
-                                {{ \App\Forms\TomSelect::create('sameAs[]', ['placeholder' => 'Введите ссылку на упоминания бренда', 'class' => 'mt-3'])
-                                    ->header('Поле SameAs')->options($brand->getSameAs())->selected($brand->getSameAs())->show() }}
+                                <x-base.tom-select name="sameAs[]" class="w-full mt-3"
+                                                   data-placeholder="Введите ссылку на упоминания бренда" multiple data-header="Поле SameAs">
+                                    @foreach($brand->getSameAs() as $item)
+                                        <option value="{{ $item }}" selected>
+                                            {{ $item }}
+                                        </option>
+                                    @endforeach
+                                </x-base.tom-select>
                             </div>
                             <div class="col-span-12 lg:col-span-4">
                                 {{ \App\Forms\TextArea::create('description', ['placeholder' => 'Описание', 'value' => $brand->description])->rows(9)->show() }}

@@ -12,6 +12,7 @@ use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Helper\ProductHelper;
+use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -20,12 +21,14 @@ class ProductController extends Controller
 {
     private ProductService $service;
     private Options $options;
+    private ProductRepository $repository;
 
-    public function __construct(ProductService $service, Options $options)
+    public function __construct(ProductService $service, Options $options, ProductRepository $repository)
     {
         $this->middleware(['auth:admin', 'can:commodity']);
         $this->service = $service;
         $this->options = $options;
+        $this->repository = $repository;
     }
 
     public function index(Request $request)
@@ -88,16 +91,13 @@ class ProductController extends Controller
 
     public function search(Request $request)
     {
-        //TODO В Repository
-        $data = $request['search'];
+
         $result = [];
         try {
-            $products = Product::orderBy('name')->where(function ($query) use ($data) {
-                $query->where('code', 'LIKE', "%{$data}%")
-                    ->orWhere('name', 'LIKE', "%{$data}%");
-            })->take(10)->get();
+            $products = $this->repository->search($request['search']);
 
             /** @var Product $product */
+
             foreach ($products as $product) {
                 $result[] = [
                     'id' => $product->id,

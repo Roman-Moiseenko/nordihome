@@ -38,4 +38,21 @@ class Group extends Model
     {
         return $this->belongsToMany(Product::class, 'groups_products', 'group_id', 'product_id');
     }
+
+    public function getImage()
+    {
+        if (empty($this->photo->file)) {
+            return '/images/no-image.jpg';
+        } else {
+            return $this->photo->getUploadUrl();
+        }
+    }
+
+    public function isProduct(int $id): bool
+    {
+        foreach ($this->products as  $product) {
+            if ($product->id == $id) return true;
+        }
+        return false;
+    }
 }

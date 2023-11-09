@@ -13,11 +13,13 @@ class SearchProduct extends Component
      */
     public string $route;
     public string $inputData;
+    public string $hiddenId;
 
-    public function __construct(string $route, string $inputData)
+    public function __construct(string $route, string $inputData, string $hiddenId = '')
     {
         $this->route = $route;
         $this->inputData = $inputData;
+        $this->hiddenId = $hiddenId;
     }
 
     /**

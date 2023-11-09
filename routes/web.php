@@ -83,6 +83,10 @@ Route::group(
                 Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
                 Route::post('/equivalent/{equivalent}/json-products', 'EquivalentController@json_products')->name('equivalent.json-products');
                 Route::post('/modification/{modification}/set-modifications', 'ModificationController@set_modifications')->name('modification.set-modifications');
+                Route::post('/group/{group}/add-product', 'GroupController@add_product')->name('group.add-product');
+                Route::delete('/group/{group}/del-product', 'GroupController@del_product')->name('group.del-product');
+                Route::post('/group/{group}/search', 'GroupController@search')->name('group.search');
+
 
 
                 Route::resource('brand', 'BrandController'); //CRUD

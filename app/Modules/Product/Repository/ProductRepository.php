@@ -16,6 +16,7 @@ class ProductRepository
      */
 
 
+
     public function getProductJSON(int $id): string
     {
         return json_encode([]);
@@ -29,5 +30,14 @@ class ProductRepository
             return json_encode(['code' => $product->code, 'name' => $product->name]);
         }
         return json_encode([]);
+    }
+
+    public function search(string $search)
+    {
+        $products = Product::orderBy('name')->where(function ($query) use ($search) {
+            $query->where('code', 'LIKE', "%{$search}%")
+                ->orWhere('name', 'LIKE', "%{$search}%");
+        })->take(10)->get();
+        return $products;
     }
 }

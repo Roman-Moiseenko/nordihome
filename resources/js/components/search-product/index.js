@@ -37,6 +37,10 @@
             });
             $('body').on('click', '.search-option', function () {
                 let _inputSearch = $(this).parent().parent().parent().find('input[name="search"]');
+                let _inputHidden = $(this).parent().parent().parent().find('#hidden-id');
+                if (_inputHidden !== undefined) {
+                    _inputHidden.val($(this).data('id'));
+                }
                 _inputSearch.val($(this).data('name'));
                 _inputSearch.attr('data-id', $(this).data('id'));
                 _inputSearch.attr('data-name', $(this).data('name'));
