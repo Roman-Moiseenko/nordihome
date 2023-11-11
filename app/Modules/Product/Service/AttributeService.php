@@ -48,7 +48,7 @@ class AttributeService
                 $attribute->filter = true;
             }
             $attribute->sameAs = $request['sameAs'] ?? '';
-            $this->image($attribute, $request->file('file'));
+            $this->image($attribute, $request);
 
             if ($attribute->isVariant()) {
                 foreach ($request['variants_value'] as $variant) {
@@ -76,7 +76,7 @@ class AttributeService
             $attribute->type = (int)$request['type'];
 
             $attribute->sameAs = $request['sameAs'] ?? '';
-            $this->image($attribute, $request->file('file'));
+            $this->image($attribute, $request);
             //Работа с категориями
 
             $array_old = [];
@@ -130,13 +130,12 @@ class AttributeService
         $attribute->delete();
     }
 
-    public function image(Attribute $attribute, $file): void
+    public function image(Attribute $attribute, Request $request): void
     {
-        if (empty($file)) return;
         if (!empty($attribute->image)) {
-            $attribute->image->newUploadFile($file);
+            $attribute->image->newUploadFile($request->file('file'));
         } else {
-            $attribute->image()->save(Photo::upload($file));
+            $attribute->image()->save(Photo::upload($request->file('file')));
         }
         $attribute->refresh();
     }

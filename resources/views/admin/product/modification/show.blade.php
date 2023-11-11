@@ -41,8 +41,8 @@
         @foreach($modification->prod_attributes as $key => $attribute)
             <div class="mt-3 flex items-center">
                 <div class="image-fit w-10 h-10">
-                    <img class="rounded-full" src="{{ $modification->base_product->getImage() }}"
-                         alt="{{ $modification->name }}">
+                    <img class="rounded-full" src="{{ $attribute->getImage() }}"
+                         alt="{{ $attribute->name }}">
                 </div>
                 <div class="font-medium ml-3 text-lg text-primary">
                     {{ $attribute->name }}

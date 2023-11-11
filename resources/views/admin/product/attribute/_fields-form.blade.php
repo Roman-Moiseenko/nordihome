@@ -130,7 +130,7 @@
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
-                        {{ \App\Forms\Upload::create('image', isset($attribute) ? $attribute->getUploadUrl() : '')->show() }}
+                        {{ \App\Forms\Upload::create('file', isset($attribute) ? $attribute->getUploadUrl() : '')->show() }}
                     </div>
                 </div>
             </div>
