@@ -1,6 +1,15 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
+
+    <script>
+
+        function show_modification() {
+            let inputModification = document.getElementById('modification-product');
+            let other = inputModification.getAttribute('data-other');
+            window.location.replace(other);
+        }
+    </script>
     <div class="intro-y flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Модификации товаров
@@ -9,7 +18,8 @@
     <div class="intro-y box p-5 mt-5">
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 lg:col-span-3">
-                <x-searchproduct route="{{ route('admin.product.modification.search') }}" input-data="modification-product" hidden-id="product_id"/>
+                <x-searchproduct route="{{ route('admin.product.modification.search', ['action' => 'index']) }}"
+                                 input-data="modification-product" callback="show_modification()"/>
             </div>
         </div>
     </div>
@@ -45,4 +55,7 @@
     </div>
 
     {{ $modifications->links('admin.components.paginator', ['pagination' => $pagination]) }}
+
+    {{ \App\Forms\ModalDelete::create('Вы уверены?',
+'Вы действительно хотите расформировать группу модификации?<br>Этот процесс не может быть отменен.')->show() }}
 @endsection

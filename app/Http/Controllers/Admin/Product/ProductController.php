@@ -129,7 +129,7 @@ class ProductController extends Controller
     {
         $result = [];
         foreach ($product->prod_attributes as $attribute) {
-            if ($attribute->isVariant()) {
+            if ($attribute->isVariant() && !$attribute->multiple) {
                 $result[] = [
                     'id' => $attribute->id,
                     'name' => $attribute->name,

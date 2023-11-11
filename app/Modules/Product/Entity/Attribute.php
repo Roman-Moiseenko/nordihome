@@ -121,7 +121,7 @@ class Attribute extends Model
 
     public function Value()
     {
-        if (!empty($this->pivot)) return json_decode($this->pivot->value);
+        if (!empty($this->pivot)) return json_decode($this->pivot->value, true);
         return null;
     }
 

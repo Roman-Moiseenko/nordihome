@@ -15,6 +15,14 @@ class ProductRepository
      * в QueryProduct setCountForSell(%id, %count) и если нет ТУ то setPriceForSell($id, $price)
      */
 
+    public function existAndGet(int $id): ?Product
+    {
+        try {
+            return Product::findOrFail($id);
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
 
     public function getProductJSON(int $id): string
     {
@@ -31,16 +39,25 @@ class ProductRepository
         return json_encode([]);
     }
 
-    public function search(string $search, int $take = 10)
+    public function search(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true)
     {
         $query = Product::orderBy('name')->where(function ($query) use ($search) {
             $query->where('code', 'LIKE', "%{$search}%")
                 ->orWhere('name', 'LIKE', "%{$search}%");
         });
+
+        if (!empty($include_ids)) {
+            if ($isInclude) {
+                $query = $query->whereIn('id', $include_ids);
+            } else {
+                $query = $query->whereNotIn('id', $include_ids);
+            }
+        }
+
         if (!is_null($take)) {
             $query = $query->take($take);
         } else {
-            $query = $query->all();
+            //$query = $query->all();
         }
         return $query->get();
     }

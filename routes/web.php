@@ -82,11 +82,14 @@ Route::group(
                 Route::delete('/equivalent/{equivalent}/del-product/{product}', 'EquivalentController@del_product')->name('equivalent.del-product');
                 Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
                 Route::post('/equivalent/{equivalent}/json-products', 'EquivalentController@json_products')->name('equivalent.json-products');
-                Route::post('/modification/{modification}/set-modifications', 'ModificationController@set_modifications')->name('modification.set-modifications');
                 Route::post('/group/{group}/add-product', 'GroupController@add_product')->name('group.add-product');
                 Route::delete('/group/{group}/del-product', 'GroupController@del_product')->name('group.del-product');
                 Route::post('/group/{group}/search', 'GroupController@search')->name('group.search');
+
+                Route::post('/modification/{modification}/set-modifications', 'ModificationController@set_modifications')->name('modification.set-modifications');
                 Route::post('/modification/search', 'ModificationController@search')->name('modification.search');
+                Route::post('/modification/{modification}/add-product', 'ModificationController@add_product')->name('modification.add-product');
+                Route::delete('/modification/{modification}/del-product', 'ModificationController@del_product')->name('modification.del-product');
 
 
 

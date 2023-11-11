@@ -2,7 +2,7 @@
     "use strict";
     $(".search-product")
         .each(function () {
-
+            let idSearch= $(this).attr('id');
             let resultBlock = $(this).find(".search-product-result"); //Блок отображения результата
             let inputSearch = $(this).find('input[name="search"]');
             let listBox = resultBlock.find('div[role="listbox"]');
@@ -34,32 +34,34 @@
                     listBox.html('');
                     listBox.append('<div class="text-slate-400">Вводите наименование или артикул товара</div>');
                 }
-                if (search_str.length > 2) _ajax_search_product(route, search_str, listBox);
+                if (search_str.length > 2) _ajax_search_product(route, search_str, listBox, idSearch);
             });
             $('body').on('click', '.search-option', function () {
-                let _inputSearch = $(this).parent().parent().parent().find('input[name="search"]');
-                let _inputHidden = $(this).parent().parent().parent().find('#hidden-id');
-                let callback = $(this).parent().parent().parent().attr('data-callback');
+                if (idSearch === $(this).data('for')) {
+                    let _inputSearch = $(this).parent().parent().parent().find('input[name="search"]');
+                    let _inputHidden = $(this).parent().parent().parent().find('#hidden-id');
+                    let callback = $(this).parent().parent().parent().attr('data-callback');
 
-                if (_inputHidden !== undefined) {
-                    _inputHidden.val($(this).data('id'));
-                }
-                _inputSearch.val($(this).data('name'));
-                _inputSearch.attr('data-id', $(this).data('id'));
-                _inputSearch.attr('data-name', $(this).data('name'));
-                _inputSearch.attr('data-img', $(this).data('img'));
-                _inputSearch.attr('data-price', $(this).data('price'));
-                _inputSearch.attr('data-code', $(this).data('code'));
-                resultBlock.removeClass("show");
-
-                callback = callback.replace(/"/g, '');
-                if (callback !== undefined) { //Колбек при выборе элемента
-                    eval(callback);
+                    if (_inputHidden !== undefined) {
+                        _inputHidden.val($(this).data('id'));
+                    }
+                    _inputSearch.val($(this).data('name'));
+                    _inputSearch.attr('data-id', $(this).data('id'));
+                    _inputSearch.attr('data-name', $(this).data('name'));
+                    _inputSearch.attr('data-img', $(this).data('img'));
+                    _inputSearch.attr('data-price', $(this).data('price'));
+                    _inputSearch.attr('data-code', $(this).data('code'));
+                    if ($(this).data('other') !== undefined) _inputSearch.attr('data-other', $(this).data('other'));
+                    resultBlock.removeClass("show");
+                    if (callback !== undefined) { //Колбек при выборе элемента
+                        callback = callback.replace(/"/g, '');
+                        eval(callback);
+                    }
                 }
             });
         });
 
-    function _ajax_search_product(_route, _search_str, _listBox)
+    function _ajax_search_product(_route, _search_str, _listBox, _id_search)
     {
         $.ajax({
             url: _route,
@@ -69,15 +71,19 @@
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
             success: function (data) {
-
+                console.log(data);
                 if (Array.isArray(data)) {
                     _listBox.html('');
                     if (data.length === 0) {
                         _listBox.append('<div class="text-slate-400">Вводите наименование или артикул товара</div>');
                     }
                     data.forEach(function (item) {
-                        _listBox.append('<div class="search-option" data-id="' + item.id +
-                            '" data-name="' + item.name + '" data-img="' + item.image + '" data-code="' + item.code + '" data-price="' + item.price + '">' +
+                        let _other = '';
+                        if (item.other !== undefined) {
+                            _other = 'data-other="' + item.other + '"';
+                        }
+                        _listBox.append('<div class="search-option" data-for="' + _id_search + '" data-id="' + item.id +
+                            '" data-name="' + item.name + '" data-img="' + item.image + '" data-code="' + item.code + '" data-price="' + item.price + '" ' + _other + '>' +
                             item.name + ' (' + item.code + ')'+
                             '</div>');
                     });

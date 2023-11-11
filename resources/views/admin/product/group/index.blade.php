@@ -11,9 +11,7 @@
             @csrf
         <div class="flex">
                 <input class="form-control w-52" name="search" value="{{ old('search') ?? '' }}">
-
-                <x-base.button id="groups"
-                               class="w-32 mt-auto ml-6 w-auto" variant="secondary" type="submit">
+                <x-base.button id="groups" class="w-32 mt-auto ml-6 w-auto" variant="secondary" type="submit">
                     Поиск
                 </x-base.button>
         </div>

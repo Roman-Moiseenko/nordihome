@@ -1,4 +1,4 @@
-<div class="search-product relative"
+<div class="search-product relative" id="search-{{ $inputData }}"
     {{ !is_null($callback) ? 'data-callback="' . $callback . '"' : '' }}
     {{ !empty($hiddenId) ? 'data-hidden="' . $hiddenId . '"' : '' }}>
 

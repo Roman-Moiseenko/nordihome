@@ -38,7 +38,7 @@
             <div class="w-1/2 lg:w-1/3">
                 <x-base.form-label for="modification-product" class="inline-block mb-2 mt-3">Выберите товар
                 </x-base.form-label>
-                <x-searchproduct route="{{ route('admin.product.modification.search', ['new' => true]) }}"
+                <x-searchproduct route="{{ route('admin.product.modification.search', ['action' => 'create']) }}"
                                  input-data="modification-product" hidden-id="product_id"
                                  class="w-52" callback="_callback()"/>
                 <div class="mt-5">

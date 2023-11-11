@@ -54,6 +54,16 @@ class Modification extends Model
             ->withPivot('values_json');
     }
 
+    public function productByVariant(array $var): ?Product
+    {
+        /** @var Product $product */
+        foreach ($this->products as $product) {
+            $_vars = json_decode($product->pivot->values_json, true);
+            if (empty(array_diff($_vars, $var))) return $product;
+        }
+        return null;
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -68,11 +78,11 @@ class Modification extends Model
         self::retrieved(function (Modification $modification) {
             $modification->prod_attributes = array_map(function ($item) {
                 return Attribute::find($item);
-            }, json_decode($modification->attributes_json));
+            }, json_decode($modification->attributes_json, true));
         });
     }
 
-    public function getVariations(): array
+    public function getVariations(bool $only_free = false): array
     {
         $result = [];
         $count = count($this->prod_attributes);
@@ -104,6 +114,14 @@ class Modification extends Model
                             $this->prod_attributes[2]->id => $variant_3->id,
                         ];
                     }
+                }
+            }
+        }
+
+        if ($only_free) { //Только свободные варианты
+            foreach ($result as $key => $item) {
+                if (!is_null($this->productByVariant($item))) {
+                    unset($result[$key]);
                 }
             }
         }

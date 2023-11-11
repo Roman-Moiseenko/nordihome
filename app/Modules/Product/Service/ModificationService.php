@@ -5,15 +5,18 @@ namespace App\Modules\Product\Service;
 
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Repository\AttributeRepository;
+use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\Request;
 
 class ModificationService
 {
     private AttributeRepository $attributes;
+    private ProductRepository $products;
 
-    public function __construct(AttributeRepository $attributes)
+    public function __construct(AttributeRepository $attributes, ProductRepository $products)
     {
         $this->attributes = $attributes;
+        $this->products = $products;
     }
 
     public function create(Request $request)
@@ -67,6 +70,29 @@ class ModificationService
         Modification::destroy($modification->id);
     }
 
+    public function add_product(Request $request, Modification $modification)
+    {
+        $product_id = (int)$request['product_id'];
+        $product = $this->products->existAndGet($product_id);
+        $_values = json_decode($request['values'], true);
+        $values = [];
+        foreach ($_values as $value) {
+            if (is_null($attribute = $product->getProdAttribute((int)$value['attribute'])))
+                throw new \DomainException('Товар ' . $product->name . ' не имеет атрибута из модификации');
+
+            if ((int)$product->Value($attribute->id)[0] !== (int)$value['variant'])
+                throw new \DomainException('Для товара ' . $product->name . ' атрибут ' . $attribute->name . ' неверное значение');
+
+            $values[(int)$value['attribute']] = (int)$value['variant'];
+        }
+        $modification->products()->attach($product_id, ['values_json' => json_encode($values)]);
+    }
+
+    public function del_product(Request $request, Modification $modification)
+    {
+        $product_id = (int)$request['product_id'];
+        $modification->products()->detach($product_id);
+    }
 
 
 }
