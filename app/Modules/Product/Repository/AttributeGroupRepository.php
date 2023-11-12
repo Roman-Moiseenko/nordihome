@@ -11,4 +11,9 @@ class AttributeGroupRepository
     {
         return AttributeGroup::Find($id);
     }
+
+    public function byName(string $name): AttributeGroup
+    {
+        return AttributeGroup::where('name', '=', $name)->first();
+    }
 }

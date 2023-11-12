@@ -45,6 +45,10 @@ class Attribute extends Model
     public $timestamps = false;
     public $thumbs = false;
 
+    protected $attributes = [
+        'multiple' => false, 'filter' => true, 'show_in' => true,
+    ];
+
     protected $fillable = [
         'name', 'type', 'multiple', 'filter', 'group_id', 'show_in',
     ];

@@ -18,4 +18,9 @@ class BrandRepository
         }
 
     }
+
+    public function byName(string $name): Brand
+    {
+        return Brand::where('name', '=', $name)->first();
+    }
 }

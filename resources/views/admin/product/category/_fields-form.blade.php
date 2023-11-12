@@ -11,8 +11,8 @@
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
                         @if($category)
-
-                            <select name="parent_id" class="tom-select w-full">
+                                <x-base.tom-select id="select-category" name="parent_id" class="w-full" data-placeholder="Выберите родительскую категорию">
+                                    <option value="0"></option>
                                 @foreach($categories as $_category)
                                     <option value="{{ $_category->id }}"
                                         {{ $category->isParent($_category) ? 'selected' : ''}}
@@ -21,7 +21,7 @@
                                         {{ $_category->name }}
                                     </option>
                                 @endforeach
-                            </select>
+                                </x-base.tom-select>
                         @endif
                         {{ \App\Forms\Input::create('name', ['placeholder' => 'Каталог', 'value' => $category->name ?? '', 'class' => 'mt-5'])->show() }}
                         {{ \App\Forms\Input::create('slug', ['placeholder' => 'Ссылка/slug', 'value' => $category->slug ?? '', 'class' => 'mt-3'])->show() }}

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_id')->constrained('attribute_groups')->onDelete('restrict');
-            $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
+           // $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
             $table->string('name');
 
             $table->boolean('multiple')->default(false);

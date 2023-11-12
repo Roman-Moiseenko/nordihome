@@ -104,6 +104,8 @@
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap">ИКОНКА</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap">АТРИБУТ</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap">КАТЕГОРИИ</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap">ГРУППА</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ТИП</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ФИЛЬТР</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>

@@ -112,8 +112,8 @@ class Product extends Model
     public static function register(string $name, string $code, int $main_category_id, string $slug = ''): self
     {
         //$dublicat = Product::where('name', '=', $name)->get();
-        if (!is_null(Product::where('name', '=', $name)->first())) throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
-        if (!is_null(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
+        if (!empty(Product::where('name', '=', $name)->first())) throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
+        if (!empty(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
         return self::create([
             'name' => $name,
             'slug' => empty($slug) ? Str::slug($name) : $slug,

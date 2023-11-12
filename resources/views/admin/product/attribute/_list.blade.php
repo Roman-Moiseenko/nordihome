@@ -8,6 +8,12 @@
     </x-base.table.td>
     <x-base.table.td class="w-40"><a href="{{ route('admin.product.attribute.show', $prod_attribute) }}"
                                       class="font-medium whitespace-nowrap">{{ $prod_attribute->name }}</a></x-base.table.td>
+    <x-base.table.td class=""> |
+        @foreach($prod_attribute->categories as $category)
+            {{ $category->name . ' | ' }}
+        @endforeach
+    </x-base.table.td>
+    <x-base.table.td class="">{{ $prod_attribute->group->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ \App\Modules\Product\Entity\Attribute::ATTRIBUTES[$prod_attribute->type] }}</x-base.table.td>
     <x-base.table.td class="text-center"><x-yesno status="{{ $prod_attribute->filter }}" lucide="" class="justify-center"/></x-base.table.td>
     <x-base.table.td class="table-report__action w-56">

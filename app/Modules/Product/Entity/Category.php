@@ -157,7 +157,9 @@ class Category extends Model
         $slug = '';
         if (isset($this->parent)) {
             $slug = $this->parent->getSlug();
+        } else {
+            $slug = '/categories';
         }
-        return '/categories' . $slug . '/' . $this->slug;
+        return $slug . '/' . $this->slug;
     }
 }

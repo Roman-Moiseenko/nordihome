@@ -51,14 +51,18 @@ class ProductService
             //Описание, короткое описание, теги
             $product->description = $request['description'];
             $product->short = $request['short'];
-            foreach ($request->get('tags') as $tag_id) {
-                if ($this->tags->exists($tag_id)) {
-                    $product->tags()->attach((int)$tag_id);
-                } else {
-                    $tag = $this->tagService->create(['name' => $tag_id]);
-                    $product->tags()->attach($tag->id);
+
+            $this->tags($request, $product);
+           /* if (!empty($request['tags'])) {
+                foreach ($request->get('tags') as $tag_id) {
+                    if ($this->tags->exists($tag_id)) {
+                        $product->tags()->attach((int)$tag_id);
+                    } else {
+                        $tag = $this->tagService->create(['name' => $tag_id]);
+                        $product->tags()->attach($tag->id);
+                    }
                 }
-            }
+            }*/
 
             DB::commit();
             $product->push();
@@ -108,14 +112,18 @@ class ProductService
             $product->description = $request['description'];
             $product->short = $request['short'];
             $product->tags()->detach();
-            foreach ($request->get('tags') as $tag_id) {
-                if ($this->tags->exists($tag_id)) {
-                    $product->tags()->attach((int)$tag_id);
-                } else {
-                    $tag = $this->tagService->create(['name' => $tag_id]);
-                    $product->tags()->attach($tag->id);
+
+            $this->tags($request, $product);
+            /*if (!empty($request['tags'])) {
+                foreach ($request->get('tags') as $tag_id) {
+                    if ($this->tags->exists($tag_id)) {
+                        $product->tags()->attach((int)$tag_id);
+                    } else {
+                        $tag = $this->tagService->create(['name' => $tag_id]);
+                        $product->tags()->attach($tag->id);
+                    }
                 }
-            }
+            }*/
 
             /* SECTION 4*/
             //Видеообзоры
@@ -254,6 +262,20 @@ class ProductService
         throw new \DomainException('Тестируем. Удалить Продукт нельзя');
     }
 
+    private function tags(Request $request, Product &$product)
+    {
+        if (empty($request['tags'])) return;
+            foreach ($request->get('tags') as $tag_id) {
+                if ($this->tags->exists($tag_id)) {
+                    $product->tags()->attach((int)$tag_id);
+                } else {
+                    $tag = $this->tagService->create(['name' => $tag_id]);
+                    $product->tags()->attach($tag->id);
+                }
+            }
+
+    }
+
     ///Работа с Фото Продукта
 
     public function addPhoto(Request $request, Product $product)
@@ -308,18 +330,6 @@ class ProductService
                 $photos[$i + 1]->update(['sort' => $next]);
             }
         }
-        /*
-                 $photo_id = (int)$request['photo_id'];
-                for ($i = 0; $i < count($product->photos) - 1; $i++) {
-                    if ($product->photos[$i] == $photo_id) {
-                        $prev = $product->photos[$i + 1]->sort;
-                        $next = $product->photos[$i]->sort;
-                        $product->photos[$i]->update(['sort' => $prev]);
-                        $product->photos[$i + 1]->update(['sort' => $next]);
-                    }
-                }
-         * */
-
     }
 
     public function altPhoto(Request $request, Product $product)

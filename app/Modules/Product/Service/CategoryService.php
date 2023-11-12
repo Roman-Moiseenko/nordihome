@@ -37,6 +37,9 @@ class CategoryService
     public function update(Request $request, Category $category): Category
     {
         $category->name = $request['name'];
+        if (isset($request['parent_id'])) {
+            $category->parent_id = (int)$request['parent_id'] == 0 ? null : (int)$request['parent_id'];
+        }
         $category->description = $request['description'] ?? '';
         $category->title = $request['title'] ?? '';
         if ($category->slug != $request['slug']) {

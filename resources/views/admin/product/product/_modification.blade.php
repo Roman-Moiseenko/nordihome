@@ -37,6 +37,7 @@
 
     </div>
     <div class="col-span-12 lg:col-span-8">
+        @if(!empty($product->modification()))
         @foreach($product->modification->products as $_product)
             <div class="relative pl-5 pr-5 xl:pr-10 py-10 bg-slate-50 dark:bg-transparent dark:border rounded-md mt-3 flex items-center">
                 <div class="flex items-center">
@@ -62,6 +63,7 @@
                 </div>
             </div>
         @endforeach
+        @endif
     </div>
 </div>
 

@@ -84,4 +84,9 @@ class CategoryRepository
         return $result;
     }
 
+
+    public function byName(string $name): Category
+    {
+        return Category::where('name', '=', $name)->first();
+    }
 }
