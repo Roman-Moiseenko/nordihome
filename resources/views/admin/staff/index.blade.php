@@ -24,7 +24,7 @@
             </div>
         </div>
     @foreach($admins as $staff)
-        @include('admin.components.cards.user3', ['staff' => $staff])
+        @include('admin.staff._card', ['staff' => $staff])
     @endforeach
     <!-- Modal -->
 

@@ -192,6 +192,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'type' => Attribute::TYPE_VARIANT,
                 'group_id' => $this->attributeGroupRepository->byName('Основные характеристики')->id,
+                'multiple' => false,
                 'variants' => [
                     'белый',
                     'черный',
@@ -206,6 +207,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'type' => Attribute::TYPE_VARIANT,
                 'group_id' => $this->attributeGroupRepository->byName('Основные характеристики')->id,
+                'multiple' => false,
                 'variants' => [
                     'белый',
                     'бук',
@@ -220,6 +222,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'type' => Attribute::TYPE_VARIANT,
                 'group_id' => $this->attributeGroupRepository->byName('Комплектация')->id,
+                'multiple' => false,
                 'variants' => [
                     '1 лампа',
                     '2 лампы',
@@ -243,6 +246,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'type' => Attribute::TYPE_VARIANT,
                 'group_id' => $this->attributeGroupRepository->byName('Комплектация')->id,
+                'multiple' => false,
                 'variants' => [
                     '4 персоны',
                     '6 персон',
@@ -280,7 +284,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'type' => Attribute::TYPE_VARIANT,
                 'group_id' => $this->attributeGroupRepository->byName('Основные характеристики')->id,
-                'multiple' => true,
+                'multiple' => false,
                 'variants' => [
                     'металл',
                     'фарфор',
@@ -295,6 +299,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'type' => Attribute::TYPE_VARIANT,
                 'group_id' => $this->attributeGroupRepository->byName('Основные характеристики')->id,
+                'multiple' => false,
                 'variants' => [
                     'E14',
                     'E27',
@@ -307,11 +312,15 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($attributes as $attribute) {
+            /** @var Attribute $_attr */
             $_attr = Attribute::register(
                 $attribute['name'],
                 $attribute['group_id'],
                 $attribute['type']
             );
+            if ($_attr->isVariant()) {
+                $_attr->multiple = $attribute['multiple'];
+            }
             foreach ($attribute['categories'] as $category) {
                 $_attr->categories()->attach((int)$category);
             }

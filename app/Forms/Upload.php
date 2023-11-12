@@ -10,7 +10,7 @@ class Upload
     private string $name;
     private string $placeholder = '';
 
-    public static function create(string $name, string  $src = ''): self
+    public static function create(string $name, $src = null): self
     {
         $form = new static();
         $form->name = $name;

@@ -4,7 +4,7 @@
             <img class="rounded-full" src="{{ $product->getImage() }}" alt="{{ $product->name }}">
         </div>
     </x-base.table.td>
-    <x-base.table.td class="w-40"><a href="{{ route('admin.product.show', $product) }}"
+    <x-base.table.td class="w-40"><a href="{{ route('admin.product.edit', $product) }}"
                                       class="font-medium whitespace-nowrap">{{ $product->name }}</a></x-base.table.td>
     <x-base.table.td class="text-center">{{ $product->category->name }}</x-base.table.td>
     <x-base.table.td class="text-center"> - </x-base.table.td>
