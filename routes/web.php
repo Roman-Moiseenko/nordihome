@@ -5,15 +5,68 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Shop
+Route::get('/', [App\Http\Controllers\Shop\HomeController::class, 'index'])->name('home');
+
+//TODO Настроить ЧПУ
+Route::group(
+    [
+        //'prefix' => 'shop',
+        'as' => 'shop.',
+        'namespace' => 'App\Http\Controllers\Shop',
+    ],
+    function () {
+        Route::get('/login', 'LoginController@showLoginForm')->name('login');
+        Route::post('/login', 'LoginController@login');
+        Route::post('/review', 'ReviewController@index')->name('review');
+
+
+        Route::group(
+            [
+                'prefix' => 'page',
+                'as' => 'page.',
+            ],
+            function() {
+                Route::get('/about', 'PageController@index')->name('about');
+                Route::get('/contact', 'PageController@index')->name('contact');
+                Route::get('/tariff', 'PageController@index')->name('tariff');
+            }
+        );
+        Route::group(
+            [
+                'prefix' => 'product',
+                'as' => 'product.',
+            ],
+            function() {
+                Route::post('/search', 'ProductController@search')->name('search');
+                Route::get('/{product}', 'ProductController@view')->name('view');
+            }
+        );
+
+        Route::group(
+            [
+                'prefix' => 'catalog',
+                'as' => 'category.',
+            ],
+            function() {
+               // Route::post('/search', 'ProductController@search')->name('search');
+                Route::get('/{category}', 'CatalogController@view')->name('view');
+            }
+        );
+    }
+);
+
+//User
 Auth::routes();
 Route::get('/profile', [\App\Http\Controllers\User\CabinetController::class, 'profile'])->name('user.profile');
 Route::get('/cabinet', [\App\Http\Controllers\User\CabinetController::class, 'index'])->name('user.cabinet');
 
 Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::class, 'verify'])->name('register.verify');
 
-Route::get('/admin/login',[\App\Http\Controllers\Auth\LoginController::class, 'showAdminLoginForm'])->name('admin.login');
-Route::post('/admin/login',[\App\Http\Controllers\Auth\LoginController::class, 'adminLogin']);//->name('admin.login');
+
+//Admin
+Route::get('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'showAdminLoginForm'])->name('admin.login');
+Route::post('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'adminLogin']);//->name('admin.login');
 
 Route::post('/file-upload', [\App\Http\Controllers\Admin\StaffController::class, 'test']);
 
@@ -90,7 +143,6 @@ Route::group(
                 Route::post('/modification/search', 'ModificationController@search')->name('modification.search');
                 Route::post('/modification/{modification}/add-product', 'ModificationController@add_product')->name('modification.add-product');
                 Route::delete('/modification/{modification}/del-product', 'ModificationController@del_product')->name('modification.del-product');
-
 
 
                 Route::resource('brand', 'BrandController'); //CRUD

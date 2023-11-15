@@ -89,4 +89,34 @@ class CategoryRepository
     {
         return Category::where('name', '=', $name)->first();
     }
+
+    public function getTree()
+    {
+        return Category::defaultOrder()->get()->toTree();
+    }
+
+    public function withDepth()
+    {
+        return Category::defaultOrder()->withDepth()->get();
+    }
+
+    public function search(string $search, int $take = 10)
+    {
+        $query = Category::orderBy('name')->where(function ($query) use ($search) {
+            $query->where('name', 'LIKE', "%{$search}%");
+        });
+        return $query->take($take)->get();
+    }
+
+    public function toShopForSearch(Category $category)
+    {
+        return [
+            'id' => $category->id,
+            'name' => $category->name,
+            'code' => '',
+            'image' => !is_null($category->icon) ? $category->icon->getUploadUrl() : '',
+            'price' => '',
+            'url' => route('shop.category.view', $category),
+        ];
+    }
 }

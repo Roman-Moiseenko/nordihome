@@ -6,9 +6,8 @@
 
 @section('content')
     <div class="py-5 md:py-0">
-
         @include('admin.components.mobile-menu')
-            @include('admin.components.top-bar', ['current_user' => \Illuminate\Support\Facades\Auth::guard('admin')->user()] )
+        @include('admin.components.top-bar', ['current_user' => \Illuminate\Support\Facades\Auth::guard('admin')->user()] )
         <div class="flex overflow-hidden">
             <!-- BEGIN: Side Menu -->
             <nav class="side-nav z-50 -mt-4 hidden w-[105px] overflow-x-hidden px-5 pb-16 pt-32 md:block xl:w-[260px]">

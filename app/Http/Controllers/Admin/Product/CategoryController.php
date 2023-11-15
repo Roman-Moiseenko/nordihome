@@ -24,7 +24,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::defaultOrder()->get()->toTree(); //withDepth()->get();
+        $categories = $this->repository->getTree();
         return view('admin.product.category.index', compact('categories'));
     }
 
@@ -42,7 +42,7 @@ class CategoryController extends Controller
 
     public function create(Request $request)
     {
-        $parents = Category::defaultOrder()->withDepth()->get();
+        $parents = $this->repository->withDepth();
         return view('admin.product.category.create', compact('parents'));
     }
 
@@ -68,7 +68,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        $categories = Category::defaultOrder()->withDepth()->get();
+        $categories = $this->repository->withDepth();
         return view('admin.product.category.edit', compact('category', 'categories'));
     }
 

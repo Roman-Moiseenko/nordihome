@@ -72,4 +72,16 @@ class ProductRepository
             'price' => $product->lastPrice->value,
         ];
     }
+
+    public function toShopForSearch(Product $product): array
+    {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'code' => $product->code,
+            'image' => !is_null($product->photo) ? $product->photo->getThumbUrl('thumb') : '',
+            'price' => number_format($product->lastPrice->value, 0, ' ', ','),
+            'url' => route('shop.product.view', $product),
+        ];
+    }
 }

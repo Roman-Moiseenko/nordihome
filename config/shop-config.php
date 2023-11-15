@@ -58,4 +58,8 @@ return [
 
         ],
     ],
+    'frontend' => [
+        'logo-nav' => '/images/logo-nordi-home-2.svg',
+        'brand-alt' => 'NORDI Home',
+    ],
 ];

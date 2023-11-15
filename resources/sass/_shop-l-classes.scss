@@ -1,0 +1,213 @@
+:root {
+ --max-height-search: 44px;
+}
+
+.img-logo {
+    width: 200px;
+}
+
+/* ТОП-МЕНЮ      */
+.menu-bottom {
+    height: 75px;
+    box-sizing: content-box;
+}
+.menu-bottom > div {
+    height: 59px;
+}
+.menu-bottom-catalog {
+    min-width: 350px;
+}
+.menu-bottom-search {
+    max-height: var(--max-height-search);
+}
+.menu-bottom-profile {
+    min-width: 300px;
+}
+.presearch {
+    height: var(--max-height-search);
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.presearch-wrapper {
+    height: 100%;
+    position: relative;
+    border-radius: 8px;
+    line-height: 32px;
+    font-size: 1.125rem;
+    background: var(--bs-gray-200);
+    z-index: 4;
+}
+.presearch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,.1);
+    z-index: 3;
+}
+#pre-search {
+    background: var(--bs-gray-200);
+}
+
+.presearch:hover .presearch-wrapper{
+    background: var(--bs-white);
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 4%), 0 4px 4px rgb(0 0 0 / 4%), 0 20px 40px rgb(0 0 0 / 8%);
+
+}
+
+.presearch:hover #pre-search, #pre-search:focus {
+    background: var(--bs-white);
+}
+.presearch-suggest {
+    display: block;
+    z-index: 1001;
+    background-color: var(--bs-white);
+    border-top: none;
+
+    border-radius: 0 0 10px 10px;
+    color: #333;
+    padding: 0 0 25px;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 4%), 0 4px 4px rgb(0 0 0 / 4%), 0 20px 40px rgb(0 0 0 / 8%);
+}
+
+.presearch-control {
+
+}
+.presearch-input {
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+    padding: 0 120px 0 20px !important;
+    outline: 0;
+    font-size: 1rem;
+    height: 100%;
+}
+#pre-search:focus {
+    border-radius: 8px 8px 0 0;
+}
+.presearch--icon-clear, .presearch--icon-search {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 8px;
+}
+.presearch--icon-clear {
+    right: 70px;
+}
+.presearch--icon-clear:after {
+    content: "";
+    background: #939393;
+    background-size: cover;
+    height: 24px;
+    width: 1px;
+    position: absolute;
+    top: 7px;
+    right: -7px;
+}
+.presearch--icon-clear:hover, .presearch--icon-search:hover {
+    background: var(--bs-gray-200);
+}
+.presearch--icon-search {
+    right: 12px;
+}
+a.presearch-suggest-item, a.presearch-suggest-item:hover {
+    text-decoration: none;
+}
+
+.presearch-suggest-item {
+    font-size: 0.9rem;
+    display: flex;
+    padding: 8px;
+    color: var(--bs-gray-700);
+}
+.presearch-suggest-item:hover {
+    background: var(--bs-gray-100);
+}
+
+.suggest--icon {
+    /*width: 20px; */
+    margin-right: 12px;
+}
+
+.suggest--icon > img {
+    width: 40px;
+    border-radius: 4px;
+    box-shadow: 0 4px 4px #7d7c7c;
+}
+.suggest--label {
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* ХЛЕБНЫЕ КРОШКИ */
+.breadcrumbs {
+    margin: 16px 0;
+}
+.breadcrumbs > li {
+    display: inline-block;
+    list-style-type: none;
+    font-size: 1rem;
+
+}
+.breadcrumbs > li:before {
+    margin: 0 4px;
+}
+.breadcrumbs > li > a {
+    text-decoration: none;
+    color: var(--bs-gray-700);
+}
+.breadcrumbs > li > a:hover {
+    text-decoration: none;
+    color: var(--bs-gray-400);
+}
+.breadcrumbs > li.active {
+
+}
+
+/* К А Т А Л О Г */
+.menu-bottom-catalog .dropdown-menu {
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 4%), 0 4px 4px rgb(0 0 0 / 4%), 0 20px 40px rgb(0 0 0 / 8%);
+}
+.catalog {
+    max-width: 800px;
+    display: flex;
+
+}
+.catalog-rootmenu .dropdown-item.active {
+    background: var(--bs-gray-700);
+}
+.catalog-rootmenu .dropdown-item > img {
+    width: 20px;
+    height: 20px;
+    margin-right: 1rem;
+}
+.catalog-rootmenu {
+
+}
+.catalog-submenu {
+    background: var(--bs-white);
+    padding: 0 30px;
+
+}
+
+$font-letter-spacing: (
+'025': 0.25px,
+'05': 0.5px,
+'075': 0.75px,
+'1': 1.0px,
+'125': 1.25px,
+'150': 1.50px,
+);
+@each $key, $num in $font-letter-spacing {
+    .ls-#{$key} {
+        letter-spacing: $num;
+    }
+}
+

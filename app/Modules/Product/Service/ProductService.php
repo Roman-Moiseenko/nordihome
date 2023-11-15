@@ -282,7 +282,7 @@ class ProductService
     {
         if (empty($file = $request->file('file'))) throw new \DomainException('Нет файла');
         $sort = count($product->photos);
-        $product->photo()->save(Photo::upload($file, '', ++$sort));
+        $product->photo()->save(Photo::upload($file, '', $sort));
     }
 
     public function delPhoto(Request $request, Product $product)

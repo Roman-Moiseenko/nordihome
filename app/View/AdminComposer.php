@@ -5,10 +5,21 @@ namespace App\View;
 
 use App\Menu\AdminMenu;
 use App\Menu\AdminProfileMenu;
+use App\Menu\ContactMenu;
+use App\Menu\ShopMenu;
+use App\Modules\Product\Repository\CategoryRepository;
+use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;
 
 class AdminComposer
 {
+    private CategoryRepository $categories;
+
+    public function __construct(CategoryRepository $categories)
+    {
+        $this->categories = $categories;
+    }
+
     public function compose(View $view): void
     {
         if (!is_null(request()->route())) {
@@ -21,6 +32,12 @@ class AdminComposer
                 $view->with('firstLevelActiveIndex', $activeMenu['first_level_active_index']);
                 $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
+            }
+            if ($layout == 'shop') {
+                $view->with('menuTop', ShopMenu::menu());
+                $view->with('menuContact', ContactMenu::menu());
+                $view->with('config', Config::get('shop-config.frontend'));
+                $view->with('categories', $this->categories->getTree());
             }
         }
     }

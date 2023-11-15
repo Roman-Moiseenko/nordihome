@@ -12,9 +12,34 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Attribute;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+/**  S H O P */
+
+
+
+/**  Пример рекурсии для вложенных категорий и товара */
+Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, Category $category) { //Без указания главной - home
+    if ($category->parent) {
+        $trail->parent('shop.category.view', $category->parent);
+    } else {
+        $trail->parent('home');
+    }
+    $trail->push($category->name, route('shop.category.view', $category));
+});
+//Выводим магазины в крошках, с родительской - Home
+/*Breadcrumbs::for('shop', function (BreadcrumbTrail $trail, $shop) {
+    $trail->parent('home');
+    $trail->push($shop->name, route('shop'));
+});*/
+//Для товара собираем из предыдущих
+Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, Product $product) {
+    //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
+    $trail->parent('shop.category.view', $product->category); //Крошка - Категория > Подкатегория >
+    $trail->push($product->name, route('shop.product.view', $product)); // Крошка - Товар
+});
+
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
-    $trail->push('Home', route('home'));
+    $trail->push('<i class="fa-light fa-house-blank"></i>', route('home'));
 });
 Breadcrumbs::for('login', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
@@ -38,6 +63,9 @@ Breadcrumbs::for('other', function (BreadcrumbTrail $trail, $caption) {
     $trail->parent('login');
     $trail->push($caption, route('password.request'));
 });
+
+/**  A D M I N  */
+
 
 Breadcrumbs::for('admin.home', function (BreadcrumbTrail $trail) {
     $trail->push('CRM', route('admin.home'));
@@ -262,6 +290,7 @@ Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
 
 
 /**  Пример рекурсии для вложенных категорий и товара */
+/*
 Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category) { //Без указания главной - home
     if ($category->parent) {
         $trail->parent('category', $category->parent);
@@ -282,3 +311,4 @@ Breadcrumbs::for('product', function (BreadcrumbTrail $trail, $product) {
     $trail->push($product->name, route('product')); // Крошка - Товар
 });
 
+*/
