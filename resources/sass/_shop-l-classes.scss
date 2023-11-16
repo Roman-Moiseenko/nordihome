@@ -22,6 +22,59 @@ a:hover {
     width: 200px;
 }
 
+/* доп элементы Вынести в компоненты */
+//Кнопка Scroll Up
+button.scrollup {
+    position: fixed;
+    top: 0;
+    right: 25px;
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    background-color: var(--bs-gray-900);
+    border: none;
+    outline: none;
+    border-radius: 50% 0 50% 50%;
+    box-shadow: 0 0 12px 0 rgba(0,0,0,.2);
+    -webkit-transition: .9s;
+    transition: .9s;
+    z-index: 99;
+    visibility: hidden;
+    opacity: 0;
+}
+.scrollup i {
+    display: inline-block;
+    -webkit-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+}
+.scrollup.is-active {
+    top: 95%;
+    -webkit-transform: translateY(-95%);
+    transform: translateY(-95%);
+    opacity: 1;
+    visibility: visible;
+}
+.scrollup.is-active:hover, .scrollup.is-active:focus {
+    color: #fff;
+    transform: translateY(-95%) rotate(-45deg);
+    -webkit-transform: translateY(-95%) rotate(-45deg);
+    -moz-transform: translateY(-95%) rotate(-45deg);
+    -o-transform: translateY(-95%) rotate(-45deg);
+    -ms-transform: translateY(-95%) rotate(-45deg);
+}
+.scrollup.is-active:hover i, .scrollup.is-active:focus i {
+    transform: translateY(0) rotate(45deg);
+    -webkit-transform: translateY(0) rotate(45deg);
+    -moz-transform: translateY(0) rotate(45deg);
+    -o-transform: translateY(0) rotate(45deg);
+    -ms-transform: translateY(0) rotate(45deg);
+}
 
 
 /* ТОП-МЕНЮ      */
@@ -196,13 +249,16 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 .catalog {
     max-width: $width-root-menu + $width-sub-menu;
     display: flex;
-
 }
 .catalog-rootmenu .dropdown-item {
     font-size: 1rem;
 }
 .catalog-rootmenu .dropdown-item.active {
     background: var(--bs-gray-700);
+}
+.catalog-rootmenu .dropdown-item:hover {
+    background: var(--bs-gray-700);
+    color: var(--bs-white);
 }
 .catalog-rootmenu .dropdown-item > img {
     width: 20px;
@@ -241,6 +297,16 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     font-size: 0.9rem;
     font-weight: 400;
     margin-bottom: 6px;
+}
+
+/* F O O T E R */
+.footer {
+    padding-top: 40px;
+    background: var(--bs-gray-900);
+    color: var(--bs-gray-200);
+}
+footer > .about {
+    border-top: 1px solid var(--bs-gray-600) ;
 }
 
 

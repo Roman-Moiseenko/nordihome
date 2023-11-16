@@ -29,6 +29,7 @@
     @yield('content')
 </main>
 @include('shop.footer')
+<button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>
 @stack('scripts')
 </body>
 </html>

@@ -1,4 +1,5 @@
 import jQuery from "jquery";
+import "./jquery.hoverIntent";
 
 window.$ = jQuery;
 
@@ -47,7 +48,7 @@ window.$ = jQuery;
                 }
             });
     });
-
+    //HTML построители
     function _itemSuggestPresearch(item) {
         let img = '<i class="fa-light fa-magnifying-glass"></i>';
         let price = item.price + ' ₽';
@@ -67,13 +68,13 @@ window.$ = jQuery;
     }
 
     //???
-    $(document).on('click', function (e) {
+   /* $(document).on('click', function (e) {
         if ($(e.target).closest(".presearch").length) {
             return;
         }// клик снаружи элемента
         $('.presearch-overlay').hide();
         $('.presearch-suggest').hide();
-    });
+    });*/
 
 
     //Кнопки в INPUT
@@ -83,27 +84,35 @@ window.$ = jQuery;
         $(this).hide();
     });
 
-    //Каталог
+    /** КАТАЛОГ В МЕНЮ **/
+    let timer;
     let catalog = $('.catalog');
     let catalogParentItems = $('.dropdown-item');
     let catalogSubmenu = $('#catalog-submenu');
+    catalogParentItems.first().addClass('active');
     _updateSubMenu(catalogParentItems.first());
 
-    catalogParentItems.hover(function () {
-        catalogParentItems.removeClass('active');
-        _updateSubMenu($(this));
-    }, function () {
-        return false;
+    //Загрузка sub-menu при hover по пунктам меню 1го уровня
+    catalogParentItems.hover(function () { //ф-ция для hoverIn
+        catalogParentItems.removeClass('active'); //Удаляем метку выделенного пункта
+        let ___item = $(this);
+        timer = setTimeout(function () {//таймер закончился, удаляем метку активного элемента и запускаем обновление sub-menu
+            catalogParentItems.removeClass('active-item');
+            _updateSubMenu(___item);
+        }, 180);
+    }, function () {//ф-ция для hoverOut
+        clearTimeout(timer);
+        catalogParentItems.each(function (){//перебираем все пункты и для активного элемента навешиваем выделение пункта
+            if ($(this).hasClass('active-item')) $(this).addClass('active');
+        });
     });
 
     function _updateSubMenu(element) {
-        element.addClass('active');
-
+        element.addClass('active-item');
         $.post(catalog.data('route'), {
                 category: element.data('id')
             },
             function (data) {
-                //console.log(data);
                 catalogSubmenu.html('');
                 if (data.length > 0) {
                     for (let i = 0; i < data.length; i++) {
@@ -111,13 +120,14 @@ window.$ = jQuery;
                         catalogSubmenu.append(_subFirst_a(_item));
                         if (_item.children.length > 0) catalogSubmenu.append(_subSecond_div(_item.children));
                     }
-                    catalogSubmenu.show();
+                    catalogSubmenu.parent().show();
                 } else {
-                    catalogSubmenu.hide();
+                    catalogSubmenu.parent().hide();
                 }
             });
     }
 
+    //HTML построители
     function _subFirst_a(item, level = 1) {
         let _class, _count = '';
         if (level === 1) _class = 'submenu-first-level';
@@ -127,17 +137,15 @@ window.$ = jQuery;
         }
         return '<a href="' + item.url +'" class="' + _class + '">' + item.name + _count + '</a>'
     }
-
     function _subSecond_div(items) {
         let html = '', sub_html = '';
         let n = 0;
 
         let countItems = items.length;
-        let col;// = Math.ceil(countItems/countColSubMenu);
+        let col;
 
         for (let j = 1; j <= countColSubMenu; j++) {
             col = Math.ceil((countItems - n)/(countColSubMenu - j + 1))
-
             sub_html = '';
             for (let i = 0; i < col; i++) {
                 if (items[n] !== undefined) sub_html = sub_html + _subFirst_a(items[n], 2) + ' <br>';
@@ -148,6 +156,20 @@ window.$ = jQuery;
         return '<div class="submenu-second-level-div">' + html + '</div>';
     }
 
+    //Доп.элементы
+    let upButton = $('#upbutton');
+    $(window).on('scroll', function () {
+        if ($(this).scrollTop() > 100) {
+            if (!upButton.hasClass('is-active')) {
+                upButton.addClass('is-active');
+            }
+        } else {
+            upButton.removeClass('is-active');
+        }
+    });
+    upButton.on('click', function () {
+        $('html, body').stop().animate({scrollTop: 0}, 1000);
+    });
 
 })();
 
