@@ -49,7 +49,7 @@ Route::group(
                 'as' => 'category.',
             ],
             function() {
-               // Route::post('/search', 'ProductController@search')->name('search');
+                Route::post('/search', 'CatalogController@search')->name('search');
                 Route::get('/{category}', 'CatalogController@view')->name('view');
             }
         );

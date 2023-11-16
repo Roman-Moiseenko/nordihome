@@ -2,9 +2,27 @@
  --max-height-search: 44px;
 }
 
+/* От Заказчика*/
+
+$count-col-submenu: 1; //Кол-во столбцов в меню 1 - для маленьких, 3 для огромных - дублируется во frontend.js
+$width-sub-menu-column: 280px; //Ширина столбца
+$padding-left-submenu: 30px;
+$padding-right-submenu: 20px;
+$width-sub-menu: $padding-left-submenu + $width-sub-menu-column * $count-col-submenu + $padding-right-submenu;
+$width-root-menu: 200px; //От кол-ва символов
+a {
+    text-decoration: none;
+    color: var(--bs-gray-800);
+}
+a:hover {
+    color: var(--bs-gray-500);
+}
+
 .img-logo {
     width: 200px;
 }
+
+
 
 /* ТОП-МЕНЮ      */
 .menu-bottom {
@@ -176,9 +194,12 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     box-shadow: 0 0 0 1px rgb(0 0 0 / 4%), 0 4px 4px rgb(0 0 0 / 4%), 0 20px 40px rgb(0 0 0 / 8%);
 }
 .catalog {
-    max-width: 800px;
+    max-width: $width-root-menu + $width-sub-menu;
     display: flex;
 
+}
+.catalog-rootmenu .dropdown-item {
+    font-size: 1rem;
 }
 .catalog-rootmenu .dropdown-item.active {
     background: var(--bs-gray-700);
@@ -189,13 +210,39 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     margin-right: 1rem;
 }
 .catalog-rootmenu {
-
+    width: $width-root-menu;
 }
 .catalog-submenu {
     background: var(--bs-white);
-    padding: 0 30px;
-
+    padding-left: $padding-left-submenu;
+    padding-right: $padding-right-submenu;
+    width: $width-sub-menu;
+    overflow-y: visible;
+    overflow-x: visible;
 }
+.catalog-submenu-scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: grid;
+}
+.submenu-first-level {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+.submenu-second-level-div {
+    margin-bottom: 12px;
+    display: flex;
+}
+.submenu-second-level-column {
+    width: $width-sub-menu-column;
+}
+.submenu-second-level {
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin-bottom: 6px;
+}
+
 
 $font-letter-spacing: (
 '025': 0.25px,

@@ -25,6 +25,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property Category $parent
  * @property Category[] $children
  * @property Attribute[] $prod_attributes
+ * @property Product[] $products
  *
  * @property int $_lft
  * @property int $_rgt
@@ -110,7 +111,7 @@ class Category extends Model
         return $this->belongsToMany(Attribute::class, 'attributes_categories', 'category_id', 'attribute_id');
     }
 
-    public function products(): HasMany
+    public function products()
     {
         return $this->hasMany(Product::class, 'main_category_id', 'id');
     }

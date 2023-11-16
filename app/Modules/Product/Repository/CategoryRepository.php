@@ -90,9 +90,10 @@ class CategoryRepository
         return Category::where('name', '=', $name)->first();
     }
 
-    public function getTree()
+    public function getTree(int $parent_id = null)
     {
-        return Category::defaultOrder()->get()->toTree();
+        if (is_null($parent_id)) return Category::defaultOrder()->get()->toTree();
+        return Category::defaultOrder()->descendantsOf($parent_id)->toTree(); //where('parent_id', '=', $parent_id)->get()->toTree();
     }
 
     public function withDepth()
@@ -119,4 +120,25 @@ class CategoryRepository
             'url' => route('shop.category.view', $category),
         ];
     }
+
+    public function toShopForSubMenu(Category $category): array
+    {
+        $children = [];
+        if (!empty($category->children)) {
+            foreach ($category->children as $child) {
+                $children[] = $this->toShopForSubMenu($child);
+            }
+        }
+
+        return [
+            'id' => $category->id,
+            'name' => $category->name,
+            'url' => route('shop.category.view', $category),
+            'image' => !is_null($category->image) ? $category->image->getUploadUrl() : '',
+            'products' => count($category->products),
+            'children' => $children,
+        ];
+    }
+
+    //private function _recurseCategory(Category $category)
 }

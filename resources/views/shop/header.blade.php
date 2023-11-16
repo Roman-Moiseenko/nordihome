@@ -35,11 +35,11 @@
                             aria-expanded="false">Каталог&nbsp;
                     </button>
                     <div class="dropdown-menu">
-                        <div class="catalog">
+                        <div class="catalog" data-route="{{ route('shop.category.search') }}">
                         <div class="catalog-rootmenu">
                             @foreach($categories as $category)
                                 <li>
-                                    <a class="dropdown-item" href="{{ $category->getSlug() }}">
+                                    <a class="dropdown-item" href="{{ $category->getSlug() }}" data-id="{{ $category->id }}">
                                         <img src="{{ $category->getIcon() }}" width="20px"/>
                                         {{ $category->name }}
                                     </a>
@@ -47,8 +47,7 @@
                             @endforeach
                         </div>
                         <div class="catalog-submenu">
-                            Меню и подменю<br>
-                            3 уровень
+                            <div id="catalog-submenu" class="catalog-submenu-scroll"></div>
                         </div>
                         </div>
                     </div>
