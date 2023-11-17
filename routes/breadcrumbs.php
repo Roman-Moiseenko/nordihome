@@ -10,6 +10,8 @@ use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Attribute;
+use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\Product\Repository\ProductRepository;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 /**  S H O P */
@@ -17,13 +19,14 @@ use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 
 /**  Пример рекурсии для вложенных категорий и товара */
-Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, Category $category) { //Без указания главной - home
+Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) { //Без указания главной - home
+    $category = (new CategoryRepository())->getBySlug($slug);
     if ($category->parent) {
-        $trail->parent('shop.category.view', $category->parent);
+        $trail->parent('shop.category.view', $category->parent_id);
     } else {
         $trail->parent('home');
     }
-    $trail->push($category->name, route('shop.category.view', $category));
+    $trail->push($category->name, route('shop.category.view', $category->slug));
 });
 //Выводим магазины в крошках, с родительской - Home
 /*Breadcrumbs::for('shop', function (BreadcrumbTrail $trail, $shop) {
@@ -31,10 +34,11 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, Categor
     $trail->push($shop->name, route('shop'));
 });*/
 //Для товара собираем из предыдущих
-Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, Product $product) {
+Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, $slug) {
+    $product = (new ProductRepository())->getBySlug($slug);
     //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
-    $trail->parent('shop.category.view', $product->category); //Крошка - Категория > Подкатегория >
-    $trail->push($product->name, route('shop.product.view', $product)); // Крошка - Товар
+    $trail->parent('shop.category.view', $product->main_category_id); //Крошка - Категория > Подкатегория >
+    $trail->push($product->name, route('shop.product.view', $product->slug)); // Крошка - Товар
 });
 
 

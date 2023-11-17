@@ -81,7 +81,13 @@ class ProductRepository
             'code' => $product->code,
             'image' => !is_null($product->photo) ? $product->photo->getThumbUrl('thumb') : '',
             'price' => number_format($product->lastPrice->value, 0, ' ', ','),
-            'url' => route('shop.product.view', $product),
+            'url' => route('shop.product.view', $product->slug),
         ];
+    }
+
+    public function getBySlug($slug): Product
+    {
+        if (is_numeric($slug)) return Product::findOrFail($slug);
+        return Product::where('slug', '=', $slug)->firstOrFail();
     }
 }

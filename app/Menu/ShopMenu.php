@@ -14,11 +14,13 @@ class ShopMenu
             'about' => [
                 'name' => 'О компании',
                 'icon' => '',
+                'page' => 'about',
                 'route_name' => 'shop.page.about',
             ],
             'tariff' => [
                 'name' => 'Условия и тарифы',
                 'icon' => '',
+                'page' => 'tariff',
                 'route_name' => 'shop.page.tariff',
             ],
             'reviews' => [
@@ -29,6 +31,7 @@ class ShopMenu
             'contact' => [
                 'name' => 'Контакты',
                 'icon' => '',
+                'page' => 'contact',
                 'route_name' => 'shop.page.contact',
             ],
          /*   'in_stock' => [

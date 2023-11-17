@@ -22,10 +22,16 @@ class ProductController extends Controller
         $this->categories = $categories;
     }
 
-    public function view(Product $product)
+    public function view($slug/*Product $product*/)
     {
-
-        return view('shop.product', compact('product'));
+        try {
+            $product = $this->repository->getBySlug($slug);
+            return view('shop.product', compact('product'));
+        } catch (\Throwable $e) {
+            $product = null;
+            flash($e->getMessage(), 'danger');
+            return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
+        }
     }
 
     public function search(Request $request)

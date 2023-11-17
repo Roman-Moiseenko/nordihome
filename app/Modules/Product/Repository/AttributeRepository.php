@@ -18,6 +18,11 @@ class AttributeRepository
         }
     }
 
+    public function getPossibleForProduct(): array
+    {
+
+    }
+
     public function byName(string $name, int $category_id): Attribute
     {
         $attrs = AttributeCategory::where('category_id', '=', $category_id)->pluck('attribute_id')->toArray();

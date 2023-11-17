@@ -21,7 +21,7 @@
 <body class="@yield('body')">
 
 @include('shop.header')
-
+@include('flash::message')
 <main class="@yield('main')">
     @section('breadcrumbs')
     {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('partials.breadcrumbs-shop') }}

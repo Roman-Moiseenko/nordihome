@@ -21,38 +21,13 @@ Route::group(
         Route::post('/review', 'ReviewController@index')->name('review');
 
 
-        Route::group(
-            [
-                'prefix' => 'page',
-                'as' => 'page.',
-            ],
-            function() {
-                Route::get('/about', 'PageController@index')->name('about');
-                Route::get('/contact', 'PageController@index')->name('contact');
-                Route::get('/tariff', 'PageController@index')->name('tariff');
-            }
-        );
-        Route::group(
-            [
-                'prefix' => 'product',
-                'as' => 'product.',
-            ],
-            function() {
-                Route::post('/search', 'ProductController@search')->name('search');
-                Route::get('/{product}', 'ProductController@view')->name('view');
-            }
-        );
 
-        Route::group(
-            [
-                'prefix' => 'catalog',
-                'as' => 'category.',
-            ],
-            function() {
-                Route::post('/search', 'CatalogController@search')->name('search');
-                Route::get('/{category}', 'CatalogController@view')->name('view');
-            }
-        );
+        Route::get('/page/{slug}', 'PageController@view')->name('page.view');
+        Route::post('/product/search', 'ProductController@search')->name('product.search');
+        Route::get('/product/{slug}', 'ProductController@view')->name('product.view');
+        Route::post('/catalog/search', 'CatalogController@search')->name('category.search');
+        Route::get('/catalog/{slug}', 'CatalogController@view')->name('category.view');
+
     }
 );
 

@@ -5,7 +5,7 @@
             <div class="d-flex ">
                 <div>
                     @foreach($menuTop as $item)
-                        <a href="{{ route($item['route_name']) }}"
+                        <a href="{{ isset($item['page']) ? route('shop.page.view', $item['page']) : route($item['route_name']) }}"
                            class="fs-5 ms-1 link-dark link-underline-opacity-0 link-underline-opacity-0-hover fw-bolder link-opacity-75-hover">
                             {{ $item['name'] }}
                         </a>
@@ -39,7 +39,7 @@
                         <div class="catalog-rootmenu">
                             @foreach($categories as $category)
                                 <li>
-                                    <a class="dropdown-item" href="{{ $category->getSlug() }}" data-id="{{ $category->id }}">
+                                    <a class="dropdown-item" href="{{ route('shop.category.view', $category->slug) }}" data-id="{{ $category->id }}">
                                         <img src="{{ $category->getIcon() }}" width="20px"/>
                                         {{ $category->name }}
                                     </a>

@@ -17,10 +17,16 @@ class CatalogController extends Controller
         $this->repository = $repository;
     }
 
-    public function view(Category $category)
+    public function view(Request $request, $slug)
     {
-
-        return view('shop.category', compact('category'));
+        try {
+            $category = $this->repository->getBySlug($slug);
+            return view('shop.catalog', compact('category'));
+        } catch (\Throwable $e) {
+            $category = null;
+            flash($e->getMessage(), 'danger');
+            return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
+        }
     }
 
     public function search(Request $request)

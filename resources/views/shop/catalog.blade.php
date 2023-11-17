@@ -9,5 +9,7 @@
 @endsection
 
 @section('content')
-    @yield('subcontent')
+
+    {{ $category->name }}
+
 @endsection

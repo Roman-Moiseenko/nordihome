@@ -133,7 +133,7 @@ class CategoryRepository
         return [
             'id' => $category->id,
             'name' => $category->name,
-            'url' => route('shop.category.view', $category),
+            'url' => route('shop.category.view', $category->slug),
             'image' => !is_null($category->image) ? $category->image->getUploadUrl() : '',
             'products' => count($category->products),
             'children' => $children,
@@ -141,4 +141,9 @@ class CategoryRepository
     }
 
     //private function _recurseCategory(Category $category)
+    public function getBySlug($slug): Category
+    {
+        if (is_numeric($slug)) return Category::findOrFail($slug);
+        return Category::where('slug', '=', $slug)->firstOrFail();
+    }
 }

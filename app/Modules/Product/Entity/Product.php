@@ -39,10 +39,12 @@ use Illuminate\Support\Str;
  * @property ProductPricing[] $pricing
  * @property ProductPricing $lastPrice
  * @property Equivalent $equivalent
+ * @property EquivalentProduct $equivalent_product
  * @property Product[] $related
  * @property Product[] $bonus
  * @property Group[] $groups
  * @property Modification $modification
+ * @property ModificationProduct $modification_product
  */
 class Product extends Model
 {
@@ -109,6 +111,10 @@ class Product extends Model
 
     }
 
+    public function sluggable()
+    {
+        return [ 'slug' => [ 'source' => 'name' ] ];
+    }
     public static function register(string $name, string $code, int $main_category_id, string $slug = ''): self
     {
         //$dublicat = Product::where('name', '=', $name)->get();
@@ -272,13 +278,15 @@ class Product extends Model
 
     //RELATIONSHIP
 
+    public function modification_product()
+    {
+        return $this->hasOne(ModificationProduct::class, 'product_id', 'id');
+    }
+
     public function modification()
     {
-        /** @var ModificationProduct $mp */
-        $mp = ModificationProduct::where('product_id', '=', $this->id)->first();
-        if (empty($mp)) return null;
-        return $mp->modification();
-
+        if (empty($this->modification_product)) return null;
+        return $this->modification_product->modification();
     }
 
     public function groups()
@@ -286,17 +294,15 @@ class Product extends Model
         return $this->belongsToMany(Group::class, 'groups_products', 'product_id', 'group_id');
     }
 
+    public function equivalent_product()
+    {
+        return $this->hasOne(EquivalentProduct::class, 'product_id', 'id');
+    }
+
     public function equivalent()
     {
-        //TODO сделать через hasOneThrough
-        $eq_prod = EquivalentProduct::where('product_id', '=', $this->id)->first();
-        if (empty($eq_prod)) return null;
-        return $eq_prod->equivalent();
-
-        //$eq_prod = $this->hasOne(EquivalentProduct::class, 'product_id', 'id');
-
-        //return $e_p->equivalent();
-        //return $this->hasOneThrough(Equivalent::class, EquivalentProduct::class, 'product_id', 'equivalent_id', 'id', 'id');
+        if (empty($this->equivalent_product)) return null;
+        return $this->equivalent_product->equivalent();
     }
 
     public function pricing()

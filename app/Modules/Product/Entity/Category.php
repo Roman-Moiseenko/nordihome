@@ -155,12 +155,13 @@ class Category extends Model
 
     public function getSlug()
     {
-        $slug = '';
+        return '/catalog/' . $this->slug;
+        /*
         if (isset($this->parent)) {
             $slug = $this->parent->getSlug();
         } else {
             $slug = '/categories';
         }
-        return $slug . '/' . $this->slug;
+        return $slug . '/' . $this->slug;*/
     }
 }

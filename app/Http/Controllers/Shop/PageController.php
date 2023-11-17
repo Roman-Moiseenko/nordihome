@@ -9,7 +9,7 @@ use Illuminate\Routing\Controller;
 class PageController extends Controller
 {
 
-    public function index()
+    public function view($slug)
     {
         return redirect()->route('home');
     }
