@@ -90,4 +90,23 @@ class ProductRepository
         if (is_numeric($slug)) return Product::findOrFail($slug);
         return Product::where('slug', '=', $slug)->firstOrFail();
     }
+
+
+    public function getFilter(int $category_id, \Illuminate\Http\Request $request): array
+    {
+        $products = Product::where('main_category_id', '=', $category_id)->get();
+        return [];
+    }
+
+    public function getByCategory(int $id)
+    {
+        $products = Product::where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {
+            $query->whereHas('categories', function ($_query) use ($id) {
+                $_query->where('category_id', $id);
+            });
+        })->get();
+        return $products;
+    }
+
+
 }

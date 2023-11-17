@@ -104,6 +104,12 @@ class Attribute extends Model
         return $this->belongsToMany(Category::class, 'attributes_categories', 'attribute_id', 'category_id');
     }
 
+    public function products()
+    {
+        return $this->belongsToMany(Category::class, 'attributes_products',
+            'attribute_id', 'product_id')->withPivot('value');
+    }
+
     public function isCategory(Category $category): bool
     {
         foreach ($this->categories as $_category) {
@@ -137,6 +143,11 @@ class Attribute extends Model
     public function isBool(): bool
     {
         return $this->type == self::TYPE_BOOL;
+    }
+
+    public function isNumeric(): bool
+    {
+        return $this->type == self::TYPE_INTEGER || $this->type == self::TYPE_FLOAT;
     }
 
     public function getUploadUrl(): string

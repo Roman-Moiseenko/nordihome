@@ -29,6 +29,8 @@ class CategoryRepository
         }
     }
 
+    //Формируем массив для передачи json ч/з ajax списка доступных атрибутов для товара
+    // если атрибут назначен, то $complete = true и $block сдержит значение атрибута
     public function relationAttributes(array $categories_id, int $product_id): array
     {
         /** @var Product $product */

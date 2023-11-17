@@ -107,6 +107,7 @@ class DatabaseSeeder extends Seeder
                     ['name' => 'Подвесные',],
                     ['name' => 'Настольные',],
                     ['name' => 'Люстры',],
+                    ['name' => 'Детские светильники',],
                     ['name' => 'Лампочки',],
                 ],
             ],
@@ -116,9 +117,11 @@ class DatabaseSeeder extends Seeder
                     [
                         'name' => 'Столы',
                         'subcategories' => [
-                            ['name' => 'Кухонные',],
-                            ['name' => 'Письменные',],
-                            ['name' => 'Офисные',],
+                            ['name' => 'Кухонные столы',],
+                            ['name' => 'Письменные столы',],
+                            ['name' => 'Офисные столы',],
+                            ['name' => 'Детские столы',],
+                            ['name' => 'Школьные столы',],
                         ],
                     ],
                     [
@@ -127,9 +130,9 @@ class DatabaseSeeder extends Seeder
                     [
                         'name' => 'Диваны',
                         'subcategories' => [
-                            ['name' => 'Угловые',],
-                            ['name' => 'Раскладные',],
-                            ['name' => 'Детские',],
+                            ['name' => 'Угловые диваны',],
+                            ['name' => 'Раскладные диваны',],
+                            ['name' => 'Детские диваны',],
                         ],
                     ],
                 ],
@@ -262,6 +265,14 @@ class DatabaseSeeder extends Seeder
                 'group_id' => $this->attributeGroupRepository->byName('Основные характеристики')->id,
             ],
             [
+                'name' => 'Диаметр плафона (см)',
+                'categories' => [
+                    $this->categoryRepository->byName('Светильники')->id,
+                ],
+                'type' => Attribute::TYPE_INTEGER,
+                'group_id' => $this->attributeGroupRepository->byName('Основные характеристики')->id,
+            ],
+            [
                 'name' => 'Материал',
                 'categories' => [
                     $this->categoryRepository->byName('Светильники')->id,
@@ -375,6 +386,24 @@ class DatabaseSeeder extends Seeder
                 'main_category_id' => $this->categoryRepository->byName('Торшеры')->id,
                 'price' => 5500,
                 'count' => 10,
+                'frequency' => Product::FREQUENCY_AVERAGE,
+                'brand' => $this->brandRepository->byName('Nokia')->id,
+            ],
+            [
+                'name' => 'Торшер INKUSED 106W для мальчиков',
+                'code' => '106W-002',
+                'main_category_id' => $this->categoryRepository->byName('Детские светильники')->id,
+                'price' => 4500,
+                'count' => 3,
+                'frequency' => Product::FREQUENCY_AVERAGE,
+                'brand' => $this->brandRepository->byName('Nokia')->id,
+            ],
+            [
+                'name' => 'Торшер INKUSED 106W для девочек',
+                'code' => '106W-003',
+                'main_category_id' => $this->categoryRepository->byName('Детские светильники')->id,
+                'price' => 4500,
+                'count' => 3,
                 'frequency' => Product::FREQUENCY_AVERAGE,
                 'brand' => $this->brandRepository->byName('Nokia')->id,
             ],
