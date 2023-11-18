@@ -42,6 +42,7 @@ use Illuminate\Support\Str;
  * @property EquivalentProduct $equivalent_product
  * @property Product[] $related
  * @property Product[] $bonus
+ * @property Brand $brand
  * @property Group[] $groups
  * @property Modification $modification
  * @property ModificationProduct $modification_product

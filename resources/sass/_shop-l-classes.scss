@@ -10,6 +10,9 @@ $padding-left-submenu: 30px;
 $padding-right-submenu: 20px;
 $width-sub-menu: $padding-left-submenu + $width-sub-menu-column * $count-col-submenu + $padding-right-submenu;
 $width-root-menu: 200px; //От кол-ва символов
+
+$widget-height: 1rem; //Высота элементов фильтров
+
 a {
     text-decoration: none;
     color: var(--bs-gray-800);
@@ -314,8 +317,78 @@ footer > .about {
 
 /* PRODUCTS PAGE */
 
-
-
+// Фильтры
+.products-page-filter {
+    //position: fixed;
+    transform: translate3d(0px, 0px, 0px);
+    top: auto;
+    left: 362px;
+    bottom: 10px;
+    width: 278px;
+    border: 1px solid var(--bs-gray-400);
+    border-radius: 12px;
+}
+.products-base-filter, .products-attribute-filter {
+    border-bottom: 1px solid var(--bs-gray-400);
+    padding: 12px;
+}
+/// Check
+.form-check-label, .form-check-input {
+    cursor: pointer;
+}
+.form-check-input:checked {
+    background-color: var(--bs-gray-700);
+    border-color: var(--bs-gray-700);
+}
+.form-check-label {
+    font-size: $widget-height;
+}
+.form-check-input {
+    height: $widget-height;
+}
+//Numeric
+.numeric-input {
+    display: inline-block;
+    margin: 5px 0;
+    width: 49%;
+    align-items: center;
+    background: var(--bs-white);
+    border: 1px solid var(--bs-gray-400);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    height: 40px;
+    position: relative;
+}
+.numeric-input > input {
+    font-size: 0.9rem;
+    width: calc(100% - 20px);
+    border: none;
+    border-radius: 8px;
+    color: var(--bs-gray-900);
+    height: 100%;
+    outline: none;
+    padding-left: 0.5rem;
+}
+.clear-icon-input {
+    overflow: hidden;
+    right: 3px;
+    width: 16px;
+    height: 38px;
+    position: absolute;
+    top: 3px;
+    font-size: 1.4rem;
+}
+.clear-icon-input.active:after {
+    content: '\f00d';
+    display: inline-block;
+    font-family: 'Font Awesome 6 Pro', serif;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 1;
+    text-transform: none;
+    cursor: pointer;
+    color: var(--bs-gray-700);
+}
 
 /* PRODUCT PAGE */
 

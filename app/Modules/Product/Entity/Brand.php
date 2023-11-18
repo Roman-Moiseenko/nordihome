@@ -55,7 +55,7 @@ class Brand extends Model
         return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
 
-    public function getPhoto(): string
+    public function getImage(): string
     {
         if (empty($this->photo->file)) {
             return '/images/default-brand.png';
