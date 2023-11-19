@@ -16,5 +16,13 @@
         });
     });
 
+    $('.variant-image-input').on('change', function () {
+        if ($(this).is(':checked')) {
+            $(this).parent().addClass('active');
+        } else {
+            $(this).parent().removeClass('active');
+        }
+    });
+
 
 })();

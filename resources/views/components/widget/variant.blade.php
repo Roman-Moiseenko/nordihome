@@ -1,5 +1,6 @@
-<div class="widget-variants">
-    <!-- You must be the change you wish to see in the world. - Mahatma Gandhi -->
+<div class="widget-variants {{ $class }}">
+    <span class="fs-6">{{ $caption }}</span>
+    {{ $slot }}
 </div>
 
 @once

@@ -1,5 +1,5 @@
 <div class="widget-numeric {{ $class }}">
-    <label class="">{{ $slot }}</label>
+    <label class="fs-6">{{ $slot }}</label>
     <div class="group-numeric-input">
         <div class="numeric-input">
             <input type="number" name="{{ $name }}-min" id="{{ $id }}-min" class="input-numeric"

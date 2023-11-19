@@ -1,7 +1,7 @@
 <tr class="intro-x">
     <td class="w-20">
         <div class="image-fit w-10 h-10">
-            <img class="rounded-full" src="{{ $brand->getPhoto() }}" alt="{{ $brand->name }}">
+            <img class="rounded-full" src="{{ $brand->getImage() }}" alt="{{ $brand->name }}">
         </div>
     </td>
     <td class="w-40"><a href="{{ route('admin.product.brand.show', $brand) }}"

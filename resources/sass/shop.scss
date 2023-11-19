@@ -14,7 +14,8 @@ $font-sizes: (
     4: $h4-font-size,
     5: $h5-font-size,
     6: $h6-font-size,
-    7: $font-size-base * 0.9
+    7: $font-size-base * 0.9,
+    8: $font-size-base * 0.75
 ) !default;
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 @import './resources/sass/fontawesome/scss/fontawesome.scss';

@@ -8,22 +8,17 @@ use Illuminate\View\Component;
 
 class Variant extends Component
 {
-
-    public string $name;
+    public string $caption;
     public string $id;
     public string $class;
 
-    public function __construct(string $name, string $id = '', string $class = '')
+    public function __construct(string $caption, string $id = '', string $class = '')
     {
-
-        $this->name = $name;
+        $this->caption = $caption;
         $this->id = $id;
         $this->class = $class;
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     */
     public function render(): View|Closure|string
     {
         return view('components.widget.variant');

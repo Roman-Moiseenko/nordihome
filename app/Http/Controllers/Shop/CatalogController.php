@@ -27,7 +27,7 @@ class CatalogController extends Controller
 
     public function view(Request $request, $slug)
     {
-        try {
+      /*  try {*/
             $category = $this->repository->getBySlug($slug);
 
             if (count($category->children) > 0) return view('shop.catalogs', compact('category'));
@@ -36,11 +36,19 @@ class CatalogController extends Controller
             $products = $this->products->getByCategory($category->id);
 
             $minPrice = 10;
-            $maxPrice = 99990;
+            $maxPrice = 999999;
             $product_ids = [];
             $brands = [];
             /** @var Product $product */
-            foreach ($products as $product) {
+            foreach ($products as $i => $product) {
+                if ($i == 0) {
+                    $minPrice = $product->getLastPrice();
+                    $maxPrice = $product->getLastPrice();
+                } else {
+                    if ($product->getLastPrice() < $minPrice) $minPrice = $product->getLastPrice();
+                    if ($product->getLastPrice() > $maxPrice) $maxPrice = $product->getLastPrice();
+                }
+
                 $product_ids[] = $product->id;
                 $brands[$product->brand->id] = [
                     'name' => $product->brand->name,
@@ -52,8 +60,28 @@ class CatalogController extends Controller
             $_attr_prod = $this->attributes->getIdPossibleForProducts($product_ids);
             $_attr_intersect =array_intersect($_attr_cat, $_attr_prod);
             //Перебрать в массив и отобрать для Numeric - min/max значения, для Variants - только используемые варианты
-            $prod_attributes = Attribute::whereIn('id', $_attr_intersect)->orderBy('group_id')->get();
+            $attributes = Attribute::whereIn('id', $_attr_intersect)->where('filter', '=', true)->orderBy('group_id')->get();
+            $prod_attributes = [];
+            /** @var Attribute $attribute */
+            foreach ($attributes as $attribute) {
 
+                if ($attribute->isNumeric()) $prod_attributes[] = $this->attributes->getNumericAttribute($attribute, $product_ids);
+                if ($attribute->isVariant()) $prod_attributes[] = $this->attributes->getVariantAttribute($attribute, $product_ids);
+                if (!$attribute->isNumeric() && !$attribute->isVariant()) {
+                    if ($attribute->isBool()) {
+                        $prod_attributes[] = [
+                            'id' => $attribute->id,
+                            'name' => $attribute->name,
+                            'isBool' => true,
+                        ];
+                    } else {
+                        $prod_attributes[] = [
+                            'id' => $attribute->id,
+                            'name' => $attribute->name,
+                        ];
+                    }
+                }
+            }
             //$prod_attributes = [];// $this->attributes->getPossibleForCategory($category->getParentIdAll());
 //getIdPossibleForProducts
             //$products = $this->products->getFilter($category->id, $request);
@@ -62,11 +90,11 @@ class CatalogController extends Controller
             return view('shop.products',
                 compact('category', 'products','prod_attributes', 'tags', 'minPrice', 'maxPrice', 'brands'));
 
-        } catch (\Throwable $e) {
+      /*  } catch (\Throwable $e) {
             $category = null;
             flash($e->getMessage(), 'danger');
             return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
-        }
+        }*/
     }
 
     public function search(Request $request)

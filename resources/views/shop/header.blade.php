@@ -6,7 +6,7 @@
                 <div>
                     @foreach($menuTop as $item)
                         <a href="{{ isset($item['page']) ? route('shop.page.view', $item['page']) : route($item['route_name']) }}"
-                           class="fs-5 ms-1 link-dark link-underline-opacity-0 link-underline-opacity-0-hover fw-bolder link-opacity-75-hover">
+                           class="fs-6 ms-1 link-dark link-underline-opacity-0 link-underline-opacity-0-hover fw-bolder link-opacity-75-hover">
                             {{ $item['name'] }}
                         </a>
                     @endforeach
@@ -78,7 +78,7 @@
                             <li class="nav-item">
                                 <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
                                     <i class="fa-light fa-user-vneck fs-4"></i>
-                                    <span class="fs-6">Войти</span>
+                                    <span class="fs-7">Войти</span>
                                 </a>
                             </li>
                         @endif
@@ -86,7 +86,7 @@
                         <li class="nav-item">
                             <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
                                 <i class="fa-light fa-user-vneck fs-4"></i>
-                                <span class="fs-6">Кабинет</span>
+                                <span class="fs-7">Кабинет</span>
                             </a>
                         </li>
 
@@ -94,19 +94,19 @@
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
                             <i class="fa-light fa-cart-shopping fs-4"></i>
-                            <span class="fs-6">Корзина</span>
+                            <span class="fs-7">Корзина</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
                             <i class="fa-light fa-heart fs-4"></i>
-                            <span class="fs-6">Избранное</span>
+                            <span class="fs-7">Избранное</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
                             <i class="fa-sharp fa-light fa-box-open fs-4"></i>
-                            <span class="fs-6">Заказы</span>
+                            <span class="fs-7">Заказы</span>
                         </a>
                     </li>
                 </ul>

@@ -5,6 +5,8 @@ namespace App\Modules\Product\Repository;
 
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeCategory;
+use App\Modules\Product\Entity\AttributeProduct;
+use App\Modules\Product\Entity\AttributeVariant;
 
 class AttributeRepository
 {
@@ -53,6 +55,56 @@ class AttributeRepository
             $query->whereIn('product_id', $products_id);
         })->pluck('id')->toArray();
         return $attrs;
+    }
+
+    public function getNumericAttribute(Attribute $attribute, array $product_ids): array
+    {
+        $attr = array_map(function ($item) {
+            return json_decode($item);
+        }, AttributeProduct::where('attribute_id', '=', $attribute->id)->whereIn('product_id', $product_ids)->pluck('value')->toArray());
+
+
+        return [
+            'id' => $attribute->id,
+            'name' => $attribute->name,
+            'isNumeric' => true,
+            'min' => min($attr),
+            'max' => max($attr)
+        ];
+
+
+        //return $result;
+    }
+
+    public function getVariantAttribute(Attribute $attribute, array $product_ids)
+    {
+        $values = array_map(function ($item) {
+            return json_decode($item);
+        }, AttributeProduct::where('attribute_id', '=', $attribute->id)->whereIn('product_id', $product_ids)->pluck('value')->toArray());
+
+        $variant_ids = [];
+        foreach ($values as $item) {
+            $variant_ids = array_merge($variant_ids, $item);
+        }
+        $variant_ids = array_unique($variant_ids);
+
+        $variants = array_map(function ($id) {
+            $_var = AttributeVariant::find($id);
+            return [
+                'id' => $_var->id,
+                'name' => $_var->name,
+                'image' => empty($_var->image->file) ? '' : $_var->getImage(),
+            ];
+        }, $variant_ids);
+
+        $result = [
+            'id' => $attribute->id,
+            'name' => $attribute->name,
+            'isVariant' => true,
+            'variants' => $variants
+        ];
+
+        return $result;
     }
 
 }
