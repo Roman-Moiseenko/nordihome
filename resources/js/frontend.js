@@ -34,18 +34,24 @@ window.$ = jQuery;
         $('.presearch-overlay').hide();
         $('.presearch-suggest').hide();
     });
+    //По таймеру - предотвращаем ajax при быстром наборе
+    let timerInput;
     presearchInput.on('keyup', function () {
-        //ajax запрос
-        $.post(presearch.data('route'), {
-                search: presearchInput.val(),
-            },
-            function (data) {
-                suggestBlock.html('');
-                for (let i = 0; i < data.length; i++) {
-                    suggestBlock.append(_itemSuggestPresearch(data[i]));
-                }
-            });
+        timerInput = setTimeout(function (){
+            $.post(presearch.data('route'), {search: presearchInput.val()},//ajax запрос
+                function (data) {
+                    suggestBlock.html('');
+                    for (let i = 0; i < data.length; i++) {
+                        suggestBlock.append(_itemSuggestPresearch(data[i]));
+                    }
+                });
+        }, 180);
+
     });
+    presearchInput.on('keydown', function (){ //отменяем таймер при нажатии клавиши
+        clearTimeout(timerInput);
+    });
+
     //HTML построители
     function _itemSuggestPresearch(item) {
         let img = '<i class="fa-light fa-magnifying-glass"></i>';
@@ -64,16 +70,6 @@ window.$ = jQuery;
             '   <span class="suggest--price">' + price + '</span>\n' +
             '</a>'
     }
-
-    //???
-   /* $(document).on('click', function (e) {
-        if ($(e.target).closest(".presearch").length) {
-            return;
-        }// клик снаружи элемента
-        $('.presearch-overlay').hide();
-        $('.presearch-suggest').hide();
-    });*/
-
 
     //Кнопки в INPUT
     $('#presearch--icon-clear').on('click', function () {

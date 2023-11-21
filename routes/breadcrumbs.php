@@ -12,15 +12,16 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Shop\ShopRepository;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 /**  S H O P */
 
-
+//TODO Перенести в отдельный файл ????
 
 /**  Пример рекурсии для вложенных категорий и товара */
 Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) { //Без указания главной - home
-    $category = (new CategoryRepository())->getBySlug($slug);
+    $category = (new ShopRepository())->CategoryBySlug($slug);
     if ($category->parent) {
         $trail->parent('shop.category.view', $category->parent_id);
     } else {
@@ -35,12 +36,12 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) 
 });*/
 //Для товара собираем из предыдущих
 Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, $slug) {
-    $product = (new ProductRepository())->getBySlug($slug);
+    $product = (new ShopRepository())->getProductBySlug($slug);
     //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
     $trail->parent('shop.category.view', $product->main_category_id); //Крошка - Категория > Подкатегория >
     $trail->push($product->name, route('shop.product.view', $product->slug)); // Крошка - Товар
 });
-
+//****/
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
     $trail->push('<i class="fa-light fa-house-blank"></i>', route('home'));

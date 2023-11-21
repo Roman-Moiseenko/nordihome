@@ -9,31 +9,30 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\AttributeRepository;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class CatalogController extends Controller
 {
-    private CategoryRepository $repository;
-    private ProductRepository $products;
+    private ShopRepository $repository;
+    //private ProductRepository $products;
     private AttributeRepository $attributes;
 
-    public function __construct(CategoryRepository $repository, ProductRepository $products, AttributeRepository $attributes)
+    public function __construct(ShopRepository $repository, AttributeRepository $attributes)
     {
         $this->repository = $repository;
-        $this->products = $products;
         $this->attributes = $attributes;
     }
 
     public function view(Request $request, $slug)
     {
       /*  try {*/
-            $category = $this->repository->getBySlug($slug);
+            $category = $this->repository->CategoryBySlug($slug);
 
             if (count($category->children) > 0) return view('shop.catalogs', compact('category'));
-            //$parents_id = $this->repository->relationAttributes()
-            //$products
-            $products = $this->products->getByCategory($category->id);
+
+            $products = $this->repository->ProductsByCategory($category->id);
 
             $minPrice = 10;
             $maxPrice = 999999;
@@ -100,7 +99,7 @@ class CatalogController extends Controller
     public function search(Request $request)
     {
         $result = [];
-        if (empty($request['category'])) return ;
+        if (empty($request['category'])) return \response()->json($result);
         try {
             $categories = $this->repository->getTree((int)$request['category']);
 

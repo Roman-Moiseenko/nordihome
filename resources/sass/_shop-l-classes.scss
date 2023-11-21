@@ -370,6 +370,15 @@ footer > .about {
     border-bottom: 1px solid var(--bs-gray-400);
     padding: 12px;
 }
+.products-buttons-filter {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+.products-buttons-filter > button {
+    flex-grow: 1;
+    margin: 8px 0;
+}
 /// Check
 .form-check-label, .form-check-input {
     cursor: pointer;

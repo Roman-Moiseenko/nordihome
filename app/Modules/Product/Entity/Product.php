@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property string $slug
  * @property string $code
+ * @property string $code_search
  * @property string $description
  * @property string $short
  * @property int $main_category_id
@@ -95,6 +96,7 @@ class Product extends Model
         'pre_order',
         'not_delivery',
         'not_local',
+        'code_search',
     ];
 
     protected $hidden = [
@@ -118,6 +120,7 @@ class Product extends Model
     }
     public static function register(string $name, string $code, int $main_category_id, string $slug = ''): self
     {
+        $code_search = str_replace(['-', ',', '.', '_'],'', $code);
         //$dublicat = Product::where('name', '=', $name)->get();
         if (!empty(Product::where('name', '=', $name)->first())) throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
         if (!empty(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
@@ -125,6 +128,7 @@ class Product extends Model
             'name' => $name,
             'slug' => empty($slug) ? Str::slug($name) : $slug,
             'code' => $code,
+            'code_search' => $code_search,
             'main_category_id' => $main_category_id,
         ]);
 

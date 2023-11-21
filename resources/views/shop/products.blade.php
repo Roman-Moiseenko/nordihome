@@ -59,8 +59,8 @@
 
             </div>
             <div class="products-buttons-filter">
-                <button>Применить</button>
-                <button>Сбросить</button>
+                <button class="btn btn-dark w-auto">Применить</button>
+                <button class="btn btn-outline-dark w-auto">Сбросить</button>
             </div>
         </div>
         <div class="products-page-list ms-3">

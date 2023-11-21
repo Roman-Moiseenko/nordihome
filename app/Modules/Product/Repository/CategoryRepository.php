@@ -95,7 +95,7 @@ class CategoryRepository
     public function getTree(int $parent_id = null)
     {
         if (is_null($parent_id)) return Category::defaultOrder()->get()->toTree();
-        return Category::defaultOrder()->descendantsOf($parent_id)->toTree(); //where('parent_id', '=', $parent_id)->get()->toTree();
+        return Category::defaultOrder()->descendantsOf($parent_id)->toTree();
     }
 
     public function withDepth()
@@ -109,43 +109,5 @@ class CategoryRepository
             $query->where('name', 'LIKE', "%{$search}%");
         });
         return $query->take($take)->get();
-    }
-
-    public function toShopForSearch(Category $category)
-    {
-        return [
-            'id' => $category->id,
-            'name' => $category->name,
-            'code' => '',
-            'image' => !is_null($category->icon) ? $category->icon->getUploadUrl() : '',
-            'price' => '',
-            'url' => route('shop.category.view', $category),
-        ];
-    }
-
-    public function toShopForSubMenu(Category $category): array
-    {
-        $children = [];
-        if (!empty($category->children)) {
-            foreach ($category->children as $child) {
-                $children[] = $this->toShopForSubMenu($child);
-            }
-        }
-
-        return [
-            'id' => $category->id,
-            'name' => $category->name,
-            'url' => route('shop.category.view', $category->slug),
-            'image' => !is_null($category->image) ? $category->image->getUploadUrl() : '',
-            'products' => count($category->products),
-            'children' => $children,
-        ];
-    }
-
-    //private function _recurseCategory(Category $category)
-    public function getBySlug($slug): Category
-    {
-        if (is_numeric($slug)) return Category::findOrFail($slug);
-        return Category::where('slug', '=', $slug)->firstOrFail();
     }
 }

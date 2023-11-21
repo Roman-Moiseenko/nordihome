@@ -7,25 +7,24 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class ProductController extends Controller
 {
 
-    private ProductRepository $repository;
-    private CategoryRepository $categories;
+    private ShopRepository $repository;
 
-    public function __construct(ProductRepository $repository, CategoryRepository $categories)
+    public function __construct(ShopRepository $repository)
     {
         $this->repository = $repository;
-        $this->categories = $categories;
     }
 
-    public function view($slug/*Product $product*/)
+    public function view($slug)
     {
         try {
-            $product = $this->repository->getBySlug($slug);
+            $product = $this->repository->getProductBySlug($slug);
             return view('shop.product', compact('product'));
         } catch (\Throwable $e) {
             $product = null;
@@ -39,16 +38,16 @@ class ProductController extends Controller
         $result = [];
         if (empty($request['search'])) return ;
         try {
-            $categories = $this->categories->search($request['search'], 5);
-            $products = $this->repository->search($request['search'], 5);
+            $categories = $this->repository->searchCategory($request['search'], 5);
+            $products = $this->repository->searchProduct($request['search'], 5);
             /** @var Category $category */
             foreach ($categories as $category) {
-                $result[] = $this->categories->toShopForSearch($category);
+                $result[] = $this->repository->CategoriesForSearch($category);
             }
 
             /** @var Product $product */
             foreach ($products as $product) {
-                $result[] = $this->repository->toShopForSearch($product);
+                $result[] = $this->repository->ProductsForSearch($product);
             }
         } catch (\Throwable $e) {
             $result = $e->getMessage();

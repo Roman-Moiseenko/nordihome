@@ -5,6 +5,7 @@ namespace App\Modules\Product\Repository;
 
 
 use App\Modules\Product\Entity\Product;
+use Illuminate\Support\Facades\DB;
 
 class ProductRepository
 {
@@ -42,8 +43,8 @@ class ProductRepository
     public function search(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true)
     {
         $query = Product::orderBy('name')->where(function ($query) use ($search) {
-            $query->where('code', 'LIKE', "%{$search}%")
-                ->orWhere('name', 'LIKE', "%{$search}%");
+            $query->where('code_search', 'LIKE', "%{$search}%")
+                ->orWhere('name', 'LIKE', "{$search}%");
         });
 
         if (!empty($include_ids)) {
@@ -73,23 +74,6 @@ class ProductRepository
         ];
     }
 
-    public function toShopForSearch(Product $product): array
-    {
-        return [
-            'id' => $product->id,
-            'name' => $product->name,
-            'code' => $product->code,
-            'image' => !is_null($product->photo) ? $product->photo->getThumbUrl('thumb') : '',
-            'price' => number_format($product->lastPrice->value, 0, ' ', ','),
-            'url' => route('shop.product.view', $product->slug),
-        ];
-    }
-
-    public function getBySlug($slug): Product
-    {
-        if (is_numeric($slug)) return Product::findOrFail($slug);
-        return Product::where('slug', '=', $slug)->firstOrFail();
-    }
 
 
     public function getFilter(int $category_id, \Illuminate\Http\Request $request): array
@@ -97,16 +81,5 @@ class ProductRepository
         $products = Product::where('main_category_id', '=', $category_id)->get();
         return [];
     }
-
-    public function getByCategory(int $id)
-    {
-        $products = Product::where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {
-            $query->whereHas('categories', function ($_query) use ($id) {
-                $_query->where('category_id', $id);
-            });
-        })->get();
-        return $products;
-    }
-
 
 }
