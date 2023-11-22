@@ -40,13 +40,20 @@ class ProductController extends Controller
     {
         $categories = Category::defaultOrder()->withDepth()->get();
 
+        $published = $request['published'] ?? 'all';
         $query = Product::orderBy('name');
 
+
         if (!empty($category_id = $request->get('category_id')) && $category_id != 0) {
-            $query->whereHas('categories', function ($q) use ($category_id) {
+            $query->whereHas('categories', function ($q) use ($category_id, $published) {
                 $q->where('id', '=', $category_id);
+                if ($published == 'active') $q->where('published', '=', true);
+                if ($published == 'draft') $q->where('published', '=', false);
+
             })->orWhere('main_category_id', '=', $category_id);
         }
+        if ($published == 'active') $query->where('published', '=', true);
+        if ($published == 'draft') $query->where('published', '=', false);
 
         //ПАГИНАЦИЯ
         if (!empty($pagination = $request->get('p'))) {
@@ -57,7 +64,7 @@ class ProductController extends Controller
         }
 
         return view('admin.product.product.index', compact('products', 'pagination',
-            'categories', 'category_id'));
+            'categories', 'category_id', 'published'));
     }
 
     public function create(Request $request)

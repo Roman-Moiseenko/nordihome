@@ -9,6 +9,7 @@ class Shop
     public bool $only_offline;
     public bool $show_finished;
     public array $delivery;
+    public int $paginate;
 
 
     public static function createFromArray(mixed $shop): static
@@ -18,7 +19,7 @@ class Shop
         $_shop->only_offline = $shop['only-offline'];
         $_shop->delivery = $shop['delivery'];
         $_shop->show_finished = $shop['show-finished'];
-
+        $_shop->paginate = $shop['paginate'];
 
         return $_shop;
     }

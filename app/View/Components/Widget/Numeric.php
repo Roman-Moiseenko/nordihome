@@ -14,12 +14,12 @@ class Numeric extends Component
     public string $id;
     public bool $checked;
     public string $class;
-    public ?float $currentMin;
-    public ?float $currentMax;
+    public mixed $currentMin;
+    public mixed $currentMax;
 
     public function __construct(string $name,
                                 float $minValue, float $maxValue,
-                                float $currentMin = null, float $currentMax = null,
+                                mixed $currentMin = null, mixed $currentMax = null,
                                 string $id = '', bool $checked = false, string $class = '')
     {
         $this->name = $name;

@@ -35,20 +35,10 @@ class ProductController extends Controller
 
     public function search(Request $request)
     {
-        $result = [];
         if (empty($request['search'])) return ;
-        try {
-            $categories = $this->repository->searchCategory($request['search'], 5);
-            $products = $this->repository->searchProduct($request['search'], 5);
-            /** @var Category $category */
-            foreach ($categories as $category) {
-                $result[] = $this->repository->CategoriesForSearch($category);
-            }
 
-            /** @var Product $product */
-            foreach ($products as $product) {
-                $result[] = $this->repository->ProductsForSearch($product);
-            }
+        try {
+            $result = $this->repository->search($request['search']);
         } catch (\Throwable $e) {
             $result = $e->getMessage();
         }

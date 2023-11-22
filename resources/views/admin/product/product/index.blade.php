@@ -22,9 +22,24 @@
                     @endforeach
                 </x-base.tom-select>
             </div>
-            <div class="col-span-12 lg:col-span-3 border-l pl-4">
+            <div class="col-span-12 lg:col-span-3 border-l pl-4 flex">
+                <div class="">
+                    <div class="form-check mr-3">
+                        <input id="published-all" class="form-check-input check-published" type="radio" name="published" value="all" {{ $published == 'all' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="published-all">Все</label>
+                    </div>
+                    <div class="form-check mr-3 mt-2 sm:mt-0">
+                        <input id="published-active" class="form-check-input check-published" type="radio" name="published" value="active" {{ $published == 'active' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="published-active">Опубликованные</label>
+                    </div>
+                    <div class="form-check mr-3 mt-2 sm:mt-0">
+                        <input id="published-draft" class="form-check-input check-published" type="radio" name="published" value="draft" {{ $published == 'draft' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="published-draft">Черновики</label>
+                    </div>
+                </div>
+                <div class="border-l pl-4 ">
                 Поиск по имени или артикулу
-
+                </div>
             </div>
         </div>
     </div>
@@ -32,6 +47,7 @@
     <script>
         /* Filters */
         const urlParams = new URLSearchParams(window.location.search);
+
         let selectCategory = document.getElementById('select-category');
         selectCategory.addEventListener('change', function () {
             let p = selectCategory.options[selectCategory.selectedIndex].value;
@@ -39,6 +55,14 @@
             window.location.search = urlParams;
         });
 
+        let checkPublished = document.querySelectorAll('.check-published');
+        checkPublished.forEach(function (item) {
+            item.addEventListener('click', function () {
+                let v = item.value;
+                urlParams.set('published', v);
+                window.location.search = urlParams;
+            });
+        })
     </script>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->

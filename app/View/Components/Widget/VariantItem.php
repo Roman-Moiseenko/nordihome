@@ -13,9 +13,21 @@ class VariantItem extends Component
     public string $caption;
     public string $image;
     private bool $image_type;
+    public mixed $selected = '';
+    public bool $checked = false;
 
-    public function __construct(string $name, string $id, string $caption, string $image = '')
+
+    public function __construct(string $name, string $id, string $caption, string $image = '', bool $checked = false)
     {
+        /*if (!empty($selected)) {
+            if (is_string($selected)) {
+                $this->checked = ($id == $selected);
+            }
+            if (is_array($selected)) {
+                $this->checked = in_array($id, $selected);
+            }
+        }*/
+        $this->checked = $checked;
         $this->image_type = !(empty($image));
         $this->name = $name;
         $this->id = $id;

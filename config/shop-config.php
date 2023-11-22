@@ -57,6 +57,7 @@ return [
         'product' => [
 
         ],
+        'paginate' => 20,
     ],
     'frontend' => [
         'logo-nav' => '/images/logo-nordi-home-2.svg',

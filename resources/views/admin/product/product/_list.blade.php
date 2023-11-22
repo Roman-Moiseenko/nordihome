@@ -5,7 +5,7 @@
         </div>
     </x-base.table.td>
     <x-base.table.td class="w-40"><a href="{{ route('admin.product.edit', $product) }}"
-                                      class="font-medium whitespace-nowrap">{{ $product->name }}</a></x-base.table.td>
+                                      class="font-medium whitespace-nowrap">{{ $product->name }}</a> {{ ($product->published) ? '' : '(Черновик)' }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $product->category->name }}</x-base.table.td>
     <x-base.table.td class="text-center"> - </x-base.table.td>
     <x-base.table.td class="table-report__action w-56">

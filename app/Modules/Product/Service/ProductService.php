@@ -239,7 +239,11 @@ class ProductService
 
             DB::commit();
             $product->push();
-            if (isset($request['published'])) $this->published($product);
+            if (isset($request['published'])) {
+                $this->published($product);
+            } else {
+                $this->draft($product);
+            }
             return $product;
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -249,10 +253,15 @@ class ProductService
 
     public function published(Product $product): void
     {
-        //TODO Проверка на заполнение и на модерацияю
-        $product->setPublished();
+        //TODO Проверка на заполнение и на модерацию
+        $product->update(['published' => true]);
     }
 
+    public function draft(Product $product): void
+    {
+        //TODO Проверка на связи
+        $product->update(['published' => false]);
+    }
 
     public function moderation(Product $product): void
     {

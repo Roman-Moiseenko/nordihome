@@ -17,4 +17,9 @@ class ProductPricing extends Model
         'value',
         'founded'
     ];
+
+    public function product()
+    {
+        //return $this->
+    }
 }
