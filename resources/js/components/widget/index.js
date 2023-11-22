@@ -1,20 +1,32 @@
 (function () {
     "use strict";
     console.log('Start Widget Component');
-    $('.input-numeric').on('keyup', function () {
+
+    let inputNumeric = $('.input-numeric');
+
+    inputNumeric.each(function () {
         let input = $(this);
         let spanClear = $('#' + input.attr('id') + '-clear');
 
-        if (input.val().length === 0) {
-            spanClear.removeClass('active');
-        } else {
-            spanClear.addClass('active');
-        }
         spanClear.on('click', function () {
             spanClear.removeClass('active');
             input.val('');
         });
+        input.on('keyup', function () {
+            _toggleClear(input, spanClear);
+        });
+        input.bind('focus', function () {
+            _toggleClear(input, spanClear);
+        });
     });
+
+    function _toggleClear(_input, _span) {
+        if (_input.val().length === 0) {
+            _span.removeClass('active');
+        } else {
+            _span.addClass('active');
+        }
+    }
 
     $('.variant-image-input').on('change', function () {
         if ($(this).is(':checked')) {

@@ -78,8 +78,16 @@ class ShopRepository
             $query->where('count_for_sell', '>', 0);
         }
         //Цена
-
-
+        if (!empty($min = $request['price'][0]) && is_numeric($min)) {
+            $query->whereHas('lastPrice', function ($q) use ($min) {
+                $q->where('value', '>=', $min);
+            });
+        }
+        if (!empty($max = $request['price'][1]) && is_numeric($max)) {
+            $query->whereHas('lastPrice', function ($q) use ($max) {
+                $q->where('value', '<=', $max);
+            });
+        }
         //Акция
 
         //Атрибуты
