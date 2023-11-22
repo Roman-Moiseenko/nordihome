@@ -10,6 +10,7 @@ use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Entity\Series;
 use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Helper\ProductHelper;
 use App\Modules\Product\Repository\ProductRepository;
@@ -55,7 +56,8 @@ class ProductController extends Controller
             $products = $query->paginate($this->pagination);
         }
 
-        return view('admin.product.product.index', compact('products', 'pagination', 'categories', 'category_id'));
+        return view('admin.product.product.index', compact('products', 'pagination',
+            'categories', 'category_id'));
     }
 
     public function create(Request $request)
@@ -64,7 +66,9 @@ class ProductController extends Controller
         $menus = ProductHelper::menuAddProduct();
         $brands = Brand::orderBy('name')->get();
         $tags = Tag::orderBy('name')->get();
-        return view('admin.product.product.create', compact('categories', 'menus', 'brands', 'tags'));
+        $series = Series::orderBy('name')->get();
+        return view('admin.product.product.create', compact('categories', 'menus', 'brands',
+            'tags', 'series'));
     }
 
     public function store(Request $request)
@@ -84,10 +88,12 @@ class ProductController extends Controller
         $menus = ProductHelper::menuUpdateProduct();
         $brands = Brand::orderBy('name')->get();
         $tags = Tag::orderBy('name')->get();
+        $series = Series::orderBy('name')->get();
         $groups = AttributeGroup::orderBy('name')->get();
         $options = $this->options;
         $equivalents = Equivalent::orderBy('name')->where('category_id', '=', $product->main_category_id)->get();
-        return view('admin.product.product.edit', compact('product', 'categories', 'menus', 'brands', 'tags', 'groups', 'options', 'equivalents'));
+        return view('admin.product.product.edit', compact('product', 'categories',
+            'menus', 'brands', 'tags', 'groups', 'options', 'equivalents', 'series'));
 
     }
 
@@ -133,11 +139,12 @@ class ProductController extends Controller
                 $result[] = [
                     'id' => $attribute->id,
                     'name' => $attribute->name,
-                    ];
+                ];
             }
         }
         return \response()->json($result);
     }
+
     public function get_images(Product $product)
     {
         $result = [];

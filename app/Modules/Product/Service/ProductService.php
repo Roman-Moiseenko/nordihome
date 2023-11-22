@@ -22,8 +22,14 @@ class ProductService
     private TagRepository $tags;
     private TagService $tagService;
     private EquivalentService $equivalentService;
+    private SeriesService $seriesService;
 
-    public function __construct(Options $options, CategoryRepository $categories, TagRepository $tags, TagService $tagService, EquivalentService $equivalentService)
+    public function __construct(Options $options,
+                                CategoryRepository $categories,
+                                TagRepository $tags,
+                                TagService $tagService,
+                                EquivalentService $equivalentService,
+                                SeriesService $seriesService)
     {
         //Конфигурация
         $this->options = $options;
@@ -31,6 +37,7 @@ class ProductService
         $this->tags = $tags;
         $this->tagService = $tagService;
         $this->equivalentService = $equivalentService;
+        $this->seriesService = $seriesService;
     }
 
     public function create(Request $request): Product
@@ -47,22 +54,25 @@ class ProductService
                         $product->categories()->attach((int)$category_id);
                 }
             }
+            //Серия
+            $this->series($request, $product);
+
             /* SECTION 2*/
             //Описание, короткое описание, теги
             $product->description = $request['description'];
             $product->short = $request['short'];
 
             $this->tags($request, $product);
-           /* if (!empty($request['tags'])) {
-                foreach ($request->get('tags') as $tag_id) {
-                    if ($this->tags->exists($tag_id)) {
-                        $product->tags()->attach((int)$tag_id);
-                    } else {
-                        $tag = $this->tagService->create(['name' => $tag_id]);
-                        $product->tags()->attach($tag->id);
-                    }
-                }
-            }*/
+            /* if (!empty($request['tags'])) {
+                 foreach ($request->get('tags') as $tag_id) {
+                     if ($this->tags->exists($tag_id)) {
+                         $product->tags()->attach((int)$tag_id);
+                     } else {
+                         $tag = $this->tagService->create(['name' => $tag_id]);
+                         $product->tags()->attach($tag->id);
+                     }
+                 }
+             }*/
 
             DB::commit();
             $product->push();
@@ -107,6 +117,7 @@ class ProductService
                     }
                 }
             }
+            $this->series($request, $product);
             /* SECTION 2*/
             //Описание, короткое описание, теги
             $product->description = $request['description'];
@@ -265,14 +276,27 @@ class ProductService
     private function tags(Request $request, Product &$product)
     {
         if (empty($request['tags'])) return;
-            foreach ($request->get('tags') as $tag_id) {
-                if ($this->tags->exists($tag_id)) {
-                    $product->tags()->attach((int)$tag_id);
-                } else {
-                    $tag = $this->tagService->create(['name' => $tag_id]);
-                    $product->tags()->attach($tag->id);
-                }
+        foreach ($request->get('tags') as $tag_id) {
+            if ($this->tags->exists($tag_id)) {
+                $product->tags()->attach((int)$tag_id);
+            } else {
+                $tag = $this->tagService->create(['name' => $tag_id]);
+                $product->tags()->attach($tag->id);
             }
+        }
+
+    }
+
+    private function series(Request $request, Product &$product)
+    {
+        if (empty($_series = $request['series_id'])) return;
+        if (is_array($_series)) $_series = $_series[0]; //Если массив, берем первый элемент
+        if (is_numeric($_series)) {
+            $product->series_id = (int)$_series;
+        } else {
+            $series = $this->seriesService->registerName($_series); //Создаем Серию
+            $product->series_id = $series->id;
+        }
 
     }
 

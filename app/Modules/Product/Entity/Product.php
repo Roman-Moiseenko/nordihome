@@ -47,6 +47,8 @@ use Illuminate\Support\Str;
  * @property Group[] $groups
  * @property Modification $modification
  * @property ModificationProduct $modification_product
+ * @property Series $series
+ * @property int $series_id
  */
 class Product extends Model
 {
@@ -77,6 +79,7 @@ class Product extends Model
         'current_rating' => 0,
         'published' => false,
         'pre_order' => false,
+        'series_id' => null,
     ];
 
     protected $fillable = [
@@ -97,6 +100,7 @@ class Product extends Model
         'not_delivery',
         'not_local',
         'code_search',
+        'series_id',
     ];
 
     protected $hidden = [
@@ -250,6 +254,12 @@ class Product extends Model
         return true;
     }
 
+    public function isSeries($id): bool
+    {
+        if ($this->series_id == null) return false;
+        return $this->series_id == $id;
+    }
+
     public function isLocal(): bool
     {
         return !$this->not_local;
@@ -282,6 +292,12 @@ class Product extends Model
     }
 
     //RELATIONSHIP
+
+
+    public function series()
+    {
+        return $this->belongsTo(Series::class, 'series_id', 'id');
+    }
 
     public function modification_product()
     {

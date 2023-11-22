@@ -38,18 +38,40 @@
                 </option>
             @endforeach
         </x-base.tom-select>
-        <!-- Выбрать бренд -->
-        <x-base.form-label for="select-brand" class="mt-3">Бренд</x-base.form-label>
-        <x-base.tom-select id="select-brand" name="brand_id" class="w-1/2" data-placeholder="Выберите бренд">
-            <option value="0"></option>
-            @foreach($brands as $brand)
-                <option value="{{ $brand->id }}"
-                @if(isset($product))
-                    {{ $brand->id == $product->brand_id ? 'selected' : ''}}
-                    @endif
-                >{{ $brand->name }}</option>
-            @endforeach
-        </x-base.tom-select>
+        <div class="grid grid-cols-12 gap-x-6">
+            <div class="col-span-12 lg:col-span-6">
+                <!-- Выбрать бренд -->
+                <x-base.form-label for="select-brand" class="mt-3">Бренд</x-base.form-label>
+                <x-base.tom-select id="select-brand" name="brand_id" class="" data-placeholder="Выберите бренд">
+                    <option value="0"></option>
+                    @foreach($brands as $brand)
+                        <option value="{{ $brand->id }}"
+                        @if(isset($product))
+                            {{ $brand->id == $product->brand_id ? 'selected' : ''}}
+                            @endif
+                        >{{ $brand->name }}</option>
+                    @endforeach
+                </x-base.tom-select>
+            </div>
+            <div class="col-span-12 lg:col-span-6">
+                <!-- Выбрать бренд -->
+                <x-base.form-label for="select-series" class="mt-3">Серия</x-base.form-label>
+                <x-base.tom-select id="select-series" name="series_id" class="" data-placeholder="Создайте или выберите серию (одну)" multiple>
+                    <option value="0"></option>
+                    @foreach($series as $item_series)
+                        <option value="{{ $item_series->id }}"
+                        @if(isset($product))
+                            {{ $product->isSeries($item_series->id) ? 'selected' : ''}}
+                            @endif
+                        >{{ $item_series->name }}</option>
+                    @endforeach
+                </x-base.tom-select>
+            </div>
+
+        </div>
+
+
+
     </div>
 
 </div>
