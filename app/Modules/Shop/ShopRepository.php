@@ -64,7 +64,7 @@ class ShopRepository
 
     public function filter(Request $request, array $product_ids)
     {
-        $query = Product::whereIn('id', $product_ids);
+        $query = Product::orderBy('name');
 
         ///Фильтрация по $request
 
@@ -78,52 +78,104 @@ class ShopRepository
             $query->where('count_for_sell', '>', 0);
         }
         //Цена
-        if (!empty($min = $request['price'][0]) && is_numeric($min)) {
-            $query->whereHas('lastPrice', function ($q) use ($min) {
-                $q->where('value', '>=', $min);
-            });
-        }
-        if (!empty($max = $request['price'][1]) && is_numeric($max)) {
-            $query->whereHas('lastPrice', function ($q) use ($max) {
-                $q->where('value', '<=', $max);
-            });
+        if (isset($request['price'])) {
+            if (!empty($min = $request['price'][0]) && is_numeric($min)) {
+                $query->whereHas('lastPrice', function ($q) use ($min) {
+                    $q->where('value', '>=', $min);
+                });
+            }
+            if (!empty($max = $request['price'][1]) && is_numeric($max)) {
+                $query->whereHas('lastPrice', function ($q) use ($max) {
+                    $q->where('value', '<=', $max);
+                });
+            }
         }
         //Акция
+
+
+
+        foreach ($request->all() as $key => $item) {
+            if (str_contains($key, 'a_')) {
+                $attr_id = (int)substr($key, 2, strlen($key) - 2);
+                /** @var Attribute $attr */
+
+                $attr = Attribute::find($attr_id);
+                if ($attr->isBool()) {
+                    $query->whereHas('prod_attributes', function ($q) use ($attr_id) {
+                        $q->where('attribute_id','=', $attr_id);
+                    });
+                }
+                if ($attr->isNumeric()) {
+                    $min = $item[0];
+                    $max = $item[1];
+                    //Получаем все позиции где товары для текущего атрибута
+                    $_attr_prods = AttributeProduct::where('attribute_id', '=', $attr_id)->whereIn('product_id', $product_ids)->get();
+
+                    //Исключаем id товара, которые не удовлетворяют условиям > или <
+                    foreach ($_attr_prods as $_attr_prod) {
+                        $_value = (int)json_decode($_attr_prod->value);
+
+                        if ((is_numeric($min) && $_value < (int)$min) || (is_numeric($max) && $_value > (int)$max))
+                            $product_ids = array_filter($product_ids, function ($value) use ($_attr_prod) {
+                                return $value != $_attr_prod->product_id;
+                            });
+                    }
+                    $_temp_array = [];
+                    foreach ($product_ids as $product_id) { //Формируем одномерный, не ассоциативный массив
+                        $_temp_array[] = $product_id;
+                    }
+                    $product_ids = $_temp_array;
+                }
+
+                if ($attr->isVariant()) {
+                    $query->whereHas('prod_attributes', function ($q) use ($item) {
+                        foreach ($item as $k => $_od) {
+                            if ($k == 0) {
+                                $q->whereJsonContains('value', $_od);
+                            } else {
+                                $q->orWhereJsonContains('value', $_od);
+                            }
+                        }
+                    });
+                }
+
+            }
+        }
 
         //Атрибуты
 
 
-        return $query->paginate($this->options->shop->paginate);
+        return $query->whereIn('id', $product_ids)->paginate($this->options->shop->paginate);
     }
 
 
-/*
-    public function searchProduct(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true)
-    {
-        $search_back = $this->avto_replace($search);
+    /*
+        public function searchProduct(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true)
+        {
+            $search_back = $this->avto_replace($search);
 
-        $query = Product::orderBy('name')->where(function ($query) use ($search, $search_back) {
-            $query->where('code_search', 'LIKE', "%{$search}%")
-                ->orWhere('name', 'LIKE', "% {$search}%")->orWhere('name', 'LIKE', "{$search}%")
-                ->orWhere('name', 'LIKE', "% {$search_back}%")->orWhere('name', 'LIKE', "{$search_back}%");
-        });
+            $query = Product::orderBy('name')->where(function ($query) use ($search, $search_back) {
+                $query->where('code_search', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "% {$search}%")->orWhere('name', 'LIKE', "{$search}%")
+                    ->orWhere('name', 'LIKE', "% {$search_back}%")->orWhere('name', 'LIKE', "{$search_back}%");
+            });
 
-        if (!empty($include_ids)) {
-            if ($isInclude) {
-                $query = $query->whereIn('id', $include_ids);
-            } else {
-                $query = $query->whereNotIn('id', $include_ids);
+            if (!empty($include_ids)) {
+                if ($isInclude) {
+                    $query = $query->whereIn('id', $include_ids);
+                } else {
+                    $query = $query->whereNotIn('id', $include_ids);
+                }
             }
-        }
 
-        if (!is_null($take)) {
-            $query = $query->take($take);
-        } else {
-            //$query = $query->all();
+            if (!is_null($take)) {
+                $query = $query->take($take);
+            } else {
+                //$query = $query->all();
+            }
+            return $query->get();
         }
-        return $query->get();
-    }
-*/
+    */
     public function ProductsByCategory(int $id)
     {
         $products = Product::where('published', '=', true)->where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {
@@ -141,15 +193,16 @@ class ShopRepository
         if (is_numeric($slug)) return Category::findOrFail($slug);
         return Category::where('slug', '=', $slug)->firstOrFail();
     }
-/*
-    public function searchCategory(string $search, int $take = 10)
-    {
-        $query = Category::orderBy('name')->where(function ($query) use ($search) {
-            $query->where('name', 'LIKE', "% {$search}%")->orWhere('name', 'LIKE', "{$search}%");
-        });
-        return $query->take($take)->get();
-    }
-*/
+
+    /*
+        public function searchCategory(string $search, int $take = 10)
+        {
+            $query = Category::orderBy('name')->where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "% {$search}%")->orWhere('name', 'LIKE', "{$search}%");
+            });
+            return $query->take($take)->get();
+        }
+    */
 
     public function getTree(int $parent_id = null)
     {
@@ -255,8 +308,8 @@ class ShopRepository
 
         //Сортировка по имени $variants
         $_count = count($variants);
-        for($i = 0; $i < $_count; $i++) {
-            for ($j = 0; $j < $_count-$i-1; $j++) {
+        for ($i = 0; $i < $_count; $i++) {
+            for ($j = 0; $j < $_count - $i - 1; $j++) {
                 if (strcasecmp($variants[$j]['name'], $variants[($j + 1)]['name']) >= 0) {
                     $p = $variants[$j];
                     $variants[$j] = $variants[$j + 1];
@@ -283,6 +336,7 @@ class ShopRepository
             $query->whereIn('id', $product_ids);
         })->get();
     }
+
     //////
 
 
@@ -336,8 +390,6 @@ class ShopRepository
         }
         return $output;
     }
-
-
 
 
 }

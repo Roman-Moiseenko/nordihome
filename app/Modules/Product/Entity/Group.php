@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Entity\Photo;
+use App\Modules\Product\IWidgetHome;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Photo $photo
  * @property Product[] $products
  */
-class Group extends Model
+class Group extends Model implements IWidgetHome
 {
     public $timestamps = false;
 
@@ -54,5 +55,10 @@ class Group extends Model
             if ($product->id == $id) return true;
         }
         return false;
+    }
+
+    public function ProductsForWidget()
+    {
+        return $this->products;
     }
 }

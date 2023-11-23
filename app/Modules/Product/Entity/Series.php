@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
+use App\Modules\Product\IWidgetHome;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *@property string $name
  *@property Product[] $products
  */
-class Series extends Model
+class Series extends Model implements IWidgetHome
 {
 
     public $timestamps = false;
@@ -36,5 +37,10 @@ class Series extends Model
             if ($product->id === $id) return true;
         }
         return false;
+    }
+
+    public function ProductsForWidget()
+    {
+        return $this->products;
     }
 }
