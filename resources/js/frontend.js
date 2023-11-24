@@ -41,6 +41,7 @@ window.$ = jQuery;
             $.post(presearch.data('route'), {search: presearchInput.val()},//ajax запрос
                 function (data) {
                     suggestBlock.html('');
+                    if ($.isArray(data))
                     for (let i = 0; i < data.length; i++) {
                         suggestBlock.append(_itemSuggestPresearch(data[i]));
                     }
