@@ -87,10 +87,22 @@ class AdminMenu
                 ],
             ],
             'discount' => [
-                'icon' => 'building',
-                'title' => 'Акции и скидки',
-                'route_name' => 'admin.home',
-                'can' => '',
+                'icon' => 'badge-percent',
+                'title' => 'Скидки',
+                'can' => 'commodity',
+                'sub_menu' => [
+                    'promotion' => [
+                        'icon' => 'percent',
+                        'title' => 'Акции',
+                        'route_name' => 'admin.home',
+                    ],
+                    'coupon' => [
+                        'icon' => 'piggy-bank',
+                        'title' => 'Купоны скидочные',
+                        'route_name' => 'admin.home',
+                    ],
+
+                ],
             ],
             'delivery' => [
                 'icon' => 'building',

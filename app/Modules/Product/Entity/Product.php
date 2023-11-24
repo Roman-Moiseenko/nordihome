@@ -138,7 +138,6 @@ class Product extends Model
 
     }
 
-
     //SET и GET
     public function setSlug(string $slug): void
     {
