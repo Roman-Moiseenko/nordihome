@@ -11,7 +11,7 @@ class GroupService
 {
     public function create(Request $request): Group
     {
-        $group = Group::register($request['name'], $request['description']);
+        $group = Group::register($request['name'], $request['description'] ?? '');
 
         $this->photo($group, $request->file('file'));
 /*
