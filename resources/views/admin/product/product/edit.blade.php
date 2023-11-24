@@ -113,6 +113,7 @@
             <div class="text-center">
                 <x-base.preview>
                     <x-base.dropzone
+                        id="myDropzoneElementID"
                         class="dropzone"
                         action="{{ route('admin.product.file-upload', $product) }}"
                         multiple
@@ -142,6 +143,7 @@
         let closeUpload = document.getElementById('close-modal-upload');
         closeUpload.addEventListener('click', function () {
             LoadImages();
+            window.Dropzone.forElement('#myDropzoneElementID').removeAllFiles(true);
         });
     </script>
 @endsection
