@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Entity\Photo;
+use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Product\IWidgetHome;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  * @property Photo $photo
  * @property Product[] $products
+ * @property Promotion[] $promotions
  */
 class Group extends Model implements IWidgetHome
 {
@@ -39,6 +41,7 @@ class Group extends Model implements IWidgetHome
     {
         return $this->belongsToMany(Product::class, 'groups_products', 'group_id', 'product_id');
     }
+
 
     public function getImage()
     {

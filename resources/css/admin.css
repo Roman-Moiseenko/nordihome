@@ -77,3 +77,7 @@ button.disabled {
 .search-product-result .search-option:hover {
     background-color: rgb(var(--color-slate-100));
 }
+div.has-error{
+    --tw-border-opacity: 1;
+    border-color: rgb(var(--color-danger) / var(--tw-border-opacity));
+}

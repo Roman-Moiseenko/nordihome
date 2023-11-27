@@ -1,21 +1,26 @@
+import Dayjs from "dayjs";
+window.dayjs = Dayjs;
+
 (function () {
     "use strict";
 
     // Litepicker
     $(".datepicker").each(function () {
         let options = {
-            autoApply: false,
+            autoApply: true,
             singleMode: false,
             numberOfColumns: 2,
             numberOfMonths: 2,
             showWeekNumbers: true,
-            format: "D MMM, YYYY",
+            format: "DD-MM-YYYY",
+            lang: 'ru-RU',
             dropdowns: {
-                minYear: 1990,
-                maxYear: null,
+                minYear: 1940,
+                maxYear: (new Date()).getFullYear() + 2,
                 months: true,
                 years: true,
             },
+            //buttonText:
         };
 
         if ($(this).data("single-mode")) {
@@ -29,11 +34,11 @@
         }
 
         if (!$(this).val()) {
-            let date = dayjs().format(options.format);
+            /*let date = dayjs().format(options.format);
             date += !options.singleMode
                 ? " - " + dayjs().add(1, "month").format(options.format)
                 : "";
-            $(this).val(date);
+            $(this).val(date);*/
         }
 
         new Litepicker({

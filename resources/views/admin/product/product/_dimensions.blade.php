@@ -33,15 +33,18 @@
         Для текущего товара можно только ограничить доставку, если габариты не позволяют это сделать.
     </div>
     <div class="col-span-12 lg:col-span-8">
-        <div class="form-check form-switch">
-            <input id="checkbox-local" class="form-check-input" type="checkbox" name="local"
-                   checked="{{ $product->isLocal() ? 'checked' : '' }}" {{ ($options->shop->delivery['local'] == true)? '' : 'disabled' }}>
-            <label class="form-check-label" for="checkbox-local">В пределах региона</label>
-        </div>
-        <div class="form-check form-switch mt-3">
-            <input id="checkbox-delivery" class="form-check-input" type="checkbox" name="delivery"
-                   checked="{{ $product->isDelivery() ? 'checked' : '' }}" {{ ($options->shop->delivery['all'] == true) ? '' : 'disabled' }}>
-            <label class="form-check-label" for="checkbox-delivery">Транспортной компанией</label>
-        </div>
+
+        {{ \App\Forms\CheckSwitch::create('local', [
+         'placeholder' => 'В пределах региона',
+         'value' => $product->isLocal(),
+         ])->disabled(!$options->shop->delivery['local'])->show() }}
+
+        {{ \App\Forms\CheckSwitch::create('delivery', [
+         'placeholder' => 'Транспортной компанией',
+         'value' => $product->isDelivery(),
+         'class' => 'mt-3',
+         ])->disabled(!$options->shop->delivery['all'])->show() }}
+
+
     </div>
 </div>

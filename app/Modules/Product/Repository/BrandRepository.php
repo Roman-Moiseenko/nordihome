@@ -16,7 +16,6 @@ class BrandRepository
         } else {
             return Brand::orderBy('name')->paginate($pagination);
         }
-
     }
 
     public function byName(string $name): Brand

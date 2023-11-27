@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Entity\Admin;
 use App\Entity\User\User;
+use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
@@ -112,8 +113,8 @@ Breadcrumbs::for('admin.staff.security', function (BreadcrumbTrail $trail, Admin
     $trail->push('Сменить пароль', route('admin.staff.security', $staff));
 });
 
-//PRODUCT
-
+///// *** SHOP
+// PRODUCTS
 Breadcrumbs::for('admin.product.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Товары', route('admin.product.index'));
@@ -136,9 +137,6 @@ Breadcrumbs::for('admin.product.update', function (BreadcrumbTrail $trail, Produ
     $trail->push($product->name, route('admin.product.show', $product));
 });
 
-
-
-
 //BRAND
 Breadcrumbs::for('admin.product.brand.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.product.index');
@@ -156,12 +154,7 @@ Breadcrumbs::for('admin.product.brand.edit', function (BreadcrumbTrail $trail, B
     $trail->parent('admin.product.brand.show', $brand);
     $trail->push('Редактировать', route('admin.product.brand.edit', $brand));
 });
-/*
-Breadcrumbs::for('admin.product.brand.update', function (BreadcrumbTrail $trail, Brand $brand) {
-    $trail->parent('admin.product.brand.index');
-    $trail->push($brand->name, route('admin.product.brand.show', $brand));
-});
-*/
+
 //CATEGORY
 Breadcrumbs::for('admin.product.category.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.product.index');
@@ -219,38 +212,23 @@ Breadcrumbs::for('admin.product.attribute.groups', function (BreadcrumbTrail $tr
     $trail->parent('admin.product.attribute.index');
     $trail->push('Группы', route('admin.product.attribute.groups'));
 });
+
 //TAGS
 Breadcrumbs::for('admin.product.tag.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.product.index');
     $trail->push('Метки (Теги)', route('admin.product.tag.index'));
 });
 
-
 //EQUIVALENT
 Breadcrumbs::for('admin.product.equivalent.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.product.index');
     $trail->push('Аналоги', route('admin.product.equivalent.index'));
 });
-/*
-Breadcrumbs::for('admin.product.equivalent.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.product.equivalent.index');
-    $trail->push('Добавить группу', route('admin.product.equivalent.create'));
-});
-*/
 Breadcrumbs::for('admin.product.equivalent.show', function (BreadcrumbTrail $trail, Equivalent $equivalent) {
     $trail->parent('admin.product.equivalent.index');
     $trail->push($equivalent->name, route('admin.product.equivalent.show', $equivalent));
 });
-/*
-Breadcrumbs::for('admin.product.equivalent.edit', function (BreadcrumbTrail $trail, Equivalent $equivalent) {
-    $trail->parent('admin.product.equivalent.show', $equivalent);
-    $trail->push('Редактировать', route('admin.product.equivalent.edit', $equivalent));
-});
-Breadcrumbs::for('admin.product.equivalent.update', function (BreadcrumbTrail $trail, Equivalent $equivalent) {
-    $trail->parent('admin.product.equivalent.index');
-    $trail->push($equivalent->name, route('admin.product.equivalent.show', $equivalent));
-});
-*/
+
 //GROUP
 Breadcrumbs::for('admin.product.group.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.product.index');
@@ -285,6 +263,30 @@ Breadcrumbs::for('admin.product.modification.show', function (BreadcrumbTrail $t
 Breadcrumbs::for('admin.product.modification.edit', function (BreadcrumbTrail $trail, Modification $modification) {
     $trail->parent('admin.product.modification.show', $modification);
     $trail->push('Редактировать', route('admin.product.modification.edit', $modification));
+});
+
+
+///// *** DISCOUNT
+// PROMOTION
+Breadcrumbs::for('admin.discount.promotion.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Акции', route('admin.discount.promotion.index'));
+});
+Breadcrumbs::for('admin.discount.promotion.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.discount.promotion.index');
+    $trail->push('Добавить новую', route('admin.discount.promotion.create'));
+});
+Breadcrumbs::for('admin.discount.promotion.show', function (BreadcrumbTrail $trail, Promotion $promotion) {
+    $trail->parent('admin.discount.promotion.index');
+    $trail->push($promotion->name, route('admin.discount.promotion.show', $promotion));
+});
+Breadcrumbs::for('admin.discount.promotion.edit', function (BreadcrumbTrail $trail, Promotion $promotion) {
+    $trail->parent('admin.discount.promotion.show', $promotion);
+    $trail->push('Редактировать', route('admin.discount.promotion.edit', $promotion));
+});
+Breadcrumbs::for('admin.discount.promotion.update', function (BreadcrumbTrail $trail, Promotion $promotion) {
+    $trail->parent('admin.discount.promotion.index');
+    $trail->push($promotion->name, route('admin.discount.promotion.show', $promotion));
 });
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {

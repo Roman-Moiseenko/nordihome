@@ -15,5 +15,4 @@ class PromotionGroup extends Model
     public $timestamps = false;
     protected $table = 'promotions_groups';
 
-
 }

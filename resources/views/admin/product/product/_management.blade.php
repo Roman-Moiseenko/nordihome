@@ -3,11 +3,10 @@
         <h3 class="font-medium">Статус товар</h3>
     </div>
     <div class="col-span-12 lg:col-span-8">
-        <div class="form-check form-switch">
-            <input id="checkbox-published" class="form-check-input" type="checkbox" name="published"
-                {{ $product->isPublished() ? 'checked' : '' }}>
-            <label class="form-check-label" for="checkbox-published">Опубликован</label>
-        </div>
+        {{ \App\Forms\CheckSwitch::create('published', [
+         'placeholder' => 'Опубликован',
+         'value' => $product->isPublished(),
+         ])->show() }}
     </div>
 </div>
 <div class="grid grid-cols-12 gap-x-6 my-5">
@@ -31,16 +30,17 @@
     </div>
     <div class="col-span-12 lg:col-span-8">
         <div class="flex">
-            <div class="form-check form-switch">
-                <input id="checkbox-preorder" class="form-check-input" type="checkbox" name="preorder"
-                    {{ $product->preorder ? 'checked' : '' }} {{ ($options->shop->preorder == true) ? '' : 'disabled' }}>
-                <label class="form-check-label" for="checkbox-preorder">Возможен предзаказ</label>
-            </div>
-            <div class="form-check form-switch ml-3">
-                <input id="checkbox-offline" class="form-check-input" type="checkbox" name="offline"
-                    {{ $product->only_offline ? 'checked' : '' }}>
-                <label class="form-check-label" for="checkbox-offline">Продажа только офлайн</label>
-            </div>
+            {{ \App\Forms\CheckSwitch::create('preorder', [
+             'placeholder' => 'Возможен предзаказ',
+             'value' => $product->preorder,
+             ])->disabled(!$options->shop->preorder)->show() }}
+
+            {{ \App\Forms\CheckSwitch::create('offline', [
+             'placeholder' => 'Продажа только офлайн',
+             'value' => $product->only_offline,
+             'class' => 'ml-3',
+             ])->show() }}
+
         </div>
     </div>
 </div>

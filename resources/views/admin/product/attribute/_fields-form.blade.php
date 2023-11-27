@@ -102,7 +102,11 @@
                                      checked="{{ !is_null($attribute) ? ($attribute->show_in ? 'checked' : '') : '' }}"/>
                             <x-base.form-switch.label for="checkbox-show-in">Показывать в кратком описании и поиске</x-base.form-switch.label>
                         </x-base.form-switch>
-                        {{ \App\Forms\Input::create('sameAs', ['placeholder' => 'Ссылка википедию', 'class' => 'mt-3'])->show() }}
+                        {{ \App\Forms\Input::create('sameAs', [
+                                        'placeholder' => 'Ссылка википедию',
+                                        'value' => (!is_null($attribute) ? $attribute->sameAs : '') ,
+                                        'class' => 'mt-3'
+                                        ])->show() }}
 
                         <!-- ТИП АТРИБУТА -->
                         <x-base.form-label for="select-type" class="mt-3">Тип значения атрибута</x-base.form-label>

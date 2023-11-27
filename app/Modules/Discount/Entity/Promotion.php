@@ -7,19 +7,21 @@ use App\Entity\Observer;
 use App\Entity\Photo;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\IWidgetHome;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 /**
  * @property int $id
- * @property string $name
+ * @property string $name //Имя для внутреннего использования
  * @property string $description
  * @property string $condition_url //Ссылка на страницу с условиями и правилами
- * @property int $start_at
- * @property int $finish_at
+ * @property Carbon $start_at
+ * @property Carbon $finish_at
  * @property Photo $image
  * @property Photo $icon
  * @property bool $menu
+ * @property bool $show_title //Показывать заголовок акции на карточках
  * @property string $title
  * @property bool $published //Опубликовать из черновиков. Опубликованные запускаются автоматически по Cron-у
  * @property bool $active // по Cron if ($start_at > time() && $published) $active = true;
@@ -29,29 +31,62 @@ use Illuminate\Support\Str;
 class Promotion extends Model implements IWidgetHome
 {
 
+    const STATUS_DRAFT = 101;
+    const STATUS_WAITING = 102;
+    const STATUS_STARTED = 103;
+    const STATUS_FINISHED = 104;
+
     //Позволяем себя слушать
     private array $observers = [];
-    public function attach(Observer $observer) {
+
+    public function attach(Observer $observer)
+    {
         $this->observers[] = $observer;
     }
-    public function detach(Observer $observer) {
+
+    public function detach(Observer $observer)
+    {
         $key = array_search($observer, $this->observers, true);
-        if($key !== false) {
+        if ($key !== false) {
             unset($this->observers[$key]);
         }
     }
-    public function notify() {
-        foreach($this->observers as $observer) {
+
+    public function notify()
+    {
+        foreach ($this->observers as $observer) {
             $observer->update($this);
         }
     }
-    //////////////////////////////////////////////
 
-    protected $fillable = [
-        'name', 'title', 'slug', 'finish_at', 'start_at'
+    //////////////////////////////////////////////
+    protected $casts = [
+        'start_at' => 'datetime',
+        'finish_at' => 'datetime',
     ];
 
-    public static function register(string $name, string $title,  int $finish_at, bool $menu = false, int $start_at = null, string $slug = ''): self
+
+    public $timestamps = false;
+    protected $attributes = [
+        'published' => false,
+        'active' => false,
+        'description' => '',
+    ];
+
+    protected $fillable = [
+        'name',
+        'title',
+        'slug',
+        'finish_at',
+        'start_at',
+        'show_title',
+        'description',
+        'menu',
+        'condition_url',
+        //'published', 'active',
+    ];
+
+    public static function register(string $name, string $title, $finish_at, bool $menu = false, $start_at = null, string $slug = null): self
     {
         return self::create([
             'name' => $name,
@@ -60,34 +95,71 @@ class Promotion extends Model implements IWidgetHome
             'finish_at' => $finish_at,
             'menu' => $menu,
             'start_at' => $start_at,
-            'published' => false,
         ]);
+    }
+
+    public function status()
+    {
+        if ($this->active) return self::STATUS_STARTED; //'Активна';
+        if (!$this->published) return self::STATUS_DRAFT;
+        if ($this->finish_at->lt(now())) return self::STATUS_FINISHED;
+        if (empty($this->start_at) || $this->start_at->gte(now())) return self::STATUS_WAITING;
+        throw new \DomainException('Неучтенная комбинация!!!');
+    }
+
+    public function isStarted(): bool
+    {
+        if ($this->active && $this->start_at->lte(now()) && $this->finish_at->gte(now())) return true;
+        return false;
+    }
+
+    public function isFinished(): bool
+    {
+        if ($this->finish_at->lt(now()) && !$this->active) return true;
+        return false;
+    }
+
+    public function isWaiting(): bool
+    {
+        if (
+            $this->published &&
+            (empty($this->start_at) || $this->start_at->gte(now()))
+        ) return true;
+        return false;
+    }
+
+    public function isDraft(): bool
+    {
+        return !$this->published;
     }
 
     public function finish()
     {
         $this->active = false;
-        $this->update(['active' => $this->active]);
-        //TODO Добавить в Очередь событие - Акция $name закончилась
+        //TODO Добавить в Очередь событие - Акция $name закончилась + за 1-2 дня до окончания или перенести в Service
     }
 
     public function start()
     {
         $this->active = true;
-        $this->update(['active' => $this->active]);
         //TODO Добавить в Очередь событие - Акция $name началась
     }
 
     public function published(): void
     {
         $this->published = true;
-        $this->update(['published' => $this->published]);
-        //TODO Добавить в Очередь событие - Акция $name запущена и скоро начнется
+        //TODO Добавить в Очередь событие - Акция $name запущена и скоро начнется ч/з ххх дней
+    }
+
+    public function draft(): void
+    {
+        $this->published = false;
+
     }
 
     public function ProductsForWidget()
     {
-        // TODO: Implement ProductsForWidget() method.
+        // TODO: Implement ProductsForWidget() method. Список всех товаров
     }
 
     public function isGroup(int $id): bool
@@ -98,6 +170,32 @@ class Promotion extends Model implements IWidgetHome
         return false;
     }
 
+    public function isPublished(): bool
+    {
+        return $this->published == true;
+    }
+
+    public function countProducts(): int
+    {
+        $count = 0;
+        //if (is_null($this->groups())) return 0;
+        foreach ($this->groups as $group) {
+            $count += count($group->products);
+        }
+        return $count;
+    }
+
+    public function products(): array
+    {
+        $products = [];
+        foreach ($this->groups as $group) {
+            foreach ($group->products as $product) {
+                $products[] = $product;
+            }
+        }
+        //TODO Выбрать все товары в цикле по группам
+        return $products;
+    }
 
     public function groups()
     {
@@ -108,8 +206,9 @@ class Promotion extends Model implements IWidgetHome
 
     public function image()
     {
-        return $this->morphOne(Photo::class, 'imageable')->where('type', '=','image')->withDefault();
+        return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'image')->withDefault();
     }
+
     public function icon()
     {
         return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
@@ -124,7 +223,6 @@ class Promotion extends Model implements IWidgetHome
         }
     }
 
-
     public function getIcon(): string
     {
         if (empty($this->icon->file)) {
@@ -134,8 +232,5 @@ class Promotion extends Model implements IWidgetHome
         }
     }
 
-    public function isPublished()
-    {
-        return $this->published;
-    }
+
 }

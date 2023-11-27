@@ -70,7 +70,6 @@ Route::group(
 
         //**** SHOP
         //Product
-
         Route::group(
             [
                 'prefix' => 'product',
@@ -130,6 +129,29 @@ Route::group(
 
             }
         );
+
+        Route::group(
+            [
+                'prefix' => 'discount',
+                'as' => 'discount.',
+                'namespace' => 'Discount',
+            ],
+            function () {
+                Route::post('/promotion/{promotion}/add-group', 'PromotionController@add_group')->name('promotion.add-group');
+                Route::delete('/promotion/{promotion}/del-group/{group}', 'PromotionController@del_group')->name('promotion.del-group');
+
+                Route::post('/promotion/{promotion}/published', 'PromotionController@published')->name('promotion.published');
+                Route::post('/promotion/{promotion}/draft', 'PromotionController@draft')->name('promotion.draft');
+                Route::post('/promotion/{promotion}/stop', 'PromotionController@stop')->name('promotion.stop');
+                Route::post('/promotion/{promotion}/start', 'PromotionController@start')->name('promotion.start');
+
+
+                Route::resource('promotion', 'PromotionController'); //CRUD
+                //Route::resource('coupon', 'CouponController'); //CRUD
+            }
+        );
+
+
         //AJAX Product-Image
         Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');
         Route::post('product/{product}/get-images', 'Product\ProductController@get_images')->name('product.get-images');

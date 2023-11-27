@@ -1,5 +1,6 @@
 import jQuery from 'jquery';
 window.$ = jQuery;
+const dayjs = require('dayjs');
 /*
 function _updateTomSelect(id_tom_select) {
     window.$("#" + id_tom_select).each(function () {

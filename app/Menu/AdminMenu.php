@@ -94,7 +94,7 @@ class AdminMenu
                     'promotion' => [
                         'icon' => 'percent',
                         'title' => 'Акции',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.discount.promotion.index',
                     ],
                     'coupon' => [
                         'icon' => 'piggy-bank',
