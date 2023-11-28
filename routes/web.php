@@ -76,7 +76,7 @@ Route::group(
         'prefix' => 'admin',
         'as' => 'admin.',
         'namespace' => 'App\Http\Controllers\Admin',
-        'middleware' => ['auth:admin'],
+        'middleware' => ['auth:admin', 'logger'],
     ],
     function () {
         Route::get('/', 'HomeController@index')->name('home');

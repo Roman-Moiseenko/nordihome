@@ -32,7 +32,7 @@ class BrandService
     {
         $brand->name = $request['name'];
         $brand->description = $request['description'];
-        $brand->url = $request['url'];
+        $brand->url = $request['url'] ?? '';
         $brand->setSameAs($request['sameAs']);
         $brand->update();
         if ($request['file-clear'] == 'delete') {
