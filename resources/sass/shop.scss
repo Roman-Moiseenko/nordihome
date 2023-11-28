@@ -5,8 +5,11 @@
 @import 'variables';
 
 // Bootstrap
+
+
 @import 'bootstrap/scss/bootstrap';
 @import "bootstrap/scss/variables";
+
 $font-sizes: (
     1: $h1-font-size,
     2: $h2-font-size,
@@ -17,6 +20,8 @@ $font-sizes: (
     7: $font-size-base * 0.9,
     8: $font-size-base * 0.75
 ) !default;
+
+
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 @import './resources/sass/fontawesome/scss/fontawesome.scss';
 @import "shop-l-classes";

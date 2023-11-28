@@ -110,12 +110,15 @@
                     /> Сообщения
                 </x-base.menu.item>
                 <x-base.menu.divider class="bg-white/[0.08]" />
-                <x-base.menu.item class="hover:bg-white/5">
+                <x-base.menu.item class="hover:bg-white/5" href="#"  onclick="document.getElementById('form-logout').submit(); return false;">
                     <x-base.lucide
                         class="mr-2 h-4 w-4"
                         icon="ToggleRight"
-                    /> Logout
+                    /> Logout*
                 </x-base.menu.item>
+                <form id="form-logout" method="POST" action="{{ route('admin.logout') }}">
+                    @csrf
+                </form>
             </x-base.menu.items>
         </x-base.menu>
 

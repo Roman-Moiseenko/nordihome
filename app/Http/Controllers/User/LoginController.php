@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\User;
 
-use App\Entity\Admin;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Modules\User\Entity\User;
+use App\Modules\User\Service\RegisterService;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -24,6 +26,7 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+    private RegisterService $service;
 
     /**
      * Create a new controller instance.
@@ -31,10 +34,11 @@ class LoginController extends Controller
      * @return void
      */
 
-    public function __construct()
+    public function __construct(RegisterService $service)
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('guest:admin')->except('logout');
+        //$this->middleware('guest:admin')->except('logout');
+        $this->service = $service;
     }
 
     public function redirectPath(): string
@@ -45,16 +49,19 @@ class LoginController extends Controller
 
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
-/*
-    public function showLoginForm(): View
-    {
-        return view('auth.login');
-    } */
 
     public function showLoginForm(): View
     {
-        return view('admin.login');
+        return view('user.auth.login'); //TODO Своя форма аутентификации
     }
+
+    public function login_ajax()
+    {
+        $result = view('user.auth.login-popup')->render();
+        return \response()->json($result);
+         //TODO Своя форма аутентификации
+    }
+
     /**
      * Handle a login request to the application.
      *
@@ -63,58 +70,77 @@ class LoginController extends Controller
      *
      * @throws ValidationException
      */
-    /*
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
+        echo 1;
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
             $this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
             return $this->sendLockoutResponse($request);
         }
-       $authenticate = Auth::guard('user')->attempt(
+        echo 2;
+        $intended = empty($request['intended']) ? '****' : $request['intended'];
+       $authenticate = $this->guard()->attempt(
             $request->only(['email', 'password']),
-            $request->filled('remember')
+            true//$request->filled('remember')
         );
+        echo 3;
         if ($authenticate) {
             $request->session()->regenerate();
             $this->clearLoginAttempts($request);
+            echo 4;
+            //$user = Auth::user(); //Auth::guard('user')->user();
 
+            /*if ($user->status != User::STATUS_ACTIVE) {
+                Auth::logout();
+                flash('Пользователь не верифицирован', 'danger');
+                return back();
+            }*/
+            echo $intended;
+            die($intended);
+                flash($intended, 'danger');
+                return redirect($intended);//->intended($request['intended'] ?? '');
+        }
+        $this->incrementLoginAttempts($request);
+        throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
+    }
+
+    public function login_registration(Request $request)
+    {
+        //TODO Верификация ??
+        if (!empty($verify_token = $request['verify_token'])) {
+            if (!$user = User::where('verify_token', $verify_token)->first()) {
+                return \response()->json(['token' => true]); //Неверный токен
+            }
+            $this->service->verify($user->id);
+            $this->guard()->attempt($request->only(['email', 'password']), true);
+            return \response()->json(['login' => true]);
+        }
+
+        //Проверяем Зарегистрирован или нет
+        if (empty(User::where('email', $request['email'])->first())) {
+            $this->service->register($request);
+            return \response()->json(['register' => true]);
+        }
+        //Такой email есть
+        $authenticate = $this->guard()->attempt(
+            $request->only(['email', 'password']),
+            true
+        );
+        if ($authenticate) {
+            /** @var User $user */
             $user = Auth::user(); //Auth::guard('user')->user();
 
             if ($user->status != User::STATUS_ACTIVE) {
                 Auth::logout();
-                flash('Не верифицирован', 'danger');
-                return back();
+                return \response()->json(['verification' => true]);
             }
-                return redirect()->intended(route('home'));
+            return \response()->json(['login' => true]);
+
+        } else { //Неверный пароль
+            return \response()->json(['password' => true]);
         }
-        $this->incrementLoginAttempts($request);
-        throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
-    }*/
-
-    public function login(Request $request)
-    {
-        $this->validate($request, [
-            'name'   => 'required',
-            'password' => 'required|min:6'
-        ]);
-        if (Auth::guard('admin')->attempt(['name' => $request['name'], 'password' => $request['password']], $request->get('remember'))) {
-            /** @var Admin $admin */
-            $admin = $this->guard()->user();
-            if ($admin->isBlocked()) {
-                Auth::logout();
-                flash('Ваш аккаунт заблокирован', 'danger');
-                return back();
-            }
-            if ($admin->isCashier()) {
-                return redirect()->intended('/admin/cashier');
-            }
-            flash('Добро пожаловать ' . $admin->fullName->getFullName(), 'success');
-            return redirect()->intended('/admin');
-        }
-
-        return back()->withInput($request->only('name', 'remember'));
-
+        //Нет =>
     }
 
     /**
@@ -172,8 +198,9 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if (Auth::guard('user')->check()) throw new \DomainException('Неверный тип пользователя'); //$this->guard('user')->logout();
-        if (Auth::guard('admin')->check()) $this->guard()->logout();
+        //$this->guard()->logout();
+        if (Auth::guard('admin')->check()) throw new \DomainException('Пользователь Админ');
+        if (Auth::guard('user')->check()) $this->guard()->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -198,29 +225,26 @@ class LoginController extends Controller
         //
     }
 
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return StatefulGuard
-     */
     protected function guard(): StatefulGuard
     {
-        return Auth::guard('admin');
+        return Auth::guard('user');
     }
+
+
 
     protected function authenticated(Request $request, $user)
     {
-        /*
         if (!$user->status != User::STATUS_ACTIVE) {
-            $this->guard('user')->logout();
-            flash('Нет подтверждения', 'danger');
+            $this->guard()->logout();
+            flash('Вы не подтвердили свой аккаунт', 'danger');
             return back();
-        } */
+        }
         return redirect()->intended($this->redirectPath());
     }
+
     protected function username(): string
     {
-        return 'name';
+        return 'email';
     }
 
 }

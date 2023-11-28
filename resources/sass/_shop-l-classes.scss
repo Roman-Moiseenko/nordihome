@@ -475,4 +475,10 @@ $font-letter-spacing: (
         letter-spacing: $num;
     }
 }
+.fs-7 {
+    font-size: $font-size-base * 0.9;
+}
+.fs-8 {
+    font-size: $font-size-base * 0.75;
+}
 

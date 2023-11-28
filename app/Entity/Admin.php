@@ -11,7 +11,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -48,7 +47,6 @@ class Admin extends Authenticatable implements UploadsDirectory
         self::ROLE_FINANCE => 'bg-pending',
         self::ROLE_LOGISTICS => 'bg-primary',
     ];
-
 
    // public FullName $fullName;
 

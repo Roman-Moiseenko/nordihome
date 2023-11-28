@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\User;
+namespace App\Modules\User\Entity;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
@@ -33,9 +33,6 @@ class User extends Authenticatable
         'password',
         'status',
         'verify_token',
-        'fullname_surname',
-        'fullname_firstname',
-        'fullname_secondname',
     ];
 
     protected $hidden = [
@@ -49,14 +46,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-   // public FullName $fullName;
-/*
-    public function __construct(array $attributes = [])
-    {
-        $this->fullName = new FullName();
-        parent::__construct($attributes);
-    }
-*/
     public function isWait(): bool
     {
         return $this->status === self::STATUS_WAIT;
@@ -71,13 +60,13 @@ class User extends Authenticatable
      * @return string
      */
 
-    public static function register(string $email, string $phone, string $password): self
+    public static function register(string $email, string $password): self
     {
         return static::create([
             'email' => $email,
-            'phone' => $phone,
+            //'phone' => $phone,
             'password' => Hash::make($password),
-            'verify_token' => Str::uuid(),
+            'verify_token' => rand(1234, 9876), //Str::uuid(),
             'status' => self::STATUS_WAIT,
         ]);
     }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Entity\User\User;
 use App\Http\Controllers\Controller;
-use App\UseCases\Auth\RegisterService;
+use App\Modules\User\Service\RegisterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 

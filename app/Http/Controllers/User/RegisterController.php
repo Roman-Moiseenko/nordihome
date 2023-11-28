@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -18,7 +18,7 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
-    private \App\Modules\User\Service\RegisterService $service;
+    private RegisterService $service;
 
 
     public function __construct(RegisterService $service)
@@ -73,7 +73,7 @@ class RegisterController extends Controller
      */
     protected function guard()
     {
-        return Auth::guard();
+        return Auth::guard('user');
     }
 
 

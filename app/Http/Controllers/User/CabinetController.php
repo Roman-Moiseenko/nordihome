@@ -4,8 +4,8 @@
 namespace App\Http\Controllers\User;
 
 
-use App\Entity\User\User;
 use App\Http\Controllers\Controller;
+use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 
 class CabinetController extends Controller

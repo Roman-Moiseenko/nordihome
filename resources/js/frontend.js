@@ -151,6 +151,63 @@ window.$ = jQuery;
         return '<div class="submenu-second-level-div">' + html + '</div>';
     }
 
+    //Login
+    let loginPopup = $('#login-popup');
+    if (loginPopup.length) {
+        let form = $('form#login-form');
+        let buttonLogin = $('#button-login');
+        let inputEmail = loginPopup.find('input[name="email"]');
+        let inputPassword = loginPopup.find('input[name="password"]');
+        let inputVerify = loginPopup.find('input[name="verify_token"]');
+        inputVerify.parent().hide();
+        buttonLogin.on('click', function () {
+            if (inputEmail.val().length === 0 || inputPassword.val().length === 0) {
+                form.addClass('was-validated');
+                return true;
+            }
+            if (inputVerify.parent().is(':visible') && inputVerify.val().length === 0) {
+                form.addClass('was-validated');
+                return true;
+            }
+
+            $.post(
+                '/login_register',
+                {
+                    email: inputEmail.val(),
+                    password: inputPassword.val(),
+                    verify_token: inputVerify.val()
+                }, function (data) {
+                    $('#token-error').hide();
+                    $('#password-error').hide();
+
+                    if (data.token === true) {
+                        $('#token-error').show();
+                    }
+
+                    if (data.verification === true || data.register === true) { //требуется верификация
+                        inputEmail.prop('disabled', true);
+                        inputPassword.prop('disabled', true);
+                        inputVerify.prop('required', true);
+                        inputVerify.parent().show();
+                    }
+
+                    if (data.password === true) { //неверный пароль
+                        $('#password-error').show();
+                    }
+
+                    if (data.login === true) {
+                        //loginPopup.find('input[name="intended"]').val(window.location.href);
+                        location.reload();
+                        //form.submit();
+                    }
+                    console.log(data);
+                }
+            );
+
+        });
+
+    }
+
     //Доп.элементы
     let upButton = $('#upbutton');
     $(window).on('scroll', function () {
@@ -165,6 +222,21 @@ window.$ = jQuery;
     upButton.on('click', function () {
         $('html, body').stop().animate({scrollTop: 0}, 1000);
     });
+
+    let showHidePassword = $('#show-hide-password');
+    if (showHidePassword !== undefined) {
+        let inputPassword = $(showHidePassword.data('target-input'));
+        showHidePassword.on('click', function () {
+           if (inputPassword.attr('type') === 'password') {
+               inputPassword.attr('type', 'text');
+           } else {
+               inputPassword.attr('type', 'password');
+           }
+        });
+    }
+
+    //Показать скрыть пароль
+    $('input[name="password"]');
 
 })();
 

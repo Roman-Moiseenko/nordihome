@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands\User;
 
-use App\Entity\User\User;
-use App\UseCases\Auth\RegisterService;
+
+use App\Modules\User\Entity\User;
+use App\Modules\User\Service\RegisterService;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class VerifyCommand extends Command
 {

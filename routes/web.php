@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\Shop\HomeController::class, 'index'])->name('home');
 
 //TODO Настроить ЧПУ
+
+
+
+
 Route::group(
     [
         //'prefix' => 'shop',
@@ -16,11 +20,8 @@ Route::group(
         'namespace' => 'App\Http\Controllers\Shop',
     ],
     function () {
-        Route::get('/login', 'LoginController@showLoginForm')->name('login');
-        Route::post('/login', 'LoginController@login');
+
         Route::post('/review', 'ReviewController@index')->name('review');
-
-
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
         Route::post('/product/search', 'ProductController@search')->name('product.search');
@@ -32,7 +33,30 @@ Route::group(
 );
 
 //User
-Auth::routes();
+//Auth::routes();
+
+Route::group(
+    [
+        'namespace' => 'App\Http\Controllers\User',
+        ],
+    function () {
+        //Route::get('/login', 'LoginController@showLoginForm')->name('login');
+        Route::post('/login', 'LoginController@login')->name('login');
+        Route::post('/login_register', 'LoginController@login_registration')->name('login_register');
+        Route::any('/logout', 'LoginController@logout')->name('logout');
+
+        Route::get('/register', 'RegisterController@showRegistrationForm')->name('register');
+        Route::post('/register', 'RegisterController@register');
+        Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
+        Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
+        Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+
+        Route::get('/password/confirm', 'ConfirmPasswordController@showConfirmForm')->name('password.confirm');
+        Route::post('/password/confirm', 'ConfirmPasswordController@confirm');
+        Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    }
+);
+
 Route::get('/profile', [\App\Http\Controllers\User\CabinetController::class, 'profile'])->name('user.profile');
 Route::get('/cabinet', [\App\Http\Controllers\User\CabinetController::class, 'index'])->name('user.cabinet');
 
@@ -40,8 +64,9 @@ Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::cl
 
 
 //Admin
-Route::get('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'showAdminLoginForm'])->name('admin.login');
-Route::post('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'adminLogin']);//->name('admin.login');
+Route::get('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);//->name('admin.login');
+Route::any('/admin/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('admin.logout');
 
 Route::post('/file-upload', [\App\Http\Controllers\Admin\StaffController::class, 'test']);
 

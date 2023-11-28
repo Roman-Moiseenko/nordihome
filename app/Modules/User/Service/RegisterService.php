@@ -1,15 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\UseCases\Auth;
+namespace App\Modules\User\Service;
 
-use App\Entity\User\User;
+
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Mail\VerifyMail;
+use App\Modules\User\Entity\User;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Events\Dispatcher;
-use Illuminate\Mail\Mailer;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
+use function event;
 
 class RegisterService
 {
@@ -23,13 +22,14 @@ class RegisterService
         $this->dispatcher = $dispatcher;
     }
 */
-    public function register(RegisterRequest $request): void
+    public function register(Request $request): void
     {
         $user = User::register(
             $request['email'],
-            $request['phone'],
+           // $request['phone'],
             $request['password']
         );
+        //TODO Отправка почты клиенту
         //$this->mailer->to($user->email)->send(new VerifyMail($user));
         //Mail::to($user->email)->send(new VerifyMail($user));
         //$this->dispatcher->dispatch(new Registered($user));

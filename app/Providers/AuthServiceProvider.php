@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Entity\Admin;
-use App\Entity\User\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 

@@ -76,11 +76,12 @@
                     @guest
                         @if (Route::has('login'))
                             <li class="nav-item">
-                                <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
+                                <a id="login" class="nav-link d-flex flex-column text-center" href="#" data-bs-toggle="modal" data-bs-target="#login-popup">
                                     <i class="fa-light fa-user-vneck fs-4"></i>
                                     <span class="fs-7">Войти</span>
                                 </a>
                             </li>
+
                         @endif
                     @else
                         <li class="nav-item">
@@ -89,7 +90,6 @@
                                 <span class="fs-7">Кабинет</span>
                             </a>
                         </li>
-
                     @endguest
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
@@ -115,3 +115,6 @@
 
     </nav>
 </header>
+@guest
+    @include('user.auth.login-popup')
+@endguest
