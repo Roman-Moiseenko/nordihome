@@ -172,19 +172,21 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if (Auth::guard('user')->check()) throw new \DomainException('Неверный тип пользователя'); //$this->guard('user')->logout();
-        if (Auth::guard('admin')->check()) $this->guard()->logout();
+        //if (Auth::guard('user')->check()) throw new \DomainException('Неверный тип пользователя'); //$this->guard('user')->logout();
+        if (Auth::guard('admin')->check()) {
+            $this->guard()->logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        if ($response = $this->loggedOut($request)) {
-            return $response;
+            if ($response = $this->loggedOut($request)) {
+                return $response;
+            }
+
+            return $request->wantsJson()
+                ? new JsonResponse([], 204)
+                : redirect('/admin');
         }
-
-        return $request->wantsJson()
-            ? new JsonResponse([], 204)
-            : redirect('/');
     }
 
     /**

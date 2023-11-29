@@ -10,6 +10,7 @@ class Shop
     public bool $show_finished;
     public array $delivery;
     public int $paginate;
+    public int $reserve_cart;
 
 
     public static function createFromArray(mixed $shop): static
@@ -20,7 +21,7 @@ class Shop
         $_shop->delivery = $shop['delivery'];
         $_shop->show_finished = $shop['show-finished'];
         $_shop->paginate = $shop['paginate'];
-
+        $_shop->reserve_cart = $shop['reserve_cart'];
         return $_shop;
     }
 }

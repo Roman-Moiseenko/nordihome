@@ -40,7 +40,9 @@ class RegisterService
     {
         $user = User::findOrFail($id);
         $user->verify();
-
+        //TODO Верификация прошла
+        // Письмо клиенту, + баллы на покупку (Coupon)
+        event($user);
         //
     }
 }

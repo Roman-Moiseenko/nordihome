@@ -83,10 +83,12 @@
                 @endforeach
             </div>
             <div class="products--list">
+                <div class="row">
                 @foreach($products as $product)
                     @include('shop.cards.card-3x')
 
                 @endforeach
+                </div>
             </div>
 
             <div class="products-page-list--bottom">

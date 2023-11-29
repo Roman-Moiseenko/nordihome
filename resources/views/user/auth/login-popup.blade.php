@@ -40,7 +40,7 @@
     </div>
 </div>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+/*    document.addEventListener("DOMContentLoaded", function() {
         const forms = document.querySelectorAll('.needs-validation');
         Array.prototype.slice.call(forms).forEach((form) => {
             form.addEventListener('submit', (event) => {
@@ -51,5 +51,5 @@
                 form.classList.add('was-validated');
             }, false);
         });
-    });
+    });*/
 </script>

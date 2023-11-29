@@ -58,6 +58,7 @@ return [
 
         ],
         'paginate' => 20,
+        'reserve_cart' => 3, //время (ч) резерва товара в корзине
     ],
     'frontend' => [
         'logo-nav' => '/images/logo-nordi-home-2.svg',

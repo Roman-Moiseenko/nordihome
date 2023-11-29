@@ -151,7 +151,7 @@ window.$ = jQuery;
         return '<div class="submenu-second-level-div">' + html + '</div>';
     }
 
-    //Login
+    //LOGIN POPUP
     let loginPopup = $('#login-popup');
     if (loginPopup.length) {
         let form = $('form#login-form');
@@ -161,7 +161,7 @@ window.$ = jQuery;
         let inputVerify = loginPopup.find('input[name="verify_token"]');
         inputVerify.parent().hide();
         buttonLogin.on('click', function () {
-            if (inputEmail.val().length === 0 || inputPassword.val().length === 0) {
+            if (inputEmail.val().length === 0 || inputPassword.val().length === 0 || !isEmail(inputEmail.val())) {
                 form.addClass('was-validated');
                 return true;
             }
@@ -169,6 +169,7 @@ window.$ = jQuery;
                 form.addClass('was-validated');
                 return true;
             }
+
 
             $.post(
                 '/login_register',
@@ -208,6 +209,18 @@ window.$ = jQuery;
 
     }
 
+    //КОРЗИНА
+    $('.to-cart').on('click', function (item) {
+        item.preventDefault();
+        let _productId = $(this).data('product');
+        console.log(_productId);
+        //Отправляем post запрос добавления в корзину
+
+        //Получаем кол-во товаров в корзине
+        //Меняем кол-во и сумму товаров в виджете корзины в хеадере
+
+    });
+
     //Доп.элементы
     let upButton = $('#upbutton');
     $(window).on('scroll', function () {
@@ -223,6 +236,7 @@ window.$ = jQuery;
         $('html, body').stop().animate({scrollTop: 0}, 1000);
     });
 
+    //Показать скрыть пароль
     let showHidePassword = $('#show-hide-password');
     if (showHidePassword !== undefined) {
         let inputPassword = $(showHidePassword.data('target-input'));
@@ -235,8 +249,11 @@ window.$ = jQuery;
         });
     }
 
-    //Показать скрыть пароль
-    $('input[name="password"]');
+    //Валидация email
+    function isEmail(email) {
+        let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        return regex.test(email);
+    }
 
 })();
 
