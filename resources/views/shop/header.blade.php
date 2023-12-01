@@ -30,29 +30,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ $config['logo-nav'] }}" alt="{{ $config['brand-alt'] }}" class="img-fluid img-logo">
                 </a>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-dark fs-5 ls-1 dropdown-toggle lh-sm" data-bs-toggle="dropdown"
-                            aria-expanded="false">Каталог&nbsp;
-                    </button>
-                    <div class="dropdown-menu">
-                        <div class="catalog" data-route="{{ route('shop.category.search') }}">
-                        <div class="catalog-rootmenu">
-                            @foreach($categories as $category)
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('shop.category.view', $category->slug) }}" data-id="{{ $category->id }}">
-                                        <img src="{{ $category->getIcon() }}" width="20px"/>
-                                        {{ $category->name }}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </div>
-                        <div class="catalog-submenu">
-                            <div id="catalog-submenu" class="catalog-submenu-scroll"></div>
-                        </div>
-                        </div>
-                    </div>
-
-                </div>
+                @include('shop.widget.header-category',['categories' => $categories])
             </div>
             <div class="menu-bottom-search flex-grow-1 mx-3">
                 <div class="presearch" data-route="{{ route('shop.product.search') }}">

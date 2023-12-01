@@ -20,7 +20,8 @@ class CartController extends Controller
 
     public function view()
     {
-        return $this->view('shop.cart');
+
+        return view('shop.cart');
     }
 
     //AJAX

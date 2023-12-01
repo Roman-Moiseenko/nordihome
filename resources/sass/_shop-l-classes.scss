@@ -256,6 +256,49 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     text-align: left;
 }
 
+//КОРЗИНА
+.cart-popup {
+    width: 480px;
+    max-height: 400px;
+    padding: 10px;
+}
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+
+}
+.cart-body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.cart-item {
+    display: flex;
+}
+.cart-item>img {
+    width: 40px;
+    height: 40px;
+}
+
+.cart-footer {
+    padding-top: 10px;
+    border-top: 1px solid var(--bs-gray-400);
+    display: flex;
+    justify-content: space-between;
+}
+
+//DROPDOWN-HOVER
+.dropdown-menu.cart-popup {
+    right: 0;
+}
+.dropdown-hover.dropdown-toggle:after {
+    border: none;
+    content: none;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0; /* remove the gap so it doesn't close */
+}
+
 /* ХЛЕБНЫЕ КРОШКИ */
 .breadcrumbs {
     margin: 16px 0;

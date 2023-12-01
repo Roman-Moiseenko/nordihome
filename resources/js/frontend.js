@@ -218,9 +218,6 @@ window.$ = jQuery;
         let _quantity = 1;
         let _options = $(this).data('options');
         console.log(_productId);
-
-
-
         $.post(
             '/cart_post/add/' + _productId, {
                 quantity: _quantity,

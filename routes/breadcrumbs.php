@@ -30,6 +30,8 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) 
     }
     $trail->push($category->name, route('shop.category.view', $category->slug));
 });
+
+
 //Выводим магазины в крошках, с родительской - Home
 /*Breadcrumbs::for('shop', function (BreadcrumbTrail $trail, $shop) {
     $trail->parent('home');
@@ -43,6 +45,11 @@ Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, $slug) {
     $trail->push($product->name, route('shop.product.view', $product->slug)); // Крошка - Товар
 });
 //****/
+
+Breadcrumbs::for('shop.cart.view', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Корзина', route('shop.cart.view'));
+});
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
     $trail->push('<i class="fa-light fa-house-blank"></i>', route('home'));
