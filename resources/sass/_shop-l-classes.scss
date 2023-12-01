@@ -259,24 +259,47 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 //КОРЗИНА
 .cart-popup {
     width: 480px;
-    max-height: 400px;
     padding: 10px;
 }
 .cart-header {
     display: flex;
     justify-content: space-between;
-
+    align-items: center;
 }
 .cart-body {
-    overflow-y: scroll;
+    max-height: 300px;
+    overflow-y: auto;
     overflow-x: hidden;
+    margin: 10px 0;
 }
 .cart-item {
     display: flex;
 }
 .cart-item>img {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
+}
+.cart-item-info {
+    width: auto;
+    height: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 0.9rem;
+}
+.cart-item-cost {
+    margin: auto 0;
+    margin-left: auto;
+    font-size: 1.25rem;
+    white-space: nowrap;
+}
+.cart-item-quantity {
+    color: var(--bs-gray-600);
+}
+
+.cart-item-trash {
+    width: 20px;
+    margin: auto 0;
+    margin-left: 8px;
 }
 
 .cart-footer {
