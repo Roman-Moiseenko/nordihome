@@ -91,17 +91,12 @@
                             </a>
                         </li>
                     @endguest
+
                     <li class="nav-item">
-                        <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
-                            <i class="fa-light fa-cart-shopping fs-4"></i>
-                            <span class="fs-7">Корзина</span>
-                        </a>
+                        @include('shop.widget.header-cart')
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
-                            <i class="fa-light fa-heart fs-4"></i>
-                            <span class="fs-7">Избранное</span>
-                        </a>
+                        @include('shop.widget.header-wish')
                     </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">

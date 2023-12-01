@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Shop;
 
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Cart\Cart;
-use App\Modules\User\Service\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Cookie;
+
 
 class CartController extends Controller
 {
@@ -18,6 +17,13 @@ class CartController extends Controller
     {
         $this->cart = $cart;
     }
+
+    public function view()
+    {
+        return $this->view('shop.cart');
+    }
+
+    //AJAX
 
     public function add(Request $request, Product $product) //sub, set_count, clear
     {
