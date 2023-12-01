@@ -15,7 +15,6 @@ Route::get('/', [App\Http\Controllers\Shop\HomeController::class, 'index'])->nam
 
 Route::group(
     [
-        //'prefix' => 'shop',
         'as' => 'shop.',
         'namespace' => 'App\Http\Controllers\Shop',
         'middleware' => ['user_cookie_id'],
@@ -38,7 +37,6 @@ Route::group(
             'prefix' => 'cart_post',
             //'namespace'=> 'Cart'
         ], function (){
-
             Route::post('/cart', 'CartController@cart')->name('all');
             Route::post('/add/{product}', 'CartController@add')->name('add');
             Route::post('/sub/{product}', 'CartController@sub')->name('sub');

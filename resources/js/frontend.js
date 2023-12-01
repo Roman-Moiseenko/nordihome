@@ -5,7 +5,7 @@ window.$ = jQuery;
     "use strict";
     //Устанавливаем в сессию таймзону клиента
     sessionStorage.setItem("time", -(new Date().getTimezoneOffset()));
-
+    let _counter = 0; //Кол-во товаров в корзине
     /* От Заказчика*/
     //Кол-во столбцов в меню 1 - для маленьких, 3 для огромных - дублируется во _shop-l-classes.scss
     const countColSubMenu = 1;
@@ -20,6 +20,12 @@ window.$ = jQuery;
         $.post('/cart_post/cart/', {tz: -(new Date().getTimezoneOffset())}, function (data) {
             console.log(data);
             widget_cart(data);
+        });
+        $('#clear-cart').on('click', function () {
+            let route = $(this).data('route');
+            $.post(route,{tz: -(new Date().getTimezoneOffset())}, function (data) {
+                widget_cart(data);
+            })
         });
     }
 
@@ -39,7 +45,8 @@ window.$ = jQuery;
         }
 
         let _text;
-        let _counter = 0;
+        _counter = 0;
+        let _amount = 0;
         for (let i = 0; i < items.length; i++) {
             let _item = cartItemTemplate.clone();
             _item.attr('id', 'cart-item-N' + (i + 1));
@@ -53,17 +60,22 @@ window.$ = jQuery;
             _text = _text.replace('{id}', items[i].id)
 
             _counter += items[i].quantity;
+            _amount += Number(items[i].cost.replace(' ', ''));
             _item.html(_text);
             _item.appendTo('.cart-body');
             _item.show();
             //console.log(_item);
         }
         counterCart.text(_counter);
-
+        $('#widget-cart-all-count').text(_counter);
+        $('#widget-cart-all-amount').text(_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ₽');
+        $(document).on('click', '.remove-item-cart', function () {
+            let route = $(this).data('route');
+            $.post(route,{tz: -(new Date().getTimezoneOffset())}, function (data) {
+                widget_cart(data);
+            })
+        });
     }
-
-    //cart-item-template
-
 
     /**  ПОИСК в ТОП-МЕНЮ    ***/
         //INPUT поиска

@@ -328,6 +328,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     border-top: 1px solid var(--bs-gray-400);
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 #counter-cart {
     position: absolute;
@@ -341,6 +342,10 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     color: white;
     min-width: 20px;
     height: 20px;
+}
+#widget-cart-all-amount {
+    font-size: 1.25rem;
+    font-weight: 500;
 }
 //DROPDOWN-HOVER
 .dropdown-menu.cart-popup {
