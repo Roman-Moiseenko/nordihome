@@ -2,6 +2,7 @@
     <a class="nav-link d-flex flex-column text-center dropdown-toggle dropdown-hover"
        href="{{ route('shop.cart.view') }}"
        aria-expanded="false" id="dropdown-cart" aria-haspopup="true">
+        <span id="counter-cart" style="display: none;"></span>
         <i class="fa-light fa-cart-shopping fs-4"></i>
         <span class="fs-7">Корзина</span>
     </a>

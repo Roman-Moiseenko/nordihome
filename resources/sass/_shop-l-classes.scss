@@ -329,7 +329,19 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     display: flex;
     justify-content: space-between;
 }
-
+#counter-cart {
+    position: absolute;
+    font-size: 0.8rem;
+    top: 0;
+    right: 10px;
+    background: var(--bs-red);
+    padding: 4px;
+    line-height: 1;
+    border-radius: 10px;
+    color: white;
+    min-width: 20px;
+    height: 20px;
+}
 //DROPDOWN-HOVER
 .dropdown-menu.cart-popup {
     right: 0;

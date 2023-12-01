@@ -25,18 +25,21 @@ window.$ = jQuery;
 
     function widget_cart(items) {
         let cartItemTemplate = $('#cart-item-template');
+        let counterCart = $('#counter-cart');
         console.log(cartItemTemplate.html());
         $('div[id^="cart-item-N"]').remove();
         if (items.length === 0) {
             $('#cart-empty').show();
             $('#cart-not-empty').hide();
+            counterCart.hide();
         } else {
             $('#cart-empty').hide();
             $('#cart-not-empty').show();
-
+            counterCart.show();
         }
 
         let _text;
+        let _counter = 0;
         for (let i = 0; i < items.length; i++) {
             let _item = cartItemTemplate.clone();
             _item.attr('id', 'cart-item-N' + (i + 1));
@@ -49,12 +52,13 @@ window.$ = jQuery;
             _text = _text.replace('{remove}', items[i].remove)
             _text = _text.replace('{id}', items[i].id)
 
-
+            _counter += items[i].quantity;
             _item.html(_text);
             _item.appendTo('.cart-body');
             _item.show();
             //console.log(_item);
         }
+        counterCart.text(_counter);
 
     }
 
