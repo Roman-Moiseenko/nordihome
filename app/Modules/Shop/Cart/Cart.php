@@ -118,10 +118,15 @@ class Cart
         foreach ($this->getItems() as $item) {
             $result[] = [
                 'id' => $item->id,
-                'product_name' => $item->getProduct()->name,
+                'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
+                'name' => $item->getProduct()->name,
+                'url' => route('shop.product.view', $item->getProduct()->slug),
                 'product_id' => $item->getProduct()->id,
+                'cost' => number_format($item->getProduct()->lastPrice->value * $item->getQuantity(), 0, ',', ' '),
                 'quantity' => $item->getQuantity(),
+                'discount_cost' => null,
                 'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
+                'remove' => route('shop.cart.remove', $item->getProduct()->id),
 
             ];
         }

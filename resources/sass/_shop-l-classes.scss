@@ -274,10 +274,13 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 }
 .cart-item {
     display: flex;
+    margin: 10px 0;
 }
 .cart-item>img {
     width: 60px;
     height: 60px;
+    border-radius: 4px;
+    box-shadow: 0 4px 4px #7d7c7c;
 }
 .cart-item-info {
     width: auto;
@@ -289,9 +292,27 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 .cart-item-cost {
     margin: auto 0;
     margin-left: auto;
-    font-size: 1.25rem;
+    padding-left: 10px;
+    font-size: 1rem;
     white-space: nowrap;
 }
+.cart-item-combined {
+    padding-left: 10px;
+    margin: auto 0;
+    margin-left: auto;
+    white-space: nowrap;
+}
+.cart-item-base_cost {
+    color: var(--bs-gray-500);
+    text-decoration: line-through;
+    font-size: 0.8rem;
+    text-align: right;
+}
+.cart-item-discount_cost {
+    font-size: 1rem;
+    color: var(--bs-red);
+}
+
 .cart-item-quantity {
     color: var(--bs-gray-600);
 }

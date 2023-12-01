@@ -69,10 +69,6 @@
                             </a>
                         </li>
                     @endguest
-
-                    <li class="nav-item">
-                        @include('shop.widget.header-cart')
-                    </li>
                     <li class="nav-item">
                         @include('shop.widget.header-wish')
                     </li>
@@ -82,6 +78,12 @@
                             <span class="fs-7">Заказы</span>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        @include('shop.widget.header-cart')
+                    </li>
+
+
                 </ul>
             </div>
         </div>

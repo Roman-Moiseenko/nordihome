@@ -1,4 +1,4 @@
-<div class="dropdown" style="position: relative">
+<div id="cart-header" class="dropdown" style="position: relative">
     <a class="nav-link d-flex flex-column text-center dropdown-toggle dropdown-hover"
        href="{{ route('shop.cart.view') }}"
        aria-expanded="false" id="dropdown-cart" aria-haspopup="true">
@@ -6,7 +6,7 @@
         <span class="fs-7">Корзина</span>
     </a>
     <div class="dropdown-menu cart-popup" aria-labelledby="dropdown-cart">
-
+        <div id="cart-not-empty">
             <div class="cart-header">
                 <div>
                     Товаров в корзине <span id="widget-cart-all-count">[*]</span>
@@ -16,13 +16,30 @@
                 </div>
             </div>
             <div class="cart-body">
-                <div class="cart-item">
+                <div id="cart-item-template" class="cart-item" style="display: none">
+                    <img src="{img}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name"><a href="{url}">{name}</a></div>
+                        <div class="cart-item-quantity">{quantity} шт</div>
+                    </div>
+                    <div class="cart-item-cost">{cost} ₽</div>
+                    <div class="cart-item-combined" style="display: none">
+                        <div class="cart-item-base_cost">{cost} ₽</div>
+                        <div class="cart-item-discount_cost">{discount_cost} ₽</div>
+                    </div>
+                    <div class="cart-item-trash"><a href="{remove}" data-item="{id}"><i class="fa-light fa-trash-can"></i></a></div>
+                </div>
+                <!--div class="cart-item">
                     <img src="\images\no-image.jpg">
                     <div class="cart-item-info">
                         <div class="cart-item-name"><a href="#">Название товара с кодами и артикулами</a></div>
                         <div class="cart-item-quantity">5 шт</div>
                     </div>
-                    <div class="cart-item-cost">10 000 ₽</div>
+                    <div class="cart-item-cost" style="display: none">10 000 ₽</div>
+                    <div class="cart-item-combined">
+                        <div class="cart-item-base_cost">10 000 ₽</div>
+                        <div class="cart-item-discount_cost">8 000 ₽</div>
+                    </div>
                     <div class="cart-item-trash"><a href="#"><i class="fa-light fa-trash-can"></i></a></div>
                 </div>
                 <div class="cart-item">
@@ -78,17 +95,7 @@
                     </div>
                     <div class="cart-item-cost">10 000 ₽</div>
                     <div class="cart-item-trash"><a href="#"><i class="fa-light fa-trash-can"></i></a></div>
-                </div>
-                <div class="cart-item">
-                    <img src="\images\no-image.jpg">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name"><a href="#">Название товара с кодами и артикулами</a></div>
-                        <div class="cart-item-quantity">5 шт</div>
-                    </div>
-                    <div class="cart-item-cost">10 000 ₽</div>
-                    <div class="cart-item-trash"><a href="#"><i class="fa-light fa-trash-can"></i></a></div>
-                </div>
-
+                </div-->
             </div>
             <div class="cart-footer">
                 <div class="cart-footer-amount">
@@ -100,5 +107,9 @@
                     <a class="btn btn-dark" href="{{ route('shop.cart.view') }}">В корзину</a>
                 </div>
             </div>
+        </div>
+        <div id="cart-empty">
+            У вас нет товаров в корзине
+        </div>
     </div>
 </div>

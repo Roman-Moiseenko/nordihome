@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Cart\Cart;
+use App\Modules\User\Service\ReserveService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -88,6 +89,7 @@ class CartController extends Controller
     public function cart(Request $request)
     {
         try {
+            (new ReserveService())->clearByTimer();
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {

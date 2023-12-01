@@ -15,6 +15,52 @@ window.$ = jQuery;
         }
     });
 
+    //Проверяем корзину
+    if ($('#cart-header').length) {
+        $.post('/cart_post/cart/', {tz: -(new Date().getTimezoneOffset())}, function (data) {
+            console.log(data);
+            widget_cart(data);
+        });
+    }
+
+    function widget_cart(items) {
+        let cartItemTemplate = $('#cart-item-template');
+        console.log(cartItemTemplate.html());
+        $('div[id^="cart-item-N"]').remove();
+        if (items.length === 0) {
+            $('#cart-empty').show();
+            $('#cart-not-empty').hide();
+        } else {
+            $('#cart-empty').hide();
+            $('#cart-not-empty').show();
+
+        }
+
+        let _text;
+        for (let i = 0; i < items.length; i++) {
+            let _item = cartItemTemplate.clone();
+            _item.attr('id', 'cart-item-N' + (i + 1));
+            _text = _item.html();
+            _text = _text.replace('{img}', items[i].img)
+            _text = _text.replace('{name}', items[i].name)
+            _text = _text.replace('{quantity}', items[i].quantity)
+            _text = _text.replace('{url}', items[i].url)
+            _text = _text.replace('{cost}', items[i].cost)
+            _text = _text.replace('{remove}', items[i].remove)
+            _text = _text.replace('{id}', items[i].id)
+
+
+            _item.html(_text);
+            _item.appendTo('.cart-body');
+            _item.show();
+            //console.log(_item);
+        }
+
+    }
+
+    //cart-item-template
+
+
     /**  ПОИСК в ТОП-МЕНЮ    ***/
         //INPUT поиска
     let presearchInput = $('#pre-search');
@@ -225,6 +271,7 @@ window.$ = jQuery;
                 tz: -(new Date().getTimezoneOffset()),
             }, function (data) {
                 console.log(data);
+                widget_cart(data);
             }
         );
 
