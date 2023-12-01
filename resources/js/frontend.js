@@ -3,6 +3,8 @@ window.$ = jQuery;
 
 (function () {
     "use strict";
+    //Устанавливаем в сессию таймзону клиента
+    sessionStorage.setItem("time", -(new Date().getTimezoneOffset()));
 
     /* От Заказчика*/
     //Кол-во столбцов в меню 1 - для маленьких, 3 для огромных - дублируется во _shop-l-classes.scss
@@ -213,7 +215,22 @@ window.$ = jQuery;
     $('.to-cart').on('click', function (item) {
         item.preventDefault();
         let _productId = $(this).data('product');
+        let _quantity = 1;
+        let _options = $(this).data('options');
         console.log(_productId);
+
+
+
+        $.post(
+            '/cart_post/add/' + _productId, {
+                quantity: _quantity,
+                options: _options,
+                tz: -(new Date().getTimezoneOffset()),
+            }, function (data) {
+                console.log(data);
+            }
+        );
+
         //Отправляем post запрос добавления в корзину
 
         //Получаем кол-во товаров в корзине

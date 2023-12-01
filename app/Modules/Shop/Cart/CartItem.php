@@ -3,27 +3,53 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart;
 
+use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
+use App\Modules\User\Entity\Reserve;
 
 class CartItem
 {
-    private Product $product;
-    private int $quantity;
+    public Product $product;
+    public ?Reserve $reserve;
+    public int $id;
+    public int $quantity;
+    public float $base_cost;
+    public string $discount;
+    public array $options;
+    public bool $preorder;
 
-    public function __construct( Product $product, int $quantity)
+    public function __construct()
     {
-        $this->product = $product;
-        $this->quantity = $quantity;
+        $this->preorder = (new Options())->shop->preorder;
     }
 
-    public function getId(): string
+    public static function create(Product $product, int $quantity, array $options): self
     {
-        return md5(serialize([$this->product->id]));
+        $item = new static();
+
+        if (!$item->preorder && $product->count_for_sell < $quantity) {
+            throw new \DomainException('Превышение остатка');
+        }
+        $item->product = $product;
+        $item->quantity = $quantity;
+        $item->options = $options;
+        return $item;
     }
 
-    public function productId(): int
+    public static function load(int $id, Product $product, $quantity, $options, $reserve = null): self
     {
-        return $this->product->id;
+        $item = new static();
+        $item->id = $id;
+        $item->product = $product;
+        $item->quantity = $quantity;
+        $item->options = $options;
+        $item->reserve = $reserve;
+        return $item;
+    }
+
+    public function isProduct(int $product_id): bool
+    {
+        return $this->product->id == $product_id;
     }
 
     public function getProduct(): Product
@@ -35,9 +61,6 @@ class CartItem
     {
         return $this->quantity;
     }
-
-
-
 
 }
 

@@ -11,7 +11,8 @@ class Shop
     public array $delivery;
     public int $paginate;
     public int $reserve_cart;
-
+    public int $cookie_timeout;
+    public string $cookie_key;
 
     public static function createFromArray(mixed $shop): static
     {
@@ -22,6 +23,8 @@ class Shop
         $_shop->show_finished = $shop['show-finished'];
         $_shop->paginate = $shop['paginate'];
         $_shop->reserve_cart = $shop['reserve_cart'];
+        $_shop->cookie_key = $shop['cookie']['key'];
+        $_shop->cookie_timeout = $shop['cookie']['timeout'];
         return $_shop;
     }
 }

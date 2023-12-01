@@ -12,41 +12,48 @@ use Illuminate\Support\Facades\DB;
 class ReserveService
 {
     private int $hours_reserve;
-    private int $user_id;
 
     public function __construct()
     {
         $this->hours_reserve = (new Options())->shop->reserve_cart;
-        $this->user_id = Auth::guard('user')->id();
     }
 
-    public function clearForTimer() //Удаляем все у которых время резерва вышло
+    public function clearByTimer() //Удаляем все у которых время резерва вышло
     {
         $reserves = Reserve::where('reserve_at', '<', now())->get();
-        /** @var Reserve $reserve */
         foreach ($reserves as $reserve) {
             $this->delete($reserve, true);
         }
     }
 
+    public function clearByUser(int $user_id)
+    {
+        $reserves = Reserve::where('user_id', $user_id)->get();
+        foreach ($reserves as $reserve) {
+            $this->delete($reserve);
+        }
+    }
+
     public function toReserve(Product $product, int $quantity): Reserve
     {
+        if (!Auth::guard('user')->check())
+            throw new \DomainException('Нельзя добавить в резерв для незарегистрированного пользователя');
+
+        $user_id = Auth::guard('user')->user()->id;
+        if (Reserve::where('user_id', $user_id)->where('product_id', $product->id)->first())
+            throw new \DomainException('Неверная функция добавления в резерв');
+
         DB::beginTransaction();
         try {
             $product->count_for_sell -= $quantity;
             $product->save();
-            /** @var Reserve $reserve */
-            $reserve = Reserve::where('user_id', $this->user_id)->where('product_id', $product->id)->first();
-            if ($reserve) { //Если товар уже есть у клиента в резерве, увеличиваем время и кол-во
-                $reserve->updateReserve($quantity, $this->hours_reserve);
-            } else {
-                $reserve = Reserve::register(
-                    $product->id,
-                    $quantity,
-                    $this->user_id,
-                    $this->hours_reserve
-                );
-            }
+
+            $reserve = Reserve::register(
+                $product->id,
+                $quantity,
+                $user_id,
+                $this->hours_reserve
+            );
             DB::commit();
             return $reserve;
         } catch (\Throwable $e) {
@@ -63,12 +70,59 @@ class ReserveService
             $product = $reserve->product;
             $product->count_for_sell += $reserve->quantity;
             $product->save();
+            $reserve->cart->clearReserve();
             Reserve::destroy($reserve->id);
-            DB::commit();
 
+            DB::commit();
             //TODO Оповещение о резерве при удалении по таймеру
             if ($timer) event($user, $product);
 
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw new \DomainException($e->getMessage());
+        }
+    }
+
+    public function deleteById(int $reserve_id)
+    {
+        $reserve = Reserve::find($reserve_id);
+        $this->delete($reserve);
+    }
+
+    public function subReserve(int $reserve_id, int $quantity)
+    {
+        /** @var Reserve $reserve */
+        DB::beginTransaction();
+        try {
+            $reserve = Reserve::find($reserve_id);
+            $product = $reserve->product;
+            $product->count_for_sell += $quantity;
+            $product->save();
+            $reserve->quantity -= $quantity;
+            $reserve->save();
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw new \DomainException($e->getMessage());
+        }
+    }
+
+    public function addReserve(int $reserve_id, int $quantity)
+    {
+        /** @var Reserve $reserve */
+        DB::beginTransaction();
+        try {
+            $reserve = Reserve::find($reserve_id);
+            $product = $reserve->product;
+            if ($product->count_for_sell < $quantity) $quantity = $product->count_for_sell;
+
+            $product->count_for_sell -= $quantity;
+            $product->save();
+
+            $reserve->quantity += $quantity;
+            $reserve->save();
+
+            DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
             throw new \DomainException($e->getMessage());

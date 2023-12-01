@@ -72,23 +72,23 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        echo 1;
+        return ;
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
             $this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
             return $this->sendLockoutResponse($request);
         }
-        echo 2;
+
         $intended = empty($request['intended']) ? '****' : $request['intended'];
        $authenticate = $this->guard()->attempt(
             $request->only(['email', 'password']),
             true//$request->filled('remember')
         );
-        echo 3;
+
         if ($authenticate) {
             $request->session()->regenerate();
             $this->clearLoginAttempts($request);
-            echo 4;
+
             //$user = Auth::user(); //Auth::guard('user')->user();
 
             /*if ($user->status != User::STATUS_ACTIVE) {
@@ -96,8 +96,7 @@ class LoginController extends Controller
                 flash('Пользователь не верифицирован', 'danger');
                 return back();
             }*/
-            echo $intended;
-            die($intended);
+
                 flash($intended, 'danger');
                 return redirect($intended);//->intended($request['intended'] ?? '');
         }

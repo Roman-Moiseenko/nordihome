@@ -18,6 +18,7 @@ Route::group(
         //'prefix' => 'shop',
         'as' => 'shop.',
         'namespace' => 'App\Http\Controllers\Shop',
+        'middleware' => ['user_cookie_id'],
     ],
     function () {
 
@@ -28,6 +29,20 @@ Route::group(
         Route::get('/product/{slug}', 'ProductController@view')->name('product.view');
         Route::post('/catalog/search', 'CatalogController@search')->name('category.search');
         Route::get('/catalog/{slug}', 'CatalogController@view')->name('category.view');
+
+
+        Route::group([
+            'as' => 'cart.',
+            'prefix' => 'cart_post',
+            //'namespace'=> 'Cart'
+        ], function (){
+            Route::post('/cart', 'CartController@cart')->name('.all');
+            Route::post('/add/{product}', 'CartController@add')->name('.add');
+            Route::post('/sub/{product}', 'CartController@sub')->name('.sub');
+            Route::post('/set/{product}', 'CartController@set')->name('.set');
+            Route::post('/remove/{product}', 'CartController@remove')->name('.remove');
+            Route::post('/clear', 'CartController@clear')->name('.clear');
+        });
 
     }
 );

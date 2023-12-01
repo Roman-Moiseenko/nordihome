@@ -59,6 +59,10 @@ return [
         ],
         'paginate' => 20,
         'reserve_cart' => 3, //время (ч) резерва товара в корзине
+        'cookie' => [
+            'key' => 'shop-l-Nordihome',
+            'timeout' => 60 * 24 * 3,
+        ],
     ],
     'frontend' => [
         'logo-nav' => '/images/logo-nordi-home-2.svg',

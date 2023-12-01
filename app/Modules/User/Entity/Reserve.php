@@ -6,7 +6,6 @@ namespace App\Modules\User\Entity;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * @property int $id
@@ -17,7 +16,10 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon $reserve_at
  * @property Product $product
  * @property User $user
+ * @property CartStorage $cart
  */
+
+//TODO Удалить id !!!!
 class Reserve extends Model
 {
     public $timestamps = false;
@@ -28,6 +30,11 @@ class Reserve extends Model
         'quantity',
         'created_at',
         'reserve_at',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'reserve_at' => 'datetime',
     ];
 
     public static function register(int $product_id, int $quantity, int $user_id, int $hours = 1): self
@@ -57,5 +64,10 @@ class Reserve extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function cart()
+    {
+        return $this->hasOne(CartStorage::class, 'reserve_id', 'id');
     }
 }
