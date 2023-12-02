@@ -1,0 +1,78 @@
+/* ХЛЕБНЫЕ КРОШКИ */
+.breadcrumbs {
+    margin: 16px 0;
+}
+.breadcrumbs > li {
+    display: inline-block;
+    list-style-type: none;
+    font-size: 1rem;
+
+}
+.breadcrumbs > li:before {
+    margin: 0 4px;
+}
+.breadcrumbs > li > a {
+    text-decoration: none;
+    color: var(--bs-gray-700);
+}
+.breadcrumbs > li > a:hover {
+    text-decoration: none;
+    color: var(--bs-gray-400);
+}
+.breadcrumbs > li.active {
+
+}
+
+
+//Кнопка Scroll Up
+button.scrollup {
+    position: fixed;
+    top: 0;
+    right: 25px;
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    background-color: var(--bs-gray-900);
+    border: none;
+    outline: none;
+    border-radius: 50% 0 50% 50%;
+    box-shadow: 0 0 12px 0 rgba(0,0,0,.2);
+    -webkit-transition: .9s;
+    transition: .9s;
+    z-index: 99;
+    visibility: hidden;
+    opacity: 0;
+}
+.scrollup i {
+    display: inline-block;
+    -webkit-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+}
+.scrollup.is-active {
+    top: 95%;
+    -webkit-transform: translateY(-95%);
+    transform: translateY(-95%);
+    opacity: 1;
+    visibility: visible;
+}
+.scrollup.is-active:hover, .scrollup.is-active:focus {
+    color: #fff;
+    transform: translateY(-95%) rotate(-45deg);
+    -webkit-transform: translateY(-95%) rotate(-45deg);
+    -moz-transform: translateY(-95%) rotate(-45deg);
+    -o-transform: translateY(-95%) rotate(-45deg);
+    -ms-transform: translateY(-95%) rotate(-45deg);
+}
+.scrollup.is-active:hover i, .scrollup.is-active:focus i {
+    transform: translateY(0) rotate(45deg);
+    -webkit-transform: translateY(0) rotate(45deg);
+    -moz-transform: translateY(0) rotate(45deg);
+    -o-transform: translateY(0) rotate(45deg);
+    -ms-transform: translateY(0) rotate(45deg);
+}
