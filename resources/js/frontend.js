@@ -32,7 +32,7 @@ window.$ = jQuery;
     function widget_cart(items) {
         let cartItemTemplate = $('#cart-item-template');
         let counterCart = $('#counter-cart');
-        console.log(cartItemTemplate.html());
+
         $('div[id^="cart-item-N"]').remove();
         if (items.length === 0) {
             $('#cart-empty').show();
@@ -48,6 +48,7 @@ window.$ = jQuery;
         _counter = 0;
         let _amount = 0;
         for (let i = 0; i < items.length; i++) {
+            console.log(items[i]);
             let _item = cartItemTemplate.clone();
             _item.attr('id', 'cart-item-N' + (i + 1));
             _text = _item.html();

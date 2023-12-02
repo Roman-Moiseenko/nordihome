@@ -101,6 +101,11 @@ class AdminMenu
                         'title' => 'Купоны скидочные',
                         'route_name' => 'admin.home',
                     ],
+                    'discount' => [
+                        'icon' => 'percent-diamond',
+                        'title' => 'Скидки',
+                        'route_name' => 'admin.discount.discount.index',
+                    ],
 
                 ],
             ],

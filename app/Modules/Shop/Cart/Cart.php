@@ -113,9 +113,11 @@ class Cart
     {
         $timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
         $this->items = $this->storage->load();
-        //TODO Пересчитать данные для вывода
+        $cartItems = $this->getItems();
+        //TODO Пересчитать данные для вывода $cartItems
+
         $result = [];
-        foreach ($this->getItems() as $item) {
+        foreach ($cartItems as $item) {
             $result[] = [
                 'id' => $item->id,
                 'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
@@ -124,10 +126,12 @@ class Cart
                 'product_id' => $item->getProduct()->id,
                 'cost' => number_format($item->getProduct()->lastPrice->value * $item->getQuantity(), 0, ',', ' '),
                 'quantity' => $item->getQuantity(),
-                'discount_cost' => null,
+                'discount_id' => $item->discount_id ?? null,
+                'discount_cost' => $item->discount_cost ?? null,
+                'discount_name' => $item->discount_name,
                 'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
                 'remove' => route('shop.cart.remove', $item->getProduct()->id),
-
+                'd' => now()->translatedFormat('d F Y'),
             ];
         }
         return $result;

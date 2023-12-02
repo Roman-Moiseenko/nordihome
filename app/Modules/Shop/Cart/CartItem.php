@@ -14,7 +14,9 @@ class CartItem
     public int $id;
     public int $quantity;
     public float $base_cost;
-    public string $discount;
+    public float $discount_cost;
+    public string $discount_name = '';
+    public int $discount_id;
     public array $options;
     public bool $preorder;
 

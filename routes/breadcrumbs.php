@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Entity\Admin;
 use App\Entity\User\User;
+use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
@@ -295,6 +296,32 @@ Breadcrumbs::for('admin.discount.promotion.update', function (BreadcrumbTrail $t
     $trail->parent('admin.discount.promotion.index');
     $trail->push($promotion->name, route('admin.discount.promotion.show', $promotion));
 });
+
+// DISCOUNT
+Breadcrumbs::for('admin.discount.discount.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Скидки', route('admin.discount.discount.index'));
+});
+Breadcrumbs::for('admin.discount.discount.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.discount.discount.index');
+    $trail->push('Добавить новую', route('admin.discount.discount.create'));
+});
+Breadcrumbs::for('admin.discount.discount.show', function (BreadcrumbTrail $trail, Discount $discount) {
+    $trail->parent('admin.discount.discount.index');
+    $trail->push($discount->name, route('admin.discount.discount.show', $discount));
+});
+Breadcrumbs::for('admin.discount.discount.edit', function (BreadcrumbTrail $trail, Discount $discount) {
+    $trail->parent('admin.discount.discount.show', $discount);
+    $trail->push('Редактировать', route('admin.discount.discount.edit', $discount));
+});
+Breadcrumbs::for('admin.discount.discount.update', function (BreadcrumbTrail $trail, Discount $discount) {
+    $trail->parent('admin.discount.discount.index');
+    $trail->push($discount->name, route('admin.discount.discount.show', $discount));
+});
+
+
+
+
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));

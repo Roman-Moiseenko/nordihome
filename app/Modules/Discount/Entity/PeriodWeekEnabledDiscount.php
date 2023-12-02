@@ -1,0 +1,25 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Modules\Discount\Entity;
+
+class PeriodWeekEnabledDiscount extends EnabledDiscountAbstract
+{
+
+    public static function isEnabled(Discount $discount, int $cost = null): bool
+    {
+        if ((int)$discount->_from <= now()->dayOfWeek && now()->dayOfWeek <= (int)$discount->_to) return true;
+        return false;
+    }
+
+    public static function name(): string
+    {
+        return 'По дням недели';
+    }
+
+    public static function caption(string $from_to): string
+    {
+        $weeks = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        return $weeks[(int)$from_to];
+    }
+}

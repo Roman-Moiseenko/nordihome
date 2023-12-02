@@ -188,6 +188,7 @@ Route::group(
 
 
                 Route::resource('promotion', 'PromotionController'); //CRUD
+                Route::resource('discount', 'DiscountController'); //CRUD
                 //Route::resource('coupon', 'CouponController'); //CRUD
             }
         );
