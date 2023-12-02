@@ -24,6 +24,12 @@ class PeriodMonthEnabledDiscount extends EnabledDiscountAbstract
             return $from_to;
         } catch (\Throwable $e) {
             flash($e->getMessage(), 'danger');
+            return '';
         }
+    }
+
+    public static function widget(): string
+    {
+        return view('admin.discount.discount.widget.period-month')->render();
     }
 }

@@ -23,4 +23,8 @@ class FullTimeEnabledDiscount extends EnabledDiscountAbstract
     {
         return Carbon::parse($from_to)->translatedFormat('d F Y');
     }
+    public static function widget(): string
+    {
+        return view('admin.discount.discount.widget.full-time')->render();
+    }
 }

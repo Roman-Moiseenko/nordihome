@@ -22,4 +22,9 @@ class PeriodWeekEnabledDiscount extends EnabledDiscountAbstract
         $weeks = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
         return $weeks[(int)$from_to];
     }
+
+    public static function widget(): string
+    {
+        return view('admin.discount.discount.widget.period-week')->render();
+    }
 }

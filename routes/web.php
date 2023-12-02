@@ -11,8 +11,6 @@ Route::get('/', [App\Http\Controllers\Shop\HomeController::class, 'index'])->nam
 //TODO Настроить ЧПУ
 
 
-
-
 Route::group(
     [
         'as' => 'shop.',
@@ -63,10 +61,10 @@ Route::group(
 
         Route::get('/register', 'RegisterController@showRegistrationForm')->name('register');
         Route::post('/register', 'RegisterController@register');
+
         Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
         Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
         Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
-
         Route::get('/password/confirm', 'ConfirmPasswordController@showConfirmForm')->name('password.confirm');
         Route::post('/password/confirm', 'ConfirmPasswordController@confirm');
         Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
@@ -75,9 +73,7 @@ Route::group(
 
 Route::get('/profile', [\App\Http\Controllers\User\CabinetController::class, 'profile'])->name('user.profile');
 Route::get('/cabinet', [\App\Http\Controllers\User\CabinetController::class, 'index'])->name('user.cabinet');
-
 Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::class, 'verify'])->name('register.verify');
-
 
 //Admin
 Route::get('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
@@ -85,7 +81,6 @@ Route::post('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 
 Route::any('/admin/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('admin.logout');
 
 Route::post('/file-upload', [\App\Http\Controllers\Admin\StaffController::class, 'test']);
-
 
 Route::group(
     [
@@ -118,7 +113,6 @@ Route::group(
                 'namespace' => 'Product',
             ],
             function () {
-
                 //Доп. - сменить категорию, добавить фото
                 Route::get('/attribute/groups', 'AttributeController@groups')->name('attribute.groups');
                 Route::delete('/attribute/group-destroy/{group}', 'AttributeController@group_destroy')->name('attribute.group-destroy');
@@ -135,7 +129,6 @@ Route::group(
                 Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
                 Route::get('/category/{category}/child', 'CategoryController@child')->name('category.child');
                 Route::post('/category/json_attributes', 'CategoryController@json_attributes')->name('attribute.json-attributes');
-
 
                 Route::get('/tags', 'TagController@index')->name('tag.index');
                 Route::post('/tag/create', 'TagController@create')->name('tag.create');
@@ -159,15 +152,12 @@ Route::group(
                 Route::post('/modification/{modification}/add-product', 'ModificationController@add_product')->name('modification.add-product');
                 Route::delete('/modification/{modification}/del-product', 'ModificationController@del_product')->name('modification.del-product');
 
-
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD
                 Route::resource('attribute', 'AttributeController'); //CRUD
                 Route::resource('equivalent', 'EquivalentController'); //CRUD
                 Route::resource('group', 'GroupController'); //CRUD
-
                 Route::resource('modification', 'ModificationController'); //CRUD
-
             }
         );
 
@@ -180,19 +170,18 @@ Route::group(
             function () {
                 Route::post('/promotion/{promotion}/add-group', 'PromotionController@add_group')->name('promotion.add-group');
                 Route::delete('/promotion/{promotion}/del-group/{group}', 'PromotionController@del_group')->name('promotion.del-group');
-
                 Route::post('/promotion/{promotion}/published', 'PromotionController@published')->name('promotion.published');
                 Route::post('/promotion/{promotion}/draft', 'PromotionController@draft')->name('promotion.draft');
                 Route::post('/promotion/{promotion}/stop', 'PromotionController@stop')->name('promotion.stop');
                 Route::post('/promotion/{promotion}/start', 'PromotionController@start')->name('promotion.start');
 
+                Route::post('/discount/widget', 'DiscountController@widget')->name('discount.widget');
 
                 Route::resource('promotion', 'PromotionController'); //CRUD
                 Route::resource('discount', 'DiscountController'); //CRUD
                 //Route::resource('coupon', 'CouponController'); //CRUD
             }
         );
-
 
         //AJAX Product-Image
         Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');

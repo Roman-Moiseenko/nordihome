@@ -15,15 +15,13 @@
                         {{ \App\Forms\Input::create('title', ['placeholder' => 'Заголовок', 'value' => !is_null($discount) ? $discount->title : '', 'class' => 'mt-3'])->show() }}
                         {{ \App\Forms\Input::create('discount', ['placeholder' => 'Скидка %%', 'value' => !is_null($discount) ? $discount->discount : '', 'class' => 'mt-3'])->show() }}
 
-
-
                     </div>
                     <div class="col-span-12 lg:col-span-4">
-                        <x-base.tom-select id="select-category" name="category_id" class="w-full"
-                                           data-placeholder="Выберите главную категорию">
+                        <x-base.tom-select id="select-discount" name="discount_class" class="w-full"
+                                           data-placeholder="Выберите тип скидки">
                             <option value="0"></option>
                             @foreach(\App\Modules\Discount\Helpers\DiscountHelper::discounts() as $class => $name)
-                                <option value="{{ $class }}"
+                                <option value="{{ $class }}" data-widget="{{ strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $class)) }}"
                                 @if(isset($discount))
                                     {{ $class == $discount->type ? 'selected' : ''}}
                                     @endif
@@ -54,3 +52,27 @@
         </div>
     </div>
 </div>
+<script>
+    let discountSelect = document.getElementById('select-discount');
+    discountSelect.addEventListener('change', function (e) {
+        let _class = discountSelect.options[discountSelect.selectedIndex].value;
+        //TODO Отправляем post запрос для получения рендера виджета
+        let _params = '_token=' + '{{ csrf_token() }}' + '&class=' + _class;
+        let request = new XMLHttpRequest();
+        request.open('POST', '/admin/discount/discount/widget');
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.send(_params);
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let _html_widget = JSON.parse(request.responseText);
+                discountSelect.parentNode.insertAdjacentHTML('beforeend', _html_widget);
+                //Вставить код HTML
+            } else {
+                //console.log(request.responseText);
+            }
+        };
+
+        //let widget = discountSelect.options[discountSelect.selectedIndex].getAttribute('data-widget');
+        console.log('*');
+    });
+</script>

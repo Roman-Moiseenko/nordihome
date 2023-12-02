@@ -21,4 +21,9 @@ class CostEnabledDiscount extends EnabledDiscountAbstract
     {
         return $from_to . ' &#8381;';
     }
+
+    public static function widget(): string
+    {
+        return view('admin.discount.discount.widget.cost')->render();
+    }
 }
