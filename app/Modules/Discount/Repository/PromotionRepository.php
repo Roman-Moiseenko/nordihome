@@ -16,4 +16,15 @@ class PromotionRepository
             return Promotion::orderBy('finish_at', 'DESC')->orderBy('start_at')->paginate($pagination);
         }
     }
+
+    public function getActive()
+    {
+        $promotions = [];
+        /** @var Promotion $promotion */
+        foreach (Promotion::where('published', true)->get() as $promotion) {
+             if ($promotion->status() == Promotion::STATUS_STARTED)
+             $promotions[] = $promotion;
+         }
+        return $promotions;
+    }
 }

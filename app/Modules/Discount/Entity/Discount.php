@@ -22,8 +22,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Discount extends Model
 {
-    //TODO Общие скидки (от суммы заказа, от определенных событий - скидка на все товары на 01.января и т.п.
-
     protected $table ='discounts';
     protected $fillable = [
         'discount',
@@ -62,11 +60,8 @@ class Discount extends Model
     {
         if (!$this->active) throw new \DomainException('Неверный алгоритм - текущий Discount (' . $this->id . ') не активен');
         $amount = array_sum(array_map(function ($item) {
-            return empty($item->discount_cost) ? $item->getProduct()->lastPrice->value : 0;
+            return empty($item->discount_cost) ? $item->base_cost * $item->quantity : 0;
         }, $items));
-
-        //TODO Вариант. Проверять $item->discount_id (вместо discount_cost), в discount_id хранить id только Discount
-        // тогда можно суммировать скидки
 
         if ($amount == 0) return 0; //Все элементы со скидкой
         if ($this->isEnabled($amount)) {
@@ -74,8 +69,8 @@ class Discount extends Model
                 array_walk($items, function (&$item) {
                     if (empty($item->discount_id)) {
                         $item->discount_id = $this->id;
-                        $item->discount_cost = (($item->base_cost) * $this->discount) / 100;
-                        $item->discount_name = $this->name;
+                        $item->discount_cost = round((($item->base_cost) * (100 - $this->discount)) / 100);
+                        $item->discount_name = empty($this->title) ? '' : $this->title . '(' . $this->discount . '%)';
                     }
                 });
             }
@@ -85,8 +80,7 @@ class Discount extends Model
         //if $written - то массив $items перезаписывается, в discount устанавливается посчитанная скидка
     }
 
-
-    public function isEnabled(int $cost = null): bool
+    public function isEnabled(float $cost = null): bool
     {
         $class = __NAMESPACE__ . "\\" . $this->class;
         return $class::isEnabled($this, $cost);

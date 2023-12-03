@@ -232,5 +232,13 @@ class Promotion extends Model implements IWidgetHome
         }
     }
 
+    public function getDiscount(int $product_id)
+    {
+        foreach ($this->groups as $group) {
+            if ($group->isProduct($product_id)) return $group->pivot->discount;
+        }
+        return null;
+    }
+
 
 }

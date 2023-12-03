@@ -193,6 +193,8 @@ Route::group(
         Route::post('product/{product}/down-image', 'Product\ProductController@down_image')->name('product.down-image');
         Route::post('product/{product}/alt-image', 'Product\ProductController@alt_image')->name('product.alt-image');
         Route::post('product/search', 'Product\ProductController@search')->name('product.search');
+        Route::post('product/search_bonus', 'Product\ProductController@search_bonus')->name('product.search-bonus');
+        //
         Route::post('product/{product}/attr-modification', 'Product\ProductController@attr_modification')->name('product.attr-modification');
 
         Route::resource('product', 'Product\ProductController'); //CRUD

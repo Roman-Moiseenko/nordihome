@@ -106,7 +106,12 @@ class AdminMenu
                         'title' => 'Скидки',
                         'route_name' => 'admin.discount.discount.index',
                     ],
-
+                    'bonus' => [
+                        'icon' => 'badge-dollar-sign',
+                        'title' => 'Бонусные продажи',
+                        'route_name' => 'admin.discount.discount.index',
+                    ],
+//
                 ],
             ],
             'delivery' => [

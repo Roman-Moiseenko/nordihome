@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Product;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
+use App\Modules\Product\Entity\Bonus;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
@@ -137,6 +138,23 @@ class ProductController extends Controller
         }
         return \response()->json($result);
     }
+
+    public function search_bonus(Request $request)
+    {
+        $result = [];
+        try {
+            $bonus_ids = Bonus::orderBy('bonus_id')->pluck('bonus_id')->toArray();
+            $products = $this->repository->search($request['search'], 10, $bonus_ids, false);
+            /** @var Product $product */
+            foreach ($products as $product) {
+                $result[] = $this->repository->toArrayForSearch($product);
+            }
+        } catch (\Throwable $e) {
+            $result = $e->getMessage();
+        }
+        return \response()->json($result);
+    }
+
 
     public function attr_modification(Product $product)
     {

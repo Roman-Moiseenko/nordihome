@@ -34,7 +34,12 @@
             <div class="cart-footer">
                 <div class="cart-footer-amount">
                     <div>Итого:</div>
-                    <div><span id="widget-cart-all-amount">[**]</span></div>
+                    <div class="cart-all-amount">
+                        <span id="widget-cart-all-amount">[**]</span>
+                    </div>
+                    <div class="cart-all-combined" style="display: none;">
+                        <span id="widget-cart-all-discount">[**]</span><span id="widget-cart-all-amount-mini">[**]</span>
+                    </div>
                 </div>
                 <div class="cart-footer-button">
                     <a class="btn btn-outline-dark" href="{{ route('shop.cart.view') }}">Оформить</a>

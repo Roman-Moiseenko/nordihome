@@ -6,7 +6,7 @@ namespace App\Modules\Discount\Entity;
 class PeriodWeekEnabledDiscount extends EnabledDiscountAbstract
 {
 
-    public static function isEnabled(Discount $discount, int $cost = null): bool
+    public static function isEnabled(Discount $discount, float $cost = null): bool
     {
         if ((int)$discount->_from <= now()->dayOfWeek && now()->dayOfWeek <= (int)$discount->_to) return true;
         return false;

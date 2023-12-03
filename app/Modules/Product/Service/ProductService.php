@@ -63,16 +63,6 @@ class ProductService
             $product->short = $request['short'];
 
             $this->tags($request, $product);
-            /* if (!empty($request['tags'])) {
-                 foreach ($request->get('tags') as $tag_id) {
-                     if ($this->tags->exists($tag_id)) {
-                         $product->tags()->attach((int)$tag_id);
-                     } else {
-                         $tag = $this->tagService->create(['name' => $tag_id]);
-                         $product->tags()->attach($tag->id);
-                     }
-                 }
-             }*/
 
             DB::commit();
             $product->push();
@@ -123,18 +113,7 @@ class ProductService
             $product->description = $request['description'];
             $product->short = $request['short'];
             $product->tags()->detach();
-
             $this->tags($request, $product);
-            /*if (!empty($request['tags'])) {
-                foreach ($request->get('tags') as $tag_id) {
-                    if ($this->tags->exists($tag_id)) {
-                        $product->tags()->attach((int)$tag_id);
-                    } else {
-                        $tag = $this->tagService->create(['name' => $tag_id]);
-                        $product->tags()->attach($tag->id);
-                    }
-                }
-            }*/
 
             /* SECTION 4*/
             //Видеообзоры
@@ -160,7 +139,6 @@ class ProductService
             $product->not_local = !($request['local'] ?? false);
             $product->not_delivery = !($request['delivery'] ?? false);
 
-
             /* SECTION 6*/
             //Атрибуты
             $product->prod_attributes()->detach();
@@ -177,7 +155,6 @@ class ProductService
                 }
             }
 
-
             /* SECTION 7*/
             //Цена, кол-во, статус, периодичность
             $product->count_for_sell = (float)($request['count-for-sell'] ?? 0);
@@ -189,10 +166,8 @@ class ProductService
 
             $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
 
-            //TODO **** ПОСЛЕ СОЗДАНИЯ ОБЪЕКТОВ
-
             /* SECTION 8*/
-            //Модификации - только в режиме update
+
 
             /* SECTION 9*/
             //Аналоги
@@ -210,7 +185,6 @@ class ProductService
                     $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
                     $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
                 }
-
             }
 
             /* SECTION 10*/
@@ -222,6 +196,7 @@ class ProductService
                 }
             }
 
+            //TODO **** ПОСЛЕ СОЗДАНИЯ ОБЪЕКТОВ
             /* SECTION 11*/
             //Опции
 
@@ -235,7 +210,6 @@ class ProductService
                     }
                 }
             }
-
 
             DB::commit();
             $product->push();
@@ -293,7 +267,6 @@ class ProductService
                 $product->tags()->attach($tag->id);
             }
         }
-
     }
 
     private function series(Request $request, Product &$product)
@@ -306,7 +279,6 @@ class ProductService
             $series = $this->seriesService->registerName($_series); //Создаем Серию
             $product->series_id = $series->id;
         }
-
     }
 
     ///Работа с Фото Продукта

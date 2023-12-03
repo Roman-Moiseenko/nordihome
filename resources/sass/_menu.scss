@@ -282,9 +282,22 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     min-width: 20px;
     height: 20px;
 }
+
 #widget-cart-all-amount {
     font-size: 1.25rem;
     font-weight: 500;
+}
+#widget-cart-all-discount {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--bs-red);
+}
+#widget-cart-all-amount-mini {
+    font-size: 0.8rem;
+    font-weight: 300;
+    margin-left: 10px;
+    margin-top: auto;
+    text-decoration: line-through;
 }
 #cart-empty {
     text-align: center;

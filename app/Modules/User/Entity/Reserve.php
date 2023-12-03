@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property CartStorage $cart
  */
 
-//TODO Удалить id !!!!
 class Reserve extends Model
 {
     public $timestamps = false;

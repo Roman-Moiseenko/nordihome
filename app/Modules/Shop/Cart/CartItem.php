@@ -13,7 +13,7 @@ class CartItem
     public ?Reserve $reserve;
     public int $id;
     public int $quantity;
-    public float $base_cost;
+    public float $base_cost = -1;
     public float $discount_cost;
     public string $discount_name = '';
     public int $discount_id;
@@ -35,6 +35,7 @@ class CartItem
         $item->product = $product;
         $item->quantity = $quantity;
         $item->options = $options;
+        $item->base_cost = $product->lastPrice->value;
         return $item;
     }
 
@@ -46,6 +47,8 @@ class CartItem
         $item->quantity = $quantity;
         $item->options = $options;
         $item->reserve = $reserve;
+
+        $item->base_cost = $product->lastPrice->value;
         return $item;
     }
 

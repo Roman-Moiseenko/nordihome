@@ -18,7 +18,6 @@ window.$ = jQuery;
     //Проверяем корзину
     if ($('#cart-header').length) {
         $.post('/cart_post/cart/', {tz: -(new Date().getTimezoneOffset())}, function (data) {
-            console.log(data);
             widget_cart(data);
         });
         $('#clear-cart').on('click', function () {
@@ -32,9 +31,11 @@ window.$ = jQuery;
     function widget_cart(items) {
         let cartItemTemplate = $('#cart-item-template');
         let counterCart = $('#counter-cart');
+        let _text,  _amount = 0, _discount_amount = 0;
+        _counter = 0;
 
         $('div[id^="cart-item-N"]').remove();
-        if (items.length === 0) {
+        if (items.length === 0) { //Элементов нет, показываем пустую заглушку
             $('#cart-empty').show();
             $('#cart-not-empty').hide();
             counterCart.hide();
@@ -44,11 +45,7 @@ window.$ = jQuery;
             counterCart.show();
         }
 
-        let _text;
-        _counter = 0;
-        let _amount = 0;
         for (let i = 0; i < items.length; i++) {
-            console.log(items[i]);
             let _item = cartItemTemplate.clone();
             _item.attr('id', 'cart-item-N' + (i + 1));
             _text = _item.html();
@@ -56,7 +53,8 @@ window.$ = jQuery;
             _text = _text.replace('{name}', items[i].name)
             _text = _text.replace('{quantity}', items[i].quantity)
             _text = _text.replace('{url}', items[i].url)
-            _text = _text.replace('{cost}', items[i].cost)
+            _text = _text.replaceAll('{cost}', items[i].cost)
+            _text = _text.replace('{discount_cost}', items[i].discount_cost)
             _text = _text.replace('{remove}', items[i].remove)
             _text = _text.replace('{id}', items[i].id)
 
@@ -64,12 +62,26 @@ window.$ = jQuery;
             _amount += Number(items[i].cost.replace(' ', ''));
             _item.html(_text);
             _item.appendTo('.cart-body');
+            if (items[i].discount_cost !== null) { //Для данного товара есть скидка
+                _item.find($('.cart-item-cost')).hide();
+                _item.find($('.cart-item-combined')).show();
+                _discount_amount += Number(items[i].discount_cost.replace(' ', ''));
+            } else {
+                _discount_amount += Number(items[i].cost.replace(' ', ''));
+            }
             _item.show();
-            //console.log(_item);
+        }
+        if (_discount_amount < _amount) { //общая сумма со скидкой
+            $('.cart-all-amount').hide();
+            $('.cart-all-combined').show()
+            $('#widget-cart-all-discount').text(price_format(_discount_amount));
+            $('#widget-cart-all-amount-mini').text(price_format(_amount));
+        } else {
+            $('#widget-cart-all-amount').text(price_format(_amount));
         }
         counterCart.text(_counter);
         $('#widget-cart-all-count').text(_counter);
-        $('#widget-cart-all-amount').text(_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ₽');
+
         $(document).on('click', '.remove-item-cart', function () {
             let route = $(this).data('route');
             $.post(route,{tz: -(new Date().getTimezoneOffset())}, function (data) {
@@ -197,6 +209,7 @@ window.$ = jQuery;
         }
         return '<a href="' + item.url +'" class="' + _class + '">' + item.name + _count + '</a>'
     }
+
     function _subSecond_div(items) {
         let html = '', sub_html = '';
         let n = 0;
@@ -331,6 +344,11 @@ window.$ = jQuery;
     function isEmail(email) {
         let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         return regex.test(email);
+    }
+
+    //Приведение числа в цену формата 1 000 000 ₽
+    function price_format(_str) {
+        return _str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ₽';
     }
 
 })();

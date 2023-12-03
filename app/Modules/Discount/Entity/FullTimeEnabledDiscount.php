@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class FullTimeEnabledDiscount extends EnabledDiscountAbstract
 {
 
-    public static function isEnabled(Discount $discount, int $cost = null): bool
+    public static function isEnabled(Discount $discount, float $cost = null): bool
     {
         if (Carbon::parse($discount->_from) <= now() && now() <= Carbon::parse($discount->_to)) return true;
         return false;

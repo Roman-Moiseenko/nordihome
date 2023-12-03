@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class PeriodYearEnabledDiscount extends EnabledDiscountAbstract
 {
 
-    public static function isEnabled(Discount $discount, int $cost = null): bool
+    public static function isEnabled(Discount $discount, float $cost = null): bool
     {
         $year = now()->format('Y');
         if (Carbon::parse($discount->_from . ' ' . $year) <= now() && now() <= Carbon::parse($discount->_to . ' ' . $year)) return true;

@@ -4,20 +4,21 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Cart;
 
 use App\Modules\Product\Entity\Product;
-use App\Modules\Shop\Calculate\CalculateInterface;
+use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Storage\HybridStorage;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Session;
+
 
 class Cart
 {
     /** @var CartItem[] $items */
     private array $items;
     private HybridStorage $storage;
+    private CalculatorOrder $calculator;
 
-    public function __construct(HybridStorage $storage)
+    public function __construct(HybridStorage $storage, CalculatorOrder $calculator)
     {
         $this->storage = $storage;
+        $this->calculator = $calculator;
     }
 
     public function getItems(): array
@@ -38,6 +39,7 @@ class Cart
         $this->storage->add(CartItem::create($product, $quantity, $options));
     }
 
+    //TODO Протестировать sub и set в Корзине
     public function plus(Product $product, $quantity)
     {
         $this->loadItems();
@@ -115,7 +117,7 @@ class Cart
         $this->items = $this->storage->load();
         $cartItems = $this->getItems();
         //TODO Пересчитать данные для вывода $cartItems
-
+        $cartItems = $this->calculator->calculate($cartItems);
         $result = [];
         foreach ($cartItems as $item) {
             $result[] = [
@@ -124,15 +126,17 @@ class Cart
                 'name' => $item->getProduct()->name,
                 'url' => route('shop.product.view', $item->getProduct()->slug),
                 'product_id' => $item->getProduct()->id,
-                'cost' => number_format($item->getProduct()->lastPrice->value * $item->getQuantity(), 0, ',', ' '),
+                'cost' => number_format($item->base_cost * $item->getQuantity(), 0, ',', ' '), //getProduct()->lastPrice->value
                 'quantity' => $item->getQuantity(),
                 'discount_id' => $item->discount_id ?? null,
-                'discount_cost' => $item->discount_cost ?? null,
+                'discount_cost' => empty($item->discount_cost) ? null : number_format($item->discount_cost * $item->getQuantity(), 0, ',', ' '),
                 'discount_name' => $item->discount_name,
                 'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
                 'remove' => route('shop.cart.remove', $item->getProduct()->id),
                 'd' => now()->translatedFormat('d F Y'),
             ];
+
+
         }
         return $result;
     }
