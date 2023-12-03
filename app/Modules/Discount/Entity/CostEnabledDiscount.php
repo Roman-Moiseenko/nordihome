@@ -19,7 +19,7 @@ class CostEnabledDiscount extends EnabledDiscountAbstract
 
     public static function caption(string $from_to): string
     {
-        return $from_to . ' &#8381;';
+        return number_format((int)$from_to, 0, ',', ' ') . ' ₽';
     }
 
     public static function widget(): string

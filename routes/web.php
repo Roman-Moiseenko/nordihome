@@ -176,6 +176,8 @@ Route::group(
                 Route::post('/promotion/{promotion}/start', 'PromotionController@start')->name('promotion.start');
 
                 Route::post('/discount/widget', 'DiscountController@widget')->name('discount.widget');
+                Route::post('/discount/{discount}/published', 'DiscountController@published')->name('discount.published');
+                Route::post('/discount/{discount}/draft', 'DiscountController@draft')->name('discount.draft');
 
                 Route::resource('promotion', 'PromotionController'); //CRUD
                 Route::resource('discount', 'DiscountController'); //CRUD

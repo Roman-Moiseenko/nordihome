@@ -19,11 +19,11 @@
         <table class="table table-report -mt-2">
             <thead>
             <tr>
-                <th class="whitespace-nowrap">IMG</th>
                 <th class="whitespace-nowrap">НАЗВАНИЕ</th>
-                <th class="text-center whitespace-nowrap">НАЧАЛО - КОНЕЦ</th>
-                <th class="text-center whitespace-nowrap">СТАТУС</th>
-                <th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</th>
+                <th class="whitespace-nowrap">СКИДКА</th>
+                <th class="text-center whitespace-nowrap">УСЛОВИЕ</th>
+                <th class="text-center whitespace-nowrap">ТИП</th>
+                <th class="text-center whitespace-nowrap">АКТИВНА</th>
                 <th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</th>
             </tr>
             </thead>

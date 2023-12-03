@@ -1,14 +1,11 @@
 <tr class="intro-x">
-    <td class="w-20">
-        <div class="image-fit w-10 h-10">
 
-        </div>
-    </td>
     <td class="w-40"><a href="{{ route('admin.discount.discount.show', $discount) }}"
                         class="font-medium whitespace-nowrap">{{ $discount->name }}</a></td>
-    <td class="text-center"> </td>
-    <td class="text-center"> </td>
-    <td class="text-center"> </td>
+    <td class="w-20">{{ $discount->discount }} %</td>
+    <td class="text-center">{{ $discount->caption() }}</td>
+    <td class="text-center">{{ $discount->nameType() }}</td>
+    <td class="text-center"><x-yesno status="{{ $discount->active() }}" lucide="" class="justify-center"/></td>
 
     <td class="table-report__action w-56">
         <div class="flex justify-center items-center">

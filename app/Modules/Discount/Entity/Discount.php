@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $discount
  * @property string $name
  * @property string $title
- * @property string $type //$class
+ * @property string $class //$class
  * @property string $_from //миним.значение
  * @property string $_to //максим.значение в условии
  * @property bool $active
@@ -24,12 +24,13 @@ class Discount extends Model
 {
     //TODO Общие скидки (от суммы заказа, от определенных событий - скидка на все товары на 01.января и т.п.
 
+    protected $table ='discounts';
     protected $fillable = [
         'discount',
         'name',
         'title',
-        'active',
-        'type',
+        //'active',
+        'class',
         '_from',
         '_to'
     ];
@@ -39,14 +40,14 @@ class Discount extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $name, string $title, int $discount, string $type, string $_from, string $_to): self
+    public static function register(string $name, string $title, int $discount, string $class, string $_from, string $_to): self
     {
         return self::create([
             'discount' => $discount,
             'name' => $name,
             'title' => $title,
             'active' => false,
-            'type' => $type,
+            'class' => $class,
             '_from' => $_from,
             '_to' => $_to,
         ]);
@@ -87,13 +88,30 @@ class Discount extends Model
 
     public function isEnabled(int $cost = null): bool
     {
-        $class = __NAMESPACE__ . "\\" . $this->type;
+        $class = __NAMESPACE__ . "\\" . $this->class;
         return $class::isEnabled($this, $cost);
     }
 
+    public function active(): bool
+    {
+        return $this->active == true;
+    }
 
     public static function namespace(): string
     {
         return __NAMESPACE__;
     }
+
+    public function nameType(): string
+    {
+        $class = __NAMESPACE__ . "\\" . $this->class;
+        return $class::name();
+    }
+
+    public function caption(): string
+    {
+        $class = __NAMESPACE__ . "\\" . $this->class;
+        return $class::caption($this->_from) . ' - ' . $class::caption($this->_to);
+    }
+
 }

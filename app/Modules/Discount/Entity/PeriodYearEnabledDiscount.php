@@ -22,7 +22,7 @@ class PeriodYearEnabledDiscount extends EnabledDiscountAbstract
 
     public static function caption(string $from_to): string
     {
-        return Carbon::parse($from_to)->translatedFormat('d F Y');
+        return Carbon::parse($from_to . '-2000')->translatedFormat('d F');
     }
     public static function widget(): string
     {
