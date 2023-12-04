@@ -6,7 +6,16 @@ use Illuminate\Support\Facades\Route;
 
 
 //Shop
-Route::get('/', [App\Http\Controllers\Shop\HomeController::class, 'index'])->name('home');
+
+Route::group(
+    [
+        'middleware' => ['user_cookie_id'],
+    ],
+    function () {
+        Route::get('/', [App\Http\Controllers\Shop\HomeController::class, 'index'])->name('home');
+    }
+);
+
 
 //TODO Настроить ЧПУ
 
@@ -34,7 +43,7 @@ Route::group(
             'as' => 'cart.',
             'prefix' => 'cart_post',
             //'namespace'=> 'Cart'
-        ], function (){
+        ], function () {
             Route::post('/cart', 'CartController@cart')->name('all');
             Route::post('/add/{product}', 'CartController@add')->name('add');
             Route::post('/sub/{product}', 'CartController@sub')->name('sub');
@@ -52,7 +61,8 @@ Route::group(
 Route::group(
     [
         'namespace' => 'App\Http\Controllers\User',
-        ],
+        'middleware' => ['user_cookie_id'],
+    ],
     function () {
         //Route::get('/login', 'LoginController@showLoginForm')->name('login');
         Route::post('/login', 'LoginController@login')->name('login');

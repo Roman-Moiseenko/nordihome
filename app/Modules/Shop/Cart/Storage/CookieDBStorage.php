@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Cookie;
 class CookieDBStorage implements StorageInterface
 {
 
-    private string $user_ui;
+    private ?string $user_ui;
     private CartCookieService $cartCookieService;
 
     public function __construct(CartCookieService $cartCookieService)
     {
-        $this->user_ui = Cookie::get('user_cookie_id');;
+        $this->user_ui = Cookie::get('user_cookie_id');
         if (empty($this->user_ui)) throw new \DomainException('Что-то пошло не так, user_cookie_id пустой');
         $this->cartCookieService = $cartCookieService;
     }

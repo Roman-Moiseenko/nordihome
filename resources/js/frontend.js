@@ -17,9 +17,15 @@ window.$ = jQuery;
 
     //Проверяем корзину
     if ($('#cart-header').length) {
-        $.post('/cart_post/cart/', {tz: -(new Date().getTimezoneOffset())}, function (data) {
-            widget_cart(data);
-        });
+        setTimeout(function () {
+            $.post('/cart_post/cart/', {tz: -(new Date().getTimezoneOffset())}, function (data) {
+                widget_cart(data);
+
+
+            });
+        }, 250);
+
+
         $('#clear-cart').on('click', function () {
             let route = $(this).data('route');
             $.post(route,{tz: -(new Date().getTimezoneOffset())}, function (data) {
@@ -44,7 +50,7 @@ window.$ = jQuery;
             $('#cart-not-empty').show();
             counterCart.show();
         }
-
+        console.log(items.length, items);
         for (let i = 0; i < items.length; i++) {
             let _item = cartItemTemplate.clone();
             _item.attr('id', 'cart-item-N' + (i + 1));

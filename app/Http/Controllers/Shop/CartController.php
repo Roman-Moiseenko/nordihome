@@ -93,7 +93,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json($e->getMessage());
+            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
         }
     }
 }

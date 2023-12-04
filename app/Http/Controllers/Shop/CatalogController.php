@@ -10,6 +10,7 @@ use App\Modules\Product\Repository\AttributeRepository;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Cookie;
 
 class CatalogController extends Controller
 {
@@ -56,6 +57,8 @@ class CatalogController extends Controller
 
         $tags = $this->repository->TagsByProducts($product_ids);
         $products = $this->repository->filter($request, $product_ids);
+
+        //Cookie::make('aaabbb', '****');
 
         return view('shop.products',
             compact('category', 'products', 'prod_attributes', 'tags', 'minPrice', 'maxPrice', 'brands', 'request'));
