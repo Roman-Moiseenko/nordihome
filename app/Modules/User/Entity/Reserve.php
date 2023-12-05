@@ -36,22 +36,22 @@ class Reserve extends Model
         'reserve_at' => 'datetime',
     ];
 
-    public static function register(int $product_id, int $quantity, int $user_id, int $hours = 1): self
+    public static function register(int $product_id, int $quantity, int $user_id, int $minutes = 1): self
     {
         return self::create([
             'user_id' => $user_id,
             'product_id' => $product_id,
             'quantity' => $quantity,
             'created_at' => now(),
-            'reserve_at' => now()->addHours($hours),
+            'reserve_at' => now()->addMinutes($minutes),
         ]);
     }
 
-    public function updateReserve(int $quantity, int $hours = 1)
+    public function updateReserve(int $quantity, int $minutes = 1)
     {
         $this->update([
             'quantity' => $this->quantity + $quantity,
-            'reserve_at' => now()->addHours($hours),
+            'reserve_at' => now()->addMinutes($minutes),
         ]);
     }
 

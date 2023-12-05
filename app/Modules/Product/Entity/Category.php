@@ -106,6 +106,16 @@ class Category extends Model
         return Category::orderBy('_lft')->where('_lft', '<=', $this->_lft)->where('_rgt', '>=', $this->_rgt)->get();
     }
 
+    public function all_attributes(): array
+    {
+        return array_merge($this->parent_attributes(), $this->prod_attributes()->getModels());
+    }
+
+    public function parent_attributes(): array
+    {
+        return $this->parent ? $this->parent->all_attributes() : [];
+    }
+
     public function prod_attributes()
     {
         return $this->belongsToMany(Attribute::class, 'attributes_categories', 'category_id', 'attribute_id');

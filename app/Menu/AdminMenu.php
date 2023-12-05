@@ -115,7 +115,7 @@ class AdminMenu
                 ],
             ],
             'delivery' => [
-                'icon' => 'building',
+                'icon' => 'truck',
                 'title' => 'Доставка',
                 'route_name' => 'admin.home',
                 'can' => '',
@@ -149,7 +149,28 @@ class AdminMenu
                     ],
                 ],
             ],
-
+            'options' => [
+                'icon' => 'settings',
+                'title' => 'Настройки',
+                'can' => 'user-manager',
+                'sub_menu' => [
+                    'shop' => [
+                        'icon' => 'store',
+                        'title' => 'Интернет магазина',
+                        'route_name' => 'admin.settings.shop',//admin.options.shop.index
+                    ],
+                    'admin-panel' => [
+                        'icon' => 'package-search',
+                        'title' => 'Админка',
+                        'route_name' => 'admin.home',
+                    ],
+                    'delivery' => [
+                        'icon' => 'truck',
+                        'title' => 'Доставка',
+                        'route_name' => 'admin.home',
+                    ],
+                ],
+            ],
             /* Образцы */
           /*  'dashboard' => [
                 'icon' => 'home',

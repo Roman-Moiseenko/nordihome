@@ -209,6 +209,19 @@ Route::group(
 
         Route::resource('product', 'Product\ProductController'); //CRUD
 
+
+        //Настройки
+        Route::group(
+            [
+                'prefix' => 'settings',
+                'as' => 'settings.',
+                'namespace' => 'Settings',
+            ],
+            function () {
+                Route::get('/shop', 'ShopSettingsController@index')->name('shop');
+                Route::post('/shop', 'ShopSettingsController@update');
+            }
+        );
     }
 );
 

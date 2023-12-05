@@ -6,9 +6,7 @@ namespace App\Entity;
 use App\Modules\Admin\Entity\Options;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
-use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
 /**
@@ -88,16 +86,6 @@ class Photo extends Model
         return $photo;
     }
 
-/*    public static function register(string $file, int $object_id, string $alt = '', int $sort = 0): self
-    {
-        return self::create([
-            'object_id' => $object_id,
-            'file' => $file,
-            'alt' => $alt,
-            'sort' => $sort,
-        ]);
-    }
-*/
     // Set и Is
     public function setSort(int $sort): void
     {

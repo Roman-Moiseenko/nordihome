@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use App\Entity\Admin;
-use App\Entity\User\User;
+
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Product\Entity\Brand;
@@ -12,9 +12,8 @@ use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Attribute;
-use App\Modules\Product\Repository\CategoryRepository;
-use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Shop\ShopRepository;
+use App\Modules\User\Entity\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 /**  S H O P */
@@ -328,7 +327,10 @@ Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
 });
 
 
-
+Breadcrumbs::for('admin.settings.shop', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Интернет Магазин', route('admin.settings.shop'));
+});
 
 /**  Пример рекурсии для вложенных категорий и товара */
 /*
