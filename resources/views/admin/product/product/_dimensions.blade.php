@@ -36,14 +36,14 @@
 
         {{ \App\Forms\CheckSwitch::create('local', [
          'placeholder' => 'В пределах региона',
-         'value' => $product->isLocal(),
-         ])->disabled(!$options->shop->delivery['local'])->show() }}
+         'value' => $options->shop->delivery_local ? $product->isLocal() : false,
+         ])->disabled(!$options->shop->delivery_local)->show() }}
 
         {{ \App\Forms\CheckSwitch::create('delivery', [
          'placeholder' => 'Транспортной компанией',
          'value' => $product->isDelivery(),
          'class' => 'mt-3',
-         ])->disabled(!$options->shop->delivery['all'])->show() }}
+         ])->disabled(!$options->shop->delivery_all)->show() }}
 
 
     </div>

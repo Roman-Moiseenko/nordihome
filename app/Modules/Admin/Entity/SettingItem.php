@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $key //$field
  * @property string $value //json
  * @property int $type
+
  */
 class SettingItem extends Model
 {
@@ -39,7 +40,6 @@ class SettingItem extends Model
         'value',
         'type',
     ];
-
     protected $casts = [
         'value' => 'json',
     ];

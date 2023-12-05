@@ -37,9 +37,9 @@
 
             {{ \App\Forms\CheckSwitch::create('offline', [
              'placeholder' => 'Продажа только офлайн',
-             'value' => $product->only_offline,
+             'value' => ($options->shop->only_offline) ? true : $product->only_offline,
              'class' => 'ml-3',
-             ])->show() }}
+             ])->disabled($options->shop->only_offline)->show() }}
 
         </div>
     </div>
