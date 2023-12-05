@@ -47,7 +47,7 @@ return [
     /* SHOP => DB*/
 
     'shop' => [
-        'preorder' => false,
+        'pre_order' => false,
         'only-offline' => false,
         'show-finished' => true,
         'delivery' => [

@@ -107,7 +107,7 @@ class GroupController extends Controller
                 }
             }
         } catch (\Throwable $e) {
-            $result = $e->getMessage();
+            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
         }
         return \response()->json($result);
     }

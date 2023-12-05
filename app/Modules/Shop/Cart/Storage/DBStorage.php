@@ -45,7 +45,13 @@ class DBStorage implements StorageInterface
     public function add(CartItem $item): void
     {
         $reserve = $this->reserveService->toReserve($item->getProduct(), $item->getQuantity());
-        $this->cartStorageService->toStorage($this->user_id, $item->getProduct(), $item->getQuantity(), $reserve->id, $item->options);
+
+        $this->cartStorageService->toStorage(
+            $this->user_id,
+            $item->getProduct(),
+            $item->getQuantity(),
+            is_null($reserve) ? null : $reserve->id,
+            $item->options);
     }
 
     public function sub(CartItem $item, int $quantity): void

@@ -221,7 +221,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     width: 60px;
     height: 60px;
     border-radius: 4px;
-    box-shadow: 0 4px 4px #7d7c7c;
+    box-shadow: $shadow-img;
 }
 .cart-item-info {
     width: auto;

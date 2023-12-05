@@ -46,7 +46,15 @@ class ProductService
         DB::beginTransaction();
         try {
             /* SECTION 1*/
-            $product = Product::register($request['name'], $request['code'], (int)$request['category_id'], $request['slug'] ?? '');
+
+            $arguments = [
+                'pre_order' => $this->options->shop->pre_order,
+                'only_offline' => $this->options->shop->only_offline,
+                'not_local' => !$this->options->shop->delivery_local,
+                'not_delivery' => !$this->options->shop->delivery_all,
+            ];
+
+            $product = Product::register($request['name'], $request['code'], (int)$request['category_id'], $request['slug'] ?? '', $arguments);
             $product->brand_id = $request['brand_id'];
             if (!empty($request['categories'])) {
                 foreach ($request->get('categories') as $category_id) {
@@ -136,8 +144,8 @@ class ProductService
                 (float)$request['dimensions-weight'],
                 $request['dimensions-measure']
             );
-            $product->not_local = !($request['local'] ?? false);
-            $product->not_delivery = !($request['delivery'] ?? false);
+            $product->not_local = !$request->has('local');
+            $product->not_delivery = !$request->has('delivery');
 
             /* SECTION 6*/
             //Атрибуты
@@ -161,8 +169,8 @@ class ProductService
             if (!empty($request['last-price']) && (float)$request['last-price'] > 0.99) {
                 $product->setPrice((float)$request['last-price']);
             }
-            $product->pre_order = $request['preorder'] ?? false;
-            $product->only_offline = $request['offline'] ?? false;
+            $product->pre_order = $request->has('pre_order');
+            $product->only_offline = $request->has('offline');
 
             $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
 

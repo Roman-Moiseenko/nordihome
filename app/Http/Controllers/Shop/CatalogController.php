@@ -18,7 +18,7 @@ class CatalogController extends Controller
 
     //private AttributeRepository $attributes;
 
-    public function __construct(ShopRepository $repository/*, AttributeRepository $attributes*/)
+    public function __construct(ShopRepository $repository)
     {
         $this->repository = $repository;
         //$this->attributes = $attributes;
@@ -26,48 +26,46 @@ class CatalogController extends Controller
 
     public function view(Request $request, $slug)
     {
-        /*  try {*/
-        $category = $this->repository->CategoryBySlug($slug);
-        if (count($category->children) > 0) return view('shop.catalogs', compact('category'));
+        try {
+            $category = $this->repository->CategoryBySlug($slug);
+            if (count($category->children) > 0) return view('shop.catalogs', compact('category'));
 
-        //TODO Переделать в запросы 1. получить только id Product,
-        // 2. Получить мин и макс цены из таблицы напрямую whereIn($product_id, $product_ids), 3. Также получить бренды
-        $minPrice = 10;
-        $maxPrice = 9999999;
-        $product_ids = [];
-        $brands = [];
-        $products = $this->repository->ProductsByCategory($category->id);
-        /** @var Product $product */
-        foreach ($products as $i => $product) {
-            if ($i == 0) {
-                $minPrice = $product->getLastPrice();
-                $maxPrice = $product->getLastPrice();
-            } else {
-                if ($product->getLastPrice() < $minPrice) $minPrice = $product->getLastPrice();
-                if ($product->getLastPrice() > $maxPrice) $maxPrice = $product->getLastPrice();
+            //TODO Переделать в запросы 1. получить только id Product,
+            // 2. Получить мин и макс цены из таблицы напрямую whereIn($product_id, $product_ids), 3. Также получить бренды
+            $minPrice = 10;
+            $maxPrice = 999999999;
+            $product_ids = [];
+            $brands = [];
+            $products = $this->repository->ProductsByCategory($category->id);
+            /** @var Product $product */
+            foreach ($products as $i => $product) {
+                if ($i == 0) {
+                    $minPrice = $product->getLastPrice();
+                    $maxPrice = $product->getLastPrice();
+                } else {
+                    if ($product->getLastPrice() < $minPrice) $minPrice = $product->getLastPrice();
+                    if ($product->getLastPrice() > $maxPrice) $maxPrice = $product->getLastPrice();
+                }
+                $product_ids[] = $product->id;
+                $brands[$product->brand->id] = [
+                    'name' => $product->brand->name,
+                    'image' => $product->brand->getImage(),
+                ];
             }
-            $product_ids[] = $product->id;
-            $brands[$product->brand->id] = [
-                'name' => $product->brand->name,
-                'image' => $product->brand->getImage(),
-            ];
+
+            $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
+
+            $tags = $this->repository->TagsByProducts($product_ids);
+            $products = $this->repository->filter($request, $product_ids);
+
+            return view('shop.products',
+                compact('category', 'products', 'prod_attributes', 'tags', 'minPrice', 'maxPrice', 'brands', 'request'));
+
+        } catch (\Throwable $e) {
+            $category = null;
+            flash($e->getMessage(), 'danger');
+            return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
         }
-
-        $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
-
-        $tags = $this->repository->TagsByProducts($product_ids);
-        $products = $this->repository->filter($request, $product_ids);
-
-        //Cookie::make('aaabbb', '****');
-
-        return view('shop.products',
-            compact('category', 'products', 'prod_attributes', 'tags', 'minPrice', 'maxPrice', 'brands', 'request'));
-
-        /*  } catch (\Throwable $e) {
-              $category = null;
-              flash($e->getMessage(), 'danger');
-              return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
-          }*/
     }
 
     public function search(Request $request)
@@ -81,7 +79,7 @@ class CatalogController extends Controller
                 $result[] = $this->repository->toShopForSubMenu($category);
             }
         } catch (\Throwable $e) {
-            $result = $e->getMessage();
+            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
         }
         return \response()->json($result);
     }

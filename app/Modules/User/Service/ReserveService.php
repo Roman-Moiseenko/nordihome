@@ -34,17 +34,23 @@ class ReserveService
         }
     }
 
-    public function toReserve(Product $product, int $quantity): Reserve
+    public function toReserve(Product $product, int $quantity): ?Reserve
     {
         if (!Auth::guard('user')->check())
             throw new \DomainException('Нельзя добавить в резерв для незарегистрированного пользователя');
 
         $user_id = Auth::guard('user')->user()->id;
+
         if (Reserve::where('user_id', $user_id)->where('product_id', $product->id)->first())
             throw new \DomainException('Неверная функция добавления в резерв');
 
+        if ($product->count_for_sell == 0) return null;
+
         DB::beginTransaction();
         try {
+            //Проверка на запас для резерва
+            if ($product->count_for_sell < $quantity) $quantity = $product->count_for_sell;
+
             $product->count_for_sell -= $quantity;
             $product->save();
 

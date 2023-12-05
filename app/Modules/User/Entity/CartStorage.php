@@ -33,7 +33,7 @@ class CartStorage extends Model
         'options_json',
     ];
 
-    public static function register(int $user_id, int $product_id, int $quantity, int $reserve_id, array $options_json = []): self
+    public static function register(int $user_id, int $product_id, int $quantity, ?int $reserve_id, array $options_json = []): self
     {
         return self::create([
             'user_id' => $user_id,

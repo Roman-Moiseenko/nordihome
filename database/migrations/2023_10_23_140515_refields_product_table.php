@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->boolean('published')->default(false);
             $table->boolean('only_offline')->default(false);
-            $table->boolean('preorder')->default(false);
+            $table->boolean('pre_order')->default(false);
             $table->boolean('not_delivery')->default(false);
             $table->boolean('not_local')->default(false);
             $table->dropColumn('status');
@@ -30,7 +30,7 @@ return new class extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('published');
             $table->dropColumn('only_offline');
-            $table->dropColumn('preorder');
+            $table->dropColumn('pre_order');
             $table->dropColumn('not_delivery');
             $table->dropColumn('not_local');
             $table->string('status');

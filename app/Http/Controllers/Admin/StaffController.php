@@ -120,9 +120,7 @@ class StaffController extends Controller
             $this->service->setPhoto($request->file('file'), $staff);
         } catch (\Throwable $e) {
 
-            return response()->json([
-                'error' => $e->getMessage()
-            ]);
+            return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
         }
         return response()->json([
             'name' => $staff->photo,

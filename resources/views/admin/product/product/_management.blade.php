@@ -30,10 +30,10 @@
     </div>
     <div class="col-span-12 lg:col-span-8">
         <div class="flex">
-            {{ \App\Forms\CheckSwitch::create('preorder', [
+            {{ \App\Forms\CheckSwitch::create('pre_order', [
              'placeholder' => 'Возможен предзаказ',
-             'value' => $product->preorder,
-             ])->disabled(!$options->shop->preorder)->show() }}
+             'value' => $options->shop->pre_order ? $product->pre_order : false,
+             ])->disabled(!$options->shop->pre_order)->show() }}
 
             {{ \App\Forms\CheckSwitch::create('offline', [
              'placeholder' => 'Продажа только офлайн',

@@ -43,7 +43,7 @@ class ShopMenu
             'pre_order' => [
                 'name' => 'Товары подзаказ',
                 'icon' => '',
-                'route_name' => 'shop.preorder',
+                'route_name' => 'shop.pre_order',
 
             ],*/
         ];

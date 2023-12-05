@@ -13,7 +13,7 @@ class CartStorageService
         CartStorage::where('user_id', $id)->delete();
     }
 
-    public function toStorage(int $user_id, Product $product, int $quantity, int $reserve_id, array $options = [])
+    public function toStorage(int $user_id, Product $product, int $quantity, ?int $reserve_id, array $options = [])
     {
         CartStorage::register(
             $user_id,

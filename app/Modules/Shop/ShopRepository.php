@@ -178,12 +178,28 @@ class ShopRepository
     */
     public function ProductsByCategory(int $id)
     {
-        $products = Product::where('published', '=', true)->where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {
-            $query->whereHas('categories', function ($_query) use ($id) {
-                $_query->where('category_id', $id)->where('published', '=', true);
+
+        $query = Product::where('published', '=', true);
+
+        $query->where(function ($_query) use ($id) {
+            $_query->where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {
+                $query->whereHas('categories', function ($_query) use ($id) {
+                    $_query->where('category_id', $id);
+                });
             });
-        })->get();
-        return $products;
+        });
+
+
+        //Предзаказ
+        if (!$this->options->shop->pre_order) {
+            $query->where('count_for_sell', '>', 0);
+        } else {
+            $query->where(function ($_query) {
+                $_query->where('pre_order', true)->OrWhere('count_for_sell', '>', 0);
+            });
+        }
+
+        return $query->get();
     }
 
     ////КАТЕГОРИИ

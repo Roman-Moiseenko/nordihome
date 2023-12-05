@@ -15,11 +15,15 @@
                  'class' => 'ml-3',
                  ])->show() }}
 
-            @else
+                @elseif($item->type == \App\Modules\Admin\Entity\SettingItem::KEY_INTEGER)
                 {{ \App\Forms\Input::create($item->key,
                     ['placeholder' => $item->name, 'class' => 'ml-0 w-full lg:w-52', 'value' => $item->value])->
-                    label($item->name)->show() }}
+                    label($item->name)->type('number')->show() }}
 
+                @else
+                    {{ \App\Forms\Input::create($item->key,
+                        ['placeholder' => $item->name, 'class' => 'ml-0 w-full lg:w-52', 'value' => $item->value])->
+                        label($item->name)->show() }}
             @endif
             </div>
             <div class="col-span-12 lg:col-span-3 flex items-center">

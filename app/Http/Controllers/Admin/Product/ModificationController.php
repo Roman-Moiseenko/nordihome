@@ -136,7 +136,7 @@ class ModificationController extends Controller
             }
 
         } catch (\Throwable $e) {
-            $result = $e->getMessage();
+            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
         }
         return \response()->json($result);
     }
@@ -148,7 +148,7 @@ class ModificationController extends Controller
             return \response()->json(true);
         } catch (\Throwable $e) {
             flash($e->getMessage(), 'danger');
-            return \response()->json($e->getMessage());
+            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
         }
     }
 

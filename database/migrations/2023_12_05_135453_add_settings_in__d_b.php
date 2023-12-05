@@ -24,7 +24,7 @@ return new class extends Migration {
                 [
                     'name' => 'Предзаказ',
                     'description' => 'Возможность оформлять предзаказ, когда товара нет в наличии',
-                    'key' => 'preorder',
+                    'key' => 'pre_order',
                     'value' => false,
                     'type' => SettingItem::KEY_BOOL,
                 ],

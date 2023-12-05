@@ -6,6 +6,7 @@ namespace App\Modules\Product\Entity;
 use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Entity\Video;
+use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Repository\CategoryRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -110,32 +111,35 @@ class Product extends Model
     //РЕГИСТРАТОРЫ
 
 
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
         $this->dimensions = new Dimensions();
         //Конфигурация
-
+        //$this->options = new Options();
     }
 
     public function sluggable()
     {
         return [ 'slug' => [ 'source' => 'name' ] ];
     }
-    public static function register(string $name, string $code, int $main_category_id, string $slug = ''): self
+    public static function register(string $name, string $code, int $main_category_id, string $slug = '', array $arguments = []): self
     {
         $code_search = str_replace(['-', ',', '.', '_'],'', $code);
         //$dublicat = Product::where('name', '=', $name)->get();
         if (!empty(Product::where('name', '=', $name)->first())) throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
         if (!empty(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
-        return self::create([
+
+        $data = [
             'name' => $name,
             'slug' => empty($slug) ? Str::slug($name) : $slug,
             'code' => $code,
             'code_search' => $code_search,
             'main_category_id' => $main_category_id,
-        ]);
+        ];
 
+        return self::create(array_merge($data, $arguments));
     }
 
     //SET и GET
@@ -409,6 +413,7 @@ class Product extends Model
         parent::boot();
         self::saving(function (Product $product) {
             $product->dimensions_json = $product->dimensions->toSave();
+            if ($product->count_for_sell < 0) throw new \DomainException('Кол-во товаров должно быть >= 0');
         });
 
         self::retrieved(function (Product $product) {

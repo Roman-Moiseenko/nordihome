@@ -18,18 +18,18 @@ class CartItem
     public string $discount_name = '';
     public int $discount_id;
     public array $options;
-    public bool $preorder;
+    public bool $pre_order;
 
     public function __construct()
     {
-        $this->preorder = (new Options())->shop->preorder;
+        $this->pre_order = (new Options())->shop->pre_order;
     }
 
     public static function create(Product $product, int $quantity, array $options): self
     {
         $item = new static();
 
-        if (!$item->preorder && $product->count_for_sell < $quantity) {
+        if (!$item->pre_order && $product->count_for_sell < $quantity) {
             throw new \DomainException('Превышение остатка');
         }
         $item->product = $product;

@@ -5,12 +5,8 @@ namespace App\Forms;
 
 class CheckSwitch extends BaseForm
 {
-
-
-
     public function show()
     {
-
         $this->id = $id ?? 'checkbox-' . $this->name;
         $params = array_merge($this->loadParams(), [
         ]);
