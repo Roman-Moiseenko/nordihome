@@ -28,6 +28,17 @@ class CalculatorOrder
         $promotions = (new PromotionRepository)->getActive();
         foreach ($items as &$item) {
 
+            //Акции по товарам
+            /** @var Promotion $promotion */
+            foreach ($promotions as $promotion) {
+                //throw new \DomainException('*****');
+                $prom_disc = $promotion->getDiscount($item->getProduct()->id);
+                if (!is_null($prom_disc)) {
+                    $item->discount_cost = round($item->base_cost * (100 - $prom_disc) / 100);
+                    $item->discount_name = $promotion->title;
+                }
+            }
+
             //Проверка на бонусы
             /** @var Bonus $bonus_product */
             $bonus_product = Bonus::where('bonus_id', $item->getProduct()->id)->first();
@@ -46,32 +57,14 @@ class CalculatorOrder
                 } else { //если кол-во бонусного больше кол-ва ведущего, рассчитать усредненную цену для бонусного
                     $item->discount_cost = round(($q_product * $bonus_product->discount + ($q_bonus - $q_product) * $item->base_cost) / $q_bonus);
                 }
-                $item->discount_name = 'Бонусный товар (' . $name_base_product . ')';
+                $item->discount_name = 'Бонусный товар';
             }
 
-            //Акции по товарам
-            /** @var Promotion $promotion */
-            foreach ($promotions as $promotion) {
-                //throw new \DomainException('*****');
-                $prom_disc = $promotion->getDiscount($item->getProduct()->id);
-                if (!is_null($prom_disc)) {
-                    $item->discount_cost = round($item->base_cost * (100 - $prom_disc) / 100);
-                    $item->discount_name = $promotion->title;
-                }
-            }
+
             //Бонус при объеме
 
 
         }
-
-
-
-
-
-
-
-
-
 
 
         /** @var Discount[] $discounts */

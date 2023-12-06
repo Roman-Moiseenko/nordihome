@@ -126,10 +126,11 @@ class Cart
                 'name' => $item->getProduct()->name,
                 'url' => route('shop.product.view', $item->getProduct()->slug),
                 'product_id' => $item->getProduct()->id,
-                'cost' => number_format($item->base_cost * $item->getQuantity(), 0, ',', ' '), //getProduct()->lastPrice->value
+                'cost' => $item->base_cost * $item->getQuantity(),
+                'price' => empty($item->discount_cost) ? $item->base_cost : $item->discount_cost,
                 'quantity' => $item->getQuantity(),
                 'discount_id' => $item->discount_id ?? null,
-                'discount_cost' => empty($item->discount_cost) ? null : number_format($item->discount_cost * $item->getQuantity(), 0, ',', ' '),
+                'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
                 'discount_name' => $item->discount_name,
                 'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
                 'remove' => route('shop.cart.remove', $item->getProduct()->id),
@@ -138,6 +139,24 @@ class Cart
 
 
         }
+        return $result;
+    }
+
+    public function CommonData(array $items): array
+    {
+        $result = [
+            'count' => 0, //Кол-во товаров
+            'full_cost' => 0, //Полная стоимость
+            'discount' => 0, //Скидка
+            'amount' => 0, //Итого со скидкой
+        ];
+        foreach ($items as $item) {
+
+            $result['count'] += $item['quantity'];
+            $result['full_cost'] += (int)$item['cost'];
+            $result['amount'] += is_null($item['discount_cost']) ? (int)$item['cost'] : (int)$item['discount_cost'];
+        }
+        $result['discount'] += $result['full_cost'] - $result['amount'];
         return $result;
     }
 

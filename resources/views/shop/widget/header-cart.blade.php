@@ -23,10 +23,10 @@
                         <div class="cart-item-name"><a href="{url}">{name}</a></div>
                         <div class="cart-item-quantity">{quantity} шт</div>
                     </div>
-                    <div class="cart-item-cost">{cost} ₽</div>
+                    <div class="cart-item-cost">{cost}</div>
                     <div class="cart-item-combined" style="display: none">
-                        <div class="cart-item-base_cost">{cost} ₽</div>
-                        <div class="cart-item-discount_cost">{discount_cost} ₽</div>
+                        <div class="cart-item-base_cost">{cost}</div>
+                        <div class="cart-item-discount_cost">{discount_cost}</div>
                     </div>
                     <div class="cart-item-trash"><a class="remove-item-cart" href="#" data-item="{id}" data-route="{remove}"><i class="fa-light fa-trash-can"></i></a></div>
                 </div>

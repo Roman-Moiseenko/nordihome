@@ -64,13 +64,14 @@ class Discount extends Model
         }, $items));
 
         if ($amount == 0) return 0; //Все элементы со скидкой
+        //dd($amount);
         if ($this->isEnabled($amount)) {
             if ($written) {
                 array_walk($items, function (&$item) {
-                    if (empty($item->discount_id)) {
+                    if (empty($item->discount_cost)) {
                         $item->discount_id = $this->id;
                         $item->discount_cost = round((($item->base_cost) * (100 - $this->discount)) / 100);
-                        $item->discount_name = empty($this->title) ? '' : $this->title . '(' . $this->discount . '%)';
+                        $item->discount_name = empty($this->title) ? '' : $this->title . ' (' . $this->discount . '%)';
                     }
                 });
             }

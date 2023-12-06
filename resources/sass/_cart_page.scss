@@ -4,6 +4,9 @@
 .full-cart-item {
     display: flex;
     margin: 20px 0;
+    box-shadow: 0 4px 4px #7d7c7c;
+    padding: 8px;
+    border-radius: 8px;
 }
 
 //Список товаров
@@ -17,7 +20,7 @@
     width: 120px;
     height: 120px;
     border-radius: 4px;
-    box-shadow: $shadow-img;
+    //box-shadow: $shadow-img;
 }
 .full-cart-item--checked {
     margin: auto 0;
@@ -27,9 +30,46 @@
 .full-cart-item--info {
     width: 100%;
     padding: 4px 12px;
+    display: flex;
+    flex-direction: column;
 }
-.full-cart-item--change {
-    width: 200px;
+.full-cart-item-control {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+}
+.full-cart-item-control>.set-value {
+    display: flex;
+}
+.full-cart-item-control>.buttons {
+    margin-top: auto;
+    text-align: center;
+}
+.cartitem-set {
+    text-align: center;
+}
+.full-cart-item--costblock {
+    margin-top: auto;
+}
+.full-cart-item--cost > .current-cost {
+    font-size: 1.25rem;
+
+}
+.full-cart-item--combinate > .discount-cost {
+    font-size: 1.25rem;
+    color: var(--bs-red);
+}
+.full-cart-item--combinate > .current-cost {
+    text-decoration: line-through;
+    font-size: 1.0rem;
+    color: var(--bs-gray-500);
+}
+
+
+.full-cart-items .current-price {
+    margin-top: 4px;
+    font-size: 0.9rem;
+    color: var(--bs-gray-500);
 }
 
 //Order - блок
