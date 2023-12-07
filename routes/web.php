@@ -51,7 +51,12 @@ Route::group(
             Route::post('/remove/{product}', 'CartController@remove')->name('remove');
             Route::post('/clear', 'CartController@clear')->name('clear');
         });
-
+        Route::group([
+            'as' => 'order.',
+            'prefix' => 'order',
+        ], function () {
+            Route::post('/begin', 'OrderController@begin')->name('begin');
+        });
     }
 );
 

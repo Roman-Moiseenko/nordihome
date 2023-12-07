@@ -113,10 +113,17 @@ class Cart
 
     public function getCartToFront($tz)
     {
+        $items = $this->ItemsData($tz);
+        return [
+            'common' => $this->CommonData($items),
+            'items' => $items,
+        ];
+
+        /*
         $timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
         $this->items = $this->storage->load();
         $cartItems = $this->getItems();
-        //TODO Пересчитать данные для вывода $cartItems
+
         $cartItems = $this->calculator->calculate($cartItems);
         $result = [];
         foreach ($cartItems as $item) {
@@ -136,8 +143,35 @@ class Cart
                 'remove' => route('shop.cart.remove', $item->getProduct()->id),
                 'd' => now()->translatedFormat('d F Y'),
             ];
+        }
+        return $result;*/
+    }
 
+    private function ItemsData($tz): array
+    {
+        $timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
+        $this->items = $this->storage->load();
+        $cartItems = $this->getItems();
 
+        $cartItems = $this->calculator->calculate($cartItems);
+        $result = [];
+        foreach ($cartItems as $item) {
+            $result[] = [
+                'id' => $item->id,
+                'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
+                'name' => $item->getProduct()->name,
+                'url' => route('shop.product.view', $item->getProduct()->slug),
+                'product_id' => $item->getProduct()->id,
+                'cost' => $item->base_cost * $item->getQuantity(),
+                'price' => empty($item->discount_cost) ? $item->base_cost : $item->discount_cost,
+                'quantity' => $item->getQuantity(),
+                'discount_id' => $item->discount_id ?? null,
+                'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
+                'discount_name' => $item->discount_name,
+                'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
+                'remove' => route('shop.cart.remove', $item->getProduct()->id),
+                'd' => now()->translatedFormat('d F Y'),
+            ];
         }
         return $result;
     }
@@ -151,7 +185,6 @@ class Cart
             'amount' => 0, //Итого со скидкой
         ];
         foreach ($items as $item) {
-
             $result['count'] += $item['quantity'];
             $result['full_cost'] += (int)$item['cost'];
             $result['amount'] += is_null($item['discount_cost']) ? (int)$item['cost'] : (int)$item['discount_cost'];

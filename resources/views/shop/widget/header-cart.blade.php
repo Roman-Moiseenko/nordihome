@@ -18,17 +18,17 @@
             </div>
             <div class="cart-body">
                 <div id="cart-item-template" class="cart-item" style="display: none">
-                    <img src="{img}">
+                    <img class="cart-item-img" src="">
                     <div class="cart-item-info">
-                        <div class="cart-item-name"><a href="{url}">{name}</a></div>
-                        <div class="cart-item-quantity">{quantity} шт</div>
+                        <div class="cart-item-name"><a href="" class="cart-item-url"></a></div>
+                        <div class="cart-item-quantity"></div>
                     </div>
-                    <div class="cart-item-cost">{cost}</div>
+                    <div class="cart-item-cost cart-item-costonly"></div>
                     <div class="cart-item-combined" style="display: none">
-                        <div class="cart-item-base_cost">{cost}</div>
-                        <div class="cart-item-discount_cost">{discount_cost}</div>
+                        <div class="cart-item-cost"></div>
+                        <div class="cart-item-discount_cost"></div>
                     </div>
-                    <div class="cart-item-trash"><a class="remove-item-cart" href="#" data-item="{id}" data-route="{remove}"><i class="fa-light fa-trash-can"></i></a></div>
+                    <div class="cart-item-trash"><a class="remove-item-cart" href="#" data-item="" data-route=""><i class="fa-light fa-trash-can"></i></a></div>
                 </div>
             </div>
             <div class="cart-footer">

@@ -230,6 +230,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     margin-right: 10px;
     font-size: 0.9rem;
 }
+
 .cart-item-cost {
     margin: auto 0;
     margin-left: auto;
@@ -243,12 +244,14 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     margin-left: auto;
     white-space: nowrap;
 }
-.cart-item-base_cost {
+
+.cart-item-combined>.cart-item-cost {
     color: var(--bs-gray-500);
     text-decoration: line-through;
     font-size: 0.8rem;
     text-align: right;
 }
+
 .cart-item-discount_cost {
     font-size: 1rem;
     color: var(--bs-red);

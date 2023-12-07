@@ -20,7 +20,7 @@ class AdminActivityLoggerMiddleware
     public function handle(Request $request, Closure $next)
     {
         $user_id = $request->user()->id;
-        $action = $request->route()->getName();//Route::currentRouteAction();//
+        $action = $request->route()->getName();
         if (!empty($request->all())) {
             LogActivity::register(
                 $user_id,

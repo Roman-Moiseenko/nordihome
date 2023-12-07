@@ -11,12 +11,12 @@
 @section('content')
     <div class="products-page">
         <div class="products-page-title d-flex h1">
-            <h1>Моя корзина</h1>
+            <h1>@if(!empty($cart['items']))Моя корзина @else Ваша корзина пуста @endif</h1>
         </div>
     </div>
     <div class="d-flex">
         <div class="full-cart-items">
-            @foreach($cart as $item)
+            @foreach($cart['items'] as $item)
                 <div class="full-cart-item" id="full-cart-item-{{ $item['product_id'] }}">
                     <div class="full-cart-item--checked">
                         <input type="checkbox" data-product="{{ $item['product_id'] }}" checked >
@@ -55,7 +55,7 @@
                             <span class="current-price">{{ price($item['price']) }}/шт.</span>
                         </div>
                         <div class="buttons">
-                            <button class="btn btn-light cartitem-wish" data-product="{{ $item['product_id'] }}"><i
+                            <button class="btn btn-light cartitem-wish product-wish-toogle" data-product="{{ $item['product_id'] }}"><i
                                     class="fa-light fa-heart"></i></button>
                             <button class="btn btn-light cartitem-trash" data-product="{{ $item['product_id'] }}"><i
                                     class="fa-light fa-trash-can"></i></button>
@@ -64,31 +64,35 @@
                 </div>
             @endforeach
         </div>
+        @if(!empty($cart['items']))
         <div class="full-cart-order">
             <div>
-                <button class="btn btn-dark w-100 py-3">Перейти к оформлению</button>
+                <button class="btn btn-dark w-100 py-3" onclick="document.getElementById('to-order').submit()">Перейти к оформлению</button>
+                <form id="to-order" method="POST" action="{{ route('shop.order.begin') }}">
+                    @csrf
+                </form>
                 <div class="full-cart-order--info">
                     <div class="d-flex justify-content-between">
                         <div class="fs-5">Товаров в корзине</div>
-                        <div id="cart-count-products" class="fs-5">{{ $cart_info['count'] }}</div>
+                        <div id="cart-count-products" class="fs-5">{{ $cart['common']['count'] }}</div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
                         <div class="fs-6">Полная стоимость корзины</div>
-                        <div id="cart-full-amount" class="fs-6">{{ price($cart_info['full_cost']) }}</div>
+                        <div id="cart-full-amount" class="fs-6">{{ price($cart['common']['full_cost']) }}</div>
                     </div>
                     <div class="d-flex justify-content-between">
                         <div class="fs-7">Ваша скидка</div>
-                        <div id="cart-full-discount" class="fs-7">{{ price($cart_info['discount']) }}</div>
+                        <div id="cart-full-discount" class="fs-7">{{ price($cart['common']['discount']) }}</div>
                     </div>
                     <div class="d-flex justify-content-between mt-4 pt-3 border-top">
                         <div class="fs-5">Сумма к оплате</div>
-                        <div id="cart-amount-pay" class="fs-5">{{ price($cart_info['amount']) }}</div>
+                        <div id="cart-amount-pay" class="fs-5">{{ price($cart['common']['amount']) }}</div>
                     </div>
                 </div>
             </div>
         </div>
+        @endif
     </div>
-
 @endsection
 
 
