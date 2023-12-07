@@ -42,7 +42,6 @@ Route::group(
         Route::group([
             'as' => 'cart.',
             'prefix' => 'cart_post',
-            //'namespace'=> 'Cart'
         ], function () {
             Route::post('/cart', 'CartController@cart')->name('all');
             Route::post('/add/{product}', 'CartController@add')->name('add');
@@ -55,7 +54,9 @@ Route::group(
             'as' => 'order.',
             'prefix' => 'order',
         ], function () {
-            Route::post('/begin', 'OrderController@begin')->name('begin');
+            Route::post('/create', 'OrderController@create')->name('create');
+            Route::get('/index', 'OrderController@index')->name('index');
+            Route::get('/{order}/view', 'OrderController@view')->name('view');
         });
     }
 );

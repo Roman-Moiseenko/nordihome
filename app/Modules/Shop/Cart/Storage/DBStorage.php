@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart\Storage;
 
+use App\Modules\Order\Entity\Reserve;
+use App\Modules\Order\Service\ReserveService;
 use App\Modules\Shop\Cart\CartItem;
 use App\Modules\User\Entity\CartStorage;
 use App\Modules\User\Service\CartStorageService;
-use App\Modules\User\Service\ReserveService;
 use Illuminate\Support\Facades\Auth;
 
 class DBStorage implements StorageInterface
@@ -44,7 +45,7 @@ class DBStorage implements StorageInterface
 
     public function add(CartItem $item): void
     {
-        $reserve = $this->reserveService->toReserve($item->getProduct(), $item->getQuantity());
+        $reserve = $this->reserveService->toReserve($item->getProduct(), $item->getQuantity(), Reserve::TYPE_CART);
 
         $this->cartStorageService->toStorage(
             $this->user_id,

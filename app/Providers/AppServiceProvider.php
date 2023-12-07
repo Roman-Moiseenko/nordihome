@@ -3,13 +3,8 @@
 namespace App\Providers;
 
 use App\Modules\Admin\Entity\Options;
-use App\Modules\Shop\Cart\Storage\DBStorage;
-use App\Modules\Shop\Cart\Storage\HybridStorage;
-use App\Modules\User\Service\CartStorageService;
-use App\Modules\User\Service\ReserveService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

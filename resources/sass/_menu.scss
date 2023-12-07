@@ -3,6 +3,7 @@
 .menu-bottom {
     height: 75px;
     box-sizing: content-box;
+    transition: $transition;
 }
 .menu-bottom > div {
     height: 59px;
@@ -15,6 +16,18 @@
 }
 .menu-bottom-profile {
     min-width: 300px;
+}
+.menu-bottom.sticky-menu {
+    box-shadow: $shadow-dropdown;
+    background: var(--bs-white);
+    position: fixed;
+    top: -1px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 999;
+    -webkit-animation: .5s ease-in-out 0s normal none 1 running fadeInDown;
+    animation: .5s ease-in-out 0s normal none 1 running fadeInDown;
 }
 
 /* К А Т А Л О Г */

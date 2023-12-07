@@ -41,9 +41,19 @@
                         <span id="widget-cart-all-discount">[**]</span><span id="widget-cart-all-amount-mini">[**]</span>
                     </div>
                 </div>
-                <div class="cart-footer-button">
-                    <a class="btn btn-outline-dark" href="{{ route('shop.cart.view') }}">Оформить</a>
-                    <a class="btn btn-dark" href="{{ route('shop.cart.view') }}">В корзину</a>
+                <div class="cart-footer-button d-flex">
+                    <button class="btn btn-outline-dark"
+                        @guest()
+                        data-bs-toggle="modal" data-bs-target="#login-popup"
+                        @endguest
+                        @auth('user')
+                        onclick="document.getElementById('to-order').submit()"
+                        @endauth
+                    >Оформить</button>
+                    <form id="to-order" method="POST" action="{{ route('shop.order.create') }}">
+                        @csrf
+                    </form>
+                    <a class="btn btn-dark ms-2" href="{{ route('shop.cart.view') }}">В корзину</a>
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
+use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -56,6 +57,7 @@ class CartStorage extends Model
 
     public function reserve()
     {
+
         return $this->belongsTo(Reserve::class, 'reserve_id', 'id');
     }
 

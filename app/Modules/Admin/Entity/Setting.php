@@ -15,6 +15,7 @@ class Setting extends Model
 {
     public $timestamps = false;
 
+
     public static function register(string $name, string $slug): self
     {
         $setting = new Setting();
@@ -22,6 +23,11 @@ class Setting extends Model
         $setting->slug = $slug;
         $setting->save();
         return $setting;
+    }
+
+    public static function get(string $slug): self
+    {
+        return Setting::where('slug', $slug)->first();
     }
 
     public function items()

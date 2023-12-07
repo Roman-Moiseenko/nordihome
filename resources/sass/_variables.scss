@@ -11,7 +11,10 @@ $primary: #275aa6;
 
 $shadow-dropdown: 0 0 0 1px rgb(0 0 0 / 4%), 0 4px 4px rgb(0 0 0 / 4%), 0 20px 40px rgb(0 0 0 / 8%);
 
+$shadow-box: 0 2px 8px rgb(0 0 0 / 20%);
 $shadow-img: 0 4px 4px #7d7c7c;
+
+$transition: all .3s cubic-bezier(.645,.045,.355,1);
 // scss-docs-start font-sizes
 
 

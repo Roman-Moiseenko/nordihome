@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Modules\Order\Service\ReserveService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Cart\Cart;
-use App\Modules\User\Service\ReserveService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -22,7 +22,6 @@ class CartController extends Controller
     public function view(Request $request)
     {
         $cart = $this->cart->getCartToFront($request['tz']);
-        //$cart_info = $this->cart->CommonData($cart);
         return view('shop.cart', compact('cart'));
     }
 
@@ -78,7 +77,11 @@ class CartController extends Controller
     public function clear(Request $request) //sub, set_count, clear
     {
         try {
-            $this->cart->clear();
+            if ($request->has('product_ids')) {
+                $this->cart->removeByIds($request->get('product_ids'));
+            } else {
+                $this->cart->clear();
+            }
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {

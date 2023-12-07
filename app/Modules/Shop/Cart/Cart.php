@@ -193,4 +193,12 @@ class Cart
         return $result;
     }
 
+    public function removeByIds(array $ids)
+    {
+        foreach ($ids as $id) {
+            $product = Product::find((int)$id);
+            $this->remove($product);
+        }
+    }
+
 }

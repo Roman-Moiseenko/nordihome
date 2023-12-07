@@ -5,6 +5,7 @@ use App\Entity\Admin;
 
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Order\Entity\Order;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
@@ -49,6 +50,21 @@ Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, $slug) {
 Breadcrumbs::for('shop.cart.view', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Корзина', route('shop.cart.view'));
+});
+Breadcrumbs::for('shop.order.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('shop.cart.view');
+    $trail->push('Оформить заказ', route('shop.order.create'));
+});
+
+Breadcrumbs::for('shop.order.view', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('shop.order.index');
+    $trail->push('Заказ xxx ' . $order->id, route('shop.order.view'));
+});
+
+
+Breadcrumbs::for('shop.order.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Мои заказы', route('shop.order.index'));
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {

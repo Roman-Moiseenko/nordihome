@@ -5,13 +5,9 @@
 @endsection
 
 @section('main')
-    container-xl product-page
+    container-xl
 @endsection
 
 @section('content')
-
-    <div class="title-page">
-        {{ $product->name }}
-    </div>
-
+    <h1>Мои заказы</h1>
 @endsection

@@ -1,11 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\User\Entity;
+namespace App\Modules\Order\Entity;
 
 use App\Modules\Product\Entity\Product;
+use App\Modules\User\Entity\CartStorage;
+use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use function now;
 
 /**
  * @property int $id
@@ -17,10 +20,17 @@ use Illuminate\Database\Eloquent\Model;
  * @property Product $product
  * @property User $user
  * @property CartStorage $cart
+ * @property string $type
  */
 
 class Reserve extends Model
 {
+
+    const TYPE_CART = 'cart';
+    const TYPE_ORDER = 'order';
+    const TYPE_SHOP = 'shop';
+    const TYPE_MANUAL = 'manual';
+
     public $timestamps = false;
     protected $table = 'reserve';
     protected $fillable = [
@@ -29,6 +39,7 @@ class Reserve extends Model
         'quantity',
         'created_at',
         'reserve_at',
+        'type'
     ];
 
     protected $casts = [
@@ -36,7 +47,7 @@ class Reserve extends Model
         'reserve_at' => 'datetime',
     ];
 
-    public static function register(int $product_id, int $quantity, int $user_id, int $minutes = 1): self
+    public static function register(int $product_id, int $quantity, int $user_id, int $minutes, string $type): self
     {
         return self::create([
             'user_id' => $user_id,
@@ -44,6 +55,7 @@ class Reserve extends Model
             'quantity' => $quantity,
             'created_at' => now(),
             'reserve_at' => now()->addMinutes($minutes),
+            'type' => $type //Корзина cart, Заказ order, Магазин shop
         ]);
     }
 

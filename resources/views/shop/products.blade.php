@@ -5,11 +5,11 @@
 @endsection
 
 @section('main')
-    container-xl
+    container-xl products-page
 @endsection
 
 @section('content')
-    <div class="products-page">
+    <div class="title-page">
         <div class="products-page-title d-flex h1">
             <h1>{{ $category->name }} </h1>
             <span>&nbsp;{{ \App\Modules\Shop\Helper::_countProd(count($products)) }} </span>

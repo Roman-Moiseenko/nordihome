@@ -5,11 +5,11 @@
 @endsection
 
 @section('main')
-    container-xl
+    container-xl catalogs-page
 @endsection
 
 @section('content')
-<div>
+<div class="title-page">
     {{ $category->name }}
 </div>
     <div>

@@ -1,13 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\User\Service;
+namespace App\Modules\Order\Service;
 
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
-use App\Modules\User\Entity\Reserve;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use function event;
+use function now;
 
 class ReserveService
 {
@@ -34,7 +36,7 @@ class ReserveService
         }
     }
 
-    public function toReserve(Product $product, int $quantity): ?Reserve
+    public function toReserve(Product $product, int $quantity, string $type): ?Reserve
     {
         if (!Auth::guard('user')->check())
             throw new \DomainException('Нельзя добавить в резерв для незарегистрированного пользователя');
@@ -58,7 +60,8 @@ class ReserveService
                 $product->id,
                 $quantity,
                 $user_id,
-                $this->hours_reserve
+                $this->hours_reserve,
+                $type
             );
             DB::commit();
             return $reserve;
@@ -97,7 +100,7 @@ class ReserveService
 
     public function subReserve(int $reserve_id, int $quantity)
     {
-        /** @var Reserve $reserve */
+        /** @var \App\Modules\Order\Entity\Reserve $reserve */
         DB::beginTransaction();
         try {
             $reserve = Reserve::find($reserve_id);
@@ -115,7 +118,7 @@ class ReserveService
 
     public function addReserve(int $reserve_id, int $quantity)
     {
-        /** @var Reserve $reserve */
+        /** @var \App\Modules\Order\Entity\Reserve $reserve */
         DB::beginTransaction();
         try {
             $reserve = Reserve::find($reserve_id);

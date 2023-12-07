@@ -1,12 +1,10 @@
 :root {
     --gap: 24px;
 }
-.full-cart-item {
-    display: flex;
-    margin: 20px 0;
-    box-shadow: 0 4px 4px #7d7c7c;
-    padding: 8px;
-    border-radius: 8px;
+
+.panel-cart-manage {
+    width: 100%;
+    height: 60px;
 }
 
 //Список товаров
@@ -16,7 +14,7 @@
     max-width: calc(66.6666% - var(--gap));
 }
 
-.full-cart-item img {
+.full-cart-item--img img {
     width: 120px;
     height: 120px;
     border-radius: 4px;
@@ -66,7 +64,7 @@
 }
 
 
-.full-cart-items .current-price {
+.cart-page .current-price {
     margin-top: 4px;
     font-size: 0.9rem;
     color: var(--bs-gray-500);

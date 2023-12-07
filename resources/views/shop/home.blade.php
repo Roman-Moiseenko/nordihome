@@ -17,7 +17,6 @@
             Правая половина <i class="fa-light fa-print-magnifying-glass"></i>
             </div>
         </div>
-
     </div>
 </div>
 @endsection
