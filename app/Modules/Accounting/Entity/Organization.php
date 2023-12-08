@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin\Accounting;
+namespace App\Modules\Accounting\Entity;
 
 use Illuminate\Database\Eloquent\Model;
 

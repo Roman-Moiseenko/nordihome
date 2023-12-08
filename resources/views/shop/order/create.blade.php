@@ -15,13 +15,25 @@
     <div class="d-flex">
         <div class="left-list-block">
             <div class="box-card">
-                Способы оплаты
+                <div>Способы оплаты</div>
+                <div id="slider-payment" class="owl-carousel owl-theme">
+                @foreach($payments as $payment)
+                    <div class="card-payment">
+                        <img src="{{ $payment['image'] }}" alt="{{ $payment['name'] }}" title="{{ $payment['name'] }}" >
+                    </div>
+                @endforeach
+                </div>
             </div>
             <div class="box-card">
                 Доставка/самовывоз
             </div>
             <div class="box-card">
-                Список товаров в корзине
+                <div>Список товаров в корзине</div>
+                @foreach($cart['items'] as $item)
+                    <div>
+                        {{ $item['name'] }} - {{ $item['quantity'] }}
+                    </div>
+                @endforeach
             </div>
         </div>
         <div class="right-action-block">

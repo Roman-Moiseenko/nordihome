@@ -522,5 +522,50 @@ window.$ = jQuery;
         return _str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ₽';
     }
 
+    //Карусели
+    if (document.getElementById('slider-payment') !== null) { //sliderArticles
+        let sliderPayment = $('#slider-payment');
+        sliderPayment.owlCarousel({
+            rtl: false,
+            items: 1,
+            autoplay: false, //
+            smartSpeed:1500, //Время движения слайда
+            autoplayTimeout:1000, //Время смены слайда
+            animateOut: 'fadeOut',
+            animateIn: 'fadeIn',
+            margin: 10,
+            loop: true,
+            dots: true,
+            nav: true,
+            navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+            singleItem: true,
+            transitionStyle: "fade",
+            touchDrag: true,
+            mouseDrag: false,
+            responsive: {
+                0: {
+                    items: 1,
+                    smartSpeed:500
+                },
+                576: {
+                    items: 2,
+                    smartSpeed:500
+                },
+                991: {
+                    items: 4,
+                    smartSpeed: 500
+                },
+            }
+        });
+        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
+            if (e.deltaY > 0) {
+                sliderPayment.trigger('next.owl');
+            } else {
+                sliderPayment.trigger('prev.owl');
+            }
+            e.preventDefault();
+        });
+    }
+
 })();
 

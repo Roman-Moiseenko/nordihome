@@ -72,6 +72,7 @@ class Category extends Model
     {
         return $this->morphOne(Photo::class, 'imageable')->where('type', '=','image')->withDefault();
     }
+
     public function icon()
     {
         return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();

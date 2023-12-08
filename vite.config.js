@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import inject from '@rollup/plugin-inject';
 import path from "path";
 
 export default defineConfig({
@@ -111,6 +112,11 @@ export default defineConfig({
                 "resources/js/components/vertical-bar-chart/index.js",
             ],
             refresh: true,
+        }),
+        inject({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
         }),
     ],
     resolve: {
