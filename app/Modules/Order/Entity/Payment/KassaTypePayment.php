@@ -31,8 +31,13 @@ class KassaTypePayment extends PaymentAbstract
         return 'Оплата с помощью системы быстрых платежей';
     }
 
-    public function sort(): int
+    public static function sort(): int
     {
         return 6;
+    }
+
+    public static function fields(array $fields = []): string
+    {
+        return '';
     }
 }

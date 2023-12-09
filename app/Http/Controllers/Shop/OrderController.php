@@ -30,8 +30,22 @@ class OrderController extends Controller
 
         $cart = $this->cart->getCartToFront($request['tz']);
         $payments = $this->payments->get($user_id);
-        $deliveries = $this->deliveries->get($user_id);
-        return view('shop.order.create', compact('cart', 'payments', 'deliveries'));
+        $storages = $this->deliveries->storages();
+        $companies = $this->deliveries->companies();
+        //$deliveries = $this->deliveries->get($user_id);
+        $default = [
+            'payment' => [
+                'class' => '',
+            ],
+            'delivery' => [
+                'company' => '',
+                'type' => '',
+                'storage' => '',
+                'address' => '',
+                'post' => ''
+            ],
+        ];
+        return view('shop.order.create', compact('cart', 'payments', 'storages', 'default', 'companies'));
     }
 
     public function view(Request $request)
@@ -44,4 +58,27 @@ class OrderController extends Controller
 
         return view('shop.order.index');
     }
+
+
+    //AJAX
+    public function payment(Request $request)
+    {
+        try {
+
+
+            $isOnline = $this->payments->online($request['class']);
+            $invoice = '';
+            if (!$isOnline) {
+                $invoice = $this->payments->invoice($request['class']);
+            }
+            $result = [
+                'online' => $isOnline,
+                'invoice' => $invoice,
+            ];
+        } catch (\Throwable $e) {
+            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+        }
+        return \response()->json($result);
+    }
+    ///
 }

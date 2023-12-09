@@ -31,8 +31,19 @@ class InvoiceTypePayment extends PaymentAbstract
         return 'Счет для юридического лица';
     }
 
-    public function sort(): int
+    public static function sort(): int
     {
         return 4;
+    }
+
+    public static function fields(array $fields = []): string
+    {
+        return '
+<h4>Необходимо заполнить данные:</h4>
+        <div class="payment-invoice-data">
+            <label for="inn">ИНН Плательшика</label>
+            <input id="inn" class="form-control form-invoice inn" name="INN" type="text" value="'. $fields['INN'] .'" placeholder="ИНН" state="0">
+        </div>
+        ';
     }
 }

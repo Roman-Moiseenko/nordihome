@@ -1,0 +1,87 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Modules\Delivery\Entity\Transport;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use function now;
+
+
+/**
+ * @property int $id
+ * @property int $order_id
+ * @property float $amount
+ * @property Carbon $delivery_at
+ * @property bool $finished
+ * @property string $document
+ * @property string $class //Способ оплаты - класс
+ * @property DeliveryStatus $status
+ * @property DeliveryStatus[] $statuses
+ */
+class Delivery extends Model
+{
+
+    protected $fillable = [
+        'order_id',
+        'amount',
+        'delivery_at',
+        'document',
+        'class',
+        'finished'
+    ];
+
+    protected $casts = [
+        'delivery_at' => 'datetime',
+    ];
+
+    public static function register(int $order_id, float $amount, string $class, string $document): self
+    {
+        return self::create([
+            'order_id' => $order_id,
+            'amount' => $amount,
+            'delivery_at' => now(),
+            'document' => $document,
+            'class' => $class
+        ]);
+    }
+
+    public function statuses()
+    {
+        return $this->hasMany(DeliveryStatus::class, 'delivery_id', 'id');
+    }
+
+    public function isStatus(int $status): bool
+    {
+        foreach ($this->statuses as $_status) {
+            if ($_status->status == $status) return true;
+        }
+        return false;
+    }
+
+    public function setStatus(int $status)
+    {
+        if ($this->finished) throw new \DomainException('Заказ закрыт, статус менять нельзя');
+        if ($this->isStatus($status)) throw new \DomainException('Статус уже назначен');
+        $this->statuses()->create(['status' => $status]);
+        if (in_array($status, [DeliveryStatus::CANCEL, DeliveryStatus::CANCEL_BY_CUSTOMER, DeliveryStatus::COMPLETED])) $this->update(['finished' => true]);
+    }
+
+    public function status()
+    {
+        return $this->hasOne(DeliveryStatus::class, 'delivery_id', 'id')->latestOfMany();
+    }
+
+
+    public static function namespace(): string
+    {
+        return __NAMESPACE__;
+    }
+
+
+    public function nameType(): string
+    {
+        $class = __NAMESPACE__ . "\\" . $this->class;
+        return $class::name();
+    }
+}

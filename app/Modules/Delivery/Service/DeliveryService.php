@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Service;
 
+use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Delivery\Helpers\DeliveryHelper;
+
 class DeliveryService
 {
 
@@ -16,5 +19,18 @@ class DeliveryService
 
 
         return [];
+    }
+
+    public function storages()
+    {
+        $storages = Storage::where('point_of_delivery', true)->get();
+        return $storages;
+    }
+
+    public function companies(): array
+    {
+
+        $delivery = DeliveryHelper::deliveries();
+        return $delivery;
     }
 }

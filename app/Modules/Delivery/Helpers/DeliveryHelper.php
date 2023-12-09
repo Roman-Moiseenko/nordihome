@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Helpers;
+namespace App\Modules\Delivery\Helpers;
 
-use App\Modules\Order\Entity\Payment\Payment;
+use App\Modules\Delivery\Entity\Transport\Delivery;
 
-class PaymentHelper
+class DeliveryHelper
 {
-    public static function payments(): array
+    public static function deliveries(): array
     {
-        $namespace = Payment::namespace();
+        $namespace = Delivery::namespace();
         $classes = self::getClasses($namespace);
         $result = [];
         foreach ($classes as $class) {
@@ -17,10 +17,7 @@ class PaymentHelper
                 'class' => $class,
                 'image' => ($namespace . '\\' . $class)::image(),
                 'name' => ($namespace . '\\' . $class)::name(),
-                'online' => ($namespace . '\\' . $class)::online(),
-                'sort' => ($namespace . '\\' . $class)::sort(),
             ];
-
         }
         return $result;
     }
@@ -33,18 +30,12 @@ class PaymentHelper
         return array_map(function (string $item){
             $info = pathinfo($item);
             return $info['filename'];
-        }, glob($path . '*TypePayment.php'));
+        }, glob($path . '*TypeDelivery.php'));
     }
 
-    public static function online(string $class): bool
+    public static function calculate(string $class, array $items, array $params): bool
     {
-        $namespace = Payment::namespace();
-        return ($namespace . '\\' . $class)::online();
-    }
-
-    public static function invoice(string $class, array $fields): string
-    {
-        $namespace = Payment::namespace();
-        return ($namespace . '\\' . $class)::fields($fields);
+        $namespace = Delivery::namespace();
+        return ($namespace . '\\' . $class)::calculate($items, $params);
     }
 }

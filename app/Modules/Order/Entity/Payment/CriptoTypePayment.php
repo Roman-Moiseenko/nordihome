@@ -31,8 +31,13 @@ class CriptoTypePayment extends PaymentAbstract
         return 'Оплата крипто валютой';
     }
 
-    public function sort(): int
+    public static function sort(): int
     {
         return 3;
+    }
+
+    public static function fields(array $fields = []): string
+    {
+        return '';
     }
 }

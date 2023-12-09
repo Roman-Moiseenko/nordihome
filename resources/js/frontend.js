@@ -1,4 +1,5 @@
 import jQuery from "jquery";
+
 window.$ = jQuery;
 
 (function () {
@@ -27,12 +28,11 @@ window.$ = jQuery;
         }, 250);
         $('#clear-cart').on('click', function () {
             let route = $(this).data('route');
-            $.post(route,{tz: -(new Date().getTimezoneOffset())}, function (data) {
+            $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
                 widget_cart(data);
             })
         });
     }
-
 
 
     /**  ПОИСК в ТОП-МЕНЮ    ***/
@@ -58,21 +58,22 @@ window.$ = jQuery;
     //По таймеру - предотвращаем ajax при быстром наборе
     let timerInput;
     presearchInput.on('keyup', function () {
-        timerInput = setTimeout(function (){
+        timerInput = setTimeout(function () {
             $.post(presearch.data('route'), {search: presearchInput.val()},//ajax запрос
                 function (data) {
                     suggestBlock.html('');
                     if ($.isArray(data))
-                    for (let i = 0; i < data.length; i++) {
-                        suggestBlock.append(_itemSuggestPresearch(data[i]));
-                    }
+                        for (let i = 0; i < data.length; i++) {
+                            suggestBlock.append(_itemSuggestPresearch(data[i]));
+                        }
                 });
         }, 180);
 
     });
-    presearchInput.on('keydown', function (){ //отменяем таймер при нажатии клавиши
+    presearchInput.on('keydown', function () { //отменяем таймер при нажатии клавиши
         clearTimeout(timerInput);
     });
+
     //HTML построители
     function _itemSuggestPresearch(item) {
         let img = '<i class="fa-light fa-magnifying-glass"></i>';
@@ -91,6 +92,7 @@ window.$ = jQuery;
             '   <span class="suggest--price">' + price + '</span>\n' +
             '</a>'
     }
+
     //Кнопки в INPUT
     $('#presearch--icon-clear').on('click', function () {
         suggestBlock.html('');
@@ -116,10 +118,11 @@ window.$ = jQuery;
         }, 180);
     }, function () {//ф-ция для hoverOut
         clearTimeout(timer);
-        catalogParentItems.each(function (){//перебираем все пункты и для активного элемента навешиваем выделение пункта
+        catalogParentItems.each(function () {//перебираем все пункты и для активного элемента навешиваем выделение пункта
             if ($(this).hasClass('active-item')) $(this).addClass('active');
         });
     });
+
     function _updateSubMenu(element) {
         element.addClass('active-item');
         $.post(catalog.data('route'), {
@@ -139,6 +142,7 @@ window.$ = jQuery;
                 }
             });
     }
+
     //HTML построители
     function _subFirst_a(item, level = 1) {
         let _class, _count = '';
@@ -147,8 +151,9 @@ window.$ = jQuery;
             _class = 'submenu-second-level';
             if (Number(item.products > 0)) _count = '<span> ' + item.products + '</span>';
         }
-        return '<a href="' + item.url +'" class="' + _class + '">' + item.name + _count + '</a>'
+        return '<a href="' + item.url + '" class="' + _class + '">' + item.name + _count + '</a>'
     }
+
     function _subSecond_div(items) {
         let html = '', sub_html = '';
         let n = 0;
@@ -157,7 +162,7 @@ window.$ = jQuery;
         let col;
 
         for (let j = 1; j <= countColSubMenu; j++) {
-            col = Math.ceil((countItems - n)/(countColSubMenu - j + 1))
+            col = Math.ceil((countItems - n) / (countColSubMenu - j + 1))
             sub_html = '';
             for (let i = 0; i < col; i++) {
                 if (items[n] !== undefined) sub_html = sub_html + _subFirst_a(items[n], 2) + ' <br>';
@@ -255,6 +260,7 @@ window.$ = jQuery;
         if (_quantity === 0 || _quantity.length === 0) _quantity = 1;
         set_count_item_cart(_productId, _quantity);
     })
+
     function set_count_item_cart(_prod_id, _quantity, _obj = null) {
         if (_obj !== null) _obj.prop('disabled', true);
         $.post(
@@ -270,6 +276,7 @@ window.$ = jQuery;
             }
         );
     }
+
     $('.cartitem-trash').on('click', function (item) {
         let _productId = $(this).data('product');
         $(this).prop(':disabled', true);
@@ -309,7 +316,7 @@ window.$ = jQuery;
             _item.find($('.cart-item-url')).html(items[i].name);
             _item.find($('.cart-item-url')).attr('href', items[i].url);
             _item.find($('.cart-item-quantity')).html(items[i].quantity + ' шт');
-            _item.find($('.cart-item-cost')).each( function () {
+            _item.find($('.cart-item-cost')).each(function () {
                     $(this).html(price_format(items[i].cost));
                 }
             );
@@ -357,11 +364,12 @@ window.$ = jQuery;
 
         $(document).on('click', '.remove-item-cart', function () {
             let route = $(this).data('route');
-            $.post(route,{tz: -(new Date().getTimezoneOffset())}, function (data) {
+            $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
                 widget_cart(data);
             })
         });
     }
+
     //Обновление страницы корзины
     function page_cart(data) {
         CartData = data;
@@ -387,6 +395,7 @@ window.$ = jQuery;
         }
         _updateOrderDataCart();//Итоговые данные по корзине
     }
+
     function _updateOrderDataCart() {
         if (CartData.length === 0) return false;
 
@@ -440,14 +449,20 @@ window.$ = jQuery;
             if (!$(this).prop('checked')) _all_check = false;
             if ($(this).prop('checked')) _show_trash = true;
         });
-        if (_all_check) {$('#checked-all').prop('checked', true);}
-        else {$('#checked-all').prop('checked', false);}
-        if (_show_trash) {$('#cart-trash').show();}
-        else {$('#cart-trash').hide();}
+        if (_all_check) {
+            $('#checked-all').prop('checked', true);
+        } else {
+            $('#checked-all').prop('checked', false);
+        }
+        if (_show_trash) {
+            $('#cart-trash').show();
+        } else {
+            $('#cart-trash').hide();
+        }
         _updateOrderDataCart();//Обновить общие данные по корзине
     });
     //Очистка корзины
-    $('#cart-trash').on('click', function (){
+    $('#cart-trash').on('click', function () {
         let products = new Array();
         $('.checked-item').each(function () {
             if ($(this).prop('checked')) products.push($(this).data('product'));
@@ -476,6 +491,137 @@ window.$ = jQuery;
 
     });
 
+    /** ОФОРМЛЕНИЕ ЗАКАЗА  */
+    if ($('main').hasClass('order-page-create')) {
+        let paymentData = {}, deliveryData = {};
+        //TODO Проверяем данные по умолчанию и если есть, заполняем paymentData и deliveryData
+
+        let deliveryStorageDIV = $('.block-delivery>.delivery-storage');
+        let deliveryLocalDIV = $('.block-delivery>.delivery-local');
+        let deliveryRegionDIV = $('.block-delivery>.delivery-region');
+
+        let inputStorage = $('input[name=storage]');
+        let inputCompany = $('input[name=company]');
+        let inputDeliveryLocal = $('#input-delivery-local');
+        let inputDeliveryRegion = $('#input-delivery-region');
+
+        order_button();
+        $('input[name=payment]').on('change', function () {
+            paymentData.class = $(this).val();
+            $.post(
+                '/order/payment',
+                {
+                    class: paymentData.class,
+                },
+                function (data) {
+                    if (data.online === undefined) {
+                        console.log(data);
+                    } else {
+                        paymentData.online = data.online;
+                        paymentData.invoice = data.invoice;
+                        $('#invoice-data').html(paymentData.invoice);
+                        if (paymentData.invoice !== '') {
+                            $('.form-invoice.inn').on('input', function () {
+                                this.value = this.value.replace(/[^0-9]/g, '');
+                                if ($(this).val().length === 10 || $(this).val().length === 12){
+                                    $(this).attr('state', '1');
+                                } else {
+                                    $(this).attr('state', '0');
+                                }
+                                order_button();
+                            });
+                        }
+                        console.log(paymentData);
+                        order_button();
+                    }
+                }
+            );
+        });
+        $('input[name=delivery]').on('change', function () {
+            deliveryStorageDIV.hide();
+            deliveryLocalDIV.hide();
+            deliveryRegionDIV.hide();
+            //Очистка всех полей
+            inputStorage.each( function () {$(this).prop('checked', false);});
+            inputCompany.each( function () {$(this).prop('checked', false);});
+            inputDeliveryLocal.val('');
+            inputDeliveryRegion.val('');
+            if ($(this).attr('id') === 'delivery_storage') {
+                deliveryStorageDIV.show();
+            }
+            if ($(this).attr('id') === 'delivery_local') {
+                deliveryLocalDIV.show();
+            }
+            if ($(this).attr('id') === 'delivery_region') {
+                deliveryRegionDIV.show();
+            }
+            deliveryData = {method: $(this).attr('id')};
+            order_button();
+        });
+        inputStorage.on('change', function () {
+            deliveryData.storage = $(this).val();
+            order_button();
+        });
+        inputCompany.on('change', function () {
+            deliveryData.company = $(this).val();
+            order_button();
+        });
+        inputDeliveryLocal.on('input', function () {
+            deliveryData.local = $(this).val();
+            order_button();
+        });
+        inputDeliveryRegion.on('input', function () {
+            deliveryData.address = $(this).val();
+            order_button();
+        });
+
+        function order_button() {
+            let _state = true;
+            let buttonOrder = $('#button-to-order');
+            //Определяем выбрана и заполнены ли данные по оплате
+            if ($.isEmptyObject(paymentData)) {
+                _state = false
+            } else {
+                if (!paymentData.online && paymentData.invoice !== '') {
+                    $('.form-invoice').each(function () {
+                        if ($(this).attr('state') === '0') _state = false;
+                    });
+                }
+            }
+
+
+            //Если нет _state = false
+
+            //Определяем доставку
+            if ($.isEmptyObject(deliveryData)) {
+                _state = false;
+            } else {
+                if(
+                    (deliveryData.method === 'delivery_storage' && deliveryData.storage !== undefined) ||
+                    (deliveryData.method === 'delivery_local' && (deliveryData.local !== undefined && deliveryData.local !== '')) ||
+                    (deliveryData.method === 'delivery_region' && deliveryData.company !== undefined && (deliveryData.address !== undefined && deliveryData.address !== ''))
+                ) {} else {
+                    _state = false;
+                }
+            }
+
+            //Если не выбрано, и нет данных _state = false
+            if (_state) {
+                buttonOrder.prop('disabled', false);
+
+            } else {
+                buttonOrder.prop('disabled', true);
+            }
+            if (paymentData.online) {
+                buttonOrder.html('Оплатить');
+            } else {
+                buttonOrder.html('Оформить');
+            }
+        }
+    }
+    //ВЫБИРАЕМ СПОСОБ ОПЛАТЫ
+
+
     //Доп.элементы
     let upButton = $('#upbutton');
     $(window).on('scroll', function () {
@@ -502,18 +648,26 @@ window.$ = jQuery;
     if (showHidePassword !== undefined) {
         let inputPassword = $(showHidePassword.data('target-input'));
         showHidePassword.on('click', function () {
-           if (inputPassword.attr('type') === 'password') {
-               inputPassword.attr('type', 'text');
-           } else {
-               inputPassword.attr('type', 'password');
-           }
+            if (inputPassword.attr('type') === 'password') {
+                inputPassword.attr('type', 'text');
+            } else {
+                inputPassword.attr('type', 'password');
+            }
         });
     }
+
+
 
     //Валидация email
     function isEmail(email) {
         let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         return regex.test(email);
+    }
+
+    //Валидация input/number
+    function inn_format(_num) {
+        let regex = /^([0-9]{10,12})+$/;
+        return regex.test(_num);
     }
 
     //Приведение числа в цену формата 1 000 000 ₽
@@ -523,42 +677,44 @@ window.$ = jQuery;
     }
 
     //Карусели
-    if (document.getElementById('slider-payment') !== null) { //sliderArticles
+    let optionsSliderBase = {
+        rtl: false,
+        startPosition: 0,
+        items: 1,
+        autoplay: false, //
+        smartSpeed: 1500, //Время движения слайда
+        autoplayTimeout: 1000, //Время смены слайда
+        animateOut: 'fadeOut',
+        animateIn: 'fadeIn',
+        margin: 10,
+        loop: false,
+        dots: false,
+        nav: true,
+        navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+        singleItem: true,
+        transitionStyle: "fade",
+        touchDrag: true,
+        mouseDrag: false,
+        responsive: {
+            0: {
+                items: 1,
+                smartSpeed: 500
+            },
+            576: {
+                items: 2,
+                smartSpeed: 500
+            },
+            991: {
+                items: 6,
+                smartSpeed: 500
+            },
+        }
+    };
+    if (document.getElementById('slider-payment') !== null) {
         let sliderPayment = $('#slider-payment');
-        sliderPayment.owlCarousel({
-            rtl: false,
-            items: 1,
-            autoplay: false, //
-            smartSpeed:1500, //Время движения слайда
-            autoplayTimeout:1000, //Время смены слайда
-            animateOut: 'fadeOut',
-            animateIn: 'fadeIn',
-            margin: 10,
-            loop: true,
-            dots: true,
-            nav: true,
-            navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
-            singleItem: true,
-            transitionStyle: "fade",
-            touchDrag: true,
-            mouseDrag: false,
-            responsive: {
-                0: {
-                    items: 1,
-                    smartSpeed:500
-                },
-                576: {
-                    items: 2,
-                    smartSpeed:500
-                },
-                991: {
-                    items: 4,
-                    smartSpeed: 500
-                },
-            }
-        });
+        sliderPayment.owlCarousel(optionsSliderBase);
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
-            if (e.deltaY > 0) {
+            if (e.originalEvent.deltaY > 0) {
                 sliderPayment.trigger('next.owl');
             } else {
                 sliderPayment.trigger('prev.owl');
@@ -566,6 +722,19 @@ window.$ = jQuery;
             e.preventDefault();
         });
     }
+    if (document.getElementById('slider-delivery-company') !== null) {
+        let sliderDeliveryCompany = $('#slider-delivery-company');
+        sliderDeliveryCompany.owlCarousel(optionsSliderBase);
+        sliderDeliveryCompany.on('mousewheel', '.owl-stage', function (e) {
+            if (e.originalEvent.deltaY > 0) {
+                sliderPayment.trigger('next.owl');
+            } else {
+                sliderPayment.trigger('prev.owl');
+            }
+            e.preventDefault();
+        });
+    }
+    //
 
 })();
 

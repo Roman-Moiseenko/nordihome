@@ -31,8 +31,13 @@ class TransferTypePayment extends PaymentAbstract
         return 'Денежный перевод';
     }
 
-    public function sort(): int
+    public static function sort(): int
     {
         return 2;
+    }
+
+    public static function fields(array $fields = []): string
+    {
+        return '';
     }
 }

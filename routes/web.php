@@ -57,6 +57,9 @@ Route::group(
             Route::post('/create', 'OrderController@create')->name('create');
             Route::get('/index', 'OrderController@index')->name('index');
             Route::get('/{order}/view', 'OrderController@view')->name('view');
+
+            //ajax
+            Route::post('/payment', 'OrderController@payment')->name('payment');
         });
     }
 );

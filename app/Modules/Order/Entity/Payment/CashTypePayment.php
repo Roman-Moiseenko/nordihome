@@ -31,8 +31,13 @@ class CashTypePayment extends PaymentAbstract
         return 'Наличными при получении';
     }
 
-    public function sort(): int
+    public static function sort(): int
     {
         return 1;
+    }
+
+    public static function fields(array $fields = []): string
+    {
+        return '';
     }
 }

@@ -22,7 +22,8 @@ class Payment extends Model
         'amount',
         'paid_at',
         'document',
-        'class'
+        'class',
+        'finished'
     ];
 
     protected $casts = [
