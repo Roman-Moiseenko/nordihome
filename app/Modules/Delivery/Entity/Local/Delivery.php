@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $delivery_at
  * @property bool $finished
  * @property GeoAddress $address
- * @property
  * @property string $document
  * @property float $weigh
  * @property DeliveryStatus $status

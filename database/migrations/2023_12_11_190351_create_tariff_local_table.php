@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tariff_local', function (Blueprint $table) {
-            //
+        Schema::create('tariff_local', function (Blueprint $table) {
+            $table->id();
+            $table->integer('distance');
+            $table->integer('tariff');
+            $table->integer('oversize')->default(0);
+
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tariff_local', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('tariff_local');
     }
 };
