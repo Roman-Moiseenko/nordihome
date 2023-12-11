@@ -76,6 +76,7 @@
         </div>
         @if(!empty($cart['items']))
             <div class="right-action-block">
+                <div class="sticky-block">
                 <div>
                     <button id="button-to-order" class="btn btn-dark w-100 py-3"
                             @guest()
@@ -108,6 +109,7 @@
                             <div id="cart-amount-pay" class="fs-5">{{ price($cart['common']['amount']) }}</div>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         @endif

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity\Transport;
 
+use App\Casts\GeoAddressCast;
+use App\Entity\GeoAddress;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use function now;
@@ -14,18 +16,21 @@ use function now;
  * @property float $amount
  * @property Carbon $delivery_at
  * @property bool $finished
+ * @property GeoAddress $address
  * @property string $document
- * @property string $class //Способ оплаты - класс
+ * @property string $class //Транспортная компания - класс
+ * @property float $weigh
  * @property DeliveryStatus $status
  * @property DeliveryStatus[] $statuses
  */
 class Delivery extends Model
 {
-
+    protected $table = 'delivery_transport';
     protected $fillable = [
         'order_id',
         'amount',
         'delivery_at',
+        'address',
         'document',
         'class',
         'finished'
@@ -33,6 +38,7 @@ class Delivery extends Model
 
     protected $casts = [
         'delivery_at' => 'datetime',
+        'address' => GeoAddressCast::class,
     ];
 
     public static function register(int $order_id, float $amount, string $class, string $document): self

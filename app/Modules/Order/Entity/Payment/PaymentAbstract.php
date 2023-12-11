@@ -14,5 +14,12 @@ abstract class PaymentAbstract
     abstract public static function name(): string;
     abstract public static function sort(): int;
 
-    abstract public static function fields(array $fields = []):string;
+    public static function isInvoice(): bool
+    {
+        return false;
+    }
+
+    public static function getInvoiceData(string $inn) {
+        return [];
+    }
 }

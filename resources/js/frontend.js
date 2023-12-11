@@ -493,59 +493,114 @@ window.$ = jQuery;
 
     /** ОФОРМЛЕНИЕ ЗАКАЗА  */
     if ($('main').hasClass('order-page-create')) {
-        let paymentData = {}, deliveryData = {};
-        //TODO Проверяем данные по умолчанию и если есть, заполняем paymentData и deliveryData
-
+        //Переключение способов доставки
         let deliveryStorageDIV = $('.block-delivery>.delivery-storage');
         let deliveryLocalDIV = $('.block-delivery>.delivery-local');
         let deliveryRegionDIV = $('.block-delivery>.delivery-region');
-
         let inputStorage = $('input[name=storage]');
         let inputCompany = $('input[name=company]');
-        let inputDeliveryLocal = $('#input-delivery-local');
-        let inputDeliveryRegion = $('#input-delivery-region');
+        let inputDeliveryLocal = $('#input-delivery-local-hidden');
+        let inputDeliveryRegion = $('#input-delivery-region-hidden');
 
-        order_button();
-        $('input[name=payment]').on('change', function () {
-            paymentData.class = $(this).val();
-            $.post(
-                '/order/payment',
-                {
-                    class: paymentData.class,
-                },
-                function (data) {
-                    if (data.online === undefined) {
-                        console.log(data);
-                    } else {
-                        paymentData.online = data.online;
-                        paymentData.invoice = data.invoice;
-                        $('#invoice-data').html(paymentData.invoice);
-                        if (paymentData.invoice !== '') {
-                            $('.form-invoice.inn').on('input', function () {
-                                this.value = this.value.replace(/[^0-9]/g, '');
-                                if ($(this).val().length === 10 || $(this).val().length === 12){
-                                    $(this).attr('state', '1');
-                                } else {
-                                    $(this).attr('state', '0');
-                                }
-                                order_button();
-                            });
-                        }
-                        console.log(paymentData);
-                        order_button();
-                    }
+
+        function readElements() {
+            //Считываем все поля для отправки
+            let data = {};
+            $('input').each(function () {
+                let name = $(this).attr('name');
+                if ($(this).attr('type') === 'radio') {
+                    if ($(this).prop('checked')) data[name] = $(this).val();
+                } else {
+                    data[name] = $(this).val();
                 }
-            );
+            });
+            return data;
+        }
+
+        function writeElements(state) {
+            //Записываем полученный результат в элементы
+            console.log('state = ', state);
+            //Данные по доставке
+            let spanRegion = $('.delivery-region').find('.address-delivery--info');
+            let spanLocal = $('.delivery-local').find('.address-delivery--info');
+            spanLocal.html(state.delivery.delivery_local);
+            spanRegion.html(state.delivery.delivery_address);
+            if (state.delivery.storage !== null) {
+                inputStorage.each(function () {
+                    $(this).prop('checked', ($(this).val() == state.delivery.storage));
+                    //if ($(this).val() == state.delivery.storage) $(this).prop('checked', true);
+                });
+            }
+
+            //По счетам
+            let invoiceBlock = $('#invoice-data');
+            if (state.payment.is_invoice) {
+                invoiceBlock.find('.address-delivery--info').html(state.payment.invoice);
+                invoiceBlock.show();
+            } else {
+                invoiceBlock.hide();
+            }
+            if (state.payment.invoice === '') {
+                invoiceBlock.find('#input-inn').parent().show();
+                invoiceBlock.find('#input-inn-hidden').parent().hide();
+            } else {
+                invoiceBlock.find('#input-inn').parent().hide();
+                invoiceBlock.find('#input-inn-hidden').parent().show();
+            }
+
+            //Общие данные
+            //Доступность, Оплатить/Оформить, Стоимость доставки, Купон
+            let buttonOrder = $('#button-to-order');
+            buttonOrder.prop('disabled', !state.amount.enabled);
+            buttonOrder.html(state.amount.caption);
+            let orderDelivery = $('#order-full-delivery');
+            orderDelivery.html(price_format(state.amount.delivery.cost));
+        }
+
+        function sendToBackend() {
+            let data = readElements();
+            $.post('/order/checkorder/', {data}, function (res) {
+                writeElements(res);
+            })
+        }
+
+        //Навешиваем событие при изменении элементов //
+        $('input[data-state=change]').on('change', function () {
+            sendToBackend();
         });
+
+        $('.input-to-hidden').on('click', function () {
+            let from = $('#' + $(this).attr('from'));
+            let to = $('#' + $(this).attr('to'));
+            to.val(from.val());
+            from.val('');
+            from.parent().hide();
+            to.parent().show();
+            sendToBackend();
+        })
+
+        //Изменить адрес (открыть блок)
+        $('.address-delivery--change').on('click', function () {
+            let id = $(this).attr('for');
+            $('#' + id).show();
+        });
+
+
+
+
         $('input[name=delivery]').on('change', function () {
             deliveryStorageDIV.hide();
             deliveryLocalDIV.hide();
             deliveryRegionDIV.hide();
             //Очистка всех полей
-            inputStorage.each( function () {$(this).prop('checked', false);});
-            inputCompany.each( function () {$(this).prop('checked', false);});
+        /*    inputStorage.each(function () {
+                $(this).prop('checked', false);
+            });
+            inputCompany.each(function () {
+                $(this).prop('checked', false);
+            });
             inputDeliveryLocal.val('');
-            inputDeliveryRegion.val('');
+            inputDeliveryRegion.val('');*/
             if ($(this).attr('id') === 'delivery_storage') {
                 deliveryStorageDIV.show();
             }
@@ -555,69 +610,8 @@ window.$ = jQuery;
             if ($(this).attr('id') === 'delivery_region') {
                 deliveryRegionDIV.show();
             }
-            deliveryData = {method: $(this).attr('id')};
-            order_button();
-        });
-        inputStorage.on('change', function () {
-            deliveryData.storage = $(this).val();
-            order_button();
-        });
-        inputCompany.on('change', function () {
-            deliveryData.company = $(this).val();
-            order_button();
-        });
-        inputDeliveryLocal.on('input', function () {
-            deliveryData.local = $(this).val();
-            order_button();
-        });
-        inputDeliveryRegion.on('input', function () {
-            deliveryData.address = $(this).val();
-            order_button();
         });
 
-        function order_button() {
-            let _state = true;
-            let buttonOrder = $('#button-to-order');
-            //Определяем выбрана и заполнены ли данные по оплате
-            if ($.isEmptyObject(paymentData)) {
-                _state = false
-            } else {
-                if (!paymentData.online && paymentData.invoice !== '') {
-                    $('.form-invoice').each(function () {
-                        if ($(this).attr('state') === '0') _state = false;
-                    });
-                }
-            }
-
-
-            //Если нет _state = false
-
-            //Определяем доставку
-            if ($.isEmptyObject(deliveryData)) {
-                _state = false;
-            } else {
-                if(
-                    (deliveryData.method === 'delivery_storage' && deliveryData.storage !== undefined) ||
-                    (deliveryData.method === 'delivery_local' && (deliveryData.local !== undefined && deliveryData.local !== '')) ||
-                    (deliveryData.method === 'delivery_region' && deliveryData.company !== undefined && (deliveryData.address !== undefined && deliveryData.address !== ''))
-                ) {} else {
-                    _state = false;
-                }
-            }
-
-            //Если не выбрано, и нет данных _state = false
-            if (_state) {
-                buttonOrder.prop('disabled', false);
-
-            } else {
-                buttonOrder.prop('disabled', true);
-            }
-            if (paymentData.online) {
-                buttonOrder.html('Оплатить');
-            } else {
-                buttonOrder.html('Оформить');
-            }
-        }
     }
     //ВЫБИРАЕМ СПОСОБ ОПЛАТЫ
 
@@ -655,7 +649,6 @@ window.$ = jQuery;
             }
         });
     }
-
 
 
     //Валидация email

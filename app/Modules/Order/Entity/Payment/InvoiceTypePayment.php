@@ -36,14 +36,18 @@ class InvoiceTypePayment extends PaymentAbstract
         return 4;
     }
 
-    public static function fields(array $fields = []): string
+    public static function isInvoice(): bool
     {
-        return '
-<h4>Необходимо заполнить данные:</h4>
-        <div class="payment-invoice-data">
-            <label for="inn">ИНН Плательшика</label>
-            <input id="inn" class="form-control form-invoice inn" name="INN" type="text" value="'. $fields['INN'] .'" placeholder="ИНН" state="0">
-        </div>
-        ';
+        return true;
+    }
+
+    public static function getInvoiceData(string $inn) {
+        //TODO Поиск по API данных об организации
+        return [
+            'INN' => $inn,
+            'KPP' => '3900000',
+            'name' => 'ООО Рога и Копыта',
+
+        ];
     }
 }

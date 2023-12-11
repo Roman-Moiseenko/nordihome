@@ -45,3 +45,16 @@
     border-radius: 10px;
     transform: translateX(-50%);
 }
+.address-delivery--title {
+    color: var(--bs-gray-500);
+    font-size: 1rem;
+}
+.address-delivery--info {
+    color: var(--bs-gray-800);
+    font-size: 1rem;
+}
+.address-delivery--change {
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--bs-blue);
+}

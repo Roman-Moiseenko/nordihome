@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Helpers;
 
 use App\Modules\Delivery\Entity\Transport\Delivery;
+use App\Modules\Delivery\Entity\Transport\DeliveryData;
 
 class DeliveryHelper
 {
@@ -33,7 +34,7 @@ class DeliveryHelper
         }, glob($path . '*TypeDelivery.php'));
     }
 
-    public static function calculate(string $class, array $items, array $params): bool
+    public static function calculate(string $class, array $items, array $params): DeliveryData
     {
         $namespace = Delivery::namespace();
         return ($namespace . '\\' . $class)::calculate($items, $params);

@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity\Payment;
+namespace App\Modules\Delivery\Entity\Local;
 
+use App\Casts\GeoAddressCast;
+use App\Entity\GeoAddress;
+use App\Modules\Delivery\Entity\Transport\DeliveryStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,24 +13,31 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $order_id
  * @property float $amount
- * @property Carbon $paid_at
+ * @property Carbon $delivery_at
+ * @property bool $finished
+ * @property GeoAddress $address
+ * @property
  * @property string $document
- * @property string $class //Способ оплаты - класс
+ * @property float $weigh
+ * @property DeliveryStatus $status
+ * @property DeliveryStatus[] $statuses
  */
-class Payment extends Model
+class Delivery extends Model
 {
-    public $timestamps = false;
+    protected $table = 'delivery_local';
+
     protected $fillable = [
         'order_id',
         'amount',
-        'paid_at',
+        'delivery_at',
+        'address',
         'document',
-        'class',
         'finished'
     ];
 
     protected $casts = [
-        'paid_at' => 'datetime',
+        'delivery_at' => 'datetime',
+        'address' => GeoAddressCast::class
     ];
 
     public static function register(int $order_id, float $amount, string $class, string $document): self
@@ -35,24 +45,9 @@ class Payment extends Model
         return self::create([
             'order_id' => $order_id,
             'amount' => $amount,
-            'paid_at' => now(),
+            'delivery_at' => now(),
             'document' => $document,
             'class' => $class
         ]);
     }
-
-
-    public static function namespace(): string
-    {
-        return __NAMESPACE__;
-    }
-
-
-    public function nameType(): string
-    {
-        $class = __NAMESPACE__ . "\\" . $this->class;
-        return $class::name();
-    }
-
-
 }

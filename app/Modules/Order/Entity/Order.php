@@ -18,7 +18,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $payment_id
  * @property OrderStatus[] $statuses
  * @property bool $finished
+ * @property string $delivery_class //Local и Transport
+ * @property int $delivery_id
  */
+
 class Order extends Model
 {
 
@@ -53,5 +56,7 @@ class Order extends Model
         return $this->hasOne(OrderStatus::class, 'order_id', 'id')->latestOfMany();
     }
 
+//Функции для данных по доставке
+//TODO Сделать интерфейс
 
 }

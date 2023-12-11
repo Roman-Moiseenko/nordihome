@@ -3,10 +3,16 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Order\Helpers\PaymentHelper;
 
 class PaymentService
 {
+    public function user(int $user_id): UserPayment
+    {
+        if ($user = UserPayment::where('user_id', $user_id)->first()) return $user;
+        return UserPayment::register($user_id);
+    }
 
     public function get(int $user_id): array
     {
@@ -25,10 +31,7 @@ class PaymentService
         return $payments;
     }
 
-    public function online(string $class)
-    {
-        return PaymentHelper::online($class);
-    }
+/*
 
     public function invoice(string $class):string
     {
@@ -37,5 +40,5 @@ class PaymentService
             'KPP' => '',
         ];
         return PaymentHelper::invoice($class, $fields);
-    }
+    }*/
 }

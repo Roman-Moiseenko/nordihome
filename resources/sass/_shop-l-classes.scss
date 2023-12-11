@@ -147,9 +147,12 @@ footer > .about {
     flex-basis: calc(33.3333% - var(--gap));
     max-width: calc(33.3333% - var(--gap));
 }
-.right-action-block > div {
+
+.sticky-block {
     position: sticky;
     top: 100px;
+}
+.sticky-block > div {
     border: 1px solid var(--bs-gray-400);
     border-radius: 12px;
     padding: 20px;

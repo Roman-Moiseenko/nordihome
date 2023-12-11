@@ -60,6 +60,8 @@ Route::group(
 
             //ajax
             Route::post('/payment', 'OrderController@payment')->name('payment');
+            Route::post('/checkorder', 'OrderController@checkorder')->name('checkorder');
+
         });
     }
 );

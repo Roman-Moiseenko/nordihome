@@ -42,9 +42,15 @@ class PaymentHelper
         return ($namespace . '\\' . $class)::online();
     }
 
-    public static function invoice(string $class, array $fields): string
+    public static function invoice(string $class, string $inn)
     {
         $namespace = Payment::namespace();
-        return ($namespace . '\\' . $class)::fields($fields);
+        return ($namespace . '\\' . $class)::getInvoiceData($inn);
+    }
+
+    public static function isInvoice(string $class): bool
+    {
+        $namespace = Payment::namespace();
+        return ($namespace . '\\' . $class)::isInvoice();
     }
 }
