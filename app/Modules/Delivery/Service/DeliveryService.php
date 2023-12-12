@@ -50,10 +50,10 @@ class DeliveryService
 
         $user_delivery = $this->user($user_id);
 
-        if ($user_delivery->isRegion() && !empty($user_delivery->address_region) && !empty($user_delivery->company)) {
+        if ($user_delivery->isRegion() && !empty($user_delivery->region->address) && !empty($user_delivery->company)) {
             return DeliveryHelper::calculate($user_delivery->company, $items, []);
         }
-        if ($user_delivery->isLocal() && !empty($user_delivery->address_local)) {
+        if ($user_delivery->isLocal() && !empty($user_delivery->local->address)) {
             //TODO Таблица с местным расчетом стоимости доставки + Вес
             $distance = $this->distance();
             $cost = Tariff::orderBy('distance')->where('distance', '>', $distance)->first();

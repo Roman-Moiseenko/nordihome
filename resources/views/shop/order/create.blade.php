@@ -118,6 +118,7 @@
                 <div>Список товаров в корзине</div>
                 <div class="row">
                 @foreach($cart['items'] as $item)
+                    @if($item['check'])
                     <div class="col-lg-2 col-sm-6 p-3">
                         <div class="" style="position: relative">
                             <img src="{{ $item['img'] }}" title="{{ $item['name'] }}" style="width: 100%;">
@@ -127,6 +128,7 @@
                         </div>
                         <div class="fs-7 text-center" style="color: var(--bs-gray-600);">{{ price($item['price']) }}/шт.</div>
                     </div>
+                    @endif
                 @endforeach
                 </div>
             </div>
@@ -149,11 +151,11 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <div class="fs-7">Стоимость доставки</div>
-                        <div id="order-full-delivery" class="fs-7" >{{ '??' }}</div>
+                        <div id="order-full-delivery" class="fs-7" >{{ price($delivery_cost->cost) }}</div>
                     </div>
                     <div class="d-flex justify-content-between mt-4 pt-3 border-top">
                         <div class="fs-5">Сумма к оплате</div>
-                        <div id="order-amount-pay" class="fs-5">{{ price($cart['common']['amount']) }}</div>
+                        <div id="order-amount-pay" class="fs-5" data-base-cost="{{ $cart['common']['amount'] }}">{{ price($cart['common']['amount'] - $delivery_cost->cost) }}</div>
                     </div>
                 </div>
                 <div class="mt-3">

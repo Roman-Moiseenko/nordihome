@@ -19,6 +19,7 @@ class CartItem
     public int $discount_id;
     public array $options;
     public bool $pre_order;
+    public bool $check;
 
     public function __construct()
     {
@@ -36,19 +37,22 @@ class CartItem
         $item->quantity = $quantity;
         $item->options = $options;
         $item->base_cost = $product->lastPrice->value;
+        $item->check = true;
         return $item;
     }
 
-    public static function load(int $id, Product $product, $quantity, $options, $reserve = null): self
+    public static function load(int $id, Product $product, $quantity, $options, bool $check, $reserve = null): self
     {
         $item = new static();
         $item->id = $id;
         $item->product = $product;
         $item->quantity = $quantity;
         $item->options = $options;
+        $item->check = $check;
         $item->reserve = $reserve;
 
         $item->base_cost = $product->lastPrice->value;
+
         return $item;
     }
 
@@ -67,5 +71,9 @@ class CartItem
         return $this->quantity;
     }
 
+    public function check(): void
+    {
+        $this->check = !$this->check;
+    }
 }
 

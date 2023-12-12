@@ -36,22 +36,12 @@ class OrderController extends Controller
         $payments = $this->payments->get($user_id);
         $storages = $this->deliveries->storages();
         $companies = $this->deliveries->companies();
-        //$deliveries = $this->deliveries->get($user_id);
+
         $default = $this->service->default_user_data();
-     /*
-        $default = [
-            'payment' => [
-                'class' => '',
-            ],
-            'delivery' => [
-                'company' => '',
-                'type' => '',
-                'storage' => '',
-                'address' => '',
-                'post' => ''
-            ],
-        ]; */
-        return view('shop.order.create', compact('cart', 'payments', 'storages', 'default', 'companies'));
+
+        $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->cart->getItems());
+
+        return view('shop.order.create', compact('cart', 'payments', 'storages', 'default', 'companies', 'delivery_cost'));
     }
 
     public function view(Request $request)

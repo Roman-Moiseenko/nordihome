@@ -14,18 +14,20 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $options_json //Опции товара [id1, id2, ...]
- *
+ * @property bool $check
  * @property Product $product
  */
 class CartCookie extends Model
 {
     protected $table = 'cart_cookie';
-
+    protected $casts = ['check' => 'bool'];
+    protected $attributes = ['check' => true];
     protected $fillable = [
         'user_ui',
         'product_id',
         'quantity',
         'options_json',
+        'check',
     ];
     public static function register(string $user_ui, int $product_id, int $quantity, array $options_json = []): self
     {
@@ -35,6 +37,17 @@ class CartCookie extends Model
             'quantity' => $quantity,
             'options_json' => json_encode($options_json)
         ]);
+    }
+
+    public function check(): void
+    {
+        $this->check = !$this->check;
+        $this->save();
+    }
+
+    public function isCheck(): bool
+    {
+        return $this->check == true;
     }
 
     public function product()

@@ -99,4 +99,26 @@ class CartController extends Controller
             return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
         }
     }
+
+    public function check(Request $request, Product $product)
+    {
+        try {
+            $this->cart->check($product);
+            $cart = $this->cart->getCartToFront($request['tz']);
+            return \response()->json($cart);
+        } catch (\Throwable $e) {
+            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+        }
+    }
+    public function check_all(Request $request)
+    {
+        try {
+            $params = json_decode($request['json'], true);
+            $this->cart->check_all($params['all']);
+            $cart = $this->cart->getCartToFront($params['tz']);
+            return \response()->json($cart);
+        } catch (\Throwable $e) {
+            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine(), $params]);
+        }
+    }
 }

@@ -16,15 +16,16 @@
         <div class="left-list-block">
             <div class="box-card d-flex panel-cart-manage align-items-center">
                 <div class="checkbox-group">
-                    <input class="" type="checkbox" value="" id="checked-all" checked>
+                    <input class="" type="checkbox" value="" id="checked-all" {{ $cart['common']['check_all'] ? 'checked' : '' }}>
                     <label class="" for="checked-all">Выбрать все</label>
                 </div>
-                <button id="cart-trash" class="btn btn-light ms-3 p-1">Удалить выбранные</button>
+                <button id="cart-trash" class="btn btn-light ms-3 p-1" {!! $cart['common']['check_all'] ? '' : 'style="display:none;"' !!}>Удалить выбранные</button>
             </div>
             @foreach($cart['items'] as $item)
                 <div class="box-card d-flex" id="full-cart-item-{{ $item['product_id'] }}">
                     <div class="full-cart-item--checked">
-                        <input class="checked-item" type="checkbox" data-product="{{ $item['product_id'] }}" checked>
+                        <input class="checked-item" type="checkbox" data-product="{{ $item['product_id'] }}"
+                               {{ $item['check'] ? 'checked' : '' }} >
                     </div>
                     <div class="full-cart-item--img">
                         <a href="{{ $item['url'] }}" target="_blank"><img src="{{ $item['img'] }}"/></a>

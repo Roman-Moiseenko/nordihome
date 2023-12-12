@@ -78,4 +78,10 @@ class HybridStorage implements StorageInterface
     {
         $this->getStorage()->clear();
     }
+
+    public function check(CartItem $item): void
+    {
+        $this->getStorage()->check($item);
+
+    }
 }

@@ -47,6 +47,8 @@ Route::group(
             Route::post('/add/{product}', 'CartController@add')->name('add');
             Route::post('/sub/{product}', 'CartController@sub')->name('sub');
             Route::post('/set/{product}', 'CartController@set')->name('set');
+            Route::post('/check/{product}', 'CartController@check')->name('check');
+            Route::post('/check-all', 'CartController@check_all')->name('check-all');
             Route::post('/remove/{product}', 'CartController@remove')->name('remove');
             Route::post('/clear', 'CartController@clear')->name('clear');
         });

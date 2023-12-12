@@ -23,7 +23,7 @@ class CalculatorOrder
      */
     public function calculate(array $items): array
     {
-        $product_ids = array_map(function ($item) {return $item->getProduct()->id;}, $items);
+        $product_ids = array_map(function ($item) {return ($item->check) ? $item->getProduct()->id : -1;}, $items);
 
         $promotions = (new PromotionRepository)->getActive();
         foreach ($items as &$item) {
@@ -31,7 +31,6 @@ class CalculatorOrder
             //Акции по товарам
             /** @var Promotion $promotion */
             foreach ($promotions as $promotion) {
-                //throw new \DomainException('*****');
                 $prom_disc = $promotion->getDiscount($item->getProduct()->id);
                 if (!is_null($prom_disc)) {
                     $item->discount_cost = round($item->base_cost * (100 - $prom_disc) / 100);
@@ -45,11 +44,11 @@ class CalculatorOrder
             if (!empty($bonus_product) && in_array($bonus_product->product_id, $product_ids)) {
                 $q_bonus = $item->getQuantity();
                 $q_product = $q_bonus;
-                $name_base_product = '';
+                //$name_base_product = '';
                 foreach($items as $_item) {
                     if ($_item->getProduct()->id == $bonus_product->product_id) {
                         $q_product = $_item->getQuantity();
-                        $name_base_product = $_item->getProduct()->name;
+                        //$name_base_product = $_item->getProduct()->name; В описании бонуса добавить название главн.товара
                     }
                 }
                 if ($q_bonus <= $q_product) {
@@ -60,10 +59,7 @@ class CalculatorOrder
                 $item->discount_name = 'Бонусный товар';
             }
 
-
             //Бонус при объеме
-
-
         }
 
 

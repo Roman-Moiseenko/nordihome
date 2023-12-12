@@ -88,7 +88,7 @@ class OrderService
         $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->cart->getItems());
 
         //5. Формирование массива на выдачу:
-        //5.1. Стоимость доставки
+
         //5.2. Скидка на заказ от купона
         //5.3. Итоговая стоимость
         //6. Оформить/Оплатить доступна или нет
@@ -115,6 +115,7 @@ class OrderService
                 'caption' => $default->payment->online() ? 'Оплатить' : 'Оформить',
                 'enabled' => $enabled,
                 'error' => $error,
+                //'amount' =>
             ],
         ];
 

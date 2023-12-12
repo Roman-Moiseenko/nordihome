@@ -170,7 +170,7 @@ class Cart
                 'discount_name' => $item->discount_name,
                 'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
                 'remove' => route('shop.cart.remove', $item->getProduct()->id),
-                'd' => now()->translatedFormat('d F Y'),
+                'check' => $item->check,
             ];
         }
         return $result;
@@ -183,11 +183,16 @@ class Cart
             'full_cost' => 0, //Полная стоимость
             'discount' => 0, //Скидка
             'amount' => 0, //Итого со скидкой
+            'check_all' => true,
         ];
         foreach ($items as $item) {
-            $result['count'] += $item['quantity'];
-            $result['full_cost'] += (int)$item['cost'];
-            $result['amount'] += is_null($item['discount_cost']) ? (int)$item['cost'] : (int)$item['discount_cost'];
+            if (!$item['check']) {
+                $result['check_all'] = false;
+            } else {
+                $result['count'] += $item['quantity'];
+                $result['full_cost'] += (int)$item['cost'];
+                $result['amount'] += is_null($item['discount_cost']) ? (int)$item['cost'] : (int)$item['discount_cost'];
+            }
         }
         $result['discount'] += $result['full_cost'] - $result['amount'];
         return $result;
@@ -198,6 +203,27 @@ class Cart
         foreach ($ids as $id) {
             $product = Product::find((int)$id);
             $this->remove($product);
+        }
+    }
+
+    public function check(Product $product)
+    {
+        $this->loadItems();
+        foreach ($this->items as $current) {
+            if ($current->isProduct($product->id)) {
+                $current->check();
+                $this->storage->check($current);
+                return;
+            }
+        }
+    }
+
+    public function check_all(bool $all)
+    {
+        $this->loadItems();
+        foreach ($this->items as $current) {
+            $current->check = $all;
+            $this->storage->check($current);
         }
     }
 

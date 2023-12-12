@@ -14,6 +14,9 @@ interface StorageInterface
     public function plus(CartItem $item, int $quantity): void;
 
     public function remove(CartItem $item): void;
+
+    public function check(CartItem $item): void;
+
     public function clear(): void;
 
 }

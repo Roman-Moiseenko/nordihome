@@ -17,14 +17,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $options_json //Опции товара [id1, id2, ...]
- *
+ * @property bool $check
  * @property Product $product
  * @property Reserve $reserve
  */
 
 class CartStorage extends Model
 {
-
+    protected $attributes = ['check' => true];
     protected $table = 'cart_storage';
     protected $fillable = [
         'user_id',
@@ -32,7 +32,10 @@ class CartStorage extends Model
         'quantity',
         'reserve_id',
         'options_json',
+        'check',
     ];
+
+    protected $casts = ['check' => 'bool'];
 
     public static function register(int $user_id, int $product_id, int $quantity, ?int $reserve_id, array $options_json = []): self
     {
@@ -41,8 +44,19 @@ class CartStorage extends Model
             'product_id' => $product_id,
             'quantity' => $quantity,
             'reserve_id' => $reserve_id,
-            'options_json' => json_encode($options_json)
+            'options_json' => json_encode($options_json),
         ]);
+    }
+
+    public function check(): void
+    {
+        $this->check = !$this->check;
+        $this->save();
+    }
+
+    public function isCheck(): bool
+    {
+        return $this->check == true;
     }
 
     public function product()
