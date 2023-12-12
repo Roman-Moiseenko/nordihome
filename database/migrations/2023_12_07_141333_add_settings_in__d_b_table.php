@@ -49,6 +49,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-
+        $setting = Setting::get('shop');
+        SettingItem::where('setting_id', $setting->id)->where('key', 'reserve_order')->delete();
+        SettingItem::where('setting_id', $setting->id)->where('key', 'reserve_preorder')->delete();
+        SettingItem::where('setting_id', $setting->id)->where('key', 'reserve_shop')->delete();
     }
 };

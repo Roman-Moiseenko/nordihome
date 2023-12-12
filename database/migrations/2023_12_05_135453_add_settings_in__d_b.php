@@ -89,6 +89,15 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        $setting = Setting::get('shop');
 
+
+        SettingItem::where('setting_id', $setting->id)->where('key', 'pre_order')->delete();
+        SettingItem::where('setting_id', $setting->id)->where('key', 'paginate')->delete();
+        SettingItem::where('setting_id', $setting->id)->where('key', 'only_offline')->delete();
+        SettingItem::where('setting_id', $setting->id)->where('key', 'delivery_local')->delete();
+        SettingItem::where('setting_id', $setting->id)->where('key', 'delivery_all')->delete();
+        SettingItem::where('setting_id', $setting->id)->where('key', 'logo_img')->delete();
+        SettingItem::where('setting_id', $setting->id)->where('key', 'logo_alt')->delete();
     }
 };

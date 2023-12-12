@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $tab
  * @property string $key //$field
  * @property string $value //json
+ * @property int $sort
  * @property int $type
 
  */
@@ -39,6 +40,7 @@ class SettingItem extends Model
         'key',
         'value',
         'type',
+        'sort',
     ];
     protected $casts = [
         'value' => 'json',
