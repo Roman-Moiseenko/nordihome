@@ -41,7 +41,7 @@ class Coupon extends Model
     public static function register(int $user_id, int $bonus, $started_at, $finished_at): self
     {
         /** @var Coupon $coupon */
-        $coupon =  self::new([
+        $coupon =  self::make([
             'user_id' => $user_id,
             'bonus' => $bonus,
             'status' => self::NEW,
@@ -50,23 +50,20 @@ class Coupon extends Model
         ]);
 
         $coupon->generate();
+        $coupon->save();
         return $coupon;
     }
-
 
     private function generate(): void
     {
         //$start = Carbon::parse('01-01-2024');
         //$difference = $start->diff(now())->days;
         $a = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $code = '';
-        $length = rand(3, 5);
+        $this->code = '';
 
-        for ($i = 0; $i < $length; $i++) {
-            $code .= $a[rand(0, 35)];
+        for ($i = 0; $i < rand(3, 5); $i++) {
+            $this->code .= $a[rand(0, 35)];
         }
-        $this->code = $code;
-
     }
 }
 

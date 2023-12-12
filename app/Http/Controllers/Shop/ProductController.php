@@ -40,7 +40,7 @@ class ProductController extends Controller
         try {
             $result = $this->repository->search($request['search']);
         } catch (\Throwable $e) {
-            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
         return \response()->json($result);
     }

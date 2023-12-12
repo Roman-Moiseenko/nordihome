@@ -34,7 +34,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
 
     }
@@ -47,7 +47,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
 
@@ -59,7 +59,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
 
@@ -70,7 +70,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
 
@@ -85,7 +85,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
 
@@ -96,7 +96,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
 
@@ -107,7 +107,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
     public function check_all(Request $request)
@@ -118,7 +118,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($params['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine(), $params]);
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
 }

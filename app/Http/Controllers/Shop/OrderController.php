@@ -55,16 +55,25 @@ class OrderController extends Controller
         return view('shop.order.index');
     }
 
-
+    //AJAX
     public function checkorder(Request $request)
     {
         try {
             $result = $this->service->checkorder($request);
 
         } catch (\Throwable $e) {
-            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
         return \response()->json($result);
     }
-    ///
+
+    public function coupon(Request $request)
+    {
+        try {
+            $result = $this->service->coupon($request);
+        } catch (\Throwable $e) {
+            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
+        }
+        return \response()->json($result);
+    }
 }

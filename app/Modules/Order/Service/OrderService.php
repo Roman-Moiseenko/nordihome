@@ -6,6 +6,7 @@ namespace App\Modules\Order\Service;
 use App\Entity\GeoAddress;
 use App\Modules\Delivery\Entity\UserDelivery;
 use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Cart\Cart;
 use Illuminate\Http\Request;
@@ -122,5 +123,14 @@ class OrderService
 
 
         return $result;
+    }
+
+    public function coupon(Request $request)
+    {
+        $code = $request['code'];
+        //TODO Сделать все проверки + user_id
+        $coupon = Coupon::where('code', $code)/*->where('started_at', '<', now())->where('finished_at', '>', now())->where('status', Coupon::NEW)*/->first();
+        if (!empty($coupon)) return $coupon->bonus;
+        return 0;
     }
 }

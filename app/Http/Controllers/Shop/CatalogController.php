@@ -79,7 +79,7 @@ class CatalogController extends Controller
                 $result[] = $this->repository->toShopForSubMenu($category);
             }
         } catch (\Throwable $e) {
-            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
         return \response()->json($result);
     }

@@ -22,6 +22,7 @@ window.$ = jQuery;
     if ($('#cart-header').length) {
         setTimeout(function () {
             $.post('/cart_post/cart/', {tz: -(new Date().getTimezoneOffset())}, function (data) {
+                _error(data);
                 widget_cart(data);
                 CartData = data;
             });
@@ -29,6 +30,7 @@ window.$ = jQuery;
         $('#clear-cart').on('click', function () {
             let route = $(this).data('route');
             $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
+                _error(data);
                 widget_cart(data);
             })
         });
@@ -61,6 +63,7 @@ window.$ = jQuery;
         timerInput = setTimeout(function () {
             $.post(presearch.data('route'), {search: presearchInput.val()},//ajax запрос
                 function (data) {
+                    _error(data);
                     suggestBlock.html('');
                     if ($.isArray(data))
                         for (let i = 0; i < data.length; i++) {
@@ -128,6 +131,7 @@ window.$ = jQuery;
                 category: element.data('id')
             },
             function (data) {
+                _error(data);
                 catalogSubmenu.html('');
                 if (data.length > 0) {
                     for (let i = 0; i < data.length; i++) {
@@ -197,6 +201,7 @@ window.$ = jQuery;
                     password: inputPassword.val(),
                     verify_token: inputVerify.val()
                 }, function (data) {
+                    _error(data);
                     $('#token-error').hide();
                     $('#password-error').hide();
 
@@ -227,6 +232,7 @@ window.$ = jQuery;
                 options: _options,
                 tz: -(new Date().getTimezoneOffset()),
             }, function (data) {//Получаем кол-во товаров в корзине
+                _error(data);
                 widget_cart(data);//Меняем кол-во и сумму товаров в виджете корзины в хеадере
             }
         );
@@ -267,6 +273,7 @@ window.$ = jQuery;
                 quantity: _quantity,
                 tz: -(new Date().getTimezoneOffset()),
             }, function (data) {
+                _error(data);
                 widget_cart(data);
                 page_cart(data);
                 if (_obj !== null) setTimeout(function () {
@@ -283,6 +290,7 @@ window.$ = jQuery;
             '/cart_post/remove/' + _productId, {
                 tz: -(new Date().getTimezoneOffset()),
             }, function (data) {
+                _error(data);
                 widget_cart(data);
                 page_cart(data);
                 $('#full-cart-item-' + _productId).remove();
@@ -352,6 +360,7 @@ window.$ = jQuery;
         $(document).on('click', '.remove-item-cart', function () {
             let route = $(this).data('route');
             $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
+                _error(data);
                 widget_cart(data);
             })
         });
@@ -434,6 +443,7 @@ window.$ = jQuery;
                 tz: -(new Date().getTimezoneOffset())
             })
         }, function (data) {
+            _error(data);
             page_cart(data);
         });
     });
@@ -455,6 +465,7 @@ window.$ = jQuery;
             $('#cart-trash').hide();
         }
         $.post('/cart_post/check/' + $(this).data('product'), {tz: -(new Date().getTimezoneOffset()),}, function (data) {
+            _error(data);
             page_cart(data);
         });
     });
@@ -471,7 +482,9 @@ window.$ = jQuery;
                     tz: -(new Date().getTimezoneOffset()),
                 },
                 function (data) {
+
                     location.reload();
+                    _error(data);
                 }
             );
         }
@@ -553,6 +566,7 @@ window.$ = jQuery;
         function sendToBackend() {
             let data = readElements();
             $.post('/order/checkorder/', {data}, function (res) {
+                _error(res);
                 writeElements(res);
             })
         }
@@ -590,6 +604,24 @@ window.$ = jQuery;
                 deliveryRegionDIV.show();
             }
         });
+        //Ввод купона
+        let inputCoupon = $('input[name=coupon]');
+        inputCoupon.on('input', function () {
+            let code = inputCoupon.val();
+            if (code.length > 2) {
+                $.post(
+                    '/order/coupon',
+                    {
+                        code: code,
+                        tz: -(new Date().getTimezoneOffset()),
+                    }, function (data) {
+                        console.log(data);
+                        //_error(data);
+                    }
+                );
+            }
+        });
+
     }
 
     //Доп.элементы
@@ -644,6 +676,10 @@ window.$ = jQuery;
         return _str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ₽';
     }
 
+    //Отображение ошибок
+    function _error(data) {
+        if (data.error !== undefined) console.log(data.error);
+    }
     //Карусели
     let optionsSliderBase = {
         rtl: false,

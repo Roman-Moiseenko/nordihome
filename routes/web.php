@@ -51,6 +51,7 @@ Route::group(
             Route::post('/check-all', 'CartController@check_all')->name('check-all');
             Route::post('/remove/{product}', 'CartController@remove')->name('remove');
             Route::post('/clear', 'CartController@clear')->name('clear');
+
         });
         Route::group([
             'as' => 'order.',
@@ -63,7 +64,7 @@ Route::group(
             //ajax
             Route::post('/payment', 'OrderController@payment')->name('payment');
             Route::post('/checkorder', 'OrderController@checkorder')->name('checkorder');
-
+            Route::post('/coupon', 'OrderController@coupon')->name('coupon');
         });
     }
 );

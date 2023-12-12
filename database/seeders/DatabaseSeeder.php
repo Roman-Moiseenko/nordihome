@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Entity\Dimensions;
-use App\Entity\User\FullName;
-use App\Entity\User\User;
+
+
+use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\Brand;
@@ -15,6 +16,7 @@ use App\Modules\Product\Repository\AttributeGroupRepository;
 use App\Modules\Product\Repository\AttributeRepository;
 use App\Modules\Product\Repository\BrandRepository;
 use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\User\Entity\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -44,14 +46,14 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-
-        $this->brand();
+        $this->coupons();
+      /*  $this->brand();
 
         $this->categories();
 
         $this->attributes();
 
-        $this->products();
+        $this->products();*/
     }
 
     private function brand()
@@ -458,5 +460,14 @@ class DatabaseSeeder extends Seeder
                 'frequency' => Product::FREQUENCY_AVERAGE,
             ],
         */
+    }
+
+    private function coupons()
+    {
+        $users = User::where('status', User::STATUS_ACTIVE)->get();
+        foreach ($users as $user) {
+            Coupon::register($user->id, rand(1, 10) * 500 + 2000, now()->addMinutes(rand(1, 100)), now()->addHours(rand(5, 100)));
+            Coupon::register($user->id, rand(1, 10) * 500 + 2000, now()->addMinutes(rand(1, 100)), now()->addHours(rand(5, 100)));
+        }
     }
 }
