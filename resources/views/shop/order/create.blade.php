@@ -136,7 +136,7 @@
         <div class="right-action-block">
             <div class="sticky-block">
                 <div>
-                    <button id="button-to-order" class="btn btn-dark w-100 py-3">{{ $default->payment->online() ? 'Оплатить' : 'Оформить' }} </button>
+                    <button id="button-to-order" class="btn btn-dark w-100 py-3" onclick="document.getElementById('form-order-create').submit();">{{ $default->payment->online() ? 'Оплатить' : 'Оформить' }} </button>
                     <div class="d-flex justify-content-between mt-3">
                         <div class="fs-5">Ваш заказ</div>
                         <div id="order-count-products" class="fs-5">{{ $cart['common']['count'] }} * масса в кг</div>
@@ -159,8 +159,19 @@
                     </div>
                 </div>
                 <div class="mt-3">
-                    <div class="fs-5" style="position: relative !important;">Купон на скидку</div>
+                    <div class="fs-5">Купон на скидку</div>
+                    <form id="form-order-create" method="POST" action="{{ route('shop.order.create') }}">
+                        @method('PUT')
+                        @csrf
                     <input type="text" class="form-control p-2" name="coupon" />
+                    </form>
+                    <div class="coupon-info" style="display:none;">
+                        <div>Скидка по купону:</div>
+                        <div class="coupon-amount"></div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="{{ route('shop.cart.view') }}" class="btn btn-outline-dark w-100 py-3">Вернуться в корзину</a>
                 </div>
             </div>
         </div>

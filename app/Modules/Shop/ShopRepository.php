@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop;
 
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeProduct;
 use App\Modules\Product\Entity\AttributeVariant;
@@ -11,7 +12,9 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\ProductPricing;
 use App\Modules\Product\Entity\Tag;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ShopRepository
 {
@@ -354,6 +357,23 @@ class ShopRepository
     }
 
     //////
+
+
+    ///КУПОНЫ И СКИДКИ
+
+    public function getCoupon(string $code): ?Coupon
+    {
+        $user_id = Auth::guard('user')->user()->id;
+
+        $coupon = Coupon::where('code', $code)
+            ->where('user_id', $user_id)
+            ->where('started_at', '<', Carbon::now())
+            ->where('finished_at', '>', Carbon::now())
+            ->where('status', Coupon::NEW)
+            ->first();
+        if (!empty($coupon)) return $coupon;
+        return null;
+    }
 
 
     private function ProductsForSearch(Product $product): array

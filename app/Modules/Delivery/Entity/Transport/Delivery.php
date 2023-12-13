@@ -5,6 +5,7 @@ namespace App\Modules\Delivery\Entity\Transport;
 
 use App\Casts\GeoAddressCast;
 use App\Entity\GeoAddress;
+use App\Modules\Order\Entity\Payment\Payment;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use function now;
@@ -13,7 +14,8 @@ use function now;
 /**
  * @property int $id
  * @property int $order_id
- * @property float $amount
+ * @property float $amount //Стоимость доставки
+ *
  * @property Carbon $delivery_at
  * @property bool $finished
  * @property GeoAddress $address
@@ -22,6 +24,7 @@ use function now;
  * @property float $weigh
  * @property DeliveryStatus $status
  * @property DeliveryStatus[] $statuses
+ * @property Payment $payment
  */
 class Delivery extends Model
 {
@@ -52,11 +55,6 @@ class Delivery extends Model
         ]);
     }
 
-    public function statuses()
-    {
-        return $this->hasMany(DeliveryStatus::class, 'delivery_id', 'id');
-    }
-
     public function isStatus(int $status): bool
     {
         foreach ($this->statuses as $_status) {
@@ -71,6 +69,17 @@ class Delivery extends Model
         if ($this->isStatus($status)) throw new \DomainException('Статус уже назначен');
         $this->statuses()->create(['status' => $status]);
         if (in_array($status, [DeliveryStatus::CANCEL, DeliveryStatus::CANCEL_BY_CUSTOMER, DeliveryStatus::COMPLETED])) $this->update(['finished' => true]);
+    }
+
+    //Relations *************************************************
+    public function payment()
+    {
+        return $this->morphOne(Payment::class, 'payable');
+    }
+
+    public function statuses()
+    {
+        return $this->hasMany(DeliveryStatus::class, 'delivery_id', 'id');
     }
 
     public function status()

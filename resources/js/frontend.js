@@ -608,17 +608,25 @@ window.$ = jQuery;
         let inputCoupon = $('input[name=coupon]');
         inputCoupon.on('input', function () {
             let code = inputCoupon.val();
+            let couponInfo = $('.coupon-info');
+            let couponAmount = $('.coupon-amount');
+
             if (code.length > 2) {
-                $.post(
-                    '/order/coupon',
-                    {
+                $.post('/order/coupon', {
                         code: code,
                         tz: -(new Date().getTimezoneOffset()),
                     }, function (data) {
-                        console.log(data);
-                        //_error(data);
-                    }
-                );
+                        if (data != 0) {
+                            couponInfo.show();
+                            couponAmount.html(price_format(data));
+                        } else {
+                            couponInfo.hide();
+                            couponAmount.html('');
+                        }
+                    });
+            } else {
+                couponInfo.hide();
+                couponAmount.html('');
             }
         });
 

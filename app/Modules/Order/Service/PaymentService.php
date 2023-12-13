@@ -14,31 +14,19 @@ class PaymentService
         return UserPayment::register($user_id);
     }
 
-    public function get(int $user_id): array
+    public function get(): array
     {
         //Получаем список всех платежных вариантов
         $payments = PaymentHelper::payments();
-        //Получаем default для клиента
-        $default = '';//'InvoiceTypePayment';
-        if (isset($payments[$default])) $payments[$default]['sort'] = 0;
-
         usort($payments, function ($a, $b) {
             return $a['sort'] > $b['sort'];
         });
-        //Сортировка if
-
-        //Если default нет
         return $payments;
     }
 
-/*
 
-    public function invoice(string $class):string
+    public function create()
     {
-        $fields = [
-            'INN' => '',
-            'KPP' => '',
-        ];
-        return PaymentHelper::invoice($class, $fields);
-    }*/
+
+    }
 }

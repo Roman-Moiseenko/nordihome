@@ -8,37 +8,46 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $order_id
+ * @property int $payable_id
+ * @property string $payable_type
  * @property float $amount
  * @property Carbon $paid_at
  * @property string $document
  * @property string $class //Способ оплаты - класс
+ * @property array $meta //Данные о платеже
  */
 class Payment extends Model
 {
     public $timestamps = false;
     protected $fillable = [
-        'order_id',
         'amount',
         'paid_at',
         'document',
         'class',
-        'finished'
     ];
 
     protected $casts = [
         'paid_at' => 'datetime',
+        'meta' => 'json',
     ];
 
-    public static function register(int $order_id, float $amount, string $class, string $document): self
+    public function payable()
     {
-        return self::create([
-            'order_id' => $order_id,
+        return $this->morphTo();
+    }
+
+    public static function register(float $amount, string $class, string $document, array $meta = []): self
+    {
+        $payment = self::create([
             'amount' => $amount,
             'paid_at' => now(),
             'document' => $document,
             'class' => $class
         ]);
+
+        $payment->meta = $meta;
+        $payment->save();
+        return $payment;
     }
 
 

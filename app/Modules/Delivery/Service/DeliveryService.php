@@ -13,8 +13,6 @@ use App\Modules\Delivery\Helpers\DeliveryHelper;
 class DeliveryService
 {
 
-
-
     public function user(int $user_id): UserDelivery
     {
         if ($user = UserDelivery::where('user_id', $user_id)->first()) return $user;

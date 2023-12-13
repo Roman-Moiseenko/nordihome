@@ -29,11 +29,8 @@ class OrderController extends Controller
 
     public function create(Request $request)
     {
-        $user_id = Auth::guard('user')->user()->id;
-        //$ids = $request[''];
-        //TODO получаем id выбранных позиций/товаров и создаем cart из выбранных
         $cart = $this->cart->getCartToFront($request['tz']);
-        $payments = $this->payments->get($user_id);
+        $payments = $this->payments->get();
         $storages = $this->deliveries->storages();
         $companies = $this->deliveries->companies();
 
@@ -42,6 +39,18 @@ class OrderController extends Controller
         $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->cart->getItems());
 
         return view('shop.order.create', compact('cart', 'payments', 'storages', 'default', 'companies', 'delivery_cost'));
+    }
+
+    public function create_pre(Request $request)
+    {
+        //Аналог create + стоимость доставки из польши
+    }
+
+    public function store(Request $request)
+    {
+        $order = $this->service->create($request);
+        flash('Ваш заказ успешно создан!');
+        return redirect()->route('shop.order.view', $order);
     }
 
     public function view(Request $request)
@@ -59,8 +68,7 @@ class OrderController extends Controller
     public function checkorder(Request $request)
     {
         try {
-            $result = $this->service->checkorder($request);
-
+            $result = $this->service->checkorder($request['data']);
         } catch (\Throwable $e) {
             $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
@@ -69,8 +77,9 @@ class OrderController extends Controller
 
     public function coupon(Request $request)
     {
+        $result = 0;
         try {
-            $result = $this->service->coupon($request);
+            if ($request->has('code')) $result = $this->service->coupon($request->get('code'));
         } catch (\Throwable $e) {
             $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }

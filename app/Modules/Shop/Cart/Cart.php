@@ -14,11 +14,17 @@ class Cart
     private array $items;
     private HybridStorage $storage;
     private CalculatorOrder $calculator;
+    public CartInfo $info;
+
+
+
+
 
     public function __construct(HybridStorage $storage, CalculatorOrder $calculator)
     {
         $this->storage = $storage;
         $this->calculator = $calculator;
+        $this->info = new CartInfo();
     }
 
     public function getItems(): array
@@ -90,7 +96,30 @@ class Cart
     {
         if (empty($this->items)) {
             $this->items = $this->storage->load();
+
+            $this->items = $this->calculator->calculate($this->items);
+
+            $this->info->clear();
+
+            foreach ($this->items as $item) {
+                //TODO Сделать подсчет на предзаказ и учет в базе???
+                if ($item->product->count_for_sell > $item->quantity) {
+                    $count_pre = (int)($item->product->count_for_sell - $item->quantity);
+                    $this->info->preorder->count += $count_pre;
+                    $this->info->preorder->amount += $count_pre * $item->product->lastPrice->value;
+                }
+                if ($item->check == true) {
+                    $this->info->order->count += $item->quantity;
+                    $this->info->order->amount += $item->quantity * $item->product->lastPrice->value;
+                    $this->info->order->discount += empty($item->discount_cost) ? 0 : $item->quantity * $item->discount_cost;
+                }
+                $this->info->all->count += $item->quantity;
+                $this->info->all->amount += $item->quantity * $item->product->lastPrice->value;
+            }
+            if ($this->info->order->count != $this->info->all->count) $this->info->check_all = false;
         }
+
+
     }
 
     public function getQuantity(int $product_id): int
@@ -113,49 +142,23 @@ class Cart
 
     public function getCartToFront($tz)
     {
+        $this->items = [];
+        $this->loadItems();
         $items = $this->ItemsData($tz);
+
         return [
             'common' => $this->CommonData($items),
             'items' => $items,
         ];
 
-        /*
-        $timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
-        $this->items = $this->storage->load();
-        $cartItems = $this->getItems();
-
-        $cartItems = $this->calculator->calculate($cartItems);
-        $result = [];
-        foreach ($cartItems as $item) {
-            $result[] = [
-                'id' => $item->id,
-                'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
-                'name' => $item->getProduct()->name,
-                'url' => route('shop.product.view', $item->getProduct()->slug),
-                'product_id' => $item->getProduct()->id,
-                'cost' => $item->base_cost * $item->getQuantity(),
-                'price' => empty($item->discount_cost) ? $item->base_cost : $item->discount_cost,
-                'quantity' => $item->getQuantity(),
-                'discount_id' => $item->discount_id ?? null,
-                'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
-                'discount_name' => $item->discount_name,
-                'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
-                'remove' => route('shop.cart.remove', $item->getProduct()->id),
-                'd' => now()->translatedFormat('d F Y'),
-            ];
-        }
-        return $result;*/
     }
 
     private function ItemsData($tz): array
     {
         $timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
-        $this->items = $this->storage->load();
-        $cartItems = $this->getItems();
 
-        $cartItems = $this->calculator->calculate($cartItems);
         $result = [];
-        foreach ($cartItems as $item) {
+        foreach ($this->items as $item) {
             $result[] = [
                 'id' => $item->id,
                 'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
@@ -178,24 +181,24 @@ class Cart
 
     public function CommonData(array $items): array
     {
-        $result = [
-            'count' => 0, //Кол-во товаров
-            'full_cost' => 0, //Полная стоимость
-            'discount' => 0, //Скидка
-            'amount' => 0, //Итого со скидкой
-            'check_all' => true,
+        return [
+            'count' => $this->info->order->count, //Кол-во товаров
+            'full_cost' => $this->info->order->amount, //Полная стоимость
+            'discount' => $this->info->order->amount - $this->info->order->discount, //Скидка
+            'amount' => $this->info->order->discount, //Итого со скидкой
+            'check_all' => $this->info->check_all,
         ];
-        foreach ($items as $item) {
+       /* foreach ($items as $item) {
             if (!$item['check']) {
                 $result['check_all'] = false;
             } else {
-                $result['count'] += $item['quantity'];
-                $result['full_cost'] += (int)$item['cost'];
-                $result['amount'] += is_null($item['discount_cost']) ? (int)$item['cost'] : (int)$item['discount_cost'];
+                //$result['count'] += $item['quantity'];
+                //$result['full_cost'] += (int)$item['cost'];
+                //$result['amount'] += is_null($item['discount_cost']) ? (int)$item['cost'] : (int)$item['discount_cost'];
             }
-        }
-        $result['discount'] += $result['full_cost'] - $result['amount'];
-        return $result;
+        }*/
+        //$result['discount'] += $this->info->order->amount - $this->info->order->discount;
+        //return $result;
     }
 
     public function removeByIds(array $ids)
