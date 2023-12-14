@@ -17,6 +17,7 @@ class CalculatorOrder
     {
     }
 
+    //TODO Перенести в корзину ???
     /**
      * @param CartItem[] $items
      * @return CartItem[]

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity;
+namespace App\Modules\Order\Entity\Order;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

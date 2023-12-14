@@ -7,14 +7,16 @@ class CartInfo
 {
     public CartInfoBlock $all;
     public CartInfoBlock $order;
-    public CartInfoBlock $preorder;
+    //public CartInfoBlock $preorder;
     public bool $check_all;
+    public bool $preorder;
 
     public function __construct()
     {
         $this->all = new CartInfoBlock();
         $this->order = new CartInfoBlock();
-        $this->preorder = new CartInfoBlock();
+        //$this->preorder = new CartInfoBlock();
+        $this->preorder = false;
         $this->check_all = true;
     }
 
@@ -22,7 +24,8 @@ class CartInfo
     {
         $this->all->clear();
         $this->order->clear();
-        $this->preorder->clear();
+        //$this->preorder->clear();
         $this->check_all = true;
+        $this->preorder = false;
     }
 }

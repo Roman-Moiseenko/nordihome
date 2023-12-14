@@ -7,12 +7,12 @@ use App\Entity\GeoAddress;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Entity\UserDelivery;
 use App\Modules\Delivery\Service\DeliveryService;
-use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Order\Entity\Order;
+use App\Modules\Discount\Service\CouponService;
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Request\RequestToOrder;
 use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\ShopRepository;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use stdClass;
@@ -25,14 +25,16 @@ class OrderService
     private Cart $cart;
     private int $coupon;
     private ShopRepository $repository;
+    private CouponService $coupons;
 
-    public function __construct(PaymentService $payments, DeliveryService $deliveries, Cart $cart, ShopRepository $repository)
+    public function __construct(PaymentService $payments, DeliveryService $deliveries, Cart $cart, ShopRepository $repository, CouponService $coupons)
     {
         $this->payments = $payments;
         $this->deliveries = $deliveries;
         $this->cart = $cart;
         $this->coupon = (new Options())->shop->coupon;
         $this->repository = $repository;
+        $this->coupons = $coupons;
     }
 
     public function default_user_data(): stdClass
@@ -139,19 +141,37 @@ class OrderService
     public function create(Request $request)
     {
         $default = $this->default_user_data();
+        $cartItems = $this->cart->getItems();
         if ($request->has('code')) {
             $coupon = $this->repository->getCoupon($request->get('code'));
+            //TODO Сервис  по скидкам и купонам
+            $discount_coupon = $this->coupons->discount($coupon, $cartItems);
         }
         //Создать Order
         $order = Order::register($default->payment->user_id);
 
+        //
+        if ($this->cart->info->preorder) {//В заказ остался товар для предзаказа
+            //Дополнительно делаем заявку на отгрузку от поставщиков, где основание данный заказ
+            $requestOrder = RequestToOrder::register($order->id);
+        }
+        foreach ($cartItems as $item) {
+            //Проверяем наличие,
+            //Ставим в резерв на ххх
+            if ($item->preorder()) {
+                $requestOrder->items()->create([
+                    'quantity' => $item->quantity - $item->availability(),
+                ]);
+            }
+            $order->items()->create([]);
+        }
 
 
         ///Добавить весь список товаров
         /// 1) в резерв
         /// 2) ожидание оплаты
 
-        //Создать платеж
+        //Создать платеж или
         /// внести платеж в Заказ
         ///
         //Создать заявку на доставку
@@ -163,5 +183,6 @@ class OrderService
         /// 3. Информацию, о счете ()
         /// 4. Время резерва, если не онлайн
         ///
+        return $order;
     }
 }

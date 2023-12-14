@@ -2,21 +2,21 @@
 declare(strict_types=1);
 
 use App\Entity\Admin;
-
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Order\Entity\Order;
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Entity\Attribute;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+
 /**  S H O P */
 
 //TODO Перенести в отдельный файл ????

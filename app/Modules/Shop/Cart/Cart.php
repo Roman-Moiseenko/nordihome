@@ -17,9 +17,6 @@ class Cart
     public CartInfo $info;
 
 
-
-
-
     public function __construct(HybridStorage $storage, CalculatorOrder $calculator)
     {
         $this->storage = $storage;
@@ -71,9 +68,14 @@ class Cart
 
     public function set(Product $product, $quantity)
     {
+        if ($quantity == 0) {
+            $this->remove($product);
+            return;
+        }
         $old_quantity = $this->getQuantity($product->id);
         if ($quantity > $old_quantity) $this->plus($product, $quantity - $old_quantity);
         if ($quantity < $old_quantity) $this->sub($product, $old_quantity - $quantity);
+
     }
 
     public function remove(Product $product)
@@ -92,7 +94,7 @@ class Cart
         $this->storage->clear();
     }
 
-    private function loadItems(): void
+    public function loadItems(): void
     {
         if (empty($this->items)) {
             $this->items = $this->storage->load();
@@ -102,12 +104,17 @@ class Cart
             $this->info->clear();
 
             foreach ($this->items as $item) {
-                //TODO Сделать подсчет на предзаказ и учет в базе???
-                if ($item->product->count_for_sell > $item->quantity) {
-                    $count_pre = (int)($item->product->count_for_sell - $item->quantity);
+
+                if ($item->check == true && $item->preorder()) $this->info->preorder = true;
+
+                /*
+                if ($item->product->count_for_sell < $item->quantity && $item->check == true) {
+                    $this->info->preorder = true; //В корзине на заказ лежит товар для предзаказа
+                }*/
+                /*    $count_pre = (int)($item->product->count_for_sell - $item->quantity);
                     $this->info->preorder->count += $count_pre;
                     $this->info->preorder->amount += $count_pre * $item->product->lastPrice->value;
-                }
+                }*/
                 if ($item->check == true) {
                     $this->info->order->count += $item->quantity;
                     $this->info->order->amount += $item->quantity * $item->product->lastPrice->value;
@@ -118,8 +125,6 @@ class Cart
             }
             if ($this->info->order->count != $this->info->all->count) $this->info->check_all = false;
         }
-
-
     }
 
     public function getQuantity(int $product_id): int
@@ -187,6 +192,7 @@ class Cart
             'discount' => $this->info->order->amount - $this->info->order->discount, //Скидка
             'amount' => $this->info->order->discount, //Итого со скидкой
             'check_all' => $this->info->check_all,
+            'preorder' => $this->info->preorder,
         ];
        /* foreach ($items as $item) {
             if (!$item['check']) {
@@ -230,4 +236,23 @@ class Cart
         }
     }
 
+    public function setAvailability()
+    {
+        $this->loadItems();
+        foreach ($this->items as $i => $item) {
+            //TODO проверка по резерву и доступно ли
+            if ($item->preorder()) {
+                $this->set($item->product, $item->availability());
+
+                if ($item->quantity == 0) {
+                    unset($this->items[$i]);
+                }
+            }
+
+           /* $availability-
+            if ()
+            $this->set($item->product);*/
+        }
+
+    }
 }

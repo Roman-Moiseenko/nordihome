@@ -9,7 +9,7 @@ use App\Modules\Order\Service\PaymentService;
 use App\Modules\Shop\Cart\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
+
 
 class OrderController extends Controller
 {
@@ -29,6 +29,15 @@ class OrderController extends Controller
 
     public function create(Request $request)
     {
+        //TODO !!!!!
+        //Постановка в Резерв товара
+        //Если товара меньше, чем есть и стоит флаг Только по наличию - обрезаем кол-во
+
+        if ($request->has('preorder') && ($request->get('preorder') == "false") ) {//Очищаем корзину от излишков
+            $this->cart->loadItems();
+            if ($this->cart->info->preorder) $this->cart->setAvailability();
+        }
+
         $cart = $this->cart->getCartToFront($request['tz']);
         $payments = $this->payments->get();
         $storages = $this->deliveries->storages();
@@ -38,7 +47,8 @@ class OrderController extends Controller
 
         $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->cart->getItems());
 
-        return view('shop.order.create', compact('cart', 'payments', 'storages', 'default', 'companies', 'delivery_cost'));
+        return view('shop.order.create', compact('cart', 'payments',
+            'storages', 'default', 'companies', 'delivery_cost'));
     }
 
     public function create_pre(Request $request)

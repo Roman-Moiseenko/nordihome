@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity;
+namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Order\Entity\Payment\Payment;
 use Carbon\Carbon;
@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Payment $payment
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
+ * @property OrderItem[] $items
  */
 
 class Order extends Model
@@ -60,7 +60,7 @@ class Order extends Model
             'paid' => false,
 
         ]);
-
+        $order->statuse()->create(['status' => OrderStatus::FORMED]);
 
         $order->save();
         return $order;

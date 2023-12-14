@@ -75,5 +75,19 @@ class CartItem
     {
         $this->check = !$this->check;
     }
+
+    public function preorder(): bool
+    {
+        return $this->quantity > $this->availability();
+    }
+
+    public function availability()
+    {
+        if (empty($this->reserve)) {
+            return $this->product->count_for_sell;
+        } else {
+            return $this->reserve->quantity;
+        }
+    }
 }
 

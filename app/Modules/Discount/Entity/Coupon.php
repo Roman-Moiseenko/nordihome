@@ -6,6 +6,8 @@ namespace App\Modules\Discount\Entity;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+
+//TODO Внести изменения в структуры
 /**
  * @property int $id
  * @property int $user_id
@@ -15,6 +17,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $started_at
  * @property Carbon $finished_at
  *
+ * @property bool $fixid //true - сумма скидки, false - %%
+ * @property int $count
+ * @property int $min_amount //Минимальная сумма заказа
+ * @property int $who //кто выдал
+ * @property int $rrr //Основание/условие выдачи
  */
 class Coupon extends Model
 {
