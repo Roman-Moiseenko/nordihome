@@ -13,11 +13,10 @@ use function now;
 
 class ReserveService
 {
-    private int $hours_reserve;
 
     public function __construct()
     {
-        $this->hours_reserve = (new Options())->shop->reserve_cart;
+
     }
 
     public function clearByTimer() //Удаляем все у которых время резерва вышло
@@ -36,7 +35,7 @@ class ReserveService
         }
     }
 
-    public function toReserve(Product $product, int $quantity, string $type): ?Reserve
+    public function toReserve(Product $product, int $quantity, string $type, int $minutes): ?Reserve
     {
         if (!Auth::guard('user')->check())
             throw new \DomainException('Нельзя добавить в резерв для незарегистрированного пользователя');
@@ -60,7 +59,7 @@ class ReserveService
                 $product->id,
                 $quantity,
                 $user_id,
-                $this->hours_reserve,
+                $minutes,
                 $type
             );
             DB::commit();
@@ -79,7 +78,8 @@ class ReserveService
             $product = $reserve->product;
             $product->count_for_sell += $reserve->quantity;
             $product->save();
-            $reserve->cart->clearReserve();
+            if ($reserve->type == Reserve::TYPE_CART) $reserve->cart->clearReserve();
+            if ($reserve->type == Reserve::TYPE_ORDER) $reserve->order->clearReserve();
             Reserve::destroy($reserve->id);
 
             DB::commit();

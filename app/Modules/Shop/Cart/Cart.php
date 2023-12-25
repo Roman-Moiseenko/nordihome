@@ -12,6 +12,11 @@ class Cart
 {
     /** @var CartItem[] $items */
     private array $items;
+    /** @var CartItem[] $itemsOrder  */
+    private array $itemsOrder;
+    /** @var CartItem[] $itemsPreOrder  */
+    private array $itemsPreOrder;
+
     private HybridStorage $storage;
     private CalculatorOrder $calculator;
     public CartInfo $info;
@@ -22,12 +27,25 @@ class Cart
         $this->storage = $storage;
         $this->calculator = $calculator;
         $this->info = new CartInfo();
+        $this->itemsOrder = [];
+        $this->itemsPreOrder = [];
     }
 
     public function getItems(): array
     {
         $this->loadItems();
         return $this->items;
+    }
+
+    public function getOrderItems(): array
+    {
+        $this->loadItems();
+        return $this->itemsOrder;
+    }
+    public function getPreOrderItems(): array
+    {
+        $this->loadItems();
+        return $this->itemsPreOrder;
     }
 
     public function add(Product $product, $quantity, array $options)
@@ -75,7 +93,6 @@ class Cart
         $old_quantity = $this->getQuantity($product->id);
         if ($quantity > $old_quantity) $this->plus($product, $quantity - $old_quantity);
         if ($quantity < $old_quantity) $this->sub($product, $old_quantity - $quantity);
-
     }
 
     public function remove(Product $product)
@@ -94,27 +111,52 @@ class Cart
         $this->storage->clear();
     }
 
+    public function clearOrder(): void
+    {
+        $this->loadItems();
+        foreach ($this->itemsOrder as $item) {
+            $this->sub($item->product, $item->quantity);
+        }
+    }
+    public function clearPreOrder(): void
+    {
+        $this->loadItems();
+        foreach ($this->itemsPreOrder as $item) {
+            $this->sub($item->product, $item->quantity);
+        }
+    }
+
     public function loadItems(): void
     {
         if (empty($this->items)) {
             $this->items = $this->storage->load();
+            $this->itemsOrder = [];
+            $this->itemsPreOrder = [];
+            foreach ($this->items as $item) {
+                if ($item->check) {
+                    if ($item->preorder()) {
+                        $this->itemsPreOrder[] = $item->withQuantity($item->quantity - $item->availability())->withNotReserve();
+                        $this->itemsOrder[] = $item->withQuantity($item->availability());
+                    } else {
+                        $this->itemsOrder[] = $item->withQuantity($item->quantity);
+                    }
+                }
+            }
 
             $this->items = $this->calculator->calculate($this->items);
-
+            $this->itemsOrder = $this->calculator->calculate($this->itemsOrder);
             $this->info->clear();
 
+            $this->info->order = $this->calcInfoBlock($this->itemsOrder);
+            $this->info->pre_order = $this->calcInfoBlock($this->itemsPreOrder);
+            $this->info->all = $this->calcInfoBlock($this->items);
+
+            $this->info->preorder = !empty($this->itemsPreOrder);
+
+            /*
             foreach ($this->items as $item) {
 
                 if ($item->check == true && $item->preorder()) $this->info->preorder = true;
-
-                /*
-                if ($item->product->count_for_sell < $item->quantity && $item->check == true) {
-                    $this->info->preorder = true; //В корзине на заказ лежит товар для предзаказа
-                }*/
-                /*    $count_pre = (int)($item->product->count_for_sell - $item->quantity);
-                    $this->info->preorder->count += $count_pre;
-                    $this->info->preorder->amount += $count_pre * $item->product->lastPrice->value;
-                }*/
                 if ($item->check == true) {
                     $this->info->order->count += $item->quantity;
                     $this->info->order->amount += $item->quantity * $item->product->lastPrice->value;
@@ -123,6 +165,7 @@ class Cart
                 $this->info->all->count += $item->quantity;
                 $this->info->all->amount += $item->quantity * $item->product->lastPrice->value;
             }
+            */
             if ($this->info->order->count != $this->info->all->count) $this->info->check_all = false;
         }
     }
@@ -149,21 +192,21 @@ class Cart
     {
         $this->items = [];
         $this->loadItems();
-        $items = $this->ItemsData($tz);
-
         return [
-            'common' => $this->CommonData($items),
-            'items' => $items,
+            'common' => $this->CommonData(),
+            'items' => $this->ItemsData($tz, $this->items),
+            'items_order' => $this->ItemsData($tz, $this->itemsOrder),
+            'items_preorder' => $this->ItemsData($tz, $this->itemsPreOrder),
         ];
 
     }
 
-    private function ItemsData($tz): array
+    private function ItemsData($tz, array $items): array
     {
         $timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
-
         $result = [];
-        foreach ($this->items as $item) {
+        /** @var CartItem $item */
+        foreach ($items as $item) {
             $result[] = [
                 'id' => $item->id,
                 'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
@@ -179,12 +222,13 @@ class Cart
                 'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
                 'remove' => route('shop.cart.remove', $item->getProduct()->id),
                 'check' => $item->check,
+                'available' => ($item->preorder()) ? $item->availability() : null,
             ];
         }
         return $result;
     }
 
-    public function CommonData(array $items): array
+    private function CommonData(): array
     {
         return [
             'count' => $this->info->order->count, //Кол-во товаров
@@ -193,18 +237,10 @@ class Cart
             'amount' => $this->info->order->discount, //Итого со скидкой
             'check_all' => $this->info->check_all,
             'preorder' => $this->info->preorder,
+
+            'count_preorder' => $this->info->pre_order->count,
+            'full_cost_preorder' => $this->info->pre_order->amount, //Полная стоимость
         ];
-       /* foreach ($items as $item) {
-            if (!$item['check']) {
-                $result['check_all'] = false;
-            } else {
-                //$result['count'] += $item['quantity'];
-                //$result['full_cost'] += (int)$item['cost'];
-                //$result['amount'] += is_null($item['discount_cost']) ? (int)$item['cost'] : (int)$item['discount_cost'];
-            }
-        }*/
-        //$result['discount'] += $this->info->order->amount - $this->info->order->discount;
-        //return $result;
     }
 
     public function removeByIds(array $ids)
@@ -238,6 +274,7 @@ class Cart
 
     public function setAvailability()
     {
+
         $this->loadItems();
         foreach ($this->items as $i => $item) {
             //TODO проверка по резерву и доступно ли
@@ -254,5 +291,19 @@ class Cart
             $this->set($item->product);*/
         }
 
+    }
+
+
+    private function calcInfoBlock(array $items): CartInfoBlock
+    {
+        $result = new CartInfoBlock();
+        /** var CartItem[] $items */
+        foreach ($items as $item) {
+            $result->count += $item->quantity;
+            $result->amount += $item->quantity * $item->product->lastPrice->value;
+            $result->discount += empty($item->discount_cost) ? 0 : $item->quantity * $item->discount_cost;
+        }
+
+        return $result;
     }
 }

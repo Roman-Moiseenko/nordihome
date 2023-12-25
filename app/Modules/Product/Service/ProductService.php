@@ -165,7 +165,7 @@ class ProductService
 
             /* SECTION 7*/
             //Цена, кол-во, статус, периодичность
-            $product->count_for_sell = (float)($request['count-for-sell'] ?? 0);
+            $product->count_for_sell = (int)($request['count-for-sell'] ?? 0);
             if (!empty($request['last-price']) && (float)$request['last-price'] > 0.99) {
                 $product->setPrice((float)$request['last-price']);
             }

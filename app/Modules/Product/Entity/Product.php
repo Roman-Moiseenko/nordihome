@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
  * @property int $frequency
  * @property int $brand_id
  * @property float $current_rating
- * @property float $count_for_sell
+ * @property int $count_for_sell
  * @property bool $published //Опубликован
  * @property bool $only_offline //Только в магазине
  * @property bool $pre_order //Установка для всего магазина из опций, после каждый отдельно можно менять

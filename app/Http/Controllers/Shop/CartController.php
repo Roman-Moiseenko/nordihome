@@ -29,8 +29,7 @@ class CartController extends Controller
     public function add(Request $request, Product $product) //sub, set_count, clear
     {
         try {
-            //if (!$request->has('quantity')) return;
-            $this->cart->add($product, 1, $request['options'] ?? []); //(int)$request->has('quantity')
+            $this->cart->add($product, 1, $request['options'] ?? []);
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
@@ -42,8 +41,7 @@ class CartController extends Controller
     public function sub(Request $request, Product $product) //sub, set_count, clear
     {
         try {
-            //if (!$request->has('quantity')) return;
-            $this->cart->sub($product, 1); //(int)$request->has('quantity')
+            $this->cart->sub($product, 1);
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {

@@ -3,10 +3,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\PaymentService;
+use App\Modules\Order\Service\ReserveService;
 use App\Modules\Shop\Cart\Cart;
+use App\Modules\User\Entity\CartStorage;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -17,28 +21,59 @@ class OrderController extends Controller
     private PaymentService $payments;
     private DeliveryService $deliveries;
     private OrderService $service;
+    private ReserveService $reserves;
+    private $minutes;
 
-    public function __construct(Cart $cart, PaymentService $payments, DeliveryService $deliveries, OrderService $service)
+    public function __construct(
+        Cart $cart,
+        PaymentService $payments,
+        DeliveryService $deliveries,
+        OrderService $service,
+        ReserveService  $reserves
+    )
     {
         $this->middleware(['auth:user']);
         $this->cart = $cart;
         $this->payments = $payments;
         $this->deliveries = $deliveries;
         $this->service = $service;
+        $this->reserves = $reserves;
+        $this->minutes = (new Options())->shop->reserve_cart;
     }
 
     public function create(Request $request)
     {
-        //TODO !!!!!
+        //TODO !!!!! Перенести куда-нибудь
         //Постановка в Резерв товара
-        //Если товара меньше, чем есть и стоит флаг Только по наличию - обрезаем кол-во
+        foreach ($this->cart->getOrderItems() as $item) {
+            if ($item->reserve == null) {
+                $reserve = $this->reserves->toReserve(
+                    $item->product,
+                    $item->quantity,
+                    Reserve::TYPE_CART,
+                    $this->minutes
+                );
+                CartStorage::find($item->id)->update(['reserve_id' => $reserve->id]);
+            } else {
+                $item->reserve->update(['reserve_at' => now()->addMinutes($this->minutes)]);
+            }
+        }
 
+
+        //Если товара меньше, чем есть и стоит флаг Только по наличию - обрезаем кол-во
+/*
         if ($request->has('preorder') && ($request->get('preorder') == "false") ) {//Очищаем корзину от излишков
             $this->cart->loadItems();
             if ($this->cart->info->preorder) $this->cart->setAvailability();
         }
-
+*/
         $cart = $this->cart->getCartToFront($request['tz']);
+        $preorder = 1;
+        if ($request->has('preorder') && ($request->get('preorder') == "false") ) {//Очищаем корзину от излишков
+            $cart['items_preorder'] = [];
+            $preorder = 0;
+        }
+
         $payments = $this->payments->get();
         $storages = $this->deliveries->storages();
         $companies = $this->deliveries->companies();
@@ -48,7 +83,7 @@ class OrderController extends Controller
         $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->cart->getItems());
 
         return view('shop.order.create', compact('cart', 'payments',
-            'storages', 'default', 'companies', 'delivery_cost'));
+            'storages', 'default', 'companies', 'delivery_cost', 'preorder'));
     }
 
     public function create_pre(Request $request)

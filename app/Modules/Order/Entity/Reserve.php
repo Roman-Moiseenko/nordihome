@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity;
 
+use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\CartStorage;
 use App\Modules\User\Entity\User;
@@ -20,6 +21,7 @@ use function now;
  * @property Product $product
  * @property User $user
  * @property CartStorage $cart
+ * @property OrderItem $order
  * @property string $type
  */
 
@@ -80,5 +82,10 @@ class Reserve extends Model
     public function cart()
     {
         return $this->hasOne(CartStorage::class, 'reserve_id', 'id');
+    }
+
+    public function order()
+    {
+        return $this->hasOne(OrderItem::class, 'reserve_id', 'id');
     }
 }

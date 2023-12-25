@@ -14,17 +14,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $preorder
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
- * @property int $amount //Полная сумма заказа
+ * @property float $amount //Полная сумма заказа
  * @property int $discount //Скидка по товарам
- * @property int $coupon //Примененная скидка по товару
+ * @property float $coupon //Примененная сумма скидки по товару
  * @property int $coupon_id //Купон скидки
- * @property int $delivery_cost //стоимость доставки, включенная в платеж
- * @property int $total //Полная сумма оплаты
+ * @property int $delivery_cost //стоимость доставки, включенная в платеж ?? Доставка оплачивается отдельно
+ * @property float $total //Полная сумма оплаты
 
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
- * @property OrderStep $step
- * @property OrderStep[] $steps
  * @property Payment $payment
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -37,6 +35,7 @@ class Order extends Model
     const ONLINE = 701;
     const MANUAL = 702;
     const SHOP = 703;
+    const PREORDER = 704; //???
 
     protected $fillable = [
         'user_id',
@@ -44,26 +43,48 @@ class Order extends Model
         'preorder',
         'paid',
         'finished',
-
+        'amount',
+        'discount',
+        'coupon',
+        'coupon_id',
+        'delivery_cost',
+        'total'
     ];
-
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'amount' => 'float',
+        'discount' => 'float',
+        'coupon' => 'float',
+        'delivery_cost' => 'float',
+        'total' => 'float',
     ];
 
     public static function register(int $user_id, int $type = self::ONLINE, bool $preorder = false): self
     {
         $order = self::make([
             'user_id' => $user_id,
+            'type' => $type,
             'paid' => false,
-
+            'preorder' => $preorder,
         ]);
         $order->statuse()->create(['status' => OrderStatus::FORMED]);
 
         $order->save();
         return $order;
+    }
+
+    public function setFinance(float $amount, float $discount, float $coupon, ?int $coupon_id, int $delivery_cost = 0)
+    {
+        $this->update([
+            'amount' => $amount,
+            'discount' => $discount,
+            'coupon' => $coupon,
+            'coupon_id' => $coupon_id,
+            'delivery_cost' => $delivery_cost,
+            'total' => ($amount + $delivery_cost - $discount - $coupon),
+        ]);
     }
 
     public function items()
@@ -72,21 +93,24 @@ class Order extends Model
     }
 
 
-
-    public function isStatus(int $status): bool
+    public function isStatus(int $value): bool
     {
-        foreach ($this->statuses as $_status) {
-            if ($_status->status == $status) return true;
+        foreach ($this->statuses as $status) {
+            if ($status->value == $value) return true;
         }
         return false;
     }
 
-    public function setStatus(int $status)
+    public function setStatus(int $value)
     {
         if ($this->finished)  throw new \DomainException('Заказ закрыт, статус менять нельзя');
-        if ($this->isStatus($status)) throw new \DomainException('Статус уже назначен');
-        $this->statuses()->create(['status' => $status]);
-        if (in_array($status, [OrderStatus::CANCEL, OrderStatus::CANCEL_BY_CUSTOMER, OrderStatus::COMPLETED])) $this->update(['finished' => true]);
+        if ($this->isStatus($value)) throw new \DomainException('Статус уже назначен');
+        if ($this->status->value < $value) throw new \DomainException('Нарушена последовательность статусов');
+
+        $this->statuses()->create(['value' => $value]);
+
+        if (in_array($value, [OrderStatus::CANCEL, OrderStatus::CANCEL_BY_CUSTOMER, OrderStatus::COMPLETED])) $this->update(['finished' => true]);
+        if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
     }
 
 
@@ -107,15 +131,6 @@ class Order extends Model
         return $this->hasMany(OrderStatus::class, 'order_id', 'id');
     }
 
-    public function step()
-    {
-        return $this->hasOne(OrderStep::class, 'order_id', 'id')->latestOfMany();
-    }
-
-    public function steps()
-    {
-        return $this->hasMany(OrderStep::class, 'order_id', 'id');
-    }
 
 //Функции для данных по доставке
 //TODO Сделать интерфейс

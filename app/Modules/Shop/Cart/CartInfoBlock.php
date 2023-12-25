@@ -9,6 +9,13 @@ class CartInfoBlock
     public float $amount;
     public float $discount;
 
+    public function __construct()
+    {
+        $this->amount = 0;
+        $this->count = 0;
+        $this->discount = 0;
+    }
+
     public function clear()
     {
         $this->amount = 0;

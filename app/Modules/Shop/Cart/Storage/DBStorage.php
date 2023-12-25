@@ -3,18 +3,20 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart\Storage;
 
+use App\Modules\Admin\Entity\Options;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Service\ReserveService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Cart\CartItem;
 use App\Modules\User\Entity\CartStorage;
-use App\Modules\User\Service\CartStorageService;
+
 use Illuminate\Support\Facades\Auth;
 
 class DBStorage implements StorageInterface
 {
     private int|null $user_id;
     private ReserveService $reserveService;
+    private $minutes;
 
     public function __construct(ReserveService $reserveService)
     {
@@ -22,6 +24,7 @@ class DBStorage implements StorageInterface
             throw new \DomainException('Неправильный вызов DBStorage, user == null');
         $this->user_id = Auth::guard('user')->user()->id;
         $this->reserveService = $reserveService;
+        $this->minutes = (new Options())->shop->reserve_cart;
     }
 
     /** @return CartItem[] */
@@ -45,7 +48,7 @@ class DBStorage implements StorageInterface
 
     public function add(CartItem $item): void
     {
-        $reserve = $this->reserveService->toReserve($item->getProduct(), $item->getQuantity(), Reserve::TYPE_CART);
+        $reserve = $this->reserveService->toReserve($item->getProduct(), $item->getQuantity(), Reserve::TYPE_CART, $this->minutes);
 
         $this->toStorage(
             $this->user_id,
@@ -57,9 +60,15 @@ class DBStorage implements StorageInterface
 
     public function sub(CartItem $item, int $quantity): void
     {
-        if (!is_null($item->reserve)) $this->reserveService->subReserve($item->reserve->id, $quantity);
 
         $new_quantity = $item->quantity - $quantity;
+        if (!is_null($item->reserve)) {
+
+            $_reserve = $item->reserve->quantity;
+            if ($new_quantity < $_reserve)
+                $this->reserveService->subReserve($item->reserve->id, $_reserve - $new_quantity);
+        }
+
         $this->updateQuantity($item->id, $new_quantity);
     }
 
@@ -89,7 +98,6 @@ class DBStorage implements StorageInterface
     }
 
 
-
     private function clearByUser($id)
     {
         CartStorage::where('user_id', $id)->delete();
@@ -108,16 +116,20 @@ class DBStorage implements StorageInterface
 
     private function updateQuantity(int $id, int $new_quantity)
     {
-        $cookie = CartStorage::find($id);
-        $cookie->update([
-            'quantity' => $new_quantity,
-        ]);
+        $storage = CartStorage::find($id);
+        if ($new_quantity == 0) {
+            $storage->delete();
+        } else {
+            $storage->update([
+                'quantity' => $new_quantity,
+            ]);
+        }
     }
 
     private function updateCheck(int $id, bool $check)
     {
-        $cookie = CartStorage::find($id);
-        $cookie->update([
+        $storage = CartStorage::find($id);
+        $storage->update([
             'check' => $check,
         ]);
     }

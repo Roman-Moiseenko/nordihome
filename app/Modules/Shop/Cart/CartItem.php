@@ -81,13 +81,27 @@ class CartItem
         return $this->quantity > $this->availability();
     }
 
-    public function availability()
+    public function availability(): int
     {
-        if (empty($this->reserve)) {
+        if ($this->reserve == null) {
             return $this->product->count_for_sell;
         } else {
             return $this->reserve->quantity;
         }
+    }
+
+    public function withQuantity(int $quantity): self
+    {
+        $item = clone $this;
+        $item->quantity = $quantity;
+        return $item;
+    }
+
+    public function withNotReserve(): self
+    {
+        $item = clone $this;
+        $item->reserve = null;
+        return $item;
     }
 }
 

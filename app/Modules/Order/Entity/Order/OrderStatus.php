@@ -10,26 +10,71 @@ use function now;
 /**
  * @property $id
  * @property $order_id
- * @property int $status
+ * @property int $value
  * @property Carbon $created_at
+ * @property string $comment
  */
 
 class OrderStatus extends Model
 {
-
-    const FORMED = 201; //Резерв 1ч
+    ///Стартовые статусы
+    const FORMED = 200; //Резерв 1ч
+    const PREORDER_SERVICE = 201; //Ожидает подтверждения менеджера предзаказа
     const AWAITING = 202; //Ожидает оплаты - резерв 3 дня ??????
     const PAID = 203;  //Оплачен
-    const DELIVERED = 204; //Отгружен на доставку
 
-    //Завершенные статусы
-    const COMPLETED = 205; //Выдан (завершен)
-    const CANCEL = 211;//
-    const CANCEL_BY_CUSTOMER = 212;//
+    ///Предзаказ
+    const ISSUED_SELLER = 210; //Оформлен у поставщика
+    const ON_PACKAGE = 211; //На комплектации
+    const CUSTOMS = 212; //'Проходит таможенный контроль',
+    const WAREHOUSE = 213; //'Доставлен на склад',
+
+    ///Служба заказов
+    const ORDER_SERVICE = 220;//'Передан в службу заказов',
+    const ORDER_COMPLETED = 221; //'Заказ собран',
+
+    ///Доставка
+    const DELIVERY_REGION = 240; //Готов для отправки ТК
+    const DELIVERY_REGION_SERVICE = 241; //Передан в службу доставки ТК
+    const DELIVERY_LOCAL = 250; //Готов для отправки по региону
+    const DELIVERY_LOCAL_SEND = 251; //Отправлен
+
+    ///Выдача
+    const READY = 260;// 'Готов к выдаче'
+    const COMPLETED = 290; //Выдан (завершен)
+
+
+    ///Отмененные статусы
+    const CANCEL = 280;//
+    const CANCEL_BY_CUSTOMER = 281;//
+
+
+    const STATUSES = [
+        self::FORMED => 'Сформирован',
+        self::AWAITING => 'Ожидает оплаты',
+        self::PAID => 'Оплачен',
+        self::ISSUED_SELLER => 'Оформлен у поставщика',
+        self::ON_PACKAGE => 'На комплектации',
+        self::CUSTOMS => 'Проходит таможенный контроль',
+        self::WAREHOUSE => 'Доставлен на склад',
+        self::ORDER_SERVICE => 'Передан в службу заказов',
+        self::ORDER_COMPLETED => 'Заказ собран',
+        self::DELIVERY_REGION => 'Готов для отправки ТК',
+        self::DELIVERY_REGION_SERVICE => 'Передан в службу доставки ТК',
+        self::DELIVERY_LOCAL => 'Готов для отправки по региону',
+        self::DELIVERY_LOCAL_SEND => 'Отправлен',
+        self::READY => 'Готов к выдаче',
+        self::COMPLETED => 'Выдан',
+        self::CANCEL => 'Отменен',
+        self::CANCEL_BY_CUSTOMER => 'Отменен клиентом',
+
+    ];
+
 
     protected $fillable = [
         'order_id',
-        'status'
+        'value',
+        'comment'
     ];
     public $timestamps = false;
     protected $casts = [

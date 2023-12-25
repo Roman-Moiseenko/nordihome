@@ -117,7 +117,7 @@
             <div class="box-card">
                 <div>Список товаров в корзине</div>
                 <div class="row">
-                @foreach($cart['items'] as $item)
+                @foreach($cart['items_order'] as $item)
                     @if($item['check'])
                     <div class="col-lg-2 col-sm-6 p-3">
                         <div class="" style="position: relative">
@@ -131,6 +131,24 @@
                     @endif
                 @endforeach
                 </div>
+                @if(!empty($cart['items_preorder']))
+                    <div class="mt-3">Товары для предзаказа</div>
+                    <div class="row">
+                        @foreach($cart['items_preorder'] as $item)
+                            @if($item['check'])
+                                <div class="col-lg-2 col-sm-6 p-3">
+                                    <div class="" style="position: relative">
+                                        <img src="{{ $item['img'] }}" title="{{ $item['name'] }}" style="width: 100%;">
+                                        @if($item['quantity'] > 1)
+                                            <span class="fs-8 order-item-quantity" style="position: absolute; bottom: 0">{{ $item['quantity'] }}шт.</span>
+                                        @endif
+                                    </div>
+                                    <div class="fs-7 text-center" style="color: var(--bs-gray-600);">{{ price($item['price']) }}/шт.</div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
         <div class="right-action-block">
@@ -164,6 +182,8 @@
                         @method('PUT')
                         @csrf
                     <input type="text" class="form-control p-2" name="coupon" />
+
+                        <input type="hidden" name="preorder" value="{{ $preorder }}">
                     </form>
                     <div class="coupon-info" style="display:none;">
                         <div>Скидка по купону:</div>

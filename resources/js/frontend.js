@@ -240,6 +240,7 @@ window.$ = jQuery;
     });
     //Обновление виджета корзины
     function widget_cart(data) {
+        console.log(data);
         let items = data.items;
         let common = data.common;
         let cartItemTemplate = $('#cart-item-template');
@@ -289,13 +290,13 @@ window.$ = jQuery;
         if (common.discount > 0) { //общая сумма со скидкой
             $('.cart-all-amount').hide();
             $('.cart-all-combined').show()
-            $('#widget-cart-all-discount').text(price_format(common.amount));
-            $('#widget-cart-all-amount-mini').text(price_format(common.full_cost));
+            $('#widget-cart-all-discount').text(price_format(common.amount + common.full_cost_preorder));
+            $('#widget-cart-all-amount-mini').text(price_format(common.full_cost + common.full_cost_preorder));
         } else {
-            $('#widget-cart-all-amount').text(price_format(common.full_cost));
+            $('#widget-cart-all-amount').text(price_format(common.full_cost + common.full_cost_preorder));
         }
-        counterCart.text(common.count);
-        $('#widget-cart-all-count').text(common.count);
+        counterCart.text(Number(common.count + common.count_preorder));
+        $('#widget-cart-all-count').text(Number(common.count + common.count_preorder));
 
         $(document).on('click', '.remove-item-cart', function () {
             let route = $(this).data('route');
@@ -369,8 +370,6 @@ window.$ = jQuery;
                 }
             );
         });
-
-
 
         //Выделение и сброс всех элементов
         $('#checked-all').on('change', function () {
@@ -468,6 +467,15 @@ window.$ = jQuery;
                 }
                 _blockItem.find($('.current-price')).html(price_format(items[i].price) + '/шт.');
                 _blockItem.find($('.current-cost')).html(price_format(items[i].cost));
+
+                if (items[i].available !== null) {
+                    _blockItem.find($('.full-cart-item--available')).show();
+                    _blockItem.find($('.full-cart-item--available-count')).text(items[i].available);
+
+                } else {
+                    _blockItem.find($('.full-cart-item--available')).hide();
+                }
+
             }
             //Итоговые данные по корзине
             if (CartData.length === 0) return false;

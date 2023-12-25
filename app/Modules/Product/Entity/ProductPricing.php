@@ -17,6 +17,9 @@ class ProductPricing extends Model
         'value',
         'founded'
     ];
+    protected $casts = [
+        'value' => 'float',
+    ];
 
     public function product()
     {

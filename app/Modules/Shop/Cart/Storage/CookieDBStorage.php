@@ -87,9 +87,13 @@ class CookieDBStorage implements StorageInterface
     private function updateQuantity(int $id, int $new_quantity)
     {
         $cookie = CartCookie::find($id);
-        $cookie->update([
-            'quantity' => $new_quantity,
-        ]);
+        if ($new_quantity == 0) {
+            $cookie->delete();
+        } else {
+            $cookie->update([
+                'quantity' => $new_quantity,
+            ]);
+        }
     }
     private function updateCheck(int $id, bool $check)
     {
