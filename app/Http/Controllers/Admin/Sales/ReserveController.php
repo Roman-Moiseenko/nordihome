@@ -1,0 +1,17 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin\Sales;
+
+use App\Http\Controllers\Controller;
+use App\Modules\Order\Entity\Reserve;
+use Illuminate\Http\Request;
+
+class ReserveController extends Controller
+{
+    public function index(Request $request)
+    {
+        $reserves = Reserve::orderByDesc('created_at')->all();
+        return view('admin.sales.reserve.index', compact('reserves'));
+    }
+}

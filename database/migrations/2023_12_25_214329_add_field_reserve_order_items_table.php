@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('order_items', function (Blueprint $table) {
             $table->integer('reserve_id')->nullable();
+            $table->string('discount_type')->default('');
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('order_items', function (Blueprint $table) {
             $table->dropColumn('reserve_id');
+            $table->dropColumn('discount_type');
         });
     }
 };

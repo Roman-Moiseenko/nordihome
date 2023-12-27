@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
+//TODO Перенести в Модули
 /**
  * @property int $id
  * @property string $name //Логин

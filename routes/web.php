@@ -210,6 +210,52 @@ Route::group(
             }
         );
 
+        //Delivery
+        Route::group(
+            [
+                'prefix' => 'delivery',
+                'as' => 'delivery.',
+                'namespace' => 'Delivery',
+            ],
+            function() {
+                //Просмотры - index
+                Route::get('/', 'DeliveryController@index')->name('all');
+                Route::get('/local', 'DeliveryController@index_local')->name('local');
+                Route::get('/region', 'DeliveryController@index_region')->name('region');
+                Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
+                //Действия
+
+            }
+        );
+        //Sales - продажи
+        Route::group(
+            [
+                'prefix' => 'sales',
+                'as' => 'sales.',
+                'namespace' => 'sales',
+            ],
+            function() {
+                Route::get('/cart', 'CartController@index')->name('cart');
+                Route::get('/reserve', 'ReserveController@index')->name('reserve');
+
+                //TODO Объеденить как Delivery????
+                Route::get('/order', 'OrderController@index')->name('order');
+                Route::get('/order/{order}', 'OrderController@show')->name('order.show');
+
+                Route::get('/preorder', 'PreOrderController@index')->name('preorder');
+                Route::get('/preorder/{order}', 'PreOrderController@show')->name('preorder.show');
+
+                Route::get('/executed', 'ExecutedController@index')->name('executed');
+                Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
+
+
+
+
+            }
+        );
+
+
+
         //AJAX Product-Image
         Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');
         Route::post('product/{product}/get-images', 'Product\ProductController@get_images')->name('product.get-images');

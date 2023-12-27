@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use function now;
 
 /**
- * @property $id
- * @property $order_id
+ * @property int $id
+ * @property int $order_id
  * @property int $value
  * @property Carbon $created_at
  * @property string $comment
@@ -43,11 +43,10 @@ class OrderStatus extends Model
     const READY = 260;// 'Готов к выдаче'
     const COMPLETED = 290; //Выдан (завершен)
 
-
     ///Отмененные статусы
     const CANCEL = 280;//
     const CANCEL_BY_CUSTOMER = 281;//
-
+    const REFUND = 282;
 
     const STATUSES = [
         self::FORMED => 'Сформирован',
@@ -67,7 +66,7 @@ class OrderStatus extends Model
         self::COMPLETED => 'Выдан',
         self::CANCEL => 'Отменен',
         self::CANCEL_BY_CUSTOMER => 'Отменен клиентом',
-
+        self::REFUND => 'Возврат оплаты',
     ];
 
 
@@ -76,11 +75,11 @@ class OrderStatus extends Model
         'value',
         'comment'
     ];
+
     public $timestamps = false;
     protected $casts = [
         'created_at' => 'datetime',
     ];
-
 
     protected static function boot()
     {

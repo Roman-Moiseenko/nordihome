@@ -80,7 +80,8 @@ class AdminComposer
 
     private function checkRouteName($menu, $pageName): bool
     {
-        if (isset($key['action'])) return $menu['route_name'] == $pageName;
+
+        if (isset($menu['action'])) return $menu['route_name'] == $pageName;
         return $this->clearAction($menu['route_name']) == $this->clearAction($pageName);
     }
 

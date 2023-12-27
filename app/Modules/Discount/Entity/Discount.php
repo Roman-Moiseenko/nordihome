@@ -72,6 +72,7 @@ class Discount extends Model
                 array_walk($items, function (&$item) {
                     if (empty($item->discount_cost) && $item->check) {
                         $item->discount_id = $this->id;
+                        $item->discount_type = Discount::class;
                         $item->discount_cost = round((($item->base_cost) * (100 - $this->discount)) / 100);
                         $item->discount_name = empty($this->title) ? '' : $this->title . ' (' . $this->discount . '%)';
                     }

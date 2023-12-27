@@ -58,7 +58,7 @@ Breadcrumbs::for('shop.order.create', function (BreadcrumbTrail $trail) {
 
 Breadcrumbs::for('shop.order.view', function (BreadcrumbTrail $trail, Order $order) {
     $trail->parent('shop.order.index');
-    $trail->push('Заказ xxx ' . $order->id, route('shop.order.view'));
+    $trail->push('Заказ xxx ' . $order->id, route('shop.order.view', $order));
 });
 
 
@@ -334,9 +334,39 @@ Breadcrumbs::for('admin.discount.discount.update', function (BreadcrumbTrail $tr
     $trail->push($discount->name, route('admin.discount.discount.show', $discount));
 });
 
+//DELIVERY
+Breadcrumbs::for('admin.delivery.all', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Доставка', route('admin.delivery.all'));
+});
+Breadcrumbs::for('admin.delivery.local', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.delivery.all');
+    $trail->push('Доставка по региону', route('admin.delivery.local'));
+});
+Breadcrumbs::for('admin.delivery.region', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.delivery.all');
+    $trail->push('Доставка ТК', route('admin.delivery.region'));
+});
+Breadcrumbs::for('admin.delivery.storage', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.delivery.all');
+    $trail->push('Самовывоз', route('admin.delivery.storage'));
+});
 
+//SALES
+Breadcrumbs::for('admin.sales', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Продажи', route('admin.home')); //TODO Заменить
+});
 
+Breadcrumbs::for('admin.sales.cart', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales');
+    $trail->push('Корзина', route('admin.sales.cart'));
+});
 
+Breadcrumbs::for('admin.sales.reserve', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales');
+    $trail->push('Резерв', route('admin.sales.reserve'));
+});
 
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));

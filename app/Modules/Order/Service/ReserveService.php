@@ -14,11 +14,6 @@ use function now;
 class ReserveService
 {
 
-    public function __construct()
-    {
-
-    }
-
     public function clearByTimer() //Удаляем все у которых время резерва вышло
     {
         $reserves = Reserve::where('reserve_at', '<', now())->get();
@@ -79,7 +74,11 @@ class ReserveService
             $product->count_for_sell += $reserve->quantity;
             $product->save();
             if ($reserve->type == Reserve::TYPE_CART) $reserve->cart->clearReserve();
-            if ($reserve->type == Reserve::TYPE_ORDER) $reserve->order->clearReserve();
+            if ($reserve->type == Reserve::TYPE_ORDER) {
+                //TODO Заказ поставить отмененным
+                $reserve->orderItem->clearReserve();
+                $reserve->orderItem->order->checkOutReserve();
+            }
             Reserve::destroy($reserve->id);
 
             DB::commit();

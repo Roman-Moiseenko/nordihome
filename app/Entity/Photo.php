@@ -49,7 +49,6 @@ class Photo extends Model
     //Генерация пути
     public function patternGeneratePath(): string
     {
-        //strtolower
         return '/' . Str::slug(class_basename($this->imageable)) . '/' . $this->imageable->id . '/';
     }
 

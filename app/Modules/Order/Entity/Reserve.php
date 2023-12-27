@@ -21,7 +21,7 @@ use function now;
  * @property Product $product
  * @property User $user
  * @property CartStorage $cart
- * @property OrderItem $order
+ * @property OrderItem $orderItem
  * @property string $type
  */
 
@@ -84,7 +84,7 @@ class Reserve extends Model
         return $this->hasOne(CartStorage::class, 'reserve_id', 'id');
     }
 
-    public function order()
+    public function orderItem()
     {
         return $this->hasOne(OrderItem::class, 'reserve_id', 'id');
     }

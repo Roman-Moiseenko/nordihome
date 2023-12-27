@@ -8,6 +8,8 @@ use App\Entity\Photo;
 use App\Entity\Video;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\User\Entity\CartCookie;
+use App\Modules\User\Entity\CartStorage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -50,6 +52,8 @@ use Illuminate\Support\Str;
  * @property ModificationProduct $modification_product
  * @property Series $series
  * @property int $series_id
+ * @property CartStorage[] $cartStorages
+ * @property CartCookie[] $cartCookies
  */
 class Product extends Model
 {
@@ -296,6 +300,15 @@ class Product extends Model
 
     //RELATIONSHIP
 
+    public function cartStorages()
+    {
+        return $this->hasMany(CartStorage::class, 'product_id', 'id');
+    }
+
+    public function cartCookies()
+    {
+        return $this->hasMany(CartCookie::class, 'product_id', 'id');
+    }
 
     public function series()
     {

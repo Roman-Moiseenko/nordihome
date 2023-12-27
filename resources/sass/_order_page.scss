@@ -67,3 +67,15 @@
     font-size: 1.25rem;
     color: var(--bs-red);
 }
+//Orders
+
+.order-header {
+    display: flex;
+    cursor: pointer;
+    justify-content: space-between;
+    background-color: var(--bs-gray-200);
+    margin: -10px -10px 0 -10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 10px;
+}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\PaymentService;
@@ -13,6 +14,7 @@ use App\Modules\Shop\Cart\Cart;
 use App\Modules\User\Entity\CartStorage;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 
 class OrderController extends Controller
@@ -60,13 +62,6 @@ class OrderController extends Controller
         }
 
 
-        //Если товара меньше, чем есть и стоит флаг Только по наличию - обрезаем кол-во
-/*
-        if ($request->has('preorder') && ($request->get('preorder') == "false") ) {//Очищаем корзину от излишков
-            $this->cart->loadItems();
-            if ($this->cart->info->preorder) $this->cart->setAvailability();
-        }
-*/
         $cart = $this->cart->getCartToFront($request['tz']);
         $preorder = 1;
         if ($request->has('preorder') && ($request->get('preorder') == "false") ) {//Очищаем корзину от излишков
@@ -98,16 +93,19 @@ class OrderController extends Controller
         return redirect()->route('shop.order.view', $order);
     }
 
-    public function view(Request $request)
+    public function view(Request $request, Order $order)
     {
-        return view('shop.order.view');
+
+        return view('shop.order.view', compact('order'));
     }
 
     public function index(Request $request)
     {
-
-        return view('shop.order.index');
+        $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
+        return view('shop.order.index', compact('orders'));
     }
+
+
 
     //AJAX
     public function checkorder(Request $request)

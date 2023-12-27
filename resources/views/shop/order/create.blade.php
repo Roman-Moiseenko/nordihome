@@ -45,17 +45,17 @@
             <div class="box-card">
                 <div>Доставка</div>
                 <input type="radio" class="btn-check" name="delivery" data-state="change" id="delivery_storage" autocomplete="off"
-                       value="{{ \App\Modules\Delivery\Entity\UserDelivery::STORAGE }}"
+                       value="{{ \App\Modules\Delivery\Entity\DeliveryOrder::STORAGE }}"
                        {{ $default->delivery->isStorage() ? 'checked' : '' }}
                 >
                 <label class="btn btn-outline-secondary" for="delivery_storage">Самовывоз</label>
                 <input type="radio" class="btn-check" name="delivery" data-state="change" id="delivery_local" autocomplete="off"
-                       value="{{ \App\Modules\Delivery\Entity\UserDelivery::LOCAL }}"
+                       value="{{ \App\Modules\Delivery\Entity\DeliveryOrder::LOCAL }}"
                     {{ $default->delivery->isLocal() ? 'checked' : '' }}
                 >
                 <label class="btn btn-outline-secondary" for="delivery_local">Доставка по региону</label>
                 <input type="radio" class="btn-check" name="delivery" data-state="change" id="delivery_region" autocomplete="off"
-                       value="{{ \App\Modules\Delivery\Entity\UserDelivery::REGION }}"
+                       value="{{ \App\Modules\Delivery\Entity\DeliveryOrder::REGION }}"
                     {{ $default->delivery->isRegion() ? 'checked' : '' }}
                 >
                 <label class="btn btn-outline-secondary" for="delivery_region">Транспортной компанией</label>

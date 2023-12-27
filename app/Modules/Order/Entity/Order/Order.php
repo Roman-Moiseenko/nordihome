@@ -63,15 +63,13 @@ class Order extends Model
 
     public static function register(int $user_id, int $type = self::ONLINE, bool $preorder = false): self
     {
-        $order = self::make([
+        $order = self::create([
             'user_id' => $user_id,
             'type' => $type,
             'paid' => false,
             'preorder' => $preorder,
         ]);
-        $order->statuse()->create(['status' => OrderStatus::FORMED]);
-
-        $order->save();
+        $order->statuses()->create(['value' => OrderStatus::FORMED]);
         return $order;
     }
 
@@ -92,7 +90,6 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
     }
 
-
     public function isStatus(int $value): bool
     {
         foreach ($this->statuses as $status) {
@@ -101,18 +98,17 @@ class Order extends Model
         return false;
     }
 
-    public function setStatus(int $value)
+    public function setStatus(int $value, string $comment = '')
     {
         if ($this->finished)  throw new \DomainException('Заказ закрыт, статус менять нельзя');
         if ($this->isStatus($value)) throw new \DomainException('Статус уже назначен');
-        if ($this->status->value < $value) throw new \DomainException('Нарушена последовательность статусов');
+        if ($this->status->value > $value) throw new \DomainException('Нарушена последовательность статусов');
 
-        $this->statuses()->create(['value' => $value]);
+        $this->statuses()->create(['value' => $value, 'comment' => $comment]);
 
         if (in_array($value, [OrderStatus::CANCEL, OrderStatus::CANCEL_BY_CUSTOMER, OrderStatus::COMPLETED])) $this->update(['finished' => true]);
         if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
     }
-
 
     //Relations *************************************************************************************
 
@@ -129,6 +125,26 @@ class Order extends Model
     public function statuses()
     {
         return $this->hasMany(OrderStatus::class, 'order_id', 'id');
+    }
+
+    public function checkOutReserve()
+    {
+        $canceled = true;
+        foreach ($this->items as $item) {
+            if ($item->reserve_id != null) $canceled = false;
+        }
+        if (!$this->paid && $canceled) $this->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
+    }
+
+    //Хелперы
+    public function htmlDate(): string
+    {
+        return 'Заказ от ' . $this->created_at->translatedFormat('d F');
+    }
+
+    public function htmlNum(): string
+    {
+        return  '№ ' . str_pad((string)$this->id, 6, '0', STR_PAD_LEFT);
     }
 
 

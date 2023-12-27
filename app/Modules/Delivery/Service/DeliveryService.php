@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Service;
 
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\Local\Delivery;
 use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
@@ -60,7 +61,7 @@ class DeliveryService
         return new DeliveryData(0, 0);
     }
 
-    //TODO расчет расстояни
+    //TODO расчет расстояния
     private function distance()
     {
         //Получаем базовые координаты центра из настроек
@@ -71,6 +72,11 @@ class DeliveryService
         return 22; //расстояние в км
     }
 
-
+    public function create(int $order_id, int $type_delivery, string $address)
+    {
+        $delivery = DeliveryOrder::register($order_id, $type_delivery, $address);
+        //TODO Оповещение о новых доставках
+        event($delivery);
+    }
 
 }

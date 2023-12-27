@@ -36,6 +36,8 @@ class CalculatorOrder
                 if (!is_null($prom_disc)) {
                     $item->discount_cost = round($item->base_cost * (100 - $prom_disc) / 100);
                     $item->discount_name = $promotion->title;
+                    $item->discount_id = $promotion->id;
+                    $item->discount_type = Promotion::class;
                 }
             }
 
@@ -58,6 +60,8 @@ class CalculatorOrder
                     $item->discount_cost = round(($q_product * $bonus_product->discount + ($q_bonus - $q_product) * $item->base_cost) / $q_bonus);
                 }
                 $item->discount_name = 'Бонусный товар';
+                $item->discount_id = $bonus_product->product_id;
+                $item->discount_type = Bonus::class;
             }
 
             //Бонус при объеме

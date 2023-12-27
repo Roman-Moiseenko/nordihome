@@ -5,6 +5,8 @@ namespace App\Modules\Delivery\Entity;
 
 use App\Casts\GeoAddressCast;
 use App\Entity\GeoAddress;
+use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Delivery\Helpers\DeliveryHelper;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,11 +24,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserDelivery extends Model
 {
-
+/*
     const STORAGE = 401;
     const LOCAL = 402;
     const REGION = 403;
-
+*/
     public $timestamps = false;
 
 
@@ -50,17 +52,16 @@ class UserDelivery extends Model
 
     public function isStorage(): bool
     {
-        return $this->type == self::STORAGE;
+        return $this->type == DeliveryOrder::STORAGE;
     }
     public function isLocal(): bool
     {
-        return $this->type == self::LOCAL;
+        return $this->type == DeliveryOrder::LOCAL;
     }
     public function isRegion(): bool
     {
-        return $this->type == self::REGION;
+        return $this->type == DeliveryOrder::REGION;
     }
-
 
     public static function register(int $user_id): self
     {
@@ -92,4 +93,11 @@ class UserDelivery extends Model
         $this->save();
     }
 
+    public function getAddressDelivery(): string
+    {
+        if ($this->isLocal()) return $this->local->address;
+        if ($this->isRegion()) return $this->region->address . '( ' . DeliveryHelper::name($this->company) . ')';
+        if ($this->isStorage()) return Storage::find($this->storage)->address;
+        throw new \DomainException('Неверный тип доставки, невозможно вернуть адрес');
+    }
 }

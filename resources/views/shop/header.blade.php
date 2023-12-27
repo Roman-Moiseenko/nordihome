@@ -73,7 +73,7 @@
                         @include('shop.widget.header-wish')
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
+                        <a class="nav-link d-flex flex-column text-center" href="{{ route('shop.order.index') }}">
                             <i class="fa-sharp fa-light fa-box-open fs-4"></i>
                             <span class="fs-7">Заказы</span>
                         </a>

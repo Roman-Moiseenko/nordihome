@@ -10,7 +10,6 @@ use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Service\CouponService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
-use App\Modules\Order\Entity\Request\RequestToOrder;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Cart\Cart;
@@ -149,17 +148,15 @@ class OrderService
         return 0;
     }
 
-
     public function create(Request $request)
     {
         $default = $this->default_user_data();
         $OrderItems = $this->cart->getOrderItems();
-
         $cart_order = $this->cart->info->order;
+
 
         //Создать Order
         $order = Order::register($default->payment->user_id, Order::ONLINE, false);
-
 
         $discount_coupon = 0;
         if ($request->has('code')) {
@@ -174,9 +171,8 @@ class OrderService
             $discount_coupon,
             (empty($coupon) || $discount_coupon == 0) ? null : $coupon->id);
 
-
         foreach ($OrderItems as $item) {
-            if ($item->reserve == null) {
+            if (is_null($item->reserve)) {
                 //Добавить товар в резерв
                 $reserve = $this->reserves->toReserve(
                     $item->product,
@@ -199,19 +195,21 @@ class OrderService
                 'quantity' => $item->quantity,
                 'base_cost' => $item->base_cost,
                 'sell_cost' => $item->discount_cost,
-                'discount_id' => $item->discount_id,
+                'discount_id' => $item->discount_id ?? null,
+                'discount_type' => $item->discount_type ?? '',
                 'options' => $item->options,
                 'reserve_id' => $reserve_id
             ]);
-
-
         }
+        $this->cart->clearOrder(true);
 /// 2) ожидание оплаты
-        $order->setStatus(OrderStatus::FORMED);
         $order->setStatus(OrderStatus::AWAITING);
 
+        //Доставка
+        $this->deliveries->create($order->id, $default->delivery->type, $default->delivery->getAddressDelivery());
+
         //Предзаказ
-        if ($request['preorder'] == 1) {//В заказе остался товар для предзаказа.
+        if ($request['preorder'] == 1) {//В заказе установлена метка для предзаказа.
             $PreOrderItems = $this->cart->getPreOrderItems();
             $cart_preorder = $this->cart->info->pre_order;
 
@@ -228,13 +226,12 @@ class OrderService
                 ]);
             }
             $this->cart->clearPreOrder();
-            $order->setStatus(OrderStatus::FORMED);
             $order->setStatus(OrderStatus::PREORDER_SERVICE);
         }
 
-        //TODO Очистка корзины
-        // очистка по кол-во
-        // cart->clearOrder(), cart->clearPreOrder() в каждой из них, если quantity = 0 => remove(item)
+        //TODO Очистка корзины проверить
+
+
 
         //Создать платеж или
         /// внести платеж в Заказ
@@ -249,5 +246,26 @@ class OrderService
         /// 4. Время резерва, если не онлайн
         ///
         return $order;
+    }
+
+    public function payment(int $order_id, array $payment_data)
+    {
+        /** @var Order $order */
+        $order = Order::find($order_id);
+
+
+        foreach ($order->items as $item) {
+            if ($item->reserve_id != null) {
+                $item->reserve()->delete();
+            } else {
+                $order->setStatus(OrderStatus::REFUND);
+                throw new \DomainException('Произведена оплата за отмененный заказ');
+            }
+        }
+        $order->setStatus(OrderStatus::PAID);
+
+        //TODO Создать платеж $payment_data
+
+        //TODO Проводка покупки
     }
 }

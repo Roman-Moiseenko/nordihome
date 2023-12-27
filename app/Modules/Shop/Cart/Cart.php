@@ -111,18 +111,18 @@ class Cart
         $this->storage->clear();
     }
 
-    public function clearOrder(): void
+    public function clearOrder(bool $notReserve = false): void
     {
-        $this->loadItems();
         foreach ($this->itemsOrder as $item) {
-            $this->sub($item->product, $item->quantity);
+            if ($notReserve == true) $item->reserve = null; //Очистка товара без затрагивания резерва
+            $this->storage->sub($item, $item->quantity); //Очищаем напрямую позицию
         }
     }
+
     public function clearPreOrder(): void
     {
-        $this->loadItems();
         foreach ($this->itemsPreOrder as $item) {
-            $this->sub($item->product, $item->quantity);
+            $this->storage->sub($item, $item->quantity);
         }
     }
 
@@ -153,19 +153,6 @@ class Cart
 
             $this->info->preorder = !empty($this->itemsPreOrder);
 
-            /*
-            foreach ($this->items as $item) {
-
-                if ($item->check == true && $item->preorder()) $this->info->preorder = true;
-                if ($item->check == true) {
-                    $this->info->order->count += $item->quantity;
-                    $this->info->order->amount += $item->quantity * $item->product->lastPrice->value;
-                    $this->info->order->discount += empty($item->discount_cost) ? 0 : $item->quantity * $item->discount_cost;
-                }
-                $this->info->all->count += $item->quantity;
-                $this->info->all->amount += $item->quantity * $item->product->lastPrice->value;
-            }
-            */
             if ($this->info->order->count != $this->info->all->count) $this->info->check_all = false;
         }
     }

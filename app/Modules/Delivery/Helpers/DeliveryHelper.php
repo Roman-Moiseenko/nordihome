@@ -39,4 +39,11 @@ class DeliveryHelper
         $namespace = Delivery::namespace();
         return ($namespace . '\\' . $class)::calculate($items, $params);
     }
+
+    public static function name(string $class): string
+    {
+        $namespace = Delivery::namespace();
+        return ($namespace . '\\' . $class)::name();
+
+    }
 }
