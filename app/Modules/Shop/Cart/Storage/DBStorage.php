@@ -117,6 +117,7 @@ class DBStorage implements StorageInterface
     private function updateQuantity(int $id, int $new_quantity)
     {
         $storage = CartStorage::find($id);
+        if ($storage == null) return;
         if ($new_quantity == 0) {
             $storage->delete();
         } else {

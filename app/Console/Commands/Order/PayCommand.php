@@ -13,12 +13,26 @@ class PayCommand extends Command
 
     protected $description = 'Заказ оплачен';
 
+
+
     public function handle(): bool
     {
         $order_id = $this->argument('order_id');
         try {
             $order = Order::find($order_id);
+
+            foreach ($order->items as $item) {
+                if ($item->reserve_id != null) {
+                    $item->reserve()->delete();
+                } else {
+                    $order->setStatus(OrderStatus::REFUND);
+                    throw new \DomainException('Произведена оплата за отмененный заказ');
+                }
+            }
+
             $order->setStatus(OrderStatus::PAID);
+
+
         } catch (\DomainException $e) {
             $this->error($e->getMessage());
             return false;

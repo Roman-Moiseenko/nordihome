@@ -63,7 +63,7 @@
                 </x-base.table.thead>
                 <x-base.table.tbody>
                     @foreach($deliveries as $delivery)
-                        @include('admin.delivery.local._list', ['delivery' => $delivery])
+                        @include('admin.delivery._list', ['delivery' => $delivery])
                     @endforeach
                 </x-base.table.tbody>
             </x-base.table>

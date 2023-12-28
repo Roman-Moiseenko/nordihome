@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Order\Entity\Payment\Payment;
+use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
  * @property float $amount //Полная сумма заказа
- * @property int $discount //Скидка по товарам
+ * @property float $discount //Скидка по товарам
  * @property float $coupon //Примененная сумма скидки по товару
  * @property int $coupon_id //Купон скидки
  * @property int $delivery_cost //стоимость доставки, включенная в платеж ?? Доставка оплачивается отдельно
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property OrderItem[] $items
+ * @property User $user
  */
 
 class Order extends Model
@@ -112,6 +114,11 @@ class Order extends Model
 
     //Relations *************************************************************************************
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     public function payment()
     {
         return $this->morphOne(Payment::class, 'payable');
@@ -146,6 +153,7 @@ class Order extends Model
     {
         return  '№ ' . str_pad((string)$this->id, 6, '0', STR_PAD_LEFT);
     }
+
 
 
 //Функции для данных по доставке

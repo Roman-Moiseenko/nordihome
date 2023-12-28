@@ -50,6 +50,7 @@ class OrderStatus extends Model
 
     const STATUSES = [
         self::FORMED => 'Сформирован',
+        self::PREORDER_SERVICE => 'Ожидает менеджера',
         self::AWAITING => 'Ожидает оплаты',
         self::PAID => 'Оплачен',
         self::ISSUED_SELLER => 'Оформлен у поставщика',
@@ -80,6 +81,11 @@ class OrderStatus extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function value(): string
+    {
+        return self::STATUSES[$this->value];
+    }
 
     protected static function boot()
     {

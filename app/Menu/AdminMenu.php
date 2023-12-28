@@ -30,27 +30,27 @@ class AdminMenu
                     'order' => [
                         'icon' => 'file-plus-2',
                         'title' => 'Заказы (new)',
-                        'route_name' => 'admin.sales.order',
+                        'route_name' => 'admin.sales.order.index',
                     ],
                     'preorder' => [
                         'icon' => 'file-scan',
                         'title' => 'Предзаказы',
-                        'route_name' => 'admin.sales.preorder',
+                        'route_name' => 'admin.sales.preorder.index',
                     ],
                     'executed' => [
                         'icon' => 'file-check-2',
                         'title' => 'Заказы (исп.)',
-                        'route_name' => 'admin.sales.executed',
+                        'route_name' => 'admin.sales.executed.index',
                     ],
                     'reserve' => [
                         'icon' => 'baggage-claim',
                         'title' => 'Резерв',
-                        'route_name' => 'admin.sales.reserve',
+                        'route_name' => 'admin.sales.reserve.index',
                     ],
                     'cart' => [
                         'icon' => 'shopping-cart',
                         'title' => 'Корзина',
-                        'route_name' => 'admin.sales.cart',
+                        'route_name' => 'admin.sales.cart.index',
                     ],
                 ],
             ],

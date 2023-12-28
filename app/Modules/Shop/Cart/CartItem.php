@@ -14,7 +14,7 @@ class CartItem
     public int $id;
     public int $quantity;
     public float $base_cost = -1;
-    public float $discount_cost;
+    public float $discount_cost = 0;
     public string $discount_name = '';
     public int $discount_id;
     public string $discount_type;

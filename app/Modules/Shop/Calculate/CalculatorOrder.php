@@ -63,10 +63,8 @@ class CalculatorOrder
                 $item->discount_id = $bonus_product->product_id;
                 $item->discount_type = Bonus::class;
             }
-
             //Бонус при объеме
         }
-
 
         /** @var Discount[] $discounts */
         $discounts = Discount::where('active', true)->get();

@@ -358,19 +358,48 @@ Breadcrumbs::for('admin.sales', function (BreadcrumbTrail $trail) {
     $trail->push('Продажи', route('admin.home')); //TODO Заменить
 });
 
-Breadcrumbs::for('admin.sales.cart', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.sales.cart.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.sales');
-    $trail->push('Корзина', route('admin.sales.cart'));
+    $trail->push('Корзина', route('admin.sales.cart.index'));
 });
 
-Breadcrumbs::for('admin.sales.reserve', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.sales.reserve.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.sales');
-    $trail->push('Резерв', route('admin.sales.reserve'));
+    $trail->push('Резерв', route('admin.sales.reserve.index'));
 });
 
+Breadcrumbs::for('admin.sales.order.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales');
+    $trail->push('Заказы новые', route('admin.sales.order.index'));
+});
+
+Breadcrumbs::for('admin.sales.order.show', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('admin.sales.order.index');
+    $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.order.show', $order));
+});
+
+Breadcrumbs::for('admin.sales.preorder.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales');
+    $trail->push('Предзаказы новые', route('admin.sales.preorder.index'));
+});
+Breadcrumbs::for('admin.sales.preorder.show', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('admin.sales.preorder.index');
+    $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.preorder.show', $order));
+});
+
+Breadcrumbs::for('admin.sales.executed.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales');
+    $trail->push('Заказы завершенные', route('admin.sales.executed.index'));
+});
+Breadcrumbs::for('admin.sales.executed.show', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('admin.sales.executed.index');
+    $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.executed.show', $order));
+});
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));
 });
+
+
 
 
 Breadcrumbs::for('admin.settings.shop', function (BreadcrumbTrail $trail) {

@@ -148,12 +148,12 @@ class Cart
             $this->info->clear();
 
             $this->info->order = $this->calcInfoBlock($this->itemsOrder);
+
             $this->info->pre_order = $this->calcInfoBlock($this->itemsPreOrder);
             $this->info->all = $this->calcInfoBlock($this->items);
 
             $this->info->preorder = !empty($this->itemsPreOrder);
-
-            if ($this->info->order->count != $this->info->all->count) $this->info->check_all = false;
+            if (($this->info->order->count + $this->info->pre_order->count) != $this->info->all->count) $this->info->check_all = false;
         }
     }
 
@@ -218,16 +218,16 @@ class Cart
     private function CommonData(): array
     {
         return [
-            'count' => $this->info->order->count, //Кол-во товаров
-            'full_cost' => $this->info->order->amount, //Полная стоимость
-            'discount' => $this->info->order->amount - $this->info->order->discount, //Скидка
-            'amount' => $this->info->order->discount, //Итого со скидкой
-            'check_all' => $this->info->check_all,
-            'preorder' => $this->info->preorder,
+             'count' => $this->info->order->count, //Кол-во товаров
+             'full_cost' => $this->info->order->amount, //Полная стоимость
+             'discount' => $this->info->order->discount, //Скидка
+             'amount' => $this->info->order->amount - $this->info->order->discount, //Итого со скидкой
+             'check_all' => $this->info->check_all,
+             'preorder' => $this->info->preorder,
 
-            'count_preorder' => $this->info->pre_order->count,
-            'full_cost_preorder' => $this->info->pre_order->amount, //Полная стоимость
-        ];
+             'count_preorder' => $this->info->pre_order->count,
+             'full_cost_preorder' => $this->info->pre_order->amount, //Полная стоимость
+         ];
     }
 
     public function removeByIds(array $ids)

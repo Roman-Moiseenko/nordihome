@@ -235,18 +235,19 @@ Route::group(
                 'namespace' => 'sales',
             ],
             function() {
-                Route::get('/cart', 'CartController@index')->name('cart');
-                Route::get('/reserve', 'ReserveController@index')->name('reserve');
+                Route::get('/cart', 'CartController@index')->name('cart.index');
+                Route::get('/reserve', 'ReserveController@index')->name('reserve.index');
 
                 //TODO Объеденить как Delivery????
-                Route::get('/order', 'OrderController@index')->name('order');
+                Route::get('/order', 'OrderController@index')->name('order.index');
                 Route::get('/order/{order}', 'OrderController@show')->name('order.show');
 
-                Route::get('/preorder', 'PreOrderController@index')->name('preorder');
+                Route::get('/preorder', 'PreOrderController@index')->name('preorder.index');
                 Route::get('/preorder/{order}', 'PreOrderController@show')->name('preorder.show');
 
-                Route::get('/executed', 'ExecutedController@index')->name('executed');
+                Route::get('/executed', 'ExecutedController@index')->name('executed.index');
                 Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
+                Route::get('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
 
 
 

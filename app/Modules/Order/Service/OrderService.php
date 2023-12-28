@@ -194,7 +194,7 @@ class OrderService
                 'product_id' => $item->product->id,
                 'quantity' => $item->quantity,
                 'base_cost' => $item->base_cost,
-                'sell_cost' => $item->discount_cost,
+                'sell_cost' => ($item->discount_cost == 0) ? $item->base_cost : $item->discount_cost,
                 'discount_id' => $item->discount_id ?? null,
                 'discount_type' => $item->discount_type ?? '',
                 'options' => $item->options,
@@ -226,7 +226,7 @@ class OrderService
                 ]);
             }
             $this->cart->clearPreOrder();
-            $order->setStatus(OrderStatus::PREORDER_SERVICE);
+            $preorder->setStatus(OrderStatus::PREORDER_SERVICE);
         }
 
         //TODO Очистка корзины проверить

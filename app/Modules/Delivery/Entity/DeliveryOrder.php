@@ -55,7 +55,7 @@ class DeliveryOrder extends Model
             'address' => $address,
         ]);
 
-        $delivery->satuses()->create([
+        $delivery->statuses()->create([
             'value' => DeliveryStatus::WAIT_STAFF,
         ]);
         return $delivery;
@@ -76,12 +76,12 @@ class DeliveryOrder extends Model
 
     public function status()
     {
-        return $this->hasOne(DeliveryStatus::class, 'order_id', 'id')->latestOfMany();
+        return $this->hasOne(DeliveryStatus::class, 'delivery_id', 'id')->latestOfMany();
     }
 
     public function statuses()
     {
-        return $this->hasMany(DeliveryStatus::class, 'order_id', 'id');
+        return $this->hasMany(DeliveryStatus::class, 'delivery_id', 'id');
     }
 
     public function responsible()

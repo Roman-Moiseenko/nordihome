@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $order_id
+ * @property int $delivery_id
  * @property int $value
  * @property Carbon $created_at
  * @property string $comment
@@ -39,7 +39,7 @@ class DeliveryStatus extends Model
     ];
 
     protected $fillable = [
-        'order_id',
+        'delivery_id',
         'value',
         'comment'
     ];
@@ -48,6 +48,11 @@ class DeliveryStatus extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function value(): string
+    {
+        return self::STATUSES[$this->value];
+    }
 
     protected static function boot()
     {
