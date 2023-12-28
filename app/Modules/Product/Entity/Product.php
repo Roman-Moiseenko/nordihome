@@ -7,6 +7,7 @@ use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Entity\Video;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
@@ -54,6 +55,7 @@ use Illuminate\Support\Str;
  * @property int $series_id
  * @property CartStorage[] $cartStorages
  * @property CartCookie[] $cartCookies
+ * @property Reserve[] $reserves
  */
 class Product extends Model
 {
@@ -299,6 +301,11 @@ class Product extends Model
     }
 
     //RELATIONSHIP
+
+    public function reserves()
+    {
+        return $this->hasMany(Reserve::class, 'product_id', 'id');
+    }
 
     public function cartStorages()
     {

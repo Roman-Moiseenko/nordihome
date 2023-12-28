@@ -23,20 +23,16 @@ class CartController extends Controller
     public function index(Request $request)
     {
 
-        $products = Product::orderBy('name');
-        //TODO
+        $query = Product::orderBy('name')->Has('cartStorages')->OrHas('cartCookies');
 
-       /* $cart_cookie = CartCookie::orderByDesc('created_at')->get();
-        $cart_storage = CartStorage::orderByDesc('created_at')->get();*/
-/*
         //ПАГИНАЦИЯ
         if (!empty($pagination = $request->get('p'))) {
-            $deliveries = $query->paginate($pagination);
-            $deliveries->appends(['p' => $pagination]);
+            $products = $query->paginate($pagination);
+            $products->appends(['p' => $pagination]);
         } else {
-            $deliveries = $query->paginate($this->pagination);
+            $products = $query->paginate($this->pagination);
         }
-*/
-        return view('admin.sales.cart.index', compact( 'products'));
+
+        return view('admin.sales.cart.index', compact( 'products', 'pagination'));
     }
 }
