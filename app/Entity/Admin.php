@@ -24,6 +24,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $active //Не заблокирован
  * @property string $photo
  * @property string $post //Должность
+ *
  */
 class Admin extends Authenticatable implements UploadsDirectory
 {
