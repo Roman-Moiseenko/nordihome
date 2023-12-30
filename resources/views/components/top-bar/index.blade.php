@@ -136,7 +136,7 @@
                                 <div class="image-fit h-8 w-8">
                                     <img
                                         class="rounded-full"
-                                        src="{{ Vite::asset($faker['photos'][0]) }}"
+                                        src="{{ $faker['photos'][0] }}"
                                         alt="Midone Tailwind HTML Admin Template"
                                     />
                                 </div>
@@ -156,7 +156,7 @@
                             <div class="image-fit h-8 w-8">
                                 <img
                                     class="rounded-full"
-                                    src="{{ Vite::asset($faker['images'][0]) }}"
+                                    src="{{ $faker['images'][0] }}"
                                     alt="Midone Tailwind HTML Admin Template"
                                 />
                             </div>
@@ -190,7 +190,7 @@
                         <div class="image-fit relative mr-1 h-12 w-12 flex-none">
                             <img
                                 class="rounded-full"
-                                src="{{ Vite::asset($faker['photos'][0]) }}"
+                                src="{{ $faker['photos'][0] }}"
                                 alt="Midone Tailwind HTML Admin Template"
                             />
                             <div

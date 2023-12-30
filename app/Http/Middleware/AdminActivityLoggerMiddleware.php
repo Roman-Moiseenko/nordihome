@@ -6,7 +6,6 @@ namespace App\Http\Middleware;
 use App\Entity\LogActivity;
 use Closure;
 use \Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 class AdminActivityLoggerMiddleware
 {

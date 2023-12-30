@@ -151,6 +151,7 @@ class Admin extends Authenticatable implements UploadsDirectory
             throw new \InvalidArgumentException('Неверная роль пользователя ' . $role);
         }
         $this->role = $role;
+        $this->save();
     }
 
     public function activated()

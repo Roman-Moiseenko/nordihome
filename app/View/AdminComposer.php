@@ -9,6 +9,7 @@ use App\Menu\ContactMenu;
 use App\Menu\ShopMenu;
 use App\Modules\Product\Repository\CategoryRepository;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
 class AdminComposer

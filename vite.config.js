@@ -19,6 +19,7 @@ export default defineConfig({
                 'resources/sass/admin.scss',
                 'resources/js/shop.js',
                 'resources/js/admin.js',
+                'resources/css/admin.css',
 
                 // Vendor
                 "resources/js/vendor/accordion/index.js",

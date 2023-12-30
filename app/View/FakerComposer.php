@@ -65,7 +65,7 @@ class FakerComposer
     {
         $photos = [];
         for ($i = 0; $i < 15; $i++) {
-            $photos[] = 'resources/images/fakers/preview-' . rand(1, 15) . '.jpg';
+            $photos[] = 'resources/images/fakers/profile-' . rand(1, 15) . '.jpg';
         }
         return collect($photos)->random(10);
     }

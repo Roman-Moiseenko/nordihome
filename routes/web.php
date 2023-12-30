@@ -232,7 +232,7 @@ Route::group(
             [
                 'prefix' => 'sales',
                 'as' => 'sales.',
-                'namespace' => 'sales',
+                'namespace' => 'Sales',
             ],
             function() {
                 Route::get('/cart', 'CartController@index')->name('cart.index');
