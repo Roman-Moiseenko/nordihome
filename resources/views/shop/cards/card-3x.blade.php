@@ -1,7 +1,9 @@
 <div class="col-sm-6 col-lg-4 mt-3">
     <div class="card">
         <div class="product-card-image">
-            <a href="{{ route('shop.product.view', $product->slug) }}"><img src="{{ $product->photo->getThumbUrl('card') }}" alt="{{ $product->name }}"></a>
+            <a href="{{ route('shop.product.view', $product->slug) }}">
+                <img src="{{ (is_null($product->photo)) ? '/images/no-image.jpg' : $product->photo->getThumbUrl('card') }}" alt="{{ $product->name }}">
+            </a>
         </div>
         <div class="product-card-name">
             <span class="fs-5">

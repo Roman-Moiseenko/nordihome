@@ -17,6 +17,7 @@
   @media screen(sm) {
     @apply w-full mr-0;
   }
+      /*
   .page-item {
       @media screen(sm) {
       @apply flex-1;
@@ -37,4 +38,5 @@
       }
     }
   }
+*/
 }

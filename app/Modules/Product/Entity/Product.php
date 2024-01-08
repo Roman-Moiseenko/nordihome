@@ -136,7 +136,11 @@ class Product extends Model
         //$dublicat = Product::where('name', '=', $name)->get();
         if (!empty(Product::where('name', '=', $name)->first())) throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
         if (!empty(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
+        $slug = empty($slug) ? Str::slug($name) : $slug;
 
+        if (Product::where('slug', $slug)->first() != null) {
+            $slug = Str::uuid();
+        }
         $data = [
             'name' => $name,
             'slug' => empty($slug) ? Str::slug($name) : $slug,

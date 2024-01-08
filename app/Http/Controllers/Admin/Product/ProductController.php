@@ -34,7 +34,6 @@ class ProductController extends Controller
         $this->options = $options;
         $this->repository = $repository;
         $this->pagination = Config::get('shop-config.p-list');
-
     }
 
     public function index(Request $request)
