@@ -62,7 +62,7 @@ class LoadCommand extends Command
     private function loadCatalog()
     {
         $this->warn('Начало загрузки каталога');
-        $filename = public_path() . '\temp\catalog.txt';
+        $filename = public_path() . '/temp/catalog.txt';
         $f_c = fopen($filename, 'r');
         $data = fread($f_c, filesize($filename));
         fclose($f_c);
@@ -81,7 +81,7 @@ class LoadCommand extends Command
             $brand = Brand::register('NONAME');
         }
         $this->warn('Начало загрузки товаров');
-        $filename = public_path() . '\temp\product.txt';
+        $filename = public_path() . '/temp/product.txt';
         $f_c = fopen($filename, 'r');
         $data = fread($f_c, filesize($filename));
         fclose($f_c);
