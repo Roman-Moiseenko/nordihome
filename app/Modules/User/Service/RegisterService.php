@@ -5,7 +5,9 @@ namespace App\Modules\User\Service;
 
 
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Mail\UserRegister;
 use App\Mail\VerifyMail;
+use App\Modules\Discount\Entity\Coupon;
 use App\Modules\User\Entity\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -44,6 +46,9 @@ class RegisterService
         $user->verify();
         //TODO Верификация прошла
         // Письмо клиенту, + баллы на покупку (Coupon)
+        $coupon = Coupon::register($user->id, 500, now(), now()->addHours(3));
+        Mail::to($user->email)->queue(new UserRegister($user, $coupon));
+
         event($user);
         //
     }

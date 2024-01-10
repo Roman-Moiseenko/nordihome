@@ -1,5 +1,5 @@
 <?php
-
+ob_start(); //TODO !!!!
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 

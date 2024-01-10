@@ -24,8 +24,13 @@ class AdminComposer
     public function compose(View $view): void
     {
         if (!is_null(request()->route())) {
+            //dd(request()->route()->getName());
             $pageName = request()->route()->getName();
-            $layout =  (str_contains($pageName, '.')) ? substr($pageName, 0, strpos($pageName, '.')) : 'shop';
+            if ($pageName == null) {
+                $layout = 'admin';
+            } else {
+                $layout = (str_contains($pageName, '.')) ? substr($pageName, 0, strpos($pageName, '.')) : 'shop';
+            }
             $activeMenu = $this->activeMenu($pageName, $layout);
             if ($layout == 'admin') {
                 $view->with('sideMenu', AdminMenu::menu());
@@ -88,6 +93,7 @@ class AdminComposer
 
     private function clearAction($str): string
     {
+        if ($str == null) return '';
         $pos = strrpos($str, '.');
         $str = substr($str, 0, $pos);
         return $str;
