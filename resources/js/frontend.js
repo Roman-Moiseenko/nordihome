@@ -187,6 +187,8 @@ window.$ = jQuery;
         let inputVerify = loginPopup.find('input[name="verify_token"]');
         inputVerify.parent().hide();
         buttonLogin.on('click', function () {
+            console.log('***** => ');
+
             if (inputEmail.val().length === 0 || inputPassword.val().length === 0 || !isEmail(inputEmail.val())) {
                 form.addClass('was-validated');
                 return true;
@@ -202,6 +204,7 @@ window.$ = jQuery;
                     password: inputPassword.val(),
                     verify_token: inputVerify.val()
                 }, function (data) {
+                    console.log(data);
                     _error(data);
                     $('#token-error').hide();
                     $('#password-error').hide();

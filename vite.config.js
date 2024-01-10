@@ -111,6 +111,7 @@ export default defineConfig({
                 "resources/js/components/tom-select/index.js",
                 "resources/js/components/top-bar/index.js",
                 "resources/js/components/vertical-bar-chart/index.js",
+                "resources/js/components/widget/index.js",
             ],
             refresh: true,
         }),

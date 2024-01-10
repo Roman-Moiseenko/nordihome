@@ -13,6 +13,7 @@ Route::group(
     ],
     function () {
         Route::get('/', [App\Http\Controllers\Shop\HomeController::class, 'index'])->name('home');
+        Route::post('/', [App\Http\Controllers\Shop\HomeController::class, 'email'])->name('shop.email');
     }
 );
 

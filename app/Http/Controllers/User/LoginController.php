@@ -118,8 +118,12 @@ class LoginController extends Controller
 
         //Проверяем Зарегистрирован или нет
         if (empty(User::where('email', $request['email'])->first())) {
-            $this->service->register($request);
-            return \response()->json(['register' => true]);
+            try {
+                $this->service->register($request);
+                return \response()->json(['register' => true]);
+            } catch (\Throwable $e) {
+                \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
+            }
         }
         //Такой email есть
         $authenticate = $this->guard()->attempt(
