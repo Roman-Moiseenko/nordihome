@@ -2,6 +2,7 @@
 # Introduction
 
 The body of your message.
+Ваш код активации {{ $very_code }}
 
 <x-mail::button :url="$url">
 Button Text

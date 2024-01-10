@@ -59,6 +59,6 @@ class VerifyMail extends Mailable
     public function build()
     {
         return $this->subject('Подтверждение')
-            ->markdown('mail.verify-mail')->with(['url' => route('register.verify', ['token' => $this->user->verify_token])]);
+            ->markdown('mail.verify-mail')->with([ 'very_code' => $this->user->verify_token]);
     }
 }
