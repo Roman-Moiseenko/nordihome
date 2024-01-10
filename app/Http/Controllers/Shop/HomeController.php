@@ -31,10 +31,4 @@ class HomeController extends Controller
         return view('shop.home');
     }
 
-    public function email()
-    {
-        Mail::to('saint_johnny@mail.ru')->send(new VerifyMail2('key'));
-
-        return redirect()->route('home');
-    }
 }

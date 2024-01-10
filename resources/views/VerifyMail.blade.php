@@ -1,12 +1,9 @@
 <x-mail::message>
-# Introduction
+# Подтверждение регистрации
 
-The body of your message.
+Укажите на сайте ваш код.
+Ваш код активации {{ $very_code }}
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
-
-Thanks,<br>
+С уважением команда,<br>
 {{ config('app.name') }}
 </x-mail::message>

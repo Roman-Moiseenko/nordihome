@@ -18,11 +18,6 @@
             </div>
         </div>
     </div>
-    <div>
-        <form method="post" action="{{ route('shop.email') }}">
-            @csrf
-            <button >Тест почты</button>
-        </form>
-    </div>
+
 </div>
 @endsection
