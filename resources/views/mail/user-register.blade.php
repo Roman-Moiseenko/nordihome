@@ -1,9 +1,8 @@
 <x-mail::message>
 # Introduction
-    @component('mail::panel')
-        Вы зарегистрировались на нашем сайте
-    @endcomponent
-
+<x-mail:panel>
+    Вы зарегистрировались на нашем сайте
+</x-mail:panel>
     Вам персональный купон на {{ $coupon->bonus }} рублей.
     Действителен до {{ $coupon->finished_at->translatedFormat('j F H:s') }}
 

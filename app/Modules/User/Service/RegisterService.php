@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\User\Service;
 
 
+use App\Events\UserHasRegistered;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\UserRegister;
 use App\Mail\VerifyMail;
@@ -34,10 +35,9 @@ class RegisterService
             $request['password']
         );
         //TODO Отправка почты клиенту
-        //$this->mailer->to($user->email)->send(new VerifyMail($user));
+
         Mail::to($user->email)->send(new VerifyMail($user));
-        //$this->dispatcher->dispatch(new Registered($user));
-        event(new Registered($user));
+        //event(new Registered($user));
     }
 
     public function verify($id): void
@@ -46,10 +46,6 @@ class RegisterService
         $user->verify();
         //TODO Верификация прошла
         // Письмо клиенту, + баллы на покупку (Coupon)
-        $coupon = Coupon::register($user->id, 500, now(), now()->addHours(3));
-        Mail::to($user->email)->queue(new UserRegister($user, $coupon));
-
-        event($user);
-        //
+        event(new UserHasRegistered($user));
     }
 }
