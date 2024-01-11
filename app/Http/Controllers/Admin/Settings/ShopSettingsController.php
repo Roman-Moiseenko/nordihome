@@ -24,8 +24,14 @@ class ShopSettingsController extends Controller
     public function index()
     {
         $setting = Setting::where('slug', 'shop')->first();
-        $items = SettingItem::orderBy('sort')->where('setting_id', $setting->id)->get();
-        return view('admin.settings.shop', compact('items', 'setting'));
+        $items = SettingItem::orderBy('sort')->where('setting_id', $setting->id)->getModels();
+        $groups = [];
+
+        /** @var SettingItem $item */
+        foreach ($items as $item) {
+            $groups[$item->tab][] = $item;
+        }
+        return view('admin.settings.shop', compact( 'groups', 'setting'));
     }
 
     public function update(Request $request)
