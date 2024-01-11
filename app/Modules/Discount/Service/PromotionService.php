@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Service;
 
+use App\Events\PromotionHasMoved;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Product\Entity\Group;
 use Carbon\Carbon;
@@ -169,6 +170,7 @@ class PromotionService
             if ($promotion->start_at == null || $promotion->start_at < now())
                 $promotion->start_at = now();
             $promotion->save();
+            event(new PromotionHasMoved($promotion));
             return;
         }
         throw new \DomainException('Нельзя запустить акцию');
@@ -179,6 +181,7 @@ class PromotionService
         if ($promotion->status() == Promotion::STATUS_STARTED) {
             $promotion->finish();
             $promotion->save();
+            event(new PromotionHasMoved($promotion));
             return;
         }
         throw new \DomainException('Ошибка завершения акции');

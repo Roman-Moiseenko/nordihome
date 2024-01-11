@@ -30,7 +30,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ $config['logo-nav'] }}" alt="{{ $config['brand-alt'] }}" class="img-fluid img-logo">
                 </a>
-                @include('shop.widget.header-category',['categories' => $categories])
+                @include('shop.widgets.header.category',['categories' => $categories])
             </div>
             <div class="menu-bottom-search flex-grow-1 mx-3">
                 <div class="presearch" data-route="{{ route('shop.product.search') }}">
@@ -70,7 +70,7 @@
                         </li>
                     @endguest
                     <li class="nav-item">
-                        @include('shop.widget.header-wish')
+                        @include('shop.widgets.header.wish')
                     </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('shop.order.index') }}">
@@ -80,7 +80,7 @@
                     </li>
 
                     <li class="nav-item">
-                        @include('shop.widget.header-cart')
+                        @include('shop.widgets.header.cart')
                     </li>
 
 

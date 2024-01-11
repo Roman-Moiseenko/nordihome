@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\PromotionHasMoved;
 use App\Events\UserHasRegistered;
+use App\Listeners\PromotionNotification;
 use App\Listeners\WelcomToShop;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -17,11 +19,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        Registered::class => [
+       /* Registered::class => [
             SendEmailVerificationNotification::class,
-        ],
+        ],*/
         UserHasRegistered::class => [
             WelcomToShop::class
+        ],
+        PromotionHasMoved::class => [
+            PromotionNotification::class
         ],
     ];
 

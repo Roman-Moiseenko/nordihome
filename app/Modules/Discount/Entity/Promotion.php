@@ -104,7 +104,9 @@ class Promotion extends Model implements IWidgetHome
         if (!$this->published) return self::STATUS_DRAFT;
         if ($this->finish_at->lt(now())) return self::STATUS_FINISHED;
         if (empty($this->start_at) || $this->start_at->gte(now())) return self::STATUS_WAITING;
-        throw new \DomainException('Неучтенная комбинация!!!');
+
+        return self::STATUS_WAITING;
+        //throw new \DomainException('Неучтенная комбинация!!!');
     }
 
     public function isStarted(): bool
@@ -136,19 +138,16 @@ class Promotion extends Model implements IWidgetHome
     public function finish()
     {
         $this->active = false;
-        //TODO Добавить в Очередь событие - Акция $name закончилась + за 1-2 дня до окончания или перенести в Service
     }
 
     public function start()
     {
         $this->active = true;
-        //TODO Добавить в Очередь событие - Акция $name началась
     }
 
     public function published(): void
     {
         $this->published = true;
-        //TODO Добавить в Очередь событие - Акция $name запущена и скоро начнется ч/з ххх дней
     }
 
     public function draft(): void

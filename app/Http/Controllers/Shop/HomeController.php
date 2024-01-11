@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Shop;
 
-use App\Mail\VerifyMail2;
+
+use App\Modules\Admin\Entity\Options;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
@@ -11,7 +12,9 @@ use Illuminate\Support\Facades\Mail;
 class HomeController extends Controller
 {
 
-    public function __construct()
+    private Options $options;
+
+    public function __construct(Options $options)
     {
         //$this->middleware(['guest', 'guest:user']);
         //$this->middleware('auth:user');
@@ -19,6 +22,7 @@ class HomeController extends Controller
         {
             throw new \DomainException('^^^^');
         }
+        $this->options = $options;
     }
 
     /**
@@ -28,7 +32,29 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('shop.home');
+        //Получаем список акций для первого виджета
+
+        //Список товаров рекомендации - Группы
+
+
+        //Создаем список группа - виджет
+
+        $widgets = [
+            [
+                'name' => '',
+                'widget' => 'promotions',
+                'items' => [
+                    [
+                        'image' => '',
+                        'url' => '',
+                        'title' => '',
+                    ]
+                ],
+            ],
+        ];
+
+
+        return view('shop.home', compact('widgets'));
     }
 
 }
