@@ -35,6 +35,7 @@ class HomeController extends Controller
     {
         //Получаем список акций для первого виджета
         $prom = Promotion::where('slug', 'akciia-smakciia')->first();
+
         //Список товаров рекомендации - Группы
 
 
