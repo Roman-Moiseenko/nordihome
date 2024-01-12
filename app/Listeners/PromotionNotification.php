@@ -32,25 +32,25 @@ class PromotionNotification
     public function handle(PromotionHasMoved $event): void
     {
         //Определяем тип Акции
-        if ($event->promotion->status() == Promotion::STATUS_WAITING && $event->promotion->start_at == Carbon::now()->addDays(3)->toDateString()) {
+        if ($event->promotion->status() == Promotion::STATUS_WAITING && $event->promotion->start_at->toDateString() == Carbon::now()->addDays(3)->toDateString()) {
             //За три дня до начала
             foreach($this->users as $user) {
                 Mail::to($user->email)->queue(new PromotionStarting($event->promotion));
             }
         }
-        if ($event->promotion->status() == Promotion::STATUS_STARTED && $event->promotion->start_at == Carbon::now()->toDateString()) {
+        if ($event->promotion->status() == Promotion::STATUS_STARTED && $event->promotion->start_at->toDateString() == Carbon::now()->toDateString()) {
             //Старт
             foreach($this->users as $user) {
                 Mail::to($user->email)->queue(new PromotionStarted($event->promotion));
             }
         }
-        if ($event->promotion->status() == Promotion::STATUS_STARTED && $event->promotion->finish_at == Carbon::now()->addDays(3)->toDateString()) {
+        if ($event->promotion->status() == Promotion::STATUS_STARTED && $event->promotion->finish_at->toDateString() == Carbon::now()->addDays(3)->toDateString()) {
             //За три дня до окончания
             foreach($this->users as $user) {
                 Mail::to($user->email)->queue(new PromotionFinishing($event->promotion));
             }
         }
-        if ($event->promotion->status() == Promotion::STATUS_FINISHED && $event->promotion->finish_at == Carbon::now()->toDateString()) {
+        if ($event->promotion->status() == Promotion::STATUS_FINISHED && $event->promotion->finish_at->toDateString() == Carbon::now()->toDateString()) {
             //Финиш
             foreach($this->users as $user) {
                 Mail::to($user->email)->queue(new PromotionFinished($event->promotion));
