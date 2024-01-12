@@ -156,9 +156,20 @@ class Promotion extends Model implements IWidgetHome
 
     }
 
-    public function ProductsForWidget()
+    public function ProductsForWidget(int $count = null): array
     {
+        $result = [];
+        $n = 0;
         // TODO: Implement ProductsForWidget() method. Список всех товаров
+        foreach ($this->groups as $group) {
+            foreach ($group->products()->getModels() as $product) {
+                $result[] = $product;
+               if (!is_null($count) && $count == ++$n) {
+                   return $result;
+               }
+            }
+        }
+        return $result;
     }
 
     public function isGroup(int $id): bool

@@ -1,0 +1,62 @@
+.shop-home-widget {
+    margin-top: 36px;
+    padding-bottom: 20px;
+}
+
+//Виджеты
+.promotion-widget img,
+.list-big-widget img,
+.list-mini-widget img{
+    width: 100%;
+    border-radius: 20px;
+}
+.promotion-widget .discount-price {
+    font-size: 1rem;
+    color: var(--bs-red);
+}
+.promotion-widget .base-price {
+    color: var(--bs-gray-500);
+    text-decoration: line-through;
+    font-size: 0.8rem;
+}
+
+.promotion-widget .count-product {
+    color: var(--bs-gray-600);
+}
+
+.list-big-widget a,
+.list-mini-widget a {
+    position: relative;
+    display: block;
+}
+.list-big-widget .price-block,
+.list-mini-widget .price-block {
+    position: absolute;
+    top: 4px;
+    text-align: right;
+    right: 8px;
+    width: 100%
+}
+.list-big-widget .price,
+.list-mini-widget .price {
+    background: red;
+    color: white;
+}
+.list-big-widget .price {
+    font-size: 1rem;
+    padding: 6px 20px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.list-mini-widget .price-block {
+    top: unset;
+    bottom: 10px;
+    right: 8px;
+}
+.list-mini-widget .price
+{
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
