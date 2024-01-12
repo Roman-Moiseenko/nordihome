@@ -4,9 +4,9 @@
             <img class="rounded-full" src="{{ $group->getImage() }}" alt="{{ $group->name }}">
         </div>
     </x-base.table.td>
-    <x-base.table.td class="w-40"><a href="{{ route('admin.product.group.show', $group) }}"
+    <x-base.table.td class="text-center"><a href="{{ route('admin.product.group.show', $group) }}"
                                      class="font-medium whitespace-nowrap">{{ $group->name }}</a></x-base.table.td>
-
+    <x-base.table.td class="text-center">{{ $group->pivot->discount }}%</x-base.table.td>
     <x-base.table.td class="text-center">{{ count($group->products) }}</x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">

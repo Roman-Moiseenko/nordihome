@@ -142,8 +142,9 @@
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
-                        <x-base.table.th class="whitespace-nowrap">IMG</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap">НАЗВАНИЕ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">IMG</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">НАЗВАНИЕ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">СКИДКА</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
