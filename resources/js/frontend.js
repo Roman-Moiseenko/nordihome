@@ -666,7 +666,7 @@ window.$ = jQuery;
         } else {
             upButton.removeClass('is-active');
         }
-        if ($(this).scrollTop() > 160) {
+        if ($(this).scrollTop() > 300) {
             $('.menu-bottom').addClass('sticky-menu');
         } else {
             $('.menu-bottom').removeClass('sticky-menu');

@@ -2,6 +2,8 @@
  --max-height-search: 44px;
 }
 
+
+
 /* От Заказчика*/
 
 $count-col-submenu: 1; //Кол-во столбцов в меню 1 - для маленьких, 3 для огромных - дублируется во frontend.js
@@ -12,6 +14,12 @@ $width-sub-menu: $padding-left-submenu + $width-sub-menu-column * $count-col-sub
 $width-root-menu: 200px; //От кол-ва символов
 
 $widget-height: 1rem; //Высота элементов фильтров
+
+
+*, *:after, *:before {
+    box-sizing: border-box;
+    border: 0;
+}
 
 a {
     text-decoration: none;
@@ -25,6 +33,9 @@ html body {
 }
 .img-logo {
     width: 200px;
+}
+body {
+    height: 100vh;
 }
 
 

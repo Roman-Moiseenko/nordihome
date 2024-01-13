@@ -5,7 +5,10 @@ namespace App\Modules\Discount\Entity;
 
 use App\Entity\Observer;
 use App\Entity\Photo;
+use App\Modules\Pages\Entity\DataWidget;
+use App\Modules\Pages\Entity\DataWidgetInterface;
 use App\Modules\Product\Entity\Group;
+use App\Modules\Product\Entity\Product;
 use App\Modules\Product\IWidgetHome;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -28,7 +31,7 @@ use Illuminate\Support\Str;
  * @property string $slug  //По title, если существует, добавляем год
  * @property Group[] $groups
  */
-class Promotion extends Model implements IWidgetHome
+class Promotion extends Model implements IWidgetHome, DataWidgetInterface
 {
 
     const STATUS_DRAFT = 101;
@@ -251,4 +254,22 @@ class Promotion extends Model implements IWidgetHome
     }
 
 
+    public function getDataWidget(array $params = []): DataWidget
+    {
+        $data = new DataWidget();
+        $data->image = $this->image;
+        $data->title = $this->title;
+        $data->url = ''; //TODO Сделать роут и Контроллер для отдельной страницы Акции
+        $data->items = array_map(function (Product $product) {
+            return [
+                'image' => $product->photo,
+                'url' => route('shop.product.view', $product),
+                'title' => $product->getName(),
+                'price' => $product->lastPrice->value,
+                'discount' => ceil($product->lastPrice->value * ((100 - $this->getDiscount($product->id)) / 100)),
+                'count' => $product->count_for_sell,
+            ];
+        }, $this->products());
+        return $data;
+    }
 }

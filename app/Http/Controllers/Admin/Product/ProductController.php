@@ -149,7 +149,7 @@ class ProductController extends Controller
                 $result[] = $this->repository->toArrayForSearch($product);
             }
         } catch (\Throwable $e) {
-            $result = $e->getMessage();
+            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
         }
         return \response()->json($result);
     }

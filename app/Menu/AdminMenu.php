@@ -191,6 +191,23 @@ class AdminMenu
                 'route_name' => 'admin.home',
                 'can' => '',
             ],
+            'pages' => [
+                'icon' => 'file-stack',
+                'title' => 'Страницы',
+                'can' => '',
+                'sub_menu' => [
+                    'widgets' => [
+                        'icon' => 'film',
+                        'title' => 'Виджеты',
+                        'route_name' => 'admin.pages.widget.index',
+                        ],
+                    'home' => [
+                        'icon' => 'home',
+                        'title' => 'Главная',
+                        'route_name' => 'admin.home',
+                    ],
+                ],
+            ],
             'dictionary' => [
                 'icon' => 'building',
                 'title' => 'Справочники',

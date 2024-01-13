@@ -254,8 +254,18 @@ Route::group(
 
             }
         );
-
-
+        //Pages
+        Route::group(
+            [
+                'prefix' => 'pages',
+                'as' => 'pages.',
+                'namespace' => 'Pages',
+            ],
+            function() {
+                Route::resource('widget', 'WidgetController'); //CRUD
+                Route::post('/widget/ids', 'WidgetController@get_ids')->name('widget.ids');
+            }
+        );
 
         //AJAX Product-Image
         Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');

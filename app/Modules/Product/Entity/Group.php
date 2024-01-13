@@ -5,7 +5,8 @@ namespace App\Modules\Product\Entity;
 
 use App\Entity\Photo;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Product\IWidgetHome;
+use App\Modules\Pages\Entity\DataWidget;
+use App\Modules\Pages\Entity\DataWidgetInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Product[] $products
  * @property Promotion[] $promotions
  */
-class Group extends Model implements IWidgetHome
+class Group extends Model implements DataWidgetInterface
 {
     public $timestamps = false;
 
@@ -54,14 +55,26 @@ class Group extends Model implements IWidgetHome
 
     public function isProduct(int $id): bool
     {
-        foreach ($this->products as  $product) {
+        foreach ($this->products as $product) {
             if ($product->id == $id) return true;
         }
         return false;
     }
 
-    public function ProductsForWidget()
+    public function getDataWidget(array $params = []): DataWidget
     {
-        return $this->products;
+        $data = new DataWidget();
+        $data->image = $this->photo;
+        $data->title = $this->name;
+        $data->items = array_map(function (Product $product) {
+            return [
+                'image' => $product->photo,
+                'url' => route('shop.product.view', $product),
+                'title' => $product->getName(),
+                'price' => $product->lastPrice->value,
+                'count' => $product->count_for_sell,
+            ];
+        }, $this->products()->getModels());
+        return $data;
     }
 }

@@ -1,0 +1,14 @@
+@extends('layouts.side-menu')
+
+@section('subcontent')
+    <div class="intro-y flex items-center mt-8">
+        <h2 class="text-lg font-medium mr-auto">
+            Добавить виджет
+        </h2>
+    </div>
+    <form method="POST" action="{{ route('admin.pages.widget.store') }}" enctype="multipart/form-data">
+        @csrf
+        @include('admin.pages.widget._fields-form', ['widget' => null])
+    </form>
+
+@endsection

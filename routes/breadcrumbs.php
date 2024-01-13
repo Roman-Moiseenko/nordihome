@@ -5,6 +5,7 @@ use App\Entity\Admin;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Pages\Entity\Widget;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
@@ -399,7 +400,28 @@ Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));
 });
 
-
+/////PAGES
+//WIDGET
+Breadcrumbs::for('admin.pages.widget.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Виджеты', route('admin.pages.widget.index'));
+});
+Breadcrumbs::for('admin.pages.widget.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.pages.widget.index');
+    $trail->push('Добавить новый', route('admin.pages.widget.create'));
+});
+Breadcrumbs::for('admin.pages.widget.show', function (BreadcrumbTrail $trail, Widget $widget) {
+    $trail->parent('admin.pages.widget.index');
+    $trail->push($widget->name, route('admin.pages.widget.show', $widget));
+});
+Breadcrumbs::for('admin.pages.widget.edit', function (BreadcrumbTrail $trail, Widget $widget) {
+    $trail->parent('admin.pages.widget.show', $widget);
+    $trail->push('Редактировать', route('admin.pages.widget.edit', $widget));
+});
+Breadcrumbs::for('admin.pages.widget.update', function (BreadcrumbTrail $trail, Widget $widget) {
+    $trail->parent('admin.pages.widget.index');
+    $trail->push($widget->name, route('admin.pages.widget.show', $widget));
+});
 
 
 Breadcrumbs::for('admin.settings.shop', function (BreadcrumbTrail $trail) {
