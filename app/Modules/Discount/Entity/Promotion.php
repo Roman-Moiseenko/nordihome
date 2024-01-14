@@ -263,7 +263,7 @@ class Promotion extends Model implements IWidgetHome, DataWidgetInterface
         $data->items = array_map(function (Product $product) {
             return [
                 'image' => $product->photo,
-                'url' => route('shop.product.view', $product),
+                'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
                 'price' => $product->lastPrice->value,
                 'discount' => ceil($product->lastPrice->value * ((100 - $this->getDiscount($product->id)) / 100)),

@@ -6,9 +6,9 @@
             Добавить виджет
         </h2>
     </div>
-    <form method="POST" action="{{ route('admin.pages.widget.store') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.page.widget.store') }}" enctype="multipart/form-data">
         @csrf
-        @include('admin.pages.widget._fields-form', ['widget' => null])
+        @include('admin.page.widget._fields-form', ['widget' => null])
     </form>
 
 @endsection

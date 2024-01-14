@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Widget extends Model
 {
-    const PATH_TEMPLATES = 'admin.pages.widget.template.';
+    const PATH_TEMPLATES = 'admin.page.widget.template.';
     const WIDGET_CLASSES = [
         'Акция' => Promotion::class,
         'Группа товаров' => Group::class,

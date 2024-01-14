@@ -101,7 +101,6 @@
                     <div class="col-span-12 lg:col-span-4">
 
                     </div>
-
                 </div>
             </div>
             <div class="intro-y col-span-12 lg:col-span-4 p-5">
@@ -110,8 +109,4 @@
         </div>
     </div>
 </div>
-<script>
 
-
-
-</script>

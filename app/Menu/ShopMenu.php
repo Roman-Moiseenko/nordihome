@@ -11,12 +11,12 @@ class ShopMenu
     {
 
         return [
-            'about' => [
+           /* 'about' => [
                 'name' => 'О компании',
                 'icon' => '',
                 'page' => 'about',
                 'route_name' => 'shop.page.about',
-            ],
+            ],*/
             'tariff' => [
                 'name' => 'Условия и тарифы',
                 'icon' => '',
@@ -26,7 +26,8 @@ class ShopMenu
             'reviews' => [
                 'name' => 'Отзывы',
                 'icon' => '',
-                'route_name' => 'shop.review',
+                'page' => 'review',
+                'route_name' => 'shop.page.review',
             ],
             'contact' => [
                 'name' => 'Контакты',

@@ -28,7 +28,7 @@ Route::group(
     ],
     function () {
 
-        Route::post('/review', 'ReviewController@index')->name('review');
+        //Route::post('/review', 'ReviewController@index')->name('review');
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
         Route::post('/product/search', 'ProductController@search')->name('product.search');
@@ -249,23 +249,23 @@ Route::group(
                 Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
                 Route::get('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
 
-
-
-
             }
         );
         //Pages
         Route::group(
             [
-                'prefix' => 'pages',
-                'as' => 'pages.',
-                'namespace' => 'Pages',
+                'prefix' => 'page',
+                'as' => 'page.',
+                'namespace' => 'Page',
             ],
             function() {
                 Route::resource('widget', 'WidgetController'); //CRUD
                 Route::post('/widget/ids', 'WidgetController@get_ids')->name('widget.ids');
                 Route::post('/widget/{widget}/draft', 'WidgetController@draft')->name('widget.draft');
                 Route::post('/widget/{widget}/activated', 'WidgetController@activated')->name('widget.activated');
+
+                Route::resource('page', 'PageController'); //CRUD
+
             }
         );
 
@@ -282,7 +282,6 @@ Route::group(
         Route::post('product/{product}/attr-modification', 'Product\ProductController@attr_modification')->name('product.attr-modification');
 
         Route::resource('product', 'Product\ProductController'); //CRUD
-
 
         //Настройки
         Route::group(

@@ -41,12 +41,12 @@
         <ul class="nav nav-link-tabs flex-col sm:flex-row justify-center lg:justify-start text-center py-5">
             <li class="nav-item">
                 <a class="btn btn-primary py-1 px-2 mr-2"
-                   href="{{ route('admin.pages.widget.edit', $widget) }}">Редактировать
+                   href="{{ route('admin.page.widget.edit', $widget) }}">Редактировать
                 </a>
             </li>
             @if($widget->active)
                 <li class="nav-item">
-                    <form action="{{ route('admin.pages.widget.draft', $widget) }}" method="POST">
+                    <form action="{{ route('admin.page.widget.draft', $widget) }}" method="POST">
                         @csrf
                         <a class="btn btn-danger py-1 px-2 mr-2" href="#"
                            onclick="this.parentNode.submit()">В черновики</a>
@@ -54,7 +54,7 @@
                 </li>
             @else
                 <li class="nav-item">
-                    <form action="{{ route('admin.pages.widget.activated', $widget) }}" method="POST">
+                    <form action="{{ route('admin.page.widget.activated', $widget) }}" method="POST">
                         @csrf
                         <a class="btn btn-success py-1 px-2 mr-2" href="#" onclick="this.parentNode.submit()">Активировать</a>
                     </form>
@@ -63,7 +63,7 @@
             <li class="nav-item">
                 <a href="#" class="btn btn-outline-secondary py-1 px-2"
                    data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal"
-                   data-route= {{ route('admin.pages.widget.destroy', $widget) }}>
+                   data-route= {{ route('admin.page.widget.destroy', $widget) }}>
                     <i data-lucide="trash-2" width="24" height="24"
                        class="lucide lucide-key-round w-4 h-4 mr-2"></i>
                     Удалить </a>

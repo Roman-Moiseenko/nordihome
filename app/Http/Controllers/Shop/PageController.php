@@ -11,7 +11,7 @@ class PageController extends Controller
 
     public function view($slug)
     {
-        return redirect()->route('home');
+        return view('shop.pages.' . $slug);
     }
 
 

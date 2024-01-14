@@ -6,10 +6,10 @@
             Редактировать виджет
         </h2>
     </div>
-    <form method="POST" action="{{ route('admin.pages.widget.update', $widget) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.page.widget.update', $widget) }}" enctype="multipart/form-data">
         @method('PUT')
         @csrf
-        @include('admin.pages.widget._fields-form', ['widget' => $widget])
+        @include('admin.page.widget._fields-form', ['widget' => $widget])
     </form>
 
 @endsection

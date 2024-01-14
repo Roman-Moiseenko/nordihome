@@ -5,6 +5,7 @@ use App\Entity\Admin;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Pages\Entity\Page;
 use App\Modules\Pages\Entity\Widget;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Brand;
@@ -92,6 +93,11 @@ Breadcrumbs::for('password.request', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('other', function (BreadcrumbTrail $trail, $caption) {
     $trail->parent('login');
     $trail->push($caption, route('password.request'));
+});
+
+Breadcrumbs::for('shop.page.view', function (BreadcrumbTrail $trail, $slug) {
+    $trail->parent('home');
+    $trail->push($slug, route('shop.page.view', $slug));
 });
 
 /**  A D M I N  */
@@ -402,25 +408,46 @@ Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
 
 /////PAGES
 //WIDGET
-Breadcrumbs::for('admin.pages.widget.index', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.page.widget.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Виджеты', route('admin.pages.widget.index'));
+    $trail->push('Виджеты', route('admin.page.widget.index'));
 });
-Breadcrumbs::for('admin.pages.widget.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.pages.widget.index');
-    $trail->push('Добавить новый', route('admin.pages.widget.create'));
+Breadcrumbs::for('admin.page.widget.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.page.widget.index');
+    $trail->push('Добавить новый', route('admin.page.widget.create'));
 });
-Breadcrumbs::for('admin.pages.widget.show', function (BreadcrumbTrail $trail, Widget $widget) {
-    $trail->parent('admin.pages.widget.index');
-    $trail->push($widget->name, route('admin.pages.widget.show', $widget));
+Breadcrumbs::for('admin.page.widget.show', function (BreadcrumbTrail $trail, Widget $widget) {
+    $trail->parent('admin.page.widget.index');
+    $trail->push($widget->name, route('admin.page.widget.show', $widget));
 });
-Breadcrumbs::for('admin.pages.widget.edit', function (BreadcrumbTrail $trail, Widget $widget) {
-    $trail->parent('admin.pages.widget.show', $widget);
-    $trail->push('Редактировать', route('admin.pages.widget.edit', $widget));
+Breadcrumbs::for('admin.page.widget.edit', function (BreadcrumbTrail $trail, Widget $widget) {
+    $trail->parent('admin.page.widget.show', $widget);
+    $trail->push('Редактировать', route('admin.page.widget.edit', $widget));
 });
-Breadcrumbs::for('admin.pages.widget.update', function (BreadcrumbTrail $trail, Widget $widget) {
-    $trail->parent('admin.pages.widget.index');
-    $trail->push($widget->name, route('admin.pages.widget.show', $widget));
+Breadcrumbs::for('admin.page.widget.update', function (BreadcrumbTrail $trail, Widget $widget) {
+    $trail->parent('admin.page.widget.index');
+    $trail->push($widget->name, route('admin.page.widget.show', $widget));
+});
+//PAGE
+Breadcrumbs::for('admin.page.page.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Страницы', route('admin.page.page.index'));
+});
+Breadcrumbs::for('admin.page.page.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.page.page.index');
+    $trail->push('Добавить новый', route('admin.page.page.create'));
+});
+Breadcrumbs::for('admin.page.page.show', function (BreadcrumbTrail $trail, Page $page) {
+    $trail->parent('admin.page.page.index');
+    $trail->push($page->name, route('admin.page.page.show', $page));
+});
+Breadcrumbs::for('admin.page.page.edit', function (BreadcrumbTrail $trail, Page $page) {
+    $trail->parent('admin.page.page.show', $page);
+    $trail->push('Редактировать', route('admin.page.page.edit', $page));
+});
+Breadcrumbs::for('admin.page.page.update', function (BreadcrumbTrail $trail, Page $page) {
+    $trail->parent('admin.page.page.index');
+    $trail->push($page->name, route('admin.page.page.show', $page));
 });
 
 

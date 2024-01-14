@@ -199,12 +199,12 @@ class AdminMenu
                     'widgets' => [
                         'icon' => 'film',
                         'title' => 'Виджеты',
-                        'route_name' => 'admin.pages.widget.index',
+                        'route_name' => 'admin.page.widget.index',
                         ],
-                    'home' => [
-                        'icon' => 'home',
-                        'title' => 'Главная',
-                        'route_name' => 'admin.home',
+                    'pages' => [
+                        'icon' => 'files',
+                        'title' => 'Страницы',
+                        'route_name' => 'admin.page.page.index',
                     ],
                 ],
             ],

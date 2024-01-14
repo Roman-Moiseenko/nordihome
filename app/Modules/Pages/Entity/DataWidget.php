@@ -12,4 +12,5 @@ class DataWidget
     public ?Photo $image = null;
     public string $description = '';
     public array $items = [];
+    public string $template = '';
 }
