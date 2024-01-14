@@ -88,4 +88,16 @@ class Widget extends Model
         return $item->getDataWidget($this->params);
     }
 
+    public function draft()
+    {
+        $this->active = false;
+        $this->save();
+    }
+
+    public function activated()
+    {
+        $this->active = true;
+        $this->save();
+    }
+
 }

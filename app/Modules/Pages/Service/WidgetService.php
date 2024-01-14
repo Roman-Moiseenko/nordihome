@@ -28,7 +28,8 @@ class WidgetService
         $widget->data_class = $request['data_class'];
         $widget->data_id = $request['data_id'];
         $widget->template = $request['template'];
-        $widget->params = $request['params'];
+        $widget->params = $request['params'] ?? [];
+        $widget->save();
         return $widget;
     }
 

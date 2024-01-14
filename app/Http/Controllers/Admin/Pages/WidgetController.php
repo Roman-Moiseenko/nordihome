@@ -43,7 +43,8 @@ class WidgetController extends Controller
 
     public function edit(Widget $widget)
     {
-        return view('admin.pages.widget.edit', compact('widget'));
+        $templates = Widget::WIDGET_TEMPLATES;
+        return view('admin.pages.widget.edit', compact('widget', 'templates'));
     }
 
     public function update(Request $request, Widget $widget)
@@ -59,6 +60,20 @@ class WidgetController extends Controller
         return redirect()->route('admin.pages.widget.index');
     }
 
+    public function draft(Widget $widget)
+    {
+        $widget->draft();
+
+        return redirect()->route('admin.pages.widget.show', compact('widget'));
+    }
+
+    public function activated(Widget $widget)
+    {
+        $widget->activated();
+
+        return redirect()->route('admin.pages.widget.show', compact('widget'));
+    }
+
     //AJAX
     public function get_ids(Request $request)
     {
@@ -71,4 +86,6 @@ class WidgetController extends Controller
 
         return response()->json($result);
     }
+
+
 }

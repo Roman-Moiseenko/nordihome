@@ -1,15 +1,15 @@
 <script>
     let selectObject, selectId;
 
-    function init() {
+    function init(data_id = 0) {
         selectObject = document.getElementById('select-object');
         selectId = document.getElementById('select-id');
         selectObject.addEventListener('change', function (e) {
             updateSelectId();
         });
-        if (selectObject.selectedIndex !== 0) updateSelectId();
+        if (selectObject.selectedIndex !== 0) updateSelectId(data_id);
     }
-    function updateSelectId() {
+    function updateSelectId(data_id = 0) {
         let _class = selectObject.options[selectObject.selectedIndex].value;
         let _params = '_token=' + '{{ csrf_token() }}' + '&class=' + _class;
         let request = new XMLHttpRequest();
@@ -23,12 +23,17 @@
                 //Очистка selectId
                 selectId.options.length = 0; //Очищаем и заполняем SELECT атрибутами
                 selectId.appendChild(new Option('', '0'));
-                //Заполнение selectId
-                for (let id in ids) {
-                    selectId.appendChild(new Option(ids[id], id));
-                }
                 selectId.tomselect.clear();
                 selectId.tomselect.clearOptions();
+                //Заполнение selectId
+
+                for (let id in ids) {
+                    if(Number(id) === Number(data_id)) {
+                        selectId.appendChild(new Option(ids[id], id, true, true));
+                    } else {
+                        selectId.appendChild(new Option(ids[id], id));
+                    }
+                }
                 selectId.tomselect.sync();
             } else {
             }
@@ -86,7 +91,12 @@
                                 >{{ $name }}</option>
                             @endforeach
                         </select>
-                        <script>init();</script>
+                        @if(isset($widget))
+                            <script>init({{ $widget->data_id }});</script>
+                        @else
+                            <script>init();</script>
+                        @endif
+
                     </div>
                     <div class="col-span-12 lg:col-span-4">
 

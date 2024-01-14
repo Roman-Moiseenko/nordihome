@@ -264,6 +264,8 @@ Route::group(
             function() {
                 Route::resource('widget', 'WidgetController'); //CRUD
                 Route::post('/widget/ids', 'WidgetController@get_ids')->name('widget.ids');
+                Route::post('/widget/{widget}/draft', 'WidgetController@draft')->name('widget.draft');
+                Route::post('/widget/{widget}/activated', 'WidgetController@activated')->name('widget.activated');
             }
         );
 
