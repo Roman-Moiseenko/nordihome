@@ -265,7 +265,8 @@ Route::group(
                 Route::post('/widget/{widget}/activated', 'WidgetController@activated')->name('widget.activated');
 
                 Route::resource('page', 'PageController'); //CRUD
-
+                Route::post('/page/{page}/draft', 'PageController@draft')->name('page.draft');
+                Route::post('/page/{page}/published', 'PageController@published')->name('page.published');
             }
         );
 
