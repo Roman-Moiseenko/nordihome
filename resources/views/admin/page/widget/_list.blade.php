@@ -5,7 +5,7 @@
     <x-base.table.td class="text-center">{{ $widget->getName() }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $widget->templateName() }}</x-base.table.td>
 
-    <x-base.table.td class="text-center"><x-yesno status="{{ $widget->active }}" lucide="" class="justify-center"/></x-base.table.td>
+    <x-base.table.td class="text-center"><x-yesNo status="{{ $widget->active }}" lucide="" class="justify-center"/></x-base.table.td>
 
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">

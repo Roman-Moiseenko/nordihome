@@ -15,7 +15,7 @@
     </x-base.table.td>
     <x-base.table.td class="">{{ $prod_attribute->group->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ \App\Modules\Product\Entity\Attribute::ATTRIBUTES[$prod_attribute->type] }}</x-base.table.td>
-    <x-base.table.td class="text-center"><x-yesno status="{{ $prod_attribute->filter }}" lucide="" class="justify-center"/></x-base.table.td>
+    <x-base.table.td class="text-center"><x-yesNo status="{{ $prod_attribute->filter }}" lucide="" class="justify-center"/></x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
             <a class="flex items-center mr-3" href="{{ route('admin.product.attribute.edit', $prod_attribute) }}">

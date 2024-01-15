@@ -3,9 +3,9 @@
                         class="font-medium whitespace-nowrap">{{ $page->name }}</a></x-base.table.td>
     <x-base.table.td class="text-center">{{ $page->title }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $page->template }}</x-base.table.td>
-    <x-base.table.td class="text-center"><x-yesno status="{{ $page->menu }}" lucide="" class="justify-center"/></x-base.table.td>
+    <x-base.table.td class="text-center"><x-yesNo status="{{ $page->menu }}" lucide="" class="justify-center"/></x-base.table.td>
 
-    <x-base.table.td class="text-center"><x-yesno status="{{ $page->published }}" lucide="" class="justify-center"/></x-base.table.td>
+    <x-base.table.td class="text-center"><x-yesNo status="{{ $page->published }}" lucide="" class="justify-center"/></x-base.table.td>
 
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">

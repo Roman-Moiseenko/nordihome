@@ -48,8 +48,8 @@
                         <x-base.lucide class="w-4 h-4" icon="link"/>&nbsp;<a href="{{ $promotion->condition_url }}"
                                                                              target="_blank">{{ $promotion->condition_url }}</a>
                     </div>
-                    <x-yesno title="Показывать в меню" status="{{$promotion->menu}}" class="mt-3"/>
-                    <x-yesno title="Заголовок в карточке товара" status="{{$promotion->show_title}}" class="mt-3"/>
+                    <x-yesNo title="Показывать в меню" status="{{$promotion->menu}}" class="mt-3"/>
+                    <x-yesNo title="Заголовок в карточке товара" status="{{$promotion->show_title}}" class="mt-3"/>
                 </div>
             </div>
             <div

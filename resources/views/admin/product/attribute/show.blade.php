@@ -37,10 +37,10 @@
                         <span class="ml-1 rounded bg-success/20 text-success px-2 ">{{ \App\Modules\Product\Entity\Attribute::ATTRIBUTES[$attribute->type] }}</span>
                         </div>
                     @if($attribute->isVariant())
-                    <x-yesno title="Множественный выбор" status="{{$attribute->multiple}}" class="mt-3"/>
+                    <x-yesNo title="Множественный выбор" status="{{$attribute->multiple}}" class="mt-3"/>
                     @endif
-                    <x-yesno title="Фильтр" status="{{$attribute->filter}}" class="mt-3"/>
-                    <x-yesno title="Показывать в поиске" status="{{$attribute->show_in}}" class="mt-3"/>
+                    <x-yesNo title="Фильтр" status="{{$attribute->filter}}" class="mt-3"/>
+                    <x-yesNo title="Показывать в поиске" status="{{$attribute->show_in}}" class="mt-3"/>
                 </div>
             </div>
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
