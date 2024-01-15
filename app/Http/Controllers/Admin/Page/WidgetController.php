@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Page;
 
-use App\Modules\Pages\Entity\Widget;
-use App\Modules\Pages\Service\WidgetService;
+use App\Modules\Page\Entity\Widget;
+use App\Modules\Page\Service\WidgetService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 

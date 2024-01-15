@@ -229,7 +229,7 @@ class AdminMenu
                         'route_name' => 'admin.home',
                     ],
                     'banners' => [
-                        'icon' => 'gallery-horizontal-end',
+                        'icon' => 'book-image', //book-image  gallery-horizontal-end
                         'title' => 'Баннеры',
                         'route_name' => 'admin.home',
                     ],

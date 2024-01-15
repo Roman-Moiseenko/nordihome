@@ -62,7 +62,7 @@
                         <x-base.tom-select id="select-object" name="data_class" class="w-full"
                                            data-placeholder="Выберите класс">
                             <option value="0"></option>
-                            @foreach(\App\Modules\Pages\Entity\Widget::WIDGET_CLASSES as $name => $class)
+                            @foreach(\App\Modules\Page\Entity\Widget::WIDGET_CLASSES as $name => $class)
                                 <option value="{{ $class }}"
                                         data-widget="{{ strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $class)) }}"
                                 @if(isset($widget))

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Pages\Entity;
+namespace App\Modules\Page\Entity;
 
 use App\Entity\Photo;
 

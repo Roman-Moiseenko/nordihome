@@ -5,8 +5,8 @@ namespace App\Modules\Discount\Entity;
 
 use App\Entity\Observer;
 use App\Entity\Photo;
-use App\Modules\Pages\Entity\DataWidget;
-use App\Modules\Pages\Entity\DataWidgetInterface;
+use App\Modules\Page\Entity\DataWidget;
+use App\Modules\Page\Entity\DataWidgetInterface;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\IWidgetHome;
@@ -31,7 +31,7 @@ use Illuminate\Support\Str;
  * @property string $slug  //По title, если существует, добавляем год
  * @property Group[] $groups
  */
-class Promotion extends Model implements IWidgetHome, DataWidgetInterface
+class Promotion extends Model implements DataWidgetInterface
 {
 
     const STATUS_DRAFT = 101;
@@ -159,21 +159,6 @@ class Promotion extends Model implements IWidgetHome, DataWidgetInterface
 
     }
 
-    public function ProductsForWidget(int $count = null): array
-    {
-        $result = [];
-        $n = 0;
-        // TODO: Implement ProductsForWidget() method. Список всех товаров
-        foreach ($this->groups as $group) {
-            foreach ($group->products()->getModels() as $product) {
-                $result[] = $product;
-               if (!is_null($count) && $count == ++$n) {
-                   return $result;
-               }
-            }
-        }
-        return $result;
-    }
 
     public function isGroup(int $id): bool
     {
@@ -206,7 +191,6 @@ class Promotion extends Model implements IWidgetHome, DataWidgetInterface
                 $products[] = $product;
             }
         }
-        //TODO Выбрать все товары в цикле по группам
         return $products;
     }
 

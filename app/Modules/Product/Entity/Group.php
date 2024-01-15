@@ -5,8 +5,8 @@ namespace App\Modules\Product\Entity;
 
 use App\Entity\Photo;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Pages\Entity\DataWidget;
-use App\Modules\Pages\Entity\DataWidgetInterface;
+use App\Modules\Page\Entity\DataWidget;
+use App\Modules\Page\Entity\DataWidgetInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**

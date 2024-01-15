@@ -5,13 +5,12 @@ namespace App\Modules\Shop;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Pages\Entity\Page;
+use App\Modules\Page\Entity\Page;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeProduct;
 use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Entity\ProductPricing;
 use App\Modules\Product\Entity\Tag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;

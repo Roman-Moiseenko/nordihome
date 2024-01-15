@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
-use App\Modules\Pages\Entity\Page;
+use App\Modules\Page\Entity\Page;
 
 class MenuHelper
 {

@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Pages\Service;
+namespace App\Modules\Page\Service;
 
-use App\Modules\Pages\Entity\Page;
+use App\Modules\Page\Entity\Page;
 use Illuminate\Http\Request;
 
 class PageService

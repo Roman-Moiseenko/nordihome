@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
-use App\Modules\Pages\Entity\Page;
-use Illuminate\Http\Request;
+use App\Modules\Page\Entity\Page;
 use Illuminate\Routing\Controller;
 
 class PageController extends Controller

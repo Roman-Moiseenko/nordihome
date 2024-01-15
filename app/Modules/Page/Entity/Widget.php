@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Pages\Entity;
+namespace App\Modules\Page\Entity;
 
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Product\Entity\Group;
-use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 
 /**

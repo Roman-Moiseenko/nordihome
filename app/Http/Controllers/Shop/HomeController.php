@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Shop;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Pages\Entity\Widget;
+use App\Modules\Page\Entity\Widget;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Contracts\Support\Renderable;

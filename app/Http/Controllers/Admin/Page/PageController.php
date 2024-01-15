@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Page;
 
-use App\Modules\Pages\Entity\Page;
-use App\Modules\Pages\Service\PageService;
+use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Service\PageService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 

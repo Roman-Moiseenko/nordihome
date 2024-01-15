@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Pages\Service;
+namespace App\Modules\Page\Service;
 
-use App\Modules\Pages\Entity\DataWidgetInterface;
-use App\Modules\Pages\Entity\Widget;
+use App\Modules\Page\Entity\DataWidgetInterface;
+use App\Modules\Page\Entity\Widget;
 use Illuminate\Http\Request;
 
 class WidgetService
