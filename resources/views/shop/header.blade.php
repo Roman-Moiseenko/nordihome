@@ -4,7 +4,7 @@
             <div><i class="fa-light fa-location-dot"></i>&nbsp;Калининград</div>
             <div class="d-flex ">
                 <div>
-                    @foreach($menuTop as $item)
+                    @foreach(\App\Modules\Shop\MenuHelper::getMenuPages() as $item)
                         <a href="{{ isset($item['page']) ? route('shop.page.view', $item['page']) : route($item['route_name']) }}"
                            class="fs-6 ms-1 link-dark link-underline-opacity-0 link-underline-opacity-0-hover fw-bolder link-opacity-75-hover">
                             {{ $item['name'] }}
@@ -12,7 +12,8 @@
                     @endforeach
                 </div>
                 <div class="d-flex ms-2">
-                    @foreach($menuContact as $item)
+
+                    @foreach(\App\Modules\Shop\MenuHelper::getMenuContacts() as $item)
                         <div class="ms-2">
                             <a href="{{ $item['url'] }}" target="_blank" title="{{ $item['name'] }}">
                                 <i class="{{ $item['icon'] }} fs-3" style="color: {{ $item['color'] }}"></i>

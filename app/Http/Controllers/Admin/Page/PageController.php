@@ -25,13 +25,19 @@ class PageController extends Controller
     public function create()
     {
         $templates = Page::PAGES_TEMPLATES;
-        return view('admin.page.page.create', compact('templates'));
+        $pages = Page::where('parent_id', null)->get();
+        return view('admin.page.page.create', compact('templates', 'pages'));
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|min:3',
+            'title' => 'required|string|min:6',
+            'template' => 'required',
+        ]);
         $page = $this->service->create($request);
-        return view('admin.page.page.show', compact('page'));
+        return redirect()->route('admin.page.page.show', $page);
     }
 
     public function show(Page $page)
@@ -42,13 +48,33 @@ class PageController extends Controller
     public function edit(Page $page)
     {
         $templates = Page::PAGES_TEMPLATES;
-        return view('admin.page.page.edit', compact('page', 'templates'));
+        $pages = Page::where('parent_id', null)->get();
+        return view('admin.page.page.edit', compact('page', 'templates', 'pages'));
     }
 
     public function update(Request $request, Page $page)
     {
+        $request->validate([
+            'name' => 'required|string|min:3',
+            'title' => 'required|string|min:6',
+            'template' => 'required',
+        ]);
         $page = $this->service->update($request, $page);
         return view('admin.page.page.show', compact('page'));
+    }
+
+    public function draft(Page $page)
+    {
+        $page->draft();
+
+        return redirect()->route('admin.page.page.show', compact('page'));
+    }
+
+    public function published(Page $page)
+    {
+        $page->published();
+
+        return redirect()->route('admin.page.page.show', compact('page'));
     }
 
     public function destroy(Page $widget)

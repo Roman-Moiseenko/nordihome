@@ -79,7 +79,7 @@
                                 data-placeholder="Выберите объект" >
                             <option value="0"></option>
                         </select>
-                        <x-base.form-label for="select-id" class="mt-3">Шаблон</x-base.form-label>
+                        <x-base.form-label for="select-template" class="mt-3">Шаблон</x-base.form-label>
                         <select id="select-template" name="template" class="w-full new-tom-select bg-white tom-select"
                                 data-placeholder="Выберите шаблон" >
                             <option value="0"></option>
