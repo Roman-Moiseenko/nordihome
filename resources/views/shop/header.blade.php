@@ -5,7 +5,7 @@
             <div class="d-flex ">
                 <div>
                     @foreach(\App\Modules\Shop\MenuHelper::getMenuPages() as $item)
-                        <a href="{{ isset($item['page']) ? route('shop.page.view', $item['page']) : route($item['route_name']) }}"
+                        <a href="{{ $item['route'] }}"
                            class="fs-6 ms-1 link-dark link-underline-opacity-0 link-underline-opacity-0-hover fw-bolder link-opacity-75-hover">
                             {{ $item['name'] }}
                         </a>

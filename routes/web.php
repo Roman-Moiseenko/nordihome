@@ -224,7 +224,6 @@ Route::group(
                 Route::get('/region', 'DeliveryController@index_region')->name('region');
                 Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
                 //Действия
-
             }
         );
         //Sales - продажи

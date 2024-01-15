@@ -5,6 +5,7 @@ namespace App\Modules\Shop;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
+use App\Modules\Pages\Entity\Page;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeProduct;
 use App\Modules\Product\Entity\AttributeVariant;
@@ -425,6 +426,11 @@ class ShopRepository
             }
         }
         return $output;
+    }
+
+    public function PageBySlug(string $slug)
+    {
+        return Page::where('slug', $slug)->first();
     }
 
 

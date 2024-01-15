@@ -1,11 +1,12 @@
 @extends('layouts.shop')
 
-@section('breadcrumbs')
+@section('main')
+    container-xl pages
 @endsection
 
 @section('content')
 
-    <div class="container-xl">
+    <div class="">
         Тарифы
     </div>
 @endsection

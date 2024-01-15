@@ -23,7 +23,7 @@ use Illuminate\Support\Str;
  */
 class Page extends Model
 {
-    const PATH_TEMPLATES = 'admin.page.widget.template.';
+    const PATH_TEMPLATES = 'admin.page.page.template.';
 
     const PAGES_TEMPLATES = [
         'contact',

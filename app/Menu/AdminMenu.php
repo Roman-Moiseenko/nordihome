@@ -191,9 +191,21 @@ class AdminMenu
                 'route_name' => 'admin.home',
                 'can' => '',
             ],
-            'pages' => [
-                'icon' => 'file-stack',
-                'title' => 'Страницы',
+            'dictionary' => [
+                'icon' => 'building',
+                'title' => 'Справочники',
+                'can' => 'user-manager',
+                'sub_menu' => [
+                    'regions' => [
+                        'icon' => 'package-search',
+                        'title' => 'Регионы',
+                        'route_name' => 'admin.home',
+                    ],
+                ],
+            ],
+            'frontend' => [
+                'icon' => 'monitor',
+                'title' => 'Фронтенд',
                 'can' => '',
                 'sub_menu' => [
                     'widgets' => [
@@ -206,16 +218,19 @@ class AdminMenu
                         'title' => 'Страницы',
                         'route_name' => 'admin.page.page.index',
                     ],
-                ],
-            ],
-            'dictionary' => [
-                'icon' => 'building',
-                'title' => 'Справочники',
-                'can' => 'user-manager',
-                'sub_menu' => [
-                    'regions' => [
-                        'icon' => 'package-search',
-                        'title' => 'Регионы',
+                    'maps' => [
+                        'icon' => 'map-pinned',
+                        'title' => 'Карты',
+                        'route_name' => 'admin.home',
+                    ],
+                    'contacts' => [
+                        'icon' => 'contact',
+                        'title' => 'Контакты',
+                        'route_name' => 'admin.home',
+                    ],
+                    'banners' => [
+                        'icon' => 'gallery-horizontal-end',
+                        'title' => 'Баннеры',
                         'route_name' => 'admin.home',
                     ],
                 ],

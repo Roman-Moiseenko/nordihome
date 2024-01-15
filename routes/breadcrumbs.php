@@ -96,8 +96,9 @@ Breadcrumbs::for('other', function (BreadcrumbTrail $trail, $caption) {
 });
 
 Breadcrumbs::for('shop.page.view', function (BreadcrumbTrail $trail, $slug) {
+    $page = (new ShopRepository())->PageBySlug($slug);
     $trail->parent('home');
-    $trail->push($slug, route('shop.page.view', $slug));
+    $trail->push($page->name, route('shop.page.view', $slug));
 });
 
 /**  A D M I N  */

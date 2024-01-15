@@ -67,14 +67,14 @@ class PageController extends Controller
     {
         $page->draft();
 
-        return redirect()->route('admin.page.page.show', compact('page'));
+        return redirect()->back();
     }
 
     public function published(Page $page)
     {
         $page->published();
 
-        return redirect()->route('admin.page.page.show', compact('page'));
+        return redirect()->back();
     }
 
     public function destroy(Page $widget)

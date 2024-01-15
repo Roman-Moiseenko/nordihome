@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div class="container-xl">
+    <div class="">
         Контакты
     </div>
 @endsection

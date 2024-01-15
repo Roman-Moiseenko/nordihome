@@ -13,13 +13,19 @@
                 <x-base.lucide icon="check-square" class="w-4 h-4"/>
                 Edit </a>
             @if($page->published)
-                <a class="flex items-center mr-3" href="{{ route('admin.page.page.draft', $page) }}">
+                <form action="{{ route('admin.page.page.draft', $page) }}" method="POST">
+                    @csrf
+                <a class="flex items-center mr-3" href="#" onclick="this.parentNode.submit()">
                     <x-base.lucide icon="file-x" class="w-4 h-4"/>
                     Draft </a>
+                </form>
             @else
-                <a class="flex items-center mr-3" href="{{ route('admin.page.page.published', $page) }}">
+                <form action="{{ route('admin.page.page.published', $page) }}" method="POST">
+                    @csrf
+                <a class="flex items-center mr-3" href="#" onclick="this.parentNode.submit()">
                     <x-base.lucide icon="file-check" class="w-4 h-4"/>
                     Published </a>
+                </form>
             @endif
             <a class="flex items-center text-danger" href="#"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.page.page.destroy', $page) }}

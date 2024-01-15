@@ -3,11 +3,27 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
+use App\Modules\Pages\Entity\Page;
+
 class MenuHelper
 {
     public static function getMenuPages(): array
     {
         //TODO Сделать загрузку из модели Page
+
+        $pages = Page::where('published', true)->where('parent_id', null)->where('menu', true)->orderBy('sort')->getModels();
+
+
+        return array_map(function (Page $page) {
+            return [
+                'name' => $page->name,
+                'icon' => '', //TODO Возможно сделать иконку для Page
+                'route' => route('shop.page.view', $page->slug),
+            ];
+
+        }, $pages);
+
+
         return [
             /* 'about' => [
                  'name' => 'О компании',
