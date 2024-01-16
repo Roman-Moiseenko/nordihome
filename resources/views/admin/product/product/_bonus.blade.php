@@ -49,7 +49,7 @@
 </script>
 <div class="grid grid-cols-12 gap-x-6">
     <div class="col-span-12 lg:col-span-4">
-        <x-searchproduct route="{{ route('admin.product.search-bonus') }}" input-data="bonus-product"/>
+        <x-searchProduct route="{{ route('admin.product.search-bonus') }}" input-data="bonus-product"/>
         <x-base.button id="add-bonus" type="button" variant="primary" class="mt-3">Добавить Бонус</x-base.button>
         <div class="w-full text-slate-400 mt-6">
 

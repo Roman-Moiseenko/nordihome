@@ -1,4 +1,4 @@
-<div class="shop-home-widget">
+<div class="container-xl shop-home-widget">
     <h2 class="fs-4">{{ $widget->title }}</h2>
     <div class="row list-mini-widget">
         @foreach($widget->items as $item)

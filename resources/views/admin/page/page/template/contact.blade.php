@@ -1,12 +1,15 @@
 @extends('layouts.shop')
 
 @section('main')
-    container-xl pages
+    pages
 @endsection
 
 @section('content')
 
-    <div class="">
+    <div class="container-xl">
         Контакты
+    </div>
+    <div class="mt-3">
+        @include('shop.widgets.map')
     </div>
 @endsection

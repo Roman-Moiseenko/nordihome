@@ -1,4 +1,4 @@
-<div class="shop-home-widget">
+<div class="container-xl shop-home-widget">
     <div class="row promotion-widget">
         <div class="col-lg-3">
             <a href="{{ $widget->url }}" title="{{ $widget->title }}">

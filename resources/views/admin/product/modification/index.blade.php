@@ -18,7 +18,7 @@
     <div class="intro-y box p-5 mt-5">
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 lg:col-span-3">
-                <x-searchproduct route="{{ route('admin.product.modification.search', ['action' => 'index']) }}"
+                <x-searchProduct route="{{ route('admin.product.modification.search', ['action' => 'index']) }}"
                                  input-data="modification-product" callback="show_modification()"/>
             </div>
         </div>

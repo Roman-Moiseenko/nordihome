@@ -770,7 +770,6 @@ window.$ = jQuery;
             e.preventDefault();
         });
     }
-    //
 
 })();
 

@@ -8,3 +8,4 @@ import 'owl.carousel';
 
 import.meta.glob(["../images/**"]);
 import './frontend';
+import './maps';

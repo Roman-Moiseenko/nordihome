@@ -96,7 +96,6 @@ class ShopRepository
         //Акция
 
 
-
         foreach ($request->all() as $key => $item) {
             if (str_contains($key, 'a_')) {
                 $attr_id = (int)substr($key, 2, strlen($key) - 2);
@@ -105,7 +104,7 @@ class ShopRepository
                 $attr = Attribute::find($attr_id);
                 if ($attr->isBool()) {
                     $query->whereHas('prod_attributes', function ($q) use ($attr_id) {
-                        $q->where('attribute_id','=', $attr_id);
+                        $q->where('attribute_id', '=', $attr_id);
                     });
                 }
                 if ($attr->isNumeric()) {
@@ -430,6 +429,25 @@ class ShopRepository
     public function PageBySlug(string $slug)
     {
         return Page::where('slug', $slug)->first();
+    }
+
+    public function getMapData(Request $request)
+    {
+        //TODO Данные о магазинах брать из Складов App\Modules\Accounting\Entity\Storage
+        return [
+            [
+                'latitude' => 54.737798,
+                'longitude' => 20.477079,
+                'iconCaption' => 'NORDI HOME',
+                'balloonContent' => 'Советский проспект 103А корпус 1'
+            ],
+            [
+                'latitude' => 54.678130,
+                'longitude' => 20.495324,
+                'iconCaption' => 'NORDI HOME',
+                'balloonContent' => 'ул. Батальная 18, 2 этаж'
+            ],
+        ];
     }
 
 

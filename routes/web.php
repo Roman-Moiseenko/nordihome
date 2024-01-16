@@ -31,6 +31,9 @@ Route::group(
         //Route::post('/review', 'ReviewController@index')->name('review');
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
+        Route::post('/page/map', 'PageController@map_data')->name('page.map');
+
+
         Route::post('/product/search', 'ProductController@search')->name('product.search');
         Route::get('/product/{slug}', 'ProductController@view')->name('product.view');
         Route::post('/catalog/search', 'CatalogController@search')->name('category.search');

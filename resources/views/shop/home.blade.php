@@ -3,13 +3,18 @@
 @section('breadcrumbs')
 @endsection
 
-@section('content')
 
-<div class="container-xl">
+@section('main')
+    home
+@endsection
+
+@section('content')
 
     @foreach($widgets as $widget)
         {!! $widget->view() !!}
     @endforeach
 
-</div>
+    <div class="mt-3">
+        @include('shop.widgets.map')
+    </div>
 @endsection

@@ -44,7 +44,7 @@
 </script>
 <div class="grid grid-cols-12 gap-x-6">
     <div class="col-span-12 lg:col-span-4">
-        <x-searchproduct route="{{ route('admin.product.search') }}" input-data="related-product"/>
+        <x-searchProduct route="{{ route('admin.product.search') }}" input-data="related-product"/>
         <x-base.button id="add-related" type="button" variant="primary" class="mt-3">Добавить аксессуар</x-base.button>
     </div>
     <div class="col-span-12 lg:col-span-8">

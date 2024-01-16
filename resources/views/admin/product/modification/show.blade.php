@@ -122,7 +122,7 @@
                 @endforeach
             </div>
             <div class="w-1/4">
-                <x-searchproduct route="{{ route('admin.product.modification.search', ['action' => 'show']) }}"
+                <x-searchProduct route="{{ route('admin.product.modification.search', ['action' => 'show']) }}"
                                  input-data="modification-{{ $i }}"
                                  class="w-full" callback="AddModification({{ $i }})"/>
             </div>

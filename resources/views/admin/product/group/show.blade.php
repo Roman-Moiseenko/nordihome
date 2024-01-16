@@ -14,7 +14,7 @@
                 <img class="rounded-full" src="{{ $group->getImage() }}" alt="{{ $group->name }}">
             </div>
             <div class="w-1/2 lg:w-1/4 mx-3">
-                <x-searchproduct route="{{ route('admin.product.group.search', $group) }}" input-data="group-product" hidden-id="product_id"/>
+                <x-searchProduct route="{{ route('admin.product.group.search', $group) }}" input-data="group-product" hidden-id="product_id"/>
             </div>
             <div>
                 <x-base.button id="add-product" type="submit" variant="primary">Добавить товар в группу</x-base.button>
