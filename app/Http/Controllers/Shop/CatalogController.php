@@ -24,11 +24,17 @@ class CatalogController extends Controller
         //$this->attributes = $attributes;
     }
 
+    public function index()
+    {
+        $categories = $this->repository->getRootCategories();
+        return view('shop.catalog', compact('categories'));
+    }
+
     public function view(Request $request, $slug)
     {
         try {
             $category = $this->repository->CategoryBySlug($slug);
-            if (count($category->children) > 0) return view('shop.catalogs', compact('category'));
+            if (count($category->children) > 0) return view('shop.subcatalog', compact('category'));
 
             //TODO Переделать в запросы 1. получить только id Product,
             // 2. Получить мин и макс цены из таблицы напрямую whereIn($product_id, $product_ids), 3. Также получить бренды

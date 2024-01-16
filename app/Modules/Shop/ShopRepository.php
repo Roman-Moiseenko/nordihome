@@ -375,17 +375,7 @@ class ShopRepository
     }
 
 
-    private function ProductsForSearch(Product $product): array
-    {
-        return [
-            'id' => $product->id,
-            'name' => $product->name,
-            'code' => $product->code,
-            'image' => !is_null($product->photo) ? $product->photo->getThumbUrl('thumb') : '',
-            'price' => number_format($product->lastPrice->value, 0, ' ', ','),
-            'url' => route('shop.product.view', $product->slug),
-        ];
-    }
+    ///КАТЕГОРИИ
 
     private function CategoriesForSearch(Category $category)
     {
@@ -398,6 +388,27 @@ class ShopRepository
             'url' => route('shop.category.view', $category),
         ];
     }
+
+    public function getRootCategories()
+    {
+        return Category::where('parent_id', null)->orderBy('_lft')->get();
+    }
+
+    ///ТОВАРЫ
+
+    private function ProductsForSearch(Product $product): array
+    {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'code' => $product->code,
+            'image' => !is_null($product->photo) ? $product->photo->getThumbUrl('thumb') : '',
+            'price' => number_format($product->lastPrice->value, 0, ' ', ','),
+            'url' => route('shop.product.view', $product->slug),
+        ];
+    }
+
+
 
     private function avto_replace(string $str): string
     {
@@ -449,6 +460,8 @@ class ShopRepository
             ],
         ];
     }
+
+
 
 
 }

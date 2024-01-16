@@ -24,12 +24,17 @@ use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 //TODO Перенести в отдельный файл ????
 
 /**  Пример рекурсии для вложенных категорий и товара */
+Breadcrumbs::for('shop.category.index', function (BreadcrumbTrail $trail) { //Без указания главной - home
+    $trail->parent('home');
+    $trail->push('Каталог', route('shop.category.index'));
+});
+
 Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) { //Без указания главной - home
     $category = (new ShopRepository())->CategoryBySlug($slug);
     if ($category->parent) {
         $trail->parent('shop.category.view', $category->parent_id);
     } else {
-        $trail->parent('home');
+        $trail->parent('shop.category.index');
     }
     $trail->push($category->name, route('shop.category.view', $category->slug));
 });

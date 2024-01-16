@@ -37,6 +37,7 @@ Route::group(
         Route::post('/product/search', 'ProductController@search')->name('product.search');
         Route::get('/product/{slug}', 'ProductController@view')->name('product.view');
         Route::post('/catalog/search', 'CatalogController@search')->name('category.search');
+        Route::get('/catalog', 'CatalogController@index')->name('category.index');
         Route::get('/catalog/{slug}', 'CatalogController@view')->name('category.view');
 
         Route::get('/cart', 'CartController@view')->name('cart.view');
