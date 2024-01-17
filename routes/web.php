@@ -32,6 +32,7 @@ Route::group(
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
         Route::post('/page/map', 'PageController@map_data')->name('page.map');
+        Route::put('/page/email', 'PageController@email')->name('page.email');
 
 
         Route::post('/product/search', 'ProductController@search')->name('product.search');

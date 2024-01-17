@@ -1,0 +1,29 @@
+///// Контакты
+//1 блок
+
+.about-block {
+    padding: 60px;
+    background: #000;//var(--bs-gray-900);
+    display: grid;
+}
+.about-block p {
+    color: var(--bs-gray-100);
+}
+.about-block p.about-header {
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #D7B56D;
+    text-transform: uppercase;
+}
+.about-header:after {
+    content: '';
+    max-width: 280px;
+    height: 3px;
+    background: var(--bs-gray-100);
+    display: block;
+    margin-top: 15px;
+}
+.about-block a {
+    color: #D7B56D;
+}

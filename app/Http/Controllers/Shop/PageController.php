@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Mail\FeedBack;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Mail;
 
 class PageController extends Controller
 {
@@ -32,4 +34,11 @@ class PageController extends Controller
         return response()->json($map);
     }
 
+    public function email(Request $request)
+    {
+        //TODO Обратная связь
+        Mail::to('info@website39.site')->queue(new FeedBack($request['email'], $request['phone'], $request['message']));
+
+        return redirect()->back();
+    }
 }

@@ -23,10 +23,14 @@
 
 @include('shop.header')
 @include('flash::message')
+
+@section('breadcrumbs')
+    <div class="container-xl">
+        {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('partials.breadcrumbs-shop') }}
+    </div>
+@show
+
 <main class="@yield('main')">
-    @section('breadcrumbs')
-    {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('partials.breadcrumbs-shop') }}
-    @show
     @yield('content')
 </main>
 @include('shop.footer')

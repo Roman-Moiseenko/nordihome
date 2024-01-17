@@ -25,7 +25,9 @@
 .breadcrumbs > li.active {
 
 }
-
+ol.breadcrumbs {
+    padding-left: 0;
+}
 
 //Кнопка Scroll Up
 button.scrollup {
