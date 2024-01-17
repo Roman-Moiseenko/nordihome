@@ -11,9 +11,9 @@
         <div class="row mt-4">
             <div class="col-lg-6 ps-4" style="display: grid">
                 <div class="about-block">
-                    <p class="about-header">
+                    <div class="heading-border">
                         О КОМПАНИИ
-                    </p>
+                    </div>
                     <p>
                         NORDI HOME — Бренд, успешно работающий в Калининграде с 2020 года. Более 7 000 счастливых клиентов!
                         Компания занимается продажей и доставкой мебели ИКЕА из Европы под ключ для вашего удобства. Ниже
@@ -80,7 +80,7 @@
                     @method('PUT')
                     @csrf
                     <div class="form-floating mt-2">
-                        <input type="email" class="form-control" name="email" placeholder="Электронная почта" required="" autofocus="autofocus">
+                        <input type="email" class="form-control" name="email" placeholder="Электронная почта" required="">
                         <label for="email">Электронная почта</label>
                     </div>
                     <div class="form-floating mt-3">
@@ -98,7 +98,7 @@
                         </label>
                     </div>
                     <div class="d-flex justify-content-center mt-3">
-                        <button id="button-login" type="button" class="btn btn-dark fs-5 py-2 px-3">Отправить</button>
+                        <button id="button-login" type="submit" class="btn btn-dark fs-5 py-2 px-3">Отправить</button>
                     </div>
                 </form>
             </div>

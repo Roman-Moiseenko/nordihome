@@ -37,8 +37,8 @@ class PageController extends Controller
     public function email(Request $request)
     {
         //TODO Обратная связь
+        // Необходимо сохранение писем в базе и передача их на Исполнение
         Mail::to('info@website39.site')->queue(new FeedBack($request['email'], $request['phone'], $request['message']));
-
         return redirect()->back();
     }
 }

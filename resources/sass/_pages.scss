@@ -9,14 +9,22 @@
 .about-block p {
     color: var(--bs-gray-100);
 }
-.about-block p.about-header {
+.heading {
+    color: var(--bs-gold);
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.heading-border {
     margin-bottom: 30px;
     font-size: 28px;
     font-weight: 700;
-    color: #D7B56D;
+    color: var(--bs-gold);
     text-transform: uppercase;
 }
-.about-header:after {
+.heading-border:after {
     content: '';
     max-width: 280px;
     height: 3px;
@@ -26,4 +34,25 @@
 }
 .about-block a {
     color: #D7B56D;
+}
+
+///// Тарифы
+
+.tariff-block {
+    background: #000;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+.tariff-block p {
+    color: var(--bs-gray-100);
+    font-size: 18px;
+}
+.condition-data {
+  //  padding-top: 60px;
+}
+.tariffs-items .item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: var(--bs-gray-100);
 }
