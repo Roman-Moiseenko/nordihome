@@ -106,6 +106,13 @@ Breadcrumbs::for('shop.page.view', function (BreadcrumbTrail $trail, $slug) {
     $trail->push($page->name, route('shop.page.view', $slug));
 });
 
+Breadcrumbs::for('shop.parser.view', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Заказ товаров с каталога IKEA.PL', route('shop.parser.view'));
+});
+
+
+
 /**  A D M I N  */
 
 

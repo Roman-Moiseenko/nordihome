@@ -674,7 +674,7 @@ window.$ = jQuery;
         //
     });
     upButton.on('click', function () {
-        $('html, body').stop().animate({scrollTop: 0}, 1000);
+        $('html, body').stop().animate({scrollTop: 0}, 700);
     });
 
     //Показать скрыть пароль

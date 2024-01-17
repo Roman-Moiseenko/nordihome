@@ -34,7 +34,6 @@ Route::group(
         Route::post('/page/map', 'PageController@map_data')->name('page.map');
         Route::put('/page/email', 'PageController@email')->name('page.email');
 
-
         Route::post('/product/search', 'ProductController@search')->name('product.search');
         Route::get('/product/{slug}', 'ProductController@view')->name('product.view');
         Route::post('/catalog/search', 'CatalogController@search')->name('category.search');
@@ -72,6 +71,14 @@ Route::group(
             Route::post('/checkorder', 'OrderController@checkorder')->name('checkorder');
             Route::post('/coupon', 'OrderController@coupon')->name('coupon');
         });
+
+        Route::group([
+            'as' => 'parser.'
+        ],
+            function() {
+                Route::get('/calculate', 'ParserController@view')->name('view');
+            }
+        );
     }
 );
 

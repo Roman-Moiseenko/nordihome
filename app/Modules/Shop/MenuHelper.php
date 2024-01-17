@@ -12,16 +12,22 @@ class MenuHelper
         //TODO Сделать загрузку из модели Page
 
         $pages = Page::where('published', true)->where('parent_id', null)->where('menu', true)->orderBy('sort')->getModels();
+        $add_items = [
+            [
+                'name' => 'Заказ товаров из ИКЕА',
+                'icon' => '',
+                'route' => route('shop.parser.view'),
+            ],
+        ];
 
-
-        return array_map(function (Page $page) {
+        return array_merge(array_map(function (Page $page) {
             return [
                 'name' => $page->name,
                 'icon' => '', //TODO Возможно сделать иконку для Page
                 'route' => route('shop.page.view', $page->slug),
             ];
 
-        }, $pages);
+        }, $pages), $add_items);
 
     }
 
@@ -68,14 +74,9 @@ class MenuHelper
                 'items' => array_merge(
                 [
                     [
-                        'name' => 'Каталог',
+                        'name' => 'Каталог товаров',
                         'icon' => '',
                         'route' => route('shop.category.index'),
-                    ],
-                    [
-                        'name' => 'Товары под заказ',
-                        'icon' => '',
-                        'route' => route('shop.category.index'), //TODO Парсер
                     ],
                 ],
                     self::getMenuPages()
@@ -89,7 +90,6 @@ class MenuHelper
                         'icon' => '',
                         'route' => route('shop.page.view', 'condition'),
                     ],
-
                     [
                         'name' => 'Политика обработки персональных данных',
                         'icon' => '',
