@@ -439,7 +439,7 @@ class ShopRepository
 
     public function PageBySlug(string $slug)
     {
-        return Page::where('slug', $slug)->first();
+        return Page::where('slug', $slug)->where('published', true)->firstOrFail();
     }
 
     public function getMapData(Request $request)

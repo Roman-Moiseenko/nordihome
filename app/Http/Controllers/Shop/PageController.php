@@ -22,9 +22,15 @@ class PageController extends Controller
 
     public function view($slug)
     {
-        $page = Page::where('slug', $slug)->first();
+        try {
 
-        return $page->view();
+
+            $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
+
+            return $page->view();
+        } catch (\Throwable $e) {
+            abort(404, 'Страница не найдена');
+        }
     }
 
     public function map_data(Request $request)

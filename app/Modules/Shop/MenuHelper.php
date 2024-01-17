@@ -65,7 +65,21 @@ class MenuHelper
         return [
             'column-1' => [
                 'title' => 'Меню',
-                'items' => self::getMenuPages(),
+                'items' => array_merge(
+                [
+                    [
+                        'name' => 'Каталог',
+                        'icon' => '',
+                        'route' => route('shop.category.index'),
+                    ],
+                    [
+                        'name' => 'Товары под заказ',
+                        'icon' => '',
+                        'route' => route('shop.category.index'), //TODO Парсер
+                    ],
+                ],
+                    self::getMenuPages()
+                ),
             ],
             'column-2' => [
                 'title' => 'Для клиента',
