@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class PageService
 {
 
-    public function create(Request $request)
+    public function create(Request $request): Page
     {
         $page = Page::register(
             $request['name'],
@@ -23,7 +23,7 @@ class PageService
         return $page;
     }
 
-    public function update(Request $request, Page $page)
+    public function update(Request $request, Page $page): Page
     {
         $page->update([
             'name' => $request['name'],
@@ -40,6 +40,13 @@ class PageService
     public function destroy(Page $page)
     {
         $page->delete();
+    }
+
+    public function setText(Request $request, Page $page): Page
+    {
+        $text = $request['text'];
+        $page->setText($text);
+        return $page;
     }
 
 }

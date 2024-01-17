@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
  * @property string $title
  * @property string $description
  * @property string $template
+ * @property string $text
  * @property bool $menu
  * @property bool $published
  * @property int $sort
@@ -29,6 +30,7 @@ class Page extends Model
         'contact',
         'review',
         'tariff',
+        'text',
     ];
     protected $fillable = [
         'parent_id',
@@ -60,8 +62,16 @@ class Page extends Model
             'sort' => ($sort + 1),
             'menu' => $menu,
             'published' => false,
+            'text' => '',
         ]);
     }
+
+    public function setText(string $text)
+    {
+        $this->text = $text;
+        $this->save();
+    }
+
     public function draft()
     {
         $this->published = false;

@@ -23,45 +23,6 @@ class MenuHelper
 
         }, $pages);
 
-
-        return [
-            /* 'about' => [
-                 'name' => 'О компании',
-                 'icon' => '',
-                 'page' => 'about',
-                 'route_name' => 'shop.page.about',
-             ],*/
-            'tariff' => [
-                'name' => 'Условия и тарифы',
-                'icon' => '',
-                'page' => 'tariff',
-                'route_name' => 'shop.page.tariff',
-            ],
-            'reviews' => [
-                'name' => 'Отзывы',
-                'icon' => '',
-                'page' => 'review',
-                'route_name' => 'shop.page.review',
-            ],
-            'contact' => [
-                'name' => 'Контакты',
-                'icon' => '',
-                'page' => 'contact',
-                'route_name' => 'shop.page.contact',
-            ],
-            /*   'in_stock' => [
-                   'name' => 'Товары в наличии',
-                   'icon' => '',
-                   'route_name' => 'shop.categories',
-                   'submenu' => (new CategoryRepository())->getTree(),
-               ],
-               'pre_order' => [
-                   'name' => 'Товары подзаказ',
-                   'icon' => '',
-                   'route_name' => 'shop.pre_order',
-
-               ],*/
-        ];
     }
 
     public static function getMenuContacts(): array
@@ -96,6 +57,33 @@ class MenuHelper
                 'url' => 'https://wa.me/+79062108505?text=Здравствуйте, я хочу мебель из Икеа!',
                 'data-type' => 4,
             ],
+        ];
+    }
+
+    public static function getFooterMenu(): array
+    {
+        return [
+            'column-1' => [
+                'title' => 'Меню',
+                'items' => self::getMenuPages(),
+            ],
+            'column-2' => [
+                'title' => 'Для клиента',
+                'items' => [//TODO сделать аналог self::getMenuPages(),
+                    [
+                        'name' => 'Условия использования сайта',
+                        'icon' => '',
+                        'route' => route('shop.page.view', 'condition'),
+                    ],
+
+                    [
+                        'name' => 'Политика обработки персональных данных',
+                        'icon' => '',
+                        'route' => route('shop.page.view', 'political'),
+                    ],
+                ],
+            ],
+
         ];
     }
 }

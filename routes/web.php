@@ -271,6 +271,7 @@ Route::group(
                 Route::resource('page', 'PageController'); //CRUD
                 Route::post('/page/{page}/draft', 'PageController@draft')->name('page.draft');
                 Route::post('/page/{page}/published', 'PageController@published')->name('page.published');
+                Route::post('/page/{page}/text', 'PageController@text')->name('page.text');
             }
         );
 

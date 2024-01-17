@@ -63,6 +63,12 @@ class PageController extends Controller
         return view('admin.page.page.show', compact('page'));
     }
 
+    public function text(Request $request, Page $page)
+    {
+        $page = $this->service->setText($request, $page);
+        return redirect()->route('admin.page.page.show', $page);
+    }
+
     public function draft(Page $page)
     {
         $page->draft();
