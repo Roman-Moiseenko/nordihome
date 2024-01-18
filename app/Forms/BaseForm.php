@@ -74,6 +74,5 @@ abstract class BaseForm
         ];
     }
 
-    //TODO Сделать массив базовых аттрибутов, в наследниках объединять массивы
     abstract public function show();
 }

@@ -27,6 +27,6 @@ class AddressTest extends TestCase
         $user->save();
         self::assertEquals($address->index, $user->address_index);
         self::assertEquals($address->index, $user->address->index);
-        //TODO
+
     }
 }

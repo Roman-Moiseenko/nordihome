@@ -60,7 +60,6 @@ class Cart
         $this->storage->add(CartItem::create($product, $quantity, $options));
     }
 
-    //TODO Протестировать sub и set в Корзине
     public function plus(Product $product, $quantity)
     {
         $this->loadItems();
@@ -261,10 +260,8 @@ class Cart
 
     public function setAvailability()
     {
-
         $this->loadItems();
         foreach ($this->items as $i => $item) {
-            //TODO проверка по резерву и доступно ли
             if ($item->preorder()) {
                 $this->set($item->product, $item->availability());
 
@@ -272,10 +269,6 @@ class Cart
                     unset($this->items[$i]);
                 }
             }
-
-           /* $availability-
-            if ()
-            $this->set($item->product);*/
         }
 
     }
