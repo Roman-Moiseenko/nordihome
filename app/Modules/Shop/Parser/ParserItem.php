@@ -7,20 +7,25 @@ use App\Modules\Product\Entity\Product;
 
 class ParserItem
 {
-    public int $quantity;
-    public Product $product;
-    public float $base_cost;
 
-    public function __construct(int $quantity, Product $product, float $base_cost = 0)
+    public string $code; //Артикул
+    public string $name; //Название
+    public string $description; //Описание
+    public string $link; //Ссылка на товар
+    public string $image; //Изображение
+    public float $weight; //Вес
+    public array $quantity; //Кол-во на складе
+
+    public int $count; //Кол-во на заказ
+    public float $cost; //Цена
+    public int $pack; //Кол-во в пачке
+    public array $composite; //Список составных артикулов с кол-вом, для таблицы: xxx.xxx.xx - x шт.
+
+
+    public function __construct()
     {
-        $this->product = $product;
-        $this->quantity = $quantity;
-        $this->base_cost = $base_cost;
+
     }
 
-    public function setCost(float $base_cost)
-    {
-        $this->base_cost = $base_cost;
-    }
 
 }

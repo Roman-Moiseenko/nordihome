@@ -1,0 +1,382 @@
+{
+    "availabilities": null,
+    "data": [
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 23,
+                    "updateDateTime": "2024-01-25T19:18:15.085Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T19:18:15.085Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "188",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 52,
+                    "updateDateTime": "2024-01-25T16:14:51.148Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T16:14:51.148Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "203",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 52,
+                    "updateDateTime": "2024-01-25T18:04:38.864Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T18:04:38.864Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "204",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 34,
+                    "updateDateTime": "2024-01-25T15:07:42.244Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T15:07:42.244Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "205",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 102,
+                    "updateDateTime": "2024-01-25T17:57:17.144Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T17:57:17.144Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "294",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 49,
+                    "updateDateTime": "2024-01-25T16:30:20.764Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T16:30:20.764Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "306",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 46,
+                    "updateDateTime": "2024-01-25T18:25:43.438Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T18:25:43.438Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "307",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 32,
+                    "updateDateTime": "2024-01-24T01:01:25.074Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-24T01:01:25.074Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "311",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 28,
+                    "updateDateTime": "2024-01-25T18:21:21.656Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T18:21:21.656Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "329",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 44,
+                    "updateDateTime": "2024-01-25T12:46:34.228Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T12:46:34.228Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "429",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": true,
+            "isInHomeDeliveryRange": true,
+            "availableStocks": [
+                {
+                    "type": "CASHCARRY",
+                    "quantity": 16,
+                    "updateDateTime": "2024-01-25T00:19:37.915Z",
+                    "probabilities": [
+                        {
+                            "type": "THIS_DAY",
+                            "updateDateTime": "2024-01-25T00:19:37.915Z",
+                            "communication": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "classUnitKey": {
+                "classUnitCode": "583",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "isInCashAndCarryRange": null,
+            "isInHomeDeliveryRange": true,
+            "classUnitKey": {
+                "classUnitCode": "PL",
+                "classUnitType": "RU"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        }
+    ],
+    "timestamp": "2024-01-25T20:45:59.326Z",
+    "traceId": "12551141763925529631"
+}

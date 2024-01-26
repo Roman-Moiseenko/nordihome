@@ -77,6 +77,7 @@ Route::group(
         ],
             function() {
                 Route::get('/calculate', 'ParserController@view')->name('view');
+                Route::post('/parser/search', 'ParserController@search')->name('search');
             }
         );
     }

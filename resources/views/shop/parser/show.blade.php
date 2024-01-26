@@ -1,7 +1,7 @@
 @extends('layouts.shop')
 
 @section('body')
-    page
+    page calculate
 @endsection
 
 @section('main')
@@ -25,8 +25,8 @@
                         Скопируйте и вставьте в поле номер артикула товара или ссылку с сайта <a href="https://IKEA.PL" target="_blank">IKEA.PL</a>
                     </div>
                     <div class="parser-card-search--form">
-                        <input id="search-field" type="text" name="search-data" class="form-control"/>
-                        <button id="search-button" onclick="ym(88113821,'reachGoal','target-parser'); return true;">Искать</button>
+                        <input id="search-parser-field" type="text" name="search" class="form-control"/>
+                        <button id="search-parser-button">Искать</button>
                     </div>
                 </div>
             </div>

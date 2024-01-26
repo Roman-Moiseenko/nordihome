@@ -85,6 +85,18 @@ class Photo extends Model
         return $photo;
     }
 
+    public static function uploadByUrl(string $url, string $type = '', int $sort = 0): self
+    {
+        $storage = public_path() . '/temp/';
+        $upload_file_name = basename($url);
+        copy($url, $storage . $upload_file_name);
+        $upload = new UploadedFile(
+            $storage . $upload_file_name,
+            $upload_file_name,
+            null, null, true);
+        return self::upload($upload, $type, $sort);
+    }
+
     // Set и Is
     public function setSort(int $sort): void
     {

@@ -47,7 +47,7 @@
     color: var(--black);
 }
 
-#search-button {
+#search-parser-button {
     border-radius: 0 12px 12px 0;
 }
 @media (max-width: 991px) {
@@ -381,7 +381,7 @@
 }
 #decrease-button {border-radius:5px 0 0 5px;}
 #increase-button {border-radius: 0 5px 5px 0;}
-#search-field {border-radius: 12px 0 0 12px;}
+#search-parser-field {border-radius: 12px 0 0 12px;}
 /* Форматирование радиокнопок*/
 
 #user-type-person {

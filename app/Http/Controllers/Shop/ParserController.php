@@ -30,11 +30,19 @@ class ParserController extends Controller
     public function search(Request $request)
     {
         //Ищем товар, делаем расчеты и event()
-        $product = $this->service->findProduct($request);
-        $this->cart->add($product);
+        try {
+            $result = $this->service->findProduct($request);
+        } catch (\Throwable $e) {
+            $result = [
+                $e->getFile(),
+                $e->getLine(),
+                $e->getMessage()
+            ];
+        }
+        //$this->cart->add($product);
         //Получаем новый список товаров.
         //TODO Ajax
-        return \response()->json($this->cart);
+        return \response()->json($result);
     }
 
     public function clear()

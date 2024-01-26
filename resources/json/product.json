@@ -1,0 +1,789 @@
+{
+    "buyModule": {
+        "productName": "BEKVÄM",
+        "hideSection": true,
+        "productNumber": "40178888",
+        "productType": "ART",
+        "onlineSellable": true,
+        "isFood": false,
+        "enabledCartButton": true,
+        "noJavascriptLabel": "Musisz włączyć obsługę JavaScript aby robić zakupy na IKEA.com",
+        "currency": "PLN",
+        "priceExclTax": 81.29,
+        "ratings": 4.8,
+        "addToCartButtonProps": {
+            "prefix": "pip-",
+            "type": "emphasised",
+            "htmlType": "button",
+            "disabled": true,
+            "text": "Dodaj do koszyka",
+            "add-x-text": "Dodaj {productCount} szt. do koszyka",
+            "added-text": "Dodano",
+            "data-test-target": "add-to-cart-button",
+            "aria-label": "Dodaj do koszyka"
+        },
+        "addToIGiftButtonProps": {
+            "prefix": "pip-",
+            "type": "secondary",
+            "htmlType": "button",
+            "disabled": true,
+            "text": "Dodaj do listy prezentów",
+            "remove-text": "Usuń z listy prezentów",
+            "data-test-target": "add-to-igift-button",
+            "aria-label": "Dodaj do listy prezentów"
+        },
+        "disabledButtonProps": {
+            "prefix": "pip-",
+            "type": "secondary",
+            "htmlType": "button",
+            "disabled": true
+        },
+        "hydrate": true
+    },
+    "mediaGrid": {
+        "productName": "BEKVÄM",
+        "fullMediaList": [
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "0122140_PE278505_S5.JPG",
+                    "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                    "id": "0122140_PE278505",
+                    "type": "MAIN_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "0810583_PH148737_S5.JPG",
+                    "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                    "id": "0810583_PH148737",
+                    "type": "INSPIRATIONAL_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0810583_ph148737_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1214005_PE911460_S5.JPG",
+                    "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                    "id": "1214005_PE911460",
+                    "type": "CONTEXT_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1214005_pe911460_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1214004_PE911461_S5.JPG",
+                    "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                    "id": "1214004_PE911461",
+                    "type": "CONTEXT_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1214004_pe911461_s5.jpg"
+                }
+            }
+        ],
+        "mediaList": [
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "0122140_PE278505_S5.JPG",
+                    "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                    "id": "0122140_PE278505",
+                    "type": "MAIN_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "0810583_PH148737_S5.JPG",
+                    "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                    "id": "0810583_PH148737",
+                    "type": "INSPIRATIONAL_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0810583_ph148737_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1214005_PE911460_S5.JPG",
+                    "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                    "id": "1214005_PE911460",
+                    "type": "CONTEXT_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1214005_pe911460_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1214004_PE911461_S5.JPG",
+                    "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                    "id": "1214004_PE911461",
+                    "type": "CONTEXT_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1214004_pe911461_s5.jpg"
+                }
+            }
+        ],
+        "disabledButton": true,
+        "buttonMoreLabel": "Pokaż więcej zdjęć",
+        "buttonLessLabel": "Pokaż mniej",
+        "isSingleMedia": false,
+        "showAsNonSellableProduct": false,
+        "defaultNrOfImages": 8,
+        "showButton": false,
+        "buttonLabel": "Pokaż więcej zdjęć",
+        "badge": null,
+        "assemblyVideos": [],
+        "hydrate": true
+    },
+    "pipPriceModule": {
+        "isNew": false,
+        "isNlp": false,
+        "isFamily": false,
+        "isTro": false,
+        "isDiscontinued": false,
+        "productName": "BEKVÄM",
+        "productDescription": "Taboret ze schodkiem, biały",
+        "measurementText": "50 cm",
+        "price": {
+            "mainPriceProps": {
+                "price": {
+                    "integer": "99",
+                    "decimals": "99"
+                },
+                "unit": "",
+                "currencySymbol": "",
+                "separator": ",",
+                "hasTrailingCurrency": false,
+                "hasHighlight": false,
+                "hasStrikeThrough": false,
+                "isSmall": false,
+                "isSecondary": false,
+                "currencySuffixZeroDecimals": false
+            },
+            "secondaryMainPriceProps": null,
+            "previousPriceProps": null,
+            "secondaryPreviousPriceProps": null,
+            "previousPriceText": "Cena dla pozostałych klientów",
+            "lowestPreviousPriceProps": null,
+            "secondaryLowestPreviousPriceProps": null,
+            "comparisonPriceText": null,
+            "discount": "",
+            "vatInfoText": null
+        },
+        "productReviewsProps": {
+            "title": "Opinie",
+            "loadingText": "Wczytywanie opinii",
+            "eventLabel": "pip_reviews",
+            "productId": "40178888",
+            "productType": "ART",
+            "averageRatingProps": {
+                "rating": 4.8,
+                "icons": [
+                    {
+                        "type": "filled",
+                        "id": "star-icon-1"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-2"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-3"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-4"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-5"
+                    }
+                ],
+                "reviewCount": 252,
+                "reviews": true,
+                "renderHeader": false,
+                "reviewText": "(252)",
+                "ariaLabel": "Opinia: 4.8 na 5 gwiazdki. Recenzje ogółem: 252"
+            },
+            "enableRatingsAndReviews": true,
+            "reviews": [
+                {
+                    "ratingValue": 4,
+                    "name": "Marta",
+                    "text": "Dużo lżejszy i mniej wytrzymały na obicie niż jego czarny odpowiednik w kolorze czarnym zakupiony ponad 10 lat temu. ",
+                    "title": "Taboret"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Justyna",
+                    "text": "To krzesłko jest super. Stabilne mozna użyć jako drabinki bądź krzesłka. Bardzo funkcjonalne ",
+                    "title": "Krzesełko "
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Anna",
+                    "text": "Bratanek bardzo zadowolony.",
+                    "title": "Idealne dla ciut starszych dzieci"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Arkadiusz",
+                    "text": "Już połowę najbliższej rodziny i jedna znajoma nkorzysta z tego rewelacyjnego taboretu w pełni polecam !!",
+                    "title": "Taboret zakupiony po raz czwarty"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Anna",
+                    "text": "bardzo przydatny i funkcjonalny",
+                    "title": "bardzo przydatny i funkcjonalny"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Joanna",
+                    "text": "Stołek rewelacyjnie się sprawdza w mojej kuchni i nie tylko. To już drugi w moim domu. Polecam",
+                    "title": "BEKVAM"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Dariusz",
+                    "text": "naprawde ok.",
+                    "title": "naprawde ok."
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Marek",
+                    "text": "Ok",
+                    "title": "Ok"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Agata",
+                    "text": "stabilny kompaktowy stopień, może też służyć jako taboret",
+                    "title": "stabilny"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Joanna",
+                    "text": "Przydatny w mieszkaniu, może robić za krzesło oraz mała drabinkę.",
+                    "title": "Przydatny w mieszkaniu"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Agnieszka",
+                    "text": "Bardzo praktyczny i dobrze wykonany. Niezbędny w każdym domu.",
+                    "title": "Dobry produkt"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Monika",
+                    "text": "Łatwy montaż, estetyka wykonania , wytrzymałość i funkcjonalności.. same pozytywy",
+                    "title": "Zadowolona klientka"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Małgorzata",
+                    "text": "Stabilny, dwustopniowy stołek, dobrze wykonany.",
+                    "title": "BEKVÅM"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Jakub",
+                    "text": "Jest ok, stołek jak stołek. Wart swojej ceny.",
+                    "title": "Jest ok, stołek jak stołek."
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Piotr",
+                    "text": "Świetna jakość",
+                    "title": "Świetna jakość"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Paweł",
+                    "text": "Bardzo wygodny i zajmuje niedużo miejsca.",
+                    "title": "Polecam"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Tomasz",
+                    "text": "trochę szybko zdziera się farba",
+                    "title": "stołek"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Małgorzata",
+                    "text": "Super stołek bardzo przydatny, to mój drugi mam jeszcze taki tylko w kolorze drewna jest trochę masywniejszy od białego. Polecam",
+                    "title": "Super stołek bardzo przydatny, to"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Joanna",
+                    "text": "przydatny do siedzenia i sięgania na wysokie pólki w szafie i garderobie",
+                    "title": "stołek"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Elżbieta",
+                    "text": "Jeden z najlepszych moich ostatnich zakupow. Naprawdę jest to schodek do zadań specjalnych, a na dodatek wyglada pięknie.",
+                    "title": "Schodek do zadań specjalnych."
+                }
+            ]
+        },
+        "productDiscountsProps": null,
+        "ecoWeeeFees": null,
+        "timeFrame": null,
+        "energyLabelProps": null,
+        "repairabilityIndex": null,
+        "ecoWeeeFeeExcludeText": "",
+        "totalPriceText": "",
+        "ecoWeeeFeeLinkText": "",
+        "ecoWeeeFeeLink": null,
+        "validToFromText": "",
+        "validToFromAndWhileSupplyLastText": "",
+        "whileSupplyLastText": null,
+        "isLastChance": false,
+        "energyInformationLocalProps": null,
+        "deliveryPageUrl": null,
+        "siteFolder": "pl/pl",
+        "hydrate": true
+    },
+    "productInformationSection": {
+        "isClient": false,
+        "dimensionProps": {
+            "title": "Wymiary",
+            "dimensions": [
+                {
+                    "measure": "43 cm",
+                    "name": "Szerokość",
+                    "type": "00047"
+                },
+                {
+                    "measure": "39 cm",
+                    "name": "Głębokość",
+                    "type": "00044"
+                },
+                {
+                    "measure": "50 cm",
+                    "name": "Wysokość",
+                    "type": "00041"
+                },
+                {
+                    "measure": "100 kg",
+                    "name": "Maksymalne obciążenie",
+                    "type": "00012"
+                }
+            ],
+            "images": [],
+            "fallbackImage": {
+                "imageFileName": "0122140_PE278505_S5.JPG",
+                "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                "id": "0122140_PE278505",
+                "type": "MAIN_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg"
+            },
+            "eventLabel": "pip_measurements",
+            "packaging": {
+                "id": "measurements-packaging",
+                "title": "Opakowanie",
+                "contentProps": {
+                    "packages": [
+                        {
+                            "name": "BEKVÄM",
+                            "typeName": "Taboret ze schodkiem",
+                            "itemNo": "40178888",
+                            "articleNumber": {
+                                "label": "Numer artykułu",
+                                "value": "401.788.88"
+                            },
+                            "measurements": [
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "39 cm",
+                                        "value": 39
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "7 cm",
+                                        "value": 7
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "49 cm",
+                                        "value": 49
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "3.17 kg",
+                                        "value": 3.17
+                                    }
+                                ]
+                            ],
+                            "quantity": {
+                                "label": "Paczka(i)",
+                                "value": 1
+                            },
+                            "multiPackDisclaimerText": false
+                        }
+                    ],
+                    "maxMeasurments": {
+                        "weightText": "3.17 kg",
+                        "widthText": "39 cm",
+                        "lengthText": "49 cm",
+                        "heightText": "7 cm",
+                        "diameterText": ""
+                    }
+                }
+            }
+        },
+        "includedProductsProps": null,
+        "productDetailsProps": {
+            "title": "Informacje o produkcie",
+            "eventLabel": "pip_details",
+            "section": "details",
+            "productDescriptionProps": {
+                "paragraphs": [
+                    "Stołek ze stopniem ułatwia sięganie po wysoko przechowywane przedmioty.",
+                    "Poręczny otwór w górnym stopniu pozwala łatwo przenosić taboret",
+                    "Lite drewno to wytrzymały, naturalny materiał.",
+                    "Ten stołek ze stopniami został przetestowany zgodnie z naszymi najbardziej rygorystycznymi standardami odnośnie stabilności, trwałości i bezpieczeństwa, aby wytrzymać codzienne użytkowanie w domu wiele lat."
+                ],
+                "designerLabel": "Projektant",
+                "designerName": "Nike Karlsson"
+            },
+            "accordionObject": {
+                "goodToKnow": {
+                    "id": "product-details-good-to-know",
+                    "title": "Dobrze wiedzieć",
+                    "contentProps": {
+                        "goodToKnow": [
+                            {
+                                "name": "Purchase-/Other information",
+                                "text": "W zależności od lokalnych uwarunkowań, produkt po zużyciu może być przeznaczony do recyklingu lub odzysku energetycznego."
+                            },
+                            {
+                                "name": "Purchase-/Other information",
+                                "text": "Do użytku w pomieszczeniach"
+                            }
+                        ]
+                    }
+                },
+                "materialsAndCare": {
+                    "id": "product-details-material-and-care",
+                    "title": "Materiały i konserwacja",
+                    "contentProps": {
+                        "materials": [
+                            {
+                                "materials": [
+                                    {
+                                        "material": "lita osika, Klej, Bejca, Bezbarwny lakier akrylowy"
+                                    }
+                                ]
+                            }
+                        ],
+                        "careInstructions": [
+                            {
+                                "texts": [
+                                    "Wycierać szmatką zwilżoną delikatnym środkiem do czyszczenia.",
+                                    "Wycierać czystą, suchą szmatką.",
+                                    "Dla zapewnienia najwyższej jakości, w razie potrzeby dokręć śruby."
+                                ]
+                            }
+                        ],
+                        "proposition65": []
+                    }
+                },
+                "safetyAndCompliance": null,
+                "sustainabilityAndEnvironment": null,
+                "assemblyAndDocuments": {
+                    "id": "product-details-assembly-and-documents",
+                    "title": "Instrukcja montażu i dokumenty",
+                    "contentProps": {
+                        "attachments": {
+                            "assembly": {
+                                "header": "Instrukcja montażu",
+                                "attachments": [
+                                    {
+                                        "id": "401.788.88",
+                                        "url": "https://www.ikea.com/pl/pl/assembly_instructions/bekvaem-taboret-ze-schodkiem-bialy__AA-323406-7-2.pdf",
+                                        "label": "BEKVÄM Taboret ze schodkiem"
+                                    }
+                                ]
+                            },
+                            "software": {
+                                "header": "Software",
+                                "attachments": []
+                            },
+                            "declaration": {
+                                "header": "Deklaracja Zgodności",
+                                "attachments": []
+                            },
+                            "other": {
+                                "header": "Inne dokumenty",
+                                "attachments": [
+                                    {
+                                        "id": "401.788.88",
+                                        "url": "https://www.ikea.com/pl/pl/manuals/bekvaem-taboret-ze-schodkiem-bialy__AA-2180203-2-2.pdf",
+                                        "label": "BEKVÄM Taboret ze schodkiem"
+                                    }
+                                ]
+                            },
+                            "disassembly": {
+                                "header": "Demontaż &amp; Recycling (dla profesjonalistów z branży)",
+                                "attachments": []
+                            }
+                        }
+                    }
+                },
+                "compliance": null
+            },
+            "productId": "40178888"
+        },
+        "productReviewsProps": {
+            "title": "Opinie",
+            "loadingText": "Wczytywanie opinii",
+            "eventLabel": "pip_reviews_section",
+            "section": "reviews",
+            "productId": "40178888",
+            "productType": "ART",
+            "averageRatingProps": {
+                "rating": 4.8,
+                "icons": [
+                    {
+                        "type": "filled",
+                        "id": "star-icon-1"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-2"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-3"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-4"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-5"
+                    }
+                ],
+                "reviewCount": 252,
+                "reviews": true,
+                "renderHeader": false,
+                "reviewText": "(252)",
+                "ariaLabel": "Opinia: 4.8 na 5 gwiazdki. Recenzje ogółem: 252"
+            },
+            "enableRatingsAndReviews": true,
+            "reviews": [
+                {
+                    "ratingValue": 4,
+                    "name": "Marta",
+                    "text": "Dużo lżejszy i mniej wytrzymały na obicie niż jego czarny odpowiednik w kolorze czarnym zakupiony ponad 10 lat temu. ",
+                    "title": "Taboret"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Justyna",
+                    "text": "To krzesłko jest super. Stabilne mozna użyć jako drabinki bądź krzesłka. Bardzo funkcjonalne ",
+                    "title": "Krzesełko "
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Anna",
+                    "text": "Bratanek bardzo zadowolony.",
+                    "title": "Idealne dla ciut starszych dzieci"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Arkadiusz",
+                    "text": "Już połowę najbliższej rodziny i jedna znajoma nkorzysta z tego rewelacyjnego taboretu w pełni polecam !!",
+                    "title": "Taboret zakupiony po raz czwarty"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Anna",
+                    "text": "bardzo przydatny i funkcjonalny",
+                    "title": "bardzo przydatny i funkcjonalny"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Joanna",
+                    "text": "Stołek rewelacyjnie się sprawdza w mojej kuchni i nie tylko. To już drugi w moim domu. Polecam",
+                    "title": "BEKVAM"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Dariusz",
+                    "text": "naprawde ok.",
+                    "title": "naprawde ok."
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Marek",
+                    "text": "Ok",
+                    "title": "Ok"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Agata",
+                    "text": "stabilny kompaktowy stopień, może też służyć jako taboret",
+                    "title": "stabilny"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Joanna",
+                    "text": "Przydatny w mieszkaniu, może robić za krzesło oraz mała drabinkę.",
+                    "title": "Przydatny w mieszkaniu"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Agnieszka",
+                    "text": "Bardzo praktyczny i dobrze wykonany. Niezbędny w każdym domu.",
+                    "title": "Dobry produkt"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Monika",
+                    "text": "Łatwy montaż, estetyka wykonania , wytrzymałość i funkcjonalności.. same pozytywy",
+                    "title": "Zadowolona klientka"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Małgorzata",
+                    "text": "Stabilny, dwustopniowy stołek, dobrze wykonany.",
+                    "title": "BEKVÅM"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Jakub",
+                    "text": "Jest ok, stołek jak stołek. Wart swojej ceny.",
+                    "title": "Jest ok, stołek jak stołek."
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Piotr",
+                    "text": "Świetna jakość",
+                    "title": "Świetna jakość"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Paweł",
+                    "text": "Bardzo wygodny i zajmuje niedużo miejsca.",
+                    "title": "Polecam"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Tomasz",
+                    "text": "trochę szybko zdziera się farba",
+                    "title": "stołek"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Małgorzata",
+                    "text": "Super stołek bardzo przydatny, to mój drugi mam jeszcze taki tylko w kolorze drewna jest trochę masywniejszy od białego. Polecam",
+                    "title": "Super stołek bardzo przydatny, to"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Joanna",
+                    "text": "przydatny do siedzenia i sięgania na wysokie pólki w szafie i garderobie",
+                    "title": "stołek"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Elżbieta",
+                    "text": "Jeden z najlepszych moich ostatnich zakupow. Naprawdę jest to schodek do zadań specjalnych, a na dodatek wyglada pięknie.",
+                    "title": "Schodek do zadań specjalnych."
+                }
+            ]
+        },
+        "technicalInformationProps": false,
+        "hydrate": true
+    },
+    "stickyProductBar": {
+        "serverOnlineSellable": true,
+        "isFood": false,
+        "hydrate": true
+    },
+    "stockcheckSection": {
+        "itemNo": "40178888",
+        "itemType": "ART",
+        "itemName": "BEKVÄM",
+        "typeName": "Taboret ze schodkiem",
+        "visibleItemNo": "401.788.88",
+        "numberOfPackages": 1,
+        "packagingProps": {
+            "packages": [
+                {
+                    "name": "BEKVÄM",
+                    "typeName": "Taboret ze schodkiem",
+                    "itemNo": "40178888",
+                    "articleNumber": {
+                        "label": "Numer artykułu",
+                        "value": "401.788.88"
+                    },
+                    "measurements": [
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "39 cm",
+                                "value": 39
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "7 cm",
+                                "value": 7
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "49 cm",
+                                "value": 49
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "3.17 kg",
+                                "value": 3.17
+                            }
+                        ]
+                    ],
+                    "quantity": {
+                        "label": "Paczka(i)",
+                        "value": 1
+                    },
+                    "multiPackDisclaimerText": false
+                }
+            ],
+            "maxMeasurments": {
+                "weightText": "3.17 kg",
+                "widthText": "39 cm",
+                "lengthText": "49 cm",
+                "heightText": "7 cm",
+                "diameterText": ""
+            }
+        },
+        "loading": true,
+        "subProducts": [],
+        "hydrate": true
+    },
+    "availabilityGroup": {
+        "isCustomMade": false,
+        "isFood": false,
+        "serverOnlineSellable": true,
+        "hydrate": true
+    }
+}

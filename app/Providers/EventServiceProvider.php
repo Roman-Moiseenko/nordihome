@@ -2,14 +2,15 @@
 
 namespace App\Providers;
 
+use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
 use App\Events\UserHasRegistered;
+use App\Listeners\ParserNotification;
+use App\Listeners\ParsingImageProduct;
 use App\Listeners\PromotionNotification;
 use App\Listeners\WelcomToShop;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         PromotionHasMoved::class => [
             PromotionNotification::class
+        ],
+        ProductHasParsed::class => [
+            ParsingImageProduct::class,
+            ParserNotification::class
         ],
     ];
 

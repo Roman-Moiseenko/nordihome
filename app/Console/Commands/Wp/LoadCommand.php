@@ -129,9 +129,8 @@ class LoadCommand extends Command
             //$upload_file_name = $this->copy_file($data_img);
             //$upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
             try {
-                $upload = $this->upload($data_img);
                 $sort = count($product->photos);
-                $product->photo()->save(Photo::upload($upload, '', $sort));
+                $product->photo()->save(Photo::uploadByUrl($data_img, '', $sort));
                 $product->refresh();
             } catch (\Throwable $e) {
                 $this->error('Файл не загрузился ' . $data_img);
@@ -174,23 +173,17 @@ class LoadCommand extends Command
             $result = Category::register($name, $cat_parent->id);
         }
         //Загрузка изображения
-        $upload_file_name = $this->copy_file($file);
-        $upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
-        $result->image->newUploadFile($upload, 'image');
+       // $upload_file_name = $this->copy_file($file);
+       // $upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
+        //TODO Проверить загрузку изображений
+        $result->image()->save(Photo::uploadByUrl($file, 'image'));
+        //$result->image->newUploadFile($upload, 'image');
         $result->refresh();
 
         return $result->slug;
     }
 
-    private function upload(string $url): UploadedFile
-    {
-
-        $upload_file_name = $this->copy_file($url);
-        $upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
-
-        return $upload;
-    }
-
+/*
     private function copy_file(string $url): string
     {
         $filename = basename($url);
@@ -200,5 +193,5 @@ class LoadCommand extends Command
         }
         throw new \DomainException('Файл по ссылке ' . $url . ' не загрузился');
     }
-
+*/
 }
