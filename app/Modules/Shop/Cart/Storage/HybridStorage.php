@@ -34,9 +34,10 @@ class HybridStorage implements StorageInterface
                 $dbStorage = app()->make(DBStorage::class);
                 if ($cookieItems = $cookieStorage->load()) {
                     $dbItems = $dbStorage->load();
-                    $_notDB = true;
+
 
                     foreach ($cookieItems as $cookieItem) {
+                        $_notDB = true;
                         foreach ($dbItems as $dbItem) {
                             if ($dbItem->isProduct($cookieItem->getProduct()->id)) {
                                 $dbStorage->plus($dbItem, $cookieItem->quantity);

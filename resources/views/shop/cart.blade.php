@@ -87,7 +87,7 @@
                             <input type="hidden" name="preorder" value="false">
                         <button id="button-to-order" class="btn btn-dark w-100 py-3"
                                 @guest()
-                                data-bs-toggle="modal" data-bs-target="#login-popup"
+                                data-bs-toggle="modal" data-bs-target="#login-popup" type="button"
                                 @endguest
                                 @auth('user')
                                 type="submit"

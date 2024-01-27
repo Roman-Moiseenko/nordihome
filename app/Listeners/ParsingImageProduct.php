@@ -4,10 +4,10 @@ namespace App\Listeners;
 
 use App\Events\ProductHasParsed;
 use App\Jobs\LoadingImageProduct;
+
 use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Parser\ProductParser;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+
 
 class ParsingImageProduct
 {
@@ -26,12 +26,10 @@ class ParsingImageProduct
      */
     public function handle(ProductHasParsed $event): void
     {
-
         /** @var ProductParser $productParser */
         $productParser = ProductParser::where('product_id', $event->product->id)->first();
         $images = $this->service->parserImage($productParser->link);
         foreach ($images as $image_url) {
-            //TODO протестировать
             LoadingImageProduct::dispatch($event->product, $image_url);
         }
     }

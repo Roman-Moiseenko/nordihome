@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Modules\Shop\Parser;
+namespace App\Modules\User\Entity;
 
-
+use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,17 +12,19 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Modules\Shop\Parser\
  * @property int $id
  * @property int $user_id
- * @property string $user_uuid
+ * @property string $user_ui
  * @property int $product_id
  * @property int $quantity
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Product $product
  */
 class ParserStorage extends Model
 {
     protected $fillable = [
         'user_id',
-        'user_uuid',
+        'user_ui',
         'product_id',
         'quantity',
     ];
@@ -33,11 +35,11 @@ class ParserStorage extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function registerForGuest(string $user_uuid, int $product_id, int $quantity): self
+    public static function registerForGuest(string $user_ui, int $product_id, int $quantity): self
     {
         return self::create([
            'user_id' => null,
-            'user_uuid' => $user_uuid,
+            'user_ui' => $user_ui,
             'product_id' => $product_id,
             'quantity' => $quantity,
         ]);
@@ -47,11 +49,15 @@ class ParserStorage extends Model
     {
         return self::create([
             'user_id' => $user_id,
-            'user_uuid' => null,
+            'user_ui' => null,
             'product_id' => $product_id,
             'quantity' => $quantity,
         ]);
     }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
 
 }

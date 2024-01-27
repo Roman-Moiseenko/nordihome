@@ -4,6 +4,7 @@
 namespace App\Console\Commands\Cron;
 
 
+
 use App\Modules\Shop\Parser\HttpPage;
 use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Parser\ProductParser;

@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Cart\Storage;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Cart\CartItem;
 use App\Modules\User\Entity\CartCookie;
-use App\Modules\User\Service\CartCookieService;
+
 use Illuminate\Support\Facades\Cookie;
 
 class CookieDBStorage implements StorageInterface
