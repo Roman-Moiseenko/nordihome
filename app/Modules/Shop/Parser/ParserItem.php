@@ -21,4 +21,5 @@ class ParserItem
         $this->cost = $cost;
         $this->storages = $storages;
     }
+
 }

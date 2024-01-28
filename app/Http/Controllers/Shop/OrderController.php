@@ -98,6 +98,13 @@ class OrderController extends Controller
             'storages', 'default', 'companies'));
     }
 
+    public function store_parser(Request $request)
+    {
+        $order = $this->service->create_parser($request);
+        flash('Ваш заказ успешно создан!');
+        return redirect()->route('shop.order.view', $order);
+    }
+
     public function create_pre(Request $request)
     {
         //Аналог create + стоимость доставки из польши

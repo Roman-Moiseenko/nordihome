@@ -23,27 +23,35 @@ class ParserCart //Repository
 
     public function __construct(Options $options)
     {
+        $this->options = $options;
+        //$this->reload();
+    }
+
+    public function load()
+    {
         if (Auth::guard('user')->check()) {
             $this->user_id = Auth::guard('user')->user()->id;
         } else {
             $this->user_ui = Cookie::get('user_cookie_id');
         }
-
         $this->merge_id_ui();
-        $this->options = $options;
         $this->reload();
     }
 
     public function reload()
     {
-        $this->items = $this->load();
+
+
+        //dd($this->user_id);
+
+        $this->items = $this->loadItems();
 
         //Считаем сумму доставки и общую сумму
         $amount = 0;
         $weight = 0;
         /** @var ParserItem $item */
         foreach ($this->items as $item) {
-            $amount += $item->cost;
+            $amount += $item->cost * $item->quantity;
             $weight += (int)$item->product->dimensions->weight * $item->quantity;
         }
         $this->weight = $weight;
@@ -116,12 +124,12 @@ class ParserCart //Repository
         $this->amount = 0;
     }
 
-    private function load(): array
+    private function loadItems(): array
     {
         return array_map(function (ParserStorage $storage) {
             /** @var ProductParser $product_parser */
             $product_parser = ProductParser::where('product_id', $storage->product_id)->first();
-            $cost_item = ceil($this->options->shop->parser_coefficient * $product_parser->price) * $storage->quantity;
+            $cost_item = ceil($this->options->shop->parser_coefficient * $product_parser->price);
             return new ParserItem(
                 $product_parser->product,
                 $product_parser,
@@ -129,12 +137,14 @@ class ParserCart //Repository
                 (int)$cost_item,
                 $this->quantityHTML($product_parser->quantity)
             );
+
         }, $this->parserStorageQuery()->getModels());
     }
 
     private function merge_id_ui()
     {
         /** @var ParserStorage[] $items */
+        //dd($this->user_id);
         $items = $this->parserStorageQuery()->get();
         //Проверка есть ли для тек.пользователя товары по uuid
         if (!is_null($this->user_id) && !empty($uuid = Cookie::get('user_cookie_id'))) {

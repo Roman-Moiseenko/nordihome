@@ -121,12 +121,12 @@
 
                     <div class="col-lg-2 col-sm-6 p-3">
                         <div class="" style="position: relative">
-                            <img src="{{ $item['img'] }}" title="{{ $item['name'] }}" style="width: 100%;">
+                            <img src="{{ $item->product->photo->getThumbUrl('thumb') }}" title="{{ $item->product->name }}" style="width: 100%;">
                             @if($item->quantity > 1)
-                                <span class="fs-8 order-item-quantity" style="position: absolute; bottom: 0">{{ $item['quantity'] }}шт.</span>
+                                <span class="fs-8 order-item-quantity" style="position: absolute; bottom: 0">{{ $item->quantity }}шт.</span>
                             @endif
                         </div>
-                        <div class="fs-7 text-center" style="color: var(--bs-gray-600);">{{ price($item['price']) }}/шт.</div>
+                        <div class="fs-7 text-center" style="color: var(--bs-gray-600);">{{ price($item->cost) }}/шт.</div>
                     </div>
 
                 @endforeach
@@ -139,23 +139,20 @@
                     <button id="button-to-order" class="btn btn-dark w-100 py-3" onclick="document.getElementById('form-order-create').submit();">{{ $default->payment->online() ? 'Оплатить' : 'Оформить' }} </button>
                     <div class="d-flex justify-content-between mt-3">
                         <div class="fs-5">Ваш заказ</div>
-                        <div id="order-count-products" class="fs-5">{{ $cart['common']['count'] }} * масса в кг</div>
+                        <div id="order-count-products" class="fs-5">{{ $cart->weight }} * масса в кг</div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
-                        <div class="fs-6">Полная стоимость</div>
-                        <div id="order-full-amount" class="fs-6">{{ price($cart['common']['full_cost']) }}</div>
+                        <div class="fs-6">Стоимость товаров</div>
+                        <div id="order-full-amount" class="fs-6">{{ price($cart->amount) }}</div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <div class="fs-7">Ваша скидка</div>
-                        <div id="order-full-discount" class="fs-7">{{ price($cart['common']['discount']) }}</div>
-                    </div>
+
                     <div class="d-flex justify-content-between">
                         <div class="fs-7">Стоимость доставки</div>
-                        <div id="order-full-delivery" class="fs-7" >{{ price($delivery_cost->cost) }}</div>
+                        <div id="order-full-delivery" class="fs-7" >{{ price($cart->delivery) }}</div>
                     </div>
                     <div class="d-flex justify-content-between mt-4 pt-3 border-top">
                         <div class="fs-5">Сумма к оплате</div>
-                        <div id="order-amount-pay" class="fs-5" data-base-cost="{{ $cart['common']['amount'] }}">{{ price($cart['common']['amount'] - $delivery_cost->cost) }}</div>
+                        <div id="order-amount-pay" class="fs-5" data-base-cost="{{ price($cart->amount + $cart->delivery) }}">{{ price($cart->amount + $cart->delivery) }}</div>
                     </div>
                 </div>
 

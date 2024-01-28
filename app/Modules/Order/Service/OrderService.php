@@ -154,7 +154,6 @@ class OrderService
         $OrderItems = $this->cart->getOrderItems();
         $cart_order = $this->cart->info->order;
 
-
         //Создать Order
         $order = Order::register($default->payment->user_id, Order::ONLINE, false);
 
@@ -267,5 +266,11 @@ class OrderService
         //TODO Создать платеж $payment_data
 
         //TODO Проводка покупки
+    }
+
+    public function create_parser(Request $request)
+    {
+        //TODO Формируем заказ из Парсере
+
     }
 }

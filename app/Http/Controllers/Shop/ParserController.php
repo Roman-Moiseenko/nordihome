@@ -24,15 +24,9 @@ class ParserController extends Controller
     {
         //Загружаем товары посетителя из Хранилища Storage_Parser
         $cart = $this->cart;
+        $cart->load();
         return view('shop.parser.show', compact('cart'));
     }
-
-
-    public function order()
-    {
-        //TODO Проверяем аутентификацию, ... скопировать с корзины
-    }
-
 
 
     public function search(Request $request)
@@ -40,11 +34,8 @@ class ParserController extends Controller
         //Ищем товар, делаем расчеты и event()
         try {
             $product = $this->service->findProduct($request);
+            $this->cart->load();
             $this->cart->add($product);
-            $this->cart->reload();
-
-            //return \response()->json($this->cart);
-
         } catch (\Throwable $e) {
             flash($e->getMessage());
         }
@@ -56,6 +47,7 @@ class ParserController extends Controller
     {
         //Очищаем список товаров
         //TODO Ajax
+        $this->cart->load();
         $this->cart->clear();
         return redirect()->route('shop.parser.view');
 
@@ -65,13 +57,10 @@ class ParserController extends Controller
     public function remove(Product $product) //Product $product
     {
         try {
+            $this->cart->load();
             $this->cart->remove($product);
-            $this->cart->reload();
-  //          return \response()->json($this->cart);
         } catch (\Throwable $e) {
             flash($e->getMessage());
-
-//            return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
         }
         return redirect()->route('shop.parser.view');
 
@@ -82,6 +71,7 @@ class ParserController extends Controller
     public function add(Product $product)
     {
         try {
+            $this->cart->load();
             $this->cart->add($product);
             $this->cart->reload();
             return \response()->json($this->cart);
@@ -90,10 +80,10 @@ class ParserController extends Controller
         }
     }
 
-    //TODO сделать проверка на 0
     public function sub(Product $product)
     {
         try {
+            $this->cart->load();
             $this->cart->sub($product);
             $this->cart->reload();
             return \response()->json($this->cart);
@@ -105,6 +95,7 @@ class ParserController extends Controller
     public function set(Request $request, Product $product) //Product $product
     {
         try {
+            $this->cart->load();
             $this->cart->set($product, $request['quantity']);
             $this->cart->reload();
             return \response()->json($this->cart);
@@ -112,7 +103,5 @@ class ParserController extends Controller
             return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
         }
     }
-
-
 
 }

@@ -63,7 +63,7 @@
                         <div><span>Наличие в ИКЕА: </span></div>
                         <div class="parser-item-quantity">{!! $item->storages !!}</div>
                         <div class="parser-list-item--bottom">
-                            <div class="parser-list-item--cost">{{ price($item->cost) }}</div>
+                            <div class="parser-list-item--cost">{{ price($item->cost * $item->quantity) }}</div>
                             <div class="parser-list-item--form">
                                 <button id="delete-button"
                                         onclick="event.preventDefault(); document.getElementById('form-remove-{{$i}}').submit();">
@@ -114,7 +114,7 @@
 
                 <div class="parser-card-amount--button">
 
-                    <form id="to-order" method="POST" action="{{ route('shop.order.create') }}">
+                    <form id="to-order" method="POST" action="{{ route('shop.order.create-parser') }}">
                         @csrf
                         <button class="btn btn-dark w-100 py-3"  onclick="ym(88113821,'reachGoal','parser-prepare'); return true;"
                                 @guest()
