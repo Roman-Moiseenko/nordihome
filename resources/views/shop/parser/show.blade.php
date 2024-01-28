@@ -37,6 +37,18 @@
             </div>
         </div>
         <div id="parser-list">
+            <div class="parsing-title-products">
+                <div>
+                    <h3>Товары в корзине:</h3>
+                </div>
+                <div class="parsing-title-products--button">
+                    <a id="clear-button" class="btn btn-dark"
+                       onclick="event.preventDefault(); document.getElementById('form-clear-parser').submit();">Очистить корзину</a>
+                    <form id="form-clear-parser" method="post" action="{{ route('shop.parser.clear') }}">
+                        @csrf
+                    </form>
+                </div>
+            </div>
             @foreach($cart->items as $i => $item)
                 <div class="parser-list-item" style="">
                     <div class="parser-item-img">
@@ -49,7 +61,7 @@
                         <div><span>Вес: </span><strong>{{ $item->product->dimensions->weight }} кг</strong></div>
                         <div><span>Кол-во пачек: </span><strong>{{ $item->parser->packs }} шт.</strong></div>
                         <div><span>Наличие в ИКЕА: </span></div>
-                        <div class="parser-item-quantity">{{ json_encode($item->parser->quantity) }}</div>
+                        <div class="parser-item-quantity">{!! $item->storages !!}</div>
                         <div class="parser-list-item--bottom">
                             <div class="parser-list-item--cost">{{ price($item->cost) }}</div>
                             <div class="parser-list-item--form">
@@ -60,7 +72,7 @@
                                 <form id="form-remove-{{$i}}" method="post" action="{{ route('shop.parser.remove', $item->product) }}">
                                     @csrf
                                 </form>
-                                <button class="decrease-button" data-code="{code}"><i class="fa-light fa-minus"></i></button>
+                                <button class="decrease-button" data-code="{{ $item->product->id }}"><i class="fa-light fa-minus"></i></button>
                                 <div><div id="count-{{ $item->product->id }}">{{ $item->quantity }}</div></div>
                                 <button class="increase-button" data-code="{{ $item->product->id }}"><i class="fa-light fa-plus"></i></button>
                             </div>
@@ -101,7 +113,19 @@
                 </table>
 
                 <div class="parser-card-amount--button">
-                    <button id="amount-button" onclick="ym(88113821,'reachGoal','parser-prepare'); return true;">Оформить заказ</button>
+
+                    <form id="to-order" method="POST" action="{{ route('shop.order.create') }}">
+                        @csrf
+                        <button class="btn btn-dark w-100 py-3"  onclick="ym(88113821,'reachGoal','parser-prepare'); return true;"
+                                @guest()
+                                data-bs-toggle="modal" data-bs-target="#login-popup" type="button"
+                                @endguest
+                                @auth('user')
+                                type="submit"
+                            @endauth
+                        >Перейти к оформлению
+                        </button>
+                    </form>
                 </div>
             </div>
 

@@ -62,7 +62,10 @@ Breadcrumbs::for('shop.order.create', function (BreadcrumbTrail $trail) {
     $trail->parent('shop.cart.view');
     $trail->push('Оформить заказ', route('shop.order.create'));
 });
-
+Breadcrumbs::for('shop.order.create-parser', function (BreadcrumbTrail $trail) {
+    $trail->parent('shop.parser.view');
+    $trail->push('Оформить заказ', route('shop.order.create-parser'));
+});
 Breadcrumbs::for('shop.order.view', function (BreadcrumbTrail $trail, Order $order) {
     $trail->parent('shop.order.index');
     $trail->push('Заказ xxx ' . $order->id, route('shop.order.view', $order));

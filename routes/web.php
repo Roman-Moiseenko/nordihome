@@ -62,6 +62,7 @@ Route::group(
             'prefix' => 'order',
         ], function () {
             Route::post('/create', 'OrderController@create')->name('create');
+            Route::post('/create-parser', 'OrderController@create_parser')->name('create-parser');
             Route::put('/create', 'OrderController@store');
             Route::get('/index', 'OrderController@index')->name('index');
             Route::get('/{order}/view', 'OrderController@view')->name('view');

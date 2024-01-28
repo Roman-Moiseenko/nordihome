@@ -1,5 +1,4 @@
 import jQuery from "jquery";
-
 window.$ = jQuery;
 
 (function () {
@@ -29,7 +28,20 @@ window.$ = jQuery;
     });
 
     function updateParserData(data) {
-        console.log(data)
+        let cart = data;
+        $('#weight').html(cart.weight);
+        $('#delivery').html(price_format(cart.delivery));
+        $('#amount').html(price_format(cart.amount));
+        $('#full-amount').html(price_format(cart.amount + cart.delivery));
+        for (let i = 0; i < cart.items.length; i++) {
+            $('#count-' + cart.items[i].product.id).html(cart.items[i].quantity);
+        }
+        //delivery
 
+    }
+
+    function price_format(_str) {
+        if (_str === null || _str === '') return '';
+        return _str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ₽';
     }
 })();

@@ -58,7 +58,7 @@ class ParserCart //Repository
                 return (int)$item['value'];
             }
         }
-        return $this->delivery;
+        return $this->options->shop->parser_delivery;
     }
 
     public function add($product, $quantity = 1)
@@ -87,6 +87,7 @@ class ParserCart //Repository
     public function sub($product, $quantity = 1)
     {
         $item = $this->parserStorageQuery()->where('product_id', $product->id)->first();
+        if ($item->quantity == 1) return;
         $item->quantity -= $quantity;
         $item->save();
     }
@@ -125,7 +126,8 @@ class ParserCart //Repository
                 $product_parser->product,
                 $product_parser,
                 $storage->quantity,
-                (int)$cost_item
+                (int)$cost_item,
+                $this->quantityHTML($product_parser->quantity)
             );
         }, $this->parserStorageQuery()->getModels());
     }
@@ -161,6 +163,20 @@ class ParserCart //Repository
         } else {
             return ParserStorage::where('user_id', $this->user_id);
         }
+    }
+
+    private function quantityHTML(array $quantity): string
+    {
+        $result = '<div class="row">';
+        foreach (ParserService::STORES as $store => $name) {
+            $_count = $quantity[$store];
+            $_class = ($_count > 1) ? 'ikea-green' : ( ($_count == 1) ? 'ikea-yellow' : 'ikea-red');
+            $result .= '<div class="col-xl-3 col-lg-4 col-6">';
+            $result .= '<span class="w39-point ' . $_class  . '">' . $name . '</span>  ';
+            $result .= '</div>';
+        }
+
+        return $result . '</div>';
     }
 
 }

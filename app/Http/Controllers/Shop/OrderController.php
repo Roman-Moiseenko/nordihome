@@ -11,6 +11,7 @@ use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\PaymentService;
 use App\Modules\Order\Service\ReserveService;
 use App\Modules\Shop\Cart\Cart;
+use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\User\Entity\CartStorage;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -25,9 +26,11 @@ class OrderController extends Controller
     private OrderService $service;
     private ReserveService $reserves;
     private $minutes;
+    private ParserCart $parserCart;
 
     public function __construct(
         Cart $cart,
+        ParserCart $parserCart,
         PaymentService $payments,
         DeliveryService $deliveries,
         OrderService $service,
@@ -41,6 +44,7 @@ class OrderController extends Controller
         $this->service = $service;
         $this->reserves = $reserves;
         $this->minutes = (new Options())->shop->reserve_cart;
+        $this->parserCart = $parserCart;
     }
 
     public function create(Request $request)
@@ -79,6 +83,19 @@ class OrderController extends Controller
 
         return view('shop.order.create', compact('cart', 'payments',
             'storages', 'default', 'companies', 'delivery_cost', 'preorder'));
+    }
+
+    public function create_parser(Request $request)
+    {
+        $cart = $this->parserCart;
+        $cart->reload();
+        $payments = $this->payments->get();
+        $storages = $this->deliveries->storages();
+        $companies = $this->deliveries->companies();
+
+        $default = $this->service->default_user_data();
+        return view('shop.order.create-parser', compact('cart', 'payments',
+            'storages', 'default', 'companies'));
     }
 
     public function create_pre(Request $request)
