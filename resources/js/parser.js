@@ -6,16 +6,30 @@ window.$ = jQuery;
     "use strict";
     let parserButton = $('#search-parser-button');
     let inputButton = $('#search-parser-field');
-    parserButton.on('click', function () {
+
+    $('.increase-button').on('click', function () {
+        let product_id = $(this).data('code');
         $.post(
-            '/parser/search',
-            {
-                search: inputButton.val()
-            },
+            '/parser/' + product_id + '/add',
+            {},
             function (data) {
-                console.log(data)
+                updateParserData(data);
+            }
+        );
+    });
+    $('.decrease-button').on('click', function () {
+        let product_id = $(this).data('code');
+        $.post(
+            '/parser/' + product_id + '/sub',
+            {},
+            function (data) {
+                updateParserData(data)
             }
         );
     });
 
+    function updateParserData(data) {
+        console.log(data)
+
+    }
 })();

@@ -379,8 +379,8 @@
     color: black;
     border: 1px solid black;
 }
-#decrease-button {border-radius:5px 0 0 5px;}
-#increase-button {border-radius: 0 5px 5px 0;}
+.decrease-button {border-radius:5px 0 0 5px !important;}
+.increase-button {border-radius: 0 5px 5px 0 !important;}
 #search-parser-field {border-radius: 12px 0 0 12px;}
 /* Форматирование радиокнопок*/
 

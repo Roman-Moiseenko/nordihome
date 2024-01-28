@@ -78,6 +78,10 @@ Route::group(
             function() {
                 Route::get('/calculate', 'ParserController@view')->name('view');
                 Route::post('/parser/search', 'ParserController@search')->name('search');
+                Route::post('/parser/clear', 'ParserController@clear')->name('clear');
+                Route::post('/parser/{product}/remove', 'ParserController@remove')->name('remove');
+                Route::post('/parser/{product}/add', 'ParserController@add')->name('add');
+                Route::post('/parser/{product}/sub', 'ParserController@sub')->name('sub');
             }
         );
     }

@@ -33,8 +33,21 @@ class ParserService
         429 => 'Быдгощ',
         583 => 'Щецин',
     ];
-    public string $telegram_token = '5672886799:AAEx8Wxsms8nroZG8H2Muvvhy65h0snbNGA'; //Телеграм токен
-    public string $telegram_chat_id = '-743591708'; //ID чат-бота
+
+    CONST DELIVERY_PERIOD = [
+        ['min' => 0, 'max' => 5, 'value' => 180, 'slug' => 'parser_delivery_0'],
+        ['min' => 5, 'max' => 10, 'value' => 160, 'slug' => 'parser_delivery_1'],
+        ['min' => 10, 'max' => 15, 'value' => 140, 'slug' => 'parser_delivery_2'],
+        ['min' => 15, 'max' => 30, 'value' => 105, 'slug' => 'parser_delivery_3'],
+        ['min' => 30, 'max' => 40, 'value' => 85, 'slug' => 'parser_delivery_4'],
+        ['min' => 40, 'max' => 50, 'value' => 75, 'slug' => 'parser_delivery_5'],
+        ['min' => 50, 'max' => 200, 'value' => 70, 'slug' => 'parser_delivery_6'],
+        ['min' => 200, 'max' => 300, 'value' => 68, 'slug' => 'parser_delivery_7'],
+        ['min' => 300, 'max' => 400, 'value' => 66, 'slug' => 'parser_delivery_8'],
+        ['min' => 400, 'max' => 600, 'value' => 63, 'slug' => 'parser_delivery_9'],
+        ['min' => 600, 'max' => 9999999, 'value' => 60, 'slug' => 'parser_delivery_10'],
+    ];
+
     private HttpPage $httpPage;
     private Options $options;
 

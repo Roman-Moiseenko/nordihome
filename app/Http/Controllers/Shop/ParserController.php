@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\Parser\ParserService;
 use Illuminate\Http\Request;
@@ -24,8 +25,15 @@ class ParserController extends Controller
         //Загружаем товары посетителя из Хранилища Storage_Parser
         $cart = $this->cart;
         return view('shop.parser.show', compact('cart'));
-
     }
+
+
+    public function order()
+    {
+        //TODO Проверяем аутентификацию, ... скопировать с корзины
+    }
+
+
 
     public function search(Request $request)
     {
@@ -34,44 +42,77 @@ class ParserController extends Controller
             $product = $this->service->findProduct($request);
             $this->cart->add($product);
             $this->cart->reload();
-            return \response()->json($this->cart);
+
+            //return \response()->json($this->cart);
 
         } catch (\Throwable $e) {
-            $result = [
-                $e->getFile(),
-                $e->getLine(),
-                $e->getMessage()
-            ];
-            return \response()->json($result);
+            flash($e->getMessage());
         }
-        //Получаем новый список товаров.
-        //TODO Ajax
-
+        return redirect()->route('shop.parser.view');
     }
+
 
     public function clear()
     {
         //Очищаем список товаров
         //TODO Ajax
         $this->cart->clear();
-        return \response()->json($this->cart);
+        return redirect()->route('shop.parser.view');
+
+        //return \response()->json($this->cart);
     }
 
-    public function add(Request $request) //Product $product
+    public function remove(Product $product) //Product $product
     {
+        try {
+            $this->cart->remove($product);
+            $this->cart->reload();
+  //          return \response()->json($this->cart);
+        } catch (\Throwable $e) {
+            flash($e->getMessage());
+
+//            return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
+        }
+        return redirect()->route('shop.parser.view');
 
     }
 
-    public function sub(Request $request) //Product $product
+    //AJAX
+
+    public function add(Product $product)
     {
-
+        try {
+            $this->cart->add($product);
+            $this->cart->reload();
+            return \response()->json($this->cart);
+        } catch (\Throwable $e) {
+            return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
+        }
     }
 
-
-    public function order()
+    //TODO сделать проверка на 0
+    public function sub(Product $product)
     {
-
+        try {
+            $this->cart->sub($product);
+            $this->cart->reload();
+            return \response()->json($this->cart);
+        } catch (\Throwable $e) {
+            return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
+        }
     }
+
+    public function set(Request $request, Product $product) //Product $product
+    {
+        try {
+            $this->cart->set($product, $request['quantity']);
+            $this->cart->reload();
+            return \response()->json($this->cart);
+        } catch (\Throwable $e) {
+            return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
+        }
+    }
+
 
 
 }

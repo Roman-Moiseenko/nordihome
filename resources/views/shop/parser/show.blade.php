@@ -24,14 +24,51 @@
                     <div id="parser-condition-text" class="parser-card-search--text">
                         Скопируйте и вставьте в поле номер артикула товара или ссылку с сайта <a href="https://IKEA.PL" target="_blank">IKEA.PL</a>
                     </div>
+                    <form method="post" action="{{ route('shop.parser.search') }}">
+                        @csrf
                     <div class="parser-card-search--form">
+
                         <input id="search-parser-field" type="text" name="search" class="form-control"/>
                         <button id="search-parser-button">Искать</button>
+
                     </div>
+                </form>
                 </div>
             </div>
         </div>
-        <div id="parser-list"></div>
+        <div id="parser-list">
+            @foreach($cart->items as $i => $item)
+                <div class="parser-list-item" style="">
+                    <div class="parser-item-img">
+                        <img src="{{ $item->product->photo->getThumbUrl('thumb') }}" alt="{{ $item->product->name }}">
+                    </div>
+                    <div class="parser-item-data">
+                        <h4>{{ $item->product->name }}</h4>
+                        <div class="description-product">{{ $item->product->short }}</div>
+                        <div><span>Артикул: </span><span class="code-selected">{{ $item->product->code }}</span></div>
+                        <div><span>Вес: </span><strong>{{ $item->product->dimensions->weight }} кг</strong></div>
+                        <div><span>Кол-во пачек: </span><strong>{{ $item->parser->packs }} шт.</strong></div>
+                        <div><span>Наличие в ИКЕА: </span></div>
+                        <div class="parser-item-quantity">{{ json_encode($item->parser->quantity) }}</div>
+                        <div class="parser-list-item--bottom">
+                            <div class="parser-list-item--cost">{{ price($item->cost) }}</div>
+                            <div class="parser-list-item--form">
+                                <button id="delete-button"
+                                        onclick="event.preventDefault(); document.getElementById('form-remove-{{$i}}').submit();">
+                                    <i class="fa-light fa-trash"></i>
+                                </button>
+                                <form id="form-remove-{{$i}}" method="post" action="{{ route('shop.parser.remove', $item->product) }}">
+                                    @csrf
+                                </form>
+                                <button class="decrease-button" data-code="{code}"><i class="fa-light fa-minus"></i></button>
+                                <div><div id="count-{{ $item->product->id }}">{{ $item->quantity }}</div></div>
+                                <button class="increase-button" data-code="{{ $item->product->id }}"><i class="fa-light fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
     <div class="right-side" id="right-side">
         <div id="parser-amount">
@@ -39,15 +76,15 @@
                 <h3>Стоимость заказа</h3>
                 <table class="parser-amount-table" style="width: 100%">
                     <tr>
-                        <td class="parser-amount-table-caption">Доставка до Калининграда (<span id="weight">{weight}</span> кг)</td>
+                        <td class="parser-amount-table-caption">Доставка до Калининграда (<span id="weight">{{$cart->weight}}</span> кг)</td>
                         <td class="parser-amount-table-value">
-                            <span id="delivery">{delivery}</span>
+                            <span id="delivery">{{ price($cart->delivery) }}</span>
                         </td>
                     </tr>
                     <tr>
                         <td class="parser-amount-table-caption">Стоимость товаров:</td>
                         <td class="parser-amount-table-value">
-                            <span id="amount">{amount}</span>
+                            <span id="amount">{{ price($cart->amount) }}</span>
                         </td>
                     </tr>
                     <tr>
@@ -58,7 +95,7 @@
                     <tr>
                         <td class="parser-amount-table-caption">Итого к оплате:</td>
                         <td class="parser-amount-table-value">
-                            <span id="full-amount">{full-amount}</span>
+                            <span id="full-amount">{{ price($cart->delivery + $cart->amount) }}</span>
                         </td>
                     </tr>
                 </table>

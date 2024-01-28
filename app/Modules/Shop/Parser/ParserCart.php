@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Parser;
 
+use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\ParserStorage;
 use Illuminate\Support\Facades\Auth;
@@ -14,11 +15,13 @@ class ParserCart //Repository
     public array $items;
     public int $delivery;
     public int $amount;
+    public int $weight;
 
     private int|null $user_id = null;
     private string|null $user_ui = null;
+    private Options $options;
 
-    public function __construct()
+    public function __construct(Options $options)
     {
         if (Auth::guard('user')->check()) {
             $this->user_id = Auth::guard('user')->user()->id;
@@ -27,19 +30,36 @@ class ParserCart //Repository
         }
 
         $this->merge_id_ui();
-
-        $this->items = $this->load();
+        $this->options = $options;
+        $this->reload();
     }
-
-
 
     public function reload()
     {
         $this->items = $this->load();
-        //TODO Считаем сумму доставки и общую сумму
 
+        //Считаем сумму доставки и общую сумму
+        $amount = 0;
+        $weight = 0;
+        /** @var ParserItem $item */
+        foreach ($this->items as $item) {
+            $amount += $item->cost;
+            $weight += (int)$item->product->dimensions->weight * $item->quantity;
+        }
+        $this->weight = $weight;
+        $this->delivery = max($this->getCostDelivery($weight) * $weight, $this->options->shop->parser_delivery);
+        $this->amount = $amount;
     }
 
+    private function getCostDelivery(float $weight): int
+    {
+        foreach (ParserService::DELIVERY_PERIOD as $item) {
+            if ($item['min'] < $weight & $weight <= $item['max']) {
+                return (int)$item['value'];
+            }
+        }
+        return $this->delivery;
+    }
 
     public function add($product, $quantity = 1)
     {
@@ -71,6 +91,19 @@ class ParserCart //Repository
         $item->save();
     }
 
+    public function set(Product $product, int $quantity)
+    {
+        $item = $this->parserStorageQuery()->where('product_id', $product->id)->first();
+        $item->quantity = $quantity;
+        $item->save();
+    }
+
+    public function remove(Product $product)
+    {
+        $item = $this->parserStorageQuery()->where('product_id', $product->id)->first();
+        $item->delete();
+    }
+
     public function clear()
     {
         $items = $this->parserStorageQuery()->get();
@@ -78,6 +111,8 @@ class ParserCart //Repository
             $item->delete();
         }
         $this->items = [];
+        $this->delivery = 1000;
+        $this->amount = 0;
     }
 
     private function load(): array
@@ -85,12 +120,13 @@ class ParserCart //Repository
         return array_map(function (ParserStorage $storage) {
             /** @var ProductParser $product_parser */
             $product_parser = ProductParser::where('product_id', $storage->product_id)->first();
-
-            return [
-                'product' => $product_parser->product,
-                'quantity' => $storage->quantity,
-                'parser' => $product_parser,
-            ];
+            $cost_item = ceil($this->options->shop->parser_coefficient * $product_parser->price) * $storage->quantity;
+            return new ParserItem(
+                $product_parser->product,
+                $product_parser,
+                $storage->quantity,
+                (int)$cost_item
+            );
         }, $this->parserStorageQuery()->getModels());
     }
 
@@ -126,4 +162,5 @@ class ParserCart //Repository
             return ParserStorage::where('user_id', $this->user_id);
         }
     }
+
 }
