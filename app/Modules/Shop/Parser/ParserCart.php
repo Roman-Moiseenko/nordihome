@@ -38,14 +38,15 @@ class ParserCart //Repository
         $this->reload();
     }
 
+    public function getItems(): array
+    {
+        $this->load();
+        return $this->items;
+    }
+
     public function reload()
     {
-
-
-        //dd($this->user_id);
-
         $this->items = $this->loadItems();
-
         //Считаем сумму доставки и общую сумму
         $amount = 0;
         $weight = 0;

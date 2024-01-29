@@ -6,7 +6,7 @@ use App\Events\ProductHasParsed;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class ParserNotification
+class NotificationNewProductParser
 {
     /**
      * Create the event listener.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Service;
 
 use App\Entity\GeoAddress;
+use App\Events\OrderHasCreated;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Entity\UserDelivery;
 use App\Modules\Delivery\Service\DeliveryService;
@@ -13,6 +14,7 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Cart\Cart;
+use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,11 +31,13 @@ class OrderService
     private CouponService $coupons;
     private $minutes;
     private ReserveService $reserves;
+    private ParserCart $parserCart;
 
     public function __construct(
         PaymentService  $payments,
         DeliveryService $deliveries,
         Cart            $cart,
+        ParserCart      $parserCart,
         ShopRepository  $repository,
         CouponService   $coupons,
         ReserveService  $reserves
@@ -46,8 +50,8 @@ class OrderService
         $this->repository = $repository;
         $this->coupons = $coupons;
         $this->minutes = (new Options())->shop->reserve_order;
-
         $this->reserves = $reserves;
+        $this->parserCart = $parserCart;
     }
 
     public function default_user_data(): stdClass
@@ -63,7 +67,6 @@ class OrderService
 
     public function checkorder(array $data): array
     {
-
         $enabled = true;
         $error = '';
         $default = $this->default_user_data();
@@ -97,15 +100,14 @@ class OrderService
             );
         }
         //Считаем стоимость доставки
-        $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->cart->getItems());
+        $items = null;
+        if ($data['order'] == 'cart') $items = $this->cart->getItems();
+        if ($data['order'] == 'parser') $items = $this->parserCart->getItems();
 
-        //5. Формирование массива на выдачу:
+        $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $items);
 
-        //5.2. Скидка на заказ от купона ???
+        //TODO Сообщения об ошибках - неверное ИНН, Негабаритный груз для доставки (название продукта) $error
 
-        //6. Оформить/Оплатить доступна или нет
-
-        //7. Сообщения об ошибках - неверное ИНН, Негабаритный груз для доставки (название продукта)
         if ($default->delivery->isStorage() && empty($default->delivery->storage)) $enabled = false;
         if ($default->delivery->isLocal() && empty($default->delivery->local->address)) $enabled = false;
         if (
@@ -148,19 +150,17 @@ class OrderService
         return 0;
     }
 
-    public function create(Request $request)
+    public function create(Request $request): Order
     {
         $default = $this->default_user_data();
         $OrderItems = $this->cart->getOrderItems();
         $cart_order = $this->cart->info->order;
 
-        //Создать Order
         $order = Order::register($default->payment->user_id, Order::ONLINE, false);
 
         $discount_coupon = 0;
         if ($request->has('code')) {
             $coupon = $this->repository->getCoupon($request->get('code'));
-            //TODO Сервис  по скидкам и купонам
             $discount_coupon = $this->coupons->discount($coupon, $OrderItems);
         }
 
@@ -201,12 +201,9 @@ class OrderService
             ]);
         }
         $this->cart->clearOrder(true);
-/// 2) ожидание оплаты
-        $order->setStatus(OrderStatus::AWAITING);
+        $order->setStatus(OrderStatus::PREORDER_SERVICE);
 
-        //Доставка
-        $this->deliveries->create($order->id, $default->delivery->type, $default->delivery->getAddressDelivery());
-
+        event(new OrderHasCreated($order));
         //Предзаказ
         if ($request['preorder'] == 1) {//В заказе установлена метка для предзаказа.
             $PreOrderItems = $this->cart->getPreOrderItems();
@@ -226,12 +223,12 @@ class OrderService
             }
             $this->cart->clearPreOrder();
             $preorder->setStatus(OrderStatus::PREORDER_SERVICE);
+            //Оповещения, создание доставки и др.
+            event(new OrderHasCreated($preorder));
         }
 
-        //TODO Очистка корзины проверить
-
-
-
+        //TODO все переносится в event/listener
+        // Либо в ручную создается из админки
         //Создать платеж или
         /// внести платеж в Заказ
         ///
@@ -244,6 +241,32 @@ class OrderService
         /// 3. Информацию, о счете ()
         /// 4. Время резерва, если не онлайн
         ///
+
+        return $order;
+    }
+
+    public function create_parser(): Order
+    {
+        $default = $this->default_user_data();
+        $OrderItems = $this->parserCart->getItems();
+        $order = Order::register($default->payment->user_id, Order::PARSER, true);
+        $order->setFinance($this->parserCart->amount + $this->parserCart->delivery, 0, 0, null);
+        foreach ($OrderItems as $item) {
+            $order->items()->create([
+                'product_id' => $item->product->id,
+                'quantity' => $item->quantity,
+                'base_cost' => $item->cost,
+                'sell_cost' => $item->cost,
+                'discount_id' => null,
+                'discount_type' => '',
+                'options' => [],
+                'reserve_id' => null
+            ]);
+        }
+        $this->parserCart->clear();
+        $order->setStatus(OrderStatus::PREORDER_SERVICE);
+
+        event(new OrderHasCreated($order));
         return $order;
     }
 
@@ -266,11 +289,5 @@ class OrderService
         //TODO Создать платеж $payment_data
 
         //TODO Проводка покупки
-    }
-
-    public function create_parser(Request $request)
-    {
-        //TODO Формируем заказ из Парсере
-
     }
 }

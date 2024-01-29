@@ -5,6 +5,7 @@ namespace App\Modules\Delivery\Helpers;
 
 use App\Modules\Delivery\Entity\Transport\Delivery;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
+use App\Modules\Shop\CartItemInterface;
 
 class DeliveryHelper
 {
@@ -34,6 +35,9 @@ class DeliveryHelper
         }, glob($path . '*TypeDelivery.php'));
     }
 
+    /**
+     * @param CartItemInterface[] $items
+     */
     public static function calculate(string $class, array $items, array $params): DeliveryData
     {
         $namespace = Delivery::namespace();

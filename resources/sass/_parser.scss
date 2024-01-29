@@ -2,8 +2,8 @@
     --color-parser-cost: #031b26;
 }
 .parser {
-    display: flex;
-    flex-direction: row;
+    /*display: flex;
+    flex-direction: row; */
     padding-bottom: 60px;
 }
 .left-side {
@@ -14,7 +14,7 @@
 }
 @media (max-width: 991px) {
     .parser {
-        flex-direction: column;
+        //flex-direction: column;
     }
     .right-side,.left-side {
         width: 100%;
@@ -33,20 +33,20 @@
     margin-left: auto;
 }
 .parser button {
-    background: black;
+    /*background: black;
     border: 1px solid #333;
     color: white;
-    font-size: 14px;
-    padding: 10px 20px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 50px;
-}
+    font-size: 14px;*/
+    //padding: 10px 20px;
+    //text-transform: uppercase;
+   // cursor: pointer;
+    //border-radius: 50px;
+}/*
 .parser button:hover {
     background: var(--gray);
     color: var(--black);
 }
-
+*/
 #search-parser-button {
     border-radius: 0 12px 12px 0;
 }
@@ -71,8 +71,8 @@
     position: relative;
     margin-top: 20px;
     padding: 20px;
-    border: 1px solid black;
-    border-radius: 10px;
+    /*border: 1px solid black;
+    border-radius: 10px; */
 }
 .parser-item-img {
     width: 150px;
@@ -180,8 +180,8 @@
 }
 /*БЛОК ПОИСКА*/
 .parser-card-search {
-    border: 1px solid black;
-    border-radius: 10px;
+    //border: 1px solid black;
+    //border-radius: 10px;
     width: 100%;
     padding: 20px;
 }
@@ -221,22 +221,7 @@
     }
 }
 /*Блок с суммой и кнопкой заказа*/
-.parser-card-amount {
-    padding: 20px;
-    border: 1px solid black;
-    border-radius: 10px;
-    margin-left: 20px;
-}
-@media (max-width: 991px) {
-    .parser-card-amount  {
-        margin-left: 0;
-    }
-}
-.parser-card-amount > h3 {
-    margin-bottom: 20px;
-    font-size: 20px;
-    margin-top:0;
-}
+
 .parser-card-amount--button {
     width: 100%;
     position: relative;

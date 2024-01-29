@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity\Transport;
 
+use App\Modules\Shop\CartItemInterface;
+
 class SdekTypeDelivery extends DeliveryAbstract
 {
 
@@ -16,6 +18,9 @@ class SdekTypeDelivery extends DeliveryAbstract
         return '/images/delivery/sdek.jpg';
     }
 
+    /**
+     * @param CartItemInterface[] $items
+     */
     public static function calculate(array $items, array $params): DeliveryData
     {
         return new DeliveryData(1000, 15);

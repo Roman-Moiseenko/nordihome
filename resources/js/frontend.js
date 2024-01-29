@@ -525,7 +525,7 @@ window.$ = jQuery;
     });
 
     /** ОФОРМЛЕНИЕ ЗАКАЗА  */
-    if (main.hasClass('order-page-create')) {
+    if (main.hasClass('order-page-create') || main.hasClass('order-page-create-parser') ) {
         //Переключение способов доставки
         let deliveryStorageDIV = $('.block-delivery>.delivery-storage');
         let deliveryLocalDIV = $('.block-delivery>.delivery-local');
@@ -543,6 +543,12 @@ window.$ = jQuery;
                     data[name] = $(this).val();
                 }
             });
+            if (main.hasClass('order-page-create')) {
+                data['order'] = 'cart'; //Стандартная корзина
+            }
+            if (main.hasClass('order-page-create-parser')) {
+                data['order'] = 'parser'; //Корзина Парсер
+            }
             return data;
         }
 
@@ -578,13 +584,14 @@ window.$ = jQuery;
 
             //Общие данные
             //Доступность, Оплатить/Оформить, Стоимость доставки, Купон
+            //console.log();
             let buttonOrder = $('#button-to-order');
             buttonOrder.prop('disabled', !state.amount.enabled);
             buttonOrder.html(state.amount.caption);
             let orderDelivery = $('#order-full-delivery');
             orderDelivery.html(price_format(state.amount.delivery.cost));
-            let orderAmount = $('#order-amount-pay');
-            orderAmount.html(price_format(Number(orderAmount.data('base-cost')) - state.amount.delivery.cost))
+            //let orderAmount = $('#order-amount-pay');
+            //orderAmount.html(price_format(Number(orderAmount.data('base-cost'))))
         }
 
         function sendToBackend() {

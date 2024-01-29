@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Service;
 
+use App\Events\OrderHasCreated;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\Local\Delivery;
@@ -10,6 +11,7 @@ use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Entity\UserDelivery;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
+use App\Modules\Shop\CartItemInterface;
 
 class DeliveryService
 {
@@ -39,14 +41,15 @@ class DeliveryService
 
     public function companies(): array
     {
-
         $delivery = DeliveryHelper::deliveries();
         return $delivery;
     }
 
+    /**
+     * @param CartItemInterface[] $items
+     */
     public function calculate(int $user_id, array $items): DeliveryData
     {
-
         $user_delivery = $this->user($user_id);
 
         if ($user_delivery->isRegion() && !empty($user_delivery->region->address) && !empty($user_delivery->company)) {
@@ -79,4 +82,11 @@ class DeliveryService
         event($delivery);
     }
 
+
+    public function handle(OrderHasCreated $event): void
+    {
+        $order = $event->order;
+        $delivery = DeliveryOrder::register($order->id, $this->user($order->user_id)->type, $this->user($order->user_id)->getAddressDelivery());
+        event($delivery);
+    }
 }

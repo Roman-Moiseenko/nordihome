@@ -15,10 +15,8 @@
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap">ЗАКАЗ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ДАТА</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap text-center">ТИП</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">СУММА</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap text-center">СКИДКА</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap text-center">КУПОН</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap text-center">ИТОГО</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">СТАТУС</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">КЛИЕНТ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ДЕЙСТВИЯ</x-base.table.th>

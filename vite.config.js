@@ -8,6 +8,7 @@ export default defineConfig({
         commonjsOptions: {
             include: ["tailwind.config.js", "node_modules/**"],
         },
+        chunkSizeWarningLimit: 1600,
     },
     optimizeDeps: {
         include: ["tailwind-config"],
@@ -112,6 +113,7 @@ export default defineConfig({
                 "resources/js/components/top-bar/index.js",
                 "resources/js/components/vertical-bar-chart/index.js",
                 "resources/js/components/widget/index.js",
+                'resources/js/components/search-product/index.js',
             ],
             refresh: true,
         }),

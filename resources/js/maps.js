@@ -6,6 +6,7 @@ window.$ = jQuery;
     "use strict";
 
     let mapBlock = $('#map');
+    if (!mapBlock.length) return false;
     loadScript("https://api-maps.yandex.ru/2.1/?apikey=" + mapBlock.data('api') + "&lang=ru_RU", function () {
         ymaps.load(init);
     });

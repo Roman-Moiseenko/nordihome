@@ -87,15 +87,17 @@ class OrderController extends Controller
 
     public function create_parser(Request $request)
     {
-        $cart = $this->parserCart;
-        $cart->reload();
+        //$cart->reload();
         $payments = $this->payments->get();
         $storages = $this->deliveries->storages();
         $companies = $this->deliveries->companies();
 
         $default = $this->service->default_user_data();
+
+        $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->parserCart->getItems());
+        $cart = $this->parserCart;
         return view('shop.order.create-parser', compact('cart', 'payments',
-            'storages', 'default', 'companies'));
+            'storages', 'default', 'companies', 'delivery_cost'));
     }
 
     public function store_parser(Request $request)

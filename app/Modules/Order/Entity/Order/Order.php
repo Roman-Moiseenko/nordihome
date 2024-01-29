@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $coupon_id //Купон скидки
  * @property int $delivery_cost //стоимость доставки, включенная в платеж ?? Доставка оплачивается отдельно
  * @property float $total //Полная сумма оплаты
+ * @property string $comment
 
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
@@ -37,7 +38,14 @@ class Order extends Model
     const ONLINE = 701;
     const MANUAL = 702;
     const SHOP = 703;
-    const PREORDER = 704; //???
+    const PARSER = 704; //???
+
+    const TYPES = [
+        self::ONLINE => 'Интернет-магазин',
+        self::MANUAL => 'Вручную',
+        self::SHOP => 'Магазин',
+        self::PARSER => 'Парсер',
+    ];
 
     protected $fillable = [
         'user_id',
@@ -112,6 +120,10 @@ class Order extends Model
         if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
     }
 
+    public function getType(): string
+    {
+        return self::TYPES[$this->type];
+    }
     //Relations *************************************************************************************
 
     public function user()

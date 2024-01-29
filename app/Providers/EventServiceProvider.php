@@ -2,13 +2,17 @@
 
 namespace App\Providers;
 
+use App\Events\OrderHasCreated;
 use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
 use App\Events\UserHasRegistered;
-use App\Listeners\ParserNotification;
+use App\Listeners\NotificationNewOrder;
+use App\Listeners\NotificationNewProductParser;
 use App\Listeners\ParsingImageProduct;
-use App\Listeners\PromotionNotification;
+use App\Listeners\NotificationMovedPromotion;
 use App\Listeners\WelcomToShop;
+use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Order\Entity\Order\Order;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 
@@ -27,11 +31,15 @@ class EventServiceProvider extends ServiceProvider
             WelcomToShop::class
         ],
         PromotionHasMoved::class => [
-            PromotionNotification::class
+            NotificationMovedPromotion::class
         ],
         ProductHasParsed::class => [
             ParsingImageProduct::class,
-            ParserNotification::class
+            NotificationNewProductParser::class
+        ],
+        OrderHasCreated::class => [
+            NotificationNewOrder::class,
+            DeliveryService::class,
         ],
     ];
 

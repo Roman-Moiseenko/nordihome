@@ -6,18 +6,19 @@ namespace App\Modules\Shop\Cart;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Shop\CartItemInterface;
 
-class CartItem
+class CartItem implements CartItemInterface
 {
     public Product $product;
     public ?Reserve $reserve;
     public int $id;
     public int $quantity;
-    public float $base_cost = -1;
-    public float $discount_cost = 0;
-    public string $discount_name = '';
+    public float $base_cost = -1; //Базовая цена  - используется для удобства = $product->lastPrice->value
+    public float $discount_cost = 0; //Цена со скидкой
+    public string $discount_name = ''; //Название акции
     public int $discount_id;
-    public string $discount_type;
+    public string $discount_type; //Класс скидка Promotion или Bonus
     public array $options;
     public bool $pre_order;
     public bool $check;

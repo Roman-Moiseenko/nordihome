@@ -62,8 +62,10 @@ Route::group(
             'prefix' => 'order',
         ], function () {
             Route::post('/create', 'OrderController@create')->name('create');
-            Route::post('/create-parser', 'OrderController@create_parser')->name('create-parser');
             Route::put('/create', 'OrderController@store');
+            Route::post('/create-parser', 'OrderController@create_parser')->name('create-parser');
+            Route::put('/create-parser', 'OrderController@store_parser');
+
             Route::get('/index', 'OrderController@index')->name('index');
             Route::get('/{order}/view', 'OrderController@view')->name('view');
 
@@ -261,6 +263,7 @@ Route::group(
 
                 Route::get('/preorder', 'PreOrderController@index')->name('preorder.index');
                 Route::get('/preorder/{order}', 'PreOrderController@show')->name('preorder.show');
+                Route::get('/preorder/{order}/destroy', 'PreOrderController@destroy')->name('preorder.destroy');
 
                 Route::get('/executed', 'ExecutedController@index')->name('executed.index');
                 Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
