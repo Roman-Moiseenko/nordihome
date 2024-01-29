@@ -19,7 +19,6 @@
                         <p><b>Для точного расчёта данный инструмент использовать без VPN</b></p>
                         <h3 id="parser-condition" class="_name_">Найти товар</h3>
                     </div>
-
                     <div class="parser-card-search--find">
                         <div id="parser-condition-text" class="parser-card-search--text">
                             Скопируйте и вставьте в поле номер артикула товара или ссылку с сайта <a href="https://IKEA.PL" target="_blank">IKEA.PL</a>
@@ -27,10 +26,8 @@
                         <form method="post" action="{{ route('shop.parser.search') }}">
                             @csrf
                         <div class="parser-card-search--form">
-
                             <input id="search-parser-field" type="text" name="search" class="form-control"/>
                             <button id="search-parser-button" class="btn btn-dark py-2 px-4">ИСКАТЬ</button>
-
                         </div>
                     </form>
                     </div>
@@ -39,9 +36,7 @@
             <div id="parser-list">
                 @if(!empty($cart->items))
                 <div class="parsing-title-products">
-                    <div>
-                        <h3>Товары в корзине:</h3>
-                    </div>
+                    <div class="fs-3">Товары в корзине:</div>
                     <div class="parsing-title-products--button">
                         <a id="clear-button" class="btn btn-dark px-2"
                            onclick="event.preventDefault(); document.getElementById('form-clear-parser').submit();">Очистить корзину</a>

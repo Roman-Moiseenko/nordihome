@@ -11,11 +11,11 @@
         <div><span>Наличие в ИКЕА: </span></div>
         <div class="parser-item-quantity">{!! $item->storages !!}</div>
         <div class="parser-list-item--bottom">
-            <div class="parser-list-item--cost">{{ price($item->cost * $item->quantity) }}</div>
+            <div class="parser-list-item--cost">{{ price($item->cost) }}</div>
             <div class="parser-list-item--form">
                 <button id="delete-button" class="btn btn-outline-dark"
                         onclick="event.preventDefault(); document.getElementById('form-remove-{{$i}}').submit();">
-                    <i class="fa-light fa-trash"></i>
+                    <i class="fa-light fa-trash-can"></i>
                 </button>
                 <form id="form-remove-{{$i}}" method="post" action="{{ route('shop.parser.remove', $item->product) }}">
                     @csrf
