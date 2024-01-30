@@ -31,7 +31,7 @@ class PromotionFinished extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Promotion Finished',
+            subject: 'Акция закончена',
         );
     }
 

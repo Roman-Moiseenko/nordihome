@@ -31,7 +31,7 @@ class PromotionStarted extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Promotion Started',
+            subject: 'Акция стартовала',
         );
     }
 
@@ -57,7 +57,7 @@ class PromotionStarted extends Mailable
 
     public function build()
     {
-        return $this->subject('Акция стартовал')
+        return $this->subject('Акция стартовала')
             ->markdown('mail.promotion.started')->with([ 'promotion' => $this->promotion]);
     }
 }

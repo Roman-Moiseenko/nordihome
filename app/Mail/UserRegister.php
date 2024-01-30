@@ -34,7 +34,7 @@ class UserRegister extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'User Register',
+            subject: 'Регистрация на NORDI HOME',
         );
     }
 
