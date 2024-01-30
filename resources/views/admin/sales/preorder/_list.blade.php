@@ -3,7 +3,7 @@
     <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.sales.preorder.show', $order) }}">{{ $order->created_at->translatedFormat('d F Y') }}</a></x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->getType() }}</x-base.table.td>
 
-    <x-base.table.td class="text-center">{{ $order->total }}</x-base.table.td>
+    <x-base.table.td class="text-center">{{ price($order->total) }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->status->value() }}</x-base.table.td>
     <x-base.table.td class="text-center font-medium"><a href="{{ route('admin.users.show', $order->user) }}">{{ $order->user->email }}</a></x-base.table.td>
     <x-base.table.td class="table-report__action w-56">

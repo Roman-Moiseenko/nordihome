@@ -13,7 +13,7 @@
         let _class = selectObject.options[selectObject.selectedIndex].value;
         let _params = '_token=' + '{{ csrf_token() }}' + '&class=' + _class;
         let request = new XMLHttpRequest();
-        request.open('POST', '/admin/pages/widget/ids');
+        request.open('POST', '/admin/page/widget/ids');
         request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         request.send(_params);
         request.onreadystatechange = function () {
