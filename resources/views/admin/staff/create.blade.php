@@ -25,6 +25,8 @@
                             ->validate($message ?? '')->show() }}
                         {{ \App\Forms\Input::create('phone', ['placeholder' => 'Телефон', 'class' => 'mt-3'])->group(['icon' => 'phone', 'size' => 16])
                             ->validate($message ?? '')->show() }}
+                        {{ \App\Forms\Input::create('chat_id', ['placeholder' => 'Чат ID телеграм', 'class' => 'mt-3'])->group(['icon' => 'send', 'size' => 16])
+                            ->validate($message ?? '')->show() }}
                         {{ \App\Forms\Input::create('password', ['placeholder' => 'Пароль', 'class' => 'mt-3'])->group(['icon' => 'key-round', 'size' => 16])
                             ->validate($message ?? '')->show() }}
                     </div>

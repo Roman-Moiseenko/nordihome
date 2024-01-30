@@ -24,10 +24,13 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $active //Не заблокирован
  * @property string $photo
  * @property string $post //Должность
- *
+ * @property int $telegram_user_id
  */
 class Admin extends Authenticatable implements UploadsDirectory
 {
+
+    //TODO Переделать $photo под Photo::class
+
     use HasApiTokens, HasFactory, Notifiable, FullNameTrait;
 
     public const ROLE_CASHIER = 'cashier';
@@ -66,6 +69,7 @@ class Admin extends Authenticatable implements UploadsDirectory
         'fullname_surname',
         'fullname_firstname',
         'fullname_secondname',
+        'telegram_user_id',
     ];
     //TODO протестировать сохранения если удалить fullname_***
 
@@ -114,6 +118,7 @@ class Admin extends Authenticatable implements UploadsDirectory
         $this->active = false;
     }
 
+
     public function isBlocked(): bool
     {
         return !$this->active;
@@ -154,6 +159,12 @@ class Admin extends Authenticatable implements UploadsDirectory
         $this->save();
     }
 
+    public function setChatID(string $chatID)
+    {
+        $this->telegram_user_id = $chatID;
+        $this->save();
+    }
+
     public function activated()
     {
         $this->active = true;
@@ -182,5 +193,10 @@ class Admin extends Authenticatable implements UploadsDirectory
     public function setPhoto(string $file): void
     {
         $this->photo = $file;
+    }
+
+    public function routeNotificationForTelegram(): int
+    {
+        return $this->telegram_user_id;
     }
 }

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterService
 {
+    //TODO Перенести в Модули и Переименовать
     private UploadService $uploadService;
 
     public function __construct(UploadService $uploadService)
@@ -36,6 +37,7 @@ class RegisterService
             $request['secondname']
         ));
 
+        $admin->telegram_user_id = $request['chat_id'] ?? null;
         //Должность и Роли
         $admin->post = $request['post'];
         $admin->setRole($request['role']);
@@ -99,6 +101,7 @@ class RegisterService
             $request['firstname'],
             $request['secondname']
         ));
+        $admin->telegram_user_id = $request['chat_id'] ?? null;
 
         $admin->post = $request['post'];
         if (!$admin->isCurrent()) $admin->setRole($request['role']);

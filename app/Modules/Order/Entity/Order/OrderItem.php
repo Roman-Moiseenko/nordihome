@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Order\Entity\Reserve;
+use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $reserve_id
  * @property Order $order
  * @property Reserve $reserve
+ * @property Product $product
  */
 class OrderItem extends Model
 {
@@ -58,5 +60,10 @@ class OrderItem extends Model
     public function reserve()
     {
         return $this->belongsTo(Reserve::class, 'reserve_id', 'id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

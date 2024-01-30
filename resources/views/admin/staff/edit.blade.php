@@ -27,6 +27,8 @@
                             ->validate($message ?? '')->show() }}
                         {{ \App\Forms\Input::create('phone', ['placeholder' => 'Телефон', 'value' => $staff->phone, 'class' => 'mt-3'])->group(['icon' => 'phone', 'size' => 16])
                             ->validate($message ?? '')->show() }}
+                        {{ \App\Forms\Input::create('chat_id', ['placeholder' => 'Чат ID телеграм', 'value' => $staff->telegram_user_id, 'class' => 'mt-3'])->group(['icon' => 'send', 'size' => 16])
+                            ->validate($message ?? '')->show() }}
                     </div>
                 </div>
             </div>

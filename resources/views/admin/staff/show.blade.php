@@ -31,6 +31,9 @@
                         <i data-lucide="phone" width="24" height="24" class="lucide lucide-phone w-4 h-4 mr-2"></i>
                         {{ $staff->phone }} </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
+                        <i data-lucide="send" width="24" height="24" class="lucide lucide-phone w-4 h-4 mr-2"></i>
+                        {{ $staff->telegram_user_id }} </div>
+                    <div class="truncate sm:whitespace-normal flex items-center mt-3">
                         <i data-lucide="key-round" width="24" height="24" class="lucide lucide-phone w-4 h-4 mr-2"></i>
                         {{ \App\Entity\Admin::ROLES[$staff->role] }} </div>
                 </div>

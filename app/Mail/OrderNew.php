@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Order\Entity\Order\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,19 +10,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PromotionFinished extends Mailable
+class OrderNew extends Mailable
 {
     use Queueable, SerializesModels;
 
-    private Promotion $promotion;
+    private Order $order;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Promotion $promotion)
+    public function __construct(Order $order)
     {
-        //
-        $this->promotion = $promotion;
+        $this->order = $order;
     }
 
     /**
@@ -31,7 +30,7 @@ class PromotionFinished extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Promotion Finished',
+            subject: 'Order New',
         );
     }
 
@@ -41,7 +40,7 @@ class PromotionFinished extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.promotion.finished',
+            markdown: 'mail.order.new',
         );
     }
 
@@ -55,10 +54,9 @@ class PromotionFinished extends Mailable
         return [];
     }
 
-
     public function build()
     {
-        return $this->subject('Акция закончена')
-            ->markdown('mail.promotion.finished')->with([ 'promotion' => $this->promotion]);
+        return $this->subject('Новый заказ')
+            ->markdown('mail.order.new')->with([ 'order' => $this->order]);
     }
 }
