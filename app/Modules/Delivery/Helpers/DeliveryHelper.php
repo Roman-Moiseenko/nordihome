@@ -27,6 +27,7 @@ class DeliveryHelper
     private static function getClasses(string $namespace): array
     {
         $relativePath = str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
+        $relativePath = str_replace('App/', 'app/', $relativePath);
         $path = dirname(__DIR__, 4) . '/' . $relativePath . '/';
 
         return array_map(function (string $item){
