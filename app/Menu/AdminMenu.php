@@ -131,6 +131,11 @@ class AdminMenu
                         'title' => 'Бренды',
                         'route_name' => 'admin.product.brand.index',
                     ],
+                    'parser' => [
+                        'icon' => 'package-search',
+                        'title' => 'Парсер',
+                        'route_name' => 'admin.product.parser.index',
+                    ],
                 ],
             ],
             'discount' => [

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 
 //Shop
 
+Route::get('/sitemap.xml', [App\Http\Controllers\Shop\SitemapXmlController::class, 'index'])->name('sitemap');
+
 Route::group(
     [
         'middleware' => ['user_cookie_id'],
@@ -196,6 +198,11 @@ Route::group(
                 Route::post('/modification/search', 'ModificationController@search')->name('modification.search');
                 Route::post('/modification/{modification}/add-product', 'ModificationController@add_product')->name('modification.add-product');
                 Route::delete('/modification/{modification}/del-product', 'ModificationController@del_product')->name('modification.del-product');
+
+                Route::get('/parser', 'ParserController@index')->name('parser.index');
+                Route::get('/parser/{parser}/show', 'ParserController@show')->name('parser.show');
+                Route::post('/parser/{parser}/block', 'ParserController@block')->name('parser.block');
+                Route::post('/parser/{parser}/unblock', 'ParserController@unblock')->name('parser.unblock');
 
                 Route::resource('brand', 'BrandController'); //CRUD
                 Route::resource('category', 'CategoryController'); //CRUD

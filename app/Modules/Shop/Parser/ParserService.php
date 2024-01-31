@@ -97,6 +97,9 @@ class ParserService
         if (empty($productParser)) {
             $parser_product = $this->parsingData($product->code_search);
             $productParser = $this->createProductParsing($product->id, $parser_product);
+        } else {
+            if ($productParser->isBlock())
+                throw new \DomainException('Данный товар ' . $code . ' не доступен для заказа');
         }
 
         if ($productParser->updated_at->lt(now()->addHours(3))) {
@@ -220,7 +223,11 @@ class ParserService
         $composite = [];
         if (count($_sub) != 0) {
             foreach ($_sub as $_item) {
-                $composite[] = $this->toCode($_item['itemNo']) . ' - ' . $_item['quantity'] . 'шт.';
+                $composite[] = [
+                    'code' => $this->toCode($_item['itemNo']),
+                    'quantity' => $_item['quantity'],
+                    ];
+                //$this->toCode($_item['itemNo']) . ' - ' . $_item['quantity'] . 'шт.';
             }
         }
         ////Кол-во пачек

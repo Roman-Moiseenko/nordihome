@@ -66,13 +66,43 @@ class ProductParser extends Model
         $this->update(['price' => $price]);
     }
 
-    public function noOrder()
+    public function block()
     {
         $this->update(['order' => false]);
+    }
+
+    public function unblock()
+    {
+        $this->update(['order' => true]);
+    }
+
+    public function isBlock(): bool
+    {
+        return $this->order == false;
     }
 
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function composite(): string
+    {
+        $result = [];
+        if (!empty($this->composite)) {
+            foreach ($this->composite as $item) {
+                $result[] = $item['code'] . ' - ' . $item['quantity'] . ' шт.';
+            }
+        }
+        return empty($result) ? '' : implode('<br>', $result);
+    }
+
+    public function quantity(): string
+    {
+        $result = '';
+        foreach ($this->quantity as $store => $quantity) {
+            $result .= ParserService::STORES[(int)$store] . '-' . $quantity . ' ';
+        }
+        return $result;
     }
 }

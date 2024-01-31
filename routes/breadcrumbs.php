@@ -14,6 +14,7 @@ use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Shop\Parser\ProductParser;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -311,6 +312,15 @@ Breadcrumbs::for('admin.product.modification.edit', function (BreadcrumbTrail $t
     $trail->push('Редактировать', route('admin.product.modification.edit', $modification));
 });
 
+//PARSER PRODUCTS
+Breadcrumbs::for('admin.product.parser.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Спарсенные товары', route('admin.product.parser.index'));
+});
+Breadcrumbs::for('admin.product.parser.show', function (BreadcrumbTrail $trail, ProductParser $productParser) {
+    $trail->parent('admin.product.index');
+    $trail->push($productParser->product->name, route('admin.product.parser.show', $productParser));
+});
 
 ///// *** DISCOUNT
 // PROMOTION
