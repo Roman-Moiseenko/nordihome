@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
@@ -21,6 +22,7 @@ class SitemapXmlController extends Controller
             $this->categories(),
             $this->pages(),
             $this->static(),
+            $this->promotions(),
         );
         $content = view('shop.sitemap', compact('pages'))->render();
         ob_end_clean();
@@ -72,6 +74,14 @@ class SitemapXmlController extends Controller
         }, ['home']);
     }
 
-    //TODO Добавить страницы акций после создания
-
+    private function promotions(): array
+    {
+        return array_map(function (Promotion $promotion) {
+            return [
+                'url' => route('shop.promotion.view', $promotion->slug),
+                'date' => $promotion->start_at->format('c'),
+                'changefreq' => 'weekly'
+            ];
+        }, Promotion::where('published', true)->where('active', true)->getModels());
+    }
 }

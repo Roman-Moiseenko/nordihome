@@ -5,6 +5,7 @@ namespace App\Modules\Shop;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
+use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeProduct;
@@ -437,7 +438,7 @@ class ShopRepository
         return $output;
     }
 
-    public function PageBySlug(string $slug)
+    public function PageBySlug(string $slug): Page
     {
         return Page::where('slug', $slug)->where('published', true)->firstOrFail();
     }
@@ -461,7 +462,10 @@ class ShopRepository
         ];
     }
 
-
+    public function getPromotionBySlug($slug): Promotion
+    {
+        return Promotion::where('slug', $slug)->where('published', true)->firstOrFail();
+    }
 
 
 }

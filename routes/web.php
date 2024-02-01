@@ -42,8 +42,10 @@ Route::group(
         Route::get('/catalog', 'CatalogController@index')->name('category.index');
         Route::get('/catalog/{slug}', 'CatalogController@view')->name('category.view');
 
+
         Route::get('/cart', 'CartController@view')->name('cart.view');
 
+        Route::get('/promotion/{slug}', 'PromotionController@view')->name('promotion.view');
         //Корзина AJAX
         Route::group([
             'as' => 'cart.',
