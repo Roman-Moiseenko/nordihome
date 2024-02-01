@@ -9,8 +9,6 @@ class MenuHelper
 {
     public static function getMenuPages(): array
     {
-        //TODO Сделать загрузку из модели Page
-
         $pages = Page::where('published', true)->where('parent_id', null)->where('menu', true)->orderBy('sort')->getModels();
         $add_items = [
             [

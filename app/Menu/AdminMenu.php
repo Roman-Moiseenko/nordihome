@@ -52,6 +52,11 @@ class AdminMenu
                         'title' => 'Корзина',
                         'route_name' => 'admin.sales.cart.index',
                     ],
+                    'wish' => [
+                        'icon' => 'heart',
+                        'title' => 'Избранное',
+                        'route_name' => 'admin.sales.wish.index',
+                    ],
                 ],
             ],
             'delivery' => [

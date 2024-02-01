@@ -11,6 +11,7 @@ use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
+use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -58,6 +59,7 @@ use Illuminate\Support\Str;
  * @property int $series_id
  * @property CartStorage[] $cartStorages
  * @property CartCookie[] $cartCookies
+ * @property Wish[] $wishes
  * @property Reserve[] $reserves
  */
 class Product extends Model
@@ -137,6 +139,7 @@ class Product extends Model
     {
         return [ 'slug' => [ 'source' => 'name' ] ];
     }
+
     public static function register(string $name, string $code, int $main_category_id, string $slug = '', array $arguments = []): self
     {
         $code_search = str_replace(['-', ',', '.', '_'],'', $code);
@@ -311,11 +314,22 @@ class Product extends Model
         return false;
     }
 
+    public function isWish(int $user_id)
+    {
+        $wish = $this->wishes()->where('user_id', $user_id)->first();
+        return !empty($wish);
+    }
+
     //RELATIONSHIP
 
     public function reserves()
     {
         return $this->hasMany(Reserve::class, 'product_id', 'id');
+    }
+
+    public function wishes()
+    {
+        return $this->hasMany(Wish::class, 'product_id', 'id');
     }
 
     public function cartStorages()

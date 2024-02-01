@@ -3,7 +3,7 @@
 @section('subcontent')
     <div class="intro-y flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
-            Товар в корзине
+            Товар в избранном
         </h2>
     </div>
     <div class="grid grid-cols-12 gap-6 mt-5">
@@ -13,12 +13,12 @@
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap">IMG</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО В КОРЗИНЕ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО В ИЗБРАННОМ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>
                     @foreach($products as $product)
-                        @include('admin.sales.cart._list', ['product' => $product])
+                        @include('admin.sales.wish._list', ['product' => $product])
                     @endforeach
                 </x-base.table.tbody>
             </x-base.table>

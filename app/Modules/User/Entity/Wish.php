@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property int $id
  * @property int $user_id
  * @property int $product_id
  * @property Carbon $created_at
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Wish extends Model
 {
-    protected $table = 'wish';
+    protected $table = 'wishes';
     public $timestamps = false;
 
     protected $fillable = [
@@ -42,5 +43,4 @@ class Wish extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    //TODO Сделать избранное
 }

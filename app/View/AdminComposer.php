@@ -5,11 +5,9 @@ namespace App\View;
 
 use App\Menu\AdminMenu;
 use App\Menu\AdminProfileMenu;
-use App\Menu\ContactMenu;
-use App\Menu\ShopMenu;
 use App\Modules\Product\Repository\CategoryRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
 class AdminComposer
@@ -39,11 +37,14 @@ class AdminComposer
                 $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
             }
-            if ($layout == 'shop') {
-                $view->with('menuTop', ShopMenu::menu());
-                $view->with('menuContact', ContactMenu::menu());
+            if ($layout == 'shop' || $layout == 'cabinet') {
+                ///$view->with('menuTop', ShopMenu::menu());
+                ///$view->with('menuContact', ContactMenu::menu());
+                $user_id = (Auth::guard('user')->check()) ? Auth::guard('user')->user()->id : null;
+
                 $view->with('config', Config::get('shop-config.frontend'));
                 $view->with('categories', $this->categories->getTree());
+                $view->with('user_id', $user_id);
             }
         }
     }

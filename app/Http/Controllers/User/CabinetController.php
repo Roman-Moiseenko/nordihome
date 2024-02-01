@@ -16,9 +16,9 @@ class CabinetController extends Controller
         $this->middleware('auth:user');
     }
 
-    public function cabinet(User $user)
+    public function view(User $user)
     {
-        //
+        return view('shop.cabinet.view');
     }
 
     public function profile(User $user)

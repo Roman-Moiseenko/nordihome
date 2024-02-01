@@ -28,4 +28,9 @@ class PreOrderController extends Controller
         }
         return view('admin.sales.preorder.index', compact('orders', 'pagination'));
     }
+
+    public function show(Request $request, Order $order)
+    {
+        return view('admin.sales.preorder.show', compact('order'));
+    }
 }

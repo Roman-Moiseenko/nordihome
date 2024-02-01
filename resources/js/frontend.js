@@ -229,7 +229,7 @@ window.$ = jQuery;
         let _quantity = 1;
         let _options = $(this).data('options');
         $.post(
-            '/cart_post/add' + _productId, {
+            '/cart_post/add/' + _productId, {
                 quantity: _quantity,
                 options: _options,
                 tz: -(new Date().getTimezoneOffset()),
@@ -343,7 +343,7 @@ window.$ = jQuery;
         function set_count_item_cart(_prod_id, _quantity, _obj = null) {
             if (_obj !== null) _obj.prop('disabled', true);
             $.post(
-                '/cart_post/set' + _prod_id, {
+                '/cart_post/set/' + _prod_id, {
                     quantity: _quantity,
                     tz: -(new Date().getTimezoneOffset()),
                 }, function (data) {
@@ -361,7 +361,7 @@ window.$ = jQuery;
             let _productId = $(this).data('product');
             $(this).prop(':disabled', true);
             $.post(
-                '/cart_post/remove' + _productId, {
+                '/cart_post/remove/' + _productId, {
                     tz: -(new Date().getTimezoneOffset()),
                 }, function (data) {
                     _error(data);
@@ -412,7 +412,7 @@ window.$ = jQuery;
             } else {
                 $('#cart-trash').hide();
             }
-            $.post('/cart_post/check' + $(this).data('product'), {tz: -(new Date().getTimezoneOffset()),}, function (data) {
+            $.post('/cart_post/check/' + $(this).data('product'), {tz: -(new Date().getTimezoneOffset()),}, function (data) {
                 _error(data);
                 page_cart(data);
             });
@@ -516,9 +516,29 @@ window.$ = jQuery;
         }
 }
     /** ДОБАВИТЬ В ИЗБРАННОЕ **/
-    $('.product-wish-toogle').on('click', function (item) {
+    $('.product-wish-toggle').on('click', function (item) {
+        item.preventDefault();
         let _productId = $(this).data('product');
+        let thisButton = $(this);
+
         if (_productId !== undefined) {
+            $.post(
+                '/cabinet/wish/toggle', {
+                    product_id: _productId,
+                    tz: -(new Date().getTimezoneOffset()),
+                },
+                function (data) {
+                    if (data === true) {
+                        thisButton.addClass('btn-warning');
+                        thisButton.removeClass('btn-outline-dark');
+                    } else  {
+                        thisButton.removeClass('btn-warning');
+                        thisButton.addClass('btn-outline-dark');
+                    }
+                    console.log(data);
+                    _error(data);
+                }
+            );
             //POST запрос
             //TODO Добавление в wish и учет и показывать, что товар уже в списке, повторное нажатие - удаление из wish
         }

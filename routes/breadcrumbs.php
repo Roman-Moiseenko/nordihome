@@ -121,7 +121,16 @@ Breadcrumbs::for('shop.promotion.view', function (BreadcrumbTrail $trail, $slug)
     $trail->push($promotion->title, route('shop.promotion.view', $slug));
 });
 
+//КАБИНЕТ
 
+Breadcrumbs::for('cabinet.view', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Мой кабинет', route('cabinet.view'));
+});
+Breadcrumbs::for('cabinet.wish.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('cabinet.view');
+    $trail->push('Избранное', route('cabinet.wish.index'));
+});
 /**  A D M I N  */
 
 
@@ -404,6 +413,11 @@ Breadcrumbs::for('admin.sales.cart.index', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('admin.sales.reserve.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.sales');
     $trail->push('Резерв', route('admin.sales.reserve.index'));
+});
+
+Breadcrumbs::for('admin.sales.wish.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales');
+    $trail->push('Избранное', route('admin.sales.wish.index'));
 });
 
 Breadcrumbs::for('admin.sales.order.index', function (BreadcrumbTrail $trail) {

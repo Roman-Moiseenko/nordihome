@@ -20,8 +20,7 @@ Route::group(
 
 
 //TODO Настроить ЧПУ
-
-
+//Shop - функции магазина
 Route::group(
     [
         'as' => 'shop.',
@@ -59,7 +58,6 @@ Route::group(
             Route::post('/check-all', 'CartController@check_all')->name('check-all');
             Route::post('/remove/{product}', 'CartController@remove')->name('remove');
             Route::post('/clear', 'CartController@clear')->name('clear');
-
         });
         Route::group([
             'as' => 'order.',
@@ -82,7 +80,7 @@ Route::group(
         Route::group([
             'as' => 'parser.'
         ],
-            function() {
+            function () {
                 Route::get('/calculate', 'ParserController@view')->name('view');
                 Route::post('/parser/search', 'ParserController@search')->name('search');
                 Route::post('/parser/clear', 'ParserController@clear')->name('clear');
@@ -91,11 +89,33 @@ Route::group(
                 Route::post('/parser/{product}/sub', 'ParserController@sub')->name('sub');
             }
         );
+
+
     }
 );
 
-//User
-//Auth::routes();
+
+
+//Cabinet - функции кабинета клиента
+Route::group([
+    'as' => 'cabinet.',
+    'prefix' => 'cabinet',
+    'namespace' => 'App\Http\Controllers\User',
+    'middleware' => ['user_cookie_id'],
+],
+    function() {
+        Route::get('/', 'CabinetController@view')->name('view');
+        Route::get('/profile', 'CabinetController@profile')->name('profile');
+
+        Route::group([
+            'as' => 'wish.',
+            'prefix' => 'wish'
+        ], function () {
+            Route::get('/', 'WishController@index')->name('index');
+            Route::post('/toggle', 'WishController@toggle')->name('toggle');
+        });
+    }
+);
 
 Route::group(
     [
@@ -120,8 +140,9 @@ Route::group(
     }
 );
 
-Route::get('/profile', [\App\Http\Controllers\User\CabinetController::class, 'profile'])->name('user.profile');
-Route::get('/cabinet', [\App\Http\Controllers\User\CabinetController::class, 'index'])->name('user.cabinet');
+
+
+
 Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::class, 'verify'])->name('register.verify');
 
 //Admin
@@ -246,7 +267,7 @@ Route::group(
                 'as' => 'delivery.',
                 'namespace' => 'Delivery',
             ],
-            function() {
+            function () {
                 //Просмотры - index
                 Route::get('/', 'DeliveryController@index')->name('all');
                 Route::get('/local', 'DeliveryController@index_local')->name('local');
@@ -262,9 +283,10 @@ Route::group(
                 'as' => 'sales.',
                 'namespace' => 'Sales',
             ],
-            function() {
+            function () {
                 Route::get('/cart', 'CartController@index')->name('cart.index');
                 Route::get('/reserve', 'ReserveController@index')->name('reserve.index');
+                Route::get('/wish', 'WishController@index')->name('wish.index');
 
                 //TODO Объеденить как Delivery????
                 Route::get('/order', 'OrderController@index')->name('order.index');
@@ -287,7 +309,7 @@ Route::group(
                 'as' => 'page.',
                 'namespace' => 'Page',
             ],
-            function() {
+            function () {
                 Route::resource('widget', 'WidgetController'); //CRUD
                 Route::post('/widget/ids', 'WidgetController@get_ids')->name('widget.ids');
                 Route::post('/widget/{widget}/draft', 'WidgetController@draft')->name('widget.draft');

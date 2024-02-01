@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div>
+    <div class="row">
         @foreach($products as $product)
             @include('shop.cards.card-3x')
         @endforeach

@@ -15,7 +15,7 @@
       outline: none;
       min-height: 36px;
       align-items: center;
-        background-color: transparent; /*//TODO ПРОТЕСТИРОВАТЬ */
+        background-color: transparent;
       font-size: inherit;
       padding: theme("spacing.2") theme("spacing.3");
       input {
@@ -27,7 +27,7 @@
     background-color: theme("colors.slate.100");
   }
   &.ts-wrapper.single.input-active .ts-control {
-   /* background-color: transparent; //TODO ПРОТЕСТИРОВАТЬ */
+   /* background-color: transparent;  */
   }
   &.ts-wrapper.multi {
     &.has-items .ts-control {
