@@ -11,6 +11,7 @@ use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -33,6 +34,8 @@ use Illuminate\Support\Str;
  * @property bool $pre_order //Установка для всего магазина из опций, после каждый отдельно можно менять
  * @property bool $not_delivery
  * @property bool $not_local
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property Tag[] $tags
  * @property Category $category
@@ -74,8 +77,12 @@ class Product extends Model
         self::FREQUENCY_NOT => 'Нет',
     ];
 
-
     public Dimensions $dimensions;
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     protected $attributes = [
         'short' => '',
