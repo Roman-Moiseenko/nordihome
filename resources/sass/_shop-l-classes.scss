@@ -204,6 +204,11 @@ ul.footer-menu > li > a:hover {
 }
 
 /* Общие блоки, карточки */
+
+.hidden {
+    display: none !important;
+}
+
 //карточка тенью и закругл.углами
 .box-card {
     box-shadow: $shadow-box;

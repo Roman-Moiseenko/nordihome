@@ -7,6 +7,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use App\Modules\User\Service\WishService;
+use App\Modules\User\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,14 @@ class WishController extends Controller
 
 
     private WishService $service;
+    private UserRepository $repository;
 
-    public function __construct(WishService $service)
+    public function __construct(WishService $service, UserRepository $repository)
     {
         $this->middleware(['auth:user']);
 
         $this->service = $service;
+        $this->repository = $repository;
     }
 
     public function index()
@@ -42,22 +45,32 @@ class WishController extends Controller
     }
 
     //Ajax
-    public function toggle(Request $request)
+    public function toggle(Product $product)
     {
         try {
             /** @var User $user */
             $user = Auth::guard('user')->user();
-            $result = $this->service->toggle($user->id, (int)$request['product_id']);
-            $products = array_map(function (Wish $wish) {
-                return [
-                    'image' => $wish->product->photo->getThumbUrl('thumb'),
-                    'name' => $wish->product->name,
-                    'url' => route('shop.product.view', $wish->product)
-                ];
-            }, $user->wishes()->getModels());
+            $result = $this->service->toggle($user->id, $product->id);
+            $products = $this->repository->getWish($user);
+
             return response()->json([
                 'items' => $products,
                 'state' => $result,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function get()
+    {
+        try {
+            /** @var User $user */
+            $user = Auth::guard('user')->user();
+            $products = $this->repository->getWish($user);
+
+            return response()->json([
+                'items' => $products,
             ]);
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);

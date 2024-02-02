@@ -244,6 +244,16 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     box-shadow: $shadow-img;
 }
 
+.wish-item-cost, .wish-item-info, .wish-item-trash {
+    margin: auto 0;
+}
+.wish-item-cost {
+    margin-left: auto;
+    margin-right: 12px;
+}
+.wish-item-trash {
+    margin-right: 4px;
+}
 .cart-item-info, .wish-item-info {
     width: auto;
     height: 100%;

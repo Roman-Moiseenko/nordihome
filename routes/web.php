@@ -113,7 +113,8 @@ Route::group([
         ], function () {
             Route::get('/', 'WishController@index')->name('index');
             Route::post('/clear', 'WishController@clear')->name('clear');
-            Route::post('/toggle', 'WishController@toggle')->name('toggle');
+            Route::post('/get', 'WishController@get')->name('get');
+            Route::post('/toggle/{product}', 'WishController@toggle')->name('toggle');
         });
     }
 );

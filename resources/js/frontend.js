@@ -37,6 +37,27 @@ window.$ = jQuery;
         });
     }
 
+    //Проверяем избранное виджет при загрузке
+    if ($('#wish-header').length) {
+        setTimeout(function () {
+            $.post('/cabinet/wish/get', {tz: -(new Date().getTimezoneOffset())}, function (data) {
+                _error(data);
+                widget_wish(data.items);
+            });
+        }, 250);
+        $('#clear-wish').on('click', function () {
+            let route = $(this).data('route');
+            $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
+                _error(data);
+                widget_wish([]);
+                $('.product-wish-toggle').each(function (item) {
+                    $(this).removeClass('btn-warning');
+                    $(this).addClass('btn-outline-dark');
+                });
+            })
+        });
+    }
+
 
     /**  ПОИСК в ТОП-МЕНЮ    ***/
         //INPUT поиска
@@ -241,7 +262,6 @@ window.$ = jQuery;
     });
     //Обновление виджета корзины
     function widget_cart(data) {
-        console.log(data);
         let items = data.items;
         let common = data.common;
         let cartItemTemplate = $('#cart-item-template');
@@ -524,10 +544,8 @@ window.$ = jQuery;
 
         if (_productId !== undefined) {
             $.post(
-                '/cabinet/wish/toggle', {
-                    product_id: _productId,
-                    tz: -(new Date().getTimezoneOffset()),
-                },
+                '/cabinet/wish/toggle/' + _productId,
+                {},
                 function (data) {
                     if (data.state === true) {
                         thisButton.addClass('btn-warning');
@@ -546,6 +564,57 @@ window.$ = jQuery;
     function widget_wish(items) {
         //TODO Обновление виджета избранное
         console.log(items);
+        let wishItemTemplate = $('#wish-item-template');
+        let counterWish = $('#counter-wish');
+        $('div[id^="wish-item-N"]').remove();
+        if (items.length === 0) { //Элементов нет, показываем пустую заглушку
+            $('#wish-block').addClass('hidden');
+            counterWish.hide();
+        } else {
+            $('#wish-block').removeClass('hidden');
+            $('#widget-wish-all-count').text(items.length);
+            counterWish.text(items.length);
+            counterWish.show();
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            let _item = wishItemTemplate;
+
+            _item.find($('.wish-item-img')).attr('src', items[i].img);
+            _item.find($('.wish-item-url')).html(items[i].name);
+            _item.find($('.wish-item-url')).attr('href', items[i].url);
+
+            _item.find($('.wish-item-cost')).each(function () {
+                    $(this).html(price_format(items[i].cost));
+                }
+            );
+
+            _item.find($('.remove-item-wish')).attr('data-route', items[i].remove);
+            _item.find($('.remove-item-wish')).attr('data-item', items[i].product_id);
+
+            _item = _item.clone();
+            _item.attr('id', 'wish-item-N' + (i + 1));
+            _item.show();
+            _item.appendTo('.wish-body');
+        }
+        $(document).on('click', '.remove-item-wish', function (e) {
+            let route = $(this).data('route');
+            let item = $(this).data('item');
+            e.preventDefault();
+            $.post(route, {}, function (data) {
+                console.log(data);
+
+                _error(data);
+                if (data.state === false) {
+                    let buttonProduct = $('.product-wish-toggle[data-product=' + item + ']');
+                    console.log(item);
+                    console.log(buttonProduct);
+                    buttonProduct.removeClass('btn-warning');
+                    buttonProduct.addClass('btn-outline-dark');
+                }
+                widget_wish(data.items);
+            })
+        });
     }
 
     /** ОФОРМЛЕНИЕ ЗАКАЗА  */
