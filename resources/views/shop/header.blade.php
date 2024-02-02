@@ -64,7 +64,7 @@
                         @endif
                     @else
                         <li class="nav-item">
-                            <a class="nav-link d-flex flex-column text-center" href="{{ route('login') }}">
+                            <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.view') }}">
                                 <i class="fa-light fa-user-vneck fs-4"></i>
                                 <span class="fs-7">Кабинет</span>
                             </a>
@@ -74,7 +74,7 @@
                         @include('shop.widgets.header.wish')
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex flex-column text-center" href="{{ route('shop.order.index') }}"
+                        <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"
                            @guest('user')
                            data-bs-toggle="modal" data-bs-target="#login-popup"
                             @endguest
@@ -87,7 +87,6 @@
                     <li class="nav-item">
                         @include('shop.widgets.header.cart')
                     </li>
-
 
                 </ul>
             </div>

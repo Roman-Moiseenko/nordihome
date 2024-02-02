@@ -98,4 +98,20 @@ class MenuHelper
 
         ];
     }
+
+    public static function getCabinetMenu(): array
+    {
+        return [
+            'orders' => [
+                'name' => 'Мои заказы',
+                'icon' => 'fa-light fa-heart',
+                'url' => route('cabinet.order.index'),
+            ],
+            'wish' => [
+                'name' => 'Избранное',
+                'icon' => 'fa-light fa-heart',
+                'url' => route('cabinet.wish.index'),
+            ],
+        ];
+    }
 }

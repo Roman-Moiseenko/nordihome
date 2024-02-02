@@ -68,9 +68,6 @@ Route::group(
             Route::post('/create-parser', 'OrderController@create_parser')->name('create-parser');
             Route::put('/create-parser', 'OrderController@store_parser');
 
-            Route::get('/index', 'OrderController@index')->name('index');
-            Route::get('/{order}/view', 'OrderController@view')->name('view');
-
             //ajax
             Route::post('/payment', 'OrderController@payment')->name('payment');
             Route::post('/checkorder', 'OrderController@checkorder')->name('checkorder');
@@ -115,6 +112,15 @@ Route::group([
             Route::post('/clear', 'WishController@clear')->name('clear');
             Route::post('/get', 'WishController@get')->name('get');
             Route::post('/toggle/{product}', 'WishController@toggle')->name('toggle');
+        });
+
+        Route::group([
+            'as' => 'order.',
+            'prefix' => 'order'
+        ], function () {
+            Route::get('/', 'OrderController@index')->name('index');
+            Route::get('/{order}', 'OrderController@view')->name('view');
+
         });
     }
 );

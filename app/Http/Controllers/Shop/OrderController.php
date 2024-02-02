@@ -17,7 +17,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
-
+/**
+ * Контроллер по созданию заказа из клиентской части, для просмотра используется контроллер из User
+ */
 class OrderController extends Controller
 {
     private Cart $cart;

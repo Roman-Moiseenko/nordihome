@@ -1,0 +1,53 @@
+//WISH
+.wish .wish-item-img img {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+}
+.wish .wish-item {
+
+}
+.wish .wish-item-info {
+
+}
+.wish .wish-item-control {
+    margin: auto;
+    margin-right: 0;
+}
+
+//MENU
+.cabinet-menu-block {
+    padding: 0 !important;
+    margin-bottom: 40px;
+    margin-right: 60px;
+    margin-left: 60px;
+    box-shadow: $shadow-box;
+}
+.cabinet-menu {
+    margin: 0;
+    padding: 0 !important;
+}
+.cabinet-menu li {
+    list-style: none;
+    display: grid;
+    border-bottom: 1px solid var(--bs-gray-400);
+}
+.cabinet-menu li > a {
+    padding: 8px 20px;
+    width: 100%;
+    text-align: center;
+}
+.cabinet-menu li:nth-last-child(1){
+    border-bottom: none;
+}
+.cabinet-menu li > a:hover {
+
+}
+
+.cabinet-menu li.active > a {
+
+}
+
+.cabinet-menu li.active > a:hover {
+
+}

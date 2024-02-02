@@ -49,10 +49,14 @@ window.$ = jQuery;
             let route = $(this).data('route');
             $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
                 _error(data);
-                widget_wish([]);
+                if ($('body').hasClass('wish')) {
+                    location.reload();
+                } else {
+                    widget_wish([]);
+                }
                 $('.product-wish-toggle').each(function (item) {
                     $(this).removeClass('btn-warning');
-                    $(this).addClass('btn-outline-dark');
+                    $(this).addClass('btn-light');
                 });
             })
         });
@@ -223,7 +227,6 @@ window.$ = jQuery;
                     password: inputPassword.val(),
                     verify_token: inputVerify.val()
                 }, function (data) {
-                    console.log(data);
                     _error(data);
                     $('#token-error').hide();
                     $('#password-error').hide();
@@ -460,11 +463,9 @@ window.$ = jQuery;
 
         $('#preorder-true').on('change', function () {
             if (this.checked) $('input[name=preorder]').val(true);
-            console.log('true - ', $('input[name=preorder]').val());
         });
         $('#preorder-false').on('change', function () {
             if (this.checked) $('input[name=preorder]').val(false);
-            console.log('false - ', $('input[name=preorder]').val());
         });
         //Обновление страницы корзины
         function page_cart(data) {
@@ -541,7 +542,6 @@ window.$ = jQuery;
         item.preventDefault();
         let _productId = $(this).data('product');
         let thisButton = $(this);
-
         if (_productId !== undefined) {
             $.post(
                 '/cabinet/wish/toggle/' + _productId,
@@ -549,12 +549,16 @@ window.$ = jQuery;
                 function (data) {
                     if (data.state === true) {
                         thisButton.addClass('btn-warning');
-                        thisButton.removeClass('btn-outline-dark');
+                        thisButton.removeClass('btn-light');
                     } else  {
                         thisButton.removeClass('btn-warning');
-                        thisButton.addClass('btn-outline-dark');
+                        thisButton.addClass('btn-light');
                     }
-                    widget_wish(data.items)
+                    if ($('body').hasClass('wish')) {
+                        location.reload();
+                    } else {
+                        widget_wish(data.items);
+                    }
                     _error(data);
                 }
             );
@@ -562,8 +566,6 @@ window.$ = jQuery;
     });
     //Обновление виджета избранное
     function widget_wish(items) {
-        //TODO Обновление виджета избранное
-        console.log(items);
         let wishItemTemplate = $('#wish-item-template');
         let counterWish = $('#counter-wish');
         $('div[id^="wish-item-N"]').remove();
@@ -602,17 +604,18 @@ window.$ = jQuery;
             let item = $(this).data('item');
             e.preventDefault();
             $.post(route, {}, function (data) {
-                console.log(data);
-
                 _error(data);
                 if (data.state === false) {
                     let buttonProduct = $('.product-wish-toggle[data-product=' + item + ']');
-                    console.log(item);
-                    console.log(buttonProduct);
                     buttonProduct.removeClass('btn-warning');
-                    buttonProduct.addClass('btn-outline-dark');
+                    buttonProduct.addClass('btn-light');
                 }
-                widget_wish(data.items);
+                if ($('body').hasClass('wish')) {
+                    location.reload();
+                } else {
+                    widget_wish(data.items);
+                }
+
             })
         });
     }
@@ -647,7 +650,6 @@ window.$ = jQuery;
 
         function writeElements(state) {
             //Записываем полученный результат в элементы
-            console.log('state = ', state);
             //Данные по доставке
             let spanRegion = $('.delivery-region').find('.address-delivery--info');
             let spanLocal = $('.delivery-local').find('.address-delivery--info');
@@ -677,7 +679,6 @@ window.$ = jQuery;
 
             //Общие данные
             //Доступность, Оплатить/Оформить, Стоимость доставки, Купон
-            //console.log();
             let buttonOrder = $('#button-to-order');
             buttonOrder.prop('disabled', !state.amount.enabled);
             buttonOrder.html(state.amount.caption);

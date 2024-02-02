@@ -18,7 +18,7 @@ class CabinetController extends Controller
 
     public function view(User $user)
     {
-        return view('shop.cabinet.view');
+        return view('cabinet.view');
     }
 
     public function profile(User $user)

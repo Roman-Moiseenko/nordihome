@@ -67,16 +67,6 @@ Breadcrumbs::for('shop.order.create-parser', function (BreadcrumbTrail $trail) {
     $trail->parent('shop.parser.view');
     $trail->push('Оформить заказ', route('shop.order.create-parser'));
 });
-Breadcrumbs::for('shop.order.view', function (BreadcrumbTrail $trail, Order $order) {
-    $trail->parent('shop.order.index');
-    $trail->push('Заказ xxx ' . $order->id, route('shop.order.view', $order));
-});
-
-
-Breadcrumbs::for('shop.order.index', function (BreadcrumbTrail $trail) {
-    $trail->parent('home');
-    $trail->push('Мои заказы', route('shop.order.index'));
-});
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
     $trail->push('<i class="fa-light fa-house-blank"></i>', route('home'));
@@ -130,6 +120,14 @@ Breadcrumbs::for('cabinet.view', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('cabinet.wish.index', function (BreadcrumbTrail $trail) {
     $trail->parent('cabinet.view');
     $trail->push('Избранное', route('cabinet.wish.index'));
+});
+Breadcrumbs::for('cabinet.order.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('cabinet.view');
+    $trail->push('Мои заказы', route('cabinet.order.index'));
+});
+Breadcrumbs::for('cabinet.order.view', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('cabinet.order.index');
+    $trail->push('Заказ ' . $order->htmlNum(), route('cabinet.order.view', $order));
 });
 /**  A D M I N  */
 

@@ -6,6 +6,7 @@ namespace App\View;
 use App\Menu\AdminMenu;
 use App\Menu\AdminProfileMenu;
 use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\Shop\MenuHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;
@@ -44,8 +45,16 @@ class AdminComposer
                 $view->with('categories', $this->categories->getTree());
                 $view->with('user', $user);
             }
+            if ($layout == 'cabinet') {
+                /*$cabinetMenu = array_map(function ($item) use ($pageName) {
+                    return array_merge($item, ['active' => request()->url() == $item['url']]);
+                }, MenuHelper::getCabinetMenu());*/
+                //dd($cabinetMenu);
+                //$view->with('cabinetMenu', $cabinetMenu);
+            }
         }
     }
+
     public function activeMenu($pageName, $layout): array
     {
         $firstLevelActiveIndex = '';
