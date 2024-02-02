@@ -22,7 +22,10 @@
                     <ul class="cabinet-menu">
                         @foreach(App\Modules\Shop\MenuHelper::getCabinetMenu() as $item)
                             <li class="cabinet-menu-item {{ ($item['url'] == request()->url()) ? 'active' : '' }}">
-                                <a href="{{ $item['url'] }}">{{ $item['name'] }}</a>
+                                <a href="{{ $item['url'] }}">
+                                    <i class="{{ $item['icon'] }}"></i>
+                                    <span>{{ $item['name'] }}</span>
+                                </a>
                             </li>
                         @endforeach
                     </ul>

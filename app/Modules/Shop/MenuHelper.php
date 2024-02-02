@@ -102,9 +102,14 @@ class MenuHelper
     public static function getCabinetMenu(): array
     {
         return [
+            'cabinet' => [
+                'name' => 'Личный кабинет',
+                'icon' => 'fa-light fa-user-vneck',
+                'url' => route('cabinet.view'),
+            ],
             'orders' => [
                 'name' => 'Мои заказы',
-                'icon' => 'fa-light fa-heart',
+                'icon' => 'fa-sharp fa-light fa-box-open',
                 'url' => route('cabinet.order.index'),
             ],
             'wish' => [
