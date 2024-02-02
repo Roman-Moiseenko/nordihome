@@ -38,13 +38,11 @@ class AdminComposer
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
             }
             if ($layout == 'shop' || $layout == 'cabinet') {
-                ///$view->with('menuTop', ShopMenu::menu());
-                ///$view->with('menuContact', ContactMenu::menu());
-                $user_id = (Auth::guard('user')->check()) ? Auth::guard('user')->user()->id : null;
+                $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
 
                 $view->with('config', Config::get('shop-config.frontend'));
                 $view->with('categories', $this->categories->getTree());
-                $view->with('user_id', $user_id);
+                $view->with('user', $user);
             }
         }
     }

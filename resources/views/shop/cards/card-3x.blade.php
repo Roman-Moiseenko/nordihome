@@ -14,9 +14,9 @@
         </div>
         <div class="product-card-info">Рейтинг, цена</div>
         <div class="product-card-to-cart">
-            @if(!is_null($user_id))
+            @if(!is_null($user))
                 <button class="product-wish-toggle btn
-                {{ $product->isWish($user_id) ? 'btn-warning' : 'btn-outline-dark' }}" data-product="{{ $product->id }}" type="button"><i
+                {{ $product->isWish($user->id) ? 'btn-warning' : 'btn-outline-dark' }}" data-product="{{ $product->id }}" type="button"><i
                         class="fa-light fa-heart"></i></button>
             @else
                     <button class="btn btn-outline-light"  data-bs-toggle="modal" data-bs-target="#login-popup" onclick="event.preventDefault();"><i

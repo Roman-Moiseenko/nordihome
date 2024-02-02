@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\User;
 
 use App\Modules\Product\Entity\Product;
+use App\Modules\User\Entity\User;
+use App\Modules\User\Entity\Wish;
 use App\Modules\User\Service\WishService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -43,9 +45,32 @@ class WishController extends Controller
     public function toggle(Request $request)
     {
         try {
-            $user_id = Auth::guard('user')->user()->id;
-            $result = $this->service->toggle($user_id, (int)$request['product_id']);
-            return response()->json($result);
+            /** @var User $user */
+            $user = Auth::guard('user')->user();
+            $result = $this->service->toggle($user->id, (int)$request['product_id']);
+            $products = array_map(function (Wish $wish) {
+                return [
+                    'image' => $wish->product->photo->getThumbUrl('thumb'),
+                    'name' => $wish->product->name,
+                    'url' => route('shop.product.view', $wish->product)
+                ];
+            }, $user->wishes()->getModels());
+            return response()->json([
+                'items' => $products,
+                'state' => $result,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function clear()
+    {
+        try {
+            /** @var User $user */
+            $user = Auth::guard('user')->user();
+            $this->service->clear($user->id);
+            return response()->json(true);
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
         }

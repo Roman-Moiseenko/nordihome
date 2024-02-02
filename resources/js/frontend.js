@@ -515,6 +515,7 @@ window.$ = jQuery;
             }
         }
 }
+
     /** ДОБАВИТЬ В ИЗБРАННОЕ **/
     $('.product-wish-toggle').on('click', function (item) {
         item.preventDefault();
@@ -528,21 +529,24 @@ window.$ = jQuery;
                     tz: -(new Date().getTimezoneOffset()),
                 },
                 function (data) {
-                    if (data === true) {
+                    if (data.state === true) {
                         thisButton.addClass('btn-warning');
                         thisButton.removeClass('btn-outline-dark');
                     } else  {
                         thisButton.removeClass('btn-warning');
                         thisButton.addClass('btn-outline-dark');
                     }
-                    console.log(data);
+                    widget_wish(data.items)
                     _error(data);
                 }
             );
-            //POST запрос
-            //TODO Добавление в wish и учет и показывать, что товар уже в списке, повторное нажатие - удаление из wish
         }
     });
+    //Обновление виджета избранное
+    function widget_wish(items) {
+        //TODO Обновление виджета избранное
+        console.log(items);
+    }
 
     /** ОФОРМЛЕНИЕ ЗАКАЗА  */
     if (main.hasClass('order-page-create') || main.hasClass('order-page-create-parser') ) {

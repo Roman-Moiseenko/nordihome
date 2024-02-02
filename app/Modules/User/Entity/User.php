@@ -19,6 +19,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $phone
  * @property string $password
  * @property string $verify_token
+ * @property Wish[] $wishes
  */
 class User extends Authenticatable
 {
@@ -93,4 +94,9 @@ class User extends Authenticatable
         ]);
     }
 
+
+    public function wishes()
+    {
+        return $this->hasMany(Wish::class, 'user_id', 'id');
+    }
 }

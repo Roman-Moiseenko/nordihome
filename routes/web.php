@@ -112,6 +112,7 @@ Route::group([
             'prefix' => 'wish'
         ], function () {
             Route::get('/', 'WishController@index')->name('index');
+            Route::post('/clear', 'WishController@clear')->name('clear');
             Route::post('/toggle', 'WishController@toggle')->name('toggle');
         });
     }

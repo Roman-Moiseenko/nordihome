@@ -206,27 +206,28 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     text-align: left;
 }
 
-//КОРЗИНА
-.dropdown-menu.cart-popup {
+//ВИДЖЕТ ВСПЛЫВАЮЩЕЕ ОКНО
+.dropdown-menu.menu-widget-popup {
     right: 0;
     box-shadow: $shadow-dropdown;
 }
-.cart-popup {
+.menu-widget-popup {
     width: 480px;
     padding: 10px;
 }
-.cart-header {
+//КОРЗИНА / ИЗБРАННОЕ
+.cart-header, .wish-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.cart-body {
+.cart-body, .wish-body {
     max-height: 300px;
     overflow-y: auto;
     overflow-x: hidden;
     margin: 10px 0;
 }
-.cart-item {
+.cart-item, .wish-item {
     display: flex;
     margin: 10px 0;
 }
@@ -236,7 +237,14 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     border-radius: 4px;
     box-shadow: $shadow-img;
 }
-.cart-item-info {
+.wish-item>img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    box-shadow: $shadow-img;
+}
+
+.cart-item-info, .wish-item-info {
     width: auto;
     height: 100%;
     margin-left: 10px;
@@ -285,7 +293,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     justify-content: space-between;
     align-items: center;
 }
-#counter-cart {
+.counter {
     position: absolute;
     font-size: 0.8rem;
     top: 0;

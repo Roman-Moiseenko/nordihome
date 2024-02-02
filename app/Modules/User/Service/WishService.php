@@ -19,4 +19,9 @@ class WishService
             return false;
         }
     }
+
+    public function clear(int $user_id)
+    {
+        Wish::where('user_id', $user_id)->delete();
+    }
 }

@@ -74,7 +74,11 @@
                         @include('shop.widgets.header.wish')
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex flex-column text-center" href="{{ route('shop.order.index') }}">
+                        <a class="nav-link d-flex flex-column text-center" href="{{ route('shop.order.index') }}"
+                           @guest('user')
+                           data-bs-toggle="modal" data-bs-target="#login-popup"
+                            @endguest
+                        >
                             <i class="fa-sharp fa-light fa-box-open fs-4"></i>
                             <span class="fs-7">Заказы</span>
                         </a>
