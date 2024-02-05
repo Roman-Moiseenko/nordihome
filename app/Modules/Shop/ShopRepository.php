@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
+use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
@@ -443,10 +444,19 @@ class ShopRepository
         return Page::where('slug', $slug)->where('published', true)->firstOrFail();
     }
 
-    public function getMapData(Request $request)
+    public function getMapData(): array
     {
-        //TODO Данные о магазинах брать из Складов App\Modules\Accounting\Entity\Storage
-        return [
+        return array_map(function (Storage $storage) {
+            return [
+                'latitude' => $storage->latitude,
+                'longitude' => $storage->longitude,
+                'iconCaption' => $storage->organization->short_name,
+                'balloonContent' => $storage->address,
+            ];
+        }, Storage::getModels());
+
+           /*
+            [
             [
                 'latitude' => 54.737798,
                 'longitude' => 20.477079,
@@ -459,13 +469,12 @@ class ShopRepository
                 'iconCaption' => 'NORDI HOME',
                 'balloonContent' => 'ул. Батальная 18, 2 этаж'
             ],
-        ];
+        ];*/
     }
 
     public function getPromotionBySlug($slug): Promotion
     {
         return Promotion::where('slug', $slug)->where('published', true)->firstOrFail();
     }
-
 
 }

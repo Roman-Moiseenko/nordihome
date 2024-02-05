@@ -82,7 +82,8 @@
                         <x-base.table.th class="whitespace-nowrap">ИКОНКА</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КАТЕГОРИЯ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ЧТО_ТО_ЕЩЕ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ДОСТУПНО ДЛЯ ПРОДАЖИ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">В РЕЗЕРВЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>

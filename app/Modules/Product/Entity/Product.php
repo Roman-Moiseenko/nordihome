@@ -213,6 +213,15 @@ class Product extends Model
         return $this->lastPrice->value;
     }
 
+    public function getReserveCount(): int
+    {
+        $result = 0;
+        foreach ($this->reserves as $reserve) {
+            $result += $reserve->quantity;
+        }
+        return $result;
+    }
+
     public function getPreviousPrice(): float
     {
         if (empty($this->pricing)) return 0;

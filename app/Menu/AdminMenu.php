@@ -172,47 +172,67 @@ class AdminMenu
                 ],
             ],
             'divider',
-            'commodity' => [
-                'icon' => 'user',
-                'title' => 'Товаровед',
+            'accounting' => [
+                'icon' => 'database',
+                'title' => 'Товарный учет',
                 'can' => 'commodity',
                 'sub_menu' => [
                     'arrival' => [
-                        'icon' => 'package-search',
+                        'icon' => 'folder-input',
                         'title' => 'Поступление',
                         'route_name' => 'admin.home',
                     ],
-                    'suppliers' => [
-                        'icon' => 'package-search',
+                    'movement' => [
+                        'icon' => 'folder-sync',
+                        'title' => 'Перемещение товара',
+                        'route_name' => 'admin.home',
+                    ],
+                    'departure' => [
+                        'icon' => 'folder-output',
+                        'title' => 'Списание товара',
+                        'route_name' => 'admin.home',
+                    ],
+                    'distributors' => [
+                        'icon' => 'building',
                         'title' => 'Поставщики',
+                        'route_name' => 'admin.accounting.distributor.index',
+                    ],
+                    'storages' => [
+                        'icon' => 'warehouse',
+                        'title' => 'Хранилища',
+                        'route_name' => 'admin.accounting.storage.index',
+                    ],
+                    'currency' => [
+                        'icon' => 'candlestick-chart',
+                        'title' => 'Курс валют',
+                        'route_name' => 'admin.accounting.currency.index',
+                    ],
+                    'company' => [
+                        'icon' => 'landmark',
+                        'title' => 'Организации',
                         'route_name' => 'admin.home',
+                        'can' => '',
                     ],
                 ],
             ],
-            'company' => [
-                'icon' => 'building',
-                'title' => 'Организация',
-                'route_name' => 'admin.home',
-                'can' => '',
-            ],
-            'providers' => [
-                'icon' => 'building',
-                'title' => 'Поставщики',
-                'route_name' => 'admin.home',
-                'can' => '',
-            ],
-            'dictionary' => [
-                'icon' => 'building',
-                'title' => 'Справочники',
-                'can' => 'user-manager',
+            'task' => [
+                'icon' => 'clipboard-check',
+                'title' => 'Задачи',
+                'can' => 'commodity',
                 'sub_menu' => [
-                    'regions' => [
-                        'icon' => 'package-search',
-                        'title' => 'Регионы',
+                    'notification' => [
+                        'icon' => 'bell-ring',
+                        'title' => 'Уведомления',
+                        'route_name' => 'admin.home',
+                    ],
+                    'mail' => [
+                        'icon' => 'mail',
+                        'title' => 'Почта',
                         'route_name' => 'admin.home',
                     ],
                 ],
             ],
+            'divider',
             'frontend' => [
                 'icon' => 'monitor',
                 'title' => 'Фронтенд',

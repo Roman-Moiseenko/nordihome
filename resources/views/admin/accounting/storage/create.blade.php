@@ -1,0 +1,15 @@
+@extends('layouts.side-menu')
+
+@section('subcontent')
+    <div class="intro-y flex items-center mt-8">
+        <h2 class="text-lg font-medium mr-auto">
+            Добавление хранилища
+        </h2>
+    </div>
+    <form method="POST" action="{{ route('admin.accounting.storage.store') }}" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="parent_id">
+        @include('admin.accounting.storage._fields-form', ['storage' => null])
+    </form>
+
+@endsection

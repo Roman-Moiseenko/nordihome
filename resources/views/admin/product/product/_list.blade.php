@@ -7,7 +7,8 @@
     <x-base.table.td class="w-40"><a href="{{ route('admin.product.edit', $product) }}"
                                       class="font-medium whitespace-nowrap">{{ $product->name }}</a> {{ ($product->published) ? '' : '(Черновик)' }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $product->category->name }}</x-base.table.td>
-    <x-base.table.td class="text-center"> - </x-base.table.td>
+    <x-base.table.td class="text-center">{{ $product->count_for_sell }}</x-base.table.td>
+    <x-base.table.td class="text-center">{{ $product->getReserveCount() }}</x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
             <a class="flex items-center mr-3" href="{{ route('admin.product.edit', $product) }}">

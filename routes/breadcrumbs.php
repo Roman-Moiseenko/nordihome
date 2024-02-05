@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 use App\Entity\Admin;
+use App\Modules\Accounting\Entity\Currency;
+use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
@@ -449,6 +452,58 @@ Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));
 });
 
+/////ACCOUNTING
+//STORAGE
+Breadcrumbs::for('admin.accounting.storage.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Хранилища', route('admin.accounting.storage.index'));
+});
+Breadcrumbs::for('admin.accounting.storage.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.storage.index');
+    $trail->push('Добавить', route('admin.accounting.storage.create'));
+});
+Breadcrumbs::for('admin.accounting.storage.show', function (BreadcrumbTrail $trail, Storage $storage) {
+    $trail->parent('admin.accounting.storage.index');
+    $trail->push($storage->name, route('admin.accounting.storage.show', $storage));
+});
+Breadcrumbs::for('admin.accounting.storage.edit', function (BreadcrumbTrail $trail, Storage $storage) {
+    $trail->parent('admin.accounting.storage.show', $storage);
+    $trail->push('Редактировать', route('admin.accounting.storage.edit', $storage));
+});
+//DISTRIBUTOR
+Breadcrumbs::for('admin.accounting.distributor.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Поставщики', route('admin.accounting.distributor.index'));
+});
+Breadcrumbs::for('admin.accounting.distributor.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.distributor.index');
+    $trail->push('Добавить', route('admin.accounting.distributor.create'));
+});
+Breadcrumbs::for('admin.accounting.distributor.show', function (BreadcrumbTrail $trail, Distributor $distributor) {
+    $trail->parent('admin.accounting.distributor.index');
+    $trail->push($distributor->name, route('admin.accounting.distributor.show', $distributor));
+});
+Breadcrumbs::for('admin.accounting.distributor.edit', function (BreadcrumbTrail $trail, Distributor $distributor) {
+    $trail->parent('admin.accounting.distributor.show', $distributor);
+    $trail->push('Редактировать', route('admin.accounting.distributor.edit', $distributor));
+});
+//CURRENCY
+Breadcrumbs::for('admin.accounting.currency.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Курсы валют', route('admin.accounting.currency.index'));
+});
+Breadcrumbs::for('admin.accounting.currency.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.currency.index');
+    $trail->push('Добавить', route('admin.accounting.currency.create'));
+});
+Breadcrumbs::for('admin.accounting.currency.show', function (BreadcrumbTrail $trail, Currency $currency) {
+    $trail->parent('admin.accounting.currency.index');
+    $trail->push($currency->name, route('admin.accounting.currency.show', $currency));
+});
+Breadcrumbs::for('admin.accounting.currency.edit', function (BreadcrumbTrail $trail, Currency $currency) {
+    $trail->parent('admin.accounting.currency.show', $currency);
+    $trail->push('Редактировать', route('admin.accounting.currency.edit', $currency));
+});
 /////PAGES
 //WIDGET
 Breadcrumbs::for('admin.page.widget.index', function (BreadcrumbTrail $trail) {

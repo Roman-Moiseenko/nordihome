@@ -330,6 +330,23 @@ Route::group(
             }
         );
 
+        //ACCOUNTING
+        Route::group(
+            [
+                'prefix' => 'accounting',
+                'as' => 'accounting.',
+                'namespace' => 'Accounting',
+            ],
+            function() {
+                Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
+                Route::resource('distributor', 'DistributorController'); //CRUD
+                Route::resource('currency', 'CurrencyController'); //CRUD
+
+            }
+        );
+
+
+
         //AJAX Product-Image
         Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');
         Route::post('product/{product}/get-images', 'Product\ProductController@get_images')->name('product.get-images');

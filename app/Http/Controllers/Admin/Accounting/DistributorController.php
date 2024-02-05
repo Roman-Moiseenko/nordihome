@@ -1,0 +1,80 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin\Accounting;
+
+use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Service\DistributorService;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Config;
+
+class DistributorController extends Controller
+{
+    private mixed $pagination;
+    private DistributorService $service;
+
+    public function __construct(DistributorService $service)
+    {
+        $this->service = $service;
+        $this->pagination = Config::get('shop-config.p-list');
+    }
+
+    public function index(Request $request)
+    {
+        $query = Distributor::orderBy('name');
+
+        //ПАГИНАЦИЯ
+        if (!empty($pagination = $request->get('p'))) {
+            $distributors = $query->paginate($pagination);
+            $distributors->appends(['p' => $pagination]);
+        } else {
+            $distributors = $query->paginate($this->pagination);
+        }
+
+        return view('admin.accounting.distributor.index', compact('distributors', 'pagination'));
+    }
+    public function create(Request $request)
+    {
+        return view('admin.accounting.distributor.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+        ]);
+        $distributor = $this->service->create($request);
+        return redirect()->route('admin.accounting.distributor.show', $distributor);
+    }
+
+    public function show(Distributor $distributor)
+    {
+        //TODO В дальнейшем добавить список товаров
+        return view('admin.accounting.distributor.show', compact('distributor'));
+    }
+
+    public function edit(Distributor $distributor)
+    {
+        return view('admin.accounting.distributor.edit', compact('distributor'));
+    }
+
+    public function update(Request $request, Distributor $distributor)
+    {
+        $request->validate([
+            'name' => 'required',
+        ]);
+        $distributor = $this->service->update($request, $distributor);
+        return redirect()->route('admin.accounting.distributor.show', $distributor);
+    }
+
+    public function destroy(Distributor $distributor)
+    {
+        try {
+            $this->service->destroy($distributor);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        }
+        return redirect()->back();
+    }
+}
