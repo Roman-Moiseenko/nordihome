@@ -20,7 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property Storage $storage
  * @property Currency $currency
  * @property  ArrivalProduct[] $arrivalProducts
+ * @property Distributor $distributor
  */
+
 class ArrivalDocument extends Model implements MovementInterface
 {
     protected $table = 'arrival_documents';
@@ -54,6 +56,26 @@ class ArrivalDocument extends Model implements MovementInterface
         return $this->hasMany(ArrivalProduct::class, 'arrival_id', 'id');
     }
 
+    public function distributor()
+    {
+        return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
+    }
+
+    public function storage()
+    {
+        return $this->belongsTo(Storage::class, 'storage_id', 'id');
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->completed == true;
+    }
+
     public function completed()
     {
         $this->completed = true;
@@ -69,5 +91,33 @@ class ArrivalDocument extends Model implements MovementInterface
             $item->cost_ru = $item->cost_currency * $this->exchange_fix;
             $item->save();
         }
+    }
+
+    public function isProduct(int $product_id): bool
+    {
+        foreach ($this->arrivalProducts as $item) {
+            if ($item->product_id == $product_id) return true;
+        }
+        return false;
+    }
+
+    public function getInfoData(): array
+    {
+        $quantity = 0;
+        $cost_currency = 0;
+        $price_sell = 0;
+        foreach ($this->arrivalProducts as $item) {
+            $quantity += $item->quantity;
+            $cost_currency += $item->quantity * $item->cost_currency;
+            $price_sell +=  $item->quantity * $item->price_sell;
+        }
+        $cost_ru = ceil($cost_currency * $this->exchange_fix * 100) / 100;
+
+        return [
+            'quantity' => $quantity,
+            'cost_currency' => $cost_currency,
+            'price_sell' => $price_sell,
+            'cost_ru' => $cost_ru,
+        ];
     }
 }

@@ -96,7 +96,7 @@ class ParserController extends Controller
     {
         try {
             $this->cart->load();
-            $this->cart->set($product, $request['quantity']);
+            $this->cart->set($product, (int)$request['quantity']);
             $this->cart->reload();
             return \response()->json($this->cart);
         } catch (\Throwable $e) {

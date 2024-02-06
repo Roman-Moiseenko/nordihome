@@ -5,6 +5,8 @@ window.$ = jQuery;
     "use strict";
     let parserButton = $('#search-parser-button');
     let inputButton = $('#search-parser-field');
+    let parserItemSet = $('.parser-set-input');
+    let buffer = {id:0, value: ''};
 
     $('.increase-button').on('click', function () {
         let product_id = $(this).data('code');
@@ -25,6 +27,29 @@ window.$ = jQuery;
                 updateParserData(data)
             }
         );
+    });
+
+    parserItemSet.on('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+
+    parserItemSet.on('keydown', function () {
+        buffer.id = $(this).data('product');
+        buffer.value = $(this).val();
+    });
+
+    parserItemSet.on('keyup', function () {
+        let product_id = $(this).data('product');
+        let _quantity = $(this).val();
+        if (_quantity === 0 || _quantity.length === 0) _quantity = 1;
+        if (buffer.id === product_id && buffer.value !== _quantity)
+            $.post(
+                '/parser/' + product_id + '/set',
+                {quantity: _quantity},
+                function (data) {
+                    updateParserData(data);
+                }
+            );
     });
 
     function updateParserData(data) {

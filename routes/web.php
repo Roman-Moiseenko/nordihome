@@ -84,6 +84,7 @@ Route::group(
                 Route::post('/parser/{product}/remove', 'ParserController@remove')->name('remove');
                 Route::post('/parser/{product}/add', 'ParserController@add')->name('add');
                 Route::post('/parser/{product}/sub', 'ParserController@sub')->name('sub');
+                Route::post('/parser/{product}/set', 'ParserController@set')->name('set');
             }
         );
 
@@ -341,6 +342,14 @@ Route::group(
                 Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
                 Route::resource('distributor', 'DistributorController'); //CRUD
                 Route::resource('currency', 'CurrencyController'); //CRUD
+                Route::resource('arrival', 'ArrivalController'); //CRUD
+
+                Route::post('/arrival/{arrival}/search', 'ArrivalController@search')->name('arrival.search');
+                Route::post('/arrival/{arrival}/add', 'ArrivalController@add')->name('arrival.add');
+                Route::post('/arrival/{arrival}/completed', 'ArrivalController@completed')->name('arrival.completed');
+                Route::post('/arrival/{item}/set', 'ArrivalController@set')->name('arrival.set');
+
+                Route::delete('/arrival/{item}/remove-item', 'ArrivalController@remove_item')->name('arrival.remove-item');
 
             }
         );

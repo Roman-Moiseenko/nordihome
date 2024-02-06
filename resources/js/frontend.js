@@ -335,6 +335,7 @@ window.$ = jQuery;
     /** СТРАНИЦА CART - КОРЗИНА **/
     if (main.hasClass('cart-page')) {
         let cartItemSet = $('.cartitem-set');
+        let buffer = {id: 0, value: ''};
 
         //ОПЕРАЦИИ НА СТРАНИЦЕ
         $('.cartitem-plus').on('click', function (item) {
@@ -353,14 +354,20 @@ window.$ = jQuery;
             _input.val(_new_val);
             set_count_item_cart(_productId, _new_val, $(this))
         });
+
         cartItemSet.on('input', function () {
             this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        cartItemSet.on('keydown', function () {
+            buffer.id = $(this).data('product');
+            buffer.value = $(this).val();
         });
         cartItemSet.on('keyup', function () {
             let _productId = $(this).data('product');
             let _quantity = $(this).val();
             if (_quantity === 0 || _quantity.length === 0) _quantity = 1;
-            set_count_item_cart(_productId, _quantity);
+            if (buffer.id === _productId && buffer.value !== _quantity) set_count_item_cart(_productId, _quantity);
         })
 
         function set_count_item_cart(_prod_id, _quantity, _obj = null) {

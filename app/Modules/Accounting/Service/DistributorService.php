@@ -27,4 +27,17 @@ class DistributorService
         if (!empty($distributor->arrivals)) throw new \DomainException('Имеются документы, удалить нельзя');
         $distributor->delete();
     }
+
+    public function arrival(Distributor $distributor, int $product_id, float $cost)
+    {
+        //Поступление товара, списком
+        foreach ($distributor->products as $product) {
+            if ($product->id == $product_id) {
+                $distributor->products()->updateExistingPivot($product_id, ['cost' => $cost]);
+                return;
+            }
+
+        }
+        $distributor->products()->attach($product_id, ['cost' => $cost]);
+    }
 }

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Entity\Admin;
+use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
@@ -504,6 +505,25 @@ Breadcrumbs::for('admin.accounting.currency.edit', function (BreadcrumbTrail $tr
     $trail->parent('admin.accounting.currency.show', $currency);
     $trail->push('Редактировать', route('admin.accounting.currency.edit', $currency));
 });
+//ARRIVAL
+Breadcrumbs::for('admin.accounting.arrival.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Поступление товаров', route('admin.accounting.arrival.index'));
+});
+Breadcrumbs::for('admin.accounting.arrival.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.arrival.index');
+    $trail->push('Добавить', route('admin.accounting.arrival.create'));
+});
+Breadcrumbs::for('admin.accounting.arrival.show', function (BreadcrumbTrail $trail, ArrivalDocument $arrival) {
+    $trail->parent('admin.accounting.arrival.index');
+    $trail->push($arrival->number . ' от ' . $arrival->created_at->format('d-m-Y'), route('admin.accounting.arrival.show', $arrival));
+});
+Breadcrumbs::for('admin.accounting.arrival.edit', function (BreadcrumbTrail $trail, ArrivalDocument $arrival) {
+    $trail->parent('admin.accounting.arrival.show', $arrival);
+    $trail->push('Редактировать', route('admin.accounting.arrival.edit', $arrival));
+});
+
+
 /////PAGES
 //WIDGET
 Breadcrumbs::for('admin.page.widget.index', function (BreadcrumbTrail $trail) {

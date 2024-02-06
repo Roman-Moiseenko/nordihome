@@ -20,9 +20,12 @@
                 <form id="form-remove-{{$i}}" method="post" action="{{ route('shop.parser.remove', $item->product) }}">
                     @csrf
                 </form>
+
                 <button class="decrease-button btn btn-outline-dark"  data-code="{{ $item->product->id }}"><i class="fa-light fa-minus"></i></button>
-                <div><div id="count-{{ $item->product->id }}">{{ $item->quantity }}</div></div>
+                <input type="text" class="form-control parser-set-input"
+                       data-product="{{ $item->product->id }}" value="{{ $item->quantity }}"/>
                 <button class="increase-button btn btn-outline-dark" data-code="{{ $item->product->id }}"><i class="fa-light fa-plus"></i></button>
+
             </div>
         </div>
     </div>

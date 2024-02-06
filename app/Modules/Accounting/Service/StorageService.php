@@ -59,9 +59,15 @@ class StorageService
     {
         //Поступление товара, списком
         foreach ($items as $item) {
-            $storage->add($item->getProduct(), $item->getQuantity());
+            $product = $item->getProduct();
+            $storage->add($product, $item->getQuantity());
+            $product->count_for_sell += $item->getQuantity();
+            $product->save();
         }
     }
+
+    //TODO При перемещении count_for_sell не меняется
+    // при списании уменьшается на getQuantity()
 
     public function photo(Storage $storage, $file): void
     {

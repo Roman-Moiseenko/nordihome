@@ -180,7 +180,7 @@ class AdminMenu
                     'arrival' => [
                         'icon' => 'folder-input',
                         'title' => 'Поступление',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.accounting.arrival.index',
                     ],
                     'movement' => [
                         'icon' => 'folder-sync',

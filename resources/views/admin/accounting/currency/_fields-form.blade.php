@@ -32,7 +32,7 @@
             </h2>
             <div class="mt-5 font-medium"></div>
             <div class="leading-relaxed mt-2 text-slate-600 dark:text-slate-500">
-                <div>Все являются обязательными.</div>
+                <div>Все поля являются обязательными.</div>
                 <div>Дробная часть курса валюты через ','.</div>
             </div>
         </div>

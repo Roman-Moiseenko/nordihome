@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\ArrivalHasCompleted;
 use App\Events\OrderHasCreated;
 use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
 use App\Events\UserHasRegistered;
+use App\Listeners\NotificationNewArrival;
 use App\Listeners\NotificationNewOrder;
 use App\Listeners\NotificationNewProductParser;
 use App\Listeners\ParsingImageProduct;
@@ -40,6 +42,9 @@ class EventServiceProvider extends ServiceProvider
         OrderHasCreated::class => [
             NotificationNewOrder::class,
             DeliveryService::class,
+        ],
+        ArrivalHasCompleted::class => [
+            NotificationNewArrival::class,
         ],
     ];
 

@@ -356,7 +356,11 @@
 .parser-user-form > div {
     padding-bottom: 12px;
 }
-
+.parser-list-item--form input {
+    width: 60px;
+    text-align: center;
+}
+/*
 .parser-list-item--form button {
     padding: 8px;
     font-size: 14px;
@@ -366,6 +370,7 @@
 }
 .decrease-button {border-radius:5px 0 0 5px !important;}
 .increase-button {border-radius: 0 5px 5px 0 !important;}
+*/
 #search-parser-field {border-radius: 12px 0 0 12px;}
 /* Форматирование радиокнопок*/
 

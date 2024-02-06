@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $cost_ru //В рублях
  * @property int $price_sell //В рублях
  * @property Product $product
+ * @property ArrivalDocument $document
  */
 class ArrivalProduct extends Model implements MovementItemInterface
 {
@@ -44,5 +45,11 @@ class ArrivalProduct extends Model implements MovementItemInterface
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function document()
+    {
+        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
+
     }
 }
