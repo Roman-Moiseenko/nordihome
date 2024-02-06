@@ -59,7 +59,7 @@ window.$ = jQuery;
         $('#amount').html(price_format(cart.amount));
         $('#full-amount').html(price_format(cart.amount + cart.delivery));
         for (let i = 0; i < cart.items.length; i++) {
-            $('#count-' + cart.items[i].product.id).html(cart.items[i].quantity);
+            $('#count-' + cart.items[i].product.id).val(cart.items[i].quantity);
         }
         //delivery
 
