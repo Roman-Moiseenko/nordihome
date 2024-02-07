@@ -112,7 +112,7 @@ class LoginController extends Controller
             if ($admin->isCashier()) {
                 return redirect()->intended('/admin/cashier');
             }
-            flash('Добро пожаловать ' . $admin->fullName->getFullName(), 'success');
+            flash('Добро пожаловать ' . $admin->fullname->getFullName(), 'success');
             return redirect()->intended('/admin');
         }
 
