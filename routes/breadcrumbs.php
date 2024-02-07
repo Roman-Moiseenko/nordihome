@@ -160,7 +160,7 @@ Breadcrumbs::for('admin.staff.create', function (BreadcrumbTrail $trail) {
 });
 Breadcrumbs::for('admin.staff.show', function (BreadcrumbTrail $trail, Admin $staff) {
     $trail->parent('admin.staff.index');
-    $trail->push($staff->fullName->getShortname(), route('admin.staff.show', $staff));
+    $trail->push($staff->fullname->getShortname(), route('admin.staff.show', $staff));
 });
 Breadcrumbs::for('admin.staff.edit', function (BreadcrumbTrail $trail, Admin $staff) {
     $trail->parent('admin.staff.show', $staff);
@@ -169,7 +169,7 @@ Breadcrumbs::for('admin.staff.edit', function (BreadcrumbTrail $trail, Admin $st
 
 Breadcrumbs::for('admin.staff.update', function (BreadcrumbTrail $trail, Admin $staff) {
     $trail->parent('admin.staff.index');
-    $trail->push($staff->fullName->getShortname(), route('admin.staff.show', $staff));
+    $trail->push($staff->fullname->getShortname(), route('admin.staff.show', $staff));
 });
 Breadcrumbs::for('admin.staff.security', function (BreadcrumbTrail $trail, Admin $staff) {
     $trail->parent('admin.staff.show', $staff);

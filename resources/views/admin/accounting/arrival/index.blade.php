@@ -9,6 +9,31 @@
     <div class="intro-y box p-5 mt-5">
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 lg:col-span-3">
+                <x-base.form-label for="select-distributor">Поставщик</x-base.form-label>
+                <x-base.tom-select id="select-distributor" name="distributor_id"
+                                   class="w-full" data-placeholder="Выберите поставщика">
+                    <option value="0"></option>
+                    @foreach($distributors as $distributor)
+                        <option value="{{ $distributor->id }}"
+                            {{ $distributor->id == $distributor_id ? 'selected' : ''}} >
+                            {{ $distributor->name }}
+                        </option>
+                    @endforeach
+                </x-base.tom-select>
+
+            </div>
+            <div class="col-span-12 lg:col-span-3">
+                <x-base.form-label for="select-storage">Хранилище</x-base.form-label>
+                <x-base.tom-select id="select-storage" name="storage_id"
+                                   class="w-full" data-placeholder="Выберите хранилище">
+                    <option value="0"></option>
+                    @foreach($storages as $storage)
+                        <option value="{{ $storage->id }}"
+                            {{ $storage->id == $storage_id ? 'selected' : ''}} >
+                            {{ $storage->name }}
+                        </option>
+                    @endforeach
+                </x-base.tom-select>
 
             </div>
             <div class="col-span-12 lg:col-span-3 border-l pl-4 flex">
@@ -36,6 +61,22 @@
     <script>
         /* Filters */
         //TODO Фильтр по дате
+        const urlParams = new URLSearchParams(window.location.search);
+
+        let selectDistributor = document.getElementById('select-distributor');
+        selectDistributor.addEventListener('change', function () {
+            let p = selectDistributor.options[selectDistributor.selectedIndex].value;
+            urlParams.set('distributor_id', p);
+            window.location.search = urlParams;
+        });
+
+        let selectStorage = document.getElementById('select-storage');
+        selectStorage.addEventListener('change', function () {
+            let p = selectStorage.options[selectStorage.selectedIndex].value;
+            urlParams.set('storage_id', p);
+            window.location.search = urlParams;
+        });
+
 
         let checkPublished = document.querySelectorAll('.check-completed');
         checkPublished.forEach(function (item) {

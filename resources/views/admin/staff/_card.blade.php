@@ -6,7 +6,7 @@
                     <img class="rounded-full" src="{{ $staff->getPhoto() }}">
                 </div>
                 <div class="lg:ml-4 text-center lg:text-left mt-3 lg:mt-0">
-                    <a href="{{ route('admin.staff.show', $staff) }}" class="font-medium {{ ($staff->isBlocked() ? 'text-danger' : 'text-info') }}">{{ $staff->fullName->getFullName() }}</a>
+                    <a href="{{ route('admin.staff.show', $staff) }}" class="font-medium {{ ($staff->isBlocked() ? 'text-danger' : 'text-info') }}">{{ $staff->fullname->getFullName() }}</a>
                     <div class="text-slate-500 text-center text-xs mt-0.5 rounded-full text-white {{ \App\Entity\Admin::ROLE_COLORS[$staff->role] }}">{{ $staff->post }}</div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                         <a href="{{ $staff->isBlocked() ? '' : route('admin.staff.edit', $staff) }}" class="dropdown-item {{ $staff->isBlocked() ? 'disabled' : '' }}">
                             <x-base.lucide icon="pen" class="w-4 h-4 mr-2"/>Редактировать </a>
                         <a href="{{ $staff->isBlocked() ? '' : 'javascript:;' }}"
-                           data-staff="{{ route('admin.staff.password', $staff) }}" data-fullname="{{ $staff->fullName->getShortName() }}"
+                           data-staff="{{ route('admin.staff.password', $staff) }}" data-fullname="{{ $staff->fullname->getShortName() }}"
                            data-tw-toggle="modal" data-tw-target="#password-modal"
                            class="dropdown-item {{ $staff->isBlocked() ? 'disabled' : '' }} password-modal">
                             <x-base.lucide icon="key-round" class="w-4 h-4 mr-2"/>

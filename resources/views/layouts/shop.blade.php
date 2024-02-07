@@ -5,11 +5,15 @@
     <meta name="robots" content="noindex" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ url('images/favicon/32x32.png') }}" size="32x32">
+    <link rel="icon" href="{{ url('images/favicon/192x192.png') }}" size="192x192">
+    <link rel="apple-touch-icon" href="{{ url('images/favicon/180x180.png') }}" size="192x192">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>NORDI HOME - SHOP</title>
+    <title>@yield('title', 'NORDY HOME - Интернет магазин товаров из Европы')</title>
+    <meta name="description" content="@yield('description', 'Интернет магазин товаров из Европы, с доставкой почтой и ТК по России')">
 
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">

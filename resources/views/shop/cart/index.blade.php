@@ -8,6 +8,8 @@
     container-xl cart-page
 @endsection
 
+@section('title', 'Корзина товаров в Интернет-магазине NORDI HOME')
+
 @section('content')
     <div class="title-page">
         <h1>@if(!empty($cart['items']))Моя корзина @else Ваша корзина пуста @endif</h1>

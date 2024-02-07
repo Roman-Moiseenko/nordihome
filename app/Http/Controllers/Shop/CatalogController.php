@@ -34,7 +34,10 @@ class CatalogController extends Controller
     {
         try {
             $category = $this->repository->CategoryBySlug($slug);
-            if (count($category->children) > 0) return view('shop.subcatalog', compact('category'));
+            $title = $category->title;
+            $description = $category->description;
+
+            if (count($category->children) > 0) return view('shop.subcatalog', compact('category', 'title', 'description'));
 
             //TODO Переделать в запросы 1. получить только id Product,
             // 2. Получить мин и макс цены из таблицы напрямую whereIn($product_id, $product_ids), 3. Также получить бренды
@@ -64,8 +67,13 @@ class CatalogController extends Controller
             $tags = $this->repository->TagsByProducts($product_ids);
             $products = $this->repository->filter($request, $product_ids);
 
+            //TODO Контакты и время работы
+            $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин NORDI HOME '.
+                ' Калининград ☎ [+7(4012) 37-37-30] (Круглосуточно)';
+
             return view('shop.products',
-                compact('category', 'products', 'prod_attributes', 'tags', 'minPrice', 'maxPrice', 'brands', 'request'));
+                compact('category', 'products', 'prod_attributes', 'tags',
+                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description'));
 
         } catch (\Throwable $e) {
             $category = null;

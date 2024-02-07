@@ -3,7 +3,7 @@
 @section('subcontent')
     <div class="intro-y flex items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
-            {{ $staff->fullName->getFullName() }}
+            {{ $staff->fullname->getFullName() }}
         </h1>
     </div>
     <div class="intro-y box px-5 pt-5 mt-5">
@@ -14,7 +14,7 @@
                     <div class="absolute mb-1 mr-1 flex items-center justify-center bottom-0 right-0 bg-primary rounded-full p-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="camera" class="lucide lucide-camera w-4 h-4 text-white" data-lucide="camera"><path d="M14.5 4h-5L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg> </div>
                 </div>
                 <div class="ml-5">
-                    <div class="w-24 sm:w-40 truncate sm:whitespace-normal font-medium text-lg">{{ $staff->fullName->getFullName() }}</div>
+                    <div class="w-24 sm:w-40 truncate sm:whitespace-normal font-medium text-lg">{{ $staff->fullname->getFullName() }}</div>
                     <div class="text-slate-500">{{ $staff->post }}</div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
             </li>
             <li class="nav-item">
                 <a href="{{ $staff->isBlocked() ? '' : 'javascript:;' }}"
-                   data-staff="{{ route('admin.staff.password', $staff) }}" data-fullname="{{ $staff->fullName->getShortName() }}"
+                   data-staff="{{ route('admin.staff.password', $staff) }}" data-fullname="{{ $staff->fullname->getShortName() }}"
                    data-tw-toggle="modal" data-tw-target="#password-modal"
                    class="btn btn-outline-secondary py-1 px-2 {{ $staff->isBlocked() ? 'disabled' : '' }} password-modal">
                     <i data-lucide="key-round" width="24" height="24" class="lucide lucide-key-round w-4 h-4 mr-2"></i>

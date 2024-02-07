@@ -86,6 +86,6 @@ class Page extends Model
 
     public function view(): string
     {
-        return view(self::PATH_TEMPLATES . $this->template, ['page' => $this])->render();
+        return view(self::PATH_TEMPLATES . $this->template, ['page' => $this, 'title' => $this->title, 'description' => $this->description])->render();
     }
 }

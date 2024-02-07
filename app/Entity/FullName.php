@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity\User;
+namespace App\Entity;
 
 class FullName
 {
@@ -29,5 +29,23 @@ class FullName
     public function isEmpty(): bool
     {
         return empty($this->surname);
+    }
+
+    public static function fromArray(array $params): self
+    {
+        $full = new static();
+        $full->surname = $params['surname'];
+        $full->firstname = $params['firstname'];
+        $full->secondname = $params['secondname'];
+        return $full;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'surname' => $this->surname,
+            'firstname' => $this->firstname,
+            'secondname' => $this->secondname,
+        ];
     }
 }

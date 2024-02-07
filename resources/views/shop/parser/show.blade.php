@@ -8,6 +8,9 @@
     container-xl
 @endsection
 
+@section('title', $title)
+@section('description', $description)
+
 @section('content')
     <h1>Заказ товаров с каталога IKEA.PL</h1>
     <div class="d-flex parser" id="parser-container">

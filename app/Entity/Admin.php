@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Entity\User\FullName;
-use App\Trait\FullNameTrait;
+use App\Casts\FullNameCast;
 use App\UseCases\Uploads\UploadsDirectory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,13 +24,14 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $photo
  * @property string $post //Должность
  * @property int $telegram_user_id
+ * @property FullName $fullname
  */
 class Admin extends Authenticatable implements UploadsDirectory
 {
 
     //TODO Переделать $photo под Photo::class
 
-    use HasApiTokens, HasFactory, Notifiable, FullNameTrait;
+    use HasApiTokens, HasFactory, Notifiable;//, FullNameTrait;
 
     public const ROLE_CASHIER = 'cashier';
     public const ROLE_LOGISTICS = 'logistics';
@@ -53,10 +53,7 @@ class Admin extends Authenticatable implements UploadsDirectory
         self::ROLE_LOGISTICS => 'bg-primary',
     ];
 
-   // public FullName $fullName;
-
     protected string $guard = 'admin';
-    //public string $uploads = 'uploads/admins/';
 
     protected $fillable = [
         'name',
@@ -66,10 +63,8 @@ class Admin extends Authenticatable implements UploadsDirectory
         'role',
         'active',
         'post',
-        'fullname_surname',
-        'fullname_firstname',
-        'fullname_secondname',
         'telegram_user_id',
+        'fullname',
     ];
     //TODO протестировать сохранения если удалить fullname_***
 
@@ -81,14 +76,15 @@ class Admin extends Authenticatable implements UploadsDirectory
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'fullname' => FullNameCast::class
     ];
-
+/*
     public function __construct(array $attributes = [])
     {
         $this->fullName = new FullName();
         parent::__construct($attributes);
     }
-
+*/
     public static function register(string $name, string $email, string $phone, string $password): self
     {
         return static::create([
@@ -98,6 +94,7 @@ class Admin extends Authenticatable implements UploadsDirectory
             'password' => Hash::make($password),
             'role' => self::ROLE_COMMODITY,
             'active' => true,
+            'fullname' => new FullName(),
         ]);
     }
 
@@ -163,6 +160,11 @@ class Admin extends Authenticatable implements UploadsDirectory
     {
         $this->telegram_user_id = $chatID;
         $this->save();
+    }
+
+    public function setFullName(FullName $fullname): void
+    {
+        $this->fullname = $fullname;
     }
 
     public function activated()

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity;
 
+use App\Casts\FullNameCast;
 use App\Casts\GeoAddressCast;
+use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
@@ -20,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property GeoAddress $local
  * @property GeoAddress $region
  * @property string $company
- * @property
+ * @property FullName $fullname
  */
 class UserDelivery extends Model
 {
@@ -43,21 +45,25 @@ class UserDelivery extends Model
         'local',
         'company',
         'post',
+        'fullname',
     ];
 
     protected $casts = [
         'region' => GeoAddressCast::class,
         'local' => GeoAddressCast::class,
+        'fullname' => FullNameCast::class,
     ];
 
     public function isStorage(): bool
     {
         return $this->type == DeliveryOrder::STORAGE;
     }
+
     public function isLocal(): bool
     {
         return $this->type == DeliveryOrder::LOCAL;
     }
+
     public function isRegion(): bool
     {
         return $this->type == DeliveryOrder::REGION;
@@ -69,6 +75,7 @@ class UserDelivery extends Model
             'user_id' => $user_id,
             'local' => new GeoAddress(),
             'region' => new GeoAddress(),
+            'fullname' => new FullName(),
         ]);
     }
 
@@ -76,6 +83,13 @@ class UserDelivery extends Model
     {
         $this->update([
             'type' => $type,
+        ]);
+    }
+
+    public function setFullName(FullName $fullName)
+    {
+        $this->update([
+            'fullname' => $fullName,
         ]);
     }
 

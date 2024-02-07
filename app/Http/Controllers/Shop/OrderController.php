@@ -126,13 +126,13 @@ class OrderController extends Controller
 
         return view('shop.order.view', compact('order'));
     }
-
+/*
     public function index(Request $request)
     {
         $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
         return view('shop.order.index', compact('orders'));
     }
-
+*/
 
 
     //AJAX

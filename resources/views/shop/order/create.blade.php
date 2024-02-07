@@ -8,6 +8,8 @@
     container-xl order-page-create
 @endsection
 
+@section('title', 'Оформление товаров на покупку в NORDI HOME')
+
 @section('content')
     <div class="title-page">
         <h1>Оформление заказа</h1>
@@ -16,6 +18,7 @@
         <div class="left-list-block">
             @include('shop.order.widget.payment')
             @include('shop.order.widget.delivery')
+            @include('shop.order.widget.personal')
 
             <div class="box-card">
                 <div>Список товаров в корзине</div>

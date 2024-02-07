@@ -17,10 +17,10 @@
         <div class="flex">
             {{ \App\Forms\Input::create('last-price',
                 ['placeholder' => 'Цена', 'class' => 'ml-0 w-full lg:w-40', 'value' => $product->getLastPrice()])
-                ->group_text('₽', false)->show() }}
+                ->group_text('₽', false)->disabled($options->shop->accounting)->show() }}
             {{ \App\Forms\Input::create('count-for-sell',
                 ['placeholder' => 'Кол-во', 'class' => 'ml-0 w-full lg:ml-4 lg:w-40', 'value' => $product->count_for_sell])
-                ->group_text('шт', false)->show() }}
+                ->group_text('шт', false)->disabled($options->shop->accounting)->show() }}
         </div>
     </div>
 </div>

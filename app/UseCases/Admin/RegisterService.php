@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\UseCases\Admin;
 
 use App\Entity\Admin;
-use App\Entity\User\FullName;
+use App\Entity\FullName;
 use App\UseCases\Uploads\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

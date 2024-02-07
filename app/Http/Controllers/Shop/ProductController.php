@@ -25,7 +25,11 @@ class ProductController extends Controller
     {
         try {
             $product = $this->repository->getProductBySlug($slug);
-            return view('shop.product', compact('product'));
+
+            $title = $product->name . ' купить по цене ' . $product->lastPrice->value . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
+            $description = $product->short;
+
+            return view('shop.product', compact('product', 'title', 'description'));
         } catch (\Throwable $e) {
             $product = null;
             flash($e->getMessage(), 'danger');

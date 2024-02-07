@@ -3,9 +3,10 @@
     @parent
     wish
 @endsection
-@section('h1')
-Избранное
-@endsection
+
+@section('title', 'Мои избранные товары - NORDI HOME')
+
+@section('h1', 'Избранное')
 
 @section('subcontent')
     @foreach($products as $product)

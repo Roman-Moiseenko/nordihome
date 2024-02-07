@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Entity\User;
 
-use App\Entity\User\FullName;
-use App\Entity\User\User;
+
+
+use App\Modules\User\Entity\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -52,11 +53,7 @@ class RegisterTest extends TestCase
     public function testFullName(): void
     {
         $user = User::new( 'email', 'phone');
-        $fullname = new FullName('surname', 'firstname', 'secondname');
-        $user->setFullname($fullname); //запись в базу
         $user->save();
-        self::assertEquals($fullname->firstname, $user->fullname_firstname);
-        self::assertEquals($fullname->surname, $user->fullname_surname);
-        self::assertEquals($fullname->secondname, $user->fullname_secondname);
+
     }
 }

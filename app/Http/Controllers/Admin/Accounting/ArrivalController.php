@@ -31,10 +31,18 @@ class ArrivalController extends Controller
     public function index(Request $request)
     {
         $query = ArrivalDocument::orderByDesc('created_at');
+        $distributors = Distributor::orderBy('name')->get();
+        $storages = Storage::orderBy('name')->get();
 
         $completed = $request['completed'] ?? 'all';
         if ($completed == 'true') $query->where('completed', '=', true);
         if ($completed == 'false') $query->where('completed', '=', false);
+        if (!empty($distributor_id = $request->get('distributor_id'))) {
+            $query->where('distributor_id', $distributor_id);
+        }
+        if (!empty($storage_id = $request->get('storage_id'))) {
+            $query->where('storage_id', $storage_id);
+        }
 
         //ПАГИНАЦИЯ
         if (!empty($pagination = $request->get('p'))) {
@@ -44,7 +52,8 @@ class ArrivalController extends Controller
             $arrivals = $query->paginate($this->pagination);
         }
 
-        return view('admin.accounting.arrival.index', compact('arrivals', 'pagination', 'completed'));
+        return view('admin.accounting.arrival.index',
+            compact('arrivals', 'pagination', 'completed', 'storages', 'distributors', 'storage_id', 'distributor_id'));
     }
 
     public function create(Request $request)

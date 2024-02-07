@@ -23,8 +23,6 @@ class PageController extends Controller
     public function view($slug)
     {
         try {
-
-
             $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
 
             return $page->view();

@@ -170,9 +170,9 @@ class ParserCart //Repository
     private function parserStorageQuery()
     {
         if (is_null($this->user_id)) {
-            return ParserStorage::where('user_ui', $this->user_ui);
+            return ParserStorage::where('user_ui', $this->user_ui)->orderByDesc('created_at');
         } else {
-            return ParserStorage::where('user_id', $this->user_id);
+            return ParserStorage::where('user_id', $this->user_id)->orderByDesc('created_at');
         }
     }
 

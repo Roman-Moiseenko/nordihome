@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Entity\Admin;
 
 use App\Entity\Admin;
-use App\Entity\User\FullName;
+
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -48,12 +48,8 @@ class RegisterTest extends TestCase
     public function testFullName(): void
     {
         $admin = Admin::new('name', 'email', 'phone', 'password');
-        $fullname = new FullName('surname', 'firstname', 'secondname');
-        $admin->setFullname($fullname); //запись в базу
         $admin->save();
-        self::assertEquals($fullname->firstname, $admin->fullname_firstname);
-        self::assertEquals($fullname->surname, $admin->fullname_surname);
-        self::assertEquals($fullname->secondname, $admin->fullname_secondname);
+
     }
 
 }

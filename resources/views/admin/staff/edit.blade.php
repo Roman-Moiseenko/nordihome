@@ -44,9 +44,9 @@
                     <div class="p-5">
                         <div class="grid grid-cols-12 gap-2">
                             <div class="col-span-12 lg:col-span-8">
-                                {{ \App\Forms\Input::create('surname', ['placeholder' => 'Фамилия', 'value' => $staff->fullName->surname])->show() }}
-                                {{ \App\Forms\Input::create('firstname', ['placeholder' => 'Имя', 'value' => $staff->fullName->firstname, 'class' => 'mt-3'])->show() }}
-                                {{ \App\Forms\Input::create('secondname', ['placeholder' => 'Отчество', 'value' => $staff->fullName->secondname, 'class' => 'mt-3'])->show() }}
+                                {{ \App\Forms\Input::create('surname', ['placeholder' => 'Фамилия', 'value' => $staff->fullname->surname])->show() }}
+                                {{ \App\Forms\Input::create('firstname', ['placeholder' => 'Имя', 'value' => $staff->fullname->firstname, 'class' => 'mt-3'])->show() }}
+                                {{ \App\Forms\Input::create('secondname', ['placeholder' => 'Отчество', 'value' => $staff->fullname->secondname, 'class' => 'mt-3'])->show() }}
                             </div>
                             <div id="single-file-upload" class="col-span-12 lg:col-span-4">
                                 {{ \App\Forms\Upload::create('file', $staff->photo)->show() }}

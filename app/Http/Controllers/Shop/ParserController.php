@@ -8,6 +8,8 @@ use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\Parser\ParserService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class ParserController extends Controller
 {
@@ -25,7 +27,12 @@ class ParserController extends Controller
         //Загружаем товары посетителя из Хранилища Storage_Parser
         $cart = $this->cart;
         $cart->load();
-        return view('shop.parser.show', compact('cart'));
+        //TODO Заглушка - для нового посетителя, с точкой входа - Парсер
+        if (!Auth::guard('user')->check() && empty(Cookie::get('user_cookie_id')))
+            return redirect()->route('shop.parser.view');
+        $title = 'Купить товары Икеа по артикулу в Калининграде и с доставкой по России';
+        $description = 'Закажите товары Икеа из Польши через наш поисковый сервис. Цены ниже чем в интернет магазине';
+        return view('shop.parser.show', compact('cart', 'title', 'description'));
     }
 
 

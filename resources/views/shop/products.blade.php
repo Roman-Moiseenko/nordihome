@@ -8,6 +8,9 @@
     container-xl products-page
 @endsection
 
+@section('title', $title)
+@section('description', $description)
+
 @section('content')
     <div class="title-page">
         <div class="products-page-title d-flex h1">
