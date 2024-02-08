@@ -693,11 +693,16 @@ window.$ = jQuery;
             orderDelivery.html(price_format(state.amount.delivery.cost));
             //let orderAmount = $('#order-amount-pay');
             //orderAmount.html(price_format(Number(orderAmount.data('base-cost'))))
+            let spanFullname = $('.fullname-block').find('.address-delivery--info');
+            let spanPhone = $('.phone-block').find('.address-delivery--info');
+            spanFullname.html(state.delivery.fullname);
+            spanPhone.html(state.phone);
         }
 
         function sendToBackend() {
             let data = readElements();
             $.post('/order/checkorder', {data}, function (res) {
+                //console.log(res);
                 _error(res);
                 writeElements(res);
             })

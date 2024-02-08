@@ -34,6 +34,13 @@ class DeliveryOrder extends Model
     const LOCAL = 402;
     const REGION = 403;
 
+    const TYPES = [
+        self::STORAGE => 'Самовывоз из магазина',
+        self::LOCAL => 'Доставка по региону',
+        self::REGION => 'Доставка ТК по России',
+    ];
+
+
     protected $fillable =[
         'order_id',
         'type',
@@ -92,5 +99,10 @@ class DeliveryOrder extends Model
     public function setResponsible(int $staff_id)
     {
         //TODO !!!!
+    }
+
+    public function typeHTML()
+    {
+        return self::TYPES[$this->type];
     }
 }

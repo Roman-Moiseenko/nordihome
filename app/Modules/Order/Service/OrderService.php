@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
 use App\Modules\Admin\Entity\Options;
@@ -16,6 +17,7 @@ use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\ShopRepository;
+use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use stdClass;
@@ -56,12 +58,15 @@ class OrderService
 
     public function default_user_data(): stdClass
     {
-        $user_id = Auth::guard('user')->user()->id;
+        /** @var User $user */
+        $user = Auth::guard('user')->user();
         $result = new stdClass();
         /** @var UserPayment payment */
-        $result->payment = $this->payments->user($user_id);
+        $result->payment = $this->payments->user($user->id);
         /** @var UserDelivery delivery */
-        $result->delivery = $this->deliveries->user($user_id);
+        $result->delivery = $this->deliveries->user($user->id);
+        $result->email = $user->email;
+        $result->phone = $user->phone;
         return $result;
     }
 
@@ -99,6 +104,18 @@ class OrderService
                 )
             );
         }
+        if (isset($data['fullname'])) {
+            list ($surname, $firstname, $secondname) = explode(" ", $data['fullname']);
+            //dd($surname);
+            $default->delivery->setFullName(new FullName($surname, $firstname, $secondname));
+        }
+
+        if (isset($data['phone'])) {
+            $user = Auth::guard('user')->user();
+            $user->phone = $data['phone'];
+            $user->save();
+        }
+
         //Считаем стоимость доставки
         $items = null;
         if ($data['order'] == 'cart') $items = $this->cart->getItems();
@@ -114,7 +131,7 @@ class OrderService
             $default->delivery->isRegion() &&
             (empty($default->delivery->region->address) || empty($default->delivery->company))
         ) $enabled = false;
-
+        $default = $this->default_user_data();
         $result = [
             'payment' => [
                 'is_invoice' => $default->payment->isInvoice(),
@@ -125,7 +142,9 @@ class OrderService
                 'delivery_address' => $default->delivery->region->address,
                 'company' => $default->delivery->company,
                 'storage' => $default->delivery->storage,
+                'fullname' => $default->delivery->fullname->getFullName(),
             ],
+            'phone' => $default->phone,
             'amount' => [
                 'delivery' => $delivery_cost,
                 'caption' => $default->payment->online() ? 'Оплатить' : 'Оформить',

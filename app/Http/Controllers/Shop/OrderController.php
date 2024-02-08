@@ -118,21 +118,21 @@ class OrderController extends Controller
     {
         $order = $this->service->create($request);
         flash('Ваш заказ успешно создан!');
-        return redirect()->route('shop.order.view', $order);
+        return redirect()->route('cabinet.order.view', $order);
     }
+    /*
+        public function view(Request $request, Order $order)
+        {
 
-    public function view(Request $request, Order $order)
-    {
+            return view('shop.order.view', compact('der'));
+        }
 
-        return view('shop.order.view', compact('order'));
-    }
-/*
-    public function index(Request $request)
-    {
-        $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
-        return view('shop.order.index', compact('orders'));
-    }
-*/
+        public function index(Request $request)
+        {
+            $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
+            return view('shop.order.index', compact('orders'));
+        }
+    */
 
 
     //AJAX

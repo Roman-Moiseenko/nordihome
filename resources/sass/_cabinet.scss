@@ -57,3 +57,37 @@
     background: var(--bs-gray-800);
     color: var(--bs-white);
 }
+
+//ORDERS
+.order-header {
+    display: flex;
+    cursor: pointer;
+    justify-content: space-between;
+    background-color: var(--bs-gray-200);
+    margin: -10px -10px 0 -10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 4px 10px;
+}
+.order-body {
+    display: flex;
+    padding: 10px;
+}
+.order-body>div:nth-child(1) {
+    flex-basis: 33.3333%;
+    max-width: 33.3333%;
+}
+.order-body>div:nth-child(2) {
+    flex-basis: 66.6666%;
+    max-width: 66.6666%;
+    justify-content: right;
+}
+.order-footer {
+    font-size: 0.9rem;
+    margin: 0 -10px -10px -10px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: var(--bs-gray-100);
+    padding: 4px 10px;
+    font-weight: 500;
+}

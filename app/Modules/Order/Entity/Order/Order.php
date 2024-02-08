@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Order\Entity\Payment\Payment;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $updated_at
  * @property OrderItem[] $items
  * @property User $user
+ * @property DeliveryOrder $delivery
  */
 
 class Order extends Model
@@ -155,6 +157,11 @@ class Order extends Model
         if (!$this->paid && $canceled) $this->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
     }
 
+    public function delivery()
+    {
+        return $this->hasOne(DeliveryOrder::class, 'order_id', 'id');
+    }
+
     //Хелперы
     public function htmlDate(): string
     {
@@ -166,7 +173,10 @@ class Order extends Model
         return  '№ ' . str_pad((string)$this->id, 6, '0', STR_PAD_LEFT);
     }
 
-
+    public function statusHtml(): string
+    {
+        return OrderStatus::STATUSES[$this->status->value] . ' ' . $this->status->comment;
+    }
 
 //Функции для данных по доставке
 //TODO Сделать интерфейс

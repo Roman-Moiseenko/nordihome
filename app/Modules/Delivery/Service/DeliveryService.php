@@ -82,7 +82,7 @@ class DeliveryService
         event($delivery);
     }
 
-
+    //Слушатель события создания Заказа
     public function handle(OrderHasCreated $event): void
     {
         $order = $event->order;

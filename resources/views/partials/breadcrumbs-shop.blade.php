@@ -14,5 +14,5 @@
             @endforeach
         </ol>
     </nav>
-    {!! $schema->BreadCrumbs($breadcrumbs) !!}
+    {!! isset($schema) ? $schema->BreadCrumbs($breadcrumbs) : '' !!}
 @endunless

@@ -22,9 +22,23 @@
                 </div>
             </div>
             <div class="order-body">
-                Самовывоз из ... адрес /Доставка по региону ... адрес/ДоставкаПочта РФ ... адрес<br>
-                Статус
-                заказа {{ \App\Modules\Order\Entity\Order\OrderStatus::STATUSES[$order->status->value] . ' ' . $order->status->comment}}
+                <div>
+                    <div class="fs-7">{{ $order->delivery->typeHTML() }} - {{ $order->delivery->address }}</div>
+                    <div class="fs-7">Стоимость доставки - {{ ($order->delivery->cost == 0) ? 'Рассчитывается' : price($order->delivery->cost)}}</div>
+                    <div class="fs-8">{{ $order->delivery->status->value() }}</div>
+                </div>
+                <div class="d-flex">
+                    @foreach($order->items as $item)
+                        <div>
+                            <img src="{{ $item->product->photo->getThumbUrl('thumb') }}" style="width: auto; height: 80px;">
+                            <span>{{ $item->quantity }} шт.</span>
+                        </div>
+                    @endforeach
+                </div>
+
+            </div>
+            <div class="order-footer">
+                {{ $order->statusHtml() }}
             </div>
         </div>
     @endforeach
