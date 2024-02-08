@@ -17,4 +17,5 @@
     <div class="mt-3">
         @include('shop.widgets.map')
     </div>
+    {!! $schema->HomePage() !!}
 @endsection

@@ -14,4 +14,5 @@
             @endforeach
         </ol>
     </nav>
+    {!! $schema->BreadCrumbs($breadcrumbs) !!}
 @endunless

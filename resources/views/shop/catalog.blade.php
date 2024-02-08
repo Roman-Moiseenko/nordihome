@@ -21,5 +21,7 @@
         @endforeach
     </div>
 
-
+<script type="application/ld+json" class="schemantra.com">
+    {{ json_encode($schema->CategoryPage($category)) }}
+</script>
 @endsection

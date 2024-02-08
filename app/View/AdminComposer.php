@@ -7,6 +7,7 @@ use App\Menu\AdminMenu;
 use App\Menu\AdminProfileMenu;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Shop\MenuHelper;
+use App\Modules\Shop\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;
@@ -44,8 +45,10 @@ class AdminComposer
                 $view->with('config', Config::get('shop-config.frontend'));
                 $view->with('categories', $this->categories->getTree());
                 $view->with('user', $user);
+
             }
-            if ($layout == 'cabinet') {
+            if ($layout == 'shop') {
+                $view->with('schema', new Schema());
                 /*$cabinetMenu = array_map(function ($item) use ($pageName) {
                     return array_merge($item, ['active' => request()->url() == $item['url']]);
                 }, MenuHelper::getCabinetMenu());*/

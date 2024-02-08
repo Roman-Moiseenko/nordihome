@@ -17,4 +17,5 @@
         {{ $product->name }}
     </div>
 
+    {!! $schema->ProductPage($product) !!}
 @endsection

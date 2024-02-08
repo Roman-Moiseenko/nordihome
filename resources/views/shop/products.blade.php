@@ -111,4 +111,6 @@
         });
     </script>
 
+        {!! $schema->CategoryProductsPage($category) !!}
+
 @endsection
