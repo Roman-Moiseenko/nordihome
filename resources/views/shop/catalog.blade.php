@@ -10,14 +10,11 @@
 
 @section('content')
 <div class="title-page">
-    Каталог
+    <h1>Каталог товаров NORDIHOME</h1>
 </div>
-    <div>
+    <div class="row">
         @foreach($categories as $category)
-            <div>
-                <img src="{{ $category->getImage() }}" width="100px">
-                <a href="{{ route('shop.category.view', $category->slug) }}">{{ $category->name }}</a>
-            </div>
+            @include('shop.cards.catalog', ['category' => $category])
         @endforeach
     </div>
 

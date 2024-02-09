@@ -14,14 +14,12 @@ use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
 
-
-    public function view(Request $request, Order $order)
+    public function view(Order $order)
     {
-
         return view('cabinet.order.view', compact('order'));
     }
 
-    public function index(Request $request)
+    public function index()
     {
         $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
         return view('cabinet.order.index', compact('orders'));

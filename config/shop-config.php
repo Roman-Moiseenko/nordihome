@@ -29,6 +29,7 @@ return [
             'thumb' => ['width' => 150, 'height' => 150,],
             'list' => ['width' => 200, 'height' => 200,],
             'card' => ['width' => 700, 'height' => 700,'watermark' => true],
+            'card-no-watermark' => ['width' => 700, 'height' => 700],
             'promotion' => ['width' => 450, 'height' => 550,],
             'promotion-mini' => ['width' => 400, 'height' => 250,],
             'original' => ['watermark' => true]

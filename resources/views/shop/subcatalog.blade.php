@@ -12,17 +12,16 @@
 @section('description', $description)
 
 @section('content')
-<div class="title-page">
-    {{ $category->name }}
-</div>
-    <div>
-        @foreach($category->children as $_child)
-            <div>
-                <img src="{{ $_child->getImage() }}" width="100px">
-                <a href="{{ route('shop.category.view', $_child->slug) }}">{{ $_child->name }}</a>
-            </div>
+    <div class="title-page">
+        <h1>{{ $category->name }}</h1>
+    </div>
+    <div class="row">
+        @foreach($category->children as $category)
+            @include('shop.cards.catalog', ['category' => $category])
         @endforeach
     </div>
 
-
+    <script type="application/ld+json" class="schemantra.com">
+        {{ json_encode($schema->CategoryPage($category)) }}
+    </script>
 @endsection

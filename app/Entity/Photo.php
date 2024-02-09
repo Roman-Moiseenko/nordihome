@@ -178,6 +178,12 @@ class Photo extends Model
                     $watermark->resize((int)($img->width() * $this->watermark['size']), (int)($img->width() * $this->watermark['size']));
                     $img->insert($watermark, $this->watermark['position'], $this->watermark['offset'], $this->watermark['offset']);
                 }
+
+                $path = pathinfo($thumb_file, PATHINFO_DIRNAME);
+                if (!file_exists($path)) {
+                    mkdir($path, 0777, true);
+                }
+
                 $img->save($thumb_file);
             }
         }
