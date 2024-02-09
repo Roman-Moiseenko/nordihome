@@ -25,15 +25,7 @@
                 <div class="row">
                 @foreach($cart['items_order'] as $item)
                     @if($item['check'])
-                    <div class="col-lg-2 col-sm-6 p-3">
-                        <div class="" style="position: relative">
-                            <img src="{{ $item['img'] }}" title="{{ $item['name'] }}" style="width: 100%;">
-                            @if($item['quantity'] > 1)
-                                <span class="fs-8 order-item-quantity" style="position: absolute; bottom: 0">{{ $item['quantity'] }}шт.</span>
-                            @endif
-                        </div>
-                        <div class="fs-7 text-center" style="color: var(--bs-gray-600);">{{ price($item['price']) }}/шт.</div>
-                    </div>
+                        @include('shop.order.widget.item', ['item' => $item])
                     @endif
                 @endforeach
                 </div>
@@ -42,15 +34,7 @@
                     <div class="row">
                         @foreach($cart['items_preorder'] as $item)
                             @if($item['check'])
-                                <div class="col-lg-2 col-sm-6 p-3">
-                                    <div class="" style="position: relative">
-                                        <img src="{{ $item['img'] }}" title="{{ $item['name'] }}" style="width: 100%;">
-                                        @if($item['quantity'] > 1)
-                                            <span class="fs-8 order-item-quantity" style="position: absolute; bottom: 0">{{ $item['quantity'] }}шт.</span>
-                                        @endif
-                                    </div>
-                                    <div class="fs-7 text-center" style="color: var(--bs-gray-600);">{{ price($item['price']) }}/шт.</div>
-                                </div>
+                                @include('shop.order.widget.item', ['item' => $item])
                             @endif
                         @endforeach
                     </div>

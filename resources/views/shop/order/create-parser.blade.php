@@ -22,15 +22,7 @@
                 <div>Список товаров в корзине</div>
                 <div class="row">
                 @foreach($cart->items as $item)
-                    <div class="col-lg-2 col-sm-6 p-3">
-                        <div class="" style="position: relative">
-                            <img src="{{ $item->product->photo->getThumbUrl('thumb') }}" title="{{ $item->product->name }}" style="width: 100%;">
-                            @if($item->quantity > 1)
-                                <span class="fs-8 order-item-quantity" style="position: absolute; bottom: 0">{{ $item->quantity }}шт.</span>
-                            @endif
-                        </div>
-                        <div class="fs-7 text-center" style="color: var(--bs-gray-600);">{{ price($item->cost) }}/шт.</div>
-                    </div>
+                        @include('shop.order.widget.item-parser', ['item' => $item])
                 @endforeach
                 </div>
             </div>

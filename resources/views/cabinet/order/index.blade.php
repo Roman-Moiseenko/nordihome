@@ -5,7 +5,7 @@
 @endsection
 
 @section('h1')
-Мои заказы
+    Мои заказы
 @endsection
 
 @section('subcontent')
@@ -23,17 +23,23 @@
             </div>
             <div class="order-body">
                 <div>
-                    <div class="fs-7">{{ $order->delivery->typeHTML() }} - {{ $order->delivery->address }}</div>
-                    <div class="fs-7">Стоимость доставки - {{ ($order->delivery->cost == 0) ? 'Рассчитывается' : price($order->delivery->cost)}}</div>
-                    <div class="fs-8">{{ $order->delivery->status->value() }}</div>
+                    <div class="fs-7">{{ $order->delivery->typeHTML() }}<br>{{ $order->delivery->address }}</div>
+                    <div class="fs-7 mt-1">Стоимость доставки
+                        - {{ ($order->delivery->cost == 0) ? 'Рассчитывается' : price($order->delivery->cost)}}</div>
+                    <div class="fs-8 mt-1">{{ $order->delivery->status->value() }}</div>
                 </div>
-                <div class="d-flex">
-                    @foreach($order->items as $item)
-                        <div>
-                            <img src="{{ $item->product->photo->getThumbUrl('thumb') }}" style="width: auto; height: 80px;">
-                            <span>{{ $item->quantity }} шт.</span>
+                <div class="row position-relative">
+                    @foreach($order->items()->paginate(4) as $item)
+                        <div class="col-6 col-lg-3 ">
+                            <div class="order-item-block">
+                                <img src="{{ $item->product->photo->getThumbUrl('thumb') }}">
+                                <span class="order-item-container"><span class="order-item-quantity fs-8">{{ $item->quantity }} шт.</span></span>
+                            </div>
                         </div>
                     @endforeach
+                    @if($order->items->count() > 4)
+                        <span class="order-item-quantity--4" title="В заказе {{ $order->items->count() }} товаров">...</span>
+                    @endif
                 </div>
 
             </div>

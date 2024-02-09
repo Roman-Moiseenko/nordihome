@@ -35,15 +35,41 @@
     background: var(--bs-dark) !important;
     transition: $transition;
 }
-.order-item-quantity {
+.order-item-block {
+    position: relative;
+}
+.order-item-block img {
+    width: 100%;
+}
+.order-item-container {
     position: absolute;
     bottom: 0;
-    left: 50%;
+    left: 0;
+    display: grid;
+    justify-content: center;
+    width: 100%;
+}
+
+.order-item-quantity {
+    /*position: absolute;
+    bottom: 0;
+    left: 50%;*/
     padding: 2px 8px;
     background: var(--bs-gray-200);
     color: var(--bs-gray-900);
     border-radius: 10px;
-    transform: translateX(-50%);
+    //transform: translateX(-50%);
+}
+.order-item-quantity--4 {
+    position: absolute;
+    //background: var(--bs-gray-400);
+    right: -20px;
+    top: 50%;
+    width: 36px;
+    border-radius: 10px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    font-weight: 700;
 }
 .address-delivery--title {
     color: var(--bs-gray-500);
