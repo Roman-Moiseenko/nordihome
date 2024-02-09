@@ -3,9 +3,75 @@
     @parent
     order
 @endsection
-@section('h1')
-Заказ xxx
-@endsection
+@section('h1', $order->htmlDate() . ' ' . $order->htmlNum())
+
 @section('subcontent')
-    ******
+    <div class="box-card p-2 mt-2">
+        <div class="row">
+            <div class="col-sm-6">
+                <div>Сумма заказа: {{ price($order->amount) }}</div>
+                @if($order->discount != 0)
+                    <div>
+                        Скидка на товары: {{ price($order->discount) }}
+                    </div>
+                @endif
+                @if(!is_null($order->coupon_id))
+                    <div>
+                        Скидка на покупку (купон): {{ price($order->coupon) }}
+                    </div>
+                @endif
+                <div>Сумма к оплате: {{ price($order->total) }}</div>
+                <div class="mt-3">
+                <span class="badge bg-secondary">
+                {{ $order->statusHtml() }}
+                </span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="fs-7">{{ $order->delivery->typeHTML() }}<br>{{ $order->delivery->address }}</div>
+                <div class="fs-7 mt-1">Стоимость доставки
+                    - {{ ($order->delivery->cost == 0) ? 'Рассчитывается' : price($order->delivery->cost)}}</div>
+                <div class="fs-7 mt-1">
+                <span class="badge bg-light text-dark">
+                {{ $order->delivery->status->value() }}
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @foreach($order->items as $item)
+        <div class="box-card d-flex" style="align-items: center">
+            <div class="">
+                @if($item->product->isPublished())
+                    <a href="{{ route('shop.product.view', $item->product->slug) }}" target="_blank">
+                        <img src="{{ $item->product->photo->getThumbUrl('mini') }}" style="border-radius: 10px;"/>
+                    </a>
+                @else
+                    <img src="{{ $item->product->photo->getThumbUrl('mini') }}" style="border-radius: 10px;"/>
+                @endif
+            </div>
+            <div class="" style="padding-left: 20px;">
+                @if($item->product->isPublished())
+                    <a href="{{ route('shop.product.view', $item->product->slug) }}" target="_blank">
+                        {{ $item->product->name }}
+                    </a>
+                @else
+                    {{ $item->product->name }}
+                @endif
+            </div>
+            <div class="" style="margin-left: auto; width: 200px; padding-left: 10px;">
+                @if(is_null($item->discount_id))
+                    <div class="fs-6"> {{ $item->quantity }} шт х {{ price($item->base_cost) }}</div>
+                    <div class="fs-5 fw-medium"
+                         style="color: var(--bs-gray-900);"> {{ price($item->base_cost * $item->quantity) }}</div>
+                @else
+                    <div class="fs-7"> {{ price($item->base_cost) }} /шт.</div>
+                    <div class="fs-7"> {{ price($item->discount_type) }}</div>
+                    <div class="fs-6"> {{ $item->quantity }} шт х {{ price($item->sell_cost) }}</div>
+                @endif
+            </div>
+        </div>
+    @endforeach
+
 @endsection

@@ -25,6 +25,7 @@ return [
         'createThumbsOnSave' => true,
         'createThumbsOnRequest' => true,
         'thumbs' => [
+            'mini' => ['width' => 80, 'height' => 80,],
             'thumb' => ['width' => 150, 'height' => 150,],
             'list' => ['width' => 200, 'height' => 200,],
             'card' => ['width' => 700, 'height' => 700,'watermark' => true],

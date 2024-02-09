@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Delivery\Entity\DeliveryOrder;
+use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Entity\Payment\Payment;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -32,6 +33,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property OrderItem[] $items
  * @property User $user
  * @property DeliveryOrder $delivery
+
  */
 
 class Order extends Model

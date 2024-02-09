@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Modules\Discount\Entity\Discount;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Order $order
  * @property Reserve $reserve
  * @property Product $product
+ * @property Discount $discount
  */
 class OrderItem extends Model
 {
@@ -65,5 +67,10 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class, 'discount_id', 'id');
     }
 }

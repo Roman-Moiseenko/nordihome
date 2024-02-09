@@ -117,6 +117,11 @@ class MenuHelper
                 'icon' => 'fa-light fa-heart',
                 'url' => route('cabinet.wish.index'),
             ],
+            'cart' => [
+                'name' => 'Корзина',
+                'icon' => 'fa-light fa-cart-shopping',
+                'url' => route('shop.cart.view'),
+            ],
         ];
     }
 }
