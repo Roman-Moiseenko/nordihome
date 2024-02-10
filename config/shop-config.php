@@ -28,8 +28,13 @@ return [
             'mini' => ['width' => 80, 'height' => 80,],
             'thumb' => ['width' => 150, 'height' => 150,],
             'list' => ['width' => 200, 'height' => 200,],
+            //catalog - для списка товаров и категорий
+            'catalog' => ['width' => 320, 'height' => 320,],
+            'catalog-watermark' => ['width' => 320, 'height' => 320, 'watermark' => true],
+            //Для карточки товара
             'card' => ['width' => 700, 'height' => 700,'watermark' => true],
-            'card-no-watermark' => ['width' => 700, 'height' => 700],
+
+            //'card-no-watermark' => ['width' => 700, 'height' => 700],
             'promotion' => ['width' => 450, 'height' => 550,],
             'promotion-mini' => ['width' => 400, 'height' => 250,],
             'original' => ['watermark' => true]

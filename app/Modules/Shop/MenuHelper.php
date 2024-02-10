@@ -122,6 +122,11 @@ class MenuHelper
                 'icon' => 'fa-light fa-cart-shopping',
                 'url' => route('shop.cart.view'),
             ],
+            'logout' => [
+                'name' => 'Выход',
+                'icon' => 'fa-light fa-right-from-bracket',
+                'url' => route('logout'),
+            ],
         ];
     }
 }

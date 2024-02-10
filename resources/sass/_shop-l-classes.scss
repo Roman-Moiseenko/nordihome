@@ -5,13 +5,13 @@
 
 
 /* От Заказчика*/
-
+//Меню
 $count-col-submenu: 1; //Кол-во столбцов в меню 1 - для маленьких, 3 для огромных - дублируется во frontend.js
 $width-sub-menu-column: 280px; //Ширина столбца
 $padding-left-submenu: 30px;
 $padding-right-submenu: 20px;
 $width-sub-menu: $padding-left-submenu + $width-sub-menu-column * $count-col-submenu + $padding-right-submenu;
-$width-root-menu: 200px; //От кол-ва символов
+$width-root-menu: 300px; //От кол-ва символов
 
 $widget-height: 1rem; //Высота элементов фильтров
 

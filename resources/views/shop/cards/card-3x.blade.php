@@ -3,7 +3,7 @@
         <div class="product-card-image">
             <a href="{{ route('shop.product.view', $product->slug) }}">
                 <img
-                    src="{{ (is_null($product->photo)) ? '/images/no-image.jpg' : $product->photo->getThumbUrl('card') }}"
+                    src="{{ (is_null($product->photo)) ? '/images/no-image.jpg' : $product->photo->getThumbUrl('catalog-watermark') }}"
                     alt="{{ $product->name }}">
             </a>
         </div>
