@@ -57,7 +57,7 @@
     padding: 2px 8px;
     background: var(--bs-gray-200);
     color: var(--bs-gray-900);
-    border-radius: 10px;
+    border-radius: $radius-big;
     //transform: translateX(-50%);
 }
 .order-item-quantity--4 {
@@ -66,7 +66,7 @@
     right: -20px;
     top: 50%;
     width: 36px;
-    border-radius: 10px;
+    border-radius: $radius-big;
     cursor: pointer;
     transform: translateY(-50%);
     font-weight: 700;

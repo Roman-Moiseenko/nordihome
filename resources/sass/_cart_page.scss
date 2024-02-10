@@ -17,7 +17,7 @@
 .full-cart-item--img img {
     width: 120px;
     height: 120px;
-    border-radius: 4px;
+    border-radius: $radius-icon;
     //box-shadow: $shadow-img;
 }
 .full-cart-item--checked {
@@ -78,7 +78,7 @@
 
 .full-cart-order > div {
     border: 1px solid var(--bs-gray-400);
-    border-radius: 12px;
+    border-radius: $radius-big;
     padding: 20px;
 }
 

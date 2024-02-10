@@ -97,7 +97,7 @@
 .presearch-wrapper {
     height: 100%;
     position: relative;
-    border-radius: 8px;
+    border-radius: $radius-card;
     line-height: 32px;
     font-size: 1.125rem;
     background: var(--bs-gray-200);
@@ -130,7 +130,7 @@
     background-color: var(--bs-white);
     border-top: none;
 
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 $radius-button $radius-button;
     color: #333;
     padding: 0 0 25px;
     box-shadow: 0 0 0 1px rgb(0 0 0 / 4%), 0 4px 4px rgb(0 0 0 / 4%), 0 20px 40px rgb(0 0 0 / 8%);
@@ -141,14 +141,14 @@
 .presearch-input {
     width: 100%;
     border: 0;
-    border-radius: 8px;
+    border-radius: $radius-button;
     padding: 0 120px 0 20px !important;
     outline: 0;
     font-size: 1rem;
     height: 100%;
 }
 #pre-search:focus {
-    border-radius: 8px 8px 0 0;
+    border-radius: $radius-button $radius-button 0 0;
 }
 .presearch--icon-clear, .presearch--icon-search {
     position: absolute;
@@ -159,7 +159,7 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: $radius-button;
 }
 .presearch--icon-clear {
     right: 70px;
@@ -198,7 +198,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 }
 .suggest--icon > img {
     width: 40px;
-    border-radius: 4px;
+    border-radius: $radius-icon;
     box-shadow: 0 4px 4px #7d7c7c;
 }
 .suggest--label {
@@ -234,13 +234,13 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 .cart-item>img {
     width: 60px;
     height: 60px;
-    border-radius: 4px;
+    border-radius: $radius-icon;
     box-shadow: $shadow-img;
 }
 .wish-item>img {
     width: 40px;
     height: 40px;
-    border-radius: 4px;
+    border-radius: $radius-icon;
     box-shadow: $shadow-img;
 }
 
@@ -311,7 +311,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
     background: var(--bs-red);
     padding: 4px;
     line-height: 1;
-    border-radius: 10px;
+    border-radius: $radius-big;
     color: white;
     min-width: 20px;
     height: 20px;
