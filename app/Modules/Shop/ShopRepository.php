@@ -73,6 +73,12 @@ class ShopRepository
 
         ///Фильтрация по $request
 
+        //Теги
+        if (!empty($tag = $request['tag_id'])) {
+            $query->whereHas('tags', function ($q) use ($tag) {
+                $q->where('id', $tag);
+            });
+        }
         //Бренд
         if (!empty($brands = $request['brands'])) {
             $query->whereIn('brand_id', $brands);
@@ -95,9 +101,10 @@ class ShopRepository
                 });
             }
         }
-        //Акция
 
+        //Акция -?
 
+        //Атрибуты
         foreach ($request->all() as $key => $item) {
             if (str_contains($key, 'a_')) {
                 $attr_id = (int)substr($key, 2, strlen($key) - 2);
@@ -146,9 +153,6 @@ class ShopRepository
             }
         }
 
-        //Атрибуты
-
-
         return $query->whereIn('id', $product_ids)->paginate($this->options->shop->paginate);
     }
 
@@ -183,7 +187,7 @@ class ShopRepository
     public function ProductsByCategory(int $id)
     {
 
-        $query = Product::where('published', '=', true);
+        $query = Product::where('published', true);
 
         $query->where(function ($_query) use ($id) {
             $_query->where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {

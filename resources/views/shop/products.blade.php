@@ -41,7 +41,6 @@
 
                 <x-widget.check name="discount" class="mt-3" checked="{{ $request->has('discount') }}" >Акция</x-widget.check>
             </div>
-
             <div class="products-attribute-filter">
                 @foreach($prod_attributes as $attribute)
                     <div>
@@ -80,9 +79,10 @@
             </div>
         </div>
         <div class="products-page-list ms-3">
-            <div class="products-page-list--top">
+            <div class="box-card products-page-list--top">
                 @foreach($tags as $tag)
-                    <span data-tag-id="{{ $tag->id }}">{{ $tag->name }}</span>
+                    <a href="{{ route('shop.category.view', [$category->slug, 'tag_id' => $tag->id]) }}"
+                        class="tag-filter-products {{ $tag_id == $tag->id ? 'active' : '' }}" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
                 @endforeach
             </div>
             <div class="products--list">
@@ -94,7 +94,7 @@
             </div>
 
             <div class="products-page-list--bottom">
-                Пагинация
+                {{ $products->links('shop.widgets.paginator') }}
             </div>
 
         </div>

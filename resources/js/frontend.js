@@ -769,6 +769,17 @@ window.$ = jQuery;
 
     }
 
+    /** СПИСОК ТОВАРОВ **/
+    if (main.hasClass('products-page')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        $('.tag-filter-products').on('click', function (e) {
+            e.preventDefault();
+            urlParams.set('tag_id', $(this).data('tag-id'));
+            window.location.search = urlParams;
+        });
+    }
+
+
     //Доп.элементы
     let upButton = $('#upbutton');
     $(window).on('scroll', function () {

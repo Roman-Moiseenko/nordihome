@@ -38,6 +38,13 @@ class Group extends Model implements DataWidgetInterface
         return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
 
+    public function promotions()
+    {
+        return $this->belongsToMany(
+            Promotion::class, 'promotions_groups',
+            'group_id', 'promotion_id')->withPivot('discount');
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'groups_products', 'group_id', 'product_id');

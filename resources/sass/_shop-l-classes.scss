@@ -217,37 +217,9 @@ ul.footer-menu > li > a:hover {
     padding: 10px;
 }
 
-/* CATALOG PAGE */
 
-/* PRODUCTS PAGE */
-.products-page-content {
 
-}
-// Фильтры
-.products-page-filter {
-    //position: fixed;
-    transform: translate3d(0px, 0px, 0px);
-    top: auto;
-    left: 362px;
-    bottom: 10px;
-    width: 278px;
-    min-width: 278px;
-    border: 1px solid var(--bs-gray-400);
-    border-radius: $radius-card;
-}
-.products-base-filter, .products-attribute-filter {
-    border-bottom: 1px solid var(--bs-gray-400);
-    padding: 12px;
-}
-.products-buttons-filter {
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-}
-.products-buttons-filter > button {
-    flex-grow: 1;
-    margin: 8px 0;
-}
+
 /// Check
 .form-check-label, .form-check-input {
     cursor: pointer;
@@ -329,27 +301,11 @@ ul.footer-menu > li > a:hover {
     font-size: 1rem;
     padding-left: 6px;
 }
-//КАРТОЧКА ТОВАРА В СПИСКЕ
-.product-card-image {
 
-}
-.product-card-image img {
-    width: 100%;
-}
-.product-card-name {
-    height: 80px;
-    align-items: center;
-    margin: auto 0;
-    display: flex;
-}
-.product-card-info {
 
-}
-.product-card-to-cart {
 
-}
 
-/* PRODUCT PAGE */
+
 
 
 

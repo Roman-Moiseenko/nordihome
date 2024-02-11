@@ -43,6 +43,7 @@ use Illuminate\Support\Str;
  * @property Category[] $categories
  * @property Attribute[] $prod_attributes
  * @property Photo $photo
+ * @property Photo $photo_next
  * @property Photo[] $photos
  * @property Video[] $videos
  * @property ProductPricing[] $pricing
@@ -440,6 +441,11 @@ class Product extends Model
        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');//->where('sort', '>',0);
     }
 
+    public function photo_next()
+    {
+        return $this->photos()->where('sort', '>', 0)->first();
+    }
+
     public function videos()
     {
         return $this->morphMany(Video::class, 'videoable');
@@ -475,4 +481,27 @@ class Product extends Model
         });
     }
 
+    public function isPromotion()
+    {
+        foreach ($this->groups as $group) {
+
+            if (!empty($group->promotions)) {
+                foreach ($group->promotions as $promotion) {
+                    if ($promotion->published == true && $promotion->active == true)
+                    return
+                    [
+                        'price' => ceil((100 - $promotion->pivot->discount) / 100 * $this->lastPrice->value),
+                        'discount' => $promotion->title,
+                    ];
+                }
+            }
+        }
+        return null;
+    }
+
+    public function countReviews(): string
+    {
+        //TODO Сделать отзывы
+        return '0 отзывов';
+    }
 }

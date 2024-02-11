@@ -339,7 +339,7 @@ class Schema
                     "sku" => $product->code,
                 ];
             },
-                $product->equivalent->products()->getModels()),
+                $product->equivalent->products()->where('published', true)->getModels()),
 
             //TODO Отзывы
 
@@ -383,7 +383,7 @@ class Schema
                 ],
             ];
         },
-            $category->products()->getModels()
+            $category->products()->where('published', true)->getModels()
         );
         return $this->_CollectionPage($list, $category);
     }

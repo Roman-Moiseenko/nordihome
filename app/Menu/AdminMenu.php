@@ -37,6 +37,11 @@ class AdminMenu
                         'title' => 'Предзаказы',
                         'route_name' => 'admin.sales.preorder.index',
                     ],
+                    'parser' => [
+                        'icon' => 'file-search',
+                        'title' => 'Парсер',
+                        'route_name' => 'admin.sales.preorder.index',
+                    ],
                     'executed' => [
                         'icon' => 'file-check-2',
                         'title' => 'Заказы (исп.)',

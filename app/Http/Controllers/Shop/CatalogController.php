@@ -45,6 +45,8 @@ class CatalogController extends Controller
             $maxPrice = 999999999;
             $product_ids = [];
             $brands = [];
+
+
             $products = $this->repository->ProductsByCategory($category->id);
             /** @var Product $product */
             foreach ($products as $i => $product) {
@@ -65,6 +67,7 @@ class CatalogController extends Controller
             $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
 
             $tags = $this->repository->TagsByProducts($product_ids);
+            $tag_id = $request['tag_id'] ?? null;
             $products = $this->repository->filter($request, $product_ids);
 
             //TODO Контакты и время работы
@@ -73,7 +76,7 @@ class CatalogController extends Controller
 
             return view('shop.products',
                 compact('category', 'products', 'prod_attributes', 'tags',
-                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description'));
+                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id'));
 
         } catch (\Throwable $e) {
             $category = null;
