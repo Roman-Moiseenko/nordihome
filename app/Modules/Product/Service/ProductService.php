@@ -12,6 +12,7 @@ use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\TagRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 
 class ProductService
@@ -67,8 +68,8 @@ class ProductService
 
             /* SECTION 2*/
             //Описание, короткое описание, теги
-            $product->description = $request['description'];
-            $product->short = $request['short'];
+            $product->description = $request['description'] ?? '';
+            $product->short = $request['short'] ?? '';
 
             $this->tags($request, $product);
 
@@ -89,7 +90,7 @@ class ProductService
             //Основная
             $product->name = $request['name'];
             $product->code = $request['code'];
-            $product->slug = $request['slug'];
+            $product->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
             $product->main_category_id = $request['category_id'];
             $product->brand_id = $request['brand_id'];
 
@@ -118,8 +119,8 @@ class ProductService
             $this->series($request, $product);
             /* SECTION 2*/
             //Описание, короткое описание, теги
-            $product->description = $request['description'];
-            $product->short = $request['short'];
+            $product->description = $request['description'] ?? '';
+            $product->short = $request['short'] ?? '';
             $product->tags()->detach();
             $this->tags($request, $product);
 

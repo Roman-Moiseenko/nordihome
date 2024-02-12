@@ -40,7 +40,7 @@
         </div>
         <div class="product-card-info">
             @if(is_null($product->isPromotion()))
-                {{ price($product->lastPrice->value) }}
+                {{ price($product->getLastPrice()) }}
             @else
                 <span class="discount-price">{{ price($product->isPromotion()['price']) }}</span><span class="base-price">{{ price($product->lastPrice->value) }}</span>
             @endif

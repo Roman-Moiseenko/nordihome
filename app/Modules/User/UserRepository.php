@@ -15,7 +15,7 @@ class UserRepository
                 'img' => $wish->product->photo->getThumbUrl('thumb'),
                 'name' => $wish->product->name,
                 'url' => route('shop.product.view', $wish->product),
-                'cost' => $wish->product->lastPrice->value,
+                'cost' => $wish->product->getLastPrice(),
                 'remove' => route('cabinet.wish.toggle', $wish->product),
                 'product_id' => $wish->product->id,
             ];

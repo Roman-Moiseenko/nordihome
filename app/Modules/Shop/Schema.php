@@ -211,7 +211,7 @@ class Schema
                 "@type" => "https://schema.org/BuyAction"
             ],
 
-            "price" => $product->lastPrice->value,
+            "price" => $product->getLastPrice(),
             "priceCurrency" => "RUB",
             "availability" => 'https://schema.org/' . ($product->count_for_sell == 0 ? 'InStock' : 'PreOrder'),
             "seller" => [
@@ -377,7 +377,7 @@ class Schema
                 "description" => strip_tags($product->description),
                 "Offers" => [
                     "@type" => "Offer",
-                    "price" => $product->lastPrice->value,
+                    "price" => $product->getLastPrice(),
                     "priceCurrency" => "RUB",
                     "availability" => "https://schema.org/" . ($product->count_for_sell == 0 ? 'InStock' : 'PreOrder'),
                 ],

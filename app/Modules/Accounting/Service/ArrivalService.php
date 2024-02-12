@@ -65,7 +65,7 @@ class ArrivalService
         /** @var Product $product */
         $product = Product::find($request['product_id']);
         $distributor_cost = $arrival->distributor->getCostItem($product->id); //Ищем у поставщика товар, если есть, берем закупочную цену
-        $product_sell = $product->lastPrice->value ?? 0;
+        $product_sell = $product->getLastPrice();
         //Добавляем в документ
         $arrival->arrivalProducts()->create([
             'product_id' => $product->id,

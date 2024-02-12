@@ -409,7 +409,7 @@ class ShopRepository
             'name' => $product->name,
             'code' => $product->code,
             'image' => !is_null($product->photo) ? $product->photo->getThumbUrl('thumb') : '',
-            'price' => number_format($product->lastPrice->value, 0, ' ', ','),
+            'price' => number_format($product->getLastPrice(), 0, ' ', ','),
             'url' => route('shop.product.view', $product->slug),
         ];
     }

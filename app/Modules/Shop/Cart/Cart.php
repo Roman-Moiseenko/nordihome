@@ -278,7 +278,7 @@ class Cart
         /** var CartItem[] $items */
         foreach ($items as $item) {
             $result->count += $item->quantity;
-            $result->amount += $item->quantity * $item->product->lastPrice->value;
+            $result->amount += $item->quantity * $item->product->getLastPrice();
             $result->discount += empty($item->discount_cost) ? 0 : $item->quantity * ($item->base_cost - $item->discount_cost);
         }
 

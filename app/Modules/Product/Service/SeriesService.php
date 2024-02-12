@@ -17,7 +17,8 @@ class SeriesService
 
     public function registerName(string $name): Series
     {
-        $series = Series::register($name);
+        $series = Series::where('name', $name)->first();
+        if (empty($series)) $series = Series::register($name);
         return $series;
     }
 

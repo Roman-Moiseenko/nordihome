@@ -490,7 +490,7 @@ class Product extends Model
                     if ($promotion->published == true && $promotion->active == true)
                     return
                     [
-                        'price' => ceil((100 - $promotion->pivot->discount) / 100 * $this->lastPrice->value),
+                        'price' => ceil((100 - $promotion->pivot->discount) / 100 * $this->getLastPrice()),
                         'discount' => $promotion->title,
                     ];
                 }

@@ -26,13 +26,13 @@ class ProductController extends Controller
         try {
             $product = $this->repository->getProductBySlug($slug);
 
-            $title = $product->name . ' купить по цене ' . $product->lastPrice->value . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
+            $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
             $description = $product->short;
 
             return view('shop.product', compact('product', 'title', 'description'));
         } catch (\Throwable $e) {
             $product = null;
-            flash($e->getMessage(), 'danger');
+            flash($e->getMessage() . '/'. $e->getFile() . '/' . $e->getLine() , 'danger');
             return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
         }
     }

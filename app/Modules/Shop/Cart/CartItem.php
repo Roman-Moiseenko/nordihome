@@ -14,7 +14,7 @@ class CartItem implements CartItemInterface
     public ?Reserve $reserve;
     public int $id;
     public int $quantity;
-    public float $base_cost = -1; //Базовая цена  - используется для удобства = $product->lastPrice->value
+    public float $base_cost = -1; //Базовая цена  - используется для удобства = $product->getLastPrice()
     public float $discount_cost = 0; //Цена со скидкой
     public string $discount_name = ''; //Название акции
     public int $discount_id;
@@ -38,7 +38,7 @@ class CartItem implements CartItemInterface
         $item->product = $product;
         $item->quantity = $quantity;
         $item->options = $options;
-        $item->base_cost = $product->lastPrice->value;
+        $item->base_cost = $product->getLastPrice();
         $item->check = true;
         return $item;
     }
@@ -53,7 +53,7 @@ class CartItem implements CartItemInterface
         $item->check = $check;
         $item->reserve = $reserve;
 
-        $item->base_cost = $product->lastPrice->value;
+        $item->base_cost = $product->getLastPrice();
 
         return $item;
     }

@@ -78,7 +78,7 @@ class Group extends Model implements DataWidgetInterface
                 'image' => $product->photo,
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
-                'price' => $product->lastPrice->value,
+                'price' => $product->getLastPrice(),
                 'count' => $product->count_for_sell,
             ];
         }, $this->products()->getModels());

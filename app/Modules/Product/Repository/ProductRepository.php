@@ -70,7 +70,7 @@ class ProductRepository
             'name' => $product->name,
             'code' => $product->code,
             'image' => $product->getImage(),
-            'price' => $product->lastPrice->value,
+            'price' => $product->getLastPrice(),
         ];
     }
 
