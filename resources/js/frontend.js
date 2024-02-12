@@ -779,6 +779,16 @@ window.$ = jQuery;
         });
     }
 
+    /** СТРАНИЦА ТОВАРА **/
+    if (main.hasClass('product-page')) {
+        let sliderImages = $('.slider-image-product');
+        let mainImage = $('#main-image-product');
+        sliderImages.on('mouseover', function () {
+            //TODO !!!! доделать
+            mainImage.attr('src', $(this).data('image'));
+        });
+    }
+
 
     //Доп.элементы
     let upButton = $('#upbutton');
@@ -837,6 +847,7 @@ window.$ = jQuery;
         if (data.error !== undefined) console.log(data.error);
     }
     //Карусели
+    /*
     let optionsSliderBase = {
         rtl: false,
         startPosition: 0,
@@ -894,6 +905,6 @@ window.$ = jQuery;
             e.preventDefault();
         });
     }
-
+*/
 })();
 

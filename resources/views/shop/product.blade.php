@@ -8,30 +8,29 @@
 @section('content')
 
     <div class="title-page">
-        {{ $product->name }}
+        <h1>{{ $product->name }}</h1>
     </div>
 
-    <div class="row">
-        <div class="col-lg-6" style="background: #f0f0f0">
-            <div class="">
-                <div>
-                    <img src="{{ $product->photo->getThumbUrl('card') }}" style="width: 100%;">
-                </div>
-                <div class="d-flex">
-                    @foreach($product->photos as $photo)
-                        <img src="{{ $photo->getThumbUrl('mini') }}" style="width: 100%">
-                    @endforeach
-
-                </div>
-
+    <div class="box-card row">
+        <div class="col-lg-6">
+            <div class="" style="padding: 10px 40px;">
+                <img id="main-image-product" src="{{ $product->photo->getThumbUrl('card') }}" style="width: 100%;">
             </div>
-            Изображения + Видео
+
+            <div id="slider-images-product" class="owl-carousel owl-theme mt-3 p-3">
+                @foreach($product->photos as $photo)
+                    <img src="{{ $photo->getThumbUrl('mini') }}" data-image="{{ $photo->getThumbUrl('card') }}" class="slider-image-product">
+                @endforeach
+            </div>
+
         </div>
-        <div class="col-lg-6" style="background: #e0e0e0">
-            Базовые характеристики. Модификации, Цена, В Корзину, Аксессуары, В избранное, сравнить,
-            В наличии. Акция
-            <br>Якоря на Отзывы, Характеристики, Описание
-        </div>
+        Изображения + Видео
+    </div>
+    <div class="col-lg-6" style="background: #e0e0e0">
+        Базовые характеристики. Модификации, Цена, В Корзину, Аксессуары, В избранное, сравнить,
+        В наличии. Акция
+        <br>Якоря на Отзывы, Характеристики, Описание
+    </div>
     </div>
     <div>
         Бонусный товар

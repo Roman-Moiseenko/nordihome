@@ -23,6 +23,15 @@ $radius-card: 8px;
 $radius-button: 6px;
 $radius-icon: 4px;
 
+
+$h1-font-size:                $font-size-base * 2.125 !default;
+$h2-font-size:                $font-size-base * 1.85 !default;
+$h3-font-size:                $font-size-base * 1.65 !default;
+$h4-font-size:                $font-size-base * 1.4 !default;
+$h5-font-size:                $font-size-base * 1.20 !default;
+$h6-font-size:                $font-size-base !default;
+
+
 //#{$pagination-padding-x};
 //--#{$prefix}pagination-padding-y: #{$pagination-padding-y};
 //@include rfs($pagination-font-size, --#{$prefix}pagination-font-size);

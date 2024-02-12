@@ -154,3 +154,26 @@ color: #ffc107;
 .is-wish:hover {
 color: #ffca2c;
 }
+
+//КАРТОЧКА ТОВАРА
+
+///СЛАЙДЕР
+#slider-images-product {
+  /*  transform: rotate(90deg);
+    width: 300px;
+    top: 150px;*/
+}
+#slider-images-product .owl-item {
+  //  transform: rotate(-90deg);
+}
+.slider-image-product {
+    cursor: pointer;
+    opacity: 0.9;
+}
+.slider-image-product:hover {
+    opacity: 1;
+}
+.slider-image-product.active {
+    opacity: 1;
+    border: 1px solid var(--bs-gray-900);
+}

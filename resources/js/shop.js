@@ -10,3 +10,4 @@ import.meta.glob(["../images/**"]);
 import './frontend';
 import './maps';
 import './parser';
+import './sliders';
