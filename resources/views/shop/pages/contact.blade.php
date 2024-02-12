@@ -1,8 +1,6 @@
 @extends('layouts.shop')
 
-@section('main')
-    container-xl pages
-@endsection
+@section('main', 'container-xl pages')
 
 @section('content')
 

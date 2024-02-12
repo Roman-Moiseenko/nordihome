@@ -27,7 +27,11 @@ class CatalogController extends Controller
     public function index()
     {
         $categories = $this->repository->getRootCategories();
-        return view('shop.catalog', compact('categories'));
+        //TODO $title и $description вынести в настройки магазина
+        $title = 'Каталог товаров интернет-магазина NORDIHOME';
+        $description = 'Ассортимент товаров из Европы известных брендов с доставкой по России почтой и транспортными компаниями';
+
+        return view('shop.catalog', compact('categories', 'title', 'description'));
     }
 
     public function view(Request $request, $slug)

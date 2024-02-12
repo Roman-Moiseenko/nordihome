@@ -1,13 +1,7 @@
 @extends('layouts.shop')
 
-@section('body')
-    product
-@endsection
-
-@section('main')
-    container-xl order-page-create
-@endsection
-
+@section('body', 'order')
+@section('main', 'container-xl order-page-create')
 @section('title', 'Оформление товаров на покупку в NORDI HOME')
 
 @section('content')

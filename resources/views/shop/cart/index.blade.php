@@ -1,13 +1,7 @@
 @extends('layouts.shop')
 
-@section('body')
-    product
-@endsection
-
-@section('main')
-    container-xl cart-page
-@endsection
-
+@section('body', 'product')
+@section('main', 'container-xl cart-page')
 @section('title', 'Корзина товаров в Интернет-магазине NORDI HOME')
 
 @section('content')

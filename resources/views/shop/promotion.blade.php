@@ -1,13 +1,8 @@
 @extends('layouts.shop')
 
-@section('body')
-    products
-@endsection
+@section('body', 'promotions')
 
-@section('main')
-    container-xl products-page
-@endsection
-
+@section('main', 'container-xl products-page')
 @section('title', $title)
 @section('description', $description)
 

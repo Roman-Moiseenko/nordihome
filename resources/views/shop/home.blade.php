@@ -3,10 +3,7 @@
 @section('breadcrumbs')
 @endsection
 
-
-@section('main')
-    home
-@endsection
+@section('main', 'home')
 
 @section('content')
 
