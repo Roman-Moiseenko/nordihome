@@ -24,10 +24,11 @@ $widget-height: 1rem; //Высота элементов фильтров
 a {
     text-decoration: none;
     color: var(--bs-gray-800);
+    &:hover {
+        color: var(--bs-gray-500);
+    }
 }
-a:hover {
-    color: var(--bs-gray-500);
-}
+
 html body {
     overflow-x: hidden;
 }
@@ -44,34 +45,37 @@ body {
 .checkbox-group {
     display: flex;
     align-items: center;
+    label {
+        padding-left: 6px;
+        cursor: pointer;
+    }
 }
-.checkbox-group label {
-    padding-left: 6px;
-    cursor: pointer;
+input[type='checkbox'] {
+    &:not([role='switch']) {
+        -webkit-appearance: none; /* Remove default appearance */
+        -moz-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #999;
+        border-radius: $radius-icon;
+        outline: none;
+        transition: background-color 0.3s ease-in-out;
+        cursor: pointer;
+        &:checked {
+            background: var(--bs-gray-900);
+        }
+        &:checked::before {
+            content: '\2714'; /* check mark symbol Unicode */
+            display: block;
+            text-align: center;
+            font-size: 16px;
+            line-height: 18px;
+            color: white;
+        }
+    }
 }
-input[type='checkbox']:not([role='switch']) {
-    -webkit-appearance: none; /* Remove default appearance */
-    -moz-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #999;
-    border-radius: $radius-icon;
-    outline: none;
-    transition: background-color 0.3s ease-in-out;
-    cursor: pointer;
-}
-input[type='checkbox']:checked:not([role='switch']) {
-    background: var(--bs-gray-900);
-}
-input[type='checkbox']:not([role='switch']):checked::before {
-    content: '\2714'; /* check mark symbol Unicode */
-    display: block;
-    text-align: center;
-    font-size: 16px;
-    line-height: 18px;
-    color: white;
-}
+
 
 ///radiobutton
 input[type='radio']:not([role='switch']) {
@@ -130,9 +134,9 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
 //КАРУСЕЛИ - Не показывать, пока не загрузится
 .owl-carousel {
     display: none;
-}
-.owl-carousel.owl-loaded {
-    display: block;
+    &.owl-loaded {
+        display: block;
+    }
 }
 
 
@@ -141,10 +145,11 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
     padding-top: 40px;
     background: var(--bs-black);
     color: var(--bs-gray-200);
+    >.about {
+        border-top: 1px solid var(--bs-gray-600) ;
+    }
 }
-footer > .about {
-    border-top: 1px solid var(--bs-gray-600) ;
-}
+
 .footer-description {
     font-size: 13px;
 }
@@ -159,27 +164,29 @@ footer > .about {
 ul.footer-menu {
     margin-left: 0;
     padding-left: 0;
+    >li {
+        list-style: none;
+        margin-bottom: 20px;
+        margin-left: 0;
+        >a {
+            color: var(--bs-gray-200);
+            &:hover {
+                color: var(--bs-gray-100);
+            }
+        }
+    }
 }
-ul.footer-menu > li {
-    list-style: none;
-    margin-bottom: 20px;
-    margin-left: 0;
-}
-ul.footer-menu > li > a {
-    color: var(--bs-gray-200);
-}
-ul.footer-menu > li > a:hover {
-    color: var(--bs-gray-100);
-}
+
 .about {
     border-bottom: 4px solid var(--bs-gold);
+    a {
+        color: var(--bs-gray-400);
+        &:hover {
+            color: var(--bs-gray-100);
+        }
+    }
 }
-.about a {
-    color: var(--bs-gray-400);
-}
-.about a:hover {
-    color: var(--bs-gray-100);
-}
+
 /* Деление экрана - слева список, справа действие с прикреплением */
 
 .left-list-block {
@@ -196,12 +203,13 @@ ul.footer-menu > li > a:hover {
 .sticky-block {
     position: sticky;
     top: 100px;
+    >div {
+        border: 1px solid var(--bs-gray-400);
+        border-radius: $radius-card;
+        padding: 20px;
+    }
 }
-.sticky-block > div {
-    border: 1px solid var(--bs-gray-400);
-    border-radius: $radius-card;
-    padding: 20px;
-}
+
 
 /* Общие блоки, карточки */
 
@@ -224,17 +232,19 @@ ul.footer-menu > li > a:hover {
 .form-check-label, .form-check-input {
     cursor: pointer;
 }
-.form-check-input:checked {
-    background-color: var(--bs-gray-700);
-    border-color: var(--bs-gray-700);
-}
+
 .form-check-label {
     font-size: $widget-height;
 }
 .form-check-input {
     height: 1.2rem;
     top: 0;
+    &:checked {
+        background-color: var(--bs-gray-700);
+        border-color: var(--bs-gray-700);
+    }
 }
+
 //Numeric
 .numeric-input {
     display: inline-block;
@@ -247,17 +257,19 @@ ul.footer-menu > li > a:hover {
     font-size: 0.9rem;
     height: 40px;
     position: relative;
+    >input {
+        font-size: 0.9rem;
+        width: calc(100% - 20px);
+        border: none;
+        border-radius: $radius-button;
+        color: var(--bs-gray-900);
+        height: 100%;
+        outline: none;
+        padding-left: 0.5rem;
+    }
+
 }
-.numeric-input > input {
-    font-size: 0.9rem;
-    width: calc(100% - 20px);
-    border: none;
-    border-radius: $radius-button;
-    color: var(--bs-gray-900);
-    height: 100%;
-    outline: none;
-    padding-left: 0.5rem;
-}
+
 .clear-icon-input {
     overflow: hidden;
     right: 3px;
@@ -266,50 +278,54 @@ ul.footer-menu > li > a:hover {
     position: absolute;
     top: 3px;
     font-size: 1.4rem;
+    &.active:after {
+        content: '\f00d';
+        display: inline-block;
+        font-family: 'Font Awesome 6 Pro', serif;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 1;
+        text-transform: none;
+        cursor: pointer;
+        color: var(--bs-gray-700);
+    }
 }
-.clear-icon-input.active:after {
-    content: '\f00d';
-    display: inline-block;
-    font-family: 'Font Awesome 6 Pro', serif;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 1;
-    text-transform: none;
-    cursor: pointer;
-    color: var(--bs-gray-700);
-}
+
 //Variant Image
 .variant-image-container {
     margin: 4px 0;
+
+    img {
+        width: 40px;
+        height: 40px;
+        border-radius: $radius-button;
+        border: none;
+    }
+    input {
+        display: none;
+    }
+    &.active {
+        img {
+            border: 2px solid var(--bs-warning);
+        }
+    }
+    label {
+        cursor: pointer;
+        >span {
+            font-size: 1rem;
+            padding-left: 6px;
+        }
+    }
 }
-.variant-image-container img {
-    width: 40px;
-    height: 40px;
-    border-radius: $radius-button;
-    border: none;
-}
-.variant-image-container.active img {
-    border: 2px solid var(--bs-warning);
-}
-.variant-image-container input {
-    display: none;
-}
-.variant-image-container label, .variant-container label {
+
+.variant-container label {
     cursor: pointer;
-}
-.variant-image-container label>span {
-    font-size: 1rem;
-    padding-left: 6px;
 }
 
 .title-page {
     margin-top: 12px;
     margin-bottom: 24px;
 }
-
-
-
-
 
 
 $font-letter-spacing: (

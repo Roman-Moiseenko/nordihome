@@ -4,25 +4,33 @@
 }
 
 //Виджеты
-.promotion-widget img,
-.list-big-widget img,
-.list-mini-widget img{
+%widget_img {
     width: 100%;
     border-radius: 20px;
 }
-.promotion-widget .discount-price {
-    font-size: 1rem;
-    color: var(--bs-red);
+
+.list-big-widget img,
+.list-mini-widget img{
+    @extend %widget_img;
 }
-.promotion-widget .base-price {
-    color: var(--bs-gray-500);
-    text-decoration: line-through;
-    font-size: 0.8rem;
+.promotion-widget {
+    img {
+        @extend %widget_img;
+    }
+    .discount-price {
+        font-size: 1rem;
+        color: var(--bs-red);
+    }
+    .base-price {
+        color: var(--bs-gray-500);
+        text-decoration: line-through;
+        font-size: 0.8rem;
+    }
+    .count-product {
+        color: var(--bs-gray-600);
+    }
 }
 
-.promotion-widget .count-product {
-    color: var(--bs-gray-600);
-}
 
 .list-big-widget a,
 .list-mini-widget a {

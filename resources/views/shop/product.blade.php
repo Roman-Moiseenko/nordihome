@@ -24,9 +24,38 @@
             </div>
 
         </div>
-        <div class="col-lg-6" style="background: #e0e0e0">
-            Базовые характеристики. Модификации, Цена, В Корзину, Аксессуары, В избранное, сравнить,
-            В наличии. Акция
+        <div class="col-lg-6">
+            <div class="view-info-product">
+                <div class="view-rating">
+                    <div>
+                        @include('shop.widgets.to-wish', ['product' => $product])
+                    </div>
+                    <div>
+                        <a href="#review" title="Отзывы реальных покупателей" aria-label="Отзывы реальных покупателей">{{ $product->countReviews() }}</a>
+                        @include('shop.widgets.stars', ['rating' => $product->current_rating])
+                    </div>
+                </div>
+                <div class="view-price">
+                    @if(is_null($product->isPromotion()))
+                        {{ price($product->getLastPrice()) }}
+                    @else
+                        <span class="discount-price">{{ price($product->isPromotion()['price']) }}</span>
+                        <span class="base-price">{{ price($product->lastPrice->value) }}</span>
+                    @endif
+                </div>
+                <div class="product-card-to-cart">
+                    <button class="to-cart btn btn-dark" data-product="{{ $product->id }}">В Корзину</button>
+                    <button class="one-click btn btn-outline-dark" data-product="{{ $product->id }}">В 1 Клик!</button>
+                </div>
+                <div>
+                    Модификации
+                </div>
+                <div>
+                    Аксессуары
+                </div>
+            </div>
+            Базовые характеристики. , , , , сравнить,
+            В наличии.
             <br>Якоря на Отзывы, Характеристики, Описание
         </div>
     </div>

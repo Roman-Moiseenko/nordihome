@@ -4,33 +4,49 @@
 /* ХЛЕБНЫЕ КРОШКИ */
 .breadcrumbs {
     margin: 16px 0;
-}
-.breadcrumbs > li {
-    display: inline-block;
-    list-style-type: none;
-    font-size: 1rem;
+    >li {
+        display: inline-block;
+        list-style-type: none;
+        font-size: 1rem;
+        &:before {
+            margin: 0 4px;
+        }
+        >a {
+            text-decoration: none;
+            color: var(--bs-gray-700);
+            &:hover {
+                text-decoration: none;
+                color: var(--bs-gray-400);
+            }
+        }
+        &.active {
+
+        }
+    }
 
 }
-.breadcrumbs > li:before {
-    margin: 0 4px;
-}
-.breadcrumbs > li > a {
-    text-decoration: none;
-    color: var(--bs-gray-700);
-}
-.breadcrumbs > li > a:hover {
-    text-decoration: none;
-    color: var(--bs-gray-400);
-}
-.breadcrumbs > li.active {
 
-}
 ol.breadcrumbs {
     padding-left: 0;
 }
 
 //Кнопка Scroll Up
-button.scrollup {
+%scrollup_hover_focus {
+    color: #fff;
+    transform: translateY(-95%) rotate(-45deg);
+    -webkit-transform: translateY(-95%) rotate(-45deg);
+    -moz-transform: translateY(-95%) rotate(-45deg);
+    -o-transform: translateY(-95%) rotate(-45deg);
+    -ms-transform: translateY(-95%) rotate(-45deg);
+    i {
+        transform: translateY(0) rotate(45deg);
+        -webkit-transform: translateY(0) rotate(45deg);
+        -moz-transform: translateY(0) rotate(45deg);
+        -o-transform: translateY(0) rotate(45deg);
+        -ms-transform: translateY(0) rotate(45deg);
+    }
+}
+.scrollup {
     position: fixed;
     top: 0;
     right: 25px;
@@ -52,20 +68,28 @@ button.scrollup {
     z-index: 99;
     visibility: hidden;
     opacity: 0;
+    i {
+        display: inline-block;
+        -webkit-transition: all .5s;
+        -o-transition: all .5s;
+        transition: all .5s;
+    }
+    &.is-active {
+        top: 95%;
+        -webkit-transform: translateY(-95%);
+        transform: translateY(-95%);
+        opacity: 1;
+        visibility: visible;
+
+        &:hover {
+            @extend %scrollup_hover_focus;
+        }
+        &:focus {
+            @extend %scrollup_hover_focus;
+        }
+    }
 }
-.scrollup i {
-    display: inline-block;
-    -webkit-transition: all .5s;
-    -o-transition: all .5s;
-    transition: all .5s;
-}
-.scrollup.is-active {
-    top: 95%;
-    -webkit-transform: translateY(-95%);
-    transform: translateY(-95%);
-    opacity: 1;
-    visibility: visible;
-}
+/*
 .scrollup.is-active:hover, .scrollup.is-active:focus {
     color: #fff;
     transform: translateY(-95%) rotate(-45deg);
@@ -81,3 +105,4 @@ button.scrollup {
     -o-transform: translateY(0) rotate(45deg);
     -ms-transform: translateY(0) rotate(45deg);
 }
+*/

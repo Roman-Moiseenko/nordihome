@@ -32,21 +32,7 @@
 .parsing-title-products--button {
     margin-left: auto;
 }
-.parser button {
-    /*background: black;
-    border: 1px solid #333;
-    color: white;
-    font-size: 14px;*/
-    //padding: 10px 20px;
-    //text-transform: uppercase;
-   // cursor: pointer;
-    //border-radius: 50px;
-}/*
-.parser button:hover {
-    background: var(--gray);
-    color: var(--black);
-}
-*/
+
 #search-parser-button {
     border-radius: 0 $radius-button $radius-button 0;
 }
@@ -81,17 +67,18 @@
     width: 100%;
     padding-left: 20px;
     font-size: 14px;
+    >div {
+        margin: 4px 0;
+    }
+    >.description-product {
+        margin-bottom: 12px;
+    }
+
+    >h4 {
+        margin-bottom: 0;
+    }
 }
-.parser-item-data > div {
-    margin: 4px 0;
-}
-/*.description-product*/
-.parser-item-data > .description-product {
-    margin-bottom: 12px;
-}
-.parser-item-data > h4 {
-    margin-bottom: 0;
-}
+
 .parser-item-quantity {
     padding-bottom: 20px;
     /*padding-right: 40px;*/
@@ -100,18 +87,19 @@
 /* точки перед городами */
 .w39-point {
     display: inline-block;
+    &::before {
+        content: '';
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        border-radius: $radius-button;
+        margin-right: 4px;
+    }
 }
 
-.w39-point::before {
-    content: '';
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: $radius-button;
-    margin-right: 4px;
-}
+
 
 .ikea-green.w39-point::before {
     background-color: green;
@@ -187,14 +175,10 @@
 }
 .parser-card-search--header {
     padding: 10px 0;
+    >h3 {
+        display: inline-flex;
+    }
 }
-.parser-card-search--header>p {
-
-}
-.parser-card-search--header>h3 {
-    display: inline-flex;
-}
-
 .parser-card-search--find {
 
 }
@@ -205,9 +189,9 @@
 .parser-card-search--form {
     position: relative;
     display: flex;
-}
-.parser-card-search--form input {
-    width: 100%;
+    input {
+        width: 100%;
+    }
 }
 @media (max-width: 991px) {
     .parser-card-search--find {
@@ -238,12 +222,13 @@
     border-spacing: 0;
     letter-spacing: 0;
     margin: 0;
+    td {
+        border: 0;
+        padding: 8px 0 0;
+        font-size: 14px;
+    }
 }
-.parser-amount-table td {
-    border: 0;
-    padding: 8px 0 0;
-    font-size: 14px;
-}
+
 .parser-tr-underline {
     border-bottom: 1px solid #ddd;
 }
@@ -256,8 +241,6 @@
 }
 /** Данные о клиенте **/
 /* CHECK LIST*/
-.parser-card-checklist {
-}
 
 .parser-tbl td{
     vertical-align: top;
@@ -272,10 +255,11 @@
     color: var(--color-parser-cost);
     position: relative;
     display: flex;
+    >.parser-checklist-amount--full {
+        margin-left: auto;
+    }
 }
-.parser-checklist-amount > .parser-checklist-amount--full {
-    margin-left: auto;
-}
+
 .parser-tbl-count{
     width: 30px;
     font-size: 16px;
@@ -310,27 +294,26 @@
 }
 .parser-col-4 {
     width: 33.33333%;
+    &:nth-child(3n-2) {
+        margin-right: 6px;
+    }
+    &:nth-child(3n-1) {
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+    &:nth-child(3n) {
+        margin-left: 6px;
+    }
 }
-.parser-col-4:nth-child(3n-2) {
 
-    margin-right: 6px;
-}
-.parser-col-4:nth-child(3n-1) {
-    margin-left: 6px;
-    margin-right: 6px;
-}
-.parser-col-4:nth-child(3n) {
-    margin-left: 6px;
-}
-
-.parser-col-6:nth-child(even) {
-    margin-left: 6px;
-}
-.parser-col-6:nth-child(odd) {
-    margin-right: 6px;
-}
 .parser-col-6 {
     width: 50%;
+    &:nth-child(even) {
+        margin-left: 6px;
+    }
+    &:nth-child(odd) {
+        margin-right: 6px;
+    }
 }
 @media (max-width: 991px) {
     .parser-flex {
@@ -360,30 +343,9 @@
     width: 60px;
     text-align: center;
 }
-/*
-.parser-list-item--form button {
-    padding: 8px;
-    font-size: 14px;
-    background: white;
-    color: black;
-    border: 1px solid black;
-}
-.decrease-button {border-radius:5px 0 0 5px !important;}
-.increase-button {border-radius: 0 5px 5px 0 !important;}
-*/
+
 #search-parser-field {border-radius: 12px 0 0 12px;}
-/* Форматирование радиокнопок*/
 
-#user-type-person {
-
-}
-#user-type-company {
-
-}
-/* Форматирование чекбокса*/
-#user-agree {
-
-}
 
 .red {
     color: red;
@@ -391,14 +353,16 @@
 /* COMPLETE */
 .parser-complete {
     width: 100%;
+    >h2 {
+        margin-bottom: 20px;
+    }
+    >h3 {
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+
 }
-.parser-complete > h2 {
-    margin-bottom: 20px;
-}
-.parser-complete > h3 {
-    margin-top: 40px;
-    margin-bottom: 20px;
-}
+
 .parser-complete-table {
     width: 100%;
 }
@@ -440,7 +404,7 @@
 }
 @keyframes spinner {to{transform: rotate(1turn)}}
 
-/**/
+
 
 .parser-comment, .parser-delivery {
     margin-top: 20px;
