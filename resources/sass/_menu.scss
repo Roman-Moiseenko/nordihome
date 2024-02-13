@@ -286,6 +286,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 .wish-item-cost {
     margin-left: auto;
     margin-right: 12px;
+    white-space: nowrap;
 }
 
 .wish-item-trash {
@@ -324,7 +325,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 
 .cart-item-discount_cost {
     font-size: 1rem;
-    color: var(--bs-red);
+    color: var(--bs-discount-color);
 }
 
 .cart-item-quantity {
@@ -367,7 +368,7 @@ a.presearch-suggest-item, a.presearch-suggest-item:hover {
 #widget-cart-all-discount {
     font-size: 1.25rem;
     font-weight: 500;
-    color: var(--bs-red);
+    color: var(--bs-discount-color);
 }
 
 #widget-cart-all-amount-mini {

@@ -619,8 +619,11 @@ window.$ = jQuery;
                 _error(data);
                 if (data.state === false) {
                     let buttonProduct = $('.product-wish-toggle[data-product=' + item + ']');
-                    buttonProduct.removeClass('btn-warning');
-                    buttonProduct.addClass('btn-light');
+                    let iconButton = buttonProduct.find('i');
+                    buttonProduct.addClass('btn-light to-wish');
+                    buttonProduct.removeClass('btn-warning is-wish');
+                    iconButton.addClass('fa-light');
+                    iconButton.removeClass('fa-solid');
                 }
                 if ($('body').hasClass('wish')) {
                     location.reload();
