@@ -17,9 +17,10 @@
                 <img id="main-image-product" src="{{ $product->photo->getThumbUrl('card') }}" style="width: 100%;">
             </div>
 
-            <div id="slider-images-product" class="owl-carousel owl-theme mt-3 p-3">
+            <div class="slider-images-product owl-carousel owl-theme mt-3 p-3" data-responsive="[3,6,9]">
                 @foreach($product->photos as $photo)
-                    <img src="{{ $photo->getThumbUrl('mini') }}" data-image="{{ $photo->getThumbUrl('card') }}" class="slider-image-product">
+                    <img src="{{ $photo->getThumbUrl('mini') }}" data-image="{{ $photo->getThumbUrl('card') }}"
+                         class="slider-image-product" alt="{{ $photo->alt }}">
                 @endforeach
             </div>
 
@@ -31,7 +32,8 @@
                         @include('shop.widgets.to-wish', ['product' => $product])
                     </div>
                     <div>
-                        <a href="#reviews" title="Отзывы реальных покупателей" aria-label="Отзывы реальных покупателей">{{ $product->countReviews() }}</a>
+                        <a href="#reviews" title="Отзывы реальных покупателей"
+                           aria-label="Отзывы реальных покупателей">{{ $product->countReviews() }}</a>
                         @include('shop.widgets.stars', ['rating' => $product->current_rating])
                     </div>
                 </div>
@@ -51,32 +53,37 @@
                     <button class="one-click btn btn-outline-dark" data-product="{{ $product->id }}">В 1 Клик!</button>
                 </div>
                 @if(!is_null($product->modification()))
-                <div class="view-modification">
-                    @foreach($product->modification->products as $_product)
-                        <div>
-                            @if($product->id == $_product->id)
-                                <img src="{{ $product->photo->getThumbUrl('thumb') }}">
-                            @else
-                                <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
-                                    <img src="{{ $_product->photo->getThumbUrl('thumb') }}" style="">
-                                </a>
-                            @endif
-                        </div>
-                    @endforeach
+                    <div class="view-modification">
+                        @foreach($product->modification->products as $_product)
+                            <div>
+                                @if($product->id == $_product->id)
+                                    <img src="{{ $product->photo->getThumbUrl('thumb') }}"
+                                         alt="{{ $_product->photo->alt }}">
+                                @else
+                                    <a href="{{ route('shop.product.view', $_product->slug) }}"
+                                       title="{{ $_product->name }}">
+                                        <img src="{{ $_product->photo->getThumbUrl('thumb') }}"
+                                             alt="{{ $_product->photo->alt }}">
+                                    </a>
+                                @endif
+                            </div>
+                        @endforeach
 
-                </div>
+                    </div>
                 @endif
                 @if(!empty($product->related))
-                <div class="view-related">
-                    <h4>Аксессуары</h4>
-                    <div style="display: flex; height: 100px;">
-                    @foreach($product->related as $_product)
-                        <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
-                            <img src="{{ $_product->photo->getThumbUrl('thumb') }}" style="">
-                        </a>
-                    @endforeach
+                    <div class="view-related">
+                        <h4>Аксессуары</h4>
+                        <div class="slider-images-product owl-carousel owl-theme" data-responsive="[2,4,6]">
+                            @foreach($product->related as $_product)
+                                <a href="{{ route('shop.product.view', $_product->slug) }}"
+                                   title="{{ $_product->name }}">
+                                    <img src="{{ $_product->photo->getThumbUrl('thumb') }}"
+                                         alt="{{ $_product->photo->alt }}">
+                                </a>
+                            @endforeach
                         </div>
-                </div>
+                    </div>
                 @endif
             </div>
             <div class="view-specifications">
@@ -93,14 +100,16 @@
     </div>
 
     @if(!empty($product->series))
-    <div class="box-card">
-        <h3 id="series">Все товары серии {{ $product->series->name }}</h3>
-        @foreach($product->series->products as $_product)
-            <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
-                <img src="{{ $_product->photo->getThumbUrl('thumb') }}" style="">
-            </a>
-        @endforeach
-    </div>
+        <div class="box-card">
+            <h3 id="series">Все товары серии {{ $product->series->name }}</h3>
+            <div class="slider-images-product owl-carousel owl-theme" data-responsive="[3,6,9]">
+            @foreach($product->series->products as $_product)
+                <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
+                    <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
+                </a>
+            @endforeach
+            </div>
+        </div>
     @endif
     <div class="box-card">
         <h3 id="description">Описание</h3>
@@ -122,8 +131,6 @@
     <div>
         Вы смотрели ???
     </div>
-
-
 
     {!! $schema->ProductPage($product) !!}
 @endsection

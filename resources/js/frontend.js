@@ -549,17 +549,22 @@ window.$ = jQuery;
         item.preventDefault();
         let _productId = $(this).data('product');
         let thisButton = $(this);
+        let iconButton = thisButton.find('i');
         if (_productId !== undefined) {
             $.post(
                 '/cabinet/wish/toggle/' + _productId,
                 {},
                 function (data) {
                     if (data.state === true) {
-                        thisButton.addClass('btn-warning');
-                        thisButton.removeClass('btn-light');
+                        thisButton.addClass('btn-warning is-wish');
+                        thisButton.removeClass('btn-light to-wish');
+                        iconButton.addClass('fa-solid');
+                        iconButton.removeClass('fa-light');
                     } else  {
-                        thisButton.removeClass('btn-warning');
-                        thisButton.addClass('btn-light');
+                        thisButton.removeClass('btn-warning is-wish');
+                        thisButton.addClass('btn-light to-wish');
+                        iconButton.addClass('fa-light');
+                        iconButton.removeClass('fa-solid');
                     }
                     if ($('body').hasClass('wish')) {
                         location.reload();
