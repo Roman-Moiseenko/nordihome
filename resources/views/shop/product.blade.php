@@ -104,7 +104,9 @@
             <div class="d-flex justify-content-around">
             @foreach($product->bonus as $_product)
                 <div class="px-2">
-                    <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
+                    <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
+                        <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
+                    </a>
                     <div class="price-block">
                         <span class="discount-price">{{ price($_product->pivot->discount) }}</span>
                         <span class="base-price">{{ price($_product->lastPrice->value) }}</span>
@@ -122,7 +124,7 @@
     @if(!empty($product->series))
         <div class="box-card">
             <h3 id="series">Все товары серии {{ $product->series->name }}</h3>
-            <div class="slider-images-product owl-carousel owl-theme" data-responsive="[3,6,9]">
+            <div class="slider-images-product owl-carousel owl-theme" data-responsive="[3,6,9]" data-mouse-scroll="0">
                 @foreach($product->series->products as $_product)
                     <div class="px-1">
                         <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
@@ -148,9 +150,26 @@
         Характеристики
     </div>
 
-    <div>
-        Аналоги (из группы Эквиваленты)
+    @if(!empty($product->equivalent()))
+    <div class="box-card">
+        <h3 id="equivalent">Похожие товары</h3>
+        <div class="slider-images-product owl-carousel owl-theme" data-responsive="[2,4,6]" data-mouse-scroll="0">
+            @foreach($product->equivalent->products as $_product)
+                <div class="px-1">
+                    <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
+                        <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
+                    </a>
+                    <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
+                            <span class="fs-8 product-trunc">
+                                {{ $_product->name }}
+                            </span>
+                    </a>
+                </div>
+            @endforeach
+        </div>
     </div>
+    @endif
+
     <div id="reviews" class="box-card">
         Отзывы
     </div>

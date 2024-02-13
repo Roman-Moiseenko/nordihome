@@ -68,21 +68,23 @@ window.$ = jQuery;
         let slidersImagesProduct = $('.slider-images-product');
         slidersImagesProduct.each(function (element) {
             let sliderImagesProduct = $(this);
-
+            let mouseScroll = sliderImagesProduct.data('mouse-scroll');
             let responsive = sliderImagesProduct.data('responsive');
             if (responsive === undefined || responsive.length !== 3) responsive = [3, 6, 9];
             product_optionsSliderBase.responsive = {0: {items: responsive[0]}, 576: {items: responsive[1]}, 991: {items: responsive[2]}};
             product_optionsSliderBase.margin = 0;
             sliderImagesProduct.owlCarousel(product_optionsSliderBase);
-            sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
-                if (e.originalEvent.deltaY > 0) {
-                    sliderImagesProduct.trigger('next.owl');
-                } else {
-                    sliderImagesProduct.trigger('prev.owl');
-                }
-                e.preventDefault();
-            });
-
+            console.log(mouseScroll);
+            if (mouseScroll !== 0) {
+                sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
+                    if (e.originalEvent.deltaY > 0) {
+                        sliderImagesProduct.trigger('next.owl');
+                    } else {
+                        sliderImagesProduct.trigger('prev.owl');
+                    }
+                    e.preventDefault();
+                });
+            }
         });
 
 
