@@ -190,6 +190,37 @@
         font-size: 1.75rem;
         color: var(--bs-gray-600);
     }
+    >.count-product {
+        font-size: 0.9rem;
+        color: var(--bs-gray-600);
+    }
+}
+.view-modification {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    display: flex;
+    position: relative;
+    >div {
+        width: 60px;
+        height: 60px;
+        >img {
+            width: 100%;
+            border: 1px solid var(--bs-gray-400);
+        }
+        >a>img {
+            width: 100%;
+            opacity: 0.8;
+        }
+    }
+}
+
+.view-related {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    img {
+        height: 100%;
+        width: auto;
+    }
 }
 
 ///СЛАЙДЕР
