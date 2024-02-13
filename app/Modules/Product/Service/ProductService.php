@@ -43,7 +43,7 @@ class ProductService
 
     public function create(Request $request): Product
     {
-
+        //TODO Переделать под получения массива $request->all()
         DB::beginTransaction();
         try {
             /* SECTION 1*/
@@ -58,7 +58,7 @@ class ProductService
             $product = Product::register($request['name'], $request['code'], (int)$request['category_id'], $request['slug'] ?? '', $arguments);
             $product->brand_id = $request['brand_id'];
             if (!empty($request['categories'])) {
-                foreach ($request->get('categories') as $category_id) {
+                foreach ($request['categories'] as $category_id) {
                     if ($this->categories->exists((int)$category_id))
                         $product->categories()->attach((int)$category_id);
                 }
@@ -145,8 +145,8 @@ class ProductService
                 (float)$request['dimensions-weight'],
                 $request['dimensions-measure']
             );
-            $product->not_local = !$request->has('local');
-            $product->not_delivery = !$request->has('delivery');
+            $product->not_local = !isset($request['local']);
+            $product->not_delivery = !isset($request['delivery']);
 
             /* SECTION 6*/
             //Атрибуты
@@ -170,8 +170,8 @@ class ProductService
             if (!empty($request['last-price']) && (float)$request['last-price'] > 0.99) {
                 $product->setPrice((float)$request['last-price']);
             }
-            $product->pre_order = $request->has('pre_order');
-            $product->only_offline = $request->has('offline');
+            $product->pre_order = isset($request['pre_order']);
+            $product->only_offline = isset($request['offline']);
 
             $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
 

@@ -180,7 +180,7 @@ class ParserCart //Repository
     {
         $result = '<div class="row">';
         foreach (ParserService::STORES as $store => $name) {
-            $_count = $quantity[$store];
+            $_count = $quantity[$store] ?? 0;
             $_class = ($_count > 1) ? 'ikea-green' : ( ($_count == 1) ? 'ikea-yellow' : 'ikea-red');
             $result .= '<div class="col-xl-3 col-lg-4 col-6">';
             $result .= '<span class="w39-point ' . $_class  . '">' . $name . '</span>  ';

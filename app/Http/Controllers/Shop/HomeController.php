@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Shop;
 
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Widget;
@@ -22,8 +23,7 @@ class HomeController extends Controller
     {
         //$this->middleware(['guest', 'guest:user']);
         //$this->middleware('auth:user');
-        if (Auth::guard('admin')->check())
-        {
+        if (Auth::guard('admin')->check()) {
             throw new \DomainException('^^^^');
         }
         $this->options = $options;
@@ -36,8 +36,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $widgets = Widget::get();
-
+        $widgets = [];
+        try {
+            $widgets = Widget::get();
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
+        }
         return view('shop.home', compact('widgets'));
     }
 

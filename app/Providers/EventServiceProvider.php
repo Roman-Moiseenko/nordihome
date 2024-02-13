@@ -6,10 +6,12 @@ use App\Events\ArrivalHasCompleted;
 use App\Events\OrderHasCreated;
 use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
+use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasRegistered;
 use App\Listeners\NotificationNewArrival;
 use App\Listeners\NotificationNewOrder;
 use App\Listeners\NotificationNewProductParser;
+use App\Listeners\NotificationThrowable;
 use App\Listeners\ParsingImageProduct;
 use App\Listeners\NotificationMovedPromotion;
 use App\Listeners\WelcomToShop;
@@ -46,6 +48,9 @@ class EventServiceProvider extends ServiceProvider
         ArrivalHasCompleted::class => [
             NotificationNewArrival::class,
         ],
+        ThrowableHasAppeared::class => [
+            NotificationThrowable::class
+        ]
     ];
 
     /**

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Order\Service\ReserveService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Cart\Cart;
@@ -21,8 +22,17 @@ class CartController extends Controller
 
     public function view(Request $request)
     {
-        $cart = $this->cart->getCartToFront($request['tz']);
-        return view('shop.cart.index', compact('cart'));
+        try {
+            $cart = $this->cart->getCartToFront($request['tz']);
+            return view('shop.cart.index', compact('cart'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        }
+        catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
+        }
+        return redirect()->route('home');
     }
 
     //AJAX
@@ -33,6 +43,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
 
@@ -45,6 +56,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
@@ -57,6 +69,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
@@ -68,6 +81,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
@@ -83,6 +97,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
@@ -94,6 +109,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
@@ -105,6 +121,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
@@ -116,6 +133,7 @@ class CartController extends Controller
             $cart = $this->cart->getCartToFront($params['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }

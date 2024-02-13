@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Events\ThrowableHasAppeared;
 use App\Mail\FeedBack;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Shop\ShopRepository;
@@ -24,18 +25,22 @@ class PageController extends Controller
     {
         try {
             $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
-
             return $page->view();
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             abort(404, 'Страница не найдена');
         }
     }
 
     public function map_data(Request $request)
     {
-        $map = $this->repository->getMapData($request);
-
-        return response()->json($map);
+        try {
+            $map = $this->repository->getMapData($request);
+            return response()->json($map);
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+        }
     }
 
     public function email(Request $request)

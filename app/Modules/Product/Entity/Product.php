@@ -144,8 +144,21 @@ class Product extends Model
     public static function register(string $name, string $code, int $main_category_id, string $slug = '', array $arguments = []): self
     {
         $code_search = str_replace(['-', ',', '.', '_'],'', $code);
-        //$dublicat = Product::where('name', '=', $name)->get();
-        if (!empty(Product::where('name', '=', $name)->first())) throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
+        //TODO Возможно перенести в сервис, тогда в Парсере - вызывать сервис
+        if (!empty(Product::where('name', '=', $name)->first())) {
+            //Ищем все товары 49483964
+            $products = Product::where('name', 'LIKE', "%$name%")->get();
+            $max_number = 0;
+            foreach ($products as $product) {
+                $number = substr($product->name, strlen($name));
+                if (empty($number)) $number = 0;
+                if ($number > $max_number) $max_number = $number;
+
+            }
+            $max_number++;
+            $name .= '-' . $max_number;
+        }
+            //throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
         if (!empty(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
         $slug = empty($slug) ? Str::slug($name) : $slug;
 

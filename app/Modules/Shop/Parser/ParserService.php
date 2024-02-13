@@ -65,20 +65,25 @@ class ParserService
             //Парсим основные данные
             $parser_product = $this->parsingData($code);
             //1. Добавляем черновик товара (Артикул, Главное фото, Название, Краткое описание, Базовая цена, published = false)
+            //TODO Перенести в Сервис Продукт
+
+            $arguments = [      //Опции магазина
+                'pre_order' => $this->options->shop->pre_order,
+                'only_offline' => $this->options->shop->only_offline,
+                'not_local' => !$this->options->shop->delivery_local,
+                'not_delivery' => !$this->options->shop->delivery_all,
+            ];
             $product = Product::register(
                 $parser_product['name'],
                 $this->toCode($code),
                 (Category::where('name', 'Прочее')->first())->id,
+                '',
+                $arguments
             );
             $product->short = $parser_product['description'];
             $product->brand_id = (Brand::where('name', 'Икеа')->first())->id;
+            //TODO спарсить размеры
             $product->dimensions = Dimensions::create(0, 0, 0, $parser_product['weight'], Dimensions::MEASURE_KG);
-            //Опции магазина
-            $product->pre_order = $this->options->shop->pre_order;
-            $product->only_offline =  $this->options->shop->only_offline;
-            $product->not_delivery = !$this->options->shop->delivery_all;
-            $product->not_local = !$this->options->shop->delivery_local;
-
 
             $product->save();
             $product->photo()->save(Photo::uploadByUrl($parser_product['image']));
@@ -192,6 +197,8 @@ class ParserService
 
         if ($_array == null)
             throw new \DomainException('На сайте содержаться неверные данные о продукте');
+        if (empty($_array['searchResultPage']['products']['main']['items']))
+            throw new \DomainException('Данный продукт недоступен для текущей продажи');
         $item = $_array['searchResultPage']['products']['main']['items'][0]['product'];
         //Парсим первычный JSON
         //$code = $this->toCode($item['itemNo']); //Добавляем точки к артикулу itemNoGlobal , Id , itemNo

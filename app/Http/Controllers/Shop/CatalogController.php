@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
@@ -26,12 +27,21 @@ class CatalogController extends Controller
 
     public function index()
     {
-        $categories = $this->repository->getRootCategories();
-        //TODO $title и $description вынести в настройки магазина
-        $title = 'Каталог товаров интернет-магазина NORDIHOME';
-        $description = 'Ассортимент товаров из Европы известных брендов с доставкой по России почтой и транспортными компаниями';
+        try {
+            $categories = $this->repository->getRootCategories();
+            //TODO $title и $description вынести в настройки магазина
+            $title = 'Каталог товаров интернет-магазина NORDIHOME';
+            $description = 'Ассортимент товаров из Европы известных брендов с доставкой по России почтой и транспортными компаниями';
 
-        return view('shop.catalog', compact('categories', 'title', 'description'));
+            return view('shop.catalog', compact('categories', 'title', 'description'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        }
+        catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
+        }
+        return redirect()->route('home');
     }
 
     public function view(Request $request, $slug)
@@ -49,7 +59,6 @@ class CatalogController extends Controller
             $maxPrice = 999999999;
             $product_ids = [];
             $brands = [];
-
 
             $products = $this->repository->ProductsByCategory($category->id);
             /** @var Product $product */
@@ -82,11 +91,14 @@ class CatalogController extends Controller
                 compact('category', 'products', 'prod_attributes', 'tags',
                     'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id'));
 
-        } catch (\Throwable $e) {
-            $category = null;
+        } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
         }
+        catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
+        }
+        return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
     }
 
     public function search(Request $request)
@@ -100,6 +112,7 @@ class CatalogController extends Controller
                 $result[] = $this->repository->toShopForSubMenu($category);
             }
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
         return \response()->json($result);

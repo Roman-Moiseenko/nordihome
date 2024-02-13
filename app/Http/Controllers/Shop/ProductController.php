@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
@@ -30,11 +31,13 @@ class ProductController extends Controller
             $description = $product->short;
 
             return view('shop.product', compact('product', 'title', 'description'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
-            $product = null;
-            flash($e->getMessage() . '/'. $e->getFile() . '/' . $e->getLine() , 'danger');
-            return redirect()->route('home'); //'error.403', ['message' => $e->getMessage()]
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
         }
+        return redirect()->route('home');
     }
 
     public function search(Request $request)
@@ -44,6 +47,7 @@ class ProductController extends Controller
         try {
             $result = $this->repository->search($request['search']);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
         return \response()->json($result);

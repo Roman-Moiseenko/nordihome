@@ -1,0 +1,211 @@
+{
+    "usergroup": "[]",
+    "testActivationTriggers": {},
+    "searchResultPage": {
+        "searchPhrase": "49483332",
+        "storeWindow": [],
+        "storeCount": 0,
+        "didYouMean": [],
+        "relatedSearches": [],
+        "retiredProducts": [],
+        "products": {
+            "badge": 0,
+            "filters": [],
+            "sortOrders": {
+                "name": "Sortuj",
+                "values": []
+            },
+            "main": {
+                "items": [],
+                "start": 0,
+                "end": 0,
+                "max": 0
+            },
+            "shelves": [
+                {
+                    "title": "Polecane kategorie",
+                    "result": {
+                        "items": [
+                            {
+                                "metadata": "v1;1;CATEGORY;st001;categories_shelf;",
+                                "category": {
+                                    "name": "Przechowywanie i organizacja",
+                                    "key": "st001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/przechowywanie-i-organizacja-st001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/storage-organisation-st001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;2;CATEGORY;fu001;categories_shelf;",
+                                "category": {
+                                    "name": "Meble",
+                                    "key": "fu001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/meble-fu001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/furniture-fu001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;3;CATEGORY;tl001;categories_shelf;",
+                                "category": {
+                                    "name": "Tekstylia",
+                                    "key": "tl001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/tekstylia-tl001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/textiles-tl001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;4;CATEGORY;de001;categories_shelf;",
+                                "category": {
+                                    "name": "Dekoracje",
+                                    "key": "de001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/dekoracje-de001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/decoration-de001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;5;CATEGORY;li001;categories_shelf;",
+                                "category": {
+                                    "name": "Oświetlenie",
+                                    "key": "li001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/oswietlenie-li001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/lighting-li001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;6;CATEGORY;kt001;categories_shelf;",
+                                "category": {
+                                    "name": "Gotowanie i zastawa stołowa",
+                                    "key": "kt001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/gotowanie-i-zastawa-stolowa-kt001/",
+                                    "imageUrl": "https://www.ikea.com/pl/pl/range-categorisation/images/gotowanie-i-zastawa-stolowa-kt001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;7;CATEGORY;ka001;categories_shelf;",
+                                "category": {
+                                    "name": "Kuchnie i AGD kuchenne",
+                                    "key": "ka001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/kuchnie-i-agd-kuchenne-ka001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/kitchen-appliances-ka001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;8;CATEGORY;od001;categories_shelf;",
+                                "category": {
+                                    "name": "Produkty do ogrodu i na balkon",
+                                    "key": "od001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/produkty-do-ogrodu-i-na-balkon-od001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/outdoor-products-od001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;9;CATEGORY;pp001;categories_shelf;",
+                                "category": {
+                                    "name": "Doniczki i rośliny",
+                                    "key": "pp001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/doniczki-i-rosliny-pp001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/pots-plants-pp001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;10;CATEGORY;bm001;categories_shelf;",
+                                "category": {
+                                    "name": "Łóżka i materace",
+                                    "key": "bm001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/lozka-i-materace-bm001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/beds-mattresses-bm001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;11;CATEGORY;bc001;categories_shelf;",
+                                "category": {
+                                    "name": "Dzieci i niemowlęta",
+                                    "key": "bc001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/dzieci-i-niemowleta-bc001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/baby-children-bc001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            },
+                            {
+                                "metadata": "v1;12;CATEGORY;ba001;categories_shelf;",
+                                "category": {
+                                    "name": "Wyposażenie łazienki",
+                                    "key": "ba001",
+                                    "url": "https://www.ikea.com/pl/pl/cat/wyposazenie-lazienki-ba001/",
+                                    "imageUrl": "https://www.ikea.com/global/assets/range-categorisation/images/bathroom-products-ba001.jpeg"
+                                },
+                                "type": "CATEGORY",
+                                "label": "Kategoria",
+                                "actionTokens": [],
+                                "isBreakout": false
+                            }
+                        ],
+                        "start": 0,
+                        "end": 12,
+                        "max": 12
+                    }
+                }
+            ],
+            "pageMessages": []
+        },
+        "content": {
+            "badge": 0,
+            "filters": [],
+            "sortOrders": {
+                "name": "Sortuj",
+                "values": []
+            },
+            "main": {
+                "items": [],
+                "start": 0,
+                "end": 0,
+                "max": 0
+            },
+            "shelves": [],
+            "pageMessages": []
+        }
+    }
+}

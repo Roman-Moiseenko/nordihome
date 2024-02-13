@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\Parser\ParserService;
@@ -43,8 +44,12 @@ class ParserController extends Controller
             $product = $this->service->findProduct($request);
             $this->cart->load();
             $this->cart->add($product);
-        } catch (\Throwable $e) {
-            flash($e->getMessage());
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        }
+        catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
         }
         return redirect()->route('shop.parser.view');
     }
@@ -52,16 +57,12 @@ class ParserController extends Controller
 
     public function clear()
     {
-        //Очищаем список товаров
-        //TODO Ajax
         $this->cart->load();
         $this->cart->clear();
         return redirect()->route('shop.parser.view');
-
-        //return \response()->json($this->cart);
     }
 
-    public function remove(Product $product) //Product $product
+    public function remove(Product $product)
     {
         try {
             $this->cart->load();

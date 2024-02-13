@@ -13,7 +13,7 @@
 
     <div class="box-card row">
         <div class="col-lg-6">
-            <div class="" style="padding: 10px 40px;">
+            <div class="view-image-product">
                 <img id="main-image-product" src="{{ $product->photo->getThumbUrl('card') }}" style="width: 100%;">
             </div>
 
@@ -24,13 +24,13 @@
             </div>
 
         </div>
-        Изображения + Видео
+        <div class="col-lg-6" style="background: #e0e0e0">
+            Базовые характеристики. Модификации, Цена, В Корзину, Аксессуары, В избранное, сравнить,
+            В наличии. Акция
+            <br>Якоря на Отзывы, Характеристики, Описание
+        </div>
     </div>
-    <div class="col-lg-6" style="background: #e0e0e0">
-        Базовые характеристики. Модификации, Цена, В Корзину, Аксессуары, В избранное, сравнить,
-        В наличии. Акция
-        <br>Якоря на Отзывы, Характеристики, Описание
-    </div>
+
     </div>
     <div>
         Бонусный товар

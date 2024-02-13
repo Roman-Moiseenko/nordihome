@@ -8,8 +8,8 @@ window.$ = jQuery;
     sessionStorage.setItem("time", -(new Date().getTimezoneOffset()));
 
     /* От Заказчика*/
-    //Кол-во столбцов в меню 1 - для маленьких, 3 для огромных - дублируется во _shop-l-classes.scss
-    const countColSubMenu = 1;
+    //Кол-во столбцов в меню 1 - для маленьких, 3 для огромных - дублируется во _shop-l-classes.scss $count-col-submenu
+    const countColSubMenu = 2;
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

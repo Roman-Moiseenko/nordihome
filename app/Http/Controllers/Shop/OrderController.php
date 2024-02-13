@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Shop;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Order\Entity\Order\Order;
@@ -31,11 +32,11 @@ class OrderController extends Controller
     private ParserCart $parserCart;
 
     public function __construct(
-        Cart $cart,
-        ParserCart $parserCart,
-        PaymentService $payments,
+        Cart            $cart,
+        ParserCart      $parserCart,
+        PaymentService  $payments,
         DeliveryService $deliveries,
-        OrderService $service,
+        OrderService    $service,
         ReserveService  $reserves
     )
     {
@@ -51,62 +52,88 @@ class OrderController extends Controller
 
     public function create(Request $request)
     {
-        //TODO !!!!! Перенести куда-нибудь
-        //Постановка в Резерв товара
-        foreach ($this->cart->getOrderItems() as $item) {
-            if ($item->reserve == null) {
-                $reserve = $this->reserves->toReserve(
-                    $item->product,
-                    $item->quantity,
-                    Reserve::TYPE_CART,
-                    $this->minutes
-                );
-                CartStorage::find($item->id)->update(['reserve_id' => $reserve->id]);
-            } else {
-                $item->reserve->update(['reserve_at' => now()->addMinutes($this->minutes)]);
+        try {
+
+
+            //TODO !!!!! Перенести куда-нибудь
+            //Постановка в Резерв товара
+            foreach ($this->cart->getOrderItems() as $item) {
+                if ($item->reserve == null) {
+                    $reserve = $this->reserves->toReserve(
+                        $item->product,
+                        $item->quantity,
+                        Reserve::TYPE_CART,
+                        $this->minutes
+                    );
+                    CartStorage::find($item->id)->update(['reserve_id' => $reserve->id]);
+                } else {
+                    $item->reserve->update(['reserve_at' => now()->addMinutes($this->minutes)]);
+                }
             }
+
+
+            $cart = $this->cart->getCartToFront($request['tz']);
+            $preorder = 1;
+            if ($request->has('preorder') && ($request->get('preorder') == "false")) {//Очищаем корзину от излишков
+                $cart['items_preorder'] = [];
+                $preorder = 0;
+            }
+
+            $payments = $this->payments->get();
+            $storages = $this->deliveries->storages();
+            $companies = $this->deliveries->companies();
+
+            $default = $this->service->default_user_data();
+
+            $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->cart->getItems());
+
+            return view('shop.order.create', compact('cart', 'payments',
+                'storages', 'default', 'companies', 'delivery_cost', 'preorder'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
         }
-
-
-        $cart = $this->cart->getCartToFront($request['tz']);
-        $preorder = 1;
-        if ($request->has('preorder') && ($request->get('preorder') == "false") ) {//Очищаем корзину от излишков
-            $cart['items_preorder'] = [];
-            $preorder = 0;
-        }
-
-        $payments = $this->payments->get();
-        $storages = $this->deliveries->storages();
-        $companies = $this->deliveries->companies();
-
-        $default = $this->service->default_user_data();
-
-        $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->cart->getItems());
-
-        return view('shop.order.create', compact('cart', 'payments',
-            'storages', 'default', 'companies', 'delivery_cost', 'preorder'));
+        return redirect()->route('home');
     }
 
     public function create_parser(Request $request)
     {
-        //$cart->reload();
-        $payments = $this->payments->get();
-        $storages = $this->deliveries->storages();
-        $companies = $this->deliveries->companies();
+        try {
+            $payments = $this->payments->get();
+            $storages = $this->deliveries->storages();
+            $companies = $this->deliveries->companies();
 
-        $default = $this->service->default_user_data();
+            $default = $this->service->default_user_data();
 
-        $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->parserCart->getItems());
-        $cart = $this->parserCart;
-        return view('shop.order.create-parser', compact('cart', 'payments',
-            'storages', 'default', 'companies', 'delivery_cost'));
+            $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $this->parserCart->getItems());
+            $cart = $this->parserCart;
+            return view('shop.order.create-parser', compact('cart', 'payments',
+                'storages', 'default', 'companies', 'delivery_cost'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
+        }
+        return redirect()->route('home');
     }
 
     public function store_parser(Request $request)
     {
-        $order = $this->service->create_parser($request);
-        flash('Ваш заказ успешно создан!');
-        return redirect()->route('shop.order.view', $order);
+        try {
+            $order = $this->service->create_parser($request);
+            flash('Ваш заказ успешно создан!');
+
+            return redirect()->route('shop.order.view', $order);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
+        }
+        return redirect()->route('home');
     }
 
     public function create_pre(Request $request)
@@ -116,9 +143,17 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $order = $this->service->create($request);
-        flash('Ваш заказ успешно создан!');
-        return redirect()->route('cabinet.order.view', $order);
+        try {
+            $order = $this->service->create($request);
+            flash('Ваш заказ успешно создан!');
+            return redirect()->route('cabinet.order.view', $order);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
+        }
+        return redirect()->route('home');
     }
     /*
         public function view(Request $request, Order $order)
@@ -141,6 +176,7 @@ class OrderController extends Controller
         try {
             $result = $this->service->checkorder($request['data']);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
         return \response()->json($result);
@@ -152,6 +188,7 @@ class OrderController extends Controller
         try {
             if ($request->has('code')) $result = $this->service->coupon($request->get('code'));
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
         return \response()->json($result);
