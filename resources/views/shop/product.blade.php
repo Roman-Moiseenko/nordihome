@@ -89,8 +89,8 @@
                     @endif
                 </div>
                 <div class="view-specifications">
-                    Базовые характеристики + ссылка -
-                    <a href="#specifications">Все характеристики</a>
+                    @include('shop.widgets.dimensions', ['dimensions' => $product->dimensions])
+                    <div><a href="#specifications">Все характеристики</a></div>
                 </div>
             </div>
         </div>
@@ -169,14 +169,11 @@
         </div>
     </div>
     @endif
-
+    @if(!empty($product->reviews))
     <div id="reviews" class="box-card">
         Отзывы
     </div>
-
-    <div>
-        Вы смотрели ???
-    </div>
+    @endif
 
     {!! $schema->ProductPage($product) !!}
 @endsection

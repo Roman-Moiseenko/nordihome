@@ -49,7 +49,7 @@ class ProductController extends Controller
                 $q->where('id', '=', $category_id);
                 if ($published == 'active') $q->where('published', '=', true);
                 if ($published == 'draft') $q->where('published', '=', false);
-
+                //TODO выбрать товары из всех подкатегорий
             })->orWhere('main_category_id', '=', $category_id);
         }
         if ($published == 'active') $query->where('published', '=', true);

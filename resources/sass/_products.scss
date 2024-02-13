@@ -203,6 +203,47 @@
         color: var(--bs-gray-600);
     }
 }
+.dimensions {
+    padding: 10px 20px;
+    display: flex;
+    .sizes {
+        padding: 10px 50px;
+        position: relative;
+        .height{
+            position: absolute;
+            top: 50%;
+            left: 0;
+        }
+        .width {
+            position: absolute;
+            left: 60%;
+            bottom: 0;
+        }
+        .depth {
+            position: absolute;
+            right: 20px;
+            top: 0;
+        }
+        img {
+            height: 100px;
+        }
+    }
+    .weight {
+        padding: 10px 40px;
+
+        position: relative;
+        .measure {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        img {
+            height: 100px;
+        }
+    }
+}
+
 .view-modification {
     margin-top: 40px;
     margin-bottom: 40px;
@@ -249,6 +290,7 @@
         }
     }
 }
+
 ///СЛАЙДЕР
 #slider-images-product {
   /*  transform: rotate(90deg);
