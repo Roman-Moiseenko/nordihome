@@ -87,11 +87,13 @@
                             </div>
                         </div>
                     @endif
+                    <div class="view-specifications">
+                        <div>Доставка по России</div>
+                        @include('shop.widgets.dimensions', ['dimensions' => $product->dimensions])
+                        <div><a href="#specifications">Все характеристики</a></div>
+                    </div>
                 </div>
-                <div class="view-specifications">
-                    @include('shop.widgets.dimensions', ['dimensions' => $product->dimensions])
-                    <div><a href="#specifications">Все характеристики</a></div>
-                </div>
+
             </div>
         </div>
     </div>
