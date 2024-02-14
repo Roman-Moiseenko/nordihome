@@ -323,7 +323,7 @@ class OrderService
             $user = Auth::guard('user')->user();
         } else {
             $email = $request['email'];
-            $phone = $request['phone '];
+            $phone = $request['phone'];
 
             $user = User::where('email', $email)->first();
             if (empty($user)) {
@@ -334,10 +334,8 @@ class OrderService
                 //TODO Уведомление клиента что он зарегистрирован
             }
             Auth::loginUsingId($user->id);
-
             $default = $this->default_user_data();
         }
-
 
         if (isset($request['payment'])) $default->payment->setPayment($request['payment']);
         if ($request['delivery'] == 'local') $default->delivery->setDeliveryType(DeliveryOrder::LOCAL);
@@ -349,7 +347,7 @@ class OrderService
         }
         $Address = GeoAddress::create(
             $data['address'] ?? '',
-            $data['latitude'] ?? '',
+            $data['latitude'] ?? '', //TODO поля на будущее
             $data['longitude'] ?? '',
             $data['post'] ?? ''
         );
@@ -360,13 +358,18 @@ class OrderService
         } else {
             $default->delivery->setDeliveryLocal($storage, $Address);
         }
-
-        //$default->delivery->setDeliveryType(isset($data['delivery']) ? (int)$data['delivery'] : null);
         $product_id = $request['product_id'];
         $product = Product::find($product_id);
 
         $order = Order::register($user->id, Order::ONLINE, true);
         $order->setFinance($product->lastPrice->value, 0, 0, null);
+
+        $reserve = $this->reserves->toReserve(
+            $product,
+            1,
+            Reserve::TYPE_ORDER,
+            $this->minutes
+        );
 
         $order->items()->create([
             'product_id' => $product->id,
@@ -376,7 +379,7 @@ class OrderService
             'discount_id' => null,
             'discount_type' => '',
             'options' => [],
-            'reserve_id' => null
+            'reserve_id' => $reserve->id,
         ]);
         $order->setStatus(OrderStatus::PREORDER_SERVICE);
         event(new OrderHasCreated($order));
