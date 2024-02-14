@@ -7,7 +7,9 @@ use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\UserDelivery;
+use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Service\CouponService;
 use App\Modules\Order\Entity\Order\Order;
@@ -328,33 +330,57 @@ class OrderService
                 $password = Str::random(8);
                 $user = User::register($email, $password);
                 $user->update(['phone' => $phone]);
+
+                //TODO Уведомление клиента что он зарегистрирован
             }
             Auth::loginUsingId($user->id);
 
             $default = $this->default_user_data();
         }
 
+
+        if (isset($request['payment'])) $default->payment->setPayment($request['payment']);
+        if ($request['delivery'] == 'local') $default->delivery->setDeliveryType(DeliveryOrder::LOCAL);
+        if ($request['delivery'] == 'region') $default->delivery->setDeliveryType(DeliveryOrder::REGION);
+        $storage = null;
+        if (is_numeric($request['delivery'])) {
+            $default->delivery->setDeliveryType(DeliveryOrder::STORAGE);
+            $storage = (int)$request['delivery'];
+        }
+        $Address = GeoAddress::create(
+            $data['address'] ?? '',
+            $data['latitude'] ?? '',
+            $data['longitude'] ?? '',
+            $data['post'] ?? ''
+        );
+        if ($default->delivery->isRegion()) {
+            $default->delivery->setDeliveryTransport(
+                DeliveryHelper::deliveries()[0]['class'], $Address
+            );
+        } else {
+            $default->delivery->setDeliveryLocal($storage, $Address);
+        }
+
+        //$default->delivery->setDeliveryType(isset($data['delivery']) ? (int)$data['delivery'] : null);
         $product_id = $request['product_id'];
         $product = Product::find($product_id);
 
         $order = Order::register($user->id, Order::ONLINE, true);
         $order->setFinance($product->lastPrice->value, 0, 0, null);
 
-            $order->items()->create([
-                'product_id' => $product->id,
-                'quantity' => 1,
-                'base_cost' => $product->lastPrice->value,
-                'sell_cost' => $product->lastPrice->value,
-                'discount_id' => null,
-                'discount_type' => '',
-                'options' => [],
-                'reserve_id' => null
-            ]);
-
-
+        $order->items()->create([
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'base_cost' => $product->lastPrice->value,
+            'sell_cost' => $product->lastPrice->value,
+            'discount_id' => null,
+            'discount_type' => '',
+            'options' => [],
+            'reserve_id' => null
+        ]);
         $order->setStatus(OrderStatus::PREORDER_SERVICE);
-
         event(new OrderHasCreated($order));
+        Auth::logout();
         return $order;
     }
 }
