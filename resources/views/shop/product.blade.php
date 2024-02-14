@@ -78,27 +78,30 @@
                             <h4>Аксессуары</h4>
                             <div class="slider-images-product owl-carousel owl-theme" data-responsive="[2,4,6]">
                                 @foreach($product->related as $_product)
-                                    <a href="{{ route('shop.product.view', $_product->slug) }}"
-                                       title="{{ $_product->name }}">
-                                        <img src="{{ $_product->photo->getThumbUrl('thumb') }}"
-                                             alt="{{ $_product->photo->alt }}">
-                                    </a>
+                                    <div class="item-slider">
+                                        <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
+                                            <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
+                                        </a>
+                                    </div>
                                 @endforeach
                             </div>
                         </div>
                     @endif
                     <div class="view-specifications">
-                        <div>Доставка по России</div>
-                        @include('shop.widgets.dimensions', ['dimensions' => $product->dimensions])
-                        <div><a href="#specifications">Все характеристики</a></div>
+                        @include('shop.widgets.dimensions', ['dimensions' => $product->dimensions, 'local' => !$product->not_local, 'region' => !$product->not_delivery])
                     </div>
                 </div>
-
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex">
+                <div class="anchor-menu"><a href="#specifications">Характеристики</a></div>
+                <div class="anchor-menu"><a href="#description">Описание товара</a></div>
             </div>
         </div>
     </div>
 
-    </div>
+
 
     @if($product->bonus->count() > 0)
         <div class="box-card view-bonus">

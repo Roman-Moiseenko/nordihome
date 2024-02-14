@@ -173,6 +173,18 @@
             padding-bottom: 20px;
         }
     }
+    .anchor-menu {
+        margin: 10px;
+        >a {
+            border: 1px solid var(--bs-gray-600);
+            border-radius: 16px;
+            padding: 4px 10px;
+            &:hover {
+                color: var(--bs-white);
+                background: var(--bs-gray-900);
+            }
+        }
+    }
 }
 .view-image-product {
     padding: 10px 60px;
@@ -203,15 +215,36 @@
         color: var(--bs-gray-600);
     }
 }
+.view-related {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    img {
+        height: 100%;
+        width: auto;
+    }
+    .item-slider {
+        margin: 10px;
+        //box-shadow: $shadow-img;
+        transition: $transition;
+        &:hover {
+            transform: scale(1.02);
+            transition: $transition;
+        }
+    }
+}
+
 .dimensions {
-    padding: 10px 20px;
+    padding: 10px 0;
     display: flex;
+    font-size: 0.75rem;
+    color: var(--bs-gray-700);
     .sizes {
         padding: 10px 50px;
         position: relative;
         .height{
             position: absolute;
             top: 50%;
+            transform: translateY(-50%);
             left: 0;
         }
         .width {
@@ -221,11 +254,11 @@
         }
         .depth {
             position: absolute;
-            right: 20px;
+            right: 30px;
             top: 0;
         }
         img {
-            height: 100px;
+            height: 80px;
         }
     }
     .weight {
@@ -239,7 +272,19 @@
             transform: translateX(-50%);
         }
         img {
-            height: 100px;
+            height: 80px;
+        }
+    }
+    .delivery {
+        display: grid;
+        ul {
+            padding: 0;
+            margin: auto 0;
+        }
+        li {
+            padding-right: 8px;
+            list-style: none;
+            font-size: 0.9rem;
         }
     }
 }
@@ -264,14 +309,7 @@
     }
 }
 
-.view-related {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    img {
-        height: 100%;
-        width: auto;
-    }
-}
+
 .view-bonus {
     img {
         width: 100%;
