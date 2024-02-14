@@ -246,6 +246,20 @@ window.$ = jQuery;
         });
     }
 
+    /** BUY-CLICK POPUP **/
+    let buyClickPopup = $('#buy-click');
+    if (buyClickPopup.length) {
+        let formBuyClick = $('form#buy-click-form');
+        let buttonBuyClick = $('#button-buy-click');
+
+        buttonBuyClick.on('click', function () {
+            //TODO проверка полей
+
+
+            formBuyClick.submit();
+        });
+
+    }
     /** КНОПКА В КОРЗИНУ **/
     $('.to-cart').on('click', function (item) {
         item.preventDefault();

@@ -1,7 +1,7 @@
 <div class="modal fade" id="buy-click" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="login-form" class="p-3 needs-validation" action="{{ route('login') }}" method="post" role="form" novalidate>
+            <form id="buy-click-form" class="p-3 needs-validation" action="{{ route('shop.order.create-click') }}" method="post" role="form" novalidate>
                 @csrf
                 <input type="hidden" name="intended">
                 <input id="one-click-product-id" type="hidden" name="product_id">
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="d-flex justify-content-center my-5">
-                            <button id="button-login" type="button" class="btn btn-dark fs-5 py-2 px-3">Оформить</button>
+                            <button id="button-buy-click" type="button" class="btn btn-dark fs-5 py-2 px-3">Оформить</button>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-center">

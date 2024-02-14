@@ -42,7 +42,7 @@ class OrderController extends Controller
         ReserveService  $reserves
     )
     {
-        $this->middleware(['auth:user']);
+        $this->middleware('auth:user', ['except' => 'create_click']);
         $this->cart = $cart;
         $this->payments = $payments;
         $this->deliveries = $deliveries;

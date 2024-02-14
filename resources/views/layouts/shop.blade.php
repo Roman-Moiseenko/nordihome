@@ -27,6 +27,8 @@
 </head>
 <body class="@yield('body')">
 
+
+
 @include('shop.header')
 @include('flash::message')
 
@@ -39,6 +41,12 @@
 <main class="@yield('main')">
     @yield('content')
 </main>
+<!--POP-UP ОКНА-->
+@guest
+    @include('shop.pop-up.login')
+@endguest
+@include('shop.pop-up.buy-click')
+<!--FOOTER-->
 @include('shop.footer')
 <button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>
 @stack('scripts')

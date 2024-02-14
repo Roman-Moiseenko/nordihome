@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Entity\Photo;
-use App\Trait\PictureTrait;
 use Illuminate\Database\Eloquent\Model;
 use function Laravel\Prompts\select;
 

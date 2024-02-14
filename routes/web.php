@@ -18,8 +18,6 @@ Route::group(
     }
 );
 
-
-//TODO Настроить ЧПУ
 //Shop - функции магазина
 Route::group(
     [
@@ -66,6 +64,8 @@ Route::group(
             Route::post('/create', 'OrderController@create')->name('create');
             Route::put('/create', 'OrderController@store');
             Route::post('/create-parser', 'OrderController@create_parser')->name('create-parser');
+            Route::post('/create-click', 'OrderController@create_click')->name('create-click');
+
             Route::put('/create-parser', 'OrderController@store_parser');
 
             //ajax
@@ -297,7 +297,6 @@ Route::group(
                 Route::get('/reserve', 'ReserveController@index')->name('reserve.index');
                 Route::get('/wish', 'WishController@index')->name('wish.index');
 
-                //TODO Объеденить как Delivery????
                 Route::get('/order', 'OrderController@index')->name('order.index');
                 Route::get('/order/{order}', 'OrderController@show')->name('order.show');
 
