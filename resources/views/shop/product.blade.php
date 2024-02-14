@@ -38,7 +38,8 @@
                             @include('shop.widgets.stars', ['rating' => $product->current_rating])
                         </div>
                     </div>
-                    <div class="view-price">
+                    <div class="price-brand-block">
+                        <div class="view-price">
                         @if(is_null($product->isPromotion()))
                             {{ price($product->getLastPrice()) }}
                         @else
@@ -47,6 +48,15 @@
                         @endif
                         <div class="count-product">
                             В наличии {{ $product->count_for_sell }} шт.
+                        </div>
+                    </div>
+                        <div class="view-brand">
+                            @if(empty($product->brand->photo))
+                                <span>{{ $product->brand->name }}</span>
+                            @else
+                                <img src="{{ $product->brand->photo->getUploadUrl() }}" alt="{{ $product->brand->name }}" title="{{ $product->brand->name }}">
+                            @endif
+
                         </div>
                     </div>
                     <div class="product-card-to-cart">
@@ -100,7 +110,6 @@
             </div>
         </div>
     </div>
-
 
 
     @if($product->bonus->count() > 0)

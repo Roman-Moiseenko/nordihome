@@ -31,7 +31,7 @@ class BrandService
     public function update(Request $request, Brand $brand)
     {
         $brand->name = $request['name'];
-        $brand->description = $request['description'];
+        $brand->description = $request['description'] ?? '';
         $brand->url = $request['url'] ?? '';
         $brand->setSameAs($request['sameAs']);
         $brand->update();

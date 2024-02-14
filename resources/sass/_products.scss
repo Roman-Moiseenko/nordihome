@@ -197,22 +197,36 @@
     justify-content: space-between;
     font-size: 0.9rem;
 }
-.view-price {
+.price-brand-block {
+    display: flex;
     margin-top: 20px;
-    margin-bottom: 40px;
-    font-size: 2.5rem;
-    color: var(--bs-gray-900);
-    >.discount-price {
-        color: var(--bs-discount-color);
+    .view-price {
+        //margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 2.5rem;
+        color: var(--bs-gray-900);
+
+        > .discount-price {
+            color: var(--bs-discount-color);
+        }
+
+        > .base-price {
+            text-decoration: line-through;
+            font-size: 1.75rem;
+            color: var(--bs-gray-600);
+        }
+
+        > .count-product {
+            font-size: 0.9rem;
+            color: var(--bs-gray-600);
+        }
     }
-    >.base-price {
-        text-decoration: line-through;
-        font-size: 1.75rem;
-        color: var(--bs-gray-600);
-    }
-    >.count-product {
-        font-size: 0.9rem;
-        color: var(--bs-gray-600);
+
+    .view-brand {
+        margin-left: auto;
+        img {
+            width: 60px;
+        }
     }
 }
 .view-related {
