@@ -135,8 +135,9 @@ class OrderController extends Controller
             event(new ThrowableHasAppeared($e));
         }
         return redirect()->route('home');
-
     }
+
+
 
     public function store_parser(Request $request)
     {

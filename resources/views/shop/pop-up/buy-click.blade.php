@@ -47,7 +47,7 @@
                             <input type="text" class="form-control" name="address" placeholder="Адрес">
                             <label for="address">Адрес</label>
                         </div>
-
+                        <div id="buy-click-error" class="fs-7 text-danger"></div>
                         <div class="d-flex justify-content-center my-5">
                             <button id="button-buy-click" type="button" class="btn btn-dark fs-5 py-2 px-3">Оформить</button>
                         </div>

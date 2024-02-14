@@ -34,6 +34,7 @@ Route::group(
         Route::put('/page/email', 'PageController@email')->name('page.email');
 
         Route::post('/product/search', 'ProductController@search')->name('product.search');
+        Route::post('/product/count-for-sell/{product}', 'ProductController@count_for_sell')->name('product.count-for-sell');
         Route::get('/product/{slug}', 'ProductController@view')->name('product.view');
         Route::post('/catalog/search', 'CatalogController@search')->name('category.search');
         Route::get('/catalog', 'CatalogController@index')->name('category.index');

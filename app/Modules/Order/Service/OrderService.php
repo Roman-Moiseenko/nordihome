@@ -361,6 +361,7 @@ class OrderService
         $product_id = $request['product_id'];
         $product = Product::find($product_id);
 
+        //TODO Commit DB сделать
         $order = Order::register($user->id, Order::ONLINE, true);
         $order->setFinance($product->lastPrice->value, 0, 0, null);
 

@@ -251,12 +251,21 @@ window.$ = jQuery;
     if (buyClickPopup.length) {
         let formBuyClick = $('form#buy-click-form');
         let buttonBuyClick = $('#button-buy-click');
-
+        let product_id = $('input[name=product_id]').val();
         buttonBuyClick.on('click', function () {
             //TODO проверка полей
+            //TODO ajax запрос на кол-во,если = 0 То нельзя купить в 1 клик, сделайте предзаказ
 
+            $.post('/product/count-for-sell/' + product_id, {}, function (data) {
+                let errorBlock = $('#buy-click-error');
+                if (data === 0) {
+                    errorBlock.html('Товар не в наличии! Оформите предзаказ!');
+                    return false;
+                } else {
+                    formBuyClick.submit();
+                }
+            });
 
-            formBuyClick.submit();
         });
 
     }

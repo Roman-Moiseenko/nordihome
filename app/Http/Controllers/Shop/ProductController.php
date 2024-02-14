@@ -53,4 +53,9 @@ class ProductController extends Controller
         return \response()->json($result);
     }
 
+    //Ajax
+    public function count_for_sell(Product $product)
+    {
+        return response()->json($product->count_for_sell);
+    }
 }
