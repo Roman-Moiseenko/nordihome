@@ -10,7 +10,7 @@
         <div id="cart-not-empty">
             <div class="cart-header">
                 <div>
-                    Товаров в корзине <span id="widget-cart-all-count">[*]</span>
+                    Товаров в корзине <span id="widget-cart-all-count"></span>
                 </div>
                 <div>
                     <a id="clear-cart" href="#" data-route="{{ route('shop.cart.clear') }}">Очистить корзину</a>
@@ -35,10 +35,10 @@
                 <div class="cart-footer-amount">
                     <div>Итого:</div>
                     <div class="cart-all-amount">
-                        <span id="widget-cart-all-amount">[**]</span>
+                        <span id="widget-cart-all-amount"></span>
                     </div>
                     <div class="cart-all-combined" style="display: none;">
-                        <span id="widget-cart-all-discount">[**]</span><span id="widget-cart-all-amount-mini">[**]</span>
+                        <span id="widget-cart-all-discount"></span><span id="widget-cart-all-amount-mini">[**]</span>
                     </div>
                 </div>
                 <div class="cart-footer-button d-flex">

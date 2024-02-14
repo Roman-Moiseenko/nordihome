@@ -95,5 +95,7 @@
     </nav>
 </header>
 @guest
-    @include('user.auth.login-popup')
+    @include('shop.pop-up.login')
 @endguest
+@include('shop.pop-up.buy-click')
+

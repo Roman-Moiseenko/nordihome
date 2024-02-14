@@ -28,7 +28,7 @@ class KassaTypePayment extends PaymentAbstract
 
     public static function name(): string
     {
-        return 'Оплата с помощью системы быстрых платежей';
+        return 'Онлайн платеж через ЮКасса';
     }
 
     public static function sort(): int

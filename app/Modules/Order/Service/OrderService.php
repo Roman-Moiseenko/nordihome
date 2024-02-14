@@ -14,12 +14,14 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Entity\UserPayment;
+use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use stdClass;
 
 class OrderService
@@ -67,6 +69,7 @@ class OrderService
         $result->delivery = $this->deliveries->user($user->id);
         $result->email = $user->email;
         $result->phone = $user->phone;
+        $result->user = $user;
         return $result;
     }
 
@@ -111,9 +114,9 @@ class OrderService
         }
 
         if (isset($data['phone'])) {
-            $user = Auth::guard('user')->user();
-            $user->phone = $data['phone'];
-            $user->save();
+            $default->user->update([
+                'phone' => $data['phone']
+            ]);
         }
 
         //Считаем стоимость доставки
@@ -308,5 +311,50 @@ class OrderService
         //TODO Создать платеж $payment_data
 
         //TODO Проводка покупки
+    }
+
+    public function create_click(Request $request)
+    {
+        //Проверяем клиент залогинен
+        if (Auth::guard('user')->check()) {
+            $default = $this->default_user_data();
+            $user = Auth::guard('user')->user();
+        } else {
+            $email = $request['email'];
+            $phone = $request['phone '];
+
+            $user = User::where('email', $email)->first();
+            if (empty($user)) {
+                $password = Str::random(8);
+                $user = User::register($email, $password);
+                $user->update(['phone' => $phone]);
+            }
+            Auth::loginUsingId($user->id);
+
+            $default = $this->default_user_data();
+        }
+
+        $product_id = $request['product_id'];
+        $product = Product::find($product_id);
+
+        $order = Order::register($user->id, Order::ONLINE, true);
+        $order->setFinance($product->lastPrice->value, 0, 0, null);
+
+            $order->items()->create([
+                'product_id' => $product->id,
+                'quantity' => 1,
+                'base_cost' => $product->lastPrice->value,
+                'sell_cost' => $product->lastPrice->value,
+                'discount_id' => null,
+                'discount_type' => '',
+                'options' => [],
+                'reserve_id' => null
+            ]);
+
+
+        $order->setStatus(OrderStatus::PREORDER_SERVICE);
+
+        event(new OrderHasCreated($order));
+        return $order;
     }
 }

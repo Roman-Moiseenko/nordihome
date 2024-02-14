@@ -38,7 +38,10 @@
         </div>
         <div class="product-card-to-cart">
             <button class="to-cart btn btn-dark" data-product="{{ $product->id }}">В Корзину</button>
-            <button class="one-click btn btn-outline-dark" data-product="{{ $product->id }}">В 1 Клик!</button>
+            <button class="one-click btn btn-outline-dark"
+                    data-product="{{ $product->id }}" type="button" data-bs-toggle="modal" data-bs-target="#buy-click"
+                    onclick="document.getElementById('one-click-product-id').value={{$product->id}};"
+            >В 1 Клик!</button>
         </div>
     </div>
 </div>

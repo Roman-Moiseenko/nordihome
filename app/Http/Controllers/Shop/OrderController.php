@@ -14,9 +14,11 @@ use App\Modules\Order\Service\ReserveService;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\User\Entity\CartStorage;
+use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 /**
  * Контроллер по созданию заказа из клиентской части, для просмотра используется контроллер из User
@@ -53,8 +55,6 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         try {
-
-
             //TODO !!!!! Перенести куда-нибудь
             //Постановка в Резерв товара
             foreach ($this->cart->getOrderItems() as $item) {
@@ -118,6 +118,24 @@ class OrderController extends Controller
             event(new ThrowableHasAppeared($e));
         }
         return redirect()->route('home');
+    }
+
+    public function create_click(Request $request)
+    {
+        try {
+            //TODO В 1Клик
+            $this->service->create_click($request);
+            flash('Ваш заказ успешно создан!');
+
+            return redirect()->back();
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
+            event(new ThrowableHasAppeared($e));
+        }
+        return redirect()->route('home');
+
     }
 
     public function store_parser(Request $request)

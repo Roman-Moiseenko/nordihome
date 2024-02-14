@@ -82,7 +82,7 @@
             <div class="products--list">
                 <div class="row">
                 @foreach($products as $product)
-                    @include('shop.cards.card-3x')
+                    @include('shop.cards.card-4x')
                 @endforeach
                 </div>
             </div>

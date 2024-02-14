@@ -61,7 +61,10 @@
                     </div>
                     <div class="product-card-to-cart">
                         <button class="to-cart btn btn-dark" data-product="{{ $product->id }}">В Корзину</button>
-                        <button class="one-click btn btn-outline-dark" data-product="{{ $product->id }}">В 1 Клик!
+                        <button class="one-click btn btn-outline-dark"
+                                data-product="{{ $product->id }}" type="button" data-bs-toggle="modal" data-bs-target="#buy-click"
+                                onclick="document.getElementById('one-click-product-id').value={{$product->id}};"
+                        >В 1 Клик!
                         </button>
                     </div>
                     @if(!is_null($product->modification()))
@@ -161,7 +164,11 @@
 
     <div class="box-card">
         <h3 id="specifications">Характеристики</h3>
-        Характеристики
+        @foreach($product->prod_attributes as $prod_attribute)
+            <div>{{ $prod_attribute->group->name }}</div>
+            <div>{{ $prod_attribute->name }}</div>
+            <div>{{ $prod_attribute->pivot->value }}</div>
+        @endforeach
     </div>
 
     @if(!empty($product->equivalent()))
@@ -174,9 +181,9 @@
                         <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
                     </a>
                     <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
-                            <span class="fs-8 product-trunc">
-                                {{ $_product->name }}
-                            </span>
+                        <span class="fs-8 product-trunc">
+                            {{ $_product->name }}
+                        </span>
                     </a>
                 </div>
             @endforeach

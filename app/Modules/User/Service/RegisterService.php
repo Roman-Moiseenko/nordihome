@@ -48,4 +48,15 @@ class RegisterService
         // Письмо клиенту, + баллы на покупку (Coupon)
         event(new UserHasRegistered($user));
     }
+
+    public function newUser($email, $password)
+    {
+        //$user = User::where($email)->first();
+        $user = User::register(
+            $email,
+            // $request['phone'],
+            $password
+        );
+        return $user;
+    }
 }
