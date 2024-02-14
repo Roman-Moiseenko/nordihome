@@ -108,7 +108,7 @@
             <h3 id="bonus">Выгодная покупка</h3>
             <div class="d-flex justify-content-around">
             @foreach($product->bonus as $_product)
-                <div class="px-2">
+                <div class="item-bonus px-2">
                     <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
                         <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
                     </a>

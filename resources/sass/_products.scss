@@ -314,19 +314,25 @@
     img {
         width: 100%;
     }
-    .price-block {
-        padding-top: 10px;
-        padding-bottom: 20px;
-        >.discount-price {
-            font-size: 1.75rem;
-            color: var(--bs-discount-color);
-        }
-        >.base-price {
-            color: var(--bs-gray-600);
-            font-size: 1.25rem;
-            text-decoration: line-through;
+    .item-bonus {
+        text-align: center;
+        padding-left: 8px;
+        padding-right: 8px;
+        .price-block {
+            padding-top: 10px;
+            padding-bottom: 20px;
+            >.discount-price {
+                font-size: 1.75rem;
+                color: var(--bs-discount-color);
+            }
+            >.base-price {
+                color: var(--bs-gray-600);
+                font-size: 1.25rem;
+                text-decoration: line-through;
+            }
         }
     }
+
 }
 
 ///СЛАЙДЕР
