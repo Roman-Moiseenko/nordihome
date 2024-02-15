@@ -38,7 +38,9 @@ class Admin extends Authenticatable implements UploadsDirectory
     public const ROLE_COMMODITY = 'commodity';
     public const ROLE_FINANCE = 'finance';
     public const ROLE_ADMIN = 'admin';
+    public const ROLE_SUPERADMIN = 'super_admin';
     public const ROLES = [
+        self::ROLE_SUPERADMIN => 'Супер Админ',
         self::ROLE_ADMIN => 'Администратор',
         self::ROLE_CASHIER => 'Кассир',
         self::ROLE_COMMODITY => 'Товаровед',
@@ -46,6 +48,7 @@ class Admin extends Authenticatable implements UploadsDirectory
         self::ROLE_LOGISTICS => 'Логист',
     ];
     public const ROLE_COLORS = [
+        self::ROLE_SUPERADMIN => 'bg-danger',
         self::ROLE_ADMIN => 'bg-success',
         self::ROLE_CASHIER => 'bg-warning',
         self::ROLE_COMMODITY => 'bg-indigo-900',
@@ -122,6 +125,11 @@ class Admin extends Authenticatable implements UploadsDirectory
     }
 
 //Роли
+    public function isSuperAdmin(): bool
+    {
+        return $this->role == self::ROLE_SUPERADMIN;
+    }
+
     public function isAdmin(): bool
     {
         return $this->role == self::ROLE_ADMIN;

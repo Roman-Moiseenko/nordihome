@@ -25,14 +25,14 @@ class AuthServiceProvider extends ServiceProvider
         //$this->registerPolicies();
 
         Gate::define('admin-panel', function (Admin $user) {
-            return $user->isAdmin() || $user->isFinance() || $user->isCommodity();
+            return $user->isSuperAdmin() || $user->isAdmin() || $user->isFinance() || $user->isCommodity();
         });
 
         Gate::define('user-manager', function (Admin $user) {
-            return $user->isAdmin();
+            return $user->isSuperAdmin() || $user->isAdmin();
         });
         Gate::define('commodity', function (Admin $user) {
-            return $user->isCommodity() || $user->isAdmin();
+            return $user->isCommodity() || $user->isSuperAdmin() || $user->isAdmin();
         });
         Gate::define('', function (Admin $user) {
             return true;

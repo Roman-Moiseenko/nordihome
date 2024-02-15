@@ -25,7 +25,7 @@ class NotificationThrowable
      */
     public function handle(ThrowableHasAppeared $event): void
     {
-        $staffs = Admin::where('role', Admin::ROLE_ADMIN)->get();
+        $staffs = Admin::where('role', Admin::ROLE_SUPERADMIN)->get();
         $message = "Ошибка на сайте:\n" . $event->throwable->getMessage() . "\n" . $event->throwable->getFile() . "\n" . $event->throwable->getLine();
 
         foreach ($staffs as $staff) {
