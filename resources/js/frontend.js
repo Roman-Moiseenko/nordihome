@@ -258,13 +258,14 @@ window.$ = jQuery;
         let inputBCAddress = buyClickPopup.find('input[name="address"]');
         buttonBuyClick.on('click', function (item) {
             let product_id = buyClickPopup.find('input[name=product_id]').val();
+            let errorBlock = $('#buy-click-error');
             item.preventDefault();
             if (inputBCEmail.val() === '' || inputBCPhone.val() === '' || selectBCPayment.val() === '' || selectBCDelivery.val() === '') {
-                errorBlock.html('Не заполненны поля');
+                errorBlock.html('Не заполнены поля');
                 return false;
             }
             if ((selectBCDelivery.val() === 'local' || selectBCDelivery.val() === 'region') && inputBCAddress.val() === '') {
-                errorBlock.html('Не заполненн адрес доставки');
+                errorBlock.html('Не заполнен адрес доставки');
                 return false;
             }
 
@@ -272,7 +273,7 @@ window.$ = jQuery;
             //TODO ajax запрос на кол-во,если = 0 То нельзя купить в 1 клик, сделайте предзаказ
 
             $.post('/product/count-for-sell/' + product_id, {}, function (data) {
-                let errorBlock = $('#buy-click-error');
+
 
                 if (data === 0) {
                     errorBlock.html('Товар не в наличии! Оформите предзаказ!');
