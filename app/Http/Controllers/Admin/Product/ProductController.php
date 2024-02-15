@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Product;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
@@ -38,87 +39,129 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $categories = Category::defaultOrder()->withDepth()->get();
+        try {
+            $categories = Category::defaultOrder()->withDepth()->get();
 
-        $published = $request['published'] ?? 'all';
-        $query = Product::orderBy('name');
+            $published = $request['published'] ?? 'all';
+            $query = Product::orderBy('name');
 
+            if (!empty($category_id = $request->get('category_id')) && $category_id != 0) {
+                $query->whereHas('categories', function ($q) use ($category_id, $published) {
+                    $q->where('id', '=', $category_id);
+                    if ($published == 'active') $q->where('published', '=', true);
+                    if ($published == 'draft') $q->where('published', '=', false);
+                    //TODO выбрать товары из всех подкатегорий
+                })->orWhere('main_category_id', '=', $category_id);
+            }
+            if ($published == 'active') $query->where('published', '=', true);
+            if ($published == 'draft') $query->where('published', '=', false);
 
-        if (!empty($category_id = $request->get('category_id')) && $category_id != 0) {
-            $query->whereHas('categories', function ($q) use ($category_id, $published) {
-                $q->where('id', '=', $category_id);
-                if ($published == 'active') $q->where('published', '=', true);
-                if ($published == 'draft') $q->where('published', '=', false);
-                //TODO выбрать товары из всех подкатегорий
-            })->orWhere('main_category_id', '=', $category_id);
+            //ПАГИНАЦИЯ
+            if (!empty($pagination = $request->get('p'))) {
+                $products = $query->paginate($pagination);
+                $products->appends(['p' => $pagination]);
+            } else {
+                $products = $query->paginate($this->pagination);
+            }
+
+            return view('admin.product.product.index', compact('products', 'pagination',
+                'categories', 'category_id', 'published'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        if ($published == 'active') $query->where('published', '=', true);
-        if ($published == 'draft') $query->where('published', '=', false);
-
-        //ПАГИНАЦИЯ
-        if (!empty($pagination = $request->get('p'))) {
-            $products = $query->paginate($pagination);
-            $products->appends(['p' => $pagination]);
-        } else {
-            $products = $query->paginate($this->pagination);
-        }
-
-        return view('admin.product.product.index', compact('products', 'pagination',
-            'categories', 'category_id', 'published'));
+        return redirect()->back();
     }
 
     public function create(Request $request)
     {
-        $categories = Category::defaultOrder()->withDepth()->get();
-        $menus = ProductHelper::menuAddProduct();
-        $brands = Brand::orderBy('name')->get();
-        $tags = Tag::orderBy('name')->get();
-        $series = Series::orderBy('name')->get();
-        return view('admin.product.product.create', compact('categories', 'menus', 'brands',
-            'tags', 'series'));
+        try {
+            $categories = Category::defaultOrder()->withDepth()->get();
+            $menus = ProductHelper::menuAddProduct();
+            $brands = Brand::orderBy('name')->get();
+            $tags = Tag::orderBy('name')->get();
+            $series = Series::orderBy('name')->get();
+            return view('admin.product.product.create', compact('categories', 'menus', 'brands',
+                'tags', 'series'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function store(Request $request)
     {
-        $product = $this->service->create($request);
-        return redirect()->route('admin.product.edit', compact('product'));
+        try {
+            $product = $this->service->create($request);
+            return redirect()->route('admin.product.edit', compact('product'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function show(Product $product)
     {
-        return view('admin.product.product.show', compact('product'));
+        try {
+            return view('admin.product.product.show', compact('product'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function edit(Product $product)
     {
-        $categories = Category::defaultOrder()->withDepth()->get();
-        $menus = ProductHelper::menuUpdateProduct();
-        $brands = Brand::orderBy('name')->get();
-        $tags = Tag::orderBy('name')->get();
-        $series = Series::orderBy('name')->get();
-        $groups = AttributeGroup::orderBy('name')->get();
-        $options = $this->options;
-        $equivalents = Equivalent::orderBy('name')->where('category_id', '=', $product->main_category_id)->get();
-        return view('admin.product.product.edit', compact('product', 'categories',
-            'menus', 'brands', 'tags', 'groups', 'options', 'equivalents', 'series'));
+        try {
+            $categories = Category::defaultOrder()->withDepth()->get();
+            $menus = ProductHelper::menuUpdateProduct();
+            $brands = Brand::orderBy('name')->get();
+            $tags = Tag::orderBy('name')->get();
+            $series = Series::orderBy('name')->get();
+            $groups = AttributeGroup::orderBy('name')->get();
+            $options = $this->options;
+            $equivalents = Equivalent::orderBy('name')->where('category_id', '=', $product->main_category_id)->get();
+            return view('admin.product.product.edit', compact('product', 'categories',
+                'menus', 'brands', 'tags', 'groups', 'options', 'equivalents', 'series'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
 
     }
 
     public function update(Request $request, Product $product)
     {
-        $product = $this->service->update($request, $product);
-        return redirect()->route('admin.product.edit', compact('product'));
-
+        try {
+            $product = $this->service->update($request, $product);
+            return redirect()->route('admin.product.edit', compact('product'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function destroy(Product $product)
     {
         try {
             $this->service->destroy($product);
+            return redirect()->route('admin.product.product.index');
+
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return redirect(route('admin.product.product.index'));
+        return redirect()->back();
+
     }
 
     public function toggle(Product $product) //Переключение между Опубликовано и Чернови
@@ -131,6 +174,9 @@ class ProductController extends Controller
             }
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
         return redirect()->back();
     }
@@ -138,9 +184,9 @@ class ProductController extends Controller
     //AJAX
 
 
-
     public function search(Request $request)
     {
+
         $result = [];
         try {
             $products = $this->repository->search($request['search']);
@@ -150,6 +196,8 @@ class ProductController extends Controller
             }
         } catch (\Throwable $e) {
             $result = $e->getMessage();
+            event(new ThrowableHasAppeared($e));
+
         }
         return \response()->json($result);
     }
@@ -166,6 +214,7 @@ class ProductController extends Controller
             }
         } catch (\Throwable $e) {
             $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+            event(new ThrowableHasAppeared($e));
         }
         return \response()->json($result);
     }
@@ -174,13 +223,17 @@ class ProductController extends Controller
     public function attr_modification(Product $product)
     {
         $result = [];
-        foreach ($product->prod_attributes as $attribute) {
-            if ($attribute->isVariant() && !$attribute->multiple) {
-                $result[] = [
-                    'id' => $attribute->id,
-                    'name' => $attribute->name,
-                ];
+        try {
+            foreach ($product->prod_attributes as $attribute) {
+                if ($attribute->isVariant() && !$attribute->multiple) {
+                    $result[] = [
+                        'id' => $attribute->id,
+                        'name' => $attribute->name,
+                    ];
+                }
             }
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
         }
         return \response()->json($result);
     }
@@ -188,34 +241,54 @@ class ProductController extends Controller
     public function get_images(Product $product)
     {
         $result = [];
-        foreach ($product->photos as $photo) {
-            $result[] = [
-                'id' => $photo->id,
-                'url' => $photo->getUploadUrl(),
-                'alt' => $photo->alt,
-            ];
+        try {
+            foreach ($product->photos as $photo) {
+                $result[] = [
+                    'id' => $photo->id,
+                    'url' => $photo->getUploadUrl(),
+                    'alt' => $photo->alt,
+                ];
+            }
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
         }
         return \response()->json($result);
     }
 
     public function del_image(Request $request, Product $product)
     {
-        $this->service->delPhoto($request, $product);
+        try {
+            $this->service->delPhoto($request, $product);
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+        }
     }
 
     public function up_image(Request $request, Product $product)
     {
-        $this->service->upPhoto($request, $product);
+        try {
+            $this->service->upPhoto($request, $product);
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+        }
     }
 
     public function down_image(Request $request, Product $product)
     {
-        $this->service->downPhoto($request, $product);
+        try {
+            $this->service->downPhoto($request, $product);
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+        }
     }
 
     public function alt_image(Request $request, Product $product)
     {
-        $this->service->altPhoto($request, $product);
+        try {
+            $this->service->altPhoto($request, $product);
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+        }
     }
 
     public function file_upload(Request $request, Product $product)
@@ -223,9 +296,8 @@ class ProductController extends Controller
         try {
             $this->service->addPhoto($request, $product);
         } catch (\Throwable $e) {
-
+            event(new ThrowableHasAppeared($e));
         }
-
     }
 
 }

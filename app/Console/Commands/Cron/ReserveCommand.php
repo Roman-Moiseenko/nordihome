@@ -17,6 +17,8 @@ class ReserveCommand extends Command
     {
         //TODO Сделать Лог (можно через event(new LogData('Текст')))
         // Сколько товаров было снято с резерва
+        $this->info('Резерв - проверка');
+
         try {
             $reserveService = new ReserveService();
             $reserveService->clearByTimer();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Entity\Admin;
+use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RegisterRequest;
 use App\Http\Requests\Admin\UpdateRequest;
@@ -29,47 +30,85 @@ class StaffController extends Controller
 
     public function index(Request $request)
     {
-        //TODO в Репозиторий!!!!!
-        $query = Admin::orderByDesc('id');
-        if (!empty($value = $request->get('role'))) {
-            $query->where('role', $value);
+        try {
+            //TODO в Репозиторий!!!!!
+            $query = Admin::orderByDesc('id');
+            if (!empty($value = $request->get('role'))) {
+                $query->where('role', $value);
+            }
+            $selected = $request['role'] ?? '';
+            $roles = Admin::ROLES;
+            $pagination = $request['p'] ?? $this->pagination;
+            $admins = $query->paginate($pagination);
+            if (isset($request['p'])) {
+                $admins->appends(['p' => $pagination]);
+            }
+            return view('admin.staff.index', compact('admins', 'roles', 'selected', 'pagination'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        $selected = $request['role'] ?? '';
-        $roles = Admin::ROLES;
-        $pagination = $request['p'] ?? $this->pagination;
-        $admins = $query->paginate($pagination);
-        if (isset($request['p'])) {
-            $admins->appends(['p' => $pagination]);
-        }
-        return view('admin.staff.index', compact('admins', 'roles', 'selected', 'pagination'));
+        return redirect()->back();
     }
 
     public function create()
     {
-        $roles = Admin::ROLES;
-        return view('admin.staff.create', compact('roles'));
+        try {
+            $roles = Admin::ROLES;
+            return view('admin.staff.create', compact('roles'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function store(RegisterRequest $request)
     {
-        $staff = $this->service->register($request);
-        return redirect()->route('admin.staff.show', compact('staff'));
+        try {
+            $staff = $this->service->register($request);
+            return redirect()->route('admin.staff.show', compact('staff'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function show(Admin $staff)
     {
-        return view('admin.staff.show', compact('staff'));
+        try {
+            return view('admin.staff.show', compact('staff'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function edit(Admin $staff)
     {
-        $roles = Admin::ROLES;
-        return view('admin.staff.edit', compact('staff', 'roles'));
+        try {
+            $roles = Admin::ROLES;
+            return view('admin.staff.edit', compact('staff', 'roles'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function security(Admin $staff)
     {
-        return view('admin.staff.security', compact('staff'));
+        try {
+            return view('admin.staff.security', compact('staff'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function password(Request $request, Admin $staff)
@@ -82,38 +121,55 @@ class StaffController extends Controller
             flash('Пароль успешно изменен', 'success');
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return back();
+        return redirect()->back();
     }
 
     public function update(UpdateRequest $request, Admin $staff)
     {
-        $staff = $this->service->update($request, $staff);
-        return view('admin.staff.show', compact('staff'));
+        try {
+            $staff = $this->service->update($request, $staff);
+            return view('admin.staff.show', compact('staff'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function destroy(Admin $staff)
     {
         try {
             $this->service->blocking($staff);
+            return redirect()->route('admin.staff.index');
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return redirect('admin/staff');
+        return redirect()->back();
     }
 
     public function activate(Admin $staff)
     {
         try {
-            $this->service->activate( $staff);
+            $this->service->activate($staff);
+            return redirect()->route('admin.staff.index');
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return redirect('admin/staff');
+        return redirect()->back();
     }
-
+/*
     public function setPhoto(Request $request, Admin $staff)
     {
         try {
@@ -126,7 +182,7 @@ class StaffController extends Controller
             'name' => $staff->photo,
         ]);
     }
-
+*/
     public function test(Request $request)
     {
         return response()->json([

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Product;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Service\TagService;
 use Illuminate\Http\Request;
@@ -22,29 +23,56 @@ class TagController extends Controller
 
     public function index(Request $request)
     {
-        $pagination = $request['p'] ?? $this->pagination;
-        $tags = Tag::orderBy('name')->paginate($this->pagination);
-        if (isset($request['p'])) {
-            $tags->appends(['p' => $pagination]);
+        try {
+            $pagination = $request['p'] ?? $this->pagination;
+            $tags = Tag::orderBy('name')->paginate($this->pagination);
+            if (isset($request['p'])) {
+                $tags->appends(['p' => $pagination]);
+            }
+            return view('admin.product.tag.index', compact('tags', 'pagination'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return view('admin.product.tag.index', compact('tags', 'pagination'));
+        return redirect()->back();
     }
 
     public function create(Request $request)
     {
-        $this->service->create($request);
-        return back();
+        try {
+            $this->service->create($request);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function rename(Request $request, Tag $tag)
     {
-        $this->service->rename($request, $tag);
-        return back();
+        try {
+            $this->service->rename($request, $tag);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function destroy(Tag $tag)
     {
-        $this->service->delete($tag);
-        return back();
+        try {
+            $this->service->delete($tag);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 }

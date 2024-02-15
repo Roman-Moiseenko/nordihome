@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Discount;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
 use App\Modules\Discount\Service\PromotionService;
@@ -29,17 +30,29 @@ class PromotionController extends Controller
 
     public function index(Request $request)
     {
-        $pagination = $request['p'] ?? $this->pagination;
-        $promotions = $this->repository->getIndex($pagination);
-        if (isset($request['p'])) {
-            $promotions->appends(['p' => $pagination]);
+        try {
+            $pagination = $request['p'] ?? $this->pagination;
+            $promotions = $this->repository->getIndex($pagination);
+            if (isset($request['p'])) {
+                $promotions->appends(['p' => $pagination]);
+            }
+            return view('admin.discount.promotion.index', compact('promotions', 'pagination'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return view('admin.discount.promotion.index', compact('promotions', 'pagination'));
+        return redirect()->back();
     }
 
     public function create()
     {
-        return view('admin.discount.promotion.create');
+        try {
+            return view('admin.discount.promotion.create');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function store(Request $request)
@@ -53,20 +66,34 @@ class PromotionController extends Controller
             return redirect()->route('admin.discount.promotion.show', compact('promotion'));
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
+        return redirect()->back();
     }
 
     public function show(Promotion $promotion)
     {
-
-        $groups = $this->groups->getNotInPromotions($promotion); // Group::orderBy('name')->get(); //Перенести в Репозиторий, и исключать группы уже в действующих и будущих акциях
-        return view('admin.discount.promotion.show', compact('promotion', 'groups'));
+        try {
+            $groups = $this->groups->getNotInPromotions($promotion); // Group::orderBy('name')->get(); //Перенести в Репозиторий, и исключать группы уже в действующих и будущих акциях
+            return view('admin.discount.promotion.show', compact('promotion', 'groups'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function edit(Promotion $promotion)
     {
-        return view('admin.discount.promotion.edit', compact('promotion'));
+        try {
+            return view('admin.discount.promotion.edit', compact('promotion'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function update(Request $request, Promotion $promotion)
@@ -76,8 +103,11 @@ class PromotionController extends Controller
             return redirect()->route('admin.discount.promotion.show', compact('promotion'));
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
+        return redirect()->back();
 
     }
 
@@ -90,23 +120,43 @@ class PromotionController extends Controller
 
         try {
             $this->service->add_group($request, $promotion);
-        }  catch (\DomainException $e) {
+            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        return redirect()->back();
+
     }
 
     public function del_group(Promotion $promotion, Group $group)
     {
-        $this->service->del_group($group, $promotion);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        try {
+            $this->service->del_group($group, $promotion);
+            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function set_group(Request $request, Promotion $promotion)
     {
-        $this->service->set_group($request, $promotion);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        try {
+            $this->service->set_group($request, $promotion);
+            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
 
@@ -114,11 +164,15 @@ class PromotionController extends Controller
     {
         try {
             $this->service->delete($promotion);
+            return redirect()->route('admin.discount.promotion.index');
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return redirect()->route('admin.discount.promotion.index');
+        return redirect()->back();
+
     }
 
     //Команды
@@ -128,8 +182,11 @@ class PromotionController extends Controller
             $this->service->draft($promotion);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return back();
+        return redirect()->back();
     }
 
     public function published(Promotion $promotion)
@@ -138,8 +195,11 @@ class PromotionController extends Controller
             $this->service->published($promotion);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return back();
+        return redirect()->back();
     }
 
     public function stop(Promotion $promotion)
@@ -148,8 +208,11 @@ class PromotionController extends Controller
             $this->service->stop($promotion);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return back();
+        return redirect()->back();
     }
 
     public function start(Promotion $promotion)
@@ -158,7 +221,10 @@ class PromotionController extends Controller
             $this->service->start($promotion);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return back();
+        return redirect()->back();
     }
 }

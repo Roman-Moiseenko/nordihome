@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 class TagService
 {
-    public function create(array $request): Tag
+    public function create(Request $request): Tag
     {
         $tag = Tag::register($request['name']);
         return $tag;

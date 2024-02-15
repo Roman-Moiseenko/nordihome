@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Sales;
 
+use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\Order;
 use Illuminate\Http\Request;
@@ -16,21 +17,34 @@ class OrderController extends Controller
     {
         $this->pagination = Config::get('shop-config.p-list');
     }
+
     public function index(Request $request)
     {
-        $query = Order::where('finished', false)->where('preorder', false)->orderByDesc('created_at');
-        //ПАГИНАЦИЯ
-        if (!empty($pagination = $request->get('p'))) {
-            $orders = $query->paginate($pagination);
-            $orders->appends(['p' => $pagination]);
-        } else {
-            $orders = $query->paginate($this->pagination);
+        try {
+            $query = Order::where('finished', false)->where('preorder', false)->orderByDesc('created_at');
+            //ПАГИНАЦИЯ
+            if (!empty($pagination = $request->get('p'))) {
+                $orders = $query->paginate($pagination);
+                $orders->appends(['p' => $pagination]);
+            } else {
+                $orders = $query->paginate($this->pagination);
+            }
+            return view('admin.sales.order.index', compact('orders', 'pagination'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return view('admin.sales.order.index', compact('orders', 'pagination'));
+        return redirect()->back();
     }
 
     public function show(Request $request, Order $order)
     {
-        return view('admin.sales.order.show', compact('order'));
+        try {
+            return view('admin.sales.order.show', compact('order'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 }

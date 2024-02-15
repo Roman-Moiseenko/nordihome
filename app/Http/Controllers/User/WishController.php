@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\User;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\WishService;
@@ -32,9 +33,10 @@ class WishController extends Controller
 
             return view('cabinet.wish', compact('products'));
         } catch (\Throwable $e) {
-            flash($e->getMessage());
-            return redirect()->route('home');
+            event(new ThrowableHasAppeared($e));
+            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
         }
+        return redirect()->back();
     }
 
     //Ajax
@@ -51,6 +53,7 @@ class WishController extends Controller
                 'state' => $result,
             ]);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return response()->json(['error' => $e->getMessage()]);
         }
     }
@@ -66,6 +69,7 @@ class WishController extends Controller
                 'items' => $products,
             ]);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return response()->json(['error' => $e->getMessage()]);
         }
     }
@@ -79,6 +83,7 @@ class WishController extends Controller
 
             return response()->json(true);
         } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return response()->json(['error' => $e->getMessage()]);
         }
     }

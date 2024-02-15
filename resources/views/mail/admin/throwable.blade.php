@@ -1,13 +1,20 @@
 <x-mail::message>
 # Ошибка на сайте:
 
-{{ $throwble->getMessage() }}
-{{ $throwble->getFile() }}
-{{ $throwble->getLine() }}
+{{ $throwable->getMessage() }}
+{{ $throwable->getFile() }}
+{{ $throwable->getLine() }}
 
 
-@foreach($throwble->getTrace() as $i => $item)
-{{ $i . ': ' . json_encode($item) }}
+@foreach($throwable->getTrace() as $i => $item)
+{{ $i . ':'}}
+{{ 'file' . $item['file'] . "\n" }}
+{{ 'line: ' . $item['line'] . "\n" }}
+{{ 'function: ' . $item['function'] . "\n" }}
+{{ 'class: ' . $item['class'] . "\n" }}
+{{ 'type: ' . $item['type'] . "\n" }}
+{{ 'args: ' . json_encode($item['args']) }}
+<hr/>
 @endforeach
 
 

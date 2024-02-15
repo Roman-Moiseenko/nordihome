@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Sales;
 
+use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\Order;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class ExecutedController extends Controller
 
     public function index(Request $request)
     {
+        try {
         $query = Order::where('finished', true)->orderByDesc('created_at');
         //ПАГИНАЦИЯ
         if (!empty($pagination = $request->get('p'))) {
@@ -27,12 +29,22 @@ class ExecutedController extends Controller
         } else {
             $orders = $query->paginate($this->pagination);
         }
-
         return view('admin.sales.executed.index', compact('orders', 'pagination'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function show(Order $order)
     {
+        try {
         return view('admin.sales.executed.show', compact('order'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 }

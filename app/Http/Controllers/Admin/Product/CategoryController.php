@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Product;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Service\CategoryService;
@@ -24,31 +25,63 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = $this->repository->getTree();
-        return view('admin.product.category.index', compact('categories'));
+        try {
+            $categories = $this->repository->getTree();
+            return view('admin.product.category.index', compact('categories'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function up(Category $category)
     {
-        $category->up();
-        return back();
+        try {
+            $category->up();
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function down(Category $category)
     {
-        $category->down();
-        return back();
+        try {
+            $category->down();
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function create(Request $request)
     {
-        $parents = $this->repository->withDepth();
-        return view('admin.product.category.create', compact('parents'));
+        try {
+            $parents = $this->repository->withDepth();
+            return view('admin.product.category.create', compact('parents'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function child(Category $category)
     {
-        return view('admin.product.category.child', compact('category'));
+        try {
+            return view('admin.product.category.child', compact('category'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function store(Request $request)
@@ -57,27 +90,53 @@ class CategoryController extends Controller
             'name' => 'required|string',
             'parent' => 'nullable|integer|exists:categories,id',
         ]);
-        $category = $this->service->register($request);
-        return redirect()->route('admin.product.category.show', compact('category'));
+        try {
+            $category = $this->service->register($request);
+            return redirect()->route('admin.product.category.show', compact('category'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function show(Category $category)
     {
-        return view('admin.product.category.show', compact('category'));
+        try {
+            return view('admin.product.category.show', compact('category'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function edit(Category $category)
     {
-        $categories = $this->repository->withDepth();
-        return view('admin.product.category.edit', compact('category', 'categories'));
+        try {
+            $categories = $this->repository->withDepth();
+            return view('admin.product.category.edit', compact('category', 'categories'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function update(Request $request, Category $category)
     {
-        $category = $this->service->update($request, $category);
-
-        return redirect(route('admin.product.category.show', $category));
-        //return view('admin.product.category.show', compact('category'));
+        try {
+            $category = $this->service->update($request, $category);
+            return redirect(route('admin.product.category.show', $category));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function destroy(Category $category)
@@ -86,17 +145,25 @@ class CategoryController extends Controller
             $this->service->delete($category);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return back();
+        return redirect()->back();
     }
 
     public function json_attributes(Request $request)
     {
+        try {
         $categories_id = json_decode($request['ids']);
         $product_id = (int)$request['product_id'];
         $result = $this->repository->relationAttributes($categories_id, $product_id);
         return \response()->json($result);
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+            return \response()->json(['error' => $e->getMessage()]);
+        }
     }
 
 }

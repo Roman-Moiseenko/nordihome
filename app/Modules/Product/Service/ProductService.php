@@ -255,8 +255,10 @@ class ProductService
 
     public function destroy(Product $product)
     {
+
         //TODO Проверка на продажи и Отзывы- через сервисы reviewService->isSet($product->id) reviewOrder->isSet($product->id)
         //TODO При удалении, удалять все связанные файлы Фото и Видео
+        if ($product->id > 0)
         throw new \DomainException('Тестируем. Удалить Продукт нельзя');
     }
 

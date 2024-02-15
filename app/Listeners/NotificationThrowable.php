@@ -30,7 +30,7 @@ class NotificationThrowable
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage($message));
-            Mail::to($staff->email)->queue(new AdminThrowable($event->throwable));
+            Mail::to($staff->email)->send(new AdminThrowable($event->throwable));
         }
     }
 }

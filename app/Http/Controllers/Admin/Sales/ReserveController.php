@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Sales;
 
+use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
@@ -21,9 +22,8 @@ class ReserveController extends Controller
 
     public function index(Request $request)
     {
+        try {
         $query = Product::orderBy('name')->Has('reserves');
-
-
         //ПАГИНАЦИЯ
         if (!empty($pagination = $request->get('p'))) {
             $products = $query->paginate($pagination);
@@ -31,7 +31,11 @@ class ReserveController extends Controller
         } else {
             $products = $query->paginate($this->pagination);
         }
-
         return view('admin.sales.reserve.index', compact('products', 'pagination'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 }

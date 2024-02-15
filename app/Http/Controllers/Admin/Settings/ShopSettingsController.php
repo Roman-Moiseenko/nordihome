@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Settings;
 
+use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Setting;
 use App\Modules\Admin\Entity\SettingItem;
@@ -23,21 +24,35 @@ class ShopSettingsController extends Controller
 
     public function index()
     {
-        $setting = Setting::where('slug', 'shop')->first();
-        $items = SettingItem::orderBy('sort')->where('setting_id', $setting->id)->getModels();
-        $groups = [];
+        try {
+            $setting = Setting::where('slug', 'shop')->first();
+            $items = SettingItem::orderBy('sort')->where('setting_id', $setting->id)->getModels();
+            $groups = [];
 
-        /** @var SettingItem $item */
-        foreach ($items as $item) {
-            $groups[$item->tab][] = $item;
+            /** @var SettingItem $item */
+            foreach ($items as $item) {
+                $groups[$item->tab][] = $item;
+            }
+            return view('admin.settings.shop', compact('groups', 'setting'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return view('admin.settings.shop', compact( 'groups', 'setting'));
+        return redirect()->back();
     }
 
     public function update(Request $request)
     {
-        $setting = Setting::where('slug', 'shop')->first();
-        $this->service->set($request, $setting);
-        return redirect()->route('admin.settings.shop');
+        try {
+            $setting = Setting::where('slug', 'shop')->first();
+            $this->service->set($request, $setting);
+            return redirect()->route('admin.settings.shop');
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 }

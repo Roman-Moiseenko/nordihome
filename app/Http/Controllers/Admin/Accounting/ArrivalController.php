@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Accounting;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Currency;
@@ -30,74 +31,117 @@ class ArrivalController extends Controller
 
     public function index(Request $request)
     {
-        $query = ArrivalDocument::orderByDesc('created_at');
-        $distributors = Distributor::orderBy('name')->get();
-        $storages = Storage::orderBy('name')->get();
+        try {
+            $query = ArrivalDocument::orderByDesc('created_at');
+            $distributors = Distributor::orderBy('name')->get();
+            $storages = Storage::orderBy('name')->get();
 
-        $completed = $request['completed'] ?? 'all';
-        if ($completed == 'true') $query->where('completed', '=', true);
-        if ($completed == 'false') $query->where('completed', '=', false);
-        if (!empty($distributor_id = $request->get('distributor_id'))) {
-            $query->where('distributor_id', $distributor_id);
-        }
-        if (!empty($storage_id = $request->get('storage_id'))) {
-            $query->where('storage_id', $storage_id);
-        }
+            $completed = $request['completed'] ?? 'all';
+            if ($completed == 'true') $query->where('completed', '=', true);
+            if ($completed == 'false') $query->where('completed', '=', false);
+            if (!empty($distributor_id = $request->get('distributor_id'))) {
+                $query->where('distributor_id', $distributor_id);
+            }
+            if (!empty($storage_id = $request->get('storage_id'))) {
+                $query->where('storage_id', $storage_id);
+            }
 
-        //ПАГИНАЦИЯ
-        if (!empty($pagination = $request->get('p'))) {
-            $arrivals = $query->paginate($pagination);
-            $arrivals->appends(['p' => $pagination]);
-        } else {
-            $arrivals = $query->paginate($this->pagination);
-        }
+            //ПАГИНАЦИЯ
+            if (!empty($pagination = $request->get('p'))) {
+                $arrivals = $query->paginate($pagination);
+                $arrivals->appends(['p' => $pagination]);
+            } else {
+                $arrivals = $query->paginate($this->pagination);
+            }
+            return view('admin.accounting.arrival.index',
+                compact('arrivals', 'pagination', 'completed', 'storages', 'distributors', 'storage_id', 'distributor_id'));
 
-        return view('admin.accounting.arrival.index',
-            compact('arrivals', 'pagination', 'completed', 'storages', 'distributors', 'storage_id', 'distributor_id'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function create(Request $request)
     {
-        $distributors = Distributor::get();
-        $currencies = Currency::get();
-        $storages = Storage::get();
-        return view('admin.accounting.arrival.create', compact('distributors', 'currencies', 'storages'));
+        try {
+            $distributors = Distributor::get();
+            $currencies = Currency::get();
+            $storages = Storage::get();
+            return view('admin.accounting.arrival.create', compact('distributors', 'currencies', 'storages'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+
+        $validated = $request->validate([
             'distributor' => 'required',
             'storage' => 'required',
             'currency' => 'required',
         ]);
-        $arrival = $this->service->create($request);
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $arrival = $this->service->create($request);
+            return redirect()->route('admin.accounting.arrival.show', $arrival);
+
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function show(ArrivalDocument $arrival)
     {
-        $info = $arrival->getInfoData();
-        return view('admin.accounting.arrival.show', compact('arrival', 'info'));
+        try {
+            $info = $arrival->getInfoData();
+            return view('admin.accounting.arrival.show', compact('arrival', 'info'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function edit(ArrivalDocument $arrival)
     {
-        $distributors = Distributor::get();
-        $currencies = Currency::get();
-        $storages = Storage::get();
-        return view('admin.accounting.arrival.edit', compact('arrival'), compact('distributors', 'currencies', 'storages'));
+        try {
+            $distributors = Distributor::get();
+            $currencies = Currency::get();
+            $storages = Storage::get();
+            return view('admin.accounting.arrival.edit', compact('arrival'), compact('distributors', 'currencies', 'storages'));
+
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function update(Request $request, ArrivalDocument $arrival)
     {
-        $request->validate([
-            'distributor' => 'required',
-            'storage' => 'required',
-            'currency' => 'required',
-        ]);
-        $arrival = $this->service->update($request, $arrival);
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $request->validate([
+                'distributor' => 'required',
+                'storage' => 'required',
+                'currency' => 'required',
+            ]);
+            $arrival = $this->service->update($request, $arrival);
+            return redirect()->route('admin.accounting.arrival.show', $arrival);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function destroy(ArrivalDocument $arrival)
@@ -106,27 +150,54 @@ class ArrivalController extends Controller
             $this->service->destroy($arrival);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
         return redirect()->back();
     }
 
     public function add(Request $request, ArrivalDocument $arrival)
     {
-        $this->service->add($request, $arrival);
-
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $this->service->add($request, $arrival);
+            return redirect()->route('admin.accounting.arrival.show', $arrival);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
-    public function remove_item(ArrivalProduct $item) {
-        $arrival = $item->document;
-        $item->delete();
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+    public function remove_item(ArrivalProduct $item)
+    {
+        try {
+            $arrival = $item->document;
+            $item->delete();
+            return redirect()->route('admin.accounting.arrival.show', $arrival);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function completed(ArrivalDocument $arrival)
     {
-        $this->service->completed($arrival);
-        return redirect()->route('admin.accounting.arrival.index');
+        try {
+            $this->service->completed($arrival);
+            return redirect()->route('admin.accounting.arrival.index');
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     //AJAX
@@ -139,6 +210,9 @@ class ArrivalController extends Controller
                 'info' => $item->document->getInfoData(),
             ]);
         } catch (\DomainException $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
             return response()->json(['error' => $e->getMessage()]);
         }
     }
@@ -157,6 +231,7 @@ class ArrivalController extends Controller
             }
         } catch (\Throwable $e) {
             $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+            event(new ThrowableHasAppeared($e));
         }
         return \response()->json($result);
     }

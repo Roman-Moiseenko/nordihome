@@ -17,6 +17,7 @@ class PromotionCommand extends Command
     public function handle()
     {
         //TODO Сделать Лог (можно через event(new LogData('Текст')))
+        $this->info('Акции - проверка');
         try {
             //поиск акций, которые стартуют через 3 дня, запускаем событие
             /** @var Promotion[] $promotions */

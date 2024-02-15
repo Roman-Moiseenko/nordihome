@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Discount;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Service\DiscountService;
 use Illuminate\Http\Request;
@@ -20,13 +21,26 @@ class DiscountController extends Controller
 
     public function index(Request $request)
     {
-        $discounts = Discount::orderBy('name')->get();
-        return view('admin.discount.discount.index', compact('discounts'));
+        try {
+
+            $discounts = Discount::orderBy('name')->get();
+            return view('admin.discount.discount.index', compact('discounts'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function create()
     {
+        try {
         return view('admin.discount.discount.create');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
 
@@ -44,8 +58,11 @@ class DiscountController extends Controller
             return redirect()->route('admin.discount.discount.show', compact('discount'));
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
+        return redirect()->back();
     }
 
     public function show(Discount $discount)

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Accounting;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Service\DistributorService;
 use Illuminate\Http\Request;
@@ -22,50 +23,92 @@ class DistributorController extends Controller
 
     public function index(Request $request)
     {
-        $query = Distributor::orderBy('name');
+        try {
+            $query = Distributor::orderBy('name');
 
-        //ПАГИНАЦИЯ
-        if (!empty($pagination = $request->get('p'))) {
-            $distributors = $query->paginate($pagination);
-            $distributors->appends(['p' => $pagination]);
-        } else {
-            $distributors = $query->paginate($this->pagination);
+            //ПАГИНАЦИЯ
+            if (!empty($pagination = $request->get('p'))) {
+                $distributors = $query->paginate($pagination);
+                $distributors->appends(['p' => $pagination]);
+            } else {
+                $distributors = $query->paginate($this->pagination);
+            }
+            return view('admin.accounting.distributor.index', compact('distributors', 'pagination'));
+
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-
-        return view('admin.accounting.distributor.index', compact('distributors', 'pagination'));
+        return redirect()->back();
     }
+
     public function create(Request $request)
     {
-        return view('admin.accounting.distributor.create');
+        try {
+            return view('admin.accounting.distributor.create');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
-        $distributor = $this->service->create($request);
-        return redirect()->route('admin.accounting.distributor.show', $distributor);
+        try {
+            $request->validate([
+                'name' => 'required|string',
+            ]);
+            $distributor = $this->service->create($request);
+            return redirect()->route('admin.accounting.distributor.show', $distributor);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function show(Distributor $distributor)
     {
-        //TODO В дальнейшем добавить список товаров
-        return view('admin.accounting.distributor.show', compact('distributor'));
+        try {
+            //TODO В дальнейшем добавить список товаров
+            return view('admin.accounting.distributor.show', compact('distributor'));
+
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function edit(Distributor $distributor)
     {
-        return view('admin.accounting.distributor.edit', compact('distributor'));
+        try {
+            return view('admin.accounting.distributor.edit', compact('distributor'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function update(Request $request, Distributor $distributor)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
-        $distributor = $this->service->update($request, $distributor);
-        return redirect()->route('admin.accounting.distributor.show', $distributor);
+        try {
+            $request->validate([
+                'name' => 'required',
+            ]);
+            $distributor = $this->service->update($request, $distributor);
+            return redirect()->route('admin.accounting.distributor.show', $distributor);
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function destroy(Distributor $distributor)
@@ -74,6 +117,9 @@ class DistributorController extends Controller
             $this->service->destroy($distributor);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
         return redirect()->back();
     }

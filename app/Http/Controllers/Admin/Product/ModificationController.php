@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Product;
 
+use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
@@ -29,26 +30,37 @@ class ModificationController extends Controller
 
     public function index(Request $request)
     {
-        $query = Modification::orderBy('name');
-        if (!empty($name = $request['name'])) {
-            $query = $query->where('name', 'LIKE', "%{$name}%");
-        }
-        //ПАГИНАЦИЯ
-        if (!empty($pagination = $request->get('p'))) {
-            $modifications = $query->paginate($pagination);
-            $modifications->appends(['p' => $pagination]);
-        } else {
-            $modifications = $query->paginate($this->pagination);
-        }
+        try {
+            $query = Modification::orderBy('name');
+            if (!empty($name = $request['name'])) {
+                $query = $query->where('name', 'LIKE', "%{$name}%");
+            }
+            //ПАГИНАЦИЯ
+            if (!empty($pagination = $request->get('p'))) {
+                $modifications = $query->paginate($pagination);
+                $modifications->appends(['p' => $pagination]);
+            } else {
+                $modifications = $query->paginate($this->pagination);
+            }
 
-        return view('admin.product.modification.index', compact('modifications', 'pagination'));
+            return view('admin.product.modification.index', compact('modifications', 'pagination'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function create(Request $request)
     {
-        //По ссылке из товара
-        $product_id = $request['product_id'] ?? null;
-        return view('admin.product.modification.create', compact('product_id'));
+        try {
+            $product_id = $request['product_id'] ?? null;
+            return view('admin.product.modification.create', compact('product_id'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function store(Request $request)
@@ -59,18 +71,38 @@ class ModificationController extends Controller
             'attribute_id' => 'required|array',
         ]);
 
-        $modification = $this->service->create($request);
-        return redirect()->route('admin.product.modification.show', compact('modification'));
+        try {
+            $modification = $this->service->create($request);
+            return redirect()->route('admin.product.modification.show', compact('modification'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function show(Modification $modification)
     {
-        return view('admin.product.modification.show', compact('modification'));
+        try {
+            return view('admin.product.modification.show', compact('modification'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function edit(Modification $modification)
     {
-        return view('admin.product.modification.edit', compact('modification'));
+        try {
+            return view('admin.product.modification.edit', compact('modification'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
 
@@ -80,19 +112,31 @@ class ModificationController extends Controller
             'name' => 'required|string',
             'product_id' => 'integer|required',
         ]);
-        $modification = $this->service->update($request, $modification);
-        return redirect()->route('admin.product.modification.show', compact('modification'));
+        try {
+            $modification = $this->service->update($request, $modification);
+            return redirect()->route('admin.product.modification.show', compact('modification'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function destroy(Modification $modification)
     {
         try {
             $this->service->delete($modification);
+            return redirect()->route('admin.product.modification.index');
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-            return back();
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return redirect()->route('admin.product.modification.index');
+        return redirect()->back();
+
     }
 
 //AJAX
@@ -137,6 +181,8 @@ class ModificationController extends Controller
 
         } catch (\Throwable $e) {
             $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+            event(new ThrowableHasAppeared($e));
+
         }
         return \response()->json($result);
     }
@@ -147,7 +193,7 @@ class ModificationController extends Controller
             $this->service->add_product($request, $modification);
             return \response()->json(true);
         } catch (\Throwable $e) {
-            flash($e->getMessage(), 'danger');
+            event(new ThrowableHasAppeared($e));
             return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
         }
     }
@@ -156,11 +202,14 @@ class ModificationController extends Controller
     {
         try {
             $this->service->del_product($request, $modification);
-        } catch (\Throwable $e) {
+            return redirect()->route('admin.product.modification.show', compact('modification'));
+        } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
-        return redirect()->route('admin.product.modification.show', compact('modification'));
-
+        return redirect()->back();
     }
 
 }

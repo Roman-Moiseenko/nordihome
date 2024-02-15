@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Page;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Page\Entity\Widget;
 use App\Modules\Page\Service\WidgetService;
 use Illuminate\Http\Request;
@@ -20,58 +21,121 @@ class WidgetController extends Controller
 
     public function index(Request $request)
     {
-        $widgets = Widget::get();
-        return view('admin.page.widget.index', compact('widgets'));
+        try {
+            $widgets = Widget::get();
+            return view('admin.page.widget.index', compact('widgets'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function create()
     {
-        $templates = Widget::WIDGET_TEMPLATES;
-        return view('admin.page.widget.create', compact('templates'));
+        try {
+            $templates = Widget::WIDGET_TEMPLATES;
+            return view('admin.page.widget.create', compact('templates'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function store(Request $request)
     {
-        $widget = $this->service->create($request);
-        return view('admin.page.widget.show', compact('widget'));
+        try {
+            $widget = $this->service->create($request);
+            return view('admin.page.widget.show', compact('widget'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function show(Widget $widget)
     {
-        return view('admin.page.widget.show', compact('widget'));
+        try {
+            return view('admin.page.widget.show', compact('widget'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function edit(Widget $widget)
     {
-        $templates = Widget::WIDGET_TEMPLATES;
-        return view('admin.page.widget.edit', compact('widget', 'templates'));
+        try {
+            $templates = Widget::WIDGET_TEMPLATES;
+            return view('admin.page.widget.edit', compact('widget', 'templates'));
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function update(Request $request, Widget $widget)
     {
-        $widget = $this->service->update($request, $widget);
-        return view('admin.page.widget.show', compact('widget'));
+        try {
+            $widget = $this->service->update($request, $widget);
+            return view('admin.page.widget.show', compact('widget'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function destroy(Widget $widget)
     {
-
-        $this->service->destroy($widget);
-        return redirect()->route('admin.page.widget.index');
+        try {
+            $this->service->destroy($widget);
+            return redirect()->route('admin.page.widget.index');
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function draft(Widget $widget)
     {
-        $widget->draft();
+        try {
+            $widget->draft();
 
-        return redirect()->route('admin.page.widget.show', compact('widget'));
+            return redirect()->route('admin.page.widget.show', compact('widget'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     public function activated(Widget $widget)
     {
-        $widget->activated();
+        try {
+            $widget->activated();
 
-        return redirect()->route('admin.page.widget.show', compact('widget'));
+            return redirect()->route('admin.page.widget.show', compact('widget'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
     }
 
     //AJAX
@@ -82,6 +146,8 @@ class WidgetController extends Controller
             $result = $this->service->getIds($class);
         } catch (\Throwable $e) {
             $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+            event(new ThrowableHasAppeared($e));
+
         }
 
         return response()->json($result);
