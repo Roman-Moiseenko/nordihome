@@ -251,13 +251,29 @@ window.$ = jQuery;
     if (buyClickPopup.length) {
         let formBuyClick = $('form#buy-click-form');
         let buttonBuyClick = $('#button-buy-click');
-        let product_id = $('input[name=product_id]').val();
-        buttonBuyClick.on('click', function () {
+        let inputBCEmail = buyClickPopup.find('input[name="email"]');
+        let inputBCPhone = buyClickPopup.find('input[name="phone"]');
+        let selectBCPayment = buyClickPopup.find('select[name="payment"]');
+        let selectBCDelivery = buyClickPopup.find('select[name="delivery"]');
+        let inputBCAddress = buyClickPopup.find('input[name="address"]');
+        buttonBuyClick.on('click', function (item) {
+            let product_id = buyClickPopup.find('input[name=product_id]').val();
+            item.preventDefault();
+            if (inputBCEmail.val() === '' || inputBCPhone.val() === '' || selectBCPayment.val() === '' || selectBCDelivery.val() === '') {
+                errorBlock.html('Не заполненны поля');
+                return false;
+            }
+            if ((selectBCDelivery.val() === 'local' || selectBCDelivery.val() === 'region') && inputBCAddress.val() === '') {
+                errorBlock.html('Не заполненн адрес доставки');
+                return false;
+            }
+
             //TODO проверка полей
             //TODO ajax запрос на кол-во,если = 0 То нельзя купить в 1 клик, сделайте предзаказ
 
             $.post('/product/count-for-sell/' + product_id, {}, function (data) {
                 let errorBlock = $('#buy-click-error');
+
                 if (data === 0) {
                     errorBlock.html('Товар не в наличии! Оформите предзаказ!');
                     return false;

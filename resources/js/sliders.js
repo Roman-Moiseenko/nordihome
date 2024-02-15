@@ -74,7 +74,6 @@ window.$ = jQuery;
             product_optionsSliderBase.responsive = {0: {items: responsive[0]}, 576: {items: responsive[1]}, 991: {items: responsive[2]}};
             product_optionsSliderBase.margin = 0;
             sliderImagesProduct.owlCarousel(product_optionsSliderBase);
-            console.log(mouseScroll);
             if (mouseScroll !== 0) {
                 sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
                     if (e.originalEvent.deltaY > 0) {
