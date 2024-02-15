@@ -239,17 +239,7 @@ class ProductService
         }
     }
 
-    public function published(Product $product): void
-    {
-        //TODO Проверка на заполнение и на модерацию
-        $product->update(['published' => true]);
-    }
 
-    public function draft(Product $product): void
-    {
-        //TODO Проверка на связи
-        $product->update(['published' => false]);
-    }
 
     public function moderation(Product $product): void
     {
@@ -361,5 +351,20 @@ class ProductService
             }
         }
     }
+
+
+    public function published(Product $product): void
+    {
+        //TODO Проверка на заполнение и на модерацию - добавить другие проверки
+        if (is_null($product->lastPrice)) throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
+
+        $product->update(['published' => true]);
+    }
+
+    public function draft(Product $product): void
+    {
+        $product->update(['published' => false]);
+    }
+
 
 }

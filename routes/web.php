@@ -193,6 +193,8 @@ Route::group(
                 'namespace' => 'Product',
             ],
             function () {
+
+
                 //Доп. - сменить категорию, добавить фото
                 Route::get('/attribute/groups', 'AttributeController@groups')->name('attribute.groups');
                 Route::delete('/attribute/group-destroy/{group}', 'AttributeController@group_destroy')->name('attribute.group-destroy');
@@ -223,6 +225,7 @@ Route::group(
                 Route::delete('/equivalent/{equivalent}/del-product/{product}', 'EquivalentController@del_product')->name('equivalent.del-product');
                 Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
                 Route::post('/equivalent/{equivalent}/json-products', 'EquivalentController@json_products')->name('equivalent.json-products');
+
                 Route::post('/group/{group}/add-product', 'GroupController@add_product')->name('group.add-product');
                 Route::delete('/group/{group}/del-product', 'GroupController@del_product')->name('group.del-product');
                 Route::post('/group/{group}/search', 'GroupController@search')->name('group.search');
@@ -245,7 +248,7 @@ Route::group(
                 Route::resource('modification', 'ModificationController'); //CRUD
             }
         );
-
+        //Discount
         Route::group(
             [
                 'prefix' => 'discount',
@@ -356,7 +359,7 @@ Route::group(
 
 
 
-        //AJAX Product-Image
+        //AJAX Product
         Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');
         Route::post('product/{product}/get-images', 'Product\ProductController@get_images')->name('product.get-images');
         Route::post('product/{product}/del-image', 'Product\ProductController@del_image')->name('product.del-image');
@@ -365,8 +368,8 @@ Route::group(
         Route::post('product/{product}/alt-image', 'Product\ProductController@alt_image')->name('product.alt-image');
         Route::post('product/search', 'Product\ProductController@search')->name('product.search');
         Route::post('product/search_bonus', 'Product\ProductController@search_bonus')->name('product.search-bonus');
-        //
         Route::post('product/{product}/attr-modification', 'Product\ProductController@attr_modification')->name('product.attr-modification');
+        Route::post('product/toggle/{product}', 'Product\ProductController@toggle')->name('product.toggle');
 
         Route::resource('product', 'Product\ProductController'); //CRUD
 

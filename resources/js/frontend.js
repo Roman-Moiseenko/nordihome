@@ -268,13 +268,7 @@ window.$ = jQuery;
                 errorBlock.html('Не заполнен адрес доставки');
                 return false;
             }
-
-            //TODO проверка полей
-            //TODO ajax запрос на кол-во,если = 0 То нельзя купить в 1 клик, сделайте предзаказ
-
             $.post('/product/count-for-sell/' + product_id, {}, function (data) {
-
-
                 if (data === 0) {
                     errorBlock.html('Товар не в наличии! Оформите предзаказ!');
                     return false;

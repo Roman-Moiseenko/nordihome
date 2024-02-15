@@ -121,7 +121,23 @@ class ProductController extends Controller
         return redirect(route('admin.product.product.index'));
     }
 
+    public function toggle(Product $product) //Переключение между Опубликовано и Чернови
+    {
+        try {
+            if ($product->isPublished()) {
+                $this->service->draft($product);
+            } else {
+                $this->service->published($product);
+            }
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        }
+        return redirect()->back();
+    }
+
     //AJAX
+
+
 
     public function search(Request $request)
     {

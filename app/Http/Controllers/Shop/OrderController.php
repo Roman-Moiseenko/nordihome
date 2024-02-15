@@ -123,7 +123,6 @@ class OrderController extends Controller
     public function create_click(Request $request)
     {
         try {
-            //TODO В 1Клик
             $this->service->create_click($request);
             flash('Ваш заказ успешно создан!');
 
@@ -136,8 +135,6 @@ class OrderController extends Controller
         }
         return redirect()->route('home');
     }
-
-
 
     public function store_parser(Request $request)
     {
