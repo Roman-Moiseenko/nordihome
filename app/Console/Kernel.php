@@ -12,7 +12,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        //Проверка акций
+        $schedule->command('cron:promotion')->dailyAt('00:01');
+        //Резерв товара
+        $schedule->command('cron:reserve')->everyFiveMinutes();
+
+        //TODO настроить логи
     }
 
     /**

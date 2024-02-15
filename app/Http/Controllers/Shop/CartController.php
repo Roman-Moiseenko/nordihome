@@ -105,7 +105,7 @@ class CartController extends Controller
     public function cart(Request $request)
     {
         try {
-            (new ReserveService())->clearByTimer();
+            //(new ReserveService())->clearByTimer();
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         } catch (\Throwable $e) {

@@ -6,6 +6,7 @@ namespace App\Modules\Order\Service;
 use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\UserDelivery;
@@ -23,6 +24,7 @@ use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use stdClass;
 
@@ -77,90 +79,97 @@ class OrderService
 
     public function checkorder(array $data): array
     {
-        $enabled = true;
-        $error = '';
-        $default = $this->default_user_data();
+        DB::beginTransaction();
+        try {
+            $enabled = true;
+            $error = '';
+            $default = $this->default_user_data();
 
-        if (isset($data['payment'])) $default->payment->setPayment($data['payment']);
-        if (isset($data['inn'])) {//Работа с ИНН. Проверяем изменился или новые данные, если да, загружаем по API
-            $default->payment->setInvoice($data['inn']);
+            if (isset($data['payment'])) $default->payment->setPayment($data['payment']);
+            if (isset($data['inn'])) {//Работа с ИНН. Проверяем изменился или новые данные, если да, загружаем по API
+                $default->payment->setInvoice($data['inn']);
+            }
+
+            $default->delivery->setDeliveryType(isset($data['delivery']) ? (int)$data['delivery'] : null);
+
+            if ($default->delivery->isRegion()) {
+                $default->delivery->setDeliveryTransport(
+                    $data['company'] ?? '',
+                    GeoAddress::create(
+                        $data['address-region'] ?? '',
+                        $data['latitude-region'] ?? '',
+                        $data['longitude-region'] ?? '',
+                        $data['post-region'] ?? ''
+                    )
+                );
+            } else {
+                $default->delivery->setDeliveryLocal(
+                    isset($data['storage']) ? (int)$data['storage'] : null,
+                    GeoAddress::create(
+                        $data['address-local'] ?? '',
+                        $data['latitude-local'] ?? '',
+                        $data['longitude-local'] ?? '',
+                        $data['post-local'] ?? ''
+                    )
+                );
+            }
+            if (isset($data['fullname'])) {
+                list ($surname, $firstname, $secondname) = explode(" ", $data['fullname']);
+                //dd($surname);
+                $default->delivery->setFullName(new FullName($surname, $firstname, $secondname));
+            }
+
+            if (isset($data['phone'])) {
+                $default->user->update([
+                    'phone' => $data['phone']
+                ]);
+            }
+
+            //Считаем стоимость доставки
+            $items = null;
+            if ($data['order'] == 'cart') $items = $this->cart->getItems();
+            if ($data['order'] == 'parser') $items = $this->parserCart->getItems();
+
+            $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $items);
+
+            //TODO Сообщения об ошибках - неверное ИНН, Негабаритный груз для доставки (название продукта) $error
+
+            if ($default->delivery->isStorage() && empty($default->delivery->storage)) $enabled = false;
+            if ($default->delivery->isLocal() && empty($default->delivery->local->address)) $enabled = false;
+            if (
+                $default->delivery->isRegion() &&
+                (empty($default->delivery->region->address) || empty($default->delivery->company))
+            ) $enabled = false;
+            $default = $this->default_user_data();
+            $result = [
+                'payment' => [
+                    'is_invoice' => $default->payment->isInvoice(),
+                    'invoice' => $default->payment->invoice(),
+                ],
+                'delivery' => [
+                    'delivery_local' => $default->delivery->local->address,
+                    'delivery_address' => $default->delivery->region->address,
+                    'company' => $default->delivery->company,
+                    'storage' => $default->delivery->storage,
+                    'fullname' => $default->delivery->fullname->getFullName(),
+                ],
+                'phone' => $default->phone,
+                'amount' => [
+                    'delivery' => $delivery_cost,
+                    'caption' => $default->payment->online() ? 'Оплатить' : 'Оформить',
+                    'enabled' => $enabled,
+                    'error' => $error,
+                    //'amount' =>
+                ],
+            ];
+
+            DB::commit();
+            return $result;
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            event(new ThrowableHasAppeared($e));
+            return [];
         }
-
-        $default->delivery->setDeliveryType(isset($data['delivery']) ? (int)$data['delivery'] : null);
-
-        if ($default->delivery->isRegion()) {
-            $default->delivery->setDeliveryTransport(
-                $data['company'] ?? '',
-                GeoAddress::create(
-                    $data['address-region'] ?? '',
-                    $data['latitude-region'] ?? '',
-                    $data['longitude-region'] ?? '',
-                    $data['post-region'] ?? ''
-                )
-            );
-        } else {
-            $default->delivery->setDeliveryLocal(
-                isset($data['storage']) ? (int)$data['storage'] : null,
-                GeoAddress::create(
-                    $data['address-local'] ?? '',
-                    $data['latitude-local'] ?? '',
-                    $data['longitude-local'] ?? '',
-                    $data['post-local'] ?? ''
-                )
-            );
-        }
-        if (isset($data['fullname'])) {
-            list ($surname, $firstname, $secondname) = explode(" ", $data['fullname']);
-            //dd($surname);
-            $default->delivery->setFullName(new FullName($surname, $firstname, $secondname));
-        }
-
-        if (isset($data['phone'])) {
-            $default->user->update([
-                'phone' => $data['phone']
-            ]);
-        }
-
-        //Считаем стоимость доставки
-        $items = null;
-        if ($data['order'] == 'cart') $items = $this->cart->getItems();
-        if ($data['order'] == 'parser') $items = $this->parserCart->getItems();
-
-        $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $items);
-
-        //TODO Сообщения об ошибках - неверное ИНН, Негабаритный груз для доставки (название продукта) $error
-
-        if ($default->delivery->isStorage() && empty($default->delivery->storage)) $enabled = false;
-        if ($default->delivery->isLocal() && empty($default->delivery->local->address)) $enabled = false;
-        if (
-            $default->delivery->isRegion() &&
-            (empty($default->delivery->region->address) || empty($default->delivery->company))
-        ) $enabled = false;
-        $default = $this->default_user_data();
-        $result = [
-            'payment' => [
-                'is_invoice' => $default->payment->isInvoice(),
-                'invoice' => $default->payment->invoice(),
-            ],
-            'delivery' => [
-                'delivery_local' => $default->delivery->local->address,
-                'delivery_address' => $default->delivery->region->address,
-                'company' => $default->delivery->company,
-                'storage' => $default->delivery->storage,
-                'fullname' => $default->delivery->fullname->getFullName(),
-            ],
-            'phone' => $default->phone,
-            'amount' => [
-                'delivery' => $delivery_cost,
-                'caption' => $default->payment->online() ? 'Оплатить' : 'Оформить',
-                'enabled' => $enabled,
-                'error' => $error,
-                //'amount' =>
-            ],
-        ];
-
-
-        return $result;
     }
 
     public function coupon(string $code)

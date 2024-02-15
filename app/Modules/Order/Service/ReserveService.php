@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
@@ -61,7 +62,8 @@ class ReserveService
             return $reserve;
         } catch (\Throwable $e) {
             DB::rollBack();
-            throw new \DomainException($e->getMessage());
+            event(new ThrowableHasAppeared($e));
+            return null;
         }
     }
 
@@ -75,7 +77,6 @@ class ReserveService
             $product->save();
             if ($reserve->type == Reserve::TYPE_CART) $reserve->cart->clearReserve();
             if ($reserve->type == Reserve::TYPE_ORDER) {
-                //TODO Заказ поставить отмененным
                 $reserve->orderItem->clearReserve();
                 $reserve->orderItem->order->checkOutReserve();
             }
@@ -87,7 +88,7 @@ class ReserveService
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            throw new \DomainException($e->getMessage());
+            event(new ThrowableHasAppeared($e));
         }
     }
 
@@ -111,7 +112,7 @@ class ReserveService
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            throw new \DomainException($e->getMessage());
+            event(new ThrowableHasAppeared($e));
         }
     }
 
@@ -133,7 +134,7 @@ class ReserveService
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
-            throw new \DomainException($e->getMessage());
+            event(new ThrowableHasAppeared($e));
         }
     }
 }

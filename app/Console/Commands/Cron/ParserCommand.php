@@ -4,7 +4,7 @@
 namespace App\Console\Commands\Cron;
 
 
-
+use App\Events\ThrowableHasAppeared;
 use App\Modules\Shop\Parser\HttpPage;
 use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Parser\ProductParser;
@@ -18,12 +18,16 @@ class ParserCommand extends Command
     public function handle()
     {
         //TODO Сделать Лог (можно через event(new LogData('Текст')))
-        $service = new ParserService(new HttpPage());
-        $products = ProductParser::get();
-        /** @var ProductParser $product */
-        foreach ($products as $product) {
-            $price = $service->parserCost($product->product->code_search);
-            $product->setCost($price);
+        try {
+            $service = new ParserService(new HttpPage());
+            $products = ProductParser::get();
+            /** @var ProductParser $product */
+            foreach ($products as $product) {
+                $price = $service->parserCost($product->product->code_search);
+                $product->setCost($price);
+            }
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
         }
     }
 }
