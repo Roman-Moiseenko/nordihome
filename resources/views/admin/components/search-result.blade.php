@@ -61,7 +61,7 @@
                     <div class="image-fit h-8 w-8">
                         <img
                             class="rounded-full"
-                            src="{{ Vite::asset($faker['photos'][0]) }}"
+                            src="/images/no-image.jpg"
                             alt="Midone Tailwind HTML Admin Template"
                         />
                     </div>
@@ -81,7 +81,7 @@
                 <div class="image-fit h-8 w-8">
                     <img
                         class="rounded-full"
-                        src="{{ Vite::asset($faker['images'][0]) }}"
+                        src="/images/no-image.jpg"
                         alt="Midone Tailwind HTML Admin Template"
                     />
                 </div>

@@ -67,7 +67,7 @@
             <li class="nav-item">
                 <a href="{{ $staff->isBlocked() ? '' : 'javascript:;' }}"
                    data-staff="{{ route('admin.staff.password', $staff) }}" data-fullname="{{ $staff->fullname->getShortName() }}"
-                   data-tw-toggle="modal" data-tw-target="#password-modal"
+                   data-tw-toggle="modal" data-tw-target="#modal-change-password"
                    class="btn btn-outline-secondary py-1 px-2 {{ $staff->isBlocked() ? 'disabled' : '' }} password-modal">
                     <i data-lucide="key-round" width="24" height="24" class="lucide lucide-key-round w-4 h-4 mr-2"></i>
                     Сменить пароль </a>
@@ -79,42 +79,6 @@
         Данные связанные с работой по профилю
     </div>
 
+    {{ \App\Forms\ModalPassword::create()->show() }}
 
-    <!-- Modal -->
-    <div id="password-modal" data-tw-backdrop="static" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="form-password-modal" method="POST" action="{{ route('admin.home') }}">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Сменить пароль сотруднику <strong id="fio"></strong></h3>
-                    </div>
-                    <div class="modal-body p-10 text-center">
-                        <p>Введите новый пароль</p>
-                        <input id="field-pass" class="form-control" type="text" name="password"/>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">
-                            Отмена
-                        </button>
-                        <button type="submit" class="btn btn-primary w-20">Сохранить</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <script>
-        let elements = document.getElementsByClassName("password-modal");
-        let _user = document.getElementById('fio');
-        let _form = document.getElementById('form-password-modal');
-        Array.from(elements).forEach(function (element) {
-            element.addEventListener('click', function () {
-                let _id = element.getAttribute('data-staff');
-                let _fio = element.getAttribute('data-fullname');
-                _form.setAttribute('action', _id);
-                _user.innerHTML = _fio;
-            });
-        });
-
-    </script>
 @endsection

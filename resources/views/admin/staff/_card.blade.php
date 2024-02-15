@@ -20,7 +20,7 @@
                             <x-base.lucide icon="pen" class="w-4 h-4 mr-2"/>Редактировать </a>
                         <a href="{{ $staff->isBlocked() ? '' : 'javascript:;' }}"
                            data-staff="{{ route('admin.staff.password', $staff) }}" data-fullname="{{ $staff->fullname->getShortName() }}"
-                           data-tw-toggle="modal" data-tw-target="#password-modal"
+                           data-tw-toggle="modal" data-tw-target="#modal-change-password"
                            class="dropdown-item {{ $staff->isBlocked() ? 'disabled' : '' }} password-modal">
                             <x-base.lucide icon="key-round" class="w-4 h-4 mr-2"/>
                             Пароль </a>

@@ -58,7 +58,7 @@
                         <div class="image-fit relative mr-1 h-12 w-12 flex-none">
                             <img
                                 class="rounded-full"
-                                src="{{ $faker['photos'][0] }}"
+                                src="/images/no-image.jpg"
                                 alt="Midone Tailwind HTML Admin Template"
                             />
                             <div
