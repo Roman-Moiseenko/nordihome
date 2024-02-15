@@ -415,7 +415,6 @@ class ShopRepository
     }
 
 
-
     private function avto_replace(string $str): string
     {
         $output = '';

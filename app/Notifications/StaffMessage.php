@@ -4,24 +4,26 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Telegram\TelegramMessage;
 
 class StaffMessage extends Notification implements ShouldQueue
 {
     use Queueable;
+
     private string $message;
 
     public function __construct(string $message)
     {
         $this->message = $message;
+
     }
 
     public function via(object $notifiable): array
     {
         return ['telegram', 'database'];
     }
-
 
     public function toTelegram(object $notifiable)
     {
@@ -31,6 +33,7 @@ class StaffMessage extends Notification implements ShouldQueue
         //TODO Продумать возврат данных, что сотрудник подтвердил уведомление/заявку
         return $message;
     }
+
 
     /**
      * Get the array representation of the notification.
