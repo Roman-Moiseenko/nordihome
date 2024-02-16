@@ -240,14 +240,30 @@
         margin: 10px;
         //box-shadow: $shadow-img;
         transition: $transition;
+        position: relative;
         &:hover {
-            transform: scale(1.02);
-            transition: $transition;
+            //transform: scale(1.02);
+            //transition: $transition;
+            .button {
+                display: block;
+            }
         }
-        div {
+        .item-price {
             text-align: center;
             padding-top: 4px;
             font-size: 0.9rem;
+        }
+        .button {
+            display: none;
+            position: absolute;
+            //top: 50%;
+            left: 0;
+            right: 0;
+            bottom: 26px;
+            //transform: translateY(-50%);
+            >button {
+                width: 100%;
+            }
         }
     }
 }
