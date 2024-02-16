@@ -25,6 +25,7 @@ window.$ = jQuery;
             map.controls.remove('searchControl');
             map.controls.remove('trafficControl');
             map.controls.remove('geolocationControl');
+            map.behaviors.disable('scrollZoom');
             $.post(mapBlock.data('route'), {},//ajax запрос
                 function (data) {
                     let  _points = data;//JSON.parse(data);
