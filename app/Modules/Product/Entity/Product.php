@@ -127,7 +127,6 @@ class Product extends Model
     //РЕГИСТРАТОРЫ
 
 
-
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -138,12 +137,12 @@ class Product extends Model
 
     public function sluggable()
     {
-        return [ 'slug' => [ 'source' => 'name' ] ];
+        return ['slug' => ['source' => 'name']];
     }
 
     public static function register(string $name, string $code, int $main_category_id, string $slug = '', array $arguments = []): self
     {
-        $code_search = str_replace(['-', ',', '.', '_'],'', $code);
+        $code_search = str_replace(['-', ',', '.', '_'], '', $code);
         //TODO Возможно перенести в сервис, тогда в Парсере - вызывать сервис
         if (!empty(Product::where('name', '=', $name)->first())) {
             //Ищем все товары 49483964
@@ -158,7 +157,7 @@ class Product extends Model
             $max_number++;
             $name .= '-' . $max_number;
         }
-            //throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
+        //throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
         if (!empty(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
         $slug = empty($slug) ? Str::slug($name) : $slug;
 
@@ -195,27 +194,27 @@ class Product extends Model
             [
                 'value' => $price,
                 'founded' => 'In Shop',
-                ]
+            ]
         );
         $this->refresh();
     }
 
-/*
-    public function setPublished(): void
-    {
-        $this->status = self::STATUS_PUBLISHED;
-    }
+    /*
+        public function setPublished(): void
+        {
+            $this->status = self::STATUS_PUBLISHED;
+        }
 
-    public function setModeration()
-    {
-        $this->status = self::STATUS_MODERATION;
-    }
+        public function setModeration()
+        {
+            $this->status = self::STATUS_MODERATION;
+        }
 
-    public function setApproved()
-    {
-        $this->status = self::STATUS_APPROVED;
-    }
-*/
+        public function setApproved()
+        {
+            $this->status = self::STATUS_APPROVED;
+        }
+    */
     public function getSlug(): string
     {
         return $this->slug;
@@ -246,7 +245,7 @@ class Product extends Model
 
     public function getName(): string
     {
-        return$this->name;
+        return $this->name;
     }
 
     public function Value(int $attribute_id)
@@ -318,7 +317,7 @@ class Product extends Model
 
     public function isCategories($category_id): bool
     {
-        foreach ($this->categories as $category){
+        foreach ($this->categories as $category) {
             if ($category->id == (int)$category_id) return true;
         }
         return false;
@@ -331,7 +330,7 @@ class Product extends Model
 
     public function isTag($tag_id): bool
     {
-        foreach ($this->tags as $tag){
+        foreach ($this->tags as $tag) {
             if ($tag->id == (int)$tag_id) return true;
         }
         return false;
@@ -393,8 +392,9 @@ class Product extends Model
 
     public function equivalent()
     {
-        if (empty($this->equivalent_product)) return null;
-        return $this->equivalent_product->equivalent();
+        return $this->belongsTo(Equivalent::class, 'product_id', 'id');
+        /*if (empty($this->equivalent_product)) return null;
+        return $this->equivalent_product->equivalent();*/
     }
 
     public function pricing()
@@ -446,12 +446,12 @@ class Product extends Model
 
     public function photo()
     {
-       return $this->morphOne(Photo::class, 'imageable')->where('sort', '=',0);
+        return $this->morphOne(Photo::class, 'imageable')->where('sort', '=', 0);
     }
 
     public function photos()
     {
-       return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');//->where('sort', '>',0);
+        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');//->where('sort', '>',0);
     }
 
     public function photo_next()
@@ -490,7 +490,7 @@ class Product extends Model
         });
 
         self::retrieved(function (Product $product) {
-            $product->dimensions =  Dimensions::load($product->dimensions_json);
+            $product->dimensions = Dimensions::load($product->dimensions_json);
         });
     }
 
@@ -501,11 +501,11 @@ class Product extends Model
             if (!empty($group->promotions)) {
                 foreach ($group->promotions as $promotion) {
                     if ($promotion->published == true && $promotion->active == true)
-                    return
-                    [
-                        'price' => ceil((100 - $promotion->pivot->discount) / 100 * $this->getLastPrice()),
-                        'discount' => $promotion->title,
-                    ];
+                        return
+                            [
+                                'price' => ceil((100 - $promotion->pivot->discount) / 100 * $this->getLastPrice()),
+                                'discount' => $promotion->title,
+                            ];
                 }
             }
         }

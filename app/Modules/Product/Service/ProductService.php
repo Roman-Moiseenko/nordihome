@@ -188,11 +188,11 @@ class ProductService
             $new_equivalent_id = $request['equivalent_id'] ?? 0;
 
 
-            if ($new_equivalent_id == 0 && !is_null($product->equivalent())) {
+            if ($new_equivalent_id == 0 && !is_null($product->equivalent)) {
                 $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
             }
             if ($new_equivalent_id != 0) {
-                if (is_null($product->equivalent())) {
+                if (is_null($product->equivalent)) {
                     //Доб.новый
                     $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
                 } elseif ((int)$new_equivalent_id !== $product->equivalent->id) {

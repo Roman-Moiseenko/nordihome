@@ -30,7 +30,7 @@ class ProductController extends Controller
             $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
             $description = $product->short;
 
-            return view('shop.product', compact('product', 'title', 'description'));
+            return view('shop.product.view', compact('product', 'title', 'description'));
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {

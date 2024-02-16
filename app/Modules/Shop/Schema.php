@@ -331,7 +331,7 @@ class Schema
                 "name" => $product->series->name,
                 "aggregateRating" => ["@type" => "aggregateRating", "ratingValue" => "5", "ratingCount" => "70"]
             ],
-            'isSimilarTo' => empty($product->equivalent()) ? null : array_map(function (Product $product) {
+            'isSimilarTo' => is_null($product->equivalent) ? null : array_map(function (Product $product) {
                 return [
                     "@type" => "Product",
                     "name" => $product->name,

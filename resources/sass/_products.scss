@@ -244,6 +244,11 @@
             transform: scale(1.02);
             transition: $transition;
         }
+        div {
+            text-align: center;
+            padding-top: 4px;
+            font-size: 0.9rem;
+        }
     }
 }
 
