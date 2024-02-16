@@ -344,7 +344,6 @@
     }
 }
 
-
 .view-bonus {
     img {
         width: 100%;
@@ -368,6 +367,25 @@
         }
     }
 
+}
+
+.view-attributes {
+    .group {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-top: 24px;
+        margin-bottom: 8px;
+    }
+    .attribute {
+        margin: 4px 0;
+        padding: 4px 0;
+        .name {
+            border-bottom: 1px dotted var(--bs-gray-500);
+        }
+        .values {
+            padding-left: 24px;
+        }
+    }
 }
 
 ///СЛАЙДЕР

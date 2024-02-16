@@ -376,8 +376,9 @@ class Product extends Model
 
     public function modification()
     {
-        if (empty($this->modification_product)) return null;
-        return $this->modification_product->modification();
+        return $this->belongsTo(Modification::class, 'product_id', 'id');
+        /*if (empty($this->modification_product)) return null;
+        return $this->modification_product->modification();*/
     }
 
     public function groups()

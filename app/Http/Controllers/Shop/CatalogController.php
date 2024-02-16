@@ -46,8 +46,10 @@ class CatalogController extends Controller
 
     public function view(Request $request, $slug)
     {
+        $category = $this->repository->CategoryBySlug($slug);
+        if (is_null($category)) return abort(404);
+
         try {
-            $category = $this->repository->CategoryBySlug($slug);
             $title = $category->title;
             $description = $category->description;
 

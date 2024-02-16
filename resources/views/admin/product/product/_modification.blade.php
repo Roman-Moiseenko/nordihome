@@ -3,7 +3,7 @@
 @endphp
 <div class="grid grid-cols-12 gap-x-6">
     <div class="col-span-12 lg:col-span-4">
-        @if(is_null($product->modification()))
+        @if(is_null($product->modification))
             <div class="w-full text-slate-400 mt-6">
                 Для данного товара Модификации не заданы. Создать группу модификаций можно в разделе
                 <a class="text-primary"
@@ -37,7 +37,7 @@
 
     </div>
     <div class="col-span-12 lg:col-span-8">
-        @if(!empty($product->modification()))
+        @if(!empty($product->modification))
         @foreach($product->modification->products as $_product)
             <div class="relative pl-5 pr-5 xl:pr-10 py-10 bg-slate-50 dark:bg-transparent dark:border rounded-md mt-3 flex items-center">
                 <div class="flex items-center">

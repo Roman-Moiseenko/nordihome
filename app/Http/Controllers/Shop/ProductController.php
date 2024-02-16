@@ -24,20 +24,35 @@ class ProductController extends Controller
 
     public function view($slug)
     {
-        try {
-            $product = $this->repository->getProductBySlug($slug);
+        $product = $this->repository->getProductBySlug($slug);
 
+        try {
             $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
             $description = $product->short;
+            $productAttributes = [];
+            foreach ($product->prod_attributes as $attribute) {
+                $value = $attribute->Value();
+                if (is_array($value)) {
+                    $value = implode(', ', array_map(function ($id) use ($attribute) {
+                        return $attribute->getVariant((int)$id)->name;
+                    }, $attribute->Value()));
+                }
 
-            return view('shop.product.view', compact('product', 'title', 'description'));
+                $productAttributes[$attribute->group->name][] = [
+                    'name' => $attribute->name,
+                    'value' => $value,
+                ];
+            }
+
+
+            return view('shop.product.view', compact('product', 'title', 'description', 'productAttributes'));
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
             flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
             event(new ThrowableHasAppeared($e));
         }
-        return redirect()->route('home');
+        return redirect()->back();
     }
 
     public function search(Request $request)

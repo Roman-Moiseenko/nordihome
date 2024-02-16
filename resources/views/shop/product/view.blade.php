@@ -79,7 +79,9 @@
         </div>
         <div class="row">
             <div class="col-12 d-flex">
+                @if(!empty($productAttributes))
                 <div class="anchor-menu"><a href="#specifications">Характеристики</a></div>
+                @endif
                 <div class="anchor-menu"><a href="#description">Описание товара</a></div>
             </div>
         </div>
@@ -94,14 +96,8 @@
         {!! $product->description !!}
     </div>
 
-    <div class="box-card">
-        <h3 id="specifications">Характеристики</h3>
-        @foreach($product->prod_attributes as $prod_attribute)
-            <div>{{ $prod_attribute->group->name }}</div>
-            <div>{{ $prod_attribute->name }}</div>
-            <div>{{ $prod_attribute->pivot->value }}</div>
-        @endforeach
-    </div>
+    @include('shop.product._attribute', ['productAttributes' => $productAttributes])
+
 
     @include('shop.product._equivalent', ['equivalent' => $product->equivalent])
     @include('shop.product._reviews', ['reviews' => $product->reviews])

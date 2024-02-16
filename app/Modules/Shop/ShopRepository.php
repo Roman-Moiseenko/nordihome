@@ -212,10 +212,14 @@ class ShopRepository
 
     ////КАТЕГОРИИ
     ///
-    public function CategoryBySlug($slug): Category
+    public function CategoryBySlug($slug):? Category
     {
-        if (is_numeric($slug)) return Category::findOrFail($slug);
-        return Category::where('slug', '=', $slug)->firstOrFail();
+        if (is_numeric($slug)) {
+            $category = Category::find($slug);
+        } else {
+            $category = Category::where('slug', '=', $slug)->first();
+        }
+        return $category;
     }
 
     /*
@@ -458,21 +462,21 @@ class ShopRepository
             ];
         }, Storage::getModels());
 
-           /*
-            [
-            [
-                'latitude' => 54.737798,
-                'longitude' => 20.477079,
-                'iconCaption' => 'NORDI HOME',
-                'balloonContent' => 'Советский проспект 103А корпус 1'
-            ],
-            [
-                'latitude' => 54.678130,
-                'longitude' => 20.495324,
-                'iconCaption' => 'NORDI HOME',
-                'balloonContent' => 'ул. Батальная 18, 2 этаж'
-            ],
-        ];*/
+        /*
+         [
+         [
+             'latitude' => 54.737798,
+             'longitude' => 20.477079,
+             'iconCaption' => 'NORDI HOME',
+             'balloonContent' => 'Советский проспект 103А корпус 1'
+         ],
+         [
+             'latitude' => 54.678130,
+             'longitude' => 20.495324,
+             'iconCaption' => 'NORDI HOME',
+             'balloonContent' => 'ул. Батальная 18, 2 этаж'
+         ],
+     ];*/
     }
 
     public function getPromotionBySlug($slug): Promotion

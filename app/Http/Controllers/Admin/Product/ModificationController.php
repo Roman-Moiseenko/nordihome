@@ -167,7 +167,7 @@ class ModificationController extends Controller
             //TODO Сделать фильтрацию по товарам которые есть в любой модификации (получить все id из ModiRepository и перебрать и проверить in_array($product->id, $array_mod_ids)
             /** @var Product $product */
             foreach ($products as $product) {
-                if (empty($product->modification())) {
+                if (is_null($product->modification)) {
                     $result[] = $this->products->toArrayForSearch($product);
                 } else {
                     if ($request['action'] == 'index') {

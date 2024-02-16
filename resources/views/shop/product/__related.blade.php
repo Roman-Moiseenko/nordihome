@@ -1,7 +1,6 @@
 @if(!empty($related))
     <div class="view-related">
         <h4>Аксессуары</h4>
-
         <div class="slider-images-product owl-carousel owl-theme" data-responsive="[2,3,4]">
             @foreach($related as $_product)
                 <div class="item-slider">
@@ -17,7 +16,5 @@
                 </div>
             @endforeach
         </div>
-
-
     </div>
 @endif
