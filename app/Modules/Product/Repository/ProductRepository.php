@@ -43,8 +43,8 @@ class ProductRepository
     public function search(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true)
     {
         $query = Product::orderBy('name')->where(function ($query) use ($search) {
-            $query->where('code_search', 'LIKE', "%{$search}%")
-                ->orWhere('name', 'LIKE', "{$search}%");
+            $query->where('code_search', 'LIKE', "%{$search}%")->orWhere('code', 'LIKE', "%{$search}%")
+                ->orWhere('name', 'LIKE', "%{$search}%");
         });
 
         if (!empty($include_ids)) {
