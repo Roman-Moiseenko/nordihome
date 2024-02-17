@@ -140,9 +140,20 @@ class Product extends Model
         return ['slug' => ['source' => 'name']];
     }
 
+    /**
+     * Регистрация товара, с учетом дублей по имени - добавляем номер
+     * Для дублирования артикула - вызываем исключение
+     * @param string $name
+     * @param string $code
+     * @param int $main_category_id
+     * @param string $slug
+     * @param array $arguments
+     * @return static
+     */
     public static function register(string $name, string $code, int $main_category_id, string $slug = '', array $arguments = []): self
     {
         $code_search = str_replace(['-', ',', '.', '_'], '', $code);
+
         //TODO Возможно перенести в сервис, тогда в Парсере - вызывать сервис
         if (!empty(Product::where('name', '=', $name)->first())) {
             //Ищем все товары 49483964
@@ -220,11 +231,15 @@ class Product extends Model
         return $this->slug;
     }
 
+    /**
+     * @return float Последняя назначенная цена с учетом если цены не назначены
+     */
     public function getLastPrice(): float
     {
         if (is_null($this->lastPrice)) return 0;
         return $this->lastPrice->value;
     }
+
 
     public function getReserveCount(): int
     {
@@ -235,12 +250,17 @@ class Product extends Model
         return $result;
     }
 
+    /**
+     * @return float Предыдущая цена товара (учитывается случаи когда всего цен менее 2
+     */
     public function getPreviousPrice(): float
     {
-        if (empty($this->pricing)) return 0;
-        $count = count($this->pricing);
+        $count = $this->pricing()->count();
+        if ($count == 0) return 0;
         if ($count == 1) return $this->getLastPrice();
-        return $this->pricing[$count - 2]->value;
+        /** @var ProductPricing $model */
+        $model = $this->pricing()->skip(1)->first();
+        return $model->value;
     }
 
     public function getName(): string
@@ -377,8 +397,6 @@ class Product extends Model
     public function modification()
     {
         return $this->belongsTo(Modification::class, 'product_id', 'id');
-        /*if (empty($this->modification_product)) return null;
-        return $this->modification_product->modification();*/
     }
 
     public function groups()
@@ -394,8 +412,6 @@ class Product extends Model
     public function equivalent()
     {
         return $this->belongsTo(Equivalent::class, 'product_id', 'id');
-        /*if (empty($this->equivalent_product)) return null;
-        return $this->equivalent_product->equivalent();*/
     }
 
     public function pricing()
@@ -495,6 +511,11 @@ class Product extends Model
         });
     }
 
+
+    /**
+     * @return array|null
+     * Возвращает array['price', 'discount'] если товар в акции и null в противном случае
+     */
     public function isPromotion()
     {
         foreach ($this->groups as $group) {

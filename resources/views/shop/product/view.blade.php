@@ -41,13 +41,24 @@
                     <div class="price-brand-block">
                         <div class="view-price">
                         @if(is_null($product->isPromotion()))
-                            {{ price($product->getLastPrice()) }}
+                            @if($product->getPreviousPrice() > $product->getLastPrice())
+                                <div class="comment">* Цена на товар снижена</div>
+                                <span class="discount-price">{{ price($product->getLastPrice()) }}</span>
+                                <span class="base-price">{{ price($product->getPreviousPrice()) }}</span>
+                            @else
+                                {{ price($product->getLastPrice()) }}
+                            @endif
                         @else
+                            <div class="comment">* Цена по акции {{ $product->isPromotion()['discount'] }}</div>
                             <span class="discount-price">{{ price($product->isPromotion()['price']) }}</span>
-                            <span class="base-price">{{ price($product->lastPrice->value) }}</span>
+                            <span class="base-price">{{ price($product->getLastPrice()) }}</span>
                         @endif
                         <div class="count-product">
-                            В наличии {{ $product->count_for_sell }} шт.
+                            @if($product->count_for_sell > 0)
+                                Товар в наличии
+                            @else
+                                Только под заказ
+                            @endif
                         </div>
                     </div>
                         <div class="view-brand">
@@ -77,13 +88,13 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12 d-flex">
-                @if(!empty($productAttributes))
+        <div class="view-footer-product">
+            @if(!empty($productAttributes))
                 <div class="anchor-menu"><a href="#specifications">Характеристики</a></div>
-                @endif
-                <div class="anchor-menu"><a href="#description">Описание товара</a></div>
-            </div>
+            @endif
+            <div class="anchor-menu"><a href="#description">Описание товара</a></div>
+                <div class="product-code">Артикул <span>{{ $product->code }}</span></div>
+
         </div>
     </div>
 
