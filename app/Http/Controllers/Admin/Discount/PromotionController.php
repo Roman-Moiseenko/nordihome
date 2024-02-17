@@ -8,7 +8,10 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
 use App\Modules\Discount\Service\PromotionService;
 use App\Modules\Product\Entity\Group;
+use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\GroupRepository;
+use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Product\Service\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
@@ -19,13 +22,15 @@ class PromotionController extends Controller
     private PromotionRepository $repository;
     private mixed $pagination;
     private GroupRepository $groups;
+    private ProductRepository $products;
 
-    public function __construct(PromotionService $service, PromotionRepository $repository, GroupRepository $groups)
+    public function __construct(PromotionService $service, PromotionRepository $repository, GroupRepository $groups, ProductRepository $products)
     {
         $this->service = $service;
         $this->repository = $repository;
         $this->pagination = Config::get('shop-config.p-list');
         $this->groups = $groups;
+        $this->products = $products;
     }
 
     public function index(Request $request)
@@ -66,10 +71,10 @@ class PromotionController extends Controller
             return redirect()->route('admin.discount.promotion.show', compact('promotion'));
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
+        } /*catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
             flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
+        }*/
         return redirect()->back();
     }
 
@@ -111,6 +116,48 @@ class PromotionController extends Controller
 
     }
 
+    public function add_product(Request $request, Promotion $promotion)
+    {
+        $request->validate([
+            'product_id' => 'required|integer|gt:0',
+        ]);
+        try {
+            $this->service->add_product($request, $promotion);
+            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
+    }
+
+    public function del_product(Promotion $promotion, Product $product)
+    {
+        try {
+            $this->service->del_product($product, $promotion);
+            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+        }
+        return redirect()->back();
+    }
+
+    public function set_product(Request $request, Promotion $promotion, Product $product)
+    {
+        try {
+            $this->service->set_product($request, $promotion, $product);
+            return response()->json(true);
+        } catch (\Throwable $e) {
+            return response()->json($e->getMessage());
+        }
+    }
+
+/*
     public function add_group(Request $request, Promotion $promotion)
     {
         $request->validate([
@@ -159,7 +206,7 @@ class PromotionController extends Controller
         return redirect()->back();
     }
 
-
+*/
     public function destroy(Promotion $promotion)
     {
         try {
@@ -226,5 +273,24 @@ class PromotionController extends Controller
             flash('Техническая ошибка! Информация направлена разработчику', 'danger');
         }
         return redirect()->back();
+    }
+
+
+    public function search(Request $request, Promotion $promotion)
+    {
+        $result = [];
+        try {
+            $products = $this->products->search($request['search']);
+            /** @var Product $product */
+            foreach ($products as $product) {
+                if (!$promotion->isProduct($product->id)) {
+                    $result[] = $this->products->toArrayForSearch($product);
+                }
+            }
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
+        }
+        return \response()->json($result);
     }
 }

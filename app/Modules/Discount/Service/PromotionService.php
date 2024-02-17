@@ -6,12 +6,21 @@ namespace App\Modules\Discount\Service;
 use App\Events\PromotionHasMoved;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Product\Entity\Group;
+use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Service\GroupService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PromotionService
 {
+
+    private GroupService $groupService;
+
+    public function __construct(GroupService $groupService)
+    {
+        $this->groupService = $groupService;
+    }
 
     public function create(Request $request): Promotion
     {
@@ -38,6 +47,7 @@ class PromotionService
         $this->image($promotion, $request->file('image'));
         $this->icon($promotion, $request->file('icon'));
 
+        $promotion->discount = (int)($request['discount'] ?? 0);
         $promotion->description = $request['description'] ?? '';
         $promotion->condition_url = $request['condition_url'] ?? '';
 
@@ -80,9 +90,36 @@ class PromotionService
             ]);
         }
 
+        if ($promotion->discount != (int)$request['discount']) {
+            $promotion->discount = (int)$request['discount'];
+            $promotion->save();
+            foreach ($promotion->products as $product) {
+                $this->setPriceProduct($promotion, $product);
+            }
+        }
+
         return $promotion;
     }
 
+    public function add_product(Request $request, Promotion $promotion)
+    {
+        if (empty($request['product_id'])) throw new \DomainException('Не выбран товар');
+        $product = Product::find((int)$request['product_id']);
+        if (!$promotion->isProduct($product->id)) {
+            $promotion->products()->attach($product->id, ['price' => 0]);
+            $this->setPriceProduct($promotion, $product);
+            $promotion->refresh();
+        }
+    }
+
+    public function del_product(Product $product, Promotion $promotion)
+    {
+        $promotion->products()->detach($product);
+        $promotion->refresh();
+    }
+
+/*
+    //TODO FOR DELETE!!!
     public function add_group(Request $request, Promotion $promotion)
     {
         if (empty($request['group_id']) || empty($request['discount'])) throw new \DomainException('Не выбрана группа и/или не указана скидка');
@@ -90,6 +127,8 @@ class PromotionService
         if (!$promotion->isGroup($group_id)) {
             $promotion->groups()->attach($group_id, ['discount' => (int)$request['discount']]);
             $promotion->refresh();
+            $this->groupService->setPriceFromPromotion($group_id, (int)$request['discount']);
+
         } else {
             throw new \DomainException('Такая группа уже добавлена');
         }
@@ -97,22 +136,22 @@ class PromotionService
 
     public function del_group(Group $group, Promotion $promotion)
     {
-        //$group_id = (int)$request['group_id'];
+        $this->groupService->setPriceFromPromotion($group->id, null);
         $promotion->groups()->detach($group->id);
         $promotion->refresh();
     }
-
     public function set_group(Request $request, Promotion $promotion)
     {
         $group_id = (int)$request['group_id'];
         if ($promotion->isGroup($group_id)) {
             $promotion->groups()->updateExistingPivot($group_id, ['discount' => (int)$request['discount']]);
             $promotion->refresh();
+            $this->groupService->setPriceFromPromotion($group_id, (int)$request['discount']);
         } else {
             throw new \DomainException('Такая группа не добавлена');
         }
     }
-
+*/
     public function delete(Promotion $promotion)
     {
         //TODO Проверка, если товар был продан по акции, то удалять нельзя
@@ -151,7 +190,7 @@ class PromotionService
 
     public function published(Promotion $promotion)
     {
-        if (count($promotion->products()) == 0) {
+        if ($promotion->products()->count() == 0) {
             throw new \DomainException('В Акции нет товаров');
         }
 
@@ -195,5 +234,18 @@ class PromotionService
             return;
         }
         throw new \DomainException('Нельзя отправить акцию в черновики');
+    }
+
+
+    private function setPriceProduct(Promotion $promotion, Product $product)
+    {
+        $new_price = (int)ceil($product->getLastPrice() * (1 - $promotion->discount / 100));
+        $promotion->products()->updateExistingPivot($product->id, ['price' => $new_price]);
+    }
+
+    public function set_product(Request $request, Promotion $promotion, Product $product)
+    {
+        $new_price = (int)$request['price'];
+        $promotion->products()->updateExistingPivot($product->id, ['price' => $new_price]);
     }
 }

@@ -38,9 +38,8 @@ class HomeController extends Controller
     {
         $widgets = [];
         try {
-            $widgets = Widget::get();
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
+            //TODO После исправления акций включить
+            $widgets = []; //Widget::get();
         } catch (\Throwable $e) {
             flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
             event(new ThrowableHasAppeared($e));

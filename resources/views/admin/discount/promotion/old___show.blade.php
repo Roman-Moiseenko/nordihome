@@ -115,33 +115,46 @@
         </ul>
     </div>
     @if($promotion->status() == \App\Modules\Discount\Entity\Promotion::STATUS_DRAFT)
-        <form action="{{ route('admin.discount.promotion.add-product', $promotion) }}" method="POST">
+        <form method="POST" action="{{ route('admin.discount.promotion.add-group', $promotion) }}">
             @csrf
-            <div class="box flex p-5 items-center">
-                <div class="w-1/2 lg:w-1/4 mx-3">
-                    <x-searchProduct route="{{ route('admin.discount.promotion.search', $promotion) }}" input-data="promotion-product" hidden-id="product_id"/>
-                </div>
+            <div class="box p-5 col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-4">
                 <div>
-                    <x-base.button id="add-product" type="submit" variant="primary">Добавить товар в акцию</x-base.button>
+                    <x-base.tom-select id="select-group" name="group_id"
+                                       class="w-72 {{ $errors->has('group_id') ? 'has-error' : '' }}"
+                                       data-placeholder="Выберите группу">
+                        <option value="0"></option>
+                        @foreach($groups as $group)
+                            <option value="{{ $group->id }}">
+                                {{ $group->name }}
+                            </option>
+                        @endforeach
+                    </x-base.tom-select>
+                    @error('group_id')
+                    <div class="pristine-error text-danger mt-2">{{ $message }}</div>
+                    @enderror
                 </div>
+                {{ \App\Forms\Input::create('discount', ['placeholder' => 'Скидка в %%', 'class' => 'ml-3'])->show() }}
+                <button class="btn btn-primary shadow-md ml-3"
+                        onclick="window.location.href=''">Добавить Группу
+                </button>
             </div>
         </form>
-
     @endif
-    @if(!empty($promotion->products))
+    @if(count($promotion->groups) > 0)
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
                         <x-base.table.th class="text-center whitespace-nowrap">IMG</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">НАЗВАНИЕ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ЦЕНООБРАЗОВАНИЕ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">СКИДКА</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>
-                    @foreach($promotion->products as $product)
-                        @include('admin.discount.promotion._list_product', ['product' => $product])
+                    @foreach($promotion->groups as $group)
+                        @include('admin.discount.promotion._list_group', ['group' => $group])
                     @endforeach
                 </x-base.table.tbody>
             </x-base.table>
@@ -154,7 +167,7 @@
         'Вы действительно хотите удалить Акцию?<br>Этот процесс не может быть отменен.')->show() }}
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
-    'Вы действительно хотите исключить товаров?<br>Вы всегда можете ее повторно добавить', 'delete-confirmation-modal-group')->show() }}
+    'Вы действительно хотите исключить группу товаров?<br>Вы всегда можете ее повторно добавить', 'delete-confirmation-modal-group')->show() }}
 
     <script>
         let selectGroup = document.getElementById('select-group');
@@ -181,30 +194,5 @@
                  }
              });
          });*/
-    </script>
-    <script>
-        let promotionProducts = document.querySelectorAll('.promotion-product');
-
-        let arrayListens = Array.prototype.slice.call(promotionProducts);
-        arrayListens.forEach(function (element) {
-            element.addEventListener('change', function (item) {
-                let route = element.getAttribute('data-route');
-                let value = element.value;
-                element.disabled = true;
-
-                let _params = '_token=' + '{{ csrf_token() }}' + '&price=' + value;
-                let request = new XMLHttpRequest();
-                request.open('POST', route);
-                request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                request.send(_params);
-                request.onreadystatechange = function () {
-                    if (this.readyState === 4 && this.status === 200) {
-                        element.disabled = false;
-                    } else {
-                        //console.log(request.responseText);
-                    }
-                };
-            })
-        });
     </script>
 @endsection

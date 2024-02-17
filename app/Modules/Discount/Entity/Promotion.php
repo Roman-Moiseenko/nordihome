@@ -30,6 +30,8 @@ use Illuminate\Support\Str;
  * @property bool $active // по Cron if ($start_at > time() && $published) $active = true;
  * @property string $slug  //По title, если существует, добавляем год
  * @property Group[] $groups
+ * @property int $discount
+ * @property Product[] $products
  */
 class Promotion extends Model implements DataWidgetInterface
 {
@@ -86,6 +88,7 @@ class Promotion extends Model implements DataWidgetInterface
         'description',
         'menu',
         'condition_url',
+        'discount',
         //'published', 'active',
     ];
 
@@ -156,9 +159,16 @@ class Promotion extends Model implements DataWidgetInterface
     public function draft(): void
     {
         $this->published = false;
-
     }
 
+
+    public function isProduct(int $product_id): bool
+    {
+        foreach ($this->products as $product) {
+            if ($product->id == $product_id) return true;
+        }
+        return false;
+    }
 
     public function isGroup(int $id): bool
     {
@@ -175,23 +185,30 @@ class Promotion extends Model implements DataWidgetInterface
 
     public function countProducts(): int
     {
+        return $this->products()->count();
+        /*
         $count = 0;
         //if (is_null($this->groups())) return 0;
         foreach ($this->groups as $group) {
             $count += count($group->products);
         }
-        return $count;
+        return $count;*/
     }
 
-    public function products(): array
+    public function products()//: array
     {
+
+        return $this->belongsToMany(
+            Product::class, 'promotions_products',
+            'promotion_id', 'product_id')->withPivot('price');
+    /*
         $products = [];
         foreach ($this->groups as $group) {
             foreach ($group->products as $product) {
                 $products[] = $product;
             }
         }
-        return $products;
+        return $products; */
     }
 
     public function groups()
@@ -253,7 +270,8 @@ class Promotion extends Model implements DataWidgetInterface
                 'discount' => ceil($product->getLastPrice() * ((100 - $this->getDiscount($product->id)) / 100)),
                 'count' => $product->count_for_sell,
             ];
-        }, $this->products());
+        }, $this->products()->getModels());
         return $data;
     }
+
 }

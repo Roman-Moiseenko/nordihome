@@ -5,6 +5,7 @@ namespace App\Modules\Product\Service;
 
 use App\Entity\Photo;
 use App\Modules\Product\Entity\Group;
+use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 
 class GroupService
@@ -12,20 +13,25 @@ class GroupService
     public function create(Request $request): Group
     {
         $group = Group::register($request['name'], $request['description'] ?? '');
-
         $this->photo($group, $request->file('file'));
-/*
-        foreach ($request['products'] as $product_id) {
-            $group->products()->attach($product_id);
-        }
 
-        $group->push();*/
         return $group;
     }
 
     public function add_product(Request $request, Group $group)
     {
+        //TODO Если группа в акции, Установить цену для товара
         $group->products()->attach((int)$request['product_id']);
+
+        foreach ($group->promotions as $promotion) {
+            if ($promotion->isStarted()) {
+                $discount = $promotion->pivot->discount;
+                $product = Product::find((int)$request['product_id']);
+                $new_price = is_null($discount) ? null : (int)ceil($product->getLastPrice() * (1 - $discount / 100));
+                $group->products()->updateExistingPivot($product->id, ['price' => $new_price]);
+                return;
+            }
+        }
     }
 
     public function del_product(Request $request, Group $group)
@@ -40,13 +46,6 @@ class GroupService
             'description' => $request['description'],
         ]);
         $this->photo($group, $request->file('file'));
-
-      /*  $group->products()->detach();
-
-        foreach ($request['products'] as $product_id) {
-            $group->products()->attach((int)$product_id);
-        }
-        $group->push();*/
         return $group;
     }
 
@@ -66,4 +65,15 @@ class GroupService
         }
         $group->refresh();
     }
+
+    /*
+    public function setPriceFromPromotion(int $group_id, ?int $discount)
+    {
+        $group = Group::find($group_id);
+        foreach ($group->products as $product) {
+            $new_price = is_null($discount) ? null : (int)ceil($product->getLastPrice() * (1 - $discount / 100));
+            $group->products()->updateExistingPivot($product->id, ['price' => $new_price]);
+        }
+    }
+    */
 }

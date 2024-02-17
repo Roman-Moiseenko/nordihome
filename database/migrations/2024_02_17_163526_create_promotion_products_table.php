@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('groups_products', function (Blueprint $table) {
-            $table->float('price')->nullable();
+        Schema::create('promotions_products', function (Blueprint $table) {
+            $table->foreignId('promotion_id')->constrained('promotions')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->float('price', 10, 2);
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('groups_products', function (Blueprint $table) {
-            $table->dropColumn('price');
-        });
+        Schema::drop('promotions_products');
     }
 };

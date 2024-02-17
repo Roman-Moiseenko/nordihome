@@ -257,6 +257,13 @@ Route::group(
             ],
             function () {
                 Route::post('/promotion/{promotion}/add-group', 'PromotionController@add_group')->name('promotion.add-group');
+                Route::post('/promotion/{promotion}/add-product', 'PromotionController@add_product')->name('promotion.add-product');
+                Route::post('/promotion/{promotion}/search', 'PromotionController@search')->name('promotion.search');
+                Route::post('/promotion/{promotion}/set-product/{product}', 'PromotionController@set_product')->name('promotion.set-product');
+                Route::delete('/promotion/{promotion}/del-product/{product}', 'PromotionController@del_product')->name('promotion.del-product');
+
+
+
                 Route::delete('/promotion/{promotion}/del-group/{group}', 'PromotionController@del_group')->name('promotion.del-group');
                 Route::post('/promotion/{promotion}/published', 'PromotionController@published')->name('promotion.published');
                 Route::post('/promotion/{promotion}/draft', 'PromotionController@draft')->name('promotion.draft');

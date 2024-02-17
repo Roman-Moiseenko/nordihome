@@ -23,6 +23,11 @@
                                  'value' => !is_null($promotion) ? $promotion->title : '',
                                  'class' => 'mt-3'
                                  ])->show() }}
+                        {{ \App\Forms\Input::create('discount', [
+                                 'placeholder' => 'Базовая скидка в %%',
+                                 'value' => !is_null($promotion) ? $promotion->discount : '',
+                                 'class' => 'mt-3'
+                                 ])->show() }}
                         {{ \App\Forms\CheckSwitch::create('show_title', [
                                  'placeholder' => 'Показывать заголовок на карточках',
                                  'value' => (!is_null($promotion) ? $promotion->show_title : ''),
