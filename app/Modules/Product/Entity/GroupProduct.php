@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $group_id
  * @property int $product_id
+ * @property float $price
  */
 class GroupProduct extends Model
 {
