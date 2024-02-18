@@ -26,6 +26,9 @@
                             <label for="verify_token">Код подтверждения (с почты)</label>
                             <span id="token-error" class="fs-7 text-danger" style="display: none">Неверный код подтверждения</span>
                         </div>
+                        <div class="fs-7 mt-3">
+                            <a href="{{ route('password.request') }}">Забыли пароль?</a>
+                        </div>
                         <div class="d-flex justify-content-center my-5">
                             <button id="button-login" type="button" class="btn btn-dark fs-5 py-2 px-3">Отправить</button>
                         </div>

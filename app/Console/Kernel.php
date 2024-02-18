@@ -17,6 +17,11 @@ class Kernel extends ConsoleKernel
         //Резерв товара
         $schedule->command('cron:reserve')->everyFiveMinutes();
 
+        //Удаляем просроченные токены
+        $schedule->command('auth:clear-resets')->everyFifteenMinutes();
+
+
+
         //TODO настроить логи
     }
 

@@ -10,22 +10,21 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>NORDI HOME - CRM</title>
+    <title>Восстановление доступа к личному кабинету</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+
 
 
 <!-- BEGIN: CSS Assets-->
-    @vite('resources/sass/admin.scss')
+    @vite(['resources/sass/shop.scss', 'resources/js/shop.js'])
 <!-- END: CSS Assets-->
 </head>
 <!-- END: Head -->
 
 <body>
 @yield('content')
-@vite('resources/js/admin.js')
+
 </body>
 
 </html>
