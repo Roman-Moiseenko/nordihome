@@ -107,6 +107,14 @@ Route::group([
         Route::get('/profile', 'CabinetController@profile')->name('profile');
 
         Route::group([
+            'as' => 'options',
+            'prefix' => 'options',
+        ], function() {
+            Route::get('/', 'OptionsController@index')->name('index');
+
+        });
+
+        Route::group([
             'as' => 'wish.',
             'prefix' => 'wish'
         ], function () {

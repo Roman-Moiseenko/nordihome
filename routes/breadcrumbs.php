@@ -125,6 +125,10 @@ Breadcrumbs::for('cabinet.wish.index', function (BreadcrumbTrail $trail) {
     $trail->parent('cabinet.view');
     $trail->push('Избранное', route('cabinet.wish.index'));
 });
+Breadcrumbs::for('cabinet.options.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('cabinet.view');
+    $trail->push('Настройки', route('cabinet.options.index'));
+});
 Breadcrumbs::for('cabinet.order.index', function (BreadcrumbTrail $trail) {
     $trail->parent('cabinet.view');
     $trail->push('Мои заказы', route('cabinet.order.index'));

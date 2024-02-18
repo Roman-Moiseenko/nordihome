@@ -122,6 +122,11 @@ class MenuHelper
                 'icon' => 'fa-light fa-cart-shopping',
                 'url' => route('shop.cart.view'),
             ],
+            'options' => [
+                'name' => 'настройки',
+                'icon' => 'fa-light fa-user-gear',
+                'url' => route('cabinet.options'),
+            ],
             'logout' => [
                 'name' => 'Выход',
                 'icon' => 'fa-light fa-right-from-bracket',
