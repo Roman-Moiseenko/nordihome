@@ -40,7 +40,7 @@
                     </div>
                     <div class="price-brand-block">
                         <div class="view-price">
-                        @if(is_null($product->isPromotion()))
+                        @if(!$product->hasPromotion())
                             @if($product->getPreviousPrice() > $product->getLastPrice())
                                 <div class="comment">* Цена на товар снижена</div>
                                 <span class="discount-price">{{ price($product->getLastPrice()) }}</span>
@@ -49,8 +49,8 @@
                                 {{ price($product->getLastPrice()) }}
                             @endif
                         @else
-                            <div class="comment">* Цена по акции {{ $product->isPromotion()['discount'] }}</div>
-                            <span class="discount-price">{{ price($product->isPromotion()['price']) }}</span>
+                            <div class="comment">* Цена по акции {{ $product->promotion()->title }}</div>
+                            <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span>
                             <span class="base-price">{{ price($product->getLastPrice()) }}</span>
                         @endif
                         <div class="count-product">

@@ -7,6 +7,8 @@ use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Entity\Video;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Entity\PromotionProduct;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\User\Entity\CartCookie;
@@ -48,6 +50,7 @@ use Illuminate\Support\Str;
  * @property Video[] $videos
  * @property ProductPricing[] $pricing
  * @property ProductPricing $lastPrice
+ * @property Promotion[] $promotions Все акции в которых есть товар
  * @property Equivalent $equivalent
  * @property EquivalentProduct $equivalent_product
  * @property Product[] $related
@@ -364,6 +367,25 @@ class Product extends Model
 
     //RELATIONSHIP
 
+    /**
+     * Действующая акция или null
+     * @return Promotion|null
+     */
+    public function promotion(): ?Promotion
+    {
+        foreach ($this->promotions as $promotion) {
+            if ($promotion->isStarted()) return $promotion;
+        }
+        return null;
+    }
+
+
+    public function promotions()
+    {
+        return $this->belongsToMany(Promotion::class, 'promotions_products',
+             'product_id', 'promotion_id')->withPivot('price');
+    }
+
     public function reserves()
     {
         return $this->hasMany(Reserve::class, 'product_id', 'id');
@@ -511,28 +533,15 @@ class Product extends Model
         });
     }
 
-
     /**
-     * @return array|null
-     * Возвращает array['price', 'discount'] если товар в акции и null в противном случае
+     * Имеется действующая акция
+     * @return bool
      */
-    public function isPromotion()
+    public function hasPromotion(): bool
     {
-        foreach ($this->groups as $group) {
-
-            if (!empty($group->promotions)) {
-                foreach ($group->promotions as $promotion) {
-                    if ($promotion->published == true && $promotion->active == true)
-                        return
-                            [
-                                'price' => ceil((100 - $promotion->pivot->discount) / 100 * $this->getLastPrice()),
-                                'discount' => $promotion->title,
-                            ];
-                }
-            }
-        }
-        return null;
+        return !is_null($this->promotion());
     }
+
 
     public function countReviews(): string
     {

@@ -18,5 +18,12 @@
             <li>Сколько в Заказах - оплаченных, но не завершенных</li>
             <li>Сколько в Заказах - в выполненных</li>
         </ol>
+
+        @foreach($product->promotions as $promotion)
+            {{ $promotion->name . '  === Запущена - ' . $promotion->isStarted()}}
+        @endforeach
+
+        {{ $product->hasPromotion() ? $product->promotion()->pivot->price : 'Нет действующей акции' }}
+
     </div>
 @endsection

@@ -89,7 +89,7 @@ class CatalogController extends Controller
             $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин NORDI HOME '.
                 ' Калининград ☎ [+7(4012) 37-37-30] (Круглосуточно)';
 
-            return view('shop.products',
+            return view('shop.product.index',
                 compact('category', 'products', 'prod_attributes', 'tags',
                     'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id'));
 

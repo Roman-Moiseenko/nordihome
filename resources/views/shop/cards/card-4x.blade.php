@@ -9,7 +9,7 @@
                      src="{{ (is_null($product->photo_next())) ? '/images/no-image.jpg' : $product->photo_next()->getThumbUrl('catalog-watermark') }}"
                      alt="{{ empty($product->photo_next()->alt) ? $product->name : $product->photo_next()->alt }}">
 
-                @if(!is_null($product->isPromotion()))
+                @if($product->hasPromotion())
                     <div class="promotion-label"><span>Акция</span></div>
                 @endif
             </a>
@@ -30,10 +30,10 @@
                title="{{ $product->name }}">{{ $product->name }}</a>
         </div>
         <div class="product-card-info">
-            @if(is_null($product->isPromotion()))
+            @if(!$product->hasPromotion())
                 {{ price($product->getLastPrice()) }}
             @else
-                <span class="discount-price">{{ price($product->isPromotion()['price']) }}</span><span class="base-price">{{ price($product->lastPrice->value) }}</span>
+                <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span><span class="base-price">{{ price($product->lastPrice->value) }}</span>
             @endif
         </div>
         <div class="product-card-to-cart">

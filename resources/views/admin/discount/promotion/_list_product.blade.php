@@ -15,12 +15,12 @@
     </x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
-            @if($promotion->status() == \App\Modules\Discount\Entity\Promotion::STATUS_DRAFT)
+
             <a class="flex items-center text-danger" href="#"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal-group" data-route = {{ route('admin.discount.promotion.del-product', [$promotion, $product]) }}
             ><x-base.lucide icon="trash-2" class="w-4 h-4"/>
                 Delete </a>
-            @endif
+
         </div>
     </x-base.table.td>
 </x-base.table.tr>
