@@ -25,20 +25,13 @@ class CalculatorOrder
     public function calculate(array $items): array
     {
         $product_ids = array_map(function ($item) {return ($item->check) ? $item->getProduct()->id : -1;}, $items);
-
-        $promotions = (new PromotionRepository)->getActive();
+        //Проверка на Акции
         foreach ($items as &$item) {
-
-            //Акции по товарам
-            /** @var Promotion $promotion */
-            foreach ($promotions as $promotion) {
-                $prom_disc = $promotion->getDiscount($item->getProduct()->id);
-                if (!is_null($prom_disc)) {
-                    $item->discount_cost = round($item->base_cost * (100 - $prom_disc) / 100);
-                    $item->discount_name = $promotion->title;
-                    $item->discount_id = $promotion->id;
-                    $item->discount_type = Promotion::class;
-                }
+            if ($item->product->hasPromotion()) {
+                $item->discount_cost = $item->product->promotion()->pivot->price;
+                $item->discount_name = $item->product->promotion()->title;
+                $item->discount_id = $item->product->promotion()->id;
+                $item->discount_type = $item->product->promotion()::class;
             }
 
             //Проверка на бонусы
