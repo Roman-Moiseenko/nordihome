@@ -20,7 +20,7 @@ class ParserService
     const API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
     const API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks';
 
-    CONST STORES = [
+    const STORES = [
         203 => 'Гданьск',
         188 => 'Рашин',
         204 => 'Краков',
@@ -34,7 +34,7 @@ class ParserService
         583 => 'Щецин',
     ];
 
-    CONST DELIVERY_PERIOD = [
+    const DELIVERY_PERIOD = [
         ['min' => 0, 'max' => 5, 'value' => 180, 'slug' => 'parser_delivery_0'],
         ['min' => 5, 'max' => 10, 'value' => 160, 'slug' => 'parser_delivery_1'],
         ['min' => 10, 'max' => 15, 'value' => 140, 'slug' => 'parser_delivery_2'],
@@ -73,28 +73,31 @@ class ParserService
                 'not_local' => !$this->options->shop->delivery_local,
                 'not_delivery' => !$this->options->shop->delivery_all,
             ];
-            $product = Product::register(
-                $parser_product['name'],
-                $this->toCode($code),
-                (Category::where('name', 'Прочее')->first())->id,
-                '',
-                $arguments
-            );
-            $product->short = $parser_product['description'];
-            $product->brand_id = (Brand::where('name', 'Икеа')->first())->id;
-            //TODO спарсить размеры
-            $product->dimensions = Dimensions::create(0, 0, 0, $parser_product['weight'], Dimensions::MEASURE_KG);
+            if (empty($product = Product::where('code_search', $code)->first())) {
 
-            $product->save();
-            $product->photo()->save(Photo::uploadByUrl($parser_product['image']));
-            $product->refresh();
+                $product = Product::register(
+                    $parser_product['name'],
+                    $this->toCode($code),
+                    (Category::where('name', 'Прочее')->first())->id,
+                    '',
+                    $arguments
+                );
+                $product->short = $parser_product['description'];
+                $product->brand_id = (Brand::where('name', 'Икеа')->first())->id;
+                //TODO спарсить размеры
+                $product->dimensions = Dimensions::create(0, 0, 0, $parser_product['weight'], Dimensions::MEASURE_KG);
 
-            //4. Создаем ProductParsing
-            $productParser = $this->createProductParsing($product->id, $parser_product);
-            $quantity = $this->parsingQuantity($code);
-            $productParser->setQuantity($quantity);
+                $product->save();
+                $product->photo()->save(Photo::uploadByUrl($parser_product['image']));
+                $product->refresh();
 
-            event(new ProductHasParsed($product));
+                //4. Создаем ProductParsing
+                $productParser = $this->createProductParsing($product->id, $parser_product);
+                $quantity = $this->parsingQuantity($code);
+                $productParser->setQuantity($quantity);
+
+                event(new ProductHasParsed($product));
+            }
             return $product;
         }
 
@@ -233,7 +236,7 @@ class ParserService
                 $composite[] = [
                     'code' => $this->toCode($_item['itemNo']),
                     'quantity' => $_item['quantity'],
-                    ];
+                ];
                 //$this->toCode($_item['itemNo']) . ' - ' . $_item['quantity'] . 'шт.';
             }
         }
@@ -245,7 +248,7 @@ class ParserService
         foreach ($_packages as $_item) {
             if (count($_item['measurements']) != 0) //Пропускаем для самого товара, только по составным
                 foreach ($_item['measurements'] as $measurement) //Если товар в 1 пачке разбит на несколько
-                    $weight += ($this->toWeight($measurement)  * $_item['quantity']['value']);//Умножаем на кол-во пачек данного товара
+                    $weight += ($this->toWeight($measurement) * $_item['quantity']['value']);//Умножаем на кол-во пачек данного товара
         }
 
         ////Описание и перевод

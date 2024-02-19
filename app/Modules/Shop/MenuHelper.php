@@ -44,7 +44,7 @@ class MenuHelper
                 'name' => 'Написать в телеграм',
                 'icon' => 'fa-brands fa-telegram',
                 'color' => '#000000',
-                'url' => 'https://t.me/Manager1_euroikea',
+                'url' => 'https://t.me/nordi_home',
                 'data-type' => 2,
             ],
             'vk' => [

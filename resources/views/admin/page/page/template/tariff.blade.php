@@ -32,7 +32,7 @@
                             Предоставляем кассовый чек об оплате с товарами и услугами
                         </p>
                         <div class="mt-3">
-                        <a href="{{ route('shop.category.index') }}" class="btn btn-gold rounded-pill fs-8 px-4 py-3 text-white">СДЕЛАТЬ ЗАКАЗ</a>
+                        <a href="{{ route('shop.parser.view') }}" class="btn btn-gold rounded-pill fs-8 px-4 py-3 text-white">СДЕЛАТЬ ЗАКАЗ</a>
                         </div>
 
                 </div>
