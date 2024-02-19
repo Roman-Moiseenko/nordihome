@@ -7,14 +7,18 @@ namespace App\Http\Controllers\User;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Entity\User;
+use App\Modules\User\Service\UserService;
 use Illuminate\Http\Request;
 
 class CabinetController extends Controller
 {
 
-    public function __construct()
+    private UserService $service;
+
+    public function __construct(UserService $service)
     {
         $this->middleware('auth:user');
+        $this->service = $service;
     }
 
     public function view(User $user)
@@ -36,5 +40,51 @@ class CabinetController extends Controller
     public function update(Request $request, User $user)
     {
         //
+    }
+
+    //AJAX
+
+    public function fullname(User $user, Request $request)
+    {
+        try {
+            $result = $this->service->setFullname($user, $request);
+            $user->refresh();
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            return response()->json([$e->getMessage(),$e->getFile(), $e->getLine()]);
+        }
+    }
+
+    public function phone(User $user, Request $request)
+    {
+        try {
+            $result = $this->service->setPhone($user, $request);
+            $user->refresh();
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            return response()->json([$e->getMessage(),$e->getFile(), $e->getLine()]);
+        }
+    }
+
+    public function email(User $user, Request $request)
+    {
+        try {
+            $result = $this->service->setEmail($user, $request);
+            $user->refresh();
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            return response()->json([$e->getMessage(),$e->getFile(), $e->getLine()]);
+        }
+    }
+
+    public function password(User $user, Request $request)
+    {
+        try {
+            $result = $this->service->setPassword($user, $request);
+            $user->refresh();
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            return response()->json([$e->getMessage(),$e->getFile(), $e->getLine()]);
+        }
     }
 }

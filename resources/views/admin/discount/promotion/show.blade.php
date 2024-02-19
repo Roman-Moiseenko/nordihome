@@ -114,20 +114,19 @@
             @endif
         </ul>
     </div>
-    @if($promotion->status() == \App\Modules\Discount\Entity\Promotion::STATUS_DRAFT)
-        <form action="{{ route('admin.discount.promotion.add-product', $promotion) }}" method="POST">
-            @csrf
-            <div class="box flex p-5 items-center">
-                <div class="w-1/2 lg:w-1/4 mx-3">
-                    <x-searchProduct route="{{ route('admin.discount.promotion.search', $promotion) }}" input-data="promotion-product" hidden-id="product_id"/>
-                </div>
-                <div>
-                    <x-base.button id="add-product" type="submit" variant="primary">Добавить товар в акцию</x-base.button>
-                </div>
-            </div>
-        </form>
 
-    @endif
+    <form action="{{ route('admin.discount.promotion.add-product', $promotion) }}" method="POST">
+        @csrf
+        <div class="box flex p-5 items-center">
+            <div class="w-1/2 lg:w-1/4 mx-3">
+                <x-searchProduct route="{{ route('admin.discount.promotion.search', $promotion) }}" input-data="promotion-product" hidden-id="product_id"/>
+            </div>
+            <div>
+                <x-base.button id="add-product" type="submit" variant="primary">Добавить товар в акцию</x-base.button>
+            </div>
+        </div>
+    </form>
+
     @if(!empty($promotion->products))
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">

@@ -7,7 +7,8 @@
 
 @section('subcontent')
     <blockquote>
-        смена пароля и другое
+        Подписка, рассылки и др.
+        Уведомления
     </blockquote>
 @endsection
 

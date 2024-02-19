@@ -4,9 +4,9 @@
     order
 @endsection
 
-@section('h1')
-    Мои заказы
-@endsection
+
+@section('h1', 'Мои заказы')
+
 
 @section('subcontent')
     @foreach($orders as $order)
@@ -48,4 +48,12 @@
             </div>
         </div>
     @endforeach
+
+    @if(count($orders) == 0 )
+        <div class="fs-5 m-3 mb-5">
+            У вас еще нет заказов.
+        </div>
+        <div class="fs-5 m-3 mb-5">Вы можете подобрать товар в нашем  <a href="{{ route('shop.category.index') }}" class="btn btn-dark">Каталоге</a>
+        </div>
+    @endif
 @endsection

@@ -4,9 +4,7 @@
     cabinet
 @endsection
 
-@section('main')
-    container-xl cabinet
-@endsection
+@section('main', 'container-xl cabinet')
 
 @section('content')
     <div class="title-page">

@@ -123,9 +123,9 @@ class MenuHelper
                 'url' => route('shop.cart.view'),
             ],
             'options' => [
-                'name' => 'настройки',
+                'name' => 'Настройки',
                 'icon' => 'fa-light fa-user-gear',
-                'url' => route('cabinet.options'),
+                'url' => route('cabinet.options.index'),
             ],
             'logout' => [
                 'name' => 'Выход',

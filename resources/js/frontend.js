@@ -365,7 +365,6 @@ window.$ = jQuery;
         });
     }
 
-
     /** СТРАНИЦА CART - КОРЗИНА **/
     if (main.hasClass('cart-page')) {
         let cartItemSet = $('.cartitem-set');
@@ -818,6 +817,104 @@ window.$ = jQuery;
             e.preventDefault();
             urlParams.set('tag_id', $(this).data('tag-id'));
             window.location.search = urlParams;
+        });
+    }
+
+    /** КАБИНЕТ **/
+    if (main.hasClass('cabinet')) {
+        //Смена ФИО
+        let fullnameButton = $('#change-fullname');
+        let fullnameGroup = $('#group-fullname');
+        let fullnameData = $('#data-fullname');
+        let fullnameInput = $('#input-fullname');
+        let fullnameSave = $('#save-fullname');
+        fullnameButton.on('click', function () {
+            fullnameButton.hide();
+            fullnameData.hide();
+            fullnameGroup.show();
+            fullnameInput.val(fullnameData.text());
+        });
+        fullnameSave.on('click', function () {
+            fullnameButton.show();
+            fullnameData.show();
+            fullnameGroup.hide();
+            let new_value = fullnameInput.val();
+            fullnameData.text(new_value);
+            $.post(fullnameSave.data('route'), {fullname: new_value}, function (data) {
+                console.log(data);
+            })
+        });
+
+        //Смена телефона
+        let phoneButton = $('#change-phone');
+        let phoneGroup = $('#group-phone');
+        let phoneData = $('#data-phone');
+        let phoneInput = $('#input-phone');
+        let phoneSave = $('#save-phone');
+        phoneButton.on('click', function () {
+            phoneButton.hide();
+            phoneData.hide();
+            phoneGroup.show();
+            phoneInput.val(phoneData.text());
+        });
+        phoneSave.on('click', function () {
+            phoneButton.show();
+            phoneData.show();
+            phoneGroup.hide();
+            let new_value = phoneInput.val();
+            phoneData.text(new_value);
+            $.post(phoneSave.data('route'), {phone: new_value}, function (data) {
+                console.log(data);
+            })
+        });
+
+        //Смена email
+        let emailButton = $('#change-email');
+        let emailGroup = $('#group-email');
+        let emailData = $('#data-email');
+        let emailInput = $('#input-email');
+        let emailSave = $('#save-email');
+        emailButton.on('click', function () {
+            emailButton.hide();
+            emailData.hide();
+            emailGroup.show();
+            emailInput.val(emailData.text());
+        });
+        emailSave.on('click', function () {
+            emailButton.show();
+            emailData.show();
+            emailGroup.hide();
+            let new_value = emailInput.val();
+            emailData.text(new_value);
+            $.post(emailSave.data('route'), {email: new_value}, function (data) {
+                if (data === true) {
+                    location.reload()
+                }
+            })
+        });
+
+        //Смена пародя
+        let passwordButton = $('#change-password');
+        let passwordGroup = $('#group-password');
+        let passwordInput = $('#input-password');
+        let passwordSave = $('#save-password');
+        passwordButton.on('click', function () {
+            passwordButton.hide();
+            passwordGroup.show();
+            passwordInput.val('');
+        });
+        passwordSave.on('click', function () {
+            passwordButton.show();
+            passwordGroup.hide();
+            let new_value = passwordInput.val();
+            $.post(passwordSave.data('route'), {password: new_value}, function (data) {
+                console.log(data);
+                if (data === true) {
+                    console.log('******');
+
+                    $('#new-password').show();
+                }
+            })
         });
     }
 

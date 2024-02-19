@@ -17,16 +17,7 @@ use function event;
 
 class RegisterService
 {
- /*   private Mailer $mailer;
-    private Dispatcher $dispatcher;
 
-    public function __construct(Mailer $mailer, Dispatcher $dispatcher)
-    {
-
-        $this->mailer = $mailer;
-        $this->dispatcher = $dispatcher;
-    }
-*/
     public function register(Request $request): void
     {
         $user = User::register(
@@ -44,8 +35,6 @@ class RegisterService
     {
         $user = User::findOrFail($id);
         $user->verify();
-        //TODO Верификация прошла
-        // Письмо клиенту, + баллы на покупку (Coupon)
         event(new UserHasRegistered($user));
     }
 

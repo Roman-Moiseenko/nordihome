@@ -5,6 +5,8 @@ namespace App\Modules\User\Entity;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 
+use App\Modules\Delivery\Entity\UserDelivery;
+use App\Modules\Order\Entity\UserPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,6 +22,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * @property string $verify_token
  * @property Wish[] $wishes
+ * @property UserDelivery $delivery
+ * @property UserPayment $payment
+ *
  */
 class User extends Authenticatable
 {
@@ -73,6 +78,7 @@ class User extends Authenticatable
         ]);
     }
 
+
     public static function new(string $email, string $phone): self
     {
         return static::create([
@@ -81,6 +87,12 @@ class User extends Authenticatable
             'password' => bcrypt(Str::random()),
             'status' => self::STATUS_ACTIVE,
         ]);
+    }
+
+    public function setPassword(string $password)
+    {
+        $this->password = Hash::make($password);
+        $this->save();
     }
 
     public function verify()
@@ -94,9 +106,19 @@ class User extends Authenticatable
         ]);
     }
 
-
+    //RELATIONS
     public function wishes()
     {
         return $this->hasMany(Wish::class, 'user_id', 'id');
+    }
+
+    public function delivery()
+    {
+        return $this->hasOne(UserDelivery::class, 'user_id', 'id');
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(UserPayment::class, 'user_id', 'id');
     }
 }

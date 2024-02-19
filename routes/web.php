@@ -105,9 +105,13 @@ Route::group([
     function() {
         Route::get('/', 'CabinetController@view')->name('view');
         Route::get('/profile', 'CabinetController@profile')->name('profile');
+        Route::post('/fullname/{user}', 'CabinetController@fullname')->name('fullname');
+        Route::post('/phone/{user}', 'CabinetController@phone')->name('phone');
+        Route::post('/email/{user}', 'CabinetController@email')->name('email');
+        Route::post('/password/{user}', 'CabinetController@password')->name('password');
 
         Route::group([
-            'as' => 'options',
+            'as' => 'options.',
             'prefix' => 'options',
         ], function() {
             Route::get('/', 'OptionsController@index')->name('index');

@@ -3,6 +3,7 @@
     @parent
     order
 @endsection
+
 @section('h1', $order->htmlDate() . ' ' . $order->htmlNum())
 
 @section('subcontent')
