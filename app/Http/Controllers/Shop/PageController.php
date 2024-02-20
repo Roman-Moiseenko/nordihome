@@ -27,7 +27,7 @@ class PageController extends Controller
             $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
             return $page->view();
         } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
+           // event(new ThrowableHasAppeared($e));
             abort(404, 'Страница не найдена');
         }
     }

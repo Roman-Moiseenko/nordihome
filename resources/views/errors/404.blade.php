@@ -1,5 +1,5 @@
 @extends('layouts.blank')
-
+@section('title', 'Страница 404')
 @section('content')
 <div class="error-page flex flex-col lg:flex-row items-center justify-center h-screen text-center lg:text-left">
     <div class="-intro-x lg:mr-20">

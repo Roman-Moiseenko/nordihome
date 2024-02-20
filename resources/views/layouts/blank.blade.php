@@ -10,7 +10,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Восстановление доступа к личному кабинету</title>
+    <title>@yield('title', 'Восстановление доступа к личному кабинету')</title>
 
     <!-- Fonts -->
 

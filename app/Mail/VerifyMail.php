@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Symfony\Component\Mime\Crypto\DkimSigner;
 
 class VerifyMail extends Mailable
 {
@@ -58,6 +59,7 @@ class VerifyMail extends Mailable
 
     public function build()
     {
+        $s = new DkimSigner();
         return $this->subject('Подтверждение')
             ->markdown('mail.verify-mail')->with([ 'very_code' => $this->user->verify_token]);
     }

@@ -44,7 +44,7 @@ class MenuHelper
                 'name' => 'Написать в телеграм',
                 'icon' => 'fa-brands fa-telegram',
                 'color' => '#000000',
-                'url' => 'https://t.me/nordi_home',
+                'url' => 'https://t.me/nordihome1',
                 'data-type' => 2,
             ],
             'vk' => [

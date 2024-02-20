@@ -40,6 +40,9 @@ class ParserController extends Controller
     public function search(Request $request)
     {
         //Ищем товар, делаем расчеты и event()
+        $request->validate([
+            'search' => 'required|min:8'
+        ]);
         try {
             $product = $this->service->findProduct($request);
             $this->cart->load();
