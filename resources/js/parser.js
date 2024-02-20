@@ -52,6 +52,13 @@ window.$ = jQuery;
             );
     });
 
+    parserButton.on('click', function () {
+        if ($('#search-parser-field').val() !== '') {
+            parserButton.prop("disabled",true);
+            $('#parser-search-form').submit();
+        }
+    });
+
     function updateParserData(data) {
         let cart = data;
         $('#weight').html(cart.weight);

@@ -20,7 +20,7 @@
                         <div id="parser-condition-text" class="parser-card-search--text">
                             Скопируйте и вставьте в поле номер артикула товара или ссылку с сайта <a href="https://IKEA.PL" target="_blank">IKEA.PL</a>
                         </div>
-                        <form method="post" action="{{ route('shop.parser.search') }}">
+                        <form id="parser-search-form" method="post" action="{{ route('shop.parser.search') }}">
                             @csrf
                         <div class="parser-card-search--form">
                             <input id="search-parser-field" type="text" name="search" class="form-control" required/>
