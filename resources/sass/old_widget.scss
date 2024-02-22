@@ -241,3 +241,26 @@
         }
     }
 }
+@media screen and (max-width: 991px){
+    .nalich-i-zakaz {
+        >.row {
+            >.div {
+                &:nth-child(1) {
+                    padding-left: 60px;
+                }
+                &:nth-child(2) {
+                    padding-right: 60px;
+                }
+            }
+        }
+        .heading {
+            font-size: 14px;
+        }
+    }
+    .nalich-i-zakaz2 {
+        .heading {
+            font-size: 14px;
+        }
+    }
+
+}
