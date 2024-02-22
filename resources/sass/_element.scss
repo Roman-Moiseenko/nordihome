@@ -27,10 +27,6 @@
 
 }
 
-ol.breadcrumbs {
-    //padding-left: 0;
-}
-
 //Кнопка Scroll Up
 %scrollup_hover_focus {
     color: #fff;
@@ -90,20 +86,11 @@ ol.breadcrumbs {
         }
     }
 }
-/*
-.scrollup.is-active:hover, .scrollup.is-active:focus {
-    color: #fff;
-    transform: translateY(-95%) rotate(-45deg);
-    -webkit-transform: translateY(-95%) rotate(-45deg);
-    -moz-transform: translateY(-95%) rotate(-45deg);
-    -o-transform: translateY(-95%) rotate(-45deg);
-    -ms-transform: translateY(-95%) rotate(-45deg);
+@media screen and (max-width: 991px) {
+    .scrollup {
+        &.is-active {
+            top: unset;
+            bottom: 16px;
+        }
+    }
 }
-.scrollup.is-active:hover i, .scrollup.is-active:focus i {
-    transform: translateY(0) rotate(45deg);
-    -webkit-transform: translateY(0) rotate(45deg);
-    -moz-transform: translateY(0) rotate(45deg);
-    -o-transform: translateY(0) rotate(45deg);
-    -ms-transform: translateY(0) rotate(45deg);
-}
-*/

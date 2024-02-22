@@ -1,5 +1,5 @@
 <header>
-    <div class="menu-top container-xl mt-2">
+    <div class="menu-top container-xl mt-2 hide-mobile">
         <div class="d-flex justify-content-between">
             <div><i class="fa-light fa-location-dot"></i>&nbsp;Калининград</div>
             <div class="d-flex ">
@@ -24,8 +24,7 @@
             </div>
         </div>
     </div>
-    <nav class="menu-bottom navbar navbar-expand-md navbar-light bg-white shadow-sm d-block">
-
+    <nav class="menu-bottom navbar navbar-expand-md navbar-light bg-white shadow-sm hide-mobile">
         <div class="d-flex flex-row text-center align-items-center container-xl">
             <div class="menu-bottom-catalog">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -92,6 +91,59 @@
             </div>
         </div>
 
+    </nav>
+    <nav class="menu-mobile">
+        <ul class="menu-list">
+            <li class="menu-item">
+                <a href="{{ route('home') }}" class="nav-link d-flex flex-column text-center">
+                    <i class="fa-light fa-house fs-3"></i>
+                    <span class="fs-8">Главная</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{{ route('shop.category.index') }}" class="nav-link d-flex flex-column text-center">
+                    <i class="fa-light fa-folder-magnifying-glass fs-3"></i>
+                    <span class="fs-8">Каталог</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ route('shop.cart.view') }}" class="nav-link d-flex flex-column text-center">
+                    <span id="counter-cart" class="counter" style="display: none;"></span>
+                    <i class="fa-light fa-cart-shopping fs-3"></i>
+                    <span class="fs-8">Корзина</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ route('cabinet.order.index') }}" class="nav-link d-flex flex-column text-center"
+                   @guest('user')
+                   data-bs-toggle="modal" data-bs-target="#login-popup"
+                    @endguest
+                >
+                    <i class="fa-sharp fa-light fa-box-open fs-3"></i>
+                    <span class="fs-8">Заказы</span>
+                </a>
+            </li>
+            @guest
+                @if (Route::has('login'))
+                    <li class="menu-item">
+                        <a id="login" class="nav-link d-flex flex-column text-center" href="#" data-bs-toggle="modal" data-bs-target="#login-popup">
+                            <i class="fa-light fa-user-vneck fs-3"></i>
+                            <span class="fs-8">Войти</span>
+                        </a>
+                    </li>
+
+                @endif
+            @else
+                <li class="menu-item">
+                    <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.view') }}">
+                        <i class="fa-light fa-user-vneck fs-3"></i>
+                        <span class="fs-8">Кабинет</span>
+                    </a>
+                </li>
+            @endguest
+        </ul>
     </nav>
 </header>
 

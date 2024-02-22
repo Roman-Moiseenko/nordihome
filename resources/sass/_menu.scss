@@ -1,9 +1,10 @@
 /* ТОП-МЕНЮ      */
+
 .menu-bottom {
     height: 75px;
     box-sizing: content-box;
     transition: $transition;
-
+    display: block;
     > div {
         height: 59px;
     }
@@ -377,4 +378,41 @@
     font-size: 1.25rem;
 
 }
+@media screen and (max-width: 991px) {
+    .hide-mobile {
+        display: none;
+    }
+}
+//Мобильное меню
 
+.menu-mobile {
+    display: block;
+    background: var(--bs-white);
+    height: 50px;
+    width: 100vw;
+    margin: 0 auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    box-shadow: 0 -2px 8px #00000026;
+    z-index: 11;
+    .menu-list {
+        display: flex;
+        padding: 0;
+        height: 100%;
+        align-items: center;
+        width: 100vw;
+        background: #fff;
+        margin: 0;
+        list-style: none;
+        justify-content: space-around;
+        .menu-item {
+            list-style: none;
+        }
+    }
+}
+@media screen and (min-width: 992px) {
+    .menu-mobile {
+        display: none;
+    }
+}

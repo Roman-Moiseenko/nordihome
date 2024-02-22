@@ -73,8 +73,9 @@ Breadcrumbs::for('shop.order.create-parser', function (BreadcrumbTrail $trail) {
 });
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
-    $trail->push('<i class="fa-light fa-house-blank"></i>', route('home'));
+    $trail->push('<i class="fa-light fa-house"></i>', route('home'));
 });
+
 Breadcrumbs::for('login', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Login', route('login'));
