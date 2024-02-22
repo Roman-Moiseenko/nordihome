@@ -1,11 +1,15 @@
 @extends('layouts.shop')
 
-@section('breadcrumbs')
+@section('main')
+    container-xl pages
 @endsection
+
+@section('title', $title)
+@section('description', $description)
 
 @section('content')
 
-    <div class="container-xl">
+    <div class="">
         Отзывы
     </div>
 @endsection

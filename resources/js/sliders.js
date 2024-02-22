@@ -85,9 +85,28 @@ window.$ = jQuery;
                 });
             }
         });
-
-
     }
+
+    if (document.getElementById('slider-old-catalog') !== null) {
+        let sliderOldCatalog = $('#slider-old-catalog');
+        let optionsOldCatalog = optionsSliderBase;
+        optionsOldCatalog.mouseDrag = true;
+        optionsOldCatalog.dots = true;
+        optionsOldCatalog.nav = false;
+        optionsOldCatalog.responsive = { 0: {items: 1}};
+        sliderOldCatalog.owlCarousel(optionsOldCatalog);
+    }
+
+    if (document.getElementById('slider-old-reviews') !== null) {
+        let sliderOldReviews = $('#slider-old-reviews');
+        let optionsOldReviews = optionsSliderBase;
+        optionsOldReviews.mouseDrag = true;
+        optionsOldReviews.dots = true;
+        optionsOldReviews.margin = 40;
+        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 4}, 991: {items: 6}};
+        sliderOldReviews.owlCarousel(optionsOldReviews);
+    }
+
 /*
 
     if (document.getElementById('slider-images-product') !== null) {

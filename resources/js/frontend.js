@@ -927,7 +927,13 @@ window.$ = jQuery;
             mainImage.attr('src', $(this).data('image'));
         });
     }
-
+    /** СТРАНИЦА ГЛАВНАЯ **/
+    if (main.hasClass('home')) {
+        let accordionItem = $('.accordion-heading');
+        accordionItem.on('click', function () {
+            $(this).parent().find('.accordion-text').toggleClass('active');
+        });
+    }
 
     //Доп.элементы
     let upButton = $('#upbutton');

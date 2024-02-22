@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
  */
 class Page extends Model
 {
-    const PATH_TEMPLATES = 'admin.page.page.template.';
+    const PATH_TEMPLATES = 'shop.pages.';
 
     const PAGES_TEMPLATES = [
         'contact',

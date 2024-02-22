@@ -14,6 +14,17 @@
         {!! $widget->view() !!}
     @endforeach
 
+    @include('shop.old_widget.spec')
+    @include('shop.old_widget.interes')
+    @include('shop.old_widget.vibirat')
+    @include('shop.old_widget.vnimanie')
+    @include('shop.old_widget.dostavka')
+    @include('shop.old_widget.nalich-i-zakaz')
+    @include('shop.old_widget.otzivi')
+    @include('shop.old_widget.voprosi')
+    @include('shop.old_widget.nalich-i-zakaz2')
+    @include('shop.widgets.contact')
+
     <div class="mt-3">
         @include('shop.widgets.map')
     </div>
