@@ -388,6 +388,7 @@
 .menu-mobile {
     display: block;
     background: var(--bs-white);
+    color: var(--bs-gray-700);
     height: 50px;
     width: 100vw;
     margin: 0 auto;
@@ -395,7 +396,7 @@
     bottom: 0;
     left: 0;
     box-shadow: 0 -2px 8px #00000026;
-    z-index: 11;
+    z-index: 99999;
     .menu-list {
         display: flex;
         padding: 0;

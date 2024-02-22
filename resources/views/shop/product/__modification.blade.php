@@ -1,3 +1,4 @@
+
 @if(!is_null($modification))
     <div class="view-modification">
         @foreach($modification->products as $_product)

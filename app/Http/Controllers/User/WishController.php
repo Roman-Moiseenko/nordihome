@@ -18,7 +18,7 @@ class WishController extends Controller
 
     public function __construct(WishService $service, UserRepository $repository)
     {
-        $this->middleware(['auth:user']);
+        $this->middleware(['auth:user'])->except('get');
         $this->service = $service;
         $this->repository = $repository;
     }
@@ -60,8 +60,13 @@ class WishController extends Controller
 
     public function get()
     {
+        if (!Auth::guard('user')->check()) return response()->json([
+            'items' => [],
+        ]);
+
         try {
             /** @var User $user */
+
             $user = Auth::guard('user')->user();
             $products = $this->repository->getWish($user);
 

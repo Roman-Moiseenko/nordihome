@@ -78,7 +78,6 @@
                         >В 1 Клик!
                         </button>
                     </div>
-
                     @include('shop.product.__modification', ['modification' => $product->modification, 'current_id' => $product->id])
                     @include('shop.product.__related', ['related' => $product->related])
 

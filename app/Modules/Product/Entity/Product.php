@@ -418,7 +418,15 @@ class Product extends Model
 
     public function modification()
     {
-        return $this->belongsTo(Modification::class, 'product_id', 'id');
+        return $this->hasOneThrough(
+            Modification::class,
+            ModificationProduct::class,
+            'product_id',
+            'id',
+            'id',
+            'modification_id'
+        );
+       // return $this->belongsTo(Modification::class, 'product_id', 'id');
     }
 
     public function groups()
