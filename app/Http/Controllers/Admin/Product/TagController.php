@@ -40,7 +40,7 @@ class TagController extends Controller
     public function create(Request $request)
     {
         try {
-            $this->service->create($request);
+            $this->service->create($request['name']);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {

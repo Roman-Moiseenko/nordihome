@@ -828,6 +828,12 @@ window.$ = jQuery;
             $('.products-page-content>.filters').toggleClass('active');
         });
 
+        let orderList = $('.order li');
+        orderList.on('click', function () {
+            urlParams.set('order', $(this).data('order'));
+            window.location.search = urlParams;
+        });
+
     }
 
     /** КАБИНЕТ **/

@@ -7,14 +7,41 @@
 
 @section('content')
     <div class="title-page">
-        <div class="products-page-title d-flex h1">
-            <h1>{{ $category->name }} </h1>
-            <span>&nbsp;{{ \App\Modules\Shop\Helper::_countProd(count($products)) }} </span>
+        <div class="products-page-title">
+            <div class="title h1">
+                <h1>{{ $category->name }} </h1>
+                <span>&nbsp;{{ \App\Modules\Shop\Helper::_countProd(count($products)) }} </span>
+            </div>
+            <div class="order btn-group">
+                <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Сортировка
+                </div>
+                <div class="dropdown-menu">
+                    <ul>
+                        <li class="{{ $order == 'price-down' ? 'active' : '' }}" data-order="price-down">По убыванию цены</li>
+                        <li class="{{ $order == 'price-up' ? 'active' : '' }}" data-order="price-up">По возрастанию цены</li>
+                        <li class="{{ $order == 'name' ? 'active' : '' }}" data-order="name">По названию</li>
+                        <li class="{{ $order == 'rating' ? 'active' : '' }}" data-order="rating">По популярности</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
     <form action="" method="GET">
         <div class="mobile-manager">
-            <div class="order">Сортировка <i class="fa-light fa-chevron-down"></i></div>
+            <div class="order btn-group">
+                <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Сортировка
+                </div>
+                <div class="dropdown-menu">
+                    <ul>
+                        <li class="{{ $order == 'price-down' ? 'active' : '' }}" data-order="price-down">По убыванию цены</li>
+                        <li class="{{ $order == 'price-up' ? 'active' : '' }}" data-order="price-up">По возрастанию цены</li>
+                        <li class="{{ $order == 'name' ? 'active' : '' }}" data-order="name">По названию</li>
+                        <li class="{{ $order == 'rating' ? 'active' : '' }}" data-order="rating">По популярности</li>
+                    </ul>
+                </div>
+            </div>
             <div class="filter-open"><i class="fa-sharp fa-light fa-filter-list"></i> Фильтры</div>
         </div>
     <div class="products-page-content d-flex position-relative">
@@ -80,8 +107,14 @@
         <div class="list">
             <div class="box-card top-tags">
                 @foreach($tags as $tag)
-                    <a href="{{ route('shop.category.view', [$category->slug, 'tag_id' => $tag->id]) }}"
-                        class="tag-filter {{ $tag_id == $tag->id ? 'active' : '' }}" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
+                    @if($tag_id == $tag->id)
+                        <a href="{{ route('shop.category.view', [$category->slug]) }}"
+                           class="tag-filter active" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
+                    @else
+                        <a href="{{ route('shop.category.view', [$category->slug, 'tag_id' => $tag->id]) }}"
+                           class="tag-filter" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
+                    @endif
+
                 @endforeach
             </div>
             <div class="products">

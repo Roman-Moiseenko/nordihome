@@ -32,6 +32,7 @@ use Illuminate\Support\Str;
  * @property int $brand_id
  * @property float $current_rating
  * @property int $count_for_sell
+ * @property float $current_price //Для быстрой сортировки
  * @property bool $published //Опубликован
  * @property bool $only_offline //Только в магазине
  * @property bool $pre_order //Установка для всего магазина из опций, после каждый отдельно можно менять
@@ -203,7 +204,8 @@ class Product extends Model
     public function setPrice(float $price): void
     {
         if (!is_null($this->lastPrice) && $this->lastPrice->value === $price) return;
-
+        $this->current_price = $price;
+        $this->save();
         $this->pricing()->create(
             [
                 'value' => $price,

@@ -83,6 +83,7 @@ class CatalogController extends Controller
 
             $tags = $this->repository->TagsByProducts($product_ids);
             $tag_id = $request['tag_id'] ?? null;
+            $order = $request['order'] ?? 'name';
             $products = $this->repository->filter($request, $product_ids);
 
             //TODO Контакты и время работы
@@ -91,7 +92,7 @@ class CatalogController extends Controller
 
             return view('shop.product.index',
                 compact('category', 'products', 'prod_attributes', 'tags',
-                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id'));
+                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order'));
 
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');

@@ -141,6 +141,10 @@ class ProductController extends Controller
         try {
             $product = $this->service->update($request, $product);
             return redirect()->route('admin.product.edit', compact('product'));
+
+
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
             flash('Техническая ошибка! Информация направлена разработчику', 'danger');

@@ -69,7 +69,15 @@ class ShopRepository
 
     public function filter(Request $request, array $product_ids)
     {
-        $query = Product::orderBy('name');
+        $query = match ($request['order']) {
+            'price-down' => Product::orderBy('current_price', 'desc'),
+            'price-up' => Product::orderBy('current_price', 'asc'),
+            'rating' => Product::orderBy('current_rating', 'asc'),
+            'name' => Product::orderBy('name', 'asc'),
+            default => Product::orderBy('name', 'asc'),
+        };
+
+       // $query = Product::orderBy('name');
 
         ///Фильтрация по $request
 

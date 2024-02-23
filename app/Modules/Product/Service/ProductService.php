@@ -269,7 +269,7 @@ class ProductService
             if ($this->tags->exists($tag_id)) {
                 $product->tags()->attach((int)$tag_id);
             } else {
-                $tag = $this->tagService->create(['name' => $tag_id]);
+                $tag = $this->tagService->create($tag_id);
                 $product->tags()->attach($tag->id);
             }
         }

@@ -9,9 +9,9 @@ use Illuminate\Support\Str;
 
 class TagService
 {
-    public function create(Request $request): Tag
+    public function create(string $name): Tag
     {
-        $tag = Tag::register($request['name']);
+        $tag = Tag::register($name);
         return $tag;
     }
 
