@@ -819,9 +819,9 @@ window.$ = jQuery;
             window.location.search = urlParams;
         });
 
-        let filterActivate = $('.mobile-manager>i');
+        let filterOpen = $('.filter-open');
         let filterClose = $('.mobile-close');
-        filterActivate.on('click', function () {
+        filterOpen.on('click', function () {
             $('.products-page-content>.filters').toggleClass('active');
         });
         filterClose.on('click', function () {
