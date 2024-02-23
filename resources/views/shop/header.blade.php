@@ -1,4 +1,14 @@
 <header>
+    <div class="header-mobile">
+        <div>
+            <a class="navbar-brand" href="{{ url('/') }}">
+                <img src="{{ $config['logo-nav'] }}" alt="{{ $config['brand-alt'] }}" class="img-fluid img-logo">
+            </a>
+        </div>
+        <div>
+            <i class="fa-light fa-location-dot"></i>&nbsp;{{ $city }}
+        </div>
+    </div>
     <div class="menu-top container-xl mt-2 hide-mobile">
         <div class="d-flex justify-content-between">
             <div><i class="fa-light fa-location-dot"></i>&nbsp;{{ $city }}</div>
@@ -24,15 +34,15 @@
             </div>
         </div>
     </div>
-    <nav class="menu-bottom navbar navbar-expand-md navbar-light bg-white shadow-sm hide-mobile">
-        <div class="d-flex flex-row text-center align-items-center container-xl">
+    <nav class="menu-bottom navbar navbar-expand-md navbar-light bg-white">
+        <div class="menu-container container-xl">
             <div class="menu-bottom-catalog">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ $config['logo-nav'] }}" alt="{{ $config['brand-alt'] }}" class="img-fluid img-logo">
                 </a>
                 @include('shop.widgets.header.category',['categories' => $categories])
             </div>
-            <div class="menu-bottom-search flex-grow-1 mx-3">
+            <div class="menu-bottom-search flex-grow-1">
                 <div class="presearch" data-route="{{ route('shop.product.search') }}">
                     <div class="presearch-wrapper">
                         <input id="pre-search">
@@ -48,9 +58,8 @@
                     <div class="presearch-overlay" style="display: none"></div>
                 </div>
             </div>
-            <div class="menu-bottom-profile d-flex">
+            <div class="menu-bottom-profile">
                 <ul class="navbar-nav ms-auto">
-                    <!-- Authentication Links -->
                     @guest
                         @if (Route::has('login'))
                             <li class="nav-item">
@@ -90,36 +99,8 @@
                 </ul>
             </div>
         </div>
-
     </nav>
-    <div class="header-mobile">
-        <div class="d-flex justify-content-between p-3">
-            <div>
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="{{ $config['logo-nav'] }}" alt="{{ $config['brand-alt'] }}" class="img-fluid img-logo">
-                </a>
-            </div>
-            <div>
-            <i class="fa-light fa-location-dot"></i>&nbsp;{{ $city }}
-            </div>
-        </div>
-        <div class="menu-bottom-search flex-grow-1 mx-3">
-            <div class="presearch" data-route="{{ route('shop.product.search') }}">
-                <div class="presearch-wrapper">
-                    <input id="pre-search">
-                    <div class="presearch-suggest" style="display: none">
-                    </div>
-                    <div class="presearch-control fs-5 opacity-50">
-                            <span id="presearch--icon-clear" class="presearch-icon clear" style="display:none;"><i
-                                    class="fa-sharp fa-light fa-xmark"></i></span>
-                        <span id="presearch--icon-search" class="presearch-icon search"><i
-                                class="fa-light fa-magnifying-glass"></i></span>
-                    </div>
-                </div>
-                <div class="presearch-overlay" style="display: none"></div>
-            </div>
-        </div>
-    </div>
+
     <nav class="menu-mobile">
         <ul class="menu-list">
             <li class="menu-item">
