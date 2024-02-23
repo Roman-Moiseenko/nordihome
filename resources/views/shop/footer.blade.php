@@ -39,12 +39,15 @@
                 <div class="row">
                     @foreach(\App\Modules\Shop\MenuHelper::getFooterMenu() as $column)
                         <div class="col-lg-6 px-2">
-                            <div class="footer-heading">{{ $column['title'] }}</div>
-                            <ul class="footer-menu">
-                            @foreach($column['items'] as $item)
-                                    <li><a href="{{ $item['route'] }}">{{ $item['name'] }}</a></li>
-                            @endforeach
-                            </ul>
+                            <div class="menu-column">
+                                <div class="heading">{{ $column['title'] }}</div>
+                                <ul class="menu">
+                                @foreach($column['items'] as $item)
+                                        <li><a href="{{ $item['route'] }}">{{ $item['name'] }}</a></li>
+                                @endforeach
+
+                                </ul>
+                            </div>
                         </div>
                     @endforeach
                 </div>

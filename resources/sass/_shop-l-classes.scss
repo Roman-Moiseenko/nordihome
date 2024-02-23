@@ -145,44 +145,57 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
     padding-top: 40px;
     background: var(--bs-black);
     color: var(--bs-gray-200);
+    .heading {
+
+    }
+    .footer-description {
+        font-size: 13px;
+    }
     >.about {
         border-top: 1px solid var(--bs-gray-600) ;
-    }
-}
-
-.footer-description {
-    font-size: 13px;
-}
-
-.footer-heading {
-    text-transform: uppercase;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--bs-gray-200);
-    margin-bottom: 20px;
-}
-ul.footer-menu {
-    margin-left: 0;
-    padding-left: 0;
-    >li {
-        list-style: none;
-        margin-bottom: 20px;
-        margin-left: 0;
-        >a {
-            color: var(--bs-gray-200);
+        border-bottom: 4px solid var(--bs-gold);
+        a {
+            color: var(--bs-gray-400);
             &:hover {
                 color: var(--bs-gray-100);
             }
         }
     }
+    .menu-column {
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
+        .heading {
+            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--bs-gray-200);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .menu {
+            margin-left: 0;
+            padding-left: 0;
+            >li {
+                list-style: none;
+                margin-bottom: 20px;
+                margin-left: 0;
+                >a {
+                    color: var(--bs-gray-200);
+                    &:hover {
+                        color: var(--bs-gray-100);
+                    }
+                }
+            }
+        }
+    }
+
+
 }
 
-.about {
-    border-bottom: 4px solid var(--bs-gold);
-    a {
-        color: var(--bs-gray-400);
-        &:hover {
-            color: var(--bs-gray-100);
+@media screen and (max-width: 991px) {
+    .footer {
+        >.about {
+            height: 120px;
         }
     }
 }
