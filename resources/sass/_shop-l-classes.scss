@@ -146,9 +146,14 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
     background: var(--bs-black);
     color: var(--bs-gray-200);
     .heading {
-
+        color: var(--bs-gold);
+        text-transform: uppercase;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 20px;
+        text-align: center;
     }
-    .footer-description {
+    .description {
         font-size: 13px;
     }
     >.about {

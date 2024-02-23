@@ -13,9 +13,14 @@
         </div>
     </div>
     <form action="" method="GET">
+        <div class="mobile-manager">
+            <div class="order">Сортировка <i class="fa-light fa-chevron-down"></i></div>
+            <div class="filter-open"><i class="fa-sharp fa-light fa-filter-list"></i> Фильтры</div>
+        </div>
     <div class="products-page-content d-flex position-relative">
-        <div class="products-page-filter">
-            <div class="products-base-filter">
+        <div class="filters">
+            <div class="mobile-close"><i class="fa-light fa-xmark"></i></div>
+            <div class="base-filter">
                 <x-widget.check name="in_stock" class="mt-2" checked="{{ $request->has('in_stock') }}">Только в наличии</x-widget.check>
                 <x-widget.numeric name="price" min-value="{{ $minPrice }}" max-value="{{ $maxPrice }}"
                                   current-min="{{ $request->has('price') ? $request->get('price')[0] : '' }}"
@@ -35,7 +40,7 @@
 
                 <x-widget.check name="discount" class="mt-3" checked="{{ $request->has('discount') }}" >Акция</x-widget.check>
             </div>
-            <div class="products-attribute-filter">
+            <div class="attribute-filter">
                 @foreach($prod_attributes as $attribute)
                     <div>
                         @if(isset($attribute['isBool']))
@@ -67,19 +72,19 @@
                     </div>
                 @endforeach
             </div>
-            <div class="products-buttons-filter">
+            <div class="buttons-filter">
                 <button class="btn btn-dark w-auto">Применить</button>
                 <button id="clear-filter" class="btn btn-outline-dark w-auto" type="button">Сбросить</button>
             </div>
         </div>
-        <div class="products-page-list ms-3">
-            <div class="box-card products-page-list--top">
+        <div class="list">
+            <div class="box-card top-tags">
                 @foreach($tags as $tag)
                     <a href="{{ route('shop.category.view', [$category->slug, 'tag_id' => $tag->id]) }}"
-                        class="tag-filter-products {{ $tag_id == $tag->id ? 'active' : '' }}" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
+                        class="tag-filter {{ $tag_id == $tag->id ? 'active' : '' }}" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
                 @endforeach
             </div>
-            <div class="products--list">
+            <div class="products">
                 <div class="row">
                 @foreach($products as $product)
                     @include('shop.cards.card-4x')
@@ -95,7 +100,7 @@
     </div>
     </form>
     <div class="recommendation-block">
-        Дополнительные блоки, слайдеры, вы смотрели и т.п.
+
     </div>
 
     <script>

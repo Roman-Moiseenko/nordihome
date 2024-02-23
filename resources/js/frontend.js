@@ -818,6 +818,16 @@ window.$ = jQuery;
             urlParams.set('tag_id', $(this).data('tag-id'));
             window.location.search = urlParams;
         });
+
+        let filterActivate = $('.mobile-manager>i');
+        let filterClose = $('.mobile-close');
+        filterActivate.on('click', function () {
+            $('.products-page-content>.filters').toggleClass('active');
+        });
+        filterClose.on('click', function () {
+            $('.products-page-content>.filters').toggleClass('active');
+        });
+
     }
 
     /** КАБИНЕТ **/

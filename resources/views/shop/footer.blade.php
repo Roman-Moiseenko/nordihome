@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="heading">NORDI HOME</div>
-                <div class="footer-description">
+                <div class="description">
                     <div>
                         <p>Магазин NORDI HOME занимается продажей и доставкой мебели ИКЕА из Европы под ключ для вашего
                             удобства.</p>
@@ -32,7 +32,6 @@
                         определяемой положениями статьи 437 ГК РФ. Все права на публикуемые здесь материалы принадлежат
                         ООО «Негоциант».</p>
                 </div>
-
             </div>
             <div class="col-lg-1"></div>
             <div class="col-lg-5">
@@ -55,7 +54,7 @@
         </div>
     </div>
     <div class="about pt-4 pb-3 text-center">
-        <p>2022 - {{date('Y')}} | Разработано <a href="https://website39.site" title="Разработка интернет-магазинов" target="_blank">Веб-студия Web39</a></p>
+        <p>2022 - {{date('Y')}} | Разработано <a href="https://website39.site" title="Разработка CRM и интернет-магазинов" target="_blank">Веб-студия Web39</a></p>
     </div>
 
 </footer>

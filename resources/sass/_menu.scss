@@ -274,6 +274,7 @@
 }
 
 //КОРЗИНА / ИЗБРАННОЕ
+//TODO Переделать под структуру SASS
 .cart-header, .wish-header {
     display: flex;
     justify-content: space-between;
@@ -435,7 +436,7 @@
     bottom: 0;
     left: 0;
     box-shadow: 0 -2px 8px #00000026;
-    z-index: 99999;
+    z-index: 999;
     .menu-list {
         display: flex;
         padding: 0;
