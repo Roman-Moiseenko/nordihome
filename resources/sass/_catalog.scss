@@ -30,9 +30,19 @@
         left: 50%;
         color: white;
         font-size: 24px;
+        font-weight: 600;
         text-align: center;
         transform: translate(-50%, -50%);
         z-index: 2;
     }
 }
 
+@media screen and (max-width: 991px){
+    .catalog-card {
+        margin: 10px 0;
+        span {
+            font-size: 16px;
+        }
+    }
+
+}

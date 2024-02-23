@@ -8,6 +8,7 @@ use App\Menu\AdminProfileMenu;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Shop\MenuHelper;
 use App\Modules\Shop\Schema;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;
@@ -24,7 +25,6 @@ class AdminComposer
     public function compose(View $view): void
     {
         if (!is_null(request()->route())) {
-            //dd(request()->route()->getName());
             $pageName = request()->route()->getName();
             if ($pageName == null) {
                 $layout = 'admin';
@@ -40,20 +40,23 @@ class AdminComposer
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
             }
             if ($layout == 'shop' || $layout == 'cabinet') {
+                //TODO Определение местоположения
+                $token = env('DADATA_TOKEN', false);
+                if ($token) {
+                    $dadata = new \Dadata\DadataClient($token, null);
+                    $result = $dadata->iplocate(request()->ip());
+                    $city = $result['data']['city'];
+                } else {
+                    $city = 'Лунапарк';
+                }
                 $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
-
                 $view->with('config', Config::get('shop-config.frontend'));
                 $view->with('categories', $this->categories->getTree());
                 $view->with('user', $user);
-
+                $view->with('city', $city);
             }
             if ($layout == 'shop') {
                 $view->with('schema', new Schema());
-                /*$cabinetMenu = array_map(function ($item) use ($pageName) {
-                    return array_merge($item, ['active' => request()->url() == $item['url']]);
-                }, MenuHelper::getCabinetMenu());*/
-                //dd($cabinetMenu);
-                //$view->with('cabinetMenu', $cabinetMenu);
             }
         }
     }

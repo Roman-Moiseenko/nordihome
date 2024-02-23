@@ -384,6 +384,9 @@
     }
 }
 //Мобильное меню
+.header-mobile {
+    display: block;
+}
 
 .menu-mobile {
     display: block;
@@ -414,6 +417,9 @@
 }
 @media screen and (min-width: 992px) {
     .menu-mobile {
+        display: none;
+    }
+    .header-mobile {
         display: none;
     }
 }

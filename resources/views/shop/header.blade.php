@@ -1,7 +1,7 @@
 <header>
     <div class="menu-top container-xl mt-2 hide-mobile">
         <div class="d-flex justify-content-between">
-            <div><i class="fa-light fa-location-dot"></i>&nbsp;Калининград</div>
+            <div><i class="fa-light fa-location-dot"></i>&nbsp;{{ $city }}</div>
             <div class="d-flex ">
                 <div>
                     @foreach(\App\Modules\Shop\MenuHelper::getMenuPages() as $item)
@@ -92,6 +92,34 @@
         </div>
 
     </nav>
+    <div class="header-mobile">
+        <div class="d-flex justify-content-between p-3">
+            <div>
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    <img src="{{ $config['logo-nav'] }}" alt="{{ $config['brand-alt'] }}" class="img-fluid img-logo">
+                </a>
+            </div>
+            <div>
+            <i class="fa-light fa-location-dot"></i>&nbsp;{{ $city }}
+            </div>
+        </div>
+        <div class="menu-bottom-search flex-grow-1 mx-3">
+            <div class="presearch" data-route="{{ route('shop.product.search') }}">
+                <div class="presearch-wrapper">
+                    <input id="pre-search">
+                    <div class="presearch-suggest" style="display: none">
+                    </div>
+                    <div class="presearch-control fs-5 opacity-50">
+                            <span id="presearch--icon-clear" class="presearch-icon clear" style="display:none;"><i
+                                    class="fa-sharp fa-light fa-xmark"></i></span>
+                        <span id="presearch--icon-search" class="presearch-icon search"><i
+                                class="fa-light fa-magnifying-glass"></i></span>
+                    </div>
+                </div>
+                <div class="presearch-overlay" style="display: none"></div>
+            </div>
+        </div>
+    </div>
     <nav class="menu-mobile">
         <ul class="menu-list">
             <li class="menu-item">
@@ -116,13 +144,11 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('cabinet.order.index') }}" class="nav-link d-flex flex-column text-center"
-                   @guest('user')
-                   data-bs-toggle="modal" data-bs-target="#login-popup"
-                    @endguest
-                >
-                    <i class="fa-sharp fa-light fa-box-open fs-3"></i>
-                    <span class="fs-8">Заказы</span>
+                <a href="{{ route('shop.parser.view') }}" class="nav-link d-flex flex-column text-center">
+                    <!--img src="/images/ikea.svg" style="height: 40px;"-->
+                    <i class="fa-light fa-lightbulb fs-3"></i>
+                    <!--i class="fa-sharp fa-light fa-box-open fs-3"></i-->
+                    <span class="fs-8">ИКЕА</span>
                 </a>
             </li>
             @guest
