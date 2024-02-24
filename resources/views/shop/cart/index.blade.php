@@ -8,7 +8,7 @@
     <div class="title-page">
         <h1>@if(!empty($cart['items']))Моя корзина @else Ваша корзина пуста @endif</h1>
     </div>
-    <div class="d-flex">
+    <div class="screen-action">
         <div class="left-list-block">
             <div class="box-card d-flex panel-cart-manage align-items-center">
                 <div class="checkbox-group">
@@ -22,7 +22,7 @@
             @endforeach
         </div>
         @if(!empty($cart['items']))
-            <div class="right-action-block">
+        <div class="right-action-block">
                 <div class="sticky-block">
                     <div>
                         <form id="to-order" method="POST" action="{{ route('shop.order.create') }}">

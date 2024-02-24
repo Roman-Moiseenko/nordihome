@@ -517,25 +517,25 @@ window.$ = jQuery;
             for (let i = 0; i < items.length; i++) {
                 let _blockItem = $('#full-cart-item-' + items[i].product_id);
                 if (items[i].discount_cost === null) {
-                    _blockItem.find($('.full-cart-item--discount')).hide();
-                    _blockItem.find($('.full-cart-item--cost')).show();
-                    _blockItem.find($('.full-cart-item--combinate')).hide();
+                    _blockItem.find($('.discount')).hide();
+                    _blockItem.find($('.cost')).show();
+                    _blockItem.find($('.combinate')).hide();
                 } else {
-                    _blockItem.find($('.full-cart-item--discount')).show();
-                    _blockItem.find($('.full-cart-item--cost')).hide();
-                    _blockItem.find($('.full-cart-item--combinate')).show();
+                    _blockItem.find($('.discount')).show();
+                    _blockItem.find($('.cost')).hide();
+                    _blockItem.find($('.combinate')).show();
                     _blockItem.find($('.discount-cost')).html(price_format(items[i].discount_cost));
-                    _blockItem.find($('.full-cart-item--discount')).find('span').html(items[i].discount_name);
+                    _blockItem.find($('.discount')).find('span').html(items[i].discount_name);
                 }
                 _blockItem.find($('.current-price')).html(price_format(items[i].price) + '/шт.');
                 _blockItem.find($('.current-cost')).html(price_format(items[i].cost));
 
                 if (items[i].available !== null) {
-                    _blockItem.find($('.full-cart-item--available')).show();
-                    _blockItem.find($('.full-cart-item--available-count')).text(items[i].available);
+                    _blockItem.find($('.available')).show();
+                    _blockItem.find($('.available-count')).text(items[i].available);
 
                 } else {
-                    _blockItem.find($('.full-cart-item--available')).hide();
+                    _blockItem.find($('.available')).hide();
                 }
 
             }
@@ -833,7 +833,6 @@ window.$ = jQuery;
             urlParams.set('order', $(this).data('order'));
             window.location.search = urlParams;
         });
-
     }
 
     /** КАБИНЕТ **/

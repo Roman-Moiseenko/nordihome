@@ -414,7 +414,7 @@
 }
 @media screen and (max-width: 991px) {
     .hide-mobile {
-        display: none;
+        display: none !important;
     }
 }
 //Мобильное меню

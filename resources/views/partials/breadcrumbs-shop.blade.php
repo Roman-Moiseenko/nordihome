@@ -8,7 +8,7 @@
                     <li class="breadcrumb-item" data-index="{{ $index }}"><a
                             href="{{ $breadcrumb->url }}">{!! $breadcrumb->title !!}  </a></li>
                 @else
-                    <li class="breadcrumb-item active" data-index="{{ $index }}"><span>{!! $breadcrumb->title !!}</span>
+                    <li class="breadcrumb-item active hide-mobile" data-index="{{ $index }}"><span>{!! $breadcrumb->title !!}</span>
                     </li>
                 @endif
             @endforeach

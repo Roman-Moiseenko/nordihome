@@ -206,6 +206,10 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
 }
 
 /* Деление экрана - слева список, справа действие с прикреплением */
+.screen-action {
+    display: flex;
+    flex-direction: row;
+}
 
 .left-list-block {
     padding-right: 24px;
@@ -216,6 +220,7 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
 .right-action-block {
     flex-basis: calc(33.3333% - var(--gap));
     max-width: calc(33.3333% - var(--gap));
+    padding-bottom: 12px;
 }
 
 .sticky-block {
@@ -228,6 +233,17 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
     }
 }
 
+@media screen and (max-width: 991px) {
+    .screen-action {
+        flex-direction: column;
+    }
+    .left-list-block, .right-action-block {
+        padding-right: 0;
+        flex-basis: 100%;
+        max-width: 100%;
+
+    }
+}
 
 /* Общие блоки, карточки */
 
