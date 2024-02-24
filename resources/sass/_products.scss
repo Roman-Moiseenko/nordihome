@@ -517,7 +517,7 @@
         .price-brand-block {
             .view-price {
                 font-size: 2rem;
-
+                display: grid;
                 .comment {
                     font-size: 0.8rem;
                 }
@@ -563,6 +563,8 @@
         .price-block {
             padding-top: 10px;
             padding-bottom: 20px;
+            display: flex;
+            align-items: center;
             >.discount-price {
                 font-size: 1.75rem;
                 color: var(--bs-discount-color);
@@ -571,6 +573,7 @@
                 color: var(--bs-gray-600);
                 font-size: 1.25rem;
                 text-decoration: line-through;
+                margin-left: 10px;
             }
         }
     }
@@ -600,6 +603,16 @@
         .attribute {
             .values {
                 text-align: right;
+            }
+        }
+    }
+    .view-bonus {
+        .item-bonus {
+            .price-block {
+                display: block;
+                >.base-price {
+                    margin-left: 0;
+                }
             }
         }
     }

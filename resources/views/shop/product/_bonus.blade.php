@@ -8,8 +8,8 @@
                         <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
                     </a>
                     <div class="price-block">
-                        <span class="discount-price">{{ price($_product->pivot->discount) }}</span>
-                        <span class="base-price">{{ price($_product->lastPrice->value) }}</span>
+                        <div class="discount-price">{{ price($_product->pivot->discount) }}</div>
+                        <div class="base-price">{{ price($_product->lastPrice->value) }}</div>
                     </div>
                     <button class="to-cart btn btn-dark" data-product="{{ $_product->id }}">В Корзину</button>
                 </div>
