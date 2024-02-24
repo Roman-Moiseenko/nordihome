@@ -6,10 +6,10 @@
             @foreach($groupAttributes as $prod_attribute)
                 <div class="attribute">
                     <div class="row">
-                        <div class="col-sm-6 col-lg-4">
+                        <div class="col-6 col-lg-4">
                             <div class="name">{{ $prod_attribute['name'] }}</div>
                         </div>
-                        <div class="col-sm-6 col-lg-4">
+                        <div class="col-6 col-lg-4">
                             <div class="values">{{ $prod_attribute['value'] }}</div>
                         </div>
                     </div>

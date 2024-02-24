@@ -117,8 +117,8 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('shop.cart.view') }}" class="nav-link d-flex flex-column text-center">
-                    <span id="counter-cart" class="counter" style="display: none;"></span>
+                <a href="{{ route('shop.cart.view') }}" class="nav-link d-flex flex-column text-center position-relative">
+                    <span id="counter-cart" class="counter-cart counter" style="display: none;"></span>
                     <i class="fa-light fa-cart-shopping fs-3"></i>
                     <span class="fs-8">Корзина</span>
                 </a>

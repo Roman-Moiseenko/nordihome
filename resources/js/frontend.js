@@ -302,7 +302,7 @@ window.$ = jQuery;
         let items = data.items;
         let common = data.common;
         let cartItemTemplate = $('#cart-item-template');
-        let counterCart = $('#counter-cart');
+        let counterCart = $('.counter-cart');
 
         $('div[id^="cart-item-N"]').remove();
         if (items.length === 0) { //Элементов нет, показываем пустую заглушку
