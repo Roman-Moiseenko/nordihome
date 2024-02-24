@@ -8,7 +8,7 @@
     <div class="title-page">
         <h1>Оформление заказа</h1>
     </div>
-    <div class="d-flex">
+    <div class="screen-action">
         <div class="left-list-block">
             @include('shop.order.widget.payment')
             @include('shop.order.widget.delivery')

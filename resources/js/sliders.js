@@ -26,11 +26,11 @@ window.$ = jQuery;
         mouseDrag: false,
         responsive: {
             0: {
-                items: 1,
+                items: 2,
                 smartSpeed: 500
             },
             576: {
-                items: 2,
+                items: 3,
                 smartSpeed: 500
             },
             991: {

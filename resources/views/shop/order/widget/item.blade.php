@@ -1,4 +1,4 @@
-<div class="col-lg-2 col-sm-6 p-3">
+<div class="col-lg-2 col-md-4 col-6 p-3">
     <div class="order-item-block">
         <img src="{{ $item['img'] }}" title="{{ $item['name'] }}">
         @if($item['quantity'] > 1)
