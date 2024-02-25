@@ -10,7 +10,7 @@
     <div class="title-page">
         <h1>@yield('h1')</h1>
     </div>
-    <div class="d-flex">
+    <div class="screen-action">
         <div class="left-list-block">
             @yield('subcontent')
         </div>

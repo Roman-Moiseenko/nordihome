@@ -114,3 +114,14 @@
     }
 }
 
+@media screen and (max-width: 991px) {
+    .view-option {
+        .field {
+            flex-wrap: wrap;
+        }
+    }
+    .cabinet-menu-block {
+        margin-right: 0;
+        margin-left: 0;
+    }
+}

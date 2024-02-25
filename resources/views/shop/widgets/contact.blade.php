@@ -60,7 +60,7 @@
                     </label>
                 </div>
                 <div class="d-flex justify-content-center mt-3">
-                    <button id="button-login" type="submit" class="btn btn-dark fs-5 py-2 px-3">Отправить</button>
+                    <button type="submit" class="btn btn-dark fs-5 py-2 px-3">Отправить</button>
                 </div>
             </form>
         </div>
