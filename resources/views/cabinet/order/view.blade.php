@@ -42,17 +42,17 @@
     </div>
 
     @foreach($order->items as $item)
-        <div class="box-card d-flex" style="align-items: center">
-            <div class="">
+        <div class="box-card order-item">
+            <div class="image">
                 @if($item->product->isPublished())
                     <a href="{{ route('shop.product.view', $item->product->slug) }}" target="_blank">
-                        <img src="{{ $item->product->photo->getThumbUrl('mini') }}" style="border-radius: 10px;"/>
+                        <img src="{{ $item->product->photo->getThumbUrl('mini') }}"/>
                     </a>
                 @else
-                    <img src="{{ $item->product->photo->getThumbUrl('mini') }}" style="border-radius: 10px;"/>
+                    <img src="{{ $item->product->photo->getThumbUrl('mini') }}"/>
                 @endif
             </div>
-            <div class="" style="padding-left: 20px;">
+            <div class="info">
                 @if($item->product->isPublished())
                     <a href="{{ route('shop.product.view', $item->product->slug) }}" target="_blank">
                         {{ $item->product->name }}
@@ -61,7 +61,7 @@
                     {{ $item->product->name }}
                 @endif
             </div>
-            <div class="" style="margin-left: auto; width: 200px; padding-left: 10px;">
+            <div class="price">
                 @if(is_null($item->discount_id))
                     <div class="fs-6"> {{ $item->quantity }} шт х {{ price($item->base_cost) }}</div>
                     <div class="fs-5 fw-medium"

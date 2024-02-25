@@ -98,6 +98,24 @@
     padding: 4px 10px;
     font-weight: 500;
 }
+//ORDER
+.order-item {
+    display: flex;
+    align-items: center;
+    .image {
+        img {
+            border-radius: 10px;
+        }
+    }
+    .info {
+        padding-left: 20px;
+    }
+    .price {
+        margin-left: auto;
+        width: 200px;
+        padding-left: 10px;
+    }
+}
 
 //ОБЩАЯ СТРАНИЦА
 .view-option {
@@ -123,5 +141,33 @@
     .cabinet-menu-block {
         margin-right: 0;
         margin-left: 0;
+    }
+    .order-body {
+        flex-direction: column;
+        >div{
+            &:nth-child(1) {
+                order: 1;
+                flex-basis: 100%;
+                max-width: 100%;
+            }
+            &:nth-child(2) {
+                order: 0;
+                flex-basis: 100%;
+                max-width: 100%;
+                justify-content: left;
+            }
+        }
+    }
+    .order-item {
+        flex-wrap: wrap;
+        .image {
+            width: 20%;
+            img {
+                width: 100%;
+            }
+        }
+        .info {
+            width: 80%;
+        }
     }
 }
