@@ -1,89 +1,116 @@
 :root {
     --color-parser-cost: #031b26;
 }
+.code-selected {
+    background: #999;
+    color: #fff;
+    font-weight: 600;
+    padding: 2px 8px;
+    letter-spacing: 1px;
+    border-radius: $radius-big;
+}
 .parser {
-    /*display: flex;
-    flex-direction: row; */
     padding-bottom: 60px;
 }
-.left-side {
-    width: 65%;
-}
-.right-side {
-    width: 35%;
-}
-@media (max-width: 991px) {
-    .parser {
-        //flex-direction: column;
-    }
-    .right-side,.left-side {
-        width: 100%;
-    }
-    .right-side > div {
-        padding-top: 20px;
-    }
-}
+
 /* Заголовок перед списком */
 .parsing-title-products {
     display: flex;
     flex-direction: row;
     padding-top: 20px;
-}
-.parsing-title-products--button {
-    margin-left: auto;
+    .button {
+        margin-left: auto;
+    }
 }
 
-#search-parser-button {
-    border-radius: 0 $radius-button $radius-button 0;
-}
+
+
 @media (max-width: 991px) {
     .parsing-title-products {
         flex-direction: column;
+        >div {
+            >h3 {
+                text-align: center;
+            }
+        }
+        .button {
+            //padding: 0 20px;
+            width: 100%;
+            > button {
+                width: 100%;
+            }
+        }
     }
-    .parsing-title-products > div > h3 {
-        text-align: center;
-    }
-    .parsing-title-products--button {
-        padding: 0 20px;
-        width: 100%;
-    }
-    .parsing-title-products--button > button {
-        width: 100%;
-    }
+
+
 }
 /* Карточка товара */
-.parser-list-item {
+.parser-item {
     display: flex;
     position: relative;
     margin-top: 20px;
     padding: 20px;
-    /*border: 1px solid black;
-    border-radius: 10px; */
-}
-.parser-item-img {
-    width: 150px;
-}
-.parser-item-data {
-    width: 100%;
-    padding-left: 20px;
-    font-size: 14px;
-    >div {
-        margin: 4px 0;
-    }
-    >.description-product {
-        margin-bottom: 12px;
-    }
 
-    >h4 {
-        margin-bottom: 0;
+    .image {
+        width: 150px;
+    }
+    .data {
+        width: 100%;
+        padding-left: 20px;
+        font-size: 14px;
+        >div {
+            margin: 4px 0;
+        }
+        >.description-product {
+            margin-bottom: 12px;
+        }
+
+        >h4 {
+            margin-bottom: 0;
+        }
+        >.quantity {
+            padding-bottom: 20px;
+            font-size: 12px;
+        }
+        >.bottom {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            >.cost {
+                font-size: 24px;
+                font-weight: 600;
+                color: var(--color-parser-cost);
+                order: 1;
+                margin: auto 0;
+            }
+            >.form {
+                display: flex;
+                margin-left: auto;
+                order: 2;
+                >input {
+                    width: 60px;
+                    text-align: center;
+                }
+                >#delete-button {
+                    margin-right: 4px;
+                    border-radius: $radius-icon;
+                }
+                >div {
+                    width: 60px;
+                    text-align: center;
+                    border-top: 1px solid black;
+                    border-bottom: 1px solid black;
+                    display: grid;
+                    padding: 0 6px;
+                    >div {
+                        margin: auto 0;
+                    }
+                }
+            }
+        }
     }
 }
 
-.parser-item-quantity {
-    padding-bottom: 20px;
-    /*padding-right: 40px;*/
-    font-size: 12px;
-}
 /* точки перед городами */
 .w39-point {
     display: inline-block;
@@ -111,98 +138,64 @@
     background-color: #f4d03c;
 }
 
-
-.code-selected {
-    background: #999;
-    color: #fff;
-    font-weight: 600;
-    padding: 2px 8px;
-    letter-spacing: 1px;
-    border-radius: $radius-big;
-}
-.parser-list-item--bottom {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.parser-list-item--cost {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--color-parser-cost);
-    order: 1;
-    margin: auto 0;
-}
-.parser-list-item--form {
-    display: flex;
-    margin-left: auto;
-    order: 2;
-}
-
 @media (max-width: 991px) {
-    .parser-list-item--bottom {
+    .parser-item {
         flex-direction: column;
-    }
-    .parser-list-item--form {
-        width: 100%;
-    }
-}
-.parser-list-item--form > #delete-button {
-    margin-right: 4px;
-    border-radius: $radius-icon;
-}
-.parser-list-item--form > div {
-    width: 60px;
-    text-align: center;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    display: grid;
-    padding: 0 6px;
-}
-.parser-list-item--form > div >div {
-    margin: auto 0;
-}
-@media (max-width: 991px) {
-    .parser-item-img {
+        .data {
+            >.bottom {
+                flex-direction: column;
+                >.form {
+                    width: 100%;
+                }
+            }
+        }
 
     }
+
 }
+
 /*БЛОК ПОИСКА*/
 .parser-card-search {
-    //border: 1px solid black;
-    //border-radius: 10px;
     width: 100%;
     padding: 20px;
-}
-.parser-card-search--header {
-    padding: 10px 0;
-    >h3 {
-        display: inline-flex;
+    .header {
+        padding: 10px 0;
+        >h3 {
+            display: inline-flex;
+        }
     }
-}
-.parser-card-search--find {
+    .find {
+        .text {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .form {
+            position: relative;
+            display: flex;
+            input {
+                width: 100%;
+            }
+            button {
+                border-radius: 0 $radius-button $radius-button 0;
+            }
+        }
+    }
 
 }
-.parser-card-search--text {
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-.parser-card-search--form {
-    position: relative;
-    display: flex;
-    input {
-        width: 100%;
-    }
-}
 @media (max-width: 991px) {
-    .parser-card-search--find {
-        flex-direction: column;
+    .parser-card-search {
+        .find {
+            flex-direction: column;
+            .text {
+                width: 100%;
+            }
+            .form {
+                width: 100%;
+            }
+        }
+
     }
-    .parser-card-search--text {
-        width: 100%;
-    }
-    .parser-card-search--form {
-        width: 100%;
-    }
+
 }
 /*Блок с суммой и кнопкой заказа*/
 
@@ -339,10 +332,7 @@
 .parser-user-form > div {
     padding-bottom: 12px;
 }
-.parser-list-item--form input {
-    width: 60px;
-    text-align: center;
-}
+
 
 #search-parser-field {border-radius: 12px 0 0 12px;}
 

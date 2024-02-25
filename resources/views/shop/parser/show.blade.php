@@ -7,34 +7,33 @@
 
 @section('content')
     <h1>Заказ товаров с каталога IKEA.PL</h1>
-    <div class="d-flex parser" id="parser-container">
-        <div class="left-list-block" id="left-side">
-            <div id="parser-search">
-                <div class="parser-card-search box-card">
-                    <div class="parser-card-search--header">
-                        <p>Рассчитайте стоимость любого товара из каталога Икеа самостоятельно и Вы сразу узнаете стоимость заказа.</p>
-                        <p><b>Для точного расчёта данный инструмент использовать без VPN</b></p>
-                        <h3 id="parser-condition" class="_name_">Найти товар</h3>
+    <div class="screen-action parser">
+        <div class="left-list-block">
+            <div class="parser-card-search box-card">
+                <div class="header">
+                    <p>Рассчитайте стоимость любого товара из каталога Икеа самостоятельно и Вы сразу узнаете стоимость заказа.</p>
+                    <p><b>Для точного расчёта данный инструмент использовать без VPN</b></p>
+                    <h3>Найти товар</h3>
+                </div>
+                <div class="find">
+                    <div id="text" class="text">
+                        Скопируйте и вставьте в поле номер артикула товара или ссылку с сайта <a href="https://IKEA.PL" target="_blank">IKEA.PL</a>
                     </div>
-                    <div class="parser-card-search--find">
-                        <div id="parser-condition-text" class="parser-card-search--text">
-                            Скопируйте и вставьте в поле номер артикула товара или ссылку с сайта <a href="https://IKEA.PL" target="_blank">IKEA.PL</a>
-                        </div>
-                        <form id="parser-search-form" method="post" action="{{ route('shop.parser.search') }}">
-                            @csrf
-                        <div class="parser-card-search--form">
+                    <form id="parser-search-form" method="post" action="{{ route('shop.parser.search') }}">
+                        @csrf
+                        <div class="form">
                             <input id="search-parser-field" type="text" name="search" class="form-control" required/>
                             <button id="search-parser-button" class="btn btn-dark py-2 px-4" type="submit">ИСКАТЬ</button>
                         </div>
                     </form>
-                    </div>
                 </div>
             </div>
+
             <div id="parser-list">
                 @if(!empty($cart->items))
                 <div class="parsing-title-products">
                     <div class="fs-3">Товары в корзине:</div>
-                    <div class="parsing-title-products--button">
+                    <div class="button">
                         <a id="clear-button" class="btn btn-dark px-2"
                            onclick="event.preventDefault(); document.getElementById('form-clear-parser').submit();">Очистить корзину</a>
                         <form id="form-clear-parser" method="post" action="{{ route('shop.parser.clear') }}">
@@ -48,7 +47,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="right-action-block" id="right-side">
+        <div class="right-action-block">
             <div id="parser-amount" class="sticky-block">
                 <div class="">
                     <form id="to-order" method="POST" action="{{ route('shop.order.create-parser') }}">

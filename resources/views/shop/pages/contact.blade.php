@@ -12,7 +12,7 @@
     <div class="container-xl">
         <h1>{{ $page->name }}</h1>
         <div class="row mt-4">
-            <div class="col-lg-6 ps-4" style="display: grid">
+            <div class="col-lg-6 ps-md-4" style="display: grid">
                 <div class="about-block">
                     <div class="heading-border">
                         О КОМПАНИИ
@@ -31,7 +31,7 @@
                 </div>
 
             </div>
-            <div class="col-lg-6 pe-4">
+            <div class="col-lg-6 pe-md-4">
                 <a href="{{ route('shop.category.index') }}" >
                     <img src="/images/pages/about.jpg" style="width: 100%" alt="Каталог интернет магазина NORDI HOME">
                 </a>
