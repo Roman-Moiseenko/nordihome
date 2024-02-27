@@ -27,12 +27,15 @@ class ParserCart //Repository
         //$this->reload();
     }
 
-    public function load()
+    public function load(string $user_ui = '')
     {
         if (Auth::guard('user')->check()) {
             $this->user_id = Auth::guard('user')->user()->id;
         } else {
             $this->user_ui = Cookie::get('user_cookie_id');
+            if (empty($this->user_ui)) {
+                $this->user_ui = $user_ui;
+            }
         }
         $this->merge_id_ui();
         $this->reload();

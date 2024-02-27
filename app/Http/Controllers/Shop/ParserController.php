@@ -23,14 +23,17 @@ class ParserController extends Controller
         $this->cart = $cart;
     }
 
-    public function view()
+    public function view(Request $request)
     {
+        $user_ui = $request->attributes->get('user_ui');
+      /*  if (!Auth::guard('user')->check() && empty(Cookie::get('user_cookie_id')))
+            return redirect()->route('shop.parser.view');*/
+       // dd($user_ui);
         //Загружаем товары посетителя из Хранилища Storage_Parser
         $cart = $this->cart;
-        $cart->load();
+        $cart->load($user_ui);
         //TODO Заглушка - для нового посетителя, с точкой входа - Парсер
-        if (!Auth::guard('user')->check() && empty(Cookie::get('user_cookie_id')))
-            return redirect()->route('shop.parser.view');
+
         $title = 'Купить товары Икеа по артикулу в Калининграде и с доставкой по России';
         $description = 'Закажите товары Икеа из Польши через наш поисковый сервис. Цены ниже чем в интернет магазине';
         return view('shop.parser.show', compact('cart', 'title', 'description'));
@@ -39,13 +42,14 @@ class ParserController extends Controller
 
     public function search(Request $request)
     {
+        $user_ui = $request->attributes->get('user_ui');
         //Ищем товар, делаем расчеты и event()
         $request->validate([
             'search' => 'required|min:8'
         ]);
         try {
             $product = $this->service->findProduct($request);
-            $this->cart->load();
+            $this->cart->load($user_ui);
             $this->cart->add($product);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');

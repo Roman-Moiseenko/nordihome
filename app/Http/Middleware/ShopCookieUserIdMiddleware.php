@@ -16,6 +16,7 @@ class ShopCookieUserIdMiddleware
     {
         $user_ui = $request->cookie('user_cookie_id');
         if (empty($user_ui)) $user_ui = Str::uuid();
+        $request->attributes->set('user_ui', $user_ui);
         return $next($request)->withCookie(\cookie()->make('user_cookie_id', $user_ui, 60*24*365));
     }
 }
