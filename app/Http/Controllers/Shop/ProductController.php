@@ -55,6 +55,13 @@ class ProductController extends Controller
         return redirect()->back();
     }
 
+    public function old_slug($old_slug)
+    {
+        $product = Product::where('old_slug', $old_slug)->first();
+        if (empty($product)) abort(404);
+        return redirect()->route('shop.product.view', $product->slug);
+    }
+
     public function search(Request $request)
     {
         if (empty($request['search'])) return ;

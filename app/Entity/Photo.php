@@ -74,18 +74,19 @@ class Photo extends Model
 
     }
 
-    public static function upload(UploadedFile $file, string $type = '', int $sort = 0): self
+    public static function upload(UploadedFile $file, string $type = '', int $sort = 0, string $alt = ''): self
     {
         $photo = self::make([
             'file' => $file->getClientOriginalName(),
             'sort' => $sort,
             'type' => $type,
+            'alt' => $alt,
         ]);
         $photo->fileForUpload = $file;
         return $photo;
     }
 
-    public static function uploadByUrl(string $url, string $type = '', int $sort = 0): self
+    public static function uploadByUrl(string $url, string $type = '', int $sort = 0, string $alt = ''): self
     {
         $storage = public_path() . '/temp/';
         $upload_file_name = basename($url);
@@ -94,7 +95,7 @@ class Photo extends Model
             $storage . $upload_file_name,
             $upload_file_name,
             null, null, true);
-        return self::upload($upload, $type, $sort);
+        return self::upload($upload, $type, $sort, $alt);
     }
 
     // Set и Is

@@ -403,7 +403,7 @@ class ShopRepository
             'code' => '',
             'image' => !is_null($category->icon) ? $category->icon->getUploadUrl() : '',
             'price' => '',
-            'url' => route('shop.category.view', $category),
+            'url' => route('shop.category.view', $category->slug),
         ];
     }
 

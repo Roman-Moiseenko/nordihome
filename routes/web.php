@@ -28,6 +28,7 @@ Route::group(
     function () {
 
         //Route::post('/review', 'ReviewController@index')->name('review');
+        Route::get('/shop/{old_slug}', 'ProductController@old_slug');
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
         Route::post('/page/map', 'PageController@map_data')->name('page.map');

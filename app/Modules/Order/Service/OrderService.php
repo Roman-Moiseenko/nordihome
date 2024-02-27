@@ -371,7 +371,7 @@ class OrderService
         $product = Product::find($product_id);
 
         //TODO Commit DB сделать
-        if (is_null($product->lastPrice)) throw new \DomainException('Данный товар не подлежит продажи.');
+        if (empty($product->lastPrice)) throw new \DomainException('Данный товар не подлежит продажи.');
         $order = Order::register($user->id, Order::ONLINE, true);
         $order->setFinance($product->lastPrice->value, 0, 0, null);
 

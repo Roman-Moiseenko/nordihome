@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
  * @property int $id
  * @property string $name
  * @property string $slug
+ * @property string $old_slug
  * @property string $code
  * @property string $code_search
  * @property string $description

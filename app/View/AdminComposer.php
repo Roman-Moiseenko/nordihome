@@ -41,14 +41,15 @@ class AdminComposer
             }
             if ($layout == 'shop' || $layout == 'cabinet') {
                 //TODO Определение местоположения
-                $token = env('DADATA_TOKEN', false);
+                /*$token = env('DADATA_TOKEN', false);
                 if ($token) {
                     $dadata = new \Dadata\DadataClient($token, null);
                     $result = $dadata->iplocate(request()->ip());
                     $city = $result['data']['city'];
                 } else {
                     $city = 'Лунапарк';
-                }
+                }*/
+                $city = 'Калининград';
                 $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
                 $view->with('config', Config::get('shop-config.frontend'));
                 $view->with('categories', $this->categories->getTree());

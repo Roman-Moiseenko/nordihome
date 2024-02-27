@@ -121,19 +121,22 @@ class LoadCommand extends Command
         //Описание
         $product->description = $data['description'];
         $product->short = $data['short'];
+        $product->old_slug = $data['slug'];
         $product->save();
         //Цена
         $product->setPrice((float)$data['price']);
         //Изображения
         foreach ($data['images'] as $data_img) {
+            $url = $data_img['url'];
+            $alt = $data_img['alt'];
             //$upload_file_name = $this->copy_file($data_img);
             //$upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
             try {
                 $sort = count($product->photos);
-                $product->photo()->save(Photo::uploadByUrl($data_img, '', $sort));
+                $product->photo()->save(Photo::uploadByUrl($url, '', $sort, $alt));
                 $product->refresh();
             } catch (\Throwable $e) {
-                $this->error('Файл не загрузился ' . $data_img);
+                $this->error('Файл не загрузился ' . $url);
             }
 
 
