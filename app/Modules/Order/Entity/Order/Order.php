@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property int $user_id
- * @property int $type //ONLINE, MANUAL, SHOP
+ * @property int $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $preorder
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
@@ -42,7 +42,7 @@ class Order extends Model
     const ONLINE = 701;
     const MANUAL = 702;
     const SHOP = 703;
-    const PARSER = 704; //???
+    const PARSER = 704;
 
     const TYPES = [
         self::ONLINE => 'Интернет-магазин',
@@ -130,6 +130,7 @@ class Order extends Model
     }
     //Relations *************************************************************************************
 
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -180,7 +181,14 @@ class Order extends Model
         return OrderStatus::STATUSES[$this->status->value] . ' ' . $this->status->comment;
     }
 
+
+    public function isParser(): bool
+    {
+        return $this->type == self::PARSER && $this->preorder == true;
+    }
+
+
+
 //Функции для данных по доставке
 //TODO Сделать интерфейс
-
 }

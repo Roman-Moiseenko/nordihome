@@ -40,7 +40,7 @@ class AdminMenu
                     'parser' => [
                         'icon' => 'file-search',
                         'title' => 'Парсер',
-                        'route_name' => 'admin.sales.preorder.index',
+                        'route_name' => 'admin.sales.parser.index',
                     ],
                     'executed' => [
                         'icon' => 'file-check-2',

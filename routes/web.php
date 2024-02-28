@@ -328,6 +328,10 @@ Route::group(
                 Route::get('/preorder/{order}', 'PreOrderController@show')->name('preorder.show');
                 Route::get('/preorder/{order}/destroy', 'PreOrderController@destroy')->name('preorder.destroy');
 
+                Route::get('/parser', 'ParserController@index')->name('parser.index');
+                Route::get('/parser/{order}', 'ParserController@show')->name('parser.show');
+                Route::get('/parser/{order}/destroy', 'ParserController@destroy')->name('parser.destroy');
+
                 Route::get('/executed', 'ExecutedController@index')->name('executed.index');
                 Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
                 Route::get('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
