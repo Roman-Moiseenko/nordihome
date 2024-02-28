@@ -52,14 +52,16 @@ class AdminComposer
                 } else {
                     $city = 'Лунапарк';
                 }*/
+                $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
+                $view->with('user', $user);
+                $view->with('config', Config::get('shop-config.frontend'));
+                $city = 'Калининград';
+                $view->with('categories', $this->categories->getTree());
+                $view->with('city', $city);
+
             }
         }
-        $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
-        $view->with('user', $user);
-        $view->with('config', Config::get('shop-config.frontend'));
-        $city = 'Калининград';
-        $view->with('categories', $this->categories->getTree());
-        $view->with('city', $city);
+
 
     }
 
