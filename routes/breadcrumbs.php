@@ -36,12 +36,18 @@ Breadcrumbs::for('shop.category.index', function (BreadcrumbTrail $trail) { //Б
 
 Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) { //Без указания главной - home
     $category = (new ShopRepository())->CategoryBySlug($slug);
-    if ($category->parent) {
-        $trail->parent('shop.category.view', $category->parent_id);
-    } else {
+    if (is_null($category)) {
         $trail->parent('shop.category.index');
+        $trail->push('Категория не найдена');
+    } else {
+        if ($category->parent) {
+            $trail->parent('shop.category.view', $category->parent_id);
+        } else {
+            $trail->parent('shop.category.index');
+        }
+        $trail->push($category->name, route('shop.category.view', $category->slug));
     }
-    $trail->push($category->name, route('shop.category.view', $category->slug));
+
 });
 
 
@@ -54,10 +60,21 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) 
 Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, $slug) {
     $product = (new ShopRepository())->getProductBySlug($slug);
     //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
-    $trail->parent('shop.category.view', $product->main_category_id); //Крошка - Категория > Подкатегория >
-    $trail->push($product->name, route('shop.product.view', $product->slug)); // Крошка - Товар
+    if (is_null($product)) {
+        $trail->parent('shop.category.index');
+        $trail->push('Товар не найден'); // Крошка - Товар
+
+    } else {
+        $trail->parent('shop.category.view', $product->main_category_id); //Крошка - Категория > Подкатегория >
+        $trail->push($product->name, route('shop.product.view', $product->slug)); // Крошка - Товар
+        }
 });
 //****/
+Breadcrumbs::for('errors.404', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Страница не найдена');
+});
+
 
 Breadcrumbs::for('shop.cart.view', function (BreadcrumbTrail $trail) {
     $trail->parent('home');

@@ -24,6 +24,7 @@ class AdminComposer
 
     public function compose(View $view): void
     {
+
         if (!is_null(request()->route())) {
             $pageName = request()->route()->getName();
             if ($pageName == null) {
@@ -38,8 +39,10 @@ class AdminComposer
                 $view->with('firstLevelActiveIndex', $activeMenu['first_level_active_index']);
                 $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
-            }
-            if ($layout == 'shop' || $layout == 'cabinet') {
+            } else {
+                if ($layout == 'shop') {
+                    $view->with('schema', new Schema());
+                }
                 //TODO Определение местоположения
                 /*$token = env('DADATA_TOKEN', false);
                 if ($token) {
@@ -49,17 +52,15 @@ class AdminComposer
                 } else {
                     $city = 'Лунапарк';
                 }*/
-                $city = 'Калининград';
-                $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
-                $view->with('config', Config::get('shop-config.frontend'));
-                $view->with('categories', $this->categories->getTree());
-                $view->with('user', $user);
-                $view->with('city', $city);
-            }
-            if ($layout == 'shop') {
-                $view->with('schema', new Schema());
             }
         }
+        $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
+        $view->with('user', $user);
+        $view->with('config', Config::get('shop-config.frontend'));
+        $city = 'Калининград';
+        $view->with('categories', $this->categories->getTree());
+        $view->with('city', $city);
+
     }
 
     public function activeMenu($pageName, $layout): array
@@ -68,30 +69,30 @@ class AdminComposer
         $secondLevelActiveIndex = '';
         $thirdLevelActiveIndex = '';
         if ($layout == 'admin')
-        foreach (AdminMenu::menu() as $menuKey => $menu) {
-            if ($menu !== 'divider' && isset($menu['route_name']) && $this->checkRouteName($menu, $pageName) && empty($firstPageName)) {
-                $firstLevelActiveIndex = $menuKey;
-            }
+            foreach (AdminMenu::menu() as $menuKey => $menu) {
+                if ($menu !== 'divider' && isset($menu['route_name']) && $this->checkRouteName($menu, $pageName) && empty($firstPageName)) {
+                    $firstLevelActiveIndex = $menuKey;
+                }
 
-            if (isset($menu['sub_menu'])) {
-                foreach ($menu['sub_menu'] as $subMenuKey => $subMenu) {
-                    if (isset($subMenu['route_name']) && $this->checkRouteName($subMenu, $pageName) && $menuKey != 'menu-layout' && empty($secondPageName)) {
-                        $firstLevelActiveIndex = $menuKey;
-                        $secondLevelActiveIndex = $subMenuKey;
-                    }
+                if (isset($menu['sub_menu'])) {
+                    foreach ($menu['sub_menu'] as $subMenuKey => $subMenu) {
+                        if (isset($subMenu['route_name']) && $this->checkRouteName($subMenu, $pageName) && $menuKey != 'menu-layout' && empty($secondPageName)) {
+                            $firstLevelActiveIndex = $menuKey;
+                            $secondLevelActiveIndex = $subMenuKey;
+                        }
 
-                    if (isset($subMenu['sub_menu'])) {
-                        foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu) {
-                            if (isset($lastSubMenu['route_name']) && $this->checkRouteName($lastSubMenu, $pageName)) {
-                                $firstLevelActiveIndex = $menuKey;
-                                $secondLevelActiveIndex = $subMenuKey;
-                                $thirdLevelActiveIndex = $lastSubMenuKey;
+                        if (isset($subMenu['sub_menu'])) {
+                            foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu) {
+                                if (isset($lastSubMenu['route_name']) && $this->checkRouteName($lastSubMenu, $pageName)) {
+                                    $firstLevelActiveIndex = $menuKey;
+                                    $secondLevelActiveIndex = $subMenuKey;
+                                    $thirdLevelActiveIndex = $lastSubMenuKey;
+                                }
                             }
                         }
                     }
                 }
             }
-        }
         return [
             'first_level_active_index' => $firstLevelActiveIndex,
             'second_level_active_index' => $secondLevelActiveIndex,

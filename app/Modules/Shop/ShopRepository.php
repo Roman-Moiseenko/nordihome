@@ -28,10 +28,10 @@ class ShopRepository
         $this->options = new Options();
     }
 
-    public function getProductBySlug($slug): Product
+    public function getProductBySlug($slug):? Product
     {
         if (is_numeric($slug)) return Product::findOrFail($slug);
-        return Product::where('slug', '=', $slug)->firstOrFail();
+        return Product::where('slug', '=', $slug)->first();
     }
 
     public function maxPrice(array $product_ids)

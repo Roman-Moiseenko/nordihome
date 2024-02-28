@@ -9,6 +9,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Shop\ShopRepository;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -25,6 +26,9 @@ class ProductController extends Controller
     public function view($slug)
     {
         $product = $this->repository->getProductBySlug($slug);
+        if (empty($product)) {
+            abort(404);
+        }
 
         try {
             $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
