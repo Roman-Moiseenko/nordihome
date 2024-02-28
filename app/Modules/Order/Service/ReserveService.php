@@ -39,7 +39,7 @@ class ReserveService
         $user_id = Auth::guard('user')->user()->id;
 
         if (Reserve::where('user_id', $user_id)->where('product_id', $product->id)->first())
-            throw new \DomainException('Неверная функция добавления в резерв');
+            throw new \DomainException('Товар в резерве по неисполненному заказу. Добавить новый невозможно. Дождитесь исполнения');
 
         if ($product->count_for_sell == 0) return null;
 

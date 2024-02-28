@@ -24,7 +24,7 @@
                 <x-base.table.tbody>
                     @foreach($orders as $order)
 
-                        @include('admin.sales.preorder._list', ['order' => $order])
+                        @include('admin.sales.parser._list', ['order' => $order])
                     @endforeach
                 </x-base.table.tbody>
             </x-base.table>

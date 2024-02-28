@@ -463,6 +463,15 @@ Breadcrumbs::for('admin.sales.preorder.show', function (BreadcrumbTrail $trail, 
     $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.preorder.show', $order));
 });
 
+Breadcrumbs::for('admin.sales.parser.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales');
+    $trail->push('Через Парсер новые', route('admin.sales.parser.index'));
+});
+Breadcrumbs::for('admin.sales.parser.show', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('admin.sales.parser.index');
+    $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.parser.show', $order));
+});
+
 Breadcrumbs::for('admin.sales.executed.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.sales');
     $trail->push('Заказы завершенные', route('admin.sales.executed.index'));

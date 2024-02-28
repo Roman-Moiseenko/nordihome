@@ -46,6 +46,8 @@
     @include('shop.pop-up.login')
 @endguest
 @include('shop.pop-up.buy-click')
+@include('shop.pop-up.notification')
+
 <!--FOOTER-->
 @include('shop.footer')
 <button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>

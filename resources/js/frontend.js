@@ -292,8 +292,7 @@ window.$ = jQuery;
                 options: _options,
                 tz: -(new Date().getTimezoneOffset()),
             }, function (data) {//Получаем кол-во товаров в корзине
-                _error(data);
-                widget_cart(data);//Меняем кол-во и сумму товаров в виджете корзины в хеадере
+                if (!_error(data)) widget_cart(data);//Меняем кол-во и сумму товаров в виджете корзины в хеадере
             }
         );
     });
@@ -1004,7 +1003,21 @@ window.$ = jQuery;
 
     //Отображение ошибок
     function _error(data) {
-        if (data.error !== undefined) console.log(data.error);
+
+        if (data.error !== undefined) {
+            let notification = $('#notification');
+            notification.find('.toast-body').html(data.error[0]);
+            notification.remove('hide');
+            notification.addClass('show');
+            notification.find('button[data-bs-dismiss=toast]').on('click', function () {
+                notification.addClass('hide');
+                notification.remove('show');
+            });
+            console.log(data.error);
+            //TODO Всплывающее окно с сообщением data.error[1]
+            return true;
+        }
+        return false;
     }
     //Карусели
     /*
