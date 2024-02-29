@@ -68,8 +68,8 @@
                          style="color: var(--bs-gray-900);"> {{ price($item->base_cost * $item->quantity) }}</div>
                 @else
                     <div class="fs-7"> {{ price($item->base_cost) }} /шт.</div>
-                    <div class="fs-7"> {{ price($item->discount_type) }}</div>
-                    <div class="fs-6"> {{ $item->quantity }} шт х {{ price($item->sell_cost) }}</div>
+                    <div class="fs-7 red"> {{ $item->discountName() }}</div>
+                    <div class="fs-6"> {{ $item->quantity }} шт х <span class="red">{{ price($item->sell_cost) }}</span></div>
                 @endif
             </div>
         </div>

@@ -124,6 +124,17 @@ class Order extends Model
         if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
     }
 
+    //GET-еры
+
+    public function getQuantity(): int
+    {
+        $quantity = 0;
+        foreach ($this->items as $item) {
+            $quantity += $item->quantity;
+        }
+        return $quantity;
+    }
+
     public function getType(): string
     {
         return self::TYPES[$this->type];

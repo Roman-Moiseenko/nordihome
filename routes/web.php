@@ -321,21 +321,23 @@ Route::group(
                 Route::get('/reserve', 'ReserveController@index')->name('reserve.index');
                 Route::get('/wish', 'WishController@index')->name('wish.index');
 
-                Route::get('/order', 'OrderController@index')->name('order.index');
-                Route::get('/order/{order}', 'OrderController@show')->name('order.show');
+                Route::get('/order', 'NewOrderController@index')->name('order.index');
+                Route::get('/order/{order}', 'NewOrderController@show')->name('order.show');
+
 
                 Route::get('/preorder', 'PreOrderController@index')->name('preorder.index');
                 Route::get('/preorder/{order}', 'PreOrderController@show')->name('preorder.show');
-                Route::get('/preorder/{order}/destroy', 'PreOrderController@destroy')->name('preorder.destroy');
+                //Route::get('/preorder/{order}/destroy', 'PreOrderController@destroy')->name('preorder.destroy');
 
                 Route::get('/parser', 'ParserController@index')->name('parser.index');
                 Route::get('/parser/{order}', 'ParserController@show')->name('parser.show');
-                Route::get('/parser/{order}/destroy', 'ParserController@destroy')->name('parser.destroy');
+                //Route::get('/parser/{order}/destroy', 'ParserController@destroy')->name('parser.destroy');
 
                 Route::get('/executed', 'ExecutedController@index')->name('executed.index');
                 Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
-                Route::get('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
 
+                Route::delete('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
+                Route::delete('/order/{item}/del-item', 'OrderController@del_item')->name('order.del-item');
             }
         );
         //Pages

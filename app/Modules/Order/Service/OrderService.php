@@ -199,7 +199,7 @@ class OrderService
 
         $order->setFinance(
             $cart_order->amount,
-            ($cart_order->amount - $cart_order->discount),
+            $cart_order->discount,
             $discount_coupon,
             (empty($coupon) || $discount_coupon == 0) ? null : $coupon->id);
 
@@ -238,8 +238,10 @@ class OrderService
 
         event(new OrderHasCreated($order));
         //Предзаказ
-        if ($request['preorder'] == 1) {//В заказе установлена метка для предзаказа.
-            $PreOrderItems = $this->cart->getPreOrderItems();
+        if (
+            $request['preorder'] == 1 && //В заказе установлена метка для предзаказа.
+            !empty($PreOrderItems = $this->cart->getPreOrderItems())) {//и кол-во товаров не пусто
+            //$PreOrderItems = $this->cart->getPreOrderItems();
             $cart_preorder = $this->cart->info->pre_order;
 
             $preorder = Order::register($default->payment->user_id, Order::ONLINE, true);

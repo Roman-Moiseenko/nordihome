@@ -22,20 +22,20 @@
                 <div class="font-medium text-center lg:text-left lg:mt-3">Contact Details</div>
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
-                        <i data-lucide="user" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
-                        {{ $staff->name }} </div>
+                        <x-base.lucide icon="user" class="w-4 h-4"/>&nbsp;{{ $staff->name }}
+                    </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                        <i data-lucide="mail" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
-                        {{ $staff->email }} </div>
+                        <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;{{ $staff->email }}
+                    </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                        <i data-lucide="phone" width="24" height="24" class="lucide lucide-phone w-4 h-4 mr-2"></i>
-                        {{ $staff->phone }} </div>
+                        <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ $staff->phone }}
+                    </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                        <i data-lucide="send" width="24" height="24" class="lucide lucide-phone w-4 h-4 mr-2"></i>
-                        {{ $staff->telegram_user_id }} </div>
+                        <x-base.lucide icon="send" class="w-4 h-4"/>&nbsp;{{ $staff->telegram_user_id }}
+                    </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                        <i data-lucide="key-round" width="24" height="24" class="lucide lucide-phone w-4 h-4 mr-2"></i>
-                        {{ \App\Entity\Admin::ROLES[$staff->role] }} </div>
+                        <x-base.lucide icon="key-round" class="w-4 h-4"/>&nbsp;{{ \App\Entity\Admin::ROLES[$staff->role] }}
+                    </div>
                 </div>
             </div>
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">

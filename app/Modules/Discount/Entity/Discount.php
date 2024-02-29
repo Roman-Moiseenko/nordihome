@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Discount extends Model
 {
+    const TYPE = 'Скидка';
+
     protected $table ='discounts';
     protected $fillable = [
         'discount',

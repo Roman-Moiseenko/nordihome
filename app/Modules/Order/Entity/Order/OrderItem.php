@@ -73,4 +73,11 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Discount::class, 'discount_id', 'id');
     }
+
+    public function discountName()
+    {
+        if (empty($this->discount_id)) return '';
+        $discount = $this->discount_type::find($this->discount_id);
+        return $this->discount_type::TYPE . ' ' . $discount->title;
+    }
 }

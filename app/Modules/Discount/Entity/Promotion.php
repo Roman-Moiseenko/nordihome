@@ -41,8 +41,11 @@ class Promotion extends Model implements DataWidgetInterface
     const STATUS_STARTED = 103;
     const STATUS_FINISHED = 104;
 
+    const TYPE = 'Акция';
+
     //Позволяем себя слушать
     private array $observers = [];
+
 
     public function attach(Observer $observer)
     {

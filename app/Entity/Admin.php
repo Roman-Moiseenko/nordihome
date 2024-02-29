@@ -37,6 +37,7 @@ class Admin extends Authenticatable implements UploadsDirectory
     public const ROLE_LOGISTICS = 'logistics';
     public const ROLE_COMMODITY = 'commodity';
     public const ROLE_FINANCE = 'finance';
+    public const ROLE_MANAGER = 'manager';
     public const ROLE_ADMIN = 'admin';
     public const ROLE_SUPERADMIN = 'super_admin';
     public const ROLES = [
@@ -45,6 +46,7 @@ class Admin extends Authenticatable implements UploadsDirectory
         self::ROLE_CASHIER => 'Кассир',
         self::ROLE_COMMODITY => 'Товаровед',
         self::ROLE_FINANCE => 'Финансист',
+        self::ROLE_MANAGER => 'Менеджер по продажам',
         self::ROLE_LOGISTICS => 'Логист',
     ];
     public const ROLE_COLORS = [
@@ -53,6 +55,7 @@ class Admin extends Authenticatable implements UploadsDirectory
         self::ROLE_CASHIER => 'bg-warning',
         self::ROLE_COMMODITY => 'bg-indigo-900',
         self::ROLE_FINANCE => 'bg-pending',
+        self::ROLE_MANAGER => 'bg-primary',
         self::ROLE_LOGISTICS => 'bg-primary',
     ];
 
