@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Entity;
 
+use App\Entity\Admin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $close_at
  * @property int $status
+ * @property Admin $staff
  */
 //TODO Добавить поля для учета
 class Responsible extends Model
@@ -32,9 +34,15 @@ class Responsible extends Model
         'close_at' => 'datetime',
     ];
 
-
     public function taskable()
     {
         return $this->morphTo();
+    }
+
+    public function register(int $staff_id): self
+    {
+        return self::create([
+
+        ]);
     }
 }

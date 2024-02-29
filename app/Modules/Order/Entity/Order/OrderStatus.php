@@ -19,7 +19,7 @@ class OrderStatus extends Model
 {
     ///Стартовые статусы
     const FORMED = 200; //Резерв 1ч
-    const PREORDER_SERVICE = 201; //Ожидает подтверждения менеджера предзаказа
+    const SET_MANAGER = 201; //В работе у менеджера
     const AWAITING = 202; //Ожидает оплаты - резерв 3 дня ??????
     const PAID = 203;  //Оплачен
 
@@ -50,7 +50,7 @@ class OrderStatus extends Model
 
     const STATUSES = [
         self::FORMED => 'Сформирован',
-        self::PREORDER_SERVICE => 'Ожидает менеджера',
+        self::SET_MANAGER => 'В работе у менеджера',
         self::AWAITING => 'Ожидает оплаты',
         self::PAID => 'Оплачен',
         self::ISSUED_SELLER => 'Оформлен у поставщика',

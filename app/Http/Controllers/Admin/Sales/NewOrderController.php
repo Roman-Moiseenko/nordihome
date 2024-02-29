@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Sales;
 
+use App\Entity\Admin;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\Order;
@@ -27,6 +28,7 @@ class NewOrderController extends Controller
     {
         try {
             $query = Order::where('finished', false)->where('preorder', false)->orderByDesc('created_at');
+
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
                 $orders = $query->paginate($pagination);
@@ -45,7 +47,8 @@ class NewOrderController extends Controller
     public function show(Request $request, Order $order)
     {
         try {
-            return view('admin.sales.order.show', compact('order'));
+            $staffs = Admin::where('role', Admin::ROLE_MANAGER)->get();
+            return view('admin.sales.order.show', compact('order', 'staffs'));
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
             flash('Техническая ошибка! Информация направлена разработчику', 'danger');

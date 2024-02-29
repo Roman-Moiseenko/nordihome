@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Modules\Admin\Entity\Responsible;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Entity\Payment\Payment;
@@ -33,7 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property OrderItem[] $items
  * @property User $user
  * @property DeliveryOrder $delivery
-
+ * @property OrderResponsible[] $responsible
  */
 
 class Order extends Model
@@ -112,6 +113,7 @@ class Order extends Model
         return false;
     }
 
+
     public function setStatus(int $value, string $comment = '')
     {
         if ($this->finished)  throw new \DomainException('Заказ закрыт, статус менять нельзя');
@@ -139,8 +141,22 @@ class Order extends Model
     {
         return self::TYPES[$this->type];
     }
+
+    public function getManager()
+    {
+        $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->latestOfMany();
+    }
+    public function getLogger()
+    {
+        $this->responsible()->where('staff_post', OrderResponsible::POST_LOGGER)->latestOfMany();
+    }
+
     //Relations *************************************************************************************
 
+    public function responsible()
+    {
+        return $this->hasMany(OrderResponsible::class, 'order_id', 'id');
+    }
 
     public function user()
     {
@@ -198,7 +214,42 @@ class Order extends Model
         return $this->type == self::PARSER && $this->preorder == true;
     }
 
+    //Проверка текущего статуса
 
+    public function isNew(): bool
+    {
+        return $this->status->value == OrderStatus::FORMED;
+    }
+
+    public function isManager(): bool
+    {
+        return $this->status->value == OrderStatus::SET_MANAGER;
+    }
+
+    public function isAwaiting(): bool
+    {
+        return $this->status->value == OrderStatus::AWAITING;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->status->value >= OrderStatus::PAID && $this->status->value < OrderStatus::ORDER_SERVICE;
+    }
+
+    public function isToDelivery(): bool
+    {
+        return $this->status->value >= OrderStatus::ORDER_SERVICE && $this->status->value < OrderStatus::ORDER_SERVICE;
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status->value == OrderStatus::COMPLETED;
+    }
+
+    public function isCanceled(): bool
+    {
+        return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
+    }
 
 //Функции для данных по доставке
 //TODO Сделать интерфейс

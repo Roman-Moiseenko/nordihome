@@ -338,6 +338,7 @@ Route::group(
 
                 Route::delete('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
                 Route::delete('/order/{item}/del-item', 'OrderController@del_item')->name('order.del-item');
+                Route::post('/order/{order}/set-manager', 'OrderController@set_manager')->name('order.set-manager');
             }
         );
         //Pages

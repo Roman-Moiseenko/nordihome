@@ -34,10 +34,12 @@
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Контакты клиенты</div>
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="user" class="w-4 h-4"/>&nbsp;{{ $order->user->delivery->fullname->getFullName() }}
+                        <x-base.lucide icon="user"
+                                       class="w-4 h-4"/>&nbsp;{{ $order->user->delivery->fullname->getFullName() }}
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;<a href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
+                        <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;<a
+                            href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ $order->user->phone }}
@@ -47,16 +49,61 @@
             <div
                 class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Действия</div>
-                <div class="flex flex-col items-center justify-center lg:justify-start mt-2">
-                    ****
-                    от текущего статуса разные действия
-                    <button class="btn btn-primary">Назначить ответственного</button>
-                    <button class="btn btn-primary">Установить резерв</button>
-                    <button class="btn btn-primary">На оплату</button>
-                    <button class="btn btn-primary">На сборку</button>
-                    <button class="btn btn-primary">Изменить кол-во товара</button>
-                    <button class="btn btn-primary">Изменить текущий статус</button>
-                    <button class="btn btn-light">Отменить</button>
+                <div class="flex flex-col lg:justify-start mt-2">
+                    @if($order->isNew())
+
+                        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
+                            <x-base.popover.button as="x-base.button" variant="primary" class="w-100">Назначить ответственного<x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/></x-base.popover.button>
+                            <x-base.popover.panel>
+                                <form action="{{ route('admin.sales.order.set-manager', $order) }}" METHOD="POST">
+                                    @csrf
+                                    <div class="p-2">
+                                        <x-base.tom-select id="select-staff" name="staff_id" class="" data-placeholder="Выберите Менеджера">
+                                            <option value="0"></option>
+                                            @foreach($staffs as $staff)
+                                                <option value="{{ $staff->id }}"
+                                                >{{ $staff->fullname->getShortName() }}</option>
+                                            @endforeach
+                                        </x-base.tom-select>
+
+                                        <div class="flex items-center mt-3">
+                                            <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                                Отмена
+                                            </x-base.button>
+                                            <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                                Сохранить
+                                            </x-base.button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </x-base.popover.panel>
+                        </x-base.popover>
+
+                        <button class="btn btn-secondary mt-2">Удалить</button>
+                    @endif
+                    @if($order->isManager())
+                        <button class="btn btn-warning">Установить резерв</button>
+                        <button class="btn btn-danger mt-2">Изменить кол-во товара</button>
+                        <button class="btn btn-success mt-2">На оплату</button>
+                        <button class="btn btn-secondary mt-2">Отменить</button>
+                    @endif
+                    @if($order->isAwaiting())
+                        <button class="btn btn-warning">Установить резерв</button>
+                        <button class="btn btn-secondary mt-2">Отменить</button>
+                    @endif
+                    @if($order->isPaid())
+                        <button class="btn btn-primary">Изменить текущий статус</button>
+                        <button class="btn btn-success mt-2">На сборку</button>
+                    @endif
+                    @if($order->isToDelivery())
+                        <span>В службе сборки</span>
+                    @endif
+                    @if($order->isCanceled())
+                        <span>Заказ отменен</span>
+                    @endif
+                    @if($order->isCompleted())
+                        <span>Завершен</span>
+                    @endif
                 </div>
             </div>
         </div>

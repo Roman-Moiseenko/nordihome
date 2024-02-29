@@ -234,9 +234,8 @@ class OrderService
             ]);
         }
         $this->cart->clearOrder(true);
-        $order->setStatus(OrderStatus::PREORDER_SERVICE);
-
         event(new OrderHasCreated($order));
+
         //Предзаказ
         if (
             $request['preorder'] == 1 && //В заказе установлена метка для предзаказа.
@@ -257,7 +256,6 @@ class OrderService
                 ]);
             }
             $this->cart->clearPreOrder();
-            $preorder->setStatus(OrderStatus::PREORDER_SERVICE);
             //Оповещения, создание доставки и др.
             event(new OrderHasCreated($preorder));
         }
@@ -299,7 +297,6 @@ class OrderService
             ]);
         }
         $this->parserCart->clear();
-        $order->setStatus(OrderStatus::PREORDER_SERVICE);
 
         event(new OrderHasCreated($order));
         return $order;
@@ -394,7 +391,7 @@ class OrderService
             'options' => [],
             'reserve_id' => $reserve->id,
         ]);
-        $order->setStatus(OrderStatus::PREORDER_SERVICE);
+
         event(new OrderHasCreated($order));
         Auth::logout();
         return $order;
