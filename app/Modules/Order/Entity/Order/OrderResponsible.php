@@ -4,6 +4,7 @@
 namespace App\Modules\Order\Entity\Order;
 
 
+use App\Entity\Admin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $close_at
  * @property int $staff_post
+ * @property Admin $staff
  *
  */
 class OrderResponsible extends Model
@@ -48,4 +50,8 @@ class OrderResponsible extends Model
         ]);
     }
 
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
 }

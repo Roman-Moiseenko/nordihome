@@ -28,13 +28,14 @@ class CartItem implements CartItemInterface
         $this->pre_order = (new Options())->shop->pre_order;
     }
 
-    public static function create(Product $product, int $quantity, array $options): self
+    public static function create(Product $product, int $quantity, array $options, bool $check_quantity = true): self
     {
         $item = new static();
 
-        if (!$item->pre_order && $product->count_for_sell < $quantity) {
+        if (!$item->pre_order && $product->count_for_sell < $quantity && $check_quantity == true) {
             throw new \DomainException('Превышение остатка');
         }
+
         $item->product = $product;
         $item->quantity = $quantity;
         $item->options = $options;
@@ -42,6 +43,8 @@ class CartItem implements CartItemInterface
         $item->check = true;
         return $item;
     }
+
+
 
     public static function load(int $id, Product $product, $quantity, $options, bool $check, $reserve = null): self
     {

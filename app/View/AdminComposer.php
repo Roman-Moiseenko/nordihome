@@ -34,11 +34,14 @@ class AdminComposer
             }
             $activeMenu = $this->activeMenu($pageName, $layout);
             if ($layout == 'admin') {
+                $admin = Auth::guard('admin')->user();
+
                 $view->with('sideMenu', AdminMenu::menu());
                 $view->with('profileMenu', AdminProfileMenu::menu());
                 $view->with('firstLevelActiveIndex', $activeMenu['first_level_active_index']);
                 $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
+                $view->with('admin', $admin);
             } else {
                 if ($layout == 'shop') {
                     $view->with('schema', new Schema());

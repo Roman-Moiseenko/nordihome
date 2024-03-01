@@ -10,7 +10,9 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderResponsible;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Service\SalesService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Общие операции с моделью Order. Все запросы POST или DELETE
@@ -20,22 +22,49 @@ use Illuminate\Http\Request;
  */
 class OrderController extends Controller
 {
-    //TODO
-    public function destroy(Order $order) {
 
+    private SalesService $service;
 
+    public function __construct(SalesService $service)
+    {
+        $this->service = $service;
     }
 
-    public function del_item(OrderItem $item)
+    //TODO
+    public function destroy(Order $order)
     {
 
+
     }
 
-    public function set_manager(Request $request, Order $order) {
-        //TODO Перенести в сервис
-        $staff = Admin::find((int)$request['staff_id']);
-        $order->setStatus(OrderStatus::SET_MANAGER);
-        $order->responsible()->save(OrderResponsible::registerManager($staff->id));
+
+    public function set_manager(Request $request, Order $order)
+    {
+        $this->service->setManager($order, (int)$request['staff_id']);
         return redirect()->back();
+    }
+
+    public function set_reserve(Request $request, Order $order)
+    {
+        $this->service->setReserve($order, $request['reserve-date'], $request['reserve-time']);
+        //TODO  Оповещение клиента, об увеличении времени резерва event(new OrderHasReserved($order)); ????
+        return redirect()->back();
+    }
+
+    //AJAX
+    public function set_quantity(Request $request, Order $order)
+    {
+        $items = json_decode($request['items'], true);
+
+        DB::beginTransaction();
+        try {
+            $this->service->setQuantity($order, $items);
+            DB::commit();
+            return response()->json(true);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json($e->getMessage());
+        }
+        //TODO  Оповещение клиента после отправки счета, об изменении кол-ва товаров event(new OrderQuantityHasChanged($order));
     }
 }

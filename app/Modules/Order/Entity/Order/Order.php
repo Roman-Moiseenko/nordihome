@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Entity\Admin;
 use App\Modules\Admin\Entity\Responsible;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Discount\Entity\Coupon;
@@ -39,7 +40,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-
     const ONLINE = 701;
     const MANUAL = 702;
     const SHOP = 703;
@@ -142,13 +142,25 @@ class Order extends Model
         return self::TYPES[$this->type];
     }
 
-    public function getManager()
+    public function getReserveTo(): Carbon
     {
-        $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->latestOfMany();
+        /** @var OrderItem $item */
+        $item = $this->items()->first();
+        return $item->reserve->reserve_at;
     }
-    public function getLogger()
+
+    public function getManager():? Admin
     {
-        $this->responsible()->where('staff_post', OrderResponsible::POST_LOGGER)->latestOfMany();
+        /** @var OrderResponsible $responsible */
+        $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->orderByDesc('created_at')->first();
+        return is_null($responsible) ? null : $responsible->staff;
+    }
+
+    public function getLogger():? Admin
+    {
+        /** @var OrderResponsible $responsible */
+        $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_LOGGER)->orderByDesc('created_at')->first();
+        return is_null($responsible) ? null : $responsible->staff;
     }
 
     //Relations *************************************************************************************

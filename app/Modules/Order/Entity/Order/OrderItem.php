@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $order_id
  * @property int $product_id
  * @property int $quantity
+ * @property int $first_quantity
  * @property int $base_cost
  * @property int $sell_cost
  * @property int $discount_id
@@ -48,6 +49,13 @@ class OrderItem extends Model
         'base_cost' => 'float',
         'sell_cost' => 'float',
     ];
+
+    public function changeQuantity(int $new_quantity)
+    {
+        if (is_null($this->first_quantity)) $this->first_quantity = $this->quantity;
+        $this->quantity = $new_quantity;
+        $this->save();
+    }
 
     public function clearReserve()
     {

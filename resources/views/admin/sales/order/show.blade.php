@@ -24,9 +24,24 @@
                     <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="package" class="w-4 h-4"/>&nbsp;{{ count($order->items) }} товаров
                     </div>
-                    <div class="truncate sm:whitespace-normal flex items-center">
+                    <div class="truncate sm:whitespace-normal flex items-center" >
                         <x-base.lucide icon="boxes" class="w-4 h-4"/>&nbsp;{{ $order->getQuantity() }} шт.
                     </div>
+                    <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;">
+                        <x-base.lucide icon="baggage-claim" class="w-4 h-4"/>&nbsp;{{ $order->getReserveTo() }}
+                    </div>
+                    @if(!empty($order->getManager()))
+                        <div class="truncate sm:whitespace-normal flex items-center">
+                            <x-base.lucide icon="contact"
+                                           class="w-4 h-4"/>&nbsp;{{ $order->getManager()->fullname->getFullName() }} - менеджер
+                        </div>
+                    @endif
+                    @if(!empty($order->getLogger()))
+                        <div class="truncate sm:whitespace-normal flex items-center">
+                            <x-base.lucide icon="contact"
+                                           class="w-4 h-4"/>&nbsp;{{ $order->getLogger()->fullname->getFullName() }} - логист
+                        </div>
+                    @endif
                 </div>
             </div>
             <div
@@ -51,14 +66,17 @@
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Действия</div>
                 <div class="flex flex-col lg:justify-start mt-2">
                     @if($order->isNew())
-
                         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-                            <x-base.popover.button as="x-base.button" variant="primary" class="w-100">Назначить ответственного<x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/></x-base.popover.button>
+                            <x-base.popover.button as="x-base.button" variant="primary" class="w-100">Назначить
+                                ответственного
+                                <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                            </x-base.popover.button>
                             <x-base.popover.panel>
                                 <form action="{{ route('admin.sales.order.set-manager', $order) }}" METHOD="POST">
                                     @csrf
                                     <div class="p-2">
-                                        <x-base.tom-select id="select-staff" name="staff_id" class="" data-placeholder="Выберите Менеджера">
+                                        <x-base.tom-select id="select-staff" name="staff_id" class=""
+                                                           data-placeholder="Выберите Менеджера">
                                             <option value="0"></option>
                                             @foreach($staffs as $staff)
                                                 <option value="{{ $staff->id }}"
@@ -67,7 +85,8 @@
                                         </x-base.tom-select>
 
                                         <div class="flex items-center mt-3">
-                                            <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                            <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                                           data-tw-dismiss="dropdown" variant="secondary" type="button">
                                                 Отмена
                                             </x-base.button>
                                             <x-base.button class="w-32 ml-2" variant="primary" type="submit">
@@ -78,20 +97,48 @@
                                 </form>
                             </x-base.popover.panel>
                         </x-base.popover>
-
                         <button class="btn btn-secondary mt-2">Удалить</button>
                     @endif
-                    @if($order->isManager())
-                        <button class="btn btn-warning">Установить резерв</button>
-                        <button class="btn btn-danger mt-2">Изменить кол-во товара</button>
+                    @php
+                    //TODO Открыть блокировку по id персонала
+                    @endphp
+                    @if($order->isManager()/* && $order->getManager()->id == $admin->id*/)
+                        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
+                                <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Установить резерв
+                                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                                </x-base.popover.button>
+                                <x-base.popover.panel>
+                                    <form action="{{ route('admin.sales.order.set-reserve', $order) }}" METHOD="POST">
+                                        @csrf
+                                        <div class="p-2">
+                                            <x-base.form-input id="reserve-date" name="reserve-date" class="flex-1 mt-2" type="date" value="{{ $order->getReserveTo()->format('Y-m-d') }}"
+                                                               placeholder="Резерв"/>
+                                            <x-base.form-input name="reserve-time" class="flex-1 mt-2" type="time" value="{{ $order->getReserveTo()->format('H:i') }}"
+                                                               placeholder=""/>
+                                            <div class="flex items-center mt-3">
+                                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                                    Отмена
+                                                </x-base.button>
+                                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                                    Сохранить
+                                                </x-base.button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </x-base.popover.panel>
+                            </x-base.popover>
+
+                        <button id="change-count-item" class="btn btn-danger mt-2"
+                                data-route="{{ route('admin.sales.order.set-quantity', $order) }}">Изменить кол-во товара</button>
                         <button class="btn btn-success mt-2">На оплату</button>
                         <button class="btn btn-secondary mt-2">Отменить</button>
                     @endif
-                    @if($order->isAwaiting())
+                    @if($order->isAwaiting()/* && $order->getManager()->id == $admin->id*/)
                         <button class="btn btn-warning">Установить резерв</button>
                         <button class="btn btn-secondary mt-2">Отменить</button>
                     @endif
-                    @if($order->isPaid())
+                    @if($order->isPaid()/* && $order->getManager()->id == $admin->id*/)
                         <button class="btn btn-primary">Изменить текущий статус</button>
                         <button class="btn btn-success mt-2">На сборку</button>
                     @endif
@@ -135,11 +182,10 @@
         <br>
         Действия: <br>
         Назначить менеджера - Только админ, или автоматически, кто работает, по алгоритму <br>
-        //до назначения, можно только отменить.<br>
         //после назначения заказ доступен в окне менеджера ... подумать по Админке работе с Заказами<br>
 
         Подвердить - смена статуса, отправка платежных документов клиенту, установка резерва (сколько).<br>
-        Установить вручную время резерва<br>
+
         Отменить - <br>
         Если оплачен<br>
         Сформировать заявку на сборку (? автоматически)<br>
@@ -147,13 +193,56 @@
         Delivery<br>
 
         <br>
-        Таблица изменений заказа: order_id, старая сумма, новая сумма, кто менял (сотрудник)<br>
-        Таблица изменений позиций: order_item_id, старое кол-во, новое кол-во, отменен? product_id, цена
-        продажи.....<br>
+
         В письме клиенту, отдельная таблица с отмененными товарами и кол-вом<br>
         <br>
         Список товаров в заказе (Название, ссылка, артикул, цена/скидка, кол-во ... действия (Уменьшить кол-во, отменить
         - причина (нет в наличии))
 
     </div>
+    <script>
+        let changeButton = document.getElementById('change-count-item');
+        let inputItem = document.querySelectorAll('input[name=new-quantity]');
+        changeButton.addEventListener('click', function () {
+            if (changeButton.getAttribute('for-change') !== '1') {
+                changeButton.setAttribute('for-change', '1');
+                changeButton.textContent = 'Сохранить изменения';
+                inputItem.forEach(function (element) {
+                    element.setAttribute('type', 'number');
+                });
+
+            } else {
+                changeButton.setAttribute('for-change', '0');
+                changeButton.textContent = 'Изменить кол-во товара';
+                //сохраняем через Ajax и перегружаем страницу
+                let data = [];
+                let route = changeButton.getAttribute('data-route');
+                inputItem.forEach(function (element) {
+                    data.push({
+                        id: element.getAttribute('data-id'),
+                        quantity: element.value
+                    })
+                    element.setAttribute('type', 'hidden');
+                });
+                setAjax(data, route)
+            }
+        });
+
+        function setAjax(data, route) {
+            //AJAX
+            let _params = '_token=' + '{{ csrf_token() }}' + '&items=' + JSON.stringify(data);
+            let request = new XMLHttpRequest();
+            request.open('POST', route);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.send(_params);
+            request.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    if (request.responseText === true) window.location.reload();
+                    console.log(request.responseText);
+                } else {
+                    //console.log(request.responseText);
+                }
+            };
+        }
+    </script>
 @endsection
