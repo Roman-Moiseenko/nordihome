@@ -34,13 +34,14 @@ class SalesService
 
     public function setQuantity(Order $order, array $items)
     {
-
+        $result = false;
         foreach ($items as $item) {
             $new_quantity = (int)$item['quantity'];
             /** @var OrderItem $orderItem */
             $orderItem = OrderItem::find((int)$item['id']);
             //Если кол-во изменилось
             if ($orderItem->quantity != $new_quantity) {
+                $result = true; //Хотя бы одно изменение кол-ва
                 //Снимаем с резерва
                 $reserve = $orderItem->reserve->quantity;
                 $sub_reserve = $reserve - $new_quantity;
@@ -54,6 +55,7 @@ class SalesService
                 $orderItem->changeQuantity($new_quantity);
             }
         }
+        if (!$result) return false;
         $order->refresh();
         $cartItems = [];
         foreach ($order->items as $item) {
@@ -66,6 +68,18 @@ class SalesService
             //Заменить скидку в товарах
             //Посчитать общую сумму и общую скидку
         }
+        return true;
         //Внести данные в Order
+    }
+
+    public function toOrder(Order $order)
+    {
+        //TODO Поменять статус
+        $order->setStatus(OrderStatus::AWAITING);
+        //Сформировать заявку на оплату
+
+        // Отправить письмо клиенту
+
+
     }
 }

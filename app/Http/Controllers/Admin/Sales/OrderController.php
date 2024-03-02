@@ -37,7 +37,6 @@ class OrderController extends Controller
 
     }
 
-
     public function set_manager(Request $request, Order $order)
     {
         $this->service->setManager($order, (int)$request['staff_id']);
@@ -51,6 +50,12 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
+    public function to_pay(Order $order)
+    {
+        $this->service->toOrder($order);
+        return redirect()->back();
+    }
+
     //AJAX
     public function set_quantity(Request $request, Order $order)
     {
@@ -58,9 +63,9 @@ class OrderController extends Controller
 
         DB::beginTransaction();
         try {
-            $this->service->setQuantity($order, $items);
+            $result = $this->service->setQuantity($order, $items);
             DB::commit();
-            return response()->json(true);
+            return response()->json($result);
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json($e->getMessage());

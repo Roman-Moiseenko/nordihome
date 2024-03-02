@@ -18,7 +18,6 @@
                         <x-base.lucide icon="history" class="w-4 h-4"/>&nbsp;{{ $order->statusHtml() }}
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center">
-
                         <x-base.lucide icon="badge-russian-ruble" class="w-4 h-4"/>&nbsp;{{ price($order->total) }}
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center">
@@ -27,11 +26,21 @@
                     <div class="truncate sm:whitespace-normal flex items-center" >
                         <x-base.lucide icon="boxes" class="w-4 h-4"/>&nbsp;{{ $order->getQuantity() }} шт.
                     </div>
+                    <div class="truncate sm:whitespace-normal flex items-center" >
+                        <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;{{ $order->delivery->typeHTML() }}
+                    </div>
+                    <div class="truncate sm:whitespace-normal flex items-center" >
+                        <x-base.lucide icon="map-pin" class="w-4 h-4"/>&nbsp;{{ $order->delivery->address }}
+                    </div>
+
+
                     @if(!$order->isStatus(\App\Modules\Order\Entity\Order\OrderStatus::PAID))
-                    <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;">
+                    <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="baggage-claim" class="w-4 h-4"/>&nbsp;{{ $order->getReserveTo() }}
                     </div>
                     @endif
+                    <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;">
+                    </div>
                     @if(!empty($order->getManager()))
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <x-base.lucide icon="contact"
@@ -66,7 +75,7 @@
             <div
                 class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Действия</div>
-                <div class="flex flex-col lg:justify-start mt-2">
+                <div class="flex flex-col lg:justify-start mt-2 buttons-block items-start">
                     @if($order->isNew())
                         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
                             <x-base.popover.button as="x-base.button" variant="primary" class="w-100">Назначить
@@ -133,7 +142,8 @@
 
                         <button id="change-count-item" class="btn btn-danger mt-2"
                                 data-route="{{ route('admin.sales.order.set-quantity', $order) }}">Изменить кол-во товара</button>
-                        <button class="btn btn-success mt-2">На оплату</button>
+                            <button class="btn btn-pending mt-2">Расчитать доставку</button>
+                            <button class="btn btn-success mt-2">На оплату</button>
                         <button class="btn btn-secondary mt-2">Отменить</button>
                     @endif
                     @if($order->isAwaiting()/* && $order->getManager()->id == $admin->id*/)
@@ -167,7 +177,7 @@
                     <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">ЦЕНА БАЗОВАЯ</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">ЦЕНА СО СКИДКОЙ</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">АКЦИЯ/СКИДКА</x-base.table.th>
+                    <x-base.table.th class="text-center whitespace-nowrap">ГАБАРИТЫ</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                 </x-base.table.tr>
             </x-base.table.thead>
@@ -182,18 +192,13 @@
     <div class="font-medium text-xl text-danger mt-6">
         В разработке.<br>
         <br>
-        Действия: <br>
-        Назначить менеджера - Только админ, или автоматически, кто работает, по алгоритму <br>
-        //после назначения заказ доступен в окне менеджера ... подумать по Админке работе с Заказами<br>
 
-        Подвердить - смена статуса, отправка платежных документов клиенту, установка резерва (сколько).<br>
+        Подвердить - смена статуса, отправка платежных документов клиенту.<br>
 
         Отменить - <br>
         Если оплачен<br>
         Сформировать заявку на сборку (? автоматически)<br>
-
         Delivery<br>
-
         <br>
 
         В письме клиенту, отдельная таблица с отмененными товарами и кол-вом<br>
@@ -231,7 +236,6 @@
         });
 
         function setAjax(data, route) {
-            //AJAX
             let _params = '_token=' + '{{ csrf_token() }}' + '&items=' + JSON.stringify(data);
             let request = new XMLHttpRequest();
             request.open('POST', route);
@@ -239,10 +243,8 @@
             request.send(_params);
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
-                    if (request.responseText === true) window.location.reload();
-                    console.log(request.responseText);
-                } else {
-                    //console.log(request.responseText);
+                    let _data = JSON.parse(request.responseText);
+                    if (_data) location.reload();
                 }
             };
         }

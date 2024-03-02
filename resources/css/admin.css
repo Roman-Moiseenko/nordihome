@@ -81,3 +81,9 @@ div.has-error{
     --tw-border-opacity: 1;
     border-color: rgb(var(--color-danger) / var(--tw-border-opacity));
 }
+
+.buttons-block>button {
+    min-width: 220px;
+}
+
+

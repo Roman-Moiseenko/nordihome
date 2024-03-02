@@ -9,8 +9,8 @@
 
     <x-base.table.td class="text-center"> {{ ($item->quantity == 0) ? 'отмена' : $item->quantity}} {{ !is_null($item->first_quantity) ? '(' . $item->first_quantity . ')' : '' }} </x-base.table.td>
     <x-base.table.td class="text-center"> {{ price($item->base_cost) }} </x-base.table.td>
-    <x-base.table.td class="text-center"> {{ ($item->base_cost == $item->sell_cost) ? '-' : price($item->sell_cost) }} </x-base.table.td>
-    <x-base.table.td class="text-center"> {{ $item->discountName() }} </x-base.table.td>
+    <x-base.table.td class="text-center"> {{ ($item->base_cost == $item->sell_cost) ? '-' : price($item->sell_cost) }} <br><span class="fs-8"> {{ $item->discountName() }} </span> </x-base.table.td>
+    <x-base.table.td class="text-center">  </x-base.table.td>
 
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
