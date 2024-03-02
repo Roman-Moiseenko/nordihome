@@ -146,6 +146,7 @@ class Order extends Model
     {
         /** @var OrderItem $item */
         $item = $this->items()->first();
+        if (is_null($item->reserve)) throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
         return $item->reserve->reserve_at;
     }
 

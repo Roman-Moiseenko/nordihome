@@ -27,9 +27,11 @@
                     <div class="truncate sm:whitespace-normal flex items-center" >
                         <x-base.lucide icon="boxes" class="w-4 h-4"/>&nbsp;{{ $order->getQuantity() }} шт.
                     </div>
+                    @if(!$order->isStatus(\App\Modules\Order\Entity\Order\OrderStatus::PAID))
                     <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;">
                         <x-base.lucide icon="baggage-claim" class="w-4 h-4"/>&nbsp;{{ $order->getReserveTo() }}
                     </div>
+                    @endif
                     @if(!empty($order->getManager()))
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <x-base.lucide icon="contact"
