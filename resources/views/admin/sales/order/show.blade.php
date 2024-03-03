@@ -10,8 +10,7 @@
     </div>
     <div class="intro-y box px-5 pt-5 mt-5">
         <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
-            <div
-                class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
+            <div class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Информация о заказе</div>
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
@@ -26,13 +25,6 @@
                     <div class="truncate sm:whitespace-normal flex items-center" >
                         <x-base.lucide icon="boxes" class="w-4 h-4"/>&nbsp;{{ $order->getQuantity() }} шт.
                     </div>
-                    <div class="truncate sm:whitespace-normal flex items-center" >
-                        <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;{{ $order->delivery->typeHTML() }}
-                    </div>
-                    <div class="truncate sm:whitespace-normal flex items-center" >
-                        <x-base.lucide icon="map-pin" class="w-4 h-4"/>&nbsp;{{ $order->delivery->address }}
-                    </div>
-
 
                     @if(!$order->isStatus(\App\Modules\Order\Entity\Order\OrderStatus::PAID))
                     <div class="truncate sm:whitespace-normal flex items-center">
@@ -55,6 +47,25 @@
                     @endif
                 </div>
             </div>
+            <div class="mt-6 lg:mt-0 flex-1 px-5 border-l border-slate-200/60 lg:border-t-0 pt-5 lg:pt-0">
+                <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Доставка</div>
+                <div class="flex flex-col justify-center items-center lg:items-start mt-4">
+                    <div class="truncate sm:whitespace-normal flex items-center" >
+                        <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;{{ $order->delivery->typeHTML() }}
+                    </div>
+                    <div class="truncate sm:whitespace-normal flex items-center" >
+                        <x-base.lucide icon="map-pin" class="w-4 h-4"/>&nbsp;{{ $order->delivery->address }}
+                    </div>
+
+                    <div class="truncate sm:whitespace-normal flex items-center" >
+                        <x-base.lucide icon="anvil" class="w-4 h-4"/>&nbsp;{{ $order->weight() }} кг
+                    </div>
+
+                    <div class="truncate sm:whitespace-normal flex items-center" >
+                        <x-base.lucide icon="box" class="w-4 h-4"/>&nbsp;{{ $order->volume() }} м3
+                    </div>
+                </div>
+            </div>
             <div
                 class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Контакты клиенты</div>
@@ -72,6 +83,7 @@
                     </div>
                 </div>
             </div>
+
             <div
                 class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Действия</div>
@@ -165,6 +177,7 @@
                     @endif
                 </div>
             </div>
+
         </div>
     </div>
 

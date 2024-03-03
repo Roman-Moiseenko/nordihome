@@ -63,4 +63,9 @@ class Dimensions
             $array['measure'] ?? self::MEASURE_G
         );
     }
+
+    public function volume(): float
+    {
+        return ($this->height * $this->width * $this->depth) / 1000000;
+    }
 }

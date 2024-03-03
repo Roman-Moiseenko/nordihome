@@ -264,6 +264,24 @@ class Order extends Model
         return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
     }
 
+    public function weight()
+    {
+        $weight = 0;
+        foreach ($this->items as $item) {
+            $weight += $item->quantity * $item->product->dimensions->weight();
+        }
+        return $weight;
+    }
+
+    public function volume()
+    {
+        $volume = 0;
+        foreach ($this->items as $item) {
+            $volume += $item->quantity * $item->product->dimensions->volume();
+        }
+        return $volume;
+    }
+
 //Функции для данных по доставке
 //TODO Сделать интерфейс
 }
