@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Sales;
 use App\Entity\Admin;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Order\Entity\Order\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -48,7 +49,8 @@ class NewOrderController extends Controller
     {
         try {
             $staffs = Admin::where('role', Admin::ROLE_MANAGER)->get();
-            return view('admin.sales.order.show', compact('order', 'staffs'));
+            $storages = Storage::orderBy('name')->get();
+            return view('admin.sales.order.show', compact('order', 'staffs', 'storages'));
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
             flash('Техническая ошибка! Информация направлена разработчику', 'danger');

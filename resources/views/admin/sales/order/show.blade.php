@@ -31,8 +31,7 @@
                         <x-base.lucide icon="baggage-claim" class="w-4 h-4"/>&nbsp;{{ $order->getReserveTo() }}
                     </div>
                     @endif
-                    <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;">
-                    </div>
+                    <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;"></div>
                     @if(!empty($order->getManager()))
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <x-base.lucide icon="contact"
@@ -64,6 +63,8 @@
                     <div class="truncate sm:whitespace-normal flex items-center" >
                         <x-base.lucide icon="box" class="w-4 h-4"/>&nbsp;{{ $order->volume() }} м3
                     </div>
+                    <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;"></div>
+
                 </div>
             </div>
             <div
@@ -152,10 +153,64 @@
                                 </x-base.popover.panel>
                             </x-base.popover>
 
-                        <button id="change-count-item" class="btn btn-danger mt-2"
+                        <button id="change-count-item" class="btn btn-warning mt-2"
                                 data-route="{{ route('admin.sales.order.set-quantity', $order) }}">Изменить кол-во товара</button>
-                            <button class="btn btn-pending mt-2">Расчитать доставку</button>
-                            <button class="btn btn-success mt-2">На оплату</button>
+                        <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
+                            <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Расчитать доставку
+                                <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                            </x-base.popover.button>
+                            <x-base.popover.panel>
+                                <form action="{{ route('admin.sales.order.set-delivery', $order) }}" METHOD="POST">
+                                    @csrf
+                                    <div class="p-2">
+                                        <x-base.form-input name="delivery-cost" class="flex-1 mt-2" type="number" value=""
+                                                           placeholder=""/>
+                                        <div class="flex items-center mt-3">
+                                            <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                                           data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                                Отмена
+                                            </x-base.button>
+                                            <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                                Сохранить
+                                            </x-base.button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </x-base.popover.panel>
+                        </x-base.popover>
+
+
+                            <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
+                                <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Заявка на перемещение
+                                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                                </x-base.popover.button>
+                                <x-base.popover.panel>
+                                    <form action="{{ route('admin.sales.order.set-moving', $order) }}" METHOD="POST">
+                                        @csrf
+                                        <div class="p-2">
+                                            <x-base.tom-select id="select-storage" name="storage" class=""
+                                                               data-placeholder="Выберите Склад">
+                                                <option value="0"></option>
+                                                @foreach($storages as $storage)
+                                                    <option value="{{ $storage->id }}"
+                                                    >{{ $storage->name }}</option>
+                                                @endforeach
+                                            </x-base.tom-select>
+
+                                            <div class="flex items-center mt-3">
+                                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                                    Отмена
+                                                </x-base.button>
+                                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                                    Сохранить
+                                                </x-base.button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </x-base.popover.panel>
+                            </x-base.popover>
+                        <button class="btn btn-success mt-2">На оплату</button>
                         <button class="btn btn-secondary mt-2">Отменить</button>
                     @endif
                     @if($order->isAwaiting()/* && $order->getManager()->id == $admin->id*/)
@@ -191,6 +246,7 @@
                     <x-base.table.th class="text-center whitespace-nowrap">ЦЕНА БАЗОВАЯ</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">ЦЕНА СО СКИДКОЙ</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">ГАБАРИТЫ</x-base.table.th>
+                    <x-base.table.th class="text-center whitespace-nowrap">НА СКЛАДАХ</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                 </x-base.table.tr>
             </x-base.table.thead>

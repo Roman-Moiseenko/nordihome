@@ -341,6 +341,8 @@ Route::group(
                 Route::post('/order/{order}/set-manager', 'OrderController@set_manager')->name('order.set-manager');
                 Route::post('/order/{order}/set-reserve', 'OrderController@set_reserve')->name('order.set-reserve');
                 Route::post('/order/{order}/set-quantity', 'OrderController@set_quantity')->name('order.set-quantity');
+                Route::post('/order/{order}/set-delivery', 'OrderController@set_delivery')->name('order.set-delivery');
+                Route::post('/order/{order}/set-moving', 'OrderController@set_moving')->name('order.set-moving');
             }
         );
         //Pages

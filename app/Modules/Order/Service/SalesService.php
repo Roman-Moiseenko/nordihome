@@ -82,4 +82,18 @@ class SalesService
 
 
     }
+
+    public function setDelivery(Order $order, float $cost)
+    {
+        //Установить стоимость доставки
+    }
+
+    public function setMoving(Order $order, int $storage_id)
+    {
+        //TODO Формируем непроведенную заявку на перемещение
+        //Создаем event:
+        //уведомляем ответственных за перемещение, руководство
+        //Запись о действиях с заказом ????
+
+    }
 }

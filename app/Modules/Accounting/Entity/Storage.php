@@ -119,4 +119,14 @@ class Storage extends Model
             return $this->photo->getUploadUrl();
         }
     }
+
+    public function getQuantity(Product $product): int
+    {
+        foreach ($this->items as $item) {
+            if ($item->product->id == $product->id) {
+                return $item->quantity;
+            }
+        }
+        return 0;
+    }
 }

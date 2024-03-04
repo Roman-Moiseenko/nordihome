@@ -6,6 +6,8 @@ namespace App\Modules\Product\Entity;
 use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Entity\Video;
+use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Entity\PromotionProduct;
@@ -369,6 +371,19 @@ class Product extends Model
     }
 
     //RELATIONSHIP
+
+    /**
+     * Хранилища, где данный товар есть в наличии
+     * @return Storage[]
+     */
+    public function getStorages(): array
+    {
+
+        return Storage::whereHas('items', function ($q) {
+            $q->where('product_id', $this->id);
+        })->getModels();
+        //return $this->hasMany(StorageItem::class, 'product_id', 'id')-;
+    }
 
     /**
      * Действующая акция или null

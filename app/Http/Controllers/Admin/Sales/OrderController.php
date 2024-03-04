@@ -4,12 +4,8 @@
 namespace App\Http\Controllers\Admin\Sales;
 
 
-use App\Entity\Admin;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Order\Entity\Order\OrderResponsible;
-use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Service\SalesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +49,20 @@ class OrderController extends Controller
     public function to_pay(Order $order)
     {
         $this->service->toOrder($order);
+        return redirect()->back();
+    }
+
+    public function set_delivery(Request $request, Order $order)
+    {
+        $cost = (float)$request['delivery-cost'];
+        $this->service->setDelivery($order, $cost);
+        return redirect()->back();
+    }
+
+    public function set_moving(Request $request,Order $order)
+    {
+        $storage_id = (int)$request['storage'];
+        $this->service->setMoving($order, $storage_id);
         return redirect()->back();
     }
 

@@ -11,6 +11,13 @@
     <x-base.table.td class="text-center"> {{ price($item->base_cost) }} </x-base.table.td>
     <x-base.table.td class="text-center"> {{ ($item->base_cost == $item->sell_cost) ? '-' : price($item->sell_cost) }} <br><span class="fs-8"> {{ $item->discountName() }} </span> </x-base.table.td>
     <x-base.table.td class="text-center"> {{ $item->product->dimensions->weight() }} кг<br> {{ $item->product->dimensions->volume() }} м3 </x-base.table.td>
+    <x-base.table.td class="text-center">
+        @foreach($item->product->getStorages() as $storage)
+            {{ $storage->getQuantity($item->product) . '(' . $storage->name . ')' }}<br>
+        @endforeach
+    </x-base.table.td>
+
+
 
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
