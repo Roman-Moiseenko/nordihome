@@ -8,9 +8,11 @@ use App\Modules\Admin\Entity\Responsible;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Entity\Payment\Payment;
+use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @property int $id
@@ -26,7 +28,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $delivery_cost //стоимость доставки, включенная в платеж ?? Доставка оплачивается отдельно
  * @property float $total //Полная сумма оплаты
  * @property string $comment
-
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
  * @property Payment $payment
@@ -37,7 +38,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property DeliveryOrder $delivery
  * @property OrderResponsible[] $responsible
  */
-
 class Order extends Model
 {
     const ONLINE = 701;
@@ -114,9 +114,12 @@ class Order extends Model
     }
 
 
-    public function setStatus(int $value, string $comment = '')
+    public function setStatus(
+        #[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value,
+        string $comment = ''
+    )
     {
-        if ($this->finished)  throw new \DomainException('Заказ закрыт, статус менять нельзя');
+        if ($this->finished) throw new \DomainException('Заказ закрыт, статус менять нельзя');
         if ($this->isStatus($value)) throw new \DomainException('Статус уже назначен');
         if ($this->status->value > $value) throw new \DomainException('Нарушена последовательность статусов');
 
@@ -150,14 +153,27 @@ class Order extends Model
         return $item->reserve->reserve_at;
     }
 
-    public function getManager():? Admin
+    /**
+     * Получить элемент заказа по Товару
+     * @param Product $product
+     * @return OrderItem
+     */
+    public function getItem(Product $product): OrderItem
+    {
+        foreach ($this->items as $orderItem) {
+            if ($orderItem->product->id = -$product->id) return $orderItem;
+        }
+        throw new \DomainException('Данный товар не содержится в заказе');
+    }
+
+    public function getManager(): ?Admin
     {
         /** @var OrderResponsible $responsible */
         $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->orderByDesc('created_at')->first();
         return is_null($responsible) ? null : $responsible->staff;
     }
 
-    public function getLogger():? Admin
+    public function getLogger(): ?Admin
     {
         /** @var OrderResponsible $responsible */
         $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_LOGGER)->orderByDesc('created_at')->first();
@@ -213,7 +229,7 @@ class Order extends Model
 
     public function htmlNum(): string
     {
-        return  '№ ' . str_pad((string)$this->id, 6, '0', STR_PAD_LEFT);
+        return '№ ' . str_pad((string)$this->id, 6, '0', STR_PAD_LEFT);
     }
 
     public function statusHtml(): string
@@ -264,7 +280,11 @@ class Order extends Model
         return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
     }
 
-    public function weight()
+    /**
+     * Общий вес заказа
+     * @return float
+     */
+    public function weight(): float
     {
         $weight = 0;
         foreach ($this->items as $item) {
@@ -273,7 +293,11 @@ class Order extends Model
         return $weight;
     }
 
-    public function volume()
+    /**
+     * Общий объем заказа
+     * @return float
+     */
+    public function volume(): float
     {
         $volume = 0;
         foreach ($this->items as $item) {

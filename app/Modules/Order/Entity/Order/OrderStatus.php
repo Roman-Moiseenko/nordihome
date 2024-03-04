@@ -46,7 +46,7 @@ class OrderStatus extends Model
     ///Отмененные статусы
     const CANCEL = 280;//
     const CANCEL_BY_CUSTOMER = 281;//
-    const REFUND = 282;
+    const REFUND = 282; //Возврат денег
 
     const STATUSES = [
         self::FORMED => 'Сформирован',

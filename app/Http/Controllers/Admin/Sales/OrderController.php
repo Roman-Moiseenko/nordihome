@@ -29,8 +29,14 @@ class OrderController extends Controller
     //TODO
     public function destroy(Order $order)
     {
+        $this->service->destroy($order);
+        return redirect()->back();
+    }
 
-
+    public function canceled(Order $order)
+    {
+        $this->service->canceled($order);
+        return redirect()->back();
     }
 
     public function set_manager(Request $request, Order $order)
@@ -42,7 +48,6 @@ class OrderController extends Controller
     public function set_reserve(Request $request, Order $order)
     {
         $this->service->setReserve($order, $request['reserve-date'], $request['reserve-time']);
-        //TODO  Оповещение клиента, об увеличении времени резерва event(new OrderHasReserved($order)); ????
         return redirect()->back();
     }
 
@@ -59,7 +64,7 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
-    public function set_moving(Request $request,Order $order)
+    public function set_moving(Request $request, Order $order)
     {
         $storage_id = (int)$request['storage'];
         $this->service->setMoving($order, $storage_id);
@@ -70,16 +75,7 @@ class OrderController extends Controller
     public function set_quantity(Request $request, Order $order)
     {
         $items = json_decode($request['items'], true);
-
-        DB::beginTransaction();
-        try {
-            $result = $this->service->setQuantity($order, $items);
-            DB::commit();
-            return response()->json($result);
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return response()->json($e->getMessage());
-        }
-        //TODO  Оповещение клиента после отправки счета, об изменении кол-ва товаров event(new OrderQuantityHasChanged($order));
+        $result = $this->service->setQuantity($order, $items);
+        return response()->json($result);
     }
 }

@@ -62,7 +62,6 @@ class CalculatorOrder
         /** @var Discount[] $discounts */
         $discounts = Discount::where('active', true)->get();
         foreach ($discounts as $discount) {
-
             $discount->render($items);
         }
 

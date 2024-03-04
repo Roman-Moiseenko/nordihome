@@ -6,15 +6,16 @@ namespace App\Modules\Shop\Cart;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Storage\HybridStorage;
+use JetBrains\PhpStorm\ArrayShape;
 
 
 class Cart
 {
     /** @var CartItem[] $items */
     private array $items;
-    /** @var CartItem[] $itemsOrder  */
+    /** @var CartItem[] $itemsOrder */
     private array $itemsOrder;
-    /** @var CartItem[] $itemsPreOrder  */
+    /** @var CartItem[] $itemsPreOrder */
     private array $itemsPreOrder;
 
     private HybridStorage $storage;
@@ -42,6 +43,7 @@ class Cart
         $this->loadItems();
         return $this->itemsOrder;
     }
+
     public function getPreOrderItems(): array
     {
         $this->loadItems();
@@ -174,7 +176,8 @@ class Cart
         throw new \DomainException('Товар с id ' . $product_id . ' не найден');
     }
 
-    public function getCartToFront($tz)
+    #[ArrayShape(['common' => "array", 'items' => "array", 'items_order' => "array", 'items_preorder' => "array"])]
+    public function getCartToFront($tz): array
     {
         $this->items = [];
         $this->loadItems();
@@ -187,6 +190,23 @@ class Cart
 
     }
 
+    #[ArrayShape([
+        'id' => 'int',
+        'img' => 'string',
+        'name' => 'string',
+        'url' => 'string',
+        'product_id' => 'int',
+        'cost' => 'float',
+        'price' => 'float',
+        'quantity' => 'int',
+        'discount_id' => 'int|null',
+        'discount_cost' => 'float|null',
+        'discount_name' => 'string',
+        'reserve_date' => 'string',
+        'remove' => 'string',
+        'check' => 'bool',
+        'available' => 'int|null'
+    ])]
     private function ItemsData($tz, array $items): array
     {
         $timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
@@ -214,19 +234,29 @@ class Cart
         return $result;
     }
 
+    #[ArrayShape([
+        'count' => "int",
+        'full_cost' => "float|int",
+        'discount' => "float|int",
+        'amount' => "float|int",
+        'check_all' => "bool",
+        'preorder' => "bool",
+        'count_preorder' => "int",
+        'full_cost_preorder' => "float|int"
+    ])]
     private function CommonData(): array
     {
         return [
-             'count' => $this->info->order->count, //Кол-во товаров
-             'full_cost' => $this->info->order->amount, //Полная стоимость
-             'discount' => $this->info->order->discount, //Скидка
-             'amount' => $this->info->order->amount - $this->info->order->discount, //Итого со скидкой
-             'check_all' => $this->info->check_all,
-             'preorder' => $this->info->preorder,
+            'count' => $this->info->order->count, //Кол-во товаров
+            'full_cost' => $this->info->order->amount, //Полная стоимость
+            'discount' => $this->info->order->discount, //Скидка
+            'amount' => $this->info->order->amount - $this->info->order->discount, //Итого со скидкой
+            'check_all' => $this->info->check_all,
+            'preorder' => $this->info->preorder,
 
-             'count_preorder' => $this->info->pre_order->count,
-             'full_cost_preorder' => $this->info->pre_order->amount, //Полная стоимость
-         ];
+            'count_preorder' => $this->info->pre_order->count,
+            'full_cost_preorder' => $this->info->pre_order->amount, //Полная стоимость
+        ];
     }
 
     public function removeByIds(array $ids)
