@@ -135,10 +135,10 @@ class SalesService
 
     }
 
-    public function canceled(Order $order)
+    public function canceled(Order $order, string $comment)
     {
-        $order->setStatus(OrderStatus::CANCEL);
+        $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         //TODO Оповещаем Клиента об отмене Заказа
-        event();
+        //event();
     }
 }

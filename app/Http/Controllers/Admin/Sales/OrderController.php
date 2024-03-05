@@ -33,9 +33,9 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
-    public function canceled(Order $order)
+    public function canceled(Request $request, Order $order)
     {
-        $this->service->canceled($order);
+        $this->service->canceled($order, $request['comment']);
         return redirect()->back();
     }
 

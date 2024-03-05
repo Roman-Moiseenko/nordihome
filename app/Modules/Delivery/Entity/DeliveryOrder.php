@@ -105,4 +105,9 @@ class DeliveryOrder extends Model
     {
         return self::TYPES[$this->type];
     }
+
+    public function isStorage(): bool
+    {
+        return $this->type == self::STORAGE;
+    }
 }

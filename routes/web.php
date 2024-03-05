@@ -344,6 +344,7 @@ Route::group(
                 Route::post('/order/{order}/set-quantity', 'OrderController@set_quantity')->name('order.set-quantity');
                 Route::post('/order/{order}/set-delivery', 'OrderController@set_delivery')->name('order.set-delivery');
                 Route::post('/order/{order}/set-moving', 'OrderController@set_moving')->name('order.set-moving');
+                Route::post('/order/{order}/canceled', 'OrderController@canceled')->name('order.canceled');
             }
         );
         //Pages

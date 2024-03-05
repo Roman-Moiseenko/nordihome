@@ -10,7 +10,8 @@
     </div>
     <div class="intro-y box px-5 pt-5 mt-5">
         <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
-            <div class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
+            <div
+                class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Информация о заказе</div>
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
@@ -22,26 +23,30 @@
                     <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="package" class="w-4 h-4"/>&nbsp;{{ count($order->items) }} товаров
                     </div>
-                    <div class="truncate sm:whitespace-normal flex items-center" >
+                    <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="boxes" class="w-4 h-4"/>&nbsp;{{ $order->getQuantity() }} шт.
                     </div>
 
                     @if(!$order->isStatus(\App\Modules\Order\Entity\Order\OrderStatus::PAID))
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="baggage-claim" class="w-4 h-4"/>&nbsp;{{ $order->getReserveTo() }}
-                    </div>
+                        <div class="truncate sm:whitespace-normal flex items-center">
+                            <x-base.lucide icon="baggage-claim" class="w-4 h-4"/>&nbsp;{{ $order->getReserveTo() }}
+                        </div>
                     @endif
-                    <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;"></div>
+                    <div
+                        class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2"
+                        style="width: 100%;"></div>
                     @if(!empty($order->getManager()))
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <x-base.lucide icon="contact"
-                                           class="w-4 h-4"/>&nbsp;{{ $order->getManager()->fullname->getFullName() }} - менеджер
+                                           class="w-4 h-4"/>&nbsp;{{ $order->getManager()->fullname->getFullName() }} -
+                            менеджер
                         </div>
                     @endif
                     @if(!empty($order->getLogger()))
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <x-base.lucide icon="contact"
-                                           class="w-4 h-4"/>&nbsp;{{ $order->getLogger()->fullname->getFullName() }} - логист
+                                           class="w-4 h-4"/>&nbsp;{{ $order->getLogger()->fullname->getFullName() }} -
+                            логист
                         </div>
                     @endif
                 </div>
@@ -49,21 +54,23 @@
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-l border-slate-200/60 lg:border-t-0 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Доставка</div>
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
-                    <div class="truncate sm:whitespace-normal flex items-center" >
+                    <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;{{ $order->delivery->typeHTML() }}
                     </div>
-                    <div class="truncate sm:whitespace-normal flex items-center" >
+                    <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="map-pin" class="w-4 h-4"/>&nbsp;{{ $order->delivery->address }}
                     </div>
 
-                    <div class="truncate sm:whitespace-normal flex items-center" >
+                    <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="anvil" class="w-4 h-4"/>&nbsp;{{ $order->weight() }} кг
                     </div>
 
-                    <div class="truncate sm:whitespace-normal flex items-center" >
+                    <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="box" class="w-4 h-4"/>&nbsp;{{ $order->volume() }} м3
                     </div>
-                    <div class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2" style="width: 100%;"></div>
+                    <div
+                        class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2"
+                        style="width: 100%;"></div>
 
                 </div>
             </div>
@@ -124,46 +131,23 @@
                         <button class="btn btn-secondary mt-2">Удалить</button>
                     @endif
                     @php
-                    //TODO Открыть блокировку по id персонала
+                        //TODO Открыть блокировку по id персонала
                     @endphp
                     @if($order->isManager()/* && $order->getManager()->id == $admin->id*/)
                         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-                                <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Установить резерв
-                                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
-                                </x-base.popover.button>
-                                <x-base.popover.panel>
-                                    <form action="{{ route('admin.sales.order.set-reserve', $order) }}" METHOD="POST">
-                                        @csrf
-                                        <div class="p-2">
-                                            <x-base.form-input id="reserve-date" name="reserve-date" class="flex-1 mt-2" type="date" value="{{ $order->getReserveTo()->format('Y-m-d') }}"
-                                                               placeholder="Резерв"/>
-                                            <x-base.form-input name="reserve-time" class="flex-1 mt-2" type="time" value="{{ $order->getReserveTo()->format('H:i') }}"
-                                                               placeholder=""/>
-                                            <div class="flex items-center mt-3">
-                                                <x-base.button id="close-add-group" class="w-32 ml-auto"
-                                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
-                                                    Отмена
-                                                </x-base.button>
-                                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
-                                                    Сохранить
-                                                </x-base.button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </x-base.popover.panel>
-                            </x-base.popover>
-
-                        <button id="change-count-item" class="btn btn-warning mt-2"
-                                data-route="{{ route('admin.sales.order.set-quantity', $order) }}">Изменить кол-во товара</button>
-                        <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
-                            <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Расчитать доставку
+                            <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Установить резерв
                                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
                             </x-base.popover.button>
                             <x-base.popover.panel>
-                                <form action="{{ route('admin.sales.order.set-delivery', $order) }}" METHOD="POST">
+                                <form action="{{ route('admin.sales.order.set-reserve', $order) }}" METHOD="POST">
                                     @csrf
                                     <div class="p-2">
-                                        <x-base.form-input name="delivery-cost" class="flex-1 mt-2" type="number" value=""
+                                        <x-base.form-input id="reserve-date" name="reserve-date" class="flex-1 mt-2"
+                                                           type="date"
+                                                           value="{{ $order->getReserveTo()->format('Y-m-d') }}"
+                                                           placeholder="Резерв"/>
+                                        <x-base.form-input name="reserve-time" class="flex-1 mt-2" type="time"
+                                                           value="{{ $order->getReserveTo()->format('H:i') }}"
                                                            placeholder=""/>
                                         <div class="flex items-center mt-3">
                                             <x-base.button id="close-add-group" class="w-32 ml-auto"
@@ -178,10 +162,42 @@
                                 </form>
                             </x-base.popover.panel>
                         </x-base.popover>
-
-
-                            <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-                                <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Заявка на перемещение
+                        <button id="change-count-item" class="btn btn-warning mt-2"
+                                data-route="{{ route('admin.sales.order.set-quantity', $order) }}">Изменить кол-во
+                            товара
+                        </button>
+                        @if(!$order->delivery->isStorage())
+                            <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
+                                <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Расчитать
+                                    доставку
+                                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                                </x-base.popover.button>
+                                <x-base.popover.panel>
+                                    <form action="{{ route('admin.sales.order.set-delivery', $order) }}" METHOD="POST">
+                                        @csrf
+                                        <div class="p-2">
+                                            <x-base.form-input name="delivery-cost" class="flex-1 mt-2" type="number"
+                                                               value=""
+                                                               placeholder=""/>
+                                            <div class="flex items-center mt-3">
+                                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                                               data-tw-dismiss="dropdown" variant="secondary"
+                                                               type="button">
+                                                    Отмена
+                                                </x-base.button>
+                                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                                    Сохранить
+                                                </x-base.button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </x-base.popover.panel>
+                            </x-base.popover>
+                        @endif
+                        @if($order->delivery->isStorage())
+                            <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
+                                <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Заявка на
+                                    перемещение
                                     <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
                                 </x-base.popover.button>
                                 <x-base.popover.panel>
@@ -199,7 +215,8 @@
 
                                             <div class="flex items-center mt-3">
                                                 <x-base.button id="close-add-group" class="w-32 ml-auto"
-                                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                                               data-tw-dismiss="dropdown" variant="secondary"
+                                                               type="button">
                                                     Отмена
                                                 </x-base.button>
                                                 <x-base.button class="w-32 ml-2" variant="primary" type="submit">
@@ -210,8 +227,32 @@
                                     </form>
                                 </x-base.popover.panel>
                             </x-base.popover>
+                        @endif
                         <button class="btn btn-success mt-2">На оплату</button>
-                        <button class="btn btn-secondary mt-2">Отменить</button>
+                        <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
+                            <x-base.popover.button as="x-base.button" variant="secondary" class="w-100">Отменить
+                                <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                            </x-base.popover.button>
+                            <x-base.popover.panel>
+                                <form action="{{ route('admin.sales.order.canceled', $order) }}" METHOD="POST">
+                                    @csrf
+                                    <div class="p-2">
+                                        <x-base.form-input name="comment" class="flex-1 mt-2" type="text" value=""
+                                                           placeholder="Комментарий"/>
+
+                                        <div class="flex items-center mt-3">
+                                            <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                                           data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                                Отмена
+                                            </x-base.button>
+                                            <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                                Сохранить
+                                            </x-base.button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </x-base.popover.panel>
+                        </x-base.popover>
                     @endif
                     @if($order->isAwaiting()/* && $order->getManager()->id == $admin->id*/)
                         <button class="btn btn-warning">Установить резерв</button>
