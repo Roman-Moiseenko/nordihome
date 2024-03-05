@@ -37,42 +37,21 @@ class Admin extends Authenticatable implements UploadsDirectory
 
     use HasApiTokens, HasFactory, Notifiable;//, FullNameTrait;
 
-    public const ROLE_CASHIER = 'cashier';
-    public const ROLE_LOGISTICS = 'logistics';
-    public const ROLE_COMMODITY = 'commodity';
-    public const ROLE_FINANCE = 'finance';
-    public const ROLE_MANAGER = 'manager';
-
-
     public const ROLE_STAFF = 'staff'; //Все сотрудники
     public const ROLE_CHIEF = 'chief'; //Руководитель - назначение сотрудников, смена обязанностей
     public const ROLE_ADMIN = 'admin'; //Администратор - учет, логи и др.
 
-    public const ROLE_SUPERADMIN = 'super_admin';
 
     public const ROLES = [
-        self::ROLE_SUPERADMIN => 'Супер Админ',
-
         self::ROLE_ADMIN => 'Администратор',
         self::ROLE_CHIEF => 'Руководитель',
         self::ROLE_STAFF => 'Сотрудник',
-
-        self::ROLE_CASHIER => 'Кассир',
-        self::ROLE_COMMODITY => 'Товаровед',
-        self::ROLE_FINANCE => 'Финансист',
-        self::ROLE_MANAGER => 'Менеджер по продажам',
-        self::ROLE_LOGISTICS => 'Логист',
     ];
+
     public const ROLE_COLORS = [
-        self::ROLE_SUPERADMIN => 'bg-danger',
         self::ROLE_ADMIN => 'bg-danger',
         self::ROLE_CHIEF => 'bg-success',
         self::ROLE_STAFF => 'bg-primary',
-        self::ROLE_CASHIER => 'bg-warning',
-        self::ROLE_COMMODITY => 'bg-indigo-900',
-        self::ROLE_FINANCE => 'bg-pending',
-        self::ROLE_MANAGER => 'bg-primary',
-        self::ROLE_LOGISTICS => 'bg-primary',
     ];
 
     protected string $guard = 'admin';
@@ -152,39 +131,6 @@ class Admin extends Authenticatable implements UploadsDirectory
     public function isStaff(): bool
     {
         return $this->role == self::ROLE_STAFF;
-    }
-
-
-
-
-    #[Deprecated]
-    public function isSuperAdmin(): bool
-    {
-        return $this->role == self::ROLE_SUPERADMIN;
-    }
-
-    #[Deprecated]
-    public function isLogistics(): bool
-    {
-        return $this->role == self::ROLE_LOGISTICS;
-    }
-
-    #[Deprecated]
-    public function isCashier(): bool
-    {
-        return $this->role == self::ROLE_CASHIER;
-    }
-
-    #[Deprecated]
-    public function isCommodity(): bool
-    {
-        return $this->role == self::ROLE_COMMODITY;
-    }
-
-    #[Deprecated]
-    public function isFinance(): bool
-    {
-        return $this->role == self::ROLE_FINANCE;
     }
 
     public function setRole($role): void
