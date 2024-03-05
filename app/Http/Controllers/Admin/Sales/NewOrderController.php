@@ -7,7 +7,10 @@ use App\Entity\Admin;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Repository\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
@@ -19,16 +22,20 @@ use Illuminate\Support\Facades\Config;
 class NewOrderController extends Controller
 {
     private mixed $pagination;
+    private StaffRepository $staffs;
+    private OrderRepository $repository;
 
-    public function __construct()
+    public function __construct(StaffRepository $staffs, OrderRepository $repository)
     {
         $this->pagination = Config::get('shop-config.p-list');
+        $this->staffs = $staffs;
+        $this->repository = $repository;
     }
 
     public function index(Request $request)
     {
         try {
-            $query = Order::where('finished', false)->where('preorder', false)->orderByDesc('created_at');
+            $query = $this->repository->getNewOrders();
 
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
@@ -48,7 +55,8 @@ class NewOrderController extends Controller
     public function show(Request $request, Order $order)
     {
         try {
-            $staffs = Admin::where('role', Admin::ROLE_MANAGER)->get();
+            $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+
             $storages = Storage::orderBy('name')->get();
             return view('admin.sales.order.show', compact('order', 'staffs', 'storages'));
         } catch (\Throwable $e) {

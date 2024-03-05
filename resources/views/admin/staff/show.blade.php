@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">
-                <div class="font-medium text-center lg:text-left lg:mt-3">Contact Details</div>
+                <div class="font-medium text-center lg:text-left lg:mt-3">Контакты</div>
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide icon="user" class="w-4 h-4"/>&nbsp;{{ $staff->name }}
@@ -39,23 +39,16 @@
                 </div>
             </div>
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
-                <div class="font-medium text-center lg:text-left lg:mt-5">Sales Growth</div>
-                <div class="flex items-center justify-center lg:justify-start mt-2">
-                    <div class="mr-2 w-20 flex"> USP: <span class="ml-3 font-medium text-success">+23%</span> </div>
-                    <div class="w-3/4">
-                        <div class="h-[55px]">
-                            <canvas class="simple-line-chart-1 -mr-5" width="733" height="137" style="display: block; box-sizing: border-box; height: 54.8px; width: 293.2px;"></canvas>
+                @if($staff->isStaff())
+                    <div class="font-medium text-center lg:text-left lg:mt-5">Доступы</div>
+                    @foreach(\App\Modules\Admin\Entity\Responsibility::RESPONSE as $code => $name)
+                        <div class="form-check mt-2">
+                        <input id="response-{{ $code }}" type="checkbox" data-response="{{ $code }}"
+                               class="form-check-input responsibility" {{ ($staff->isResponsibility($code)) ? 'checked' : '' }}>
+                            <label for="response-{{ $code }}" class="form-check-label">{{ $name }}</label>
                         </div>
-                    </div>
-                </div>
-                <div class="flex items-center justify-center lg:justify-start">
-                    <div class="mr-2 w-20 flex"> STP: <span class="ml-3 font-medium text-danger">-2%</span> </div>
-                    <div class="w-3/4">
-                        <div class="h-[55px]">
-                            <canvas class="simple-line-chart-2 -mr-5" width="733" height="137" style="display: block; box-sizing: border-box; height: 54.8px; width: 293.2px;"></canvas>
-                        </div>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
             </div>
         </div>
         <ul class="nav nav-link-tabs flex-col sm:flex-row justify-center lg:justify-start text-center py-5">
@@ -76,9 +69,35 @@
     </div>
 
     <div class="intro-y box px-5 py-5 mt-5">
+
         Данные связанные с работой по профилю
     </div>
 
     {{ \App\Forms\ModalPassword::create()->show() }}
+
+    <script>
+        let inputResponse = document.querySelectorAll('.responsibility');
+        let route = "{{ route('admin.staff.response', $staff) }}";
+        inputResponse.forEach(function (element) {
+            element.addEventListener('click', function () {
+                let data = element.getAttribute('data-response');
+                setAjax(data, route);
+            });
+        })
+
+        function setAjax(data, route) {
+            let _params = '_token=' + '{{ csrf_token() }}' + '&code=' + data;
+            let request = new XMLHttpRequest();
+            request.open('POST', route);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.send(_params);
+            request.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    let _data = JSON.parse(request.responseText);
+                    console.log(_data);
+                }
+            };
+        }
+    </script>
 
 @endsection

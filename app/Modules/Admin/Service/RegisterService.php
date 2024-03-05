@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\UseCases\Admin;
+namespace App\Modules\Admin\Service;
 
 use App\Entity\Admin;
 use App\Entity\FullName;
+use App\Modules\Admin\Entity\Responsibility;
 use App\UseCases\Uploads\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -119,5 +120,22 @@ class RegisterService
         $admin->save();
 
         return $admin;
+    }
+
+    public function setResponsibility(Request $request, Admin $admin)
+    {
+        if (!$admin->isStaff()) throw new \DomainException('Обязанность назначается только персоналу');
+        $admin->responsibilities()->delete();
+        $responses = $request['response'];
+        foreach ($responses as $respons) {
+            $admin->responsibilities()->save(Responsibility::new((int)$respons));
+        }
+    }
+
+    public function responsibility(int $code, Admin $admin)
+    {
+        if (!$admin->isStaff()) throw new \DomainException('Обязанность назначается только персоналу');
+
+        $admin->toggleResponsibilities($code);
     }
 }

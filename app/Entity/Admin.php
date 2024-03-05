@@ -4,12 +4,15 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Casts\FullNameCast;
+use App\Modules\Admin\Entity\Responsibility;
 use App\UseCases\Uploads\UploadsDirectory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use JetBrains\PhpStorm\Deprecated;
+use JetBrains\PhpStorm\ExpectedValues;
 use Laravel\Sanctum\HasApiTokens;
 
 //TODO Перенести в Модули
@@ -25,6 +28,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $post //Должность
  * @property int $telegram_user_id
  * @property FullName $fullname
+ * @property Responsibility[] $responsibilities
  */
 class Admin extends Authenticatable implements UploadsDirectory
 {
@@ -38,11 +42,21 @@ class Admin extends Authenticatable implements UploadsDirectory
     public const ROLE_COMMODITY = 'commodity';
     public const ROLE_FINANCE = 'finance';
     public const ROLE_MANAGER = 'manager';
-    public const ROLE_ADMIN = 'admin';
+
+
+    public const ROLE_STAFF = 'staff'; //Все сотрудники
+    public const ROLE_CHIEF = 'chief'; //Руководитель - назначение сотрудников, смена обязанностей
+    public const ROLE_ADMIN = 'admin'; //Администратор - учет, логи и др.
+
     public const ROLE_SUPERADMIN = 'super_admin';
+
     public const ROLES = [
         self::ROLE_SUPERADMIN => 'Супер Админ',
+
         self::ROLE_ADMIN => 'Администратор',
+        self::ROLE_CHIEF => 'Руководитель',
+        self::ROLE_STAFF => 'Сотрудник',
+
         self::ROLE_CASHIER => 'Кассир',
         self::ROLE_COMMODITY => 'Товаровед',
         self::ROLE_FINANCE => 'Финансист',
@@ -51,7 +65,9 @@ class Admin extends Authenticatable implements UploadsDirectory
     ];
     public const ROLE_COLORS = [
         self::ROLE_SUPERADMIN => 'bg-danger',
-        self::ROLE_ADMIN => 'bg-success',
+        self::ROLE_ADMIN => 'bg-danger',
+        self::ROLE_CHIEF => 'bg-success',
+        self::ROLE_STAFF => 'bg-primary',
         self::ROLE_CASHIER => 'bg-warning',
         self::ROLE_COMMODITY => 'bg-indigo-900',
         self::ROLE_FINANCE => 'bg-pending',
@@ -72,7 +88,6 @@ class Admin extends Authenticatable implements UploadsDirectory
         'telegram_user_id',
         'fullname',
     ];
-    //TODO протестировать сохранения если удалить fullname_***
 
     protected $hidden = [
         'password',
@@ -84,13 +99,7 @@ class Admin extends Authenticatable implements UploadsDirectory
         'password' => 'hashed',
         'fullname' => FullNameCast::class
     ];
-/*
-    public function __construct(array $attributes = [])
-    {
-        $this->fullName = new FullName();
-        parent::__construct($attributes);
-    }
-*/
+
     public static function register(string $name, string $email, string $phone, string $password): self
     {
         return static::create([
@@ -98,7 +107,7 @@ class Admin extends Authenticatable implements UploadsDirectory
             'email' => $email,
             'phone' => $phone,
             'password' => Hash::make($password),
-            'role' => self::ROLE_COMMODITY,
+            'role' => self::ROLE_STAFF,
             'active' => true,
             'fullname' => new FullName(),
         ]);
@@ -111,7 +120,7 @@ class Admin extends Authenticatable implements UploadsDirectory
             'email' => $email,
             'phone' => $phone,
             'password' => Hash::make($password),
-            'role' => self::ROLE_COMMODITY,
+            'role' => self::ROLE_STAFF,
             'active' => true,
         ]);
     }
@@ -121,38 +130,58 @@ class Admin extends Authenticatable implements UploadsDirectory
         $this->active = false;
     }
 
-
     public function isBlocked(): bool
     {
         return !$this->active;
     }
 
+
 //Роли
-    public function isSuperAdmin(): bool
-    {
-        return $this->role == self::ROLE_SUPERADMIN;
-    }
 
     public function isAdmin(): bool
     {
         return $this->role == self::ROLE_ADMIN;
     }
 
+    public function isChief(): bool
+    {
+        return $this->role == self::ROLE_CHIEF;
+    }
+
+
+    public function isStaff(): bool
+    {
+        return $this->role == self::ROLE_STAFF;
+    }
+
+
+
+
+    #[Deprecated]
+    public function isSuperAdmin(): bool
+    {
+        return $this->role == self::ROLE_SUPERADMIN;
+    }
+
+    #[Deprecated]
     public function isLogistics(): bool
     {
         return $this->role == self::ROLE_LOGISTICS;
     }
 
+    #[Deprecated]
     public function isCashier(): bool
     {
         return $this->role == self::ROLE_CASHIER;
     }
 
+    #[Deprecated]
     public function isCommodity(): bool
     {
         return $this->role == self::ROLE_COMMODITY;
     }
 
+    #[Deprecated]
     public function isFinance(): bool
     {
         return $this->role == self::ROLE_FINANCE;
@@ -183,7 +212,6 @@ class Admin extends Authenticatable implements UploadsDirectory
         $this->active = true;
     }
 
-
     public function isCurrent(): bool
     {
         return Auth::guard($this->guard)->user()->id == $this->id;
@@ -211,5 +239,31 @@ class Admin extends Authenticatable implements UploadsDirectory
     public function routeNotificationForTelegram(): int
     {
         return $this->telegram_user_id;
+    }
+
+    public function isResponsibility(#[ExpectedValues(valuesFromClass: Responsibility::class)] int $resp): bool
+    {
+        if (!$this->isStaff()) return false;
+        foreach ($this->responsibilities as $responsibility) {
+            if ($responsibility->code == $resp) return true;
+        }
+        return false;
+    }
+
+    public function responsibilities()
+    {
+        return $this->hasMany(Responsibility::class, 'admin_id', 'id');
+    }
+
+    public function toggleResponsibilities(int $code)
+    {
+        foreach ($this->responsibilities as $responsibility) { //Если Обязанность уже назначена, то удаляем
+            if ($responsibility->code == $code) {
+                $responsibility->delete();
+                return;
+            }
+        }
+        //Иначе добавляем Обязанность
+        $this->responsibilities()->save(Responsibility::new($code));
     }
 }

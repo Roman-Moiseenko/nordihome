@@ -109,9 +109,7 @@ class LoginController extends Controller
                 flash('Ваш аккаунт заблокирован', 'danger');
                 return back();
             }
-            if ($admin->isCashier()) {
-                return redirect()->intended('/admin/cashier');
-            }
+
             flash('Добро пожаловать ' . $admin->fullname->getFullName(), 'success');
             return redirect()->intended('/admin');
         }

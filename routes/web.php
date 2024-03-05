@@ -196,6 +196,7 @@ Route::group(
         Route::post('/staff/password/{staff}', 'StaffController@password')->name('staff.password');
         Route::post('/staff/activate/{staff}', 'StaffController@activate')->name('staff.activate');
         Route::post('/staff/photo/{staff}', 'StaffController@setPhoto')->name('staff.photo');
+        Route::post('/staff/response/{staff}', 'StaffController@response')->name('staff.response');
 
         //**** SHOP
         //Product

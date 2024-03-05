@@ -28,7 +28,7 @@ class RegisterTest extends TestCase
         self::assertNotEmpty($admin->password);
         self::assertNotEquals($password, $admin->password);
 
-        self::assertTrue($admin->isCommodity());
+
         self::assertFalse($admin->isBlocked());
     }
 

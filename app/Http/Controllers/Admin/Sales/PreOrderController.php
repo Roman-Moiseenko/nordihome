@@ -6,22 +6,25 @@ namespace App\Http\Controllers\Admin\Sales;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Repository\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 class PreOrderController extends Controller
 {
     private mixed $pagination;
+    private OrderRepository $repository;
 
-    public function __construct()
+    public function __construct(OrderRepository $repository)
     {
         $this->pagination = Config::get('shop-config.p-list');
+        $this->repository = $repository;
     }
 
     public function index(Request $request)
     {
         try {
-            $query = Order::where('finished', false)->where('preorder', true)->where('type', '<>', Order::PARSER)->orderByDesc('created_at');
+            $query = $this->repository->getPreOrders();
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
                 $orders = $query->paginate($pagination);

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Entity\Admin;
+use App\Modules\Admin\Entity\Responsibility;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -25,15 +26,17 @@ class AuthServiceProvider extends ServiceProvider
         //$this->registerPolicies();
 
         Gate::define('admin-panel', function (Admin $user) {
-            return $user->isSuperAdmin() || $user->isAdmin() || $user->isFinance() || $user->isCommodity();
+            return $user->isAdmin() || $user->isChief();
         });
 
         Gate::define('user-manager', function (Admin $user) {
-            return $user->isSuperAdmin() || $user->isAdmin();
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_USER);
         });
         Gate::define('commodity', function (Admin $user) {
-            return $user->isCommodity() || $user->isSuperAdmin() || $user->isAdmin();
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_PRODUCT);
         });
+
+        //TODO Добавить доступы разграничения
         Gate::define('', function (Admin $user) {
             return true;
         });

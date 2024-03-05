@@ -7,7 +7,7 @@ use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RegisterRequest;
 use App\Http\Requests\Admin\UpdateRequest;
-use App\UseCases\Admin\RegisterService;
+use App\Modules\Admin\Service\RegisterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
@@ -188,5 +188,17 @@ class StaffController extends Controller
         return response()->json([
             'name' => $request['file'],
         ]);
+    }
+
+    //AJAX
+
+    public function response(Request $request, Admin $staff)
+    {
+        try {
+            $this->service->responsibility((int)$request['code'], $staff);
+        } catch (\Throwable $e) {
+            return response()->json($e);
+        }
+        return response()->json(true);
     }
 }
