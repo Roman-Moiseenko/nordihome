@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Events\OrderHasCanceled;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Order\Entity\Reserve;
@@ -71,20 +72,20 @@ class ReserveService
     {
         DB::beginTransaction();
         try {
-            $user = $reserve->user;
+            //$user = $reserve->user;
             $product = $reserve->product;
             $product->count_for_sell += $reserve->quantity;
             $product->save();
             if ($reserve->type == Reserve::TYPE_CART) $reserve->cart->clearReserve();
             if ($reserve->type == Reserve::TYPE_ORDER) {
                 $reserve->orderItem->clearReserve();
-                $reserve->orderItem->order->checkOutReserve();
+                if ($reserve->orderItem->order->checkOutReserve()) event(new OrderHasCanceled($reserve->orderItem->order));
             }
             Reserve::destroy($reserve->id);
 
             DB::commit();
-            //TODO Оповещение о резерве при удалении по таймеру
-            if ($timer) event($user, $product);
+            //Оповещение о резерве при удалении по таймеру для Корзины????
+            //if ($timer) event($user, $product);
 
         } catch (\Throwable $e) {
             DB::rollBack();

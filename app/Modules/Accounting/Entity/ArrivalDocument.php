@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Entity;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @property int $id
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $storage_id
  * @property int $currency_id
  * @property float $exchange_fix //Курс на момент создания документа
+ * @property string $comment Комментарий к документу, пока отключена, на будущее
+
  *
  * @property Storage $storage
  * @property Currency $currency
@@ -101,6 +104,13 @@ class ArrivalDocument extends Model implements MovementInterface
         return false;
     }
 
+
+    #[ArrayShape([
+        'quantity' => 'int',
+        'cost_currency' => 'float',
+        'price_sell' => 'float',
+        'cost_ru' => 'float',
+    ])]
     public function getInfoData(): array
     {
         $quantity = 0;

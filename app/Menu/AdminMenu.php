@@ -190,7 +190,7 @@ class AdminMenu
                     'movement' => [
                         'icon' => 'folder-sync',
                         'title' => 'Перемещение товара',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.accounting.movement.index',
                     ],
                     'departure' => [
                         'icon' => 'folder-output',

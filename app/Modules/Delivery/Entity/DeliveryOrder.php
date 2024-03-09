@@ -2,11 +2,10 @@
 declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity;
-use App\Modules\Admin\Entity\Responsible;
+use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Order\Entity\Order\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\File;
 
 /**
  * @property int $id
@@ -14,13 +13,13 @@ use phpDocumentor\Reflection\File;
  * @property int $type
  * @property float $cost
  * @property string $address
- *
+ * @property int $point_storage_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property DeliveryStatus $status
+ * @property DeliveryStatus $status Текущий статус
  * @property DeliveryStatus[] $statuses
- * @property Responsible $responsible
  * @property Order $order
+ * @property Storage $point Точка (склад) выдачи/сбора товара
  */
 
 
@@ -39,7 +38,6 @@ class DeliveryOrder extends Model
         self::LOCAL => 'Доставка по региону',
         self::REGION => 'Доставка ТК по России',
     ];
-
 
     protected $fillable =[
         'order_id',
@@ -66,14 +64,18 @@ class DeliveryOrder extends Model
             'value' => DeliveryStatus::WAIT_STAFF,
         ]);
         return $delivery;
-
     }
-
 
     public function setCost(float $cost)
     {
         $this->cost = $cost;
         $this->save();
+    }
+
+    public function point()
+    {
+        if (is_null($this->point_storage_id)) return null;
+        return $this->belongsTo(Storage::class, 'point_storage_id', 'id');
     }
 
     public function order()
@@ -91,16 +93,6 @@ class DeliveryOrder extends Model
         return $this->hasMany(DeliveryStatus::class, 'delivery_id', 'id');
     }
 
-    public function responsible()
-    {
-        return $this->morphOne(Responsible::class, 'taskable');
-    }
-
-    public function setResponsible(int $staff_id)
-    {
-        //TODO !!!!
-    }
-
     public function typeHTML()
     {
         return self::TYPES[$this->type];
@@ -109,5 +101,15 @@ class DeliveryOrder extends Model
     public function isStorage(): bool
     {
         return $this->type == self::STORAGE;
+    }
+
+    public function isLocal(): bool
+    {
+        return $this->type == self::LOCAL;
+    }
+
+    public function isRegion(): bool
+    {
+        return $this->type == self::REGION;
     }
 }

@@ -16,6 +16,7 @@ use function now;
  * @property int $user_id
  * @property int $product_id
  * @property int $quantity
+ * @property int $storage_id
  * @property Carbon $created_at
  * @property Carbon $reserve_at
  * @property Product $product
@@ -69,6 +70,12 @@ class Reserve extends Model
         ]);
     }
 
+    public function setStorage(int $storage_id)
+    {
+        $this->storage_id = $storage_id;
+        $this->save();
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
@@ -88,4 +95,5 @@ class Reserve extends Model
     {
         return $this->hasOne(OrderItem::class, 'reserve_id', 'id');
     }
+
 }

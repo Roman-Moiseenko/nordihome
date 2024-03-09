@@ -2,36 +2,27 @@
 
 namespace App\Listeners;
 
-use App\Entity\Admin;
-use App\Events\ProductHasParsed;
+use App\Events\MovementHasCreated;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use NotificationChannels\Telegram\TelegramUpdates;
 
-class NotificationNewProductParser
+class NotificationNewMovement
 {
     private StaffRepository $repository;
 
-    /**
-     * Create the event listener.
-     */
     public function __construct(StaffRepository $repository)
     {
-        //
         $this->repository = $repository;
     }
 
-    /**
-     * Handle the event.
-     */
-    public function handle(ProductHasParsed $event): void
+    public function handle(MovementHasCreated $event): void
     {
-        $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_PRODUCT);
+        $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_ACCOUNTING);
 
-        $message = "Добавлен новый товар через Парсер\n Артикул товара " . $event->product->code;
+        $message = "Новое перемещение\n со склада " . $event->document->storageOut->name . " \n на склад " . $event->document->storageIn->name;
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage($message));
         }

@@ -1,8 +1,10 @@
 <x-mail::message>
 
 <x-mail::panel>
-#Новый заказ {{ $order->htmlNum() }}
+#Отмена заказа {{ $order->htmlNum() }}
 </x-mail::panel>
+
+Ваш заказ был отменен менеджером:
 @component('mail::table')
 | Товар       | Цена         | Цена со скидкой  | Кол-во  | Сумма  |
 | ----------- |:------------:|:----------------:|:-------:| ------:|
@@ -10,9 +12,10 @@
 | {{ $item->product->name}}       | {{ price($item->base_cost) }}         | {{ price($item->sell_cost) }}  | {{ $item->quantity }}  | {{ price($item->sell_cost * $item->quantity) }}  |
 @endforeach
 @endcomponent
-Общая сумма к оплате {{ $order->total }}
-Ожидайте подтверждение менеджера.
-Счет на оплату будет выслан после подтверждения
+
+<x-mail::panel>
+##{{ $comment }}
+</x-mail::panel>
 
 С уважением,<br>
 {{ config('app.name') }}

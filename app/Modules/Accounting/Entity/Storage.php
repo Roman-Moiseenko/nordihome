@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Entity\Photo;
+use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -128,5 +129,10 @@ class Storage extends Model
             }
         }
         return 0;
+    }
+
+    public function getReserve(Product $product): int
+    {
+        return Reserve::where('storage_id', $this->id)->where('product_id', $product->id)->count();
     }
 }

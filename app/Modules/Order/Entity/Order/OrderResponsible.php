@@ -25,7 +25,7 @@ class OrderResponsible extends Model
 {
     const POST_MANAGER = 1;
     const POST_LOGGER = 2;
-    const POST_CASHER = 3;
+    const POST_CASHIER = 3;
 
     public $timestamps = false;
     protected $fillable = [
@@ -46,6 +46,15 @@ class OrderResponsible extends Model
         return self::make([
             'staff_id' => $staff_id,
             'staff_post' => self::POST_MANAGER,
+            'created_at' => now(),
+        ]);
+    }
+
+    public static function registerLogger(int $staff_id): self
+    {
+        return self::make([
+            'staff_id' => $staff_id,
+            'staff_post' => self::POST_LOGGER,
             'created_at' => now(),
         ]);
     }

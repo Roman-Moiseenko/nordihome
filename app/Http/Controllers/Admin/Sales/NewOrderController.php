@@ -56,9 +56,10 @@ class NewOrderController extends Controller
     {
         try {
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+            $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
 
             $storages = Storage::orderBy('name')->get();
-            return view('admin.sales.order.show', compact('order', 'staffs', 'storages'));
+            return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages'));
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
             flash('Техническая ошибка! Информация направлена разработчику', 'danger');

@@ -9,5 +9,5 @@
     <x-base.table.td class="text-center">{{ $item->product->category->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $item->quantity }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $item->product->count_for_sell }}</x-base.table.td>
-    <x-base.table.td class="text-center"> - </x-base.table.td>
+    <x-base.table.td class="text-center"> {{ $item->inReserve() }} </x-base.table.td>
 </x-base.table.tr>

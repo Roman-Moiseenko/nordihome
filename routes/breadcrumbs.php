@@ -5,6 +5,7 @@ use App\Entity\Admin;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
@@ -553,7 +554,23 @@ Breadcrumbs::for('admin.accounting.arrival.edit', function (BreadcrumbTrail $tra
     $trail->parent('admin.accounting.arrival.show', $arrival);
     $trail->push('Редактировать', route('admin.accounting.arrival.edit', $arrival));
 });
-
+//MOVEMENT
+Breadcrumbs::for('admin.accounting.movement.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Перемещение товаров', route('admin.accounting.movement.index'));
+});
+Breadcrumbs::for('admin.accounting.movement.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.movement.index');
+    $trail->push('Добавить', route('admin.accounting.movement.create'));
+});
+Breadcrumbs::for('admin.accounting.movement.show', function (BreadcrumbTrail $trail, MovementDocument $movement) {
+    $trail->parent('admin.accounting.movement.index');
+    $trail->push($movement->number . ' от ' . $movement->created_at->format('d-m-Y'), route('admin.accounting.movement.show', $movement));
+});
+Breadcrumbs::for('admin.accounting.movement.edit', function (BreadcrumbTrail $trail, MovementDocument $movement) {
+    $trail->parent('admin.accounting.movement.show', $movement);
+    $trail->push('Редактировать', route('admin.accounting.movement.edit', $movement));
+});
 
 /////PAGES
 //WIDGET

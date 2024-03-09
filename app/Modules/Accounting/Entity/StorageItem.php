@@ -27,4 +27,13 @@ class StorageItem extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    /**
+     * В резерве на текущем складе
+     * @return int
+     */
+    public function inReserve()
+    {
+        return $this->product->reserves()->where('storage_id', $this->storage_id)->sum('quantity');
+    }
 }

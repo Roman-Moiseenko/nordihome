@@ -379,13 +379,19 @@ Route::group(
                 Route::resource('distributor', 'DistributorController'); //CRUD
                 Route::resource('currency', 'CurrencyController'); //CRUD
                 Route::resource('arrival', 'ArrivalController'); //CRUD
+                Route::resource('movement', 'MovementController'); //CRUD
 
                 Route::post('/arrival/{arrival}/search', 'ArrivalController@search')->name('arrival.search');
                 Route::post('/arrival/{arrival}/add', 'ArrivalController@add')->name('arrival.add');
                 Route::post('/arrival/{arrival}/completed', 'ArrivalController@completed')->name('arrival.completed');
                 Route::post('/arrival/{item}/set', 'ArrivalController@set')->name('arrival.set');
-
                 Route::delete('/arrival/{item}/remove-item', 'ArrivalController@remove_item')->name('arrival.remove-item');
+
+                Route::post('/movement/{movement}/search', 'MovementController@search')->name('movement.search');
+                Route::post('/movement/{movement}/add', 'MovementController@add')->name('movement.add');
+                Route::post('/movement/{movement}/completed', 'MovementController@completed')->name('movement.completed');
+                Route::post('/movement/{item}/set', 'MovementController@set')->name('movement.set');
+                Route::delete('/movement/{item}/remove-item', 'MovementController@remove_item')->name('movement.remove-item');
 
             }
         );

@@ -3,13 +3,20 @@
 namespace App\Providers;
 
 use App\Events\ArrivalHasCompleted;
+use App\Events\MovementHasCompleted;
+use App\Events\MovementHasCreated;
+use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCreated;
+use App\Events\PointHasEstablished;
 use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
 use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasRegistered;
+use App\Listeners\NotificationCanceledOrder;
 use App\Listeners\NotificationNewArrival;
+use App\Listeners\NotificationNewMovement;
 use App\Listeners\NotificationNewOrder;
+use App\Listeners\NotificationNewPointStorage;
 use App\Listeners\NotificationNewProductParser;
 use App\Listeners\NotificationThrowable;
 use App\Listeners\ParsingImageProduct;
@@ -50,7 +57,19 @@ class EventServiceProvider extends ServiceProvider
         ],
         ThrowableHasAppeared::class => [
             NotificationThrowable::class
-        ]
+        ],
+        OrderHasCanceled::class => [
+            NotificationCanceledOrder::class,
+        ],
+        MovementHasCompleted::class => [
+            //TODO Слушатель для события
+        ],
+        MovementHasCreated::class => [
+            NotificationNewMovement::class
+        ],
+        PointHasEstablished::class => [
+            NotificationNewPointStorage::class
+        ],
     ];
 
     /**

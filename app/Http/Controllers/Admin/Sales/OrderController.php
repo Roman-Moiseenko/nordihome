@@ -26,7 +26,7 @@ class OrderController extends Controller
         $this->service = $service;
     }
 
-    //TODO
+    //TODO Сделать OrderAction и по каждому действию записывать staff->id, Action, json(данные)
     public function destroy(Order $order)
     {
         $this->service->destroy($order);
@@ -74,8 +74,12 @@ class OrderController extends Controller
     //AJAX
     public function set_quantity(Request $request, Order $order)
     {
-        $items = json_decode($request['items'], true);
-        $result = $this->service->setQuantity($order, $items);
-        return response()->json($result);
+        try {
+            $items = json_decode($request['items'], true);
+            $result = $this->service->setQuantity($order, $items);
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            return response()->json($e->getMessage());
+        }
     }
 }

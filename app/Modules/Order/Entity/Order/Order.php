@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Entity\Admin;
-use App\Modules\Admin\Entity\Responsible;
+use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Entity\Payment\Payment;
@@ -37,6 +37,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property User $user
  * @property DeliveryOrder $delivery
  * @property OrderResponsible[] $responsible
+ * @property MovementDocument[] $movements
  */
 class Order extends Model
 {
@@ -161,7 +162,7 @@ class Order extends Model
     public function getItem(Product $product): OrderItem
     {
         foreach ($this->items as $orderItem) {
-            if ($orderItem->product->id = -$product->id) return $orderItem;
+            if ($orderItem->product->id == $product->id) return $orderItem;
         }
         throw new \DomainException('Данный товар не содержится в заказе');
     }
@@ -207,13 +208,17 @@ class Order extends Model
         return $this->hasMany(OrderStatus::class, 'order_id', 'id');
     }
 
-    public function checkOutReserve()
+    public function checkOutReserve(): bool
     {
         $canceled = true;
         foreach ($this->items as $item) {
             if ($item->reserve_id != null) $canceled = false;
         }
-        if (!$this->paid && $canceled) $this->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
+        if (!$this->paid && $canceled) {
+            $this->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
+            return true;
+        }
+        return false;
     }
 
     public function delivery()
@@ -281,6 +286,15 @@ class Order extends Model
     }
 
     /**
+     * Установлена точка выдачи/сборки товара
+     * @return bool
+     */
+    public function isPoint(): bool
+    {
+        return !is_null($this->delivery->point_storage_id);
+    }
+
+    /**
      * Общий вес заказа
      * @return float
      */
@@ -307,5 +321,34 @@ class Order extends Model
     }
 
 //Функции для данных по доставке
-//TODO Сделать интерфейс
-}
+
+    /**
+     * Устанавливаем точку выдачи/сборки товара
+     * @param int $point_storage_id
+     * @return void
+     */
+    public function setPoint(int $point_storage_id)
+    {
+        $this->delivery->point_storage_id = $point_storage_id;
+        $this->delivery->save();
+    }
+
+    /**
+     * Для каждого товара в заказе назначаем склад резерва
+     * @param $storage_id
+     * @return void
+     */
+    public function setStorage($storage_id)
+    {
+        foreach ($this->items as $item) {
+            $item->reserve->setStorage($storage_id);
+            $item->reserve->save();
+        }
+    }
+
+    public function movements()
+    {
+        return $this->hasMany(MovementDocument::class, 'order_id', 'id');
+    }
+
+}//TODO Сделать интерфейс

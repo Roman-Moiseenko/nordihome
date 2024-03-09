@@ -5,7 +5,12 @@ namespace App\Modules\Order\Service;
 
 
 use App\Entity\Admin;
+use App\Events\MovementHasCreated;
+use App\Events\OrderHasCanceled;
+use App\Events\PointHasEstablished;
 use App\Events\ThrowableHasAppeared;
+use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderResponsible;
@@ -17,6 +22,16 @@ use Illuminate\Support\Facades\DB;
 
 class SalesService
 {
+
+    private ReserveService $reserve;
+    private MovementService $movements;
+
+    public function __construct(ReserveService $reserve, MovementService $movements)
+    {
+        $this->reserve = $reserve;
+        $this->movements = $movements;
+    }
+
     public function setManager(Order $order, int $staff_id)
     {
         $staff = Admin::find($staff_id);
@@ -48,20 +63,14 @@ class SalesService
                 if ($orderItem->quantity != $new_quantity) {
                     $result = true; //Хотя бы одно изменение кол-ва
                     //Снимаем с резерва
-                    $reserve = $orderItem->reserve->quantity;
-                    $sub_reserve = $reserve - $new_quantity;
-                    if ($sub_reserve > 0) {
-                        $orderItem->reserve->update(
-                            ['quantity' => $sub_reserve],
-                        );
-                        $orderItem->product->count_for_sell += $sub_reserve;
-                        $orderItem->product->save();
-                    }
+                    $sub_reserve = $orderItem->quantity - $new_quantity;
+                    $this->reserve->subReserve($orderItem->reserve->id, $sub_reserve);
                     $orderItem->changeQuantity($new_quantity);
                 }
             }
-            if (!$result) return false;
+            if ($result == false) return false;
             $order->refresh();
+            //Пересчет скидок и стоимости Заказа
             $cartItems = [];
             foreach ($order->items as $item) {
                 $cartItems[] = CartItem::create(
@@ -72,24 +81,22 @@ class SalesService
             }
             $calculator = new CalculatorOrder();
             $cartItems = $calculator->calculate($cartItems);
-            //TODO пересчет Заказа - Проверить
-            $amount = 0;
-            $total = 0;
+            $order->amount = 0;
+            $order->total = 0;
             foreach ($cartItems as $cartItem) {
                 $orderItem = $order->getItem($cartItem->product);
-                $orderItem->discount_id = $cartItem->discount_id;
-                $orderItem->discount_type = $cartItem->discount_type;
-                $orderItem->sell_cost = $cartItem->discount_cost;
+                if (isset($cartItem->discount_id)) {
+                    $orderItem->discount_id = $cartItem->discount_id;
+                    $orderItem->discount_type = $cartItem->discount_type;
+                    $orderItem->sell_cost = $cartItem->discount_cost;
+                }
                 $orderItem->save();
-                $amount += $orderItem->quantity * $orderItem->base_cost;
-                $total += $orderItem->quantity * $orderItem->sell_cost;
-                //Заменить скидку в товарах
-                //Посчитать общую сумму и общую скидку
+                $orderItem->refresh();
+                $order->amount += $orderItem->quantity * $orderItem->base_cost;
+                $order->total += $orderItem->quantity * $orderItem->sell_cost;
             }
-            $order->amount = $amount;
-            $order->total = $total;
-            $order->discount = $amount - $total - $order->coupon;
-            $order->save();//Внести данные в Order
+            $order->discount = $order->amount - $order->total - $order->coupon;
+            $order->save();
             DB::commit();
             //TODO  Оповещение клиента после отправки счета, об изменении кол-ва товаров event(new OrderQuantityHasChanged($order));
             return true;
@@ -97,6 +104,7 @@ class SalesService
             DB::rollBack();
             event(new ThrowableHasAppeared($e));
             return false;
+            //return [$e->getMessage(), $e->getLine(), $e->getFile()];
         }
     }
 
@@ -113,16 +121,32 @@ class SalesService
 
     public function setDelivery(Order $order, float $cost)
     {
+        $order->delivery->cost = $cost;
+        $order->delivery->save();
         //Установить стоимость доставки
     }
 
+    public function setLogger(Order $order, int $logger_id)
+    {
+        $logger = Admin::find($logger_id);
+        $order->responsible()->save(OrderResponsible::registerLogger($logger->id));
+    }
+
+    /**
+     * Устанавливаем точку сборки заказа и при необходимости формируем заявку на перемещение товара
+     * @param Order $order
+     * @param int $storage_id
+     * @return void
+     */
     public function setMoving(Order $order, int $storage_id)
     {
-        //TODO Формируем не проведенную заявку на перемещение
-        //Создаем event:
-        //уведомляем ответственных за перемещение, руководство
-        //Запись о действиях с заказом ????
+        $storage = Storage::find($storage_id);
+        $order->setPoint($storage->id); // Установить точку выдачи товара
+        $order->setStorage($storage->id); // в резервах указать склад,
 
+        event(new PointHasEstablished($order));
+        $movement = $this->movements->createByOrder($order);
+        if (!is_null($movement)) event(new MovementHasCreated($movement));
     }
 
     public function destroy(Order $order)
@@ -132,13 +156,15 @@ class SalesService
         } else {
             throw new \DomainException('Нельзя удалить заказ, который уже в работе');
         }
-
     }
 
     public function canceled(Order $order, string $comment)
     {
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
-        //TODO Оповещаем Клиента об отмене Заказа
-        //event();
+        foreach ($order->items as $item) {
+            //Снимаем с резерва
+            $this->reserve->subReserve($item->reserve->id, $item->quantity);
+        }
+        event(new OrderHasCanceled($order));
     }
 }

@@ -13,11 +13,6 @@ use App\Modules\Shop\Cart\CartItem;
 class CalculatorOrder
 {
 
-    public function __construct()
-    {
-    }
-
-    //TODO Перенести в корзину ???
     /**
      * @param CartItem[] $items
      * @return CartItem[]
@@ -38,13 +33,11 @@ class CalculatorOrder
             /** @var Bonus $bonus_product */
             $bonus_product = Bonus::where('bonus_id', $item->getProduct()->id)->first();
             if (!empty($bonus_product) && in_array($bonus_product->product_id, $product_ids)) {
-                $q_bonus = $item->getQuantity();
+                $q_bonus = $item->quantity;
                 $q_product = $q_bonus;
-                //$name_base_product = '';
                 foreach($items as $_item) {
-                    if ($_item->getProduct()->id == $bonus_product->product_id) {
-                        $q_product = $_item->getQuantity();
-                        //$name_base_product = $_item->getProduct()->name; В описании бонуса добавить название главн.товара
+                    if ($_item->product->id == $bonus_product->product_id) {
+                        $q_product = $_item->quantity;
                     }
                 }
                 if ($q_bonus <= $q_product) {
@@ -67,5 +60,4 @@ class CalculatorOrder
 
         return $items;
     }
-
 }

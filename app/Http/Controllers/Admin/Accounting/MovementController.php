@@ -4,57 +4,55 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Accounting;
 
 use App\Events\ThrowableHasAppeared;
-use App\Modules\Accounting\Entity\ArrivalDocument;
-use App\Modules\Accounting\Entity\ArrivalProduct;
-use App\Modules\Accounting\Entity\Currency;
-use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Accounting\Service\ArrivalService;
+use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 
-class ArrivalController extends Controller
+class MovementController extends Controller
 {
-    private mixed $pagination;
-    private ArrivalService $service;
+    private MovementService $service;
     private ProductRepository $products;
+    private mixed $pagination;
 
-    public function __construct(ArrivalService $service, ProductRepository $products)
+    public function __construct(MovementService $service, ProductRepository $products)
     {
         $this->service = $service;
-        $this->pagination = Config::get('shop-config.p-list');
         $this->products = $products;
+        $this->pagination = Config::get('shop-config.p-list');
+
     }
 
     public function index(Request $request)
     {
         try {
-            $query = ArrivalDocument::orderByDesc('created_at');
-            $distributors = Distributor::orderBy('name')->get();
+            $query = MovementDocument::orderByDesc('created_at');
             $storages = Storage::orderBy('name')->get();
 
             $completed = $request['completed'] ?? 'all';
             if ($completed == 'true') $query->where('completed', '=', true);
             if ($completed == 'false') $query->where('completed', '=', false);
-            if (!empty($distributor_id = $request->get('distributor_id'))) {
-                $query->where('distributor_id', $distributor_id);
-            }
-            if (!empty($storage_id = $request->get('storage_id'))) {
-                $query->where('storage_id', $storage_id);
-            }
 
+            if (!empty($storage_in = $request->get('storage_in'))) {
+                $query->where('storage_in', $storage_in);
+            }
+            if (!empty($storage_out = $request->get('storage_out'))) {
+                $query->where('storage_out', $storage_out);
+            }
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
-                $arrivals = $query->paginate($pagination);
-                $arrivals->appends(['p' => $pagination]);
+                $movements = $query->paginate($pagination);
+                $movements->appends(['p' => $pagination]);
             } else {
-                $arrivals = $query->paginate($this->pagination);
+                $movements = $query->paginate($this->pagination);
             }
-            return view('admin.accounting.arrival.index',
-                compact('arrivals', 'pagination', 'completed', 'storages', 'distributors', 'storage_id', 'distributor_id'));
+            return view('admin.accounting.movement.index',
+                compact('movements', 'pagination', 'completed', 'storages', 'storage_in', 'storage_out'));
 
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
@@ -66,10 +64,8 @@ class ArrivalController extends Controller
     public function create(Request $request)
     {
         try {
-            $distributors = Distributor::get();
-            $currencies = Currency::get();
             $storages = Storage::get();
-            return view('admin.accounting.arrival.create', compact('distributors', 'currencies', 'storages'));
+            return view('admin.accounting.movement.create', compact('storages'));
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
             flash('Техническая ошибка! Информация направлена разработчику', 'danger');
@@ -79,15 +75,13 @@ class ArrivalController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
-            'distributor' => 'required',
-            'storage' => 'required',
-            'currency' => 'required',
+            'storage_out' => 'required',
+            'storage_in' => 'required',
         ]);
         try {
-            $arrival = $this->service->create($request);
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
+            $movement = $this->service->create($request);
+            return redirect()->route('admin.accounting.movement.show', $movement);
 
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
@@ -98,11 +92,11 @@ class ArrivalController extends Controller
         return redirect()->back();
     }
 
-    public function show(ArrivalDocument $arrival)
+    public function show(MovementDocument $movement)
     {
         try {
-            $info = $arrival->getInfoData();
-            return view('admin.accounting.arrival.show', compact('arrival', 'info'));
+            $info = $movement->getInfoData();
+            return view('admin.accounting.movement.show', compact('movement', 'info'));
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
             flash('Техническая ошибка! Информация направлена разработчику', 'danger');
@@ -110,13 +104,11 @@ class ArrivalController extends Controller
         return redirect()->back();
     }
 
-    public function edit(ArrivalDocument $arrival)
+    public function edit(MovementDocument $movement)
     {
         try {
-            $distributors = Distributor::get();
-            $currencies = Currency::get();
             $storages = Storage::get();
-            return view('admin.accounting.arrival.edit', compact('arrival'), compact('distributors', 'currencies', 'storages'));
+            return view('admin.accounting.movement.edit', compact('movement'), compact('storages'));
 
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
@@ -125,16 +117,15 @@ class ArrivalController extends Controller
         return redirect()->back();
     }
 
-    public function update(Request $request, ArrivalDocument $arrival)
+    public function update(Request $request, MovementDocument $movement)
     {
         try {
             $request->validate([
-                'distributor' => 'required',
-                'storage' => 'required',
-                'currency' => 'required',
+                'storage_in' => 'required',
+                'storage_out' => 'required',
             ]);
-            $arrival = $this->service->update($request, $arrival);
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
+            $movement = $this->service->update($request, $movement);
+            return redirect()->route('admin.accounting.movement.show', $movement);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
@@ -144,10 +135,10 @@ class ArrivalController extends Controller
         return redirect()->back();
     }
 
-    public function destroy(ArrivalDocument $arrival)
+    public function destroy(MovementDocument $movement)
     {
         try {
-            $this->service->destroy($arrival);
+            $this->service->destroy($movement);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
@@ -157,11 +148,11 @@ class ArrivalController extends Controller
         return redirect()->back();
     }
 
-    public function add(Request $request, ArrivalDocument $arrival)
+    public function add(Request $request, MovementDocument $movement)
     {
         try {
-            $this->service->add($request, $arrival);
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
+            $this->service->add($request, $movement);
+            return redirect()->route('admin.accounting.movement.show', $movement);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
@@ -171,12 +162,12 @@ class ArrivalController extends Controller
         return redirect()->back();
     }
 
-    public function remove_item(ArrivalProduct $item)
+    public function remove_item(MovementProduct $item)
     {
         try {
-            $arrival = $item->document;
+            $movement = $item->document;
             $item->delete();
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
+            return redirect()->route('admin.accounting.movement.show', $movement);
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
@@ -186,11 +177,11 @@ class ArrivalController extends Controller
         return redirect()->back();
     }
 
-    public function completed(ArrivalDocument $arrival)
+    public function completed(MovementDocument $movement)
     {
         try {
-            $this->service->completed($arrival);
-            return redirect()->route('admin.accounting.arrival.index');
+            $this->service->completed($movement);
+            return redirect()->route('admin.accounting.movement.index');
         } catch (\DomainException $e) {
             flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
@@ -201,14 +192,11 @@ class ArrivalController extends Controller
     }
 
     //AJAX
-    public function set(Request $request, ArrivalProduct $item)
+    public function set(Request $request, MovementProduct $item)
     {
         try {
-            $cost_ru = $this->service->set($request, $item);
-            return response()->json([
-                'cost_ru' => $cost_ru,
-                'info' => $item->document->getInfoData(),
-            ]);
+            $result = $this->service->set($request, $item);
+            return response()->json($result);
         } catch (\DomainException $e) {
             return response()->json(['error' => $e->getMessage()]);
         } catch (\Throwable $e) {
@@ -217,15 +205,14 @@ class ArrivalController extends Controller
         }
     }
 
-
-    public function search(Request $request, ArrivalDocument $arrival)
+    public function search(Request $request, MovementDocument $movement)
     {
         $result = [];
         try {
             $products = $this->products->search($request['search']);
             /** @var Product $product */
             foreach ($products as $product) {
-                if (!$arrival->isProduct($product->id)) {
+                if (!$movement->isProduct($product->id)) {
                     $result[] = $this->products->toArrayForSearch($product);
                 }
             }
@@ -235,4 +222,5 @@ class ArrivalController extends Controller
         }
         return \response()->json($result);
     }
+
 }

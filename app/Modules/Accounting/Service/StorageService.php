@@ -65,6 +65,20 @@ class StorageService
             $product->save();
         }
     }
+    /**
+     * @param MovementItemInterface[] $items
+     * @return void
+     */
+    public function departure(Storage $storage, array $items)
+    {
+        //Списание товара, списком
+        foreach ($items as $item) {
+            $product = $item->getProduct();
+            $storage->sub($product, $item->getQuantity());
+            $product->count_for_sell -= $item->getQuantity();
+            $product->save();
+        }
+    }
 
     //TODO При перемещении count_for_sell не меняется
     // при списании уменьшается на getQuantity()
