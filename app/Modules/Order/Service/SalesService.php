@@ -115,15 +115,18 @@ class SalesService
         //Сформировать заявку на оплату
 
         // Отправить письмо клиенту
-
-
     }
 
+    /**
+     * Установка вручную стоимости доставки
+     * @param Order $order
+     * @param float $cost
+     * @return void
+     */
     public function setDelivery(Order $order, float $cost)
     {
         $order->delivery->cost = $cost;
         $order->delivery->save();
-        //Установить стоимость доставки
     }
 
     public function setLogger(Order $order, int $logger_id)
@@ -140,13 +143,25 @@ class SalesService
      */
     public function setMoving(Order $order, int $storage_id)
     {
-        $storage = Storage::find($storage_id);
-        $order->setPoint($storage->id); // Установить точку выдачи товара
-        $order->setStorage($storage->id); // в резервах указать склад,
-
-        event(new PointHasEstablished($order));
-        $movement = $this->movements->createByOrder($order);
-        if (!is_null($movement)) event(new MovementHasCreated($movement));
+        DB::beginTransaction();
+        try {
+            $storage = Storage::find($storage_id);
+            $order->setPoint($storage->id); // Установить точку выдачи товара
+            $order->setStorage($storage->id); // в резервах указать склад,
+            $movements = $this->movements->createByOrder($order); //Создаем перемещения, если нехватает товара
+            DB::commit();
+            event(new PointHasEstablished($order));
+            if (!is_null($movements)) event(new MovementHasCreated($movements));
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+            DB::rollBack();
+            return;
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            //flash($e->getMessage(), 'danger');
+            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
+            DB::rollBack();
+        }
     }
 
     public function destroy(Order $order)
@@ -160,11 +175,10 @@ class SalesService
 
     public function canceled(Order $order, string $comment)
     {
-        $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         foreach ($order->items as $item) {
-            //Снимаем с резерва
-            $this->reserve->subReserve($item->reserve->id, $item->quantity);
+            $this->reserve->delete($item->reserve);
         }
+        $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         event(new OrderHasCanceled($order));
     }
 }

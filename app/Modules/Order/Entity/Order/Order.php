@@ -208,17 +208,17 @@ class Order extends Model
         return $this->hasMany(OrderStatus::class, 'order_id', 'id');
     }
 
+    /**
+     * Возвращает true если весь товар из заказа не имеет резерва
+     * @return bool
+     */
     public function checkOutReserve(): bool
     {
-        $canceled = true;
         foreach ($this->items as $item) {
-            if ($item->reserve_id != null) $canceled = false;
+            if ($item->reserve_id != null)
+            return false;
         }
-        if (!$this->paid && $canceled) {
-            $this->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public function delivery()

@@ -63,7 +63,6 @@ class DBStorage implements StorageInterface
 
         $new_quantity = $item->quantity - $quantity;
         if (!is_null($item->reserve)) {
-
             $_reserve = $item->reserve->quantity;
             if ($new_quantity < $_reserve)
                 $this->reserveService->subReserve($item->reserve->id, $_reserve - $new_quantity);

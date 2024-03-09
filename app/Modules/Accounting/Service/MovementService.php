@@ -12,6 +12,7 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\ArrayShape;
 
 class MovementService
 {
@@ -33,38 +34,61 @@ class MovementService
         return $movement;
     }
 
-
-    public function createByOrder(Order $order)
+    /**
+     * @param Order $order
+     * @return MovementDocument[]|null
+     */
+    public function createByOrder(Order $order): ?array
     {
-        return null;
-
         $storageIn = $order->delivery->point;
+
         $emptyItems = [];
         //Создаем список недостающих товаров
         foreach ($order->items as $orderItem) {
-            //TODO
+            $free_product = $storageIn->freeToSell($orderItem->product);
+            if ($free_product < $orderItem->quantity) {
+                $emptyItems[] = [
+                    'product' => $orderItem->product,
+                    'quantity' => $orderItem->quantity - $free_product,
+                ];
+            }
         }
 
-        $storages = Storage::where('id', '<>', $storageIn->id)->get();
-        foreach ($storages as $storage) {
+        if (empty($emptyItems)) return null; //Товара на точке выдачи хватает
 
+        $movements = [];
+        /** @var Storage[] $storages */
+        $storages = Storage::where('id', '<>', $storageIn->id)->where('point_of_delivery', true)->get();
+        foreach ($storages as $storage) { //Для каждого склада создаем перемещение, пока кол-во не опустеет
+            $movement = MovementDocument::register(
+                'По заказу ' . $order->htmlNum(),
+                $storage->id,
+                $storageIn->id,
+            );
+            $movement->order_id = $order->id;
+            $movement->save();
+
+            foreach ($emptyItems as $i => &$item) {
+                $free_product = $storage->freeToSell($item['product']);
+                if ($free_product >= $item['quantity']) {
+                    $movement->movementProducts()->create([
+                        'quantity' => $item['quantity'],
+                        'product_id' => $item['product']->id,
+                        ]);
+                    unset($emptyItems[$i]);
+                } else {
+                    $movement->movementProducts()->create(['quantity' => $free_product]);
+                    $item['quantity'] -= $free_product;
+                }
+            }
+            $movements[] = $movement;
+            if (empty($emptyItems)) return $movements;
         }
-        //Ищем в остальных хранилищах
 
-
-        $movement = MovementDocument::register(
-            'по заказу ' . $order->htmlNum(),
-            1,
-            $storageIn->id,
-        );
-        $movement->order_id = $order->id;
-        $movement->save();
-
-        return $movement;
+        throw new \DomainException('Нехватка товара для исполнения заказа!');
     }
 
-
-    public function update(Request $request, MovementDocument $movement)
+    public function update(Request $request, MovementDocument $movement): MovementDocument
     {
         if ($movement->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         $movement->number = $request['number'] ?? '';
@@ -81,7 +105,7 @@ class MovementService
         $movement->delete();
     }
 
-    public function add(Request $request, MovementDocument $movement)
+    public function add(Request $request, MovementDocument $movement): MovementDocument
     {
         if ($movement->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
 
@@ -112,8 +136,6 @@ class MovementService
     public function completed(MovementDocument $movement)
     {
         //Проведение документа
-
-
         DB::beginTransaction();
         try {
             $this->storages->arrival($movement->storageIn, $movement->movementProducts()->getModels());
@@ -121,6 +143,9 @@ class MovementService
             $movement->completed();
             DB::commit();
             event(new MovementHasCompleted($movement));
+        } catch (\DomainException $e) {
+            DB::rollBack();
+            flash($e->getMessage(), 'danger');
         } catch (\Throwable $e) {
             DB::rollBack();
             flash($e->getMessage(), 'danger');

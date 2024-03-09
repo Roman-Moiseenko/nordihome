@@ -6,6 +6,8 @@ namespace App\Modules\Order\Service;
 use App\Events\OrderHasCanceled;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +22,14 @@ class ReserveService
     {
         $reserves = Reserve::where('reserve_at', '<', now())->get();
         foreach ($reserves as $reserve) {
+            /** @var Order $order */
+            $order = $reserve->orderItem->order;
+
             $this->delete($reserve, true);
+            if ($order->checkOutReserve()) {
+                $order->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
+                event(new OrderHasCanceled($order));
+            }
         }
     }
 
@@ -79,7 +88,7 @@ class ReserveService
             if ($reserve->type == Reserve::TYPE_CART) $reserve->cart->clearReserve();
             if ($reserve->type == Reserve::TYPE_ORDER) {
                 $reserve->orderItem->clearReserve();
-                if ($reserve->orderItem->order->checkOutReserve()) event(new OrderHasCanceled($reserve->orderItem->order));
+                //if ($reserve->orderItem->order->checkOutReserve()) event(new OrderHasCanceled($reserve->orderItem->order));
             }
             Reserve::destroy($reserve->id);
 
@@ -89,6 +98,7 @@ class ReserveService
 
         } catch (\Throwable $e) {
             DB::rollBack();
+            if (!$timer) flash($e->getMessage() . ' / ' . $e->getFile() . ' / ' . $e->getLine());
             event(new ThrowableHasAppeared($e));
         }
     }

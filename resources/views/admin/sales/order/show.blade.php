@@ -27,7 +27,7 @@
                         <x-base.lucide icon="boxes" class="w-4 h-4"/>&nbsp;{{ $order->getQuantity() }} шт.
                     </div>
 
-                    @if(!$order->isStatus(\App\Modules\Order\Entity\Order\OrderStatus::PAID))
+                    @if(!$order->isStatus(\App\Modules\Order\Entity\Order\OrderStatus::PAID) && !$order->isCanceled())
                         <div class="truncate sm:whitespace-normal flex items-center">
                             <x-base.lucide icon="baggage-claim" class="w-4 h-4"/>&nbsp;{{ $order->getReserveTo() }}
                         </div>
@@ -79,13 +79,21 @@
 
                     @if($order->delivery->cost != 0)
                         <div class="truncate sm:whitespace-normal flex items-center">
-                            <x-base.lucide icon="badge-russian-ruble" class="w-4 h-4"/>Доставка&nbsp;{{ price($order->delivery->cost) }}
+                            <x-base.lucide icon="badge-russian-ruble" class="w-4 h-4"/>&nbsp;Доставка&nbsp;{{ price($order->delivery->cost) }}
                         </div>
                     @endif
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        Перемещения (проведены или нет)
+                    @if(!empty($order->movements))
+                    <div class="truncate sm:whitespace-normal flex items-center flex-col">
+                        <div class="truncate sm:whitespace-normal flex items-center">
+                            <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;Перемещения со складов:
+                        </div>
+                        @foreach($order->movements as $i => $movement)
+                        <div>
+                            {{ '#' . (int)($i + 1) . ' ' . $movement->storageOut->name . ($movement->isCompleted() ? ': Исполнено' : ': В ожидании') }}
+                        </div>
+                        @endforeach
                     </div>
-
+                    @endif
                 </div>
             </div>
             <div
@@ -162,10 +170,7 @@
     <div class="font-medium text-xl text-danger mt-6">
         В разработке.<br>
         <br>
-        Заявка на перемещение товара<br>
         Подтвердить - смена статуса, отправка платежных документов клиенту.<br>
-
-
         Если оплачен<br>
         Сформировать заявку на сборку (? автоматически)<br>
         Delivery<br>

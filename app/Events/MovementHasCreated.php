@@ -12,22 +12,14 @@ class MovementHasCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public MovementDocument $document;
+    /** @var MovementDocument[] $documents  */
+    public array $documents;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(MovementDocument $document)
+    public function __construct(array $documents)
     {
-        //
-        $this->document = $document;
+        $this->documents = $documents;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
     public function broadcastOn(): array
     {
         return [
