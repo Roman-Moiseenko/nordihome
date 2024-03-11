@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Payment\PaymentOrder;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,18 +11,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderHasCreated
+class PaymentHasPaid
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Order $order;
+    public PaymentOrder $payment;
 
     /**
-     * Слушатели - уведомления, доставка и платежи (сервисы)
+     * Create a new event instance.
      */
-    public function __construct(Order $order)
+    public function __construct(PaymentOrder $payment)
     {
-        $this->order = $order;
+        //
+        $this->payment = $payment;
     }
 
     /**

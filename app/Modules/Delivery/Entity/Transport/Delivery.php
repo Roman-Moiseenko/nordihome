@@ -5,7 +5,6 @@ namespace App\Modules\Delivery\Entity\Transport;
 
 use App\Casts\GeoAddressCast;
 use App\Entity\GeoAddress;
-use App\Modules\Order\Entity\Payment\Payment;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use function now;
@@ -24,7 +23,6 @@ use function now;
  * @property float $weigh
  * @property DeliveryStatus $status
  * @property DeliveryStatus[] $statuses
- * @property Payment $payment
  */
 class Delivery extends Model
 {
@@ -72,10 +70,6 @@ class Delivery extends Model
     }
 
     //Relations *************************************************
-    public function payment()
-    {
-        return $this->morphOne(Payment::class, 'payable');
-    }
 
     public function statuses()
     {

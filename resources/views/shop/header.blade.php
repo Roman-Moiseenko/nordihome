@@ -45,7 +45,7 @@
             <div class="menu-bottom-search flex-grow-1">
                 <div class="presearch" data-route="{{ route('shop.product.search') }}">
                     <div class="presearch-wrapper">
-                        <input id="pre-search">
+                        <input id="pre-search" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');">
                         <div class="presearch-suggest" style="display: none">
                         </div>
                         <div class="presearch-control fs-5 opacity-50">

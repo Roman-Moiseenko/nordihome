@@ -167,6 +167,27 @@
             </x-base.table>
         </div>
     @endif
+
+    <div class="box col-span-12 overflow-auto lg:overflow-visible p-4 mt-4">
+        <h2 class="text-lg font-medium mr-auto">Платежи</h2>
+        <x-base.table class="table table-hover">
+            <x-base.table.thead class="table-dark">
+                <x-base.table.tr>
+                    <x-base.table.th class="whitespace-nowrap">ДАТА СОЗДАНИЯ</x-base.table.th>
+                    <x-base.table.th class="whitespace-nowrap">СУММА</x-base.table.th>
+                    <x-base.table.th class="text-center whitespace-nowrap">СПОСОБ ПЛАТЕЖА</x-base.table.th>
+                    <x-base.table.th class="text-center whitespace-nowrap">НАЗНАЧЕНИЕ</x-base.table.th>
+                    <x-base.table.th class="text-center whitespace-nowrap">ОПЛАТА</x-base.table.th>
+                </x-base.table.tr>
+            </x-base.table.thead>
+            <x-base.table.tbody>
+                @foreach($order->payments as $payment)
+                    @include('admin.sales.order._payment', ['payment' => $payment])
+                @endforeach
+            </x-base.table.tbody>
+        </x-base.table>
+    </div>
+
     <div class="font-medium text-xl text-danger mt-6">
         В разработке.<br>
         <br>
@@ -175,11 +196,8 @@
         Сформировать заявку на сборку (? автоматически)<br>
         Delivery<br>
         <br>
-
         В письме клиенту, отдельная таблица с отмененными товарами и кол-вом<br>
-        <br>
-        Список товаров в заказе (Название, ссылка, артикул, цена/скидка, кол-во ... действия (Уменьшить кол-во, отменить
-        - причина (нет в наличии))
+
 
     </div>
     <script>

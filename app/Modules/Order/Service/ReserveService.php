@@ -20,13 +20,12 @@ class ReserveService
 
     public function clearByTimer() //Удаляем все у которых время резерва вышло
     {
+        /** @var Reserve[] $reserves */
         $reserves = Reserve::where('reserve_at', '<', now())->get();
         foreach ($reserves as $reserve) {
-            /** @var Order $order */
-            $order = $reserve->orderItem->order;
-
+            if ($reserve->type == Reserve::TYPE_ORDER) $order = $reserve->orderItem->order;
             $this->delete($reserve, true);
-            if ($order->checkOutReserve()) {
+            if (isset($order) && $order->checkOutReserve()) {
                 $order->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
                 event(new OrderHasCanceled($order));
             }

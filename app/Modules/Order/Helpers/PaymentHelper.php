@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Helpers;
 
-use App\Modules\Order\Entity\Payment\Payment;
+use App\Modules\Order\Entity\Payment\PaymentOrder;
 
 class PaymentHelper
 {
     public static function payments(): array
     {
-        $namespace = Payment::namespace();
+        $namespace = PaymentOrder::namespace();
         $classes = self::getClasses($namespace);
         $result = [];
         foreach ($classes as $class) {
@@ -39,19 +39,19 @@ class PaymentHelper
 
     public static function online(string $class): bool
     {
-        $namespace = Payment::namespace();
+        $namespace = PaymentOrder::namespace();
         return ($namespace . '\\' . $class)::online();
     }
 
     public static function invoice(string $class, string $inn)
     {
-        $namespace = Payment::namespace();
+        $namespace = PaymentOrder::namespace();
         return ($namespace . '\\' . $class)::getInvoiceData($inn);
     }
 
     public static function isInvoice(string $class): bool
     {
-        $namespace = Payment::namespace();
+        $namespace = PaymentOrder::namespace();
         return ($namespace . '\\' . $class)::isInvoice();
     }
 }

@@ -7,6 +7,7 @@ use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCreated;
+use App\Events\PaymentHasPaid;
 use App\Events\PointHasEstablished;
 use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
@@ -24,6 +25,7 @@ use App\Listeners\NotificationMovedPromotion;
 use App\Listeners\WelcomToShop;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Service\PaymentService;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 
@@ -51,6 +53,7 @@ class EventServiceProvider extends ServiceProvider
         OrderHasCreated::class => [
             NotificationNewOrder::class,
             DeliveryService::class,
+            PaymentService::class,
         ],
         ArrivalHasCompleted::class => [
             NotificationNewArrival::class,
@@ -69,6 +72,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PointHasEstablished::class => [
             NotificationNewPointStorage::class
+        ],
+        PaymentHasPaid::class => [
+
         ],
     ];
 

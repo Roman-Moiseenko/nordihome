@@ -15,6 +15,8 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderResponsible;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Entity\Payment\PaymentOrder;
+use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Cart\CartItem;
@@ -113,6 +115,8 @@ class SalesService
         //TODO Поменять статус
         $order->setStatus(OrderStatus::AWAITING);
         //Сформировать заявку на оплату
+        // готовим документ для оплаты, по типу оплаты клиента ()
+
 
         // Отправить письмо клиенту
     }
@@ -125,8 +129,20 @@ class SalesService
      */
     public function setDelivery(Order $order, float $cost)
     {
+        /** @var UserPayment $userPayment */
+        $userPayment = UserPayment::where('user_id', $order->user_id)->first();
+
+        if ($order->delivery->cost != 0) {
+            $pay = PaymentOrder::where('order_id', $order->id)->where('amount', $order->delivery->cost)->first();
+            if (!empty($pay)) $pay->delete();
+        }
+
         $order->delivery->cost = $cost;
         $order->delivery->save();
+
+        $payment = PaymentOrder::new($cost, $userPayment->class_payment, '', PaymentOrder::PAY_DELIVERY);
+        $order->payments()->save($payment);
+
     }
 
     public function setLogger(Order $order, int $logger_id)

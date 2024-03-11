@@ -6,7 +6,6 @@ namespace App\Modules\Delivery\Service;
 use App\Events\OrderHasCreated;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Delivery\Entity\DeliveryOrder;
-use App\Modules\Delivery\Entity\Local\Delivery;
 use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Entity\UserDelivery;
@@ -82,11 +81,16 @@ class DeliveryService
         event($delivery);
     }
 
-    //Слушатель события создания Заказа
+
+    /**
+     * Слушатель события создания Заказа
+     * @param OrderHasCreated $event
+     * @return void
+     */
     public function handle(OrderHasCreated $event): void
     {
         $order = $event->order;
-        $delivery = DeliveryOrder::register($order->id, $this->user($order->user_id)->type, $this->user($order->user_id)->getAddressDelivery());
-        event($delivery);
+        DeliveryOrder::register($order->id, $this->user($order->user_id)->type, $this->user($order->user_id)->getAddressDelivery());
+        //event($delivery);
     }
 }

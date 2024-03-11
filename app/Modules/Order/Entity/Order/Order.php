@@ -7,7 +7,7 @@ use App\Entity\Admin;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Order\Entity\Payment\Payment;
+use App\Modules\Order\Entity\Payment\PaymentOrder;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -30,7 +30,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property string $comment
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
- * @property Payment $payment
+ * @property PaymentOrder[] $payments
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property OrderItem[] $items
@@ -193,9 +193,9 @@ class Order extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function payment()
+    public function payments()
     {
-        return $this->morphOne(Payment::class, 'payable');
+        return $this->hasMany(PaymentOrder::class, 'order_id', 'id');
     }
 
     public function status()
@@ -221,6 +221,8 @@ class Order extends Model
         return true;
     }
 
+
+    //TODO переделать на hasMany() если будет ТЗ
     public function delivery()
     {
         return $this->hasOne(DeliveryOrder::class, 'order_id', 'id');
@@ -350,5 +352,9 @@ class Order extends Model
     {
         return $this->hasMany(MovementDocument::class, 'order_id', 'id');
     }
+
+    //TODO Сборная информация по доставке
+    // общая стоимость, ...
+
 
 }//TODO Сделать интерфейс

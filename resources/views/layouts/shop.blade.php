@@ -52,5 +52,11 @@
 @include('shop.footer')
 <button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>
 @stack('scripts')
+<script>
+    let tagArr = document.getElementsByTagName("input");
+    for (let i = 0; i < tagArr.length; i++) {
+        tagArr[i].autocomplete = 'off';
+    }
+</script>
 </body>
 </html>
