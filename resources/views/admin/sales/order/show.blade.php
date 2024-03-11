@@ -9,115 +9,19 @@
         </div>
     </div>
     <div class="intro-y box px-5 pt-5 mt-5">
-        <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
+        <div class="flex flex-col lg:flex-row border-b border-slate-200/60  pb-5 -mx-5">
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 pt-5 lg:pt-0">
-
-                <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Информация о заказе</div>
-                <div class="flex flex-col justify-center items-center lg:items-start mt-4">
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="history" class="w-4 h-4"/>&nbsp;{{ $order->statusHtml() }}
-                    </div>
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="badge-russian-ruble" class="w-4 h-4"/>&nbsp;{{ price($order->total) }}
-                    </div>
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="package" class="w-4 h-4"/>&nbsp;{{ count($order->items) }} товаров
-                    </div>
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="boxes" class="w-4 h-4"/>&nbsp;{{ $order->getQuantity() }} шт.
-                    </div>
-
-                    @if(!$order->isStatus(\App\Modules\Order\Entity\Order\OrderStatus::PAID) && !$order->isCanceled())
-                        <div class="truncate sm:whitespace-normal flex items-center">
-                            <x-base.lucide icon="baggage-claim" class="w-4 h-4"/>&nbsp;{{ $order->getReserveTo() }}
-                        </div>
-                    @endif
-                    <div
-                        class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2"
-                        style="width: 100%;"></div>
-                    @if(!empty($order->getManager()))
-                        <div class="truncate sm:whitespace-normal flex items-center">
-                            <x-base.lucide icon="contact"
-                                           class="w-4 h-4"/>&nbsp;{{ $order->getManager()->fullname->getFullName() }} -
-                            менеджер
-                        </div>
-                    @endif
-                    @if(!empty($order->getLogger()))
-                        <div class="truncate sm:whitespace-normal flex items-center">
-                            <x-base.lucide icon="contact"
-                                           class="w-4 h-4"/>&nbsp;{{ $order->getLogger()->fullname->getFullName() }} -
-                            логист
-                        </div>
-                    @endif
-                </div>
+                @include('admin.sales.order._info-order')
             </div>
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-l border-slate-200/60 lg:border-t-0 pt-5 lg:pt-0">
-                <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Доставка</div>
-                <div class="flex flex-col justify-center items-center lg:items-start mt-4">
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;{{ $order->delivery->typeHTML() }}
-                    </div>
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="map-pin" class="w-4 h-4"/>&nbsp;{{ $order->delivery->address }}
-                    </div>
-
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="anvil" class="w-4 h-4"/>&nbsp;{{ $order->weight() }} кг
-                    </div>
-
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="box" class="w-4 h-4"/>&nbsp;{{ $order->volume() }} м3
-                    </div>
-                    <div
-                        class="truncate sm:whitespace-normal flex items-center border-b w-100 border-slate-200/60 pb-2 mb-2"
-                        style="width: 100%;"></div>
-                    @if($order->isPoint())
-                        <div class="truncate sm:whitespace-normal flex items-center">
-                            <x-base.lucide icon="warehouse" class="w-4 h-4"/>&nbsp;{{ 'Выдача/сборка: ' . $order->delivery->point->name }}
-                        </div>
-                    @endif
-
-                    @if($order->delivery->cost != 0)
-                        <div class="truncate sm:whitespace-normal flex items-center">
-                            <x-base.lucide icon="badge-russian-ruble" class="w-4 h-4"/>&nbsp;Доставка&nbsp;{{ price($order->delivery->cost) }}
-                        </div>
-                    @endif
-                    @if(!empty($order->movements))
-                    <div class="truncate sm:whitespace-normal flex items-center flex-col">
-                        <div class="truncate sm:whitespace-normal flex items-center">
-                            <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;Перемещения со складов:
-                        </div>
-                        @foreach($order->movements as $i => $movement)
-                        <div>
-                            {{ '#' . (int)($i + 1) . ' ' . $movement->storageOut->name . ($movement->isCompleted() ? ': Исполнено' : ': В ожидании') }}
-                        </div>
-                        @endforeach
-                    </div>
-                    @endif
-                </div>
+                @include('admin.sales.order._info-delivery')
             </div>
-            <div
-                class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">
-                <div class="font-medium text-center lg:text-left lg:mt-5 text-lg">Контакты клиенты</div>
-                <div class="flex flex-col justify-center items-center lg:items-start mt-4">
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="user"
-                                       class="w-4 h-4"/>&nbsp;{{ $order->user->delivery->fullname->getFullName() }}
-                    </div>
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;<a
-                            href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
-                    </div>
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ $order->user->phone }}
-                    </div>
-                </div>
+            <div class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 border-t lg:border-t-0 pt-5 lg:pt-0">
+                @include('admin.sales.order._info-user')
             </div>
-
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 pt-5 lg:pt-0">
-                @include('admin.sales.order._actions')
+                @include('admin.sales.order._info-actions')
             </div>
-
         </div>
     </div>
 
@@ -169,24 +73,29 @@
     @endif
 
     <div class="box col-span-12 overflow-auto lg:overflow-visible p-4 mt-4">
-        <h2 class="text-lg font-medium mr-auto">Платежи</h2>
-        <x-base.table class="table table-hover">
-            <x-base.table.thead class="table-dark">
-                <x-base.table.tr>
-                    <x-base.table.th class="whitespace-nowrap">ДАТА СОЗДАНИЯ</x-base.table.th>
-                    <x-base.table.th class="whitespace-nowrap">СУММА</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">СПОСОБ ПЛАТЕЖА</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">НАЗНАЧЕНИЕ</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">ОПЛАТА</x-base.table.th>
-                </x-base.table.tr>
-            </x-base.table.thead>
-            <x-base.table.tbody>
-                @foreach($order->payments as $payment)
-                    @include('admin.sales.order._payment', ['payment' => $payment])
-                @endforeach
-            </x-base.table.tbody>
-        </x-base.table>
-    </div>
+            <h2 class="text-lg font-medium mr-auto">Платежи</h2>
+            <x-base.table class="table table-hover">
+                <x-base.table.thead class="table-dark">
+                    <x-base.table.tr>
+                        <x-base.table.th class="whitespace-nowrap">ДАТА СОЗДАНИЯ</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap">СУММА</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">СПОСОБ ПЛАТЕЖА</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">НАЗНАЧЕНИЕ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">КОММЕНТАРИЙ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ОПЛАТА</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
+                    </x-base.table.tr>
+                </x-base.table.thead>
+                <x-base.table.tbody>
+                    @foreach($order->payments as $payment)
+                        @include('admin.sales.order._payment', ['payment' => $payment])
+                    @endforeach
+                    @if($order->isManager())
+                        @include('admin.sales.order._payment-new', ['order' => $order])
+                    @endif
+                </x-base.table.tbody>
+            </x-base.table>
+        </div>
 
     <div class="font-medium text-xl text-danger mt-6">
         В разработке.<br>
@@ -200,6 +109,12 @@
 
 
     </div>
+
+    @if($order->isManager())
+        {{ \App\Forms\ModalDelete::create('Вы уверены?',
+            'Вы действительно хотите удалить платеж?<br>Этот процесс не может быть отменен.', 'id-delete-payment')->show() }}
+    @endif
+
     <script>
         let changeButton = document.getElementById('change-count-item');
         let inputItem = document.querySelectorAll('input[name=new-quantity]');

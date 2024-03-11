@@ -140,7 +140,7 @@ class SalesService
         $order->delivery->cost = $cost;
         $order->delivery->save();
 
-        $payment = PaymentOrder::new($cost, $userPayment->class_payment, '', PaymentOrder::PAY_DELIVERY);
+        $payment = PaymentOrder::new($cost, $userPayment->class_payment, PaymentOrder::PAY_DELIVERY);
         $order->payments()->save($payment);
 
     }
@@ -196,5 +196,30 @@ class SalesService
         }
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         event(new OrderHasCanceled($order));
+    }
+
+    public function setPayment(Order $order, array $params)
+    {
+        $payment = PaymentOrder::new(
+            amount: (float)$params['payment-amount'],
+            class: $params['payment-class'],
+            purpose: (int)$params['payment-purpose'],
+            comment: $params['payment-comment']
+        );
+        $order->payments()->save($payment);
+    }
+
+    public function delPayment(PaymentOrder $payment)
+    {
+        $order = $payment->order;
+        $payment->delete();
+
+        $pays = PaymentOrder::where('order_id', $order->id)->where('purpose', PaymentOrder::PAY_ORDER)->getModels();
+        if (empty($pays)) {
+            flash('У заказа нет ни одного платежа!', 'warning');
+        } else {
+            $sum = array_sum(array_map(function (PaymentOrder $paymentOrder) { return $paymentOrder->amount;}, $pays));
+            if ($order->total != $sum) flash('Сумма платежей не совпадает с заказом!', 'warning');
+        }
     }
 }

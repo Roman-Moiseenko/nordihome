@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Payment;
 
+use App\Modules\Order\Entity\Order\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property array $meta //Данные о платеже
  * @property int $purpose
  * @property string $comment
+ *
+ * @property Order $order
  */
 class PaymentOrder extends Model
 {
@@ -58,11 +61,11 @@ class PaymentOrder extends Model
     ];
 
 
-    public static function new(float $amount, string $class, string $document, int $purpose, array $meta = []): self
+    public static function new(float $amount, string $class, int $purpose, string $comment = '', array $meta = []): self
     {
         $payment = self::make([
             'amount' => $amount,
-            'document' => $document,
+            'comment' => $comment,
             'class' => $class,
             'purpose' => $purpose,
             'created_at' => now(),
@@ -94,6 +97,10 @@ class PaymentOrder extends Model
         return self::PAYS[$this->purpose];
     }
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
 
 
     /////////////////////////////////////////////////////////////////////////////

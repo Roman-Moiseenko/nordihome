@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Sales;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Payment\PaymentOrder;
 use App\Modules\Order\Service\SalesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,6 +69,19 @@ class OrderController extends Controller
     {
         $storage_id = (int)$request['storage'];
         $this->service->setMoving($order, $storage_id);
+        return redirect()->back();
+    }
+
+    public function set_payment(Request $request, Order $order)
+    {
+        $params = $request->all();
+        $this->service->setPayment($order, $params);
+        return redirect()->back();
+    }
+
+    public function del_payment(PaymentOrder $payment)
+    {
+        $this->service->delPayment($payment);
         return redirect()->back();
     }
 

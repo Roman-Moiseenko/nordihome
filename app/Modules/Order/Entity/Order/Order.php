@@ -353,6 +353,15 @@ class Order extends Model
         return $this->hasMany(MovementDocument::class, 'order_id', 'id');
     }
 
+    public function totalPayments(): float
+    {
+        $total = 0;
+        foreach ($this->payments as $payment) {
+            $total += $payment->amount;
+        }
+        return $total;
+    }
+
     //TODO Сборная информация по доставке
     // общая стоимость, ...
 

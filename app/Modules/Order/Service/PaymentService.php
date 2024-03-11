@@ -45,7 +45,7 @@ class PaymentService
 
     public function create(Order $order)
     {
-        $payment = PaymentOrder::new($order->id, $this->user($order->user_id)->class_payment, '', PaymentOrder::PAY_ORDER);
+        $payment = PaymentOrder::new($order->id, $this->user($order->user_id)->class_payment, PaymentOrder::PAY_ORDER);
     }
 
     /**
@@ -57,7 +57,7 @@ class PaymentService
     {
         try {
             $order = $event->order;
-            $payment = PaymentOrder::new($order->total, $this->user($order->user_id)->class_payment, '', PaymentOrder::PAY_ORDER);
+            $payment = PaymentOrder::new($order->total, $this->user($order->user_id)->class_payment,PaymentOrder::PAY_ORDER);
             $order->payments()->save($payment);
         } catch (\Throwable $e) {
             flash($e->getMessage());
