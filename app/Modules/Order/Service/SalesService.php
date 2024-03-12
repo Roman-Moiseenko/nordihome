@@ -7,6 +7,7 @@ namespace App\Modules\Order\Service;
 use App\Entity\Admin;
 use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
+use App\Events\OrderHasLogger;
 use App\Events\PointHasEstablished;
 use App\Events\ThrowableHasAppeared;
 use App\Mail\OrderAwaiting;
@@ -182,6 +183,8 @@ class SalesService
         $logger = Admin::find($logger_id);
         if (empty($logger)) throw new \DomainException('Сборщик под ID ' . $logger_id . ' не существует!');
         $order->responsible()->save(OrderResponsible::registerLogger($logger->id));
+        $order->setStatus(OrderStatus::ORDER_SERVICE);
+        event(new OrderHasLogger($order));
     }
 
     /**
@@ -290,5 +293,10 @@ class SalesService
                 $paymentOrder->save();
             }
         }
+    }
+
+    public function setStatus(Order $order, int $status)
+    {
+        $order->setStatus($status);
     }
 }

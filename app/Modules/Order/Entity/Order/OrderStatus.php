@@ -57,7 +57,7 @@ class OrderStatus extends Model
         self::ON_PACKAGE => 'На комплектации',
         self::CUSTOMS => 'Проходит таможенный контроль',
         self::WAREHOUSE => 'Доставлен на склад',
-        self::ORDER_SERVICE => 'Передан в службу заказов',
+        self::ORDER_SERVICE => 'Передан в службу сборки заказов',
         self::ORDER_COMPLETED => 'Заказ собран',
         self::DELIVERY_REGION => 'Готов для отправки ТК',
         self::DELIVERY_REGION_SERVICE => 'Передан в службу доставки ТК',
@@ -94,4 +94,16 @@ class OrderStatus extends Model
             $status->created_at = now();
         });
     }
+
+    public static function getServiceStatuses(): array
+    {
+        $result = [];
+        foreach (self::STATUSES as $code => $name) {
+            if ($code > self::PAID && $code < self::ORDER_SERVICE) {
+                $result[$code] = $name;
+            }
+        }
+        return $result;
+    }
+
 }

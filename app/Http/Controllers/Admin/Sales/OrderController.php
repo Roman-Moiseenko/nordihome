@@ -46,6 +46,18 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
+    public function sel_logger(Request $request, Order $order)
+    {
+        $this->service->setLogger($order, (int)$request['logger_id']);
+        return redirect()->back();
+    }
+
+    public function set_status(Request $request, Order $order)
+    {
+        $this->service->setStatus($order, (int)$request['status']);
+        return redirect()->back();
+    }
+
     public function set_reserve(Request $request, Order $order)
     {
         $this->service->setReserve($order, $request['reserve-date'], $request['reserve-time']);
@@ -100,6 +112,7 @@ class OrderController extends Controller
         $this->service->paidPayment($payment, $document);
         return redirect()->back();
     }
+
     //AJAX
     public function set_quantity(Request $request, Order $order)
     {

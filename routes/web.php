@@ -340,6 +340,7 @@ Route::group(
                 Route::delete('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
                 Route::delete('/order/{item}/del-item', 'OrderController@del_item')->name('order.del-item');
                 Route::post('/order/{order}/set-manager', 'OrderController@set_manager')->name('order.set-manager');
+                Route::post('/order/{order}/set-logger', 'OrderController@set_logger')->name('order.set-logger');
                 Route::post('/order/{order}/set-reserve', 'OrderController@set_reserve')->name('order.set-reserve');
                 Route::post('/order/{order}/set-quantity', 'OrderController@set_quantity')->name('order.set-quantity');
                 Route::post('/order/{order}/set-delivery', 'OrderController@set_delivery')->name('order.set-delivery');
@@ -349,6 +350,7 @@ Route::group(
                 Route::delete('/order/{payment}/del-payment', 'OrderController@del_payment')->name('order.del-payment');
                 Route::post('/order/{order}/canceled', 'OrderController@canceled')->name('order.canceled');
                 Route::post('/order/{order}/set-awaiting', 'OrderController@set_awaiting')->name('order.set-awaiting');
+                Route::post('/order/{order}/set-status', 'OrderController@set_status')->name('order.set-status');
             }
         );
         //Pages

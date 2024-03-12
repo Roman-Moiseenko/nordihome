@@ -7,6 +7,7 @@ use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCreated;
+use App\Events\OrderHasLogger;
 use App\Events\PaymentHasPaid;
 use App\Events\PointHasEstablished;
 use App\Events\ProductHasParsed;
@@ -15,6 +16,7 @@ use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasRegistered;
 use App\Listeners\NotificationCanceledOrder;
 use App\Listeners\NotificationNewArrival;
+use App\Listeners\NotificationNewLogger;
 use App\Listeners\NotificationNewMovement;
 use App\Listeners\NotificationNewOrder;
 use App\Listeners\NotificationNewPointStorage;
@@ -75,6 +77,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PaymentHasPaid::class => [
 
+        ],
+        OrderHasLogger::class => [
+            NotificationNewLogger::class,
         ],
     ];
 

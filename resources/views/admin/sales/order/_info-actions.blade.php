@@ -169,8 +169,66 @@
         <button class="btn btn-secondary mt-2">Отменить</button>
     @endif
     @if($order->isPaid()/* && $order->getManager()->id == $admin->id*/)
-        <button class="btn btn-primary">Изменить текущий статус</button>
-        <button class="btn btn-success mt-2">На сборку</button>
+            <x-base.popover class="inline-block mt-2 w-100" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="primary" class="w-100">Изменить статус
+                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                </x-base.popover.button>
+                <x-base.popover.panel>
+                    <form action="{{ route('admin.sales.order.set-status', $order) }}" METHOD="POST">
+                        @csrf
+                        <div class="p-2">
+                            <x-base.tom-select id="select-status" name="status" class=""
+                                               data-placeholder="Изменить текущий статус">
+                                <option value="0"></option>
+                                @foreach(\App\Modules\Order\Entity\Order\OrderStatus::getServiceStatuses() as $code => $name)
+                                    <option value="{{ $code }}"
+                                    >{{ $name }}</option>
+                                @endforeach
+                            </x-base.tom-select>
+                            <div class="flex items-center mt-3">
+                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                    Отмена
+                                </x-base.button>
+                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                    Сохранить
+                                </x-base.button>
+                            </div>
+                        </div>
+                    </form>
+                </x-base.popover.panel>
+            </x-base.popover>
+
+
+        <x-base.popover class="inline-block mt-2 w-100" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="success" class="w-100">На сборку
+                <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+            </x-base.popover.button>
+            <x-base.popover.panel>
+                <form action="{{ route('admin.sales.order.set-logger', $order) }}" METHOD="POST">
+                    @csrf
+                    <div class="p-2">
+                        <x-base.tom-select id="select-staff" name="staff_id" class=""
+                                           data-placeholder="Выберите Сборщика">
+                            <option value="0"></option>
+                            @foreach($loggers as $logger)
+                                <option value="{{ $logger->id }}"
+                                >{{ $logger->fullname->getShortName() }}</option>
+                            @endforeach
+                        </x-base.tom-select>
+                        <div class="flex items-center mt-3">
+                            <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                           data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                Отмена
+                            </x-base.button>
+                            <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                Сохранить
+                            </x-base.button>
+                        </div>
+                    </div>
+                </form>
+            </x-base.popover.panel>
+        </x-base.popover>
     @endif
     @if($order->isToDelivery())
         <span>В службе сборки</span>
