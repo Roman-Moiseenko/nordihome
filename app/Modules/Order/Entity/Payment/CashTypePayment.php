@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Payment;
 
+use App\Modules\Order\Entity\Order\Order;
+
 class CashTypePayment extends PaymentAbstract
 {
 
@@ -11,9 +13,9 @@ class CashTypePayment extends PaymentAbstract
         return false;
     }
 
-    public static function getPaidData(): string
+    public static function getPaidData(PaymentOrder $payment = null)
     {
-        return '';
+        return null;
     }
 
     public static function toPay(): void

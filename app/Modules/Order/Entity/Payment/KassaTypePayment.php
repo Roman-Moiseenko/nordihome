@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Payment;
 
+use App\Modules\Order\Entity\Order\Order;
+
 class KassaTypePayment extends PaymentAbstract
 {
 
@@ -11,9 +13,11 @@ class KassaTypePayment extends PaymentAbstract
         return true;
     }
 
-    public static function getPaidData(): string
+    public static function getPaidData(PaymentOrder $payment): string
     {
-        return '';
+        //TODO Формирование ссылки на платеж
+        $url = '/';
+        return '<a href="' . $url . '" target="_blank">' . $url . '</a>';
     }
 
     public static function toPay(): void

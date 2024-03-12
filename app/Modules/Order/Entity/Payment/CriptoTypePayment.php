@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Payment;
 
+use App\Modules\Order\Entity\Order\Order;
+
 class CriptoTypePayment extends PaymentAbstract
 {
 
@@ -11,7 +13,7 @@ class CriptoTypePayment extends PaymentAbstract
         return false;
     }
 
-    public static function getPaidData(): string
+    public static function getPaidData(PaymentOrder $payment = null): string
     {
         return 'Данные крипто кошелька';
     }

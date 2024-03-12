@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Payment;
 
+use App\Modules\Order\Entity\Order\Order;
+
 abstract class PaymentAbstract
 {
     abstract public static function online(): bool;
-    abstract public static function getPaidData(): string;
+    abstract public static function getPaidData(PaymentOrder $payment);
 
     abstract public static function toPay(): void;
 

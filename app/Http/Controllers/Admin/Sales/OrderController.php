@@ -52,9 +52,18 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
-    public function to_pay(Order $order)
+    public function set_awaiting(Order $order)
     {
-        $this->service->toOrder($order);
+        try {
+            $this->service->setAwaiting($order);
+
+        } catch (\DomainException $e) {
+            flash($e->getMessage(), 'danger');
+        } catch (\Throwable $e) {
+            flash($e->getMessage(), 'danger');
+
+        }
+
         return redirect()->back();
     }
 
@@ -85,6 +94,12 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
+    public function paid_payment(Request $request, PaymentOrder $payment)
+    {
+        $document = $request['payment-document'] ?? '';
+        $this->service->paidPayment($payment, $document);
+        return redirect()->back();
+    }
     //AJAX
     public function set_quantity(Request $request, Order $order)
     {

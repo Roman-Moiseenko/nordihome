@@ -3,6 +3,7 @@
 <x-mail::panel>
 #Новый заказ {{ $order->htmlNum() }}
 </x-mail::panel>
+
 @component('mail::table')
 | Товар       | Цена         | Цена со скидкой  | Кол-во  | Сумма  |
 | ----------- |:------------:|:----------------:|:-------:| ------:|
@@ -10,6 +11,7 @@
 | {{ $item->product->name}}       | {{ price($item->base_cost) }}         | {{ price($item->sell_cost) }}  | {{ $item->quantity }}  | {{ price($item->sell_cost * $item->quantity) }}  |
 @endforeach
 @endcomponent
+
 Общая сумма к оплате {{ $order->total }}
 Ожидайте подтверждение менеджера.
 Счет на оплату будет выслан после подтверждения

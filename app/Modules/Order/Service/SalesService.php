@@ -9,6 +9,7 @@ use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
 use App\Events\PointHasEstablished;
 use App\Events\ThrowableHasAppeared;
+use App\Mail\OrderAwaiting;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Order\Entity\Order\Order;
@@ -21,6 +22,7 @@ use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Cart\CartItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class SalesService
 {
@@ -37,6 +39,7 @@ class SalesService
     public function setManager(Order $order, int $staff_id)
     {
         $staff = Admin::find($staff_id);
+        if (empty($logger)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
         $order->setStatus(OrderStatus::SET_MANAGER);
         $order->responsible()->save(OrderResponsible::registerManager($staff->id));
     }
@@ -49,9 +52,14 @@ class SalesService
                 'reserve_at' => $new_reserve,
             ]);
         }
-        //TODO  Оповещение клиента, об увеличении времени резерва event(new OrderHasReserved($order)); ????
     }
 
+    /**
+     * Устанавливаем новое кол-во товаров для Заказа, снимаем лишнее с резерва и пересчитываем заказ, с учетом скидок и акций
+     * @param Order $order
+     * @param array $items
+     * @return bool
+     */
     public function setQuantity(Order $order, array $items): bool
     {
         $result = false;
@@ -63,7 +71,7 @@ class SalesService
                 $orderItem = OrderItem::find((int)$item['id']);
                 //Если кол-во изменилось
                 if ($orderItem->quantity != $new_quantity) {
-                    $result = true; //Хотя бы одно изменение кол-ва
+                    $result = true; //Хотя бы одно изменение кол-ва.
                     //Снимаем с резерва
                     $sub_reserve = $orderItem->quantity - $new_quantity;
                     $this->reserve->subReserve($orderItem->reserve->id, $sub_reserve);
@@ -100,7 +108,6 @@ class SalesService
             $order->discount = $order->amount - $order->total - $order->coupon;
             $order->save();
             DB::commit();
-            //TODO  Оповещение клиента после отправки счета, об изменении кол-ва товаров event(new OrderQuantityHasChanged($order));
             return true;
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -110,15 +117,41 @@ class SalesService
         }
     }
 
-    public function toOrder(Order $order)
+    public function setAwaiting(Order $order)
     {
-        //TODO Поменять статус
+        //Проверить что установлена точка выдачи
+        if (!$order->isPoint()) throw new \DomainException('Не установлена точка сбора/выдачи!');
+
+        //Проверить, если на доставку
+        if (!$order->delivery->isStorage()) {
+            if ($order->delivery->cost == 0)  throw new \DomainException('Не установлена стоимость доставка');
+            $payment_delivery = 0;
+            foreach ($order->payments as $payment) {
+                if ($payment->purpose == PaymentOrder::PAY_DELIVERY) {
+                    $payment_delivery += $payment->amount;
+                }
+            }
+            if ($payment_delivery < $order->delivery->cost)  throw new \DomainException('Сумма платежей по доставке меньше ее стоимости');
+        }
+        if (empty($order->payments)) throw new \DomainException('Нет ни одного платежа');
+
+        //Проверить на сумму платежа за заказ
+        $payment_order = 0;
+        foreach ($order->payments as $payment) {
+            if ($payment->purpose == PaymentOrder::PAY_ORDER) {
+                $payment_order += $payment->amount;
+            }
+        }
+        if ($payment_order != $order->total) throw new \DomainException('Сумма платежей за заказ не совпадает со стоимостью заказа');
+
         $order->setStatus(OrderStatus::AWAITING);
-        //Сформировать заявку на оплату
-        // готовим документ для оплаты, по типу оплаты клиента ()
-
-
-        // Отправить письмо клиенту
+        foreach ($order->payments as $payment) {
+            if (!empty($paymentDocument = $payment->createOnlinePayment())) {
+                $payment->document = $paymentDocument;
+                $payment->save();
+            }
+        }
+        Mail::to($order->user->email)->queue(new OrderAwaiting($order));
     }
 
     /**
@@ -142,12 +175,12 @@ class SalesService
 
         $payment = PaymentOrder::new($cost, $userPayment->class_payment, PaymentOrder::PAY_DELIVERY);
         $order->payments()->save($payment);
-
     }
 
     public function setLogger(Order $order, int $logger_id)
     {
         $logger = Admin::find($logger_id);
+        if (empty($logger)) throw new \DomainException('Сборщик под ID ' . $logger_id . ' не существует!');
         $order->responsible()->save(OrderResponsible::registerLogger($logger->id));
     }
 
@@ -204,8 +237,15 @@ class SalesService
             amount: (float)$params['payment-amount'],
             class: $params['payment-class'],
             purpose: (int)$params['payment-purpose'],
-            comment: $params['payment-comment']
+            comment: $params['payment-comment'] ?? '',
         );
+
+        //Проверка на delivery, если платеж за доставку и delivery->cost не установлен
+        if ($payment->purpose == PaymentOrder::PAY_DELIVERY && $order->delivery->cost == 0) {
+            $order->delivery->cost = $payment->amount;
+            $order->delivery->save();
+        }
+
         $order->payments()->save($payment);
     }
 
@@ -220,6 +260,35 @@ class SalesService
         } else {
             $sum = array_sum(array_map(function (PaymentOrder $paymentOrder) { return $paymentOrder->amount;}, $pays));
             if ($order->total != $sum) flash('Сумма платежей не совпадает с заказом!', 'warning');
+        }
+    }
+
+    public function paidPayment(PaymentOrder $payment, string $document, array $meta = [])
+    {
+        $order = $payment->order;
+        $payment->document = $document;
+        $payment->paid_at = now();
+        $payment->meta = $meta;
+        $payment->save();
+
+        $allPaid = true;//Если все платежи оплачены, то Заказ => Оплачен!
+        foreach ($order->payments as $paymentOrder) {
+            if (!$paymentOrder->isPaid()) $allPaid = false;
+        }
+        if ($allPaid) $order->setPaid();
+    }
+
+    public function paidOrder(Order $order, string $document)
+    {
+        $order->setPaid();
+        //TODO перенести в Order ??
+        //Все неоплаченные платежи переводим в статус Оплачено.
+        foreach ($order->payments as $paymentOrder) {
+            if (!$paymentOrder->isPaid()) {
+                $paymentOrder->document = $document;
+                $paymentOrder->paid_at = now();
+                $paymentOrder->save();
+            }
         }
     }
 }

@@ -89,6 +89,75 @@ class Order extends Model
         return $order;
     }
 
+    ///*** ПРОВЕРКА СОСТОЯНИЙ is...()
+
+    /**
+     * Статус $value был применен
+     * @param int $value
+     * @return bool
+     */
+    public function isStatus(#[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value): bool
+    {
+        foreach ($this->statuses as $status) {
+            if ($status->value == $value) return true;
+        }
+        return false;
+    }
+
+    public function isParser(): bool
+    {
+        return $this->type == self::PARSER && $this->preorder == true;
+    }
+
+    /**
+     * Установлена точка выдачи/сборки товара
+     * @return bool
+     */
+    public function isPoint(): bool
+    {
+        return !is_null($this->delivery->point_storage_id);
+    }
+
+    //Проверка текущего статуса
+
+    public function isNew(): bool
+    {
+        return $this->status->value == OrderStatus::FORMED;
+    }
+
+    public function isManager(): bool
+    {
+        return $this->status->value == OrderStatus::SET_MANAGER;
+    }
+
+    public function isAwaiting(): bool
+    {
+        return $this->status->value == OrderStatus::AWAITING;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->status->value >= OrderStatus::PAID && $this->status->value < OrderStatus::ORDER_SERVICE;
+    }
+
+    public function isToDelivery(): bool
+    {
+        return $this->status->value >= OrderStatus::ORDER_SERVICE && $this->status->value < OrderStatus::ORDER_SERVICE;
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status->value == OrderStatus::COMPLETED;
+    }
+
+    public function isCanceled(): bool
+    {
+        return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
+    }
+
+
+    ///*** SET-еры
+
     public function setFinance(float $amount, float $discount, float $coupon, ?int $coupon_id, int $delivery_cost = 0)
     {
         $this->update([
@@ -100,20 +169,6 @@ class Order extends Model
             'total' => ($amount + $delivery_cost - $discount - $coupon),
         ]);
     }
-
-    public function items()
-    {
-        return $this->hasMany(OrderItem::class, 'order_id', 'id');
-    }
-
-    public function isStatus(int $value): bool
-    {
-        foreach ($this->statuses as $status) {
-            if ($status->value == $value) return true;
-        }
-        return false;
-    }
-
 
     public function setStatus(
         #[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value,
@@ -130,7 +185,42 @@ class Order extends Model
         if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
     }
 
-    //GET-еры
+    public function setPaid()
+    {
+        $this->setStatus(OrderStatus::PAID);
+        $this->paid = true;
+        $this->save();
+        //Увеличиваем резерв на оплаченные товары
+        foreach ($this->items as $item) {
+            $item->reserve->update(['reserve_at' => now()->addYears(10)]);
+        }
+    }
+
+    /**
+     * Устанавливаем точку выдачи/сборки товара
+     * @param int $point_storage_id
+     * @return void
+     */
+    public function setPoint(int $point_storage_id)
+    {
+        $this->delivery->point_storage_id = $point_storage_id;
+        $this->delivery->save();
+    }
+
+    /**
+     * Для каждого товара в заказе назначаем склад резерва
+     * @param $storage_id
+     * @return void
+     */
+    public function setStorage($storage_id)
+    {
+        foreach ($this->items as $item) {
+            $item->reserve->setStorage($storage_id);
+            $item->reserve->save();
+        }
+    }
+
+    ///*** GET-еры
 
     public function getQuantity(): int
     {
@@ -181,7 +271,12 @@ class Order extends Model
         return is_null($responsible) ? null : $responsible->staff;
     }
 
-    //Relations *************************************************************************************
+    ///*** Relations *************************************************************************************
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id', 'id');
+    }
 
     public function responsible()
     {
@@ -208,6 +303,16 @@ class Order extends Model
         return $this->hasMany(OrderStatus::class, 'order_id', 'id');
     }
 
+    public function delivery()
+    {
+        return $this->hasOne(DeliveryOrder::class, 'order_id', 'id');
+    }
+
+    public function movements()
+    {
+        return $this->hasMany(MovementDocument::class, 'order_id', 'id');
+    }
+
     /**
      * Возвращает true если весь товар из заказа не имеет резерва
      * @return bool
@@ -223,12 +328,9 @@ class Order extends Model
 
 
     //TODO переделать на hasMany() если будет ТЗ
-    public function delivery()
-    {
-        return $this->hasOne(DeliveryOrder::class, 'order_id', 'id');
-    }
 
-    //Хелперы
+
+    ///*** Хелперы
     public function htmlDate(): string
     {
         return 'Заказ от ' . $this->created_at->translatedFormat('d F');
@@ -244,57 +346,6 @@ class Order extends Model
         return OrderStatus::STATUSES[$this->status->value] . ' ' . $this->status->comment;
     }
 
-
-    public function isParser(): bool
-    {
-        return $this->type == self::PARSER && $this->preorder == true;
-    }
-
-    //Проверка текущего статуса
-
-    public function isNew(): bool
-    {
-        return $this->status->value == OrderStatus::FORMED;
-    }
-
-    public function isManager(): bool
-    {
-        return $this->status->value == OrderStatus::SET_MANAGER;
-    }
-
-    public function isAwaiting(): bool
-    {
-        return $this->status->value == OrderStatus::AWAITING;
-    }
-
-    public function isPaid(): bool
-    {
-        return $this->status->value >= OrderStatus::PAID && $this->status->value < OrderStatus::ORDER_SERVICE;
-    }
-
-    public function isToDelivery(): bool
-    {
-        return $this->status->value >= OrderStatus::ORDER_SERVICE && $this->status->value < OrderStatus::ORDER_SERVICE;
-    }
-
-    public function isCompleted(): bool
-    {
-        return $this->status->value == OrderStatus::COMPLETED;
-    }
-
-    public function isCanceled(): bool
-    {
-        return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
-    }
-
-    /**
-     * Установлена точка выдачи/сборки товара
-     * @return bool
-     */
-    public function isPoint(): bool
-    {
-        return !is_null($this->delivery->point_storage_id);
-    }
 
     /**
      * Общий вес заказа
@@ -324,34 +375,8 @@ class Order extends Model
 
 //Функции для данных по доставке
 
-    /**
-     * Устанавливаем точку выдачи/сборки товара
-     * @param int $point_storage_id
-     * @return void
-     */
-    public function setPoint(int $point_storage_id)
-    {
-        $this->delivery->point_storage_id = $point_storage_id;
-        $this->delivery->save();
-    }
 
-    /**
-     * Для каждого товара в заказе назначаем склад резерва
-     * @param $storage_id
-     * @return void
-     */
-    public function setStorage($storage_id)
-    {
-        foreach ($this->items as $item) {
-            $item->reserve->setStorage($storage_id);
-            $item->reserve->save();
-        }
-    }
 
-    public function movements()
-    {
-        return $this->hasMany(MovementDocument::class, 'order_id', 'id');
-    }
 
     public function totalPayments(): float
     {

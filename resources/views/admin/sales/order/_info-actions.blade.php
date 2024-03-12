@@ -18,7 +18,6 @@
                                 >{{ $staff->fullname->getShortName() }}</option>
                             @endforeach
                         </x-base.tom-select>
-
                         <div class="flex items-center mt-3">
                             <x-base.button id="close-add-group" class="w-32 ml-auto"
                                            data-tw-dismiss="dropdown" variant="secondary" type="button">
@@ -133,7 +132,12 @@
                 </x-base.popover.panel>
             </x-base.popover>
         @endif
-        <button class="btn btn-success mt-2">На оплату</button>
+        <button class="btn btn-success mt-2" type="button"
+                onclick="document.getElementById('form-set-awaiting').submit();">На оплату
+        </button>
+        <form id="form-set-awaiting" method="post" action="{{ route('admin.sales.order.set-awaiting', $order) }}">
+            @csrf
+        </form>
         <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="secondary" class="w-100">Отменить
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
@@ -161,6 +165,7 @@
     @endif
     @if($order->isAwaiting()/* && $order->getManager()->id == $admin->id*/)
         <button class="btn btn-warning">Установить резерв</button>
+        <button class="btn btn-primary mt-2">Установить оплату</button>
         <button class="btn btn-secondary mt-2">Отменить</button>
     @endif
     @if($order->isPaid()/* && $order->getManager()->id == $admin->id*/)

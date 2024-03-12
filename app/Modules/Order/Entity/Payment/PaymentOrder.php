@@ -110,9 +110,17 @@ class PaymentOrder extends Model
     }
     public function nameType(): string
     {
+        /** @var PaymentAbstract $class */
         $class = __NAMESPACE__ . "\\" . $this->class;
         return $class::name();
     }
 
+    public function createOnlinePayment()
+    {
+        /** @var PaymentAbstract $class */
+        $class = __NAMESPACE__ . "\\" . $this->class;
+        if ($class::online()) return $class::getPaidData($this);
+        return null;
+    }
 
 }
