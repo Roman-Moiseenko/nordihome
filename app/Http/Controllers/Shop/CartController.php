@@ -51,7 +51,6 @@ class CartController extends Controller
             return \response()->json($cart);
         });
 /*
-
         try {
             $this->cart->add($product, 1, $request['options'] ?? []);
             $cart = $this->cart->getCartToFront($request['tz']);

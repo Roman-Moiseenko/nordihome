@@ -27,20 +27,16 @@ class PageController extends Controller
             $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
             return $page->view();
         } catch (\Throwable $e) {
-           // event(new ThrowableHasAppeared($e));
             abort(404, 'Страница не найдена');
         }
     }
 
     public function map_data(Request $request)
     {
-        try {
+        return $this->try_catch_ajax(function () use ($request) {
             $map = $this->repository->getMapData($request);
             return response()->json($map);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
-        }
+        });
     }
 
     public function email(Request $request)

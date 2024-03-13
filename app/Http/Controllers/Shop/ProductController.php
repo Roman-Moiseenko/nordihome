@@ -25,10 +25,31 @@ class ProductController extends Controller
 
     public function view($slug)
     {
+
         $product = $this->repository->getProductBySlug($slug);
         if (empty($product)) {
             abort(404);
         }
+        return $this->try_catch(function () use ($slug, $product) {
+            $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
+            $description = $product->short;
+            $productAttributes = [];
+            foreach ($product->prod_attributes as $attribute) {
+                $value = $attribute->Value();
+                if (is_array($value)) {
+                    $value = implode(', ', array_map(function ($id) use ($attribute) {
+                        return $attribute->getVariant((int)$id)->name;
+                    }, $attribute->Value()));
+                }
+                $productAttributes[$attribute->group->name][] = [
+                    'name' => $attribute->name,
+                    'value' => $value,
+                ];
+            }
+            return view('shop.product.view', compact('product', 'title', 'description', 'productAttributes'));
+        });
+
+/*
 
         try {
             $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
@@ -56,7 +77,7 @@ class ProductController extends Controller
             flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
             event(new ThrowableHasAppeared($e));
         }
-        return redirect()->back();
+        return redirect()->back();*/
     }
 
     public function old_slug($old_slug)
@@ -66,20 +87,26 @@ class ProductController extends Controller
         return redirect()->route('shop.product.view', $product->slug);
     }
 
+    //Ajax
     public function search(Request $request)
     {
         if (empty($request['search'])) return ;
 
-        try {
+        return $this->try_catch_ajax(function () use ($request) {
+            $result = $this->repository->search($request['search']);
+            return \response()->json($result);
+        });
+
+      /*  try {
             $result = $this->repository->search($request['search']);
         } catch (\Throwable $e) {
             event(new ThrowableHasAppeared($e));
             $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
-        return \response()->json($result);
+        return \response()->json($result);*/
     }
 
-    //Ajax
+
     public function count_for_sell(Product $product)
     {
         return response()->json($product->count_for_sell);

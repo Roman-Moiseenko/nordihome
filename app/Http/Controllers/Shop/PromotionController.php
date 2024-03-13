@@ -20,9 +20,17 @@ class PromotionController extends Controller
 
     public function view(string $slug)
     {
+
+        return $this->try_catch(function () use ($slug) {
+            $promotion = $this->repository->getPromotionBySlug($slug);
+            $products = $promotion->products();
+            $title = 'Акция ' . $promotion->title . ' | Цены снижены в интернет-магазине';
+            $description = $promotion->description;
+            return view('shop.promotion', compact('promotion', 'products', 'title', 'description'));
+        }, route('home'));
+
+     /*
         try {
-
-
             $promotion = $this->repository->getPromotionBySlug($slug);
             $products = $promotion->products();
             $title = 'Акция ' . $promotion->title . ' | Цены снижены в интернет-магазине';
@@ -34,7 +42,7 @@ class PromotionController extends Controller
             flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
             event(new ThrowableHasAppeared($e));
         }
-        return redirect()->route('home');
+        return redirect()->route('home');*/
     }
 
 

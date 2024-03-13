@@ -23,13 +23,9 @@ class CabinetController extends Controller
 
     public function view(User $user)
     {
-        try {
+        return $this->try_catch(function () {
             return view('cabinet.view');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
-        }
-        return redirect()->back();
+        });
     }
 
     public function profile(User $user)
@@ -46,45 +42,38 @@ class CabinetController extends Controller
 
     public function fullname(User $user, Request $request)
     {
-        try {
+        return $this->try_catch_ajax(function () use ($user, $request) {
             $result = $this->service->setFullname($user, $request);
             $user->refresh();
             return response()->json($result);
-        } catch (\Throwable $e) {
-            return response()->json([$e->getMessage(),$e->getFile(), $e->getLine()]);
-        }
+        });
     }
 
     public function phone(User $user, Request $request)
     {
-        try {
+        return $this->try_catch_ajax(function () use ($user, $request) {
             $result = $this->service->setPhone($user, $request);
             $user->refresh();
             return response()->json($result);
-        } catch (\Throwable $e) {
-            return response()->json([$e->getMessage(),$e->getFile(), $e->getLine()]);
-        }
+        });
     }
 
     public function email(User $user, Request $request)
     {
-        try {
+        return $this->try_catch_ajax(function () use ($user, $request) {
             $result = $this->service->setEmail($user, $request);
             $user->refresh();
             return response()->json($result);
-        } catch (\Throwable $e) {
-            return response()->json([$e->getMessage(),$e->getFile(), $e->getLine()]);
-        }
+        });
+
     }
 
     public function password(User $user, Request $request)
     {
-        try {
+        return $this->try_catch_ajax(function () use ($user, $request) {
             $result = $this->service->setPassword($user, $request);
             $user->refresh();
             return response()->json($result);
-        } catch (\Throwable $e) {
-            return response()->json([$e->getMessage(),$e->getFile(), $e->getLine()]);
-        }
+        });
     }
 }

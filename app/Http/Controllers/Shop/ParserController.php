@@ -25,98 +25,80 @@ class ParserController extends Controller
 
     public function view(Request $request)
     {
-        $user_ui = $request->attributes->get('user_ui');
-      /*  if (!Auth::guard('user')->check() && empty(Cookie::get('user_cookie_id')))
-            return redirect()->route('shop.parser.view');*/
-       // dd($user_ui);
-        //Загружаем товары посетителя из Хранилища Storage_Parser
-        $cart = $this->cart;
-        $cart->load($user_ui);
-        //TODO Заглушка - для нового посетителя, с точкой входа - Парсер
+        return $this->try_catch(function () use ($request) {
+            $user_ui = $request->attributes->get('user_ui');
 
-        $title = 'Купить товары Икеа по артикулу в Калининграде и с доставкой по России';
-        $description = 'Закажите товары Икеа из Польши через наш поисковый сервис. Цены ниже чем в интернет магазине';
-        return view('shop.parser.show', compact('cart', 'title', 'description'));
+            $cart = $this->cart;
+            $cart->load($user_ui);
+
+            $title = 'Купить товары Икеа по артикулу в Калининграде и с доставкой по России';
+            $description = 'Закажите товары Икеа из Польши через наш поисковый сервис. Цены ниже чем в интернет магазине';
+            return view('shop.parser.show', compact('cart', 'title', 'description'));
+        });
     }
-
 
     public function search(Request $request)
     {
         $user_ui = $request->attributes->get('user_ui');
-        //Ищем товар, делаем расчеты и event()
         $request->validate([
             'search' => 'required|min:8'
         ]);
-        try {
+
+        return $this->try_catch(function () use ($request, $user_ui) {
             $product = $this->service->findProduct($request);
             $this->cart->load($user_ui);
             $this->cart->add($product);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        }
-        catch (\Throwable $e) {
-            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
-            event(new ThrowableHasAppeared($e));
-        }
-        return redirect()->route('shop.parser.view');
+            return redirect()->route('shop.parser.view');
+        });
     }
-
 
     public function clear()
     {
-        $this->cart->load();
-        $this->cart->clear();
-        return redirect()->route('shop.parser.view');
+        return $this->try_catch(function () {
+            $this->cart->load();
+            $this->cart->clear();
+            return redirect()->route('shop.parser.view');
+        });
     }
 
     public function remove(Product $product)
     {
-        try {
+        return $this->try_catch(function () use ($product) {
             $this->cart->load();
             $this->cart->remove($product);
-        } catch (\Throwable $e) {
-            flash($e->getMessage());
-        }
-        return redirect()->route('shop.parser.view');
-
+            return redirect()->route('shop.parser.view');
+        });
     }
 
     //AJAX
-
     public function add(Product $product)
     {
-        try {
+        return $this->try_catch_ajax(function () use ($product) {
             $this->cart->load();
             $this->cart->add($product);
             $this->cart->reload();
             return \response()->json($this->cart);
-        } catch (\Throwable $e) {
-            return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
-        }
+        });
     }
 
     public function sub(Product $product)
     {
-        try {
+        return $this->try_catch_ajax(function () use ($product) {
             $this->cart->load();
             $this->cart->sub($product);
             $this->cart->reload();
             return \response()->json($this->cart);
-        } catch (\Throwable $e) {
-            return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
-        }
+        });
     }
 
     public function set(Request $request, Product $product) //Product $product
     {
-        try {
+        return $this->try_catch_ajax(function () use ($product, $request) {
             $this->cart->load();
             $this->cart->set($product, (int)$request['quantity']);
             $this->cart->reload();
             return \response()->json($this->cart);
-        } catch (\Throwable $e) {
-            return \response()->json([$e->getFile(), $e->getLine(), $e->getMessage()]);
-        }
+        });
     }
 
 }
