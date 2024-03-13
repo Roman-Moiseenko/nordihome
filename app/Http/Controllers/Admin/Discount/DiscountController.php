@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Discount;
 
 use App\Events\ThrowableHasAppeared;
+use App\Http\Controllers\Controller;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Service\DiscountService;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 
 class DiscountController extends Controller
 {
@@ -21,26 +21,17 @@ class DiscountController extends Controller
 
     public function index(Request $request)
     {
-        try {
-
+        return $this->try_catch_admin(function () use($request) {
             $discounts = Discount::orderBy('name')->get();
             return view('admin.discount.discount.index', compact('discounts'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function create()
     {
-        try {
-        return view('admin.discount.discount.create');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        return $this->try_catch_admin(function () {
+            return view('admin.discount.discount.create');
+        });
     }
 
 
@@ -53,22 +44,14 @@ class DiscountController extends Controller
             '_from' => 'required',
         ]);
 
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $discount = $this->service->create($request);
             return redirect()->route('admin.discount.discount.show', compact('discount'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function show(Discount $discount)
     {
-
-
         return view('admin.discount.discount.show', compact('discount'));
     }
 
@@ -79,52 +62,43 @@ class DiscountController extends Controller
 
     public function update(Request $request, Discount $discount)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $discount) {
             $discount = $this->service->update($request, $discount);
             return redirect()->route('admin.discount.discount.show', compact('discount'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-            return back();
-        }
-
+        });
     }
 
     public function destroy(Discount $discount)
     {
-        try {
+        return $this->try_catch_admin(function () use($discount) {
             $this->service->delete($discount);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-            return back();
-        }
-        return redirect()->route('admin.discount.discount.index');
+            return redirect()->route('admin.discount.discount.index');
+        });
     }
 
     //Команды
     public function draft(Discount $discount)
     {
-        try {
+        return $this->try_catch_admin(function () use($discount) {
             $this->service->draft($discount);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        }
-        return back();
+            return back();
+        });
     }
 
     public function published(Discount $discount)
     {
-        try {
+        return $this->try_catch_admin(function () use($discount) {
             $this->service->published($discount);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        }
-        return back();
+            return back();
+        });
     }
 
+    //AJAX
     public function widget(Request $request)
     {
-        $class = Discount::namespace() . '\\' . $request['class'];
-        return \response()->json($class::widget());
-
+        return $this->try_catch_ajax_admin(function () use($request) {
+            $class = Discount::namespace() . '\\' . $request['class'];
+            return \response()->json($class::widget());
+        });
     }
 }
