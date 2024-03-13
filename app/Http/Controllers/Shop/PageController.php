@@ -8,7 +8,7 @@ use App\Mail\FeedBack;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 
 class PageController extends Controller

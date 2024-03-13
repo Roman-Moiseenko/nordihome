@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Shop;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Shop\ShopRepository;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 
 class PromotionController extends Controller
 {

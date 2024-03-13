@@ -107,8 +107,6 @@
     </div>
 
     @include('shop.product._attribute', ['productAttributes' => $productAttributes])
-
-
     @include('shop.product._equivalent', ['equivalent' => $product->equivalent])
     @include('shop.product._reviews', ['reviews' => $product->reviews])
 

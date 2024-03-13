@@ -11,7 +11,7 @@ use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller

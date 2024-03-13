@@ -182,7 +182,6 @@ class ProductService
 
             /* SECTION 8*/
 
-
             /* SECTION 9*/
             //Аналоги
             $new_equivalent_id = $request['equivalent_id'] ?? 0;
@@ -210,9 +209,6 @@ class ProductService
                 }
             }
 
-            //TODO **** ПОСЛЕ СОЗДАНИЯ ОБЪЕКТОВ
-            /* SECTION 11*/
-            //Опции
 
             /* SECTION 13*/
             //Бонусный товар

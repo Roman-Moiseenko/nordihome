@@ -1003,18 +1003,19 @@ window.$ = jQuery;
 
     //Отображение ошибок
     function _error(data) {
-
         if (data.error !== undefined) {
-            let notification = $('#notification');
-            notification.find('.toast-body').html(data.error[0]);
-            notification.remove('hide');
-            notification.addClass('show');
-            notification.find('button[data-bs-dismiss=toast]').on('click', function () {
-                notification.addClass('hide');
-                notification.remove('show');
-            });
-            console.log(data.error);
-            //TODO Всплывающее окно с сообщением data.error[1]
+            if (Array.isArray(data.error)) {
+                console.log(data.error);
+            } else {
+                let notification = $('#notification');
+                notification.find('.toast-body').html(data.error);
+                notification.remove('hide');
+                notification.addClass('show');
+                notification.find('button[data-bs-dismiss=toast]').on('click', function () {
+                    notification.addClass('hide');
+                    notification.remove('show');
+                });
+            }
             return true;
         }
         return false;

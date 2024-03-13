@@ -7,7 +7,7 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 
 class SitemapXmlController extends Controller
 {

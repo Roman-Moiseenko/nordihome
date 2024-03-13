@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Shop;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Service\DeliveryService;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\PaymentService;
@@ -14,11 +13,9 @@ use App\Modules\Order\Service\ReserveService;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\User\Entity\CartStorage;
-use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
+
 
 /**
  * Контроллер по созданию заказа из клиентской части, для просмотра используется контроллер из User

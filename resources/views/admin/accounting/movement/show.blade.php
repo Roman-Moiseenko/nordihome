@@ -86,7 +86,6 @@
                 };
 
                 console.log(route, element.value);
-                //let result = document.getElementById('cost_ru-' + id);
                 setMovementProduct(route, data);
             })
         });
@@ -101,14 +100,7 @@
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     let data = JSON.parse(request.responseText)
-                 /*   result.value = data.cost_ru;
-                    document.getElementById('currency-amount').value = data.info.cost_currency;
-                    document.getElementById('quantity-amount').value = data.info.quantity;
-                    document.getElementById('cost_ru-amount').value = data.info.cost_ru;
-                    document.getElementById('sell-amount').value = data.info.price_sell;*/
-
                 } else {
-                    //console.log(request.responseText);
                 }
             };
         }

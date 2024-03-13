@@ -11,7 +11,7 @@ use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {

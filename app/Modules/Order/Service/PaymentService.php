@@ -46,6 +46,7 @@ class PaymentService
     public function create(Order $order)
     {
         $payment = PaymentOrder::new($order->id, $this->user($order->user_id)->class_payment, PaymentOrder::PAY_ORDER);
+
     }
 
     /**
