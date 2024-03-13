@@ -23,7 +23,7 @@ class CartController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $query = Product::orderBy('name')->Has('cartStorages')->OrHas('cartCookies');
 
             //ПАГИНАЦИЯ
@@ -35,10 +35,6 @@ class CartController extends Controller
             }
 
             return view('admin.sales.cart.index', compact('products', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 }

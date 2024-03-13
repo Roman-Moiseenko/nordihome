@@ -22,20 +22,16 @@ class ReserveController extends Controller
 
     public function index(Request $request)
     {
-        try {
-        $query = Product::orderBy('name')->Has('reserves');
-        //ПАГИНАЦИЯ
-        if (!empty($pagination = $request->get('p'))) {
-            $products = $query->paginate($pagination);
-            $products->appends(['p' => $pagination]);
-        } else {
-            $products = $query->paginate($this->pagination);
-        }
-        return view('admin.sales.reserve.index', compact('products', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        return $this->try_catch_admin(function () use($request) {
+            $query = Product::orderBy('name')->Has('reserves');
+            //ПАГИНАЦИЯ
+            if (!empty($pagination = $request->get('p'))) {
+                $products = $query->paginate($pagination);
+                $products->appends(['p' => $pagination]);
+            } else {
+                $products = $query->paginate($this->pagination);
+            }
+            return view('admin.sales.reserve.index', compact('products', 'pagination'));
+        });
     }
 }

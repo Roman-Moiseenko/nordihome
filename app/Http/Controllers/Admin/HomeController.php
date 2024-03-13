@@ -17,12 +17,8 @@ class HomeController extends Controller
 
     public function index()
     {
-        try {
+        return $this->try_catch_admin(function () {
             return view('admin.home', ['layout' => 'admin']);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 }

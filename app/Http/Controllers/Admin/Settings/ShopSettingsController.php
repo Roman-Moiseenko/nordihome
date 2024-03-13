@@ -24,7 +24,7 @@ class ShopSettingsController extends Controller
 
     public function index()
     {
-        try {
+        return $this->try_catch_admin(function () {
             $setting = Setting::where('slug', 'shop')->first();
             $items = SettingItem::orderBy('sort')->where('setting_id', $setting->id)->getModels();
             $groups = [];
@@ -34,25 +34,15 @@ class ShopSettingsController extends Controller
                 $groups[$item->tab][] = $item;
             }
             return view('admin.settings.shop', compact('groups', 'setting'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function update(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $setting = Setting::where('slug', 'shop')->first();
             $this->service->set($request, $setting);
             return redirect()->route('admin.settings.shop');
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 }

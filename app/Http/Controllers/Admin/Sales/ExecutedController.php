@@ -23,31 +23,23 @@ class ExecutedController extends Controller
 
     public function index(Request $request)
     {
-        try {
-        $query = $this->repository->getExecuted();
-        //ПАГИНАЦИЯ
-        if (!empty($pagination = $request->get('p'))) {
-            $orders = $query->paginate($pagination);
-            $orders->appends(['p' => $pagination]);
-        } else {
-            $orders = $query->paginate($this->pagination);
-        }
-        return view('admin.sales.executed.index', compact('orders', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        return $this->try_catch_admin(function () use($request) {
+            $query = $this->repository->getExecuted();
+            //ПАГИНАЦИЯ
+            if (!empty($pagination = $request->get('p'))) {
+                $orders = $query->paginate($pagination);
+                $orders->appends(['p' => $pagination]);
+            } else {
+                $orders = $query->paginate($this->pagination);
+            }
+            return view('admin.sales.executed.index', compact('orders', 'pagination'));
+        });
     }
 
     public function show(Order $order)
     {
-        try {
-        return view('admin.sales.executed.show', compact('order'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        return $this->try_catch_admin(function () use($order) {
+            return view('admin.sales.executed.show', compact('order'));
+        });
     }
 }

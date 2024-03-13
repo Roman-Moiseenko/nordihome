@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Page;
 
 use App\Events\ThrowableHasAppeared;
+use App\Http\Controllers\Controller;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Service\PageService;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 
 class PageController extends Controller
 {
@@ -20,27 +20,19 @@ class PageController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $pages = Page::get();
             return view('admin.page.page.index', compact('pages'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function create()
     {
-        try {
+        return $this->try_catch_admin(function () {
             $templates = Page::PAGES_TEMPLATES;
             $pages = Page::where('parent_id', null)->get();
             return view('admin.page.page.create', compact('templates', 'pages'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function store(Request $request)
@@ -50,42 +42,26 @@ class PageController extends Controller
             'title' => 'required|string|min:6',
             'template' => 'required',
         ]);
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $page = $this->service->create($request);
             return redirect()->route('admin.page.page.show', $page);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function show(Page $page)
     {
-        try {
+        return $this->try_catch_admin(function () use($page) {
             return view('admin.page.page.show', compact('page'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function edit(Page $page)
     {
-        try {
+        return $this->try_catch_admin(function () use($page) {
             $templates = Page::PAGES_TEMPLATES;
             $pages = Page::where('parent_id', null)->get();
             return view('admin.page.page.edit', compact('page', 'templates', 'pages'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function update(Request $request, Page $page)
@@ -95,68 +71,42 @@ class PageController extends Controller
             'title' => 'required|string|min:6',
             'template' => 'required',
         ]);
-        try {
+        return $this->try_catch_admin(function () use($request, $page) {
             $page = $this->service->update($request, $page);
             return view('admin.page.page.show', compact('page'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function text(Request $request, Page $page)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $page) {
             $page = $this->service->setText($request, $page);
             return redirect()->route('admin.page.page.show', $page);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function draft(Page $page)
     {
-        try {
+        return $this->try_catch_admin(function () use($page) {
             $page->draft();
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
     public function published(Page $page)
     {
-        try {
+        return $this->try_catch_admin(function () use($page) {
             $page->published();
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
-    public function destroy(Page $widget)
+    public function destroy(Page $page)
     {
-        try {
-            $this->service->destroy($widget);
+        return $this->try_catch_admin(function () use($page) {
+            $this->service->destroy($page);
             return redirect()->route('admin.page.page.index');
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
 }

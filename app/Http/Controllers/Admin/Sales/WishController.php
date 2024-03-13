@@ -21,7 +21,7 @@ class WishController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $query = Product::orderBy('name')->Has('wishes');
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
@@ -31,10 +31,6 @@ class WishController extends Controller
                 $products = $query->paginate($this->pagination);
             }
             return view('admin.sales.wish.index', compact('products', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 }

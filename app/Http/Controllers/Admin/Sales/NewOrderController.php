@@ -34,9 +34,8 @@ class NewOrderController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use ($request) {
             $query = $this->repository->getNewOrders();
-
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
                 $orders = $query->paginate($pagination);
@@ -45,25 +44,16 @@ class NewOrderController extends Controller
                 $orders = $query->paginate($this->pagination);
             }
             return view('admin.sales.order.index', compact('orders', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function show(Request $request, Order $order)
     {
-        try {
+        return $this->try_catch_admin(function () use ($request, $order) {
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
             $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
-
             $storages = Storage::orderBy('name')->get();
             return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 }

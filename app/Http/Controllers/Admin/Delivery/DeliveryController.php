@@ -20,51 +20,35 @@ class DeliveryController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             return $this->view($request);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function index_local(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             return $this->view($request, DeliveryOrder::LOCAL);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function index_region(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             return $this->view($request, DeliveryOrder::REGION);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function index_storage(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             return $this->view($request, DeliveryOrder::STORAGE);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     private function view(Request $request, $type = null)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $type) {
             $status = $request['status'] ?? '';
             $query = DeliveryOrder::orderByDesc('created_at');
             if ($type != null) $query = $query->where('type', $type);
@@ -84,10 +68,6 @@ class DeliveryController extends Controller
             }
 
             return view('admin.delivery.index', compact('deliveries', 'type', 'status', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 }

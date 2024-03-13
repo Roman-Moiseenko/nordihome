@@ -25,7 +25,7 @@ class UsersController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $statuses = [
                 User::STATUS_WAIT => 'В Ожидании',
                 User::STATUS_ACTIVE => 'Подтвержден',
@@ -53,35 +53,22 @@ class UsersController extends Controller
                 $users = $query->paginate($this->pagination);
             }
             return view('admin.users.index', compact('users', 'statuses', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+
+        });
     }
 
     public function show(User $user)
     {
-        try {
+        return $this->try_catch_admin(function () use($user) {
             return view('admin.users.show', compact('user'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function verify(User $user)
     {
-        try {
+        return $this->try_catch_admin(function () use($user) {
             $this->service->verify($user->id);
             return redirect()->route('admin.users.show', $user);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 }
