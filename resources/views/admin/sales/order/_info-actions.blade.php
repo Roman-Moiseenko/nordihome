@@ -164,9 +164,83 @@
         </x-base.popover>
     @endif
     @if($order->isAwaiting()/* && $order->getManager()->id == $admin->id*/)
-        <button class="btn btn-warning">Установить резерв</button>
-        <button class="btn btn-primary mt-2">Установить оплату</button>
-        <button class="btn btn-secondary mt-2">Отменить</button>
+            <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Установить резерв
+                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                </x-base.popover.button>
+                <x-base.popover.panel>
+                    <form action="{{ route('admin.sales.order.set-reserve', $order) }}" METHOD="POST">
+                        @csrf
+                        <div class="p-2">
+                            <x-base.form-input id="reserve-date" name="reserve-date" class="flex-1 mt-2"
+                                               type="date"
+                                               value="{{ $order->getReserveTo()->format('Y-m-d') }}"
+                                               placeholder="Резерв"/>
+                            <x-base.form-input name="reserve-time" class="flex-1 mt-2" type="time"
+                                               value="{{ $order->getReserveTo()->format('H:i') }}"
+                                               placeholder=""/>
+                            <div class="flex items-center mt-3">
+                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                    Отмена
+                                </x-base.button>
+                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                    Сохранить
+                                </x-base.button>
+                            </div>
+                        </div>
+                    </form>
+                </x-base.popover.panel>
+            </x-base.popover>
+            <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="primary" class="w-100">Оплачен
+                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                </x-base.popover.button>
+                <x-base.popover.panel>
+                    <form action="{{ route('admin.sales.order.paid-order', $order) }}" METHOD="POST">
+                        @csrf
+                        <div class="p-2">
+                            <x-base.form-input name="document" class="flex-1 mt-2" type="text" value=""
+                                               placeholder="Комментарий"/>
+
+                            <div class="flex items-center mt-3">
+                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                    Отмена
+                                </x-base.button>
+                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                    Сохранить
+                                </x-base.button>
+                            </div>
+                        </div>
+                    </form>
+                </x-base.popover.panel>
+            </x-base.popover>
+
+            <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="secondary" class="w-100">Отменить
+                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                </x-base.popover.button>
+                <x-base.popover.panel>
+                    <form action="{{ route('admin.sales.order.canceled', $order) }}" METHOD="POST">
+                        @csrf
+                        <div class="p-2">
+                            <x-base.form-input name="comment" class="flex-1 mt-2" type="text" value=""
+                                               placeholder="Комментарий"/>
+
+                            <div class="flex items-center mt-3">
+                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                    Отмена
+                                </x-base.button>
+                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                    Сохранить
+                                </x-base.button>
+                            </div>
+                        </div>
+                    </form>
+                </x-base.popover.panel>
+            </x-base.popover>
     @endif
     @if($order->isPaid()/* && $order->getManager()->id == $admin->id*/)
             <x-base.popover class="inline-block mt-2 w-100" placement="bottom-start">
@@ -180,7 +254,7 @@
                             <x-base.tom-select id="select-status" name="status" class=""
                                                data-placeholder="Изменить текущий статус">
                                 <option value="0"></option>
-                                @foreach(\App\Modules\Order\Entity\Order\OrderStatus::getServiceStatuses() as $code => $name)
+                                @foreach($order->getAvailableStatuses(\App\Modules\Order\Entity\Order\OrderStatus::ORDER_SERVICE) as $code => $name)
                                     <option value="{{ $code }}"
                                     >{{ $name }}</option>
                                 @endforeach
@@ -198,8 +272,6 @@
                     </form>
                 </x-base.popover.panel>
             </x-base.popover>
-
-
         <x-base.popover class="inline-block mt-2 w-100" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="success" class="w-100">На сборку
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
@@ -208,7 +280,7 @@
                 <form action="{{ route('admin.sales.order.set-logger', $order) }}" METHOD="POST">
                     @csrf
                     <div class="p-2">
-                        <x-base.tom-select id="select-staff" name="staff_id" class=""
+                        <x-base.tom-select id="select-logger" name="logger_id" class=""
                                            data-placeholder="Выберите Сборщика">
                             <option value="0"></option>
                             @foreach($loggers as $logger)
@@ -231,7 +303,65 @@
         </x-base.popover>
     @endif
     @if($order->isToDelivery())
-        <span>В службе сборки</span>
+            <x-base.popover class="inline-block mt-2 w-100" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Изменить статус
+                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                </x-base.popover.button>
+                <x-base.popover.panel>
+                    <form action="{{ route('admin.sales.order.set-status', $order) }}" METHOD="POST">
+                        @csrf
+                        <div class="p-2">
+                            <x-base.tom-select id="select-status" name="status" class=""
+                                               data-placeholder="Изменить текущий статус">
+                                <option value="0"></option>
+                                @foreach($order->getAvailableStatuses(\App\Modules\Order\Entity\Order\OrderStatus::CANCEL) as $code => $name)
+                                    <option value="{{ $code }}"
+                                    >{{ $name }}</option>
+                                @endforeach
+                            </x-base.tom-select>
+                            <div class="flex items-center mt-3">
+                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                    Отмена
+                                </x-base.button>
+                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                    Сохранить
+                                </x-base.button>
+                            </div>
+                        </div>
+                    </form>
+                </x-base.popover.panel>
+            </x-base.popover>
+            <button class="btn btn-primary mt-2" type="button" onclick="document.getElementById('form-order-completed').submit();">Заказ Выполнен!</button>
+        <form id="form-order-completed" method="post" action="{{ route('admin.sales.order.completed') }}">
+            @csrf
+        </form>
+
+            <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="danger" class="w-100">Возврат
+                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                </x-base.popover.button>
+                <x-base.popover.panel>
+                    <form action="{{ route('admin.sales.order.refund', $order) }}" METHOD="POST">
+                        @csrf
+                        <div class="p-2">
+                            <x-base.form-input name="refund" class="flex-1 mt-2" type="text" value=""
+                                               placeholder="Причина"/>
+
+                            <div class="flex items-center mt-3">
+                                <x-base.button id="close-add-group" class="w-32 ml-auto"
+                                               data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                    Отмена
+                                </x-base.button>
+                                <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                    Сохранить
+                                </x-base.button>
+                            </div>
+                        </div>
+                    </form>
+                </x-base.popover.panel>
+            </x-base.popover>
+
     @endif
     @if($order->isCanceled())
         <span>Заказ отменен</span>

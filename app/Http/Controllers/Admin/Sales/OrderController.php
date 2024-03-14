@@ -44,6 +44,22 @@ class OrderController extends Controller
         });
     }
 
+    public function completed(Order $order)
+    {
+        return $this->try_catch_admin(function () use ($order) {
+            $this->service->comleted($order);
+            return redirect()->back();
+        });
+    }
+
+    public function refund(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $this->service->refund($order, $request['refund'] ?? '');
+            return redirect()->back();
+        });
+    }
+
     public function set_manager(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
@@ -120,6 +136,14 @@ class OrderController extends Controller
     {
         return $this->try_catch_admin(function () use ($request, $payment) {
             $this->service->paidPayment($payment, $request['payment-document'] ?? '');
+            return redirect()->back();
+        });
+    }
+
+    public function paid_order(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $this->service->paidOrder($order, $request['document']);
             return redirect()->back();
         });
     }

@@ -140,4 +140,14 @@ class Storage extends Model
     {
         return $this->getQuantity($product) - $this->getReserve($product);
     }
+
+    public function getItem(Product $product): StorageItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->product->id == $product->id) {
+                return $item;
+            }
+        }
+        throw new \DomainException('Товар Id=' . $product->id . ' В хранилище не найден');
+    }
 }

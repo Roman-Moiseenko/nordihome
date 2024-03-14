@@ -280,4 +280,27 @@ class SalesService
     {
         $order->setStatus($status);
     }
+
+    public function refund(Order $order, mixed $param)
+    {
+        //TODO Возврат денег!!!!
+        // Алгоритм??
+    }
+
+    public function comleted(Order $order)
+    {
+        $order->setStatus(OrderStatus::COMPLETED);
+        $order->finished = true;
+        $order->save();
+        $storage = $order->delivery->point;
+        //Удаляем резерв
+        foreach ($order->items as $item) {
+            //TODO В хранилище уменьшить кол-во доступного товара на кол-во в резерв - ТЕСТ!!!!!
+            $itemStorage = $storage->getItem($item->product);
+            $itemStorage->quantity -= $item->reserve->quantity;
+            $itemStorage->save();
+            //$storage->getReserve();
+            $item->reserve->delete();
+        }
+    }
 }

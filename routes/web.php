@@ -337,8 +337,8 @@ Route::group(
                 Route::get('/executed', 'ExecutedController@index')->name('executed.index');
                 Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
 
-                Route::delete('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
                 Route::delete('/order/{item}/del-item', 'OrderController@del_item')->name('order.del-item');
+                Route::delete('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
                 Route::post('/order/{order}/set-manager', 'OrderController@set_manager')->name('order.set-manager');
                 Route::post('/order/{order}/set-logger', 'OrderController@set_logger')->name('order.set-logger');
                 Route::post('/order/{order}/set-reserve', 'OrderController@set_reserve')->name('order.set-reserve');
@@ -346,11 +346,14 @@ Route::group(
                 Route::post('/order/{order}/set-delivery', 'OrderController@set_delivery')->name('order.set-delivery');
                 Route::post('/order/{order}/set-moving', 'OrderController@set_moving')->name('order.set-moving');
                 Route::post('/order/{order}/set-payment', 'OrderController@set_payment')->name('order.set-payment');
-                Route::post('/order/{payment}/paid-payment', 'OrderController@paid_payment')->name('order.paid-payment');
-                Route::delete('/order/{payment}/del-payment', 'OrderController@del_payment')->name('order.del-payment');
+                Route::post('/order/{order}/paid-order', 'OrderController@paid_order')->name('order.paid-order');
                 Route::post('/order/{order}/canceled', 'OrderController@canceled')->name('order.canceled');
                 Route::post('/order/{order}/set-awaiting', 'OrderController@set_awaiting')->name('order.set-awaiting');
                 Route::post('/order/{order}/set-status', 'OrderController@set_status')->name('order.set-status');
+                Route::post('/order/{order}/completed', 'OrderController@completed')->name('order.completed');
+                Route::post('/order/{order}/refund', 'OrderController@refund')->name('order.refund');
+                Route::post('/order/{payment}/paid-payment', 'OrderController@paid_payment')->name('order.paid-payment');
+                Route::delete('/order/{payment}/del-payment', 'OrderController@del_payment')->name('order.del-payment');
             }
         );
         //Pages

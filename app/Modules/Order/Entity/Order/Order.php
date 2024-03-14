@@ -12,6 +12,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**
@@ -142,7 +143,7 @@ class Order extends Model
 
     public function isToDelivery(): bool
     {
-        return $this->status->value >= OrderStatus::ORDER_SERVICE && $this->status->value < OrderStatus::ORDER_SERVICE;
+        return $this->status->value >= OrderStatus::ORDER_SERVICE && $this->status->value < OrderStatus::CANCEL;
     }
 
     public function isCompleted(): bool
@@ -221,6 +222,23 @@ class Order extends Model
     }
 
     ///*** GET-еры
+
+    /**
+     * Доступные статусы для текущего заказа, ограниченные сверху
+     * @param int $top_status
+     * @return array
+     */
+    public function getAvailableStatuses(int $top_status = OrderStatus::COMPLETED): array
+    {
+        $last_code = $this->status->value;
+        $result = [];
+        foreach (OrderStatus::STATUSES as $code => $name) {
+            if ($code > $last_code && $code < $top_status) {
+                $result[$code] = $name;
+            }
+        }
+        return $result;
+    }
 
     public function getQuantity(): int
     {
