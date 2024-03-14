@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Product;
 
-use App\Events\ThrowableHasAppeared;
+use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Options;
-use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\Bonus;
 use App\Modules\Product\Entity\Brand;
@@ -18,7 +17,6 @@ use App\Modules\Product\Helper\ProductHelper;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 
 class ProductController extends Controller
@@ -39,9 +37,8 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $categories = Category::defaultOrder()->withDepth()->get();
-
             $published = $request['published'] ?? 'all';
             $query = Product::orderBy('name');
 
@@ -55,7 +52,6 @@ class ProductController extends Controller
             }
             if ($published == 'active') $query->where('published', '=', true);
             if ($published == 'draft') $query->where('published', '=', false);
-
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
                 $products = $query->paginate($pagination);
@@ -66,16 +62,12 @@ class ProductController extends Controller
 
             return view('admin.product.product.index', compact('products', 'pagination',
                 'categories', 'category_id', 'published'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function create(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $categories = Category::defaultOrder()->withDepth()->get();
             $menus = ProductHelper::menuAddProduct();
             $brands = Brand::orderBy('name')->get();
@@ -83,41 +75,27 @@ class ProductController extends Controller
             $series = Series::orderBy('name')->get();
             return view('admin.product.product.create', compact('categories', 'menus', 'brands',
                 'tags', 'series'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function store(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $product = $this->service->create($request);
             return redirect()->route('admin.product.edit', compact('product'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function show(Product $product)
     {
-        try {
+        return $this->try_catch_admin(function () use($product) {
             return view('admin.product.product.show', compact('product'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function edit(Product $product)
     {
-        try {
+        return $this->try_catch_admin(function () use($product) {
             $categories = Category::defaultOrder()->withDepth()->get();
             $menus = ProductHelper::menuUpdateProduct();
             $brands = Brand::orderBy('name')->get();
@@ -128,106 +106,69 @@ class ProductController extends Controller
             $equivalents = Equivalent::orderBy('name')->where('category_id', '=', $product->main_category_id)->get();
             return view('admin.product.product.edit', compact('product', 'categories',
                 'menus', 'brands', 'tags', 'groups', 'options', 'equivalents', 'series'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
-
+        });
     }
 
     public function update(Request $request, Product $product)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $product) {
             $product = $this->service->update($request, $product);
             return redirect()->route('admin.product.edit', compact('product'));
-
-
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function destroy(Product $product)
     {
-        try {
+        return $this->try_catch_admin(function () use($product) {
             $this->service->destroy($product);
             return redirect()->route('admin.product.product.index');
-
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
-
+        });
     }
 
     public function toggle(Product $product) //Переключение между Опубликовано и Чернови
     {
-        try {
+        return $this->try_catch_admin(function () use($product) {
             if ($product->isPublished()) {
                 $this->service->draft($product);
             } else {
                 $this->service->published($product);
             }
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
     //AJAX
-
-
     public function search(Request $request)
     {
-
-        $result = [];
-        try {
+        return $this->try_catch_ajax_admin(function () use($request) {
+            $result = [];
             $products = $this->repository->search($request['search']);
             /** @var Product $product */
             foreach ($products as $product) {
                 $result[] = $this->repository->toArrayForSearch($product);
             }
-        } catch (\Throwable $e) {
-            $result = $e->getMessage();
-            event(new ThrowableHasAppeared($e));
-
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
     }
 
     public function search_bonus(Request $request)
     {
-        $result = [];
-        try {
+        return $this->try_catch_ajax_admin(function () use($request) {
+            $result = [];
             $bonus_ids = Bonus::orderBy('bonus_id')->pluck('bonus_id')->toArray();
             $products = $this->repository->search($request['search'], 10, $bonus_ids, false);
             /** @var Product $product */
             foreach ($products as $product) {
                 $result[] = $this->repository->toArrayForSearch($product);
             }
-        } catch (\Throwable $e) {
-            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
-            event(new ThrowableHasAppeared($e));
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
     }
-
 
     public function attr_modification(Product $product)
     {
-        $result = [];
-        try {
+        return $this->try_catch_ajax_admin(function () use($product) {
+            $result = [];
             foreach ($product->prod_attributes as $attribute) {
                 if ($attribute->isVariant() && !$attribute->multiple) {
                     $result[] = [
@@ -236,16 +177,14 @@ class ProductController extends Controller
                     ];
                 }
             }
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
     }
 
     public function get_images(Product $product)
     {
-        $result = [];
-        try {
+        return $this->try_catch_ajax_admin(function () use($product) {
+            $result = [];
             foreach ($product->photos as $photo) {
                 $result[] = [
                     'id' => $photo->id,
@@ -253,55 +192,48 @@ class ProductController extends Controller
                     'alt' => $photo->alt,
                 ];
             }
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
     }
 
     public function del_image(Request $request, Product $product)
     {
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $product) {
             $this->service->delPhoto($request, $product);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-        }
+            return \response()->json(true);
+        });
     }
 
     public function up_image(Request $request, Product $product)
     {
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $product) {
             $this->service->upPhoto($request, $product);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-        }
+            return \response()->json(true);
+        });
     }
 
     public function down_image(Request $request, Product $product)
     {
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $product) {
             $this->service->downPhoto($request, $product);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-        }
+            return \response()->json(true);
+        });
     }
 
     public function alt_image(Request $request, Product $product)
     {
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $product) {
             $this->service->altPhoto($request, $product);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-        }
+            return \response()->json(true);
+        });
     }
 
     public function file_upload(Request $request, Product $product)
     {
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $product) {
             $this->service->addPhoto($request, $product);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-        }
+            return \response()->json(true);
+        });
     }
 
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Product;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
@@ -27,7 +26,7 @@ class GroupController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $query = Group::orderBy('name');
             if (!empty($name = $request['search'])) {
                 $query = $query->where('name', 'LIKE', "%{$name}%");
@@ -40,23 +39,14 @@ class GroupController extends Controller
                 $groups = $query->paginate($this->pagination);
             }
             return view('admin.product.group.index', compact('groups', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
-
+        });
     }
 
     public function create()
     {
-        try {
+        return $this->try_catch_admin(function () {
             return view('admin.product.group.create');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function store(Request $request)
@@ -64,38 +54,24 @@ class GroupController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $group = $this->service->create($request);
             return redirect()->route('admin.product.group.show', compact('group'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function show(Group $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($group) {
             return view('admin.product.group.show', compact('group'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function edit(Group $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($group) {
             return view('admin.product.group.edit', compact('group'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function update(Request $request, Group $group)
@@ -103,65 +79,41 @@ class GroupController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
-        try {
+        return $this->try_catch_admin(function () use($request, $group) {
             $group = $this->service->update($request, $group);
             return redirect()->route('admin.product.group.show', compact('group'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function destroy(Group $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($group) {
             $this->service->delete($group);
             return redirect()->route('admin.product.group.index');
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
-
+        });
     }
 
     public function add_product(Request $request, Group $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $group) {
             $this->service->add_product($request, $group);
             return redirect()->route('admin.product.group.show', compact('group'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function del_product(Request $request, Group $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $group) {
             $this->service->del_product($request, $group);
             return redirect()->route('admin.product.group.show', compact('group'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
+    //AJAX
     public function search(Request $request, Group $group)
     {
-        $result = [];
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $group) {
+            $result = [];
             $products = $this->products->search($request['search']);
             /** @var Product $product */
             foreach ($products as $product) {
@@ -169,10 +121,7 @@ class GroupController extends Controller
                     $result[] = $this->products->toArrayForSearch($product);
                 }
             }
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
     }
 }

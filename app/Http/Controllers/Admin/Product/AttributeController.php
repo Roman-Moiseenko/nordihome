@@ -4,15 +4,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Product;
 
 use App\Events\ThrowableHasAppeared;
+use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Service\AttributeGroupService;
 use App\Modules\Product\Service\AttributeService;
-use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 
 class AttributeController extends Controller
@@ -33,7 +32,7 @@ class AttributeController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             //TODO Перенести все в Repository!!!
             $query = Attribute::orderBy('name');
             $categories = Category::defaultOrder()->withDepth()->get();
@@ -44,12 +43,9 @@ class AttributeController extends Controller
                     $q->where('id', '=', $category_id);
                 });
             }
-
-            //if ($category_id == 0) unset($category_id);
             if (!empty($group_id = $request->get('group_id'))) {
                 $query->where('group_id', $group_id);
             }
-
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
                 $prod_attributes = $query->paginate($pagination);
@@ -58,29 +54,20 @@ class AttributeController extends Controller
                 $prod_attributes = $query->paginate($this->pagination);
             }
 
-
             return view('admin.product.attribute.index',
                 compact('prod_attributes',
                     'categories', 'groups', 'pagination', 'category_id', 'group_id'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
 
     public function create()
     {
-        try {
+        return $this->try_catch_admin(function () {
             $categories = Category::defaultOrder()->withDepth()->get();
             $groups = AttributeGroup::orderBy('name')->get();
             return view('admin.product.attribute.create', compact('categories', 'groups'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function store(Request $request)
@@ -91,169 +78,102 @@ class AttributeController extends Controller
             'name' => 'required|string',
             'type' => 'required|integer',
         ]);
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $attribute = $this->service->create($request);
             return redirect()->route('admin.product.attribute.show', compact('attribute'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
-
+        });
     }
 
     public function show(Attribute $attribute)
     {
-        try {
+        return $this->try_catch_admin(function () use($attribute) {
             return view('admin.product.attribute.show', compact('attribute'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function edit(Attribute $attribute)
     {
-        try {
+        return $this->try_catch_admin(function () use($attribute) {
             $categories = Category::defaultOrder()->withDepth()->get();
             $groups = AttributeGroup::orderBy('name')->get();
             return view('admin.product.attribute.edit', compact('attribute', 'categories', 'groups'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function update(Request $request, Attribute $attribute)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $attribute) {
             $attribute = $this->service->update($request, $attribute);
             return view('admin.product.attribute.show', compact('attribute'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function destroy(Attribute $attribute)
     {
-        try {
+        return $this->try_catch_admin(function () use($attribute) {
             $this->service->delete($attribute);
             return redirect()->route('admin.product.attribute.index');
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
-
     //ГРУППЫ АТРИБУТОВ
-
     public function group_add(Request $request)
     {
-        try {
-
+        return $this->try_catch_admin(function () use($request) {
             $this->groupService->create($request);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
     public function groups(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $groups = AttributeGroup::orderBy('sort')->get();
             return view('admin.product.attribute.groups', compact('groups'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function group_up(AttributeGroup $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($group) {
             $this->groupService->up($group);
             $groups = AttributeGroup::orderBy('sort')->get();
             return redirect(route('admin.product.attribute.groups', compact('groups')));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function group_down(AttributeGroup $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($group) {
             $this->groupService->down($group);
             $groups = AttributeGroup::orderBy('sort')->get();
             return redirect(route('admin.product.attribute.groups', compact('groups')));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function group_rename(Request $request, AttributeGroup $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $group) {
             $this->groupService->update($request, $group);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
     public function group_destroy(AttributeGroup $group)
     {
-        try {
+        return $this->try_catch_admin(function () use($group) {
             $this->groupService->delete($group);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
     //Варианты
-
     public function variant_image(Request $request, AttributeVariant $variant)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $variant) {
             $this->service->image_variant($variant, $request);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
 }

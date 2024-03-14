@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Product;
 
 use App\Events\ThrowableHasAppeared;
-use App\Modules\Product\Entity\Category;
+use App\Http\Controllers\Controller;
 use App\Modules\Shop\Parser\ProductParser;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 
 class ParserController extends Controller
@@ -23,7 +22,7 @@ class ParserController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $published = $request['published'] ?? 'all';
 
             $query = ProductParser::orderBy('created_at');
@@ -33,7 +32,6 @@ class ParserController extends Controller
             if ($published == 'draft') $query->whereHas('product', function ($q) {
                 $q->where('published', '=', false);
             });
-
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
                 $parsers = $query->paginate($pagination);
@@ -42,48 +40,30 @@ class ParserController extends Controller
                 $parsers = $query->paginate($this->pagination);
             }
             return view('admin.product.parser.index', compact('parsers', 'pagination', 'published'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
 
     public function show(ProductParser $productParser)
     {
-        try {
+        return $this->try_catch_admin(function () use($productParser) {
             return view('admin.product.parser.show', compact('productParser'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function block(ProductParser $parser)
     {
-        try {
+        return $this->try_catch_admin(function () use($parser) {
             $parser->block();
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
     public function unblock(ProductParser $parser)
     {
-        try {
+        return $this->try_catch_admin(function () use($parser) {
             $parser->unblock();
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 }

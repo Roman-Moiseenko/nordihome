@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Accounting;
 
 use App\Events\ThrowableHasAppeared;
+use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\StorageService;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 
 class StorageController extends Controller
@@ -25,59 +25,42 @@ class StorageController extends Controller
 
     public function index()
     {
-        try {
+        return $this->try_catch_admin(function () {
             $storages = Storage::orderBy('name')->get();
             return view('admin.accounting.storage.index', compact('storages'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function create(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $organizations = Organization::get();
             return view('admin.accounting.storage.create', compact('organizations'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'name' => 'required|string',
-                'organization_id' => 'required|int',
-            ]);
+        $request->validate([
+            'name' => 'required|string',
+            'organization_id' => 'required|int',
+        ]);
+        return $this->try_catch_admin(function () use($request) {
             $storage = $this->service->create($request);
             return redirect()->route('admin.accounting.storage.show', $storage);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function show(Request $request, Storage $storage)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $storage) {
             //TODO поиск по товару ....
-
             $query = $storage->items();
-
             if (!empty($search = $request['search'])) {
                 $query->whereHas('product', function ($q) use ($search) {
                     $q->where('code_search', 'LIKE', "%{$search}%")
                         ->orWhere('name', 'LIKE', "% {$search}%");
                 });
-
             }
             //ПАГИНАЦИЯ
             if (!empty($pagination = $request->get('p'))) {
@@ -86,42 +69,27 @@ class StorageController extends Controller
             } else {
                 $items = $query->paginate($this->pagination);
             }
-
             return view('admin.accounting.storage.show', compact('storage', 'items', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function edit(Storage $storage)
     {
-        try {
+        return $this->try_catch_admin(function () use($storage) {
             $organizations = Organization::get();
             return view('admin.accounting.storage.edit', compact('storage', 'organizations'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function update(Request $request, Storage $storage)
     {
-        try {
-            $request->validate([
-                'name' => 'required',
-                'organization_id' => 'required',
-            ]);
+        $request->validate([
+            'name' => 'required',
+            'organization_id' => 'required',
+        ]);
+        return $this->try_catch_admin(function () use($request, $storage) {
             $storage = $this->service->update($request, $storage);
             return redirect()->route('admin.accounting.storage.show', $storage);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 }

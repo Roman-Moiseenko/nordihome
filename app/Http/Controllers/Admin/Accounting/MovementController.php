@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Accounting;
 
 use App\Events\ThrowableHasAppeared;
+use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
@@ -11,7 +12,6 @@ use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 
 class MovementController extends Controller
@@ -30,7 +30,7 @@ class MovementController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $query = MovementDocument::orderByDesc('created_at');
             $storages = Storage::orderBy('name')->get();
 
@@ -53,24 +53,15 @@ class MovementController extends Controller
             }
             return view('admin.accounting.movement.index',
                 compact('movements', 'pagination', 'completed', 'storages', 'storage_in', 'storage_out'));
-
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function create(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $storages = Storage::get();
             return view('admin.accounting.movement.create', compact('storages'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function store(Request $request)
@@ -79,136 +70,86 @@ class MovementController extends Controller
             'storage_out' => 'required',
             'storage_in' => 'required',
         ]);
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $movement = $this->service->create($request);
             return redirect()->route('admin.accounting.movement.show', $movement);
-
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function show(MovementDocument $movement)
     {
-        try {
+        return $this->try_catch_admin(function () use($movement) {
             $info = $movement->getInfoData();
             return view('admin.accounting.movement.show', compact('movement', 'info'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function edit(MovementDocument $movement)
     {
-        try {
+        return $this->try_catch_admin(function () use($movement) {
             $storages = Storage::get();
             return view('admin.accounting.movement.edit', compact('movement'), compact('storages'));
-
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function update(Request $request, MovementDocument $movement)
     {
-        try {
-            $request->validate([
-                'storage_in' => 'required',
-                'storage_out' => 'required',
-            ]);
+        $request->validate([
+            'storage_in' => 'required',
+            'storage_out' => 'required',
+        ]);
+        return $this->try_catch_admin(function () use($request, $movement) {
             $movement = $this->service->update($request, $movement);
             return redirect()->route('admin.accounting.movement.show', $movement);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function destroy(MovementDocument $movement)
     {
-        try {
+        return $this->try_catch_admin(function () use($movement) {
             $this->service->destroy($movement);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+            return redirect()->back();
+        });
     }
 
     public function add(Request $request, MovementDocument $movement)
     {
-        try {
+        return $this->try_catch_admin(function () use($request, $movement) {
             $this->service->add($request, $movement);
             return redirect()->route('admin.accounting.movement.show', $movement);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function remove_item(MovementProduct $item)
     {
-        try {
+        return $this->try_catch_admin(function () use($item) {
             $movement = $item->document;
             $item->delete();
             return redirect()->route('admin.accounting.movement.show', $movement);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function completed(MovementDocument $movement)
     {
-        try {
+        return $this->try_catch_admin(function () use($movement) {
             $this->service->completed($movement);
             return redirect()->route('admin.accounting.movement.index');
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     //AJAX
     public function set(Request $request, MovementProduct $item)
     {
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $item) {
             $result = $this->service->set($request, $item);
             return response()->json($result);
-        } catch (\DomainException $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            return response()->json(['error' => $e->getMessage()]);
-        }
+        });
     }
 
     public function search(Request $request, MovementDocument $movement)
     {
-        $result = [];
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $movement) {
+            $result = [];
             $products = $this->products->search($request['search']);
             /** @var Product $product */
             foreach ($products as $product) {
@@ -216,11 +157,8 @@ class MovementController extends Controller
                     $result[] = $this->products->toArrayForSearch($product);
                 }
             }
-        } catch (\Throwable $e) {
-            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
-            event(new ThrowableHasAppeared($e));
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
     }
 
 }

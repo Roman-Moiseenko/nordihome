@@ -30,7 +30,7 @@ class ModificationController extends Controller
 
     public function index(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $query = Modification::orderBy('name');
             if (!empty($name = $request['name'])) {
                 $query = $query->where('name', 'LIKE', "%{$name}%");
@@ -42,25 +42,16 @@ class ModificationController extends Controller
             } else {
                 $modifications = $query->paginate($this->pagination);
             }
-
             return view('admin.product.modification.index', compact('modifications', 'pagination'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function create(Request $request)
     {
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $product_id = $request['product_id'] ?? null;
             return view('admin.product.modification.create', compact('product_id'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function store(Request $request)
@@ -70,39 +61,24 @@ class ModificationController extends Controller
             'product_id' => 'required',
             'attribute_id' => 'required|array',
         ]);
-
-        try {
+        return $this->try_catch_admin(function () use($request) {
             $modification = $this->service->create($request);
             return redirect()->route('admin.product.modification.show', compact('modification'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function show(Modification $modification)
     {
-        try {
+        return $this->try_catch_admin(function () use($modification) {
             return view('admin.product.modification.show', compact('modification'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function edit(Modification $modification)
     {
-        try {
+        return $this->try_catch_admin(function () use($modification) {
             return view('admin.product.modification.edit', compact('modification'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
 
@@ -112,40 +88,34 @@ class ModificationController extends Controller
             'name' => 'required|string',
             'product_id' => 'integer|required',
         ]);
-        try {
+        return $this->try_catch_admin(function () use($request, $modification) {
             $modification = $this->service->update($request, $modification);
             return redirect()->route('admin.product.modification.show', compact('modification'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
     }
 
     public function destroy(Modification $modification)
     {
-        try {
+        return $this->try_catch_admin(function () use($modification) {
             $this->service->delete($modification);
             return redirect()->route('admin.product.modification.index');
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
+        });
+    }
 
+    public function del_product(Request $request, Modification $modification)
+    {
+        return $this->try_catch_admin(function () use($request, $modification) {
+            $this->service->del_product($request, $modification);
+            return redirect()->route('admin.product.modification.show', compact('modification'));
+        });
     }
 
 //AJAX
     public function search(Request $request)
     {
-        //$request - содержит параметр action = index, create и show //
-        $result = [];
-        $products = [];
-        try {
+        return $this->try_catch_ajax_admin(function () use($request) {
+            $result = [];
+            $products = [];
             if (empty($request['action'])) {
                 $products = $this->products->search($request['search'], 100000);
             } else {
@@ -163,7 +133,6 @@ class ModificationController extends Controller
                 }
             }
 
-
             //TODO Сделать фильтрацию по товарам которые есть в любой модификации (получить все id из ModiRepository и перебрать и проверить in_array($product->id, $array_mod_ids)
             /** @var Product $product */
             foreach ($products as $product) {
@@ -178,38 +147,18 @@ class ModificationController extends Controller
                     $result[] = array_merge($this->products->toArrayForSearch($product), ['other' => $other]);
                 }
             }
-
-        } catch (\Throwable $e) {
-            $result = [$e->getMessage(), $e->getFile(), $e->getLine()];
-            event(new ThrowableHasAppeared($e));
-
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
     }
 
     public function add_product(Request $request, Modification $modification)
     {
-        try {
+        return $this->try_catch_ajax_admin(function () use($request, $modification) {
             $this->service->add_product($request, $modification);
             return \response()->json(true);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            return \response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
-        }
+        });
     }
 
-    public function del_product(Request $request, Modification $modification)
-    {
-        try {
-            $this->service->del_product($request, $modification);
-            return redirect()->route('admin.product.modification.show', compact('modification'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-        }
-        return redirect()->back();
-    }
+
 
 }
