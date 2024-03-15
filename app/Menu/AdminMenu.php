@@ -195,7 +195,7 @@ class AdminMenu
                     'departure' => [
                         'icon' => 'folder-output',
                         'title' => 'Списание товара',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.accounting.departure.index',
                     ],
                     'distributors' => [
                         'icon' => 'building',

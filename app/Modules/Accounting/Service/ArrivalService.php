@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\ArrayShape;
 
 class ArrivalService
 {
@@ -24,16 +25,15 @@ class ArrivalService
     public function create(Request $request): ArrivalDocument
     {
         $currency = Currency::find((int)$request['currency']);
-        $arrival = ArrivalDocument::register(
+        return ArrivalDocument::register(
             $request['number'] ?? '',
             (int)$request['distributor'],
             (int)$request['storage'],
             $currency
         );
-        return $arrival;
     }
 
-    public function update(Request $request, ArrivalDocument $arrival)
+    public function update(Request $request, ArrivalDocument $arrival): ArrivalDocument
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         $arrival->number = $request['number'] ?? '';
@@ -91,7 +91,8 @@ class ArrivalService
         return $item->cost_ru;
     }
 
-    public function getInfoData(ArrivalDocument $arrival)
+    #[ArrayShape(['cost_currency' => "float|int", 'quantity' => "int", 'cost_ru' => "float|int"])]
+    public function getInfoData(ArrivalDocument $arrival): array
     {
         $result = [
             'cost_currency' => 0,
@@ -108,15 +109,15 @@ class ArrivalService
         return $result;
     }
 
+    /**
+     * Проведение документа, с установкой новой цены продажи и закупа у поставщика
+     * @param ArrivalDocument $arrival
+     * @return void
+     */
     public function completed(ArrivalDocument $arrival)
     {
-        //Проведение документа
-        $storage = $arrival->storage;
-        $distributor = $arrival->distributor;
-        //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
-
         $this->storages->arrival($arrival->storage, $arrival->arrivalProducts()->getModels());
-
+        //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
         foreach ($arrival->arrivalProducts as $item) {
             $this->distributors->arrival($arrival->distributor, $item->product_id, $item->cost_currency);
             $item->product->setPrice($item->price_sell);
@@ -124,7 +125,6 @@ class ArrivalService
 
         $arrival->completed();
         event(new ArrivalHasCompleted($arrival));
-        //Уведомление .... Если ктото подписан на товар -- Событие event(new ArrivalHasCompleted($document))
     }
 
 }

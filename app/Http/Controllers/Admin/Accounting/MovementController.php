@@ -25,7 +25,6 @@ class MovementController extends Controller
         $this->service = $service;
         $this->products = $products;
         $this->pagination = Config::get('shop-config.p-list');
-
     }
 
     public function index(Request $request)

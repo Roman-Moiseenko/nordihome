@@ -35,6 +35,7 @@ class MovementService
     }
 
     /**
+     * Создание заявки на перемещение при обработке заказа на недостающее кол-во
      * @param Order $order
      * @return MovementDocument[]|null
      */
@@ -73,7 +74,8 @@ class MovementService
                     $movement->movementProducts()->create([
                         'quantity' => $item['quantity'],
                         'product_id' => $item['product']->id,
-                        ]);
+                        'cost' => $item['product']->lastPrice->value,
+                    ]);
                     unset($emptyItems[$i]);
                 } else {
                     $movement->movementProducts()->create(['quantity' => $free_product]);
@@ -110,45 +112,35 @@ class MovementService
 
         /** @var Product $product */
         $product = Product::find($request['product_id']);
-        $free_quantity = $movement->storageOut->getQuantity($product) - $movement->storageOut->getReserve($product);
+        $free_quantity = $movement->storageOut->freeToSell($product);
         $quantity = min((int)$request['quantity'], $free_quantity);
 
         //Добавляем в документ
         $movement->movementProducts()->create([
             'product_id' => $product->id,
             'quantity' => $quantity,
+            'cost' => $product->lastPrice->value
         ]);
         $movement->refresh();
         return $movement;
     }
 
     //Для AJAX
-    public function set(Request $request, MovementProduct $item): bool
+    public function set(Request $request, MovementProduct $item)
     {
         if ($item->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         //Меняем данные
         $item->quantity = (int)$request['quantity'];
         $item->save();
-        return true;
+        return $item->document->getInfoData();
     }
 
     public function completed(MovementDocument $movement)
     {
         //Проведение документа
-        DB::beginTransaction();
-        try {
-            $this->storages->arrival($movement->storageIn, $movement->movementProducts()->getModels());
-            $this->storages->departure($movement->storageOut, $movement->movementProducts()->getModels());
-            $movement->completed();
-            DB::commit();
-            event(new MovementHasCompleted($movement));
-        } catch (\DomainException $e) {
-            DB::rollBack();
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            flash($e->getMessage(), 'danger');
-            event(new ThrowableHasAppeared($e));
-        }
+        $this->storages->arrival($movement->storageIn, $movement->movementProducts()->getModels());
+        $this->storages->departure($movement->storageOut, $movement->movementProducts()->getModels());
+        $movement->completed();
+        event(new MovementHasCompleted($movement));
     }
 }

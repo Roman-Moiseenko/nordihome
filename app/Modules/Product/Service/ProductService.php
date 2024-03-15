@@ -25,12 +25,12 @@ class ProductService
     private EquivalentService $equivalentService;
     private SeriesService $seriesService;
 
-    public function __construct(Options $options,
+    public function __construct(Options            $options,
                                 CategoryRepository $categories,
-                                TagRepository $tags,
-                                TagService $tagService,
-                                EquivalentService $equivalentService,
-                                SeriesService $seriesService)
+                                TagRepository      $tags,
+                                TagService         $tagService,
+                                EquivalentService  $equivalentService,
+                                SeriesService      $seriesService)
     {
         //Конфигурация
         $this->options = $options;
@@ -44,197 +44,181 @@ class ProductService
     public function create(Request $request): Product
     {
         //TODO Переделать под получения массива $request->all()
-        DB::beginTransaction();
-        try {
-            /* SECTION 1*/
 
-            $arguments = [
-                'pre_order' => $this->options->shop->pre_order,
-                'only_offline' => $this->options->shop->only_offline,
-                'not_local' => !$this->options->shop->delivery_local,
-                'not_delivery' => !$this->options->shop->delivery_all,
-            ];
-
-            $product = Product::register($request['name'], $request['code'], (int)$request['category_id'], $request['slug'] ?? '', $arguments);
-            $product->brand_id = $request['brand_id'];
-            if (!empty($request['categories'])) {
-                foreach ($request['categories'] as $category_id) {
-                    if ($this->categories->exists((int)$category_id))
-                        $product->categories()->attach((int)$category_id);
-                }
+        /* SECTION 1*/
+        $arguments = [
+            'pre_order' => $this->options->shop->pre_order,
+            'only_offline' => $this->options->shop->only_offline,
+            'not_local' => !$this->options->shop->delivery_local,
+            'not_delivery' => !$this->options->shop->delivery_all,
+        ];
+        $product = Product::register($request['name'], $request['code'], (int)$request['category_id'], $request['slug'] ?? '', $arguments);
+        $product->brand_id = $request['brand_id'];
+        if (!empty($request['categories'])) {
+            foreach ($request['categories'] as $category_id) {
+                if ($this->categories->exists((int)$category_id))
+                    $product->categories()->attach((int)$category_id);
             }
-            //Серия
-            $this->series($request, $product);
-
-            /* SECTION 2*/
-            //Описание, короткое описание, теги
-            $product->description = $request['description'] ?? '';
-            $product->short = $request['short'] ?? '';
-
-            $this->tags($request, $product);
-
-            DB::commit();
-            $product->push();
-            return $product;
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            throw new \DomainException($e->getMessage());
         }
+        //Серия
+        $this->series($request, $product);
+
+        /* SECTION 2*/
+        //Описание, короткое описание, теги
+        $product->description = $request['description'] ?? '';
+        $product->short = $request['short'] ?? '';
+
+        $this->tags($request, $product);
+
+        $product->push();
+        return $product;
+
     }
 
     public function update(Request $request, Product $product): Product
     {
-        DB::beginTransaction();
-        try {
-            /* SECTION 1*/
-            //Основная
-            $product->name = $request['name'];
-            $product->code = $request['code'];
-            $product->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
-            $product->main_category_id = $request['category_id'];
-            $product->brand_id = $request['brand_id'];
+        /* SECTION 1*/
+        //Основная
+        $product->name = $request['name'];
+        $product->code = $request['code'];
+        $product->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
+        $product->main_category_id = $request['category_id'];
+        $product->brand_id = $request['brand_id'];
 
-            //Проверить изменения в списке категорий
-            $array_old = [];
-            $array_new = $request['categories'] ?? null;
+        //Проверить изменения в списке категорий
+        $array_old = [];
+        $array_new = $request['categories'] ?? null;
 
-            foreach ($product->categories as $category) $array_old[] = $category->id;
-            foreach ($array_old as $key => $item) {
-                if (!is_null($array_new) && in_array($item, $array_new)) {
-                    $key_new = array_search($item, $array_new);
-                    unset($array_old[$key]);
-                    unset($array_new[$key_new]);
-                }
+        foreach ($product->categories as $category) $array_old[] = $category->id;
+        foreach ($array_old as $key => $item) {
+            if (!is_null($array_new) && in_array($item, $array_new)) {
+                $key_new = array_search($item, $array_new);
+                unset($array_old[$key]);
+                unset($array_new[$key_new]);
             }
-            foreach ($array_old as $item) {
-                $product->categories()->detach((int)$item);
-            }
-            if (!is_null($array_new)) {
-                foreach ($array_new as $item) {
-                    if ($this->categories->exists((int)$item)) {
-                        $product->categories()->attach((int)$item);
-                    }
-                }
-            }
-            $this->series($request, $product);
-            /* SECTION 2*/
-            //Описание, короткое описание, теги
-            $product->description = $request['description'] ?? '';
-            $product->short = $request['short'] ?? '';
-            $product->tags()->detach();
-            $this->tags($request, $product);
-
-            /* SECTION 4*/
-            //Видеообзоры
-            $product->videos()->delete();
-            if (!empty($request['video_url'])) {
-                foreach ($request['video_url'] as $i => $item) {
-                    if (!empty($request['video_url'][$i]))
-                        $product->videos()->save(Video::register(
-                            $request['video_url'][$i],
-                            $request['video_caption'][$i] ?? '',
-                            $request['video_text'][$i] ?? '', $i));
-                }
-            }
-            /* SECTION 5*/
-            //Габариты и доставка
-            $product->dimensions = Dimensions::create(
-                (float)$request['dimensions-width'],
-                (float)$request['dimensions-height'],
-                (float)$request['dimensions-depth'],
-                (float)$request['dimensions-weight'],
-                $request['dimensions-measure']
-            );
-            $product->not_local = !isset($request['local']);
-            $product->not_delivery = !isset($request['delivery']);
-
-            /* SECTION 6*/
-            //Атрибуты
-            $product->prod_attributes()->detach();
-            foreach ($product->getPossibleAttribute() as $key => $attribute) {
-                if (isset($request['attribute_' . $key])) {
-                    if ($attribute->isVariant()) {
-                        $value = $request['attribute_' . $key];
-                    } elseif ($attribute->isBool()) {
-                        $value = true;
-                    } else {
-                        $value = $request['attribute_' . $key];
-                    }
-                    $product->prod_attributes()->attach($attribute->id, ['value' => json_encode($value)]);
-                }
-            }
-
-            /* SECTION 7*/
-            //Цена, кол-во, статус, периодичность
-
-            //Не сохранять цену и кол-во, если торговый учет
-            if (!$this->options->shop->accounting) {
-                $product->count_for_sell = (int)($request['count-for-sell'] ?? 0);
-                if (!empty($request['last-price']) && (float)$request['last-price'] > 0.99) {
-                    $product->setPrice((float)$request['last-price']);
-                }
-            }
-
-            $product->pre_order = isset($request['pre_order']);
-            $product->only_offline = isset($request['offline']);
-
-            $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
-
-            /* SECTION 8*/
-
-            /* SECTION 9*/
-            //Аналоги
-            $new_equivalent_id = $request['equivalent_id'] ?? 0;
-
-
-            if ($new_equivalent_id == 0 && !is_null($product->equivalent)) {
-                $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-            }
-            if ($new_equivalent_id != 0) {
-                if (is_null($product->equivalent)) {
-                    //Доб.новый
-                    $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
-                } elseif ((int)$new_equivalent_id !== $product->equivalent->id) {
-                    $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-                    $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
-                }
-            }
-
-            /* SECTION 10*/
-            //Сопутствующие
-            $product->related()->detach();
-            if (!empty($request['related'])) {
-                foreach ($request['related'] as $related) {
-                    if ($product->id != (int)$related) $product->related()->attach((int)$related);
-                }
-            }
-
-
-            /* SECTION 13*/
-            //Бонусный товар
-            $product->bonus()->detach();
-            if (!empty($request['bonus'])) {
-                foreach ($request['bonus'] as $key => $bonus) {
-                    if ($product->id != (int)$bonus) {
-                        $product->bonus()->attach((int)$bonus, ['discount' => (int)$request['discount'][$key]]);
-                    }
-                }
-            }
-
-            DB::commit();
-            $product->push();
-            if (isset($request['published'])) {
-                $this->published($product);
-            } else {
-                $this->draft($product);
-            }
-            return $product;
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            throw new \DomainException($e->getMessage());
         }
-    }
+        foreach ($array_old as $item) {
+            $product->categories()->detach((int)$item);
+        }
+        if (!is_null($array_new)) {
+            foreach ($array_new as $item) {
+                if ($this->categories->exists((int)$item)) {
+                    $product->categories()->attach((int)$item);
+                }
+            }
+        }
+        $this->series($request, $product);
+        /* SECTION 2*/
+        //Описание, короткое описание, теги
+        $product->description = $request['description'] ?? '';
+        $product->short = $request['short'] ?? '';
+        $product->tags()->detach();
+        $this->tags($request, $product);
 
+        /* SECTION 4*/
+        //Видеообзоры
+        $product->videos()->delete();
+        if (!empty($request['video_url'])) {
+            foreach ($request['video_url'] as $i => $item) {
+                if (!empty($request['video_url'][$i]))
+                    $product->videos()->save(Video::register(
+                        $request['video_url'][$i],
+                        $request['video_caption'][$i] ?? '',
+                        $request['video_text'][$i] ?? '', $i));
+            }
+        }
+        /* SECTION 5*/
+        //Габариты и доставка
+        $product->dimensions = Dimensions::create(
+            (float)$request['dimensions-width'],
+            (float)$request['dimensions-height'],
+            (float)$request['dimensions-depth'],
+            (float)$request['dimensions-weight'],
+            $request['dimensions-measure']
+        );
+        $product->not_local = !isset($request['local']);
+        $product->not_delivery = !isset($request['delivery']);
+
+        /* SECTION 6*/
+        //Атрибуты
+        $product->prod_attributes()->detach();
+        foreach ($product->getPossibleAttribute() as $key => $attribute) {
+            if (isset($request['attribute_' . $key])) {
+                if ($attribute->isVariant()) {
+                    $value = $request['attribute_' . $key];
+                } elseif ($attribute->isBool()) {
+                    $value = true;
+                } else {
+                    $value = $request['attribute_' . $key];
+                }
+                $product->prod_attributes()->attach($attribute->id, ['value' => json_encode($value)]);
+            }
+        }
+
+        /* SECTION 7*/
+        //Цена, кол-во, статус, периодичность
+
+        //Не сохранять цену и кол-во, если торговый учет
+        if (!$this->options->shop->accounting) {
+            $product->count_for_sell = (int)($request['count-for-sell'] ?? 0);
+            if (!empty($request['last-price']) && (float)$request['last-price'] > 0.99) {
+                $product->setPrice((float)$request['last-price']);
+            }
+        }
+
+        $product->pre_order = isset($request['pre_order']);
+        $product->only_offline = isset($request['offline']);
+
+        $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
+
+        /* SECTION 8*/
+
+        /* SECTION 9*/
+        //Аналоги
+        $new_equivalent_id = $request['equivalent_id'] ?? 0;
+
+
+        if ($new_equivalent_id == 0 && !is_null($product->equivalent)) {
+            $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+        }
+        if ($new_equivalent_id != 0) {
+            if (is_null($product->equivalent)) {
+                //Доб.новый
+                $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
+            } elseif ((int)$new_equivalent_id !== $product->equivalent->id) {
+                $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+                $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
+            }
+        }
+
+        /* SECTION 10*/
+        //Сопутствующие
+        $product->related()->detach();
+        if (!empty($request['related'])) {
+            foreach ($request['related'] as $related) {
+                if ($product->id != (int)$related) $product->related()->attach((int)$related);
+            }
+        }
+
+        /* SECTION 13*/
+        //Бонусный товар
+        $product->bonus()->detach();
+        if (!empty($request['bonus'])) {
+            foreach ($request['bonus'] as $key => $bonus) {
+                if ($product->id != (int)$bonus) {
+                    $product->bonus()->attach((int)$bonus, ['discount' => (int)$request['discount'][$key]]);
+                }
+            }
+        }
+
+        $product->push();
+        if (isset($request['published'])) {
+            $this->published($product);
+        } else {
+            $this->draft($product);
+        }
+        return $product;
+    }
 
 
     public function moderation(Product $product): void
@@ -255,7 +239,7 @@ class ProductService
         //TODO Проверка на продажи и Отзывы- через сервисы reviewService->isSet($product->id) reviewOrder->isSet($product->id)
         //TODO При удалении, удалять все связанные файлы Фото и Видео
         if ($product->id > 0)
-        throw new \DomainException('Тестируем. Удалить Продукт нельзя');
+            throw new \DomainException('Тестируем. Удалить Продукт нельзя');
     }
 
     private function tags(Request $request, Product &$product)
@@ -284,7 +268,6 @@ class ProductService
     }
 
     ///Работа с Фото Продукта
-
     public function addPhoto(Request $request, Product $product)
     {
         if (empty($file = $request->file('file'))) throw new \DomainException('Нет файла');
@@ -363,6 +346,5 @@ class ProductService
     {
         $product->update(['published' => false]);
     }
-
 
 }

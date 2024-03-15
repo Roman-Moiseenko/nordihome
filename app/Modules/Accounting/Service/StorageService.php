@@ -52,6 +52,7 @@ class StorageService
 
 
     /**
+     * Поступление товара списком
      * @param MovementItemInterface[] $items
      * @return void
      */
@@ -66,6 +67,7 @@ class StorageService
         }
     }
     /**
+     * Списание товара списком
      * @param MovementItemInterface[] $items
      * @return void
      */
@@ -79,9 +81,6 @@ class StorageService
             $product->save();
         }
     }
-
-    //TODO При перемещении count_for_sell не меняется
-    // при списании уменьшается на getQuantity()
 
     public function photo(Storage $storage, $file): void
     {

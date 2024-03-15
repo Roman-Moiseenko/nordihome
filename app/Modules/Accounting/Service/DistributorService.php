@@ -9,13 +9,13 @@ use Illuminate\Http\Request;
 class DistributorService
 {
 
-    public function create(Request $request)
+    public function create(Request $request): Distributor
     {
         $distributor = Distributor::register($request['name']);
         return $distributor;
     }
 
-    public function update(Request $request, Distributor $distributor)
+    public function update(Request $request, Distributor $distributor): Distributor
     {
         $distributor->name = $request['name'];
         $distributor->save();

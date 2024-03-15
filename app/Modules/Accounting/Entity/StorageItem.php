@@ -18,6 +18,7 @@ class StorageItem extends Model
 {
     protected $table = 'storage_items';
     public $timestamps = false;
+
     protected $fillable = [
         'product_id',
         'quantity'

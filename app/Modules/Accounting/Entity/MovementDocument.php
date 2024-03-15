@@ -12,7 +12,6 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property int $storage_out
  * @property int $storage_in
  * @property string $number
-
  * @property int $order_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -56,7 +55,6 @@ class MovementDocument extends Model implements MovementInterface
         $this->save();
     }
 
-
     public function movementProducts()
     {
         return $this->hasMany(MovementProduct::class, 'movement_id', 'id');
@@ -84,6 +82,7 @@ class MovementDocument extends Model implements MovementInterface
         }
         return false;
     }
+
     #[ArrayShape([
         'quantity' => 'int',
         'cost' => 'float',
@@ -94,7 +93,7 @@ class MovementDocument extends Model implements MovementInterface
         $cost = 0;
         foreach ($this->movementProducts as $item) {
             $quantity += $item->quantity;
-            $cost += $item->quantity * $item->product->lastPrice->value;
+            $cost += $item->quantity * ($item->cost ?? 0);
         }
         return [
             'quantity' => $quantity,

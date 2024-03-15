@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Entity\Admin;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\Currency;
+use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
@@ -570,6 +571,23 @@ Breadcrumbs::for('admin.accounting.movement.show', function (BreadcrumbTrail $tr
 Breadcrumbs::for('admin.accounting.movement.edit', function (BreadcrumbTrail $trail, MovementDocument $movement) {
     $trail->parent('admin.accounting.movement.show', $movement);
     $trail->push('Редактировать', route('admin.accounting.movement.edit', $movement));
+});
+//DEPARTURE
+Breadcrumbs::for('admin.accounting.departure.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Списание товаров', route('admin.accounting.departure.index'));
+});
+Breadcrumbs::for('admin.accounting.departure.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.departure.index');
+    $trail->push('Добавить', route('admin.accounting.departure.create'));
+});
+Breadcrumbs::for('admin.accounting.departure.show', function (BreadcrumbTrail $trail, DepartureDocument $departure) {
+    $trail->parent('admin.accounting.departure.index');
+    $trail->push($departure->number . ' от ' . $departure->created_at->format('d-m-Y'), route('admin.accounting.departure.show', $departure));
+});
+Breadcrumbs::for('admin.accounting.departure.edit', function (BreadcrumbTrail $trail, DepartureDocument $departure) {
+    $trail->parent('admin.accounting.departure.show', $departure);
+    $trail->push('Редактировать', route('admin.accounting.departure.edit', $departure));
 });
 
 /////PAGES

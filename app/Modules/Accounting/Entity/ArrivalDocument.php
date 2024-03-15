@@ -18,17 +18,15 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property int $currency_id
  * @property float $exchange_fix //Курс на момент создания документа
  * @property string $comment Комментарий к документу, пока отключена, на будущее
-
- *
  * @property Storage $storage
  * @property Currency $currency
- * @property  ArrivalProduct[] $arrivalProducts
+ * @property ArrivalProduct[] $arrivalProducts
  * @property Distributor $distributor
  */
-
 class ArrivalDocument extends Model implements MovementInterface
 {
     protected $table = 'arrival_documents';
+
     protected $fillable = [
         'number',
         'distributor_id',
@@ -104,7 +102,6 @@ class ArrivalDocument extends Model implements MovementInterface
         return false;
     }
 
-
     #[ArrayShape([
         'quantity' => 'int',
         'cost_currency' => 'float',
@@ -119,7 +116,7 @@ class ArrivalDocument extends Model implements MovementInterface
         foreach ($this->arrivalProducts as $item) {
             $quantity += $item->quantity;
             $cost_currency += $item->quantity * $item->cost_currency;
-            $price_sell +=  $item->quantity * $item->price_sell;
+            $price_sell += $item->quantity * $item->price_sell;
         }
         $cost_ru = ceil($cost_currency * $this->exchange_fix * 100) / 100;
 

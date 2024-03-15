@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\ArrivalHasCompleted;
+use App\Events\DepartureHasCompleted;
 use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
@@ -17,6 +18,7 @@ use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasRegistered;
 use App\Listeners\NotificationCanceledOrder;
 use App\Listeners\NotificationNewArrival;
+use App\Listeners\NotificationNewDeparture;
 use App\Listeners\NotificationNewLogger;
 use App\Listeners\NotificationNewMovement;
 use App\Listeners\NotificationNewOrder;
@@ -85,6 +87,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasRefund::class => [
             NotificationNewRefund::class
+        ],
+        DepartureHasCompleted::class => [
+            NotificationNewDeparture::class,
         ],
     ];
 

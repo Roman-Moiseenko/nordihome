@@ -8,19 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $movement_id
+ * @property int $departure_id
  * @property int $product_id
  * @property int $quantity
  * @property float $cost
  * @property Product $product
- * @property MovementDocument $document
+ * @property DepartureDocument $document
  */
-class MovementProduct extends Model implements MovementItemInterface
+class DepartureProduct extends Model implements MovementItemInterface
 {
-    protected $table = 'movement_products';
+    protected $table = 'departure_products';
     public $timestamps = false;
     protected $fillable = [
-        'movement_id',
+        'departure_id',
         'product_id',
         'quantity',
         'cost',
@@ -33,7 +33,7 @@ class MovementProduct extends Model implements MovementItemInterface
 
     public function document()
     {
-        return $this->belongsTo(MovementDocument::class, 'movement_id', 'id');
+        return $this->belongsTo(DepartureDocument::class, 'departure_id', 'id');
     }
 
     public function getProduct(): Product

@@ -389,6 +389,7 @@ Route::group(
                 Route::resource('currency', 'CurrencyController'); //CRUD
                 Route::resource('arrival', 'ArrivalController'); //CRUD
                 Route::resource('movement', 'MovementController'); //CRUD
+                Route::resource('departure', 'DepartureController'); //CRUD
 
                 Route::post('/arrival/{arrival}/search', 'ArrivalController@search')->name('arrival.search');
                 Route::post('/arrival/{arrival}/add', 'ArrivalController@add')->name('arrival.add');
@@ -401,6 +402,12 @@ Route::group(
                 Route::post('/movement/{movement}/completed', 'MovementController@completed')->name('movement.completed');
                 Route::post('/movement/{item}/set', 'MovementController@set')->name('movement.set');
                 Route::delete('/movement/{item}/remove-item', 'MovementController@remove_item')->name('movement.remove-item');
+
+                Route::post('/departure/{departure}/search', 'DepartureController@search')->name('departure.search');
+                Route::post('/departure/{departure}/add', 'DepartureController@add')->name('departure.add');
+                Route::post('/departure/{departure}/completed', 'DepartureController@completed')->name('departure.completed');
+                Route::post('/departure/{item}/set', 'DepartureController@set')->name('departure.set');
+                Route::delete('/departure/{item}/remove-item', 'DepartureController@remove_item')->name('departure.remove-item');
 
             }
         );
