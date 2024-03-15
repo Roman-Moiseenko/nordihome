@@ -8,6 +8,7 @@ use App\Entity\Admin;
 use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasLogger;
+use App\Events\OrderHasRefund;
 use App\Events\PointHasEstablished;
 use App\Events\ThrowableHasAppeared;
 use App\Mail\OrderAwaiting;
@@ -18,6 +19,7 @@ use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderResponsible;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Payment\PaymentOrder;
+use App\Modules\Order\Entity\Refund;
 use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
@@ -28,12 +30,12 @@ use Illuminate\Support\Facades\Mail;
 class SalesService
 {
 
-    private ReserveService $reserve;
+    private ReserveService $reserveService;
     private MovementService $movements;
 
-    public function __construct(ReserveService $reserve, MovementService $movements)
+    public function __construct(ReserveService $reserveService, MovementService $movements)
     {
-        $this->reserve = $reserve;
+        $this->reserveService = $reserveService;
         $this->movements = $movements;
     }
 
@@ -45,7 +47,7 @@ class SalesService
         $order->responsible()->save(OrderResponsible::registerManager($staff->id));
     }
 
-    public function setReserve(Order $order, string $date, string $time)
+    public function setReserveService(Order $order, string $date, string $time)
     {
         $new_reserve = $date . ' ' . $time . ':00';
         foreach ($order->items as $item) {
@@ -74,7 +76,7 @@ class SalesService
                 $result = true; //Хотя бы одно изменение кол-ва.
                 //Снимаем с резерва
                 $sub_reserve = $orderItem->quantity - $new_quantity;
-                $this->reserve->subReserve($orderItem->reserve->id, $sub_reserve);
+                $this->reserveService->subReserve($orderItem->reserve->id, $sub_reserve);
                 $orderItem->changeQuantity($new_quantity);
             }
         }
@@ -113,7 +115,6 @@ class SalesService
 
     public function setAwaiting(Order $order)
     {
-        //Проверить что установлена точка выдачи
         if (!$order->isPoint()) throw new \DomainException('Не установлена точка сбора/выдачи!');
 
         //Проверить, если на доставку
@@ -189,9 +190,9 @@ class SalesService
     public function setMoving(Order $order, int $storage_id)
     {
         $storage = Storage::find($storage_id);
-        $order->setPoint($storage->id); // Установить точку выдачи товара
-        $order->setStorage($storage->id); // в резервах указать склад,
-        $movements = $this->movements->createByOrder($order); //Создаем перемещения, если нехватает товара
+        $order->setPoint($storage->id); //1. Установить точку выдачи товара
+        $movements = $this->movements->createByOrder($order); //2. Создаем перемещения, если нехватает товара
+        $order->setStorage($storage->id); //3. В резервах товаров установить склад.
         event(new PointHasEstablished($order));
         if (!is_null($movements)) event(new MovementHasCreated($movements));
     }
@@ -208,7 +209,7 @@ class SalesService
     public function canceled(Order $order, string $comment)
     {
         foreach ($order->items as $item) {
-            $this->reserve->delete($item->reserve);
+            $this->reserveService->delete($item->reserve);
         }
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         event(new OrderHasCanceled($order));
@@ -265,7 +266,6 @@ class SalesService
     public function paidOrder(Order $order, string $document)
     {
         $order->setPaid();
-        //TODO перенести в Order ??
         //Все неоплаченные платежи переводим в статус Оплачено.
         foreach ($order->payments as $paymentOrder) {
             if (!$paymentOrder->isPaid()) {
@@ -281,10 +281,25 @@ class SalesService
         $order->setStatus($status);
     }
 
-    public function refund(Order $order, mixed $param)
+    public function refund(Order $order, string $comment)
     {
-        //TODO Возврат денег!!!!
-        // Алгоритм??
+        //TODO Возврат денег!!!!Алгоритм?? Тестить!
+        $order->setStatus(OrderStatus::REFUND, $comment);
+        //Возврат товаров в продажу
+        foreach ($order->items as $item) {
+            $this->reserveService->delete($item->reserve);
+        }
+        //Все платежи на возврат
+        foreach ($order->payments as $payment) {
+            //Платежный документ для возврата
+            if (!$payment->isRefund()) {
+                //Возможно для разных типов платежей разный способ расчета возврата денег
+                $amount = $payment->amount;
+                Refund::register($payment->id, $amount, $comment);
+                //$payment->setRefund();
+            }
+        }
+        event(new OrderHasRefund($order)); //Оповещение менеджера по возврату денег
     }
 
     public function comleted(Order $order)
@@ -295,11 +310,9 @@ class SalesService
         $storage = $order->delivery->point;
         //Удаляем резерв
         foreach ($order->items as $item) {
-            //TODO В хранилище уменьшить кол-во доступного товара на кол-во в резерв - ТЕСТ!!!!!
             $itemStorage = $storage->getItem($item->product);
             $itemStorage->quantity -= $item->reserve->quantity;
             $itemStorage->save();
-            //$storage->getReserve();
             $item->reserve->delete();
         }
     }

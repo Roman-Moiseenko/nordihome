@@ -119,8 +119,7 @@ class Order extends Model
         return !is_null($this->delivery->point_storage_id);
     }
 
-    //Проверка текущего статуса
-
+    ///***Проверка текущего статуса
     public function isNew(): bool
     {
         return $this->status->value == OrderStatus::FORMED;
@@ -156,9 +155,7 @@ class Order extends Model
         return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
     }
 
-
     ///*** SET-еры
-
     public function setFinance(float $amount, float $discount, float $coupon, ?int $coupon_id, int $delivery_cost = 0)
     {
         $this->update([
@@ -193,7 +190,7 @@ class Order extends Model
         $this->save();
         //Увеличиваем резерв на оплаченные товары
         foreach ($this->items as $item) {
-            $item->reserve->update(['reserve_at' => now()->addYears(10)]);
+            $item->reserve->update(['reserve_at' => now()->addYears(99)]);
         }
     }
 
@@ -321,7 +318,7 @@ class Order extends Model
         return $this->hasMany(OrderStatus::class, 'order_id', 'id');
     }
 
-    public function delivery()
+    public function delivery()//TODO переделать на hasMany() если будет ТЗ
     {
         return $this->hasOne(DeliveryOrder::class, 'order_id', 'id');
     }
@@ -344,10 +341,6 @@ class Order extends Model
         return true;
     }
 
-
-    //TODO переделать на hasMany() если будет ТЗ
-
-
     ///*** Хелперы
     public function htmlDate(): string
     {
@@ -363,7 +356,6 @@ class Order extends Model
     {
         return OrderStatus::STATUSES[$this->status->value] . ' ' . $this->status->comment;
     }
-
 
     /**
      * Общий вес заказа
@@ -391,11 +383,6 @@ class Order extends Model
         return $volume;
     }
 
-//Функции для данных по доставке
-
-
-
-
     public function totalPayments(): float
     {
         $total = 0;
@@ -405,8 +392,4 @@ class Order extends Model
         return $total;
     }
 
-    //TODO Сборная информация по доставке
-    // общая стоимость, ...
-
-
-}//TODO Сделать интерфейс
+}

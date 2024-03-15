@@ -8,6 +8,7 @@ use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCreated;
 use App\Events\OrderHasLogger;
+use App\Events\OrderHasRefund;
 use App\Events\PaymentHasPaid;
 use App\Events\PointHasEstablished;
 use App\Events\ProductHasParsed;
@@ -21,6 +22,7 @@ use App\Listeners\NotificationNewMovement;
 use App\Listeners\NotificationNewOrder;
 use App\Listeners\NotificationNewPointStorage;
 use App\Listeners\NotificationNewProductParser;
+use App\Listeners\NotificationNewRefund;
 use App\Listeners\NotificationThrowable;
 use App\Listeners\ParsingImageProduct;
 use App\Listeners\NotificationMovedPromotion;
@@ -80,6 +82,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasLogger::class => [
             NotificationNewLogger::class,
+        ],
+        OrderHasRefund::class => [
+            NotificationNewRefund::class
         ],
     ];
 

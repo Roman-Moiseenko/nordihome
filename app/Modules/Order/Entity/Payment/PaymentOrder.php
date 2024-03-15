@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Payment;
 
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Refund;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $comment
  *
  * @property Order $order
+ * @property Refund $refund
  */
 class PaymentOrder extends Model
 {
@@ -92,6 +94,11 @@ class PaymentOrder extends Model
         return !is_null($this->paid_at);
     }
 
+    public function isRefund(): bool
+    {
+        return !empty($this->refund);
+    }
+
     public function purposeHTML(): string
     {
         return self::PAYS[$this->purpose];
@@ -102,12 +109,17 @@ class PaymentOrder extends Model
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
+    public function refund()
+    {
+        return $this->hasOne(Refund::class, 'payment_id', 'id');
+    }
 
     /////////////////////////////////////////////////////////////////////////////
     public static function namespace(): string
     {
         return __NAMESPACE__;
     }
+
     public function nameType(): string
     {
         /** @var PaymentAbstract $class */
@@ -122,5 +134,6 @@ class PaymentOrder extends Model
         if ($class::online()) return $class::getPaidData($this);
         return null;
     }
+
 
 }

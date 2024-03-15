@@ -133,7 +133,7 @@ class Storage extends Model
 
     public function getReserve(Product $product): int
     {
-        return Reserve::where('storage_id', $this->id)->where('product_id', $product->id)->count();
+        return Reserve::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
     }
 
     public function freeToSell(Product $product): int

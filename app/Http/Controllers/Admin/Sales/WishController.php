@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Sales;
 
 use App\Events\ThrowableHasAppeared;
+use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 class WishController extends Controller

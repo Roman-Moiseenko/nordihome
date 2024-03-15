@@ -41,7 +41,6 @@ class MovementService
     public function createByOrder(Order $order): ?array
     {
         $storageIn = $order->delivery->point;
-
         $emptyItems = [];
         //Создаем список недостающих товаров
         foreach ($order->items as $orderItem) {

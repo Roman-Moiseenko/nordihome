@@ -333,7 +333,7 @@
                 </x-base.popover.panel>
             </x-base.popover>
             <button class="btn btn-primary mt-2" type="button" onclick="document.getElementById('form-order-completed').submit();">Заказ Выполнен!</button>
-        <form id="form-order-completed" method="post" action="{{ route('admin.sales.order.completed') }}">
+        <form id="form-order-completed" method="post" action="{{ route('admin.sales.order.completed', $order) }}">
             @csrf
         </form>
 

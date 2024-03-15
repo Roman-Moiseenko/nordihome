@@ -87,7 +87,7 @@ class OrderController extends Controller
     public function set_reserve(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->setReserve($order, $request['reserve-date'], $request['reserve-time']);
+            $this->service->setReserveService($order, $request['reserve-date'], $request['reserve-time']);
             return redirect()->back();
         });
     }
