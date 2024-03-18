@@ -178,7 +178,6 @@ class LoadCommand extends Command
         //Загрузка изображения
        // $upload_file_name = $this->copy_file($file);
        // $upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
-        //TODO Проверить загрузку изображений
         $result->image()->save(Photo::uploadByUrl($file, 'image'));
         //$result->image->newUploadFile($upload, 'image');
         $result->refresh();

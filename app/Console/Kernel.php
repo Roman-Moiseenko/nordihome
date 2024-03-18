@@ -16,13 +16,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('cron:promotion')->dailyAt('00:01');
         //Резерв товара
         $schedule->command('cron:reserve')->everyFiveMinutes();
-
+        //Парсим цены
+        $schedule->command('cron:parser')->dailyAt('02:01');
         //Удаляем просроченные токены
         $schedule->command('auth:clear-resets')->everyFifteenMinutes();
-
-
-
-        //TODO настроить логи
     }
 
     /**
