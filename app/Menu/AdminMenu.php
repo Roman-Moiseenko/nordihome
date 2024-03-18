@@ -292,6 +292,24 @@ class AdminMenu
                     ],
                 ],
             ],
+            'analytics' => [
+                'icon' => 'scroll-text',
+                'title' => 'Логгеры',
+                'can' => 'user-manager',
+                'sub_menu' => [
+                    'shop' => [
+                        'icon' => 'users',
+                        'title' => 'Сотрудников',
+                        'route_name' => 'admin.analytics.activity.index',
+                    ],
+                    'admin-panel' => [
+                        'icon' => 'timer-reset',
+                        'title' => 'По расписанию',
+                        'route_name' => 'admin.analytics.cron.index',
+                    ],
+
+                ],
+            ],
             /* Образцы */
             /*  'dashboard' => [
                   'icon' => 'home',

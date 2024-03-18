@@ -8,6 +8,7 @@ use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
@@ -590,6 +591,19 @@ Breadcrumbs::for('admin.accounting.departure.edit', function (BreadcrumbTrail $t
     $trail->push('Редактировать', route('admin.accounting.departure.edit', $departure));
 });
 
+//ANALYTICS
+Breadcrumbs::for('admin.analytics.activity.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Логгер действий сотрудников', route('admin.analytics.activity.index'));
+});
+Breadcrumbs::for('admin.analytics.cron.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Логгер действий по расписанию', route('admin.analytics.cron.index'));
+});
+Breadcrumbs::for('admin.analytics.cron.show', function (BreadcrumbTrail $trail, LoggerCron $cron) {
+    $trail->parent('admin.home');
+    $trail->push($cron->event, route('admin.analytics.cron.show', $cron));
+});
 /////PAGES
 //WIDGET
 Breadcrumbs::for('admin.page.widget.index', function (BreadcrumbTrail $trail) {

@@ -412,7 +412,19 @@ Route::group(
             }
         );
 
+        //ANALYTICS
+        Route::group(
+            [
+                'prefix' => 'analytics',
+                'as' => 'analytics.',
+                'namespace' => 'Analytics',
+            ],
+            function() {
+                Route::resource('cron', 'CronController')->only(['index', 'show']); //CRUD
+                Route::resource('activity', 'ActivityController')->only(['index']); //CRUD
 
+            }
+        );
 
         //AJAX Product
         Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');
