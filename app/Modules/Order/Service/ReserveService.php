@@ -24,7 +24,7 @@ class ReserveService
         $reserves = Reserve::where('reserve_at', '<', now())->get();
         foreach ($reserves as $reserve) {
             if ($reserve->type == Reserve::TYPE_ORDER) $order = $reserve->orderItem->order;
-            $this->delete($reserve, true);
+            $this->delete($reserve);
             if (isset($order) && $order->checkOutReserve()) {
                 $order->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
                 event(new OrderHasCanceled($order));
@@ -68,7 +68,7 @@ class ReserveService
         );
     }
 
-    public function delete(Reserve $reserve, bool $timer = false)
+    public function delete(Reserve $reserve)
     {
         $product = $reserve->product;
         $product->count_for_sell += $reserve->quantity;

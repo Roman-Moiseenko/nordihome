@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Modules\Analytics\Entity;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use function now;
 
 /**
  * @property int $id
@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $url
  * @property string $request_params
  */
-class LogActivity extends Model
+class LoggerActivity extends Model
 {
     public $timestamps = false;
-    protected $table = 'log_activities';
+    protected $table = 'logger_activity';
 
     protected $fillable = [
         'user_id',
@@ -26,6 +26,7 @@ class LogActivity extends Model
         'request_params',
         'url',
     ];
+
     public static function register(int $user_id, $action, $url, array $request_params)
     {
         self::create([

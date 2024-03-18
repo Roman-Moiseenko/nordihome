@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Entity\LogActivity;
+use App\Modules\Analytics\Entity\LoggerActivity;
 use Closure;
-use \Illuminate\Http\Request;
+use Illuminate\Http\Request;
 
 class AdminActivityLoggerMiddleware
 {
@@ -21,7 +21,7 @@ class AdminActivityLoggerMiddleware
         $user_id = $request->user()->id;
         $action = $request->route()->getName();
         if (!empty($request->all())) {
-            LogActivity::register(
+            LoggerActivity::register(
                 $user_id,
                 $action,
                 $request->url(),
