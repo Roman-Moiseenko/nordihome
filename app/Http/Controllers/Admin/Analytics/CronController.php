@@ -26,6 +26,5 @@ class CronController extends Controller
         return $this->try_catch_admin(function () use ($cron){
             return view('admin.analytics.cron.show', compact('cron'));
         });
-
     }
 }
