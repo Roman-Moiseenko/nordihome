@@ -118,20 +118,22 @@ class ParserService
         return $product;
     }
 
-    //TODO Функция для Cron - раз в сутки, парсим все цены товаров из ProductParsing
+    /**
+     * Функция для Cron - раз в сутки, парсим все цены товаров из ProductParsing
+     * Если товар не подлежит парсингу, возвращаем -1
+     * @param string $code
+     * @return float
+     */
     public function parserCost(string $code): float
     {
         $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
         $json_product = $this->httpPage->getPage($url, '_cache');
-
         $_array = json_decode($json_product, true);
 
-        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items']))
-            return -1;
+        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items'])) return -1;
 
         $item = $_array['searchResultPage']['products']['main']['items'][0]['product']['salesPrice'];
         $price = $item['numeral'];
-
         if (isset($item['previous'])) {
             $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
             if ($_previous > (float)$price) $price = $_previous;

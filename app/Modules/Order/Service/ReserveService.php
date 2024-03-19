@@ -12,12 +12,14 @@ use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\Deprecated;
 use function event;
 use function now;
 
 class ReserveService
 {
 
+    #[Deprecated]
     public function clearByTimer() //Удаляем все у которых время резерва вышло
     {
         /** @var Reserve[] $reserves */
