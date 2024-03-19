@@ -19,15 +19,13 @@ use stdClass;
 class Options
 {
     public Image $image;
-    //public Shop $shop;
+
 
     public function __construct()
     {
         //Считываем из Config
         $image = Config::get('shop-config.image');
         $this->image = Image::createFromArray($image);
-        //$shop = Config::get('shop-config.shop');
-        //$this->shop = Shop::createFromArray($shop);
     }
 
     #[NoReturn] public function __get($name)

@@ -57,21 +57,19 @@ class Photo extends Model
     {
         parent::__construct($attributes);
         $options = new Options();
-        //TODO Конфигурация перенести в Опции CRM (DB table options) и контейнер зависимости
-       // $config = Config::get('shop-config.image');
-        $this->watermark = $options->image->watermark;// $config['watermark'];
 
-        if (empty($this->thumbs)) $this->thumbs = $options->image->thumbs;// $config['thumbs'];
+        $this->watermark = $options->image->watermark;
 
-        $this->createThumbsOnSave = $options->image->createThumbsOnSave;// $config['createThumbsOnSave'];
-        $this->createThumbsOnRequest = $options->image->createThumbsOnRequest;// $config['createThumbsOnRequest'];
+        if (empty($this->thumbs)) $this->thumbs = $options->image->thumbs;
 
-        $this->catalogUpload = $options->image->getPublicPath('uploads');//$config['path-uploads'];
-        $this->catalogThumb =   $options->image->getPublicPath('cache');//public_path() . $config['path-cache'];
+        $this->createThumbsOnSave = $options->image->createThumbsOnSave;
+        $this->createThumbsOnRequest = $options->image->createThumbsOnRequest;
 
-        $this->urlUpload = $options->image->path['uploads'];// $config['path-uploads'];
-        $this->urlThumb = $options->image->path['cache'];//$config['path-cache'];
+        $this->catalogUpload = $options->image->getPublicPath('uploads');
+        $this->catalogThumb =   $options->image->getPublicPath('cache');
 
+        $this->urlUpload = $options->image->path['uploads'];
+        $this->urlThumb = $options->image->path['cache'];
     }
 
     public static function upload(UploadedFile $file, string $type = '', int $sort = 0, string $alt = ''): self

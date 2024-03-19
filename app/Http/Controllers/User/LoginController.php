@@ -52,14 +52,14 @@ class LoginController extends Controller
 
     public function showLoginForm(): View
     {
-        return view('user.auth.login'); //TODO Своя форма аутентификации
+        return view('user.auth.login'); //Своя форма аутентификации
     }
 
     public function login_ajax()
     {
         $result = view('user.auth.login-popup')->render();
         return \response()->json($result);
-         //TODO Своя форма аутентификации
+         //Своя форма аутентификации
     }
 
     /**
@@ -106,7 +106,6 @@ class LoginController extends Controller
 
     public function login_registration(Request $request)
     {
-        //TODO Верификация ??
         if (!empty($verify_token = $request['verify_token'])) {
             if (!$user = User::where('verify_token', $verify_token)->first()) {
                 return \response()->json(['token' => true]); //Неверный токен
