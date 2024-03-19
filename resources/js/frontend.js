@@ -937,7 +937,6 @@ window.$ = jQuery;
         let sliderImages = $('.slider-image-product');
         let mainImage = $('#main-image-product');
         sliderImages.on('mouseover', function () {
-            //TODO !!!! доделать
             mainImage.attr('src', $(this).data('image'));
         });
     }

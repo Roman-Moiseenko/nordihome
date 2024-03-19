@@ -28,9 +28,6 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 /**  S H O P */
-
-//TODO Перенести в отдельный файл ????
-
 /**  Пример рекурсии для вложенных категорий и товара */
 Breadcrumbs::for('shop.category.index', function (BreadcrumbTrail $trail) { //Без указания главной - home
     $trail->parent('home');
@@ -429,7 +426,7 @@ Breadcrumbs::for('admin.delivery.storage', function (BreadcrumbTrail $trail) {
 //SALES
 Breadcrumbs::for('admin.sales', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Продажи', route('admin.home')); //TODO Заменить
+    $trail->push('Продажи', route('admin.home'));
 });
 
 Breadcrumbs::for('admin.sales.cart.index', function (BreadcrumbTrail $trail) {

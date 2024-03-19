@@ -124,7 +124,6 @@ class ProductTest extends TestCase
 
     }
 
-    //TODO Перенести в продукт, добавить операции по Category
     public function testCategory(): void
     {
         $category = Category::register($name_parent = 'parent category');

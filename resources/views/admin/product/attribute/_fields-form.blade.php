@@ -30,7 +30,6 @@
     //Добавляем INPUT перед elButton и навешиваем событие по удалению
     function addVariantBlock(elButton, number, value = '', _id = '') {
         //Код INPUT
-        //TODO Вынести в компоненты или шаблоны
         let _el = '<div id="div-' + number +'" class="input-form mt-3 flex">' +
             '  <input id="input-id-' + number +'" type="hidden" name="variants.id[]" class="form-control " placeholder="Вариант" value="' + _id + '">'+
             '  <input id="input-val-' + number +'" type="text" name="variants.value[]" class="form-control " placeholder="Вариант" value="' + value + '">'+

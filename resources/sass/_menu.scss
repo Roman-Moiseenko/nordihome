@@ -274,7 +274,6 @@
 }
 
 //КОРЗИНА / ИЗБРАННОЕ
-//TODO Переделать под структуру SASS
 .cart-header, .wish-header {
     display: flex;
     justify-content: space-between;
@@ -342,13 +341,12 @@
     margin: auto 0;
     margin-left: auto;
     white-space: nowrap;
-}
-
-.cart-item-combined > .cart-item-cost {
-    color: var(--bs-gray-500);
-    text-decoration: line-through;
-    font-size: 0.8rem;
-    text-align: right;
+    > .cart-item-cost {
+        color: var(--bs-gray-500);
+        text-decoration: line-through;
+        font-size: 0.8rem;
+        text-align: right;
+    }
 }
 
 .cart-item-discount_cost {

@@ -295,7 +295,7 @@ class AdminMenu
             'analytics' => [
                 'icon' => 'scroll-text',
                 'title' => 'Логгеры',
-                'can' => 'user-manager',
+                'can' => 'admin-panel',
                 'sub_menu' => [
                     'shop' => [
                         'icon' => 'users',
