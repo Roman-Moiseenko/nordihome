@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Events\ThrowableHasAppeared;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
@@ -85,5 +87,24 @@ class Controller extends BaseController
                 return \response()->json(false); //Игнорируем вывод в консоль (error - undefined)
             }
         }
+    }
+
+    /**
+     * Установка пагинации для запроса $query
+     * @param $query - Построитель запросов
+     * @param Request $request - Необходимо для параметра ->get('p')
+     * @param $pagination - Кол-во элементов на страницу
+     * @return mixed - Возвращает пагинацию Модели paginate()
+     */
+    public function pagination($query, Request $request, &$pagination): mixed
+    {
+        if (!empty($pagination = $request->get('p'))) {
+            $result = $query->paginate($pagination);
+            $result->appends(['p' => $pagination]);
+        } else {
+            $pagination = Config::get('shop-config.p-list');
+            $result = $query->paginate($pagination);
+        }
+        return $result;
     }
 }

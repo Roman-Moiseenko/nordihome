@@ -11,6 +11,7 @@ use App\Modules\Discount\Service\PromotionService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\GroupRepository;
 use App\Modules\Product\Repository\ProductRepository;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
@@ -18,15 +19,17 @@ class PromotionController extends Controller
 {
     private PromotionService $service;
     private PromotionRepository $repository;
-    private mixed $pagination;
     private GroupRepository $groups;
     private ProductRepository $products;
 
-    public function __construct(PromotionService $service, PromotionRepository $repository, GroupRepository $groups, ProductRepository $products)
+    public function __construct(
+        PromotionService $service,
+        PromotionRepository $repository,
+        GroupRepository $groups,
+        ProductRepository $products)
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->pagination = Config::get('shop-config.p-list');
         $this->groups = $groups;
         $this->products = $products;
     }
@@ -34,11 +37,8 @@ class PromotionController extends Controller
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
-            $pagination = $request['p'] ?? $this->pagination;
-            $promotions = $this->repository->getIndex($pagination);
-            if (isset($request['p'])) {
-                $promotions->appends(['p' => $pagination]);
-            }
+            $query = $this->repository->getIndex();
+            $promotions = $this->pagination($query, $request, $pagination);
             return view('admin.discount.promotion.index', compact('promotions', 'pagination'));
         });
     }

@@ -8,13 +8,11 @@ use App\Modules\Discount\Entity\Promotion;
 class PromotionRepository
 {
 
-    public function getIndex(int $pagination = null)
+    public function getIndex()
     {
-        if (is_null($pagination)) {
-            return Promotion::orderBy('finish_at', 'DESC')->orderBy('start_at');
-        } else {
-            return Promotion::orderBy('finish_at', 'DESC')->orderBy('start_at')->paginate($pagination);
-        }
+
+        return Promotion::orderBy('finish_at', 'DESC')->orderBy('start_at');
+
     }
 
     public function getActive()

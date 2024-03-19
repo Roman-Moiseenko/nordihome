@@ -21,13 +21,11 @@ use Illuminate\Support\Facades\Config;
  */
 class NewOrderController extends Controller
 {
-    private mixed $pagination;
     private StaffRepository $staffs;
     private OrderRepository $repository;
 
     public function __construct(StaffRepository $staffs, OrderRepository $repository)
     {
-        $this->pagination = Config::get('shop-config.p-list');
         $this->staffs = $staffs;
         $this->repository = $repository;
     }
@@ -36,13 +34,7 @@ class NewOrderController extends Controller
     {
         return $this->try_catch_admin(function () use ($request) {
             $query = $this->repository->getNewOrders();
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $orders = $query->paginate($pagination);
-                $orders->appends(['p' => $pagination]);
-            } else {
-                $orders = $query->paginate($this->pagination);
-            }
+            $orders = $this->pagination($query, $request, $pagination);
             return view('admin.sales.order.index', compact('orders', 'pagination'));
         });
     }

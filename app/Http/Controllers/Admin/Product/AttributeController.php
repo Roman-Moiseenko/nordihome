@@ -11,21 +11,22 @@ use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Service\AttributeGroupService;
 use App\Modules\Product\Service\AttributeService;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 class AttributeController extends Controller
 {
 
-    private mixed $pagination;
     private AttributeService $service;
     private AttributeGroupService $groupService;
 
 
-    public function __construct(AttributeService $service, AttributeGroupService $groupService)
+    public function __construct(
+        AttributeService $service,
+        AttributeGroupService $groupService)
     {
         $this->middleware(['auth:admin', 'can:commodity']);
-        $this->pagination = Config::get('shop-config.p-list');
         $this->service = $service;
         $this->groupService = $groupService;
     }
@@ -33,11 +34,12 @@ class AttributeController extends Controller
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
+
             //TODO Перенести все в Repository!!!
-            $query = Attribute::orderBy('name');
             $categories = Category::defaultOrder()->withDepth()->get();
             $groups = AttributeGroup::orderBy('name')->get();
 
+            $query = Attribute::orderBy('name');
             if (!empty($category_id = $request->get('category_id')) && $category_id != 0) {
                 $query->whereHas('categories', function ($q) use ($category_id) {
                     $q->where('id', '=', $category_id);
@@ -46,13 +48,8 @@ class AttributeController extends Controller
             if (!empty($group_id = $request->get('group_id'))) {
                 $query->where('group_id', $group_id);
             }
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $prod_attributes = $query->paginate($pagination);
-                $prod_attributes->appends(['p' => $pagination]);
-            } else {
-                $prod_attributes = $query->paginate($this->pagination);
-            }
+
+            $prod_attributes = $this->pagination($query, $request, $pagination);
 
             return view('admin.product.attribute.index',
                 compact('prod_attributes',

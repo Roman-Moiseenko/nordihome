@@ -12,12 +12,10 @@ use Illuminate\Support\Facades\Config;
 
 class ExecutedController extends Controller
 {
-    private mixed $pagination;
     private OrderRepository $repository;
 
     public function __construct(OrderRepository $repository)
     {
-        $this->pagination = Config::get('shop-config.p-list');
         $this->repository = $repository;
     }
 
@@ -25,13 +23,7 @@ class ExecutedController extends Controller
     {
         return $this->try_catch_admin(function () use($request) {
             $query = $this->repository->getExecuted();
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $orders = $query->paginate($pagination);
-                $orders->appends(['p' => $pagination]);
-            } else {
-                $orders = $query->paginate($this->pagination);
-            }
+            $orders = $this->pagination($query, $request, $pagination);
             return view('admin.sales.executed.index', compact('orders', 'pagination'));
         });
     }

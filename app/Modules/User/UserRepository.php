@@ -5,6 +5,7 @@ namespace App\Modules\User;
 
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
+use Illuminate\Http\Request;
 
 class UserRepository
 {
@@ -20,5 +21,23 @@ class UserRepository
                 'product_id' => $wish->product->id,
             ];
         }, $user->wishes()->getModels());
+    }
+
+    public function getIndex(Request $request)
+    {
+        $query = User::orderByDesc('id');
+        if (!empty($value = $request->get('id'))) {
+            $query->where('id', $value);
+        }
+        if (!empty($value = $request->get('phone'))) {
+            $query->where('phone', 'like', '%' . $value . '%');
+        }
+        if (!empty($value = $request->get('email'))) {
+            $query->where('email', 'like', '%' . $value . '%');
+        }
+        if (!empty($value = $request->get('status'))) {
+            $query->where('status', $value);
+        }
+        return $query;
     }
 }

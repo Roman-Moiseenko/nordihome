@@ -15,13 +15,11 @@ use Illuminate\Support\Facades\Config;
 class EquivalentController extends Controller
 {
 
-    private mixed $pagination;
     private EquivalentService $service;
 
     public function __construct(EquivalentService $service)
     {
         $this->middleware(['auth:admin', 'can:commodity']);
-        $this->pagination = Config::get('shop-config.p-list');
         $this->service = $service;
     }
 
@@ -32,14 +30,7 @@ class EquivalentController extends Controller
             if (!empty($category_id = $request['category_id'])) {
                 $query = $query->where('category_id', '=', $category_id);
             }
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $equivalents = $query->paginate($pagination);
-                $equivalents->appends(['p' => $pagination]);
-            } else {
-                $equivalents = $query->paginate($this->pagination);
-            }
-
+            $equivalents = $this->pagination($query, $request, $pagination);
             $categories = Category::defaultOrder()->withDepth()->get();
             return view('admin.product.equivalent.index', compact('equivalents', 'categories', 'category_id', 'pagination'));
         });

@@ -2,8 +2,6 @@
 
 namespace App\Modules\User\Entity;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 
 use App\Modules\Delivery\Entity\UserDelivery;
 use App\Modules\Order\Entity\UserPayment;

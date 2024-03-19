@@ -5,30 +5,18 @@ namespace App\Http\Controllers\Admin\Analytics;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Analytics\Entity\LoggerCron;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 class CronController extends Controller
 {
-    private mixed $pagination;
-
-    public function __construct()
-    {
-        $this->pagination = Config::get('shop-config.p-list');
-    }
 
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
             $query = LoggerCron::orderByDesc('created_at');
-
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $crons = $query->paginate($pagination);
-                $crons->appends(['p' => $pagination]);
-            } else {
-                $crons = $query->paginate($this->pagination);
-            }
+            $crons = $this->pagination($query, $request, $pagination);
             return view('admin.analytics.cron.index', compact('crons', 'pagination'));
         });
     }

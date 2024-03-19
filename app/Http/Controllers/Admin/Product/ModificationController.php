@@ -14,15 +14,12 @@ use Illuminate\Support\Facades\Config;
 
 class ModificationController extends Controller
 {
-
-    private mixed $pagination;
     private ModificationService $service;
     private ProductRepository $products;
     private ModificationRepository $repository;
 
     public function __construct(ModificationService $service, ProductRepository $products, ModificationRepository $repository)
     {
-        $this->pagination = Config::get('shop-config.p-list');
         $this->service = $service;
         $this->products = $products;
         $this->repository = $repository;
@@ -35,13 +32,7 @@ class ModificationController extends Controller
             if (!empty($name = $request['name'])) {
                 $query = $query->where('name', 'LIKE', "%{$name}%");
             }
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $modifications = $query->paginate($pagination);
-                $modifications->appends(['p' => $pagination]);
-            } else {
-                $modifications = $query->paginate($this->pagination);
-            }
+            $modifications = $this->pagination($query, $request, $pagination);
             return view('admin.product.modification.index', compact('modifications', 'pagination'));
         });
     }
@@ -158,7 +149,6 @@ class ModificationController extends Controller
             return \response()->json(true);
         });
     }
-
 
 
 }

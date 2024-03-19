@@ -11,6 +11,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
@@ -18,13 +19,11 @@ class MovementController extends Controller
 {
     private MovementService $service;
     private ProductRepository $products;
-    private mixed $pagination;
 
     public function __construct(MovementService $service, ProductRepository $products)
     {
         $this->service = $service;
         $this->products = $products;
-        $this->pagination = Config::get('shop-config.p-list');
     }
 
     public function index(Request $request)
@@ -43,13 +42,8 @@ class MovementController extends Controller
             if (!empty($storage_out = $request->get('storage_out'))) {
                 $query->where('storage_out', $storage_out);
             }
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $movements = $query->paginate($pagination);
-                $movements->appends(['p' => $pagination]);
-            } else {
-                $movements = $query->paginate($this->pagination);
-            }
+
+            $movements = $this->pagination($query, $request, $pagination);
             return view('admin.accounting.movement.index',
                 compact('movements', 'pagination', 'completed', 'storages', 'storage_in', 'storage_out'));
         });

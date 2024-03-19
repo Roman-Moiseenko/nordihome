@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\StorageService;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
@@ -15,12 +16,10 @@ class StorageController extends Controller
 {
 
     private StorageService $service;
-    private mixed $pagination;
 
     public function __construct(StorageService $service)
     {
         $this->service = $service;
-        $this->pagination = Config::get('shop-config.p-list');
     }
 
     public function index()
@@ -62,13 +61,7 @@ class StorageController extends Controller
                         ->orWhere('name', 'LIKE', "% {$search}%");
                 });
             }
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $items = $query->paginate($pagination);
-                $items->appends(['p' => $pagination]);
-            } else {
-                $items = $query->paginate($this->pagination);
-            }
+            $items = $this->pagination($query, $request, $pagination);
             return view('admin.accounting.storage.show', compact('storage', 'items', 'pagination'));
         });
     }

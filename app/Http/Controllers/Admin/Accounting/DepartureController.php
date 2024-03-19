@@ -10,6 +10,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\DepartureService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
@@ -17,13 +18,12 @@ class DepartureController extends Controller
 {
     private DepartureService $service;
     private ProductRepository $products;
-    private mixed $pagination;
+
 
     public function __construct(DepartureService $service, ProductRepository $products)
     {
         $this->service = $service;
         $this->products = $products;
-        $this->pagination = Config::get('shop-config.p-list');
     }
 
     public function index(Request $request)
@@ -39,13 +39,8 @@ class DepartureController extends Controller
             if (!empty($storage_id = $request->get('storage_id'))) {
                 $query->where('storage_id', $storage_id);
             }
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $departures = $query->paginate($pagination);
-                $departures->appends(['p' => $pagination]);
-            } else {
-                $departures = $query->paginate($this->pagination);
-            }
+
+            $departures = $this->pagination($query, $request, $pagination);
             return view('admin.accounting.departure.index',
                 compact('departures', 'pagination', 'completed', 'storages', 'storage_id'));
         });

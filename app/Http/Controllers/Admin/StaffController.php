@@ -6,6 +6,7 @@ use App\Entity\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RegisterRequest;
 use App\Http\Requests\Admin\UpdateRequest;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Admin\Service\StaffService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -14,34 +15,26 @@ use Illuminate\Support\Facades\Config;
 class StaffController extends Controller
 {
     private StaffService $service;
-    private mixed $pagination;
+    private StaffRepository $repository;
 
     /**
      * Display a listing of the resource.
      */
 
-    public function __construct(StaffService $service)
+    public function __construct(StaffService $service, StaffRepository $repository)
     {
         $this->middleware(['auth:admin', 'can:user-manager']);
         $this->service = $service;
-        $this->pagination = Config::get('shop-config.p-card');
+        $this->repository = $repository;
     }
 
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
-            //TODO в Репозиторий!!!!!
-            $query = Admin::orderByDesc('id');
-            if (!empty($value = $request->get('role'))) {
-                $query->where('role', $value);
-            }
             $selected = $request['role'] ?? '';
             $roles = Admin::ROLES;
-            $pagination = $request['p'] ?? $this->pagination;
-            $admins = $query->paginate($pagination);
-            if (isset($request['p'])) {
-                $admins->appends(['p' => $pagination]);
-            }
+            $query = $this->repository->getIndex($request);
+            $admins = $this->pagination($query, $request, $pagination);
             return view('admin.staff.index', compact('admins', 'roles', 'selected', 'pagination'));
         });
     }

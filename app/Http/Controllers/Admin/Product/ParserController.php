@@ -11,13 +11,9 @@ use Illuminate\Support\Facades\Config;
 
 class ParserController extends Controller
 {
-
-    private mixed $pagination;
-
     public function __construct()
     {
         $this->middleware(['auth:admin', 'can:commodity']);
-        $this->pagination = Config::get('shop-config.p-list');
     }
 
     public function index(Request $request)
@@ -32,13 +28,7 @@ class ParserController extends Controller
             if ($published == 'draft') $query->whereHas('product', function ($q) {
                 $q->where('published', '=', false);
             });
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $parsers = $query->paginate($pagination);
-                $parsers->appends(['p' => $pagination]);
-            } else {
-                $parsers = $query->paginate($this->pagination);
-            }
+            $parsers = $this->pagination($query, $request, $pagination);
             return view('admin.product.parser.index', compact('parsers', 'pagination', 'published'));
         });
     }

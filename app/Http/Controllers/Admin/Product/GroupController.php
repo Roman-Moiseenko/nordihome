@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Config;
 
 class GroupController extends Controller
 {
-    private mixed $pagination;
     private GroupService $service;
     private ProductRepository $products;
 
@@ -20,7 +19,6 @@ class GroupController extends Controller
     {
         $this->middleware(['auth:admin', 'can:commodity']);
         $this->service = $service;
-        $this->pagination = Config::get('shop-config.p-list');
         $this->products = $products;
     }
 
@@ -31,13 +29,7 @@ class GroupController extends Controller
             if (!empty($name = $request['search'])) {
                 $query = $query->where('name', 'LIKE', "%{$name}%");
             }
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $groups = $query->paginate($pagination);
-                $groups->appends(['p' => $pagination]);
-            } else {
-                $groups = $query->paginate($this->pagination);
-            }
+            $groups = $this->pagination($query, $request, $pagination);
             return view('admin.product.group.index', compact('groups', 'pagination'));
         });
     }

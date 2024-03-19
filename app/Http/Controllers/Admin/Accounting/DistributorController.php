@@ -7,31 +7,24 @@ use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Service\DistributorService;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 class DistributorController extends Controller
 {
-    private mixed $pagination;
     private DistributorService $service;
 
-    public function __construct(DistributorService $service)
+    public function __construct(DistributorService $service )
     {
         $this->service = $service;
-        $this->pagination = Config::get('shop-config.p-list');
     }
 
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
             $query = Distributor::orderBy('name');
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $distributors = $query->paginate($pagination);
-                $distributors->appends(['p' => $pagination]);
-            } else {
-                $distributors = $query->paginate($this->pagination);
-            }
+            $distributors = $this->pagination($query, $request, $pagination);
             return view('admin.accounting.distributor.index', compact('distributors', 'pagination'));
         });
     }

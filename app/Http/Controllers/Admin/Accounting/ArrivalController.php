@@ -14,18 +14,15 @@ use App\Modules\Accounting\Service\ArrivalService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 class ArrivalController extends Controller
 {
-    private mixed $pagination;
     private ArrivalService $service;
     private ProductRepository $products;
 
     public function __construct(ArrivalService $service, ProductRepository $products)
     {
         $this->service = $service;
-        $this->pagination = Config::get('shop-config.p-list');
         $this->products = $products;
     }
 
@@ -46,13 +43,8 @@ class ArrivalController extends Controller
                 $query->where('storage_id', $storage_id);
             }
 
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $arrivals = $query->paginate($pagination);
-                $arrivals->appends(['p' => $pagination]);
-            } else {
-                $arrivals = $query->paginate($this->pagination);
-            }
+            $arrivals = $this->pagination($query, $request, $pagination);
+
             return view('admin.accounting.arrival.index',
                 compact('arrivals', 'pagination', 'completed', 'storages', 'distributors', 'storage_id', 'distributor_id'));
         });

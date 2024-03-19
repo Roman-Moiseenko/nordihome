@@ -6,18 +6,12 @@ namespace App\Http\Controllers\Admin\Delivery;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Delivery\Entity\DeliveryOrder;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 class DeliveryController extends Controller
 {
-    private mixed $pagination;
-
-    public function __construct()
-    {
-        $this->pagination = Config::get('shop-config.p-list');
-    }
-
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
@@ -59,14 +53,7 @@ class DeliveryController extends Controller
                 });
             }
 
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $deliveries = $query->paginate($pagination);
-                $deliveries->appends(['p' => $pagination]);
-            } else {
-                $deliveries = $query->paginate($this->pagination);
-            }
-
+            $deliveries = $this->pagination($query, $request, $pagination);
             return view('admin.delivery.index', compact('deliveries', 'type', 'status', 'pagination'));
         });
     }

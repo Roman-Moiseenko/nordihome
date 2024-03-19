@@ -24,7 +24,6 @@ class ProductController extends Controller
     private ProductService $service;
     private Options $options;
     private ProductRepository $repository;
-    private mixed $pagination;
 
     public function __construct(ProductService $service, Options $options, ProductRepository $repository)
     {
@@ -32,7 +31,6 @@ class ProductController extends Controller
         $this->service = $service;
         $this->options = $options;
         $this->repository = $repository;
-        $this->pagination = Config::get('shop-config.p-list');
     }
 
     public function index(Request $request)
@@ -52,13 +50,7 @@ class ProductController extends Controller
             }
             if ($published == 'active') $query->where('published', '=', true);
             if ($published == 'draft') $query->where('published', '=', false);
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $products = $query->paginate($pagination);
-                $products->appends(['p' => $pagination]);
-            } else {
-                $products = $query->paginate($this->pagination);
-            }
+            $products = $this->pagination($query, $request, $pagination);
 
             return view('admin.product.product.index', compact('products', 'pagination',
                 'categories', 'category_id', 'published'));

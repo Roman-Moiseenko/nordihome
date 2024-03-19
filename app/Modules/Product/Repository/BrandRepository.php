@@ -9,13 +9,9 @@ use App\Modules\Product\Entity\Brand;
 class BrandRepository
 {
 
-    public function getIndex(int $pagination = null)
+    public function getIndex()
     {
-        if (is_null($pagination)) {
-            return Brand::orderBy('name');
-        } else {
-            return Brand::orderBy('name')->paginate($pagination);
-        }
+        return Brand::orderBy('name');
     }
 
     public function byName(string $name): Brand

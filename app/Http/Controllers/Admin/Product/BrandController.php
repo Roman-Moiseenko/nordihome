@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Repository\BrandRepository;
 use App\Modules\Product\Service\BrandService;
+use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
@@ -15,7 +16,6 @@ class BrandController extends Controller
 {
     private BrandService $service;
     private BrandRepository $repository;
-    private mixed $pagination;
 
 
     public function __construct(BrandService $service, BrandRepository $repository)
@@ -23,17 +23,13 @@ class BrandController extends Controller
         $this->middleware(['auth:admin', 'can:commodity']);
         $this->service = $service;
         $this->repository = $repository;
-        $this->pagination = Config::get('shop-config.p-list');
     }
 
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
-            $pagination = $request['p'] ?? $this->pagination;
-            $brands = $this->repository->getIndex($pagination);
-            if (isset($request['p'])) {
-                $brands->appends(['p' => $pagination]);
-            }
+            $query = $this->repository->getIndex();
+            $brands = $this->pagination($query, $request, $pagination);
             return view('admin.product.brand.index', compact('brands', 'pagination'));
         });
     }

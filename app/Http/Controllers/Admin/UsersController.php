@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\RegisterService;
+use App\Modules\User\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 class UsersController extends Controller
 {
     private RegisterService $service;
-    private mixed $pagination;
+    private UserRepository $repository;
 
-    public function __construct(RegisterService $service)
+    public function __construct(RegisterService $service, UserRepository $repository)
     {
         $this->middleware('auth:admin');
         $this->middleware('can:user-manager');
         $this->service = $service;
-        $this->pagination = Config::get('shop-config.p-list');
+        $this->repository = $repository;
     }
 
     public function index(Request $request)
@@ -30,30 +30,10 @@ class UsersController extends Controller
                 User::STATUS_WAIT => 'В Ожидании',
                 User::STATUS_ACTIVE => 'Подтвержден',
             ];
-            //TODO Вынести в Репозиторий, после переноса User в модуль User\
-            $query = User::orderByDesc('id');
-            if (!empty($value = $request->get('id'))) {
-                $query->where('id', $value);
-            }
-            if (!empty($value = $request->get('phone'))) {
-                $query->where('phone', 'like', '%' . $value . '%');
-            }
-            if (!empty($value = $request->get('email'))) {
-                $query->where('email', 'like', '%' . $value . '%');
-            }
-            if (!empty($value = $request->get('status'))) {
-                $query->where('status', $value);
-            }
+            $query = $this->repository->getIndex($request);
+            $users = $this->pagination($query, $request, $pagination);
 
-            //ПАГИНАЦИЯ
-            if (!empty($pagination = $request->get('p'))) {
-                $users = $query->paginate($pagination);
-                $users->appends(['p' => $pagination]);
-            } else {
-                $users = $query->paginate($this->pagination);
-            }
             return view('admin.users.index', compact('users', 'statuses', 'pagination'));
-
         });
     }
 

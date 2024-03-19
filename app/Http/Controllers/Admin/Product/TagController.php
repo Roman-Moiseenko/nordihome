@@ -13,22 +13,17 @@ use Illuminate\Support\Facades\Config;
 class TagController extends Controller
 {
     private TagService $service;
-    private mixed $pagination;
 
     public function __construct(TagService $service)
     {
         $this->service = $service;
-        $this->pagination = Config::get('shop-config.p-list');
     }
 
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
-            $pagination = $request['p'] ?? $this->pagination;
-            $tags = Tag::orderBy('name')->paginate($this->pagination);
-            if (isset($request['p'])) {
-                $tags->appends(['p' => $pagination]);
-            }
+            $query = Tag::orderBy('name');
+            $tags = $this->pagination($query, $request, $pagination);
             return view('admin.product.tag.index', compact('tags', 'pagination'));
         });
     }
