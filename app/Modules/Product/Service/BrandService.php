@@ -5,9 +5,7 @@ namespace App\Modules\Product\Service;
 
 use App\Entity\Photo;
 use App\Modules\Product\Entity\Brand;
-use App\UseCases\Uploads\UploadService;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 
 class BrandService
 {

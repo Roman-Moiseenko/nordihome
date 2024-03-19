@@ -3,25 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Entity\Admin;
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RegisterRequest;
 use App\Http\Requests\Admin\UpdateRequest;
-use App\Modules\Admin\Service\RegisterService;
+use App\Modules\Admin\Service\StaffService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 
 class StaffController extends Controller
 {
-    private RegisterService $service;
+    private StaffService $service;
     private mixed $pagination;
 
     /**
      * Display a listing of the resource.
      */
 
-    public function __construct(RegisterService $service)
+    public function __construct(StaffService $service)
     {
         $this->middleware(['auth:admin', 'can:user-manager']);
         $this->service = $service;

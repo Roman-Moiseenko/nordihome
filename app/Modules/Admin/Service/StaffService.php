@@ -5,22 +5,14 @@ namespace App\Modules\Admin\Service;
 
 use App\Entity\Admin;
 use App\Entity\FullName;
+use App\Entity\Photo;
 use App\Modules\Admin\Entity\Responsibility;
-use App\UseCases\Uploads\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class RegisterService
+class StaffService
 {
-    //TODO Перенести в Модули и Переименовать
-    private UploadService $uploadService;
-
-    public function __construct(UploadService $uploadService)
-    {
-        $this->uploadService = $uploadService;
-    }
-
     public function register(Request $request): Admin
     {
         //Основные поля
@@ -45,9 +37,7 @@ class RegisterService
         $admin->save();
 
         //Фото
-        if (!empty($request->file('file')))
-            $admin->setPhoto($this->uploadService->singleReplace($request->file('file'), $admin));
-
+        $this->photo($admin, $request->file('file'));
         $admin->save();
         return $admin;
     }
@@ -60,8 +50,6 @@ class RegisterService
 
     public function setPassword(string $password, Admin $admin): void
     {
-        //TODO Проверка на пароль
-        // На совпадение
         $admin->update(['password' => Hash::make($password)]);
     }
 
@@ -76,8 +64,6 @@ class RegisterService
 
     public function blocking(Admin $admin): void
     {
-        //TODO Проверить на связанны данные,
-        // если их нет, то удаляем Сотрудника
 
         /** @var Admin $current */
         $current = Auth::guard('admin')->user();//Проверка на себя,
@@ -109,16 +95,16 @@ class RegisterService
         $admin->update();
 
         //Фото
+
         if ($request['image-clear'] == 'delete') {
-            $this->uploadService->removeFile($admin->photo);
-            $admin->photo = '';
-            $admin->save();
+            $admin->photo->delete();
+            //$admin->save();
         }
 
-        if (!empty($request->file('file')))
-            $admin->setPhoto($this->uploadService->singleReplace($request->file('file'), $admin));
-        $admin->save();
+        $this->photo($admin, $request->file('file'));
 
+        $admin->save();
+        $admin->refresh();
         return $admin;
     }
 
@@ -137,5 +123,22 @@ class RegisterService
         if (!$admin->isStaff()) throw new \DomainException('Обязанность назначается только персоналу');
 
         $admin->toggleResponsibilities($code);
+    }
+
+    public function photo(Admin $admin, $file): void
+    {
+        if (empty($file)) return;
+        if (!empty($admin->photo)) {
+            $admin->photo->newUploadFile($file);
+        } else {
+            $admin->photo()->save(Photo::upload($file));
+        }
+        $admin->refresh();
+    }
+
+    public function delete(Admin $admin): void
+    {
+        //TODO Проверить на связанны данные,
+        // если их нет, то удаляем Сотрудника
     }
 }

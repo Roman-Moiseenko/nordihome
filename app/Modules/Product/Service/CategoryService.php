@@ -5,18 +5,12 @@ namespace App\Modules\Product\Service;
 
 use App\Entity\Photo;
 use App\Modules\Product\Entity\Category;
-use App\UseCases\Uploads\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CategoryService
 {
-    private UploadService $uploadService;
 
-    public function __construct(UploadService $uploadService)
-    {
-        $this->uploadService = $uploadService;
-    }
     public function register(Request $request): Category
     {
         $category = Category::register(

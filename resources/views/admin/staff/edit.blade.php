@@ -49,7 +49,7 @@
                                 {{ \App\Forms\Input::create('secondname', ['placeholder' => 'Отчество', 'value' => $staff->fullname->secondname, 'class' => 'mt-3'])->show() }}
                             </div>
                             <div id="single-file-upload" class="col-span-12 lg:col-span-4">
-                                {{ \App\Forms\Upload::create('file', $staff->photo)->show() }}
+                                {{ \App\Forms\Upload::create('file', $staff->photo->getUploadUrl())->show() }}
                             </div>
                         </div>
                     </div>

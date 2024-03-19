@@ -5,7 +5,6 @@ namespace App\Entity;
 
 use App\Casts\FullNameCast;
 use App\Modules\Admin\Entity\Responsibility;
-use App\UseCases\Uploads\UploadsDirectory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,16 +22,14 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * @property string $role
  * @property bool $active //Не заблокирован
- * @property string $photo
  * @property string $post //Должность
  * @property int $telegram_user_id
  * @property FullName $fullname
  * @property Responsibility[] $responsibilities
+ * @property Photo $photo
  */
-class Admin extends Authenticatable implements UploadsDirectory
+class Admin extends Authenticatable
 {
-
-    //TODO Переделать $photo под Photo::class
 
     use HasApiTokens, HasFactory, Notifiable;//, FullNameTrait;
 
@@ -113,9 +110,7 @@ class Admin extends Authenticatable implements UploadsDirectory
         return !$this->active;
     }
 
-
 //Роли
-
     public function isAdmin(): bool
     {
         return $this->role == self::ROLE_ADMIN;
@@ -162,25 +157,26 @@ class Admin extends Authenticatable implements UploadsDirectory
         return Auth::guard($this->guard)->user()->id == $this->id;
     }
 
+    public function photo()
+    {
+        return $this->morphOne(Photo::class, 'imageable');
+    }
+
+
     public function getPhoto(): string
     {
-        if (empty($this->photo)) {
+        if (empty($this->photo->file)) {
             return '/images/default-user.png';
         } else {
-            return $this->photo;
+            return $this->photo->getUploadUrl();
         }
     }
-
-    public function getUploadsDirectory(): string
-    {
-        return 'uploads/admins/' . $this->id . '/';
-    }
-
+/*
     public function setPhoto(string $file): void
     {
         $this->photo = $file;
     }
-
+*/
     public function routeNotificationForTelegram(): int
     {
         return $this->telegram_user_id;
@@ -210,5 +206,9 @@ class Admin extends Authenticatable implements UploadsDirectory
         }
         //Иначе добавляем Обязанность
         $this->responsibilities()->save(Responsibility::new($code));
+    }
+    public function roleHTML(): string
+    {
+        return self::ROLES[$this->role];
     }
 }
