@@ -12,6 +12,7 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use JetBrains\PhpStorm\ArrayShape;
 
 
 class ParserService
@@ -120,8 +121,23 @@ class ParserService
     //TODO Функция для Cron - раз в сутки, парсим все цены товаров из ProductParsing
     public function parserCost(string $code): float
     {
-        $result = $this->parsingData($code, true);
-        return $result['price'];
+        $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
+        $json_product = $this->httpPage->getPage($url, '_cache');
+
+        $_array = json_decode($json_product, true);
+
+        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items']))
+            return -1;
+
+        $item = $_array['searchResultPage']['products']['main']['items'][0]['product']['salesPrice'];
+        $price = $item['numeral'];
+
+        if (isset($item['previous'])) {
+            $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
+            if ($_previous > (float)$price) $price = $_previous;
+        }
+
+        return $price;
     }
 
     public function parserImage(string $linkProduct): array
@@ -191,7 +207,17 @@ class ParserService
         return substr_replace($code, '.', 3, 0);
     }
 
-    private function parsingData(string $code, bool $onlyPrice = false): array|float
+    #[ArrayShape([
+        'name' => "string",
+        'description' => "array|string",
+        'link' => "string",
+        'image' => "string",
+        'weight' => "float|int",
+        'price' => "float",
+        'pack' => "mixed",
+        'composite' => "array"
+    ])]
+    private function parsingData(string $code): array|float
     {
         $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
         $json_product = $this->httpPage->getPage($url, '_cache');
@@ -215,8 +241,6 @@ class ParserService
             $_previous = (float)(str_replace(' ', '', $item['salesPrice']['previous']['wholeNumber']) . '.' . $item['salesPrice']['previous']['decimals']);
             if ($_previous > (float)$price) $price = $_previous;
         }
-        //TODO Для крона только цена, возможно разбить на 2 функции ...
-        if ($onlyPrice) return $price;
 
         //Сканируем страницу для остальных параметров
         $pageProduct = $this->httpPage->getPage($link, '_cache');

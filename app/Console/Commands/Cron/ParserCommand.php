@@ -19,20 +19,23 @@ class ParserCommand extends Command
     public function handle()
     {
         $logger = LoggerCron::new($this->description);
+        $change = false;
         try {
             $this->info('Парсим цены товаров');
 
-            $change = false;
             $service = new ParserService(new HttpPage());
-            $products = ProductParser::get();
+            $products = ProductParser::where('order', true)->get();
             $this->info('Товаров - ' . $products->count());
             /** @var ProductParser $product */
             foreach ($products as $product) {
+                $this->info($product->product->name . ' ' . $product->product->code);
                 $price = $service->parserCost($product->product->code_search);
-                $this->info($product->price . ' = ' . $price);
-                if ($product->price != $price) {
-                    $this->info($product->price . ' = ' . $price);
-
+                if ($price < 0) {
+                    $product->order = false;
+                    $product->save(); //Цена не парсится, убираем из продажи
+                }
+                if ($product->price != $price && $price > 0) {
+                    $this->info($product->price . ' != ' . $price);
                     $change = true;
                     $logger->items()->create([
                         'object' => $product->product->name,
@@ -44,7 +47,7 @@ class ParserCommand extends Command
             }
             if ($change == false) $logger->delete();
         } catch (\Throwable $e) {
-            $logger->delete();
+            if ($change == false) $logger->delete();
             event(new ThrowableHasAppeared($e));
         }
     }
