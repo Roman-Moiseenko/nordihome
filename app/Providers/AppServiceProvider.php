@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Modules\Admin\Entity\Options;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -51,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
     {
         setlocale(LC_ALL, 'ru_RU.utf8');
         Carbon::setLocale(config('app.locale'));
-
+        URL::forceScheme('https');
         //Europe/Kaliningrad
     }
 

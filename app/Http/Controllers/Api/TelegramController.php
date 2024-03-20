@@ -11,6 +11,6 @@ class TelegramController extends Controller
     public function get(Request $request)
     {
 
-        return response()->json(true);
+        return response()->json($request);
     }
 }
