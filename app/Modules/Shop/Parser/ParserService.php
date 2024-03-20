@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use JetBrains\PhpStorm\ArrayShape;
 
-
 class ParserService
 {
     const STORE = 203; //Код магазина в стране
@@ -62,43 +61,40 @@ class ParserService
     {
         $code = $this->formatCode($request['search']);
         $product = Product::where('code_search', $code)->first();//Ищем товар в базе
-        if (empty($product)) {
-            //Парсим основные данные
-            $parser_product = $this->parsingData($code);
-            //1. Добавляем черновик товара (Артикул, Главное фото, Название, Краткое описание, Базовая цена, published = false)
-            //TODO Перенести в Сервис Продукт
-
+        if (empty($product)) {//1. Добавляем черновик товара (Артикул, Главное фото, Название, Краткое описание, Базовая цена, published = false)
+            $parser_product = $this->parsingData($code); //Парсим основные данные
             $arguments = [      //Опции магазина
                 'pre_order' => $this->options->shop->pre_order,
                 'only_offline' => $this->options->shop->only_offline,
                 'not_local' => !$this->options->shop->delivery_local,
                 'not_delivery' => !$this->options->shop->delivery_all,
             ];
-            if (empty($product = Product::where('code_search', $code)->first())) {
 
-                $product = Product::register(
-                    $parser_product['name'],
-                    $this->toCode($code),
-                    (Category::where('name', 'Прочее')->first())->id,
-                    '',
-                    $arguments
-                );
-                $product->short = $parser_product['description'];
-                $product->brand_id = (Brand::where('name', 'Икеа')->first())->id;
-                //TODO спарсить размеры
-                $product->dimensions = Dimensions::create(0, 0, 0, $parser_product['weight'], Dimensions::MEASURE_KG);
+            $product = Product::register(
+                $parser_product['name'],
+                $this->toCode($code),
+                (Category::where('name', 'Прочее')->first())->id,
+                '',
+                $arguments
+            );
+            $product->short = $parser_product['description'];
+            $product->brand_id = (Brand::where('name', 'Икеа')->first())->id;
+            $product->dimensions = Dimensions::create(
+                $parser_product['dimensions']->width,
+                $parser_product['dimensions']->height,
+                $parser_product['dimensions']->depth,
+                $parser_product['dimensions']->weight,
+                Dimensions::MEASURE_KG);
+            $product->save();
+            $product->photo()->save(Photo::uploadByUrl($parser_product['image']));
+            $product->refresh();
 
-                $product->save();
-                $product->photo()->save(Photo::uploadByUrl($parser_product['image']));
-                $product->refresh();
+            //4. Создаем ProductParsing
+            $productParser = $this->createProductParsing($product->id, $parser_product);
+            $quantity = $this->parsingQuantity($code);
+            $productParser->setQuantity($quantity);
 
-                //4. Создаем ProductParsing
-                $productParser = $this->createProductParsing($product->id, $parser_product);
-                $quantity = $this->parsingQuantity($code);
-                $productParser->setQuantity($quantity);
-
-                event(new ProductHasParsed($product));
-            }
+            event(new ProductHasParsed($product));
             return $product;
         }
 
@@ -214,7 +210,7 @@ class ParserService
         'description' => "array|string",
         'link' => "string",
         'image' => "string",
-        'weight' => "float|int",
+        'dimensions' => Dimensions::class,
         'price' => "float",
         'pack' => "mixed",
         'composite' => "array"
@@ -232,7 +228,6 @@ class ParserService
             throw new \DomainException('Данный продукт недоступен для текущей продажи');
         $item = $_array['searchResultPage']['products']['main']['items'][0]['product'];
         //Парсим первычный JSON
-        //$code = $this->toCode($item['itemNo']); //Добавляем точки к артикулу itemNoGlobal , Id , itemNo
         $name = $item['name'];
         $link = $item['pipUrl'];
         $image = $item['mainImageUrl'];
@@ -251,9 +246,7 @@ class ParserService
         $_res = str_replace('&quot;', '"', $_res);
         $_data = json_decode($_res, true);
 
-        //throw new \DomainException($_res);
         ////Определяем есть ли составные артикулы
-
         $_sub = $_data['stockcheckSection']['subProducts']; //availabilityHeaderSection
 
         $composite = [];
@@ -263,18 +256,21 @@ class ParserService
                     'code' => $this->toCode($_item['itemNo']),
                     'quantity' => $_item['quantity'],
                 ];
-                //$this->toCode($_item['itemNo']) . ' - ' . $_item['quantity'] . 'шт.';
             }
         }
-        ////Кол-во пачек
-        $pack = $_data['stockcheckSection']['numberOfPackages'];
-        ////Вычисляем вес
-        $weight = 0;
+
+        $pack = $_data['stockcheckSection']['numberOfPackages']; //Кол-во пачек
+        $dimensions = new Dimensions(); //габариты
         $_packages = $_data['stockcheckSection']['packagingProps']['packages'];
         foreach ($_packages as $_item) {
+            $_quantity = $_item['quantity']['value']; //кол-во элементов в пачке данного товара
             if (count($_item['measurements']) != 0) //Пропускаем для самого товара, только по составным
-                foreach ($_item['measurements'] as $measurement) //Если товар в 1 пачке разбит на несколько
-                    $weight += ($this->toWeight($measurement) * $_item['quantity']['value']);//Умножаем на кол-во пачек данного товара
+                foreach ($_item['measurements'] as $measurement) { //Если товар в 1 пачке разбит на несколько
+                    $dimensions->weight += $this->toWeight($measurement) * $_quantity;
+                    $dimensions->height += $this->toHeight($measurement) * $_quantity;
+                    $dimensions->width += $this->toWidth($measurement) * $_quantity;
+                    $dimensions->depth += $this->toLength($measurement) * $_quantity;
+                }
         }
 
         ////Описание и перевод
@@ -289,7 +285,7 @@ class ParserService
             'description' => $description,
             'link' => $link,
             'image' => $image,
-            'weight' => $weight,
+            'dimensions' => $dimensions,
             'price' => $price,
             'pack' => $pack,
             'composite' => $composite,
@@ -304,4 +300,32 @@ class ParserService
         }
         return $weight;
     }
+
+    private function toHeight(array $_measures)
+    {
+        $height = 0.0;
+        foreach ($_measures as $_measure) {
+            if ($_measure['type'] == "height") $height = $_measure['value'];
+        }
+        return $height;
+    }
+
+    private function toLength(array $_measures)
+    {
+        $length = 0.0;
+        foreach ($_measures as $_measure) {
+            if ($_measure['type'] == "length") $length = $_measure['value'];
+        }
+        return $length;
+    }
+
+    private function toWidth(array $_measures)
+    {
+        $width = 0.0;
+        foreach ($_measures as $_measure) {
+            if ($_measure['type'] == "width") $width = $_measure['value'];
+        }
+        return $width;
+    }
+
 }

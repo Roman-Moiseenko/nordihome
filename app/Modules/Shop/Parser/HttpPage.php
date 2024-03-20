@@ -21,13 +21,7 @@ class HttpPage
 
     public function isUseCache(): bool
     {
-        return false;
-        //TODO отключение кеша ???
-        if ($this->cache !== NULL) {
-            return true;
-        } else {
-            return false;
-        }
+        return !is_null($this->cache);
     }
 
     public function getPage(string $url, string $prefix = ''): ?string
@@ -51,7 +45,6 @@ class HttpPage
                 }
             }
         } else {
-            //$res = array("error" => null, "response" => FALSE);
             $res = $this->request($url);
             if ($res['error'] === NULL) {
                 $result = $res["response"];
@@ -63,8 +56,8 @@ class HttpPage
 
     protected function request($url): array
     {
-        $result = array("error" => null, "response" => FALSE, "http_code" => '200');
-        $headers = array(
+        $result = ["error" => null, "response" => FALSE, "http_code" => '200'];
+        $headers = [
             "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0",
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             //"Accept-Encoding: gzip, deflate",
@@ -72,7 +65,7 @@ class HttpPage
             "Cache-Control: max-age=0",
             "Connection: keep-alive",
             "x-client-id: b6c117e5-ae61-4ef5-b4cc-e0b1e37f0631"
-        );
+        ];
         if ($curl = curl_init()) {
             $_url = '';
             if (count($this->parsdomains) > 0) {
