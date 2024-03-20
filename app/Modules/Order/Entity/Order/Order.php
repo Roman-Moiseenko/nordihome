@@ -190,7 +190,7 @@ class Order extends Model
         $this->save();
         //Увеличиваем резерв на оплаченные товары
         foreach ($this->items as $item) {
-            $item->reserve->update(['reserve_at' => now()->addYears(99)]);
+            $item->reserve->update(['reserve_at' => now()->addDays(28)]);
         }
     }
 
