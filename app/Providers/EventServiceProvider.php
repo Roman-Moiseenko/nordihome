@@ -16,6 +16,7 @@ use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
 use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasRegistered;
+use App\Listeners\CheckNotificationStatus;
 use App\Listeners\NotificationCanceledOrder;
 use App\Listeners\NotificationNewArrival;
 use App\Listeners\NotificationNewDeparture;
@@ -33,6 +34,7 @@ use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Service\PaymentService;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Notifications\Events\NotificationSending;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -90,6 +92,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         DepartureHasCompleted::class => [
             NotificationNewDeparture::class,
+        ],
+        NotificationSending::class => [
+            CheckNotificationStatus::class,
         ],
     ];
 

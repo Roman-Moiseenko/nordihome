@@ -165,7 +165,6 @@ Route::group(
 
 
 
-
 Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::class, 'verify'])->name('register.verify');
 
 //Admin
@@ -455,3 +454,6 @@ Route::group(
     }
 );
 
+//API
+
+Route::any('/api/telegram', [\App\Http\Controllers\Api\TelegramController::class, 'get'])->name('api.telegram');
