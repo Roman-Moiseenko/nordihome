@@ -29,10 +29,10 @@ class AdminMenu
                 'sub_menu' => [
                     'order' => [
                         'icon' => 'file-plus-2',
-                        'title' => 'Заказы (new)',
+                        'title' => 'Заказы',
                         'route_name' => 'admin.sales.order.index',
                     ],
-                    'preorder' => [
+                 /*   'preorder' => [
                         'icon' => 'file-scan',
                         'title' => 'Предзаказы',
                         'route_name' => 'admin.sales.preorder.index',
@@ -46,7 +46,7 @@ class AdminMenu
                         'icon' => 'file-check-2',
                         'title' => 'Заказы (исп.)',
                         'route_name' => 'admin.sales.executed.index',
-                    ],
+                    ],*/
                     'reserve' => [
                         'icon' => 'baggage-claim',
                         'title' => 'Резерв',

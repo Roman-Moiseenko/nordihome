@@ -52,7 +52,8 @@ class AppServiceProvider extends ServiceProvider
     {
         setlocale(LC_ALL, 'ru_RU.utf8');
         Carbon::setLocale(config('app.locale'));
-        URL::forceScheme('https');
+        $local = env('APP_ENV', 'server');
+        if ($local == 'server') URL::forceScheme('https');
         //Europe/Kaliningrad
     }
 

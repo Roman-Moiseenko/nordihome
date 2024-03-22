@@ -10,21 +10,18 @@ use App\Events\OrderHasCanceled;
 use App\Events\OrderHasLogger;
 use App\Events\OrderHasRefund;
 use App\Events\PointHasEstablished;
-use App\Events\ThrowableHasAppeared;
 use App\Mail\OrderAwaiting;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Entity\Order\OrderPaymentRefund;
 use App\Modules\Order\Entity\Order\OrderResponsible;
 use App\Modules\Order\Entity\Order\OrderStatus;
-use App\Modules\Order\Entity\Payment\PaymentOrder;
-use App\Modules\Order\Entity\Refund;
 use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Calculate\CalculatorOrder;
-use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Cart\CartItem;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class SalesService
@@ -122,7 +119,7 @@ class SalesService
             if ($order->delivery->cost == 0) throw new \DomainException('Не установлена стоимость доставка');
             $payment_delivery = 0;
             foreach ($order->payments as $payment) {
-                if ($payment->purpose == PaymentOrder::PAY_DELIVERY) {
+                if ($payment->purpose == OrderAddition::PAY_DELIVERY) {
                     $payment_delivery += $payment->amount;
                 }
             }
@@ -133,7 +130,7 @@ class SalesService
         //Проверить на сумму платежа за заказ
         $payment_order = 0;
         foreach ($order->payments as $payment) {
-            if ($payment->purpose == PaymentOrder::PAY_ORDER) {
+            if ($payment->purpose == OrderAddition::PAY_ORDER) {
                 $payment_order += $payment->amount;
             }
         }
@@ -157,19 +154,20 @@ class SalesService
      */
     public function setDelivery(Order $order, float $cost)
     {
+        //TODO Переработать Возможно отменить
         /** @var UserPayment $userPayment */
         $userPayment = UserPayment::where('user_id', $order->user_id)->first();
 
         if ($order->delivery->cost != 0) {
-            $pay = PaymentOrder::where('order_id', $order->id)->where('amount', $order->delivery->cost)->first();
+            $pay = OrderAddition::where('order_id', $order->id)->where('amount', $order->delivery->cost)->first();
             if (!empty($pay)) $pay->delete();
         }
 
         $order->delivery->cost = $cost;
         $order->delivery->save();
 
-        $payment = PaymentOrder::new($cost, $userPayment->class_payment, PaymentOrder::PAY_DELIVERY);
-        $order->payments()->save($payment);
+        $payment = OrderAddition::new($cost, OrderAddition::PAY_DELIVERY);
+        $order->additions()->save($payment);
     }
 
     public function setLogger(Order $order, int $logger_id)
@@ -217,38 +215,37 @@ class SalesService
 
     public function setPayment(Order $order, array $params)
     {
-        $payment = PaymentOrder::new(
+        $payment = OrderAddition::new(
             amount: (float)$params['payment-amount'],
-            class: $params['payment-class'],
             purpose: (int)$params['payment-purpose'],
             comment: $params['payment-comment'] ?? '',
         );
 
         //Проверка на delivery, если платеж за доставку и delivery->cost не установлен
-        if ($payment->purpose == PaymentOrder::PAY_DELIVERY && $order->delivery->cost == 0) {
+        if ($payment->purpose == OrderAddition::PAY_DELIVERY && $order->delivery->cost == 0) {
             $order->delivery->cost = $payment->amount;
             $order->delivery->save();
         }
-        $order->payments()->save($payment);
+        $order->additions()->save($payment);
     }
 
-    public function delPayment(PaymentOrder $payment)
+    public function delPayment(OrderAddition $payment)
     {
         $order = $payment->order;
         $payment->delete();
 
-        $pays = PaymentOrder::where('order_id', $order->id)->where('purpose', PaymentOrder::PAY_ORDER)->getModels();
+        $pays = OrderAddition::where('order_id', $order->id)->where('purpose', OrderAddition::PAY_ORDER)->getModels();
         if (empty($pays)) {
             flash('У заказа нет ни одного платежа!', 'warning');
         } else {
-            $sum = array_sum(array_map(function (PaymentOrder $paymentOrder) {
+            $sum = array_sum(array_map(function (OrderAddition $paymentOrder) {
                 return $paymentOrder->amount;
             }, $pays));
             if ($order->total != $sum) flash('Сумма платежей не совпадает с заказом!', 'warning');
         }
     }
 
-    public function paidPayment(PaymentOrder $payment, string $document, array $meta = [])
+    public function paidPayment(OrderAddition $payment, string $document, array $meta = [])
     {
         $order = $payment->order;
         $payment->document = $document;
@@ -295,7 +292,7 @@ class SalesService
             if (!$payment->isRefund()) {
                 //Возможно для разных типов платежей разный способ расчета возврата денег
                 $amount = $payment->amount;
-                Refund::register($payment->id, $amount, $comment);
+                OrderPaymentRefund::register($payment->id, $amount, $comment);
                 //$payment->setRefund();
             }
         }
@@ -315,5 +312,10 @@ class SalesService
             $itemStorage->save();
             $item->reserve->delete();
         }
+    }
+
+    public function createOrder(\Illuminate\Http\Request $request)
+    {
+        return null;
     }
 }

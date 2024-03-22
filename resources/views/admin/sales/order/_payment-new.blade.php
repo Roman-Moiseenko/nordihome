@@ -10,7 +10,7 @@
         <x-base.tom-select id="select-payment-class" name="payment-class" class=""
                            data-placeholder="Выберите Способ оплаты">
             <option value="0"></option>
-            @foreach(\App\Modules\Order\Helpers\PaymentHelper::payments() as $payment)
+            @foreach(\App\Modules\Order\Entity\Payment\PaymentHelper::payments() as $payment)
                 <option value="{{ $payment['class'] }}"
                 >{{ $payment['name'] }}</option>
             @endforeach
@@ -21,7 +21,7 @@
         <x-base.tom-select id="select-payment-purpose" name="payment-purpose" class=""
                            data-placeholder="Выберите Способ оплаты">
             <option value="0"></option>
-            @foreach(\App\Modules\Order\Entity\Payment\PaymentOrder::PAYS as $code => $name)
+            @foreach(\App\Modules\Order\Entity\Order\OrderAddition::PAYS as $code => $name)
                 <option value="{{ $code }}"
                 >{{ $name }}</option>
             @endforeach

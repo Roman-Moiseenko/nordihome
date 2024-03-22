@@ -95,5 +95,8 @@
     font-size: 1.25rem;
     color: var(--bs-discount-color);
 }
-
+//Скачущее изображение
+#slider-delivery-company .radio-img img {
+    max-width: 120px;
+}
 

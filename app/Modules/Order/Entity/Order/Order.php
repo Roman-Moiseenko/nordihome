@@ -6,13 +6,10 @@ namespace App\Modules\Order\Entity\Order;
 use App\Entity\Admin;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Delivery\Entity\DeliveryOrder;
-use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Order\Entity\Payment\PaymentOrder;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**
@@ -31,12 +28,14 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property string $comment
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
- * @property PaymentOrder[] $payments
+ * @property OrderAddition[] $additions //Дополнения к заказу (услуги)
+ * @property OrderPayment[] $payments //Платежи за заказ
+ * @property OrderExpense[] $expenses //Расходники на выдачу
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property OrderItem[] $items
  * @property User $user
- * @property DeliveryOrder $delivery
+ * @property DeliveryOrder $delivery //Удалить
  * @property OrderResponsible[] $responsible
  * @property MovementDocument[] $movements
  */
@@ -303,9 +302,14 @@ class Order extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function additions()
+    {
+        return $this->hasMany(OrderAddition::class, 'order_id', 'id');
+    }
+
     public function payments()
     {
-        return $this->hasMany(PaymentOrder::class, 'order_id', 'id');
+        return $this->hasMany(OrderPayment::class, 'order_id', 'id');
     }
 
     public function status()

@@ -1,29 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity\Payment;
+namespace App\Modules\Order\Entity\Order;
 
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Refund;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use function now;
 
 /**
+ * Дополнительные оплаты(услуги) к заказу
  * @property int $id
  * @property int $order_id
  * @property float $amount
  * @property Carbon $created_at
- * @property Carbon $paid_at
- * @property string $document
- * @property string $class //Способ оплаты - класс
- * @property array $meta //Данные о платеже
  * @property int $purpose
  * @property string $comment
- *
  * @property Order $order
- * @property Refund $refund
  */
-class PaymentOrder extends Model
+
+class OrderAddition extends Model
 {
     /**
      * Назначения платежа $purpose
@@ -42,38 +37,29 @@ class PaymentOrder extends Model
         self::PAY_OTHER => 'Другие платежи',
     ];
 
-    protected $table = 'payment_orders';
+    protected $table = 'order_additions';
 
     public $timestamps = false;
     protected $fillable = [
         'amount',
-        'paid_at',
-        'document',
-        'class',
         'purpose',
         'created_at',
         'comment',
-        'meta'
     ];
 
     protected $casts = [
-        'paid_at' => 'datetime',
         'created_at' => 'datetime',
-        'meta' => 'json',
     ];
 
 
-    public static function new(float $amount, string $class, int $purpose, string $comment = '', array $meta = []): self
+    public static function new(float $amount, int $purpose, string $comment = ''): self
     {
-        $payment = self::make([
+        return self::make([
             'amount' => $amount,
             'comment' => $comment,
-            'class' => $class,
             'purpose' => $purpose,
             'created_at' => now(),
         ]);
-        $payment->meta = $meta;
-        return $payment;
     }
 
     /**
@@ -89,15 +75,6 @@ class PaymentOrder extends Model
         $this->save();
     }
 
-    public function isPaid(): bool
-    {
-        return !is_null($this->paid_at);
-    }
-
-    public function isRefund(): bool
-    {
-        return !empty($this->refund);
-    }
 
     public function purposeHTML(): string
     {
@@ -108,32 +85,4 @@ class PaymentOrder extends Model
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
-
-    public function refund()
-    {
-        return $this->hasOne(Refund::class, 'payment_id', 'id');
-    }
-
-    /////////////////////////////////////////////////////////////////////////////
-    public static function namespace(): string
-    {
-        return __NAMESPACE__;
-    }
-
-    public function nameType(): string
-    {
-        /** @var PaymentAbstract $class */
-        $class = __NAMESPACE__ . "\\" . $this->class;
-        return $class::name();
-    }
-
-    public function createOnlinePayment()
-    {
-        /** @var PaymentAbstract $class */
-        $class = __NAMESPACE__ . "\\" . $this->class;
-        if ($class::online()) return $class::getPaidData($this);
-        return null;
-    }
-
-
 }

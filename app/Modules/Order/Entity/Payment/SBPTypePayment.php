@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Payment;
 
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderAddition;
 
 class SBPTypePayment extends PaymentAbstract
 {
@@ -13,7 +14,7 @@ class SBPTypePayment extends PaymentAbstract
         return true;
     }
 
-    public static function getPaidData(PaymentOrder $payment): string
+    public static function getPaidData(Order $order): string
     {
         //TODO Формирование ссылки на платеж
         $url = '/';

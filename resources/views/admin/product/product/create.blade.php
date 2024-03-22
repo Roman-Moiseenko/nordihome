@@ -3,7 +3,7 @@
 @section('subcontent')
     <div class="intro-y flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
-            Создать новый товары
+            Создать новый товар
         </h2>
     </div>
     <form action="{{ route('admin.product.store') }}" METHOD="POST" enctype="multipart/form-data">

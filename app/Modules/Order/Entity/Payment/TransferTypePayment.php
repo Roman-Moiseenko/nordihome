@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Payment;
 
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderAddition;
 
 class TransferTypePayment extends PaymentAbstract
 {
@@ -13,7 +14,7 @@ class TransferTypePayment extends PaymentAbstract
         return false;
     }
 
-    public static function getPaidData(PaymentOrder $payment): string
+    public static function getPaidData(Order $order): string
     {
         return 'Данные карты';
     }

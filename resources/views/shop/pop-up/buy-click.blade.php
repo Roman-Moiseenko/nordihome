@@ -25,7 +25,7 @@
                         <div class="form-floating mb-3">
                             <select class="form-select" name="payment" id="payment">
                                 <option value="0" selected></option>
-                                @foreach(App\Modules\Order\Helpers\PaymentHelper::payments() as $payment)
+                                @foreach(App\Modules\Order\Entity\Payment\PaymentHelper::payments() as $payment)
                                     <option value="{{ $payment['class'] }}">{{ $payment['name'] }}</option>
                                 @endforeach
                             </select>

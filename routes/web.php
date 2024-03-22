@@ -310,6 +310,7 @@ Route::group(
             }
         );
         //Sales - продажи
+
         Route::group(
             [
                 'prefix' => 'sales',
@@ -321,38 +322,55 @@ Route::group(
                 Route::get('/reserve', 'ReserveController@index')->name('reserve.index');
                 Route::get('/wish', 'WishController@index')->name('wish.index');
 
-                Route::get('/order', 'NewOrderController@index')->name('order.index');
-                Route::get('/order/{order}', 'NewOrderController@show')->name('order.show');
 
 
-                Route::get('/preorder', 'PreOrderController@index')->name('preorder.index');
-                Route::get('/preorder/{order}', 'PreOrderController@show')->name('preorder.show');
+
+           //     Route::get('/preorder', 'PreOrderController@index')->name('preorder.index');
+             //   Route::get('/preorder/{order}', 'PreOrderController@show')->name('preorder.show');
                 //Route::get('/preorder/{order}/destroy', 'PreOrderController@destroy')->name('preorder.destroy');
 
-                Route::get('/parser', 'ParserController@index')->name('parser.index');
-                Route::get('/parser/{order}', 'ParserController@show')->name('parser.show');
+            //    Route::get('/parser', 'ParserController@index')->name('parser.index');
+              //  Route::get('/parser/{order}', 'ParserController@show')->name('parser.show');
                 //Route::get('/parser/{order}/destroy', 'ParserController@destroy')->name('parser.destroy');
 
-                Route::get('/executed', 'ExecutedController@index')->name('executed.index');
-                Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
+             //   Route::get('/executed', 'ExecutedController@index')->name('executed.index');
+               // Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
 
-                Route::delete('/order/{item}/del-item', 'OrderController@del_item')->name('order.del-item');
-                Route::delete('/order/{order}/destroy', 'OrderController@destroy')->name('order.destroy');
-                Route::post('/order/{order}/set-manager', 'OrderController@set_manager')->name('order.set-manager');
-                Route::post('/order/{order}/set-logger', 'OrderController@set_logger')->name('order.set-logger');
-                Route::post('/order/{order}/set-reserve', 'OrderController@set_reserve')->name('order.set-reserve');
-                Route::post('/order/{order}/set-quantity', 'OrderController@set_quantity')->name('order.set-quantity');
-                Route::post('/order/{order}/set-delivery', 'OrderController@set_delivery')->name('order.set-delivery');
-                Route::post('/order/{order}/set-moving', 'OrderController@set_moving')->name('order.set-moving');
-                Route::post('/order/{order}/set-payment', 'OrderController@set_payment')->name('order.set-payment');
-                Route::post('/order/{order}/paid-order', 'OrderController@paid_order')->name('order.paid-order');
-                Route::post('/order/{order}/canceled', 'OrderController@canceled')->name('order.canceled');
-                Route::post('/order/{order}/set-awaiting', 'OrderController@set_awaiting')->name('order.set-awaiting');
-                Route::post('/order/{order}/set-status', 'OrderController@set_status')->name('order.set-status');
-                Route::post('/order/{order}/completed', 'OrderController@completed')->name('order.completed');
-                Route::post('/order/{order}/refund', 'OrderController@refund')->name('order.refund');
-                Route::post('/order/{payment}/paid-payment', 'OrderController@paid_payment')->name('order.paid-payment');
-                Route::delete('/order/{payment}/del-payment', 'OrderController@del_payment')->name('order.del-payment');
+                Route::resource('order', 'OrderController');
+                Route::group(
+                    [
+                        'prefix' => 'order',
+                        'as' => 'order.',
+                        //'namespace' => 'Sales',
+                    ],
+                    function() {
+                        Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
+                        Route::delete('/{order}/destroy', 'OrderController@destroy')->name('destroy');
+                        Route::delete('/del-payment/{payment}', 'OrderController@del_payment')->name('del-payment');
+
+                        Route::post('/{order}/set-manager', 'OrderController@set_manager')->name('set-manager');
+                        Route::post('/{order}/set-logger', 'OrderController@set_logger')->name('set-logger');
+                        Route::post('/{order}/set-reserve', 'OrderController@set_reserve')->name('set-reserve');
+                        Route::post('/{order}/set-quantity', 'OrderController@set_quantity')->name('set-quantity');
+                        Route::post('/{order}/set-delivery', 'OrderController@set_delivery')->name('set-delivery');
+                        Route::post('/{order}/set-moving', 'OrderController@set_moving')->name('set-moving');
+                        Route::post('/{order}/set-payment', 'OrderController@set_payment')->name('set-payment');
+                        Route::post('/{order}/paid-order', 'OrderController@paid_order')->name('paid-order');
+                        Route::post('/{order}/canceled', 'OrderController@canceled')->name('canceled');
+                        Route::post('/{order}/set-awaiting', 'OrderController@set_awaiting')->name('set-awaiting');
+                        Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
+                        Route::post('/{order}/completed', 'OrderController@completed')->name('completed');
+                        Route::post('/{order}/refund', 'OrderController@refund')->name('refund');
+                        Route::post('/paid-payment/{payment}', 'OrderController@paid_payment')->name('paid-payment');
+
+                        Route::post('/search-user', 'OrderController@search_user')->name('search-user');
+                        Route::post('/search', 'OrderController@search')->name('search');
+                        Route::post('/get-to-order', 'OrderController@get_to_order')->name('get-to-order');
+
+                    }
+                );
+
+
             }
         );
         //Pages

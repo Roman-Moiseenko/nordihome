@@ -21,7 +21,8 @@ class OrderStatus extends Model
     const FORMED = 200; //Резерв 1ч
     const SET_MANAGER = 201; //В работе у менеджера
     const AWAITING = 202; //Ожидает оплаты - резерв 3 дня ??????
-    const PAID = 203;  //Оплачен
+    const PREPAID = 203;  //Предоплата
+    const PAID = 204;  //Оплачен
 
     ///Предзаказ
     const ISSUED_SELLER = 210; //Оформлен у поставщика

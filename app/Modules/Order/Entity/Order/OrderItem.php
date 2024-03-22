@@ -14,7 +14,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $order_id
  * @property int $product_id
  * @property int $quantity
- * @property int $first_quantity
+ * @property int $first_quantity //удалить
+ * @property bool $preorder //на предзаказ
+ * @property int $supplier_document_id //Заказ поставщику
  * @property int $base_cost
  * @property int $sell_cost
  * @property int $discount_id
@@ -41,7 +43,8 @@ class OrderItem extends Model
         'cancel',
         'comment',
         'reserve_id',
-        'discount_type'
+        'discount_type',
+        'preorder'
     ];
 
     protected $casts = [

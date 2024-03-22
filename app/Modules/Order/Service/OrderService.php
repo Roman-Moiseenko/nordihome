@@ -190,12 +190,6 @@ class OrderService
             $discount_coupon = $this->coupons->discount($coupon, $OrderItems);
         }
 
-        $order->setFinance(
-            $cart_order->amount,
-            $cart_order->discount,
-            $discount_coupon,
-            (empty($coupon) || $discount_coupon == 0) ? null : $coupon->id);
-
         foreach ($OrderItems as $item) {
             if (is_null($item->reserve)) {
                 //Добавить товар в резерв
@@ -227,7 +221,8 @@ class OrderService
             ]);
         }
         $this->cart->clearOrder(true);
-        event(new OrderHasCreated($order));
+
+
 
         //Предзаказ
         if (
@@ -236,38 +231,31 @@ class OrderService
             //$PreOrderItems = $this->cart->getPreOrderItems();
             $cart_preorder = $this->cart->info->pre_order;
 
-            $preorder = Order::register($default->payment->user_id, Order::ONLINE, true);
-            $preorder->setFinance($cart_preorder->amount, $cart_preorder->amount, 0, null);
+            //$preorder = Order::register($default->payment->user_id, Order::ONLINE, true);
+            //$preorder->setFinance($cart_preorder->amount, $cart_preorder->amount, 0, null);
 
             foreach ($PreOrderItems as $item) {
-                $preorder->items()->create([
+                $order->items()->create([
                     'product_id' => $item->product->id,
                     'quantity' => $item->quantity,
                     'base_cost' => $item->base_cost,
                     'sell_cost' => $item->base_cost,
-                    'options' => $item->options
+                    'options' => $item->options,
+                    'preorder' => true,
+
                 ]);
             }
             $this->cart->clearPreOrder();
             //Оповещения, создание доставки и др.
-            event(new OrderHasCreated($preorder));
+            //event(new OrderHasCreated($preorder));
         }
 
-        //TODO все переносится в event/listener
-        // Либо в ручную создается из админки
-        //Создать платеж или
-        /// внести платеж в Заказ
-        ///
-        //Создать заявку на доставку
-        ///внести доставку в Заказ
-        ///
-        //Отправить документы клиенту:
-        /// 1. Счет на ООО
-        /// 2. Данные для перевода денег
-        /// 3. Информацию, о счете ()
-        /// 4. Время резерва, если не онлайн
-        ///
-
+        $order->setFinance(
+            $cart_order->amount + (!empty($cart_preorder) ? $cart_preorder->amount : 0),
+            $cart_order->discount,
+            $discount_coupon,
+            (empty($coupon) || $discount_coupon == 0) ? null : $coupon->id);
+        event(new OrderHasCreated($order));
         return $order;
     }
 

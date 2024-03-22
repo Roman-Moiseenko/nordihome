@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Order\Repository;
 
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderStatus;
+use Illuminate\Http\Request;
+use JetBrains\PhpStorm\ArrayShape;
 
 class OrderRepository
 {
@@ -25,5 +28,52 @@ class OrderRepository
     public function getExecuted()
     {
         return Order::where('finished', true)->orderByDesc('created_at');
+    }
+
+    public function getOrders(string $filter)
+    {
+        $query = Order::orderByDesc('created_at');
+        //$filter = $request['filter'];
+        if ($filter == 'all') return $query;
+
+        if ($filter == 'new')
+            $query->whereHas('status', function ($q) {
+                $q->where('value', '<', OrderStatus::AWAITING);
+            });
+        if ($filter == 'awaiting')
+            $query->whereHas('status', function ($q) {
+                $q->where('value', OrderStatus::AWAITING);
+            });
+
+        if ($filter == 'at-work')
+            $query->whereHas('status', function ($q) {
+                $q->where('value', '>' , OrderStatus::AWAITING)->where('value', '<', OrderStatus::CANCEL);
+            });
+
+        if ($filter == 'canceled')
+            $query->whereHas('status', function ($q) {
+                $q->where('value', '>=' , OrderStatus::CANCEL)->where('value', '<', OrderStatus::COMPLETED);
+            });
+        if ($filter == 'completed')
+            $query->whereHas('status', function ($q) {
+                $q->where('value', OrderStatus::COMPLETED);
+            });
+        return $query;
+    }
+
+    #[ArrayShape(['new' => "int", 'awaiting' => "int", 'at-work' => "int"])]
+    public function getFilterCount(): array
+    {
+        return [
+            'new' => Order::whereHas('status', function ($q) {
+                $q->where('value', '<', OrderStatus::AWAITING);
+            })->count(),
+            'awaiting' => Order::whereHas('status', function ($q) {
+                $q->where('value', OrderStatus::AWAITING);
+            })->count(),
+            'at-work' => Order::whereHas('status', function ($q) {
+                $q->where('value', '>' , OrderStatus::AWAITING)->where('value', '<', OrderStatus::CANCEL);
+            })->count(),
+        ];
     }
 }

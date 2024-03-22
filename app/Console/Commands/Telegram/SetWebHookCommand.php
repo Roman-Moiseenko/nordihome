@@ -24,7 +24,7 @@ class SetWebHookCommand extends Command
 
         $url = "https://api.telegram.org/bot" . $token . "/setWebhook?url=" . $route . '&certificate=@sert_tm.pem';
         $this->info($url);
-        $result = $this->setCurl($url);// file_get_contents($url);
+        $result = $this->setCurl($url);
         $this->info(json_encode($result));
         return true;
     }
@@ -34,11 +34,9 @@ class SetWebHookCommand extends Command
         $headers = [
             "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0",
             "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            //"Accept-Encoding: gzip, deflate",
             "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
             "Cache-Control: max-age=0",
             "Connection: keep-alive",
-            //"x-client-id: b6c117e5-ae61-4ef5-b4cc-e0b1e37f0631"
         ];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -50,10 +48,8 @@ class SetWebHookCommand extends Command
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_POST, true);
 
-        //
         $result = curl_exec($curl);
         curl_close($curl);
         return $result;
     }
 }
-//https://api.telegram.org/bot5829112840:AAFdy4JTA6AAo8NGdJ9vz5pTh7XOo4MzBXY/setWebhook?url=http://39y.ru/api/telegram

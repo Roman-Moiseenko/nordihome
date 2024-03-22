@@ -86,4 +86,27 @@ div.has-error{
     min-width: 220px;
 }
 
+/* Радиокнопки в виде btn */
+input.btn-check {
+    display: none;
+}
+input.btn-check + label {
+    position: relative;
+    min-width: 120px;
+}
+input.btn-check + label>span {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    color: #fff;
+    background: rgb(var(--color-danger));
+    border-radius: 10px;
+    padding: 0 6px;
+}
+input.btn-check:checked + label {
+    border: 2px solid rgb(var(--color-danger));
+}
+input.btn-check:checked + label:hover {
+    border: 2px solid rgb(var(--color-danger));
+}
 

@@ -242,8 +242,9 @@ class Product extends Model
     /**
      * @return float Последняя назначенная цена с учетом если цены не назначены
      */
-    public function getLastPrice(): float
+    public function getLastPrice(int $user_id = null): float
     {
+        //TODO Реализовать цены оптовые и другие для разных клиентов
         if (is_null($this->lastPrice)) return 0;
         return $this->lastPrice->value;
     }

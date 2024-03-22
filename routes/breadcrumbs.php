@@ -444,9 +444,21 @@ Breadcrumbs::for('admin.sales.wish.index', function (BreadcrumbTrail $trail) {
     $trail->push('Избранное', route('admin.sales.wish.index'));
 });
 
+
 Breadcrumbs::for('admin.sales.order.index', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.sales');
-    $trail->push('Заказы новые', route('admin.sales.order.index'));
+    $trail->parent('admin.home');
+    $trail->push('Заказы', route('admin.sales.order.index'));
+});
+
+
+Breadcrumbs::for('admin.sales.order.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales.order.index');
+    $trail->push('Новый заказ', route('admin.sales.order.create'));
+});
+
+Breadcrumbs::for('admin.sales.order.update', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('admin.sales.order.index');
+    $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.order.update', $order));
 });
 
 Breadcrumbs::for('admin.sales.order.show', function (BreadcrumbTrail $trail, Order $order) {
@@ -454,6 +466,7 @@ Breadcrumbs::for('admin.sales.order.show', function (BreadcrumbTrail $trail, Ord
     $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.order.show', $order));
 });
 
+/*
 Breadcrumbs::for('admin.sales.preorder.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.sales');
     $trail->push('Предзаказы новые', route('admin.sales.preorder.index'));
@@ -480,6 +493,7 @@ Breadcrumbs::for('admin.sales.executed.show', function (BreadcrumbTrail $trail, 
     $trail->parent('admin.sales.executed.index');
     $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.executed.show', $order));
 });
+*/
 Breadcrumbs::for('admin.login', function (BreadcrumbTrail $trail) {
     $trail->push('Login', route('admin.login'));
 });

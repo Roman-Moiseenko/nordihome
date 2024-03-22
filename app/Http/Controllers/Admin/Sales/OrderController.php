@@ -5,11 +5,18 @@ namespace App\Http\Controllers\Admin\Sales;
 
 
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Payment\PaymentOrder;
+use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Helpers\OrderHelper;
+use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\SalesService;
+use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Общие операции с моделью Order. Все запросы POST или DELETE
@@ -21,10 +28,56 @@ class OrderController extends Controller
 {
 
     private SalesService $service;
+    private StaffRepository $staffs;
+    private OrderRepository $repository;
+    private ProductRepository $products;
 
-    public function __construct(SalesService $service)
+
+    public function __construct(
+        SalesService $service,
+        StaffRepository $staffs,
+        OrderRepository $repository,
+        ProductRepository $products)
     {
         $this->service = $service;
+        $this->staffs = $staffs;
+        $this->repository = $repository;
+        $this->products = $products;
+    }
+
+    public function index(Request $request)
+    {
+        return $this->try_catch_admin(function () use ($request) {
+            $filter = $request['filter'] ?? 'all';
+            $filter_count = $this->repository->getFilterCount();
+            $query = $this->repository->getOrders($filter);
+            $orders = $this->pagination($query, $request, $pagination);
+            return view('admin.sales.order.index', compact('orders', 'pagination', 'filter', 'filter_count'));
+        });
+    }
+
+    public function show(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+            $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
+            $storages = Storage::orderBy('name')->get();
+            return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages'));
+        });
+    }
+
+    public function create()
+    {
+        $menus = OrderHelper::menuNewOrder();
+        $storages = Storage::get();
+        return view('admin.sales.order.create', compact('menus', 'storages'));
+    }
+
+    public function store(Request $request)
+    {
+        //TODO
+        $order = $this->service->createOrder($request);
+        return  view('admin.sales.order.show', $order);
     }
 
     //TODO Сделать OrderAction и по каждому действию записывать staff->id, Action, json(данные)
@@ -124,7 +177,7 @@ class OrderController extends Controller
         });
     }
 
-    public function del_payment(PaymentOrder $payment)
+    public function del_payment(OrderAddition $payment)
     {
         return $this->try_catch_admin(function () use ($payment) {
             $this->service->delPayment($payment);
@@ -132,7 +185,7 @@ class OrderController extends Controller
         });
     }
 
-    public function paid_payment(Request $request, PaymentOrder $payment)
+    public function paid_payment(Request $request, OrderAddition $payment)
     {
         return $this->try_catch_admin(function () use ($request, $payment) {
             $this->service->paidPayment($payment, $request['payment-document'] ?? '');
@@ -156,6 +209,98 @@ class OrderController extends Controller
             $items = json_decode($request['items'], true);
             $result = $this->service->setQuantity($order, $items);
             return response()->json($result);
+        });
+    }
+
+    /**  НОВЫЕ ACTIONS  **/
+
+
+    //AJAX
+    public function search_user(Request $request)
+    {
+        return $this->try_catch_ajax_admin(function () use($request) {
+
+            $data = $request['data'];
+            /** @var User $user */
+            $user = User::where('phone', $data)->OrWhere('email', $data)->first();
+
+
+            if (empty($user)) {
+                return response()->json(false);
+            } else {
+                $result = [
+                    'id' => $user->id,
+                    'phone' => $user->phone,
+                    'email' => $user->email,
+                    'name' => $user->delivery->fullname->firstname,
+                    'delivery' => $user->delivery->type,
+                    'storage' => $user->delivery->storage,
+                    'local' => $user->delivery->local->address,
+                    'region' => $user->delivery->region->address,
+                    'payment' => $user->payment->class_payment,
+                    //'delivery_storage' => $user->delivery->storage,
+                ];
+                return response()->json($result);
+            }
+        });
+    }
+
+    public function search(Request $request)
+    {
+        return $this->try_catch_ajax_admin(function () use($request) {
+            $result = [];
+            $products = $this->products->search($request['search']);
+            /** @var Product $product */
+            foreach ($products as $product) {
+                $result[] = $this->products->toArrayForSearch($product);
+            }
+            return \response()->json($result);
+        });
+    }
+
+    public function get_to_order(Request $request) {
+        return $this->try_catch_ajax_admin(function () use($request) {
+            $product_id = (int)$request['product_id'];
+            $quantity = (int)$request['quantity'];
+            $user_id = (int)$request['user_id'];
+            /** @var Product $product */
+            $product = Product::find($product_id);
+
+            $free_count = min($quantity, $product->count_for_sell);
+            $preorder_count = max($quantity - $product->count_for_sell, 0);
+            $base_params = [
+                'id' => $product_id,
+                'code' => $product->code,
+                'name' => $product->name,
+                'weight' => $product->dimensions->weight(),
+                'volume' => $product->dimensions->volume(),
+                'cost' => $product->getLastPrice($user_id),
+            ];
+
+            if ($free_count > 0) {
+                $free = array_merge($base_params, [
+                        'count' => $free_count,
+                        'promotion' => ($product->hasPromotion()) ? $product->promotion()->pivot->price : 0,
+                        'max' => $product->count_for_sell,
+                    ]);
+
+            } else {
+                $free = false;
+            }
+            if ($preorder_count > 0) {
+                $preorder = array_merge($base_params, [
+                        'count' => $preorder_count,
+                    ]);
+            } else {
+                $preorder = false;
+            }
+
+
+            $result = [
+                'free' => $free,
+                'preorder' => $preorder,
+            ];
+            return \response()->json($result);
         });
     }
 }

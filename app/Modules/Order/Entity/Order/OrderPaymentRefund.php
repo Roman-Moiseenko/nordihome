@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity;
+namespace App\Modules\Order\Entity\Order;
 
-use App\Modules\Order\Entity\Payment\PaymentOrder;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use function now;
 
 /**
  * @property int $id
@@ -13,12 +13,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $amount
  * @property string $comment
  * @property Carbon $created_at
- * @property PaymentOrder $payment
+ * @property OrderPayment $payment
  */
 
-class Refund extends Model
+class OrderPaymentRefund extends Model
 {
 
+    protected $table = 'order_payment_refunds';
     protected $fillable = [
         'payment_id',
         'amount',
@@ -44,6 +45,6 @@ class Refund extends Model
 
     public function payment()
     {
-        return $this->belongsTo(PaymentOrder::class, 'payment_id', 'id');
+        return $this->belongsTo(OrderPayment::class, 'payment_id', 'id');
     }
 }

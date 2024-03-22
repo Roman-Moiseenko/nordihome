@@ -6,9 +6,9 @@ namespace App\Modules\Order\Service;
 use App\Events\OrderHasCreated;
 use App\Events\PaymentHasPaid;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Payment\PaymentOrder;
+use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Order\Entity\UserPayment;
-use App\Modules\Order\Helpers\PaymentHelper;
 
 class PaymentService
 {
@@ -31,10 +31,10 @@ class PaymentService
     /**
      * Платеж был оплачен.
      * Вызов - Вручную (наличные, переводы) и Чз сервисы оплаты, посредством фасада по приему платежей
-     * @param PaymentOrder $payment
+     * @param \App\Modules\Order\Entity\Order\OrderAddition $payment
      * @return void
      */
-    public function payed(PaymentOrder $payment)
+    public function payed(OrderAddition $payment)
     {
         //TODO
        $payment->paid_at = now();
@@ -45,7 +45,7 @@ class PaymentService
 
     public function create(Order $order)
     {
-        $payment = PaymentOrder::new($order->id, $this->user($order->user_id)->class_payment, PaymentOrder::PAY_ORDER);
+       // $payment = OrderAddition::new($order->id, $this->user($order->user_id)->class_payment, OrderAddition::PAY_ORDER);
 
     }
 
@@ -54,12 +54,14 @@ class PaymentService
      * @param OrderHasCreated $event
      * @return void
      */
+
     public function handle(OrderHasCreated $event): void
     {
         try {
             $order = $event->order;
-            $payment = PaymentOrder::new($order->total, $this->user($order->user_id)->class_payment,PaymentOrder::PAY_ORDER);
-            $order->payments()->save($payment);
+            //TODO Удалить OrderAddition
+            $payment = OrderAddition::new($order->total, OrderAddition::PAY_ORDER);
+            $order->additions()->save($payment);
         } catch (\Throwable $e) {
             flash($e->getMessage());
         }

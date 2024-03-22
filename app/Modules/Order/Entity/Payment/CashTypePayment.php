@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Payment;
 
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderAddition;
 
 class CashTypePayment extends PaymentAbstract
 {
@@ -13,7 +14,7 @@ class CashTypePayment extends PaymentAbstract
         return false;
     }
 
-    public static function getPaidData(PaymentOrder $payment = null)
+    public static function getPaidData(Order $order = null)
     {
         return null;
     }
