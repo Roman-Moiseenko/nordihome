@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Modules\Discount\Entity\Coupon;
 use App\Modules\User\Entity\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,21 +10,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserRegister extends Mailable
+class VerifyLinkMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     private User $user;
-    private Coupon $coupon;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user, Coupon $coupon)
+    public function __construct(User $user)
     {
         //
         $this->user = $user;
-        $this->coupon = $coupon;
     }
 
     /**
@@ -34,7 +31,7 @@ class UserRegister extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Регистрация на NORDI HOME',
+            subject: 'Verify Link Mail',
         );
     }
 
@@ -44,7 +41,7 @@ class UserRegister extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.user.register',
+            markdown: 'mail.user.created',
         );
     }
 
@@ -60,7 +57,8 @@ class UserRegister extends Mailable
 
     public function build()
     {
+        //TODO
         return $this->subject('Регистрация')
-            ->markdown('mail.user.register')->with([ 'user' => $this->user, 'coupon' => $this->coupon]);
+            ->markdown('mail.user.created')->with([ 'user' => $this->user]);
     }
 }

@@ -7,6 +7,8 @@ use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
 use App\Events\ThrowableHasAppeared;
+use App\Events\UserHasCreated;
+use App\Mail\VerifyMail;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\UserDelivery;
@@ -25,6 +27,7 @@ use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 use stdClass;
@@ -63,10 +66,10 @@ class OrderService
         $this->parserCart = $parserCart;
     }
 
-    public function default_user_data(): stdClass
+    public function default_user_data(User $user = null): stdClass
     {
         /** @var User $user */
-        $user = Auth::guard('user')->user();
+        if (is_null($user)) $user = Auth::guard('user')->user();
         $result = new stdClass();
         /** @var UserPayment payment */
         $result->payment = $this->payments->user($user->id);
@@ -314,10 +317,10 @@ class OrderService
                 $user = User::register($email, $password);
                 $user->update(['phone' => $phone]);
 
-                //TODO Уведомление клиента что он зарегистрирован
+                event(new UserHasCreated($user));
             }
-            Auth::loginUsingId($user->id);
-            $default = $this->default_user_data();
+           // Auth::loginUsingId($user->id);
+            $default = $this->default_user_data($user);
         }
 
         if (isset($request['payment'])) $default->payment->setPayment($request['payment']);
@@ -344,7 +347,7 @@ class OrderService
         $product_id = $request['product_id'];
         $product = Product::find($product_id);
 
-        //TODO Commit DB сделать
+
         if (empty($product->lastPrice)) throw new \DomainException('Данный товар не подлежит продажи.');
         $order = Order::register($user->id, Order::ONLINE, true);
         $order->setFinance($product->lastPrice->value, 0, 0, null);
@@ -368,7 +371,7 @@ class OrderService
         ]);
 
         event(new OrderHasCreated($order));
-        Auth::logout();
+        //Auth::logout();
         return $order;
     }
 
@@ -380,17 +383,45 @@ class OrderService
     public function create_sales(Request $request): Order
     {
         $data = json_decode($request['data'], true);
-        dd($data);
-        //1. Пользователь новый.
-        /// регистрируем его и отправляем ему письмо, с ссылкой верификации
-        //2. Пользователь старый.
-        /// Получаем клиента, и заменяем измененные данные
+        $user_request = $data['user'];
+
+        if (!isset($user_request['id'])){//1. Пользователь новый.
+            /// регистрируем его и отправляем ему письмо, с ссылкой верификации
+            $password = Str::random(8);
+            $user = User::register($user_request['email'], $password);
+            $user->update(['phone' => $user_request['phone']]);
+            event(new UserHasCreated($user));
+        } else {//2. Пользователь старый.
+            $user = User::find((int)$user_request['id']);
+        }
+        $default = $this->default_user_data($user);
+        //Перезаполняем или заполняем данные
+
+        if (isset($user_request['payment']))
+            $default->payment->setPayment($user_request['payment']);
+        $default->delivery->setDeliveryType($user_request['delivery']);
+
+        if ($default->delivery->isRegion()) {
+            $default->delivery->setDeliveryTransport(
+                DeliveryHelper::deliveries()[0]['class'],
+                GeoAddress::create($user_request['region'], '', '', '')
+            );
+        } else {
+            $storage = (int)$user_request['storage'] ?? null;
+            $default->delivery->setDeliveryLocal(
+                $storage,
+                GeoAddress::create($user_request['local'], '', '', ''));
+        }
 
         //Заказ создаем заказ, заполняем все товары
+        $order = Order::register($user->id, Order::MANUAL, true);
+
 
         //Добавляем дополнительные услуги
 
 
+        event(new OrderHasCreated($order));
+        return $order;
     }
 
     public function payment(int $order_id, array $payment_data)

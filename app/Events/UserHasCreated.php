@@ -12,9 +12,9 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Клиент подтвердил свою верификацию
+ * Клиент был создан системой: менеджер, в 1клик, Для отправки ссылки на верификацию и смены пароля
  */
-class UserHasRegistered
+class UserHasCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

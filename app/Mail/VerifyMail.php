@@ -43,7 +43,7 @@ class VerifyMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.verify-mail',
+            markdown: 'mail.user.verify',
         );
     }
 
@@ -59,8 +59,8 @@ class VerifyMail extends Mailable
 
     public function build()
     {
-        $s = new DkimSigner();
+        //$s = new DkimSigner();
         return $this->subject('Подтверждение')
-            ->markdown('mail.verify-mail')->with([ 'very_code' => $this->user->verify_token]);
+            ->markdown('mail.user.verify')->with([ 'very_code' => $this->user->verify_token]);
     }
 }
