@@ -176,6 +176,11 @@ class OrderService
         return 0;
     }
 
+    /**
+     * Создание заказа клиентом с Фронтенда
+     * @param Request $request
+     * @return Order
+     */
     public function create(Request $request): Order
     {
         $default = $this->default_user_data();
@@ -259,6 +264,10 @@ class OrderService
         return $order;
     }
 
+    /**
+     * Создание заказа из корзины парсера клиента
+     * @return Order
+     */
     public function create_parser(): Order
     {
         $default = $this->default_user_data();
@@ -283,27 +292,12 @@ class OrderService
         return $order;
     }
 
-    public function payment(int $order_id, array $payment_data)
-    {
-        /** @var Order $order */
-        $order = Order::find($order_id);
 
-
-        foreach ($order->items as $item) {
-            if ($item->reserve_id != null) {
-                $item->reserve()->delete();
-            } else {
-                $order->setStatus(OrderStatus::REFUND);
-                throw new \DomainException('Произведена оплата за отмененный заказ');
-            }
-        }
-        $order->setStatus(OrderStatus::PAID);
-
-        //TODO Создать платеж $payment_data
-
-        //TODO Проводка покупки
-    }
-
+    /**
+     * Создание заказа по кнопке В 1 клик
+     * @param Request $request
+     * @return Order
+     */
     public function create_click(Request $request)
     {
         //Проверяем клиент залогинен
@@ -376,5 +370,47 @@ class OrderService
         event(new OrderHasCreated($order));
         Auth::logout();
         return $order;
+    }
+
+    /**
+     * Создание заказа менеджером из Продаж
+     * @param Request $request
+     * @return void
+     */
+    public function create_sales(Request $request): Order
+    {
+        $data = json_decode($request['data'], true);
+        dd($data);
+        //1. Пользователь новый.
+        /// регистрируем его и отправляем ему письмо, с ссылкой верификации
+        //2. Пользователь старый.
+        /// Получаем клиента, и заменяем измененные данные
+
+        //Заказ создаем заказ, заполняем все товары
+
+        //Добавляем дополнительные услуги
+
+
+    }
+
+    public function payment(int $order_id, array $payment_data)
+    {
+        /** @var Order $order */
+        $order = Order::find($order_id);
+
+
+        foreach ($order->items as $item) {
+            if ($item->reserve_id != null) {
+                $item->reserve()->delete();
+            } else {
+                $order->setStatus(OrderStatus::REFUND);
+                throw new \DomainException('Произведена оплата за отмененный заказ');
+            }
+        }
+        $order->setStatus(OrderStatus::PAID);
+
+        //TODO Создать платеж $payment_data
+
+        //TODO Проводка покупки
     }
 }

@@ -1,6 +1,24 @@
 (function () {
     "use strict";
 
+
+    window.notification = function (_title, _message, _icon = '') {
+        let node = $('#notification-block').find('#notification-widget').clone();
+        node.find('#title').html(_title);
+        node.find('#body').html(_message);
+        if (_icon !== '') node.find('#' + _icon).removeClass('hidden');
+        Toastify({
+            node: node.removeClass("hidden")[0],
+            duration: -1,
+            newWindow: true,
+            close: true,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+        }).showToast();
+    }
+    //Базовые шаблоны, можно удалить ----
+
     // Basic non sticky notification
     $("#basic-non-sticky-notification-toggle").on("click", function () {
         Toastify({
@@ -107,6 +125,8 @@
             });
     });
 
+
+
     // Notification with buttons below
     $("#notification-with-buttons-below-toggle").on("click", function () {
         // Init toastify
@@ -122,4 +142,6 @@
             stopOnFocus: true,
         }).showToast();
     });
+
+
 })();

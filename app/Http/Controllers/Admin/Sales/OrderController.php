@@ -12,6 +12,7 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Helpers\OrderHelper;
 use App\Modules\Order\Repository\OrderRepository;
+use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\SalesService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
@@ -31,10 +32,12 @@ class OrderController extends Controller
     private StaffRepository $staffs;
     private OrderRepository $repository;
     private ProductRepository $products;
+    private OrderService $orderService;
 
 
     public function __construct(
         SalesService $service,
+        OrderService $orderService,
         StaffRepository $staffs,
         OrderRepository $repository,
         ProductRepository $products)
@@ -43,6 +46,7 @@ class OrderController extends Controller
         $this->staffs = $staffs;
         $this->repository = $repository;
         $this->products = $products;
+        $this->orderService = $orderService;
     }
 
     public function index(Request $request)
@@ -75,9 +79,10 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        //TODO
-        $order = $this->service->createOrder($request);
-        return  view('admin.sales.order.show', $order);
+        return $this->try_catch_admin(function () use ($request) {
+            $order = $this->orderService->create_sales($request);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
     }
 
     //TODO Сделать OrderAction и по каждому действию записывать staff->id, Action, json(данные)
@@ -224,7 +229,6 @@ class OrderController extends Controller
             /** @var User $user */
             $user = User::where('phone', $data)->OrWhere('email', $data)->first();
 
-
             if (empty($user)) {
                 return response()->json(false);
             } else {
@@ -238,7 +242,6 @@ class OrderController extends Controller
                     'local' => $user->delivery->local->address,
                     'region' => $user->delivery->region->address,
                     'payment' => $user->payment->class_payment,
-                    //'delivery_storage' => $user->delivery->storage,
                 ];
                 return response()->json($result);
             }

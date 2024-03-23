@@ -79,6 +79,8 @@
         })
     });
 
+    //Заполняем данные из input в userData
+
     function findUser(data) {
         //AJAX
         let route = document.getElementById('route-search-user').value;

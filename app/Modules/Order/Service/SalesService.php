@@ -22,6 +22,7 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\CartItem;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class SalesService
@@ -314,7 +315,7 @@ class SalesService
         }
     }
 
-    public function createOrder(\Illuminate\Http\Request $request)
+    public function createOrder(Request $request)
     {
         return null;
     }

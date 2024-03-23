@@ -30,6 +30,7 @@
 @yield('content')
 @include('flash::message')
 
+@include('layouts.partials.notification')
 
 <!-- BEGIN: Vendor JS Assets-->
 @stack('vendors')
