@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Payment;
 
-use App\Modules\Order\Entity\Order\OrderAddition;
 
 class PaymentHelper
 {
@@ -36,18 +35,16 @@ class PaymentHelper
                 'online' => ($namespace . '\\' . $class)::online(),
                 'sort' => ($namespace . '\\' . $class)::sort(),
             ];
-
         }
         return $result;
     }
 
     private static function getClasses(): array
     {
-        $relativePath = str_replace('\\', DIRECTORY_SEPARATOR, self::namespace());
-        $relativePath = str_replace('App\\', 'app\\', $relativePath);
+        $relativePath = str_replace('App\\', 'app\\', self::namespace());
         $path = dirname(__DIR__, 5) . '/' . $relativePath . '/';
-
-        return array_map(function (string $item){
+        $path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
+        return array_map(function (string $item) {
             $info = pathinfo($item);
             return $info['filename'];
         }, glob($path . '*TypePayment.php'));
@@ -55,20 +52,16 @@ class PaymentHelper
 
     public static function online(string $class): bool
     {
-        //$namespace = self::namespace();
-        //return ($namespace . '\\' . $class)::online();
         return self::getClass($class)::online();
     }
 
     public static function invoice(string $class, string $inn): array
     {
-        //$namespace = self::namespace();
         return self::getClass($class)::getInvoiceData($inn);
     }
 
     public static function isInvoice(string $class): bool
     {
-        //$namespace = self::namespace();
         return self::getClass($class)::isInvoice();
     }
 

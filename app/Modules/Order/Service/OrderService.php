@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Entity\Admin;
 use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
@@ -19,6 +20,7 @@ use App\Modules\Discount\Service\CouponService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Entity\Order\OrderResponsible;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Entity\UserPayment;
@@ -383,6 +385,13 @@ class OrderService
 
         $this->updateFinance($order);
         event(new OrderHasCreated($order));
+
+        /** @var Admin $staff */
+        $staff = Auth::guard('admin')->user();
+
+        $order->setStatus(OrderStatus::SET_MANAGER);
+        $order->responsible()->save(OrderResponsible::registerManager($staff->id));
+
         return $order;
     }
 

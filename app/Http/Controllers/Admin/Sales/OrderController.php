@@ -217,9 +217,9 @@ class OrderController extends Controller
         });
     }
 
+
+
     /**  НОВЫЕ ACTIONS  **/
-
-
     //AJAX
     public function search_user(Request $request)
     {
