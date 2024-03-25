@@ -21,6 +21,7 @@ class CalculatorOrder
     {
         $product_ids = array_map(function ($item) {return ($item->check) ? $item->getProduct()->id : -1;}, $items);
         //Проверка на Акции
+
         foreach ($items as &$item) {
             if ($item->product->hasPromotion()) {
                 $item->discount_cost = $item->product->promotion()->pivot->price;

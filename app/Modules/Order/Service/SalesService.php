@@ -49,9 +49,10 @@ class SalesService
     {
         $new_reserve = $date . ' ' . $time . ':00';
         foreach ($order->items as $item) {
-            $item->reserve->update([
-                'reserve_at' => $new_reserve,
-            ]);
+            if (!is_null($item->reserve))
+                $item->reserve->update([
+                    'reserve_at' => $new_reserve,
+                ]);
         }
     }
 
@@ -208,7 +209,7 @@ class SalesService
     public function canceled(Order $order, string $comment)
     {
         foreach ($order->items as $item) {
-            $this->reserveService->delete($item->reserve);
+            if (!is_null($item->reserve)) $this->reserveService->delete($item->reserve);
         }
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         event(new OrderHasCanceled($order));

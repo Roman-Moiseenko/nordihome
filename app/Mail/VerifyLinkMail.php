@@ -57,7 +57,7 @@ class VerifyLinkMail extends Mailable
 
     public function build()
     {
-        //TODO
+        //TODO сделать отправку клиенту ссылку на верификацию аккунта
         return $this->subject('Регистрация')
             ->markdown('mail.user.created')->with([ 'user' => $this->user]);
     }

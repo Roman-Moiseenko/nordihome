@@ -26,6 +26,7 @@ class CartItem implements CartItemInterface
     public function __construct()
     {
         $this->pre_order = (new Options())->shop->pre_order;
+        $this->reserve = null;
     }
 
     public static function create(Product $product, int $quantity, array $options, bool $check_quantity = true): self
@@ -44,8 +45,6 @@ class CartItem implements CartItemInterface
         return $item;
     }
 
-
-
     public static function load(int $id, Product $product, $quantity, $options, bool $check, $reserve = null): self
     {
         $item = new static();
@@ -55,9 +54,7 @@ class CartItem implements CartItemInterface
         $item->options = $options;
         $item->check = $check;
         $item->reserve = $reserve;
-
         $item->base_cost = $product->getLastPrice();
-
         return $item;
     }
 
@@ -107,6 +104,36 @@ class CartItem implements CartItemInterface
         $item = clone $this;
         $item->reserve = null;
         return $item;
+    }
+
+    public function getBaseCost(): float
+    {
+        return $this->base_cost;
+    }
+
+    public function getSellCost(): float
+    {
+        return ($this->discount_cost == 0) ? $this->base_cost : $this->discount_cost;
+    }
+
+    public function getDiscount(): ?int
+    {
+        return $this->discount_id ?? null;
+    }
+
+    public function getDiscountType(): string
+    {
+        return $this->discount_type ?? '';
+    }
+
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    public function getReserve(): ?Reserve
+    {
+        return $this->reserve;
     }
 }
 

@@ -155,15 +155,15 @@ class Order extends Model
     }
 
     ///*** SET-еры
-    public function setFinance(float $amount, float $discount, float $coupon, ?int $coupon_id, int $delivery_cost = 0)
+    public function setFinance(float $amount, float $discount, float $coupon, ?int $coupon_id)
     {
         $this->update([
             'amount' => $amount,
             'discount' => $discount,
             'coupon' => $coupon,
             'coupon_id' => $coupon_id,
-            'delivery_cost' => $delivery_cost,
-            'total' => ($amount + $delivery_cost - $discount - $coupon),
+            //'delivery_cost' => $delivery_cost,
+            'total' => ($amount - $discount - $coupon),
         ]);
     }
 

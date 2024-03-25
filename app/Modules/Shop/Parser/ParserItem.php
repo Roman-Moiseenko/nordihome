@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Parser;
 
+use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
 
@@ -31,5 +32,35 @@ class ParserItem implements CartItemInterface
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    public function getBaseCost(): float
+    {
+        return $this->cost;
+    }
+
+    public function getSellCost(): float
+    {
+        return $this->cost;
+    }
+
+    public function getDiscount(): ?int
+    {
+        return null;
+    }
+
+    public function getDiscountType(): string
+    {
+        return '';
+    }
+
+    public function getOptions(): array
+    {
+        return [];
+    }
+
+    public function getReserve(): ?Reserve
+    {
+        return  null;
     }
 }

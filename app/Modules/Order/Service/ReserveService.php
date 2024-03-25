@@ -42,12 +42,11 @@ class ReserveService
         }
     }
 
-    public function toReserve(Product $product, int $quantity, string $type, int $minutes): ?Reserve
+    public function toReserve(Product $product, int $quantity, string $type, int $minutes, int $userId = null): ?Reserve
     {
-        if (!Auth::guard('user')->check())
-            throw new \DomainException('Нельзя добавить в резерв для незарегистрированного пользователя');
-
-        $user_id = Auth::guard('user')->user()->id;
+        if (!Auth::guard('user')->check() && $userId == null)
+            throw new \DomainException('Нельзя добавить в резерв без ID пользователя');
+        $user_id = $userId ?? Auth::guard('user')->user()->id;
 
         if (Reserve::where('user_id', $user_id)->where('product_id', $product->id)->first())
             throw new \DomainException('Товар в резерве по неисполненному заказу. Добавить новый невозможно. Дождитесь исполнения');
