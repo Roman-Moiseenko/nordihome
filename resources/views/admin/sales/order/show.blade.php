@@ -28,30 +28,20 @@
         <div class="col-span-2 hidden lg:block">
             <div class="fixed fixed-top pt-5">
                 <ul
-                    class="relative text-slate-500 before:absolute before:left-0 before:z-[-1] before:h-full before:w-[2px] before:bg-slate-200 before:content-[''] before:dark:bg-darkmode-600">
+                    class="relative text-slate-500 before:absolute before:left-0 before:z-[-1] before:h-full before:w-[2px] before:bg-slate-200 before:content-['']">
                     @foreach($menus as $n => $menu)
                         <li id="li-{{ $menu['anchor'] }}" class="li-menus-order mb-4 border-l-2 border-primary pl-5
-        {{ ($n == 'common') ? 'border-primary text-primary font-medium' : 'border-transparent' }}">
+                            {{ ($n == 'common') ? 'border-primary text-primary font-medium' : 'border-transparent' }}">
                             <a href="#{{ $menu['anchor'] }}">{{ $menu['caption'] }}</a>
                         </li>
                     @endforeach
                 </ul>
+                @include('admin.sales.order.blocks.actions')
 
-                @include('admin.sales.order._info-actions')
-
-                <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                    <x-base.button id="submit-order" class="w-full py-3" type="button" variant="primary"
-                                   data-route="{{ route('admin.sales.order.update', $order) }}">Сохранить
-                    </x-base.button>
-                </div>
-
-
-                <div
-                    class="relative mt-10 rounded-md border border-info bg-info/20 p-5 dark:border-0 dark:bg-darkmode-600">
+                <div class="relative mt-10 rounded-md border border-info bg-info/20 p-5">
                     <x-base.lucide class="absolute top-0 right-0 mt-5 mr-3 h-12 w-12 text-warning/80"
                                    icon="line-chart"/>
                     <h2 class="text-lg font-medium">Общая информация</h2>
-
                     <div class="mt-2 leading-relaxed text-slate-600 dark:text-slate-500">
                         <div class="">
                             <span>Сумма за товар </span><span class="font-medium" id="amount-products">0</span> ₽
@@ -80,80 +70,6 @@
         </div>
     </div>
 
-
-
-
-    <div class="box col-span-12 overflow-auto lg:overflow-visible p-4 mt-4">
-        <x-base.table class="table table-hover">
-            <x-base.table.thead class="table-dark">
-                <x-base.table.tr>
-                    <x-base.table.th class="whitespace-nowrap">IMG</x-base.table.th>
-                    <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">ЦЕНА БАЗОВАЯ</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">ЦЕНА СО СКИДКОЙ</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">ГАБАРИТЫ</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">НА СКЛАДАХ</x-base.table.th>
-                    <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
-                </x-base.table.tr>
-            </x-base.table.thead>
-            <x-base.table.tbody>
-                @foreach($order->items as $item)
-                    @include('admin.sales.order._item', ['item' => $item])
-                @endforeach
-            </x-base.table.tbody>
-        </x-base.table>
-    </div>
-
-    @if($order->delivery->isRegion())
-        <div class="box col-span-12 overflow-auto lg:overflow-visible p-4 mt-4">
-            <h2 class="text-lg font-medium mr-auto">Упаковка</h2>
-            <x-base.table class="table table-hover">
-                <x-base.table.thead class="table-dark">
-                    <x-base.table.tr>
-                        <x-base.table.th class="whitespace-nowrap">IMG</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ГАБАРИТЫ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">МАТЕРИАЛ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ВЕС</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">КОЭФИЦИЕНТ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">СТОИМОСТЬ</x-base.table.th>
-                    </x-base.table.tr>
-                </x-base.table.thead>
-                <x-base.table.tbody>
-                    @foreach($order->items as $item)
-
-                    @endforeach
-                </x-base.table.tbody>
-            </x-base.table>
-        </div>
-    @endif
-
-    <div class="box col-span-12 overflow-auto lg:overflow-visible p-4 mt-4">
-            <h2 class="text-lg font-medium mr-auto">Платежи</h2>
-            <x-base.table class="table table-hover">
-                <x-base.table.thead class="table-dark">
-                    <x-base.table.tr>
-                        <x-base.table.th class="whitespace-nowrap">ДАТА СОЗДАНИЯ</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap">СУММА</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">СПОСОБ ПЛАТЕЖА</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">НАЗНАЧЕНИЕ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">КОММЕНТАРИЙ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ОПЛАТА</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
-                    </x-base.table.tr>
-                </x-base.table.thead>
-                <x-base.table.tbody>
-                    @foreach($order->payments as $payment)
-                        @include('admin.sales.order._payment', ['payment' => $payment])
-                    @endforeach
-                    @if($order->isManager())
-                        @include('admin.sales.order._payment-new', ['order' => $order])
-                    @endif
-                </x-base.table.tbody>
-            </x-base.table>
-        </div>
 
     @if($order->isManager())
         {{ \App\Forms\ModalDelete::create('Вы уверены?',
@@ -201,7 +117,7 @@
         }
 
 
-
+        //Удалить изменить
         let changeButton = document.getElementById('change-count-item');
         let inputItem = document.querySelectorAll('input[name=new-quantity]');
         changeButton.addEventListener('click', function () {

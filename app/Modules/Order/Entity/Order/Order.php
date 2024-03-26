@@ -250,7 +250,7 @@ class Order extends Model
     public function getReserveTo(): Carbon
     {
         /** @var OrderItem $item */
-        $item = $this->items()->first();
+        $item = $this->items()->where('preorder', false)->first();
         if (is_null($item->reserve)) throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
         return $item->reserve->reserve_at;
     }
@@ -384,6 +384,10 @@ class Order extends Model
         return $volume;
     }
 
+    /**
+     * Общая стоимость с учетом всех дополнений
+     * @return float
+     */
     public function totalPayments(): float
     {
         $total = 0;
@@ -393,4 +397,21 @@ class Order extends Model
         return $total + $this->total;
     }
 
+    /**
+     * Товары из заказа, которые были по наличию
+     * @return OrderItem[]
+     */
+    public function getInStock(): array
+    {
+        return $this->items()->where('preorder', false)->getModels();
+    }
+
+    /**
+     * Товары из заказа, которые на предзаказ
+     * @return OrderItem[]
+     */
+    public function getPreOrder(): array
+    {
+        return $this->items()->where('preorder', true)->getModels();
+    }
 }

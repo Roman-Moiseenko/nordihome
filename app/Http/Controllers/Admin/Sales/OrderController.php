@@ -67,6 +67,8 @@ class OrderController extends Controller
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
             $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
             $storages = Storage::orderBy('name')->get();
+            $edit = false;
+
             return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages', 'menus'));
         });
     }
