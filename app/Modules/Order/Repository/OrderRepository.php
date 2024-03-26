@@ -7,24 +7,29 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 class OrderRepository
 {
+    #[Deprecated]
     public function getNewOrders()
     {
         return Order::where('finished', false)->where('preorder', false)->orderByDesc('created_at');
     }
 
+    #[Deprecated]
     public function getPreOrders()
     {
         return Order::where('finished', false)->where('preorder', true)->where('type', '<>', Order::PARSER)->orderByDesc('created_at');
     }
 
+    #[Deprecated]
     public function getParser()
     {
         return Order::where('finished', false)->where('preorder', true)->where('type', Order::PARSER)->orderByDesc('created_at');
     }
 
+    #[Deprecated]
     public function getExecuted()
     {
         return Order::where('finished', true)->orderByDesc('created_at');

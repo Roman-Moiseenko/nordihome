@@ -2,15 +2,18 @@
     <div class="col-span-12 lg:col-span-6">
         <input id="route-search-user" type="hidden" value="{{ route('admin.sales.order.search-user') }}">
         <input id="input-user-id" type="hidden" value="">
-        {{ \App\Forms\Input::create('user-phone', ['placeholder' => 'Телефон', 'class' => 'mt-6 search-user', 'value' => (isset($order) ? $order->user->phone : '')])
-            ->help('Цифры, без разделительных символов.')->disabled(isset($order))
+        {{ \App\Forms\Input::create('user-phone', ['placeholder' => '89000000000', 'class' => 'mt-6 search-user', 'value' => (isset($order) ? $order->user->phone : '')])
+            ->help('* Телефон, без разделительных символов.')->disabled(isset($order))
             ->show() }}
         {{ \App\Forms\Input::create('user-email', ['placeholder' => 'Почта', 'class' => 'mt-3 search-user', 'value' => (isset($order) ? $order->user->email : '')])
-            ->help('Обязательное поле, для отправки счета')->disabled(isset($order))
+            ->help('* Обязательное поле, для отправки счета')->disabled(isset($order))
             ->show() }}
         {{ \App\Forms\Input::create('user-name', ['placeholder' => 'Имя', 'class' => 'mt-3', 'value' => (isset($order) ? $order->user->delivery->fullname->firstname : '')])
             ->help('')->disabled(isset($order))
             ->show() }}
+        <div class="mt-4 text-danger text-xs">
+            * Осуществляется поиск по данным полям
+        </div>
     </div>
     <div class="col-span-12 lg:col-span-6">
         <div class="delivery">

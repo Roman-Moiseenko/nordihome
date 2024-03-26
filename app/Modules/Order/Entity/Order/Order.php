@@ -16,7 +16,6 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property int $id
  * @property int $user_id
  * @property int $type //ONLINE, MANUAL, SHOP, PARSER
- * @property bool $preorder
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
  * @property float $amount //Полная сумма заказа
@@ -56,7 +55,6 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'type',
-        'preorder',
         'paid',
         'finished',
         'amount',
@@ -77,13 +75,12 @@ class Order extends Model
         'total' => 'float',
     ];
 
-    public static function register(int $user_id, int $type = self::ONLINE, bool $preorder = false): self
+    public static function register(int $user_id, int $type = self::ONLINE): self
     {
         $order = self::create([
             'user_id' => $user_id,
             'type' => $type,
-            'paid' => false,
-            'preorder' => $preorder,
+            'paid' => false
         ]);
         $order->statuses()->create(['value' => OrderStatus::FORMED]);
         return $order;
@@ -106,7 +103,7 @@ class Order extends Model
 
     public function isParser(): bool
     {
-        return $this->type == self::PARSER && $this->preorder == true;
+        return $this->type == self::PARSER;
     }
 
     /**
@@ -390,10 +387,10 @@ class Order extends Model
     public function totalPayments(): float
     {
         $total = 0;
-        foreach ($this->payments as $payment) {
-            $total += $payment->amount;
+        foreach ($this->additions as $addition) {
+            $total += $addition->amount;
         }
-        return $total;
+        return $total + $this->total;
     }
 
 }

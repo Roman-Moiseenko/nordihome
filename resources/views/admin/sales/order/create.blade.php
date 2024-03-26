@@ -16,29 +16,40 @@
             let amountInfoAdditions = document.getElementById('amount-additions');
             let amountTotal = document.getElementById('amount-total');
 
+            let amountWeight= document.getElementById('amount-weight');
+            let amountVolume= document.getElementById('amount-volume');
+
             let sum1 = _getSum(freeProducts);
             let sum2 = _getSum(preorderProducts);
-            amountFree.value = sum1;
-            amountPreorder.value = sum2;
-            amountProducts.innerText = (sum1 + sum2);
+            amountFree.value = sum1.sum;
+            amountPreorder.value = sum2.sum;
+            amountProducts.innerText = (sum1.sum + sum2.sum);
+
+            amountWeight.innerText = (sum1.weight + sum2.weight);
+            amountVolume.innerText = (sum1.volume + sum2.volume);
 
             let sum3 = _sumAdditions();
             amountAdditions.value = sum3;
             amountInfoAdditions.innerText = sum3;
-            amountTotal.innerText = (sum1 + sum2 + sum3);
+            amountTotal.innerText = (sum1.sum + sum2.sum + sum3);
         }
 
         function _getSum(_array) {
             let sum = 0;
+            let weight = 0;
+            let volume = 0;
             _array.forEach(function (product) {
                 if (product.promotion !== undefined && product.promotion !== 0) {
                     sum += product.promotion * product.count;
                 } else {
                     sum += product.cost * product.count;
                 }
+                weight += product.weight * product.count;
+                volume += product.volume * product.count;
             })
-            return sum;
+            return {sum: sum, weight: weight, volume: volume};
         }
+
         function _sumAdditions() {
             let _sum = 0;
             orderAdditions.forEach(function (addition) {
@@ -86,19 +97,7 @@
                                    data-route="{{ route('admin.sales.order.store') }}">Сохранить
                     </x-base.button>
                 </div>
-                <div
-                    class="relative mt-10 rounded-md border border-warning bg-warning/20 p-5 dark:border-0 dark:bg-darkmode-600">
-                    <x-base.lucide class="absolute top-0 right-0 mt-5 mr-3 h-12 w-12 text-warning/80" icon="Lightbulb"/>
-                    <h2 class="text-lg font-medium">Важно</h2>
-                    <div class="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-500">
-                        <div>
-                            Если клиент есть в базе, то по номеру телефона (формат 89000000000) или по email подгрузятся все его параметры
-                        </div>
-                        <div class="mt-2">
 
-                        </div>
-                    </div>
-                </div>
 
                 <div
                     class="relative mt-10 rounded-md border border-info bg-info/20 p-5 dark:border-0 dark:bg-darkmode-600">
@@ -107,14 +106,27 @@
                     <h2 class="text-lg font-medium">Общая информация</h2>
 
                     <div class="mt-2 leading-relaxed text-slate-600 dark:text-slate-500">
-                        <div class=""><span>Сумма за товар </span><span class="font-medium"
-                                                                        id="amount-products">0</span> ₽
+                        <div class="">
+                            <span>Сумма за товар </span><span class="font-medium" id="amount-products">0</span> ₽
                         </div>
-                        <div class="mt-2"><span>Сумма за услуги </span><span class="font-medium"
-                                                                             id="amount-additions">0</span> ₽
+                        <div class="mt-2">
+                            <span>Сумма за услуги </span><span class="font-medium" id="amount-additions">0</span> ₽
                         </div>
-                        <div class="mt-2"><span>К оплате </span><span class="font-medium" id="amount-total">0</span> ₽
+                        <div class="mt-2">
+                            <span>К оплате </span><span class="font-medium" id="amount-total">0</span> ₽
                         </div>
+                    </div>
+
+                    <div class="text-sm mt-4">
+                        <div class="">
+                            <span>Общий вес груза </span><span class="font-medium" id="amount-weight">0</span> кг
+                        </div>
+                        <div class="mt-2">
+                            <span>Общий объем груза </span><span class="font-medium" id="amount-volume">0</span> м3
+                        </div>
+                    </div>
+                    <div class="text-xs mt-3">
+                        Примечание. Здесь будет информационный текст и правила заполнения
                     </div>
                 </div>
             </div>
@@ -204,11 +216,11 @@
                 hasError = true;
                 window.notification('Ошибка заполнения данных', 'Вы не указали стоимость услуг', 'danger');
             }
-            if (freeProducts.length !== 0 && _getSum(freeProducts) === 0) {
+            if (freeProducts.length !== 0 && _getSum(freeProducts).sum === 0) {
                 hasError = true;
                 window.notification('Ошибка заполнения данных', 'Неверное количество товаров в наличии', 'danger');
             }
-            if (preorderProducts.length !== 0 && _getSum(preorderProducts) === 0) {
+            if (preorderProducts.length !== 0 && _getSum(preorderProducts).sum === 0) {
                 hasError = true;
                 window.notification('Ошибка заполнения данных', 'Неверное количество товаров в предзаказе', 'danger');
             }

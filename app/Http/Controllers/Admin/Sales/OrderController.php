@@ -63,10 +63,11 @@ class OrderController extends Controller
     public function show(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
+            $menus = OrderHelper::menuCreateOrder();
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
             $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
             $storages = Storage::orderBy('name')->get();
-            return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages'));
+            return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages', 'menus'));
         });
     }
 

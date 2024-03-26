@@ -200,7 +200,7 @@ class OrderService
     {
         $default = $this->default_user_data();
         $OrderItems = $this->cart->getOrderItems();
-        $order = Order::register($default->payment->user_id, Order::ONLINE, false);
+        $order = Order::register($default->payment->user_id, Order::ONLINE);
         if ($request->has('code')) {
             $coupon = $this->repository->getCoupon($request->get('code'));
         } else {
@@ -238,7 +238,7 @@ class OrderService
     {
         $default = $this->default_user_data();
         $OrderItems = $this->parserCart->getItems();
-        $order = Order::register($default->payment->user_id, Order::PARSER, true);
+        $order = Order::register($default->payment->user_id, Order::PARSER);
         $order->amount = $this->parserCart->amount;
         $order->total = $order->amount + $this->parserCart->delivery;
         $order->save();
@@ -303,7 +303,7 @@ class OrderService
         $product = Product::find($product_id);
 
         if (empty($product->lastPrice)) throw new \DomainException('Данный товар не подлежит продажи.');
-        $order = Order::register($user->id, Order::ONLINE, true);
+        $order = Order::register($user->id, Order::ONLINE);
 
         $items[] = CartItem::create($product, 1, []);
         $items = $this->calculator->calculate($items);
@@ -345,14 +345,14 @@ class OrderService
                 GeoAddress::create($user_request['region'], '', '', '')
             );
         } else {
-            $storage = (int)$user_request['storage'] ?? null;
+            $storage = $user_request['storage'] ?? null;
             $default->delivery->setDeliveryLocal(
                 $storage,
                 GeoAddress::create($user_request['local'], '', '', ''));
         }
 
         //Заказ создаем заказ, заполняем все товары
-        $order = Order::register($user->id, Order::MANUAL, true);
+        $order = Order::register($user->id, Order::MANUAL);
 
         //Товары в наличии
         $orderFreeItems = array_map(function ($item) {
