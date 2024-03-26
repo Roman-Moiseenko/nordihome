@@ -7,6 +7,7 @@ use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Service\ReserveService;
 use App\Modules\Order\Service\SalesService;
 use Illuminate\Console\Command;
@@ -28,6 +29,10 @@ class ClearCommand extends Command
             } catch (\Throwable $e) {
                 $this->error($e->getMessage());
             }
+        }
+        $reserves = Reserve::where('type', 'order')->get();
+        foreach ($reserves as $reserve) {
+            $reserve->delete();
         }
         return true;
     }

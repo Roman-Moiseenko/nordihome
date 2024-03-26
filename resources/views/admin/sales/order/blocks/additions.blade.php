@@ -8,7 +8,7 @@
                 @endforeach
             </select>
             {{ \App\Forms\Input::create('addition-amount', ['placeholder' => 'Стоимость', 'value' => 0, 'class' => 'ml-2 w-40'])->type('number')->group_text('₽', false)->show() }}
-            {{ \App\Forms\Input::create('addition-comment', ['placeholder' => 'Примечание', 'class' => 'ml-2 w-1/3'])->show() }}
+            {{ \App\Forms\Input::create('addition-comment', ['placeholder' => 'Примечание', 'class' => 'ml-2 w-1/4'])->show() }}
             <x-base.button id="add-addition" type="button" variant="primary" class="ml-3">Добавить услугу в документ
             </x-base.button>
         </div>

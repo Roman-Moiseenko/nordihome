@@ -5,7 +5,7 @@
             <input id="route-search" type="hidden" value="{{ route('admin.sales.order.get-to-order') }}">
             <x-searchProduct route="{{ route('admin.sales.order.search') }}"
                              input-data="order-product" hidden-id="product_id" class="w-1/3"/>
-            {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
+            {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->type('number')->show() }}
             <x-base.button id="add-product" type="button" variant="primary" class="ml-3">Добавить товар в документ
             </x-base.button>
         </div>
@@ -53,7 +53,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
     let buttonAddProduct = document.getElementById('add-product');
