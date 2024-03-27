@@ -18,7 +18,14 @@ interface CartItemInterface
 
     public function getDiscountType(): string;
     public function getOptions(): array;
-
     public function getReserve():? Reserve;
+    public function getCheck(): bool;
+    public function getPreorder(): bool;
+
+
+    public function setSellCost(float $discount_cost): void; //discount_cost
+    public function setDiscountName(string $discount_name): void; //discount_name
+    public function setDiscount(int $discount_id): void; //discount_id
+    public function setDiscountType(string $discount_type): void; //discount_type
 
 }

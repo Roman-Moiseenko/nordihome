@@ -18,6 +18,8 @@ use function now;
 class OrderStatus extends Model
 {
     ///Стартовые статусы
+    const DRAFT = 199; //Резерв нет --- ????
+
     const FORMED = 200; //Резерв 1ч
     const SET_MANAGER = 201; //В работе у менеджера
     const AWAITING = 202; //Ожидает оплаты - резерв 3 дня ??????

@@ -6,7 +6,7 @@
     </x-base.table.td>
     <x-base.table.td class="w-40"><a href="{{ route('admin.product.show', $item->product) }}"
                                      class="font-medium whitespace-nowrap">{{ $item->product->name }}</a></x-base.table.td>
-    <x-base.table.td class="text-center"> {{ ($item->quantity == 0) ? 'отмена' : $item->quantity}} {{ !is_null($item->first_quantity) ? '(' . $item->first_quantity . ')' : '' }} </x-base.table.td>
+    <x-base.table.td class="text-center"> {{ $item->quantity }} </x-base.table.td>
     <x-base.table.td class="text-center"> {{ price($item->base_cost) }} </x-base.table.td>
     <x-base.table.td class="text-center"> {{ ($item->base_cost == $item->sell_cost) ? '-' : price($item->sell_cost) }} <br><span class="fs-8"> {{ $item->discountName() }} </span> </x-base.table.td>
     <x-base.table.td class="text-center"> {{ $item->product->dimensions->weight() }} кг<br> {{ $item->product->dimensions->volume() }} м3 </x-base.table.td>

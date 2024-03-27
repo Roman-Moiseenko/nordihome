@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Entity;
 
 use App\Modules\Shop\Cart\CartItem;
+use App\Modules\Shop\CartItemInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -54,7 +55,7 @@ class Discount extends Model
     }
 
     /**
-     * @param CartItem[] $items
+     * @param CartItemInterface[] $items
      * @param bool $written
      * @return int
      */
@@ -62,8 +63,8 @@ class Discount extends Model
     {
         if (!$this->active) throw new \DomainException('Неверный алгоритм - текущий Discount (' . $this->id . ') не активен');
         $amount = array_sum(array_map(function ($item) {
-            return (empty($item->discount_cost) && $item->check)
-                ? $item->base_cost * $item->quantity
+            return (empty($item->getSellCost()) && $item->getCheck())
+                ? $item->getBaseCost() * $item->getQuantity()
                 : 0;
         }, $items));
 
@@ -71,12 +72,12 @@ class Discount extends Model
 
         if ($this->isEnabled($amount)) {
             if ($written) {
-                array_walk($items, function (&$item) {
-                    if (empty($item->discount_cost) && $item->check) {
-                        $item->discount_id = $this->id;
-                        $item->discount_type = Discount::class;
-                        $item->discount_cost = round((($item->base_cost) * (100 - $this->discount)) / 100);
-                        $item->discount_name = empty($this->title) ? '' : $this->title . ' (' . $this->discount . '%)';
+                array_walk($items, function (CartItemInterface &$item) {
+                    if (empty($item->getSellCost()) && $item->getCheck()) {
+                        $item->setDiscount($this->id);
+                        $item->setDiscountType(Discount::class);
+                        $item->setSellCost(round((($item->getBaseCost()) * (100 - $this->discount)) / 100));
+                        $item->setDiscountName(empty($this->title) ? '' : $this->title . ' (' . $this->discount . '%)');
                     }
                 });
             }

@@ -63,4 +63,34 @@ class ParserItem implements CartItemInterface
     {
         return  null;
     }
+
+    public function getCheck(): bool
+    {
+        return false;
+    }
+
+    public function setSellCost(float $discount_cost): void
+    {
+        //TODO на будущее, вдруг будут скидки
+    }
+
+    public function setDiscountName(string $discount_name): void
+    {
+
+    }
+
+    public function setDiscount(int $discount_id): void
+    {
+
+    }
+
+    public function setDiscountType(string $discount_type): void
+    {
+
+    }
+
+    public function getPreorder(): bool
+    {
+        return true;
+    }
 }

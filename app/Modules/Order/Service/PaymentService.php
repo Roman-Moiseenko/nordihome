@@ -28,45 +28,7 @@ class PaymentService
         return $payments;
     }
 
-    /**
-     * Платеж был оплачен.
-     * Вызов - Вручную (наличные, переводы) и Чз сервисы оплаты, посредством фасада по приему платежей
-     * @param \App\Modules\Order\Entity\Order\OrderAddition $payment
-     * @return void
-     */
-    public function payed(OrderAddition $payment)
-    {
-        //TODO
-       $payment->paid_at = now();
-       $payment->save();
-       event(new PaymentHasPaid($payment));
-    }
 
 
-    public function create(Order $order)
-    {
-       // $payment = OrderAddition::new($order->id, $this->user($order->user_id)->class_payment, OrderAddition::PAY_ORDER);
-
-    }
-
-    /**
-     * Слушатель события создания Заказа
-     * @param OrderHasCreated $event
-     * @return void
-     */
-
-    public function handle(OrderHasCreated $event): void
-    {
-        try {
-            $order = $event->order;
-            //TODO Удалить OrderAddition
-            $payment = OrderAddition::new($order->total, OrderAddition::PAY_ORDER);
-            $order->additions()->save($payment);
-        } catch (\Throwable $e) {
-            flash($e->getMessage());
-        }
-
-       // event($payment);
-    }
 
 }

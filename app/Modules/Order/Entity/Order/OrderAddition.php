@@ -23,14 +23,14 @@ class OrderAddition extends Model
     /**
      * Назначения платежа $purpose
      */
-    const PAY_ORDER = 101;
+  //  const PAY_ORDER = 101;
     const PAY_DELIVERY = 102;
     const PAY_PACKING = 103;
     const PAY_ASSEMBLY = 104;
     const PAY_OTHER = 109;
 
     const PAYS = [
-        self::PAY_ORDER => 'Платеж за заказ',
+      //  self::PAY_ORDER => 'Платеж за заказ',
         self::PAY_DELIVERY => 'Платеж за доставку',
         self::PAY_PACKING => 'Платеж за упаковку',
         self::PAY_ASSEMBLY => 'Платеж за сборку',

@@ -95,6 +95,7 @@ class DeliveryOrder extends Model
 
     public function typeHTML()
     {
+        if (empty($this->type)) return '';
         return self::TYPES[$this->type];
     }
 

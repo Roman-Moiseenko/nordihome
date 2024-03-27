@@ -36,7 +36,6 @@ class CartItem implements CartItemInterface
         if (!$item->pre_order && $product->count_for_sell < $quantity && $check_quantity == true) {
             throw new \DomainException('Превышение остатка');
         }
-
         $item->product = $product;
         $item->quantity = $quantity;
         $item->options = $options;
@@ -134,6 +133,36 @@ class CartItem implements CartItemInterface
     public function getReserve(): ?Reserve
     {
         return $this->reserve;
+    }
+
+    public function getCheck(): bool
+    {
+        return $this->check;
+    }
+
+    public function setSellCost(float $discount_cost): void
+    {
+        $this->discount_cost = $discount_cost;
+    }
+
+    public function setDiscountName(string $discount_name): void
+    {
+        $this->discount_name = $discount_name;
+    }
+
+    public function setDiscount(int $discount_id): void
+    {
+        $this->discount_id = $discount_id;
+    }
+
+    public function setDiscountType(string $discount_type): void
+    {
+        $this->discount_type = $discount_type;
+    }
+
+    public function getPreorder(): bool
+    {
+        return false;
     }
 }
 

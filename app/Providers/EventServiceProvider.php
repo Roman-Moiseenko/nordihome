@@ -60,8 +60,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasCreated::class => [
             NotificationNewOrder::class,
-            DeliveryService::class,
-            PaymentService::class,
+           /* DeliveryService::class,
+            PaymentService::class,*/
         ],
         ArrivalHasCompleted::class => [
             NotificationNewArrival::class,

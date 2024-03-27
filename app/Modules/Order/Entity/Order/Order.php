@@ -112,6 +112,7 @@ class Order extends Model
      */
     public function isPoint(): bool
     {
+        if (is_null($this->delivery)) return false;
         return !is_null($this->delivery->point_storage_id);
     }
 
@@ -247,25 +248,27 @@ class Order extends Model
         return self::TYPES[$this->type];
     }
 
-    public function getReserveTo(): Carbon
+    public function getReserveTo():? Carbon
     {
         /** @var OrderItem $item */
+        if ($this->items->count() == 0) return now();
         $item = $this->items()->where('preorder', false)->first();
         if (is_null($item->reserve)) throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
         return $item->reserve->reserve_at;
     }
 
     /**
-     * Получить элемент заказа по Товару
+     * Получить элемент заказа по Товару и типу (в наличии/на заказ)
      * @param Product $product
-     * @return OrderItem
+     * @return OrderItem|null
      */
-    public function getItem(Product $product): OrderItem
+    public function getItem(Product $product, bool $preorder = false): ?OrderItem
     {
         foreach ($this->items as $orderItem) {
-            if ($orderItem->product->id == $product->id) return $orderItem;
+            if ($orderItem->product->id == $product->id && $orderItem->preorder == $preorder) return $orderItem;
         }
-        throw new \DomainException('Данный товар не содержится в заказе');
+        return null;
+        //throw new \DomainException('Данный товар не содержится в заказе');
     }
 
     public function getManager(): ?Admin

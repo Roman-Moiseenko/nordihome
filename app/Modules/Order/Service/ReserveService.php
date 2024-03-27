@@ -74,6 +74,7 @@ class ReserveService
         $product = $reserve->product;
         $product->count_for_sell += $reserve->quantity;
         $product->save();
+        $product->refresh();
         if ($reserve->type == Reserve::TYPE_CART) $reserve->cart->clearReserve();
         if ($reserve->type == Reserve::TYPE_ORDER) $reserve->orderItem->clearReserve();
         Reserve::destroy($reserve->id);
@@ -102,12 +103,15 @@ class ReserveService
         $reserve = Reserve::find($reserve_id);
         $product = $reserve->product;
         if ($product->count_for_sell < $quantity) $quantity = $product->count_for_sell;
-
         $product->count_for_sell -= $quantity;
         $product->save();
-
         $reserve->quantity += $quantity;
         $reserve->save();
+    }
 
+    public function UpdateReserve(int $reserve_id, int $delta)
+    {
+        if ($delta > 0) $this->addReserve($reserve_id, $delta);
+        if ($delta < 0) $this->subReserve($reserve_id, $delta);
     }
 }

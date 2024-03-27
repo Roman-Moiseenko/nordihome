@@ -83,6 +83,8 @@
         let menusScroll = document.querySelectorAll('.li-menus-order');
         let submitOrder = document.getElementById('submit-order');
 
+        let inputUpdateData = document.querySelectorAll('.update-data-ajax');
+
         const classesSelect = ['border-primary', 'dark:border-primary', 'text-primary', 'font-medium'];
         const classesUnSelect = ['border-transparent', 'dark:border-transparent'];
 
@@ -116,37 +118,18 @@
             });
         }
 
-
-        //Удалить изменить
-        let changeButton = document.getElementById('change-count-item');
-        let inputItem = document.querySelectorAll('input[name=new-quantity]');
-        changeButton.addEventListener('click', function () {
-            if (changeButton.getAttribute('for-change') !== '1') {
-                changeButton.setAttribute('for-change', '1');
-                changeButton.textContent = 'Сохранить изменения';
-                inputItem.forEach(function (element) {
-                    element.setAttribute('type', 'number');
-                });
-
-            } else {
-                changeButton.setAttribute('for-change', '0');
-                changeButton.textContent = 'Изменить кол-во товара';
-                //сохраняем через Ajax и перегружаем страницу
-                let data = [];
-                let route = changeButton.getAttribute('data-route');
-                inputItem.forEach(function (element) {
-                    data.push({
-                        id: element.getAttribute('data-id'),
-                        quantity: element.value
-                    })
-                    element.setAttribute('type', 'hidden');
-                });
-                setAjax(data, route)
-            }
+        Array.from(inputUpdateData).forEach(function (input) {
+            input.addEventListener('change', function () {
+                let value = input.value;
+                let route = input.getAttribute('data-route');
+                let field = 'value';
+                setAjax(route, field, value)
+            });
         });
 
-        function setAjax(data, route) {
-            let _params = '_token=' + '{{ csrf_token() }}' + '&items=' + JSON.stringify(data);
+
+        function setAjax(route, field, value) {
+            let _params = '_token=' + '{{ csrf_token() }}' + '&' + field + '=' + value;
             let request = new XMLHttpRequest();
             request.open('POST', route);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -154,12 +137,13 @@
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     let _data = JSON.parse(request.responseText);
-                    //console.log(_data);
-                    if (_data === true) {
+                    console.log(_data);
+                    //TODO Обновляем данные по сумме заказа
+                    /*if (_data === true) {
                         location.reload();
                     } else {
                         console.log(_data);
-                    }
+                    }*/
                 }
             };
         }

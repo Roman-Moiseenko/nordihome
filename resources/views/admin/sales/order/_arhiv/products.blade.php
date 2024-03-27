@@ -14,10 +14,10 @@
         <div class="box flex items-center font-semibold p-2">
             <div class="w-20 text-center">№ п/п</div>
             <div class="w-1/4 text-center">Товар</div>
-            <div class="w-40 text-center">Цена</div>
-            <div class="w-40 text-center">Скидочная цена</div>
+            <div class="w-40 text-center">Базовая цена</div>
+            <div class="w-40 text-center">Цена продажи</div>
             <div class="w-40 text-center">Кол-во</div>
-            <div class="w-20 text-center">-</div>
+            <div class="w-20 text-center">Действия</div>
         </div>
 
         <div id="free_products"></div>
@@ -36,9 +36,10 @@
         <div class="box flex items-center font-semibold p-2">
             <div class="w-20 text-center">№ п/п</div>
             <div class="w-1/4 text-center">Товар</div>
-            <div class="w-40 text-center">Цена</div>
+            <div class="w-40 text-center">Базовая цена</div>
+            <div class="w-40 text-center">Цена продажи</div>
             <div class="w-40 text-center">Кол-во</div>
-            <div class="w-20 text-center">-</div>
+            <div class="w-20 text-center">Действия</div>
         </div>
         <div id="preorder_products"></div>
         <div class="box flex items-center font-semibold p-2">
@@ -171,38 +172,28 @@
      * @returns {string}
      */
     function getLineProduct(i, product) {
-        let promotion = '';
-        if (product.promotion !== undefined) {
-            promotion = ''+
-                ' <div class="w-40 input-group">'+
-                    '<input type="number" class="form-control text-right"'+
-                    'value="' + product.promotion + '" aria-describedby="input-cost_ru" readonly>'+
-                    '<div id="input-cost_ru" class="input-group-text">₽</div>'+
-                ' </div>';
-
-        }
         let result = '' +
         '<div class="box flex items-center px-2" data-id="">' +
             '<div class="w-20">' + (i + 1) +'</div>'+
             '<div class="w-1/4">' + product.name + '</div>'+
-            '<div class="w-40 input-group">'+
-                '<input id="" type="number" class="form-control text-right"'+
-                       'value="' + product.cost + '" aria-describedby="input-currency" min="0" readonly>'+
-                    '<div id="input-currency" class="input-group-text">₽</div>'+
-            '</div>'+
-            promotion +
+            '<div class="w-40 input-group">'+ product.cost + '₽</div>'+
+            ' <div class="w-40 input-group">'+
+            '<input type="number" class="form-control text-right"'+
+            'value="' + product.sell_cost + '" aria-describedby="input-cost_ru">'+
+            '<div id="input-cost_ru" class="input-group-text">₽</div>'+
+            ' </div>'+
             '<div class="w-40 input-group">'+
                 '<input id="quantity" type="number" class="form-control text-right quantity-input"'+
                        'value="' + product.count + '" aria-describedby="input-quantity" min="0" ' +
-                        'data-array="' + (product.promotion !== undefined ? 'free' : 'preorder') + '"' +
+                        'data-array="' + (product.preorder === false ? 'free' : 'preorder') + '"' +
                         'data-num = "' + i + '"'+
-                        (product.promotion !== undefined ? 'max="' + product.max + '"' : '') +' >'+
+                        (product.preorder === false ? 'max="' + product.max + '"' : '') +' >'+
                     '<div id="input-quantity" class="input-group-text">шт.</div>'+
            ' </div>'+
 
             '<button class="btn btn-outline-danger ml-6 product-remove"'+
                     'data-num = "' + i + '"'+
-                    ' data-id="' + product.id + '" data-array="' + (product.promotion !== undefined ? 'free' : 'preorder') + '" type="button">'+
+                    ' data-id="' + product.id + '" data-array="' + (product.preorder === false ? 'free' : 'preorder') + '" type="button">'+
             'X'+
             '</button>'+
        ' </div>';

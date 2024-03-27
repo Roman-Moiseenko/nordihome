@@ -10,6 +10,7 @@ use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Helpers\OrderHelper;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderService;
@@ -36,10 +37,10 @@ class OrderController extends Controller
 
 
     public function __construct(
-        SalesService $service,
-        OrderService $orderService,
-        StaffRepository $staffs,
-        OrderRepository $repository,
+        SalesService      $service,
+        OrderService      $orderService,
+        StaffRepository   $staffs,
+        OrderRepository   $repository,
         ProductRepository $products)
     {
         $this->service = $service;
@@ -67,19 +68,18 @@ class OrderController extends Controller
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
             $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
             $storages = Storage::orderBy('name')->get();
-            $edit = false;
 
             return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages', 'menus'));
         });
     }
-
-    public function create()
+/*
+    public function create(Request $request)
     {
         $menus = OrderHelper::menuNewOrder();
         $storages = Storage::get();
         return view('admin.sales.order.create', compact('menus', 'storages'));
     }
-
+*/
     public function store(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
@@ -87,6 +87,23 @@ class OrderController extends Controller
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
+
+    public function add_item(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $order = $this->orderService->add_item($order, $request);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
+
+    public function del_item(OrderItem $item)
+    {
+        return $this->try_catch_admin(function () use ($item) {
+            $order = $this->orderService->delete_item($item);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
+
 
     //TODO Сделать OrderAction и по каждому действию записывать staff->id, Action, json(данные)
     public function destroy(Order $order)
@@ -213,7 +230,7 @@ class OrderController extends Controller
     public function set_quantity(Request $request, Order $order)
     {
 
-        return $this->try_catch_ajax_admin(function () use($request, $order) {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
             $items = json_decode($request['items'], true);
             $result = $this->service->setQuantity($order, $items);
             return response()->json($result);
@@ -224,9 +241,42 @@ class OrderController extends Controller
 
     /**  НОВЫЕ ACTIONS  **/
     //AJAX
+    public function update_quantity(Request $request, OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $item) {
+            $quantity = (int)$request['value'];
+            $result = $this->orderService->update_quantity($item, $quantity);
+            return response()->json(true);
+        });
+    }
+
+    public function update_sell(Request $request, OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $item) {
+            $sell_cost = (int)$request['value'];
+            $result = $this->orderService->update_sell($item, $sell_cost);
+            return response()->json(true);
+        });
+    }
+
+    public function check_delivery(OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($item) {
+            $this->orderService->check_delivery($item);
+            return response()->json(true);
+        });
+    }
+    public function check_assemblage(OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($item) {
+            $this->orderService->check_assemblage($item);
+            return response()->json(true);
+        });
+    }
+
     public function search_user(Request $request)
     {
-        return $this->try_catch_ajax_admin(function () use($request) {
+        return $this->try_catch_ajax_admin(function () use ($request) {
 
             $data = $request['data'];
             /** @var User $user */
@@ -253,7 +303,7 @@ class OrderController extends Controller
 
     public function search(Request $request)
     {
-        return $this->try_catch_ajax_admin(function () use($request) {
+        return $this->try_catch_ajax_admin(function () use ($request) {
             $result = [];
             $products = $this->products->search($request['search']);
             /** @var Product $product */
@@ -264,8 +314,9 @@ class OrderController extends Controller
         });
     }
 
-    public function get_to_order(Request $request) {
-        return $this->try_catch_ajax_admin(function () use($request) {
+    public function get_to_order(Request $request)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request) {
             $product_id = (int)$request['product_id'];
             $quantity = (int)$request['quantity'];
             $user_id = (int)$request['user_id'];
@@ -281,22 +332,25 @@ class OrderController extends Controller
                 'weight' => $product->dimensions->weight(),
                 'volume' => $product->dimensions->volume(),
                 'cost' => $product->getLastPrice($user_id),
+                'sell_cost' => ($product->hasPromotion()) ? $product->promotion()->pivot->price : $product->getLastPrice($user_id),
+
             ];
 
             if ($free_count > 0) {
                 $free = array_merge($base_params, [
-                        'count' => $free_count,
-                        'promotion' => ($product->hasPromotion()) ? $product->promotion()->pivot->price : 0,
-                        'max' => $product->count_for_sell,
-                    ]);
+                    'count' => $free_count,
+                    'max' => $product->count_for_sell,
+                    'preorder' => false,
+                ]);
 
             } else {
                 $free = false;
             }
             if ($preorder_count > 0) {
                 $preorder = array_merge($base_params, [
-                        'count' => $preorder_count,
-                    ]);
+                    'count' => $preorder_count,
+                    'preorder' => true,
+                ]);
             } else {
                 $preorder = false;
             }

@@ -344,14 +344,23 @@ Route::group(
                         //'namespace' => 'Sales',
                     ],
                     function() {
+                        Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
+
+
                         Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
                         Route::delete('/{order}/destroy', 'OrderController@destroy')->name('destroy');
                         Route::delete('/del-payment/{payment}', 'OrderController@del_payment')->name('del-payment');
+                        Route::post('/{item}/update-quantity', 'OrderController@update_quantity')->name('update-quantity');
+                        Route::post('/{item}/update-sell', 'OrderController@update_sell')->name('update-sell');
+
+                        Route::post('/{item}/check-delivery', 'OrderController@check_delivery')->name('check-delivery');
+                        Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
+
 
                         Route::post('/{order}/set-manager', 'OrderController@set_manager')->name('set-manager');
                         Route::post('/{order}/set-logger', 'OrderController@set_logger')->name('set-logger');
                         Route::post('/{order}/set-reserve', 'OrderController@set_reserve')->name('set-reserve');
-                        Route::post('/{order}/set-quantity', 'OrderController@set_quantity')->name('set-quantity');
+
                         Route::post('/{order}/set-delivery', 'OrderController@set_delivery')->name('set-delivery');
                         Route::post('/{order}/set-moving', 'OrderController@set_moving')->name('set-moving');
                         Route::post('/{order}/set-payment', 'OrderController@set_payment')->name('set-payment');

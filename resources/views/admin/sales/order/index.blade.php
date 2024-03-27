@@ -40,8 +40,8 @@
             </form>
         </div>
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <button class="btn btn-primary shadow-md mr-2"
-                    onclick="window.location.href='{{ route('admin.sales.order.create') }}'">Создать заказ
+            <button data-tw-toggle="modal" data-tw-target="#modal-create-order" class="btn btn-primary shadow-md mr-2"
+                    type="button">Создать заказ
             </button>
             {{ $orders->links('admin.components.count-paginator') }}
         </div>
@@ -62,7 +62,6 @@
                 </x-base.table.thead>
                 <x-base.table.tbody>
                     @foreach($orders as $order)
-
                         @include('admin.sales.order._list', ['order' => $order])
                     @endforeach
                 </x-base.table.tbody>
@@ -72,4 +71,76 @@
     {{ $orders->links('admin.components.paginator', ['pagination' => $pagination]) }}
 
 
+    <x-base.dialog id="modal-create-order" staticBackdrop>
+        <x-base.dialog.panel>
+            <input type="hidden" id="route-search-user" value="{{ route('admin.sales.order.search-user') }}">
+            <form id="modal-destroy-form" action="{{ route('admin.sales.order.store') }}" method="POST">
+                @csrf
+                <x-base.dialog.title>
+                    <h2 class="mr-auto text-base font-medium">Создать заказ</h2>
+                </x-base.dialog.title>
+
+                <x-base.dialog.description class="grid grid-cols-12 gap-4 gap-y-3">
+                    <x-base.form-input id="input-id" type="hidden" name="user_id"/>
+                    <div class="col-span-12">
+                        <x-base.form-label for="input-phone">Телефон</x-base.form-label>
+                        <x-base.form-input id="input-phone" class="input-search-user" type="text" name="phone" placeholder="89000000000" required />
+                    </div>
+                    <div class="col-span-12">
+                        <x-base.form-label for="input-email">Почта</x-base.form-label>
+                        <x-base.form-input id="input-email" class="input-search-user" type="text" name="email" placeholder="example@gmail.com" required />
+                    </div>
+                    <div class="col-span-12">
+                        <x-base.form-label for="input-name">Имя</x-base.form-label>
+                        <x-base.form-input id="input-name" type="text" name="name" placeholder="Имя"/>
+                    </div>
+                </x-base.dialog.description>
+
+                <x-base.dialog.footer>
+                    <x-base.button id="modal-cancel" class="mr-1 w-24" data-tw-dismiss="modal" type="button" variant="outline-secondary">Отмена</x-base.button>
+                    <x-base.button class="w-24" type="submit" variant="primary">Создать</x-base.button>
+                </x-base.dialog.footer>
+            </form>
+        </x-base.dialog.panel>
+    </x-base.dialog>
+
+    <script>
+        let inputSearchUser = document.querySelectorAll('.input-search-user');
+        Array.from(inputSearchUser).forEach(function (input) {
+            input.addEventListener('change', function () {
+                let data = input.value;
+                if (data !== '') findUser(input.value);
+            })
+        });
+        function findUser(data) {
+            //AJAX
+            let route = document.getElementById('route-search-user').value;
+            let _params = '_token=' + '{{ csrf_token() }}' + '&data=' + data;
+            let request = new XMLHttpRequest();
+            request.open('POST', route);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.send(_params);
+            request.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    let data = JSON.parse(request.responseText);
+                    if (data !== false) {
+                        document.getElementById('input-id').value = data.id;
+                        document.getElementById('input-phone').value = data.phone;
+                        document.getElementById('input-email').value = data.email;
+                        document.getElementById('input-name').value = data.name;
+                    }
+                } else {
+                }
+            };
+        }
+        let buttonCloseModal = document.getElementById('modal-cancel');
+        buttonCloseModal.addEventListener('click', function () {
+            document.getElementById('input-id').value = '';
+            document.getElementById('input-phone').value = '';
+            document.getElementById('input-email').value = '';
+            document.getElementById('input-name').value = '';
+            return true;
+        });
+
+    </script>
 @endsection

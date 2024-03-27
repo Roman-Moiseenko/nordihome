@@ -89,8 +89,9 @@ class DeliveryService
      */
     public function handle(OrderHasCreated $event): void
     {
-        $order = $event->order;
-        DeliveryOrder::register($order->id, $this->user($order->user_id)->type, $this->user($order->user_id)->getAddressDelivery());
+        //TODO перепланировать доставки... Возможно пока вообще убрать создание доставок, только после распоряжения
+        //$order = $event->order;
+        //DeliveryOrder::register($order->id, $this->user($order->user_id)->type, $this->user($order->user_id)->getAddressDelivery());
         //event($delivery);
     }
 }

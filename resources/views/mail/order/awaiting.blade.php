@@ -11,7 +11,7 @@
 | Товар | Цена | Цена со скидкой | Кол-во | Сумма |
 | ----- |:----:|:---------------:|:------:| -----:|
 @foreach($order->items as $item)
-| {{ $item->product->name}} | {{ price($item->base_cost) }} | {{ price($item->sell_cost) }} | {{ (($item->quantity == 0) ? 'отменен' : $item->quantity) . (($item->first_quantity !=0) ? '(' . $item->first_quantity . ')' : '') }} | {{ price($item->sell_cost * $item->quantity) }} |
+| {{ $item->product->name}} | {{ price($item->base_cost) }} | {{ price($item->sell_cost) }} | {{ $item->quantity }} | {{ price($item->sell_cost * $item->quantity) }} |
 @endforeach
 @endcomponent
 
