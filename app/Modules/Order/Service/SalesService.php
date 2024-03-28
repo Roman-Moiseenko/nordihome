@@ -92,8 +92,7 @@ class SalesService
         }
         $calculator = new CalculatorOrder();
         $cartItems = $calculator->calculate($cartItems);
-        $order->amount = 0;
-        $order->total = 0;
+
         foreach ($cartItems as $cartItem) {
             $orderItem = $order->getItem($cartItem->product);
             if (isset($cartItem->discount_id)) {
@@ -103,10 +102,8 @@ class SalesService
             }
             $orderItem->save();
             $orderItem->refresh();
-            $order->amount += $orderItem->quantity * $orderItem->base_cost;
-            $order->total += $orderItem->quantity * $orderItem->sell_cost;
         }
-        $order->discount = $order->amount - $order->total - $order->coupon;
+
         $order->save();
 
         return true;

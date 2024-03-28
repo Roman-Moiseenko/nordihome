@@ -21,17 +21,18 @@ class CalculatorOrder
      */
     public function calculate(array $items): array
     {
-        $product_ids = array_map(function ($item) {return ($item->getCheck() && !$item->getPreorder()) ? $item->getProduct()->id : -1;}, $items);
-        //Проверка на Акции
+        //TODO Переделать под calculate(array &$items): ?Discount
+        // Проверить все используемые ф-ции
 
+        $product_ids = array_map(function ($item) {return ($item->getCheck() && !$item->getPreorder()) ? $item->getProduct()->id : -1;}, $items);
         foreach ($items as &$item) {
+            //Проверка на Акции
             if (!$item->getPreorder() && $item->getProduct()->hasPromotion()) {
                 $item->setSellCost($item->getProduct()->promotion()->pivot->price);
                 $item->setDiscountName($item->getProduct()->promotion()->title);
                 $item->setDiscount($item->getProduct()->promotion()->id);
                 $item->setDiscountType($item->getProduct()->promotion()::class);
             }
-
             //Проверка на бонусы
             /** @var Bonus $bonus_product */
             $bonus_product = Bonus::where('bonus_id', $item->getProduct()->id)->first();
@@ -55,13 +56,29 @@ class CalculatorOrder
             //Бонус при объеме
         }
 
-        /** @var Discount[] $discounts */
+        /*
+
         $discounts = Discount::where('active', true)->get();
         foreach ($discounts as $discount) {
             $discount->render($items);
         }
-
+*/
         return $items;
     }
 
+
+    /**
+     * @param CartItemInterface[] $items
+     * @return Discount|null
+     */
+    public function discount(array $items): ?Discount
+    {
+        //TODO продумать - выбрать максимальную скидку
+        /** @var Discount[] $discounts */
+        $discounts = Discount::where('active', true)->get();
+        foreach ($discounts as $discount) {
+            if ($discount->render($items, false) != 0) return $discount;
+        }
+        return null;
+    }
 }

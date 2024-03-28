@@ -9,7 +9,7 @@
         <div class="input-group">
             <input id="sell_cost-{{ $item->id }}" type="text" class="form-control text-right update-data-ajax"
                    value="{{ $item->sell_cost }}" aria-describedby="input-sell_cost"
-                   min="0" data-id="{{ $item->id }}" @if(!$edit) readonly @endif
+                   min="0" data-id="{{ $item->id }}" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
                    data-route="{{ route('admin.sales.order.update-sell', $item) }}"
             >
             <div id="input-quantity" class="input-group-text">₽</div>

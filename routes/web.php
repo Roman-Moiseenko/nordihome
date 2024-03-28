@@ -322,20 +322,6 @@ Route::group(
                 Route::get('/reserve', 'ReserveController@index')->name('reserve.index');
                 Route::get('/wish', 'WishController@index')->name('wish.index');
 
-
-
-
-           //     Route::get('/preorder', 'PreOrderController@index')->name('preorder.index');
-             //   Route::get('/preorder/{order}', 'PreOrderController@show')->name('preorder.show');
-                //Route::get('/preorder/{order}/destroy', 'PreOrderController@destroy')->name('preorder.destroy');
-
-            //    Route::get('/parser', 'ParserController@index')->name('parser.index');
-              //  Route::get('/parser/{order}', 'ParserController@show')->name('parser.show');
-                //Route::get('/parser/{order}/destroy', 'ParserController@destroy')->name('parser.destroy');
-
-             //   Route::get('/executed', 'ExecutedController@index')->name('executed.index');
-               // Route::get('/executed/{order}', 'ExecutedController@show')->name('executed.show');
-
                 Route::resource('order', 'OrderController');
                 Route::group(
                     [
@@ -345,13 +331,16 @@ Route::group(
                     ],
                     function() {
                         Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
-
+                        Route::post('/{order}/add-addition', 'OrderController@add_addition')->name('add-addition');
 
                         Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
+                        Route::delete('/del-addition/{addition}', 'OrderController@del_addition')->name('del-addition');
                         Route::delete('/{order}/destroy', 'OrderController@destroy')->name('destroy');
                         Route::delete('/del-payment/{payment}', 'OrderController@del_payment')->name('del-payment');
                         Route::post('/{item}/update-quantity', 'OrderController@update_quantity')->name('update-quantity');
                         Route::post('/{item}/update-sell', 'OrderController@update_sell')->name('update-sell');
+                        Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
+                        Route::post('/{order}/update-manual', 'OrderController@update_manual')->name('update-manual');
 
                         Route::post('/{item}/check-delivery', 'OrderController@check_delivery')->name('check-delivery');
                         Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');

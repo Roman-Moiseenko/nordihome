@@ -10,10 +10,10 @@
     <div class="box-card p-2 mt-2">
         <div class="row">
             <div class="col-sm-6">
-                <div>Сумма заказа: {{ price($order->amount) }}</div>
-                @if($order->discount != 0)
+                <div>Сумма заказа: {{ price($order->getBaseAmount()) }}</div>
+                @if($order->getDiscountProducts() != 0)
                     <div>
-                        Скидка на товары: {{ price($order->discount) }}
+                        Скидка на товары: {{ price($order->getDiscountProducts()) }}
                     </div>
                 @endif
                 @if(!is_null($order->coupon_id))
@@ -21,7 +21,7 @@
                         Скидка на покупку (купон): {{ price($order->coupon) }}
                     </div>
                 @endif
-                <div>Сумма к оплате: {{ price($order->total) }}</div>
+                <div>Сумма к оплате: {{ price($order->getTotalAmount()) }}</div>
                 <div class="mt-3">
                 <span class="badge bg-secondary">
                 {{ $order->statusHtml() }}
@@ -29,14 +29,14 @@
                 </div>
             </div>
             <div class="col-sm-6">
+                @if(!is_null($order->delivery))
                 <div class="fs-7">{{ $order->delivery->typeHTML() }}<br>{{ $order->delivery->address }}</div>
                 <div class="fs-7 mt-1">Стоимость доставки
                     - {{ ($order->delivery->cost == 0) ? 'Рассчитывается' : price($order->delivery->cost)}}</div>
                 <div class="fs-7 mt-1">
-                <span class="badge bg-light text-dark">
-                {{ $order->delivery->status->value() }}
-                </span>
+
                 </div>
+                @endif
             </div>
         </div>
     </div>

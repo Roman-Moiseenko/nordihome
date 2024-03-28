@@ -23,10 +23,10 @@
                 <x-base.lucide icon="history" class="w-4 h-4"/>&nbsp;{{ $order->statusHtml() }}
             </div>
             <div class="truncate sm:whitespace-normal flex items-center ml-4">
-                <x-base.lucide icon="badge-russian-ruble" class="w-4 h-4"/>&nbsp;{{ price($order->total) }}
+                <x-base.lucide icon="badge-russian-ruble" class="w-4 h-4"/>&nbsp;{{ price($order->getSellAmount()) }}
             </div>
             <div class="truncate sm:whitespace-normal flex items-center ml-4">
-                <x-base.lucide icon="sigma" class="w-4 h-4"/>&nbsp;{{ price($order->totalPayments()) }}
+                <x-base.lucide icon="sigma" class="w-4 h-4"/>&nbsp;{{ price($order->getTotalAmount()) }}
             </div>
             <div class="truncate sm:whitespace-normal flex items-center ml-4">
                 <x-base.lucide icon="package" class="w-4 h-4"/>&nbsp;{{ count($order->items) }} товаров
@@ -53,52 +53,6 @@
                     <x-base.lucide icon="contact"
                                    class="w-4 h-4"/>&nbsp;{{ $order->getLogger()->fullname->getFullName() }} -
                     логист
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <div class="col-span-12">
-        <div class="font-medium text-center lg:text-left lg:mt-5 text-base">Доставка</div>
-        <div class="flex flex-row items-center lg:items-start mt-4">
-            <div class="truncate sm:whitespace-normal flex items-center">
-                <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;{{ (is_null($order->delivery)) ? 'Не определена' : $order->delivery->typeHTML() }}
-            </div>
-            <div class="truncate sm:whitespace-normal flex items-center ml-4">
-                <x-base.lucide icon="map-pin" class="w-4 h-4"/>&nbsp;{{ (is_null($order->delivery)) ? 'Не определена' : $order->delivery->address }}
-            </div>
-
-            <div class="truncate sm:whitespace-normal flex items-center ml-4">
-                <x-base.lucide icon="anvil" class="w-4 h-4"/>&nbsp;{{ $order->weight() }} кг
-            </div>
-
-            <div class="truncate sm:whitespace-normal flex items-center ml-4">
-                <x-base.lucide icon="box" class="w-4 h-4"/>&nbsp;{{ $order->volume() }} м3
-            </div>
-
-            @if($order->isPoint())
-                <div class="truncate sm:whitespace-normal flex items-center ml-4">
-                    <x-base.lucide icon="warehouse"
-                                   class="w-4 h-4"/>&nbsp;{{ 'Выдача/сборка: ' . ((is_null($order->delivery)) ? 'Не определена' : $order->delivery->point->name) }}
-                </div>
-            @endif
-
-
-                <div class="truncate sm:whitespace-normal flex items-center ml-4">
-                    <x-base.lucide icon="badge-russian-ruble"
-                                   class="w-4 h-4"/>&nbsp;Доставка&nbsp;{{ (is_null($order->delivery)) ? 'Не определена' : price($order->delivery->cost) }}
-                </div>
-
-            @if(!empty($order->movements))
-                <div class="truncate sm:whitespace-normal flex items-center flex-col ml-4">
-                    <div class="truncate sm:whitespace-normal flex items-center">
-                        <x-base.lucide icon="truck" class="w-4 h-4"/>&nbsp;Перемещения со складов:
-                    </div>
-                    @foreach($order->movements as $i => $movement)
-                        <div>
-                            {{ '#' . (int)($i + 1) . ' ' . $movement->storageOut->name . ($movement->isCompleted() ? ': Исполнено' : ': В ожидании') }}
-                        </div>
-                    @endforeach
                 </div>
             @endif
         </div>

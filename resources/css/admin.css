@@ -110,3 +110,24 @@ input.btn-check:checked + label:hover {
     border: 2px solid rgb(var(--color-danger));
 }
 
+.circle {
+    position: relative;
+    margin-right: 16px;
+}
+.circle:before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.circle.red:before {
+    background: rgb(var(--color-danger));
+}
+.circle.green:before {
+    background: rgb(var(--color-success));/* #02ab0f;*/
+}

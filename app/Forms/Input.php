@@ -11,7 +11,9 @@ class Input extends BaseForm
     public string $help = '';
     public bool $pos_left = true;
     public string $group_text = '';
-
+    public bool $required = false;
+    public ?int $min = null;
+    public ?int $max = null;
 
 
     public function group($text): self
@@ -33,6 +35,14 @@ class Input extends BaseForm
         return $input;
     }
 
+    public function min_max($min, $max = null): self
+    {
+        $form = clone $this;
+        $form->min = $min;
+        $form->max = $max;
+        return $form;
+    }
+
     public function group_text($group_text, $pos_left = true)
     {
         $input = clone $this;
@@ -48,6 +58,13 @@ class Input extends BaseForm
         return $input;
     }
 
+    public function required(): self
+    {
+        $required = clone $this;
+        $required->required = true;
+        return $required;
+    }
+
     public function show($id = null)
     {
         $this->id = $id ?? 'input-' . $this->name;
@@ -56,6 +73,9 @@ class Input extends BaseForm
             'help' => $this->help,
             'group_text' => $this->group_text,
             'pos_left' => $this->pos_left,
+            'required' => $this->required,
+            'min' => $this->min,
+            'max' => $this->max,
         ]);
         return view('forms.input', $params);
     }

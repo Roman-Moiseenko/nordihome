@@ -6,6 +6,7 @@ namespace App\Modules\Order\Entity\Order;
 use App\Entity\Admin;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Delivery\Entity\DeliveryOrder;
+use App\Modules\Discount\Entity\Discount;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -18,12 +19,12 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property int $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
- * @property float $amount //Полная сумма заказа
- * @property float $discount //Скидка по товарам
+
+ * @property int $discount_id //Скидка на заказ - от суммы, или по дням
  * @property float $coupon //Примененная сумма скидки по товару
  * @property int $coupon_id //Купон скидки
- * @property int $delivery_cost //стоимость доставки, включенная в платеж ?? Доставка оплачивается отдельно
- * @property float $total //Полная сумма оплаты
+ * @property float $manual //Ручная скидка
+
  * @property string $comment
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
@@ -37,6 +38,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property DeliveryOrder $delivery //Удалить
  * @property OrderResponsible[] $responsible
  * @property MovementDocument[] $movements
+ * @property Discount $discount
  */
 class Order extends Model
 {
@@ -57,22 +59,16 @@ class Order extends Model
         'type',
         'paid',
         'finished',
-        'amount',
-        'discount',
         'coupon',
         'coupon_id',
-        'delivery_cost',
-        'total'
+        'discount_id',
+        'manual'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'amount' => 'float',
-        'discount' => 'float',
         'coupon' => 'float',
-        'delivery_cost' => 'float',
-        'total' => 'float',
     ];
 
     public static function register(int $user_id, int $type = self::ONLINE): self
@@ -152,18 +148,6 @@ class Order extends Model
         return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
     }
 
-    ///*** SET-еры
-    public function setFinance(float $amount, float $discount, float $coupon, ?int $coupon_id)
-    {
-        $this->update([
-            'amount' => $amount,
-            'discount' => $discount,
-            'coupon' => $coupon,
-            'coupon_id' => $coupon_id,
-            //'delivery_cost' => $delivery_cost,
-            'total' => ($amount - $discount - $coupon),
-        ]);
-    }
 
     public function setStatus(
         #[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value,
@@ -285,6 +269,96 @@ class Order extends Model
         return is_null($responsible) ? null : $responsible->staff;
     }
 
+    //TODO заменить на всем сайте переменные на функции по суммам!!!!
+    //Суммы по заказу*******************
+    /**
+     * Базовая стоимость всех товаров
+     * @return float
+     */
+    public function getBaseAmount(): float
+    {
+        $result = 0;
+        foreach ($this->items as $item) {
+            $result += $item->base_cost * $item->quantity;
+        }
+        return $result;
+    }
+
+    /**
+     * Продажная стоимость всех товаров
+     * @return float
+     */
+    public function getSellAmount(): float
+    {
+        $result = 0;
+        foreach ($this->items as $item) {
+            $result += $item->sell_cost * $item->quantity;
+        }
+        return $result;
+    }
+
+    /**
+     * Скидка по товаром - акции, бонусы
+     * @return float
+     */
+    public function getDiscountProducts(): float
+    {
+        return $this->getBaseAmount() - $this->getSellAmount();
+    }
+
+    /**
+     * Скидка на заказ - по сумме, срокам и др.
+     * @return float
+     */
+    public function getDiscountOrder(): float
+    {
+        if (!is_null($this->discount_id)) {
+            /** @var Discount $discount */
+            $discount = Discount::find($this->discount_id);
+            return $this->getSellAmount() * $discount->discount / 100;
+        }
+        return 0;
+    }
+
+    /**
+     * Сумма скидки по купону
+     * @return float
+     */
+    public function getCoupon(): float
+    {
+        return $this->coupon ?? 0;
+    }
+
+    /**
+     * Скидка ручная
+     * @return float
+     */
+    public function getManual(): float
+    {
+        return $this->manual ?? 0;
+    }
+    /**
+     * Сумма всех доп услуг
+     * @return float
+     */
+    public function getAdditionsAmount(): float
+    {
+        $total_addition = 0;
+        foreach ($this->additions as $addition) {
+            $total_addition += $addition->amount;
+        }
+        return $total_addition;
+    }
+
+    /**
+     * Итоговая сумма оплаты за заказ, с учетом всех скидок и платежей
+     * @return float
+     */
+    public function getTotalAmount(): float
+    {
+        return $this->getAdditionsAmount() + $this->getSellAmount() - $this->getDiscountOrder() - $this->getCoupon() - $this->getManual();
+    }
+
     ///*** Relations *************************************************************************************
 
     public function items()
@@ -320,6 +394,11 @@ class Order extends Model
     public function statuses()
     {
         return $this->hasMany(OrderStatus::class, 'order_id', 'id');
+    }
+
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class, 'discount_id', 'id');
     }
 
     public function delivery()//TODO переделать на hasMany() если будет ТЗ
@@ -365,7 +444,7 @@ class Order extends Model
      * Общий вес заказа
      * @return float
      */
-    public function weight(): float
+    public function getWeight(): float
     {
         $weight = 0;
         foreach ($this->items as $item) {
@@ -378,26 +457,13 @@ class Order extends Model
      * Общий объем заказа
      * @return float
      */
-    public function volume(): float
+    public function getVolume(): float
     {
         $volume = 0;
         foreach ($this->items as $item) {
             $volume += $item->quantity * $item->product->dimensions->volume();
         }
         return $volume;
-    }
-
-    /**
-     * Общая стоимость с учетом всех дополнений
-     * @return float
-     */
-    public function totalPayments(): float
-    {
-        $total = 0;
-        foreach ($this->additions as $addition) {
-            $total += $addition->amount;
-        }
-        return $total + $this->total;
     }
 
     /**

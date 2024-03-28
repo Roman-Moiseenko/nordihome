@@ -96,6 +96,14 @@ class OrderController extends Controller
         });
     }
 
+    public function add_addition(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $order = $this->orderService->add_addition($order, $request);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
+
     public function del_item(OrderItem $item)
     {
         return $this->try_catch_admin(function () use ($item) {
@@ -104,6 +112,22 @@ class OrderController extends Controller
         });
     }
 
+    public function del_addition(OrderAddition $addition)
+    {
+        return $this->try_catch_admin(function () use ($addition) {
+            $order = $this->orderService->delete_addition($addition);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
+
+    public function update_manual(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $manual = (int)$request['manual'];
+            $order = $this->orderService->update_manual($order, $manual);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
 
     //TODO Сделать OrderAction и по каждому действию записывать staff->id, Action, json(данные)
     public function destroy(Order $order)
@@ -246,7 +270,7 @@ class OrderController extends Controller
         return $this->try_catch_ajax_admin(function () use ($request, $item) {
             $quantity = (int)$request['value'];
             $result = $this->orderService->update_quantity($item, $quantity);
-            return response()->json(true);
+            return response()->json($this->ArrayToAjax($result));
         });
     }
 
@@ -255,24 +279,52 @@ class OrderController extends Controller
         return $this->try_catch_ajax_admin(function () use ($request, $item) {
             $sell_cost = (int)$request['value'];
             $result = $this->orderService->update_sell($item, $sell_cost);
-            return response()->json(true);
+            return response()->json($this->ArrayToAjax($result));
         });
     }
+
+    public function update_addition(Request $request, OrderAddition $addition)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $addition) {
+            $amount = (int)$request['value'];
+            $result = $this->orderService->update_addition($addition, $amount);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
 
     public function check_delivery(OrderItem $item)
     {
         return $this->try_catch_ajax_admin(function () use ($item) {
-            $this->orderService->check_delivery($item);
-            return response()->json(true);
+            $result = $this->orderService->check_delivery($item);
+            return response()->json($this->ArrayToAjax($result));
         });
     }
+
     public function check_assemblage(OrderItem $item)
     {
         return $this->try_catch_ajax_admin(function () use ($item) {
-            $this->orderService->check_assemblage($item);
-            return response()->json(true);
+            $result = $this->orderService->check_assemblage($item);
+            return response()->json($this->ArrayToAjax($result));
         });
     }
+
+    private function ArrayToAjax(Order $order): array
+    {
+        return [
+            'base_amount' => price($order->getBaseAmount()),
+            'sell_amount' => price($order->getSellAmount()),
+            'discount_order' => price($order->getDiscountOrder()),
+            'discount_products' => price($order->getDiscountProducts()),
+            'total_amount' => price($order->getTotalAmount()),
+            'coupon' => price($order->getCoupon()),
+            'manual' => price($order->getManual()),
+            'additions_amount' => price($order->getAdditionsAmount()),
+            'weight' => $order->getWeight() . ' кг',
+            'volume' => (float)number_format($order->getVolume(), 6) . ' м3',
+        ];
+    }
+
 
     public function search_user(Request $request)
     {
@@ -308,7 +360,9 @@ class OrderController extends Controller
             $products = $this->products->search($request['search']);
             /** @var Product $product */
             foreach ($products as $product) {
-                $result[] = $this->products->toArrayForSearch($product);
+                $result[] = array_merge($this->products->toArrayForSearch($product),
+                    ['count' => $product->count_for_sell]
+                );
             }
             return \response()->json($result);
         });

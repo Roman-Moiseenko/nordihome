@@ -66,6 +66,7 @@ class Dimensions
 
     public function volume(): float
     {
-        return ($this->height * $this->width * $this->depth) / 1000000;
+        $volume = (int)(($this->height * $this->width * $this->depth) * 100) / 100;
+        return  $volume / 1000000;
     }
 }

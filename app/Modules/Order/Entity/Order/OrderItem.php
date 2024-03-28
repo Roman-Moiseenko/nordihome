@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $supplier_document_id //Заказ поставщику
  * @property int $base_cost
  * @property int $sell_cost
- * @property int $discount_id
+ * @property int $discount_id - Акция или бонус
  * @property string $discount_type
  * @property array $options
  * @property bool $cancel

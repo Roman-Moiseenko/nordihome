@@ -19,7 +19,6 @@ abstract class BaseForm
     public string $message = 'Ошибка валидации';
     public string $disabled = '';
 
-
     public static function create($name, array $attr = []): self
     {
         $form = new static();
@@ -41,6 +40,7 @@ abstract class BaseForm
         $form->label_pos = $pos;
         return $form;
     }
+
 
     public function validate($message): self
     {
@@ -71,6 +71,7 @@ abstract class BaseForm
             'placeholder' => $this->placeholder,
             'message' => $this->message,
             'disabled' => $this->disabled,
+
         ];
     }
 

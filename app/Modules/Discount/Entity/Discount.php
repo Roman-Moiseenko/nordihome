@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $discount
+ * @property int $discount - скидка в %%
  * @property string $name
  * @property string $title
  * @property string $class //$class
@@ -63,17 +63,17 @@ class Discount extends Model
     {
         if (!$this->active) throw new \DomainException('Неверный алгоритм - текущий Discount (' . $this->id . ') не активен');
         $amount = array_sum(array_map(function ($item) {
-            return (empty($item->getSellCost()) && $item->getCheck())
-                ? $item->getBaseCost() * $item->getQuantity()
+            return ($item->getCheck())
+                ? $item->getSellCost() * $item->getQuantity()
                 : 0;
         }, $items));
 
-        if ($amount == 0) return 0; //Все элементы со скидкой
+        //if ($amount == 0) return 0; //Все элементы со скидкой
 
         if ($this->isEnabled($amount)) {
             if ($written) {
                 array_walk($items, function (CartItemInterface &$item) {
-                    if (empty($item->getSellCost()) && $item->getCheck()) {
+                    if ($item->getCheck()) {
                         $item->setDiscount($this->id);
                         $item->setDiscountType(Discount::class);
                         $item->setSellCost(round((($item->getBaseCost()) * (100 - $this->discount)) / 100));

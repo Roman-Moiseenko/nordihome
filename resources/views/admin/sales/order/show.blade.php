@@ -27,7 +27,7 @@
         </div>
         <div class="col-span-2 hidden lg:block">
             <div class="fixed fixed-top pt-5">
-                <ul
+                <!--ul
                     class="relative text-slate-500 before:absolute before:left-0 before:z-[-1] before:h-full before:w-[2px] before:bg-slate-200 before:content-['']">
                     @foreach($menus as $n => $menu)
                         <li id="li-{{ $menu['anchor'] }}" class="li-menus-order mb-4 border-l-2 border-primary pl-5
@@ -35,31 +35,45 @@
                             <a href="#{{ $menu['anchor'] }}">{{ $menu['caption'] }}</a>
                         </li>
                     @endforeach
-                </ul>
+                </ul-->
                 @include('admin.sales.order.blocks.actions')
 
                 <div class="relative mt-10 rounded-md border border-info bg-info/20 p-5">
-                    <x-base.lucide class="absolute top-0 right-0 mt-5 mr-3 h-12 w-12 text-warning/80"
-                                   icon="line-chart"/>
                     <h2 class="text-lg font-medium">Общая информация</h2>
-                    <div class="mt-2 leading-relaxed text-slate-600 dark:text-slate-500">
+                    <div class="mt-2 leading-relaxed text-slate-600">
                         <div class="">
-                            <span>Сумма за товар </span><span class="font-medium" id="amount-products">0</span> ₽
+                            <span>Базовая сумма за товар </span><span class="font-medium" id="base_amount">{{ price($order->getBaseAmount()) }}</span>
                         </div>
-                        <div class="mt-2">
-                            <span>Сумма за услуги </span><span class="font-medium" id="amount-additions">0</span> ₽
+                        <div class="">
+                            <span>Скидка по товарам </span><span class="font-medium" id="discount_products">{{ price($order->getDiscountProducts()) }}</span>
                         </div>
-                        <div class="mt-2">
-                            <span>К оплате </span><span class="font-medium" id="amount-total">0</span> ₽
+                        <div class="">
+                            <span>Скидка по заказу </span><span class="font-medium" id="discount_order">{{ price($order->getDiscountOrder()) }}</span>
+                        </div>
+                        <div class="">
+                            <span>Скидка по купону </span><span class="font-medium" id="coupon">{{ price($order->getCoupon()) }}</span>
+                        </div>
+                        <div class="">
+                            <span>Скидка ручная </span><span class="font-medium" id="coupon">{{ price($order->getManual()) }}</span>
+                        </div>
+
+                        <div class="">
+                            <span>Сумма за услуги </span><span class="font-medium" id="additions_amount">{{ price($order->getAdditionsAmount()) }}</span>
+                        </div>
+                        <div class="mt-1">
+                            <span>Итого за товары </span><span class="font-medium" id="sell_amount">{{ price($order->getSellAmount()) }}</span>
+                        </div>
+                        <div class="mt-2 text-base">
+                            <span>К оплате всего </span><span class="font-medium" id="total_amount">{{ price($order->getTotalAmount()) }}</span>
                         </div>
                     </div>
 
                     <div class="text-sm mt-4">
                         <div class="">
-                            <span>Общий вес груза </span><span class="font-medium" id="amount-weight">0</span> кг
+                            <span>Общий вес груза </span><span class="font-medium" id="weight">{{ $order->getWeight() }} кг</span>
                         </div>
                         <div class="mt-2">
-                            <span>Общий объем груза </span><span class="font-medium" id="amount-volume">0</span> м3
+                            <span>Общий объем груза </span><span class="font-medium" id="volume">{{ $order->getVolume() }} м3</span>
                         </div>
                     </div>
                     <div class="text-xs mt-3">
@@ -136,8 +150,23 @@
             request.send(_params);
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
-                    let _data = JSON.parse(request.responseText);
-                    console.log(_data);
+                    let data = JSON.parse(request.responseText);
+                    console.log(data);
+
+
+
+                    document.getElementById('base_amount').innerText = data.base_amount;
+                    document.getElementById('sell_amount').innerText = data.sell_amount;
+                    document.getElementById('discount_order').innerText = data.discount_order;
+                    document.getElementById('discount_products').innerText = data.discount_products;
+                    document.getElementById('total_amount').innerText = data.total_amount;
+
+                    document.getElementById('additions_amount').innerText = data.additions_amount;
+                    document.getElementById('weight').innerText = data.weight;
+                    document.getElementById('volume').innerText = data.volume;
+
+                    document.getElementById('coupon').innerText = data.coupon;
+                    document.getElementById('manual').innerText = data.manual;
                     //TODO Обновляем данные по сумме заказа
                     /*if (_data === true) {
                         location.reload();

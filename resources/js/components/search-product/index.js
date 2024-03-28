@@ -78,13 +78,20 @@
                         _listBox.append('<div class="text-slate-400">Вводите наименование или артикул товара</div>');
                     }
                     data.forEach(function (item) {
-                        let _other = '';
+                        let _other = '', _count = '';
                         if (item.other !== undefined) {
                             _other = 'data-other="' + item.other + '"';
                         }
+                        if (item.count !== undefined) {
+                            if (item.count === 0) {
+                                _count = '<span class="circle red"></span>';
+                            } else {
+                                _count = '<span class="circle green"></span>';
+                            }
+                        }
                         _listBox.append('<div class="search-option" data-for="' + _id_search + '" data-id="' + item.id +
                             '" data-name="' + item.name + '" data-img="' + item.image + '" data-code="' + item.code + '" data-price="' + item.price + '" ' + _other + '>' +
-                            item.name + ' (' + item.code + ')'+
+                            _count + item.name + ' (' + item.code + ')'+
                             '</div>');
                     });
                 }
