@@ -518,4 +518,14 @@ class Order extends Model
     {
         return $this->items()->where('preorder', true)->getModels();
     }
+
+    public function setReserve(Carbon $addDays)
+    {
+        foreach ($this->items as $item) {
+            if (!is_null($item->reserve)) {
+                $item->reserve->reserve_at = $addDays;
+                $item->reserve->save();
+            }
+        }
+    }
 }

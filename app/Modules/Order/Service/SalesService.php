@@ -109,10 +109,18 @@ class SalesService
         return true;
     }
 
+    /**
+     * Отправить заказ на оплату
+     * @param Order $order
+     * @return void
+     */
     public function setAwaiting(Order $order)
     {
-        if (!$order->isPoint()) throw new \DomainException('Не установлена точка сбора/выдачи!');
+        //if (!$order->isPoint()) throw new \DomainException('Не установлена точка сбора/выдачи!');
 
+        if ($order->getSellAmount() == 0)  throw new \DomainException('Нет товара или цена равна 0!');
+        if ($order->getTotalAmount() == 0)  throw new \DomainException('Неверная стоимость заказа');
+ /*
         //Проверить, если на доставку
         if (!$order->delivery->isStorage()) {
             if ($order->delivery->cost == 0) throw new \DomainException('Не установлена стоимость доставка');
@@ -134,14 +142,17 @@ class SalesService
             }
         }
         if ($payment_order != $order->total) throw new \DomainException('Сумма платежей за заказ не совпадает со стоимостью заказа');
-
+*/
+        $order->setReserve(now()->addDays(3));
         $order->setStatus(OrderStatus::AWAITING);
+      /*
         foreach ($order->payments as $payment) {
             if (!empty($paymentDocument = $payment->createOnlinePayment())) {
                 $payment->document = $paymentDocument;
                 $payment->save();
             }
         }
+        */
         Mail::to($order->user->email)->queue(new OrderAwaiting($order));
     }
 

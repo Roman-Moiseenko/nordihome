@@ -192,7 +192,12 @@ class OrderController extends Controller
         });
     }
 
-    public function set_awaiting(Order $order)
+    /**
+     * На оплату
+     * @param Order $order
+     * @return mixed
+     */
+    public function set_awaiting(Order $order): mixed
     {
         return $this->try_catch_admin(function () use ($order) {
             $this->service->setAwaiting($order);

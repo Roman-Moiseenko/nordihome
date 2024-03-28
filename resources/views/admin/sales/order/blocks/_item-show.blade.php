@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="w-32 px-1 text-center">
-        <div>{{ $item->product->count_for_sell + $item->quantity }} шт.</div>
+        <div>{{  $edit ? (($item->product->count_for_sell + $item->quantity) . ' шт.') : '-' }} </div>
         <div class="input-group">
         <input id="quantity-{{ $item->id }}" type="number" class="form-control text-right update-data-ajax"
                value="{{ $item->quantity }}" aria-describedby="input-quantity"
