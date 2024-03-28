@@ -1,6 +1,6 @@
 <div class="box flex items-center p-2">
     <div class="w-20 text-center">{{ $i + 1 }}</div>
-    <div class="w-1/4 text-center">
+    <div class="w-1/4">
         <div>{{ $item->product->name }}</div>
         <div>{{ $item->product->dimensions->weight() }} кг | {{ $item->product->dimensions->volume() }} м3</div>
     </div>

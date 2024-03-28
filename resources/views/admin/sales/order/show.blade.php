@@ -37,7 +37,6 @@
                     @endforeach
                 </ul-->
                 @include('admin.sales.order.blocks.actions')
-
                 <div class="relative mt-10 rounded-md border border-info bg-info/20 p-5">
                     <h2 class="text-lg font-medium">Общая информация</h2>
                     <div class="mt-2 leading-relaxed text-slate-600">
@@ -54,12 +53,16 @@
                             <span>Скидка по купону </span><span class="font-medium" id="coupon">{{ price($order->getCoupon()) }}</span>
                         </div>
                         <div class="">
-                            <span>Скидка ручная </span><span class="font-medium" id="coupon">{{ price($order->getManual()) }}</span>
+                            <span>Скидка ручная </span><span class="font-medium" id="manual">{{ price($order->getManual()) }}</span>
                         </div>
 
                         <div class="">
                             <span>Сумма за услуги </span><span class="font-medium" id="additions_amount">{{ price($order->getAdditionsAmount()) }}</span>
                         </div>
+                        <div class="">
+                            <span>Сборка мебели </span><span class="font-medium" id="assemblage_amount">{{ price($order->getAssemblageAmount()) }}</span>
+                        </div>
+
                         <div class="mt-1">
                             <span>Итого за товары </span><span class="font-medium" id="sell_amount">{{ price($order->getSellAmount()) }}</span>
                         </div>
@@ -77,7 +80,7 @@
                         </div>
                     </div>
                     <div class="text-xs mt-3">
-                        Примечание. Здесь будет информационный текст и правила заполнения
+                        Доставка рассчитывается в ручном режиме.
                     </div>
                 </div>
             </div>
@@ -141,7 +144,6 @@
             });
         });
 
-
         function setAjax(route, field, value) {
             let _params = '_token=' + '{{ csrf_token() }}' + '&' + field + '=' + value;
             let request = new XMLHttpRequest();
@@ -152,27 +154,9 @@
                 if (this.readyState === 4 && this.status === 200) {
                     let data = JSON.parse(request.responseText);
                     console.log(data);
-
-
-
-                    document.getElementById('base_amount').innerText = data.base_amount;
-                    document.getElementById('sell_amount').innerText = data.sell_amount;
-                    document.getElementById('discount_order').innerText = data.discount_order;
-                    document.getElementById('discount_products').innerText = data.discount_products;
-                    document.getElementById('total_amount').innerText = data.total_amount;
-
-                    document.getElementById('additions_amount').innerText = data.additions_amount;
-                    document.getElementById('weight').innerText = data.weight;
-                    document.getElementById('volume').innerText = data.volume;
-
-                    document.getElementById('coupon').innerText = data.coupon;
-                    document.getElementById('manual').innerText = data.manual;
-                    //TODO Обновляем данные по сумме заказа
-                    /*if (_data === true) {
-                        location.reload();
-                    } else {
-                        console.log(_data);
-                    }*/
+                    for (let key in data) {
+                        if (document.getElementById(key) !== null) document.getElementById(key).innerText = data[key];
+                    }
                 }
             };
         }

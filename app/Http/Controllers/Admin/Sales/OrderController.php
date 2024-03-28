@@ -28,13 +28,11 @@ use Illuminate\Http\Request;
  */
 class OrderController extends Controller
 {
-
     private SalesService $service;
     private StaffRepository $staffs;
     private OrderRepository $repository;
     private ProductRepository $products;
     private OrderService $orderService;
-
 
     public function __construct(
         SalesService      $service,
@@ -48,6 +46,7 @@ class OrderController extends Controller
         $this->repository = $repository;
         $this->products = $products;
         $this->orderService = $orderService;
+        //TODO загрузка процента по сборке
     }
 
     public function index(Request $request)
@@ -68,7 +67,6 @@ class OrderController extends Controller
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
             $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
             $storages = Storage::orderBy('name')->get();
-
             return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages', 'menus'));
         });
     }
@@ -262,7 +260,6 @@ class OrderController extends Controller
     }
 
 
-
     /**  НОВЫЕ ACTIONS  **/
     //AJAX
     public function update_quantity(Request $request, OrderItem $item)
@@ -317,6 +314,8 @@ class OrderController extends Controller
             'discount_order' => price($order->getDiscountOrder()),
             'discount_products' => price($order->getDiscountProducts()),
             'total_amount' => price($order->getTotalAmount()),
+            'assemblage_amount' => price($order->getAssemblageAmount()),
+
             'coupon' => price($order->getCoupon()),
             'manual' => price($order->getManual()),
             'additions_amount' => price($order->getAdditionsAmount()),

@@ -351,12 +351,47 @@ class Order extends Model
     }
 
     /**
+     * Сборка товара, сумма по всем выбранным позициям из заказа
+     * @param int $percent
+     * @return float
+     */
+    public function getAssemblageAmount(int $percent = 15): float
+    {
+        $assemblage = 0;
+        foreach ($this->items as $item) {
+            if ($item->assemblage == true) {
+                if (is_null($item->product->assemblage)) {
+                    $assemblage += $item->sell_cost * $item->quantity * $percent / 100;
+                } else {
+                    $assemblage = $item->product->assemblage;
+                }
+            }
+        }
+        return $assemblage;
+    }
+
+    /**
+     * Расчет упаковки для товаров, которым требуется
+     * @return float
+     */
+    public function getPackagingAmount(): float
+    {
+        //TODO на будущее
+        return 0;
+    }
+    /**
      * Итоговая сумма оплаты за заказ, с учетом всех скидок и платежей
      * @return float
      */
     public function getTotalAmount(): float
     {
-        return $this->getAdditionsAmount() + $this->getSellAmount() - $this->getDiscountOrder() - $this->getCoupon() - $this->getManual();
+        return $this->getAdditionsAmount() +
+            $this->getPackagingAmount() +
+            $this->getSellAmount() +
+            $this->getAssemblageAmount() -
+            $this->getDiscountOrder() -
+            $this->getCoupon() -
+            $this->getManual();
     }
 
     ///*** Relations *************************************************************************************

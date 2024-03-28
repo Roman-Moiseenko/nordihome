@@ -470,8 +470,6 @@ class OrderService
         return $order;
     }
 
-
-
     public function update_quantity(OrderItem $item, int $quantity): Order
     {
         $delta = $quantity - $item->quantity;

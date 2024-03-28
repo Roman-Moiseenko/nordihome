@@ -57,6 +57,11 @@ class OrderItem extends Model implements CartItemInterface
         'sell_cost' => 'float',
         'preorder' => 'bool'
     ];
+/*
+    public function getAssemblage(): float
+    {
+        if ()
+    } */
 
     public function changeQuantity(int $new_quantity)
     {
