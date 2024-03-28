@@ -8,7 +8,7 @@
             </h1>
         </div>
     </div>
-    <div class="grid grid-cols-11 gap-x-6 pb-20">
+    <div class="grid grid-cols-12 gap-x-6 pb-20">
         <!-- ORDER -->
         <div class="col-span-11 lg:col-span-9">
             @foreach($menus as $n => $menu)
@@ -25,7 +25,7 @@
                 </div>
             @endforeach
         </div>
-        <div class="col-span-2 hidden lg:block">
+        <div class="col-span-3 hidden lg:block">
             <div class="fixed fixed-top pt-5">
                 <!--ul
                     class="relative text-slate-500 before:absolute before:left-0 before:z-[-1] before:h-full before:w-[2px] before:bg-slate-200 before:content-['']">
@@ -37,7 +37,7 @@
                     @endforeach
                 </ul-->
                 @include('admin.sales.order.blocks.actions')
-                <div class="relative mt-10 rounded-md border border-info bg-info/20 p-5">
+                <div class="relative mt-2 rounded-md border border-info bg-info/20 p-5">
                     <h2 class="text-lg font-medium">Общая информация</h2>
                     <div class="mt-2 leading-relaxed text-slate-600">
                         <div class="">

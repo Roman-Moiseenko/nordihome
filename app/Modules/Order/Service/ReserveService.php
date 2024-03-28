@@ -112,6 +112,6 @@ class ReserveService
     public function UpdateReserve(int $reserve_id, int $delta)
     {
         if ($delta > 0) $this->addReserve($reserve_id, $delta);
-        if ($delta < 0) $this->subReserve($reserve_id, $delta);
+        if ($delta < 0) $this->subReserve($reserve_id, -1 * $delta);
     }
 }
