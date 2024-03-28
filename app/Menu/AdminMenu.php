@@ -32,6 +32,11 @@ class AdminMenu
                         'title' => 'Заказы',
                         'route_name' => 'admin.sales.order.index',
                     ],
+                    'payment' => [
+                        'icon' => 'credit-card',
+                        'title' => 'Платежи',
+                        'route_name' => 'admin.sales.payment.index',
+                    ],
                  /*   'preorder' => [
                         'icon' => 'file-scan',
                         'title' => 'Предзаказы',

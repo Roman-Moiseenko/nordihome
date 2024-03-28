@@ -323,6 +323,7 @@ Route::group(
                 Route::get('/wish', 'WishController@index')->name('wish.index');
 
                 Route::resource('order', 'OrderController');
+                Route::resource('payment', 'PaymentController');
                 Route::group(
                     [
                         'prefix' => 'order',

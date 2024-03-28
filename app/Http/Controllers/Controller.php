@@ -16,8 +16,11 @@ class Controller extends BaseController
 
     public function try_catch($callback, $return = '', $level = 'warning')
     {
+        DB::beginTransaction();
         try {
-            return call_user_func($callback);
+            $result = call_user_func($callback);
+            DB::commit();
+            return $result;
         } catch (\DomainException $e) {
             flash($e->getMessage(), $level);
         } catch (\Throwable $e) {
@@ -28,16 +31,22 @@ class Controller extends BaseController
                 event(new ThrowableHasAppeared($e));
             }
         }
+        DB::rollBack();
         return empty($return) ? redirect()->back() : redirect($return);
     }
 
     public function try_catch_ajax($callback)
     {
+        DB::beginTransaction();
         try {
-            return call_user_func($callback);
+            $result = call_user_func($callback);
+            DB::commit();
+            return $result;
         } catch (\DomainException $e){
+            DB::rollBack();
             return \response()->json(['error' => $e->getMessage()]);//Сообщение посетителю
         } catch (\Throwable $e) {
+            DB::rollBack();
             if (config('app.debug')) {
                 //Вывод ошибки в консоль
                 return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
@@ -79,6 +88,7 @@ class Controller extends BaseController
             DB::commit();
             return $result;
         } catch (\Throwable $e) {
+            DB::rollBack();
             if (config('app.debug')) {
                 //Вывод ошибки в консоль
                 return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
@@ -93,7 +103,7 @@ class Controller extends BaseController
      * Установка пагинации для запроса $query
      * @param $query - Построитель запросов
      * @param Request $request - Необходимо для параметра ->get('p')
-     * @param $pagination - Кол-во элементов на страницу
+     * @param $pagination - Кол-во элементов на страницу, передается во view
      * @return mixed - Возвращает пагинацию Модели paginate()
      */
     public function pagination($query, Request $request, &$pagination): mixed

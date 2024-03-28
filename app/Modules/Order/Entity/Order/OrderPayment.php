@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Entity\Admin;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -10,34 +11,35 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property int $order_id
+ * @property int $staff_id
  * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property float $amount
  * @property string $method
  * @property string $document
- *
+ * @property Admin $staff
  * @property Order $order
  */
 
 //TODO Проверить
 class OrderPayment extends Model
 {
-    public $timestamps = false;
     protected $table = 'order_payments';
     protected $casts = [
         'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
     protected $fillable = [
         'amount',
-        'created_at',
         'method',
-        'document'
+        'document',
+        'staff_id',
     ];
 
     public static function new(float $amount, string $method, string $document): self
     {
         return self::make([
             'amount' => $amount,
-            'created_at' => now(),
             'method' => $method,
             'document' => $document
         ]);
@@ -51,5 +53,10 @@ class OrderPayment extends Model
     public function methodHTML(): string
     {
         return PaymentHelper::nameType($this->method);
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }
 }

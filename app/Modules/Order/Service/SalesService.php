@@ -144,6 +144,7 @@ class SalesService
         if ($payment_order != $order->total) throw new \DomainException('Сумма платежей за заказ не совпадает со стоимостью заказа');
 */
         $order->setReserve(now()->addDays(3));
+        $order->setNumber();
         $order->setStatus(OrderStatus::AWAITING);
       /*
         foreach ($order->payments as $payment) {
@@ -154,6 +155,7 @@ class SalesService
         }
         */
         Mail::to($order->user->email)->queue(new OrderAwaiting($order));
+        flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
     }
 
     /**
@@ -221,53 +223,6 @@ class SalesService
         }
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         event(new OrderHasCanceled($order));
-    }
-
-    public function setPayment(Order $order, array $params)
-    {
-        $payment = OrderAddition::new(
-            amount: (float)$params['payment-amount'],
-            purpose: (int)$params['payment-purpose'],
-            comment: $params['payment-comment'] ?? '',
-        );
-
-        //Проверка на delivery, если платеж за доставку и delivery->cost не установлен
-        if ($payment->purpose == OrderAddition::PAY_DELIVERY && $order->delivery->cost == 0) {
-            $order->delivery->cost = $payment->amount;
-            $order->delivery->save();
-        }
-        $order->additions()->save($payment);
-    }
-
-    public function delPayment(OrderAddition $payment)
-    {
-        $order = $payment->order;
-        $payment->delete();
-
-        $pays = OrderAddition::where('order_id', $order->id)->where('purpose', OrderAddition::PAY_ORDER)->getModels();
-        if (empty($pays)) {
-            flash('У заказа нет ни одного платежа!', 'warning');
-        } else {
-            $sum = array_sum(array_map(function (OrderAddition $paymentOrder) {
-                return $paymentOrder->amount;
-            }, $pays));
-            if ($order->total != $sum) flash('Сумма платежей не совпадает с заказом!', 'warning');
-        }
-    }
-
-    public function paidPayment(OrderAddition $payment, string $document, array $meta = [])
-    {
-        $order = $payment->order;
-        $payment->document = $document;
-        $payment->paid_at = now();
-        $payment->meta = $meta;
-        $payment->save();
-
-        $allPaid = true;//Если все платежи оплачены, то Заказ => Оплачен!
-        foreach ($order->payments as $paymentOrder) {
-            if (!$paymentOrder->isPaid()) $allPaid = false;
-        }
-        if ($allPaid) $order->setPaid();
     }
 
     public function paidOrder(Order $order, string $document)

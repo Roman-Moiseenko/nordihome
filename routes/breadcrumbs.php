@@ -12,6 +12,7 @@ use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Widget;
 use App\Modules\Product\Entity\Attribute;
@@ -464,6 +465,24 @@ Breadcrumbs::for('admin.sales.order.update', function (BreadcrumbTrail $trail, O
 Breadcrumbs::for('admin.sales.order.show', function (BreadcrumbTrail $trail, Order $order) {
     $trail->parent('admin.sales.order.index');
     $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.order.show', $order));
+});
+
+//PAYMENT
+Breadcrumbs::for('admin.sales.payment.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Платежи', route('admin.sales.payment.index'));
+});
+Breadcrumbs::for('admin.sales.payment.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales.payment.index');
+    $trail->push('Новый платеж', route('admin.sales.payment.create'));
+});
+Breadcrumbs::for('admin.sales.payment.edit', function (BreadcrumbTrail $trail, OrderPayment $payment) {
+    $trail->parent('admin.sales.payment.show', $payment);
+    $trail->push('Изменить', route('admin.sales.payment.edit', $payment));
+});
+Breadcrumbs::for('admin.sales.payment.show', function (BreadcrumbTrail $trail, OrderPayment $payment) {
+    $trail->parent('admin.sales.payment.index');
+    $trail->push('Платеж за заказ ' . $payment->order->htmlDate() . ' ' . $payment->order->htmlNum(), route('admin.sales.payment.show', $payment));
 });
 
 /*

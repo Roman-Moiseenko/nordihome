@@ -15,6 +15,7 @@ use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * @property int $id
+ * @property int $number - номер заказа, присваивается автоматически ++ при отправке на оплату
  * @property int $user_id
  * @property int $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $paid //Оплачен (для быстрой фильтрации)
@@ -269,7 +270,6 @@ class Order extends Model
         return is_null($responsible) ? null : $responsible->staff;
     }
 
-    //TODO заменить на всем сайте переменные на функции по суммам!!!!
     //Суммы по заказу*******************
     /**
      * Базовая стоимость всех товаров
@@ -394,6 +394,18 @@ class Order extends Model
             $this->getManual();
     }
 
+    /**
+     * Сумма всех платежей по заказу
+     * @return float
+     */
+    public function getPaymentAmount(): float
+    {
+        $payments = 0;
+        foreach ($this->payments as $payment) {
+            $payments += $payment->amount;
+        }
+        return $payments;
+    }
     ///*** Relations *************************************************************************************
 
     public function items()
@@ -467,7 +479,8 @@ class Order extends Model
 
     public function htmlNum(): string
     {
-        return '№ ' . str_pad((string)$this->id, 6, '0', STR_PAD_LEFT);
+        if (is_null($this->number)) return 'б/н';
+        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
     }
 
     public function statusHtml(): string
@@ -528,4 +541,13 @@ class Order extends Model
             }
         }
     }
+
+    public function setNumber()
+    {
+        $count = Order::where('number', '<>', null)->count();
+        $this->number = $count + 1;
+        $this->save();
+    }
+
+
 }
