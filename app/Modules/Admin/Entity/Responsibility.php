@@ -20,15 +20,18 @@ class Responsibility extends Model
     public $timestamps = false;
 
     //Управления
-    public const MANAGER_ORDER = 1001;
-    public const MANAGER_PRODUCT = 1002;
-    public const MANAGER_ACCOUNTING = 1003;
-    public const MANAGER_DELIVERY = 1004;
+    public const MANAGER_ORDER = 1001; // order
+    public const MANAGER_PRODUCT = 1002; //product
+    public const MANAGER_ACCOUNTING = 1003; //accounting
+    public const MANAGER_DELIVERY = 1004; //delivery
 
-    public const MANAGER_LOGGER = 1005;
-    public const MANAGER_DISCOUNT = 1006;
-    public const MANAGER_USER = 1007;
+    public const MANAGER_LOGGER = 1005; //logger
+    public const MANAGER_DISCOUNT = 1006; //discount
+    public const MANAGER_USER = 1007; //user
+    public const MANAGER_PAYMENT = 1008; //paid
+    public const MANAGER_STAFF = 1009; //staff
 
+    public const MANAGER_OPTIONS = 1010; //options
 
     //Отчеты и/или Контроль
     public const REPORT_THROWABLE = 2001;
@@ -43,10 +46,14 @@ class Responsibility extends Model
         self::MANAGER_DELIVERY => 'Доставка товаров',
         self::MANAGER_LOGGER => 'Сборка и выдача товаров',
         self::MANAGER_DISCOUNT => 'Работа со скидками',
+        self::MANAGER_PAYMENT => 'Работа с платежами',
         self::MANAGER_USER => 'Доступ к данным о клиенте',
+        self::MANAGER_STAFF => 'Доступ к данным о сотруднике',
+        self::MANAGER_OPTIONS => 'Настройки сайта',
+
         // ----------------------- //
-        self::REPORT_THROWABLE => 'Логи по ошибкам сайта',
-        self::REPORT_OTHER => 'Другие отчеты',
+        self::REPORT_THROWABLE => 'Report: Логи по ошибкам сайта',
+        self::REPORT_OTHER => 'Report: Другие отчеты',
 
     ];
 

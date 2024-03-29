@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Config;
 class ReserveController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware(['auth:admin', 'can:order']);
+    }
+
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {

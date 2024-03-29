@@ -25,16 +25,58 @@ class AuthServiceProvider extends ServiceProvider
     {
         //$this->registerPolicies();
 
+/*
+        * MANAGER_ORDER = order
+        * MANAGER_PRODUCT = product
+        * MANAGER_ACCOUNTING = accounting
+        * MANAGER_DELIVERY = delivery
+
+        * MANAGER_LOGGER = logger
+        * MANAGER_DISCOUNT = discount
+        * MANAGER_USER = user
+        * MANAGER_PAYMENT = payment
+        * MANAGER_STAFF = staff
+
+        * MANAGER_OPTIONS = options
+        */
+
         Gate::define('admin-panel', function (Admin $user) {
             return $user->isAdmin() || $user->isChief();
         });
-
-        Gate::define('user-manager', function (Admin $user) {
+        Gate::define('user', function (Admin $user) {
             return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_USER);
         });
-        Gate::define('commodity', function (Admin $user) {
+        Gate::define('staff', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_STAFF);
+        });
+
+        Gate::define('product', function (Admin $user) {
             return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_PRODUCT);
         });
+        Gate::define('options', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_OPTIONS);
+        });
+
+        Gate::define('order', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_ORDER);
+        });
+        Gate::define('payment', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_PAYMENT);
+        });
+        Gate::define('discount', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_DISCOUNT);
+        });
+        Gate::define('delivery', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_DELIVERY);
+        });
+        Gate::define('accounting', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_ACCOUNTING);
+        });
+        Gate::define('logger', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_LOGGER);
+        });
+
+
 
         //TODO Добавить доступы разграничения
         Gate::define('', function (Admin $user) {

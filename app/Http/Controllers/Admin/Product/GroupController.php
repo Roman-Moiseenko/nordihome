@@ -17,7 +17,7 @@ class GroupController extends Controller
 
     public function __construct(GroupService $service, ProductRepository $products)
     {
-        $this->middleware(['auth:admin', 'can:commodity']);
+        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->products = $products;
     }

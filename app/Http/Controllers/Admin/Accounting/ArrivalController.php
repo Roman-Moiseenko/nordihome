@@ -22,6 +22,7 @@ class ArrivalController extends Controller
 
     public function __construct(ArrivalService $service, ProductRepository $products)
     {
+        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->products = $products;
     }

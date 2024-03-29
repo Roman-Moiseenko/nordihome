@@ -27,7 +27,7 @@ class ProductController extends Controller
 
     public function __construct(ProductService $service, Options $options, ProductRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:commodity']);
+        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->options = $options;
         $this->repository = $repository;

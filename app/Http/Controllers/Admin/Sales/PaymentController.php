@@ -18,6 +18,7 @@ class PaymentController extends Controller
 
     public function __construct(PaymentService $service)
     {
+        $this->middleware(['auth:admin', 'can:payment']);
         $this->service = $service;
     }
 

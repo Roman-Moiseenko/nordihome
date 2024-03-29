@@ -26,7 +26,7 @@ class AttributeController extends Controller
         AttributeService $service,
         AttributeGroupService $groupService)
     {
-        $this->middleware(['auth:admin', 'can:commodity']);
+        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->groupService = $groupService;
     }

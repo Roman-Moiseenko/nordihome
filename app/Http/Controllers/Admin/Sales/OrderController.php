@@ -41,6 +41,7 @@ class OrderController extends Controller
         OrderRepository   $repository,
         ProductRepository $products)
     {
+        $this->middleware(['auth:admin', 'can:order']);
         $this->service = $service;
         $this->staffs = $staffs;
         $this->repository = $repository;

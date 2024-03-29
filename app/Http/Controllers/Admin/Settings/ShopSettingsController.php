@@ -18,7 +18,7 @@ class ShopSettingsController extends Controller
 
     public function __construct(SettingService $service)
     {
-        $this->middleware(['auth:admin']);
+        $this->middleware(['auth:admin, can:options']);
         $this->service = $service;
     }
 

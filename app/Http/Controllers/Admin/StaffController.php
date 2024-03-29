@@ -23,7 +23,7 @@ class StaffController extends Controller
 
     public function __construct(StaffService $service, StaffRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:user-manager']);
+        $this->middleware(['auth:admin', 'can:staff']);
         $this->service = $service;
         $this->repository = $repository;
     }

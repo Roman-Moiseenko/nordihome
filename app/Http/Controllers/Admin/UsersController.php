@@ -17,8 +17,7 @@ class UsersController extends Controller
 
     public function __construct(RegisterService $service, UserRepository $repository)
     {
-        $this->middleware('auth:admin');
-        $this->middleware('can:user-manager');
+        $this->middleware(['auth:admin', 'can:user']);
         $this->service = $service;
         $this->repository = $repository;
     }

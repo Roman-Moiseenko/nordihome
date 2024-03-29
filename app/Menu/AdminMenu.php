@@ -8,71 +8,60 @@ class AdminMenu
     public static function menu(): array
     {
         return [
-
             'staff' => [
                 'icon' => 'contact',
                 'title' => 'Сотрудники',
                 'route_name' => 'admin.staff.index',
-                'can' => 'user-manager',
+                'can' => 'staff',
             ],
             'clients' => [
                 'icon' => 'users',
                 'title' => 'Клиенты',
                 'route_name' => 'admin.users.index',
-                'can' => 'user-manager',
+                'can' => 'user',
             ],
             'divider',
             'sales' => [
                 'icon' => 'coins',
                 'title' => 'Продажи',
-                'can' => '',
+                'can' => ['order','payment'],
                 'sub_menu' => [
                     'order' => [
                         'icon' => 'file-plus-2',
                         'title' => 'Заказы',
                         'route_name' => 'admin.sales.order.index',
+                        'can' => 'order',
                     ],
                     'payment' => [
                         'icon' => 'credit-card',
                         'title' => 'Платежи',
                         'route_name' => 'admin.sales.payment.index',
+                        'can' => 'payment',
                     ],
-                 /*   'preorder' => [
-                        'icon' => 'file-scan',
-                        'title' => 'Предзаказы',
-                        'route_name' => 'admin.sales.preorder.index',
-                    ],
-                    'parser' => [
-                        'icon' => 'file-search',
-                        'title' => 'Парсер',
-                        'route_name' => 'admin.sales.parser.index',
-                    ],
-                    'executed' => [
-                        'icon' => 'file-check-2',
-                        'title' => 'Заказы (исп.)',
-                        'route_name' => 'admin.sales.executed.index',
-                    ],*/
                     'reserve' => [
                         'icon' => 'baggage-claim',
                         'title' => 'Резерв',
                         'route_name' => 'admin.sales.reserve.index',
+                        'can' => 'order',
                     ],
                     'cart' => [
                         'icon' => 'shopping-cart',
                         'title' => 'Корзина',
                         'route_name' => 'admin.sales.cart.index',
+                        'can' => 'order',
                     ],
                     'wish' => [
                         'icon' => 'heart',
                         'title' => 'Избранное',
                         'route_name' => 'admin.sales.wish.index',
+                        'can' => 'order',
                     ],
                 ],
             ],
             'delivery' => [
                 'icon' => 'truck',
                 'title' => 'Доставка',
-                'can' => '',
+                'can' => ['order', 'delivery'],
                 'sub_menu' => [
                     'storage' => [
                         'icon' => 'warehouse',
@@ -96,10 +85,10 @@ class AdminMenu
 
             ],
             'divider',
-            'products' => [
+            'shop' => [
                 'icon' => 'store',
                 'title' => 'Магазин',
-                'can' => 'commodity',
+                'can' => 'product',
                 'sub_menu' => [
                     'product' => [
                         'icon' => 'package-open',
@@ -156,7 +145,7 @@ class AdminMenu
             'discount' => [
                 'icon' => 'badge-percent',
                 'title' => 'Скидки',
-                'can' => 'commodity',
+                'can' => 'discount',
                 'sub_menu' => [
                     'promotion' => [
                         'icon' => 'percent',
@@ -185,7 +174,7 @@ class AdminMenu
             'accounting' => [
                 'icon' => 'database',
                 'title' => 'Товарный учет',
-                'can' => 'commodity',
+                'can' => 'accounting',
                 'sub_menu' => [
                     'arrival' => [
                         'icon' => 'folder-input',
@@ -228,7 +217,7 @@ class AdminMenu
             'task' => [
                 'icon' => 'clipboard-check',
                 'title' => 'Задачи',
-                'can' => 'commodity',
+                'can' => '',
                 'sub_menu' => [
                     'notification' => [
                         'icon' => 'bell-ring',
@@ -246,7 +235,7 @@ class AdminMenu
             'frontend' => [
                 'icon' => 'monitor',
                 'title' => 'Фронтенд',
-                'can' => '',
+                'can' => 'options',
                 'sub_menu' => [
                     'widgets' => [
                         'icon' => 'film',
@@ -278,7 +267,7 @@ class AdminMenu
             'options' => [
                 'icon' => 'settings',
                 'title' => 'Настройки',
-                'can' => 'user-manager',
+                'can' => 'admin-panel',
                 'sub_menu' => [
                     'shop' => [
                         'icon' => 'store',

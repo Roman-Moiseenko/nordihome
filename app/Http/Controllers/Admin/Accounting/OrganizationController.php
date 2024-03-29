@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class OrganizationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth:admin', 'can:accounting']);
+    }
 
     public function index(Request $request)
     {

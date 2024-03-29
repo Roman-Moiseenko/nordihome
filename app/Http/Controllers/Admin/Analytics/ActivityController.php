@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Config;
 
 class ActivityController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth:admin', 'can:accounting']);
+    }
 
     public function index(Request $request)
     {

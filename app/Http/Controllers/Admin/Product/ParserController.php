@@ -13,7 +13,7 @@ class ParserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:admin', 'can:commodity']);
+        $this->middleware(['auth:admin', 'can:product']);
     }
 
     public function index(Request $request)

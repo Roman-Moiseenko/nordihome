@@ -11,9 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        $payments = \App\Modules\Order\Entity\Order\OrderPayment::orderBy('id')->get();
+        foreach ($payments as $payment) {
+            $payment->delete();
+        }
         Schema::table('order_payments', function (Blueprint $table) {
             $table->integer('staff_id')->nullable();
-            $table->timestamp('updated_at');
+            $table->dropColumn('created_at');
+        });
+        Schema::table('order_payments', function (Blueprint $table) {
+            $table->timestamps();
         });
     }
 

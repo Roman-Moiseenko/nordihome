@@ -19,6 +19,7 @@ class StorageController extends Controller
 
     public function __construct(StorageService $service)
     {
+        $this->middleware(['auth:admin', 'can:admin-panel']);
         $this->service = $service;
     }
 

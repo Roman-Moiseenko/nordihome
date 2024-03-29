@@ -20,7 +20,7 @@ class BrandController extends Controller
 
     public function __construct(BrandService $service, BrandRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:commodity']);
+        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->repository = $repository;
     }
