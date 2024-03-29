@@ -49,7 +49,8 @@ class PaymentController extends Controller
     {
         return $this->try_catch_admin(function () use ($request) {
             $payment = $this->service->create($request);
-            return redirect()->route('admin.sales.payment.show', $payment);
+            return redirect()->route('admin.sales.payment.index');
+            //return redirect()->route('admin.sales.payment.show', $payment);
         });
     }
 
@@ -68,14 +69,16 @@ class PaymentController extends Controller
     {
         return $this->try_catch_admin(function () use ($payment, $request) {
             $payment = $this->service->update($payment, $request);
-            return redirect()->route('admin.sales.payment.show', $payment);
+            return redirect()->route('admin.sales.payment.index');
+            //return redirect()->route('admin.sales.payment.show', $payment);
         });
     }
 
     public function show(OrderPayment $payment)
     {
         return $this->try_catch_admin(function () use ($payment) {
-            return view('admin.sales.payment.create', $payment);
+            return redirect()->route('admin.sales.payment.index');
+            //return view('admin.sales.payment.show', $payment);
         });
     }
 

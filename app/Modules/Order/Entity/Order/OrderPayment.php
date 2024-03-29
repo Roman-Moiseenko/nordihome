@@ -47,7 +47,7 @@ class OrderPayment extends Model
 
     public function order()
     {
-        return $this->belongsTo(Order::class, 'orders', 'id');
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     public function methodHTML(): string
@@ -58,5 +58,11 @@ class OrderPayment extends Model
     public function staff()
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
+
+    //Хелперы
+    public function getUserFullName(): string
+    {
+        return $this->order->user->delivery->fullname->getFullName();
     }
 }

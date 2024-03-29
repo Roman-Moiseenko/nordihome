@@ -13,9 +13,7 @@
             ** фильтр
         </div>
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <button data-tw-toggle="modal" data-tw-target="#modal-create-order" class="btn btn-primary shadow-md mr-2"
-                    type="button">Создать платеж
-            </button>
+            <a class="btn btn-primary shadow-md mr-2" href="{{ route('admin.sales.payment.create') }}">Создать платеж</a>
             {{ $payments->links('admin.components.count-paginator') }}
         </div>
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">

@@ -38,10 +38,10 @@ class PaymentService
     public function create(Request $request): OrderPayment
     {
         /** @var Order $order */
-        $order = Order::find((int)$request['order_id']);
-        if ($order->status != OrderStatus::AWAITING || $order->status != OrderStatus::PREPAID)
+        $order = Order::find((int)$request['order']);
+        if ($order->status->value != OrderStatus::AWAITING && $order->status->value != OrderStatus::PREPAID)
             throw new \DomainException('Нельзя внести платеж за заказ!');
-        $payment = OrderPayment::new((float)$request['amount'], $request['method'], $request['document']);
+        $payment = OrderPayment::new((float)$request['amount'], $request['method'], $request['document'] ?? '');
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $payment->staff_id = $staff->id;
@@ -51,7 +51,7 @@ class PaymentService
             $order->setPaid();
             event(new OrderHasPaid($order));
         }
-        if ($order->status == OrderStatus::AWAITING) {
+        if ($order->status->value == OrderStatus::AWAITING) {
             $order->setStatus(OrderStatus::PREPAID);
             event(new OrderHasPrepaid($order));
         }
@@ -67,7 +67,7 @@ class PaymentService
     {
         /** @var Order $order */
         $order = Order::find((int)$data['order_id']);
-        $payment = OrderPayment::new((float)$data['amount'], $data['method'], $data['document']);
+        $payment = OrderPayment::new((float)$data['amount'], $data['method'], $data['document'] ?? '');
 
         $order->payments()->save($payment);
         $order->refresh();
@@ -75,7 +75,7 @@ class PaymentService
             $order->setPaid();
             event(new OrderHasPaid($order));
         }
-        if ($order->status == OrderStatus::AWAITING) {
+        if ($order->status->value == OrderStatus::AWAITING) {
             $order->setStatus(OrderStatus::PREPAID);
             event(new OrderHasPrepaid($order));
         }
@@ -85,12 +85,12 @@ class PaymentService
     public function update(OrderPayment $payment, Request $request): OrderPayment
     {
         $order = $payment->order;
-        if ($order->status != OrderStatus::PREPAID)
+        if ($order->status->value != OrderStatus::PREPAID)
             throw new \DomainException('Нельзя внести изменения в платеж за заказ!');
         //TODO Подумать, можно ли вносить изменения в сумму
         $payment->amount = (float)$request['amount'];
         $payment->method = $request['method'];
-        $payment->document = $request['document'];
+        $payment->document = $request['document'] ?? '';
         $payment->save();
         $payment->refresh();
         return $payment;
@@ -99,7 +99,7 @@ class PaymentService
     public function destroy(OrderPayment $payment)
     {
         $order = $payment->order;
-        if ($order->status != OrderStatus::PREPAID)
+        if ($order->status->value != OrderStatus::PREPAID)
             throw new \DomainException('Нельзя удалить платеж за заказ!');
         $payment->delete();
         $order->refresh();

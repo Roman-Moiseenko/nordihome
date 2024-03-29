@@ -55,6 +55,7 @@ class OrderStatus extends Model
         self::FORMED => 'Сформирован',
         self::SET_MANAGER => 'В работе у менеджера',
         self::AWAITING => 'Ожидает оплаты',
+        self::PREPAID => 'Внесена предоплата',
         self::PAID => 'Оплачен',
         self::ISSUED_SELLER => 'Оформлен у поставщика',
         self::ON_PACKAGE => 'На комплектации',
