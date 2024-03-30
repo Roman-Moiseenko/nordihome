@@ -550,8 +550,10 @@ class OrderService
 
         if (!is_null($discount = $this->calculator->discount($items))) {
             $order->discount_id = $discount->id;
-            $order->save();
+        } else {
+            $order->discount_id = null;
         }
+        $order->save();
     }
 
     public function update_addition(OrderAddition $addition, int $amount): Order

@@ -6,26 +6,24 @@
     </div>
     <div class="w-32 text-center px-1">
         <div>{{ price($item->base_cost) }}</div>
-        <div class="input-group">
-            <input id="sell_cost-{{ $item->id }}" type="text" class="form-control text-right update-data-ajax"
+
+            <input id="sell_cost-{{ $item->id }}" type="text" class="form-control text-center update-data-ajax"
                    value="{{ $item->sell_cost }}" aria-describedby="input-sell_cost"
                    min="0" data-id="{{ $item->id }}" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
                    data-route="{{ route('admin.sales.order.update-sell', $item) }}"
             >
-            <div id="input-quantity" class="input-group-text">₽</div>
-        </div>
+
     </div>
-    <div class="w-32 px-1 text-center">
+    <div class="w-20 px-1 text-center">
         <div>{{  $edit ? (($item->product->count_for_sell + $item->quantity) . ' шт.') : '-' }} </div>
-        <div class="input-group">
-        <input id="quantity-{{ $item->id }}" type="number" class="form-control text-right update-data-ajax"
+
+        <input id="quantity-{{ $item->id }}" type="number" class="form-control text-center update-data-ajax"
                value="{{ $item->quantity }}" aria-describedby="input-quantity"
                min="1" @if(!$item->preorder) max="{{ $item->product->count_for_sell + $item->quantity }}"
                @endif data-id="{{ $item->id }}" @if(!$edit) readonly @endif
                data-route="{{ route('admin.sales.order.update-quantity', $item) }}"
         >
-        <div id="input-quantity" class="input-group-text">шт.</div>
-        </div>
+
     </div>
     <div class="w-40 text-center">
         @foreach($item->product->getStorages() as $storage)

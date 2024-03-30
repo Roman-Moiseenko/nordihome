@@ -69,6 +69,7 @@ use Illuminate\Support\Str;
  * @property CartCookie[] $cartCookies
  * @property Wish[] $wishes
  * @property Reserve[] $reserves
+
  */
 class Product extends Model
 {
@@ -258,6 +259,8 @@ class Product extends Model
         }
         return $result;
     }
+
+
 
     /**
      * @return float Предыдущая цена товара (учитывается случаи когда всего цен менее 2
