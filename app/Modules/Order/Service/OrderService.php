@@ -44,7 +44,7 @@ class OrderService
     private int $coupon;
     private ShopRepository $repository;
     private CouponService $coupons;
-    private $minutes;
+    private $minutes; //Время резерва товара в заказе
     private ReserveService $reserves;
     private ParserCart $parserCart;
     private CalculatorOrder $calculator;
@@ -320,7 +320,7 @@ class OrderService
             $user = User::find((int)$request['user_id']);
         }
         $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
-        event(new OrderHasCreated($order));
+        //Оповещать не нужно event(new OrderHasCreated($order));
 
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
@@ -454,6 +454,10 @@ class OrderService
             $preItem = $this->createNewItem($product, $preorder_count, false, $user_id);
             $preItem->preorder = true;
             $order->items()->save($preItem);
+        }
+        //Обновляем резерв для всех товаров из заказа
+        foreach ($order->items as $item) {
+            if (!$item->preorder) $item->reserve->update(['reserve_at', now()->addMinutes($this->minutes)]);
         }
 
         $this->recalculation($order);

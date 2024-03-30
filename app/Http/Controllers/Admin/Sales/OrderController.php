@@ -351,7 +351,7 @@ class OrderController extends Controller
                     'storage' => $user->delivery->storage,
                     'local' => $user->delivery->local->address,
                     'region' => $user->delivery->region->address,
-                    'payment' => $user->payment->class_payment,
+                    'payment' => $user->getDefaultPayment(),
                 ];
                 return response()->json($result);
             }

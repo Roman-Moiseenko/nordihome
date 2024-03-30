@@ -4,6 +4,7 @@ namespace App\Modules\User\Entity;
 
 
 use App\Modules\Delivery\Entity\UserDelivery;
+use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Order\Entity\UserPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -118,5 +119,18 @@ class User extends Authenticatable
     public function payment()
     {
         return $this->hasOne(UserPayment::class, 'user_id', 'id');
+    }
+
+    /**
+     * Платеж по умолчанию
+     * @return string
+     */
+    public function getDefaultPayment(): string
+    {
+        if (is_null($this->payment)) {
+            $payments = PaymentHelper::payments();
+            return array_key_first($payments);
+        }
+        return $this->payment->class_payment;
     }
 }
