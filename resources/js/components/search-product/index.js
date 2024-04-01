@@ -47,6 +47,7 @@
                     }
                     _inputSearch.val($(this).data('name'));
                     _inputSearch.attr('data-id', $(this).data('id'));
+                    _inputSearch.attr('data-url', $(this).data('url'));
                     _inputSearch.attr('data-name', $(this).data('name'));
                     _inputSearch.attr('data-img', $(this).data('img'));
                     _inputSearch.attr('data-price', $(this).data('price'));
@@ -89,7 +90,7 @@
                                 _count = '<span class="circle green"></span>';
                             }
                         }
-                        _listBox.append('<div class="search-option" data-for="' + _id_search + '" data-id="' + item.id +
+                        _listBox.append('<div class="search-option" data-for="' + _id_search + '" data-url="' + item.url + '" data-id="' + item.id +
                             '" data-name="' + item.name + '" data-img="' + item.image + '" data-code="' + item.code + '" data-price="' + item.price + '" ' + _other + '>' +
                             _count + item.name + ' (' + item.code + ')'+
                             '</div>');

@@ -55,9 +55,9 @@ class ArrivalController extends Controller
     {
         return $this->try_catch_admin(function () use($request) {
             $distributors = Distributor::get();
-            $currencies = Currency::get();
+            //$currencies = Currency::get();
             $storages = Storage::get();
-            return view('admin.accounting.arrival.create', compact('distributors', 'currencies', 'storages'));
+            return view('admin.accounting.arrival.create', compact('distributors', 'storages'));
         });
     }
 
@@ -66,7 +66,7 @@ class ArrivalController extends Controller
         $request->validate([
             'distributor' => 'required',
             'storage' => 'required',
-            'currency' => 'required',
+            //'currency' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request) {
             $arrival = $this->service->create($request);
@@ -86,9 +86,9 @@ class ArrivalController extends Controller
     {
         return $this->try_catch_admin(function () use($arrival) {
             $distributors = Distributor::get();
-            $currencies = Currency::get();
+            //$currencies = Currency::get();
             $storages = Storage::get();
-            return view('admin.accounting.arrival.edit', compact('arrival'), compact('distributors', 'currencies', 'storages'));
+            return view('admin.accounting.arrival.edit', compact('arrival'), compact('distributors', 'storages'));
         });
     }
 
@@ -97,7 +97,7 @@ class ArrivalController extends Controller
         $request->validate([
             'distributor' => 'required',
             'storage' => 'required',
-            'currency' => 'required',
+            //'currency' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request, $arrival) {
             $arrival = $this->service->update($request, $arrival);

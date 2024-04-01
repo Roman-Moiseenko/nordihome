@@ -22,7 +22,7 @@
                     @endforeach
                 </x-base.tom-select>
             </div>
-            <div class="col-span-12 lg:col-span-3 border-l pl-4 flex">
+            <div class="col-span-12 lg:col-span-2 border-l pl-4 flex">
                 <div class="">
                     <div class="form-check mr-3">
                         <input id="published-all" class="form-check-input check-published" type="radio" name="published" value="all" {{ $published == 'all' ? 'checked' : '' }}>
@@ -37,9 +37,11 @@
                         <label class="form-check-label" for="published-draft">Черновики</label>
                     </div>
                 </div>
-                <div class="border-l pl-4 ">
-                Поиск по имени или артикулу
-                </div>
+            </div>
+            <div class="col-span-12 lg:col-span-4 border-l pl-4 flex flex-col">
+                <x-base.form-label>Поиск товара по названию или артикулу</x-base.form-label>
+                <x-searchProduct id="search-product-select" route="{{ route('admin.product.search') }}"
+                                 input-data="product-product" hidden-id="product_id" class="w-full"  callback="_callback()"/>
             </div>
         </div>
     </div>
@@ -62,7 +64,11 @@
                 urlParams.set('published', v);
                 window.location.search = urlParams;
             });
-        })
+        });
+
+        function _callback() {
+            window.location.href = document.getElementById('product-product').dataset.url;
+        }
     </script>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->

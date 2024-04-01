@@ -11,6 +11,19 @@
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
                         {{ \App\Forms\Input::create('name', ['placeholder' => 'Название', 'value' => $distributor->name ?? '', 'class' => 'mt-5'])->show() }}
+
+                        <x-base.tom-select id="select-currency" name="currency_id" class="w-full mt-3" data-placeholder="Выберите валюту документа">
+                            <option value="0"></option>
+                            @foreach($currencies as $currency)
+                                <option value="{{ $currency->id }}"
+                                @if($distributor)
+                                    {{ $distributor->currency_id == $currency->id ? 'selected' : ''}}
+                                    @endif
+                                >
+                                    {{ $currency->name }}
+                                </option>
+                            @endforeach
+                        </x-base.tom-select>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
 

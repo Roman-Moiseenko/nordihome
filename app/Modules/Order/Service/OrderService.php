@@ -9,6 +9,8 @@ use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
 use App\Events\UserHasCreated;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Analytics\Entity\LoggerOrder;
+use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\UserDelivery;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
@@ -48,6 +50,7 @@ class OrderService
     private ReserveService $reserves;
     private ParserCart $parserCart;
     private CalculatorOrder $calculator;
+    private LoggerService $logger;
 
     public function __construct(
         PaymentService  $payments,
@@ -57,7 +60,8 @@ class OrderService
         ShopRepository  $repository,
         CouponService   $coupons,
         ReserveService  $reserves,
-        CalculatorOrder $calculator
+        CalculatorOrder $calculator,
+        LoggerService   $logger,
     )
     {
         $this->payments = $payments;
@@ -70,6 +74,7 @@ class OrderService
         $this->reserves = $reserves;
         $this->parserCart = $parserCart;
         $this->calculator = $calculator;
+        $this->logger = $logger;
     }
 
     public function default_user_data(User $user = null): stdClass
@@ -462,18 +467,34 @@ class OrderService
 
         $this->recalculation($order);
 
+        $this->logger->logOrder($order, 'Добавлен товар', $product->name, (string)$quantity);
+
         return $order;
     }
 
+    /**
+     * Добавить в заказ доп.услугу
+     * @param Order $order
+     * @param Request $request
+     * @return Order
+     */
     public function add_addition(Order $order, Request $request): Order
     {
         if ((int)$request['purpose'] == 0) throw new \DomainException('Не выбрана дополнительная услуга!');
         if ((int)$request['amount'] == 0) throw new \DomainException('Стоимость услуги должна быть больше нуля!');
-        $order->additions()->save(OrderAddition::new((int)$request['amount'], (int)$request['purpose'], $request['comment'] ?? ''));
+        $orderAddition = OrderAddition::new((int)$request['amount'], (int)$request['purpose'], $request['comment'] ?? '');
+        $order->additions()->save($orderAddition);
         $order->refresh();
+        $this->logger->logOrder($order, 'Добавлена услуга', $orderAddition->purposeHTML(), price($orderAddition->amount));
         return $order;
     }
 
+    /**
+     * Изменения кол-ва товара, с учетом "в наличии" и перерасчетом всего заказа
+     * @param OrderItem $item - изменяемая позиция
+     * @param int $quantity - новое значение кол-ва
+     * @return Order
+     */
     public function update_quantity(OrderItem $item, int $quantity): Order
     {
         $delta = $quantity - $item->quantity;
@@ -489,9 +510,17 @@ class OrderService
         $order = $item->order;
 
         $this->recalculation($order);
+        $this->logger->logOrder($order, 'Изменено кол-во товара', $item->product->name, (string)$quantity);
+
         return $order;
     }
 
+    /**
+     * Изменяем цену продажи товара для текущего заказа
+     * @param OrderItem $item
+     * @param int $sell_cost
+     * @return Order
+     */
     public function update_sell(OrderItem $item, int $sell_cost): Order
     {
         $item->sell_cost = $sell_cost;
@@ -499,20 +528,30 @@ class OrderService
         $order = $item->order;
 
         $this->recalculation($order);
+        $this->logger->logOrder($order, 'Изменена цена товара', $item->product->name, price($sell_cost));
         return $order;
     }
 
+    /**
+     * Устанавливаем в ручную доп. скидку на заказ
+     * @param Order $order
+     * @param int $manual
+     * @return Order
+     */
     public function update_manual(Order $order, int $manual): Order
     {
+        $old = $order->manual;
         $order->manual = $manual;
         $order->save();
         $order->refresh();
+        $this->logger->logOrder($order, 'Изменена скидка на заказ', price($old), price($manual));
         return $order;
     }
 
     public function delete_addition(OrderAddition $addition): Order
     {
         $order = $addition->order;
+        $this->logger->logOrder($order, 'Удалена услуга', $addition->purposeHTML(), price($addition->amount));
         $addition->delete();
         return $order;
     }
@@ -520,6 +559,7 @@ class OrderService
     public function delete_item(OrderItem $item): Order
     {
         $order = $item->order;
+        $this->logger->logOrder($order, 'Удален товар из заказа', $item->product->name, (string)$item->quantity);
         if (!is_null($item->reserve)) $this->reserves->delete($item->reserve);
         $item->delete();
         $this->recalculation($order);
@@ -530,6 +570,8 @@ class OrderService
     {
         $item->delivery = !$item->delivery;
         $item->save();
+        $this->logger->logOrder($item->order, 'Изменена доставка', $item->product->name, ($item->delivery) ? 'Добавлена' : 'Удалена');
+
         return $item->order;
     }
 
@@ -537,6 +579,8 @@ class OrderService
     {
         $item->assemblage = !$item->assemblage;
         $item->save();
+        $this->logger->logOrder($item->order, 'Изменена сборка', $item->product->name, ($item->assemblage) ? 'Добавлена' : 'Удалена');
+
         return $item->order;
     }
 
@@ -564,6 +608,8 @@ class OrderService
     {
         $addition->amount = $amount;
         $addition->save();
+        $this->logger->logOrder($addition->order, 'Изменена цена услуги', $addition->purposeHTML(), price($amount));
+
         return $addition->order;
     }
 

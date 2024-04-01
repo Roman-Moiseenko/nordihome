@@ -12,13 +12,11 @@
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-
             <button class="btn btn-primary shadow-md mr-2"
                     onclick="window.location.href='{{ route('admin.accounting.storage.edit', $storage) }}'">Редактировать
             </button>
             {{ $items->links('admin.components.count-paginator') }}
         </div>
-
 
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">

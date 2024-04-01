@@ -8,6 +8,8 @@ use App\Events\OrderHasCreated;
 use App\Events\OrderHasPaid;
 use App\Events\OrderHasPrepaid;
 use App\Events\PaymentHasPaid;
+use App\Modules\Analytics\Entity\LoggerOrder;
+use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderPayment;
@@ -19,6 +21,14 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentService
 {
+
+    private LoggerService $logger;
+
+    public function __construct(LoggerService $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function user(int $user_id): UserPayment
     {
         if ($user = UserPayment::where('user_id', $user_id)->first()) return $user;
@@ -55,6 +65,7 @@ class PaymentService
             $order->setStatus(OrderStatus::PREPAID);
             event(new OrderHasPrepaid($order));
         }
+        $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
         return $payment;
     }
 
@@ -81,18 +92,30 @@ class PaymentService
         }
     }
 
-
     public function update(OrderPayment $payment, Request $request): OrderPayment
     {
         $order = $payment->order;
         if ($order->status->value != OrderStatus::PREPAID)
             throw new \DomainException('Нельзя внести изменения в платеж за заказ!');
-        //TODO Подумать, можно ли вносить изменения в сумму
-        $payment->amount = (float)$request['amount'];
-        $payment->method = $request['method'];
+
+        if ($payment->amount != (float)$request['amount']) {
+            $old_value = price($payment->amount);
+            $payment->amount = (float)$request['amount'];
+            $new_value = price($payment->amount);
+            $this->logger->logOrder($order, 'Изменена сумма оплаты', $old_value, $new_value);
+        }
+
+        if ($payment->method != $request['method']) {
+            $old_value = $payment->methodHTML();
+            $payment->method = $request['method'];
+            $new_value = $payment->methodHTML();
+            $this->logger->logOrder($order, 'Изменен способ оплаты', $old_value, $new_value);
+        }
+
         $payment->document = $request['document'] ?? '';
         $payment->save();
         $payment->refresh();
+
         return $payment;
     }
 
@@ -101,6 +124,7 @@ class PaymentService
         $order = $payment->order;
         if ($order->status->value != OrderStatus::PREPAID)
             throw new \DomainException('Нельзя удалить платеж за заказ!');
+        $this->logger->logOrder($order, 'Удален платеж', $payment->methodHTML(), price($payment->amount));
         $payment->delete();
         $order->refresh();
         if ($order->getPaymentAmount() == 0) {

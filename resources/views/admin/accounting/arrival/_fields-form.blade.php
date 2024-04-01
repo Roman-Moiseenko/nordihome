@@ -24,19 +24,6 @@
                             @endforeach
                         </x-base.tom-select>
 
-                        <x-base.tom-select id="select-currency" name="currency" class="w-full mt-3" data-placeholder="Выберите валюту документа">
-                            <option value="0"></option>
-                            @foreach($currencies as $currency)
-                                <option value="{{ $currency->id }}"
-                                @if($arrival)
-                                    {{ $arrival->currency_id == $currency->id ? 'selected' : ''}}
-                                    @endif
-                                >
-                                    {{ $currency->name }}
-                                </option>
-                            @endforeach
-                        </x-base.tom-select>
-
                         <x-base.tom-select id="select-storage" name="storage" class="w-full mt-3" data-placeholder="Выберите хранилище">
                             <option value="0"></option>
                             @foreach($storages as $storage)

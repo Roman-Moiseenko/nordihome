@@ -16,4 +16,10 @@ class AttributeGroupRepository
     {
         return AttributeGroup::where('name', '=', $name)->first();
     }
+
+    public function get(string $order_by)
+    {
+        return AttributeGroup::orderBy($order_by)->get();
+    }
+
 }

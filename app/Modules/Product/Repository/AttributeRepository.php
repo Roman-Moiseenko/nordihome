@@ -29,10 +29,24 @@ class AttributeRepository
 
     public function getPossibleForCategory(array $parents_id)
     {
-        $attrs = Attribute::whereHas('categories', function ($query) use ($parents_id) {
+        return Attribute::whereHas('categories', function ($query) use ($parents_id) {
             $query->whereIn('category_id', $parents_id);
         })->get();
-        return $attrs;
+    }
+
+    public function getIndex($category_id, $group_id)
+    {
+        $query = Attribute::orderBy('name');
+        if (!empty($category_id) && $category_id != 0) {
+            $query->whereHas('categories', function ($q) use ($category_id) {
+                $q->where('id', '=', $category_id);
+            });
+        }
+        if (!empty($group_id)) {
+            $query->where('group_id', $group_id);
+        }
+
+        return $query;
     }
 
 

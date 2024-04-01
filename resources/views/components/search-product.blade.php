@@ -2,7 +2,8 @@
     {{ !is_null($callback) ? 'data-callback="' . $callback . '"' : '' }}
     {{ !empty($hiddenId) ? 'data-hidden="' . $hiddenId . '"' : '' }}>
 
-    <input id="{{ $inputData }}" type="text" name="search" value="" class="form-control" placeholder="Поиск ..." data-route="{{ $route }}"  data-id="" data-name="" data-img="" data-code="" data-price="">
+    <input id="{{ $inputData }}" type="text" name="search" value="" class="form-control" placeholder="Поиск ..."
+           data-route="{{ $route }}" data-url="" data-id="" data-name="" data-img="" data-code="" data-price="">
     @if(!empty($hiddenId))
         <input type="hidden" id="hidden-id" name="{{ $hiddenId }}" value="">
     @endif

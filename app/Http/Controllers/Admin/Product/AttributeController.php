@@ -9,6 +9,9 @@ use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Repository\AttributeGroupRepository;
+use App\Modules\Product\Repository\AttributeRepository;
+use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Service\AttributeGroupService;
 use App\Modules\Product\Service\AttributeService;
 use App\UseCase\PaginationService;
@@ -20,35 +23,36 @@ class AttributeController extends Controller
 
     private AttributeService $service;
     private AttributeGroupService $groupService;
+    private CategoryRepository $categories;
+    private AttributeRepository $repository;
+    private AttributeGroupRepository $groupRepository;
 
 
     public function __construct(
         AttributeService $service,
-        AttributeGroupService $groupService)
+        AttributeGroupService $groupService,
+        CategoryRepository $categories,
+        AttributeRepository $repository,
+        AttributeGroupRepository $groupRepository,
+    )
     {
         $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->groupService = $groupService;
+        $this->categories = $categories;
+        $this->repository = $repository;
+        $this->groupRepository = $groupRepository;
     }
 
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
+            $category_id = $request->get('category_id');
+            $group_id = $request->get('group_id');
 
-            //TODO Перенести все в Repository!!!
-            $categories = Category::defaultOrder()->withDepth()->get();
-            $groups = AttributeGroup::orderBy('name')->get();
-
-            $query = Attribute::orderBy('name');
-            if (!empty($category_id = $request->get('category_id')) && $category_id != 0) {
-                $query->whereHas('categories', function ($q) use ($category_id) {
-                    $q->where('id', '=', $category_id);
-                });
-            }
-            if (!empty($group_id = $request->get('group_id'))) {
-                $query->where('group_id', $group_id);
-            }
-
+            $categories = $this->categories->withDepth();
+            $groups = $this->groupRepository->get(order_by: 'name');
+            $query = $this->repository->getIndex($category_id, $group_id);
             $prod_attributes = $this->pagination($query, $request, $pagination);
 
             return view('admin.product.attribute.index',
@@ -57,12 +61,11 @@ class AttributeController extends Controller
         });
     }
 
-
     public function create()
     {
         return $this->try_catch_admin(function () {
-            $categories = Category::defaultOrder()->withDepth()->get();
-            $groups = AttributeGroup::orderBy('name')->get();
+            $categories = $this->categories->withDepth();
+            $groups = $this->groupRepository->get(order_by: 'name');
             return view('admin.product.attribute.create', compact('categories', 'groups'));
         });
     }
@@ -91,8 +94,8 @@ class AttributeController extends Controller
     public function edit(Attribute $attribute)
     {
         return $this->try_catch_admin(function () use($attribute) {
-            $categories = Category::defaultOrder()->withDepth()->get();
-            $groups = AttributeGroup::orderBy('name')->get();
+            $categories = $this->categories->withDepth();
+            $groups = $this->groupRepository->get(order_by: 'name');
             return view('admin.product.attribute.edit', compact('attribute', 'categories', 'groups'));
         });
     }
@@ -125,7 +128,7 @@ class AttributeController extends Controller
     public function groups(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
-            $groups = AttributeGroup::orderBy('sort')->get();
+            $groups = $this->groupRepository->get(order_by: 'sort');
             return view('admin.product.attribute.groups', compact('groups'));
         });
     }
@@ -134,7 +137,7 @@ class AttributeController extends Controller
     {
         return $this->try_catch_admin(function () use($group) {
             $this->groupService->up($group);
-            $groups = AttributeGroup::orderBy('sort')->get();
+            $groups = $this->groupRepository->get(order_by: 'sort');
             return redirect(route('admin.product.attribute.groups', compact('groups')));
         });
     }
@@ -143,7 +146,7 @@ class AttributeController extends Controller
     {
         return $this->try_catch_admin(function () use($group) {
             $this->groupService->down($group);
-            $groups = AttributeGroup::orderBy('sort')->get();
+            $groups = $this->groupRepository->get(order_by: 'sort');
             return redirect(route('admin.product.attribute.groups', compact('groups')));
         });
     }

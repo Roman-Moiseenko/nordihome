@@ -128,7 +128,6 @@ class OrderController extends Controller
         });
     }
 
-    //TODO Сделать OrderAction и по каждому действию записывать staff->id, Action, json(данные)
     public function destroy(Order $order)
     {
         return $this->try_catch_admin(function () use ($order) {

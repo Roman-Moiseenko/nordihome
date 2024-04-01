@@ -11,13 +11,15 @@ class DistributorService
 
     public function create(Request $request): Distributor
     {
-        $distributor = Distributor::register($request['name']);
+        $distributor = Distributor::register($request['name'], (int)$request['currency_id']);
+
         return $distributor;
     }
 
     public function update(Request $request, Distributor $distributor): Distributor
     {
         $distributor->name = $request['name'];
+        $distributor->currency_id = (int)$request['currency_id'];
         $distributor->save();
         return $distributor;
     }
@@ -36,7 +38,6 @@ class DistributorService
                 $distributor->products()->updateExistingPivot($product_id, ['cost' => $cost]);
                 return;
             }
-
         }
         $distributor->products()->attach($product_id, ['cost' => $cost]);
     }

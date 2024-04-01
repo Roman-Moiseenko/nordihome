@@ -45,11 +45,17 @@ class ProductController extends Controller
                     $q->where('id', '=', $category_id);
                     if ($published == 'active') $q->where('published', '=', true);
                     if ($published == 'draft') $q->where('published', '=', false);
-                    //TODO выбрать товары из всех подкатегорий
                 })->orWhere('main_category_id', '=', $category_id);
             }
             if ($published == 'active') $query->where('published', '=', true);
             if ($published == 'draft') $query->where('published', '=', false);
+
+            /*
+            if (!empty($search = $request['search'])) {
+                $query->where('code_search', 'LIKE', "%{$search}%")->orWhere('code', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%");
+            }
+             */
             $products = $this->pagination($query, $request, $pagination);
 
             return view('admin.product.product.index', compact('products', 'pagination',

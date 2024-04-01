@@ -55,11 +55,8 @@ class ProductRepository
             }
         }
 
-        if (!is_null($take)) {
-            $query = $query->take($take);
-        } else {
-            //$query = $query->all();
-        }
+        $query = $query->take($take);
+
         return $query->get();
     }
 
@@ -71,6 +68,7 @@ class ProductRepository
             'code' => $product->code,
             'image' => $product->getImage(),
             'price' => $product->getLastPrice(),
+            'url' => route('admin.product.edit', $product),
         ];
     }
 

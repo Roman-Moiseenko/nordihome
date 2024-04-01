@@ -7,6 +7,7 @@ use App\Events\ArrivalHasCompleted;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Currency;
+use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ArrayShape;
@@ -24,12 +25,13 @@ class ArrivalService
 
     public function create(Request $request): ArrivalDocument
     {
-        $currency = Currency::find((int)$request['currency']);
+        /** @var Distributor $distributor */
+        $distributor = Distributor::find((int)$request['distributor']);
         return ArrivalDocument::register(
             $request['number'] ?? '',
             (int)$request['distributor'],
             (int)$request['storage'],
-            $currency
+            $distributor->currency
         );
     }
 
@@ -40,8 +42,9 @@ class ArrivalService
         $arrival->distributor_id = (int)$request['distributor'];
         $arrival->storage_id = (int)$request['storage'];
         $arrival->save();
-        $currency = Currency::find((int)$request['currency']);
-
+        /** @var Distributor $distributor */
+        $distributor = Distributor::find((int)$request['distributor']);
+        $currency = $distributor->currency;
         if ($currency->id != $arrival->currency_id) {
             $arrival->currency_id = $currency->id;
             $arrival->setExchange($currency->exchange);

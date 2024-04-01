@@ -98,6 +98,10 @@ class CategoryRepository
         return Category::defaultOrder()->descendantsOf($parent_id)->toTree();
     }
 
+    /**
+     * Возвращает все категории с учетом глубины
+     * @return mixed
+     */
     public function withDepth()
     {
         return Category::defaultOrder()->withDepth()->get();

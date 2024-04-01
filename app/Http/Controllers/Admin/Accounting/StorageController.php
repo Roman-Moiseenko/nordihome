@@ -54,14 +54,16 @@ class StorageController extends Controller
     public function show(Request $request, Storage $storage)
     {
         return $this->try_catch_admin(function () use($request, $storage) {
-            //TODO поиск по товару ....
             $query = $storage->items();
+            /*
+             * Поиск по товару, нужен ли?
             if (!empty($search = $request['search'])) {
                 $query->whereHas('product', function ($q) use ($search) {
                     $q->where('code_search', 'LIKE', "%{$search}%")
                         ->orWhere('name', 'LIKE', "% {$search}%");
                 });
             }
+            */
             $items = $this->pagination($query, $request, $pagination);
             return view('admin.accounting.storage.show', compact('storage', 'items', 'pagination'));
         });

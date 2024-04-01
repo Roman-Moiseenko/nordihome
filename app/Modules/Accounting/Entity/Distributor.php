@@ -8,20 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
+ * @property int $currency_id
  * @property string $name
  * @property ArrivalDocument[] $arrivals
  * @property Product[] $products
+ * @property Currency $currency
  */
 class Distributor extends Model
 {
     public $timestamps = false;
     public $fillable =[
         'name',
+        'currency_id',
     ];
 
-    public static function register(string $name): self
+    public static function register(string $name, int $currency_id): self
     {
-        return self::create(['name' => $name]);
+        return self::create([
+            'name' => $name,
+            'currency_id' => $currency_id,
+            ]);
     }
 
     public function arrivals()
@@ -41,5 +47,10 @@ class Distributor extends Model
             if ($product->id == $product_id) return $product->pivot->cost;
         }
         return 0.0;
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
 }

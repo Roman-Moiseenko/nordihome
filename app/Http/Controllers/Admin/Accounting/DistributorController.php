@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin\Accounting;
 
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\DistributorProduct;
 use App\Modules\Accounting\Service\DistributorService;
 use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
@@ -32,7 +34,8 @@ class DistributorController extends Controller
 
     public function create(Request $request)
     {
-            return view('admin.accounting.distributor.create');
+        $currencies = Currency::get();
+        return view('admin.accounting.distributor.create', compact('currencies'));
     }
 
     public function store(Request $request)
@@ -46,18 +49,20 @@ class DistributorController extends Controller
         });
     }
 
-    public function show(Distributor $distributor)
+    public function show(Distributor $distributor, Request $request)
     {
-        return $this->try_catch_admin(function () use($distributor) {
-            //TODO В дальнейшем добавить список товаров
-            return view('admin.accounting.distributor.show', compact('distributor'));
+        return $this->try_catch_admin(function () use($distributor, $request) {
+            $query = DistributorProduct::where('distributor_id', $distributor->id);
+            $items = $this->pagination($query, $request, $pagination);
+            return view('admin.accounting.distributor.show', compact('distributor', 'items', 'pagination'));
         });
     }
 
     public function edit(Distributor $distributor)
     {
         return $this->try_catch_admin(function () use($distributor) {
-            return view('admin.accounting.distributor.edit', compact('distributor'));
+            $currencies = Currency::get();
+            return view('admin.accounting.distributor.edit', compact('distributor', 'currencies'));
         });
     }
 

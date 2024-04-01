@@ -81,4 +81,18 @@ class OrderRepository
             })->count(),
         ];
     }
+
+    /**
+     * Возвращает список заказов, которые ждут оплаты, в том числе с внесенной предоплатой
+     * @param int|null $order_id - id текущего заказа, для случая, когда надо поменять назначения платежа, для уже оплаченного заказа
+     * @return mixed
+     */
+    public function getNotPaidYet(int $order_id = null): mixed
+    {
+        $query = Order::whereHas('status', function ($query) {
+            $query->where('value', OrderStatus::PREPAID)->orWhere('value', OrderStatus::AWAITING);
+        });
+        if (!is_null($order_id)) $query->orWhere('id', $order_id);
+        return $query->orderBy('number')->get();
+    }
 }
