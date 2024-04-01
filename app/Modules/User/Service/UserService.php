@@ -35,7 +35,7 @@ class UserService
     {
         $password = trim($request['password']);
         if (strlen($password) < 6) throw new \DomainException('Длина пароля должна быть не менее 6 символов');
-        //TODO другие проверки на сложность пароля
+
         $user->setPassword($request['password']);
         return true;
     }
@@ -49,7 +49,7 @@ class UserService
         $user->email = $email;
         $user->status = User::STATUS_WAIT;
         $user->save();
-        //TODO Заменить на отправку ссылки для верификации
+
         Mail::to($user->email)->send(new VerifyMail($user));
         Auth::logout();
         return true;

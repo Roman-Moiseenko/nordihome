@@ -61,6 +61,6 @@ class VerifyMail extends Mailable
     {
         //$s = new DkimSigner();
         return $this->subject('Подтверждение')
-            ->markdown('mail.user.verify')->with([ 'very_code' => $this->user->verify_token]);
+            ->markdown('mail.user.verify')->with([ 'user' => $this->user]);
     }
 }

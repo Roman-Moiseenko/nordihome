@@ -24,6 +24,6 @@ class NotificationUserCreated
      */
     public function handle(UserHasCreated $event): void
     {
-        Mail::to($event->user->email)->send(new VerifyLinkMail($event->user));
+        Mail::to($event->user->email)->send(new VerifyMail($event->user));
     }
 }

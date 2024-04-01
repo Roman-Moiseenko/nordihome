@@ -263,7 +263,7 @@ class Promotion extends Model implements DataWidgetInterface
         $data = new DataWidget();
         $data->image = $this->image;
         $data->title = $this->title;
-        $data->url = route('shop.promotion.view', $this->slug); //TODO Сделать роут и Контроллер для отдельной страницы Акции
+        $data->url = route('shop.promotion.view', $this->slug);
         $data->items = array_map(function (Product $product) {
             return [
                 'image' => $product->photo,

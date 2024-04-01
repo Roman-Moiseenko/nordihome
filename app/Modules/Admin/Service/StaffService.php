@@ -138,7 +138,6 @@ class StaffService
 
     public function delete(Admin $admin): void
     {
-        //TODO Проверить на связанны данные,
-        // если их нет, то удаляем Сотрудника
+        throw new \DomainException('Нельзя удалить сотрудника! Данная функция доступна только Администратору!');
     }
 }

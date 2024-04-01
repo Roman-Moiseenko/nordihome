@@ -80,7 +80,6 @@ class Storage extends Model
         return $this->hasMany(StorageItem::class, 'storage_id', 'id');
     }
 
-    //TODO перенести в Service
     public function add(Product $product, int $quantity)
     {
         foreach ($this->items as $item) {

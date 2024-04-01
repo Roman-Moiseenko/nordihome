@@ -154,7 +154,7 @@ class OrderItem extends Model implements CartItemInterface
 
     public function setDiscountName(string $discount_name): void
     {
-        //TODO Нужно?
+        //
     }
 
     public function setDiscount(int $discount_id): void

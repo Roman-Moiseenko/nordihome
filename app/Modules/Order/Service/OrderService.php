@@ -407,22 +407,21 @@ class OrderService
         return $orderItem;
     }
 
-
-    #[Deprecated]
-    public function payment(int $order_id, array $payment_data)
+    //**** ФУНКЦИИ РАБОТЫ С ЗАКАЗОМ МЕНЕДЖЕРОМ
+    /**
+     * Устанавливаем в ручную доп. скидку на заказ
+     * @param Order $order
+     * @param int $manual
+     * @return Order
+     */
+    public function update_manual(Order $order, int $manual): Order
     {
-        /** @var Order $order */
-        $order = Order::find($order_id);
-
-        foreach ($order->items as $item) {
-            if ($item->reserve_id != null) {
-                $item->reserve()->delete();
-            } else {
-                $order->setStatus(OrderStatus::REFUND);
-                throw new \DomainException('Произведена оплата за отмененный заказ');
-            }
-        }
-        $order->setStatus(OrderStatus::PAID);
+        $old = $order->manual;
+        $order->manual = $manual;
+        $order->save();
+        $order->refresh();
+        $this->logger->logOrder($order, 'Изменена скидка на заказ', price($old), price($manual));
+        return $order;
     }
 
     /**
@@ -473,23 +472,6 @@ class OrderService
     }
 
     /**
-     * Добавить в заказ доп.услугу
-     * @param Order $order
-     * @param Request $request
-     * @return Order
-     */
-    public function add_addition(Order $order, Request $request): Order
-    {
-        if ((int)$request['purpose'] == 0) throw new \DomainException('Не выбрана дополнительная услуга!');
-        if ((int)$request['amount'] == 0) throw new \DomainException('Стоимость услуги должна быть больше нуля!');
-        $orderAddition = OrderAddition::new((int)$request['amount'], (int)$request['purpose'], $request['comment'] ?? '');
-        $order->additions()->save($orderAddition);
-        $order->refresh();
-        $this->logger->logOrder($order, 'Добавлена услуга', $orderAddition->purposeHTML(), price($orderAddition->amount));
-        return $order;
-    }
-
-    /**
      * Изменения кол-ва товара, с учетом "в наличии" и перерасчетом всего заказа
      * @param OrderItem $item - изменяемая позиция
      * @param int $quantity - новое значение кол-ва
@@ -533,29 +515,38 @@ class OrderService
     }
 
     /**
-     * Устанавливаем в ручную доп. скидку на заказ
-     * @param Order $order
-     * @param int $manual
+     * Изменение доставки для элемента заказа вкл/выкл
+     * @param OrderItem $item
      * @return Order
      */
-    public function update_manual(Order $order, int $manual): Order
+    public function check_delivery(OrderItem $item): Order
     {
-        $old = $order->manual;
-        $order->manual = $manual;
-        $order->save();
-        $order->refresh();
-        $this->logger->logOrder($order, 'Изменена скидка на заказ', price($old), price($manual));
-        return $order;
+        $item->delivery = !$item->delivery;
+        $item->save();
+        $this->logger->logOrder($item->order, 'Изменена доставка', $item->product->name, ($item->delivery) ? 'Добавлена' : 'Удалена');
+
+        return $item->order;
     }
 
-    public function delete_addition(OrderAddition $addition): Order
+    /**
+     * Изменение сборки для элемента заказа вкл/выкл
+     * @param OrderItem $item
+     * @return Order
+     */
+    public function check_assemblage(OrderItem $item): Order
     {
-        $order = $addition->order;
-        $this->logger->logOrder($order, 'Удалена услуга', $addition->purposeHTML(), price($addition->amount));
-        $addition->delete();
-        return $order;
+        $item->assemblage = !$item->assemblage;
+        $item->save();
+        $this->logger->logOrder($item->order, 'Изменена сборка', $item->product->name, ($item->assemblage) ? 'Добавлена' : 'Удалена');
+
+        return $item->order;
     }
 
+    /**
+     * Удаляем позицию в заказе, пересчитываем резерв и скидки по заказу
+     * @param OrderItem $item
+     * @return Order
+     */
     public function delete_item(OrderItem $item): Order
     {
         $order = $item->order;
@@ -566,24 +557,56 @@ class OrderService
         return $order;
     }
 
-    public function check_delivery(OrderItem $item): Order
+    /**
+     * Добавить в заказ доп.услугу
+     * @param Order $order
+     * @param Request $request
+     * @return Order
+     */
+    public function add_addition(Order $order, Request $request): Order
     {
-        $item->delivery = !$item->delivery;
-        $item->save();
-        $this->logger->logOrder($item->order, 'Изменена доставка', $item->product->name, ($item->delivery) ? 'Добавлена' : 'Удалена');
-
-        return $item->order;
+        if ((int)$request['purpose'] == 0) throw new \DomainException('Не выбрана дополнительная услуга!');
+        if ((int)$request['amount'] == 0) throw new \DomainException('Стоимость услуги должна быть больше нуля!');
+        $orderAddition = OrderAddition::new((int)$request['amount'], (int)$request['purpose'], $request['comment'] ?? '');
+        $order->additions()->save($orderAddition);
+        $order->refresh();
+        $this->logger->logOrder($order, 'Добавлена услуга', $orderAddition->purposeHTML(), price($orderAddition->amount));
+        return $order;
     }
 
-    public function check_assemblage(OrderItem $item): Order
+    /**
+     * Изменяем сумму на услугу, возвращаем Заказ
+     * @param OrderAddition $addition
+     * @param int $amount
+     * @return Order
+     */
+    public function update_addition(OrderAddition $addition, int $amount): Order
     {
-        $item->assemblage = !$item->assemblage;
-        $item->save();
-        $this->logger->logOrder($item->order, 'Изменена сборка', $item->product->name, ($item->assemblage) ? 'Добавлена' : 'Удалена');
+        $addition->amount = $amount;
+        $addition->save();
+        $this->logger->logOrder($addition->order, 'Изменена цена услуги', $addition->purposeHTML(), price($amount));
 
-        return $item->order;
+        return $addition->order;
     }
 
+    /**
+     * Удалить услугу, возвращает Заказ
+     * @param OrderAddition $addition
+     * @return Order
+     */
+    public function delete_addition(OrderAddition $addition): Order
+    {
+        $order = $addition->order;
+        $this->logger->logOrder($order, 'Удалена услуга', $addition->purposeHTML(), price($addition->amount));
+        $addition->delete();
+        return $order;
+    }
+
+    /**
+     * Пересчет заказа, расчет скидок на товар, по акциям и бонусам. Расчет скидки на заказ, по "Скидки"
+     * @param Order $order
+     * @return void
+     */
     private function recalculation(Order &$order)
     {
         $order->refresh();
@@ -602,15 +625,6 @@ class OrderService
             $order->discount_id = null;
         }
         $order->save();
-    }
-
-    public function update_addition(OrderAddition $addition, int $amount): Order
-    {
-        $addition->amount = $amount;
-        $addition->save();
-        $this->logger->logOrder($addition->order, 'Изменена цена услуги', $addition->purposeHTML(), price($amount));
-
-        return $addition->order;
     }
 
 }

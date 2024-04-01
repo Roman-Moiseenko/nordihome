@@ -15,6 +15,7 @@ use App\Events\PointHasEstablished;
 use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
 use App\Events\ThrowableHasAppeared;
+use App\Events\UserHasCreated;
 use App\Events\UserHasRegistered;
 use App\Listeners\CheckNotificationStatus;
 use App\Listeners\NotificationCanceledOrder;
@@ -27,6 +28,7 @@ use App\Listeners\NotificationNewPointStorage;
 use App\Listeners\NotificationNewProductParser;
 use App\Listeners\NotificationNewRefund;
 use App\Listeners\NotificationThrowable;
+use App\Listeners\NotificationUserCreated;
 use App\Listeners\ParsingImageProduct;
 use App\Listeners\NotificationMovedPromotion;
 use App\Listeners\WelcomToShop;
@@ -95,6 +97,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         NotificationSending::class => [
             CheckNotificationStatus::class,
+        ],
+        //
+        UserHasCreated::class => [
+            NotificationUserCreated::class,
         ],
     ];
 

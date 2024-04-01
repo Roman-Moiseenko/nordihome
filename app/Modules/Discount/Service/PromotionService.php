@@ -5,6 +5,7 @@ namespace App\Modules\Discount\Service;
 
 use App\Events\PromotionHasMoved;
 use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Service\GroupService;
@@ -118,43 +119,10 @@ class PromotionService
         $promotion->refresh();
     }
 
-/*
-    //TODO FOR DELETE!!!
-    public function add_group(Request $request, Promotion $promotion)
-    {
-        if (empty($request['group_id']) || empty($request['discount'])) throw new \DomainException('Не выбрана группа и/или не указана скидка');
-        $group_id = (int)$request['group_id'];
-        if (!$promotion->isGroup($group_id)) {
-            $promotion->groups()->attach($group_id, ['discount' => (int)$request['discount']]);
-            $promotion->refresh();
-            $this->groupService->setPriceFromPromotion($group_id, (int)$request['discount']);
-
-        } else {
-            throw new \DomainException('Такая группа уже добавлена');
-        }
-    }
-
-    public function del_group(Group $group, Promotion $promotion)
-    {
-        $this->groupService->setPriceFromPromotion($group->id, null);
-        $promotion->groups()->detach($group->id);
-        $promotion->refresh();
-    }
-    public function set_group(Request $request, Promotion $promotion)
-    {
-        $group_id = (int)$request['group_id'];
-        if ($promotion->isGroup($group_id)) {
-            $promotion->groups()->updateExistingPivot($group_id, ['discount' => (int)$request['discount']]);
-            $promotion->refresh();
-            $this->groupService->setPriceFromPromotion($group_id, (int)$request['discount']);
-        } else {
-            throw new \DomainException('Такая группа не добавлена');
-        }
-    }
-*/
     public function delete(Promotion $promotion)
     {
-        //TODO Проверка, если товар был продан по акции, то удалять нельзя
+        $count = OrderItem::where('discount_type', Promotion::class)->where('discount_id', $promotion->id)->count();
+        if ($count > 0) throw new \DomainException('Нельзя удалить акцию, по которой были продажи');
         Promotion::destroy($promotion->id);
     }
 
@@ -173,9 +141,6 @@ class PromotionService
         $promotion->icon->newUploadFile($file, 'icon');
         $promotion->refresh();
     }
-
-    //TODO для Cron-а ????
-
 
     public function stop(Promotion $promotion)
     {

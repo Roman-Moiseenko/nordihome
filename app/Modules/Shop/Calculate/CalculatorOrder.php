@@ -31,7 +31,7 @@ class CalculatorOrder
                 $item->setSellCost($item->getProduct()->promotion()->pivot->price);
                 $item->setDiscountName($item->getProduct()->promotion()->title);
                 $item->setDiscount($item->getProduct()->promotion()->id);
-                $item->setDiscountType($item->getProduct()->promotion()::class);
+                $item->setDiscountType(Promotion::class); //$item->getProduct()->promotion()::class
             }
             //Проверка на бонусы
             /** @var Bonus $bonus_product */

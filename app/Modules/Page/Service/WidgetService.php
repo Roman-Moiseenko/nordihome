@@ -35,7 +35,7 @@ class WidgetService
 
     public function destroy(Widget $widget)
     {
-        //TODO Если используется, удалить нельзя
+        if ($widget->active == true) throw new \DomainException('Виджет активен, удалить нельзя');
         $widget->delete();
     }
 
@@ -43,6 +43,7 @@ class WidgetService
     {
         $result = [];
         /** @var DataWidgetInterface[] $items */
+        /** @var Widget $class */
         $items = $class::orderBy('id')->get();
         foreach ($items as $item) {
             $result[$item->id] = $item->getDataWidget()->title;
