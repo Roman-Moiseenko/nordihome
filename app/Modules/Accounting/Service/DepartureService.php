@@ -48,7 +48,7 @@ class DepartureService
 
         /** @var Product $product */
         $product = Product::find($request['product_id']);
-        $free_quantity = $departure->storage->freeToSell($product);
+        $free_quantity = $departure->storage->getAvailable($product);
         $quantity = min((int)$request['quantity'], $free_quantity);
 
         //Добавляем в документ

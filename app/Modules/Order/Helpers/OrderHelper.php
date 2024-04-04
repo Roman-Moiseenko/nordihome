@@ -46,7 +46,7 @@ class OrderHelper
             ],
             'additions' => [
                 'include' => 'additions',
-                'caption' => 'Дополнения',
+                'caption' => 'Услуги',
                 'anchor' => 'additions'
             ],
             'payments' => [

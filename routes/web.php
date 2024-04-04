@@ -343,7 +343,7 @@ Route::group(
                         Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
                         Route::post('/{order}/update-manual', 'OrderController@update_manual')->name('update-manual');
 
-                        Route::post('/{item}/check-delivery', 'OrderController@check_delivery')->name('check-delivery');
+
                         Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
 
 
@@ -351,10 +351,10 @@ Route::group(
                         Route::post('/{order}/set-logger', 'OrderController@set_logger')->name('set-logger');
                         Route::post('/{order}/set-reserve', 'OrderController@set_reserve')->name('set-reserve');
 
-                        Route::post('/{order}/set-delivery', 'OrderController@set_delivery')->name('set-delivery');
-                        Route::post('/{order}/set-moving', 'OrderController@set_moving')->name('set-moving');
-                        Route::post('/{order}/set-payment', 'OrderController@set_payment')->name('set-payment');
-                        Route::post('/{order}/paid-order', 'OrderController@paid_order')->name('paid-order');
+                        //Route::post('/{order}/set-delivery', 'OrderController@set_delivery')->name('set-delivery');
+                        //Route::post('/{order}/set-moving', 'OrderController@set_moving')->name('set-moving');
+                        //Route::post('/{order}/set-payment', 'OrderController@set_payment')->name('set-payment');
+                        //Route::post('/{order}/paid-order', 'OrderController@paid_order')->name('paid-order');
                         Route::post('/{order}/canceled', 'OrderController@canceled')->name('canceled');
                         Route::post('/{order}/set-awaiting', 'OrderController@set_awaiting')->name('set-awaiting');
                         Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
@@ -415,7 +415,15 @@ Route::group(
 
                 Route::post('/movement/{movement}/search', 'MovementController@search')->name('movement.search');
                 Route::post('/movement/{movement}/add', 'MovementController@add')->name('movement.add');
-                Route::post('/movement/{movement}/completed', 'MovementController@completed')->name('movement.completed');
+
+                Route::post('/movement/{movement}/activate', 'MovementController@activate')->name('movement.activate');
+                Route::post('/movement/{movement}/departure', 'MovementController@departure')->name('movement.departure');
+                Route::post('/movement/{movement}/arrival', 'MovementController@arrival')->name('movement.arrival');
+
+
+
+                //Route::post('/movement/{movement}/completed', 'MovementController@completed')->name('movement.completed');
+
                 Route::post('/movement/{item}/set', 'MovementController@set')->name('movement.set');
                 Route::delete('/movement/{item}/remove-item', 'MovementController@remove_item')->name('movement.remove-item');
 

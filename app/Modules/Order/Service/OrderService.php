@@ -309,10 +309,10 @@ class OrderService
 
     /**
      * Создание пустого заказа менеджером из Продаж
-     * @param Request $request
+     * @param array $request
      * @return void
      */
-    public function create_sales(Request $request): Order
+    public function create_sales(array $request): Order
     {
         if (empty($request['user_id'])) {//1. Пользователь новый.
             $password = Str::random(8); /// регистрируем его и отправляем ему письмо, со ссылкой верификации
@@ -331,7 +331,7 @@ class OrderService
         $staff = Auth::guard('admin')->user();
         $order->setStatus(OrderStatus::SET_MANAGER);
         $order->responsible()->save(OrderResponsible::registerManager($staff->id));
-
+        $order->refresh();
         return $order;
     }
 
@@ -427,10 +427,10 @@ class OrderService
     /**
      * Добавить в заказ товар, с учетом в наличии
      * @param Order $order
-     * @param Request $request
+     * @param array $request
      * @return Order
      */
-    public function add_item(Order $order, Request $request): Order
+    public function add_item(Order $order, array $request): Order
     {
         $product_id = (int)$request['product_id'];
         $quantity = (int)$request['quantity'];
@@ -492,6 +492,7 @@ class OrderService
         $order = $item->order;
 
         $this->recalculation($order);
+        $order->refresh();
         $this->logger->logOrder($order, 'Изменено кол-во товара', $item->product->name, (string)$quantity);
 
         return $order;
@@ -510,22 +511,9 @@ class OrderService
         $order = $item->order;
 
         $this->recalculation($order);
+        $order->refresh();
         $this->logger->logOrder($order, 'Изменена цена товара', $item->product->name, price($sell_cost));
         return $order;
-    }
-
-    /**
-     * Изменение доставки для элемента заказа вкл/выкл
-     * @param OrderItem $item
-     * @return Order
-     */
-    public function check_delivery(OrderItem $item): Order
-    {
-        $item->delivery = !$item->delivery;
-        $item->save();
-        $this->logger->logOrder($item->order, 'Изменена доставка', $item->product->name, ($item->delivery) ? 'Добавлена' : 'Удалена');
-
-        return $item->order;
     }
 
     /**
@@ -560,10 +548,10 @@ class OrderService
     /**
      * Добавить в заказ доп.услугу
      * @param Order $order
-     * @param Request $request
+     * @param array $request
      * @return Order
      */
-    public function add_addition(Order $order, Request $request): Order
+    public function add_addition(Order $order, array $request): Order
     {
         if ((int)$request['purpose'] == 0) throw new \DomainException('Не выбрана дополнительная услуга!');
         if ((int)$request['amount'] == 0) throw new \DomainException('Стоимость услуги должна быть больше нуля!');
@@ -585,7 +573,7 @@ class OrderService
         $addition->amount = $amount;
         $addition->save();
         $this->logger->logOrder($addition->order, 'Изменена цена услуги', $addition->purposeHTML(), price($amount));
-
+        $addition->order->refresh();
         return $addition->order;
     }
 

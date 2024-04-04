@@ -24,17 +24,24 @@ use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use JetBrains\PhpStorm\Deprecated;
 
 class SalesService
 {
 
     private ReserveService $reserveService;
     private MovementService $movements;
+    private ExpenseService $expenseService;
 
-    public function __construct(ReserveService $reserveService, MovementService $movements)
+    public function __construct(
+        ReserveService $reserveService,
+        MovementService $movements,
+        ExpenseService $expenseService
+    )
     {
         $this->reserveService = $reserveService;
         $this->movements = $movements;
+        $this->expenseService = $expenseService;
     }
 
     public function setManager(Order $order, int $staff_id)
@@ -56,104 +63,31 @@ class SalesService
         }
     }
 
-    /**
-     * Устанавливаем новое кол-во товаров для Заказа, снимаем лишнее с резерва и пересчитываем заказ, с учетом скидок и акций
-     * @param Order $order
-     * @param array $items
-     * @return bool
-     */
-    public function setQuantity(Order $order, array $items): bool
-    {
-        $result = false;
-
-        foreach ($items as $item) {
-            $new_quantity = (int)$item['quantity'];
-            /** @var OrderItem $orderItem */
-            $orderItem = OrderItem::find((int)$item['id']);
-            //Если кол-во изменилось
-            if ($orderItem->quantity != $new_quantity) {
-                $result = true; //Хотя бы одно изменение кол-ва.
-                //Снимаем с резерва
-                $sub_reserve = $orderItem->quantity - $new_quantity;
-                $this->reserveService->subReserve($orderItem->reserve->id, $sub_reserve);
-                $orderItem->changeQuantity($new_quantity);
-            }
-        }
-        if ($result == false) return false;
-        $order->refresh();
-        //Пересчет скидок и стоимости Заказа
-        $cartItems = [];
-        foreach ($order->items as $item) {
-            $cartItems[] = CartItem::create(
-                product: $item->product,
-                quantity: $item->quantity,
-                options: [],
-                check_quantity: false);
-        }
-        $calculator = new CalculatorOrder();
-        $cartItems = $calculator->calculate($cartItems);
-
-        foreach ($cartItems as $cartItem) {
-            $orderItem = $order->getItem($cartItem->product);
-            if (isset($cartItem->discount_id)) {
-                $orderItem->discount_id = $cartItem->discount_id;
-                $orderItem->discount_type = $cartItem->discount_type;
-                $orderItem->sell_cost = $cartItem->discount_cost;
-            }
-            $orderItem->save();
-            $orderItem->refresh();
-        }
-
-        $order->save();
-
-        return true;
-    }
 
     /**
-     * Отправить заказ на оплату
+     * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
      * @param Order $order
      * @return void
      */
     public function setAwaiting(Order $order)
     {
-        //if (!$order->isPoint()) throw new \DomainException('Не установлена точка сбора/выдачи!');
+        if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
+        //if ($order->getSellAmount() == 0)  throw new \DomainException('Нет товара или цена равна 0!');
+        if ($order->getTotalAmount() == 0)  throw new \DomainException('Сумма заказа не может быть равно нулю');
 
-        if ($order->getSellAmount() == 0)  throw new \DomainException('Нет товара или цена равна 0!');
-        if ($order->getTotalAmount() == 0)  throw new \DomainException('Неверная стоимость заказа');
- /*
-        //Проверить, если на доставку
-        if (!$order->delivery->isStorage()) {
-            if ($order->delivery->cost == 0) throw new \DomainException('Не установлена стоимость доставка');
-            $payment_delivery = 0;
-            foreach ($order->payments as $payment) {
-                if ($payment->purpose == OrderAddition::PAY_DELIVERY) {
-                    $payment_delivery += $payment->amount;
-                }
-            }
-            if ($payment_delivery < $order->delivery->cost) throw new \DomainException('Сумма платежей по доставке меньше ее стоимости');
-        }
-        if (empty($order->payments)) throw new \DomainException('Нет ни одного платежа');
-
-        //Проверить на сумму платежа за заказ
-        $payment_order = 0;
-        foreach ($order->payments as $payment) {
-            if ($payment->purpose == OrderAddition::PAY_ORDER) {
-                $payment_order += $payment->amount;
+        foreach ($order->items as $item) {
+            if ($item->assemblage == true) {
+                $addition = OrderAddition::new($item->getAssemblage(), OrderAddition::PAY_ASSEMBLY, $item->product->name);
+                $order->additions()->save($addition);
+                $item->assemblage = false;
+                $item->save();
             }
         }
-        if ($payment_order != $order->total) throw new \DomainException('Сумма платежей за заказ не совпадает со стоимостью заказа');
-*/
         $order->setReserve(now()->addDays(3));
         $order->setNumber();
         $order->setStatus(OrderStatus::AWAITING);
-      /*
-        foreach ($order->payments as $payment) {
-            if (!empty($paymentDocument = $payment->createOnlinePayment())) {
-                $payment->document = $paymentDocument;
-                $payment->save();
-            }
-        }
-        */
+        $order->refresh();
+
         Mail::to($order->user->email)->queue(new OrderAwaiting($order));
         flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
     }
@@ -182,6 +116,7 @@ class SalesService
         $order->additions()->save($payment);
     }
 
+    #[Deprecated]
     public function setLogger(Order $order, int $logger_id)
     {
         $logger = Admin::find($logger_id);
@@ -197,6 +132,7 @@ class SalesService
      * @param int $storage_id
      * @return void
      */
+    #[Deprecated]
     public function setMoving(Order $order, int $storage_id)
     {
         $storage = Storage::find($storage_id);

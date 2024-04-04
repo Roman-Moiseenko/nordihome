@@ -25,7 +25,7 @@
 @endforeach
 @endcomponent
 
-Общая сумма к оплате {{ $order->totalPayments() }}
+Общая сумма к оплате {{ $order->getTotalAmount() }}
 
 <x-mail::button :url="''">
 Подтвердить?

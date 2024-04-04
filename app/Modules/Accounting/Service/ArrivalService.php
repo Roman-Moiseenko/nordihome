@@ -23,7 +23,7 @@ class ArrivalService
         $this->distributors = $distributors;
     }
 
-    public function create(Request $request): ArrivalDocument
+    public function create(array $request): ArrivalDocument
     {
         /** @var Distributor $distributor */
         $distributor = Distributor::find((int)$request['distributor']);
@@ -60,8 +60,12 @@ class ArrivalService
         $arrival->delete();
     }
 
-
-    public function add(Request $request, ArrivalDocument $arrival)
+    /**
+     * @param ArrivalDocument $arrival
+     * @param array{product_id: int, quantity: int} $request
+     * @return ArrivalProduct
+     */
+    public function add(ArrivalDocument $arrival, array $request): ArrivalProduct
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
 
@@ -69,15 +73,21 @@ class ArrivalService
         $product = Product::find($request['product_id']);
         $distributor_cost = $arrival->distributor->getCostItem($product->id); //Ищем у поставщика товар, если есть, берем закупочную цену
         $product_sell = $product->getLastPrice();
+
         //Добавляем в документ
-        $arrival->arrivalProducts()->create([
-            'product_id' => $product->id,
-            'quantity' => (int)$request['quantity'],
-            'cost_currency' => $distributor_cost,
-            'cost_ru' => $arrival->exchange_fix * $distributor_cost,
-            'price_sell' => $product_sell,
-            ]);
+        $item = ArrivalProduct::new(
+            $product->id,
+            (int)$request['quantity'],
+            $distributor_cost,
+            $arrival->exchange_fix * $distributor_cost,
+            $product_sell
+        );
+        $product->refresh();
+
+        $arrival->arrivalProducts()->save($item);
         $arrival->refresh();
+
+        return $item;
     }
 
     //Для AJAX

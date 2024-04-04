@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $cost
  * @property Product $product
  * @property MovementDocument $document
+ * @property StorageDepartureItem $departureItem
+ * @property StorageArrivalItem $arrivalItem
  */
 class MovementProduct extends Model implements MovementItemInterface
 {
@@ -44,5 +46,15 @@ class MovementProduct extends Model implements MovementItemInterface
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    public function departureItem()
+    {
+        return $this->hasOne(StorageDepartureItem::class, 'movement_product_id', 'id');
+    }
+
+    public function arrivalItem()
+    {
+        return $this->hasOne(StorageArrivalItem::class, 'movement_product_id', 'id');
     }
 }

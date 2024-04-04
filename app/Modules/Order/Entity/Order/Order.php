@@ -11,6 +11,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**
@@ -31,7 +32,9 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property OrderStatus[] $statuses
  * @property OrderAddition[] $additions //Дополнения к заказу (услуги)
  * @property OrderPayment[] $payments //Платежи за заказ
- * @property OrderExpense[] $expenses //Расходники на выдачу
+
+ * @property OrderIssuance[] $issuances  // Базовый список на выдачу товаров и услуг
+ * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property OrderItem[] $items
@@ -103,10 +106,7 @@ class Order extends Model
         return $this->type == self::PARSER;
     }
 
-    /**
-     * Установлена точка выдачи/сборки товара
-     * @return bool
-     */
+    #[Deprecated]
     public function isPoint(): bool
     {
         if (is_null($this->delivery)) return false;
@@ -172,15 +172,12 @@ class Order extends Model
         $this->save();
         //Увеличиваем резерв на оплаченные товары
         foreach ($this->items as $item) {
+            if (!is_null($item->reserve))
             $item->reserve->update(['reserve_at' => now()->addDays(28)]);
         }
     }
 
-    /**
-     * Устанавливаем точку выдачи/сборки товара
-     * @param int $point_storage_id
-     * @return void
-     */
+    #[Deprecated]
     public function setPoint(int $point_storage_id)
     {
         $this->delivery->point_storage_id = $point_storage_id;
@@ -359,13 +356,7 @@ class Order extends Model
     {
         $assemblage = 0;
         foreach ($this->items as $item) {
-            if ($item->assemblage == true) {
-                if (is_null($item->product->assemblage)) {
-                    $assemblage += $item->sell_cost * $item->quantity * $percent / 100;
-                } else {
-                    $assemblage = $item->product->assemblage;
-                }
-            }
+            $assemblage += $item->getAssemblage($percent);
         }
         return $assemblage;
     }
@@ -408,6 +399,16 @@ class Order extends Model
     }
     ///*** Relations *************************************************************************************
 
+    public function issuances()
+    {
+        return $this->hasMany(OrderIssuance::class, 'order_id', 'id');
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(OrderExpense::class, 'order_id', 'id');
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
@@ -448,11 +449,13 @@ class Order extends Model
         return $this->belongsTo(Discount::class, 'discount_id', 'id');
     }
 
-    public function delivery()//TODO переделать на hasMany() если будет ТЗ
+    #[Deprecated]
+    public function delivery()
     {
         return $this->hasOne(DeliveryOrder::class, 'order_id', 'id');
     }
 
+    #[Deprecated]
     public function movements()
     {
         return $this->hasMany(MovementDocument::class, 'order_id', 'id');
@@ -548,6 +551,8 @@ class Order extends Model
         $this->number = $count + 1;
         $this->save();
     }
+
+
 
 
 }

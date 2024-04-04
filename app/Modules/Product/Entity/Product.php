@@ -260,7 +260,14 @@ class Product extends Model
         return $result;
     }
 
-
+    /**
+     * Кол-во доступное для продажи по всем точкам, за минусом резерва
+     * @return int
+     */
+    public function getCountSell(): int
+    {
+        return $this->count_for_sell;
+    }
 
     /**
      * @return float Предыдущая цена товара (учитывается случаи когда всего цен менее 2

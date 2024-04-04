@@ -69,7 +69,7 @@ class ArrivalController extends Controller
             //'currency' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request) {
-            $arrival = $this->service->create($request);
+            $arrival = $this->service->create($request->only(['distributor', 'storage', 'number']));
             return redirect()->route('admin.accounting.arrival.show', $arrival);
         });
     }
@@ -116,7 +116,10 @@ class ArrivalController extends Controller
     public function add(Request $request, ArrivalDocument $arrival)
     {
         return $this->try_catch_admin(function () use($request, $arrival) {
-            $this->service->add($request, $arrival);
+            $this->service->add(
+                $arrival,
+                $request->only(['product_id', 'quantity'])
+            );
             return redirect()->route('admin.accounting.arrival.show', $arrival);
         });
     }

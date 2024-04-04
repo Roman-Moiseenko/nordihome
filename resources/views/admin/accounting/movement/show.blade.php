@@ -19,12 +19,12 @@
                 <a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.movement.edit', $movement) }}">
                     <x-base.lucide icon="check-square" class="w-4 h-4"/>
                     Редактировать параметры</a>
-                <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
+                <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Активировать документ</button>
             </div>
         </div>
     </form>
     @endif
-    <form id="form-completed" method="post" action="{{ route('admin.accounting.movement.completed', $movement) }}">
+    <form id="form-completed" method="post" action="{{ route('admin.accounting.movement.activate', $movement) }}">
         @csrf
     </form>
     <div class="box flex items-center font-semibold p-2 mt-3">

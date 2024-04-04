@@ -16,13 +16,6 @@ use Illuminate\Support\Str;
 class PromotionService
 {
 
-    private GroupService $groupService;
-
-    public function __construct(GroupService $groupService)
-    {
-        $this->groupService = $groupService;
-    }
-
     public function create(Request $request): Promotion
     {
         $start = empty($request['start']) ? null : Carbon::parse($request['start']);
@@ -102,15 +95,17 @@ class PromotionService
         return $promotion;
     }
 
-    public function add_product(Request $request, Promotion $promotion)
+    public function add_product(int $product_id, Promotion $promotion): Promotion
     {
-        if (empty($request['product_id'])) throw new \DomainException('Не выбран товар');
-        $product = Product::find((int)$request['product_id']);
+        //if (empty($request['product_id'])) throw new \DomainException('Не выбран товар');
+        $product = Product::find($product_id);
         if (!$promotion->isProduct($product->id)) {
             $promotion->products()->attach($product->id, ['price' => 0]);
             $this->setPriceProduct($promotion, $product);
             $promotion->refresh();
+            return $promotion;
         }
+        throw new \DomainException('Товар уже добавлен в акцию');
     }
 
     public function del_product(Product $product, Promotion $promotion)

@@ -1,7 +1,7 @@
 <x-base.table.tr>
     <x-base.table.td class="">
         <a href="{{ route('admin.accounting.movement.show', $movement) }}"
-           class="font-medium whitespace-nowrap">{{ $movement->number . ' от ' . $movement->created_at->format('d-m-Y') }}</a> {{ ($movement->completed) ? '' : '(Черновик)' }}
+           class="font-medium whitespace-nowrap">{{ $movement->number . ' от ' . $movement->created_at->format('d-m-Y') }}</a> {{ ($movement->isDraft()) ? '(Черновик)' : '' }}
     </x-base.table.td>
     <x-base.table.td class="text-center">{{ $movement->storageOut->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $movement->storageIn->name }}</x-base.table.td>

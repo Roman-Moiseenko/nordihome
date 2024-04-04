@@ -25,12 +25,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $cancel
  * @property string $comment
  * @property int $reserve_id
- * @property bool $delivery - требуется доставка
  * @property bool $assemblage - требуется сборка
  * @property Order $order
  * @property Reserve $reserve
  * @property Product $product
  * @property Discount $discount
+ * @property OrderExpenseItem[] $expenseItems
  */
 class OrderItem extends Model implements CartItemInterface
 {
@@ -47,7 +47,6 @@ class OrderItem extends Model implements CartItemInterface
         'reserve_id',
         'discount_type',
         'preorder',
-        'delivery',
         'assemblage',
     ];
 
@@ -72,6 +71,11 @@ class OrderItem extends Model implements CartItemInterface
     public function clearReserve()
     {
         $this->update(['reserve_id' => null]);
+    }
+
+    public function expenseItems()
+    {
+        return $this->hasMany(OrderExpenseItem::class, 'order_item_id', 'id');
     }
 
     public function order()
@@ -99,6 +103,27 @@ class OrderItem extends Model implements CartItemInterface
         if (empty($this->discount_id)) return '';
         $discount = $this->discount_type::find($this->discount_id);
         return $this->discount_type::TYPE . ' ' . $discount->title;
+    }
+
+    public function getExpenseAmount(): int
+    {
+        $result = 0;
+        foreach ($this->expenseItems as $expenseItem) {
+            $result += $expenseItem->quantity;
+        }
+        return $result;
+    }
+
+    public function getAssemblage(int $percent = 15): float
+    {
+        if ($this->assemblage == true) {
+            if (is_null($this->product->assemblage)) {
+                return $this->sell_cost * $this->quantity * $percent / 100;
+            } else {
+                return $this->product->assemblage;
+            }
+        }
+        return 0;
     }
 
     public function getProduct(): Product

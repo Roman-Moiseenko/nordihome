@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Order\Entity\Order\OrderExpense;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\ArrayShape;
@@ -11,8 +12,9 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property int $id
  * @property int $storage_out
  * @property int $storage_in
+ * @property int $status
  * @property string $number
- * @property int $order_id
+ * @property int $expense_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property bool $completed
@@ -21,9 +23,15 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property Storage $storageOut
  * @property Storage $storageIn
  * @property MovementProduct[] $movementProducts
+ * @property OrderExpense $expense
  */
 class MovementDocument extends Model implements MovementInterface
 {
+    const STATUS_DRAFT = 11; //Черновик
+    const STATUS_DEPARTURE = 12; //На убытие
+    const STATUS_ARRIVAL = 13; //В Пути
+    const STATUS_COMPLETED = 14; //Исполнен
+
     protected $table = 'movement_documents';
 
     protected $fillable = [
@@ -31,7 +39,8 @@ class MovementDocument extends Model implements MovementInterface
         'storage_in',
         'number',
         'basic',
-        'order_id',
+        'status',
+        'expense_id',
     ];
 
     protected $casts = [
@@ -45,13 +54,31 @@ class MovementDocument extends Model implements MovementInterface
             'number' => $number,
             'storage_out' => $storage_out,
             'storage_in' => $storage_in,
-            'completed' => false,
+            'status' => self::STATUS_DRAFT,
         ]);
+    }
+
+    public function setExpense(int $expense_id)
+    {
+        $this->expense_id = $expense_id;
+        $this->save();
+    }
+
+    public function departure()
+    {
+        $this->status = self::STATUS_DEPARTURE;
+        $this->save();
+    }
+
+    public function arrival()
+    {
+        $this->status = self::STATUS_ARRIVAL;
+        $this->save();
     }
 
     public function completed()
     {
-        $this->completed = true;
+        $this->status = self::STATUS_COMPLETED;
         $this->save();
     }
 
@@ -70,9 +97,19 @@ class MovementDocument extends Model implements MovementInterface
         return $this->belongsTo(Storage::class, 'storage_in', 'id');
     }
 
+    public function expense()
+    {
+        return $this->belongsTo(OrderExpense::class, 'expense_id', 'id');
+    }
+
+    public function isDraft(): bool
+    {
+        return $this->status == self::STATUS_DRAFT;
+    }
+
     public function isCompleted(): bool
     {
-        return $this->completed == true;
+        return $this->status == self::STATUS_COMPLETED;
     }
 
     public function isProduct(int $product_id): bool

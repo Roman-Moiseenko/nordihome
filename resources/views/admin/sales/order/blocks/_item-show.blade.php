@@ -40,15 +40,6 @@
         </div>
     </div>
     <div class="w-20 text-center">
-        <div class="form-check form-switch justify-center mt-3">
-            <input id="assemblage-{{ $item->id }}" class="form-check-input update-data-ajax" type="checkbox" name="assemblage"
-                   @if(!$edit) disabled @endif @if($item->delivery) checked @endif
-                   data-route="{{ route('admin.sales.order.check-delivery', $item) }}"
-            >
-            <label class="form-check-label" for="assemblage-{{ $item->id }}"></label>
-        </div>
-    </div>
-    <div class="w-20 text-center">
         @if($edit)
             <button class="btn btn-outline-danger ml-6 product-remove" data-num = "{{ $i }}"
                     data-id="{{ $item->id }}" type="button" onclick="document.getElementById('form-remove-item-{{ $item->id }}').submit()">X</button>

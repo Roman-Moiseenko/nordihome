@@ -30,6 +30,17 @@ class ArrivalProduct extends Model implements MovementItemInterface
         'price_sell'
     ];
 
+    public static function new(int $product_id, int $quantity, float $distributor_cost, float $cost_ru, float $product_sell): self
+    {
+        return self::make([
+            'product_id' => $product_id,
+            'quantity' => $quantity,
+            'cost_currency' => $distributor_cost,
+            'cost_ru' => $cost_ru,
+            'price_sell' => $product_sell,
+        ]);
+    }
+
 
     public function getProduct(): Product
     {

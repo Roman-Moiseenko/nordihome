@@ -45,7 +45,7 @@ class PaymentService
         return $payments;
     }
 
-    public function create(Request $request): OrderPayment
+    public function create(array $request): OrderPayment
     {
         /** @var Order $order */
         $order = Order::find((int)$request['order']);

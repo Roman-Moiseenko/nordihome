@@ -82,7 +82,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
-            $order = $this->orderService->create_sales($request);
+            $order = $this->orderService->create_sales($request->only(['user_id', 'email', 'phone', 'name']));
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
@@ -90,7 +90,7 @@ class OrderController extends Controller
     public function add_item(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
-            $order = $this->orderService->add_item($order, $request);
+            $order = $this->orderService->add_item($order, $request->only(['product_id', 'quantity']));
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
@@ -98,7 +98,7 @@ class OrderController extends Controller
     public function add_addition(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
-            $order = $this->orderService->add_addition($order, $request);
+            $order = $this->orderService->add_addition($order, $request->only(['purpose', 'amount', 'comment']));
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
@@ -204,7 +204,7 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
-
+/*
     public function set_delivery(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
@@ -212,6 +212,7 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
+*/
 
     public function set_moving(Request $request, Order $order)
     {
@@ -220,7 +221,7 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
-
+/*
     public function set_payment(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
@@ -244,7 +245,7 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
-
+*/
     public function paid_order(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
@@ -290,15 +291,6 @@ class OrderController extends Controller
         return $this->try_catch_ajax_admin(function () use ($request, $addition) {
             $amount = (int)$request['value'];
             $result = $this->orderService->update_addition($addition, $amount);
-            return response()->json($this->ArrayToAjax($result));
-        });
-    }
-
-
-    public function check_delivery(OrderItem $item)
-    {
-        return $this->try_catch_ajax_admin(function () use ($item) {
-            $result = $this->orderService->check_delivery($item);
             return response()->json($this->ArrayToAjax($result));
         });
     }

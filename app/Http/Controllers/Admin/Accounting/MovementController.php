@@ -14,6 +14,7 @@ use App\Modules\Product\Repository\ProductRepository;
 use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use JetBrains\PhpStorm\Deprecated;
 
 class MovementController extends Controller
 {
@@ -65,7 +66,7 @@ class MovementController extends Controller
             'storage_in' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request) {
-            $movement = $this->service->create($request);
+            $movement = $this->service->create($request->only(['number', 'storage_out', 'storage_in']));
             return redirect()->route('admin.accounting.movement.show', $movement);
         });
     }
@@ -109,7 +110,7 @@ class MovementController extends Controller
     public function add(Request $request, MovementDocument $movement)
     {
         return $this->try_catch_admin(function () use($request, $movement) {
-            $this->service->add($request, $movement);
+            $this->service->add($movement, $request->only(['product_id', 'quantity']));
             return redirect()->route('admin.accounting.movement.show', $movement);
         });
     }
@@ -123,10 +124,26 @@ class MovementController extends Controller
         });
     }
 
-    public function completed(MovementDocument $movement)
+    public function activate(MovementDocument $movement)
     {
         return $this->try_catch_admin(function () use($movement) {
-            $this->service->completed($movement);
+            $this->service->activate($movement);
+            return redirect()->route('admin.accounting.movement.index');
+        });
+    }
+
+    public function departure(MovementDocument $movement)
+    {
+        return $this->try_catch_admin(function () use($movement) {
+            $this->service->departure($movement);
+            return redirect()->route('admin.accounting.movement.index');
+        });
+    }
+
+    public function arrival(MovementDocument $movement)
+    {
+        return $this->try_catch_admin(function () use($movement) {
+            $this->service->arrival($movement);
             return redirect()->route('admin.accounting.movement.index');
         });
     }

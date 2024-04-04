@@ -42,9 +42,6 @@ class PaymentController extends Controller
         return $this->try_catch_admin(function () {
             $methods = PaymentHelper::payments();
             $orders = $this->orders->getNotPaidYet();
-            /*$orders = Order::whereHas('status', function ($query) {
-                $query->where('value', OrderStatus::PREPAID)->orWhere('value', OrderStatus::AWAITING);
-            })->orderBy('number')->get();*/
             return view('admin.sales.payment.create', compact('methods', 'orders'));
         });
     }
@@ -52,7 +49,7 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
-            $payment = $this->service->create($request);
+            $payment = $this->service->create($request->only(['order', 'amount', 'method', 'document']));
             return redirect()->route('admin.sales.payment.index');
         });
     }
@@ -61,10 +58,6 @@ class PaymentController extends Controller
     {
         return $this->try_catch_admin(function () use ($payment) {
             $methods = PaymentHelper::payments();
-            /*$orders = Order::whereHas('status', function ($query) {
-                $query->where('value', OrderStatus::PREPAID)->orWhere('value', OrderStatus::AWAITING);
-            })->orWhere('id', $payment->order_id)->orderBy('number')->get();
-            */
             $orders = $this->orders->getNotPaidYet($payment->order_id);
             return view('admin.sales.payment.edit', compact('payment', 'methods', 'orders'));
         });

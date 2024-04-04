@@ -24,6 +24,8 @@ use Illuminate\Support\Str;
  * @property Photo $photo
  * @property Organization $organization
  * @property StorageItem[] $items
+ * @property StorageDepartureItem[] $departureItems
+ * @property StorageArrivalItem[] $arrivalItems
  */
 class Storage extends Model
 {
@@ -80,6 +82,16 @@ class Storage extends Model
         return $this->hasMany(StorageItem::class, 'storage_id', 'id');
     }
 
+    public function departureItems()
+    {
+        return $this->hasMany(StorageDepartureItem::class, 'storage_id', 'id');
+    }
+
+    public function arrivalItems()
+    {
+        return $this->hasMany(StorageArrivalItem::class, 'storage_id', 'id');
+    }
+
     public function add(Product $product, int $quantity)
     {
         foreach ($this->items as $item) {
@@ -122,12 +134,15 @@ class Storage extends Model
 
     public function getQuantity(Product $product): int
     {
+        //Более быстрый вариант
+        return StorageItem::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
+/*
         foreach ($this->items as $item) {
             if ($item->product->id == $product->id) {
                 return $item->quantity;
             }
         }
-        return 0;
+        return 0;*/
     }
 
     public function getReserve(Product $product): int
@@ -135,9 +150,10 @@ class Storage extends Model
         return Reserve::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
     }
 
-    public function freeToSell(Product $product): int
+    //TODO Использование ??? Переименовать в getAvailable ???
+    public function getAvailable(Product $product): int
     {
-        return $this->getQuantity($product) - $this->getReserve($product);
+        return $this->getQuantity($product) - $this->getReserve($product) - $this->getDeparture($product);
     }
 
     public function getItem(Product $product): StorageItem
@@ -149,4 +165,36 @@ class Storage extends Model
         }
         throw new \DomainException('Товар Id=' . $product->id . ' В хранилище не найден');
     }
+
+    public function getDeparture(Product $product): int
+    {
+        //Более быстрый вариант
+        return StorageDepartureItem::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
+        /*
+        $result = 0;
+        foreach ($this->departureItems as $departureItem) {
+            if ($departureItem->product_id == $product->id) $result += $departureItem->quantity;
+        }
+        return $result;
+        */
+    }
+
+    public function getArrival(Product $product): int
+    {
+        //Более быстрый вариант
+        return StorageArrivalItem::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
+
+        /*
+        $result = 0;
+        foreach ($this->arrivalItems as $arrivalItem) {
+            if ($arrivalItem->product_id == $product->id) $result += $arrivalItem->quantity;
+        }
+        return $result;
+        */
+    }
+
+   /* public function getAvailable(Product $product): int
+    {
+
+    }*/
 }

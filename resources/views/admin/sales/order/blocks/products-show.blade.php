@@ -21,7 +21,6 @@
 
     <div class="w-40 text-center">Наличие</div>
     <div class="w-20 text-center">Сборка</div>
-    <div class="w-20 text-center">Доставка</div>
     <div class="w-20 text-center">Х</div>
 </div>
 @foreach($order->getInStock() as $i => $item)
@@ -36,7 +35,6 @@
     <div class="w-20 text-center">Кол-во</div>
     <div class="w-40 text-center">Наличие</div>
     <div class="w-20 text-center">Сборка</div>
-    <div class="w-20 text-center">Доставка</div>
     <div class="w-20 text-center">Х</div>
 </div>
 

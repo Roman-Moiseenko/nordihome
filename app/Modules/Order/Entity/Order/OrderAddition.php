@@ -16,6 +16,7 @@ use function now;
  * @property int $purpose
  * @property string $comment
  * @property Order $order
+ * @property OrderExpenseAddition[] $expenseAdditions
  */
 
 class OrderAddition extends Model
@@ -26,14 +27,16 @@ class OrderAddition extends Model
   //  const PAY_ORDER = 101;
     const PAY_DELIVERY = 102;
     const PAY_PACKING = 103;
-//    const PAY_ASSEMBLY = 104;
+    const PAY_ASSEMBLY = 104;
+    const PAY_LIFTING = 105;
     const PAY_OTHER = 109;
 
     const PAYS = [
       //  self::PAY_ORDER => 'Платеж за заказ',
         self::PAY_DELIVERY => 'Платеж за доставку',
         self::PAY_PACKING => 'Платеж за упаковку',
-//        self::PAY_ASSEMBLY => 'Платеж за сборку',
+        self::PAY_LIFTING => 'Платеж за подъем',
+        self::PAY_ASSEMBLY => 'Платеж за сборку',
         self::PAY_OTHER => 'Другие платежи',
     ];
 
@@ -84,5 +87,19 @@ class OrderAddition extends Model
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
+
+    public function expenseAdditions()
+    {
+        return $this->hasMany(OrderExpenseAddition::class, 'order_addition_id', 'id');
+    }
+
+    public function getExpenseAmount(): float
+    {
+        $result = 0;
+        foreach ($this->expenseAdditions as $expenseAddition) {
+            $result += $expenseAddition->amount;
+        }
+        return $result;
     }
 }

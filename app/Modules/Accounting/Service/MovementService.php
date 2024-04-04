@@ -8,11 +8,15 @@ use App\Events\ThrowableHasAppeared;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\StorageArrivalItem;
+use App\Modules\Accounting\Entity\StorageDepartureItem;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 class MovementService
 {
@@ -24,28 +28,75 @@ class MovementService
         $this->storages = $storages;
     }
 
-    public function create(Request $request): MovementDocument
+    public function create(array $request): MovementDocument
     {
-        $movement = MovementDocument::register(
-            $request['number'],
+        return MovementDocument::register(
+            $request['number'] ?? '',
             (int)$request['storage_out'],
             (int)$request['storage_in'],
         );
-        return $movement;
     }
 
+    public function activate(MovementDocument $document)
+    {
+        $storageOut = $document->storageOut;
+        foreach ($document->movementProducts as $movementProduct) {
+            $departureItem = StorageDepartureItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
+            $storageOut->departureItems()->save($departureItem);
+        }
+        $document->departure();
+        //TODO Оповещаем склад
+    }
+
+    public function departure(MovementDocument $document)
+    {
+        $storageOut = $document->storageOut;
+        $storageIn = $document->storageIn;
+        // Удаляем товар из Storage и создаем StorageArrivalItem
+        foreach ($document->movementProducts as $movementProduct) {
+            //удаляем из Storage и StorageDepartureItem
+            $departureItem = $movementProduct->departureItem;
+            $storageOut->sub($departureItem->product, $departureItem->quantity);
+            $departureItem->delete();
+            //создаем StorageArrivalItem
+            $arrivalItem = StorageArrivalItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
+            $storageIn->arrivalItems()->save($arrivalItem);
+        }
+        $document->arrival();
+    }
+
+    public function arrival(MovementDocument $document)
+    {
+        $storageIn = $document->storageIn;
+        foreach ($document->movementProducts as $movementProduct) {
+            $arrivalItem = $movementProduct->arrivalItem;
+            $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
+            $arrivalItem->delete();//удаляем StorageArrivalItem
+            if (!is_null($document->expense_id)) {
+                //TODO Ставим в резерв - проверить
+
+            }
+        }
+        $document->completed();
+        if (!is_null($document->expense_id)) {
+            //TODO Оповещаем менеджера
+        }
+
+
+    }
     /**
      * Создание заявки на перемещение при обработке заказа на недостающее кол-во
      * @param Order $order
      * @return MovementDocument[]|null
      */
+    #[Deprecated]
     public function createByOrder(Order $order): ?array
     {
         $storageIn = $order->delivery->point;
         $emptyItems = [];
         //Создаем список недостающих товаров
         foreach ($order->items as $orderItem) {
-            $free_product = $storageIn->freeToSell($orderItem->product);
+            $free_product = $storageIn->getAvailable($orderItem->product);
             if ($free_product < $orderItem->quantity) {
                 $emptyItems[] = [
                     'product' => $orderItem->product,
@@ -69,12 +120,12 @@ class MovementService
             $movement->save();
 
             foreach ($emptyItems as $i => &$item) {
-                $free_product = $storage->freeToSell($item['product']);
+                $free_product = $storage->getAvailable($item['product']);
                 if ($free_product >= $item['quantity']) {
                     $movement->movementProducts()->create([
                         'quantity' => $item['quantity'],
                         'product_id' => $item['product']->id,
-                        'cost' => $item['product']->lastPrice->value,
+                        'cost' => $item['product']->getLastPrice(),
                     ]);
                     unset($emptyItems[$i]);
                 } else {
@@ -89,9 +140,12 @@ class MovementService
         throw new \DomainException('Нехватка товара для исполнения заказа!');
     }
 
+    //TODO Перемещение менять нельзя
+    #[Deprecated]
     public function update(Request $request, MovementDocument $movement): MovementDocument
     {
-        if ($movement->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
+        //
+        if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
         $movement->number = $request['number'] ?? '';
         $movement->storage_out = (int)$request['storage_out'];
         $movement->storage_in = (int)$request['storage_in'];
@@ -102,24 +156,24 @@ class MovementService
 
     public function destroy(MovementDocument $movement)
     {
-        if ($movement->isCompleted()) throw new \DomainException('Документ проведен. Удалять нельзя');
+        if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Удалять нельзя');
         $movement->delete();
     }
 
-    public function add(Request $request, MovementDocument $movement): MovementDocument
+    public function add(MovementDocument $movement,array $request): MovementDocument
     {
-        if ($movement->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
+        if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
 
         /** @var Product $product */
         $product = Product::find($request['product_id']);
-        $free_quantity = $movement->storageOut->freeToSell($product);
+        $free_quantity = $movement->storageOut->getAvailable($product);
         $quantity = min((int)$request['quantity'], $free_quantity);
 
         //Добавляем в документ
         $movement->movementProducts()->create([
             'product_id' => $product->id,
             'quantity' => $quantity,
-            'cost' => $product->lastPrice->value
+            'cost' => $product->getLastPrice()
         ]);
         $movement->refresh();
         return $movement;
@@ -128,19 +182,20 @@ class MovementService
     //Для AJAX
     public function set(Request $request, MovementProduct $item)
     {
-        if ($item->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
+        if (!$item->document->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
         //Меняем данные
         $item->quantity = (int)$request['quantity'];
         $item->save();
         return $item->document->getInfoData();
     }
 
-    public function completed(MovementDocument $movement)
+
+    public function createByExpense(OrderExpense $expense, array $request):? MovementDocument
     {
-        //Проведение документа
-        $this->storages->arrival($movement->storageIn, $movement->movementProducts()->getModels());
-        $this->storages->departure($movement->storageOut, $movement->movementProducts()->getModels());
-        $movement->completed();
-        event(new MovementHasCompleted($movement));
+        //TODO !!!!!
+        //Проверяем наличие на складе
+        //Если нехватает, создаем перемещение
+
+        return null;
     }
 }
