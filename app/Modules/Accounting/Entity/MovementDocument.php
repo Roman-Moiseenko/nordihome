@@ -31,6 +31,12 @@ class MovementDocument extends Model implements MovementInterface
     const STATUS_DEPARTURE = 12; //На убытие
     const STATUS_ARRIVAL = 13; //В Пути
     const STATUS_COMPLETED = 14; //Исполнен
+    const STATUSES = [
+        self::STATUS_DRAFT => 'Черновик',
+        self::STATUS_DEPARTURE => 'На отбытии',
+        self::STATUS_ARRIVAL => 'В пути',
+        self::STATUS_COMPLETED => 'Завершен',
+    ];
 
     protected $table = 'movement_documents';
 
@@ -107,6 +113,16 @@ class MovementDocument extends Model implements MovementInterface
         return $this->status == self::STATUS_DRAFT;
     }
 
+    public function isDeparture(): bool
+    {
+        return $this->status == self::STATUS_DEPARTURE;
+    }
+
+    public function isArrival(): bool
+    {
+        return $this->status == self::STATUS_ARRIVAL;
+    }
+
     public function isCompleted(): bool
     {
         return $this->status == self::STATUS_COMPLETED;
@@ -136,5 +152,12 @@ class MovementDocument extends Model implements MovementInterface
             'quantity' => $quantity,
             'cost' => $cost,
         ];
+    }
+
+    public function statusHTML(): string
+    {
+
+        if ($this->status == 0) return self::STATUSES[self::STATUS_COMPLETED];
+        return self::STATUSES[$this->status];
     }
 }

@@ -6,7 +6,7 @@
             {{ $movement->number . ' от ' . $movement->created_at->format('d-m-Y') . ' (' . $movement->storageOut->name. ' -> ' . $movement->storageIn->name . ')' }}
         </h2>
     </div>
-    @if(!$movement->isCompleted())
+    @if($movement->isDraft())
     <form action="{{ route('admin.accounting.movement.add', $movement) }}" method="POST">
         @csrf
         <div class="box flex p-5 items-center">
@@ -19,14 +19,46 @@
                 <a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.movement.edit', $movement) }}">
                     <x-base.lucide icon="check-square" class="w-4 h-4"/>
                     Редактировать параметры</a>
-                <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Активировать документ</button>
+                <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-activate').submit();">Активировать документ</button>
             </div>
         </div>
     </form>
     @endif
-    <form id="form-completed" method="post" action="{{ route('admin.accounting.movement.activate', $movement) }}">
+    <form id="form-activate" method="post" action="{{ route('admin.accounting.movement.activate', $movement) }}">
         @csrf
     </form>
+
+    @if($movement->isDeparture())
+        <form action="{{ route('admin.accounting.movement.departure', $movement) }}" method="POST">
+            @csrf
+            <div class="box flex p-5 items-center">
+                <div class="mx-3 flex w-full">
+                    <div class="text-lg font-medium">СТАТУС: {{ $movement->statusHTML() }}</div>
+                    <button type="submit" class="ml-auto btn btn-danger">Груз отправлен</button>
+                </div>
+            </div>
+        </form>
+    @endif
+    @if($movement->isArrival())
+        <form action="{{ route('admin.accounting.movement.arrival', $movement) }}" method="POST">
+            @csrf
+            <div class="box flex p-5 items-center">
+                <div class="mx-3 flex w-full">
+                    <div class="text-lg font-medium">СТАТУС: {{ $movement->statusHTML() }}</div>
+                    <button type="submit" class="ml-auto btn btn-danger">Груз прибыл</button>
+                </div>
+            </div>
+        </form>
+    @endif
+
+    @if($movement->isCompleted())
+        <div class="box flex p-5 items-center">
+            <div class="mx-3 flex w-full">
+                <div class="text-lg font-medium">СТАТУС: {{ $movement->statusHTML() }}</div>
+            </div>
+        </div>
+    @endif
+
     <div class="box flex items-center font-semibold p-2 mt-3">
         <div class="w-20 text-center">№ п/п</div>
         <div class="w-1/4 text-center">Товар</div>
@@ -41,7 +73,7 @@
 
             <div class="w-40 input-group">
                 <input id="quantity-{{ $item->id }}" type="number" class="form-control text-right movement-input-listen"
-                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0" {{ $movement->isCompleted() ? 'readonly' : '' }}>
+                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0" {{ !$movement->isDraft() ? 'readonly' : '' }}>
                 <div id="input-quantity" class="input-group-text">шт.</div>
             </div>
             <div class="w-40 input-group">
@@ -49,7 +81,7 @@
                        value="{{ $item->cost }}" aria-describedby="input-quantity" min="0" readonly>
                 <div id="input-quantity" class="input-group-text">₽</div>
             </div>
-            @if(!$movement->isCompleted())
+            @if($movement->isDraft())
                 <button class="btn btn-outline-danger ml-6" type="button" onclick="document.getElementById('form-delete-item-{{ $item->id }}').submit();">
                     <x-base.lucide icon="trash-2" class="w-4 h-4"/>
                 </button>

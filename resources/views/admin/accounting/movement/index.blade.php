@@ -109,6 +109,7 @@
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap">ДАТА</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">СТАТУС</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">УБЫТИЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ПРИБЫТИЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>

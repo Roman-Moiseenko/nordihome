@@ -37,4 +37,27 @@ class StorageItem extends Model
     {
         return $this->product->reserves()->where('storage_id', $this->storage_id)->sum('quantity');
     }
+
+    public function getDeparture(): int
+    {
+        return StorageDepartureItem::where('storage_id', $this->storage_id)->where('product_id', $this->product_id)->pluck('quantity')->sum();
+    }
+
+    public function getArrival(): int
+    {
+        return StorageArrivalItem::where('storage_id', $this->storage_id)->where('product_id', $this->product_id)->pluck('quantity')->sum();
+    }
+
+    /**
+     * Хелпер для списка товаров в Хранилище - движение (-Убытие, +Поступление)
+     * @return string
+     */
+    public function inMovementHTML(): string
+    {
+        $result = '-';
+        if (($departure = $this->getDeparture()) != 0) $result = '-' . $departure;
+        if (($arrival = $this->getArrival()) != 0) $result = '+' . $arrival;
+
+        return $result;
+    }
 }

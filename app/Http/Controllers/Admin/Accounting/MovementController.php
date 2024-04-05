@@ -128,7 +128,7 @@ class MovementController extends Controller
     {
         return $this->try_catch_admin(function () use($movement) {
             $this->service->activate($movement);
-            return redirect()->route('admin.accounting.movement.index');
+            return redirect()->route('admin.accounting.movement.show', $movement);
         });
     }
 
@@ -136,7 +136,7 @@ class MovementController extends Controller
     {
         return $this->try_catch_admin(function () use($movement) {
             $this->service->departure($movement);
-            return redirect()->route('admin.accounting.movement.index');
+            return redirect()->route('admin.accounting.movement.show', $movement);
         });
     }
 
