@@ -24,6 +24,7 @@ use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 
 class SalesService
@@ -200,7 +201,7 @@ class SalesService
         event(new OrderHasRefund($order)); //Оповещение менеджера по возврату денег
     }
 
-    public function comleted(Order $order)
+    public function completed(Order $order)
     {
         $order->setStatus(OrderStatus::COMPLETED);
         $order->finished = true;
@@ -218,5 +219,28 @@ class SalesService
     public function createOrder(Request $request)
     {
         return null;
+    }
+
+    #[ArrayShape(['remains' => "float", 'expense' => "int", 'disable' => "bool"])]
+    public function expenseCalculate(Order $order, string $_data): array
+    {
+        $remains = $order->getPaymentAmount() - $order->getExpenseAmount();
+        $data = json_decode($_data, true);
+        $amount = 0;
+        //Суммируем по товарам
+        foreach ($data['products'] as $item) {
+            $id_item = (int)$item['id'];
+            $amount += $order->getItemById($id_item)->sell_cost * (int)$item['value'];
+        }
+        //Суммируем по услугам
+        foreach ($data['additions'] as $addition) {
+                $amount += (float)$addition['value'];
+        }
+
+        return [
+            'remains' => price($remains),
+            'expense' => price($amount),
+            'disable' => $amount > $remains || $amount == 0,
+        ];
     }
 }

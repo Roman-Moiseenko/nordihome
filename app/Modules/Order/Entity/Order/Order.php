@@ -33,7 +33,6 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property OrderAddition[] $additions //Дополнения к заказу (услуги)
  * @property OrderPayment[] $payments //Платежи за заказ
 
- * @property OrderIssuance[] $issuances  // Базовый список на выдачу товаров и услуг
  * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -129,9 +128,14 @@ class Order extends Model
         return $this->status->value == OrderStatus::AWAITING;
     }
 
+    public function isPrepaid(): bool
+    {
+        return $this->status->value >= OrderStatus::PREPAID;
+    }
+
     public function isPaid(): bool
     {
-        return $this->status->value >= OrderStatus::PAID && $this->status->value < OrderStatus::ORDER_SERVICE;
+        return $this->status->value >= OrderStatus::PAID;
     }
 
     public function isToDelivery(): bool
@@ -397,12 +401,21 @@ class Order extends Model
         }
         return $payments;
     }
+
+    /**
+     * Сумма всех распоряжений
+     * @return float
+     */
+    public function getExpenseAmount(): float
+    {
+        $amount = 0;
+        foreach ($this->expenses as $expense) {
+            $amount += $expense->getAmount();
+        }
+        return $amount;
+    }
     ///*** Relations *************************************************************************************
 
-    public function issuances()
-    {
-        return $this->hasMany(OrderIssuance::class, 'order_id', 'id');
-    }
 
     public function expenses()
     {
@@ -552,7 +565,13 @@ class Order extends Model
         $this->save();
     }
 
-
+    public function getItemById(int $id_item): OrderItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->id == $id_item) return $item;
+        }
+        throw new \DomainException('Элемент заказа не найден item_ID = ' . $id_item);
+    }
 
 
 }

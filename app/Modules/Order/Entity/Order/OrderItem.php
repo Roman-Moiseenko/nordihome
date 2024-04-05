@@ -8,6 +8,7 @@ use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Pure;
 
 
 /**
@@ -112,6 +113,11 @@ class OrderItem extends Model implements CartItemInterface
             $result += $expenseItem->quantity;
         }
         return $result;
+    }
+
+    #[Pure] public function getRemains(): int
+    {
+        return $this->quantity - $this->getExpenseAmount();
     }
 
     public function getAssemblage(int $percent = 15): float

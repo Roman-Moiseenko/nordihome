@@ -24,7 +24,7 @@
     <div class="w-20 text-center">Х</div>
 </div>
 @foreach($order->getInStock() as $i => $item)
-    @include('admin.sales.order.blocks._item-show', ['i' => $i, 'item' => $item, 'edit' => $order->isManager()])
+    @include('admin.sales.order.manager._product-item', ['i' => $i, 'item' => $item, 'edit' => $order->isManager()])
 @endforeach
 
 <h2 class=" mt-3 font-medium">Товар на заказ</h2>
@@ -39,5 +39,5 @@
 </div>
 
 @foreach($order->getPreOrder() as $i => $item)
-    @include('admin.sales.order.blocks._item-show', ['i' => $i, 'item' => $item, 'edit' => $order->isManager()])
+    @include('admin.sales.order.manager._product-item', ['i' => $i, 'item' => $item, 'edit' => $order->isManager()])
 @endforeach

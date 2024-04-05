@@ -88,10 +88,6 @@
     </div>
 
 
-    @if($order->isManager())
-        {{ \App\Forms\ModalDelete::create('Вы уверены?',
-            'Вы действительно хотите удалить платеж?<br>Этот процесс не может быть отменен.', 'id-delete-payment')->show() }}
-    @endif
 
     <script>
 

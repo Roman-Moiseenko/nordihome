@@ -5,6 +5,7 @@ namespace App\Modules\Order\Entity\Order;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Pure;
 use function now;
 
 /**
@@ -92,6 +93,11 @@ class OrderAddition extends Model
     public function expenseAdditions()
     {
         return $this->hasMany(OrderExpenseAddition::class, 'order_addition_id', 'id');
+    }
+
+    #[Pure] public function getRemains(): float
+    {
+        return $this->amount - $this->getExpenseAmount();
     }
 
     public function getExpenseAmount(): float

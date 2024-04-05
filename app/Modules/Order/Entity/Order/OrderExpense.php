@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Modules\Accounting\Entity\Storage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $status
  * @property OrderExpenseItem[] $items
  * @property OrderExpenseAddition[] $additions
+ * @property Storage $storage
  */
 class OrderExpense extends Model
 {
@@ -26,6 +28,14 @@ class OrderExpense extends Model
     const STATUS_ASSEMBLY = 2;
     const STATUS_ASSEMBLING = 3;
     const STATUS_COMPLETED = 10;
+
+    const STATUSES = [
+        self::STATUS_DRAFT => 'Черновик',
+        self::STATUS_MOVEMENT => 'Ждет перемещения',
+        self::STATUS_ASSEMBLY => 'Ожидает сборки',
+        self::STATUS_ASSEMBLING => 'Собрано',
+        self::STATUS_COMPLETED => 'Выдано',
+    ];
 
     protected $table = 'order_expenses';
 
@@ -55,6 +65,11 @@ class OrderExpense extends Model
         return $this->hasMany(OrderExpenseAddition::class, 'expense_id', 'id');
     }
 
+    public function storage()
+    {
+        return $this->belongsTo(Storage::class, 'storage_id', 'id');
+    }
+
     public function setPoint(int $storage_id): void
     {
         $this->update(['storage_id' => $storage_id]);
@@ -79,5 +94,10 @@ class OrderExpense extends Model
             $item->orderItem->reserve->setStorage($storage_id);
             $item->orderItem->reserve->save();
         }
+    }
+
+    public function statusHTML()
+    {
+        return self::STATUSES[$this->status];
     }
 }

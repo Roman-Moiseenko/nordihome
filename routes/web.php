@@ -345,16 +345,12 @@ Route::group(
 
 
                         Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
+                        Route::post('/{order}/expense-calculate', 'OrderController@expense_calculate')->name('expense-calculate');
 
 
                         Route::post('/{order}/set-manager', 'OrderController@set_manager')->name('set-manager');
-                        Route::post('/{order}/set-logger', 'OrderController@set_logger')->name('set-logger');
                         Route::post('/{order}/set-reserve', 'OrderController@set_reserve')->name('set-reserve');
 
-                        //Route::post('/{order}/set-delivery', 'OrderController@set_delivery')->name('set-delivery');
-                        //Route::post('/{order}/set-moving', 'OrderController@set_moving')->name('set-moving');
-                        //Route::post('/{order}/set-payment', 'OrderController@set_payment')->name('set-payment');
-                        //Route::post('/{order}/paid-order', 'OrderController@paid_order')->name('paid-order');
                         Route::post('/{order}/canceled', 'OrderController@canceled')->name('canceled');
                         Route::post('/{order}/set-awaiting', 'OrderController@set_awaiting')->name('set-awaiting');
                         Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');

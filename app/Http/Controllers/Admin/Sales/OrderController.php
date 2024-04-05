@@ -64,11 +64,21 @@ class OrderController extends Controller
     public function show(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
-            $menus = OrderHelper::menuCreateOrder();
+            //$menus = OrderHelper::menuCreateOrder();
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
             $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
             $storages = Storage::orderBy('name')->get();
-            return view('admin.sales.order.show', compact('order', 'staffs', 'loggers', 'storages', 'menus'));
+
+            if ($order->isNew())
+                return view('admin.sales.order.new.show', compact('order', 'staffs'));
+            if ($order->isManager())
+                return view('admin.sales.order.manager.show', compact('order', 'staffs', 'loggers', 'storages'));
+            if ($order->isAwaiting())
+                return view('admin.sales.order.awaiting.show', compact('order'));
+            if ($order->isPrepaid() || $order->isPaid())
+                return view('admin.sales.order.paid.show', compact('order', 'staffs', 'loggers', 'storages'));
+            //TODO Разные реализации в зависимости от статуса
+
         });
     }
 /*
@@ -147,7 +157,7 @@ class OrderController extends Controller
     public function completed(Order $order)
     {
         return $this->try_catch_admin(function () use ($order) {
-            $this->service->comleted($order);
+            $this->service->completed($order);
             return redirect()->back();
         });
     }
@@ -164,14 +174,6 @@ class OrderController extends Controller
     {
         return $this->try_catch_admin(function () use ($request, $order) {
             $this->service->setManager($order, (int)$request['staff_id']);
-            return redirect()->back();
-        });
-    }
-
-    public function set_logger(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->setLogger($order, (int)$request['logger_id']);
             return redirect()->back();
         });
     }
@@ -204,48 +206,7 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
-/*
-    public function set_delivery(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->setDelivery($order, (float)$request['delivery-cost']);
-            return redirect()->back();
-        });
-    }
-*/
 
-    public function set_moving(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->setMoving($order, (int)$request['storage']);
-            return redirect()->back();
-        });
-    }
-/*
-    public function set_payment(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->setPayment($order, $request->all());
-            return redirect()->back();
-        });
-    }
-
-    public function del_payment(OrderAddition $payment)
-    {
-        return $this->try_catch_admin(function () use ($payment) {
-            $this->service->delPayment($payment);
-            return redirect()->back();
-        });
-    }
-
-    public function paid_payment(Request $request, OrderAddition $payment)
-    {
-        return $this->try_catch_admin(function () use ($request, $payment) {
-            $this->service->paidPayment($payment, $request['payment-document'] ?? '');
-            return redirect()->back();
-        });
-    }
-*/
     public function paid_order(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
@@ -254,20 +215,17 @@ class OrderController extends Controller
         });
     }
 
+    /**  НОВЫЕ ACTIONS  **/
     //AJAX
-    public function set_quantity(Request $request, Order $order)
-    {
 
+    public function expense_calculate(Request $request, Order $order)
+    {
         return $this->try_catch_ajax_admin(function () use ($request, $order) {
-            $items = json_decode($request['items'], true);
-            $result = $this->service->setQuantity($order, $items);
+            $result = $this->service->expenseCalculate($order, $request['data']);
             return response()->json($result);
         });
     }
 
-
-    /**  НОВЫЕ ACTIONS  **/
-    //AJAX
     public function update_quantity(Request $request, OrderItem $item)
     {
         return $this->try_catch_ajax_admin(function () use ($request, $item) {

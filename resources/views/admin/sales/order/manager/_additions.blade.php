@@ -40,7 +40,7 @@
                                min="0" data-num="0" @if(!$order->isManager()) readonly @endif
                                data-route="{{ route('admin.sales.order.update-addition', $addition) }}"
                         >
-                        <div id="addition->amount" class="input-group-text">шт.</div>
+                        <div id="addition->amount" class="input-group-text">₽</div>
                     </div>
 
                     <div class="w-56 text-center">{{ $addition->comment }}</div>
