@@ -324,7 +324,7 @@ Route::group(
 
                 Route::resource('order', 'OrderController');
                 Route::resource('payment', 'PaymentController');
-                Route::resource('expanse', 'ExpanseController');
+                Route::resource('expense', 'ExpenseController');
                 //Заказы
                 Route::group(
                     [
@@ -345,6 +345,7 @@ Route::group(
                         Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
                         Route::post('/{order}/update-manual', 'OrderController@update_manual')->name('update-manual');
                         Route::post('/{order}/update-comment', 'OrderController@update_comment')->name('update-comment');
+                        Route::post('/{item}/update-item-comment', 'OrderController@update_item_comment')->name('update-item-comment');
 
                         Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
                         Route::post('/{order}/expense-calculate', 'OrderController@expense_calculate')->name('expense-calculate');
@@ -369,11 +370,11 @@ Route::group(
                 //Распоряжения
                 Route::group(
                     [
-                        'prefix' => 'expanse',
-                        'as' => 'expanse.',
+                        'prefix' => 'expense',
+                        'as' => 'expense.',
                     ],
                     function() {
-                       // Route::post('/create', 'ExpanseController@create')->name('create');
+                       // Route::post('/create', 'ExpenseController@create')->name('create');
 
                     }
                 );

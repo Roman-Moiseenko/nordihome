@@ -8,7 +8,7 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
 use Illuminate\Http\Request;
 
-class ExpanseController extends Controller
+class ExpenseController extends Controller
 {
     private ExpenseService $service;
 
@@ -24,18 +24,19 @@ class ExpanseController extends Controller
         return redirect()->route('home');
     }
 
+
     //Через AJAX
     public function store(Request $request)
     {
         return $this->try_catch_ajax(function () use ($request) {
             $data = json_decode($request['data'], true);
-            $expanse = $this->service->create($data);
-            return response()->json(route('admin.sales.expanse.show', $expanse));
+            $expense = $this->service->create($data);
+            return response()->json(route('admin.sales.expense.show', $expense));
         });
     }
 
     public function show(OrderExpense $expense)
     {
-        return view('admin.sales.expanse.show', compact('expense'));
+        return view('admin.sales.expense.show', compact('expense'));
     }
 }

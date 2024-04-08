@@ -147,8 +147,8 @@ class OrderItem extends Model implements CartItemInterface
     #[Pure] public function check_reserve(): bool
     {
         $reserve_q = $this->reserve->quantity;
-        $expanse_q = $this->getExpenseAmount();
-        return $this->quantity == ($reserve_q + $expanse_q); //Кол-во равно в резерве+выдано
+        $expense_q = $this->getExpenseAmount();
+        return $this->quantity == ($reserve_q + $expense_q); //Кол-во равно в резерве+выдано
     }
 
     public function getProduct(): Product

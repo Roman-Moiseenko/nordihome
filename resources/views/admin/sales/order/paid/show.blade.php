@@ -69,15 +69,15 @@
                         </div>
                         <div class="">
                             <span>Оплачено за заказ </span>
-                            <span class="font-medium" id="discount_products">{{ price(-1) }}</span>
+                            <span class="font-medium" id="discount_products">{{ price($order->getPaymentAmount()) }}</span>
                         </div>
                         <div class="">
                             <span>Остаток оплаты за заказ </span>
-                            <span class="font-medium" id="discount_order">{{ price(-1) }}</span>
+                            <span class="font-medium" id="discount_order">{{ price($order->getTotalAmount() - $order->getPaymentAmount()) }}</span>
                         </div>
                         <div class="">
                             <span>Распоряжения на сумму </span>
-                            <span class="font-medium" id="coupon">{{ price(-1) }}</span>
+                            <span class="font-medium" id="coupon">{{ price($order->getExpenseAmount()) }}</span>
                         </div>
                         <div class="">
                             <span>Выдано товаров </span>

@@ -151,7 +151,7 @@ class OrdersTest extends TestCase
         self::assertEquals($first_payment, $payment->amount);
 
         //Создаем Expense с 2 строками
-        $requestExpense = $this->createRequestExpanse($order, $product, $data_products['product']['price']);
+        $requestExpense = $this->createRequestExpense($order, $product, $data_products['product']['price']);
 
 
         $expense = $this->expenseService->create($requestExpense);
@@ -231,7 +231,7 @@ class OrdersTest extends TestCase
         $this->storage->refresh();
     }
 
-    private function createRequestExpanse(Order $order, Product $product, int $price_product): array
+    private function createRequestExpense(Order $order, Product $product, int $price_product): array
     {
         $requestExpense = [];
         foreach ($order->items as $item) { //первый товар

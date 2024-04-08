@@ -12,6 +12,7 @@ use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Widget;
@@ -465,6 +466,17 @@ Breadcrumbs::for('admin.sales.order.update', function (BreadcrumbTrail $trail, O
 Breadcrumbs::for('admin.sales.order.show', function (BreadcrumbTrail $trail, Order $order) {
     $trail->parent('admin.sales.order.index');
     $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.order.show', $order));
+});
+
+//EXPENSE
+Breadcrumbs::for('admin.sales.expense.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Платежи', route('admin.sales.payment.index'));
+});
+
+Breadcrumbs::for('admin.sales.expense.show', function (BreadcrumbTrail $trail, OrderExpense $expense) {
+    $trail->parent('admin.sales.order.show', $expense->order);
+    $trail->push('Расходный документ', route('admin.sales.expense.show', $expense));
 });
 
 //PAYMENT

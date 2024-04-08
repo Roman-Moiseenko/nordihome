@@ -621,4 +621,10 @@ class OrderService
         $order->save();
     }
 
+    public function update_item_comment(OrderItem $item, string $comment)
+    {
+        $item->comment = $comment;
+        $item->save();
+    }
+
 }

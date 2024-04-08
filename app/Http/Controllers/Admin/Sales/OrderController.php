@@ -269,6 +269,14 @@ class OrderController extends Controller
         });
     }
 
+    public function update_item_comment(Request $request, OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $item) {
+            $this->orderService->update_item_comment($item, $request['value'] ?? '');
+            return response()->json(['notupdate' => true]);
+        });
+    }
+
     private function ArrayToAjax(Order $order): array
     {
         return [

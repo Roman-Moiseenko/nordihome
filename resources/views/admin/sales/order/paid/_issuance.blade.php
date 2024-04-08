@@ -33,7 +33,7 @@
     <div class="w-56 text-center">
         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="primary" class="w-100"
-                id="button-expanse" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
+                id="button-expense" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
                 Создать распоряжение
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
             </x-base.popover.button>
@@ -52,7 +52,7 @@
                         <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
                             Отмена
                         </x-base.button>
-                        <button id="create-expanse" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expanse.store') }}">
+                        <button id="create-expense" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expense.store') }}">
                             Создать
                         </button>
                     </div>
@@ -72,14 +72,14 @@
 
     let expenseAmount = document.getElementById('expense-amount');
     let remainsAmount = document.getElementById('remains-amount');
-    let createExpanse = document.getElementById('create-expanse');
+    let createExpense = document.getElementById('create-expense');
 
-    let buttonExpanse = document.getElementById('button-expanse');
-    let buttonCreateExpanse = document.getElementById('create-expanse');
+    let buttonExpense = document.getElementById('button-expense');
+    let buttonCreateExpense = document.getElementById('create-expense');
 
 
-    if (buttonExpanse.dataset.disabled === '1') {
-        buttonExpanse.disabled = true;
+    if (buttonExpense.dataset.disabled === '1') {
+        buttonExpense.disabled = true;
     }
 
     Array.from(inputUpdateData).forEach(function (input) {
@@ -88,8 +88,8 @@
         });
     });
 
-    buttonCreateExpanse.addEventListener('click', function () {
-        let route = buttonCreateExpanse.dataset.route;
+    buttonCreateExpense.addEventListener('click', function () {
+        let route = buttonCreateExpense.dataset.route;
         let selectStorage = document.getElementById('select-storage');
         let data = _check();
         data['storage_id'] = Number(selectStorage.value);
@@ -136,8 +136,8 @@
     function _updateData(data) {
         expenseAmount.innerText = data.expense;
         remainsAmount.innerText = data.remains;
-        buttonExpanse.disabled = data.disable;
-        //createExpanse.disabled = data.disable;
+        buttonExpense.disabled = data.disable;
+        //createExpense.disabled = data.disable;
     }
 
     function _expenseShow(data) {

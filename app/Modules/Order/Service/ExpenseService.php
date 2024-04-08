@@ -47,7 +47,7 @@ class ExpenseService
             $quantity = (int)$item['value'];
 
             $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
-
+            if (is_null($orderItem->reserve)) throw new \DomainException('Товара нет в резерве, дождитесь исполнения поступления!');
             $orderItem->reserve->sub($quantity);
             $storageItem = $storage->getItem($orderItem->product);
             $storageItem->sub($quantity);
@@ -65,7 +65,7 @@ class ExpenseService
 
         $additions = $request['additions'];
         foreach ($additions as $addition) {
-            $expense->additions()->save(OrderExpenseAddition::new($addition['id'], $addition['value']));
+            $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
         }
         $expense->refresh();
 

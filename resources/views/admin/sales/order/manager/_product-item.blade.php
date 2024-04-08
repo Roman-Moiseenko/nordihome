@@ -39,6 +39,14 @@
             <label class="form-check-label" for="delivery-{{ $item->id }}"></label>
         </div>
     </div>
+    <div class="w-40 text-left">
+        <input id="comment-{{ $item->id }}" type="text" class="form-control update-data-ajax"
+               value="{{ $item->comment }}" aria-describedby="input-sell_cost"
+               min="0" data-id="{{ $item->id }}" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
+               data-route="{{ route('admin.sales.order.update-item-comment', $item) }}"
+        >
+    </div>
+
     <div class="w-20 text-center">
         @if($edit)
             <button class="btn btn-outline-danger ml-6 product-remove" data-num = "{{ $i }}"
