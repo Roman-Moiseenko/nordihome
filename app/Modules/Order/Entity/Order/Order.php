@@ -65,7 +65,8 @@ class Order extends Model
         'coupon',
         'coupon_id',
         'discount_id',
-        'manual'
+        'manual',
+        'comment',
     ];
 
     protected $casts = [

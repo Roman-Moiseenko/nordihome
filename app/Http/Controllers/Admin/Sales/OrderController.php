@@ -66,17 +66,17 @@ class OrderController extends Controller
         return $this->try_catch_admin(function () use ($request, $order) {
             //$menus = OrderHelper::menuCreateOrder();
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
-            $loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
+            //$loggers = $this->staffs->getStaffsByCode(Responsibility::MANAGER_LOGGER);
             $storages = Storage::orderBy('name')->get();
 
             if ($order->isNew())
                 return view('admin.sales.order.new.show', compact('order', 'staffs'));
             if ($order->isManager())
-                return view('admin.sales.order.manager.show', compact('order', 'staffs', 'loggers', 'storages'));
+                return view('admin.sales.order.manager.show', compact('order', 'staffs', 'storages'));
             if ($order->isAwaiting())
                 return view('admin.sales.order.awaiting.show', compact('order'));
             if ($order->isPrepaid() || $order->isPaid())
-                return view('admin.sales.order.paid.show', compact('order', 'staffs', 'loggers', 'storages'));
+                return view('admin.sales.order.paid.show', compact('order', 'staffs', 'storages'));
             //TODO Разные реализации в зависимости от статуса
 
         });
@@ -258,6 +258,14 @@ class OrderController extends Controller
         return $this->try_catch_ajax_admin(function () use ($item) {
             $result = $this->orderService->check_assemblage($item);
             return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    public function update_comment(Request $request, Order $order)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
+            $this->orderService->update_comment($order, $request['value'] ?? '');
+            return response()->json(['notupdate' => true]);
         });
     }
 

@@ -28,7 +28,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $reserve_id
  * @property bool $assemblage - требуется сборка
  * @property Order $order
- * @property Reserve $reserve
+ * @property Reserve $reserve - в резерве
  * @property Product $product
  * @property Discount $discount
  * @property OrderExpenseItem[] $expenseItems
@@ -106,6 +106,10 @@ class OrderItem extends Model implements CartItemInterface
         return $this->discount_type::TYPE . ' ' . $discount->title;
     }
 
+    /**
+     * Сколько выдано данного товара
+     * @return int
+     */
     public function getExpenseAmount(): int
     {
         $result = 0;
@@ -115,6 +119,10 @@ class OrderItem extends Model implements CartItemInterface
         return $result;
     }
 
+    /**
+     * Не выданный остаток
+     * @return int
+     */
     #[Pure] public function getRemains(): int
     {
         return $this->quantity - $this->getExpenseAmount();
@@ -130,6 +138,17 @@ class OrderItem extends Model implements CartItemInterface
             }
         }
         return 0;
+    }
+
+    /**
+     * Функция для контроля кол-ва
+     * @return bool
+     */
+    #[Pure] public function check_reserve(): bool
+    {
+        $reserve_q = $this->reserve->quantity;
+        $expanse_q = $this->getExpenseAmount();
+        return $this->quantity == ($reserve_q + $expanse_q); //Кол-во равно в резерве+выдано
     }
 
     public function getProduct(): Product

@@ -41,20 +41,19 @@
             @endif
         </div>
         <div class="flex flex-col items-center lg:items-start mt-2">
-            @if(!empty($order->getManager()))
+
                 <div class="truncate sm:whitespace-normal flex items-center">
                     <x-base.lucide icon="contact"
                                    class="w-4 h-4"/>&nbsp;{{ $order->getManager()->fullname->getFullName() }} -
                     менеджер
                 </div>
-            @endif
-            @if(!empty($order->getLogger()))
-                <div class="truncate sm:whitespace-normal flex items-center">
-                    <x-base.lucide icon="contact"
-                                   class="w-4 h-4"/>&nbsp;{{ $order->getLogger()->fullname->getFullName() }} -
-                    логист
-                </div>
-            @endif
+
+        </div>
+    </div>
+    <div class="col-span-12 mt-3">
+        <div class="truncate sm:whitespace-normal flex items-center">
+        <x-base.lucide icon="message-square"
+                       class="w-4 h-4"/>&nbsp;Комментарий: {{ $order->comment }}
         </div>
     </div>
 </div>

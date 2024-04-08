@@ -117,33 +117,6 @@ class SalesService
         $order->additions()->save($payment);
     }
 
-    #[Deprecated]
-    public function setLogger(Order $order, int $logger_id)
-    {
-        $logger = Admin::find($logger_id);
-        if (empty($logger)) throw new \DomainException('Сборщик под ID ' . $logger_id . ' не существует!');
-        $order->responsible()->save(OrderResponsible::registerLogger($logger->id));
-        $order->setStatus(OrderStatus::ORDER_SERVICE);
-        event(new OrderHasLogger($order));
-    }
-
-    /**
-     * Устанавливаем точку сборки заказа и при необходимости формируем заявку на перемещение товара
-     * @param Order $order
-     * @param int $storage_id
-     * @return void
-     */
-    #[Deprecated]
-    public function setMoving(Order $order, int $storage_id)
-    {
-        $storage = Storage::find($storage_id);
-        $order->setPoint($storage->id); //1. Установить точку выдачи товара
-        $movements = $this->movements->createByOrder($order); //2. Создаем перемещения, если нехватает товара
-        $order->setStorage($storage->id); //3. В резервах товаров установить склад.
-        event(new PointHasEstablished($order));
-        if (!is_null($movements)) event(new MovementHasCreated($movements));
-    }
-
     public function destroy(Order $order)
     {
         if ($order->status->value == OrderStatus::FORMED) {
@@ -221,19 +194,27 @@ class SalesService
         return null;
     }
 
+    /**
+     * Пересчет суммы для выдачи товара по распоряжению.
+     * Остаток неизрасходованного лимита денег должен быть выше
+     * стоимости товаров и услуг для нового распоряжения
+     * @param Order $order
+     * @param string $_data
+     * @return array
+     */
     #[ArrayShape(['remains' => "float", 'expense' => "int", 'disable' => "bool"])]
     public function expenseCalculate(Order $order, string $_data): array
     {
         $remains = $order->getPaymentAmount() - $order->getExpenseAmount();
         $data = json_decode($_data, true);
         $amount = 0;
-        //Суммируем по товарам
-        foreach ($data['products'] as $item) {
+
+        foreach ($data['items'] as $item) { //Суммируем по товарам
             $id_item = (int)$item['id'];
             $amount += $order->getItemById($id_item)->sell_cost * (int)$item['value'];
         }
-        //Суммируем по услугам
-        foreach ($data['additions'] as $addition) {
+
+        foreach ($data['additions'] as $addition) { //Суммируем по услугам
                 $amount += (float)$addition['value'];
         }
 

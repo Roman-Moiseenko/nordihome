@@ -25,4 +25,14 @@
             </div>
         </div>
     </div>
+    <div class="col-span-12 mt-3">
+    <div class="form-control">
+        <label class="form-check-label" for="order-comment">Комментарий</label>
+        <input id="order-comment" class="form-control update-data-ajax" type="text" name="comment"
+               value="{{ $order->comment }}"
+               data-route="{{ route('admin.sales.order.update-comment', $order) }}"
+        >
+
+    </div>
+    </div>
 </div>

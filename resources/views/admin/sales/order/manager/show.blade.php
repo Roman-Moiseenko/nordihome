@@ -118,11 +118,12 @@
                 let value = input.value;
                 let route = input.getAttribute('data-route');
                 let field = 'value';
-                setAjax(route, field, value)
+                input.disabled = true;
+                setAjax(route, field, value, input);
             });
         });
 
-        function setAjax(route, field, value) {
+        function setAjax(route, field, value, element) {
             let _params = '_token=' + '{{ csrf_token() }}' + '&' + field + '=' + value;
             let request = new XMLHttpRequest();
             request.open('POST', route);
@@ -131,6 +132,8 @@
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     let data = JSON.parse(request.responseText);
+                    element.disabled = false;
+                    if(data.notupdate !== undefined) return;
                     console.log(data);
                     for (let key in data) {
                         if (document.getElementById(key) !== null) document.getElementById(key).innerText = data[key];

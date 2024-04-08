@@ -60,4 +60,10 @@ class StorageItem extends Model
 
         return $result;
     }
+
+    public function sub(int $quantity)
+    {
+        $this->quantity -= $quantity;
+        $this->save();
+    }
 }

@@ -76,6 +76,13 @@ class Reserve extends Model
         $this->save();
     }
 
+    public function sub(int $quantity)
+    {
+        if ($this->quantity < $quantity) throw new \DomainException('Превышение ол-ва товара в резерве');
+        $this->quantity -= $quantity;
+        $this->save();
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');

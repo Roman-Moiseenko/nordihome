@@ -80,6 +80,7 @@ class Controller extends BaseController
         }
     }
 
+    //TODO Заменить все на try_catch_ajax
     public function try_catch_ajax_admin($callback)
     {
         DB::beginTransaction();
@@ -87,6 +88,9 @@ class Controller extends BaseController
             $result = call_user_func($callback);
             DB::commit();
             return $result;
+        } catch (\DomainException $e) {
+            DB::rollBack();
+            return \response()->json(['error' => $e->getMessage()]);//Сообщение сотруднику
         } catch (\Throwable $e) {
             DB::rollBack();
             if (config('app.debug')) {

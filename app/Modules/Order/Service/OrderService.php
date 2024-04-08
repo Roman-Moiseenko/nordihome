@@ -615,4 +615,10 @@ class OrderService
         $order->save();
     }
 
+    public function update_comment(Order $order, string $comment): void
+    {
+        $order->comment = $comment;
+        $order->save();
+    }
+
 }

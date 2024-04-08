@@ -25,4 +25,10 @@
             </div>
         </div>
     </div>
+    <div class="col-span-12 mt-3">
+        <div class="truncate sm:whitespace-normal flex items-center">
+            <x-base.lucide icon="message-square"
+                           class="w-4 h-4"/>&nbsp;Комментарий: {{ $order->comment }}
+        </div>
+    </div>
 </div>

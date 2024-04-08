@@ -7,6 +7,7 @@ namespace App\Modules\Order\Entity\Order;
 use App\Entity\Admin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Ответственные сотрудники по заказу
@@ -50,6 +51,7 @@ class OrderResponsible extends Model
         ]);
     }
 
+    #[Deprecated]
     public static function registerLogger(int $staff_id): self
     {
         return self::make([

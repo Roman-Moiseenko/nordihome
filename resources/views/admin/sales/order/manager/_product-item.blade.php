@@ -7,7 +7,7 @@
     <div class="w-32 text-center px-1">
         <div>{{ price($item->base_cost) }}</div>
 
-            <input id="sell_cost-{{ $item->id }}" type="text" class="form-control text-center update-data-ajax"
+            <input id="sell_cost-{{ $item->id }}" type="number" class="form-control text-center update-data-ajax"
                    value="{{ $item->sell_cost }}" aria-describedby="input-sell_cost"
                    min="0" data-id="{{ $item->id }}" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
                    data-route="{{ route('admin.sales.order.update-sell', $item) }}"
@@ -27,7 +27,7 @@
     </div>
     <div class="w-40 text-center">
         @foreach($item->product->getStorages() as $storage)
-            {{ $storage->getQuantity($item->product) . '(' . $storage->name . ')' }}<br>
+            {{ $storage->getQuantity($item->product) . ' (' . $storage->name . ')' }}<br>
         @endforeach
     </div>
     <div class="w-20 text-center">

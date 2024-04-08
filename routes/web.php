@@ -324,11 +324,13 @@ Route::group(
 
                 Route::resource('order', 'OrderController');
                 Route::resource('payment', 'PaymentController');
+                Route::resource('expanse', 'ExpanseController');
+                //Заказы
                 Route::group(
                     [
                         'prefix' => 'order',
                         'as' => 'order.',
-                        //'namespace' => 'Sales',
+                        //'namespace' => '',
                     ],
                     function() {
                         Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
@@ -342,7 +344,7 @@ Route::group(
                         Route::post('/{item}/update-sell', 'OrderController@update_sell')->name('update-sell');
                         Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
                         Route::post('/{order}/update-manual', 'OrderController@update_manual')->name('update-manual');
-
+                        Route::post('/{order}/update-comment', 'OrderController@update_comment')->name('update-comment');
 
                         Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
                         Route::post('/{order}/expense-calculate', 'OrderController@expense_calculate')->name('expense-calculate');
@@ -364,8 +366,17 @@ Route::group(
 
                     }
                 );
+                //Распоряжения
+                Route::group(
+                    [
+                        'prefix' => 'expanse',
+                        'as' => 'expanse.',
+                    ],
+                    function() {
+                       // Route::post('/create', 'ExpanseController@create')->name('create');
 
-
+                    }
+                );
             }
         );
         //Pages

@@ -5,10 +5,11 @@
     <div class="w-1/4 text-center">Товар/Габариты</div>
     <div class="w-32 text-center">Цена продажи</div>
     <div class="w-20 text-center">Кол-во</div>
+    <div class="w-40 text-center">Наличие на складах</div>
     <div class="w-20 text-center"></div>
 </div>
 @foreach($order->items as $i => $item)
-    @include('admin.sales.order.paid._product-item', ['i' => $i, 'item' => $item])
+    @include('admin.sales.order.paid._issuance-item', ['i' => $i, 'item' => $item])
 @endforeach
 
 <h2 class=" mt-3 font-medium">Услуги</h2>
@@ -21,26 +22,7 @@
 </div>
 
 @foreach($order->additions as $i => $addition)
-    <div class="box flex items-center p-2">
-        <div class="w-20 text-center">{{ $i + 1 }}</div>
-        <div class="w-56 text-center">{{ $addition->purposeHTML() }}</div>
-        <div class="w-40 input-group">
-            <input id="addition-amount-{{ $addition->id }}" type="number" class="form-control text-right update-data-ajax"
-                   value="{{ $addition->getRemains() }}" aria-describedby="addition-amount"
-                   min="0" max="{{ $addition->getRemains() }}"
-            >
-            <div id="addition->amount" class="input-group-text">₽</div>
-        </div>
-
-        <div class="w-56 text-center">{{ $addition->comment }}</div>
-        <div class="w-20 text-center">
-            <div class="form-check form-switch justify-center mt-3">
-                <input id="addition-check-{{ $addition->id }}" class="form-check-input update-data-ajax" type="checkbox"
-                       data-input="addition-amount-{{ $addition->id }}" name="additions" value="{{ $addition->id }}" checked>
-                <label class="form-check-label" for="additions-check-{{ $addition->id }}"></label>
-            </div>
-        </div>
-    </div>
+    @include('admin.sales.order.paid._issuance-addition', ['i' => $i, 'addition' => $addition])
 @endforeach
 
 <div class="box flex items-center font-semibold mt-3 p-2">
@@ -49,13 +31,39 @@
     <div class="w-40 text-center">Остаток по оплате</div>
     <div id="remains-amount" class="w-40 text-center">{{ price($order->getPaymentAmount() - $order->getExpenseAmount()) }}</div>
     <div class="w-56 text-center">
-        <button id="create-expanse" type="button" class="btn btn-primary"
-                @if($order->getTotalAmount() > $order->getPaymentAmount()) disabled @endif
-            data-route=""
-            onclick="document.getElementById('form-create-expance').submit()"
-        >Создать распоряжение</button>
+        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="primary" class="w-100"
+                id="button-expanse" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
+                Создать распоряжение
+                <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+            </x-base.popover.button>
+            <x-base.popover.panel>
+                <div class="p-2">
+                    <x-base.tom-select id="select-storage" name="storage" class=""
+                                       data-placeholder="Выберите Склад">
+                        <option value="0"></option>
+                        @foreach($storages as $storage)
+                            <option value="{{ $storage->id }}"
+                            >{{ $storage->name }}</option>
+                        @endforeach
+                    </x-base.tom-select>
+
+                    <div class="flex items-center mt-3">
+                        <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
+                            Отмена
+                        </x-base.button>
+                        <button id="create-expanse" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expanse.store') }}">
+                            Создать
+                        </button>
+                    </div>
+                </div>
+            </x-base.popover.panel>
+        </x-base.popover>
+
+
     </div>
 </div>
+
 
 <script>
     let route = document.getElementById('route').value;
@@ -66,14 +74,36 @@
     let remainsAmount = document.getElementById('remains-amount');
     let createExpanse = document.getElementById('create-expanse');
 
+    let buttonExpanse = document.getElementById('button-expanse');
+    let buttonCreateExpanse = document.getElementById('create-expanse');
+
+
+    if (buttonExpanse.dataset.disabled === '1') {
+        buttonExpanse.disabled = true;
+    }
+
     Array.from(inputUpdateData).forEach(function (input) {
         input.addEventListener('change', function () {
-            setAjax(route, _check())
+            setAjax(route, _check(), _updateData)
         });
     });
 
+    buttonCreateExpanse.addEventListener('click', function () {
+        let route = buttonCreateExpanse.dataset.route;
+        let selectStorage = document.getElementById('select-storage');
+        let data = _check();
+        data['storage_id'] = Number(selectStorage.value);
+        if (data['storage_id'] === 0) {
+            window.notification('Неполные данные', 'Не выбран склад выдачи заказа', 'info');
+            return;
+        }
+        data['order_id'] = {{ $order->id }};
+        console.log(data);
+        setAjax(route, data , _expenseShow);
+    });
+
     function _check() {
-        let data = {products: [], additions: []};
+        let data = {items: [], additions: []};
         Array.from(checkboxUpdateData).forEach(function (checkbox) {
             if (checkbox.checked) {
                 let id = checkbox.value;
@@ -89,7 +119,7 @@
         return data;
     }
 
-    function setAjax(route, data) {
+    function setAjax(route, data, callback) {
         let _params = '_token=' + '{{ csrf_token() }}' + '&data=' + JSON.stringify(data);
         let request = new XMLHttpRequest();
         request.open('POST', route);
@@ -98,11 +128,26 @@
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 let data = JSON.parse(request.responseText);
-                expenseAmount.innerText = data.expense;
-                remainsAmount.innerText = data.remains;
-                createExpanse.disabled = data.disable;
+                if (callback !== undefined) callback(data);
             }
         };
+    }
+
+    function _updateData(data) {
+        expenseAmount.innerText = data.expense;
+        remainsAmount.innerText = data.remains;
+        buttonExpanse.disabled = data.disable;
+        //createExpanse.disabled = data.disable;
+    }
+
+    function _expenseShow(data) {
+        if (data.error !== undefined) {
+            //Notification
+            window.notification('Ошибка при создании распоряжения',data.error ,'danger');
+            return;
+        }
+
+        window.location.href = data; //data - содержит УРЛ
     }
 </script>
 

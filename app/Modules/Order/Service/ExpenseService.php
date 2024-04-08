@@ -14,6 +14,8 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderIssuance;
+use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -29,45 +31,54 @@ class ExpenseService
         $this->movements = $movements;
     }
 
-    #[Deprecated]
-    public function create_original(Order $order)
+    public function create(array $request): OrderExpense
     {
+        /** @var Storage $storage */
+        $storage = Storage::find($request['storage_id']);
+        /** @var Order $order */
+        $order = Order::find($request['order_id']);
 
-        foreach ($order->items as $item) {
-            /** @var OrderIssuance $issuance */
-            if (!empty($issuance = OrderIssuance::where('order_id', $order->id)->where('product_id', $item->product_id)->first())) {
-                $issuance->value += $item->quantity;
-                $issuance->save();
-            } else {
-                $issuance = OrderIssuance::new_product($item->product_id, $item->quantity, $item->comment);
-                $order->issuances()->save($issuance);
+        $to_movement = [];
+        $expense = OrderExpense::register($order->id, $storage->id);
+        $items = $request['items'];
+        foreach ($items as $item) {
+            /** @var OrderItem $orderItem */
+            $orderItem = OrderItem::find($item['id']);
+            $quantity = (int)$item['value'];
+
+            $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
+
+            $orderItem->reserve->sub($quantity);
+            $storageItem = $storage->getItem($orderItem->product);
+            $storageItem->sub($quantity);
+
+            $storageItem->refresh();
+            if ($storageItem->quantity < 0) {
+                $to_movement[] = [
+                    'product_id' => $storageItem->product_id,
+                    'quantity' => -1 * $storageItem->quantity,
+                ];
             }
-            if ($item->assemblage) {
-                $assemblage = $item->product->assemblage ?? ($item->getSellCost() * $item->getQuantity() * $this->assemblage / 100);
-
-                $issuance = OrderIssuance::new_service('Сборка товара ' . $item->product->name . ' ( ' . $item->quantity . ' шт.)', $assemblage, $item->comment);
-                $order->issuances()->save($issuance);
-            }
         }
+        $expense->storage_id = $storage->id;
+        $expense->save();
 
-        foreach ($order->additions as $addition) {
-            $issuance = OrderIssuance::new_service($addition->purposeHTML(), $addition->amount, $addition->comment);
-            $order->issuances()->save($issuance);
-        }
-    }
-
-    public function create(Order $order, array $request): OrderExpense
-    {
-        $expense = OrderExpense::register($order->id);
-        $products = $request['products'];
-        foreach ($products as $product) {
-            $expense->items()->save(OrderExpenseItem::new($product['id'], $product['quantity']));
-        }
         $additions = $request['additions'];
         foreach ($additions as $addition) {
-            $expense->additions()->save(OrderExpenseAddition::new($addition['id'], $addition['amount']));
+            $expense->additions()->save(OrderExpenseAddition::new($addition['id'], $addition['value']));
         }
         $expense->refresh();
+
+        if (!empty($to_movement)) {
+            //TODO Создаем перемещение
+
+            throw new \DomainException('Требуется перемещение');
+        }
+
+        //$storage
+
+        //Если на складе < 0 , то => Формируем перемещение
+
         return $expense;
     }
 
@@ -86,19 +97,17 @@ class ExpenseService
     }
 
     //Установить точку сборки
-
+/*
     public function setPoint(OrderExpense $expense, int $storage_id)
     {
         $storage = Storage::find($storage_id);
         $expense->setPoint($storage->id); //1. Установить точку выдачи товара
-        //TODO Если нехватает создаем перемещение
         $movements = $this->movements->createByExpense($expense); //2. Создаем перемещения, если нехватает товара
         $expense->setStorage($storage->id); //3. В резервах товаров установить склад.
         //event(new PointHasEstablished($order));
         if (!is_null($movements)) event(new MovementHasCreated($movements));
     }
 
-/*
     public function create_original(Order $order)
     {
         $expense = OrderExpense::register_original($order->id);

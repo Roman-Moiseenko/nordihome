@@ -10,12 +10,18 @@
                value="{{ $item->getRemains() }}" aria-describedby="input-quantity"
                min="1" max="{{ $item->getRemains() }}">
     </div>
-
+    <div class="w-40 text-center">
+        @foreach($item->product->getStorages() as $storage)
+            <div class="{{ ($item->getRemains() > $storage->getQuantity($item->product)) ? 'text-danger' : '' }}">
+                {{ $storage->getQuantity($item->product) . ' (' . $storage->name . ')' }}
+            </div>
+        @endforeach
+    </div>
     <div class="w-20 text-center">
         <div class="form-check form-switch justify-center mt-3">
-            <input id="product-{{ $item->id }}" class="form-check-input update-data-ajax"
-                   data-input="item-quantity-{{ $item->id }}" type="checkbox" name="products" value="{{ $item->id }}" checked>
-            <label class="form-check-label" for="product-{{ $item->id }}"></label>
+            <input id="item-{{ $item->id }}" class="form-check-input update-data-ajax"
+                   data-input="item-quantity-{{ $item->id }}" type="checkbox" name="items" value="{{ $item->id }}" checked>
+            <label class="form-check-label" for="item-{{ $item->id }}"></label>
         </div>
     </div>
 </div>

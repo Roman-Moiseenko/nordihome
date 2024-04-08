@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property OrderExpenseItem[] $items
  * @property OrderExpenseAddition[] $additions
  * @property Storage $storage
+ * @property Order $order
  */
 class OrderExpense extends Model
 {
@@ -46,12 +47,12 @@ class OrderExpense extends Model
     ];
 
 
-    public static function register(int $order_id): self
+    public static function register(int $order_id, int $storage_id): self
     {
         return self::create([
             'order_id' => $order_id,
             'status' => self::STATUS_DRAFT,
-            'storage_id' => null,
+            'storage_id' => $storage_id,
         ]);
     }
 
@@ -68,6 +69,11 @@ class OrderExpense extends Model
     public function storage()
     {
         return $this->belongsTo(Storage::class, 'storage_id', 'id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     public function setPoint(int $storage_id): void
