@@ -66,4 +66,10 @@ class StorageItem extends Model
         $this->quantity -= $quantity;
         $this->save();
     }
+
+    public function add(int $quantity)
+    {
+        $this->quantity += $quantity;
+        $this->save();
+    }
 }

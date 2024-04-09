@@ -63,7 +63,7 @@ class ExpenseService
         $expense->storage_id = $storage->id;
         $expense->save();
 
-        $additions = $request['additions'];
+        $additions = $request['additions'] ?? [];
         foreach ($additions as $addition) {
             $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
         }
@@ -71,7 +71,7 @@ class ExpenseService
 
         if (!empty($to_movement)) {
             //TODO Создаем перемещение
-
+            // Событие event()!!
             throw new \DomainException('Требуется перемещение');
         }
 
@@ -82,13 +82,44 @@ class ExpenseService
         return $expense;
     }
 
+    /**
+     * Отмена распоряжения. Возвращаем кол-во в резерв и на склад. Удаляем записи и само распоряжение
+     * @param OrderExpense $expense
+     * @return Order
+     */
+    public function cancel(OrderExpense $expense): Order
+    {
+        $order = $expense->order;
+        foreach ($expense->items as $item) {
+            $item->orderItem->reserve->add($item->quantity);
+            $storageItem = $expense->storage->getItem($item->orderItem->product);
+            $storageItem->add($item->quantity);
+            $item->delete();
+        }
+        $expense->delete();
+        $order->refresh();
+        return $order;
+    }
+
     //*** Изменения в Распоряжении - value, add_item, del_item
+    #[Deprecated]
     public function update_item(OrderExpenseItem $item, $quantity) {
         //TODO Проверка на превышение
+
+        $remains = $item->orderItem->getRemains() + $item->quantity; //Остаток для текущего распоряжения
+        if ($remains < $quantity) throw new \DomainException('**');
+        $delta = $item->quantity - $quantity;
+        if ($delta == 0) return;
+        //Изменяем резерв и хранилище
+        $item->orderItem->reserve->add($delta);
+        $storageItem = $item->expense->storage->getItem($item->orderItem->product);
+        $storageItem->add($item->quantity);
+
         $item->quantity = $quantity;
         $item->save();
         //TODO проверка на сумму оплаты
     }
+    #[Deprecated]
     public function update_addition(OrderExpenseAddition $addition, $amount) {
         //TODO Проверка на превышение
         $addition->amount = $amount;

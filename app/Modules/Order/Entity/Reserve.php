@@ -103,4 +103,10 @@ class Reserve extends Model
         return $this->hasOne(OrderItem::class, 'reserve_id', 'id');
     }
 
+    public function add(int $quantity)
+    {
+        $this->quantity += $quantity;
+        $this->save();
+    }
+
 }

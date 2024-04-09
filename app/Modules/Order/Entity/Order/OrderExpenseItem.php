@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $order_item_id
  * @property int $quantity
  * @property OrderItem $orderItem
+ * @property OrderExpense $expense
  */
 class OrderExpenseItem extends Model
 {
@@ -33,5 +34,10 @@ class OrderExpenseItem extends Model
     public function orderItem()
     {
         return $this->belongsTo(OrderItem::class, 'order_item_id', 'id');
+    }
+
+    public function expense()
+    {
+        return $this->belongsTo(OrderExpense::class, 'expense_id', 'id');
     }
 }

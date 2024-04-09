@@ -5,15 +5,14 @@ namespace Modules\Order;
 
 use App\Entity\Admin;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Service\PromotionService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
-use App\Modules\Order\Entity\Order\OrderIssuance;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\PaymentService;
@@ -34,6 +33,13 @@ class OrdersTest extends TestCase
 
     private Storage $storage;
     private Category $category;
+    private Order $order;
+
+    const PRODUCTS = [
+        'product' => ['price' => 1000, 'quantity' => 100, 'discount' => null],
+        'product_pre' => ['price' => 500, 'quantity' => 2, 'discount' => null],
+        'product_discount' => ['price' => 5000, 'quantity' => 100, 'discount' => 50],
+    ];
 
     public function setUp(): void
     {
@@ -46,150 +52,162 @@ class OrdersTest extends TestCase
 
     public function testCreateManager()
     {
-        //Актуализируем данные по умолчанию
+        //Актуализируем данные по умолчанию и создаем заказ
         $this->actualData();
+
         //Создаем 3 товара и помещаем в первое хранилище
-        $data_products = [
-            'product' => ['price' => 1000, 'quantity' => 100, 'discount' => null],
-            'product_pre' => ['price' => 500, 'quantity' => 2, 'discount' => null],
-            'product_discount' => ['price' => 5000, 'quantity' => 100, 'discount' => 50],
-        ];
-        $product = $this->product($data_products['product']['price'], $data_products['product']['quantity']);
-        $product_pre = $this->product($data_products['product_pre']['price'], $data_products['product_pre']['quantity']);
-        $product_discount = $this->product($data_products['product_discount']['price'], $data_products['product_discount']['quantity'], $data_products['product_discount']['discount']);
-
-        $user = [
-            'phone' => '89001230101',
-            'email' => 'qwe@q.ru',
-            'name' => 'Имя',
-        ];
-
-        $staff = Admin::find(1);
-        $this->actingAs($staff, 'admin');
-
-        $order = $this->orderService->create_sales($user);
-        self::assertEquals(Order::MANUAL, $order->type); //Заказ создан в ручную
-        self::assertTrue($order->isManager());
+        $product = $this->product(self::PRODUCTS['product']);
+        $product_pre = $this->product(self::PRODUCTS['product_pre']);
+        $product_discount = $this->product(self::PRODUCTS['product_discount']);
 
         //Добавляем товар
-        $order = $this->orderService->add_item($order, ['product_id' => $product->id, 'quantity' => 10]);
-        $order = $this->orderService->add_item($order, ['product_id' => $product_pre->id, 'quantity' => 10]);
-        $order = $this->orderService->add_item($order, ['product_id' => $product_discount->id, 'quantity' => 10]);
-        $order->refresh();
+        $this->orderService->add_item($this->order, ['product_id' => $product->id, 'quantity' => 10]);
+        $this->orderService->add_item($this->order, ['product_id' => $product_pre->id, 'quantity' => 10]);
+        $this->orderService->add_item($this->order, ['product_id' => $product_discount->id, 'quantity' => 10]);
+        $this->order->refresh();
 
         //Проверка на калькулятор
         $base_amount =
-            $data_products['product']['price'] * 10 +
-            $data_products['product_pre']['price'] * 10 +
-            $data_products['product_discount']['price'] * 10;
+            self::PRODUCTS['product']['price'] * 10 +
+            self::PRODUCTS['product_pre']['price'] * 10 +
+            self::PRODUCTS['product_discount']['price'] * 10;
         $sell_amount =
-            $data_products['product']['price'] * 10 +
-            $data_products['product_pre']['price'] * 10 +
-            $data_products['product_discount']['price'] * $data_products['product_discount']['discount'] / 100 * 10;
-        self::assertEquals($base_amount, $order->getBaseAmount());
-        self::assertEquals($sell_amount, $order->getSellAmount());
-        self::assertEquals(0, $order->getDiscountOrder());//Скидка настроена в программе от 50 000 до 100 000 - 5%
-        self::assertEquals(4, $order->items()->count());
+            self::PRODUCTS['product']['price'] * 10 +
+            self::PRODUCTS['product_pre']['price'] * 10 +
+            self::PRODUCTS['product_discount']['price'] * self::PRODUCTS['product_discount']['discount'] / 100 * 10;
+        self::assertEquals($base_amount, $this->order->getBaseAmount());
+        self::assertEquals($sell_amount, $this->order->getSellAmount());
+        self::assertEquals(0, $this->order->getDiscountOrder());//Скидка настроена в программе от 50 000 до 100 000 - 5%
+        self::assertEquals(4, $this->order->items()->count());
 
         //Изменяем кол-во первого товара, проверка на изменения
-        $orderItem = OrderItem::where('order_id', $order->id)->where('product_id', $product->id)->where('preorder', false)->first();
-        $order = $this->orderService->update_quantity($orderItem, 40); //Новое количество
-        $base_amount += $data_products['product']['price'] * 30;
-        $sell_amount += $data_products['product']['price'] * 30;
-        self::assertEquals($base_amount, $order->getBaseAmount());
-        self::assertEquals($sell_amount, $order->getSellAmount());
-        self::assertEquals($sell_amount * 0.05, $order->getDiscountOrder());
+        /** @var OrderItem $orderItem */
+        $orderItem = OrderItem::where('order_id', $this->order->id)->where('product_id', $product->id)->where('preorder', false)->first();
+        $this->order = $this->orderService->update_quantity($orderItem, 40); //Новое количество
+        $base_amount += self::PRODUCTS['product']['price'] * 30;
+        $sell_amount += self::PRODUCTS['product']['price'] * 30;
+        self::assertEquals($base_amount, $this->order->getBaseAmount());
+        self::assertEquals($sell_amount, $this->order->getSellAmount());
+        self::assertEquals($sell_amount * 0.05, $this->order->getDiscountOrder());
 
         //TODO Ручная скидка уйдет в перерасчет цены всех товаров
-        $order = $this->orderService->update_manual($order, 5000);  //Ручная скидка
-        self::assertEquals($sell_amount - $sell_amount * 0.05 - 5000, $order->getTotalAmount());
+        $this->order = $this->orderService->update_manual($this->order, 5000);  //Ручная скидка
+        self::assertEquals($sell_amount - $sell_amount * 0.05 - 5000, $this->order->getTotalAmount());
 
         //Проверка на разделение товара на "В наличии" и "На заказ"
-        $orderItem2 = OrderItem::where('order_id', $order->id)->where('product_id', $product_pre->id)->where('preorder', false)->first();
-        $orderItem3 = OrderItem::where('order_id', $order->id)->where('product_id', $product_pre->id)->where('preorder', true)->first();
+        /** @var OrderItem $orderItem2 */
+        $orderItem2 = OrderItem::where('order_id', $this->order->id)->where('product_id', $product_pre->id)->where('preorder', false)->first();
+        /** @var OrderItem $orderItem3 */
+        $orderItem3 = OrderItem::where('order_id', $this->order->id)->where('product_id', $product_pre->id)->where('preorder', true)->first();
         self::assertEquals(2, $orderItem2->quantity);
         self::assertEquals(8, $orderItem3->quantity);
 
         //Проверка на калькулятор, если у товаров разные цены в ручную
-        $order = $this->orderService->update_sell($orderItem2, 550); //Для в наличии цена выше
-        $order = $this->orderService->update_sell($orderItem3, 450); //Для того же товара, но под заказ цена ниже
+        $this->orderService->update_sell($orderItem2, 550); //Для в наличии цена выше
+        $this->order = $this->orderService->update_sell($orderItem3, 450); //Для того же товара, но под заказ цена ниже
         $sell_amount =
-            $data_products['product']['price'] * 40 +
+            self::PRODUCTS['product']['price'] * 40 +
             550 * 2 + 450 * 8 +
-            $data_products['product_discount']['price'] * $data_products['product_discount']['discount'] / 100 * 10;
-        self::assertEquals($sell_amount, $order->getSellAmount());
+            self::PRODUCTS['product_discount']['price'] * self::PRODUCTS['product_discount']['discount'] / 100 * 10;
+        self::assertEquals($sell_amount, $this->order->getSellAmount());
 
         //Проверка на автоматический расчет сборки
-        $order = $this->orderService->check_assemblage($orderItem);
-        $order = $this->orderService->check_assemblage($orderItem2);
-        $assemblage = $data_products['product']['price'] * 40 * 0.15 + 550 * 2 * 0.15;
-        self::assertEquals($sell_amount - $sell_amount * 0.05 - 5000 + $assemblage, $order->getTotalAmount());
+        $this->order = $this->orderService->check_assemblage($orderItem);
+        $this->order = $this->orderService->check_assemblage($orderItem2);
+        $assemblage = self::PRODUCTS['product']['price'] * 40 * 0.15 + 550 * 2 * 0.15;
+        self::assertEquals($sell_amount - $sell_amount * 0.05 - 5000 + $assemblage, $this->order->getTotalAmount());
 
         //Добавляем услуги
-        $order = $this->orderService->add_addition($order, ['purpose' => OrderAddition::PAY_DELIVERY, 'amount' => 3500, 'comment' => '***']);
-        $order = $this->orderService->add_addition($order, ['purpose' => OrderAddition::PAY_LIFTING, 'amount' => 1500, 'comment' => '***']);
-        self::assertEquals(5000, $order->getAdditionsAmount());
+        $this->order = $this->orderService->add_addition($this->order, ['purpose' => OrderAddition::PAY_DELIVERY, 'amount' => 3500, 'comment' => '***']);
+        $this->order = $this->orderService->add_addition($this->order, ['purpose' => OrderAddition::PAY_LIFTING, 'amount' => 1500, 'comment' => '***']);
+        self::assertEquals(5000, $this->order->getAdditionsAmount());
 
         //Проверка на изменение цены услуги
-        $additional = OrderAddition::where('order_id', $order->id)->where('purpose', OrderAddition::PAY_DELIVERY)->first();
-        $order = $this->orderService->update_addition($additional, 4500);
-        self::assertEquals(6000, $order->getAdditionsAmount());
-        $total = $order->getTotalAmount();
+        $additional = OrderAddition::where('order_id', $this->order->id)->where('purpose', OrderAddition::PAY_DELIVERY)->first();
+        $this->order = $this->orderService->update_addition($additional, 4500);
+        self::assertEquals(6000, $this->order->getAdditionsAmount());
+        $total = $this->order->getTotalAmount();
 
         //Проверка на изменение статуса, и переноса автоматической сборки в услугу
-        $this->salesService->setAwaiting($order);
-        $order->refresh();
-        self::assertEquals(0, $order->getAssemblageAmount());
-        self::assertEquals($total, $order->getTotalAmount());
-        self::assertEquals(OrderStatus::AWAITING, $order->status->value);
+        $this->salesService->setAwaiting($this->order);
+        $this->order->refresh();
+        self::assertEquals(0, $this->order->getAssemblageAmount());
+        self::assertEquals($total, $this->order->getTotalAmount());
+        self::assertEquals(OrderStatus::AWAITING, $this->order->status->value);
+
+
 
         //Проверка на смену статуса при внесении оплаты и подсчета оплаты
-        $first_payment = $data_products['product']['price'] * 40 + $data_products['product']['price'] * 40 * 0.15; //первый товар + сборка
-        $payment = $this->paymentService->create(['order' => $order->id, 'amount' => $first_payment, 'method' => array_key_first(PaymentHelper::payments()), 'document']);
-        $order->refresh();
-        self::assertEquals(OrderStatus::PREPAID, $order->status->value);
+        $first_payment = self::PRODUCTS['product']['price'] * 40 + self::PRODUCTS['product']['price'] * 40 * 0.15; //первый товар + сборка
+        $payment = $this->paymentService->create(['order' => $this->order->id, 'amount' => $first_payment, 'method' => array_key_first(PaymentHelper::payments()), 'document']);
+        $this->order->refresh();
+        $product->refresh();
+        self::assertEquals(OrderStatus::PREPAID, $this->order->status->value);
         self::assertEquals($first_payment, $payment->amount);
+        ///РЕЗЕРВ И ХРАНИЛИЩЕ ПЕРЕД РАСПОРЯЖЕНИЕМ
+        $storageItem = $this->storage->getItem($product);
+        $storageItem2 = $this->storage->getItem($product_pre);
+        self::assertEquals(40, $orderItem->reserve->quantity);
+        self::assertEquals(2, $orderItem2->reserve->quantity);
+        self::assertEquals(100, $storageItem->quantity);
+        self::assertEquals(60, $product->getCountSell());
 
+        //////РАСПОРЯЖЕНИЯ
         //Создаем Expense с 2 строками
-        $requestExpense = $this->createRequestExpense($order, $product, $data_products['product']['price']);
-
-
+        $requestExpense = $this->createRequestExpense($product, self::PRODUCTS['product']['price'] * 40 * 0.15);
+        //Проверка на сумму по распоряжению
         $expense = $this->expenseService->create($requestExpense);
         self::assertEquals($first_payment, $expense->getAmount());
-
-        //Изменение кол-во товаров и суммы
-        $_item  = $expense->items()->first();
-        $_addition = $expense->additions()->first();
-
-        $this->expenseService->update_item($_item, quantity: 20);
-        $this->expenseService->update_addition($_addition, amount: 20 * $data_products['product']['price'] * 0.15);
         $expense->refresh();
+        $orderItem->refresh();
+        $storageItem->refresh();
+        $product->refresh();
         //Проверяем на резерв, товар должен уйти с резерва
-
-
-
-        self::assertEquals($first_payment / 2, $expense->getAmount());
-
-        /** @var OrderItem $orderItem */
-        $orderItem = OrderItem::where('order_id', $order->id)->where('product_id', $product->id)->first();
-        self::assertEquals(20, $orderItem->getExpenseAmount());
+        ///РЕЗЕРВ ПОСЛЕ РАСПОРЯЖЕНИЯ
+        self::assertEquals(0, $orderItem->reserve->quantity);
+        self::assertEquals(60, $storageItem->quantity);
+        self::assertEquals(60, $product->getCountSell());
+        self::assertEquals($first_payment, $expense->getAmount());
+        self::assertEquals(40, $orderItem->getExpenseAmount());
 
         /** @var OrderAddition $orderAddition */
-        $orderAddition = OrderAddition::where('order_id', $order->id)->where('purpose', OrderAddition::PAY_ASSEMBLY)->first();
+        $orderAddition = OrderAddition::where('order_id', $this->order->id)->where('purpose', OrderAddition::PAY_ASSEMBLY)->first();
         $orderAddition->refresh();
-        self::assertEquals(3000, $orderAddition->getExpenseAmount());
+        self::assertEquals(6000, $orderAddition->getExpenseAmount());
 
-        $payment = $this->paymentService->create(['order' => $order->id, 'amount' => $order->getTotalAmount() - $first_payment, 'method' => array_key_first(PaymentHelper::payments()), 'document']);
-        $order->refresh();
-        self::assertEquals(OrderStatus::PAID, $order->status->value);
-        self::assertTrue($order->isStatus(OrderStatus::PAID));
+        ///Распоряжение с отменой
+        $second_payment = self::PRODUCTS['product_pre']['price'] * 2; //второй товар
+        $payment2 = $this->paymentService->create(['order' => $this->order->id, 'amount' => $second_payment, 'method' => array_key_first(PaymentHelper::payments()), 'document']);
+        $this->order->refresh();
+        $requestExpense2 = $this->createRequestExpense($product_pre);
+        $storageItem2->refresh();
+        $orderItem2->refresh();
+        self::assertEquals(2, $orderItem2->reserve->quantity);
+        self::assertEquals(2, $storageItem2->quantity);
+        $expense2 = $this->expenseService->create($requestExpense2);
+        $orderItem2->refresh();
+        $storageItem2->refresh();
+        self::assertEquals(0, $storageItem2->quantity);
+        self::assertEquals(0, $orderItem2->reserve->quantity);
+        $this->expenseService->cancel($expense2);
+        $orderItem2->refresh();
+        $storageItem2->refresh();
+        self::assertEquals(2, $storageItem2->quantity);
+        self::assertEquals(2, $orderItem2->reserve->quantity);
+        $payment3 = $this->paymentService->create(['order' => $this->order->id, 'amount' => $this->order->getTotalAmount() - $first_payment - $second_payment, 'method' => array_key_first(PaymentHelper::payments()), 'document']);
+        $this->order->refresh();
+        self::assertEquals(OrderStatus::PAID, $this->order->status->value);
+        self::assertTrue($this->order->isStatus(OrderStatus::PAID));
 
         //Создаем отгрузки
     }
 
 
-    protected function product(int $price, int $quantity, int $discount = null): Product
+    protected function product(array $_product): Product
     {
+        $price = $_product['price'];
+        $quantity = $_product['quantity'];
+        $discount = $_product['discount'];
         $random = rand(1, 999);
         $product = Product::register('Товар ' . $random, '001.00-' . $random, $this->category->id);
         $product->setPrice($price);
@@ -218,8 +236,20 @@ class OrdersTest extends TestCase
 
     private function actualData()
     {
+        $user = [
+            'phone' => '89001230101',
+            'email' => 'qwe@q.ru',
+            'name' => 'Имя',
+        ];
+        $staff = Admin::find(1);
+        $this->actingAs($staff, 'admin');
+
         $this->storage = Storage::first();
         $this->category = Category::register('Main');
+        $this->order = $this->orderService->create_sales($user);
+
+        self::assertEquals(Order::MANUAL, $this->order->type); //Заказ создан в ручную
+        self::assertTrue($this->order->isManager());
     }
 
     private function toStorage(Product $product)
@@ -231,27 +261,33 @@ class OrdersTest extends TestCase
         $this->storage->refresh();
     }
 
-    private function createRequestExpense(Order $order, Product $product, int $price_product): array
+    /**
+     * Для товаров в наличии
+     * @param Product $product
+     * @param float $assembly
+     * @return array
+     */
+    private function createRequestExpense(Product $product, float $assembly = 0 ): array
     {
         $requestExpense = [];
-        foreach ($order->items as $item) { //первый товар
-            if ($item->product_id == $product->id) {
+        foreach ($this->order->items as $item) { //первый товар
+            if ($item->product_id == $product->id && $item->preorder == false) {
                 $requestExpense['items'][] = [
                     'id' => $item->id,
                     'value' => $item->quantity,
                 ];
             }
         }
-        foreach ($order->additions as $addition)
+        foreach ($this->order->additions as $addition)
         {
-            if ($addition->amount == $price_product * 40 * 0.15 && $addition->purpose == OrderAddition::PAY_ASSEMBLY) {
+            if ($addition->amount == $assembly && $addition->purpose == OrderAddition::PAY_ASSEMBLY) {
                 $requestExpense['additions'][] = [
                     'id' => $addition->id,
                     'value' => $addition->amount,
                 ];
             }
         }
-        $requestExpense['order_id'] = $order->id;
+        $requestExpense['order_id'] = $this->order->id;
         $requestExpense['storage_id'] = $this->storage->id;
         return $requestExpense;
     }
