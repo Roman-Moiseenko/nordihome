@@ -95,7 +95,6 @@ Route::group(
 );
 
 
-
 //Cabinet - функции кабинета клиента
 Route::group([
     'as' => 'cabinet.',
@@ -103,7 +102,7 @@ Route::group([
     'namespace' => 'App\Http\Controllers\User',
     'middleware' => ['user_cookie_id'],
 ],
-    function() {
+    function () {
         Route::get('/', 'CabinetController@view')->name('view');
         Route::get('/profile', 'CabinetController@profile')->name('profile');
         Route::post('/fullname/{user}', 'CabinetController@fullname')->name('fullname');
@@ -114,7 +113,7 @@ Route::group([
         Route::group([
             'as' => 'options.',
             'prefix' => 'options',
-        ], function() {
+        ], function () {
             Route::get('/', 'OptionsController@index')->name('index');
 
         });
@@ -162,7 +161,6 @@ Route::group(
         Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
     }
 );
-
 
 
 Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::class, 'verify'])->name('register.verify');
@@ -276,7 +274,6 @@ Route::group(
                 Route::delete('/promotion/{promotion}/del-product/{product}', 'PromotionController@del_product')->name('promotion.del-product');
 
 
-
                 Route::delete('/promotion/{promotion}/del-group/{group}', 'PromotionController@del_group')->name('promotion.del-group');
                 Route::post('/promotion/{promotion}/published', 'PromotionController@published')->name('promotion.published');
                 Route::post('/promotion/{promotion}/draft', 'PromotionController@draft')->name('promotion.draft');
@@ -332,7 +329,7 @@ Route::group(
                         'as' => 'order.',
                         //'namespace' => '',
                     ],
-                    function() {
+                    function () {
                         Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
                         Route::post('/{order}/add-addition', 'OrderController@add_addition')->name('add-addition');
 
@@ -373,8 +370,8 @@ Route::group(
                         'prefix' => 'expense',
                         'as' => 'expense.',
                     ],
-                    function() {
-                       // Route::post('/create', 'ExpenseController@create')->name('create');
+                    function () {
+                        // Route::post('/create', 'ExpenseController@create')->name('create');
 
                     }
                 );
@@ -407,40 +404,57 @@ Route::group(
                 'as' => 'accounting.',
                 'namespace' => 'Accounting',
             ],
-            function() {
+            function () {
                 Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
                 Route::resource('distributor', 'DistributorController'); //CRUD
                 Route::resource('currency', 'CurrencyController'); //CRUD
                 Route::resource('arrival', 'ArrivalController'); //CRUD
                 Route::resource('movement', 'MovementController'); //CRUD
                 Route::resource('departure', 'DepartureController'); //CRUD
+                Route::resource('supply', 'SupplyController'); //CRUD
 
-                Route::post('/arrival/{arrival}/search', 'ArrivalController@search')->name('arrival.search');
-                Route::post('/arrival/{arrival}/add', 'ArrivalController@add')->name('arrival.add');
-                Route::post('/arrival/{arrival}/completed', 'ArrivalController@completed')->name('arrival.completed');
-                Route::post('/arrival/{item}/set', 'ArrivalController@set')->name('arrival.set');
-                Route::delete('/arrival/{item}/remove-item', 'ArrivalController@remove_item')->name('arrival.remove-item');
-
-                Route::post('/movement/{movement}/search', 'MovementController@search')->name('movement.search');
-                Route::post('/movement/{movement}/add', 'MovementController@add')->name('movement.add');
-
-                Route::post('/movement/{movement}/activate', 'MovementController@activate')->name('movement.activate');
-                Route::post('/movement/{movement}/departure', 'MovementController@departure')->name('movement.departure');
-                Route::post('/movement/{movement}/arrival', 'MovementController@arrival')->name('movement.arrival');
-
-
-
-                //Route::post('/movement/{movement}/completed', 'MovementController@completed')->name('movement.completed');
-
-                Route::post('/movement/{item}/set', 'MovementController@set')->name('movement.set');
-                Route::delete('/movement/{item}/remove-item', 'MovementController@remove_item')->name('movement.remove-item');
-
-                Route::post('/departure/{departure}/search', 'DepartureController@search')->name('departure.search');
-                Route::post('/departure/{departure}/add', 'DepartureController@add')->name('departure.add');
-                Route::post('/departure/{departure}/completed', 'DepartureController@completed')->name('departure.completed');
-                Route::post('/departure/{item}/set', 'DepartureController@set')->name('departure.set');
-                Route::delete('/departure/{item}/remove-item', 'DepartureController@remove_item')->name('departure.remove-item');
-
+                Route::group([
+                    'prefix' => 'arrival',
+                    'as' => 'arrival.',
+                ],
+                    function () {
+                        Route::post('/search/{arrival}', 'ArrivalController@search')->name('search');
+                        Route::post('/add/{arrival}', 'ArrivalController@add')->name('add');
+                        Route::post('/completed/{arrival}', 'ArrivalController@completed')->name('completed');
+                        Route::post('/set/{item}', 'ArrivalController@set')->name('set');
+                        Route::delete('/remove-item/{item}', 'ArrivalController@remove_item')->name('remove-item');
+                    });
+                Route::group([
+                    'prefix' => 'movement',
+                    'as' => 'movement.',
+                ],
+                    function () {
+                        Route::post('/search/{movement}', 'MovementController@search')->name('search');
+                        Route::post('/add/{movement}', 'MovementController@add')->name('add');
+                        Route::post('/activate/{movement}', 'MovementController@activate')->name('activate');
+                        Route::post('/departure/{movement}', 'MovementController@departure')->name('departure');
+                        Route::post('/arrival/{movement}', 'MovementController@arrival')->name('arrival');
+                        Route::post('/set/{item}', 'MovementController@set')->name('set');
+                        Route::delete('/remove-item/{item}', 'MovementController@remove_item')->name('remove-item');
+                    });
+                Route::group([
+                    'prefix' => 'departure',
+                    'as' => 'departure.',
+                ],
+                    function () {
+                        Route::post('/search/{departure}', 'DepartureController@search')->name('search');
+                        Route::post('/add/{departure}', 'DepartureController@add')->name('add');
+                        Route::post('/completed/{departure}', 'DepartureController@completed')->name('completed');
+                        Route::post('/set/{item}', 'DepartureController@set')->name('set');
+                        Route::delete('/remove-item/{item}', 'DepartureController@remove_item')->name('remove-item');
+                    });
+                Route::group([
+                    'prefix' => 'supply',
+                    'as' => 'supply.',
+                ],
+                    function () {
+                        Route::post('/add-stack/{item}', 'SupplyController@add_stack')->name('add-stack');
+                    });
             }
         );
 
@@ -451,7 +465,7 @@ Route::group(
                 'as' => 'analytics.',
                 'namespace' => 'Analytics',
             ],
-            function() {
+            function () {
                 Route::resource('cron', 'CronController')->only(['index', 'show']); //CRUD
                 Route::resource('activity', 'ActivityController')->only(['index']); //CRUD
 

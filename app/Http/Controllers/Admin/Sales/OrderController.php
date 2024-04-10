@@ -76,7 +76,12 @@ class OrderController extends Controller
             if ($order->isAwaiting())
                 return view('admin.sales.order.awaiting.show', compact('order'));
             if ($order->isPrepaid() || $order->isPaid())
-                return view('admin.sales.order.paid.show', compact('order', 'staffs', 'storages'));
+                return view('admin.sales.order.paid.show', compact('order', 'storages'));
+            if ($order->isCompleted())
+                return view('admin.sales.order.completed.show', compact('order'));
+            if ($order->isCanceled())
+                return view('admin.sales.order.canceled.show', compact('order'));
+
             //TODO Разные реализации в зависимости от статуса
 
         });

@@ -130,12 +130,21 @@ class Order extends Model
 
     public function isPrepaid(): bool
     {
-        return $this->status->value >= OrderStatus::PREPAID;
+        return $this->status->value == OrderStatus::PREPAID;
     }
 
     public function isPaid(): bool
     {
-        return $this->status->value >= OrderStatus::PAID;
+        return $this->status->value == OrderStatus::PAID;
+    }
+
+    /**
+     * Заказ оплачен полностью, но не завершен или отменен
+     * @return bool
+     */
+    public function afterPaid(): bool
+    {
+        return $this->status->value > OrderStatus::PAID && $this->status->value < OrderStatus::CANCEL;
     }
 
     public function isToDelivery(): bool
@@ -242,7 +251,8 @@ class Order extends Model
         /** @var OrderItem $item */
         if ($this->items()->count() == 0) return now();
         $item = $this->items()->where('preorder', false)->first();
-        if (is_null($item->reserve)) throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
+        //TODO Переделать
+        if (is_null($item->reserve)) return now(); //throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
         return $item->reserve->reserve_at;
     }
 
@@ -262,12 +272,12 @@ class Order extends Model
     public function getManager(): ?Admin
     {
         //TODO раскомментить после миграции
-        //if (is_null($this->manager_id)) return null;
-        //return $this->manager()->first();
+        if (is_null($this->manager_id)) return null;
+        return $this->manager()->first();
 
         /** @var OrderResponsible $responsible */
-        $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->orderByDesc('created_at')->first();
-        return is_null($responsible) ? null : $responsible->staff;
+       // $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->orderByDesc('created_at')->first();
+       // return is_null($responsible) ? null : $responsible->staff;
     }
 
     //Суммы по заказу*******************
@@ -499,7 +509,9 @@ class Order extends Model
 
     public function statusHtml(): string
     {
-        return OrderStatus::STATUSES[$this->status->value] . ' ' . $this->status->comment;
+        $comment = '';
+        if (!empty($this->status->comment)) $comment = ' (' . $this->status->comment . ')';
+        return OrderStatus::STATUSES[$this->status->value] . $comment;
     }
 
     /**

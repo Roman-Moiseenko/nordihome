@@ -59,8 +59,6 @@
                 </div>
             </x-base.popover.panel>
         </x-base.popover>
-
-
     </div>
 </div>
 
@@ -77,11 +75,7 @@
     let buttonExpense = document.getElementById('button-expense');
     let buttonCreateExpense = document.getElementById('create-expense');
 
-
-    if (buttonExpense.dataset.disabled === '1') {
-        buttonExpense.disabled = true;
-    }
-
+    setAjax(route, _check(), _updateData);
     Array.from(inputUpdateData).forEach(function (input) {
         input.addEventListener('change', function () {
             setAjax(route, _check(), _updateData)

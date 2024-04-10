@@ -18,7 +18,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $product_id
  * @property int $quantity
  * @property bool $preorder //на предзаказ
- * @property int $supplier_document_id //Заказ поставщику - ????
+ * @property int $supply_stack_id
  * @property int $base_cost
  * @property int $sell_cost
  * @property int $discount_id - Акция или бонус
@@ -59,11 +59,6 @@ class OrderItem extends Model implements CartItemInterface
         'sell_cost' => 'float',
         'preorder' => 'bool'
     ];
-/*
-    public function getAssemblage(): float
-    {
-        if ()
-    } */
 
     public function changeQuantity(int $new_quantity)
     {
@@ -78,7 +73,9 @@ class OrderItem extends Model implements CartItemInterface
 
     public function supplyStack()
     {
-        return $this->hasOne(SupplyStack::class, 'order_item_id', 'id');
+        //TODO Протестировать вызов исключения
+        if ($this->preorder == false) throw new \DomainException('Данная функция должна вызываться для preorder == true');
+        return $this->belongsTo(SupplyStack::class, 'supply_stack_id', 'id');
     }
 
     public function expenseItems()

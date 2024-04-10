@@ -8,6 +8,7 @@ use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\Supply;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
@@ -632,6 +633,24 @@ Breadcrumbs::for('admin.accounting.departure.edit', function (BreadcrumbTrail $t
     $trail->parent('admin.accounting.departure.show', $departure);
     $trail->push('Редактировать', route('admin.accounting.departure.edit', $departure));
 });
+//SUPPLY
+Breadcrumbs::for('admin.accounting.supply.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Поступление товаров', route('admin.accounting.supply.index'));
+});
+Breadcrumbs::for('admin.accounting.supply.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.supply.index');
+    $trail->push('Добавить', route('admin.accounting.supply.create'));
+});
+Breadcrumbs::for('admin.accounting.supply.show', function (BreadcrumbTrail $trail, Supply $supply) {
+    $trail->parent('admin.accounting.supply.index');
+    $trail->push($supply->number . ' от ' . $supply->created_at->format('d-m-Y'), route('admin.accounting.supply.show', $supply));
+});
+Breadcrumbs::for('admin.accounting.supply.edit', function (BreadcrumbTrail $trail, Supply $supply) {
+    $trail->parent('admin.accounting.supply.show', $supply);
+    $trail->push('Редактировать', route('admin.accounting.supply.edit', $supply));
+});
+
 
 //ANALYTICS
 Breadcrumbs::for('admin.analytics.activity.index', function (BreadcrumbTrail $trail) {

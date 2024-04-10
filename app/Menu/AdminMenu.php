@@ -191,6 +191,12 @@ class AdminMenu
                         'title' => 'Списание товара',
                         'route_name' => 'admin.accounting.departure.index',
                     ],
+                    'supply' => [
+                        'icon' => 'folder-pen',
+                        'title' => 'Заказы поставщикам',
+                        'route_name' => 'admin.accounting.supply.index',
+                    ],
+
                     'distributors' => [
                         'icon' => 'building',
                         'title' => 'Поставщики',
