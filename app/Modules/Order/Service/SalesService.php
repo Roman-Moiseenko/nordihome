@@ -50,7 +50,8 @@ class SalesService
         $staff = Admin::find($staff_id);
         if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
         $order->setStatus(OrderStatus::SET_MANAGER);
-        $order->responsible()->save(OrderResponsible::registerManager($staff->id));
+        $order->setManager($staff->id);
+//        $order->responsible()->save(OrderResponsible::registerManager($staff->id));
     }
 
     public function setReserveService(Order $order, string $date, string $time)

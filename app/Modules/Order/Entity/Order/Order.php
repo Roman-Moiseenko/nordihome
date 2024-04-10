@@ -21,27 +21,28 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property int $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
-
+ * @property int $manager_id // Admin::class - менеджер, создавший или прикрепленный к заказу
  * @property int $discount_id //Скидка на заказ - от суммы, или по дням
  * @property float $coupon //Примененная сумма скидки по товару
  * @property int $coupon_id //Купон скидки
- * @property float $manual //Ручная скидка
-
+ * @property float $manual //Ручная скидка - возможно удалить
  * @property string $comment
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
  * @property OrderAddition[] $additions //Дополнения к заказу (услуги)
  * @property OrderPayment[] $payments //Платежи за заказ
 
  * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
- * @property Carbon $created_at
- * @property Carbon $updated_at
+
  * @property OrderItem[] $items
  * @property User $user
- * @property DeliveryOrder $delivery //Удалить
- * @property OrderResponsible[] $responsible
+ * @property OrderResponsible[] $responsible - удалить
  * @property MovementDocument[] $movements
  * @property Discount $discount
+ * @property Admin $manager
  */
 class Order extends Model
 {
@@ -49,7 +50,6 @@ class Order extends Model
     const MANUAL = 702;
     const SHOP = 703;
     const PARSER = 704;
-
     const TYPES = [
         self::ONLINE => 'Интернет-магазин',
         self::MANUAL => 'Вручную',
@@ -67,8 +67,8 @@ class Order extends Model
         'discount_id',
         'manual',
         'comment',
+        'manager_id'
     ];
-
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -87,7 +87,6 @@ class Order extends Model
     }
 
     ///*** ПРОВЕРКА СОСТОЯНИЙ is...()
-
     /**
      * Статус $value был применен
      * @param int $value
@@ -182,24 +181,27 @@ class Order extends Model
         }
     }
 
-    #[Deprecated]
-    public function setPoint(int $point_storage_id)
-    {
-        $this->delivery->point_storage_id = $point_storage_id;
-        $this->delivery->save();
-    }
-
     /**
      * Для каждого товара в заказе назначаем склад резерва
      * @param $storage_id
      * @return void
      */
+    #[Deprecated]
     public function setStorage($storage_id)
     {
         foreach ($this->items as $item) {
             $item->reserve->setStorage($storage_id);
             $item->reserve->save();
         }
+    }
+
+    public function setManager(int $staff_id)
+    {
+        if ($this->manager_id != null) throw new \DomainException('Менеджер уже назначен, нельзя менять');
+        $this->manager_id = $staff_id;
+        $this->save();
+
+        //$this->responsible()->save(OrderResponsible::registerManager($staff->id));
     }
 
     ///*** GET-еры
@@ -238,7 +240,7 @@ class Order extends Model
     public function getReserveTo():? Carbon
     {
         /** @var OrderItem $item */
-        if ($this->items->count() == 0) return now();
+        if ($this->items()->count() == 0) return now();
         $item = $this->items()->where('preorder', false)->first();
         if (is_null($item->reserve)) throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
         return $item->reserve->reserve_at;
@@ -255,20 +257,16 @@ class Order extends Model
             if ($orderItem->product->id == $product->id && $orderItem->preorder == $preorder) return $orderItem;
         }
         return null;
-        //throw new \DomainException('Данный товар не содержится в заказе');
     }
 
     public function getManager(): ?Admin
     {
+        //TODO раскомментить после миграции
+        //if (is_null($this->manager_id)) return null;
+        //return $this->manager()->first();
+
         /** @var OrderResponsible $responsible */
         $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->orderByDesc('created_at')->first();
-        return is_null($responsible) ? null : $responsible->staff;
-    }
-
-    public function getLogger(): ?Admin
-    {
-        /** @var OrderResponsible $responsible */
-        $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_LOGGER)->orderByDesc('created_at')->first();
         return is_null($responsible) ? null : $responsible->staff;
     }
 
@@ -417,6 +415,10 @@ class Order extends Model
     }
     ///*** Relations *************************************************************************************
 
+    public function manager()
+    {
+        return $this->belongsTo(Admin::class, 'manager_id', 'id');
+    }
 
     public function expenses()
     {
@@ -428,6 +430,7 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
     }
 
+    #[Deprecated]
     public function responsible()
     {
         return $this->hasMany(OrderResponsible::class, 'order_id', 'id');
@@ -461,12 +464,6 @@ class Order extends Model
     public function discount()
     {
         return $this->belongsTo(Discount::class, 'discount_id', 'id');
-    }
-
-    #[Deprecated]
-    public function delivery()
-    {
-        return $this->hasOne(DeliveryOrder::class, 'order_id', 'id');
     }
 
     #[Deprecated]

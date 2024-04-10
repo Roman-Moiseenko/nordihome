@@ -25,5 +25,8 @@
             <label class="form-check-label" for="item-{{ $item->id }}"></label>
         </div>
     </div>
+    <div class=" ml-auto">
+        @if($item->preorder) <button class="btn btn-dark">В Заказ Менеджеру</button> @endif
+    </div>
 </div>
 

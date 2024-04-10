@@ -27,7 +27,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         let FullList = document.getElementsByTagName('body')[0];
         FullList.addEventListener('click', function (e) {
-            if (e.target.nodeName === 'A') {
+            if (e.target.nodeName === 'A' || e.target.nodeName === 'BUTTON') {
                 if (e.target.getAttribute('data-tw-toggle') === 'modal') {
                     e.preventDefault();
                     let route = e.target.getAttribute('data-route');

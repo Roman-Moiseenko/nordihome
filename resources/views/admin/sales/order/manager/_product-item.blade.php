@@ -41,8 +41,7 @@
     </div>
     <div class="w-40 text-left">
         <input id="comment-{{ $item->id }}" type="text" class="form-control update-data-ajax"
-               value="{{ $item->comment }}" aria-describedby="input-sell_cost"
-               min="0" data-id="{{ $item->id }}" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
+               value="{{ $item->comment }}" data-id="{{ $item->id }}"
                data-route="{{ route('admin.sales.order.update-item-comment', $item) }}"
         >
     </div>

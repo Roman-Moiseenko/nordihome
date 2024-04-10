@@ -330,7 +330,8 @@ class OrderService
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $order->setStatus(OrderStatus::SET_MANAGER);
-        $order->responsible()->save(OrderResponsible::registerManager($staff->id));
+        $order->setManager($staff->id);
+        //$order->responsible()->save(OrderResponsible::registerManager($staff->id));
         $order->refresh();
         return $order;
     }

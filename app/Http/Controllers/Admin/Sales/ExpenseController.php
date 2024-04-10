@@ -24,6 +24,18 @@ class ExpenseController extends Controller
         return redirect()->route('home');
     }
 
+    public function show(OrderExpense $expense)
+    {
+        return view('admin.sales.expense.show', compact('expense'));
+    }
+
+    public function destroy(OrderExpense $expense) {
+        return $this->try_catch(function () use ($expense) {
+            $order = $this->service->cancel($expense);
+            flash('Распоряжение успешно удалено. Товар возвращен в резерв и хранилище.', 'info');
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
 
     //Через AJAX
     public function store(Request $request)
@@ -35,8 +47,5 @@ class ExpenseController extends Controller
         });
     }
 
-    public function show(OrderExpense $expense)
-    {
-        return view('admin.sales.expense.show', compact('expense'));
-    }
+
 }

@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Отгрузки
  * @property int $id
+ * @property int $number
  * @property int $order_id
  * @property int $storage_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property int $status
+ * @property string $comment
  * @property OrderExpenseItem[] $items
  * @property OrderExpenseAddition[] $additions
  * @property Storage $storage
@@ -44,6 +46,7 @@ class OrderExpense extends Model
         'order_id',
         'storage_id',
         'status',
+        'comment',
     ];
 
 
@@ -102,8 +105,21 @@ class OrderExpense extends Model
         }
     }
 
-    public function statusHTML()
+    public function statusHTML(): string
     {
         return self::STATUSES[$this->status];
+    }
+
+    public function htmlNum(): string
+    {
+        if (is_null($this->number)) return 'б/н';
+        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function setNumber()
+    {
+        $count = OrderExpense::where('number', '<>', null)->count();
+        $this->number = $count + 1;
+        $this->save();
     }
 }

@@ -101,30 +101,10 @@ class ExpenseService
         return $order;
     }
 
-    //*** Изменения в Распоряжении - value, add_item, del_item
-    #[Deprecated]
-    public function update_item(OrderExpenseItem $item, $quantity) {
-        //TODO Проверка на превышение
-
-        $remains = $item->orderItem->getRemains() + $item->quantity; //Остаток для текущего распоряжения
-        if ($remains < $quantity) throw new \DomainException('**');
-        $delta = $item->quantity - $quantity;
-        if ($delta == 0) return;
-        //Изменяем резерв и хранилище
-        $item->orderItem->reserve->add($delta);
-        $storageItem = $item->expense->storage->getItem($item->orderItem->product);
-        $storageItem->add($item->quantity);
-
-        $item->quantity = $quantity;
-        $item->save();
-        //TODO проверка на сумму оплаты
-    }
-    #[Deprecated]
-    public function update_addition(OrderExpenseAddition $addition, $amount) {
-        //TODO Проверка на превышение
-        $addition->amount = $amount;
-        $addition->save();
-        //TODO проверка на сумму оплаты
+    public function update_comment(OrderExpense $expense, string $comment)
+    {
+        $expense->comment = $comment;
+        $expense->save();
     }
 
     //Установить точку сборки

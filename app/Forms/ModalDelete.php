@@ -12,7 +12,7 @@ class ModalDelete
      * Считываем с <a> - data-tw-toggle="modal", data-route="..."
      */
 
-    public static function create($caption, $text, $id = 'delete-confirmation-modal'): self
+    public static function create($caption, $text, $id = 'delete-confirmation-modal', array $buttons = []): self
     {
         $modal = new static();
         $modal->params = [

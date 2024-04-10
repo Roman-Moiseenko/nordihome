@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
@@ -17,13 +18,13 @@ use JetBrains\PhpStorm\Pure;
  * @property int $product_id
  * @property int $quantity
  * @property bool $preorder //на предзаказ
- * @property int $supplier_document_id //Заказ поставщику
+ * @property int $supplier_document_id //Заказ поставщику - ????
  * @property int $base_cost
  * @property int $sell_cost
  * @property int $discount_id - Акция или бонус
  * @property string $discount_type
  * @property array $options
- * @property bool $cancel
+ * @property bool $cancel -- ?
  * @property string $comment
  * @property int $reserve_id
  * @property bool $assemblage - требуется сборка
@@ -32,6 +33,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Product $product
  * @property Discount $discount
  * @property OrderExpenseItem[] $expenseItems
+ * @property SupplyStack $supplyStack
  */
 class OrderItem extends Model implements CartItemInterface
 {
@@ -72,6 +74,11 @@ class OrderItem extends Model implements CartItemInterface
     public function clearReserve()
     {
         $this->update(['reserve_id' => null]);
+    }
+
+    public function supplyStack()
+    {
+        return $this->hasOne(SupplyStack::class, 'order_item_id', 'id');
     }
 
     public function expenseItems()
