@@ -16,12 +16,14 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property bool $completed
  * @property int $storage_id
  * @property int $currency_id
+ * @property int $supply_id
  * @property float $exchange_fix //Курс на момент создания документа
  * @property string $comment Комментарий к документу, пока отключена, на будущее
  * @property Storage $storage
  * @property Currency $currency
  * @property ArrivalProduct[] $arrivalProducts
  * @property Distributor $distributor
+ * @property SupplyDocument $supply
  */
 class ArrivalDocument extends Model implements MovementInterface
 {
@@ -34,6 +36,7 @@ class ArrivalDocument extends Model implements MovementInterface
         'currency_id',
         'exchange_fix',
         'completed',
+        'supply_id',
     ];
     protected $casts = [
         'created_at' => 'datetime',
@@ -50,6 +53,10 @@ class ArrivalDocument extends Model implements MovementInterface
             'exchange_fix' => $currency->exchange, //Запоминаем текущий курс
             'completed' => false,
         ]);
+    }
+    public function supply()
+    {
+        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
     }
 
     public function arrivalProducts()

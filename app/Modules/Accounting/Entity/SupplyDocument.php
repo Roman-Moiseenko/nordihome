@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,14 +14,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $staff_id
  * @property int $distributor_id
  * @property int $status
- * @property int $arrival_id
  * @property string $comment
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property ArrivalDocument $arrival  - документ, который создастся после исполнения заказа
- * @property SupplyItem[] $items
+ * @property ArrivalDocument[] $arrivals  - документ, который создастся после исполнения заказа
+ * @property SupplyProduct[] $products
+ * @property SupplyStack[] $stacks
  */
-class Supply extends Model
+class SupplyDocument extends Model
 {
     const CREATED = 1201;
     const SENT = 1202;
@@ -32,12 +33,11 @@ class Supply extends Model
 
     ];
 
-    protected $table = 'supplies';
+    protected $table = 'supply_documents';
     protected $fillable = [
         'staff_id',
         'distributor_id',
         'status',
-        'arrival_id',
         'comment',
     ];
 
@@ -52,7 +52,6 @@ class Supply extends Model
             'staff_id' => $staff_id,
             'distributor_id' => $distributor_id,
             'status' => self::CREATED,
-            'arrival_id' => null,
             'comment' => $comment,
         ]);
     }
@@ -62,13 +61,31 @@ class Supply extends Model
         return $this->status == self::CREATED;
     }
 
-    public function items()
+    public function products()
     {
-        return $this->hasMany(SupplyItem::class, 'supply_id', 'id');
+        return $this->hasMany(SupplyProduct::class, 'supply_id', 'id');
+    }
+
+    public function stacks()
+    {
+        return $this->hasMany(SupplyStack::class, 'supply_id', 'id');
     }
 
     public function statusHTML()
     {
         return self::STATUSES[$this->status];
+    }
+
+    public function getProduct(Product $product):? SupplyProduct
+    {
+        foreach ($this->products as $item) {
+            if ($item->product_id == $product->id) return $item;
+        }
+        return null;
+    }
+
+    public function arrivals()
+    {
+        return $this->hasMany(ArrivalDocument::class, 'supply_id', 'id');
     }
 }

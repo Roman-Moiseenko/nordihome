@@ -53,4 +53,12 @@ class Distributor extends Model
     {
         return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
+
+    public function isProduct(Product $product): bool
+    {
+        foreach ($this->products as $_product) {
+            if ($_product->id == $product->id) return true;
+        }
+        return false;
+    }
 }

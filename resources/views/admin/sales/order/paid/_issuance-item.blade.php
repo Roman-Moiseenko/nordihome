@@ -23,9 +23,7 @@
         <div class="form-check form-switch justify-center mt-3">
             <input id="item-{{ $item->id }}" class="form-check-input update-data-ajax"
                    data-input="item-quantity-{{ $item->id }}" type="checkbox" name="items" value="{{ $item->id }}"
-
                    @if($item->preorder && is_null($item->reserve) || ($item->getRemains() == 0)) disabled @else checked @endif
-
             >
             <label class="form-check-label" for="item-{{ $item->id }}"></label>
         </div>
@@ -33,7 +31,6 @@
     <div class=" ml-auto">
         @if($item->preorder)
             @if(is_null($item->supplyStack))
-
                 <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
                     <x-base.popover.button as="x-base.button" variant="dark" class="w-100"
                                            id="button-supply-stack" type="button">
@@ -66,10 +63,8 @@
                         </form>
                     </x-base.popover.panel>
                 </x-base.popover>
-
-
             @else
-                <span>{{ $item->supplyStack->status() }}</span>
+                <span><a class="text-primary" href="{{ route('admin.accounting.supply.show', $item->supplyStack->supply) }}" target="_blank">{{ $item->supplyStack->status() }}</a></span>
             @endif
         @endif
     </div>

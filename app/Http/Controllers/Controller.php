@@ -66,8 +66,6 @@ class Controller extends BaseController
             return $result;
         } catch (\DomainException $e) {
             flash($e->getMessage(), $level);
-            DB::rollBack();
-            return empty($return) ? redirect()->back() : redirect($return);
         } catch (\Throwable $e) {
             if (config('app.debug')) {
                 flash($e->getMessage() . ' / ' . $e->getFile() . ' / ' . $e->getLine(), 'danger');
@@ -75,12 +73,11 @@ class Controller extends BaseController
                 flash('Техническая ошибка! Информация направлена разработчику', 'danger');
                 event(new ThrowableHasAppeared($e));
             }
-            DB::rollBack();
-            return empty($return) ? redirect()->back() : redirect($return);
         }
+        DB::rollBack();
+        return empty($return) ? redirect()->back() : redirect($return);
     }
 
-    //TODO Заменить все на try_catch_ajax
     public function try_catch_ajax_admin($callback)
     {
         DB::beginTransaction();

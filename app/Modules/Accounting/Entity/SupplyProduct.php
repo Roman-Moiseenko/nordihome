@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $supply_id
  * @property int $product_id
  * @property int $quantity
- * @property Supply $supply
+ * @property SupplyDocument $supply
  */
-class SupplyItem extends Model
+class SupplyProduct extends Model
 {
-    protected $table = 'supply_items';
-
+    protected $table = 'supply_products';
+    public $timestamps = false;
     protected $fillable = [
         'supply_id',
         'product_id',
@@ -28,5 +28,10 @@ class SupplyItem extends Model
             'product_id' => $product_id,
             'quantity' => $quantity
         ]);
+    }
+
+    public function supply()
+    {
+        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
     }
 }

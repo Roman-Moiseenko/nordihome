@@ -5,7 +5,7 @@
         {{ $supply->statusHTML() }}
     </x-base.table.td>
     <x-base.table.td class="text-center">{{ $supply->distributor->name }}</x-base.table.td>
-    <x-base.table.td class="text-center">{{ $supply->storage->name }}</x-base.table.td>
+    <x-base.table.td class="text-center">{{ $supply->statusHTML() }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $supply->getQuantity() }}</x-base.table.td>
 
     <x-base.table.td class="table-report__action w-56">

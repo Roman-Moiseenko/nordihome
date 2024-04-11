@@ -405,14 +405,6 @@ Route::group(
                 'namespace' => 'Accounting',
             ],
             function () {
-                Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
-                Route::resource('distributor', 'DistributorController'); //CRUD
-                Route::resource('currency', 'CurrencyController'); //CRUD
-                Route::resource('arrival', 'ArrivalController'); //CRUD
-                Route::resource('movement', 'MovementController'); //CRUD
-                Route::resource('departure', 'DepartureController'); //CRUD
-                Route::resource('supply', 'SupplyController'); //CRUD
-
                 Route::group([
                     'prefix' => 'arrival',
                     'as' => 'arrival.',
@@ -453,8 +445,18 @@ Route::group(
                     'as' => 'supply.',
                 ],
                     function () {
+                        Route::get('/stack', 'SupplyController@stack')->name('stack');
+                        Route::delete('/del-stack/{stack}', 'SupplyController@del_stack')->name('del-stack');
                         Route::post('/add-stack/{item}', 'SupplyController@add_stack')->name('add-stack');
+
                     });
+                Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
+                Route::resource('distributor', 'DistributorController'); //CRUD
+                Route::resource('currency', 'CurrencyController'); //CRUD
+                Route::resource('arrival', 'ArrivalController'); //CRUD
+                Route::resource('movement', 'MovementController'); //CRUD
+                Route::resource('departure', 'DepartureController'); //CRUD
+                Route::resource('supply', 'SupplyController'); //CRUD
             }
         );
 

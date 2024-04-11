@@ -51,6 +51,7 @@ class OrderItem extends Model implements CartItemInterface
         'discount_type',
         'preorder',
         'assemblage',
+        'supply_stack_id',
     ];
 
     protected $casts = [

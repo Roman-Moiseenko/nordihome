@@ -8,6 +8,7 @@ use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Order\Service\ReserveService;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ArrayShape;
@@ -16,11 +17,13 @@ class ArrivalService
 {
     private StorageService $storages;
     private DistributorService $distributors;
+    private ReserveService $reserveService;
 
-    public function __construct(StorageService $storages, DistributorService $distributors)
+    public function __construct(StorageService $storages, DistributorService $distributors, ReserveService $reserveService)
     {
         $this->storages = $storages;
         $this->distributors = $distributors;
+        $this->reserveService = $reserveService;
     }
 
     public function create(array $request): ArrivalDocument
@@ -137,6 +140,30 @@ class ArrivalService
         }
 
         $arrival->completed();
+
+        //TODO ПРОТЕСТИРОВАТЬ
+        //У поступления есть заказ поставщику
+        if (!is_null($arrival->supply)) {
+            //Проходим по стеку к заказу поставщика
+            foreach ($arrival->supply->stacks as $stack) {
+                //Если у стека есть элемент Заказа Клиента и совпадает Хранилище
+                if (!empty($stack->orderItem) && $stack->storage_id == $arrival->storage_id) {
+                    $reserve = $this->reserveService->toReserve(
+                        $stack->orderItem->product,
+                        $stack->orderItem->quantity,
+                        'order',
+                        24 * 60 * 3,
+                        $stack->orderItem->order->user_id);
+                    $stack->orderItem->reserve_id = $reserve->id;
+                    $stack->orderItem->save();
+                    $reserve->storage_id = $arrival->storage_id;
+                    $reserve->save();
+                }
+
+            }
+
+        }
+
         event(new ArrivalHasCompleted($arrival));
     }
 

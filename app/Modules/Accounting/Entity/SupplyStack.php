@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Entity\Admin;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
@@ -20,8 +21,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property OrderItem $orderItem
- * @property Supply $supply - поставка по текущему запросу
+ * @property SupplyDocument $supply - поставка по текущему запросу
  * @property Product $product
+ * @property Admin $staff
  */
 class SupplyStack extends Model
 {
@@ -57,7 +59,7 @@ class SupplyStack extends Model
 
     public function supply()
     {
-        return $this->belongsTo(Supply::class, 'supply_id', 'id');
+        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
     }
 
     public function product()
@@ -74,5 +76,10 @@ class SupplyStack extends Model
     public function orderItem()
     {
         return $this->hasOne(OrderItem::class, 'supply_stack_id', 'id');
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }
 }

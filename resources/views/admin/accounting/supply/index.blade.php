@@ -22,20 +22,6 @@
                 </x-base.tom-select>
 
             </div>
-            <div class="col-span-12 lg:col-span-3">
-                <x-base.form-label for="select-storage">Хранилище</x-base.form-label>
-                <x-base.tom-select id="select-storage" name="storage_id"
-                                   class="w-full" data-placeholder="Выберите хранилище">
-                    <option value="0"></option>
-                    @foreach($storages as $storage)
-                        <option value="{{ $storage->id }}"
-                            {{ $storage->id == $storage_id ? 'selected' : ''}} >
-                            {{ $storage->name }}
-                        </option>
-                    @endforeach
-                </x-base.tom-select>
-
-            </div>
             <div class="col-span-12 lg:col-span-3 border-l pl-4 flex">
                 <div class="">
                     <div class="form-check mr-3">
@@ -70,13 +56,6 @@
             window.location.search = urlParams;
         });
 
-        let selectStorage = document.getElementById('select-storage');
-        selectStorage.addEventListener('change', function () {
-            let p = selectStorage.options[selectStorage.selectedIndex].value;
-            urlParams.set('storage_id', p);
-            window.location.search = urlParams;
-        });
-
 
         let checkPublished = document.querySelectorAll('.check-completed');
         checkPublished.forEach(function (item) {
@@ -91,10 +70,50 @@
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
 
-            <button class="btn btn-primary shadow-md mr-2"
-                    onclick="window.location.href='{{ route('admin.accounting.supply.create') }}'">Создать Документ
-            </button>
+            <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="primary" class="w-100"
+                                       id="button-supply-stack" type="button">
+                    Создать Документ
+                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                </x-base.popover.button>
+                <x-base.popover.panel>
+                    <form method="get" action="{{ route('admin.accounting.supply.create') }}">
+
+                        <div class="p-2">
+                            <x-base.tom-select id="select-distributor" name="distributor" class=""
+                                               data-placeholder="Выберите Поставщика">
+                                <option value="0"></option>
+                                @foreach($distributors as $distributor)
+                                    <option value="{{ $distributor->id }}"
+                                    >{{ $distributor->name }}</option>
+                                @endforeach
+                            </x-base.tom-select>
+
+                            <div class="flex items-center mt-3">
+                                <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                    Отмена
+                                </x-base.button>
+                                <button class="w-32 ml-2 btn btn-primary" type="submit">
+                                    Создать
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </x-base.popover.panel>
+            </x-base.popover>
+
+
             {{ $supplies->links('admin.components.count-paginator') }}
+            <div class="ml-auto relative label-up-button">
+                <button class="btn btn-success shadow-md"
+                        onclick="window.location.href='{{ route('admin.accounting.supply.stack') }}'">Стек заказов
+                </button>
+                @if($stack_count != 0)
+                <span class="">{{ $stack_count }}</span>
+                @endif
+            </div>
+
+
         </div>
 
 
@@ -104,7 +123,7 @@
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap">ДАТА</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ПОСТАВЩИК</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ХРАНИЛИЩЕ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">СТАТУС</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>

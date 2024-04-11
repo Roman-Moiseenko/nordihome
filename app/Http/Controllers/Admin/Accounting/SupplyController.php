@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin\Accounting;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\DistributorProduct;
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Accounting\Entity\Supply;
+use App\Modules\Accounting\Entity\StorageItem;
+use App\Modules\Accounting\Entity\SupplyDocument;
+use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Service\SupplyService;
 use App\Modules\Order\Entity\Order\OrderItem;
 use Illuminate\Http\Request;
@@ -22,8 +25,8 @@ class SupplyController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = Supply::orderByDesc('created_at');
+        return $this->try_catch_admin(function () use ($request) {
+            $query = SupplyDocument::orderByDesc('created_at');
             $distributors = Distributor::orderBy('name')->get();
             $storages = Storage::orderBy('name')->get();
 
@@ -38,9 +41,59 @@ class SupplyController extends Controller
             }
 
             $supplies = $this->pagination($query, $request, $pagination);
+            $stack_count = SupplyStack::where('supply_id', null)->count();
 
             return view('admin.accounting.supply.index',
-                compact('supplies', 'pagination', 'completed', 'storages', 'distributors', 'storage_id', 'distributor_id'));
+                compact('supplies', 'pagination', 'completed', 'storages', 'distributors', 'storage_id', 'distributor_id', 'stack_count'));
+        });
+    }
+
+    public function create(Request $request)
+    {
+        return $this->try_catch_admin(function () use ($request) {
+            /** @var Distributor $distributor */
+            $distributor = Distributor::find((int)$request['distributor']);
+            /** @var SupplyStack[] $stacks */
+            $stacks = SupplyStack::where('supply_id', null)->getModels();
+            foreach ($stacks as $i => $stack) {
+                if (DistributorProduct::where('product_id', $stack->product->id)->get())
+                if (!$distributor->isProduct($stack->product))
+                    unset($stacks[$i]);
+
+            }
+
+            if (!empty($stacks)) { //Если стек не пуст, то показываем
+                return view('admin.accounting.supply.create', compact('stacks', 'distributor'));
+            } else { //Иначе создаем пустой заказ
+                $supply = $this->service->create_empty($distributor);
+                return redirect()->route('admin.accounting.supply.show', $supply);
+            }
+
+        });
+    }
+    public function store(Request $request)
+    {
+
+        return $this->try_catch_admin(function () use ($request) {
+            $supply = $this->service->create((int)$request['distributor'], $request['stack']);
+            return redirect()->route('admin.accounting.supply.show', $supply);
+        });
+    }
+
+
+    public function show(SupplyDocument $supply)
+    {
+        return $this->try_catch_admin(function () use ($supply) {
+            return view('admin.accounting.supply.show', compact('supply'));
+        });
+    }
+
+    public function stack(Request $request)
+    {
+        return $this->try_catch_admin(function () use ($request) {
+            $distributors = Distributor::orderBy('name')->get();
+            $stacks = SupplyStack::where('supply_id', null)->get();
+            return view('admin.accounting.supply.stack', compact('stacks' ,'distributors'));
         });
     }
 
@@ -49,9 +102,17 @@ class SupplyController extends Controller
         $request->validate([
             'storage' => 'required|numeric|min:0|not_in:0',
         ]);
-        return $this->try_catch_admin(function () use($request, $item) {
+        return $this->try_catch_admin(function () use ($request, $item) {
             $stack = $this->service->add_stack($item, (int)$request['storage']);
             if (!empty($stack)) flash('Товар ' . $stack->product->name . ' помещен в стек заказа', 'info');
+            return redirect()->back();
+        });
+    }
+
+    public function del_stack(SupplyStack $stack)
+    {
+        return $this->try_catch_admin(function () use ($stack) {
+            $this->service->del_stack($stack);
             return redirect()->back();
         });
     }

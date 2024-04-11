@@ -24,8 +24,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderExpense extends Model
 {
-    //TODO Отгрузки
-
     const STATUS_DRAFT = -1;
     const STATUS_MOVEMENT = 1;
     const STATUS_ASSEMBLY = 2;

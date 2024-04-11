@@ -61,6 +61,7 @@
 
 @import "tw-starter/dist/css/starter.css";
 
+
 a.disabled {
     cursor: no-drop;
     color: #a4a5a4;
@@ -90,11 +91,13 @@ div.has-error{
 input.btn-check {
     display: none;
 }
-input.btn-check + label {
+input.btn-check + label, .label-up-button > button {
     position: relative;
     min-width: 120px;
+    padding-right: 30px;
+    padding-left: 30px;
 }
-input.btn-check + label>span {
+input.btn-check + label>span, .label-up-button > span {
     position: absolute;
     top: 2px;
     right: 2px;
@@ -103,6 +106,7 @@ input.btn-check + label>span {
     border-radius: 10px;
     padding: 0 6px;
 }
+
 input.btn-check:checked + label {
     border: 2px solid rgb(var(--color-danger));
 }
