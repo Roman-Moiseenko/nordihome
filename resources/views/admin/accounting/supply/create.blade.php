@@ -37,7 +37,7 @@
 
                                        class="text-success font-medium" target="_blank">{{ $stack->comment }}</a>
                                 @else
-                                    {{ $stack->comment }}
+                                    {{ $stack->comment . ' (' . $stack->storage->name . ')' }}
                                 @endif
                             </x-base.table.td>
                             <x-base.table.td class="text-center">{{ $stack->staff->fullname->getFullName() }}</x-base.table.td>

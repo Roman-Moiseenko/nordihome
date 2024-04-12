@@ -11,7 +11,6 @@
     <div class="grid grid-cols-12 gap-x-6 pb-20">
         <!-- ORDER -->
         <div class="col-span-11 lg:col-span-9">
-
             <div class="intro-y box p-5 mt-5 block-menus-order">
                 <div class="rounded-md border border-slate-200/60 p-5">
                     <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">

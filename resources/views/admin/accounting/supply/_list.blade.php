@@ -1,8 +1,7 @@
 <x-base.table.tr>
     <x-base.table.td class="">
         <a href="{{ route('admin.accounting.supply.show', $supply) }}"
-           class="font-medium whitespace-nowrap">{{ $supply->number . ' от ' . $supply->created_at->format('d-m-Y') }}</a>
-        {{ $supply->statusHTML() }}
+           class="font-medium whitespace-nowrap">{{ $supply->htmlNum() . ' от ' . $supply->htmlDate() }}</a>
     </x-base.table.td>
     <x-base.table.td class="text-center">{{ $supply->distributor->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $supply->statusHTML() }}</x-base.table.td>

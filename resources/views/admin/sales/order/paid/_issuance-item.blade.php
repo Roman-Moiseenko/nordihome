@@ -64,7 +64,13 @@
                     </x-base.popover.panel>
                 </x-base.popover>
             @else
-                <span><a class="text-primary" href="{{ route('admin.accounting.supply.show', $item->supplyStack->supply) }}" target="_blank">{{ $item->supplyStack->status() }}</a></span>
+                <span>
+                    @if(is_null($item->supplyStack->supply))
+                        {{ $item->supplyStack->status() }}
+                    @else
+                    <a class="text-primary" href="{{ route('admin.accounting.supply.show', $item->supplyStack->supply) }}" target="_blank">{{ $item->supplyStack->status() }}</a>
+                    @endif
+                </span>
             @endif
         @endif
     </div>

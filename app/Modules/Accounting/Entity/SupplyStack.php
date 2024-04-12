@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property SupplyDocument $supply - поставка по текущему запросу
  * @property Product $product
  * @property Admin $staff
+ * @property Storage $storage
  */
 class SupplyStack extends Model
 {
@@ -62,6 +63,11 @@ class SupplyStack extends Model
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
     }
 
+    public function storage()
+    {
+        return $this->belongsTo(Storage::class, 'storage_id', 'id');
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
@@ -82,4 +88,6 @@ class SupplyStack extends Model
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }
+
+
 }

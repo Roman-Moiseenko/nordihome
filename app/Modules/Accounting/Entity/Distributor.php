@@ -61,4 +61,14 @@ class Distributor extends Model
         }
         return false;
     }
+
+    public function addProduct(Product $product, float $cost): void
+    {
+        $this->products()->attach($product->id, ['cost' => $cost]);
+    }
+
+    public function updateProduct(Product $product, float $cost)
+    {
+        $this->products()->updateExistingPivot($product->id, ['cost' => $cost]);
+    }
 }

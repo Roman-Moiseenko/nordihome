@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property ArrivalDocument[] $arrivals  - документ, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
  * @property SupplyStack[] $stacks
+ * @property Distributor $distributor
  */
 class SupplyDocument extends Model
 {
@@ -55,12 +56,58 @@ class SupplyDocument extends Model
             'comment' => $comment,
         ]);
     }
+    //** IS ... */
 
     public function isCreated(): bool
     {
         return $this->status == self::CREATED;
     }
 
+    public function isSent(): bool
+    {
+        return $this->status == self::SENT;
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status == self::COMPLETED;
+    }
+
+    public function isProduct(Product $product): bool
+    {
+        foreach ($this->products as $item) {
+            if ($item->product_id == $product->id) return true;
+        }
+        return false;
+    }
+    //** SET'S */
+
+    //** GET'S */
+
+    public function getQuantity(): int
+    {
+        $quantity = 0;
+        foreach ($this->products as $product) {
+            $quantity += $product->quantity;
+        }
+        return $quantity;
+    }
+
+    public function getQuantityStack(Product $product): int
+    {
+        $quantity = 0;
+
+        //Проверка на стек, если кол-во меньше чем в стеке, то изменить нельзя
+        foreach ($this->stacks as $stack) {
+            if ($stack->product_id == $product->id){
+                $quantity += $stack->quantity;
+            }
+        }
+        if ($quantity == 0) $quantity = 1;
+        return $quantity;
+    }
+
+    //** RELATIONS */
     public function products()
     {
         return $this->hasMany(SupplyProduct::class, 'supply_id', 'id');
@@ -69,11 +116,6 @@ class SupplyDocument extends Model
     public function stacks()
     {
         return $this->hasMany(SupplyStack::class, 'supply_id', 'id');
-    }
-
-    public function statusHTML()
-    {
-        return self::STATUSES[$this->status];
     }
 
     public function getProduct(Product $product):? SupplyProduct
@@ -88,4 +130,46 @@ class SupplyDocument extends Model
     {
         return $this->hasMany(ArrivalDocument::class, 'supply_id', 'id');
     }
+
+    public function distributor()
+    {
+        return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
+    }
+
+    public function addProduct(Product $product, int $quantity)
+    {
+        if (!empty($supplyItem = $this->getProduct($product))) {
+            $supplyItem->quantity += $quantity;
+            $supplyItem->save();
+        } else {
+            $supplyItem = SupplyProduct::new($product->id, $quantity); //В документ заносим данные из стека
+            $this->products()->save($supplyItem);
+        }
+    }
+
+    //** HELPERS */
+
+    public function htmlNum(): string
+    {
+        if (empty($this->number)) return 'б/н';
+        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function htmlDate(): string
+    {
+        return  $this->created_at->translatedFormat('d F');
+    }
+
+    public function statusHTML()
+    {
+        return self::STATUSES[$this->status];
+    }
+
+    public function setNumber()
+    {
+        $this->number = SupplyDocument::where('number', '<>', null)->count() + 1;
+        $this->save();
+    }
+
+
 }

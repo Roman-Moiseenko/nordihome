@@ -448,8 +448,15 @@ Route::group(
                         Route::get('/stack', 'SupplyController@stack')->name('stack');
                         Route::delete('/del-stack/{stack}', 'SupplyController@del_stack')->name('del-stack');
                         Route::post('/add-stack/{item}', 'SupplyController@add_stack')->name('add-stack');
+                        Route::post('/add-product/{supply}', 'SupplyController@add_product')->name('add-product');
+                        Route::post('/set-product/{product}', 'SupplyController@set_product')->name('set-product');
+                        Route::delete('/del-product/{product}', 'SupplyController@del_product')->name('del-product');
+                        Route::post('/search/{supply}', 'SupplyController@search')->name('search');
+                        Route::post('/sent/{supply}', 'SupplyController@sent')->name('sent');
+                        Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
 
                     });
+
                 Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
                 Route::resource('distributor', 'DistributorController'); //CRUD
                 Route::resource('currency', 'CurrencyController'); //CRUD

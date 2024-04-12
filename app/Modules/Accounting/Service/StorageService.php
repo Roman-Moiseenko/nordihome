@@ -18,14 +18,11 @@ class StorageService
             $request['organization_id'],
             $request['name'],
             $request->has('sale'),
-            $request->has('delivery'),
-
+            $request->has('delivery')
         );
         if (!empty($request['address'])) $storage->setAddress($request['post'] ?? '', $request['city'] ?? '', $request['address']);
-
         if (!empty($request['latitude']) && !empty($request['longitude']))
             $storage->setCoordinate($request['latitude'], $request['longitude']);
-
         $this->photo($storage, $request->file('file'));
 
         return $storage;
@@ -41,10 +38,8 @@ class StorageService
         $storage->save();
 
         if (!empty($request['address'])) $storage->setAddress($request['post'] ?? '', $request['city'] ?? '', $request['address']);
-
         if (!empty($request['latitude']) && !empty($request['longitude']))
             $storage->setCoordinate((float)$request['latitude'], (float)$request['longitude']);
-
         $this->photo($storage, $request->file('file'));
 
         return $storage;

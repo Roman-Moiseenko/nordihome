@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Service;
 
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 
 class DistributorService
@@ -33,12 +34,14 @@ class DistributorService
     public function arrival(Distributor $distributor, int $product_id, float $cost)
     {
         //Поступление товара, списком
+        /** @var Product $_product */
+        $_product = Product::find($product_id);
         foreach ($distributor->products as $product) {
-            if ($product->id == $product_id) {
-                $distributor->products()->updateExistingPivot($product_id, ['cost' => $cost]);
+            if ($product->id == $_product->id) {
+                $distributor->updateProduct($product, $cost);
                 return;
             }
         }
-        $distributor->products()->attach($product_id, ['cost' => $cost]);
+        $distributor->addProduct($_product, $cost);
     }
 }

@@ -14,11 +14,14 @@ use App\Events\PaymentHasPaid;
 use App\Events\PointHasEstablished;
 use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
+use App\Events\SupplyHasCompleted;
+use App\Events\SupplyHasSent;
 use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasCreated;
 use App\Events\UserHasRegistered;
 use App\Listeners\CheckNotificationStatus;
 use App\Listeners\NotificationCanceledOrder;
+use App\Listeners\NotificationMovementCompleted;
 use App\Listeners\NotificationNewArrival;
 use App\Listeners\NotificationNewDeparture;
 use App\Listeners\NotificationNewLogger;
@@ -27,6 +30,8 @@ use App\Listeners\NotificationNewOrder;
 use App\Listeners\NotificationNewPointStorage;
 use App\Listeners\NotificationNewProductParser;
 use App\Listeners\NotificationNewRefund;
+use App\Listeners\NotificationSupplyCompleted;
+use App\Listeners\NotificationSupplySent;
 use App\Listeners\NotificationThrowable;
 use App\Listeners\NotificationUserCreated;
 use App\Listeners\ParsingImageProduct;
@@ -47,9 +52,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-       /* Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],*/
+        /* Registered::class => [
+             SendEmailVerificationNotification::class,
+         ],*/
         UserHasRegistered::class => [
             WelcomToShop::class
         ],
@@ -62,8 +67,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasCreated::class => [
             NotificationNewOrder::class,
-           /* DeliveryService::class,
-            PaymentService::class,*/
+            /* DeliveryService::class,
+             PaymentService::class,*/
         ],
         ArrivalHasCompleted::class => [
             NotificationNewArrival::class,
@@ -75,7 +80,7 @@ class EventServiceProvider extends ServiceProvider
             NotificationCanceledOrder::class,
         ],
         MovementHasCompleted::class => [
-            //TODO Слушатель для события
+            NotificationMovementCompleted::class
         ],
         MovementHasCreated::class => [
             NotificationNewMovement::class
@@ -101,6 +106,12 @@ class EventServiceProvider extends ServiceProvider
         //
         UserHasCreated::class => [
             NotificationUserCreated::class,
+        ],
+        SupplyHasSent::class => [
+            NotificationSupplySent::class
+        ],
+        SupplyHasCompleted::class => [
+            NotificationSupplyCompleted::class,
         ],
     ];
 

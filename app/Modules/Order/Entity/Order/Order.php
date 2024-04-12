@@ -213,6 +213,23 @@ class Order extends Model
         //$this->responsible()->save(OrderResponsible::registerManager($staff->id));
     }
 
+    public function setReserve(Carbon $addDays)
+    {
+        foreach ($this->items as $item) {
+            if (!is_null($item->reserve)) {
+                $item->reserve->reserve_at = $addDays;
+                $item->reserve->save();
+            }
+        }
+    }
+
+    public function setNumber()
+    {
+        $count = Order::where('number', '<>', null)->count();
+        $this->number = $count + 1;
+        $this->save();
+    }
+
     ///*** GET-еры
 
     /**
@@ -423,6 +440,58 @@ class Order extends Model
         }
         return $amount;
     }
+
+    /**
+     * Общий вес заказа
+     * @return float
+     */
+    public function getWeight(): float
+    {
+        $weight = 0;
+        foreach ($this->items as $item) {
+            $weight += $item->quantity * $item->product->dimensions->weight();
+        }
+        return $weight;
+    }
+
+    /**
+     * Общий объем заказа
+     * @return float
+     */
+    public function getVolume(): float
+    {
+        $volume = 0;
+        foreach ($this->items as $item) {
+            $volume += $item->quantity * $item->product->dimensions->volume();
+        }
+        return $volume;
+    }
+
+    /**
+     * Товары из заказа, которые были по наличию
+     * @return OrderItem[]
+     */
+    public function getInStock(): array
+    {
+        return $this->items()->where('preorder', false)->getModels();
+    }
+
+    /**
+     * Товары из заказа, которые на предзаказ
+     * @return OrderItem[]
+     */
+    public function getPreOrder(): array
+    {
+        return $this->items()->where('preorder', true)->getModels();
+    }
+    public function getItemById(int $id_item): OrderItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->id == $id_item) return $item;
+        }
+        throw new \DomainException('Элемент заказа не найден item_ID = ' . $id_item);
+    }
+
     ///*** Relations *************************************************************************************
 
     public function manager()
@@ -513,75 +582,5 @@ class Order extends Model
         if (!empty($this->status->comment)) $comment = ' (' . $this->status->comment . ')';
         return OrderStatus::STATUSES[$this->status->value] . $comment;
     }
-
-    /**
-     * Общий вес заказа
-     * @return float
-     */
-    public function getWeight(): float
-    {
-        $weight = 0;
-        foreach ($this->items as $item) {
-            $weight += $item->quantity * $item->product->dimensions->weight();
-        }
-        return $weight;
-    }
-
-    /**
-     * Общий объем заказа
-     * @return float
-     */
-    public function getVolume(): float
-    {
-        $volume = 0;
-        foreach ($this->items as $item) {
-            $volume += $item->quantity * $item->product->dimensions->volume();
-        }
-        return $volume;
-    }
-
-    /**
-     * Товары из заказа, которые были по наличию
-     * @return OrderItem[]
-     */
-    public function getInStock(): array
-    {
-        return $this->items()->where('preorder', false)->getModels();
-    }
-
-    /**
-     * Товары из заказа, которые на предзаказ
-     * @return OrderItem[]
-     */
-    public function getPreOrder(): array
-    {
-        return $this->items()->where('preorder', true)->getModels();
-    }
-
-    public function setReserve(Carbon $addDays)
-    {
-        foreach ($this->items as $item) {
-            if (!is_null($item->reserve)) {
-                $item->reserve->reserve_at = $addDays;
-                $item->reserve->save();
-            }
-        }
-    }
-
-    public function setNumber()
-    {
-        $count = Order::where('number', '<>', null)->count();
-        $this->number = $count + 1;
-        $this->save();
-    }
-
-    public function getItemById(int $id_item): OrderItem
-    {
-        foreach ($this->items as $item) {
-            if ($item->id == $id_item) return $item;
-        }
-        throw new \DomainException('Элемент заказа не найден item_ID = ' . $id_item);
-    }
-
 
 }

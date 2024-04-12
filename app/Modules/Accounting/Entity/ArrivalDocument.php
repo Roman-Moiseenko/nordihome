@@ -134,4 +134,14 @@ class ArrivalDocument extends Model implements MovementInterface
             'cost_ru' => $cost_ru,
         ];
     }
+
+    public function htmlNum(): string
+    {
+        return $this->number;
+    }
+
+    public function htmlDate(): string
+    {
+        return  $this->created_at->translatedFormat('d F');
+    }
 }

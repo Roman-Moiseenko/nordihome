@@ -2,9 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\NotificationSending;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+
+use Illuminate\Notifications\Events\NotificationSending;
 
 class CheckNotificationStatus
 {

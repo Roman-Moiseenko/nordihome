@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $product_id
  * @property int $quantity
  * @property SupplyDocument $supply
+ * @property Product $product
  */
 class SupplyProduct extends Model
 {
@@ -34,4 +36,10 @@ class SupplyProduct extends Model
     {
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
     }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
 }
