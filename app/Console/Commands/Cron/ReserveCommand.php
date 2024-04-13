@@ -25,7 +25,7 @@ class ReserveCommand extends Command
             $reserveService = new ReserveService();
             //$reserveService->clearByTimer();
 
-            $reserves = Reserve::where('reserve_at', '<', now())->get();
+            $reserves = Reserve::where('reserve_at', '<', now())->where('quantity', '>', 0)->get();
             if ($reserves->count() > 0) {
                 $logger = LoggerCron::new($this->description);
                 /** @var Reserve $reserve */
