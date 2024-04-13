@@ -1,4 +1,4 @@
-<div class="box flex items-center p-2">
+<div class="box-in-box flex items-center p-2">
     <div class="w-20 text-center">{{ $i + 1 }}</div>
     <div class="w-56 text-center">{{ $addition->purposeHTML() }}</div>
     <div class="w-40 input-group">

@@ -17,7 +17,7 @@
     @if($movement->isDraft())
     <form action="{{ route('admin.accounting.movement.add', $movement) }}" method="POST">
         @csrf
-        <div class="box flex p-5 items-center">
+        <div class="box flex p-3 items-center">
             <div class="mx-3 flex w-full">
                 <x-searchProduct route="{{ route('admin.accounting.movement.search', $movement) }}"
                                  input-data="movement-product" hidden-id="product_id" class="w-56"/>
@@ -39,7 +39,7 @@
     @if($movement->isDeparture())
         <form action="{{ route('admin.accounting.movement.departure', $movement) }}" method="POST">
             @csrf
-            <div class="box flex p-5 items-center">
+            <div class="box flex p-3 items-center">
                 <div class="mx-3 flex w-full">
                     <div class="text-lg font-medium">СТАТУС: {{ $movement->statusHTML() }}</div>
                     <button type="submit" class="ml-auto btn btn-danger">Груз отправлен</button>
@@ -50,7 +50,7 @@
     @if($movement->isArrival())
         <form action="{{ route('admin.accounting.movement.arrival', $movement) }}" method="POST">
             @csrf
-            <div class="box flex p-5 items-center">
+            <div class="box flex p-3 items-center">
                 <div class="mx-3 flex w-full">
                     <div class="text-lg font-medium">СТАТУС: {{ $movement->statusHTML() }}</div>
                     <button type="submit" class="ml-auto btn btn-danger">Груз прибыл</button>
@@ -60,7 +60,7 @@
     @endif
 
     @if($movement->isCompleted())
-        <div class="box flex p-5 items-center">
+        <div class="box flex p-3 items-center">
             <div class="mx-3 flex w-full">
                 <div class="text-lg font-medium">СТАТУС: {{ $movement->statusHTML() }}</div>
             </div>

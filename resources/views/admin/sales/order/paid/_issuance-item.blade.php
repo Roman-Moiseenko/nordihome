@@ -1,4 +1,4 @@
-<div class="box flex items-center p-2">
+<div class="box-in-box flex items-center p-2">
     <div class="w-20 text-center">{{ $i + 1 }}</div>
     <div class="w-1/4">
         <div>{{ $item->product->name }}  @if($item->preorder) <b>(предзаказ)</b> @endif</div>
