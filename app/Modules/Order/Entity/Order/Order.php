@@ -105,13 +105,6 @@ class Order extends Model
         return $this->type == self::PARSER;
     }
 
-    #[Deprecated]
-    public function isPoint(): bool
-    {
-        if (is_null($this->delivery)) return false;
-        return !is_null($this->delivery->point_storage_id);
-    }
-
     ///***Проверка текущего статуса
     public function isNew(): bool
     {
@@ -254,6 +247,15 @@ class Order extends Model
         $quantity = 0;
         foreach ($this->items as $item) {
             $quantity += $item->quantity;
+        }
+        return $quantity;
+    }
+
+    public function getQuantityExpense(): int
+    {
+        $quantity = 0;
+        foreach ($this->items as $item) {
+            $quantity += $item->getExpenseAmount();
         }
         return $quantity;
     }

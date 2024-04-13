@@ -55,8 +55,9 @@
         </x-base.popover>
 
 
-
-    <x-base.popover class="inline-block mt-auto w-100 mt-5" placement="bottom-start">
+    <!--Перемещение-->
+    @if($order->getQuantity() > $order->getQuantityExpense())
+        <x-base.popover class="inline-block mt-auto w-100 mt-5" placement="bottom-start">
         <x-base.popover.button as="x-base.button" variant="dark" class="w-100">Перемещение
             <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
         </x-base.popover.button>
@@ -97,4 +98,5 @@
             </form>
         </x-base.popover.panel>
     </x-base.popover>
+    @endif
 </div>
