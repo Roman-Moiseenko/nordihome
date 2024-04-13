@@ -1,11 +1,19 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="intro-y flex items-center mt-8 mb-3">
         <h2 class="text-lg font-medium mr-auto">
             {{ $movement->number . ' от ' . $movement->created_at->format('d-m-Y') . ' (' . $movement->storageOut->name. ' -> ' . $movement->storageIn->name . ')' }}
         </h2>
+
     </div>
+    @if(!empty($movement->order()))
+    <div class="m-2 p-2 box">
+        <a class="text-success font-medium" href="{{ route('admin.sales.order.show', $movement->order()) }}" target="_blank">
+            Заказ {{ $movement->order()->htmlNum() . ' от ' . $movement->order()->htmlDate()}}
+        </a>
+    </div>
+    @endif
     @if($movement->isDraft())
     <form action="{{ route('admin.accounting.movement.add', $movement) }}" method="POST">
         @csrf

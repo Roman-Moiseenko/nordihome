@@ -48,7 +48,11 @@ class DBStorage implements StorageInterface
 
     public function add(CartItem $item): void
     {
-        $reserve = $this->reserveService->toReserve($item->getProduct(), $item->getQuantity(), Reserve::TYPE_CART, $this->minutes);
+        if ($this->minutes > 0) {
+            $reserve = $this->reserveService->toReserve($item->getProduct(), $item->getQuantity(), Reserve::TYPE_CART, $this->minutes);
+        } else {
+            $reserve = null;
+        }
 
         $this->toStorage(
             $this->user_id,
@@ -62,7 +66,8 @@ class DBStorage implements StorageInterface
     {
 
         $new_quantity = $item->quantity - $quantity;
-        if (!is_null($item->reserve)) {
+
+        if ($this->minutes > 0 && !is_null($item->reserve)) {
             $_reserve = $item->reserve->quantity;
             if ($new_quantity < $_reserve)
                 $this->reserveService->subReserve($item->reserve->id, $_reserve - $new_quantity);
@@ -73,7 +78,7 @@ class DBStorage implements StorageInterface
 
     public function plus(CartItem $item, int $quantity): void
     {
-        if (!is_null($item->reserve)) $this->reserveService->addReserve($item->reserve->id, $quantity);
+        if ($this->minutes > 0 && !is_null($item->reserve)) $this->reserveService->addReserve($item->reserve->id, $quantity);
 
         $new_quantity = $item->quantity + $quantity;
         $this->updateQuantity($item->id, $new_quantity);
@@ -81,13 +86,13 @@ class DBStorage implements StorageInterface
 
     public function remove(CartItem $item): void
     {
-        if (!is_null($item->reserve)) $this->reserveService->deleteById($item->reserve->id);
+        if ($this->minutes > 0 && !is_null($item->reserve)) $this->reserveService->deleteById($item->reserve->id);
         $this->fromStorage($item->id);
     }
 
     public function clear(): void
     {
-        $this->reserveService->clearByUser($this->user_id);
+        if ($this->minutes > 0) $this->reserveService->clearByUser($this->user_id);
         $this->clearByUser($this->user_id);
     }
 

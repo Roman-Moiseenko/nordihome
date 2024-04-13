@@ -102,6 +102,14 @@ class OrderController extends Controller
         });
     }
 
+    public function movement(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $movement = $this->orderService->movement($order, (int)$request['storage_out'], (int)$request['storage_in']);
+            return redirect()->route('admin.accounting.movement.show', $movement);
+        });
+    }
+
     public function add_item(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {

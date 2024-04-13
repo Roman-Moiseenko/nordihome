@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\ArrayShape;
@@ -14,7 +16,6 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property int $storage_in
  * @property int $status
  * @property string $number
- * @property int $expense_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property bool $completed
@@ -23,7 +24,6 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property Storage $storageOut
  * @property Storage $storageIn
  * @property MovementProduct[] $movementProducts
- * @property OrderExpense $expense
  */
 class MovementDocument extends Model implements MovementInterface
 {
@@ -64,10 +64,20 @@ class MovementDocument extends Model implements MovementInterface
         ]);
     }
 
+
     public function setExpense(int $expense_id)
     {
         $this->expense_id = $expense_id;
         $this->save();
+    }
+
+    public function addProduct(Product $product, int $quantity): void
+    {
+        $this->movementProducts()->create([
+            'product_id' => $product->id,
+            'quantity' => $quantity,
+            'cost' => $product->getLastPrice()
+        ]);
     }
 
     public function departure()
@@ -86,6 +96,11 @@ class MovementDocument extends Model implements MovementInterface
     {
         $this->status = self::STATUS_COMPLETED;
         $this->save();
+    }
+
+    public function order()
+    {
+        return $this->belongsToMany(Order::class, 'orders_movements', 'movement_id', 'order_id')->first();
     }
 
     public function movementProducts()

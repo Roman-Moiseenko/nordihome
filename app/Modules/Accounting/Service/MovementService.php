@@ -122,14 +122,21 @@ class MovementService
             foreach ($emptyItems as $i => &$item) {
                 $free_product = $storage->getAvailable($item['product']);
                 if ($free_product >= $item['quantity']) {
-                    $movement->movementProducts()->create([
+                    $movement->addProduct($item['quantity'], $item['quantity']);
+                  /*  $movement->movementProducts()->create([
                         'quantity' => $item['quantity'],
                         'product_id' => $item['product']->id,
                         'cost' => $item['product']->getLastPrice(),
-                    ]);
+                    ]);*/
                     unset($emptyItems[$i]);
                 } else {
-                    $movement->movementProducts()->create(['quantity' => $free_product]);
+                    $movement->addProduct($item['quantity'], $free_product);
+/*
+                    $movement->movementProducts()->create([
+                        'quantity' => $free_product,
+                        'product_id' => $item['product']->id,
+                        'cost' => $item['product']->getLastPrice(),
+                        ]);*/
                     $item['quantity'] -= $free_product;
                 }
             }
@@ -170,11 +177,7 @@ class MovementService
         $quantity = min((int)$request['quantity'], $free_quantity);
 
         //Добавляем в документ
-        $movement->movementProducts()->create([
-            'product_id' => $product->id,
-            'quantity' => $quantity,
-            'cost' => $product->getLastPrice()
-        ]);
+        $movement->addProduct($product, $quantity);
         $movement->refresh();
         return $movement;
     }

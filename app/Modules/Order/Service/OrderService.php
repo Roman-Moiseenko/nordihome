@@ -8,6 +8,8 @@ use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
 use App\Events\UserHasCreated;
+use App\Modules\Accounting\Entity\MovementProduct;
+use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Analytics\LoggerService;
@@ -51,6 +53,7 @@ class OrderService
     private ParserCart $parserCart;
     private CalculatorOrder $calculator;
     private LoggerService $logger;
+    private MovementService $movementService;
 
     public function __construct(
         PaymentService  $payments,
@@ -62,6 +65,7 @@ class OrderService
         ReserveService  $reserves,
         CalculatorOrder $calculator,
         LoggerService   $logger,
+        MovementService $movementService,
     )
     {
         $this->payments = $payments;
@@ -75,6 +79,7 @@ class OrderService
         $this->parserCart = $parserCart;
         $this->calculator = $calculator;
         $this->logger = $logger;
+        $this->movementService = $movementService;
     }
 
     public function default_user_data(User $user = null): stdClass
@@ -626,6 +631,21 @@ class OrderService
     {
         $item->comment = $comment;
         $item->save();
+    }
+
+    public function movement(Order $order, int $storage_out, int $storage_in)
+    {
+        $movement = $this->movementService->create([
+            'number' => 'Заказ ' . $order->htmlNum(),
+            'storage_out' => $storage_out,
+            'storage_in' => $storage_in,
+        ]);
+        $order->movements()->attach($movement->id);
+
+        foreach ($order->items as $item) {
+            if ($item->getRemains() != 0) $movement->addProduct($item->product, $item->getRemains());
+        }
+        return $movement;
     }
 
 }

@@ -49,6 +49,17 @@
                 <div class="rounded-md border border-slate-200/60 p-5">
                     <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                         <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
+                        Перемещения
+                    </div>
+                    <div class="mt-5">
+                        @include('admin.sales.order.paid._movements')
+                    </div>
+                </div>
+            </div>
+            <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="rounded-md border border-slate-200/60 p-5">
+                    <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+                        <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                         Платежи
                     </div>
                     <div class="mt-5">
@@ -107,7 +118,7 @@
                         getAssemblageAmount() - {{ $order->getAssemblageAmount() }}<br>
                         getPaymentAmount() - {{ $order->getPaymentAmount() }}<br>
                         getExpenseAmount() - {{ $order->getExpenseAmount() }}<br>
-
+                        getTotalAmount() - {{  $order->getTotalAmount() }}<br>
                         Доставка рассчитывается в ручном режиме.
                     </div>
                 </div>

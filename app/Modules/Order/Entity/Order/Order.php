@@ -545,10 +545,9 @@ class Order extends Model
         return $this->belongsTo(Discount::class, 'discount_id', 'id');
     }
 
-    #[Deprecated]
     public function movements()
     {
-        return $this->hasMany(MovementDocument::class, 'order_id', 'id');
+        return $this->belongsToMany(MovementDocument::class, 'orders_movements', 'order_id', 'movement_id');
     }
 
     /**
@@ -567,7 +566,7 @@ class Order extends Model
     ///*** Хелперы
     public function htmlDate(): string
     {
-        return 'Заказ от ' . $this->created_at->translatedFormat('d F');
+        return $this->created_at->translatedFormat('d F');
     }
 
     public function htmlNum(): string

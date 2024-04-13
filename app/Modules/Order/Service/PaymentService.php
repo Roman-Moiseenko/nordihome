@@ -60,10 +60,11 @@ class PaymentService
         if ($order->getTotalAmount() <= $order->getPaymentAmount()) {
             $order->setPaid();
             event(new OrderHasPaid($order));
-        }
-        if ($order->status->value == OrderStatus::AWAITING) {
-            $order->setStatus(OrderStatus::PREPAID);
-            event(new OrderHasPrepaid($order));
+        } else {
+            if ($order->status->value == OrderStatus::AWAITING) {
+                $order->setStatus(OrderStatus::PREPAID);
+                event(new OrderHasPrepaid($order));
+            }
         }
         $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
         return $payment;

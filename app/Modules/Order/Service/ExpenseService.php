@@ -22,7 +22,7 @@ use JetBrains\PhpStorm\Deprecated;
 class ExpenseService
 {
 
-    private int $assemblage;
+
     private MovementService $movements;
 
     public function __construct(MovementService $movements)
@@ -70,15 +70,10 @@ class ExpenseService
         $expense->refresh();
 
         if (!empty($to_movement)) {
-            //TODO Создаем перемещение
+            //TODO Создаем перемещение или Оставляем, тогда перемещение в ручную
             // Событие event()!!
             throw new \DomainException('Требуется перемещение');
         }
-
-        //$storage
-
-        //Если на складе < 0 , то => Формируем перемещение
-
         return $expense;
     }
 

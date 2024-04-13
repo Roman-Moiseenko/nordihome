@@ -68,6 +68,8 @@ Route::group(
             Route::post('/create-parser', 'OrderController@create_parser')->name('create-parser');
             Route::post('/create-click', 'OrderController@create_click')->name('create-click');
 
+
+
             Route::put('/create-parser', 'OrderController@store_parser');
 
             //ajax
@@ -343,7 +345,7 @@ Route::group(
                         Route::post('/{order}/update-manual', 'OrderController@update_manual')->name('update-manual');
                         Route::post('/{order}/update-comment', 'OrderController@update_comment')->name('update-comment');
                         Route::post('/{item}/update-item-comment', 'OrderController@update_item_comment')->name('update-item-comment');
-
+                        Route::post('/movement/{order}', 'OrderController@movement')->name('movement');
                         Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
                         Route::post('/{order}/expense-calculate', 'OrderController@expense_calculate')->name('expense-calculate');
 
