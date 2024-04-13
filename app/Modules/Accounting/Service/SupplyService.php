@@ -8,6 +8,7 @@ use App\Events\SupplyHasCompleted;
 use App\Events\SupplyHasSent;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
@@ -118,20 +119,15 @@ class SupplyService
 
     public function completed(SupplyDocument $supply)
     {
-
-        //TODO
         //Проходим по стеку и вытаскиваем товары
         $distributor = $supply->distributor;
-        $storage_base = 3; //TODO Базовое Хранилище
-        $data = [];
+        $storage_base = Storage::where('default', true)->first()->id;
         //Хранилища из стека по текущему заказу
         $storages_in_stack = SupplyStack::select('storage_id')->where('supply_id', $supply->id)->groupby('storage_id')->pluck('storage_id')->toArray();
-
         //Убираем базовый склад
         foreach ($storages_in_stack as $i => $storage_id) {
             if ($storage_id == $storage_base) unset($storages_in_stack[$i]);
         }
-
         $supply_products = []; //Все товары и кол-во в заказе
         foreach ($supply->products as $product) {
             $supply_products[$product->product_id] = $product->quantity;
@@ -145,13 +141,11 @@ class SupplyService
                 groupBy('product_id')->get();
 
             //Создаем Поступление
-            //TODO Перенести в сервис
-            $arrival = ArrivalDocument::register(
-                number: 'Из заказа ' . $supply->htmlNum(),
-                distributor_id: $distributor->id,
-                storage_id: $storage_id,
-                currency: $distributor->currency
-            );
+            $arrival = $this->arrivalService->create([
+                'number' => 'Из заказа ' . $supply->htmlNum(),
+                'distributor' => $distributor->id,
+                'storage' => $storage_id,
+            ]);
             $arrival->supply_id = $supply->id;
             $arrival->save();
 
@@ -167,12 +161,11 @@ class SupplyService
             }
         }
         //Создаем Поступление на базовый склад
-        $arrival = ArrivalDocument::register(
-            number: 'Из заказа ' . $supply->htmlNum(),
-            distributor_id: $distributor->id,
-            storage_id: $storage_base,
-            currency: $distributor->currency
-        );
+        $arrival = $this->arrivalService->create([
+            'number' => 'Из заказа ' . $supply->htmlNum(),
+            'distributor' => $distributor->id,
+            'storage' => $storage_base,
+        ]);
         $arrival->supply_id = $supply->id;
         $arrival->save();
         foreach ($supply_products as $product_id => $quantity) {
@@ -183,11 +176,6 @@ class SupplyService
                 ]
             );
         }
-
-
-        //из хранилищ и создаем несколько документов поступления,
-
-        //Оставшиеся товары добавляем в хранилище по умолчанию
         $supply->status = SupplyDocument::COMPLETED;
         $supply->save();
         event(new SupplyHasCompleted($supply));

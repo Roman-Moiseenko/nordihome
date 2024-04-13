@@ -24,7 +24,10 @@ class StorageService
         if (!empty($request['latitude']) && !empty($request['longitude']))
             $storage->setCoordinate($request['latitude'], $request['longitude']);
         $this->photo($storage, $request->file('file'));
-
+        if (!empty($request['default'])) {
+            Storage::where('default', true)->update(['default' => false]);
+            $storage->setDefault();
+        }
         return $storage;
     }
 
@@ -41,6 +44,14 @@ class StorageService
         if (!empty($request['latitude']) && !empty($request['longitude']))
             $storage->setCoordinate((float)$request['latitude'], (float)$request['longitude']);
         $this->photo($storage, $request->file('file'));
+
+        if (!empty($request['default'])) {
+            Storage::where('default', true)->update(['default' => false]);
+            $storage->setDefault();
+        }
+        if (empty($request['default']) && $storage->default == true) {
+            flash('Склад по умолчанию должен быть назначен! Выберите нужный склад, и сделайте его по умолчанию.', 'warning');
+        }
 
         return $storage;
     }

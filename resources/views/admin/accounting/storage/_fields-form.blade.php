@@ -44,6 +44,11 @@
                                                       checked="{{ !is_null($storage) ? ($storage->point_of_delivery ? 'checked' : '') : '' }}"/>
                             <x-base.form-switch.label for="checkbox-delivery">Точка выдачи</x-base.form-switch.label>
                         </x-base.form-switch>
+                        <x-base.form-switch class="mt-3">
+                            <x-base.form-switch.input id="checkbox-default" type="checkbox" name="default"
+                                                      checked="{{ !is_null($storage) ? ($storage->default ? 'checked' : '') : '' }}"/>
+                            <x-base.form-switch.label for="checkbox-default">Склад по умолчанию</x-base.form-switch.label>
+                        </x-base.form-switch>
                     </div>
                     <div class="col-span-12 lg:col-span-6">
                                 {{ \App\Forms\Upload::create('file', isset($storage) ? $storage->photo->getUploadUrl() : '')->placeholder('Для карточек')->show() }}

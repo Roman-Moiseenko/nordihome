@@ -32,7 +32,7 @@ class ArrivalService
         $distributor = Distributor::find((int)$request['distributor']);
         return ArrivalDocument::register(
             $request['number'] ?? '',
-            (int)$request['distributor'],
+            $distributor->id,
             (int)$request['storage'],
             $distributor->currency
         );

@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
  * @property string $address // заменить
  * @property bool $point_of_sale
  * @property bool $point_of_delivery
+ * @property bool $default
  * @property Photo $photo
  * @property Organization $organization
  * @property StorageItem[] $items
@@ -40,7 +41,8 @@ class Storage extends Model
         'city',
         'address',
         'point_of_sale',
-        'point_of_delivery'
+        'point_of_delivery',
+        'default',
     ];
 
     public static function register(int $organization_id, string $name, bool $point_of_sale, bool $point_of_delivery, string $slug = ''): self
@@ -70,6 +72,12 @@ class Storage extends Model
             'latitude' => $latitude,
             'longitude' => $longitude,
         ]);
+    }
+
+    public function setDefault(): void
+    {
+        $this->default = true;
+        $this->save();
     }
 
     public function organization()
