@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Entity\Admin;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property OrderItem $orderItem
  * @property SupplyDocument $supply - поставка по текущему запросу
  * @property Product $product
- * @property Admin $staff
+ * @property \App\Modules\Admin\Entity\Admin $staff
  * @property Storage $storage
  */
 class SupplyStack extends Model

@@ -74,7 +74,7 @@ class PageController extends Controller
         ]);
         return $this->try_catch_admin(function () use($request, $page) {
             $page = $this->service->update($request, $page);
-            return view('admin.page.page.show', compact('page'));
+            return redirect()->route('admin.page.page.show', $page);
         });
     }
 

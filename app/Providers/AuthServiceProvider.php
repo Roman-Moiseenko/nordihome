@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Entity\Admin;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {

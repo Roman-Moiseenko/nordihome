@@ -64,7 +64,7 @@ class WidgetController extends Controller
     {
         return $this->try_catch_admin(function () use($request, $widget) {
             $widget = $this->service->update($request, $widget);
-            return view('admin.page.widget.show', compact('widget'));
+            return redirect()->route('admin.page.widget.show', $widget);
         });
     }
 

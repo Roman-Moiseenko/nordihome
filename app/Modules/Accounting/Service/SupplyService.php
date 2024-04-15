@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Service;
 
-use App\Entity\Admin;
 use App\Events\SupplyHasCompleted;
 use App\Events\SupplyHasSent;
-use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Support\Facades\Auth;

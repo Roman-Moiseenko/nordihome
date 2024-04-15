@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Entity\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RegisterRequest;
 use App\Http\Requests\Admin\UpdateRequest;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Admin\Service\StaffService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 
 class StaffController extends Controller

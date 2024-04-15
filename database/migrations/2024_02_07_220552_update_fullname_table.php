@@ -1,11 +1,9 @@
 <?php
 
-use App\Entity\Admin;
 use App\Entity\FullName;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Delivery\Entity\UserDelivery;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {

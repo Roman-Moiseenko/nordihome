@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Admin;
 
-use App\Entity\Admin;
+use App\Modules\Admin\Entity\Admin;
 use Illuminate\Console\Command;
 
 class CreateCommand extends Command

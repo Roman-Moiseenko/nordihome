@@ -261,7 +261,7 @@ class AdminMenu
                     'contacts' => [
                         'icon' => 'contact',
                         'title' => 'Контакты',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.page.contact.index',
                     ],
                     'banners' => [
                         'icon' => 'book-image', //book-image  gallery-horizontal-end

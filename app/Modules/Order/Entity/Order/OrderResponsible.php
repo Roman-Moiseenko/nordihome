@@ -4,7 +4,7 @@
 namespace App\Modules\Order\Entity\Order;
 
 
-use App\Entity\Admin;
+use App\Modules\Admin\Entity\Admin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\Deprecated;

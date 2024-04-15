@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\User\Service;
 
 
+use App\Events\UserHasCreated;
 use App\Events\UserHasRegistered;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\UserRegister;
@@ -25,10 +26,7 @@ class RegisterService
            // $request['phone'],
             $request['password']
         );
-        //TODO Отправка почты клиенту
-
-        Mail::to($user->email)->send(new VerifyMail($user));
-        //event(new Registered($user));
+        event(new UserHasCreated($user));
     }
 
     public function verify($id): void

@@ -3,15 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Entity\Admin;
-use App\Events\OrderHasCreated;
 use App\Events\OrderHasPaid;
 use App\Events\OrderHasPrepaid;
-use App\Events\PaymentHasPaid;
-use App\Modules\Analytics\Entity\LoggerOrder;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Payment\PaymentHelper;

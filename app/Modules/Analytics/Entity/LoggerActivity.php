@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Analytics\Entity;
 
-use App\Entity\Admin;
+use App\Modules\Admin\Entity\Admin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use function now;

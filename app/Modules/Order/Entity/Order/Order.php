@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
-use App\Entity\Admin;
 use App\Modules\Accounting\Entity\MovementDocument;
-use App\Modules\Delivery\Entity\DeliveryOrder;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;

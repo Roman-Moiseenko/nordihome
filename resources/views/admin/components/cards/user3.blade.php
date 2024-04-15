@@ -7,7 +7,7 @@
                 </div>
                 <div class="lg:ml-4 text-center lg:text-left mt-3 lg:mt-0">
                     <a href="{{ route('admin.staff.show', $staff) }}" class="font-medium {{ ($staff->isBlocked() ? 'text-danger' : 'text-info') }}">{{ $staff->fullName->getFullName() }}</a>
-                    <div class="text-slate-500 text-center text-xs mt-0.5 rounded-full text-white {{ \App\Entity\Admin::ROLE_COLORS[$staff->role] }}">{{ $staff->post }}</div>
+                    <div class="text-slate-500 text-center text-xs mt-0.5 rounded-full text-white {{ \App\Modules\Admin\Entity\Admin::ROLE_COLORS[$staff->role] }}">{{ $staff->post }}</div>
                 </div>
             </div>
             <div class="absolute right-0 top-0 mr-5 mt-3 dropdown">

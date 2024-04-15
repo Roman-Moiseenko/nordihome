@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Modules\Order;
 
-use App\Entity\Admin;
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Accounting\Entity\StorageItem;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Service\PromotionService;
 use App\Modules\Order\Entity\Order\Order;
@@ -199,7 +198,7 @@ class OrdersTest extends TestCase
         self::assertEquals(OrderStatus::PAID, $this->order->status->value);
         self::assertTrue($this->order->isStatus(OrderStatus::PAID));
 
-        //Создаем отгрузки
+        //TODO Создаем отгрузки
     }
 
 

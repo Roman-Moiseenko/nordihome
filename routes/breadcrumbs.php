@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use App\Entity\Admin;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\DepartureDocument;
@@ -9,12 +8,14 @@ use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Widget;
 use App\Modules\Product\Entity\Attribute;
@@ -685,10 +686,7 @@ Breadcrumbs::for('admin.page.widget.edit', function (BreadcrumbTrail $trail, Wid
     $trail->parent('admin.page.widget.show', $widget);
     $trail->push('Редактировать', route('admin.page.widget.edit', $widget));
 });
-Breadcrumbs::for('admin.page.widget.update', function (BreadcrumbTrail $trail, Widget $widget) {
-    $trail->parent('admin.page.widget.index');
-    $trail->push($widget->name, route('admin.page.widget.show', $widget));
-});
+
 //PAGE
 Breadcrumbs::for('admin.page.page.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
@@ -696,7 +694,7 @@ Breadcrumbs::for('admin.page.page.index', function (BreadcrumbTrail $trail) {
 });
 Breadcrumbs::for('admin.page.page.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.page.page.index');
-    $trail->push('Добавить новый', route('admin.page.page.create'));
+    $trail->push('Добавить новую', route('admin.page.page.create'));
 });
 Breadcrumbs::for('admin.page.page.show', function (BreadcrumbTrail $trail, Page $page) {
     $trail->parent('admin.page.page.index');
@@ -706,9 +704,22 @@ Breadcrumbs::for('admin.page.page.edit', function (BreadcrumbTrail $trail, Page 
     $trail->parent('admin.page.page.show', $page);
     $trail->push('Редактировать', route('admin.page.page.edit', $page));
 });
-Breadcrumbs::for('admin.page.page.update', function (BreadcrumbTrail $trail, Page $page) {
-    $trail->parent('admin.page.page.index');
-    $trail->push($page->name, route('admin.page.page.show', $page));
+//CONTACT
+Breadcrumbs::for('admin.page.contact.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Контакты', route('admin.page.contact.index'));
+});
+Breadcrumbs::for('admin.page.contact.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.page.contact.index');
+    $trail->push('Добавить новый', route('admin.page.contact.create'));
+});
+Breadcrumbs::for('admin.page.contact.show', function (BreadcrumbTrail $trail, Contact $contact) {
+    $trail->parent('admin.page.contact.index');
+    $trail->push($contact->name, route('admin.page.contact.show', $contact));
+});
+Breadcrumbs::for('admin.page.contact.edit', function (BreadcrumbTrail $trail, Contact $contact) {
+    $trail->parent('admin.page.contact.show', $contact);
+    $trail->push('Редактировать', route('admin.page.page.edit', $contact));
 });
 
 

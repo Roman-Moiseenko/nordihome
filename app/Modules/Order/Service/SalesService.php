@@ -4,28 +4,19 @@
 namespace App\Modules\Order\Service;
 
 
-use App\Entity\Admin;
-use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
-use App\Events\OrderHasLogger;
 use App\Events\OrderHasRefund;
-use App\Events\PointHasEstablished;
 use App\Mail\OrderAwaiting;
-use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\MovementService;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
-use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderPaymentRefund;
-use App\Modules\Order\Entity\Order\OrderResponsible;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\UserPayment;
-use App\Modules\Shop\Calculate\CalculatorOrder;
-use App\Modules\Shop\Cart\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Deprecated;
 
 class SalesService
 {

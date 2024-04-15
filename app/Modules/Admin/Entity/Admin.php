@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Modules\Admin\Entity;
 
 use App\Casts\FullNameCast;
-use App\Modules\Admin\Entity\Responsibility;
+use App\Entity\FullName;
+use App\Entity\Photo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Hash;
 use JetBrains\PhpStorm\ExpectedValues;
 use Laravel\Sanctum\HasApiTokens;
 
-//TODO Перенести в Модули
 /**
  * @property int $id
  * @property string $name //Логин

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
+use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Entity\Page;
 
 class MenuHelper
@@ -31,8 +32,21 @@ class MenuHelper
 
     public static function getMenuContacts(): array
     {
+
+        $contacts = Contact::where('published', true)->orderBy('sort')->getModels();
+        return array_map(function (Contact $contact) {
+            return [
+                'name' => $contact->name,
+                'icon' => $contact->icon,
+                'color' => $contact->color,
+                'url' => $contact->url,
+                'data-type' => $contact->type,
+            ];
+
+        }, $contacts);
+
         //TODO Сделать настройку контактов в админке и загрузке из  базы
-        return [
+       /* return [
             'phone' => [
                 'name' => 'Позвонить по телефону',
                 'icon' => 'fa-sharp fa-solid fa-circle-phone',
@@ -62,6 +76,7 @@ class MenuHelper
                 'data-type' => 4,
             ],
         ];
+        */
     }
 
     public static function getFooterMenu(): array

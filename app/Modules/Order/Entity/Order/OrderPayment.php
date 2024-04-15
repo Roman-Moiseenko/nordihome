@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
-use App\Entity\Admin;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

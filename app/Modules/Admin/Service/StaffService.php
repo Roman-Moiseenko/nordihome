@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Service;
 
-use App\Entity\Admin;
 use App\Entity\FullName;
 use App\Entity\Photo;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -65,7 +65,7 @@ class StaffService
     public function blocking(Admin $admin): void
     {
 
-        /** @var Admin $current */
+        /** @var \App\Modules\Admin\Entity\Admin $current */
         $current = Auth::guard('admin')->user();//Проверка на себя,
         if ($current->id == $admin->id) {
             throw new \DomainException('Нельзя заблокировать самого себя');

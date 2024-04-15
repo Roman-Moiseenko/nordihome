@@ -2,14 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Entity\Admin;
 use App\Events\ProductHasParsed;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use NotificationChannels\Telegram\TelegramUpdates;
 
 class NotificationNewProductParser
 {

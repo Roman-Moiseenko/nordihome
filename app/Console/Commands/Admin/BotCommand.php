@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Admin;
 
-use App\Entity\Admin;
-use App\Notifications\StaffMessage;
 use Illuminate\Console\Command;
-
 use NotificationChannels\Telegram\TelegramUpdates;
 
 class BotCommand extends Command

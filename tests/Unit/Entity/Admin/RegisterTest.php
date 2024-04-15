@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace Entity\Admin;
 
-use App\Entity\Admin;
-
+use App\Modules\Admin\Entity\Admin;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 

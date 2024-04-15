@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Entity\Admin;
 use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
 use App\Events\UserHasCreated;
-use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Service\MovementService;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Options;
-use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\UserDelivery;
@@ -21,7 +19,6 @@ use App\Modules\Discount\Service\CouponService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Order\Entity\Order\OrderResponsible;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Entity\UserPayment;
@@ -36,7 +33,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Deprecated;
 use stdClass;
 
 class OrderService

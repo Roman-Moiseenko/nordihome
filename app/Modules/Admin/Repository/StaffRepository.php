@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Repository;
 
-use App\Entity\Admin;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ExpectedValues;

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\Accounting;
 
-use App\Entity\Admin;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
 

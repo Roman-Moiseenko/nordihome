@@ -18,7 +18,7 @@
             <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                 <div class="w-56 relative text-slate-500">
                     <form id="search-role-form" action="?" method="GET">
-                    {{ \App\Forms\Select::create('role', ['placeholder' => 'Доступ', 'value' => $selected])->options(array_merge(['' => ''], \App\Entity\Admin::ROLES))->show() }}
+                    {{ \App\Forms\Select::create('role', ['placeholder' => 'Доступ', 'value' => $selected])->options(array_merge(['' => ''], \App\Modules\Admin\Entity\Admin::ROLES))->show() }}
                     </form>
                 </div>
             </div>
