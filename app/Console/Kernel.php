@@ -14,8 +14,10 @@ class Kernel extends ConsoleKernel
     {
         //Проверка акций
         $schedule->command('cron:promotion')->dailyAt('00:01');
-        //Резерв товара
+        //Резерв товара - закончился
         $schedule->command('cron:reserve')->everyFiveMinutes();
+        //Резерв товара - за 1 день или 12 часов
+        $schedule->command('cron:reserve-before')->everyFiveMinutes();
         //Парсим цены
         $schedule->command('cron:parser')->dailyAt('02:01');
         //Удаляем просроченные токены

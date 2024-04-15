@@ -34,6 +34,7 @@
                     </div>
                 </div>
             </div>
+            @if($order->expenses->count() > 0)
             <div class="intro-y box p-3 mt-3 block-menus-order">
                 <div class="rounded-md border border-slate-200/60 p-5">
                     <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
@@ -45,6 +46,8 @@
                     </div>
                 </div>
             </div>
+            @endif
+            @if($order->movements->count() > 0)
             <div class="intro-y box p-3 mt-3 block-menus-order">
                 <div class="rounded-md border border-slate-200/60 p-5">
                     <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
@@ -56,6 +59,8 @@
                     </div>
                 </div>
             </div>
+            @endif
+            @if($order->payments->count() > 0)
             <div class="intro-y box p-3 mt-3 block-menus-order">
                 <div class="rounded-md border border-slate-200/60 p-5">
                     <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
@@ -67,6 +72,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
         <div class="col-span-3 lg:block">
             <div class="fixed fixed-top pt-5">

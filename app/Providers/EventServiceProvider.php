@@ -14,6 +14,7 @@ use App\Events\PaymentHasPaid;
 use App\Events\PointHasEstablished;
 use App\Events\ProductHasParsed;
 use App\Events\PromotionHasMoved;
+use App\Events\ReserveHasTimeOut;
 use App\Events\SupplyHasCompleted;
 use App\Events\SupplyHasSent;
 use App\Events\ThrowableHasAppeared;
@@ -30,6 +31,7 @@ use App\Listeners\NotificationNewOrder;
 use App\Listeners\NotificationNewPointStorage;
 use App\Listeners\NotificationNewProductParser;
 use App\Listeners\NotificationNewRefund;
+use App\Listeners\NotificationReserveTimeOut;
 use App\Listeners\NotificationSupplyCompleted;
 use App\Listeners\NotificationSupplySent;
 use App\Listeners\NotificationThrowable;
@@ -112,6 +114,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         SupplyHasCompleted::class => [
             NotificationSupplyCompleted::class,
+        ],
+        ReserveHasTimeOut::class => [
+            NotificationReserveTimeOut::class,
         ],
     ];
 
