@@ -2,14 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Events\PointHasEstablished;
+use App\Events\MovementHasCreated;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class NotificationNewPointStorage
+class NotificationMovementNew
 {
     private StaffRepository $repository;
 
@@ -18,11 +18,16 @@ class NotificationNewPointStorage
         $this->repository = $repository;
     }
 
-    public function handle(PointHasEstablished $event): void
+    public function handle(MovementHasCreated $event): void
     {
-        $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_LOGGER);
+        $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_ACCOUNTING);
 
-        $message = "Новая сборка товара для заказа\n " . $event->order->htmlNum() . " от " . $event->order->htmlDate();
+        $text = '';
+        foreach ($event->documents as $document) {
+            $text .= "\n со склада " . $document->storageOut->name . " \n на склад " . $document->storageIn->name;
+        }
+
+        $message = "Новое перемещение" . $text;
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage($message));
         }

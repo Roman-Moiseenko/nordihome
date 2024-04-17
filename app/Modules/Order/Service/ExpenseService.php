@@ -3,21 +3,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Events\MovementHasCreated;
-use App\Events\PointHasEstablished;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
-use App\Modules\Order\Entity\Order\OrderIssuance;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Product\Entity\Product;
-use Illuminate\Http\Request;
-use JetBrains\PhpStorm\Deprecated;
+
 
 class ExpenseService
 {

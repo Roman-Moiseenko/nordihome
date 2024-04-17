@@ -907,7 +907,7 @@ window.$ = jQuery;
             })
         });
 
-        //Смена пародя
+        //Смена пароля
         let passwordButton = $('#change-password');
         let passwordGroup = $('#group-password');
         let passwordInput = $('#input-password');
@@ -930,6 +930,16 @@ window.$ = jQuery;
                 }
             })
         });
+
+        //Подписки
+        let subscriptionCheck = $('.subscription-check');
+        subscriptionCheck.on('change', function(element) {
+            $.post(element.target.dataset.route, {}, function (data) {
+                console.log(data);
+                _error(data);
+            })
+        });
+
     }
 
     /** СТРАНИЦА ТОВАРА **/

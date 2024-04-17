@@ -17,8 +17,19 @@ class AdminMenu
             'clients' => [
                 'icon' => 'users',
                 'title' => 'Клиенты',
-                'route_name' => 'admin.users.index',
                 'can' => 'user',
+                'sub_menu' => [
+                    'users' => [
+                        'icon' => 'user-search',
+                        'title' => 'Список',
+                        'route_name' => 'admin.users.index',
+                    ],
+                    'subscriptions' => [
+                        'icon' => 'bell-ring',
+                        'title' => 'Подписки',
+                        'route_name' => 'admin.user.subscription.index',
+                    ],
+                ],
             ],
             'divider',
             'sales' => [
@@ -268,6 +279,7 @@ class AdminMenu
                         'title' => 'Баннеры',
                         'route_name' => 'admin.home',
                     ],
+
                 ],
             ],
             'options' => [
@@ -278,7 +290,7 @@ class AdminMenu
                     'shop' => [
                         'icon' => 'store',
                         'title' => 'Интернет магазина',
-                        'route_name' => 'admin.settings.shop',//admin.options.shop.index
+                        'route_name' => 'admin.settings.shop',
                     ],
                     'admin-panel' => [
                         'icon' => 'package-search',

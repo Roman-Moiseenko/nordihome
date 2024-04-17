@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderHasPrepaid;
+use App\Events\OrderHasPaid;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class NotificationPrepaidOrder
+class NotificationOrderPaid
 {
     /**
      * Create the event listener.
@@ -19,9 +19,8 @@ class NotificationPrepaidOrder
     /**
      * Handle the event.
      */
-    public function handle(OrderHasPrepaid $event): void
+    public function handle(OrderHasPaid $event): void
     {
-        //$event->order
-        //TODO Уведомляем менеджера и клиента, что его оплата внесена
+        //TODO Уведомляем менеджера и клиента, что его заказ полностью оплачен
     }
 }

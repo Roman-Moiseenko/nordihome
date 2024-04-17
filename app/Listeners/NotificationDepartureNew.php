@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderHasPaid;
+use App\Events\DepartureHasCompleted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class NotificationPaidOrder
+class NotificationDepartureNew
 {
     /**
      * Create the event listener.
@@ -19,8 +19,8 @@ class NotificationPaidOrder
     /**
      * Handle the event.
      */
-    public function handle(OrderHasPaid $event): void
+    public function handle(DepartureHasCompleted $event): void
     {
-        //TODO Уведомляем менеджера и клиента, что его заказ полностью оплачен
+        //TODO Уведомление специалистам
     }
 }

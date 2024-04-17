@@ -7,7 +7,7 @@ use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
 
-class NotificationNewProductParser
+class NotificationProductParserNew
 {
     private StaffRepository $repository;
 

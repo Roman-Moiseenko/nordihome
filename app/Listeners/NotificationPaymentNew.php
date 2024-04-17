@@ -6,7 +6,7 @@ use App\Events\PaymentHasPaid;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class NotificationNewPayment
+class NotificationPaymentNew
 {
     /**
      * Create the event listener.

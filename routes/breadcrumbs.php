@@ -27,6 +27,7 @@ use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Parser\ProductParser;
 use App\Modules\Shop\ShopRepository;
+use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
@@ -713,13 +714,20 @@ Breadcrumbs::for('admin.page.contact.create', function (BreadcrumbTrail $trail) 
     $trail->parent('admin.page.contact.index');
     $trail->push('Добавить новый', route('admin.page.contact.create'));
 });
-Breadcrumbs::for('admin.page.contact.show', function (BreadcrumbTrail $trail, Contact $contact) {
-    $trail->parent('admin.page.contact.index');
-    $trail->push($contact->name, route('admin.page.contact.show', $contact));
-});
+
 Breadcrumbs::for('admin.page.contact.edit', function (BreadcrumbTrail $trail, Contact $contact) {
-    $trail->parent('admin.page.contact.show', $contact);
-    $trail->push('Редактировать', route('admin.page.page.edit', $contact));
+    $trail->parent('admin.page.contact.index', $contact);
+    $trail->push($contact->name . ' - Редактировать', route('admin.page.page.edit', $contact));
+});
+
+//SUBSCRIPTION
+Breadcrumbs::for('admin.user.subscription.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Рассылки/Уведомления', route('admin.user.subscription.index'));
+});
+Breadcrumbs::for('admin.user.subscription.edit', function (BreadcrumbTrail $trail, Subscription $subscription) {
+    $trail->parent('admin.user.subscription.index');
+    $trail->push($subscription->name .' - Редактировать', route('admin.user.subscription.edit', $subscription));
 });
 
 

@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\DepartureHasCompleted;
+use App\Events\OrderHasRefund;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class NotificationNewDeparture
+class NotificationRefundNew
 {
     /**
      * Create the event listener.
@@ -19,8 +19,9 @@ class NotificationNewDeparture
     /**
      * Handle the event.
      */
-    public function handle(DepartureHasCompleted $event): void
+    public function handle(OrderHasRefund $event): void
     {
-        //TODO Уведомление специалистам
+        //TODO Уведомляем кто работает с возратом
+
     }
 }

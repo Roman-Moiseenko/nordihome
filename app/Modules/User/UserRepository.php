@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User;
 
+use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use Illuminate\Http\Request;
@@ -39,5 +40,14 @@ class UserRepository
             $query->where('status', $value);
         }
         return $query;
+    }
+
+    public function getUsersBySubscription(string $class)
+    {
+        $subscription = Subscription::where('listener', $class)->first();
+
+        return User::where('status', User::STATUS_ACTIVE)->whereHas('subscriptions', function ($query) use ($subscription) {
+            $query->where('subscription_id', $subscription->id);
+        })->getModels();
     }
 }

@@ -117,6 +117,7 @@ Route::group([
             'prefix' => 'options',
         ], function () {
             Route::get('/', 'OptionsController@index')->name('index');
+            Route::post('/subscription/{subscription}', 'OptionsController@subscription')->name('subscription');
 
         });
 
@@ -188,6 +189,33 @@ Route::group(
         Route::get('/users', 'UsersController@index')->name('users.index');
         Route::get('/users/{user}', 'UsersController@show')->name('users.show');
         Route::post('/users/{user}/verify', 'UsersController@verify')->name('users.verify');
+
+        Route::group(
+            [
+                'prefix' => 'user',
+                'as' => 'user.',
+                'namespace' => 'User',
+            ],
+            function () {
+                Route::resource('subscription', 'SubscriptionController')->except(['create', 'store', 'destroy']); //CRUD
+                //Subscription
+                Route::group(
+                    [
+                        'prefix' => 'subscription',
+                        'as' => 'subscription.',
+                        //'namespace' => '',
+                    ],
+                    function () {
+                        Route::post('/published/{subscription}', 'SubscriptionController@published')->name('published');
+                        Route::post('/draft/{subscription}', 'SubscriptionController@draft')->name('draft');
+                    }
+                );
+
+            }
+        );
+
+
+
 
         Route::resource('staff', 'StaffController'); //CRUD
 
@@ -404,6 +432,7 @@ Route::group(
                 Route::post('/contact/{contact}/down', 'ContactController@down')->name('contact.down');
             }
         );
+
 
         //ACCOUNTING
         Route::group(

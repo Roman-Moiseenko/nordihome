@@ -6,9 +6,25 @@
 @section('h1', 'Настройки')
 
 @section('subcontent')
-    <blockquote>
-        Подписка, рассылки и др.
-        Уведомления
-    </blockquote>
+
+    <h3 class="mt-3">Подписки на Уведомления</h3>
+    <div class="box-card view-option">
+        @foreach($subscriptions as $subscription)
+            <div>
+                <x-widget.check name="subscription" class="mt-3 subscription-check"
+                                route="{{ route('cabinet.options.subscription', $subscription) }}"
+                                checked="{{ $user->isSubscription($subscription) }}" >
+                    {{ $subscription->title }}
+                </x-widget.check>
+            </div>
+        @endforeach
+    </div>
+
+
+
+
+
+    <h3 class="mt-3">Рассылки</h3>
+
 @endsection
 

@@ -11,8 +11,9 @@ use App\Events\OrderHasCreated;
 use App\Events\OrderHasLogger;
 use App\Events\OrderHasRefund;
 use App\Events\PaymentHasPaid;
-use App\Events\PointHasEstablished;
+use App\Events\PricingHasCompleted;
 use App\Events\ProductHasParsed;
+use App\Events\ProductHasPublished;
 use App\Events\PromotionHasMoved;
 use App\Events\ReserveHasTimeOut;
 use App\Events\SupplyHasCompleted;
@@ -21,27 +22,25 @@ use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasCreated;
 use App\Events\UserHasRegistered;
 use App\Listeners\CheckNotificationStatus;
-use App\Listeners\NotificationCanceledOrder;
+use App\Listeners\NotificationOrderCanceled;
 use App\Listeners\NotificationMovementCompleted;
-use App\Listeners\NotificationNewArrival;
-use App\Listeners\NotificationNewDeparture;
+use App\Listeners\NotificationArrivalCompleted;
+use App\Listeners\NotificationDepartureNew;
 use App\Listeners\NotificationNewLogger;
-use App\Listeners\NotificationNewMovement;
-use App\Listeners\NotificationNewOrder;
-use App\Listeners\NotificationNewPointStorage;
-use App\Listeners\NotificationNewProductParser;
-use App\Listeners\NotificationNewRefund;
+use App\Listeners\NotificationMovementNew;
+use App\Listeners\NotificationOrderNew;
+use App\Listeners\NotificationPricingCompleted;
+use App\Listeners\NotificationProductParserNew;
+use App\Listeners\NotificationProductPublished;
+use App\Listeners\NotificationRefundNew;
 use App\Listeners\NotificationReserveTimeOut;
 use App\Listeners\NotificationSupplyCompleted;
 use App\Listeners\NotificationSupplySent;
 use App\Listeners\NotificationThrowable;
 use App\Listeners\NotificationUserCreated;
 use App\Listeners\ParsingImageProduct;
-use App\Listeners\NotificationMovedPromotion;
+use App\Listeners\NotificationPromotionMoved;
 use App\Listeners\WelcomToShop;
-use App\Modules\Delivery\Service\DeliveryService;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Service\PaymentService;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Notifications\Events\NotificationSending;
 
@@ -61,35 +60,35 @@ class EventServiceProvider extends ServiceProvider
             WelcomToShop::class
         ],
         PromotionHasMoved::class => [
-            NotificationMovedPromotion::class
+            NotificationPromotionMoved::class
         ],
         ProductHasParsed::class => [
             ParsingImageProduct::class,
-            NotificationNewProductParser::class
+            NotificationProductParserNew::class
         ],
         OrderHasCreated::class => [
-            NotificationNewOrder::class,
+            NotificationOrderNew::class,
             /* DeliveryService::class,
              PaymentService::class,*/
         ],
         ArrivalHasCompleted::class => [
-            NotificationNewArrival::class,
+            NotificationArrivalCompleted::class,
         ],
         ThrowableHasAppeared::class => [
             NotificationThrowable::class
         ],
         OrderHasCanceled::class => [
-            NotificationCanceledOrder::class,
+            NotificationOrderCanceled::class,
         ],
         MovementHasCompleted::class => [
             NotificationMovementCompleted::class
         ],
         MovementHasCreated::class => [
-            NotificationNewMovement::class
+            NotificationMovementNew::class
         ],
-        PointHasEstablished::class => [
+        /*PointHasEstablished::class => [
             NotificationNewPointStorage::class
-        ],
+        ],*/
         PaymentHasPaid::class => [
 
         ],
@@ -97,10 +96,10 @@ class EventServiceProvider extends ServiceProvider
             NotificationNewLogger::class,
         ],
         OrderHasRefund::class => [
-            NotificationNewRefund::class
+            NotificationRefundNew::class
         ],
         DepartureHasCompleted::class => [
-            NotificationNewDeparture::class,
+            NotificationDepartureNew::class,
         ],
         NotificationSending::class => [
             CheckNotificationStatus::class,
@@ -118,6 +117,12 @@ class EventServiceProvider extends ServiceProvider
         ReserveHasTimeOut::class => [
             NotificationReserveTimeOut::class,
         ],
+        PricingHasCompleted::class => [
+            NotificationPricingCompleted::class,
+        ],
+        ProductHasPublished::class => [
+            NotificationProductPublished::class,
+            ],
     ];
 
     /**

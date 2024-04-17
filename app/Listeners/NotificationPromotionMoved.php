@@ -9,21 +9,26 @@ use App\Mail\PromotionStarted;
 use App\Mail\PromotionStarting;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\User\Entity\User;
+use App\Modules\User\Service\SubscriptionService;
+use App\Modules\User\UserRepository;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Mail;
 
-class NotificationMovedPromotion
+class NotificationPromotionMoved
 {
-    private $users;
+    private array $users;
 
     /**
      * Create the event listener.
      */
-    public function __construct()
+    public function __construct(SubscriptionService $subscriptionService, UserRepository $userRepository)
     {
-        //TODO Получить список Пользователей, которые подписались на рассылку
-        $this->users = User::where('status', User::STATUS_ACTIVE)->get();
+        if ($subscriptionService->check_subscription(self::class)) {
+            $this->users = $userRepository->getUsersBySubscription(self::class);
+        } else {
+            $this->users = [];
+        }
     }
 
     /**

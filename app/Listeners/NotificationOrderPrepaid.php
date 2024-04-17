@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderHasRefund;
+use App\Events\OrderHasPrepaid;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class NotificationNewRefund
+class NotificationOrderPrepaid
 {
     /**
      * Create the event listener.
@@ -19,9 +19,9 @@ class NotificationNewRefund
     /**
      * Handle the event.
      */
-    public function handle(OrderHasRefund $event): void
+    public function handle(OrderHasPrepaid $event): void
     {
-        //TODO Уведомляем кто работает с возратом
-
+        //$event->order
+        //TODO Уведомляем менеджера и клиента, что его оплата внесена
     }
 }

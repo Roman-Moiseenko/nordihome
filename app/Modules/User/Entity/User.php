@@ -23,7 +23,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Wish[] $wishes
  * @property UserDelivery $delivery
  * @property UserPayment $payment
- *
+ * @property Subscription[] $subscriptions
  */
 class User extends Authenticatable
 {
@@ -52,6 +52,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    //*** IS-...
     public function isWait(): bool
     {
         return $this->status === self::STATUS_WAIT;
@@ -62,6 +63,21 @@ class User extends Authenticatable
         return $this->status === self::STATUS_ACTIVE;
     }
 
+    public function isWish(int $product_id): bool
+    {
+        foreach ($this->wishes as $wish) {
+            if ($wish->product_id == $product_id) return true;
+        }
+        return false;
+    }
+
+    public function isSubscription(Subscription $subscription): bool
+    {
+        foreach ($this->subscriptions as $item) {
+            if ($item->id == $subscription->id) return true;
+        }
+        return false;
+    }
     /**
      * @return string
      */
@@ -111,14 +127,25 @@ class User extends Authenticatable
         return $this->hasMany(Wish::class, 'user_id', 'id');
     }
 
+    //TODO Перенести в таблицу Users или сделать UserDefault
     public function delivery()
     {
         return $this->hasOne(UserDelivery::class, 'user_id', 'id');
     }
 
+    //TODO Перенести в таблицу Users или сделать UserDefault
     public function payment()
     {
         return $this->hasOne(UserPayment::class, 'user_id', 'id');
+    }
+
+    //TODO Добавить все платежи под учет OrderPayment
+    // ***
+
+
+    public function subscriptions()
+    {
+        return $this->belongsToMany(Subscription::class, 'users_subscriptions', 'user_id', 'subscription_id');
     }
 
     /**

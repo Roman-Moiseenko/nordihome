@@ -9,7 +9,7 @@ use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
 use Illuminate\Support\Facades\Mail;
 
-class NotificationNewOrder
+class NotificationOrderNew
 {
     private StaffRepository $repository;
 
