@@ -17,6 +17,7 @@ use App\Modules\Order\Entity\UserPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 class SalesService
 {
@@ -91,6 +92,7 @@ class SalesService
      * @param float $cost
      * @return void
      */
+    #[Deprecated]
     public function setDelivery(Order $order, float $cost)
     {
         //TODO Переработать Возможно отменить

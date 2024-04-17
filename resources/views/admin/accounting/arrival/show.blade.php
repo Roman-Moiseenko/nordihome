@@ -57,7 +57,7 @@
             </div>
             <div class="w-40 input-group">
                 <input id="sell-{{ $item->id }}" type="number" class="form-control text-right arrival-input-listen"
-                       value="{{ $item->price_sell }}" aria-describedby="input-sell" min="0" {{ $arrival->isCompleted() ? 'readonly' : '' }}>
+                       value="{{ $item->price_sell }}" aria-describedby="input-sell" min="0" readonly>
                 <div id="input-sell" class="input-group-text">₽</div>
             </div>
             @if(!$arrival->isCompleted())

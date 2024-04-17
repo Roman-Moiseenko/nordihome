@@ -72,14 +72,20 @@ class MovementService
             $arrivalItem = $movementProduct->arrivalItem;
             $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
             $arrivalItem->delete();//удаляем StorageArrivalItem
-            if (!is_null($document->expense_id)) {
-                //TODO Ставим в резерв - проверить
 
+
+            if (!empty($document->order())) {
+                //TODO Проверяем, есть ли в перемещении заказ, то Ставим в резерв
+                foreach ($document->order()->items as $item) {
+                    if (!$item->preorder) {
+
+                    }
+                }
             }
         }
         $document->completed();
-        if (!is_null($document->expense_id)) {
-            //TODO Оповещаем менеджера
+        if (!empty($document->order())) {
+            //TODO Если есть в перемещении заказ, Оповещаем менеджера
         }
 
 

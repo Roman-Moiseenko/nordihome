@@ -338,13 +338,12 @@ class ProductService
     {
         //TODO Проверка на заполнение и на модерацию - добавить другие проверки
         if (is_null($product->lastPrice)) throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
-
-        $product->update(['published' => true]);
+        $product->setPublished();
     }
 
     public function draft(Product $product): void
     {
-        $product->update(['published' => false]);
+        $product->setDraft();
     }
 
 }

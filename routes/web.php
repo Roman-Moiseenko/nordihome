@@ -377,7 +377,6 @@ Route::group(
                         Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
                         Route::post('/{order}/expense-calculate', 'OrderController@expense_calculate')->name('expense-calculate');
 
-
                         Route::post('/{order}/set-manager', 'OrderController@set_manager')->name('set-manager');
                         Route::post('/{order}/set-reserve', 'OrderController@set_reserve')->name('set-reserve');
 

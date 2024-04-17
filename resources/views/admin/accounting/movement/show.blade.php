@@ -15,22 +15,27 @@
     </div>
     @endif
     @if($movement->isDraft())
-    <form action="{{ route('admin.accounting.movement.add', $movement) }}" method="POST">
-        @csrf
-        <div class="box flex p-3 items-center">
-            <div class="mx-3 flex w-full">
-                <x-searchProduct route="{{ route('admin.accounting.movement.search', $movement) }}"
-                                 input-data="movement-product" hidden-id="product_id" class="w-56"/>
-                {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
-                <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
-                </x-base.button>
-                <a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.movement.edit', $movement) }}">
-                    <x-base.lucide icon="check-square" class="w-4 h-4"/>
-                    Редактировать параметры</a>
-                <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-activate').submit();">Активировать документ</button>
-            </div>
+
+        <div class="box flex p-3 items-center flex w-full">
+            @if(empty($movement->order()))
+            <form action="{{ route('admin.accounting.movement.add', $movement) }}" method="POST">
+                @csrf
+                <div class="mx-3 flex">
+                    <x-searchProduct route="{{ route('admin.accounting.movement.search', $movement) }}"
+                                     input-data="movement-product" hidden-id="product_id" class="w-56"/>
+                    {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
+                    <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
+                    </x-base.button>
+                    <a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.movement.edit', $movement) }}">
+                        <x-base.lucide icon="check-square" class="w-4 h-4"/>
+                        Редактировать параметры</a>
+
+                </div>
+            </form>
+            @endif
+            <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-activate').submit();">Активировать документ</button>
         </div>
-    </form>
+
     @endif
     <form id="form-activate" method="post" action="{{ route('admin.accounting.movement.activate', $movement) }}">
         @csrf
@@ -81,7 +86,15 @@
 
             <div class="w-40 input-group">
                 <input id="quantity-{{ $item->id }}" type="number" class="form-control text-right movement-input-listen"
-                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0" {{ !$movement->isDraft() ? 'readonly' : '' }}>
+                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0"
+                       @if(!empty($movement->order()))
+                           max="{{ $item->quantity }}"
+                       @endif
+                   @if(!$movement->isDraft())
+                       readonly
+                    @endif
+
+                >
                 <div id="input-quantity" class="input-group-text">шт.</div>
             </div>
             <div class="w-40 input-group">

@@ -43,7 +43,7 @@ use Illuminate\Support\Str;
  * @property bool $not_local
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
+ * @property Carbon $published_at
  * @property Tag[] $tags
  * @property Category $category
  * @property Category[] $categories
@@ -69,7 +69,6 @@ use Illuminate\Support\Str;
  * @property CartCookie[] $cartCookies
  * @property Wish[] $wishes
  * @property Reserve[] $reserves
-
  */
 class Product extends Model
 {
@@ -93,6 +92,7 @@ class Product extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'published_at' => 'datetime',
     ];
 
     protected $attributes = [
@@ -105,6 +105,7 @@ class Product extends Model
         'published' => false,
         'pre_order' => false,
         'series_id' => null,
+        'published_at' => null,
     ];
 
     protected $fillable = [
@@ -126,6 +127,7 @@ class Product extends Model
         'not_local',
         'code_search',
         'series_id',
+        'published_at',
     ];
 
     protected $hidden = [
@@ -194,6 +196,61 @@ class Product extends Model
         return self::create(array_merge($data, $arguments));
     }
 
+
+    //ФУНЦИИ СОСТОЯНИЯ
+    public function isVisible(): bool
+    {/*
+        if ($this->status != self::STATUS_PUBLISHED) return false;
+        if ($this->count_for_sell == 0 and $this->sell_method == self::SELL_OFFLINE) return false;
+        if ($this->sell_method == self::SELL_OFFLINE) return false;
+        return true;*/
+        return true;
+    }
+
+    public function isSeries($id): bool
+    {
+        if ($this->series_id == null) return false;
+        return $this->series_id == $id;
+    }
+
+    public function isLocal(): bool
+    {
+        return !$this->not_local;
+    }
+
+    public function isDelivery(): bool
+    {
+        return !$this->not_delivery;
+    }
+
+    public function isCategories($category_id): bool
+    {
+        foreach ($this->categories as $category) {
+            if ($category->id == (int)$category_id) return true;
+        }
+        return false;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->published == true;
+    }
+
+    public function isTag($tag_id): bool
+    {
+        foreach ($this->tags as $tag) {
+            if ($tag->id == (int)$tag_id) return true;
+        }
+        return false;
+    }
+
+    public function isWish(int $user_id)
+    {
+        $wish = $this->wishes()->where('user_id', $user_id)->first();
+        return !empty($wish);
+    }
+
+    //*** SET-....
     //SET и GET
     public function setSlug(string $slug): void
     {
@@ -219,22 +276,31 @@ class Product extends Model
         $this->refresh();
     }
 
+    public function setPublished(): void
+    {
+        $this->published = true;
+        if (is_null($this->published_at)) $this->published_at = now();
+        $this->save();
+    }
+
+    public function setDraft(): void
+    {
+        $this->published = false;
+        $this->save();
+    }
     /*
-        public function setPublished(): void
-        {
-            $this->status = self::STATUS_PUBLISHED;
-        }
+            public function setModeration()
+            {
+                $this->status = self::STATUS_MODERATION;
+            }
 
-        public function setModeration()
-        {
-            $this->status = self::STATUS_MODERATION;
-        }
+            public function setApproved()
+            {
+                $this->status = self::STATUS_APPROVED;
+            }
+        */
 
-        public function setApproved()
-        {
-            $this->status = self::STATUS_APPROVED;
-        }
-    */
+    //*** GET-....
     public function getSlug(): string
     {
         return $this->slug;
@@ -270,7 +336,8 @@ class Product extends Model
     }
 
     /**
-     * @return float Предыдущая цена товара (учитывается случаи когда всего цен менее 2
+     * Предыдущая цена товара (учитывается случаи когда всего цен менее 2
+     * @return float
      */
     public function getPreviousPrice(): float
     {
@@ -328,60 +395,6 @@ class Product extends Model
         return $result;
     }
 
-    //ФУНЦИИ СОСТОЯНИЯ
-    public function isVisible(): bool
-    {/*
-        if ($this->status != self::STATUS_PUBLISHED) return false;
-        if ($this->count_for_sell == 0 and $this->sell_method == self::SELL_OFFLINE) return false;
-        if ($this->sell_method == self::SELL_OFFLINE) return false;
-        return true;*/
-        return true;
-    }
-
-    public function isSeries($id): bool
-    {
-        if ($this->series_id == null) return false;
-        return $this->series_id == $id;
-    }
-
-    public function isLocal(): bool
-    {
-        return !$this->not_local;
-    }
-
-    public function isDelivery(): bool
-    {
-        return !$this->not_delivery;
-    }
-
-    public function isCategories($category_id): bool
-    {
-        foreach ($this->categories as $category) {
-            if ($category->id == (int)$category_id) return true;
-        }
-        return false;
-    }
-
-    public function isPublished(): bool
-    {
-        return $this->published == true;
-    }
-
-    public function isTag($tag_id): bool
-    {
-        foreach ($this->tags as $tag) {
-            if ($tag->id == (int)$tag_id) return true;
-        }
-        return false;
-    }
-
-    public function isWish(int $user_id)
-    {
-        $wish = $this->wishes()->where('user_id', $user_id)->first();
-        return !empty($wish);
-    }
-
-    //RELATIONSHIP
 
     /**
      * Хранилища, где данный товар есть в наличии
@@ -394,6 +407,15 @@ class Product extends Model
             $q->where('product_id', $this->id);
         })->getModels();
         //return $this->hasMany(StorageItem::class, 'product_id', 'id')-;
+    }
+
+    public function getImage(): string
+    {
+        if (empty($this->photo->file)) {
+            return '/images/no-image.jpg';
+        } else {
+            return $this->photo->getUploadUrl();
+        }
     }
 
     /**
@@ -409,10 +431,12 @@ class Product extends Model
     }
 
 
+    //*** RELATIONS
+
     public function promotions()
     {
         return $this->belongsToMany(Promotion::class, 'promotions_products',
-             'product_id', 'promotion_id')->withPivot('price');
+            'product_id', 'promotion_id')->withPivot('price');
     }
 
     public function reserves()
@@ -455,7 +479,7 @@ class Product extends Model
             'id',
             'modification_id'
         );
-       // return $this->belongsTo(Modification::class, 'product_id', 'id');
+        // return $this->belongsTo(Modification::class, 'product_id', 'id');
     }
 
     public function groups()
@@ -538,15 +562,6 @@ class Product extends Model
     public function videos()
     {
         return $this->morphMany(Video::class, 'videoable');
-    }
-
-    public function getImage()
-    {
-        if (empty($this->photo->file)) {
-            return '/images/no-image.jpg';
-        } else {
-            return $this->photo->getUploadUrl();
-        }
     }
 
 

@@ -125,7 +125,8 @@
             </x-base.table>
         </div>
     </div>
-
+    {{ \App\Forms\ModalDelete::create('Вы уверены?',
+        'Вы действительно хотите удалить перемещение?<br>Этот процесс не может быть отменен.')->show() }}
     {{ $movements->links('admin.components.paginator', ['pagination' => $pagination]) }}
 
 @endsection

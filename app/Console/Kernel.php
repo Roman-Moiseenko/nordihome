@@ -22,6 +22,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('cron:parser')->dailyAt('02:01');
         //Удаляем просроченные токены
         $schedule->command('auth:clear-resets')->everyFifteenMinutes();
+        //Рассылка по новым товара
+        $schedule->command('cron:product-new')->weeklyOn(3, '1:00');
     }
 
     /**

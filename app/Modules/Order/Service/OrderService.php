@@ -639,7 +639,8 @@ class OrderService
         $order->movements()->attach($movement->id);
 
         foreach ($order->items as $item) {
-            if ($item->getRemains() != 0) $movement->addProduct($item->product, $item->getRemains());
+            if ($item->getRemains() != 0 && $item->preorder == false) 
+                $movement->addProduct($item->product, $item->getRemains());
         }
         return $movement;
     }

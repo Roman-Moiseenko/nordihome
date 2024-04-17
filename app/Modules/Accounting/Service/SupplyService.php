@@ -121,6 +121,24 @@ class SupplyService
         //Проходим по стеку и вытаскиваем товары
         $distributor = $supply->distributor;
         $storage_base = Storage::where('default', true)->first()->id;
+
+        //Создаем Поступление на базовый склад
+        $arrival = $this->arrivalService->create([
+            'number' => 'Из заказа ' . $supply->htmlNum(),
+            'distributor' => $distributor->id,
+            'storage' => $storage_base,
+        ]);
+        $arrival->supply_id = $supply->id;
+        $arrival->save();
+        foreach ($supply->products as $supplyProduct) {
+            //Добавляем товар в поступление
+            $this->arrivalService->add($arrival, [
+                    'product_id' => $supplyProduct->product_id,
+                    'quantity' => $supplyProduct->quantity
+                ]
+            );
+        }
+/*
         //Хранилища из стека по текущему заказу
         $storages_in_stack = SupplyStack::select('storage_id')->where('supply_id', $supply->id)->groupby('storage_id')->pluck('storage_id')->toArray();
         //Убираем базовый склад
@@ -133,7 +151,7 @@ class SupplyService
         }
 
         foreach ($storages_in_stack as $storage_id) {
-            //Поучаем список товаров по хранилищу из стека, просуммировано
+            //Получаем список товаров по хранилищу из стека, просуммировано
             $stack_products = DB::table('supply_stack')
                 ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))->
                 where('supply_id', $supply->id)->where('storage_id', $storage_id)->
@@ -159,8 +177,10 @@ class SupplyService
                 $supply_products[$item->product_id] -= (int)$item->total_quantity;
             }
         }
+        */
+        /*****/
         //Создаем Поступление на базовый склад
-        $arrival = $this->arrivalService->create([
+      /*  $arrival = $this->arrivalService->create([
             'number' => 'Из заказа ' . $supply->htmlNum(),
             'distributor' => $distributor->id,
             'storage' => $storage_base,
@@ -174,7 +194,7 @@ class SupplyService
                     'quantity' => (int)$quantity
                 ]
             );
-        }
+        }*/
         $supply->status = SupplyDocument::COMPLETED;
         $supply->save();
         event(new SupplyHasCompleted($supply));

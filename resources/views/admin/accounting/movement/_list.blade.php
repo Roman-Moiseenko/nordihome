@@ -10,12 +10,14 @@
     <x-base.table.td class="text-center">{{ price($movement->getInfoData()['cost']) }}</x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
-            @if(!$movement->isCompleted())
-            <a class="flex items-center mr-3" href="{{ route('admin.accounting.movement.edit', $movement) }}">
-                <x-base.lucide icon="check-square" class="w-4 h-4"/>
-                Edit </a>
+            @if($movement->isDraft())
+                @if(empty($movement->order()))
+                <a class="flex items-center mr-3" href="{{ route('admin.accounting.movement.edit', $movement) }}">
+                    <x-base.lucide icon="check-square" class="w-4 h-4"/>
+                    Edit </a>
+                @endif
             <a class="flex items-center text-danger" href="#"
-               data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.destroy', $movement) }}
+               data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.accounting.movement.destroy', $movement) }}
                ><x-base.lucide icon="trash-2" class="w-4 h-4"/>
                 Delete </a>
                 @endif

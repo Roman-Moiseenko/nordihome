@@ -15,11 +15,9 @@ class ProductHasPublished
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Product $product;
-
-    public function __construct(Product $product)
+    public function __construct()
     {
-        $this->product = $product;
+
     }
 
     /**

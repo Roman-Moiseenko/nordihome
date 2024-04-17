@@ -3,10 +3,14 @@
 namespace App\Listeners;
 
 use App\Events\ProductHasPublished;
+use App\Mail\ProductNew;
+use App\Modules\Product\Entity\Product;
 use App\Modules\User\Service\SubscriptionService;
 use App\Modules\User\UserRepository;
+use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationProductPublished
 {
@@ -26,8 +30,13 @@ class NotificationProductPublished
      */
     public function handle(ProductHasPublished $event): void
     {
-        //TODO Собираем группу новых товаров
-
+        //Собираем группу новых товаров за неделю
+        $products = Product::where('published', true)->where('published_at', '>', Carbon::now()->subDays(7)->toDateString())->getModels();
+        if (!empty($products)) {
+            foreach ($this->users as $user) {
+                Mail::to($user->email)->queue(new ProductNew($products));
+            }
+        }
 
     }
 }

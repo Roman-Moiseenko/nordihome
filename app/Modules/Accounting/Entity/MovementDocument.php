@@ -98,7 +98,7 @@ class MovementDocument extends Model implements MovementInterface
         $this->save();
     }
 
-    public function order()
+    public function order():? Order
     {
         return $this->belongsToMany(Order::class, 'orders_movements', 'movement_id', 'order_id')->first();
     }

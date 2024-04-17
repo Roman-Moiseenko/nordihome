@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use App\Modules\Product\Entity\Product;
-use App\Modules\User\Entity\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ProductArrival extends Mailable
+class ProductNew extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,16 +18,14 @@ class ProductArrival extends Mailable
      * @var Product[]
      */
     private array $products;
-    private User $user;
 
     /**
      * @param Product[] $products
      */
-    public function __construct(array $products, User $user)
+    public function __construct(array $products)
     {
         //
         $this->products = $products;
-        $this->user = $user;
     }
 
     /**
@@ -37,7 +34,7 @@ class ProductArrival extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Поступление товара из избранного',
+            subject: 'Поступление нового товара',
         );
     }
 
@@ -47,7 +44,7 @@ class ProductArrival extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.subscription.product-arrival',
+            markdown: 'mail.subscription.product-new',
         );
     }
 
@@ -61,9 +58,10 @@ class ProductArrival extends Mailable
         return [];
     }
 
+
     public function build()
     {
-        return $this->subject('Поступление товара из избранного')
-            ->markdown('mail.subscription.product-arrival')->with([ 'user' => $this->user, 'products' => $this->products]);
+        return $this->subject('Поступление нового товара')
+            ->markdown('mail.subscription.product-new')->with([ 'products' => $this->products]);
     }
 }
