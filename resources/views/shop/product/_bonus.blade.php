@@ -9,7 +9,7 @@
                     </a>
                     <div class="price-block">
                         <div class="discount-price">{{ price($_product->pivot->discount) }}</div>
-                        <div class="base-price">{{ price($_product->lastPrice->value) }}</div>
+                        <div class="base-price">{{ price($_product->getLastPrice()) }}</div>
                     </div>
                     <button class="to-cart btn btn-dark" data-product="{{ $_product->id }}">В Корзину</button>
                 </div>

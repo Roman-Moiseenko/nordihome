@@ -34,6 +34,7 @@ class MovementService
             $request['number'] ?? '',
             (int)$request['storage_out'],
             (int)$request['storage_in'],
+            $request['comment'] ?? ''
         );
     }
 
@@ -70,18 +71,12 @@ class MovementService
         $storageIn = $document->storageIn;
         foreach ($document->movementProducts as $movementProduct) {
             $arrivalItem = $movementProduct->arrivalItem;
-            $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
+            $storageItem = $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
             $arrivalItem->delete();//удаляем StorageArrivalItem
-
-
-            if (!empty($document->order())) {
-                //TODO Проверяем, есть ли в перемещении заказ, то Ставим в резерв
-                foreach ($document->order()->items as $item) {
-                    if (!$item->preorder) {
-
-                    }
-                }
-            }
+//TODO Проверяем, есть ли в перемещении заказ, то Ставим в резерв
+            //Если перемещение под заказ, то резервируем
+            if (!empty($document->order()))
+                $storageItem->movementReserve()->attach($movementProduct->id, ['quantity' => $movementProduct->quantity]);
         }
         $document->completed();
         if (!empty($document->order())) {
@@ -121,6 +116,7 @@ class MovementService
                 'По заказу ' . $order->htmlNum(),
                 $storage->id,
                 $storageIn->id,
+                ''
             );
             $movement->order_id = $order->id;
             $movement->save();

@@ -337,7 +337,7 @@ class ProductService
     public function published(Product $product): void
     {
         //TODO Проверка на заполнение и на модерацию - добавить другие проверки
-        if (is_null($product->lastPrice)) throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
+        if ($product->getLastPrice() == 0) throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
         $product->setPublished();
     }
 

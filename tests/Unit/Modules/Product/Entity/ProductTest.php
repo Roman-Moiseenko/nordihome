@@ -77,15 +77,18 @@ class ProductTest extends TestCase
         $category = Category::register('Category');
         $product = Product::register('name', '7889-GH-987-Y', $category->id);
         $product->setPrice($price1 = 80);
-        self::assertEquals($product->getLastPrice(), $price1);
+        self::assertEquals($price1, $product->getLastPrice());
+        $product->refresh();
         $product->setPrice($price2 = 100);
-        self::assertEquals($product->getLastPrice(), $price2);
-        self::assertEquals($product->getPreviousPrice(), $price1);
-        $product->setPrice($price3 = 120);
-        self::assertEquals($product->getLastPrice(), $price3);
-        self::assertEquals($product->getPreviousPrice(), $price2);
+        $product->refresh();
+        self::assertEquals($price2, $product->getLastPrice());
 
-        foreach ($product->pricing() as $i => $pricing) {
+        self::assertEquals($price1, $product->getPreviousPrice());
+        $product->setPrice($price3 = 120);
+        self::assertEquals($price3, $product->getLastPrice());
+        self::assertEquals($price2, $product->getPreviousPrice());
+
+        foreach ($product->prices as $i => $pricing) {
 
             if ($i == 0) self::assertEquals($pricing->value, $price3);
             if ($i == 1) self::assertEquals($pricing->value, $price2);

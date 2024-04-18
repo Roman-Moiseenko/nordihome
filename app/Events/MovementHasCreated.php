@@ -12,12 +12,12 @@ class MovementHasCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var MovementDocument[] $documents  */
-    public array $documents;
 
-    public function __construct(array $documents)
+    public MovementDocument $document;
+
+    public function __construct(MovementDocument $document)
     {
-        $this->documents = $documents;
+        $this->document = $document;
     }
 
     public function broadcastOn(): array

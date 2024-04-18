@@ -25,6 +25,8 @@
                                 </option>
                             @endforeach
                         </x-base.tom-select>
+                        {{ \App\Forms\Input::create('comment', ['placeholder' => 'Комментарий', 'value' => $departure->comment ?? '', 'class' => 'mt-3'])->label('Комментарий')->show() }}
+
                     </div>
                     <div class="col-span-12 lg:col-span-6">
 

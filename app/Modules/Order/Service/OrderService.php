@@ -298,7 +298,7 @@ class OrderService
         /** @var Product $product */
         $product = Product::find($product_id);
 
-        if (empty($product->lastPrice)) throw new \DomainException('Данный товар не подлежит продажи.');
+        if ($product->getLastPrice() == 0) throw new \DomainException('Данный товар не подлежит продажи.');
         $order = Order::register($user->id, Order::ONLINE);
 
         $orderItem = $this->createNewItem($product, 1, true, $user->id);
@@ -639,7 +639,7 @@ class OrderService
         $order->movements()->attach($movement->id);
 
         foreach ($order->items as $item) {
-            if ($item->getRemains() != 0 && $item->preorder == false) 
+            if ($item->getRemains() != 0 && $item->preorder == false)
                 $movement->addProduct($item->product, $item->getRemains());
         }
         return $movement;

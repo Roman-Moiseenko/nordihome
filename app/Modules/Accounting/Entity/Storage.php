@@ -100,16 +100,16 @@ class Storage extends Model
         return $this->hasMany(StorageArrivalItem::class, 'storage_id', 'id');
     }
 
-    public function add(Product $product, int $quantity)
+    public function add(Product $product, int $quantity): StorageItem
     {
         foreach ($this->items as $item) {
             if ($item->product->id == $product->id) {
                 $item->quantity += $quantity;
                 $item->save();
-                return;
+                return $item;
             }
         }
-        $this->items()->create([
+        return $this->items()->create([
             'product_id' => $product->id,
             'quantity' => $quantity
         ]);

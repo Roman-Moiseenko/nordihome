@@ -52,8 +52,11 @@ use Illuminate\Support\Str;
  * @property Photo $photo_next
  * @property Photo[] $photos
  * @property Video[] $videos
- * @property ProductPricing[] $pricing
- * @property ProductPricing $lastPrice
+ *
+ * @property ProductPriceRetail[] $prices
+ * @property ProductPriceRetail $priceRetail
+ * @property ProductPriceBulk $priceBulk
+ * @property ProductPriceSpecial $priceSpecial
  * @property Promotion[] $promotions Все акции в которых есть товар
  * @property Equivalent $equivalent
  * @property EquivalentProduct $equivalent_product
@@ -264,10 +267,10 @@ class Product extends Model
 
     public function setPrice(float $price): void
     {
-        if (!is_null($this->lastPrice) && $this->lastPrice->value === $price) return;
+        if (!is_null($this->priceRetail) && $this->priceRetail->value === $price) return;
         $this->current_price = $price;
         $this->save();
-        $this->pricing()->create(
+        $this->prices()->create(
             [
                 'value' => $price,
                 'founded' => 'In Shop',
@@ -312,8 +315,8 @@ class Product extends Model
     public function getLastPrice(int $user_id = null): float
     {
         //TODO Реализовать цены оптовые и другие для разных клиентов
-        if (is_null($this->lastPrice)) return 0;
-        return $this->lastPrice->value;
+        if (is_null($this->priceRetail)) return 0;
+        return $this->priceRetail->value;
     }
 
 
@@ -341,11 +344,11 @@ class Product extends Model
      */
     public function getPreviousPrice(): float
     {
-        $count = $this->pricing()->count();
+        $count = $this->prices()->count();
         if ($count == 0) return 0;
         if ($count == 1) return $this->getLastPrice();
-        /** @var ProductPricing $model */
-        $model = $this->pricing()->skip(1)->first();
+        /** @var ProductPriceRetail $model */
+        $model = $this->prices()->skip(1)->first();
         return $model->value;
     }
 
@@ -407,6 +410,14 @@ class Product extends Model
             $q->where('product_id', $this->id);
         })->getModels();
         //return $this->hasMany(StorageItem::class, 'product_id', 'id')-;
+    }
+
+    /**
+     * @return StorageItem[]
+     */
+    public function getStorageItems(): array
+    {
+        return StorageItem::where('product_id', $this->id)->getModels();
     }
 
     public function getImage(): string
@@ -497,15 +508,26 @@ class Product extends Model
         return $this->belongsTo(Equivalent::class, 'product_id', 'id');
     }
 
-    public function pricing()
+    public function prices()
     {
-        return $this->hasMany(ProductPricing::class, 'product_id', 'id')->orderByDesc('created_at');
+        return $this->hasMany(ProductPriceRetail::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function lastPrice()
+    public function priceRetail()
     {
-        return $this->hasOne(ProductPricing::class, 'product_id', 'id')->latestOfMany();
+        return $this->hasOne(ProductPriceRetail::class, 'product_id', 'id')->latestOfMany();
     }
+
+    public function priceBulk()
+    {
+        return $this->hasOne(ProductPriceBulk::class, 'product_id', 'id')->latestOfMany();
+    }
+
+    public function priceSpecial()
+    {
+        return $this->hasOne(ProductPriceSpecial::class, 'product_id', 'id')->latestOfMany();
+    }
+
 
     public function brand()
     {

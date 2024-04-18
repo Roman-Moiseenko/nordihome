@@ -16,7 +16,7 @@
     <div class="w-1/4 text-center">Товар/Габариты</div>
     <div class="w-32 text-center">Базовая/ Продажа</div>
     <div class="w-20 text-center">Кол-во</div>
-    <div class="w-40 text-center">Наличие</div>
+    <div class="w-40 text-center">Наличие/Резерв/Склад</div>
     <div class="w-20 text-center">Сборка</div>
     <div class="w-40 text-center">Комментарий</div>
     <div class="w-20 text-center">Х</div>
@@ -31,7 +31,7 @@
     <div class="w-1/4 text-center">Товар/Габариты</div>
     <div class="w-32 text-center">Базовая/ Продажа</div>
     <div class="w-20 text-center">Кол-во</div>
-    <div class="w-40 text-center">Наличие</div>
+    <div class="w-40 text-center">Наличие/Резерв/Склад</div>
     <div class="w-20 text-center">Сборка</div>
     <div class="w-20 text-center">Х</div>
 </div>

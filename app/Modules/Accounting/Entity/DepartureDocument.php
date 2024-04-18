@@ -14,6 +14,7 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property Carbon $updated_at
  * @property bool $completed
  * @property int $storage_id
+ * @property string $comment Комментарий к документу, пока отключена, на будущее
  * @property Storage $storage
  * @property DepartureProduct[] $departureProducts
  */
@@ -24,6 +25,7 @@ class DepartureDocument extends Model implements MovementInterface
     protected $fillable = [
         'storage_id',
         'number',
+        'comment',
     ];
 
     protected $casts = [
@@ -31,12 +33,13 @@ class DepartureDocument extends Model implements MovementInterface
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, int $storage_id): self
+    public static function register(string $number, int $storage_id, string $comment): self
     {
         return self::create([
             'number' => $number,
             'storage_id' => $storage_id,
             'completed' => false,
+            'comment' => $comment,
         ]);
     }
 

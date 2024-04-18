@@ -46,6 +46,9 @@ class ExpenseService
             $storageItem = $storage->getItem($orderItem->product);
             $storageItem->sub($quantity);
 
+            //TODO Проверяем Таблица-Сущность MovementReserve
+            // И отнимаем кол-во
+
             $storageItem->refresh();
             if ($storageItem->quantity < 0) {
                 $to_movement[] = [
@@ -64,8 +67,6 @@ class ExpenseService
         $expense->refresh();
 
         if (!empty($to_movement)) {
-            //TODO Создаем перемещение или Оставляем, тогда перемещение в ручную
-            // Событие event()!!
             throw new \DomainException('Требуется перемещение');
         }
         return $expense;

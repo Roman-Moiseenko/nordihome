@@ -23,6 +23,7 @@ class DepartureService
         return DepartureDocument::register(
             $request['number'],
             (int)$request['storage_id'],
+            $request['comment'] ?? ''
         );
     }
 
@@ -55,7 +56,7 @@ class DepartureService
         $departure->departureProducts()->create([
             'product_id' => $product->id,
             'quantity' => $quantity,
-            'cost' => $product->lastPrice->value
+            'cost' => $product->getLastPrice()
         ]);
         $departure->refresh();
         return $departure;

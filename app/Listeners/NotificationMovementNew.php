@@ -21,12 +21,12 @@ class NotificationMovementNew
     public function handle(MovementHasCreated $event): void
     {
         $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_ACCOUNTING);
-
-        $text = '';
+        //TODO
+        $text = '';/*
         foreach ($event->documents as $document) {
             $text .= "\n со склада " . $document->storageOut->name . " \n на склад " . $document->storageIn->name;
         }
-
+*/
         $message = "Новое перемещение" . $text;
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage($message));

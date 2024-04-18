@@ -9,7 +9,7 @@
                        class="dropdown-toggle dropdown-hover" aria-expanded="false" id="dropdown-related" aria-haspopup="true">
                         <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
                     </a>
-                    <div class="item-price">{{ price($_product->lastPrice->value) }}</div>
+                    <div class="item-price">{{ price($_product->getLastPrice()) }}</div>
                     <div class="button">
                         <button class="to-cart btn btn-dark" data-product="{{ $_product->id }}">В Корзину</button>
                     </div>

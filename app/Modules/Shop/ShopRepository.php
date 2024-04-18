@@ -99,12 +99,12 @@ class ShopRepository
         //Цена
         if (isset($request['price'])) {
             if (!empty($min = $request['price'][0]) && is_numeric($min)) {
-                $query->whereHas('lastPrice', function ($q) use ($min) {
+                $query->whereHas('priceRetail', function ($q) use ($min) {
                     $q->where('value', '>=', $min);
                 });
             }
             if (!empty($max = $request['price'][1]) && is_numeric($max)) {
-                $query->whereHas('lastPrice', function ($q) use ($max) {
+                $query->whereHas('priceRetail', function ($q) use ($max) {
                     $q->where('value', '<=', $max);
                 });
             }

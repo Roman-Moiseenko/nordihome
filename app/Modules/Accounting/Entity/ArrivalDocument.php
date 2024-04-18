@@ -36,6 +36,7 @@ class ArrivalDocument extends Model implements MovementInterface
         'currency_id',
         'exchange_fix',
         'completed',
+        'comment',
         'supply_id',
     ];
     protected $casts = [
@@ -43,7 +44,7 @@ class ArrivalDocument extends Model implements MovementInterface
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, int $distributor_id, int $storage_id, Currency $currency): self
+    public static function register(string $number, int $distributor_id, int $storage_id, Currency $currency, string $comment): self
     {
         return self::create([
             'number' => $number,
@@ -52,6 +53,7 @@ class ArrivalDocument extends Model implements MovementInterface
             'currency_id' => $currency->id,
             'exchange_fix' => $currency->exchange, //Запоминаем текущий курс
             'completed' => false,
+            'comment' => $comment,
         ]);
     }
     public function supply()

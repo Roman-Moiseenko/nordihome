@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $quantity
  *
  * @property Product $product
+ * @property MovementProduct $movementReserve
+ * @property Storage $storage
  */
 class StorageItem extends Model
 {
@@ -33,9 +35,26 @@ class StorageItem extends Model
      * В резерве на текущем складе
      * @return int
      */
-    public function inReserve()
+    public function inReserve(): int
     {
         return $this->product->reserves()->where('storage_id', $this->storage_id)->sum('quantity');
+    }
+
+    public function inReserveMovement(int $order_id = null): int
+    {
+        $quantity = 0;
+        /** @var MovementProduct $item */
+        foreach ($this->movementReserve as $item) {
+            if (is_null($order_id)) {
+                $quantity += $item->pivot->quantity;
+            } else {
+                $order = $item->document->order();
+                if ($order->id != $order_id) {
+                    $quantity += $item->pivot->quantity;
+                }
+            }
+        }
+        return $quantity;
     }
 
     public function getDeparture(): int
@@ -72,4 +91,15 @@ class StorageItem extends Model
         $this->quantity += $quantity;
         $this->save();
     }
+
+    public function movementReserve()
+    {
+        return $this->belongsToMany(MovementProduct::class, 'storages_movements', 'storage_item_id', 'movement_item_id')->withPivot(['quantity']);
+    }
+
+    public function storage()
+    {
+        return $this->belongsTo(Storage::class, 'storage_id', 'id');
+    }
+
 }

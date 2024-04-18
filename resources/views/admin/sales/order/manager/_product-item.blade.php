@@ -26,9 +26,11 @@
 
     </div>
     <div class="w-40 text-center">
-        @foreach($item->product->getStorages() as $storage)
-            {{ $storage->getQuantity($item->product) . ' (' . $storage->name . ')' }}<br>
+        @foreach($item->product->getStorageItems() as $storageItem)
+            {{ $storageItem->quantity . ' / ' . $storageItem->inReserveMovement() . ' / ' . $storageItem->storage->name }}<br>
         @endforeach
+
+
     </div>
     <div class="w-20 text-center">
         <div class="form-check form-switch justify-center mt-3">

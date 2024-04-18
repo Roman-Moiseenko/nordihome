@@ -19,8 +19,8 @@ return new class extends Migration
         $products = Product::get();
         /** @var Product $product */
         foreach ($products as $product) {
-            if (!is_null($product->lastPrice)) {
-                $product->current_price = $product->lastPrice->value;
+            if (!is_null($product->priceRetail)) {
+                $product->current_price = $product->priceRetail->value;
                 $product->save();
             }
         }

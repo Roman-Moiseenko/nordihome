@@ -46,6 +46,7 @@ class MovementDocument extends Model implements MovementInterface
         'number',
         'basic',
         'status',
+        'comment',
         'expense_id',
     ];
 
@@ -54,13 +55,14 @@ class MovementDocument extends Model implements MovementInterface
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, int $storage_out, int $storage_in): self
+    public static function register(string $number, int $storage_out, int $storage_in, string $comment): self
     {
         return self::create([
             'number' => $number,
             'storage_out' => $storage_out,
             'storage_in' => $storage_in,
             'status' => self::STATUS_DRAFT,
+            'comment' => $comment,
         ]);
     }
 

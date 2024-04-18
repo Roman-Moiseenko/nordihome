@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Service;
 
 use App\Events\ArrivalHasCompleted;
+use App\Events\MovementHasCreated;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Currency;
@@ -44,7 +45,8 @@ class ArrivalService
             $request['number'] ?? '',
             $distributor->id,
             (int)$request['storage'],
-            $distributor->currency
+            $distributor->currency,
+            $request['comment'] ?? ''
         );
     }
 
@@ -154,12 +156,13 @@ class ArrivalService
 
         //У поступления есть заказ поставщику
         if (!is_null($arrival->supply)) {
-            //TODO Создаем перемещения под все заказы со статусом на отбытие
+            //Создаем перемещения под все заказы со статусом на отбытие
             $orders_movement = [];
             $storages_movement = [];
             foreach ($arrival->supply->stacks as $stack) {
                 if ($stack->storage_id != $arrival->storage_id) { //Хранилище отличается, требуется Перемещение
-                    if ($stack->order_item_id != null) { //Из заказа
+
+                    if (!is_null($stack->orderItem)) { //Из заказа
                         $orders_movement[$stack->orderItem->order->id][] = $stack;
                     } else { //Перемещение от менеджера
                         $storages_movement[$stack->storage_id][] = $stack;
@@ -167,6 +170,7 @@ class ArrivalService
                 }
 
             }
+
             //Создаем перемещения для заказов
             /** @var SupplyStack $stack */
             foreach ($orders_movement as $order_id => $stacks) {
@@ -184,6 +188,7 @@ class ArrivalService
                 }
                 $movement->refresh();
                 $this->movementService->activate($movement);
+                event(new MovementHasCreated($movement));
             }
             //Создаем перемещения от менеджеров
             /** @var SupplyStack $stack */
@@ -198,6 +203,7 @@ class ArrivalService
                 }
                 $movement->refresh();
                 $this->movementService->activate($movement);
+                event(new MovementHasCreated($movement));
             }
 
             //Проходим по стеку к заказу поставщика

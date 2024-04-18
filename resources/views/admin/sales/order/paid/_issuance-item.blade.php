@@ -13,11 +13,12 @@
         >
     </div>
     <div class="w-40 text-center">
-        @foreach($item->product->getStorages() as $storage)
-            <div class="{{ ($item->getRemains() > $storage->getQuantity($item->product)) ? 'text-danger' : '' }}">
-                {{ $storage->getQuantity($item->product) . ' (' . $storage->name . ')' }}
+        @foreach($item->product->getStorageItems() as $storageItem)
+            <div class="{{ ($item->getRemains() > $storageItem->quantity) ? 'text-danger' : '' }}">
+            {{ $storageItem->quantity . ' / ' . $storageItem->inReserveMovement($order->id) . ' / ' . $storageItem->storage->name }}<br>
             </div>
         @endforeach
+
     </div>
     <div class="w-20 text-center">
         <div class="form-check form-switch justify-center mt-3">

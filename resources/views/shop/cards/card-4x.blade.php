@@ -33,7 +33,7 @@
             @if(!$product->hasPromotion())
                 {{ price($product->getLastPrice()) }}
             @else
-                <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span><span class="base-price">{{ price($product->lastPrice->value) }}</span>
+                <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span><span class="base-price">{{ price($product->getLastPrice()) }}</span>
             @endif
         </div>
         <div class="product-card-to-cart">
