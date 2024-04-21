@@ -20,6 +20,7 @@ class PricingController extends Controller
 
     public function __construct(PricingService $service, ProductRepository $products)
     {
+        $this->middleware(['auth:admin', 'can:pricing']);
         $this->service = $service;
         $this->products = $products;
     }

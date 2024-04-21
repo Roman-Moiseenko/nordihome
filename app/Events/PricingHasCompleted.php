@@ -15,12 +15,12 @@ class PricingHasCompleted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public PricingDocument $document;
+    public PricingDocument $pricing;
 
-    public function __construct(PricingDocument $document)
+    public function __construct(PricingDocument $pricing)
     {
         //
-        $this->document = $document;
+        $this->pricing = $pricing;
     }
 
     /**

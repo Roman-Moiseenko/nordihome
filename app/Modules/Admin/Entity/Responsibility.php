@@ -31,7 +31,9 @@ class Responsibility extends Model
     public const MANAGER_PAYMENT = 1008; //paid
     public const MANAGER_STAFF = 1009; //staff
 
+
     public const MANAGER_OPTIONS = 1010; //options
+    public const MANAGER_PRICING = 1011; //pricing
 
     //Отчеты и/или Контроль
     public const REPORT_THROWABLE = 2001;
@@ -47,6 +49,7 @@ class Responsibility extends Model
         self::MANAGER_LOGGER => 'Сборка и выдача товаров',
         self::MANAGER_DISCOUNT => 'Работа со скидками',
         self::MANAGER_PAYMENT => 'Работа с платежами',
+        self::MANAGER_PRICING => 'Работа с ценам',
         self::MANAGER_USER => 'Доступ к данным о клиенте',
         self::MANAGER_STAFF => 'Доступ к данным о сотруднике',
         self::MANAGER_OPTIONS => 'Настройки сайта',

@@ -24,6 +24,7 @@ class SupplyController extends Controller
 
     public function __construct(SupplyService $service, ProductRepository $products)
     {
+        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->products = $products;
     }

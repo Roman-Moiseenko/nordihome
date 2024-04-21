@@ -63,6 +63,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('payment', function (Admin $user) {
             return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_PAYMENT);
         });
+        Gate::define('pricing', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_PRICING);
+        });
         Gate::define('discount', function (Admin $user) {
             return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_DISCOUNT);
         });

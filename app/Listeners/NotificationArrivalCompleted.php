@@ -48,7 +48,7 @@ class NotificationArrivalCompleted
             foreach ($this->users as $user) { //Проверяем всех пользователей, кто подписан на уведомление
                 $user_products = []; //Список товаров из Избранное, которые есть в Поступлении
                 foreach ($products as $product) {
-                    if ($user->isWish($product->id)) $user_products[] = $product; //Если естьв избранном, добавляем на уведомление
+                    if ($user->isWish($product->id)) $user_products[] = $product; //Если есть в избранном, добавляем на уведомление
                 }
                 if (!empty($user_products)) //Одним письмом клиенту, о поступлении товаров из избранного
                     Mail::to($user->email)->queue(new ProductArrival($user_products, $user));
