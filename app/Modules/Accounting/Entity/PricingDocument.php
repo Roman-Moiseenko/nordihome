@@ -3,20 +3,22 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Admin\Entity\Admin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property string $number
+ * @property int $number
  * @property boolean $completed
  * @property string $comment Комментарий к документу
  * @property int $arrival_id  - Основание
- *
+ * @property int $staff_id - автор документа
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property ArrivalDocument $arrival
  * @property PricingProduct[] $pricingProducts
+ * @property Admin $staff
  */
 class PricingDocument extends Model
 {
@@ -27,6 +29,7 @@ class PricingDocument extends Model
         'completed',
         'comment',
         'arrival_id',
+        'staff_id',
     ];
 
     protected $casts = [
@@ -34,16 +37,35 @@ class PricingDocument extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, string $comment, int $arrival_id = null):self
+    public static function register(int $staff_id, int $arrival_id = null):self
     {
         return self::create([
-            'number' => $number,
-            'comment' => $comment,
+            'number' => null,
+            'comment' => '',
             'arrival_id' => $arrival_id,
             'completed' => false,
+            'staff_id' => $staff_id,
         ]);
     }
 
+    public function isCompleted()
+    {
+        return $this->completed == true;
+    }
+
+    public function setNumber()
+    {
+        $this->number = PricingDocument::where('number', '<>', null)->count() + 1;
+        $this->save();
+    }
+
+    public function getManager(): string
+    {
+        if ($this->staff_id == null) return 'Не установлен';
+        return $this->staff->fullname->getFullName();
+    }
+
+    //***
     public function arrival()
     {
         return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
@@ -52,5 +74,32 @@ class PricingDocument extends Model
     public function pricingProducts()
     {
         return $this->hasMany(PricingProduct::class, 'pricing_id', 'id');
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
+
+
+    //** HELPERS */
+
+    public function htmlNum(): string
+    {
+        if (empty($this->number)) return 'б/н';
+        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function htmlDate(): string
+    {
+        return  $this->created_at->translatedFormat('d F');
+    }
+
+    public function isProduct(int $product_id)
+    {
+        foreach ($this->pricingProducts as $item) {
+            if ($item->product_id == $product_id) return true;
+        }
+        return false;
     }
 }

@@ -14,7 +14,7 @@
                 <x-base.lucide icon="check-square" class="w-4 h-4"/>
                 Edit </a>
             <a class="flex items-center text-danger" href="#"
-               data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.destroy', $arrival) }}
+               data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.accounting.arrival.destroy', $arrival) }}
                ><x-base.lucide icon="trash-2" class="w-4 h-4"/>
                 Delete </a>
                 @endif

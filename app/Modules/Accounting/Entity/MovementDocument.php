@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Product\Entity\Product;
@@ -20,10 +21,12 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property Carbon $updated_at
  * @property bool $completed
  * @property string $comment Комментарий к документу, пока отключена, на будущее
+ * @property int $staff_id - автор документа
  *
  * @property Storage $storageOut
  * @property Storage $storageIn
  * @property MovementProduct[] $movementProducts
+ * @property Admin $staff
  */
 class MovementDocument extends Model implements MovementInterface
 {
@@ -48,6 +51,7 @@ class MovementDocument extends Model implements MovementInterface
         'status',
         'comment',
         'expense_id',
+        'staff_id',
     ];
 
     protected $casts = [
@@ -55,7 +59,7 @@ class MovementDocument extends Model implements MovementInterface
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, int $storage_out, int $storage_in, string $comment): self
+    public static function register(string $number, int $storage_out, int $storage_in, string $comment, int $staff_id): self
     {
         return self::create([
             'number' => $number,
@@ -63,6 +67,7 @@ class MovementDocument extends Model implements MovementInterface
             'storage_in' => $storage_in,
             'status' => self::STATUS_DRAFT,
             'comment' => $comment,
+            'staff_id' => $staff_id,
         ]);
     }
 
@@ -173,8 +178,19 @@ class MovementDocument extends Model implements MovementInterface
 
     public function statusHTML(): string
     {
-
         if ($this->status == 0) return self::STATUSES[self::STATUS_COMPLETED];
         return self::STATUSES[$this->status];
+    }
+
+
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
+
+    public function getManager(): string
+    {
+        if ($this->staff_id == null) return 'Не установлен';
+        return $this->staff->fullname->getFullName();
     }
 }

@@ -492,6 +492,18 @@ Route::group(
                         Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
 
                     });
+                Route::group([
+                    'prefix' => 'pricing',
+                    'as' => 'pricing.',
+                ],
+                    function () {
+                        Route::post('/search/{pricing}', 'PricingController@search')->name('search');
+                        Route::post('/add/{pricing}', 'PricingController@add')->name('add');
+                        Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
+                        Route::post('/create-arrival/{arrival}', 'PricingController@create_arrival')->name('create-arrival');
+                        Route::post('/set/{item}', 'PricingController@set')->name('set');
+                        Route::delete('/remove-item/{item}', 'PricingController@remove_item')->name('remove-item');
+                    });
 
                 Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
                 Route::resource('distributor', 'DistributorController'); //CRUD
@@ -500,6 +512,7 @@ Route::group(
                 Route::resource('movement', 'MovementController'); //CRUD
                 Route::resource('departure', 'DepartureController'); //CRUD
                 Route::resource('supply', 'SupplyController'); //CRUD
+                Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
             }
         );
 

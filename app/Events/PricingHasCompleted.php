@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Modules\Accounting\Entity\PricingDocument;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,11 +15,12 @@ class PricingHasCompleted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public PricingDocument $document;
 
-    //TODO добавить Класс Pricing
-    public function __construct()
+    public function __construct(PricingDocument $document)
     {
         //
+        $this->document = $document;
     }
 
     /**

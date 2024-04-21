@@ -6,6 +6,7 @@ use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Admin\Entity\Admin;
@@ -656,6 +657,28 @@ Breadcrumbs::for('admin.accounting.supply.stack', function (BreadcrumbTrail $tra
     $trail->parent('admin.accounting.supply.index');
     $trail->push('Стек заказов', route('admin.accounting.supply.stack'));
 });
+//PRICING
+Breadcrumbs::for('admin.accounting.pricing.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Установка цен', route('admin.accounting.pricing.index'));
+});
+/*
+Breadcrumbs::for('admin.accounting.pricing.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.pricing.index');
+    $trail->push('Добавить', route('admin.accounting.pricing.create'));
+});
+*/
+Breadcrumbs::for('admin.accounting.pricing.show', function (BreadcrumbTrail $trail, PricingDocument $pricing) {
+    $trail->parent('admin.accounting.pricing.index');
+    $trail->push($pricing->number . ' от ' . $pricing->created_at->format('d-m-Y'), route('admin.accounting.pricing.show', $pricing));
+});
+/*
+Breadcrumbs::for('admin.accounting.pricing.edit', function (BreadcrumbTrail $trail, PricingDocument $pricing) {
+    $trail->parent('admin.accounting.pricing.show', $pricing);
+    $trail->push('Редактировать', route('admin.accounting.pricing.edit', $pricing));
+});
+*/
+
 //ANALYTICS
 Breadcrumbs::for('admin.analytics.activity.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');

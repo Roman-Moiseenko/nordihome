@@ -10,10 +10,12 @@ use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageArrivalItem;
 use App\Modules\Accounting\Entity\StorageDepartureItem;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
@@ -30,11 +32,14 @@ class MovementService
 
     public function create(array $request): MovementDocument
     {
+        /** @var Admin $manager */
+        $manager = Auth::guard('admin')->user();
         return MovementDocument::register(
             $request['number'] ?? '',
             (int)$request['storage_out'],
             (int)$request['storage_in'],
-            $request['comment'] ?? ''
+            $request['comment'] ?? '',
+            $manager->id
         );
     }
 
@@ -84,69 +89,6 @@ class MovementService
         }
 
 
-    }
-    /**
-     * Создание заявки на перемещение при обработке заказа на недостающее кол-во
-     * @param Order $order
-     * @return MovementDocument[]|null
-     */
-    #[Deprecated]
-    public function createByOrder(Order $order): ?array
-    {
-        $storageIn = $order->delivery->point;
-        $emptyItems = [];
-        //Создаем список недостающих товаров
-        foreach ($order->items as $orderItem) {
-            $free_product = $storageIn->getAvailable($orderItem->product);
-            if ($free_product < $orderItem->quantity) {
-                $emptyItems[] = [
-                    'product' => $orderItem->product,
-                    'quantity' => $orderItem->quantity - $free_product,
-                ];
-            }
-        }
-
-        if (empty($emptyItems)) return null; //Товара на точке выдачи хватает
-
-        $movements = [];
-        /** @var Storage[] $storages */
-        $storages = Storage::where('id', '<>', $storageIn->id)->where('point_of_delivery', true)->get();
-        foreach ($storages as $storage) { //Для каждого склада создаем перемещение, пока кол-во не опустеет
-            $movement = MovementDocument::register(
-                'По заказу ' . $order->htmlNum(),
-                $storage->id,
-                $storageIn->id,
-                ''
-            );
-            $movement->order_id = $order->id;
-            $movement->save();
-
-            foreach ($emptyItems as $i => &$item) {
-                $free_product = $storage->getAvailable($item['product']);
-                if ($free_product >= $item['quantity']) {
-                    $movement->addProduct($item['quantity'], $item['quantity']);
-                  /*  $movement->movementProducts()->create([
-                        'quantity' => $item['quantity'],
-                        'product_id' => $item['product']->id,
-                        'cost' => $item['product']->getLastPrice(),
-                    ]);*/
-                    unset($emptyItems[$i]);
-                } else {
-                    $movement->addProduct($item['quantity'], $free_product);
-/*
-                    $movement->movementProducts()->create([
-                        'quantity' => $free_product,
-                        'product_id' => $item['product']->id,
-                        'cost' => $item['product']->getLastPrice(),
-                        ]);*/
-                    $item['quantity'] -= $free_product;
-                }
-            }
-            $movements[] = $movement;
-            if (empty($emptyItems)) return $movements;
-        }
-
-        throw new \DomainException('Нехватка товара для исполнения заказа!');
     }
 
     //TODO Перемещение менять нельзя

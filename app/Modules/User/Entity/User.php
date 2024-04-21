@@ -20,11 +20,16 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $phone
  * @property string $password
  * @property string $verify_token
+ * @property int $client
  * @property Wish[] $wishes
  * @property UserDelivery $delivery
  * @property UserPayment $payment
  * @property Subscription[] $subscriptions
  */
+
+//TODO Задачи по клиентам - настройка в админке, $client  - какие цены
+// и др.
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -32,6 +37,10 @@ class User extends Authenticatable
     public string $uploads = 'uploads/users/';
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
+
+    const CLIENT_RETAIL = 7700;
+    const CLIENT_BULK = 7701;
+    const CLIENT_SPECIAL = 7702;
 
     protected $fillable = [
         'email',
@@ -77,6 +86,16 @@ class User extends Authenticatable
             if ($item->id == $subscription->id) return true;
         }
         return false;
+    }
+
+    public function isBulk(): bool
+    {
+        return $this->client == self::CLIENT_BULK;
+    }
+
+    public function isSpecial(): bool
+    {
+        return $this->client == self::CLIENT_SPECIAL;
     }
     /**
      * @return string

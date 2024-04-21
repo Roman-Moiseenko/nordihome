@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Admin\Entity\Admin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\ArrayShape;
@@ -15,8 +16,10 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property bool $completed
  * @property int $storage_id
  * @property string $comment Комментарий к документу, пока отключена, на будущее
+ * @property int $staff_id - автор документа
  * @property Storage $storage
  * @property DepartureProduct[] $departureProducts
+ * @property Admin $staff
  */
 class DepartureDocument extends Model implements MovementInterface
 {
@@ -26,6 +29,7 @@ class DepartureDocument extends Model implements MovementInterface
         'storage_id',
         'number',
         'comment',
+        'staff_id',
     ];
 
     protected $casts = [
@@ -33,13 +37,14 @@ class DepartureDocument extends Model implements MovementInterface
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, int $storage_id, string $comment): self
+    public static function register(string $number, int $storage_id, string $comment, int $staff_id): self
     {
         return self::create([
             'number' => $number,
             'storage_id' => $storage_id,
             'completed' => false,
             'comment' => $comment,
+            'staff_id' => $staff_id,
         ]);
     }
 
@@ -88,5 +93,17 @@ class DepartureDocument extends Model implements MovementInterface
             'quantity' => $quantity,
             'cost' => $cost,
         ];
+    }
+
+
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
+
+    public function getManager(): string
+    {
+        if ($this->staff_id == null) return 'Не установлен';
+        return $this->staff->fullname->getFullName();
     }
 }

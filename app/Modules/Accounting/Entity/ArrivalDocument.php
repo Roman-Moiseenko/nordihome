@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Admin\Entity\Admin;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\ArrayShape;
 
 /**
@@ -19,11 +21,14 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property int $supply_id
  * @property float $exchange_fix //Курс на момент создания документа
  * @property string $comment Комментарий к документу, пока отключена, на будущее
+ * @property int $staff_id - автор документа
  * @property Storage $storage
  * @property Currency $currency
  * @property ArrivalProduct[] $arrivalProducts
  * @property Distributor $distributor
  * @property SupplyDocument $supply
+ * @property Admin $staff
+ * @property PricingDocument $pricing
  */
 class ArrivalDocument extends Model implements MovementInterface
 {
@@ -37,6 +42,7 @@ class ArrivalDocument extends Model implements MovementInterface
         'exchange_fix',
         'completed',
         'comment',
+        'staff_id',
         'supply_id',
     ];
     protected $casts = [
@@ -44,8 +50,11 @@ class ArrivalDocument extends Model implements MovementInterface
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, int $distributor_id, int $storage_id, Currency $currency, string $comment): self
+    public static function register(string $number, int $distributor_id,
+                                    int $storage_id, Currency $currency,
+                                    string $comment, ?int $staff_id): self
     {
+
         return self::create([
             'number' => $number,
             'distributor_id' => $distributor_id,
@@ -54,38 +63,25 @@ class ArrivalDocument extends Model implements MovementInterface
             'exchange_fix' => $currency->exchange, //Запоминаем текущий курс
             'completed' => false,
             'comment' => $comment,
+            'staff_id' => $staff_id,
         ]);
     }
-    public function supply()
-    {
-        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
-    }
 
-    public function arrivalProducts()
-    {
-        return $this->hasMany(ArrivalProduct::class, 'arrival_id', 'id');
-    }
-
-    public function distributor()
-    {
-        return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
-    }
-
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class, 'currency_id', 'id');
-    }
-
-    public function storage()
-    {
-        return $this->belongsTo(Storage::class, 'storage_id', 'id');
-    }
-
+    //*** IS-...
     public function isCompleted(): bool
     {
         return $this->completed == true;
     }
 
+    public function isProduct(int $product_id): bool
+    {
+        foreach ($this->arrivalProducts as $item) {
+            if ($item->product_id == $product_id) return true;
+        }
+        return false;
+    }
+
+    //*** SET-...
     public function completed()
     {
         $this->completed = true;
@@ -103,14 +99,7 @@ class ArrivalDocument extends Model implements MovementInterface
         }
     }
 
-    public function isProduct(int $product_id): bool
-    {
-        foreach ($this->arrivalProducts as $item) {
-            if ($item->product_id == $product_id) return true;
-        }
-        return false;
-    }
-
+    //*** GET-...
     #[ArrayShape([
         'quantity' => 'int',
         'cost_currency' => 'float',
@@ -137,6 +126,49 @@ class ArrivalDocument extends Model implements MovementInterface
         ];
     }
 
+    public function getManager(): string
+    {
+        if ($this->staff_id == null) return 'Не установлен';
+        return $this->staff->fullname->getFullName();
+    }
+
+    //*** RELATION
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
+
+    public function supply()
+    {
+        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
+    }
+
+    public function arrivalProducts()
+    {
+        return $this->hasMany(ArrivalProduct::class, 'arrival_id', 'id');
+    }
+
+    public function distributor()
+    {
+        return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
+    }
+
+    public function storage()
+    {
+        return $this->belongsTo(Storage::class, 'storage_id', 'id');
+    }
+
+    public function pricing()
+    {
+        return $this->hasOne(PricingDocument::class, 'arrival_id', 'id');
+    }
+
+    //*** Helpers
     public function htmlNum(): string
     {
         return $this->number;
@@ -146,4 +178,8 @@ class ArrivalDocument extends Model implements MovementInterface
     {
         return  $this->created_at->translatedFormat('d F');
     }
+
+
+
+
 }

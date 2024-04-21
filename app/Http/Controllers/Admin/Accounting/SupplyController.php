@@ -36,8 +36,10 @@ class SupplyController extends Controller
             $storages = Storage::orderBy('name')->get();
 
             $completed = $request['completed'] ?? 'all';
-            if ($completed == 'true') $query->where('completed', '=', true);
-            if ($completed == 'false') $query->where('completed', '=', false);
+
+            if ($completed == 'created') $query->where('status', SupplyDocument::CREATED);
+            if ($completed == 'sent') $query->where('status', SupplyDocument::SENT);
+            if ($completed == 'completed') $query->where('status', SupplyDocument::COMPLETED);
             if (!empty($distributor_id = $request->get('distributor_id'))) {
                 $query->where('distributor_id', $distributor_id);
             }

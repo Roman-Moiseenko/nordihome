@@ -6,10 +6,21 @@
             {{ $arrival->number . ' от ' . $arrival->created_at->format('d-m-Y') . ' (' . $arrival->distributor->name. ') - ' . $arrival->storage->name }}
         </h2>
     </div>
+    <div class="box flex p-5 mt-3 items-center">
+        <h3>Установка цен</h3>
+    @if(empty($arrival->pricing))
+        <button class="btn btn-success ml-5" onclick="document.getElementById('create-pricing-arrival').submit();">Создать</button>
+        <form id="create-pricing-arrival" method="post" action="{{ route('admin.accounting.pricing.create-arrival', $arrival) }}">
+            @csrf
+        </form>
+    @else
+        <a class="ml-5 text-success font-medium" href="{{ route('admin.accounting.pricing.show', $arrival->pricing) }}" target="_blank">{{ $arrival->pricing->htmlNum() . ' от ' . $arrival->pricing->htmlDate() }}</a>
+    @endif
+    </div>
     @if(!$arrival->isCompleted())
     <form action="{{ route('admin.accounting.arrival.add', $arrival) }}" method="POST">
         @csrf
-        <div class="box flex p-5 items-center">
+        <div class="box flex p-5 mt-3 items-center">
             <div class="mx-3 flex w-full">
                 <x-searchProduct route="{{ route('admin.accounting.arrival.search', $arrival) }}"
                                  input-data="arrival-product" hidden-id="product_id" class="w-56"/>

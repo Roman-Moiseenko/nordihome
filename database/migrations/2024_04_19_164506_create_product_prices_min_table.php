@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pricing_products', function (Blueprint $table) {
+        Schema::create('product_prices_min', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pricing_id')->constrained('pricing_documents')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->float('price_retail', 10, 2)->default(0);
-            $table->float('price_bunk', 10, 2)->default(0);
-            $table->float('price_special', 10, 2)->default(0);
+            $table->float('value', 10, 2)->default(0);
+            $table->string('founded');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::drop('pricing_products');
+        Schema::drop('product_prices_min');
     }
 };

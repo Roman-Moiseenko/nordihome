@@ -47,9 +47,9 @@ class SupplyService
     //Создание пустого заказа
     public function create_empty(Distributor $distributor): SupplyDocument
     {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
-        $supply = SupplyDocument::register($staff->id, $distributor->id, '');
+        /** @var Admin $manager */
+        $manager = Auth::guard('admin')->user();
+        $supply = SupplyDocument::register($distributor->id, '', $manager->id);
 
         return $supply;
     }

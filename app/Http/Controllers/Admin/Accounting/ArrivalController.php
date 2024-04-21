@@ -35,8 +35,8 @@ class ArrivalController extends Controller
             $storages = Storage::orderBy('name')->get();
 
             $completed = $request['completed'] ?? 'all';
-            if ($completed == 'true') $query->where('completed', '=', true);
-            if ($completed == 'false') $query->where('completed', '=', false);
+            if ($completed == 'active') $query->where('completed', '=', true);
+            if ($completed == 'draft') $query->where('completed', '=', false);
             if (!empty($distributor_id = $request->get('distributor_id'))) {
                 $query->where('distributor_id', $distributor_id);
             }
@@ -55,7 +55,6 @@ class ArrivalController extends Controller
     {
         return $this->try_catch_admin(function () use($request) {
             $distributors = Distributor::get();
-            //$currencies = Currency::get();
             $storages = Storage::get();
             return view('admin.accounting.arrival.create', compact('distributors', 'storages'));
         });
@@ -66,7 +65,6 @@ class ArrivalController extends Controller
         $request->validate([
             'distributor' => 'required',
             'storage' => 'required',
-            //'currency' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request) {
             $arrival = $this->service->create($request->only(['distributor', 'storage', 'number']));
@@ -86,7 +84,6 @@ class ArrivalController extends Controller
     {
         return $this->try_catch_admin(function () use($arrival) {
             $distributors = Distributor::get();
-            //$currencies = Currency::get();
             $storages = Storage::get();
             return view('admin.accounting.arrival.edit', compact('arrival'), compact('distributors', 'storages'));
         });
@@ -97,7 +94,6 @@ class ArrivalController extends Controller
         $request->validate([
             'distributor' => 'required',
             'storage' => 'required',
-            //'currency' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request, $arrival) {
             $arrival = $this->service->update($request, $arrival);

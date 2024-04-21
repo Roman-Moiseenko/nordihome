@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -11,16 +12,17 @@ use Illuminate\Database\Eloquent\Model;
  * Поставка товар - заказ для поставщика, формируется автоматически из стека заказов, также можно добавить вручную
  * @property int $id
  * @property int $number
- * @property int $staff_id
  * @property int $distributor_id
  * @property int $status
  * @property string $comment
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property int $staff_id - автор документа
  * @property ArrivalDocument[] $arrivals  - документ, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
  * @property SupplyStack[] $stacks
  * @property Distributor $distributor
+ * @property Admin $staff
  */
 class SupplyDocument extends Model
 {
@@ -36,10 +38,10 @@ class SupplyDocument extends Model
 
     protected $table = 'supply_documents';
     protected $fillable = [
-        'staff_id',
         'distributor_id',
         'status',
         'comment',
+        'staff_id',
     ];
 
     protected $casts = [
@@ -47,13 +49,13 @@ class SupplyDocument extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function register(int $staff_id, int $distributor_id, string $comment): self
+    public static function register(int $distributor_id, string $comment, int $staff_id): self
     {
         return  self::create([
-            'staff_id' => $staff_id,
             'distributor_id' => $distributor_id,
             'status' => self::CREATED,
             'comment' => $comment,
+            'staff_id' => $staff_id,
         ]);
     }
     //** IS ... */
@@ -171,5 +173,16 @@ class SupplyDocument extends Model
         $this->save();
     }
 
+
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
+
+    public function getManager(): string
+    {
+        if ($this->staff_id == null) return 'Не установлен';
+        return $this->staff->fullname->getFullName();
+    }
 
 }

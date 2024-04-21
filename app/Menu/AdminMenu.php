@@ -207,7 +207,11 @@ class AdminMenu
                         'title' => 'Заказы поставщикам',
                         'route_name' => 'admin.accounting.supply.index',
                     ],
-
+                    'pricing' => [
+                        'icon' => 'badge-russian-ruble',
+                        'title' => 'Ценообразование',
+                        'route_name' => 'admin.accounting.pricing.index',
+                    ],
                     'distributors' => [
                         'icon' => 'building',
                         'title' => 'Поставщики',

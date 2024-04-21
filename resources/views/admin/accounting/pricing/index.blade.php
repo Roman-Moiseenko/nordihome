@@ -3,26 +3,11 @@
 @section('subcontent')
     <div class="intro-y flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
-            Списание товара
+            Установка цен
         </h2>
     </div>
     <div class="intro-y box p-5 mt-5">
         <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 lg:col-span-3">
-                <x-base.form-label for="select-storage">Хранилище Списания</x-base.form-label>
-                <x-base.tom-select id="select-storage" name="storage_id"
-                                   class="w-full" data-placeholder="Выберите хранилище">
-                    <option value="0"></option>
-                    @foreach($storages as $storage)
-                        <option value="{{ $storage->id }}"
-                            {{ $storage->id == $storage_id ? 'selected' : ''}} >
-                            {{ $storage->name }}
-                        </option>
-                    @endforeach
-                </x-base.tom-select>
-
-            </div>
-
             <div class="col-span-12 lg:col-span-3 border-l pl-4 flex">
                 <div class="">
                     <div class="form-check mr-3">
@@ -47,17 +32,6 @@
         //TODO Фильтр по дате
         const urlParams = new URLSearchParams(window.location.search);
 
-        let selectStorage = document.getElementById('select-storage');
-        selectStorage.addEventListener('change', function () {
-            let p = selectStorage.options[selectStorage.selectedIndex].value;
-            if (p === '0') {
-                urlParams.delete('storage_id');
-            } else {
-                urlParams.set('storage_id', p);
-            }
-            window.location.search = urlParams;
-        });
-
 
         let checkPublished = document.querySelectorAll('.check-completed');
         checkPublished.forEach(function (item) {
@@ -73,9 +47,9 @@
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
 
             <button class="btn btn-primary shadow-md mr-2"
-                    onclick="window.location.href='{{ route('admin.accounting.departure.create') }}'">Создать Документ
+                    onclick="window.location.href='{{ route('admin.accounting.pricing.create') }}'">Создать Документ
             </button>
-            {{ $departures->links('admin.components.count-paginator') }}
+            {{ $pricing_documents->links('admin.components.count-paginator') }}
         </div>
 
 
@@ -84,21 +58,21 @@
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap">ДАТА</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">СПИСАНИЕ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">СУММА СПИСАНИЯ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ОТВЕТСТВЕННЫЙ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ПОСТУПЛЕНИЕ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">ПРОВЕДЕН</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>
-                    @foreach($departures as $departure)
-                        @include('admin.accounting.departure._list', ['departure' => $departure])
+                    @foreach($pricing_documents as $pricing)
+                        @include('admin.accounting.pricing._list', ['pricing' => $pricing])
                     @endforeach
                 </x-base.table.tbody>
             </x-base.table>
         </div>
     </div>
 
-    {{ $departures->links('admin.components.paginator', ['pagination' => $pagination]) }}
+    {{ $pricing_documents->links('admin.components.paginator', ['pagination' => $pagination]) }}
 
 @endsection

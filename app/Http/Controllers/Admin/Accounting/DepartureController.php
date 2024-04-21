@@ -34,8 +34,8 @@ class DepartureController extends Controller
             $storages = Storage::orderBy('name')->get();
 
             $completed = $request['completed'] ?? 'all';
-            if ($completed == 'true') $query->where('completed', '=', true);
-            if ($completed == 'false') $query->where('completed', '=', false);
+            if ($completed == 'active') $query->where('completed', '=', true);
+            if ($completed == 'draft') $query->where('completed', '=', false);
 
             if (!empty($storage_id = $request->get('storage_id'))) {
                 $query->where('storage_id', $storage_id);

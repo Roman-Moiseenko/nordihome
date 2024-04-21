@@ -6,8 +6,10 @@ namespace App\Modules\Accounting\Service;
 use App\Events\DepartureHasCompleted;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DepartureService
 {
@@ -20,10 +22,13 @@ class DepartureService
 
     public function create(Request $request): DepartureDocument
     {
+        /** @var Admin $manager */
+        $manager = Auth::guard('admin')->user();
         return DepartureDocument::register(
             $request['number'],
             (int)$request['storage_id'],
-            $request['comment'] ?? ''
+            $request['comment'] ?? '',
+            $manager->id,
         );
     }
 

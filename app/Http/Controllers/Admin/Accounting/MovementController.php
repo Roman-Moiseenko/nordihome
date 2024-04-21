@@ -35,8 +35,10 @@ class MovementController extends Controller
             $storages = Storage::orderBy('name')->get();
 
             $completed = $request['completed'] ?? 'all';
-            if ($completed == 'true') $query->where('completed', '=', true);
-            if ($completed == 'false') $query->where('completed', '=', false);
+            if ($completed == 'draft') $query->where('status', MovementDocument::STATUS_DRAFT);
+            if ($completed == 'departure') $query->where('status', MovementDocument::STATUS_DEPARTURE);
+            if ($completed == 'arrival') $query->where('status', MovementDocument::STATUS_ARRIVAL);
+            if ($completed == 'completed') $query->where('status', MovementDocument::STATUS_COMPLETED);
 
             if (!empty($storage_in = $request->get('storage_in'))) {
                 $query->where('storage_in', $storage_in);

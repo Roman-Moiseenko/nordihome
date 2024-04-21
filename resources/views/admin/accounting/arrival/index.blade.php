@@ -43,16 +43,13 @@
                         <label class="form-check-label" for="completed-all">Все</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
-                        <input id="completed-true" class="form-check-input check-completed" type="radio" name="completed" value="active" {{ $completed == 'true' ? 'checked' : '' }}>
+                        <input id="completed-true" class="form-check-input check-completed" type="radio" name="completed" value="active" {{ $completed == 'active' ? 'checked' : '' }}>
                         <label class="form-check-label" for="completed-true">Проведенные</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
-                        <input id="completed-false" class="form-check-input check-completed" type="radio" name="completed" value="draft" {{ $completed == 'false' ? 'checked' : '' }}>
+                        <input id="completed-false" class="form-check-input check-completed" type="radio" name="completed" value="draft" {{ $completed == 'draft' ? 'checked' : '' }}>
                         <label class="form-check-label" for="completed-false">Черновики</label>
                     </div>
-                </div>
-                <div class="border-l pl-4 ">
-                Поиск по имени или артикулу
                 </div>
             </div>
         </div>

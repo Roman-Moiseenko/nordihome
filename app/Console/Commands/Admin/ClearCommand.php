@@ -84,7 +84,8 @@ class ClearCommand extends Command
             $distributor->id,
             Storage::first()->id,
             $distributor->currency,
-            ''
+            '',
+            null
         );
 
         foreach ($products as $product) {

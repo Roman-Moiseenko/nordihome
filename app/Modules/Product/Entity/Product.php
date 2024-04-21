@@ -6,6 +6,7 @@ namespace App\Modules\Product\Entity;
 use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Entity\Video;
+use App\Modules\Accounting\Entity\DistributorProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Admin\Entity\Options;
@@ -15,6 +16,7 @@ use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
+use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -54,9 +56,11 @@ use Illuminate\Support\Str;
  * @property Video[] $videos
  *
  * @property ProductPriceRetail[] $prices
- * @property ProductPriceRetail $priceRetail
- * @property ProductPriceBulk $priceBulk
- * @property ProductPriceSpecial $priceSpecial
+ * @property ProductPriceCost[] $pricesCost
+ * @property ProductPriceRetail[] $pricesRetail
+ * @property ProductPriceBulk[] $pricesBulk
+ * @property ProductPriceSpecial[] $pricesSpecial
+ * @property ProductPriceMin[] $pricesMin
  * @property Promotion[] $promotions Все акции в которых есть товар
  * @property Equivalent $equivalent
  * @property EquivalentProduct $equivalent_product
@@ -72,6 +76,7 @@ use Illuminate\Support\Str;
  * @property CartCookie[] $cartCookies
  * @property Wish[] $wishes
  * @property Reserve[] $reserves
+
  */
 class Product extends Model
 {
@@ -314,11 +319,83 @@ class Product extends Model
      */
     public function getLastPrice(int $user_id = null): float
     {
-        //TODO Реализовать цены оптовые и другие для разных клиентов
-        if (is_null($this->priceRetail)) return 0;
-        return $this->priceRetail->value;
+        if (!is_null($user_id)) {
+            /** @var User $user */
+            $user = User::find($user_id);
+            if ($user->isBulk()) return $this->getPriceBulk(); //Оптовый клиент
+            if ($user->isSpecial()) return $this->getPriceSpecial(); //Спец Клиент
+        }
+        return $this->getPriceRetail();
     }
 
+    /**
+     * Последняя закупочная цена, через Поставщиков
+     * @return float
+     */
+    public function getPriceCost(bool $previous = false): float
+    {
+        if ($this->pricesCost()->count() == 0) return 0;
+        if ($previous == true) {
+            /** @var ProductPriceCost $model */
+            $model = $this->pricesCost()->skip(1)->first();
+            if (empty($model)) return 0;
+        } else {
+            $model = $this->pricesCost()->skip(0)->first();
+        }
+        return $model->value;
+    }
+
+    public function getPriceRetail(bool $previous = false): float
+    {
+        if ($this->pricesRetail()->count() == 0) return 0;
+        if ($previous == true) {
+            /** @var ProductPriceRetail $model */
+            $model = $this->pricesRetail()->skip(1)->first();
+            if (empty($model)) return 0;
+        } else {
+            $model = $this->pricesRetail()->skip(0)->first();
+        }
+        return $model->value;
+    }
+
+    public function getPriceBulk(bool $previous = false): float
+    {
+        if ($this->pricesBulk()->count() == 0) return 0;
+        if ($previous == true) {
+            /** @var ProductPriceBulk $model */
+            $model = $this->pricesBulk()->skip(1)->first();
+            if (empty($model)) return 0;
+        } else {
+            $model = $this->pricesBulk()->skip(0)->first();
+        }
+        return $model->value;
+    }
+
+    public function getPriceSpecial(bool $previous = false): float
+    {
+        if ($this->pricesSpecial()->count() == 0) return 0;
+        if ($previous == true) {
+            /** @var ProductPriceSpecial $model */
+            $model = $this->pricesSpecial()->skip(1)->first();
+            if (empty($model)) return 0;
+        } else {
+            $model = $this->pricesSpecial()->skip(0)->first();
+        }
+        return $model->value;
+    }
+
+    public function getPriceMin(bool $previous = false): float
+    {
+        if ($this->pricesMin()->count() == 0) return 0;
+        if ($previous == true) {
+            /** @var ProductPriceMin $model */
+            $model = $this->pricesMin()->skip(1)->first();
+            if (empty($model)) return 0;
+        } else {
+            $model = $this->pricesMin()->skip(0)->first();
+        }
+        return $model->value;
+    }
 
     public function getReserveCount(): int
     {
@@ -328,6 +405,10 @@ class Product extends Model
         }
         return $result;
     }
+
+
+
+
 
     /**
      * Кол-во доступное для продажи по всем точкам, за минусом резерва
@@ -513,20 +594,31 @@ class Product extends Model
         return $this->hasMany(ProductPriceRetail::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function priceRetail()
+    public function pricesCost()
     {
-        return $this->hasOne(ProductPriceRetail::class, 'product_id', 'id')->latestOfMany();
+        return $this->hasMany(ProductPriceCost::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function priceBulk()
+    public function pricesRetail()
     {
-        return $this->hasOne(ProductPriceBulk::class, 'product_id', 'id')->latestOfMany();
+        return $this->hasMany(ProductPriceRetail::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function priceSpecial()
+    public function pricesBulk()
     {
-        return $this->hasOne(ProductPriceSpecial::class, 'product_id', 'id')->latestOfMany();
+        return $this->hasMany(ProductPriceBulk::class, 'product_id', 'id')->orderByDesc('id');
     }
+
+    public function pricesSpecial()
+    {
+        return $this->hasMany(ProductPriceSpecial::class, 'product_id', 'id')->orderByDesc('id');
+    }
+
+    public function pricesMin()
+    {
+        return $this->hasMany(ProductPriceMin::class, 'product_id', 'id')->orderByDesc('id');
+    }
+
 
 
     public function brand()

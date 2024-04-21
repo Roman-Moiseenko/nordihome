@@ -11,10 +11,12 @@ use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Service\ReserveService;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\ArrayShape;
 
 class ArrivalService
@@ -39,6 +41,8 @@ class ArrivalService
 
     public function create(array $request): ArrivalDocument
     {
+        /** @var Admin $manager */
+        $manager = Auth::guard('admin')->user();
         /** @var Distributor $distributor */
         $distributor = Distributor::find((int)$request['distributor']);
         return ArrivalDocument::register(
@@ -46,7 +50,8 @@ class ArrivalService
             $distributor->id,
             (int)$request['storage'],
             $distributor->currency,
-            $request['comment'] ?? ''
+            $request['comment'] ?? '',
+            $manager->id
         );
     }
 
