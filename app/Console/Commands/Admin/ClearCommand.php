@@ -15,9 +15,8 @@ use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
-use App\Modules\Order\Entity\Reserve;
-use App\Modules\Order\Service\ReserveService;
-use App\Modules\Order\Service\SalesService;
+use App\Modules\Order\Entity\OrderReserve;
+
 use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
 
@@ -35,7 +34,7 @@ class ClearCommand extends Command
             $order->delete();
         }
         $this->info('Заказы удалены');
-        $reserves = Reserve::get();
+        $reserves = OrderReserve::get();
         foreach ($reserves as $reserve) {
             $reserve->delete();
         }

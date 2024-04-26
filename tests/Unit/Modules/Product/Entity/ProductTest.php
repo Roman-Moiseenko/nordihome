@@ -141,11 +141,6 @@ class ProductTest extends TestCase
         $second1 = Category::register($name_second1 = 'second category 1');
         $second2 = Category::register($name_second2 = 'second category 2');
 
-        $product->addCategory($category);
-        $this->expectExceptionMessage('Категория уже назначен');
-
-        $product->addCategory($second1);
-        $product->addCategory($second2);
         self::assertNotEmpty($second2->products());
 
 

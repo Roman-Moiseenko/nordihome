@@ -20,12 +20,10 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
-use App\Modules\Shop\CartItemInterface;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
@@ -33,6 +31,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 use stdClass;
 
 class OrderService
@@ -44,24 +43,26 @@ class OrderService
     private int $coupon;
     private ShopRepository $repository;
     private CouponService $coupons;
-    private $minutes; //Время резерва товара в заказе
-    private ReserveService $reserves;
     private ParserCart $parserCart;
     private CalculatorOrder $calculator;
     private LoggerService $logger;
     private MovementService $movementService;
+    private OrderReserveService $reserveService;
+
+
 
     public function __construct(
-        PaymentService  $payments,
-        DeliveryService $deliveries,
-        Cart            $cart,
-        ParserCart      $parserCart,
-        ShopRepository  $repository,
-        CouponService   $coupons,
-        ReserveService  $reserves,
-        CalculatorOrder $calculator,
-        LoggerService   $logger,
-        MovementService $movementService,
+        PaymentService      $payments,
+        DeliveryService     $deliveries,
+        Cart                $cart,
+        ParserCart          $parserCart,
+        ShopRepository      $repository,
+        CouponService       $coupons,
+        //ReserveService      $reserves,
+        CalculatorOrder     $calculator,
+        LoggerService       $logger,
+        MovementService     $movementService,
+        OrderReserveService $reserveService,
     )
     {
         $this->payments = $payments;
@@ -70,12 +71,13 @@ class OrderService
         $this->coupon = (new Options())->shop->coupon;
         $this->repository = $repository;
         $this->coupons = $coupons;
-        $this->minutes = (new Options())->shop->reserve_order;
-        $this->reserves = $reserves;
+       // $this->minutes = (new Options())->shop->reserve_order;
+       // $this->reserves = $reserves;
         $this->parserCart = $parserCart;
         $this->calculator = $calculator;
         $this->logger = $logger;
         $this->movementService = $movementService;
+        $this->reserveService = $reserveService;
     }
 
     public function default_user_data(User $user = null): stdClass
@@ -198,7 +200,8 @@ class OrderService
     public function create(Request $request): Order
     {
         $default = $this->default_user_data();
-        $OrderItems = $this->cart->getOrderItems();
+
+        //$OrderItems = $this->cart->getOrderItems();
         $order = Order::register($default->payment->user_id, Order::ONLINE);
         if ($request->has('code')) {
             $coupon = $this->repository->getCoupon($request->get('code'));
@@ -208,24 +211,30 @@ class OrderService
             $order->save();
         }
 
-        foreach ($OrderItems as $item) {
-            $orderItem = $this->createItemFromCart($item, true);
-            $order->items()->save($orderItem);
-            $item->reserve = null; //Для очистки корзины, без затрагивания резерва
+        $items = ($request['preorder'] == 1) ? $this->cart->getItems() : $this->cart->getOrderItems();
+        foreach ($items as $item) {
+            if ($item->check) $this->add_product($order, $item->product->id, $item->quantity);
+            //$orderItem = $this->createItemFromCart($item);
+            //$order->items()->save($orderItem);
         }
-        $this->cart->clearOrder(true);
+        $this->cart->clearOrder();
+        if ($request['preorder'] == 1) $this->cart->clearPreOrder();
+
+        $order->refresh();
+        $this->recalculation($order);
 
         //Предзаказ
+        /*
         if ($request['preorder'] == 1 && //В заказе установлена метка для предзаказа.
             !empty($PreOrderItems = $this->cart->getPreOrderItems())) {//и кол-во товаров не пусто
             foreach ($PreOrderItems as $item) {
-                $orderItem = $this->createItemFromCart($item, false);
+                $orderItem = $this->createItemFromCart($item);
                 $orderItem->preorder = true;
                 $order->items()->save($orderItem);
             }
             $this->cart->clearPreOrder();
         }
-
+*/
         event(new OrderHasCreated($order));
         return $order;
     }
@@ -241,8 +250,8 @@ class OrderService
         $order = Order::register($default->payment->user_id, Order::PARSER);
         $order->save();
         foreach ($OrderItems as $item) {
-            $orderItem = $this->createItemFromCart($item, false);
-            $order->items()->save($orderItem);
+            $orderItemPre = OrderItem::new($item->product, $item->quantity, true, $order->user_id);
+            $order->items()->save($orderItemPre);
         }
         $this->parserCart->clear();
         $this->recalculation($order);
@@ -298,11 +307,10 @@ class OrderService
         /** @var Product $product */
         $product = Product::find($product_id);
 
-        if ($product->getLastPrice() == 0) throw new \DomainException('Данный товар не подлежит продажи.');
+        if ($product->getLastPrice($user->id) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
         $order = Order::register($user->id, Order::ONLINE);
 
-        $orderItem = $this->createNewItem($product, 1, true, $user->id);
-        $order->items()->save($orderItem);
+        $order = $this->add_product($order, $product->id, 1);
         $this->recalculation($order);
         event(new OrderHasCreated($order));
         return $order;
@@ -326,90 +334,18 @@ class OrderService
             $user = User::find((int)$request['user_id']);
         }
         $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
-        //Оповещать не нужно event(new OrderHasCreated($order));
 
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $order->setStatus(OrderStatus::SET_MANAGER);
         $order->setManager($staff->id);
-        //$order->responsible()->save(OrderResponsible::registerManager($staff->id));
         $order->refresh();
         return $order;
     }
 
-    /**
-     * Создаем элемент заказа из элемента корзины
-     * @param CartItemInterface $item
-     * @param bool $reserve
-     * @param int|null $user_id
-     * @return OrderItem
-     */
-    private function createItemFromCart(CartItemInterface $item, bool $reserve, int $user_id = null): OrderItem
-    {
-        if ($reserve) {//Ставим в резерв
-            if (is_null($reserveItem = $item->getReserve())) { //Не корзина, т.к. в элементе нет резерва
-                $reserveItem = $this->reserves->toReserve(
-                    $item->getProduct(),
-                    $item->getQuantity(),
-                    Reserve::TYPE_ORDER,
-                    $this->minutes,
-                    $user_id
-                );
-            } else { //корзина, товар уже в резерве, увеличиваем время
-                $reserveItem->update([
-                    'reserve_at' => now()->addMinutes($this->minutes),
-                    'type' => Reserve::TYPE_ORDER,
-                ]);
-            }
-        }
-
-        $orderItem = new OrderItem();
-        $orderItem->preorder = false;
-        $orderItem->product_id = $item->getProduct()->id;
-        $orderItem->quantity = $item->getQuantity();
-
-        $orderItem->base_cost = $item->getBaseCost();
-        $orderItem->sell_cost = $item->getSellCost();
-        $orderItem->discount_id = $item->getDiscount();
-        $orderItem->discount_type = $item->getDiscountType();
-        $orderItem->options = $item->getOptions();
-        $orderItem->reserve_id = ($reserve) ? $reserveItem->id : null;
-
-        return $orderItem;
-    }
-
-    /**
-     * Создаем элемент заказа из товара, с резервом или без
-     * @param Product $product
-     * @param int $quantity
-     * @param bool $reserve
-     * @param int|null $user_id
-     * @return OrderItem
-     */
-    private function createNewItem(Product $product, int $quantity, bool $reserve = false, int $user_id = null): OrderItem
-    {
-        if ($reserve) {//Ставим в резерв
-            $reserveItem = $this->reserves->toReserve(
-                $product,
-                $quantity,
-                Reserve::TYPE_ORDER,
-                $this->minutes,
-                $user_id
-            );
-        }
-
-        $orderItem = new OrderItem();
-        $orderItem->preorder = false;
-        $orderItem->product_id = $product->id;
-        $orderItem->quantity = $quantity;
-        $orderItem->base_cost = $product->getLastPrice($user_id);
-        $orderItem->sell_cost = $orderItem->base_cost; //Цена продаже равна базовой цене
-        $orderItem->options = [];
-        $orderItem->reserve_id = ($reserve) ? $reserveItem->id : null;
-        return $orderItem;
-    }
 
     //**** ФУНКЦИИ РАБОТЫ С ЗАКАЗОМ МЕНЕДЖЕРОМ
+
     /**
      * Устанавливаем в ручную доп. скидку на заказ
      * @param Order $order
@@ -418,6 +354,7 @@ class OrderService
      */
     public function update_manual(Order $order, int $manual): Order
     {
+        //TODO Пересчет скидки для товара ! Добавить параметр float $percent
         $old = $order->manual;
         $order->manual = $manual;
         $order->save();
@@ -426,55 +363,39 @@ class OrderService
         return $order;
     }
 
+
     /**
-     * Добавить в заказ товар, с учетом в наличии
+     * Добавить в заказ товар. НОВАЯ ВЕРСИЯ
      * @param Order $order
-     * @param array $request
+     * @param int $product_id
+     * @param int $quantity
      * @return Order
      */
-    public function add_item(Order $order, array $request): Order
+    public function add_product(Order $order, int $product_id, int $quantity): Order
     {
-        $product_id = (int)$request['product_id'];
-        $quantity = (int)$request['quantity'];
-        $user_id = $order->user->id;
         /** @var Product $product */
         $product = Product::find($product_id);
-
-        //Если товар уже есть, удаляем
-        if (!is_null($item = $order->getItem($product, false))) { //по наличию
-            $this->reserves->delete($item->reserve);
-            $item->delete();
+        $quantity_preorder = 0;
+        if ($product->getCountSell() <= $quantity) {
+            $quantity_preorder = $quantity - $product->getCountSell(); //По предзаказу
+            $quantity = $product->getCountSell(); //в наличии
         }
-        if (!is_null($item = $order->getItem($product, true))) $item->delete(); //по предзаказу
+
+        $orderItem = OrderItem::new($product, $quantity, false, $order->user_id);
+        $order->items()->save($orderItem);
+        $this->reserveService->toReserve($orderItem, $quantity);
+
+        if ($quantity_preorder > 0) {
+            $orderItemPre = OrderItem::new($product, $quantity_preorder, true, $order->user_id);
+            $order->items()->save($orderItemPre);
+        }
         $order->refresh();
-        $product->refresh();
-
-        $free_count = min($quantity, $product->count_for_sell);
-        $preorder_count = max($quantity - $product->count_for_sell, 0);
-        if ($free_count > 0) {
-            $freeItem = $this->createNewItem($product, $free_count, true, $user_id);
-            $freeItem->preorder = false;
-            $order->items()->save($freeItem);
-        }
-        if ($preorder_count > 0) {
-            $preItem = $this->createNewItem($product, $preorder_count, false, $user_id);
-            $preItem->preorder = true;
-            $order->items()->save($preItem);
-        }
-        //Обновляем резерв для всех товаров из заказа
-        foreach ($order->items as $item) {
-            if (!$item->preorder) $item->reserve->update(['reserve_at', now()->addMinutes($this->minutes)]);
-        }
-
-        $this->recalculation($order);
-
-        $this->logger->logOrder($order, 'Добавлен товар', $product->name, (string)$quantity);
-
         return $order;
     }
 
+
     /**
-     * Изменения кол-ва товара, с учетом "в наличии" и перерасчетом всего заказа
+     * Изменения кол-ва товара, с учетом "в наличии" и перерасчетом всего заказа. НОВАЯ ВЕРСИЯ.
      * @param OrderItem $item - изменяемая позиция
      * @param int $quantity - новое значение кол-ва
      * @return Order
@@ -485,11 +406,14 @@ class OrderService
         if ($delta == 0) return $item->order;
 
         if (!$item->preorder) {
-            $max_free = $item->product->count_for_sell + $item->quantity;
-            $quantity = min($max_free, $quantity);
-            $this->reserves->UpdateReserve($item->reserve_id, $delta);
+            if ($delta > 0) {
+                $delta = min($item->product->getCountSell(), $delta);
+                $this->reserveService->upReserve($item, abs($delta));
+            } else {
+                $this->reserveService->downReserve($item, abs($delta));
+            }
         }
-        $item->quantity = $quantity;
+        $item->quantity += $delta;
         $item->save();
         $order = $item->order;
 
@@ -533,7 +457,7 @@ class OrderService
     }
 
     /**
-     * Удаляем позицию в заказе, пересчитываем резерв и скидки по заказу
+     * Удаляем позицию в заказе, пересчитываем резерв и скидки по заказу. НОВАЯ ВЕРСИЯ
      * @param OrderItem $item
      * @return Order
      */
@@ -541,7 +465,10 @@ class OrderService
     {
         $order = $item->order;
         $this->logger->logOrder($order, 'Удален товар из заказа', $item->product->name, (string)$item->quantity);
-        if (!is_null($item->reserve)) $this->reserves->delete($item->reserve);
+        foreach ($item->reserves as $reserve) {
+            $reserve->delete();
+        }
+
         $item->delete();
         $this->recalculation($order);
         return $order;
@@ -614,6 +541,7 @@ class OrderService
         } else {
             $order->discount_id = null;
         }
+        //TODO Если есть купон, обсчитываем
         $order->save();
     }
 
@@ -632,15 +560,22 @@ class OrderService
     public function movement(Order $order, int $storage_out, int $storage_in)
     {
         $movement = $this->movementService->create([
-            'number' => 'Заказ ' . $order->htmlNum(),
+            //'number' => 'Заказ ' . $order->htmlNum(),
             'storage_out' => $storage_out,
             'storage_in' => $storage_in,
         ]);
         $order->movements()->attach($movement->id);
 
         foreach ($order->items as $item) {
+            if (!is_null($reserve = $item->getReserveByStorage($storage_out))) {
+                if ($reserve->quantity > 0) {
+                    $movement->addProduct($item->product, $reserve->quantity, $item->id);
+                }
+            }
+
+            /*
             if ($item->getRemains() != 0 && $item->preorder == false)
-                $movement->addProduct($item->product, $item->getRemains());
+                $movement->addProduct($item->product, $item->getRemains());*/
         }
         return $movement;
     }

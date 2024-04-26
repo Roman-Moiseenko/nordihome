@@ -36,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         * MANAGER_USER = user
         * MANAGER_PAYMENT = payment
         * MANAGER_STAFF = staff
+        * MANAGER_PRICING = pricing
 
         * MANAGER_OPTIONS = options
         */

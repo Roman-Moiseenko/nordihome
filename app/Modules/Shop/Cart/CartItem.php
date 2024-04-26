@@ -4,14 +4,12 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Cart;
 
 use App\Modules\Admin\Entity\Options;
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
 
 class CartItem implements CartItemInterface
 {
     public Product $product;
-    public ?Reserve $reserve;
     public int $id;
     public int $quantity;
     public float $base_cost = -1; //Базовая цена  - используется для удобства = $product->getLastPrice()
@@ -26,14 +24,14 @@ class CartItem implements CartItemInterface
     public function __construct()
     {
         $this->pre_order = (new Options())->shop->pre_order;
-        $this->reserve = null;
+        //$this->reserve = null;
     }
 
     public static function create(Product $product, int $quantity, array $options, bool $check_quantity = true): self
     {
         $item = new static();
 
-        if (!$item->pre_order && $product->count_for_sell < $quantity && $check_quantity == true) {
+        if (!$item->pre_order && $product->getCountSell() < $quantity && $check_quantity == true) {
             throw new \DomainException('Превышение остатка');
         }
         $item->product = $product;
@@ -44,7 +42,7 @@ class CartItem implements CartItemInterface
         return $item;
     }
 
-    public static function load(int $id, Product $product, $quantity, $options, bool $check, $reserve = null): self
+    public static function load(int $id, Product $product, $quantity, $options, bool $check): self
     {
         $item = new static();
         $item->id = $id;
@@ -52,7 +50,6 @@ class CartItem implements CartItemInterface
         $item->quantity = $quantity;
         $item->options = $options;
         $item->check = $check;
-        $item->reserve = $reserve;
         $item->base_cost = $product->getLastPrice();
         return $item;
     }
@@ -84,11 +81,7 @@ class CartItem implements CartItemInterface
 
     public function availability(): int
     {
-        if ($this->reserve == null) {
-            return $this->product->count_for_sell;
-        } else {
-            return $this->reserve->quantity;
-        }
+        return $this->product->getCountSell();
     }
 
     public function withQuantity(int $quantity): self
@@ -100,9 +93,7 @@ class CartItem implements CartItemInterface
 
     public function withNotReserve(): self
     {
-        $item = clone $this;
-        $item->reserve = null;
-        return $item;
+        return clone $this;
     }
 
     public function getBaseCost(): float
@@ -130,10 +121,6 @@ class CartItem implements CartItemInterface
         return $this->options;
     }
 
-    public function getReserve(): ?Reserve
-    {
-        return $this->reserve;
-    }
 
     public function getCheck(): bool
     {

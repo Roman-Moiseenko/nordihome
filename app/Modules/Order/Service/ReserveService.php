@@ -16,6 +16,7 @@ use JetBrains\PhpStorm\Deprecated;
 use function event;
 use function now;
 
+#[Deprecated]
 class ReserveService
 {
 
@@ -51,14 +52,12 @@ class ReserveService
         if (Auth::guard('user')->check() && Reserve::where('user_id', $user_id)->where('product_id', $product->id)->first())
             throw new \DomainException('Товар в резерве по неисполненному заказу. Добавить новый невозможно. Дождитесь исполнения');
 
-        if ($product->count_for_sell == 0) return null;
+        if ($product->getCountSell() == 0) return null;
 
 
         //Проверка на запас для резерва
-        if ($product->count_for_sell < $quantity) $quantity = $product->count_for_sell;
-
-        $product->count_for_sell -= $quantity;
-        $product->save();
+        if ($product->getCountSell() < $quantity) $quantity = $product->getCountSell();
+        $product->setCountSell($product->getCountSell() - $quantity);
 
         return Reserve::register(
             $product->id,
@@ -72,11 +71,11 @@ class ReserveService
     public function delete(Reserve $reserve)
     {
         $product = $reserve->product;
-        $product->count_for_sell += $reserve->quantity;
-        $product->save();
+        $product->setCountSell($product->getCountSell() + $reserve->quantity);
+
         $product->refresh();
-        if ($reserve->type == Reserve::TYPE_CART) $reserve->cart->clearReserve();
-        if ($reserve->type == Reserve::TYPE_ORDER) $reserve->orderItem->clearReserve();
+        //if ($reserve->type == Reserve::TYPE_CART) $reserve->cart->clearReserve();
+        //if ($reserve->type == Reserve::TYPE_ORDER) $reserve->orderItem->clearReserve();
         Reserve::destroy($reserve->id);
     }
 
@@ -91,8 +90,7 @@ class ReserveService
         /** @var Reserve $reserve */
         $reserve = Reserve::find($reserve_id);
         $product = $reserve->product;
-        $product->count_for_sell += $quantity;
-        $product->save();
+        $product->setCountSell($product->getCountSell() + $quantity);
         $reserve->quantity -= $quantity;
         $reserve->save();
     }
@@ -102,9 +100,8 @@ class ReserveService
         /** @var Reserve $reserve */
         $reserve = Reserve::find($reserve_id);
         $product = $reserve->product;
-        if ($product->count_for_sell < $quantity) $quantity = $product->count_for_sell;
-        $product->count_for_sell -= $quantity;
-        $product->save();
+        if ($product->getCountSell() < $quantity) $quantity = $product->getCountSell();
+        $product->setCountSell($product->getCountSell() - $quantity);
         $reserve->quantity += $quantity;
         $reserve->save();
     }

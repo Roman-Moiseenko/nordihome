@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Parser;
 
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
 
@@ -59,10 +58,6 @@ class ParserItem implements CartItemInterface
         return [];
     }
 
-    public function getReserve(): ?Reserve
-    {
-        return  null;
-    }
 
     public function getCheck(): bool
     {

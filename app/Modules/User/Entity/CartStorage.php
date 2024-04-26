@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -13,13 +12,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property int $product_id
  * @property int $quantity
- * @property int $reserve_id //Связанная позиция в резерве
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $options_json //Опции товара [id1, id2, ...]
  * @property bool $check
  * @property Product $product
- * @property Reserve $reserve
  */
 
 class CartStorage extends Model
@@ -30,20 +27,18 @@ class CartStorage extends Model
         'user_id',
         'product_id',
         'quantity',
-        'reserve_id',
         'options_json',
         'check',
     ];
 
     protected $casts = ['check' => 'bool'];
 
-    public static function register(int $user_id, int $product_id, int $quantity, ?int $reserve_id, array $options_json = []): self
+    public static function register(int $user_id, int $product_id, int $quantity, array $options_json = []): self
     {
         return self::create([
             'user_id' => $user_id,
             'product_id' => $product_id,
             'quantity' => $quantity,
-            'reserve_id' => $reserve_id,
             'options_json' => json_encode($options_json),
         ]);
     }
@@ -67,16 +62,5 @@ class CartStorage extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-
-    public function reserve()
-    {
-
-        return $this->belongsTo(Reserve::class, 'reserve_id', 'id');
-    }
-
-    public function clearReserve()
-    {
-        $this->update(['reserve_id' => null]);
     }
 }

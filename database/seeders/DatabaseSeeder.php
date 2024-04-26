@@ -439,7 +439,7 @@ class DatabaseSeeder extends Seeder
             $product->dimensions = $dimension;
 
             $product->setPrice($item['price']);
-            $product->count_for_sell = $item['count'];
+            $product->setCountSell($item['count']);
             $product->brand_id = $item['brand'];
             $product->save();
             $product->update([

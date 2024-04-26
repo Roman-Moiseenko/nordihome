@@ -112,10 +112,9 @@ class Cart
         $this->storage->clear();
     }
 
-    public function clearOrder(bool $notReserve = false): void
+    public function clearOrder(): void
     {
         foreach ($this->itemsOrder as $item) {
-            if ($notReserve == true) $item->reserve = null; //Очистка товара без затрагивания резерва
             $this->storage->sub($item, $item->quantity); //Очищаем напрямую позицию
         }
     }
@@ -202,7 +201,6 @@ class Cart
         'discount_id' => 'int|null',
         'discount_cost' => 'float|null',
         'discount_name' => 'string',
-        'reserve_date' => 'string',
         'remove' => 'string',
         'check' => 'bool',
         'available' => 'int|null'
@@ -225,7 +223,6 @@ class Cart
                 'discount_id' => $item->discount_id ?? null,
                 'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
                 'discount_name' => $item->discount_name,
-                'reserve_date' => !is_null($item->reserve) ? $item->reserve->reserve_at->setTimezone($timeZone)->format('H:i') : '',
                 'remove' => route('shop.cart.remove', $item->getProduct()->id),
                 'check' => $item->check,
                 'available' => ($item->preorder()) ? $item->availability() : null,

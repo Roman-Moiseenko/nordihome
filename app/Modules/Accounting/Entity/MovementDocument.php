@@ -16,7 +16,7 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property int $storage_out
  * @property int $storage_in
  * @property int $status
- * @property string $number
+ * @property int $number
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property bool $completed
@@ -59,10 +59,9 @@ class MovementDocument extends Model implements MovementInterface
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, int $storage_out, int $storage_in, string $comment, int $staff_id): self
+    public static function register(int $storage_out, int $storage_in, string $comment, int $staff_id): self
     {
         return self::create([
-            'number' => $number,
             'storage_out' => $storage_out,
             'storage_in' => $storage_in,
             'status' => self::STATUS_DRAFT,
@@ -78,12 +77,12 @@ class MovementDocument extends Model implements MovementInterface
         $this->save();
     }
 
-    public function addProduct(Product $product, int $quantity): void
+    public function addProduct(Product $product, int $quantity, int $order_item_id = null): void
     {
         $this->movementProducts()->create([
             'product_id' => $product->id,
             'quantity' => $quantity,
-            'cost' => $product->getLastPrice()
+            'order_item_id' => $order_item_id,
         ]);
     }
 
@@ -174,6 +173,26 @@ class MovementDocument extends Model implements MovementInterface
             'quantity' => $quantity,
             'cost' => $cost,
         ];
+    }
+    //** HELPERS */
+
+    public function htmlNum(): string
+    {
+        if (!is_null($this->order())) return 'Заказ ' . $this->order()->htmlNum();
+        if (empty($this->number)) return 'б/н';
+        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function htmlDate(): string
+    {
+        return  $this->created_at->translatedFormat('d F Y');
+    }
+
+
+    public function setNumber()
+    {
+        $this->number = MovementDocument::where('number', '<>', null)->count() + 1;
+        $this->save();
     }
 
     public function statusHTML(): string

@@ -160,7 +160,7 @@ class ProductService
 
         //Не сохранять цену и кол-во, если торговый учет
         if (!$this->options->shop->accounting) {
-            $product->count_for_sell = (int)($request['count-for-sell'] ?? 0);
+            $product->setCountSell((int)($request['count-for-sell'] ?? 0));
             if (!empty($request['last-price']) && (float)$request['last-price'] > 0.99) {
                 $product->setPrice((float)$request['last-price']);
             }

@@ -5,9 +5,10 @@ namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Discount\Entity\Discount;
-use App\Modules\Order\Entity\Reserve;
+use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\Pure;
 
@@ -29,11 +30,11 @@ use JetBrains\PhpStorm\Pure;
  * @property int $reserve_id
  * @property bool $assemblage - требуется сборка
  * @property Order $order
- * @property Reserve $reserve - в резерве
  * @property Product $product
  * @property Discount $discount
  * @property OrderExpenseItem[] $expenseItems
  * @property SupplyStack $supplyStack
+ * @property OrderReserve[] $reserves
  */
 class OrderItem extends Model implements CartItemInterface
 {
@@ -61,15 +62,46 @@ class OrderItem extends Model implements CartItemInterface
         'preorder' => 'bool'
     ];
 
+    public static function new(Product $product, int $quantity, bool $preorder, int $user_id): self
+    {
+        return self::make([
+            'quantity' => $quantity,
+            'product_id' => $product->id,
+            'base_cost' => $product->getLastPrice($user_id),
+            'sell_cost' => $product->getLastPrice($user_id),
+            'options' => [],
+            'preorder' => $preorder,
+        ]);
+    }
+
     public function changeQuantity(int $new_quantity)
     {
         $this->quantity = $new_quantity;
         $this->save();
     }
 
-    public function clearReserve()
+
+    //*** GET-...
+    public function getReserveByStorageItem(int $storage_item_id):? OrderReserve
     {
-        $this->update(['reserve_id' => null]);
+        foreach ($this->reserves as $reserve) {
+            if ($reserve->storage_item_id == $storage_item_id) return $reserve;
+        }
+        return null;
+    }
+
+    public function getReserveByStorage(int $storage_id):? OrderReserve
+    {
+        foreach ($this->reserves as $reserve) {
+            if ($reserve->storageItem->storage_id == $storage_id) return $reserve;
+        }
+        return null;
+    }
+
+    //RELATIONS
+    public function reserves()
+    {
+        return $this->hasMany(OrderReserve::class, 'order_item_id', 'id');
     }
 
     public function supplyStack()
@@ -88,12 +120,12 @@ class OrderItem extends Model implements CartItemInterface
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
-
+/*
     public function reserve()
     {
         return $this->belongsTo(Reserve::class, 'reserve_id', 'id');
     }
-
+*/
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
@@ -102,6 +134,21 @@ class OrderItem extends Model implements CartItemInterface
     public function discount()
     {
         return $this->belongsTo(Discount::class, 'discount_id', 'id');
+    }
+
+
+    public function clearReserves()
+    {
+        foreach ($this->reserves as $reserve) {
+            $reserve->delete();
+        }
+    }
+
+    public function updateReserves(Carbon $addDays)
+    {
+        foreach ($this->reserves as $reserve) {
+            $reserve->update(['reserve_at' => $addDays]);
+        }
     }
 
     public function discountName()
@@ -149,13 +196,13 @@ class OrderItem extends Model implements CartItemInterface
      * Функция для контроля кол-ва
      * @return bool
      */
-    #[Pure] public function check_reserve(): bool
+/*    #[Pure] public function check_reserve(): bool
     {
         $reserve_q = $this->reserve->quantity;
         $expense_q = $this->getExpenseAmount();
         return $this->quantity == ($reserve_q + $expense_q); //Кол-во равно в резерве+выдано
     }
-
+*/
     public function getProduct(): Product
     {
         return $this->product;
@@ -191,10 +238,6 @@ class OrderItem extends Model implements CartItemInterface
         return $this->options;
     }
 
-    public function getReserve(): ?Reserve
-    {
-        return $this->reserve;
-    }
 
     public function getCheck(): bool
     {
@@ -228,4 +271,6 @@ class OrderItem extends Model implements CartItemInterface
     {
         return $this->preorder;
     }
+
+
 }

@@ -13,6 +13,7 @@ use App\Modules\Accounting\Entity\StorageDepartureItem;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,20 +25,28 @@ class MovementService
 {
 
     private StorageService $storages;
+    private OrderReserveService $reserveService;
 
-    public function __construct(StorageService $storages)
+    public function __construct(StorageService $storages, OrderReserveService $reserveService)
     {
         $this->storages = $storages;
+        $this->reserveService = $reserveService;
     }
 
     public function create(array $request): MovementDocument
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
+
+        $storage_out = (int)$request['storage_out'];
+        $storage_in = (int)$request['storage_in'];
+
+        /*$movement = MovementDocument::where('storage_out', $storage_out)->where('storage_in', $storage_in)->where('status', MovementDocument::STATUS_DRAFT)->first();
+        if (!empty($movement)) return $movement;*/
+
         return MovementDocument::register(
-            $request['number'] ?? '',
-            (int)$request['storage_out'],
-            (int)$request['storage_in'],
+            $storage_out,
+            $storage_in,
             $request['comment'] ?? '',
             $manager->id
         );
@@ -51,6 +60,7 @@ class MovementService
             $storageOut->departureItems()->save($departureItem);
         }
         $document->departure();
+        $document->setNumber();
         //TODO Оповещаем склад
     }
 
@@ -76,18 +86,20 @@ class MovementService
         $storageIn = $document->storageIn;
         foreach ($document->movementProducts as $movementProduct) {
             $arrivalItem = $movementProduct->arrivalItem;
-            $storageItem = $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
+            $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
             $arrivalItem->delete();//удаляем StorageArrivalItem
-//TODO Проверяем, есть ли в перемещении заказ, то Ставим в резерв
+
             //Если перемещение под заказ, то резервируем
             if (!empty($document->order()))
-                $storageItem->movementReserve()->attach($movementProduct->id, ['quantity' => $movementProduct->quantity]);
+                $this->reserveService->ReserveWithMovement(
+                    $document->storageOut, $document->storageIn,
+                    $movementProduct->orderItem,
+                    $movementProduct->quantity);
         }
         $document->completed();
         if (!empty($document->order())) {
             //TODO Если есть в перемещении заказ, Оповещаем менеджера
         }
-
 
     }
 
@@ -111,7 +123,7 @@ class MovementService
         $movement->delete();
     }
 
-    public function add(MovementDocument $movement,array $request): MovementDocument
+    public function add(MovementDocument $movement, array $request): MovementDocument
     {
         if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
 

@@ -26,10 +26,6 @@
                     {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
                     <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
                     </x-base.button>
-                    <a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.movement.edit', $movement) }}">
-                        <x-base.lucide icon="check-square" class="w-4 h-4"/>
-                        Редактировать параметры</a>
-
                 </div>
             </form>
             @endif
@@ -76,7 +72,10 @@
         <div class="w-20 text-center">№ п/п</div>
         <div class="w-1/4 text-center">Товар</div>
         <div class="w-40 text-center">Кол-во</div>
-        <div class="w-40 text-center">Цена</div>
+        <div class="w-40 text-center">{{ $movement->storageOut->name }}</div>
+        <div class="w-40 text-center">{{ $movement->storageIn->name }}</div>
+
+
     </div>
     @foreach($movement->movementProducts as $i => $item)
         <div class="box flex items-center px-2" data-id="{{ $item->id }}"
@@ -97,10 +96,17 @@
                 >
                 <div id="input-quantity" class="input-group-text">шт.</div>
             </div>
+
+
             <div class="w-40 input-group">
                 <input id="cost-{{ $item->id }}" type="number" class="form-control text-right departure-input-listen"
-                       value="{{ $item->cost }}" aria-describedby="input-quantity" min="0" readonly>
-                <div id="input-quantity" class="input-group-text">₽</div>
+                       value="{{ $item->product->getQuantity($movement->storageOut->id) }}" aria-describedby="input-quantity" min="0" readonly>
+                <div id="input-quantity" class="input-group-text">шт</div>
+            </div>
+            <div class="w-40 input-group">
+                <input id="cost-{{ $item->id }}" type="number" class="form-control text-right departure-input-listen"
+                       value="{{ $item->product->getQuantity($movement->storageIn->id) }}" aria-describedby="input-quantity" min="0" readonly>
+                <div id="input-quantity" class="input-group-text">шт</div>
             </div>
             @if($movement->isDraft())
                 <button class="btn btn-outline-danger ml-6" type="button" onclick="document.getElementById('form-delete-item-{{ $item->id }}').submit();">
@@ -123,11 +129,7 @@
                    value="{{ $info['quantity'] }}" aria-describedby="input-quantity" min="0" readonly>
             <div id="input-quantity" class="input-group-text">шт.</div>
         </div>
-        <div class="w-40 input-group">
-            <input id="cost-amount" type="number" class="form-control text-right departure-input-listen"
-                   value="{{ $info['cost'] }}" aria-describedby="input-quantity" min="0" readonly>
-            <div id="input-quantity" class="input-group-text">₽</div>
-        </div>
+
     </div>
 
 
@@ -162,7 +164,7 @@
                     let data = JSON.parse(request.responseText);
                     if (data.quantity !== undefined) {
                         document.getElementById('quantity-amount').value = data.quantity;
-                        document.getElementById('cost-amount').value = data.cost;
+                       // document.getElementById('cost-amount').value = data.cost;
                     }
                 } else {
                 }

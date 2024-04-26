@@ -271,7 +271,7 @@ class Promotion extends Model implements DataWidgetInterface
                 'title' => $product->getName(),
                 'price' => $product->getLastPrice(),
                 'discount' => ceil($product->getLastPrice() * ((100 - $this->getDiscount($product->id)) / 100)),
-                'count' => $product->count_for_sell,
+                'count' => $product->getCountSell(),
             ];
         }, $this->products()->getModels());
         return $data;

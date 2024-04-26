@@ -42,6 +42,7 @@ class ExpenseController extends Controller
     {
         return $this->try_catch_ajax(function () use ($request) {
             $data = json_decode($request['data'], true);
+
             $expense = $this->service->create($data);
             return response()->json(route('admin.sales.expense.show', $expense));
         });

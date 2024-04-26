@@ -19,10 +19,9 @@ class StorageCommand extends Command
             $count_reserves = $product->getReserveCount();
             $count_storages = $this->getStorageCount($product);
             $new_count = $count_storages - $count_reserves;
-            if ($new_count != $product->count_for_sell) {
-                $this->info('Изменено кол-во для товара ' . $product->name . ' ' . $product->count_for_sell . ' => ' . $new_count);
-                $product->count_for_sell = $new_count;
-                $product->save();
+            if ($new_count != $product->getCountSell()) {
+                $this->info('Изменено кол-во для товара ' . $product->name . ' ' . $product->getCountSell() . ' => ' . $new_count);
+                $product->setCountSell($new_count);
             }
 
         }

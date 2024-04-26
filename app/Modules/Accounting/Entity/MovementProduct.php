@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,11 +12,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $movement_id
  * @property int $product_id
  * @property int $quantity
- * @property float $cost
+ * @property int $order_item_id
  * @property Product $product
  * @property MovementDocument $document
  * @property StorageDepartureItem $departureItem
  * @property StorageArrivalItem $arrivalItem
+ * @property OrderItem $orderItem
  */
 class MovementProduct extends Model implements MovementItemInterface
 {
@@ -24,6 +26,7 @@ class MovementProduct extends Model implements MovementItemInterface
     protected $fillable = [
         'movement_id',
         'product_id',
+        'order_item_id',
         'quantity',
         'cost',
     ];
@@ -56,5 +59,11 @@ class MovementProduct extends Model implements MovementItemInterface
     public function arrivalItem()
     {
         return $this->hasOne(StorageArrivalItem::class, 'movement_product_id', 'id');
+    }
+
+
+    public function orderItem()
+    {
+        return $this->belongsTo(OrderItem::class, 'order_item_id', 'id');
     }
 }

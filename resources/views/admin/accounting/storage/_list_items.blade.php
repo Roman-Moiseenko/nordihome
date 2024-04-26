@@ -9,7 +9,7 @@
     <x-base.table.td class="text-center">{{ $item->product->category->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $item->quantity }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $item->inMovementHTML() }}</x-base.table.td>
-    <x-base.table.td class="text-center"> {{ $item->inReserve() . ' / ' . $item->inReserveMovement() }} </x-base.table.td>
-    <x-base.table.td class="text-center">{{ $item->product->count_for_sell }}</x-base.table.td>
+    <x-base.table.td class="text-center"> {{ $item->getQuantityReserve() }} </x-base.table.td>
+    <x-base.table.td class="text-center">{{ $item->product->getCountSell() }}</x-base.table.td>
 
 </x-base.table.tr>

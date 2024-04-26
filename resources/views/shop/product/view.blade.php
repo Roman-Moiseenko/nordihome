@@ -54,7 +54,7 @@
                             <span class="base-price">{{ price($product->getLastPrice()) }}</span>
                         @endif
                         <div class="count-product">
-                            @if($product->count_for_sell > 0)
+                            @if($product->getCountSell() > 0)
                                 Товар в наличии
                             @else
                                 Только под заказ

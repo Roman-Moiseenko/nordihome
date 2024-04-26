@@ -13,6 +13,7 @@ use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Helpers\OrderHelper;
 use App\Modules\Order\Repository\OrderRepository;
+use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\SalesService;
 use App\Modules\Product\Entity\Product;
@@ -33,13 +34,15 @@ class OrderController extends Controller
     private OrderRepository $repository;
     private ProductRepository $products;
     private OrderService $orderService;
+    private OrderReserveService $reserveService;
 
     public function __construct(
-        SalesService      $service,
-        OrderService      $orderService,
-        StaffRepository   $staffs,
-        OrderRepository   $repository,
-        ProductRepository $products)
+        OrderReserveService $reserveService,
+        SalesService        $service,
+        OrderService        $orderService,
+        StaffRepository     $staffs,
+        OrderRepository     $repository,
+        ProductRepository   $products)
     {
         $this->middleware(['auth:admin', 'can:order']);
         $this->service = $service;
@@ -48,6 +51,7 @@ class OrderController extends Controller
         $this->products = $products;
         $this->orderService = $orderService;
         //TODO загрузка процента по сборке
+        $this->reserveService = $reserveService;
     }
 
     public function index(Request $request)
@@ -86,14 +90,15 @@ class OrderController extends Controller
 
         });
     }
-/*
-    public function create(Request $request)
-    {
-        $menus = OrderHelper::menuNewOrder();
-        $storages = Storage::get();
-        return view('admin.sales.order.create', compact('menus', 'storages'));
-    }
-*/
+
+    /*
+        public function create(Request $request)
+        {
+            $menus = OrderHelper::menuNewOrder();
+            $storages = Storage::get();
+            return view('admin.sales.order.create', compact('menus', 'storages'));
+        }
+    */
     public function store(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
@@ -113,7 +118,7 @@ class OrderController extends Controller
     public function add_item(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
-            $order = $this->orderService->add_item($order, $request->only(['product_id', 'quantity']));
+            $order = $this->orderService->add_product($order, (int)$request['product_id'], (int)$request['quantity']);
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
@@ -220,10 +225,13 @@ class OrderController extends Controller
         });
     }
 
-    public function paid_order(Request $request, Order $order)
+
+    //Работа с резервом
+
+    public function collect_reserve(OrderItem $item, Request $request)
     {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->paidOrder($order, $request['document']);
+        return $this->try_catch_admin(function () use ($item, $request) {
+            $this->reserveService->CollectReserve($item, (int)$request['storage_in'], (int)$request['quantity']);
             return redirect()->back();
         });
     }
@@ -344,7 +352,7 @@ class OrderController extends Controller
             /** @var Product $product */
             foreach ($products as $product) {
                 $result[] = array_merge($this->products->toArrayForSearch($product),
-                    ['count' => $product->count_for_sell]
+                    ['count' => $product->getCountSell()]
                 );
             }
             return \response()->json($result);
@@ -360,8 +368,8 @@ class OrderController extends Controller
             /** @var Product $product */
             $product = Product::find($product_id);
 
-            $free_count = min($quantity, $product->count_for_sell);
-            $preorder_count = max($quantity - $product->count_for_sell, 0);
+            $free_count = min($quantity, $product->getCountSell());
+            $preorder_count = max($quantity - $product->getCountSell(), 0);
             $base_params = [
                 'id' => $product_id,
                 'code' => $product->code,
@@ -376,7 +384,7 @@ class OrderController extends Controller
             if ($free_count > 0) {
                 $free = array_merge($base_params, [
                     'count' => $free_count,
-                    'max' => $product->count_for_sell,
+                    'max' => $product->getCountSell(),
                     'preorder' => false,
                 ]);
 
@@ -400,4 +408,6 @@ class OrderController extends Controller
             return \response()->json($result);
         });
     }
+
+
 }

@@ -9,6 +9,7 @@ use App\Modules\User\Entity\CartStorage;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 use function now;
 
 /**
@@ -17,6 +18,7 @@ use function now;
  * @property int $product_id
  * @property int $quantity
  * @property int $storage_id
+ *
  * @property Carbon $created_at
  * @property Carbon $reserve_at
  * @property Product $product
@@ -25,7 +27,7 @@ use function now;
  * @property OrderItem $orderItem
  * @property string $type
  */
-
+#[Deprecated]
 class Reserve extends Model
 {
 

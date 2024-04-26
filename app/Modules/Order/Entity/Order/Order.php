@@ -6,6 +6,7 @@ namespace App\Modules\Order\Entity\Order;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Discount\Entity\Discount;
+use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -182,36 +183,18 @@ class Order extends Model
         }
     }
 
-    /**
-     * Для каждого товара в заказе назначаем склад резерва
-     * @param $storage_id
-     * @return void
-     */
-    #[Deprecated]
-    public function setStorage($storage_id)
-    {
-        foreach ($this->items as $item) {
-            $item->reserve->setStorage($storage_id);
-            $item->reserve->save();
-        }
-    }
 
     public function setManager(int $staff_id)
     {
         if ($this->manager_id != null) throw new \DomainException('Менеджер уже назначен, нельзя менять');
         $this->manager_id = $staff_id;
         $this->save();
-
-        //$this->responsible()->save(OrderResponsible::registerManager($staff->id));
     }
 
     public function setReserve(Carbon $addDays)
     {
         foreach ($this->items as $item) {
-            if (!is_null($item->reserve)) {
-                $item->reserve->reserve_at = $addDays;
-                $item->reserve->save();
-            }
+            $item->updateReserves($addDays);
         }
     }
 
@@ -270,8 +253,10 @@ class Order extends Model
         if ($this->items()->count() == 0) return now();
         $item = $this->items()->where('preorder', false)->first();
         //TODO Переделать
-        if (is_null($item->reserve)) return now(); //throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
-        return $item->reserve->reserve_at;
+        if (is_null($item->reserves)) return now(); //throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
+        /** @var OrderReserve $reserve */
+        $reserve = $item->reserves()->first();
+        return $reserve->reserve_at;
     }
 
     /**
@@ -581,6 +566,13 @@ class Order extends Model
         $comment = '';
         if (!empty($this->status->comment)) $comment = ' (' . $this->status->comment . ')';
         return OrderStatus::STATUSES[$this->status->value] . $comment;
+    }
+
+    public function clearReserve()
+    {
+        foreach ($this->items as $item) {
+            $item->clearReserves();
+        }
     }
 
 }

@@ -13,7 +13,9 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Service\ReserveService;
+use App\Modules\Order\Entity\OrderReserve;
+use App\Modules\Order\Service\OrderReserveService;
+
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,13 +25,13 @@ class ArrivalService
 {
     private StorageService $storages;
     private DistributorService $distributors;
-    private ReserveService $reserveService;
+    private OrderReserveService $reserveService;
     private MovementService $movementService;
 
     public function __construct(
         StorageService $storages,
         DistributorService $distributors,
-        ReserveService $reserveService,
+        OrderReserveService $reserveService,
         MovementService $movementService
     )
     {
@@ -165,6 +167,13 @@ class ArrivalService
             $orders_movement = [];
             $storages_movement = [];
             foreach ($arrival->supply->stacks as $stack) {
+                //Поступления, для которых есть стек из заказа, ставим в резерв
+                if (!is_null($stack->orderItem)) {
+                    $this->reserveService->toReserveStorage($stack->orderItem, $arrival->storage, $stack->quantity);
+                    $stack->orderItem->preorder = false;
+                    $stack->orderItem->save();
+                }
+
                 if ($stack->storage_id != $arrival->storage_id) { //Хранилище отличается, требуется Перемещение
 
                     if (!is_null($stack->orderItem)) { //Из заказа
@@ -186,10 +195,11 @@ class ArrivalService
                     'storage_out' => $arrival->storage_id,
                     'storage_in' => $stacks[0]->storage_id, //По первому элементу определяем хранилище
                 ]);
+
                 $order->movements()->attach($movement->id);
 
                 foreach ($stacks as $stack) {
-                    $movement->addProduct($stack->product, $stack->quantity);
+                    $movement->addProduct($stack->product, $stack->quantity, $stack->orderItem->id);
                 }
                 $movement->refresh();
                 $this->movementService->activate($movement);
@@ -212,6 +222,7 @@ class ArrivalService
             }
 
             //Проходим по стеку к заказу поставщика
+            /*
             foreach ($arrival->supply->stacks as $stack) {
                 //Если у стека есть элемент Заказа Клиента и совпадает Хранилище
                 if (!empty($stack->orderItem)) {
@@ -221,10 +232,9 @@ class ArrivalService
                         'order',
                         24 * 60 * 3,
                         $stack->orderItem->order->user_id);
+
                     $stack->orderItem->reserve_id = $reserve->id;
                     $stack->orderItem->save();
-                    //TODO Ставить в резерв хранилищу только из текущего склада
-                    // для остальных после перемещения
                     if ($stack->storage_id == $arrival->storage_id) {
                         $reserve->storage_id = $stack->storage_id;
                         $reserve->save();
@@ -232,6 +242,7 @@ class ArrivalService
                 }
 
             }
+            */
         }
 
         event(new ArrivalHasCompleted($arrival));

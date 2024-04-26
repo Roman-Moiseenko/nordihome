@@ -3,12 +3,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Telegram;
 
-use App\Modules\Accounting\Service\MovementService;
-use App\Modules\Accounting\Service\StorageService;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderStatus;
-use App\Modules\Order\Service\ReserveService;
-use App\Modules\Order\Service\SalesService;
+
 use Illuminate\Console\Command;
 
 class SetWebHookCommand extends Command

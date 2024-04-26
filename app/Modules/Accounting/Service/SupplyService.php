@@ -49,12 +49,10 @@ class SupplyService
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
-        $supply = SupplyDocument::register($distributor->id, '', $manager->id);
-
-        return $supply;
+        return SupplyDocument::register($distributor->id, '', $manager->id);
     }
 
-    public function create(int $distributor_id, array $data)
+    public function create(int $distributor_id, array $data): SupplyDocument
     {
         $distributor = Distributor::find($distributor_id);
         $supply = $this->create_empty($distributor);

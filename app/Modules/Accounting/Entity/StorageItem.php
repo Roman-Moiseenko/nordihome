@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property Product $product
  * @property MovementProduct $movementReserve
+ * @property OrderReserve[] $orderReserves
  * @property Storage $storage
  */
 class StorageItem extends Model
@@ -31,31 +33,24 @@ class StorageItem extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    /**
-     * В резерве на текущем складе
-     * @return int
-     */
-    public function inReserve(): int
-    {
-        return $this->product->reserves()->where('storage_id', $this->storage_id)->sum('quantity');
-    }
 
+/*
     public function inReserveMovement(int $order_id = null): int
     {
         $quantity = 0;
-        /** @var MovementProduct $item */
+
         foreach ($this->movementReserve as $item) {
             if (is_null($order_id)) {
                 $quantity += $item->pivot->quantity;
             } else {
                 $order = $item->document->order();
-                if ($order->id != $order_id) {
+                if ($order->id == $order_id) {
                     $quantity += $item->pivot->quantity;
                 }
             }
         }
         return $quantity;
-    }
+    }*/
 
     public function getDeparture(): int
     {
@@ -92,14 +87,52 @@ class StorageItem extends Model
         $this->save();
     }
 
-    public function movementReserve()
-    {
-        return $this->belongsToMany(MovementProduct::class, 'storages_movements', 'storage_item_id', 'movement_item_id')->withPivot(['quantity']);
-    }
-
     public function storage()
     {
         return $this->belongsTo(Storage::class, 'storage_id', 'id');
     }
 
+
+    public function orderReserves()
+    {
+        return $this->hasMany(OrderReserve::class, 'storage_item_id', 'id');
+    }
+
+
+    public function orderReserve(int $order_id):? OrderReserve
+    {
+        foreach ($this->orderReserves as $orderReserve) {
+            if ($orderReserve->orderItem->order_id == $order_id) return $orderReserve;
+        }
+        return null;
+    }
+    //Кол-во товара
+
+    /**
+     * Свободное кол-во для продажи на текущем складе, кроме заказа $order_id
+     * @param int|null $order_id
+     * @return int
+     */
+    public function getFreeToSell(int $order_id = null): int
+    {
+        return $this->quantity - $this->getQuantityReserve($order_id);
+    }
+
+    /**
+     * Кол-во товара в резерве для текущего склада
+     * @param int|null $order_id
+     * @return int
+     */
+    public function getQuantityReserve(int $order_id = null): int
+    {
+        $quantity = 0;
+        foreach ($this->orderReserves  as $orderReserve) {
+            if ($order_id != $orderReserve->orderItem->order_id) $quantity += $orderReserve->quantity;
+        }
+        return $quantity;
+    }
+
+    public function getReserveByOrderItem(int $id)
+    {
+    }
 }

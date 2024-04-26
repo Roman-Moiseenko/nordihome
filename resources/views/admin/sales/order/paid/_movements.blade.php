@@ -1,7 +1,7 @@
 <div class="box flex items-center font-semibold p-2">
     <div class="w-20 text-center">№ п/п</div>
-    <div class="w-32 text-center">Склад прибытия</div>
     <div class="w-32 text-center">Склад убытия</div>
+    <div class="w-32 text-center">Склад прибытия</div>
     <div class="w-32 text-center">Статус</div>
 </div>
 @foreach($order->movements as $i => $movement)

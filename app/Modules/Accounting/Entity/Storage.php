@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Entity\Photo;
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -56,6 +55,7 @@ class Storage extends Model
         ]);
     }
 
+    //*** SET-...
     public function setAddress(string $post, string $city, string $address)
     {
         $this->update([
@@ -80,56 +80,7 @@ class Storage extends Model
         $this->save();
     }
 
-    public function organization()
-    {
-        return $this->belongsTo(Organization::class, 'organization_id', 'id');
-    }
-
-    public function items()
-    {
-        return $this->hasMany(StorageItem::class, 'storage_id', 'id');
-    }
-
-    public function departureItems()
-    {
-        return $this->hasMany(StorageDepartureItem::class, 'storage_id', 'id');
-    }
-
-    public function arrivalItems()
-    {
-        return $this->hasMany(StorageArrivalItem::class, 'storage_id', 'id');
-    }
-
-    public function add(Product $product, int $quantity): StorageItem
-    {
-        foreach ($this->items as $item) {
-            if ($item->product->id == $product->id) {
-                $item->quantity += $quantity;
-                $item->save();
-                return $item;
-            }
-        }
-        return $this->items()->create([
-            'product_id' => $product->id,
-            'quantity' => $quantity
-        ]);
-    }
-
-    public function sub(Product $product, int $quantity)
-    {
-        foreach ($this->items as $item) {
-            if ($item->product->id == $product->id) {
-                $item->quantity -= $quantity;
-                $item->save();
-                return;
-            }
-        }
-    }
-
-    public function photo()
-    {
-        return $this->morphOne(Photo::class, 'imageable')->withDefault();
-    }
+    //*** GET-...
 
     public function getImage(): string
     {
@@ -143,19 +94,18 @@ class Storage extends Model
     public function getQuantity(Product $product): int
     {
         //Более быстрый вариант
-        return StorageItem::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
-/*
-        foreach ($this->items as $item) {
-            if ($item->product->id == $product->id) {
-                return $item->quantity;
-            }
-        }
-        return 0;*/
+        //return StorageItem::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
+        $storageItem = $this->getItem($product);
+        if (is_null($storageItem)) return 0;
+        return $storageItem->quantity;
     }
 
     public function getReserve(Product $product): int
     {
-        return Reserve::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
+        $storageItem = $this->getItem($product);
+        if (is_null($storageItem)) return 0;
+
+        return $storageItem->getQuantityReserve();
     }
 
     //TODO Использование ??? Переименовать в getAvailable ???
@@ -164,14 +114,15 @@ class Storage extends Model
         return $this->getQuantity($product) - $this->getReserve($product) - $this->getDeparture($product);
     }
 
-    public function getItem(Product $product): StorageItem
+    public function getItem(Product $product):? StorageItem
     {
         foreach ($this->items as $item) {
             if ($item->product->id == $product->id) {
                 return $item;
             }
         }
-        throw new \DomainException('Товар Id=' . $product->id . ' В хранилище не найден');
+        return null;
+       //throw new \DomainException('Товар Id=' . $product->id . ' В хранилище не найден');
     }
 
     public function getDeparture(Product $product): int
@@ -201,8 +152,61 @@ class Storage extends Model
         */
     }
 
-   /* public function getAvailable(Product $product): int
+    //*** RELATIONS
+    public function organization()
     {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
 
-    }*/
+    public function items()
+    {
+        return $this->hasMany(StorageItem::class, 'storage_id', 'id');
+    }
+
+    public function departureItems()
+    {
+        return $this->hasMany(StorageDepartureItem::class, 'storage_id', 'id');
+    }
+
+    public function arrivalItems()
+    {
+        return $this->hasMany(StorageArrivalItem::class, 'storage_id', 'id');
+    }
+
+    public function photo()
+    {
+        return $this->morphOne(Photo::class, 'imageable')->withDefault();
+    }
+
+
+    public function add(Product $product, int $quantity): StorageItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->product->id == $product->id) {
+                $item->quantity += $quantity;
+                $item->save();
+                return $item;
+            }
+        }
+        return $this->items()->create([
+            'product_id' => $product->id,
+            'quantity' => $quantity
+        ]);
+    }
+
+    public function sub(Product $product, int $quantity)
+    {
+        foreach ($this->items as $item) {
+            if ($item->product->id == $product->id) {
+                $item->quantity -= $quantity;
+                $item->save();
+                return;
+            }
+        }
+    }
+
+
+
+
+
 }

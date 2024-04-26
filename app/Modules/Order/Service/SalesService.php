@@ -14,6 +14,7 @@ use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderPaymentRefund;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\UserPayment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use JetBrains\PhpStorm\ArrayShape;
@@ -22,17 +23,14 @@ use JetBrains\PhpStorm\Deprecated;
 class SalesService
 {
 
-    private ReserveService $reserveService;
     private MovementService $movements;
     private ExpenseService $expenseService;
 
     public function __construct(
-        ReserveService $reserveService,
         MovementService $movements,
         ExpenseService $expenseService
     )
     {
-        $this->reserveService = $reserveService;
         $this->movements = $movements;
         $this->expenseService = $expenseService;
     }
@@ -49,12 +47,7 @@ class SalesService
     public function setReserveService(Order $order, string $date, string $time)
     {
         $new_reserve = $date . ' ' . $time . ':00';
-        foreach ($order->items as $item) {
-            if (!is_null($item->reserve))
-                $item->reserve->update([
-                    'reserve_at' => $new_reserve,
-                ]);
-        }
+        $order->setReserve(Carbon::parse($new_reserve));
     }
 
 
@@ -86,30 +79,6 @@ class SalesService
         flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
     }
 
-    /**
-     * Установка вручную стоимости доставки
-     * @param Order $order
-     * @param float $cost
-     * @return void
-     */
-    #[Deprecated]
-    public function setDelivery(Order $order, float $cost)
-    {
-        //TODO Переработать Возможно отменить
-        /** @var UserPayment $userPayment */
-        $userPayment = UserPayment::where('user_id', $order->user_id)->first();
-
-        if ($order->delivery->cost != 0) {
-            $pay = OrderAddition::where('order_id', $order->id)->where('amount', $order->delivery->cost)->first();
-            if (!empty($pay)) $pay->delete();
-        }
-
-        $order->delivery->cost = $cost;
-        $order->delivery->save();
-
-        $payment = OrderAddition::new($cost, OrderAddition::PAY_DELIVERY);
-        $order->additions()->save($payment);
-    }
 
     public function destroy(Order $order)
     {
@@ -122,24 +91,9 @@ class SalesService
 
     public function canceled(Order $order, string $comment)
     {
-        foreach ($order->items as $item) {
-            if (!is_null($item->reserve)) $this->reserveService->delete($item->reserve);
-        }
+        $order->clearReserve();
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         event(new OrderHasCanceled($order));
-    }
-
-    public function paidOrder(Order $order, string $document)
-    {
-        $order->setPaid();
-        //Все неоплаченные платежи переводим в статус Оплачено.
-        foreach ($order->payments as $paymentOrder) {
-            if (!$paymentOrder->isPaid()) {
-                $paymentOrder->document = $document;
-                $paymentOrder->paid_at = now();
-                $paymentOrder->save();
-            }
-        }
     }
 
     public function setStatus(Order $order, int $status)
@@ -152,9 +106,8 @@ class SalesService
         //TODO Возврат денег!!!!Алгоритм?? Тестить!
         $order->setStatus(OrderStatus::REFUND, $comment);
         //Возврат товаров в продажу
-        foreach ($order->items as $item) {
-            $this->reserveService->delete($item->reserve);
-        }
+
+        $order->clearReserve();
         //Все платежи на возврат
         foreach ($order->payments as $payment) {
             //Платежный документ для возврата
@@ -173,14 +126,8 @@ class SalesService
         $order->setStatus(OrderStatus::COMPLETED);
         $order->finished = true;
         $order->save();
-        $storage = $order->delivery->point;
-        //Удаляем резерв
-        foreach ($order->items as $item) {
-            $itemStorage = $storage->getItem($item->product);
-            $itemStorage->quantity -= $item->reserve->quantity;
-            $itemStorage->save();
-            $item->reserve->delete();
-        }
+        //TODO !!!!!
+
     }
 
     public function createOrder(Request $request)

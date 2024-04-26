@@ -15,11 +15,11 @@
 
     </div>
     <div class="w-20 px-1 text-center">
-        <div>{{  $edit ? (($item->product->count_for_sell + $item->quantity) . ' шт.') : '-' }} </div>
+        <div>{{  $edit ? (($item->product->getCountSell() + $item->quantity) . ' шт.') : '-' }} </div>
 
         <input id="quantity-{{ $item->id }}" type="number" class="form-control text-center update-data-ajax"
                value="{{ $item->quantity }}" aria-describedby="input-quantity"
-               min="1" @if(!$item->preorder) max="{{ $item->product->count_for_sell + $item->quantity }}"
+               min="1" @if(!$item->preorder) max="{{ $item->product->getCountSell() + $item->quantity }}"
                @endif data-id="{{ $item->id }}" @if(!$edit) readonly @endif
                data-route="{{ route('admin.sales.order.update-quantity', $item) }}"
         >
@@ -27,7 +27,7 @@
     </div>
     <div class="w-40 text-center">
         @foreach($item->product->getStorageItems() as $storageItem)
-            {{ $storageItem->quantity . ' / ' . $storageItem->inReserveMovement() . ' / ' . $storageItem->storage->name }}<br>
+            {{ $storageItem->quantity . ' / ' . $storageItem->getQuantityReserve($order->id) . ' / ' . $storageItem->storage->name }}<br>
         @endforeach
 
 

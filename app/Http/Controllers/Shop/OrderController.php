@@ -4,15 +4,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Shop;
 
 use App\Events\ThrowableHasAppeared;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Delivery\Service\DeliveryService;
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\PaymentService;
-use App\Modules\Order\Service\ReserveService;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
-use App\Modules\User\Entity\CartStorage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -26,8 +22,7 @@ class OrderController extends Controller
     private PaymentService $payments;
     private DeliveryService $deliveries;
     private OrderService $service;
-    private ReserveService $reserves;
-    private $minutes;
+
     private ParserCart $parserCart;
 
     public function __construct(
@@ -35,8 +30,7 @@ class OrderController extends Controller
         ParserCart      $parserCart,
         PaymentService  $payments,
         DeliveryService $deliveries,
-        OrderService    $service,
-        ReserveService  $reserves
+        OrderService    $service
     )
     {
         $this->middleware('auth:user', ['except' => 'create_click']);
@@ -44,16 +38,14 @@ class OrderController extends Controller
         $this->payments = $payments;
         $this->deliveries = $deliveries;
         $this->service = $service;
-        $this->reserves = $reserves;
-        $this->minutes = (new Options())->shop->reserve_cart;
         $this->parserCart = $parserCart;
     }
 
     public function create(Request $request)
     {
         try {
-            //TODO !!!!! Перенести куда-нибудь
             //Постановка в Резерв товара
+  /*
             foreach ($this->cart->getOrderItems() as $item) {
                 if ($item->reserve == null) {
                     $reserve = $this->reserves->toReserve(
@@ -67,7 +59,7 @@ class OrderController extends Controller
                     $item->reserve->update(['reserve_at' => now()->addMinutes($this->minutes)]);
                 }
             }
-
+*/
 
             $cart = $this->cart->getCartToFront($request['tz']);
             $preorder = 1;

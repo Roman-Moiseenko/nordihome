@@ -7,7 +7,7 @@
     <x-base.table.td class="w-40"><a href="{{ route('admin.product.edit', $item->product) }}"
                                      class="font-medium whitespace-nowrap">{{ $item->product->name }}</a></x-base.table.td>
     <x-base.table.td class="text-center">{{ $item->cost . ' ' . $item->distributor->currency->sign }}</x-base.table.td>
-    <x-base.table.td class="text-center">{{ $item->product->count_for_sell }}</x-base.table.td>
+    <x-base.table.td class="text-center">{{ $item->product->getCountSell() }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ price($item->product->getLastPrice()) }}</x-base.table.td>
 
 </x-base.table.tr>

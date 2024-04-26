@@ -10,8 +10,6 @@
             <div class="p-5">
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
-                        {{ \App\Forms\Input::create('number', ['placeholder' => 'Номер', 'value' => $movement->number ?? '', 'class' => 'mt-5'])->show() }}
-
                         <x-base.form-label for="select-storage-out" class="mt-3">Хранилище Убытие</x-base.form-label>
                         <x-base.tom-select id="select-storage-out" name="storage_out" class="w-full" data-placeholder="Выберите хранилище">
                             <option value="0"></option>

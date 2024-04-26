@@ -109,6 +109,6 @@ class ProductController extends Controller
 
     public function count_for_sell(Product $product)
     {
-        return response()->json($product->count_for_sell);
+        return response()->json($product->getCountSell());
     }
 }

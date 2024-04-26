@@ -9,9 +9,8 @@ use App\Events\ThrowableHasAppeared;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
-use App\Modules\Order\Entity\Reserve;
-use App\Modules\Order\Service\ReserveService;
-use App\Modules\Shop\Parser\HttpPage;
+use App\Modules\Order\Entity\OrderReserve;
+use App\Modules\Order\Service\OrderReserveService;
 use Illuminate\Console\Command;
 
 class ReserveCommand extends Command
@@ -24,34 +23,38 @@ class ReserveCommand extends Command
         $this->info('Резерв - проверка');
 
         try {
-            $reserveService = new ReserveService();
+            $reserveService = new OrderReserveService();
             /** @var Order[] $orders */
             $orders = [];
 
-            $reserves = Reserve::where('reserve_at', '<', now())->where('quantity', '>', 0)->get();
+            //$reserves = Reserve::where('reserve_at', '<', now())->where('quantity', '>', 0)->get();
+            $reserves = OrderReserve::where('reserve_at', '<', now())->where('quantity', '>', 0)->get();
+
             if ($reserves->count() > 0) {
                 $logger = LoggerCron::new($this->description);
-                /** @var Reserve $reserve */
+                /** @var OrderReserve $reserve */
                 foreach ($reserves as $reserve) {
-                    if ($reserve->type == Reserve::TYPE_ORDER) {
-                        $order = $reserve->orderItem->order;
-                        if ($order->status->value < OrderStatus::AWAITING) {
-                            $this->deleteFromReserve($reserve, $reserveService, $logger);
-                            if ($order->checkOutReserve()) {
-                                $logger->items()->create([
-                                    'object' => $order->htmlDate() . ' ' . $order->htmlNum(),
-                                    'action' => 'Отменен на сумму',
-                                    'value' => price($order->total),
-                                ]);
+                    $order = $reserve->orderItem->order;
+                    if ($order->status->value < OrderStatus::AWAITING) {
+                        $logger->items()->create([
+                            'object' => $reserve->orderItem->product->name,
+                            'action' => 'Снято с резерва - ',
+                            'value' => $reserve->quantity . ' шт.',
+                        ]);
+                        $reserve->delete();
 
-                                $order->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
-                                event(new OrderHasCanceled($order));
-                            }
-                        } else {
-                            $orders[$order->id] = $order;
+                        if ($order->checkOutReserve()) {
+                            $logger->items()->create([
+                                'object' => $order->htmlDate() . ' ' . $order->htmlNum(),
+                                'action' => 'Отменен на сумму',
+                                'value' => price($order->total),
+                            ]);
+
+                            $order->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
+                            event(new OrderHasCanceled($order));
                         }
                     } else {
-                        $this->deleteFromReserve($reserve, $reserveService, $logger);
+                        $orders[$order->id] = $order;
                     }
                 }
             }
@@ -72,14 +75,4 @@ class ReserveCommand extends Command
         }
     }
 
-    private function deleteFromReserve($reserve, $service, LoggerCron $logger)
-    {
-
-        $service->delete($reserve);
-        $logger->items()->create([
-            'object' => $reserve->product->name,
-            'action' => 'Снято с резерва - ' . $reserve->type,
-            'value' => $reserve->quantity . ' шт.',
-        ]);
-    }
 }

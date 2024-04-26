@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\ArrivalService;
 use App\Modules\Accounting\Service\MovementService;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -128,13 +129,15 @@ class MovementTest extends TestCase
         $product = Product::register('Товар ' . $random, '001.00-' . $random, $this->category->id);
         $product->setPrice(rand(1, 99) * 100);
         $product->published = true;
-        $product->count_for_sell = 0;
+        //$product->setCountSell(0);
         $product->save();
         return $product;
     }
 
     private function actualData()
     {
+        $staff = Admin::find(1);
+        $this->actingAs($staff, 'admin');
         $this->category = Category::register('Main');
         $this->organization = Organization::register('Company');
         $currency = Currency::register('Валюта', 'Вл', 100);

@@ -60,9 +60,9 @@ class OrdersTest extends TestCase
         $product_discount = $this->product(self::PRODUCTS['product_discount']);
 
         //Добавляем товар
-        $this->orderService->add_item($this->order, ['product_id' => $product->id, 'quantity' => 10]);
-        $this->orderService->add_item($this->order, ['product_id' => $product_pre->id, 'quantity' => 10]);
-        $this->orderService->add_item($this->order, ['product_id' => $product_discount->id, 'quantity' => 10]);
+        $this->orderService->add_product($this->order, $product->id,  10);
+        $this->orderService->add_product($this->order, $product_pre->id,  10);
+        $this->orderService->add_product($this->order, $product_discount->id, 10);
         $this->order->refresh();
 
         //Проверка на калькулятор
@@ -211,7 +211,7 @@ class OrdersTest extends TestCase
         $product = Product::register('Товар ' . $random, '001.00-' . $random, $this->category->id);
         $product->setPrice($price);
         $product->published = true;
-        $product->count_for_sell = $quantity;
+        $product->setCountSell($quantity);
         $product->save();
         $this->toStorage($product);
         self::assertEquals($quantity, $this->storage->getQuantity($product));
@@ -255,7 +255,7 @@ class OrdersTest extends TestCase
     {
         $this->storage->items()->create([
             'product_id' => $product->id,
-            'quantity' => $product->count_for_sell,
+            'quantity' => $product->getCountSell(),
         ]);
         $this->storage->refresh();
     }

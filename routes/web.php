@@ -368,6 +368,9 @@ Route::group(
                         Route::delete('/{order}/destroy', 'OrderController@destroy')->name('destroy');
                         Route::delete('/del-payment/{payment}', 'OrderController@del_payment')->name('del-payment');
                         Route::post('/{item}/update-quantity', 'OrderController@update_quantity')->name('update-quantity');
+                        Route::post('/{item}/collect-reserve', 'OrderController@collect_reserve')->name('collect-reserve');
+
+
                         Route::post('/{item}/update-sell', 'OrderController@update_sell')->name('update-sell');
                         Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
                         Route::post('/{order}/update-manual', 'OrderController@update_manual')->name('update-manual');
@@ -509,7 +512,7 @@ Route::group(
                 Route::resource('distributor', 'DistributorController'); //CRUD
                 Route::resource('currency', 'CurrencyController'); //CRUD
                 Route::resource('arrival', 'ArrivalController'); //CRUD
-                Route::resource('movement', 'MovementController'); //CRUD
+                Route::resource('movement', 'MovementController')->except(['edit', 'update']); //CRUD
                 Route::resource('departure', 'DepartureController'); //CRUD
                 Route::resource('supply', 'SupplyController'); //CRUD
                 Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD

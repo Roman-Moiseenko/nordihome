@@ -9,11 +9,9 @@ use App\Entity\Video;
 use App\Modules\Accounting\Entity\DistributorProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Discount\Entity\PromotionProduct;
-use App\Modules\Order\Entity\Reserve;
-use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
 use App\Modules\User\Entity\User;
@@ -21,6 +19,8 @@ use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Deprecated;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @property int $id
@@ -75,8 +75,9 @@ use Illuminate\Support\Str;
  * @property CartStorage[] $cartStorages
  * @property CartCookie[] $cartCookies
  * @property Wish[] $wishes
- * @property Reserve[] $reserves
-
+ * @property OrderReserve[] $reserves
+ * @property StorageItem[] $storageItems
+ * @property OrderItem[] $orderItems
  */
 class Product extends Model
 {
@@ -209,7 +210,7 @@ class Product extends Model
     public function isVisible(): bool
     {/*
         if ($this->status != self::STATUS_PUBLISHED) return false;
-        if ($this->count_for_sell == 0 and $this->sell_method == self::SELL_OFFLINE) return false;
+        if ($this->getCountSell() == 0 and $this->sell_method == self::SELL_OFFLINE) return false;
         if ($this->sell_method == self::SELL_OFFLINE) return false;
         return true;*/
         return true;
@@ -314,6 +315,7 @@ class Product extends Model
         return $this->slug;
     }
 
+    //*** ЦЕНЫ
     /**
      * @return float Последняя назначенная цена с учетом если цены не назначены
      */
@@ -397,17 +399,22 @@ class Product extends Model
         return $model->value;
     }
 
+    //*** КОЛ_ВО
     public function getReserveCount(): int
     {
         $result = 0;
-        foreach ($this->reserves as $reserve) {
-            $result += $reserve->quantity;
+        foreach ($this->storageItems as $storageItem) {
+            $result += $storageItem->getQuantityReserve();
         }
         return $result;
     }
 
-
-
+    #[Deprecated]
+    public function setCountSell(int $count): void
+    {
+        $this->count_for_sell = $count;
+        $this->save();
+    }
 
 
     /**
@@ -416,7 +423,37 @@ class Product extends Model
      */
     public function getCountSell(): int
     {
-        return $this->count_for_sell;
+        //return $this->count_for_sell;
+        //TODO Заменить на динамический подсчет
+        return $this->getQuantity() - $this->getQuantityReserve();
+    }
+
+    /**
+     * Кол-во товара на складах
+     * @param int|null $storage_id
+     * @return int
+     */
+    public function getQuantity(int $storage_id = null): int
+    {
+        $quantity = 0;
+        foreach ($this->storageItems as $storageItem) {
+            if (is_null($storage_id)) {
+                $quantity += $storageItem->quantity;
+            } else {
+                if ($storageItem->storage_id == $storage_id) return $storageItem->quantity;
+            }
+        }
+        return $quantity;
+    }
+
+    //TODO Переименовать
+    #[Pure] public function getQuantityReserve(): int
+    {
+        $quantity = 0;
+        foreach ($this->storageItems as $storageItem) {
+            $quantity += $storageItem->getQuantityReserve();
+        }
+        return $quantity;
     }
 
     /**
@@ -523,22 +560,24 @@ class Product extends Model
     }
 
 
+
     //*** RELATIONS
+    //ТОВАРНЫЙ УЧЕТ
+
+    public function storageItems()
+    {
+        return $this->hasMany(StorageItem::class, 'product_id', 'id');
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class, 'product_id', 'id');
+    }
 
     public function promotions()
     {
         return $this->belongsToMany(Promotion::class, 'promotions_products',
             'product_id', 'promotion_id')->withPivot('price');
-    }
-
-    public function reserves()
-    {
-        return $this->hasMany(Reserve::class, 'product_id', 'id');
-    }
-
-    public function wishes()
-    {
-        return $this->hasMany(Wish::class, 'product_id', 'id');
     }
 
     public function cartStorages()
@@ -551,49 +590,14 @@ class Product extends Model
         return $this->hasMany(CartCookie::class, 'product_id', 'id');
     }
 
-    public function series()
-    {
-        return $this->belongsTo(Series::class, 'series_id', 'id');
-    }
 
-    public function modification_product()
-    {
-        return $this->hasOne(ModificationProduct::class, 'product_id', 'id');
-    }
-
-    public function modification()
-    {
-        return $this->hasOneThrough(
-            Modification::class,
-            ModificationProduct::class,
-            'product_id',
-            'id',
-            'id',
-            'modification_id'
-        );
-        // return $this->belongsTo(Modification::class, 'product_id', 'id');
-    }
-
-    public function groups()
-    {
-        return $this->belongsToMany(Group::class, 'groups_products', 'product_id', 'group_id');
-    }
-
-    public function equivalent_product()
-    {
-        return $this->hasOne(EquivalentProduct::class, 'product_id', 'id');
-    }
-
-    public function equivalent()
-    {
-        return $this->belongsTo(Equivalent::class, 'product_id', 'id');
-    }
 
     public function prices()
     {
         return $this->hasMany(ProductPriceRetail::class, 'product_id', 'id')->orderByDesc('id');
     }
 
+    //ЦЕНЫ ****************
     public function pricesCost()
     {
         return $this->hasMany(ProductPriceCost::class, 'product_id', 'id')->orderByDesc('id');
@@ -619,8 +623,7 @@ class Product extends Model
         return $this->hasMany(ProductPriceMin::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-
-
+    //ХАРАКТЕРИСТИКИ ТОВАРА
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
@@ -678,20 +681,58 @@ class Product extends Model
         return $this->morphMany(Video::class, 'videoable');
     }
 
-
-    public function addCategory(Category $category)
+    public function series()
     {
-        //Проверка, если главной категории нет, то назначаем на главную
-
-        //Проверка на совпадение с главной и второстепенными
+        return $this->belongsTo(Series::class, 'series_id', 'id');
     }
+
+    public function modification_product()
+    {
+        return $this->hasOne(ModificationProduct::class, 'product_id', 'id');
+    }
+
+    public function modification()
+    {
+        return $this->hasOneThrough(
+            Modification::class,
+            ModificationProduct::class,
+            'product_id',
+            'id',
+            'id',
+            'modification_id'
+        );
+        // return $this->belongsTo(Modification::class, 'product_id', 'id');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'groups_products', 'product_id', 'group_id');
+    }
+
+    public function equivalent_product()
+    {
+        return $this->hasOne(EquivalentProduct::class, 'product_id', 'id');
+    }
+
+    public function equivalent()
+    {
+        return $this->belongsTo(Equivalent::class, 'product_id', 'id');
+    }
+
+    public function wishes()
+    {
+        return $this->hasMany(Wish::class, 'product_id', 'id');
+    }
+
+
+
 
     public static function boot()
     {
         parent::boot();
         self::saving(function (Product $product) {
             $product->dimensions_json = $product->dimensions->toSave();
-            if ($product->count_for_sell < 0) throw new \DomainException('Кол-во товаров должно быть >= 0');
+            if ($product->getCountSell() < 0) throw new \DomainException('Кол-во товаров должно быть >= 0');
         });
 
         self::retrieved(function (Product $product) {

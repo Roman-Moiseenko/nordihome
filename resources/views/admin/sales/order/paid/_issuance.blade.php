@@ -5,7 +5,12 @@
     <div class="w-1/4 text-center">Товар/Габариты</div>
     <div class="w-32 text-center">Цена продажи</div>
     <div class="w-20 text-center">Кол-во</div>
-    <div class="w-40 text-center">Наличие/Резерв/Склад</div>
+    <div class="text-center flex">
+        <div class="w-32">Склад</div>
+        <div class="w-20">Доступно</div>
+        <div class="w-32">Резерв</div>
+    </div>
+
     <div class="w-20 text-center"></div>
 </div>
 @foreach($order->items as $i => $item)

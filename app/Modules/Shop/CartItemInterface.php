@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Product\Entity\Product;
 
 //TODO проработать все поля
@@ -18,7 +17,6 @@ interface CartItemInterface
 
     public function getDiscountType(): string;
     public function getOptions(): array;
-    public function getReserve():? Reserve;
     public function getCheck(): bool;
     public function getPreorder(): bool;
 

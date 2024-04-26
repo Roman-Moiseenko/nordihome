@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Резерв товара по перемещению под Заказ
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property StorageItem $storageItem
  * @property MovementProduct $movementProduct
  */
+
+#[Deprecated]
 class StorageMovement extends Model
 {
     public $timestamps = false;
