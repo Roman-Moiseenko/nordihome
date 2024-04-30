@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_reserve', function (Blueprint $table) {
+        Schema::create('order_refund_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('refund_id')->constrained('order_refunds')->onDelete('cascade');
             $table->foreignId('order_item_id')->constrained('order_items')->onDelete('cascade');
-            $table->foreignId('storage_item_id')->constrained('storage_items')->onDelete('cascade');
             $table->integer('quantity');
-            $table->timestamp('created_at');
-            $table->timestamp('reserve_at')->nullable();
         });
     }
 
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::drop('order_reserve');
+        Schema::drop('order_refund_items');
     }
 };

@@ -378,9 +378,9 @@ class ShopRepository
 
     ///КУПОНЫ И СКИДКИ
 
-    public function getCoupon(string $code): ?Coupon
+    public function getCoupon(string $code, int $user_id = null): ?Coupon
     {
-        $user_id = Auth::guard('user')->user()->id;
+        if (is_null($user_id)) $user_id = Auth::guard('user')->user()->id;
 
         $coupon = Coupon::where('code', $code)
             ->where('user_id', $user_id)

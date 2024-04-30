@@ -5,6 +5,7 @@ namespace App\Modules\Order\Entity\Order;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 use function now;
 
 /**
@@ -16,6 +17,8 @@ use function now;
  * @property OrderPayment $payment
  */
 
+//TODO Удалить с таблицей
+#[Deprecated]
 class OrderPaymentRefund extends Model
 {
 

@@ -271,9 +271,10 @@ class Product extends Model
         $this->description = $description;
     }
 
+    #[Deprecated]
     public function setPrice(float $price): void
     {
-        if (!is_null($this->priceRetail) && $this->priceRetail->value === $price) return;
+        if ($this->getPriceRetail() === $price) return;
         $this->current_price = $price;
         $this->save();
         $this->prices()->create(

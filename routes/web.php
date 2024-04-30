@@ -372,8 +372,16 @@ Route::group(
 
 
                         Route::post('/{item}/update-sell', 'OrderController@update_sell')->name('update-sell');
+                        Route::post('/{item}/update-percent', 'OrderController@update_percent')->name('update-percent');
+
                         Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
-                        Route::post('/{order}/update-manual', 'OrderController@update_manual')->name('update-manual');
+                        Route::post('/{order}/discount', 'OrderController@discount')->name('discount');
+                        Route::post('/{order}/discount-percent', 'OrderController@discount_percent')->name('discount-percent');
+
+                        Route::post('/{order}/fix-manual-item', 'OrderController@fix_manual_item')->name('fix-manual-item');
+                        //Route::post('/{order}/fix-manual-order', 'OrderController@fix_manual_order')->name('fix-manual-order');
+                        Route::post('/{order}/set-coupon', 'OrderController@set_coupon')->name('set-coupon');
+
                         Route::post('/{order}/update-comment', 'OrderController@update_comment')->name('update-comment');
                         Route::post('/{item}/update-item-comment', 'OrderController@update_item_comment')->name('update-item-comment');
                         Route::post('/movement/{order}', 'OrderController@movement')->name('movement');

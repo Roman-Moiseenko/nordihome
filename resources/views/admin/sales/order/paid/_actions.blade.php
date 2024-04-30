@@ -1,6 +1,7 @@
 <div class="flex flex-col lg:justify-start buttons-block items-start">
 
 
+    @if(!is_null($order->getReserveTo()))
         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
                 <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Установить резерв
                     <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
@@ -29,6 +30,7 @@
                     </form>
                 </x-base.popover.panel>
             </x-base.popover>
+    @endif
         <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="danger" class="w-100">Возврат
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
@@ -53,7 +55,6 @@
                 </form>
             </x-base.popover.panel>
         </x-base.popover>
-
 
     <!--Перемещение-->
     @if($order->getQuantity() > $order->getQuantityExpense())

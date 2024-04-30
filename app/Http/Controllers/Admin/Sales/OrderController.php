@@ -20,6 +20,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Общие операции с моделью Order. Все запросы POST или DELETE
@@ -85,7 +86,7 @@ class OrderController extends Controller
                 return view('admin.sales.order.completed.show', compact('order'));
             if ($order->isCanceled())
                 return view('admin.sales.order.canceled.show', compact('order'));
-
+            abort(404, 'Неверный статус заказа');
             //TODO Разные реализации в зависимости от статуса
 
         });
@@ -146,7 +147,7 @@ class OrderController extends Controller
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
-
+/*
     public function update_manual(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
@@ -154,7 +155,7 @@ class OrderController extends Controller
             $order = $this->orderService->update_manual($order, $manual);
             return redirect()->route('admin.sales.order.show', $order);
         });
-    }
+    }*/
 
     public function destroy(Order $order)
     {
@@ -247,12 +248,21 @@ class OrderController extends Controller
         });
     }
 
+    #[Deprecated]
+    public function fix_manual_item(OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($item) {
+            $this->orderService->fix_manual_item($item);
+            return response()->json(true);
+        });
+    }
+
     public function update_quantity(Request $request, OrderItem $item)
     {
         return $this->try_catch_ajax_admin(function () use ($request, $item) {
             $quantity = (int)$request['value'];
-            $result = $this->orderService->update_quantity($item, $quantity);
-            return response()->json($this->ArrayToAjax($result));
+            $order = $this->orderService->update_quantity($item, $quantity);
+            return response()->json($this->ArrayToAjax($order));
         });
     }
 
@@ -261,6 +271,15 @@ class OrderController extends Controller
         return $this->try_catch_ajax_admin(function () use ($request, $item) {
             $sell_cost = (int)$request['value'];
             $result = $this->orderService->update_sell($item, $sell_cost);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    public function update_percent(Request $request, OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $item) {
+            $sell_percent = (float)$request['value'];
+            $result = $this->orderService->discount_item_percent($item, $sell_percent);
             return response()->json($this->ArrayToAjax($result));
         });
     }
@@ -298,21 +317,68 @@ class OrderController extends Controller
         });
     }
 
+    public function discount(Request $request, Order $order)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
+            $discount = (int)$request['value'];
+            $result = $this->orderService->discount_order($order, $discount);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    public function discount_percent(Request $request, Order $order)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
+            $discount_percent = (float)$request['value'];
+            $result = $this->orderService->discount_order_percent($order, $discount_percent);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    public function set_coupon(Request $request, Order $order)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
+            $coupon = $request['value'];
+            $order = $this->orderService->set_coupon($order, $coupon ?? '');
+            return response()->json($this->ArrayToAjax($order));
+        });
+    }
+
     private function ArrayToAjax(Order $order): array
     {
-        return [
-            'base_amount' => price($order->getBaseAmount()),
-            'sell_amount' => price($order->getSellAmount()),
-            'discount_order' => price($order->getDiscountOrder()),
-            'discount_products' => price($order->getDiscountProducts()),
-            'total_amount' => price($order->getTotalAmount()),
-            'assemblage_amount' => price($order->getAssemblageAmount()),
+        $items = [];
 
-            'coupon' => price($order->getCoupon()),
-            'manual' => price($order->getManual()),
-            'additions_amount' => price($order->getAdditionsAmount()),
+        foreach ($order->items as $item) {
+            $items[] = [
+                'id' => $item->id,
+                'base_cost' => $item->base_cost,
+                'sell_cost' => $item->sell_cost,
+                'percent' => number_format(($item->base_cost - $item->sell_cost)/$item->base_cost * 100, 2, '.'),
+                'quantity' => $item->quantity,
+            ];
+        }
+
+        $order = [
+            'base_amount' => $order->getBaseAmount(),
+            'sell_amount' => $order->getSellAmount(),
+            'discount_order' => $order->getDiscountOrder(),
+            'discount_name' => $order->getDiscountName(),
+            'all_discount_order' => $order->getDiscountOrder() + $order->getCoupon(),
+            'discount_products' => $order->getDiscountProducts(),
+            'total_amount' => $order->getTotalAmount(),
+            //'assemblage_amount' => price($order->getAssemblageAmount()),
+
+            'coupon' => $order->getCoupon(),
+            'manual' => $order->getManual(),
+            'manual_percent' => number_format($order->manual / $order->getBaseAmountNotDiscount() * 100, 2),
+            'additions_amount' => $order->getAdditionsAmount() + $order->getAssemblageAmount(),
             'weight' => $order->getWeight() . ' кг',
             'volume' => (float)number_format($order->getVolume(), 6) . ' м3',
+        ];
+
+        return [
+          'order' => $order,
+          'items' => $items,
         ];
     }
 

@@ -96,6 +96,11 @@ class ExpenseService
         $expense->save();
     }
 
+    public function completed(OrderExpense $expense)
+    {
+        //TODO Проверка, если все товары выданы, то завершаем Заказ - статус COMPLETED
+    }
+
     //Установить точку сборки
     /*
         public function setPoint(OrderExpense $expense, int $storage_id)

@@ -14,6 +14,15 @@
             >
 
     </div>
+    <div class="w-20 text-center px-1">
+        <div>%</div>
+        <input id="percent-{{ $item->id }}" type="text" class="form-control text-center update-data-ajax"
+               value="{{ number_format(($item->base_cost - $item->sell_cost) / $item->base_cost * 100, 2) }}" aria-describedby="input-sell_cost"
+               min="0" max="50" data-id="{{ $item->id }}" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
+               data-route="{{ route('admin.sales.order.update-percent', $item) }}"
+        >
+    </div>
+
     <div class="w-20 px-1 text-center">
         <div>{{  $edit ? (($item->product->getCountSell() + $item->quantity) . ' шт.') : '-' }} </div>
 
@@ -25,12 +34,8 @@
         >
 
     </div>
-    <div class="w-40 text-center">
-        @foreach($item->product->getStorageItems() as $storageItem)
-            {{ $storageItem->quantity . ' / ' . $storageItem->getQuantityReserve($order->id) . ' / ' . $storageItem->storage->name }}<br>
-        @endforeach
-
-
+    <div class="w-20 text-center">
+        {{ $item->product->getCountSell() }}
     </div>
     <div class="w-20 text-center">
         <div class="form-check form-switch justify-center mt-3">

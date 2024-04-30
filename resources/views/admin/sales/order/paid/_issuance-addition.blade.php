@@ -6,7 +6,7 @@
                value="{{ $addition->getRemains() }}" aria-describedby="addition-amount"
                min="0" max="{{ $addition->getRemains() }}" {{ $addition->getRemains() == 0 ? 'disabled' : '' }}
         >
-        <div id="addition->amount" class="input-group-text">₽</div>
+        <div id="addition-amount" class="input-group-text">₽</div>
     </div>
 
     <div class="w-56 text-center">{{ $addition->comment }}</div>

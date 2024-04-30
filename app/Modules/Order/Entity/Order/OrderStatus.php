@@ -45,6 +45,7 @@ class OrderStatus extends Model
     ///Выдача
     const READY = 260;// 'Готов к выдаче'
     const COMPLETED = 290; //Выдан (завершен)
+    const COMPLETED_REFUND = 291; //Выдан частично, с возвратом части товара (завершен)
 
     ///Отмененные статусы
     const CANCEL = 280;//
@@ -68,7 +69,8 @@ class OrderStatus extends Model
         self::DELIVERY_LOCAL => 'Готов для отправки по региону',
         self::DELIVERY_LOCAL_SEND => 'Отправлен',
         self::READY => 'Готов к выдаче',
-        self::COMPLETED => 'Выдан',
+        self::COMPLETED => 'Завершен',
+        self::COMPLETED_REFUND => 'Завершен с возвратом',
         self::CANCEL => 'Отменен',
         self::CANCEL_BY_CUSTOMER => 'Отменен клиентом',
         self::REFUND => 'Возврат оплаты',

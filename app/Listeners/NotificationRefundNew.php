@@ -21,7 +21,10 @@ class NotificationRefundNew
      */
     public function handle(OrderHasRefund $event): void
     {
-        //TODO Уведомляем кто работает с возратом
+        $refund = $event->order->refund;
 
+        //
+        //TODO Уведомляем кто работает с возратом
+        // Уведомляем руководство что возврат
     }
 }

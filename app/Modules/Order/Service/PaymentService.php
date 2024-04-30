@@ -14,17 +14,21 @@ use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Order\Entity\UserPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\Deprecated;
 
 class PaymentService
 {
 
     private LoggerService $logger;
+    private OrderService $orderService;
 
-    public function __construct(LoggerService $logger)
+    public function __construct(LoggerService $logger, OrderService $orderService)
     {
         $this->logger = $logger;
+        $this->orderService = $orderService;
     }
 
+    #[Deprecated]
     public function user(int $user_id): UserPayment
     {
         if ($user = UserPayment::where('user_id', $user_id)->first()) return $user;
@@ -53,15 +57,8 @@ class PaymentService
         $payment->staff_id = $staff->id;
         $order->payments()->save($payment);
         $order->refresh();
-        if ($order->getTotalAmount() <= $order->getPaymentAmount()) {
-            $order->setPaid();
-            event(new OrderHasPaid($order));
-        } else {
-            if ($order->status->value == OrderStatus::AWAITING) {
-                $order->setStatus(OrderStatus::PREPAID);
-                event(new OrderHasPrepaid($order));
-            }
-        }
+        $this->orderService->check_payment($order);
+
         $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
         return $payment;
     }
@@ -79,14 +76,8 @@ class PaymentService
 
         $order->payments()->save($payment);
         $order->refresh();
-        if ($order->getTotalAmount() <= $order->getPaymentAmount()) {
-            $order->setPaid();
-            event(new OrderHasPaid($order));
-        }
-        if ($order->status->value == OrderStatus::AWAITING) {
-            $order->setStatus(OrderStatus::PREPAID);
-            event(new OrderHasPrepaid($order));
-        }
+
+        $this->orderService->check_payment($order);
     }
 
     public function update(OrderPayment $payment, Request $request): OrderPayment

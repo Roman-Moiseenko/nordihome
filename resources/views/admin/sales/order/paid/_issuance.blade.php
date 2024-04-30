@@ -33,8 +33,8 @@
 <div class="box flex items-center font-semibold mt-3 p-2">
     <div class="w-40 text-center">Сумма в распоряжении</div>
     <div id="expense-amount" class="w-40 text-center">{{ price($order->getTotalAmount() - $order->getExpenseAmount()) }}</div>
-    <div class="w-40 text-center">Остаток по оплате</div>
-    <div id="remains-amount" class="w-40 text-center">{{ price($order->getPaymentAmount() - $order->getExpenseAmount()) }}</div>
+    <div class="w-40 text-center">Остаток на выдачу</div>
+    <div id="remains-amount" class="w-40 text-center">{{ price($order->getPaymentAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) }}</div>
     <div class="w-56 text-center">
         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="primary" class="w-100"

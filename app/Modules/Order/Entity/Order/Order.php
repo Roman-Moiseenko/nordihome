@@ -5,6 +5,7 @@ namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
@@ -23,26 +24,26 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property bool $finished //Завершен (для быстрой фильтрации)
  * @property int $manager_id // Admin::class - менеджер, создавший или прикрепленный к заказу
  * @property int $discount_id //Скидка на заказ - от суммы, или по дням
- * @property float $coupon //Примененная сумма скидки по товару
+ * @property int $discount_amount //Скидка в рублях для фиксации конечного значения
+ * @property float $coupon_amount //Примененная сумма скидки по товару
  * @property int $coupon_id //Купон скидки
- * @property float $manual //Ручная скидка - возможно удалить
+ * @property float $manual //Сумма ручных скидок по всем товарам, кроме акционных.
  * @property string $comment
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
  * @property OrderAddition[] $additions //Дополнения к заказу (услуги)
  * @property OrderPayment[] $payments //Платежи за заказ
-
  * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
-
  * @property OrderItem[] $items
  * @property User $user
  * @property OrderResponsible[] $responsible - удалить
  * @property MovementDocument[] $movements
  * @property Discount $discount
  * @property Admin $manager
+ * @property Coupon $coupon
+ * @property OrderRefund $refund
  */
 class Order extends Model
 {
@@ -62,17 +63,18 @@ class Order extends Model
         'type',
         'paid',
         'finished',
-        'coupon',
+        'coupon_amount',
         'coupon_id',
         'discount_id',
+        'discount_amount',
         'manual',
         'comment',
-        'manager_id'
+        'manager_id',
     ];
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'coupon' => 'float',
+        'coupon_amount' => 'float',
     ];
 
     public static function register(int $user_id, int $type = self::ONLINE): self
@@ -80,13 +82,14 @@ class Order extends Model
         $order = self::create([
             'user_id' => $user_id,
             'type' => $type,
-            'paid' => false
+            'paid' => false,
         ]);
         $order->statuses()->create(['value' => OrderStatus::FORMED]);
         return $order;
     }
 
     ///*** ПРОВЕРКА СОСТОЯНИЙ is...()
+
     /**
      * Статус $value был применен
      * @param int $value
@@ -147,7 +150,7 @@ class Order extends Model
 
     public function isCompleted(): bool
     {
-        return $this->status->value == OrderStatus::COMPLETED;
+        return $this->status->value >= OrderStatus::COMPLETED;
     }
 
     public function isCanceled(): bool
@@ -167,7 +170,13 @@ class Order extends Model
 
         $this->statuses()->create(['value' => $value, 'comment' => $comment]);
 
-        if (in_array($value, [OrderStatus::CANCEL, OrderStatus::CANCEL_BY_CUSTOMER, OrderStatus::COMPLETED])) $this->update(['finished' => true]);
+        if (in_array($value, [
+            OrderStatus::CANCEL,
+            OrderStatus::CANCEL_BY_CUSTOMER,
+            OrderStatus::COMPLETED,
+            OrderStatus::COMPLETED_REFUND,
+            OrderStatus::REFUND
+            ])) $this->update(['finished' => true]);
         if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
     }
 
@@ -177,12 +186,7 @@ class Order extends Model
         $this->paid = true;
         $this->save();
         //Увеличиваем резерв на оплаченные товары
-        foreach ($this->items as $item) {
-            if (!is_null($item->reserve))
-            $item->reserve->update(['reserve_at' => now()->addDays(28)]);
-        }
     }
-
 
     public function setManager(int $staff_id)
     {
@@ -247,7 +251,7 @@ class Order extends Model
         return self::TYPES[$this->type];
     }
 
-    public function getReserveTo():? Carbon
+    public function getReserveTo(): ?Carbon
     {
         /** @var OrderItem $item */
         if ($this->items()->count() == 0) return now();
@@ -256,6 +260,7 @@ class Order extends Model
         if (is_null($item->reserves)) return now(); //throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
         /** @var OrderReserve $reserve */
         $reserve = $item->reserves()->first();
+        if (empty($reserve)) return null;
         return $reserve->reserve_at;
     }
 
@@ -279,11 +284,12 @@ class Order extends Model
         return $this->manager()->first();
 
         /** @var OrderResponsible $responsible */
-       // $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->orderByDesc('created_at')->first();
-       // return is_null($responsible) ? null : $responsible->staff;
+        // $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->orderByDesc('created_at')->first();
+        // return is_null($responsible) ? null : $responsible->staff;
     }
 
     //Суммы по заказу*******************
+
     /**
      * Базовая стоимость всех товаров
      * @return float
@@ -293,6 +299,19 @@ class Order extends Model
         $result = 0;
         foreach ($this->items as $item) {
             $result += $item->base_cost * $item->quantity;
+        }
+        return $result;
+    }
+
+    /**
+     * Базовая стоимость всех товаров, за исключением Акционных и Бонусных
+     * @return float
+     */
+    public function getBaseAmountNotDiscount(): float
+    {
+        $result = 0;
+        foreach ($this->items as $item) {
+            if (is_null($item->discount_id)) $result += $item->base_cost * $item->quantity;
         }
         return $result;
     }
@@ -325,6 +344,8 @@ class Order extends Model
      */
     public function getDiscountOrder(): float
     {
+        return $this->discount_amount;
+
         if (!is_null($this->discount_id)) {
             /** @var Discount $discount */
             $discount = Discount::find($this->discount_id);
@@ -334,22 +355,38 @@ class Order extends Model
     }
 
     /**
+     * Скидка на заказ - по сумме, срокам и др.
+     * @return float
+     */
+    public function getDiscountName(): string
+    {
+        if (!is_null($this->discount_id)) {
+            /** @var Discount $discount */
+            $discount = Discount::find($this->discount_id);
+            return $discount->name;
+        }
+        return '';
+    }
+
+    /**
      * Сумма скидки по купону
      * @return float
      */
     public function getCoupon(): float
     {
-        return $this->coupon ?? 0;
+        return $this->coupon_amount ?? 0;
     }
 
     /**
-     * Скидка ручная
+     * Скидка ручная, разбросана в sell_cost. getManual() = getBaseAmount() - getSellAmount()
      * @return float
      */
+    #[Deprecated]
     public function getManual(): float
     {
         return $this->manual ?? 0;
     }
+
     /**
      * Сумма всех доп услуг
      * @return float
@@ -386,6 +423,7 @@ class Order extends Model
         //TODO на будущее
         return 0;
     }
+
     /**
      * Итоговая сумма оплаты за заказ, с учетом всех скидок и платежей
      * @return float
@@ -397,8 +435,7 @@ class Order extends Model
             $this->getSellAmount() +
             $this->getAssemblageAmount() -
             $this->getDiscountOrder() -
-            $this->getCoupon() -
-            $this->getManual();
+            $this->getCoupon();
     }
 
     /**
@@ -470,6 +507,7 @@ class Order extends Model
     {
         return $this->items()->where('preorder', true)->getModels();
     }
+
     public function getItemById(int $id_item): OrderItem
     {
         foreach ($this->items as $item) {
@@ -479,6 +517,16 @@ class Order extends Model
     }
 
     ///*** Relations *************************************************************************************
+
+    public function refund()
+    {
+        return $this->hasOne(OrderRefund::class, 'order_id', 'id');
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class, 'coupon_id', 'id');
+    }
 
     public function manager()
     {
@@ -544,7 +592,7 @@ class Order extends Model
     {
         foreach ($this->items as $item) {
             if ($item->reserve_id != null)
-            return false;
+                return false;
         }
         return true;
     }

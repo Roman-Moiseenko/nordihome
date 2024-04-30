@@ -49,6 +49,12 @@ class AdminMenu
                         'route_name' => 'admin.sales.payment.index',
                         'can' => 'payment',
                     ],
+                    'refund' => [
+                        'icon' => 'refresh-ccw',
+                        'title' => 'Возвраты',
+                        'route_name' => 'admin.home',//'admin.sales.payment.index',
+                        'can' => 'order',
+                    ],
                     'reserve' => [
                         'icon' => 'baggage-claim',
                         'title' => 'Резерв',

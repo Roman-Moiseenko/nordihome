@@ -25,14 +25,17 @@ class SalesService
 
     private MovementService $movements;
     private ExpenseService $expenseService;
+    private RefundService $refundService;
 
     public function __construct(
         MovementService $movements,
-        ExpenseService $expenseService
+        ExpenseService $expenseService,
+        RefundService $refundService
     )
     {
         $this->movements = $movements;
         $this->expenseService = $expenseService;
+        $this->refundService = $refundService;
     }
 
     public function setManager(Order $order, int $staff_id)
@@ -104,21 +107,19 @@ class SalesService
     public function refund(Order $order, string $comment)
     {
         //TODO Возврат денег!!!!Алгоритм?? Тестить!
-        $order->setStatus(OrderStatus::REFUND, $comment);
+        if ($order->getExpenseAmount() > 0) {
+            $order->setStatus(OrderStatus::COMPLETED_REFUND);
+        } else {
+            $order->setStatus(OrderStatus::REFUND);
+        }
         //Возврат товаров в продажу
 
         $order->clearReserve();
-        //Все платежи на возврат
-        foreach ($order->payments as $payment) {
-            //Платежный документ для возврата
-            if (!$payment->isRefund()) {
-                //Возможно для разных типов платежей разный способ расчета возврата денег
-                $amount = $payment->amount;
-                OrderPaymentRefund::register($payment->id, $amount, $comment);
-                //$payment->setRefund();
-            }
-        }
-        event(new OrderHasRefund($order)); //Оповещение менеджера по возврату денег
+        //Создать документ на возврат
+        $this->refundService->create($order, $comment);
+
+        //event(new OrderHasRefund($order)); //Оповещение менеджера по возврату денег
+
     }
 
     public function completed(Order $order)
@@ -146,7 +147,7 @@ class SalesService
     #[ArrayShape(['remains' => "float", 'expense' => "int", 'disable' => "bool"])]
     public function expenseCalculate(Order $order, string $_data): array
     {
-        $remains = $order->getPaymentAmount() - $order->getExpenseAmount();
+        $remains = $order->getPaymentAmount() - $order->getExpenseAmount()+  $order->getCoupon() + $order->getDiscountOrder();
         $data = json_decode($_data, true);
         $amount = 0;
 

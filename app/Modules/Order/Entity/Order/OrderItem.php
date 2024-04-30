@@ -19,16 +19,19 @@ use JetBrains\PhpStorm\Pure;
  * @property int $product_id
  * @property int $quantity
  * @property bool $preorder //на предзаказ
- * @property int $supply_stack_id
- * @property int $base_cost
- * @property int $sell_cost
+ * @property int $supply_stack_id - данная позиция в стеке заказов
+ * @property int $base_cost - базовая цена, не меняется
+ * @property int $sell_cost - цена продажи, со скидкой, можно ставить вручную
  * @property int $discount_id - Акция или бонус
  * @property string $discount_type
+ * @property bool $fix_manual - фиксированная цена со скидкой, блокирует автоматический пересчет
  * @property array $options
  * @property bool $cancel -- ?
  * @property string $comment
  * @property int $reserve_id
  * @property bool $assemblage - требуется сборка
+ *
+ *
  * @property Order $order
  * @property Product $product
  * @property Discount $discount
@@ -53,13 +56,15 @@ class OrderItem extends Model implements CartItemInterface
         'preorder',
         'assemblage',
         'supply_stack_id',
+        'fix_manual',
     ];
 
     protected $casts = [
         'options' => 'json',
         'base_cost' => 'float',
         'sell_cost' => 'float',
-        'preorder' => 'bool'
+        'preorder' => 'bool',
+        'fix_manual' => 'bool'
     ];
 
     public static function new(Product $product, int $quantity, bool $preorder, int $user_id): self
@@ -184,7 +189,7 @@ class OrderItem extends Model implements CartItemInterface
     {
         if ($this->assemblage == true) {
             if (is_null($this->product->assemblage)) {
-                return $this->sell_cost * $this->quantity * $percent / 100;
+                return (int)ceil($this->sell_cost * $this->quantity * $percent / 100);
             } else {
                 return $this->product->assemblage;
             }

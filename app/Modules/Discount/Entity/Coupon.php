@@ -61,6 +61,17 @@ class Coupon extends Model
         return $coupon;
     }
 
+    public function isNew(): bool
+    {
+        return $this->status == self::NEW;
+    }
+
+    public function completed(): void
+    {
+        $this->status = self::COMPLETED;
+        $this->save();
+    }
+
     private function generate(): void
     {
         //$start = Carbon::parse('01-01-2024');

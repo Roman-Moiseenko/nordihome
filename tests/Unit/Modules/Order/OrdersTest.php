@@ -90,7 +90,7 @@ class OrdersTest extends TestCase
         self::assertEquals($sell_amount * 0.05, $this->order->getDiscountOrder());
 
         //TODO Ручная скидка уйдет в перерасчет цены всех товаров
-        $this->order = $this->orderService->update_manual($this->order, 5000);  //Ручная скидка
+        $this->order = $this->orderService->discount_order($this->order, 5000);  //Ручная скидка
         self::assertEquals($sell_amount - $sell_amount * 0.05 - 5000, $this->order->getTotalAmount());
 
         //Проверка на разделение товара на "В наличии" и "На заказ"
