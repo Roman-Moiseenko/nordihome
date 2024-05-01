@@ -1,7 +1,7 @@
 <x-base.table.tr>
     <x-base.table.td class="text-center"> * </x-base.table.td>
     <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.sales.order.show', $order) }}">{{ $order->htmlNum() }}</a></x-base.table.td>
-    <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.sales.order.show', $order) }}">{{ $order->created_at->translatedFormat('d F Y') }}</a></x-base.table.td>
+    <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.sales.order.show', $order) }}">{{ $order->htmlDate() }}</a></x-base.table.td>
     <x-base.table.td class="text-center">{{ price($order->getBaseAmount()) }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->getQuantity() }} шт.</x-base.table.td>
     <x-base.table.td class="text-center">{{ price($order->getTotalAmount()) }}</x-base.table.td>

@@ -16,6 +16,7 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Entity\Order\OrderRefund;
 use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Widget;
@@ -501,6 +502,15 @@ Breadcrumbs::for('admin.sales.payment.show', function (BreadcrumbTrail $trail, O
     $trail->push('Платеж за заказ ' . $payment->order->htmlDate() . ' ' . $payment->order->htmlNum(), route('admin.sales.payment.show', $payment));
 });
 
+//REFUND
+Breadcrumbs::for('admin.sales.refund.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Возвраты по заказам', route('admin.sales.payment.index'));
+});
+Breadcrumbs::for('admin.sales.refund.show', function (BreadcrumbTrail $trail, OrderRefund $refund) {
+    $trail->parent('admin.sales.refund.index');
+    $trail->push('Возврат по заказу ' . $refund->order->htmlNum() . ' от ' . $refund->order->htmlDate(), route('admin.sales.refund.show', $refund));
+});
 /*
 Breadcrumbs::for('admin.sales.preorder.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.sales');

@@ -52,7 +52,7 @@ class AdminMenu
                     'refund' => [
                         'icon' => 'refresh-ccw',
                         'title' => 'Возвраты',
-                        'route_name' => 'admin.home',//'admin.sales.payment.index',
+                        'route_name' => 'admin.sales.refund.index',
                         'can' => 'order',
                     ],
                     'reserve' => [

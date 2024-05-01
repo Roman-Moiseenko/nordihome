@@ -415,6 +415,18 @@ Route::group(
 
                     }
                 );
+                //Возвраты
+                Route::group(
+                    [
+                        'prefix' => 'refund',
+                        'as' => 'refund.',
+                    ],
+                    function () {
+                        Route::get('/index', 'RefundController@index')->name('index');
+                        Route::get('/show', 'RefundController@show')->name('show');
+
+                    }
+                );
             }
         );
         //Pages
