@@ -59,6 +59,15 @@ class OrderRefund extends Model
         ]);
     }
 
+    public function getBalanceOrder(): float
+    {
+        return $this->order->getPaymentAmount() - $this->order->getExpenseAmount();
+    }
+
+    public function getRefundAmount(): float
+    {
+        return min($this->getBalanceOrder(), $this->getAmount());
+    }
 
     public function getAmount(): float
     {

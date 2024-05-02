@@ -34,7 +34,10 @@
     <div class="w-40 text-center">Сумма в распоряжении</div>
     <div id="expense-amount" class="w-40 text-center">{{ price($order->getTotalAmount() - $order->getExpenseAmount()) }}</div>
     <div class="w-40 text-center">Остаток на выдачу</div>
-    <div id="remains-amount" class="w-40 text-center">{{ price($order->getPaymentAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) }}</div>
+    <div id="remains-amount" class="w-40 text-center">
+        {{ price($order->getPaymentAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) }}
+        <span class="font-medium">{{ price($order->getCoupon() + $order->getDiscountOrder()) }}</span>
+    </div>
     <div class="w-56 text-center">
         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="primary" class="w-100"

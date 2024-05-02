@@ -505,7 +505,7 @@ Breadcrumbs::for('admin.sales.payment.show', function (BreadcrumbTrail $trail, O
 //REFUND
 Breadcrumbs::for('admin.sales.refund.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Возвраты по заказам', route('admin.sales.payment.index'));
+    $trail->push('Возвраты по заказам', route('admin.sales.refund.index'));
 });
 Breadcrumbs::for('admin.sales.refund.show', function (BreadcrumbTrail $trail, OrderRefund $refund) {
     $trail->parent('admin.sales.refund.index');

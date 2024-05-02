@@ -423,7 +423,7 @@ Route::group(
                     ],
                     function () {
                         Route::get('/index', 'RefundController@index')->name('index');
-                        Route::get('/show', 'RefundController@show')->name('show');
+                        Route::get('/show/{refund}', 'RefundController@show')->name('show');
 
                     }
                 );
