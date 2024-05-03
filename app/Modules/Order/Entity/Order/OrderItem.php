@@ -111,7 +111,6 @@ class OrderItem extends Model implements CartItemInterface
 
     public function supplyStack()
     {
-        //TODO Протестировать вызов исключения
         if ($this->preorder == false) throw new \DomainException('Данная функция должна вызываться для preorder == true');
         return $this->belongsTo(SupplyStack::class, 'supply_stack_id', 'id');
     }

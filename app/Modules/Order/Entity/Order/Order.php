@@ -258,14 +258,13 @@ class Order extends Model
         return self::TYPES[$this->type];
     }
 
-    #[Deprecated]
     public function getReserveTo(): ?Carbon
     {
         /** @var OrderItem $item */
         if ($this->items()->count() == 0) return now();
         $item = $this->items()->where('preorder', false)->first();
-        //TODO Переделать
-        if (is_null($item->reserves)) return now(); //throw new \DomainException('Неверный вызов функции! У заказа не установлен резерв');
+
+        if (is_null($item->reserves)) return now();
         /** @var OrderReserve $reserve */
         $reserve = $item->reserves()->first();
         if (empty($reserve)) return null;

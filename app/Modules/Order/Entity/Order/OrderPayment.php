@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property Order $order
  */
 
-//TODO Проверить
 class OrderPayment extends Model
 {
     protected $table = 'order_payments';

@@ -13,6 +13,7 @@ use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
+use App\Notifications\StaffMessage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -40,7 +41,9 @@ class SupplyService
     {
         if (!is_null($stack->orderItem)) throw new \DomainException('Нельзя удалить товар из стека под Заказ клиенту!');
         $staff = $stack->staff;
-        //TODO Оповещение Менеджера ??
+        //Оповещение Менеджера
+        $message = "Товар " . $stack->product->name . "\n  из стека Поставщику удален";
+        $staff->notify(new StaffMessage($message));
         $stack->delete();
     }
 
