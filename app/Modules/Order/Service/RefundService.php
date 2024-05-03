@@ -13,7 +13,6 @@ class RefundService
 {
     public function create(Order $order, string $comment)
     {
-        //TODO Создаем возврат
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $refund = OrderRefund::register($order->id, $staff->id, $comment);

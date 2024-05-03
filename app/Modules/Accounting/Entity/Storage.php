@@ -7,6 +7,7 @@ use App\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @property int $id
@@ -91,6 +92,7 @@ class Storage extends Model
         }
     }
 
+    #[Pure]
     public function getQuantity(Product $product): int
     {
         //Более быстрый вариант
@@ -100,6 +102,7 @@ class Storage extends Model
         return $storageItem->quantity;
     }
 
+    #[Pure]
     public function getReserve(Product $product): int
     {
         $storageItem = $this->getItem($product);
@@ -122,7 +125,6 @@ class Storage extends Model
             }
         }
         return null;
-       //throw new \DomainException('Товар Id=' . $product->id . ' В хранилище не найден');
     }
 
     public function getDeparture(Product $product): int
@@ -178,7 +180,6 @@ class Storage extends Model
         return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
 
-
     public function add(Product $product, int $quantity): StorageItem
     {
         foreach ($this->items as $item) {
@@ -204,8 +205,6 @@ class Storage extends Model
             }
         }
     }
-
-
 
 
 

@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @property int $id
@@ -237,6 +238,7 @@ class Order extends Model
         return $quantity;
     }
 
+    #[Pure]
     public function getQuantityExpense(): int
     {
         $quantity = 0;
@@ -251,6 +253,7 @@ class Order extends Model
         return self::TYPES[$this->type];
     }
 
+    #[Deprecated]
     public function getReserveTo(): ?Carbon
     {
         /** @var OrderItem $item */
@@ -267,6 +270,7 @@ class Order extends Model
     /**
      * Получить элемент заказа по Товару и типу (в наличии/на заказ)
      * @param Product $product
+     * @param bool $preorder
      * @return OrderItem|null
      */
     public function getItem(Product $product, bool $preorder = false): ?OrderItem
@@ -279,13 +283,8 @@ class Order extends Model
 
     public function getManager(): ?Admin
     {
-        //TODO раскомментить после миграции
         if (is_null($this->manager_id)) return null;
         return $this->manager()->first();
-
-        /** @var OrderResponsible $responsible */
-        // $responsible = $this->responsible()->where('staff_post', OrderResponsible::POST_MANAGER)->orderByDesc('created_at')->first();
-        // return is_null($responsible) ? null : $responsible->staff;
     }
 
     //Суммы по заказу*******************
@@ -405,6 +404,7 @@ class Order extends Model
      * @param int $percent
      * @return float
      */
+    #[Pure]
     public function getAssemblageAmount(int $percent = 15): float
     {
         $assemblage = 0;
@@ -428,6 +428,7 @@ class Order extends Model
      * Итоговая сумма оплаты за заказ, с учетом всех скидок и платежей
      * @return float
      */
+    #[Pure]
     public function getTotalAmount(): float
     {
         return $this->getAdditionsAmount() +
@@ -455,6 +456,7 @@ class Order extends Model
      * Сумма всех распоряжений
      * @return float
      */
+    #[Pure]
     public function getExpenseAmount(): float
     {
         $amount = 0;
@@ -468,6 +470,7 @@ class Order extends Model
      * Общий вес заказа
      * @return float
      */
+    #[Pure]
     public function getWeight(): float
     {
         $weight = 0;
@@ -481,6 +484,7 @@ class Order extends Model
      * Общий объем заказа
      * @return float
      */
+    #[Pure]
     public function getVolume(): float
     {
         $volume = 0;

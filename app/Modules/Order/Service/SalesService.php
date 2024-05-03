@@ -19,18 +19,10 @@ use JetBrains\PhpStorm\ArrayShape;
 class SalesService
 {
 
-    private MovementService $movements;
-    private ExpenseService $expenseService;
     private RefundService $refundService;
 
-    public function __construct(
-        MovementService $movements,
-        ExpenseService $expenseService,
-        RefundService $refundService
-    )
+    public function __construct(RefundService $refundService)
     {
-        $this->movements = $movements;
-        $this->expenseService = $expenseService;
         $this->refundService = $refundService;
     }
 
@@ -40,7 +32,6 @@ class SalesService
         if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
         $order->setStatus(OrderStatus::SET_MANAGER);
         $order->setManager($staff->id);
-//        $order->responsible()->save(OrderResponsible::registerManager($staff->id));
     }
 
     public function setReserveService(Order $order, string $date, string $time)
@@ -48,7 +39,6 @@ class SalesService
         $new_reserve = $date . ' ' . $time . ':00';
         $order->setReserve(Carbon::parse($new_reserve));
     }
-
 
     /**
      * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
@@ -58,7 +48,6 @@ class SalesService
     public function setAwaiting(Order $order)
     {
         if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
-        //if ($order->getSellAmount() == 0)  throw new \DomainException('Нет товара или цена равна 0!');
         if ($order->getTotalAmount() == 0)  throw new \DomainException('Сумма заказа не может быть равно нулю');
 
         foreach ($order->items as $item) {
@@ -102,20 +91,14 @@ class SalesService
 
     public function refund(Order $order, string $comment)
     {
-        //TODO Возврат денег!!!!Алгоритм?? Тестить!
         if ($order->getExpenseAmount() > 0) {
             $order->setStatus(OrderStatus::COMPLETED_REFUND);
         } else {
             $order->setStatus(OrderStatus::REFUND);
         }
-        //Возврат товаров в продажу
 
-        $order->clearReserve();
-        //Создать документ на возврат
-        $this->refundService->create($order, $comment);
-
-        //event(new OrderHasRefund($order)); //Оповещение менеджера по возврату денег
-
+        $order->clearReserve();//Возврат товаров в продажу
+        $this->refundService->create($order, $comment); //Создать документ на возврат
     }
 
     public function completed(Order $order)

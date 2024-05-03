@@ -147,15 +147,6 @@ class OrderController extends Controller
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
-/*
-    public function update_manual(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $manual = (int)$request['manual'];
-            $order = $this->orderService->update_manual($order, $manual);
-            return redirect()->route('admin.sales.order.show', $order);
-        });
-    }*/
 
     public function destroy(Order $order)
     {
