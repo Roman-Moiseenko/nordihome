@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Events\OrderHasPaid;
-use App\Events\OrderHasPrepaid;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
-use App\Modules\Order\Entity\UserPayment;
+use App\Modules\User\Entity\UserPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\Deprecated;

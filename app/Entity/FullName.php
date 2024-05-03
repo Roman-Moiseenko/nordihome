@@ -31,12 +31,18 @@ class FullName
         return empty($this->surname);
     }
 
-    public static function fromArray(array $params): self
+    public static function fromArray(?array $params): self
     {
         $full = new static();
-        $full->surname = $params['surname'];
-        $full->firstname = $params['firstname'];
-        $full->secondname = $params['secondname'];
+        if (!empty($params)) {
+            $full->surname = $params['surname'];
+            $full->firstname = $params['firstname'];
+            $full->secondname = $params['secondname'];
+        } /*else {
+            $full->surname = '';
+            $full->firstname = '';
+            $full->secondname = '';
+        }*/
         return $full;
     }
 

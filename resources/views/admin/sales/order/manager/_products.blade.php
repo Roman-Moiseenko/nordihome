@@ -47,7 +47,7 @@
         <label for="coupon_code" class="mr-3">Купон на скидку: </label>
         <input id="coupon_code" type="text" class="w-20 form-control text-center update-data-ajax"
                value="{{ is_null($order->coupon_id) ? '' : $order->coupon->code }}" aria-describedby=""
-               min="0" data-id="{{ $item->id }}"
+               min="0"
                data-route="{{ route('admin.sales.order.set-coupon', $order) }}"
         >
         <div class="input-group">
@@ -70,7 +70,8 @@
 
         <div class="input-group ml-1">
             <input id="manual_percent" type="text" class="form-control  w-20 text-right update-data-ajax"
-                   value="{{ number_format($order->manual / $order->getBaseAmountNotDiscount() * 100, 2, '.') }}" aria-describedby="discount-percent"
+                   value="{{ ($order->getBaseAmountNotDiscount() == 0) ? 0 : number_format($order->manual / $order->getBaseAmountNotDiscount() * 100, 2, '.') }}"
+                   aria-describedby="discount-percent"
                    min="0" max="50" data-route="{{ route('admin.sales.order.discount-percent', $order) }}"
             >
             <div id="discount-percent" class="input-group-text">%</div>

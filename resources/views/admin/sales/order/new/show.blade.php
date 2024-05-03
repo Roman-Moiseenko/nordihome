@@ -25,7 +25,7 @@
         </div>
         <div class="col-span-3 lg:block">
             <div class="fixed fixed-top pt-5">
-                @include('admin.sales.order.awaiting._actions')
+                @include('admin.sales.order.new._actions')
             </div>
         </div>
     </div>

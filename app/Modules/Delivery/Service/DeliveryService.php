@@ -8,9 +8,9 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
-use App\Modules\Delivery\Entity\UserDelivery;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Shop\CartItemInterface;
+use App\Modules\User\Entity\UserDelivery;
 
 class DeliveryService
 {

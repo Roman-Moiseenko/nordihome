@@ -4,7 +4,7 @@
         <div class="flex flex-row items-center lg:items-start mt-4">
             <div class="truncate sm:whitespace-normal flex items-center">
                 <x-base.lucide icon="user"
-                               class="w-4 h-4"/>&nbsp;<a href="{{ route('admin.users.show', $order->user) }}">{{ $order->user->delivery->fullname->getFullName() }}</a>
+                               class="w-4 h-4"/>&nbsp;<a href="{{ route('admin.users.show', $order->user) }}">{{ $order->userFullName() }}</a>
             </div>
             <div class="truncate sm:whitespace-normal flex items-center ml-4">
                 <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;<a

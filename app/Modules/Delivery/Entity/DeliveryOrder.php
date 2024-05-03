@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $order_id
+ * @property int $order_id -- переделать на expense_id  - Отгрузки по Заказу (Распоряжения)
  * @property int $type
  * @property float $cost
  * @property string $address

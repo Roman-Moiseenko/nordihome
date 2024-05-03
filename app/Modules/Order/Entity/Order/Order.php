@@ -616,11 +616,17 @@ class Order extends Model
         return OrderStatus::STATUSES[$this->status->value] . $comment;
     }
 
+    public function userFullName(): string
+    {
+        return $this->user->fullname->getFullName();
+    }
+
     public function clearReserve()
     {
         foreach ($this->items as $item) {
             $item->clearReserves();
         }
     }
+
 
 }

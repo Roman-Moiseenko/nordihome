@@ -398,12 +398,12 @@ class OrderController extends Controller
                     'id' => $user->id,
                     'phone' => $user->phone,
                     'email' => $user->email,
-                    'name' => $user->delivery->fullname->firstname,
+                    'name' => $user->fullname->firstname,
                     'delivery' => $user->delivery->type,
                     'storage' => $user->delivery->storage,
                     'local' => $user->delivery->local->address,
                     'region' => $user->delivery->region->address,
-                    'payment' => $user->getDefaultPayment(),
+                    'payment' => $user->payment->class_payment,
                 ];
                 return response()->json($result);
             }

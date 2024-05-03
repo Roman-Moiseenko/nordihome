@@ -16,9 +16,10 @@ class UserService
     public function setFullname(User $user, Request $request): bool
     {
         $fullname = trim($request['fullname']);
-        if ($fullname == $user->delivery->fullname->getFullName()) return false;
+        if ($fullname == $user->fullname->getFullName()) return false;
         list ($surname, $firstname, $secondname) = explode(" ", $fullname);
-        $user->delivery->setFullName(new FullName($surname, $firstname, $secondname));
+        $user->setNameField($surname, $firstname, $secondname);
+        //$user->delivery->setFullName(new FullName($surname, $firstname, $secondname));
         return true;
     }
 

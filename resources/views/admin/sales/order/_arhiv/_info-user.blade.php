@@ -2,7 +2,7 @@
 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
     <div class="truncate sm:whitespace-normal flex items-center">
         <x-base.lucide icon="user"
-                       class="w-4 h-4"/>&nbsp;{{ $order->user->delivery->fullname->getFullName() }}
+                       class="w-4 h-4"/>&nbsp;{{ $order->userFullName() }}
     </div>
     <div class="truncate sm:whitespace-normal flex items-center">
         <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;<a

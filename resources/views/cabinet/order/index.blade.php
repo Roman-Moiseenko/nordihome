@@ -17,16 +17,16 @@
                     <div class="fs-8">{{ $order->htmlNum() }}</div>
                 </div>
                 <div>
-                    <div class="fs-5">{{ price($order->total) }}</div>
+                    <div class="fs-5">{{ price($order->getTotalAmount()) }}</div>
                     <div class="fs-8">{{ $order->paid ? 'Оплачен' : '' }}</div>
                 </div>
             </div>
             <div class="order-body">
                 <div>
-                    <div class="fs-7">{{ $order->delivery->typeHTML() }}<br>{{ $order->delivery->address }}</div>
+                    <div class="fs-7">{{ '$order->delivery->typeHTML()' }}<br>{{ '$order->delivery->address' }}</div>
                     <div class="fs-7 mt-1">Стоимость доставки
-                        - {{ ($order->delivery->cost == 0) ? 'Рассчитывается' : price($order->delivery->cost)}}</div>
-                    <div class="fs-8 mt-1">{{ $order->delivery->status->value() }}</div>
+                        - {{ 'price($order->delivery->cost)' }}</div>
+                    <div class="fs-8 mt-1">{{ '$order->delivery->status->value()' }}</div>
                 </div>
                 <div class="row position-relative">
                     @foreach($order->items()->paginate(4) as $item)

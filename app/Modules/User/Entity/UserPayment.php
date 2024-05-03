@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity;
+namespace App\Modules\User\Entity;
 
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use Illuminate\Database\Eloquent\Model;

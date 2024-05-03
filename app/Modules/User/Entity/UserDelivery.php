@@ -1,28 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Delivery\Entity;
+namespace App\Modules\User\Entity;
 
 use App\Casts\FullNameCast;
 use App\Casts\GeoAddressCast;
 use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property int $id //?
+ * @property int $id
  * @property int $user_id
- * @property string $recipient_surname
- * @property string $recipient_firstname
- * @property string $recipient_secondname
  * @property int $type
  * @property int $storage
  * @property GeoAddress $local
  * @property GeoAddress $region
  * @property string $company
- * @property FullName $fullname
  */
 class UserDelivery extends Model
 {
@@ -36,22 +33,17 @@ class UserDelivery extends Model
 
     protected $fillable = [
         'user_id',
-        'recipient_surname',
-        'recipient_firstname',
-        'recipient_secondname',
         'type',
         'storage',
         'region',
         'local',
         'company',
         'post',
-        'fullname',
     ];
 
     protected $casts = [
         'region' => GeoAddressCast::class,
         'local' => GeoAddressCast::class,
-        'fullname' => FullNameCast::class,
     ];
 
     public function isStorage(): bool
@@ -75,7 +67,6 @@ class UserDelivery extends Model
             'user_id' => $user_id,
             'local' => new GeoAddress(),
             'region' => new GeoAddress(),
-            'fullname' => new FullName(),
         ]);
     }
 
@@ -86,12 +77,6 @@ class UserDelivery extends Model
         ]);
     }
 
-    public function setFullName(FullName $fullName)
-    {
-        $this->update([
-            'fullname' => $fullName,
-        ]);
-    }
 
     public function setDeliveryLocal($storage, GeoAddress $local)
     {
@@ -110,7 +95,7 @@ class UserDelivery extends Model
     public function getAddressDelivery(): string
     {
         if ($this->isLocal()) return $this->local->address;
-        if ($this->isRegion()) return $this->region->address . '( ' . DeliveryHelper::name($this->company) . ')';
+        if ($this->isRegion()) return $this->region->address . ' (' . DeliveryHelper::name($this->company) . ')';
         if ($this->isStorage()) return Storage::find($this->storage)->address;
 
         throw new \DomainException('Неверный тип доставки, невозможно вернуть адрес');

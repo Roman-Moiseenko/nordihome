@@ -3,9 +3,10 @@
 namespace App\Modules\User\Entity;
 
 
-use App\Modules\Delivery\Entity\UserDelivery;
+use App\Casts\FullNameCast;
+use App\Entity\FullName;
+use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
-use App\Modules\Order\Entity\UserPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -25,6 +26,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property UserDelivery $delivery
  * @property UserPayment $payment
  * @property Subscription[] $subscriptions
+ * @property FullName $fullname
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -33,6 +35,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
     protected string $guard = 'user';
     public string $uploads = 'uploads/users/';
     public const STATUS_WAIT = 'wait';
@@ -41,6 +44,7 @@ class User extends Authenticatable
     const CLIENT_RETAIL = 7700;
     const CLIENT_BULK = 7701;
     const CLIENT_SPECIAL = 7702;
+
 
     protected $fillable = [
         'email',
@@ -59,6 +63,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'fullname' => FullNameCast::class,
     ];
 
     //*** IS-...
@@ -97,6 +102,7 @@ class User extends Authenticatable
     {
         return $this->client == self::CLIENT_SPECIAL;
     }
+
     /**
      * @return string
      */
@@ -140,6 +146,20 @@ class User extends Authenticatable
         ]);
     }
 
+    /**
+     * @param string $surname
+     * @param string $firstname
+     * @param string $secondname
+     * @return void
+     */
+    public function setNameField(string $surname = '', string $firstname = '', string $secondname = '')
+    {
+        if (!empty($surname)) $this->fullname->surname = $surname;
+        if (!empty($firstname)) $this->fullname->firstname = $firstname;
+        if (!empty($secondname)) $this->fullname->secondname = $secondname;
+        $this->save();
+    }
+
     //RELATIONS
     public function wishes()
     {
@@ -147,36 +167,38 @@ class User extends Authenticatable
     }
 
     //TODO Перенести в таблицу Users или сделать UserDefault
+    // delivery и payment
     public function delivery()
     {
-        return $this->hasOne(UserDelivery::class, 'user_id', 'id');
+        return $this->hasOne(UserDelivery::class, 'user_id', 'id')->withDefault();
     }
 
-    //TODO Перенести в таблицу Users или сделать UserDefault
     public function payment()
     {
-        return $this->hasOne(UserPayment::class, 'user_id', 'id');
+        $payments = PaymentHelper::payments();
+        $default = array_key_first($payments);
+
+        return $this->hasOne(UserPayment::class, 'user_id', 'id')->withDefault(['class_payment' => $default]);
     }
-
-    //TODO Добавить все платежи под учет OrderPayment
-    // ***
-
 
     public function subscriptions()
     {
         return $this->belongsToMany(Subscription::class, 'users_subscriptions', 'user_id', 'subscription_id');
     }
 
-    /**
-     * Платеж по умолчанию
-     * @return string
-     */
-    public function getDefaultPayment(): string
+
+    //*** Хелперы
+
+    public function htmlPayment(): string
     {
-        if (is_null($this->payment)) {
-            $payments = PaymentHelper::payments();
-            return array_key_first($payments);
-        }
-        return $this->payment->class_payment;
+        $payments = PaymentHelper::payments();
+        return $payments[$this->payment->class_payment]['name'];
+    }
+
+    public function htmlDelivery(): string
+    {
+        $type = DeliveryOrder::TYPES[$this->delivery->type];
+        $address = $this->delivery->getAddressDelivery();
+        return $type . ' ('. $address . ')';
     }
 }

@@ -38,7 +38,7 @@
         <div class="right-action-block">
             <div class="sticky-block">
                 <div>
-                    <button id="button-to-order" class="btn btn-dark w-100 py-3" onclick="document.getElementById('form-order-create').submit();">{{ $default->payment->online() ? 'Оплатить' : 'Оформить' }} </button>
+                    <button id="button-to-order" class="btn btn-dark w-100 py-3" onclick="document.getElementById('form-order-create').submit();">{{ $user->payment->online() ? 'Оплатить' : 'Оформить' }} </button>
                     <div class="d-flex justify-content-between mt-3">
                         <div class="fs-5">Ваш заказ</div>
                         <div id="order-count-products" class="fs-5">{{ $cart['common']['count'] }} * масса в кг</div>

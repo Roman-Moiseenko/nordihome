@@ -2,7 +2,7 @@
 
 use App\Entity\FullName;
 use App\Modules\Admin\Entity\Admin;
-use App\Modules\Delivery\Entity\UserDelivery;
+use App\Modules\User\Entity\UserDelivery;
 use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration

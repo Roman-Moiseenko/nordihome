@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
 use App\Events\OrderHasPaid;
@@ -15,7 +14,6 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\DeliveryOrder;
-use App\Modules\Delivery\Entity\UserDelivery;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
@@ -24,13 +22,13 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
-use App\Modules\Order\Entity\UserPayment;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
+use App\Modules\User\Entity\UserDelivery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -51,7 +49,6 @@ class OrderService
     private LoggerService $logger;
     private MovementService $movementService;
     private OrderReserveService $reserveService;
-
 
     public function __construct(
         DeliveryService     $deliveries,
@@ -79,19 +76,22 @@ class OrderService
         $this->reserveService = $reserveService;
     }
 
+    #[Deprecated]
     public function default_user_data(User $user = null): stdClass
     {
         /** @var User $user */
         if (is_null($user)) $user = Auth::guard('user')->user();
         $result = new stdClass();
-
+/*
         if ($user_payment = UserPayment::where('user_id', $user->id)->first()) {
             $result->payment = $user_payment;
         } else {
             $result->payment = UserPayment::register($user->id);
-        }
+        }*/
+        $result->payment = $user->payment;
+
         /** @var UserDelivery delivery */
-        $result->delivery = $this->deliveries->user($user->id);
+        $result->delivery = $user->delivery; //$this->deliveries->user($user->id);
         $result->email = $user->email;
         $result->phone = $user->phone;
         $result->user = $user;
@@ -105,17 +105,22 @@ class OrderService
     {
         $enabled = true;
         $error = '';
-        $default = $this->default_user_data();
-
-        if (isset($data['payment'])) $default->payment->setPayment($data['payment']);
-        if (isset($data['inn'])) {//Работа с ИНН. Проверяем изменился или новые данные, если да, загружаем по API
-            $default->payment->setInvoice($data['inn']);
+        if (Auth::guard('user')->check()) {
+            /** @var User $user */
+            $user = Auth::guard('user')->user();
+        } else {
+            throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
         }
 
-        $default->delivery->setDeliveryType(isset($data['delivery']) ? (int)$data['delivery'] : null);
+        if (isset($data['payment'])) $user->payment->setPayment($data['payment']);
+        if (isset($data['inn'])) {//Работа с ИНН. Проверяем изменился или новые данные, если да, загружаем по API
+            $user->payment->setInvoice($data['inn']);
+        }
 
-        if ($default->delivery->isRegion()) {
-            $default->delivery->setDeliveryTransport(
+        $user->delivery->setDeliveryType(isset($data['delivery']) ? (int)$data['delivery'] : null);
+
+        if ($user->delivery->isRegion()) {
+            $user->delivery->setDeliveryTransport(
                 $data['company'] ?? '',
                 GeoAddress::create(
                     $data['address-region'] ?? '',
@@ -125,7 +130,7 @@ class OrderService
                 )
             );
         } else {
-            $default->delivery->setDeliveryLocal(
+            $user->delivery->setDeliveryLocal(
                 isset($data['storage']) ? (int)$data['storage'] : null,
                 GeoAddress::create(
                     $data['address-local'] ?? '',
@@ -137,11 +142,11 @@ class OrderService
         }
         if (isset($data['fullname'])) {
             list ($surname, $firstname, $secondname) = explode(" ", $data['fullname']);
-            $default->delivery->setFullName(new FullName($surname, $firstname, $secondname));
+            $user->setNameField($surname, $firstname, $secondname);
         }
 
         if (isset($data['phone'])) {
-            $default->user->update([
+            $user->update([
                 'phone' => $data['phone']
             ]);
         }
@@ -151,33 +156,33 @@ class OrderService
         if ($data['order'] == 'cart') $items = $this->cart->getItems();
         if ($data['order'] == 'parser') $items = $this->parserCart->getItems();
 
-        $delivery_cost = $this->deliveries->calculate($default->delivery->user_id, $items);
+        $delivery_cost = $this->deliveries->calculate($user->id, $items);
 
         //TODO Сообщения об ошибках - неверное ИНН, Негабаритный груз для доставки (название продукта) $error
 
-        if ($default->delivery->isStorage() && empty($default->delivery->storage)) $enabled = false;
-        if ($default->delivery->isLocal() && empty($default->delivery->local->address)) $enabled = false;
+        if ($user->delivery->isStorage() && empty($user->delivery->storage)) $enabled = false;
+        if ($user->delivery->isLocal() && empty($user->delivery->local->address)) $enabled = false;
         if (
-            $default->delivery->isRegion() &&
-            (empty($default->delivery->region->address) || empty($default->delivery->company))
+            $user->delivery->isRegion() &&
+            (empty($user->delivery->region->address) || empty($user->delivery->company))
         ) $enabled = false;
-        $default = $this->default_user_data();
+        $user->refresh();
         return [
             'payment' => [
-                'is_invoice' => $default->payment->isInvoice(),
-                'invoice' => $default->payment->invoice(),
+                'is_invoice' => $user->payment->isInvoice(),
+                'invoice' => $user->payment->invoice(),
             ],
             'delivery' => [
-                'delivery_local' => $default->delivery->local->address,
-                'delivery_address' => $default->delivery->region->address,
-                'company' => $default->delivery->company,
-                'storage' => $default->delivery->storage,
-                'fullname' => $default->delivery->fullname->getFullName(),
+                'delivery_local' => $user->delivery->local->address,
+                'delivery_address' => $user->delivery->region->address,
+                'company' => $user->delivery->company,
+                'storage' => $user->delivery->storage,
+                'fullname' => $user->fullname->getFullName(),
             ],
-            'phone' => $default->phone,
+            'phone' => $user->phone,
             'amount' => [
                 'delivery' => $delivery_cost,
-                'caption' => $default->payment->online() ? 'Оплатить' : 'Оформить',
+                'caption' => $user->payment->online() ? 'Оплатить' : 'Оформить',
                 'enabled' => $enabled,
                 'error' => $error,
                 //'amount' =>
@@ -205,10 +210,15 @@ class OrderService
      */
     public function create(Request $request): Order
     {
-        $default = $this->default_user_data();
+        if (Auth::guard('user')->check()) {
+            /** @var User $user */
+            $user = Auth::guard('user')->user();
+        } else {
+            throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
+        }
 
         //$OrderItems = $this->cart->getOrderItems();
-        $order = Order::register($default->payment->user_id, Order::ONLINE);
+        $order = Order::register($user->id, Order::ONLINE);
         if ($request->has('code')) {
             $coupon = $this->repository->getCoupon($request->get('code'));
 
@@ -250,9 +260,14 @@ class OrderService
      */
     public function create_parser(): Order
     {
-        $default = $this->default_user_data();
+        if (Auth::guard('user')->check()) {
+            /** @var User $user */
+            $user = Auth::guard('user')->user();
+        } else {
+            throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
+        }
         $OrderItems = $this->parserCart->getItems();
-        $order = Order::register($default->payment->user_id, Order::PARSER);
+        $order = Order::register($user->id, Order::PARSER);
         $order->save();
         foreach ($OrderItems as $item) {
             $orderItemPre = OrderItem::new($item->product, $item->quantity, true, $order->user_id);
@@ -272,7 +287,7 @@ class OrderService
     public function create_click(Request $request)
     {
         if (Auth::guard('user')->check()) { //Проверяем клиент залогинен
-            $default = $this->default_user_data();
+            //$default = $this->default_user_data();
             $user = Auth::guard('user')->user();
         } else {
             $email = $request['email'];
@@ -286,15 +301,15 @@ class OrderService
 
                 event(new UserHasCreated($user));
             }
-            $default = $this->default_user_data($user);
+            //$default = $this->default_user_data($user);
         }
 
-        if (isset($request['payment'])) $default->payment->setPayment($request['payment']);
-        if ($request['delivery'] == 'local') $default->delivery->setDeliveryType(DeliveryOrder::LOCAL);
-        if ($request['delivery'] == 'region') $default->delivery->setDeliveryType(DeliveryOrder::REGION);
+        if (isset($request['payment'])) $user->payment->setPayment($request['payment']);
+        if ($request['delivery'] == 'local') $user->delivery->setDeliveryType(DeliveryOrder::LOCAL);
+        if ($request['delivery'] == 'region') $user->delivery->setDeliveryType(DeliveryOrder::REGION);
         $storage = null;
         if (is_numeric($request['delivery'])) {
-            $default->delivery->setDeliveryType(DeliveryOrder::STORAGE);
+            $user->delivery->setDeliveryType(DeliveryOrder::STORAGE);
             $storage = (int)$request['delivery'];
         }
         $Address = GeoAddress::create(
@@ -303,10 +318,10 @@ class OrderService
             $data['longitude'] ?? '',
             $data['post'] ?? ''
         );
-        if ($default->delivery->isRegion()) {
-            $default->delivery->setDeliveryTransport(DeliveryHelper::deliveries()[0]['class'], $Address);
+        if ($user->delivery->isRegion()) {
+            $user->delivery->setDeliveryTransport(DeliveryHelper::deliveries()[0]['class'], $Address);
         } else {
-            $default->delivery->setDeliveryLocal($storage, $Address);
+            $user->delivery->setDeliveryLocal($storage, $Address);
         }
         $product_id = $request['product_id'];
         /** @var Product $product */
@@ -332,11 +347,14 @@ class OrderService
             $password = Str::random(8); /// регистрируем его и отправляем ему письмо, со ссылкой верификации
             $user = User::register($request['email'], $password);
             $user->update(['phone' => $request['phone']]);
-            $this->deliveries->user($user->id)
-                ->setFullName(new FullName('', $request['name'], ''));
+            $user->setNameField(firstname: $request['name']);
+           /* $this->deliveries->user($user->id)
+                ->setFullName(new FullName('', $request['name'], ''));*/
             event(new UserHasCreated($user));
         } else {//2. Пользователь старый.
             $user = User::find((int)$request['user_id']);
+            //Обновить Имя
+            $user->setNameField(firstname: $request['name']);
         }
         $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
 
@@ -437,14 +455,13 @@ class OrderService
     {
         $order = $item->order;
 
+        if ($item->product->getPriceMin() > $sell_cost) throw new \DomainException('Цена продажи меньше установленной минимальной!');
+
         //if ($order->manual_calculation == false) throw new \DomainException('Ручная установка цены невозможна');
         //$delta = $item->sell_cost - $sell_cost;
         $item->sell_cost = $sell_cost;
         //$item->fix_manual = true; //Фиксируем цену
         $item->save();
-
-        //$order->manual += $delta * $item->quantity;
-        //$order->save();
         $order->refresh();
         $this->recalculation($order);
 
@@ -474,14 +491,6 @@ class OrderService
     public function delete_item(OrderItem $item): Order
     {
         $order = $item->order;
-        //Если для товара была установлена ручная скидка, то удаляя, убираем разницу из ручной скидки
-        /*if ($order->manual_calculation) {
-            $delta = 0;
-            if (is_null($item->discount_id)) $delta = $item->base_cost - $item->sell_cost;
-            $order->manual -= $item->quantity * $delta;
-            if ($order->manual < 0) $order->manual = 0;
-            $order->save();
-        }*/
         $this->logger->logOrder($order, 'Удален товар из заказа', $item->product->name, (string)$item->quantity);
         foreach ($item->reserves as $reserve) {
             $reserve->delete();
@@ -509,6 +518,7 @@ class OrderService
         $order->save();
         //Раскидываем скидку на все товары не из акций
         $base_amount = $order->getBaseAmountNotDiscount();
+        if ($base_amount == 0) throw new \DomainException('В заказе нет товаров для установки ручной скидки');
         /*foreach ($order->items as $item) {
             if (is_null($item->discount_id)) {
                 $base_amount += $item->base_cost * $item->quantity;
@@ -518,7 +528,11 @@ class OrderService
         $percent_item = $discount / $base_amount;
         foreach ($order->items as $item) {
             if (is_null($item->discount_id)) {
-                $item->sell_cost = (int)ceil($item->base_cost * (1 - $percent_item));
+                $sell_cost = (int)ceil($item->base_cost * (1 - $percent_item));
+                if ($item->product->getPriceMin() > $sell_cost)
+                    throw new \DomainException('Цена продажи меньше установленной минимальной для товара ' . $item->product->name);
+
+                $item->sell_cost = $sell_cost;
                 $item->save();
             }
         }

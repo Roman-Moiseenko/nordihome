@@ -3,7 +3,7 @@
 <div class="box p-3 flex flex-row items-center lg:items-start mt-4">
     <div class="truncate sm:whitespace-normal flex items-center my-auto">
         <x-base.lucide icon="user" class="w-4 h-4"/>&nbsp;
-        <a href="{{ route('admin.users.show', $order->user) }}">{{ $order->user->delivery->fullname->getFullName() }}</a>
+        <a href="{{ route('admin.users.show', $order->user) }}">{{ $order->userFullName() }}</a>
     </div>
     <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
         <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;<a

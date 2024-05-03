@@ -8,7 +8,7 @@
         {{ \App\Forms\Input::create('user-email', ['placeholder' => 'Почта', 'class' => 'mt-3 search-user', 'value' => (isset($order) ? $order->user->email : '')])
             ->help('* Обязательное поле, для отправки счета')->disabled(isset($order))
             ->show() }}
-        {{ \App\Forms\Input::create('user-name', ['placeholder' => 'Имя', 'class' => 'mt-3', 'value' => (isset($order) ? $order->user->delivery->fullname->firstname : '')])
+        {{ \App\Forms\Input::create('user-name', ['placeholder' => 'Имя', 'class' => 'mt-3', 'value' => (isset($order) ? $order->user->fullname->firstname : '')])
             ->help('')->disabled(isset($order))
             ->show() }}
         <div class="mt-4 text-danger text-xs">

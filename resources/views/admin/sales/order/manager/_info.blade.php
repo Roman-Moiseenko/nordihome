@@ -3,7 +3,7 @@
 <div class="box p-3 flex flex-row items-center lg:items-start mt-4">
     <div class="truncate sm:whitespace-normal flex items-center my-auto">
         <x-base.lucide icon="user" class="w-4 h-4"/>&nbsp;
-        <a href="{{ route('admin.users.show', $order->user) }}">{{ $order->user->delivery->fullname->getFullName() }}</a>
+        <a href="{{ route('admin.users.show', $order->user) }}">{{ $order->userFullName() }}</a>
     </div>
     <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
         <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;<a
@@ -13,13 +13,13 @@
         <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ $order->user->phone }}
     </div>
     <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
-        <x-base.lucide icon="map" class="w-4 h-4"/>&nbsp;Адрес по умолчанию&nbsp;
+        <x-base.lucide icon="map" class="w-4 h-4"/>&nbsp;{{ $order->user->htmlDelivery() }}&nbsp;
         <button class="btn btn-warning-soft btn-sm ml-1">
             <x-base.lucide icon="pencil" class="w-4 h-4"/>
         </button>
     </div>
     <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
-        <x-base.lucide icon="coins" class="w-4 h-4"/>&nbsp;Оплата по умолчанию&nbsp;
+        <x-base.lucide icon="coins" class="w-4 h-4"/>&nbsp;{{ $order->user->htmlPayment() }}&nbsp;
         <button class="btn btn-warning-soft btn-sm ml-1">
             <x-base.lucide icon="pencil" class="w-4 h-4"/>
         </button>

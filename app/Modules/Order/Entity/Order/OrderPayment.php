@@ -63,6 +63,6 @@ class OrderPayment extends Model
     //Хелперы
     public function getUserFullName(): string
     {
-        return $this->order->user->delivery->fullname->getFullName();
+        return $this->order->user->fullname->getFullName();
     }
 }
