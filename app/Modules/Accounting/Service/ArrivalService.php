@@ -17,6 +17,7 @@ use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Service\OrderReserveService;
 
 use App\Modules\Product\Entity\Product;
+use App\Notifications\StaffMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\ArrayShape;
@@ -166,12 +167,15 @@ class ArrivalService
             //Создаем перемещения под все заказы со статусом на отбытие
             $orders_movement = [];
             $storages_movement = [];
+            $orders = [];
             foreach ($arrival->supply->stacks as $stack) {
                 //Поступления, для которых есть стек из заказа, ставим в резерв
                 if (!is_null($stack->orderItem)) {
                     $this->reserveService->toReserveStorage($stack->orderItem, $arrival->storage, $stack->quantity);
                     $stack->orderItem->preorder = false;
                     $stack->orderItem->save();
+                    //сохраняем список $orders для оповещения
+                    $orders[$stack->orderItem->order_id] = $stack->orderItem->order;
                 }
 
                 if ($stack->storage_id != $arrival->storage_id) { //Хранилище отличается, требуется Перемещение
@@ -183,6 +187,12 @@ class ArrivalService
                     }
                 }
 
+            }
+            //Оповещаем всех менеджеров по их Заказам
+            foreach ($orders as $order) {
+                //TODO Надо ли оповещать клиента?
+                $message = 'Товар по заказу ' . $order->htmlNum() . ' прибыл на основной склад';
+                $order->manager->notify(new StaffMessage($message));
             }
 
             //Создаем перемещения для заказов
@@ -220,29 +230,6 @@ class ArrivalService
                 $this->movementService->activate($movement);
                 event(new MovementHasCreated($movement));
             }
-
-            //Проходим по стеку к заказу поставщика
-            /*
-            foreach ($arrival->supply->stacks as $stack) {
-                //Если у стека есть элемент Заказа Клиента и совпадает Хранилище
-                if (!empty($stack->orderItem)) {
-                    $reserve = $this->reserveService->toReserve(
-                        $stack->orderItem->product,
-                        $stack->orderItem->quantity,
-                        'order',
-                        24 * 60 * 3,
-                        $stack->orderItem->order->user_id);
-
-                    $stack->orderItem->reserve_id = $reserve->id;
-                    $stack->orderItem->save();
-                    if ($stack->storage_id == $arrival->storage_id) {
-                        $reserve->storage_id = $stack->storage_id;
-                        $reserve->save();
-                    }
-                }
-
-            }
-            */
         }
 
         event(new ArrivalHasCompleted($arrival));

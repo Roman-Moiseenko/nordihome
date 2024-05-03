@@ -15,6 +15,7 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Product\Entity\Product;
+use App\Notifications\StaffMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +62,6 @@ class MovementService
         }
         $document->departure();
         $document->setNumber();
-        //TODO Оповещаем склад
     }
 
     public function departure(MovementDocument $document)
@@ -97,24 +97,11 @@ class MovementService
                     $movementProduct->quantity);
         }
         $document->completed();
-        if (!empty($document->order())) {
-            //TODO Если есть в перемещении заказ, Оповещаем менеджера
+        if (!empty($document->order())) { //Уведомляем менеджера, что товар поступил
+            $message = 'Перемещение товара по заказу ' . $document->order()->htmlNum();
+            $document->order()->manager->notify(new StaffMessage($message));
         }
 
-    }
-
-    //TODO Перемещение менять нельзя
-    #[Deprecated]
-    public function update(Request $request, MovementDocument $movement): MovementDocument
-    {
-        //
-        if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
-        $movement->number = $request['number'] ?? '';
-        $movement->storage_out = (int)$request['storage_out'];
-        $movement->storage_in = (int)$request['storage_in'];
-        $movement->save();
-
-        return $movement;
     }
 
     public function destroy(MovementDocument $movement)
@@ -146,15 +133,5 @@ class MovementService
         $item->quantity = (int)$request['quantity'];
         $item->save();
         return $item->document->getInfoData();
-    }
-
-
-    public function createByExpense(OrderExpense $expense, array $request):? MovementDocument
-    {
-        //TODO !!!!!
-        //Проверяем наличие на складе
-        //Если нехватает, создаем перемещение
-
-        return null;
     }
 }

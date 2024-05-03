@@ -135,6 +135,11 @@ class Order extends Model
         return $this->status->value == OrderStatus::PAID;
     }
 
+    public function InWork(): bool
+    {
+        return $this->status->value >= OrderStatus::PREPAID && $this->status->value < OrderStatus::CANCEL;
+    }
+
     /**
      * Заказ оплачен полностью, но не завершен или отменен
      * @return bool

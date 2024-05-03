@@ -111,7 +111,6 @@ class Storage extends Model
         return $storageItem->getQuantityReserve();
     }
 
-    //TODO Использование ??? Переименовать в getAvailable ???
     public function getAvailable(Product $product): int
     {
         return $this->getQuantity($product) - $this->getReserve($product) - $this->getDeparture($product);
