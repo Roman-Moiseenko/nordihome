@@ -10,12 +10,18 @@
         </div>
     </div>
     <div class="box p-3 mt-3">
-        <button class="btn btn-primary mr-3">На сборку</button>
-        <button class="btn btn-secondary" type="button" data-tw-toggle="modal"
-                data-tw-target="#cancel-confirmation-modal"
-                data-route = {{ route('admin.sales.expense.destroy', $expense) }}>
-            Отменить
-        </button>
+        @if($expense->isNew())
+            <button class="btn btn-primary mr-3">На сборку</button>
+            <button class="btn btn-secondary" type="button" data-tw-toggle="modal"
+                    data-tw-target="#cancel-confirmation-modal"
+                    data-route = {{ route('admin.sales.expense.destroy', $expense) }}>
+                Отменить
+            </button>
+        @endif
+
+        @if($expense->isCompleted())
+            <span class="font-medium">Заказ выдан</span>
+        @endif
     </div>
 
     <div class="box col-span-12 overflow-auto lg:overflow-visible p-4 mt-3">
@@ -54,7 +60,7 @@
     </div>
 
     <div class="grid grid-cols-12 gap-x-6 pb-20">
-        Перемещения
+
     </div>
 
     <div class="grid grid-cols-12 gap-x-6 pb-20">

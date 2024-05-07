@@ -38,11 +38,16 @@
         <span id="remains-amount">{{ price($order->getPaymentAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) }}</span>&nbsp;
         (<span id="discount-amount" class="font-medium">{{ price($order->getCoupon() + $order->getDiscountOrder()) }}</span>)
     </div>
-    <div class="w-56 text-center">
+    <div>
+        <button id="button-expense" class="btn btn-primary ml-2 mr-2" type="button"
+                data-route="{{ route('admin.sales.expense.create') }}" data-storage="{{ $mainStorage->id }}"
+            {{ ($order->getTotalAmount() > $order->getPaymentAmount()) ? 'disables' : ''  }}>Распоряжение на отгрузку</button>
+    </div>
+    <!--div class="w-56 text-center">
         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="primary" class="w-100"
                                    id="button-expense" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
-                Создать распоряжение
+                На отгрузку
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
             </x-base.popover.button>
             <x-base.popover.panel>
@@ -60,8 +65,38 @@
                         <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
                             Отмена
                         </x-base.button>
-                        <button id="create-expense" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expense.store') }}">
+                        <button id="create-expense" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expense.create') }}">
                             Создать
+                        </button>
+                    </div>
+                </div>
+            </x-base.popover.panel>
+        </x-base.popover>
+    </div-->
+    <div class="w-56 text-center">
+        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="primary" class="w-100"
+                                   id="button-issue" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
+                Выдать со склада
+                <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+            </x-base.popover.button>
+            <x-base.popover.panel>
+                <div class="p-2">
+                    <x-base.tom-select id="select-storage-issue" name="storage" class=""
+                                       data-placeholder="Выберите Склад">
+                        <option value="0"></option>
+                        @foreach($storages as $storage)
+                            <option value="{{ $storage->id }}"
+                            >{{ $storage->name }}</option>
+                        @endforeach
+                    </x-base.tom-select>
+
+                    <div class="flex items-center mt-3">
+                        <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
+                            Отмена
+                        </x-base.button>
+                        <button id="create-issue" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expense.issue') }}">
+                            Выдать
                         </button>
                     </div>
                 </div>
@@ -82,7 +117,11 @@
     let createExpense = document.getElementById('create-expense');
 
     let buttonExpense = document.getElementById('button-expense');
-    let buttonCreateExpense = document.getElementById('create-expense');
+    //let buttonCreateExpense = document.getElementById('create-expense');
+    let buttonCreateExpense = document.getElementById('button-expense');
+
+    let buttonIssue = document.getElementById('button-issue');
+    let buttonCreateIssue = document.getElementById('create-issue');
 
     setAjax(route, _check(), _updateData);
 
@@ -106,15 +145,29 @@
 
     buttonCreateExpense.addEventListener('click', function () {
         let route = buttonCreateExpense.dataset.route;
-        let selectStorage = document.getElementById('select-storage');
+        //let selectStorage = document.getElementById('select-storage');
+        let selectStorage = buttonCreateExpense.dataset.storage;
+        let data = _check();
+        data['storage_id'] = Number(selectStorage); //selectStorage.value
+        /* if (data['storage_id'] === 0) {
+            window.notification('Неполные данные', 'Не выбран склад выдачи заказа', 'info');
+            return;
+        } */
+        data['order_id'] = {{ $order->id }};
+       // console.log(data);
+        setAjax(route, data , _expenseShow);
+    });
+
+    buttonCreateIssue.addEventListener('click', function () {
+        let route = buttonCreateIssue.dataset.route;
+        let selectStorage = document.getElementById('select-storage-issue');
         let data = _check();
         data['storage_id'] = Number(selectStorage.value);
-        if (data['storage_id'] === 0) {
+         if (data['storage_id'] === 0) {
             window.notification('Неполные данные', 'Не выбран склад выдачи заказа', 'info');
             return;
         }
         data['order_id'] = {{ $order->id }};
-       // console.log(data);
         setAjax(route, data , _expenseShow);
     });
 
@@ -155,6 +208,7 @@
         remainsAmount.innerText = data.remains;
         discountAmount.innerText = data.discount;
         buttonExpense.disabled = data.disable;
+        buttonIssue.disabled = data.disable;
         //createExpense.disabled = data.disable;
     }
 

@@ -351,7 +351,7 @@ Route::group(
 
                 Route::resource('order', 'OrderController');
                 Route::resource('payment', 'PaymentController');
-                Route::resource('expense', 'ExpenseController');
+               // Route::resource('expense', 'ExpenseController');
                 //Заказы
                 Route::group(
                     [
@@ -411,8 +411,10 @@ Route::group(
                         'as' => 'expense.',
                     ],
                     function () {
-                        // Route::post('/create', 'ExpenseController@create')->name('create');
-
+                        Route::post('/create', 'ExpenseController@create')->name('create');
+                        Route::post('/issue', 'ExpenseController@issue')->name('issue');
+                        Route::get('/show/{expense}', 'ExpenseController@show')->name('show');
+                        Route::delete('/destroy/{expense}', 'ExpenseController@destroy')->name('destroy');
                     }
                 );
                 //Возвраты

@@ -3,15 +3,20 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Events\ExpenseHasCompleted;
+use App\Events\OrderHasCanceled;
+use App\Events\OrderHasCompleted;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Entity\Order\OrderStatus;
 
 
 class ExpenseService
@@ -37,7 +42,6 @@ class ExpenseService
         /** @var Order $order */
         $order = Order::find($request['order_id']);
 
-        $to_movement = [];
         $expense = OrderExpense::register($order->id, $storage->id);
         $items = $request['items'];
         foreach ($items as $item) {
@@ -96,9 +100,40 @@ class ExpenseService
         $expense->save();
     }
 
+    /**
+     * ВЫдатьтовар со склада
+     * @param array $request
+     * @return OrderExpense
+     */
+    public function issue(array $request): OrderExpense
+    {
+        $expense = $this->create($request);
+
+        $expense->type = DeliveryOrder::STORAGE;
+        $expense->recipient = clone $expense->order->user->fullname;
+        $expense->phone = $expense->order->user->phone;
+        $expense->save();
+        $expense->setNumber();
+        $this->completed($expense);
+        $expense->refresh();
+        return $expense;
+    }
+
+    public function assembly(OrderExpense $expense)
+    {
+
+    }
+
     public function completed(OrderExpense $expense)
     {
-        //TODO Проверка, если все товары выданы, то завершаем Заказ - статус COMPLETED
+        $expense->completed();
+
+        if ($expense->order->getExpenseAmount() == $expense->order->getTotalAmount()) {
+            $expense->order->setStatus(OrderStatus::COMPLETED);
+            event(new OrderHasCompleted($expense->order));
+        } else {
+            event(new ExpenseHasCompleted($expense));
+        }
     }
 
     //Установить точку сборки

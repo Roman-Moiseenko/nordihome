@@ -1,4 +1,4 @@
-<livewire:admin.sales.order.user-info :order="$order" />
+<livewire:admin.sales.order.user-info :order="$order" :edit="false"/>
 
 <h2 class=" mt-3 font-medium">Информация о заказе</h2>
 <div class="box p-3 flex flex-col items-center lg:items-start mt-2">

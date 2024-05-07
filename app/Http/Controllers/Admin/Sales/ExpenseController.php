@@ -18,11 +18,6 @@ class ExpenseController extends Controller
         $this->service = $service;
     }
 
-    public function create()
-    {
-        flash('Данный метод не должен вызываться');
-        return redirect()->route('home');
-    }
 
     public function show(OrderExpense $expense)
     {
@@ -38,7 +33,7 @@ class ExpenseController extends Controller
     }
 
     //Через AJAX
-    public function store(Request $request)
+    public function create(Request $request)
     {
         return $this->try_catch_ajax(function () use ($request) {
             $data = json_decode($request['data'], true);
@@ -48,5 +43,13 @@ class ExpenseController extends Controller
         });
     }
 
+    public function issue(Request $request)
+    {
+        return $this->try_catch_ajax(function () use ($request) {
+            $data = json_decode($request['data'], true);
 
+            $expense = $this->service->issue($data);
+            return response()->json(route('admin.sales.expense.show', $expense));
+        });
+    }
 }

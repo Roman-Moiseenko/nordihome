@@ -71,7 +71,7 @@ class OrderController extends Controller
         return $this->try_catch_admin(function () use ($request, $order) {
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
             $storages = Storage::orderBy('name')->getModels();
-
+            $mainStorage = Storage::where('default', true)->first();
             if ($order->isNew())
                 return view('admin.sales.order.new.show', compact('order', 'staffs'));
             if ($order->isManager())
@@ -79,7 +79,7 @@ class OrderController extends Controller
             if ($order->isAwaiting())
                 return view('admin.sales.order.awaiting.show', compact('order'));
             if ($order->isPrepaid() || $order->isPaid())
-                return view('admin.sales.order.paid.show', compact('order', 'storages'));
+                return view('admin.sales.order.paid.show', compact('order', 'storages', 'mainStorage'));
             if ($order->isCompleted())
                 return view('admin.sales.order.completed.show', compact('order'));
             if ($order->isCanceled())

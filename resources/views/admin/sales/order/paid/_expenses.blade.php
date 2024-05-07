@@ -3,6 +3,7 @@
     <div class="w-32 text-center">Дата</div>
     <div class="w-32 text-center">Сумма</div>
     <div class="w-32 text-center">Склад выдачи</div>
+    <div class="w-32 text-center">Доставка</div>
     <div class="w-32 text-center">Статус</div>
 </div>
 
@@ -13,6 +14,7 @@
             <div class="w-32 text-center">{{ $expense->created_at->format('d-m-Y H:i') }}</div>
             <div class="w-32 text-center">{{ price($expense->getAmount()) }}</div>
             <div class="w-32 text-center">{{ $expense->storage->name }}</div>
+            <div class="w-32 text-center">{{ $expense->typeHTML() }}</div>
             <div class="w-32 text-center">{{ $expense->statusHTML() }}</div>
         </div>
     </a>

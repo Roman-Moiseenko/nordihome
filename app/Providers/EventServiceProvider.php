@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Events\ArrivalHasCompleted;
 use App\Events\DepartureHasCompleted;
+use App\Events\ExpenseHasCompleted;
 use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
 use App\Events\OrderHasCanceled;
+use App\Events\OrderHasCompleted;
 use App\Events\OrderHasCreated;
 use App\Events\OrderHasLogger;
 use App\Events\OrderHasRefund;
@@ -22,12 +24,14 @@ use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasCreated;
 use App\Events\UserHasRegistered;
 use App\Listeners\CheckNotificationStatus;
+use App\Listeners\NotificationExpenseCompleted;
 use App\Listeners\NotificationOrderCanceled;
 use App\Listeners\NotificationMovementCompleted;
 use App\Listeners\NotificationArrivalCompleted;
 use App\Listeners\NotificationDepartureNew;
 use App\Listeners\NotificationNewLogger;
 use App\Listeners\NotificationMovementNew;
+use App\Listeners\NotificationOrderCompleted;
 use App\Listeners\NotificationOrderNew;
 use App\Listeners\NotificationPricingCompleted;
 use App\Listeners\NotificationProductParserNew;
@@ -123,6 +127,13 @@ class EventServiceProvider extends ServiceProvider
         ProductHasPublished::class => [
             NotificationProductPublished::class,
             ],
+        OrderHasCompleted::class => [
+            NotificationOrderCompleted::class
+        ],
+        ExpenseHasCompleted::class => [
+            NotificationExpenseCompleted::class
+        ],
+
     ];
 
     /**

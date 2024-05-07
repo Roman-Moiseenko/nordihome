@@ -32,9 +32,11 @@
                     <div class="mt-5">
                         @include('admin.sales.order.completed._products')
                     </div>
+                    @if($order->additions()->count() > 0)
                     <div class="mt-5">
                         @include('admin.sales.order.completed._additions')
                     </div>
+                    @endif
                 </div>
             </div>
             @if(!is_null($order->refund))
