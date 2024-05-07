@@ -477,7 +477,7 @@ class OrderService
      */
     public function discount_item_percent(OrderItem $item, float $percent): Order
     {
-        if ($percent > 50) throw new \DomainException('Скидка слишком высока');
+        if ($percent > 100) throw new \DomainException('Скидка слишком высока');
 
         $sell_cost = (int)ceil($item->base_cost - $item->base_cost * $percent / 100);
         return $this->update_sell($item, $sell_cost);

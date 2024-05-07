@@ -44,7 +44,7 @@ class ManagerAdditions extends Component
             ['purpose'=> $this->form_purpose, 'amount' => $this->form_amount, 'comment' => $this->form_comment]);
         $this->form_purpose = 0;
         $this->form_amount = 0;
-        $this->form_comment = 0;
+        $this->form_comment = '';
         $this->refresh_fields();
         $this->dispatch('update-amount-order');
     }

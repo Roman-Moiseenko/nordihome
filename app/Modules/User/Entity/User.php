@@ -45,6 +45,9 @@ class User extends Authenticatable
     const CLIENT_BULK = 7701;
     const CLIENT_SPECIAL = 7702;
 
+    protected $attributes = [
+        'fullname' => '{}',
+    ];
 
     protected $fillable = [
         'email',

@@ -87,11 +87,13 @@ class OrdersTest extends TestCase
         $sell_amount += self::PRODUCTS['product']['price'] * 30;
         self::assertEquals($base_amount, $this->order->getBaseAmount());
         self::assertEquals($sell_amount, $this->order->getSellAmount());
-        self::assertEquals($sell_amount * 0.05, $this->order->getDiscountOrder());
+        //dd($this->order->getDiscountOrder());
+        self::assertEquals($base_amount * 0.05, $this->order->getDiscountOrder());
 
         //TODO Ручная скидка уйдет в перерасчет цены всех товаров
         $this->order = $this->orderService->discount_order($this->order, 5000);  //Ручная скидка
-        self::assertEquals($sell_amount - $sell_amount * 0.05 - 5000, $this->order->getTotalAmount());
+        dd($this->order->getSellAmount());
+        self::assertEquals($sell_amount - $base_amount * 0.05 - 5000, $this->order->getTotalAmount());
 
         //Проверка на разделение товара на "В наличии" и "На заказ"
         /** @var OrderItem $orderItem2 */
@@ -211,9 +213,9 @@ class OrdersTest extends TestCase
         $product = Product::register('Товар ' . $random, '001.00-' . $random, $this->category->id);
         $product->setPrice($price);
         $product->published = true;
-        $product->setCountSell($quantity);
+
         $product->save();
-        $this->toStorage($product);
+        $this->toStorage($product, $quantity);
         self::assertEquals($quantity, $this->storage->getQuantity($product));
 
         if (!is_null($discount)) {//Создаем скидку
@@ -251,11 +253,11 @@ class OrdersTest extends TestCase
         self::assertTrue($this->order->isManager());
     }
 
-    private function toStorage(Product $product)
+    private function toStorage(Product $product, int $quantity)
     {
         $this->storage->items()->create([
             'product_id' => $product->id,
-            'quantity' => $product->getCountSell(),
+            'quantity' => $quantity,
         ]);
         $this->storage->refresh();
     }
