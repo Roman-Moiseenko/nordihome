@@ -43,7 +43,13 @@
                     let callback = $(this).parent().parent().parent().attr('data-callback');
 
                     if (_inputHidden !== undefined) {
+
                         _inputHidden.val($(this).data('id'));
+                        _inputHidden.trigger('change');
+                        console.log('****');
+                        //document.getElementById('hidden-id').value = $(this).data('id');
+                        //document.getElementById('hidden-id').dispatchEvent(new Event('input'));
+                        //document.getElementById('hidden-id').dispatchEvent(new Event('change'));
                     }
                     _inputSearch.val($(this).data('name'));
                     _inputSearch.attr('data-id', $(this).data('id'));
@@ -54,6 +60,9 @@
                     _inputSearch.attr('data-code', $(this).data('code'));
                     if ($(this).data('other') !== undefined) _inputSearch.attr('data-other', $(this).data('other'));
                     resultBlock.removeClass("show");
+
+                    //_inputHidden.change();
+                    //_inputHidden.input();
                     if (callback !== undefined) { //Колбек при выборе элемента
                         callback = callback.replace(/"/g, '');
                         eval(callback);

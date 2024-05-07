@@ -123,7 +123,7 @@ class OrdersTest extends TestCase
 
         //Проверка на изменение цены услуги
         $additional = OrderAddition::where('order_id', $this->order->id)->where('purpose', OrderAddition::PAY_DELIVERY)->first();
-        $this->order = $this->orderService->update_addition($additional, 4500);
+        $this->order = $this->orderService->addition_amount($additional, 4500);
         self::assertEquals(6000, $this->order->getAdditionsAmount());
         $total = $this->order->getTotalAmount();
 

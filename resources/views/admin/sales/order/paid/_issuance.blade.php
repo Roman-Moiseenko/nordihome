@@ -14,7 +14,7 @@
     <div class="w-20 text-center"></div>
 </div>
 @foreach($order->items as $i => $item)
-    @include('admin.sales.order.paid._issuance-item', ['i' => $i, 'item' => $item])
+    <livewire:admin.sales.order.paid-item :item="$item" :i="$i" :storages="$storages" />
 @endforeach
 
 <h2 class=" mt-3 font-medium">Услуги</h2>
@@ -27,21 +27,21 @@
 </div>
 
 @foreach($order->additions as $i => $addition)
-    @include('admin.sales.order.paid._issuance-addition', ['i' => $i, 'addition' => $addition])
+    <livewire:admin.sales.order.paid-addition :addition="$addition" :i="$i" />
 @endforeach
 
 <div class="box flex items-center font-semibold mt-3 p-2">
     <div class="w-40 text-center">Сумма в распоряжении</div>
     <div id="expense-amount" class="w-40 text-center">{{ price($order->getTotalAmount() - $order->getExpenseAmount()) }}</div>
     <div class="w-40 text-center">Остаток на выдачу</div>
-    <div id="remains-amount" class="w-40 text-center">
-        {{ price($order->getPaymentAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) }}
-        <span class="font-medium">{{ price($order->getCoupon() + $order->getDiscountOrder()) }}</span>
+    <div class="w-40 text-center">
+        <span id="remains-amount">{{ price($order->getPaymentAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) }}</span>&nbsp;
+        (<span id="discount-amount" class="font-medium">{{ price($order->getCoupon() + $order->getDiscountOrder()) }}</span>)
     </div>
     <div class="w-56 text-center">
         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="primary" class="w-100"
-                id="button-expense" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
+                                   id="button-expense" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
                 Создать распоряжение
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
             </x-base.popover.button>
@@ -78,17 +78,31 @@
 
     let expenseAmount = document.getElementById('expense-amount');
     let remainsAmount = document.getElementById('remains-amount');
+    let discountAmount = document.getElementById('discount-amount');
     let createExpense = document.getElementById('create-expense');
 
     let buttonExpense = document.getElementById('button-expense');
     let buttonCreateExpense = document.getElementById('create-expense');
 
     setAjax(route, _check(), _updateData);
-    Array.from(inputUpdateData).forEach(function (input) {
+
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('issuance-update', (event) => {
+            console.log(event);
+            setAjax(route, _check(), _updateData);
+            //if(event.icon === undefined) event.icon = 'danger';
+            //window.notification(event.title, event.message, event.icon);
+        });
+    });
+
+
+ /*   Array.from(inputUpdateData).forEach(function (input) {
         input.addEventListener('change', function () {
             setAjax(route, _check(), _updateData)
         });
     });
+
+*/
 
     buttonCreateExpense.addEventListener('click', function () {
         let route = buttonCreateExpense.dataset.route;
@@ -100,7 +114,7 @@
             return;
         }
         data['order_id'] = {{ $order->id }};
-        console.log(data);
+       // console.log(data);
         setAjax(route, data , _expenseShow);
     });
 
@@ -111,6 +125,7 @@
                 let id = checkbox.value;
                 let value = document.getElementById(checkbox.dataset.input).value;
                 let key = checkbox.getAttribute('name');
+                //console.log(id, value, key);
                 data[key].push({
                     id: id,
                     value: value
@@ -138,6 +153,7 @@
     function _updateData(data) {
         expenseAmount.innerText = data.expense;
         remainsAmount.innerText = data.remains;
+        discountAmount.innerText = data.discount;
         buttonExpense.disabled = data.disable;
         //createExpense.disabled = data.disable;
     }

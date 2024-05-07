@@ -154,8 +154,9 @@ class Order extends Model
         return $this->status->value >= OrderStatus::ORDER_SERVICE && $this->status->value < OrderStatus::CANCEL;
     }
 
-    public function isCompleted(): bool
+    public function isCompleted(bool $only = false): bool
     {
+        if ($only) return $this->status->value == OrderStatus::COMPLETED;
         return $this->status->value >= OrderStatus::COMPLETED;
     }
 
@@ -170,7 +171,7 @@ class Order extends Model
         string $comment = ''
     )
     {
-        if ($this->finished) throw new \DomainException('Заказ закрыт, статус менять нельзя');
+        if ($this->finished && $value != OrderStatus::COMPLETED_REFUND) throw new \DomainException('Заказ закрыт, статус менять нельзя');
         if ($this->isStatus($value)) throw new \DomainException('Статус уже назначен');
         if ($this->status->value > $value) throw new \DomainException('Нарушена последовательность статусов');
 

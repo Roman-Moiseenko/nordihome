@@ -14,15 +14,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $comment
- * @property int $status
+ * @property float $amount - сумма на возврат
  * @property OrderRefundItem[] $items
  * @property OrderRefundAddition[] $additions
+ * @property OrderRefundPayment[] $payments
  * @property Order $order
  * @property Admin $staff
  */
 class OrderRefund extends Model
 {
-    const NEW = 80;
+ /*   const NEW = 80;
     const CONFIRMED = 81; //Проставляет ответственный за деньги, руководитель
     const PAID = 82; //Проставляет Бухгалтер
     const COMPLETED = 89; //Проставляет менеджер, отчитался за работу!
@@ -33,7 +34,7 @@ class OrderRefund extends Model
         self::PAID => 'Оплачено',
         self::COMPLETED => 'Завершен',
     ];
-
+*/
     protected $table = 'order_refunds';
     protected $fillable = [
         'order_id',
@@ -41,7 +42,7 @@ class OrderRefund extends Model
         'created_at',
         'updated_at',
         'comment',
-        'status',
+        'amount',
     ];
 
     protected $casts = [
@@ -55,10 +56,9 @@ class OrderRefund extends Model
             'order_id' => $order_id,
             'staff_id' => $staff_id,
             'comment' => $comment,
-            'status' => self::NEW,
         ]);
     }
-
+/*
     public function getBalanceOrder(): float
     {
         return $this->order->getPaymentAmount() - $this->order->getExpenseAmount();
@@ -81,7 +81,7 @@ class OrderRefund extends Model
         }
         return $amount;
     }
-
+*/
     public function  getQuantity(): int
     {
         $quantity = 0;
@@ -101,6 +101,11 @@ class OrderRefund extends Model
         return $this->hasMany(OrderRefundAddition::class, 'refund_id', 'id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(OrderRefundPayment::class, 'refund_id', 'id');
+    }
+
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
@@ -116,10 +121,4 @@ class OrderRefund extends Model
     {
         return $this->created_at->translatedFormat('d F');
     }
-
-    public function statusHtml(): string
-    {
-        return self::STATUSES[$this->status];
-    }
-
 }

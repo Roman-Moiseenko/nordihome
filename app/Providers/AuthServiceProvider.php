@@ -39,6 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         * MANAGER_PRICING = pricing
 
         * MANAGER_OPTIONS = options
+        * MANAGER_REFUND = refund
         */
 
         Gate::define('admin-panel', function (Admin $user) {
@@ -79,7 +80,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('logger', function (Admin $user) {
             return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_LOGGER);
         });
-
+        Gate::define('refund', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_REFUND);
+        });
 
 
         //TODO Добавить доступы разграничения

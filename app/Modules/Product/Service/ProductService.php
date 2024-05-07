@@ -6,7 +6,9 @@ namespace App\Modules\Product\Service;
 use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Entity\Video;
+use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\TagRepository;
@@ -24,13 +26,16 @@ class ProductService
     private TagService $tagService;
     private EquivalentService $equivalentService;
     private SeriesService $seriesService;
+    private StorageService $storageService;
 
     public function __construct(Options            $options,
                                 CategoryRepository $categories,
                                 TagRepository      $tags,
                                 TagService         $tagService,
                                 EquivalentService  $equivalentService,
-                                SeriesService      $seriesService)
+                                SeriesService      $seriesService,
+                                StorageService     $storageService,
+    )
     {
         //Конфигурация
         $this->options = $options;
@@ -39,6 +44,7 @@ class ProductService
         $this->tagService = $tagService;
         $this->equivalentService = $equivalentService;
         $this->seriesService = $seriesService;
+        $this->storageService = $storageService;
     }
 
     public function create(Request $request): Product
@@ -71,8 +77,22 @@ class ProductService
         $this->tags($request, $product);
 
         $product->push();
+        $this->storageService->add_product($product);
         return $product;
 
+    }
+
+    public function create_parser(string $name, string $code, int $category_id, array $arguments): Product
+    {
+        $product = Product::register(
+            $name,
+            $code,
+            $category_id,
+            '',
+            $arguments
+        );
+        $this->storageService->add_product($product);
+        return $product;
     }
 
     public function update(Request $request, Product $product): Product
@@ -345,5 +365,7 @@ class ProductService
     {
         $product->setDraft();
     }
+
+
 
 }

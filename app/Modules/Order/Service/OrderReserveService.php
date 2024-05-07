@@ -158,23 +158,27 @@ class OrderReserveService
         /** @var Storage $storageIn */
         $storageIn = Storage::find($storage_id);
         $storageItem = $storageIn->getItem($orderItem->product);
+        $storageItems = StorageItem::where('product_id', $orderItem->product_id)->where('id', '<>', $storageItem->id)->get(); //Остальные ячейки хранилища
         $quantity = min($quantity, $storageItem->getFreeToSell());
-        $this->AddReserveOrderItem($orderItem, $storageItem, $quantity);
 
         /** @var StorageItem[] $storageItems */
-        $storageItems = StorageItem::where('product_id', $orderItem->product_id)->where('id', '<>', $storageItem->id)->get(); //Остальные ячейки хранилища
+
         foreach ($storageItems as $item) {
             if (!is_null($reserve = $item->orderReserve($orderItem->order_id))) {
+
                 if ($reserve->quantity <= $quantity) {
+                    $this->AddReserveOrderItem($orderItem, $storageItem, $reserve->quantity); //Добавляем в резерв сколько есть
                     $quantity -= $reserve->quantity;
                     $reserve->delete();
                 } else {
+                    $this->AddReserveOrderItem($orderItem, $storageItem, $quantity);//Добавляем в резерв все
                     $reserve->quantity -= $quantity;
                     $reserve->save();
                     return;
                 }
             }
         }
+
     }
 
 

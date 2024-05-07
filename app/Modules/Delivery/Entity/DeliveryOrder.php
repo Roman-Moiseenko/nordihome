@@ -34,6 +34,7 @@ class DeliveryOrder extends Model
     const REGION = 403;
 
     const TYPES = [
+        '' => 'Неопределенно',
         self::STORAGE => 'Самовывоз из магазина',
         self::LOCAL => 'Доставка по региону',
         self::REGION => 'Доставка ТК по России',

@@ -97,7 +97,7 @@ class UserDelivery extends Model
         if ($this->isLocal()) return $this->local->address;
         if ($this->isRegion()) return $this->region->address . ' (' . DeliveryHelper::name($this->company) . ')';
         if ($this->isStorage()) return Storage::find($this->storage)->address;
-
+        return 'Неопределенно';
         throw new \DomainException('Неверный тип доставки, невозможно вернуть адрес');
     }
 }

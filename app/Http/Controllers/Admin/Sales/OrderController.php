@@ -70,7 +70,7 @@ class OrderController extends Controller
     {
         return $this->try_catch_admin(function () use ($request, $order) {
             $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
-            $storages = Storage::orderBy('name')->get();
+            $storages = Storage::orderBy('name')->getModels();
 
             if ($order->isNew())
                 return view('admin.sales.order.new.show', compact('order', 'staffs'));
@@ -107,37 +107,8 @@ class OrderController extends Controller
         });
     }
 
-    public function add_item(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $order = $this->orderService->add_product($order, (int)$request['product_id'], (int)$request['quantity']);
-            return redirect()->route('admin.sales.order.show', $order);
-        });
-    }
 
-    public function add_addition(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $order = $this->orderService->add_addition($order, $request->only(['purpose', 'amount', 'comment']));
-            return redirect()->route('admin.sales.order.show', $order);
-        });
-    }
 
-    public function del_item(OrderItem $item)
-    {
-        return $this->try_catch_admin(function () use ($item) {
-            $order = $this->orderService->delete_item($item);
-            return redirect()->route('admin.sales.order.show', $order);
-        });
-    }
-
-    public function del_addition(OrderAddition $addition)
-    {
-        return $this->try_catch_admin(function () use ($addition) {
-            $order = $this->orderService->delete_addition($addition);
-            return redirect()->route('admin.sales.order.show', $order);
-        });
-    }
 
     public function destroy(Order $order)
     {
@@ -159,14 +130,6 @@ class OrderController extends Controller
     {
         return $this->try_catch_admin(function () use ($order) {
             $this->service->completed($order);
-            return redirect()->back();
-        });
-    }
-
-    public function refund(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->refund($order, $request['refund'] ?? '');
             return redirect()->back();
         });
     }
@@ -209,16 +172,6 @@ class OrderController extends Controller
     }
 
 
-    //Работа с резервом
-
-    public function collect_reserve(OrderItem $item, Request $request)
-    {
-        return $this->try_catch_admin(function () use ($item, $request) {
-            $this->reserveService->CollectReserve($item, (int)$request['storage_in'], (int)$request['quantity']);
-            return redirect()->back();
-        });
-    }
-
     /**  НОВЫЕ ACTIONS  **/
     //AJAX
 
@@ -239,49 +192,8 @@ class OrderController extends Controller
         });
     }
 
-    public function update_quantity(Request $request, OrderItem $item)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $item) {
-            $quantity = (int)$request['value'];
-            $order = $this->orderService->update_quantity($item, $quantity);
-            return response()->json($this->ArrayToAjax($order));
-        });
-    }
 
-    public function update_sell(Request $request, OrderItem $item)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $item) {
-            $sell_cost = (int)$request['value'];
-            $result = $this->orderService->update_sell($item, $sell_cost);
-            return response()->json($this->ArrayToAjax($result));
-        });
-    }
 
-    public function update_percent(Request $request, OrderItem $item)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $item) {
-            $sell_percent = (float)$request['value'];
-            $result = $this->orderService->discount_item_percent($item, $sell_percent);
-            return response()->json($this->ArrayToAjax($result));
-        });
-    }
-
-    public function update_addition(Request $request, OrderAddition $addition)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $addition) {
-            $amount = (int)$request['value'];
-            $result = $this->orderService->update_addition($addition, $amount);
-            return response()->json($this->ArrayToAjax($result));
-        });
-    }
-
-    public function check_assemblage(OrderItem $item)
-    {
-        return $this->try_catch_ajax_admin(function () use ($item) {
-            $result = $this->orderService->check_assemblage($item);
-            return response()->json($this->ArrayToAjax($result));
-        });
-    }
 
     public function update_comment(Request $request, Order $order)
     {
@@ -289,79 +201,6 @@ class OrderController extends Controller
             $this->orderService->update_comment($order, $request['value'] ?? '');
             return response()->json(['notupdate' => true]);
         });
-    }
-
-    public function update_item_comment(Request $request, OrderItem $item)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $item) {
-            $this->orderService->update_item_comment($item, $request['value'] ?? '');
-            return response()->json(['notupdate' => true]);
-        });
-    }
-
-    public function discount(Request $request, Order $order)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $order) {
-            $discount = (int)$request['value'];
-            $result = $this->orderService->discount_order($order, $discount);
-            return response()->json($this->ArrayToAjax($result));
-        });
-    }
-
-    public function discount_percent(Request $request, Order $order)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $order) {
-            $discount_percent = (float)$request['value'];
-            $result = $this->orderService->discount_order_percent($order, $discount_percent);
-            return response()->json($this->ArrayToAjax($result));
-        });
-    }
-
-    public function set_coupon(Request $request, Order $order)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $order) {
-            $coupon = $request['value'];
-            $order = $this->orderService->set_coupon($order, $coupon ?? '');
-            return response()->json($this->ArrayToAjax($order));
-        });
-    }
-
-    private function ArrayToAjax(Order $order): array
-    {
-        $items = [];
-
-        foreach ($order->items as $item) {
-            $items[] = [
-                'id' => $item->id,
-                'base_cost' => $item->base_cost,
-                'sell_cost' => $item->sell_cost,
-                'percent' => number_format(($item->base_cost - $item->sell_cost)/$item->base_cost * 100, 2, '.'),
-                'quantity' => $item->quantity,
-            ];
-        }
-
-        $order = [
-            'base_amount' => $order->getBaseAmount(),
-            'sell_amount' => $order->getSellAmount(),
-            'discount_order' => $order->getDiscountOrder(),
-            'discount_name' => $order->getDiscountName(),
-            'all_discount_order' => $order->getDiscountOrder() + $order->getCoupon(),
-            'discount_products' => $order->getDiscountProducts(),
-            'total_amount' => $order->getTotalAmount(),
-            //'assemblage_amount' => price($order->getAssemblageAmount()),
-
-            'coupon' => $order->getCoupon(),
-            'manual' => $order->getManual(),
-            'manual_percent' => number_format($order->manual / $order->getBaseAmountNotDiscount() * 100, 2),
-            'additions_amount' => $order->getAdditionsAmount() + $order->getAssemblageAmount(),
-            'weight' => $order->getWeight() . ' кг',
-            'volume' => (float)number_format($order->getVolume(), 6) . ' м3',
-        ];
-
-        return [
-          'order' => $order,
-          'items' => $items,
-        ];
     }
 
 
@@ -457,5 +296,177 @@ class OrderController extends Controller
         });
     }
 
+    ///Actions ушедшие в Компоненты LiveWire
 
+    //**
+    public function add_item(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $order = $this->orderService->add_product($order, (int)$request['product_id'], (int)$request['quantity']);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
+
+    //**
+    public function del_item(OrderItem $item)
+    {
+        return $this->try_catch_admin(function () use ($item) {
+            $order = $this->orderService->delete_item($item);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
+
+    //*
+    public function update_item_comment(Request $request, OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $item) {
+            $this->orderService->update_item_comment($item, $request['value'] ?? '');
+            return response()->json(['notupdate' => true]);
+        });
+    }
+
+    //*
+    public function discount(Request $request, Order $order)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
+            $discount = (int)$request['value'];
+            $result = $this->orderService->discount_order($order, $discount);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    //**
+    public function discount_percent(Request $request, Order $order)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
+            $discount_percent = (float)$request['value'];
+            $result = $this->orderService->discount_order_percent($order, $discount_percent);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    //**
+    public function set_coupon(Request $request, Order $order)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
+            $coupon = $request['value'];
+            $order = $this->orderService->set_coupon($order, $coupon ?? '');
+            return response()->json($this->ArrayToAjax($order));
+        });
+    }
+
+    //**
+    private function ArrayToAjax(Order $order): array
+    {
+        $items = [];
+
+        foreach ($order->items as $item) {
+            $items[] = [
+                'id' => $item->id,
+                'base_cost' => $item->base_cost,
+                'sell_cost' => $item->sell_cost,
+                'percent' => number_format(($item->base_cost - $item->sell_cost)/$item->base_cost * 100, 2, '.'),
+                'quantity' => $item->quantity,
+            ];
+        }
+
+        $order = [
+            'base_amount' => $order->getBaseAmount(),
+            'sell_amount' => $order->getSellAmount(),
+            'discount_order' => $order->getDiscountOrder(),
+            'discount_name' => $order->getDiscountName(),
+            'all_discount_order' => $order->getDiscountOrder() + $order->getCoupon(),
+            'discount_products' => $order->getDiscountProducts(),
+            'total_amount' => $order->getTotalAmount(),
+            //'assemblage_amount' => price($order->getAssemblageAmount()),
+
+            'coupon' => $order->getCoupon(),
+            'manual' => $order->getManual(),
+            'manual_percent' => number_format($order->manual / $order->getBaseAmountNotDiscount() * 100, 2),
+            'additions_amount' => $order->getAdditionsAmount() + $order->getAssemblageAmount(),
+            'weight' => $order->getWeight() . ' кг',
+            'volume' => (float)number_format($order->getVolume(), 6) . ' м3',
+        ];
+
+        return [
+            'order' => $order,
+            'items' => $items,
+        ];
+    }
+
+    //**
+    public function update_quantity(Request $request, OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $item) {
+            $quantity = (int)$request['value'];
+            $order = $this->orderService->update_quantity($item, $quantity);
+            return response()->json($this->ArrayToAjax($order));
+        });
+    }
+
+    //*
+    public function update_sell(Request $request, OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $item) {
+            $sell_cost = (int)$request['value'];
+            $result = $this->orderService->update_sell($item, $sell_cost);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    //*
+    public function update_percent(Request $request, OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $item) {
+            $sell_percent = (float)$request['value'];
+            $result = $this->orderService->discount_item_percent($item, $sell_percent);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    //*
+    public function update_addition(Request $request, OrderAddition $addition)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $addition) {
+            $amount = (int)$request['value'];
+            $result = $this->orderService->addition_amount($addition, $amount);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    //*
+    public function check_assemblage(OrderItem $item)
+    {
+        return $this->try_catch_ajax_admin(function () use ($item) {
+            $result = $this->orderService->check_assemblage($item);
+            return response()->json($this->ArrayToAjax($result));
+        });
+    }
+
+    //*
+    public function collect_reserve(OrderItem $item, Request $request)
+    {
+        return $this->try_catch_admin(function () use ($item, $request) {
+            $this->reserveService->CollectReserve($item, (int)$request['storage_in'], (int)$request['quantity']);
+            return redirect()->back();
+        });
+    }
+
+    //*
+    public function del_addition(OrderAddition $addition)
+    {
+        return $this->try_catch_admin(function () use ($addition) {
+            $order = $this->orderService->addition_delete($addition);
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
+
+    //*
+    public function add_addition(Request $request, Order $order)
+    {
+        return $this->try_catch_admin(function () use ($request, $order) {
+            $order = $this->orderService->add_addition($order, $request->only(['purpose', 'amount', 'comment']));
+            return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
 }

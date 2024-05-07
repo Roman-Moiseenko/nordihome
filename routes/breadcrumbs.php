@@ -507,6 +507,10 @@ Breadcrumbs::for('admin.sales.refund.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Возвраты по заказам', route('admin.sales.refund.index'));
 });
+Breadcrumbs::for('admin.sales.refund.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.sales.refund.index');
+    $trail->push('Создать возврат по заказу', route('admin.sales.refund.create'));
+});
 Breadcrumbs::for('admin.sales.refund.show', function (BreadcrumbTrail $trail, OrderRefund $refund) {
     $trail->parent('admin.sales.refund.index');
     $trail->push('Возврат по заказу ' . $refund->order->htmlNum() . ' от ' . $refund->order->htmlDate(), route('admin.sales.refund.show', $refund));

@@ -33,6 +33,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="intro-y box p-5 mt-5 block-menus-order">
                 <div class="rounded-md border border-slate-200/60 p-5">
                     <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
@@ -40,11 +41,10 @@
                         Услуги
                     </div>
                     <div class="mt-5">
-                        @include('admin.sales.order.manager._additions')
+                        <livewire:admin.sales.order.manager-additions :order="$order" />
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

@@ -16,7 +16,8 @@
                         ->type('number')->min_max(0, null)->required()->group_text('₽', false)->show() }}
                     {{ \App\Forms\Input::create('comment', ['placeholder' => 'Примечание', 'class' => 'ml-2 w-1/4'])
                         ->show() }}
-                    <x-base.button id="add-addition" type="submit" variant="primary" class="ml-3">Добавить услугу в документ
+                    <x-base.button id="add-addition" type="submit" variant="primary" class="ml-3">Добавить услугу в
+                        документ
                     </x-base.button>
                 </div>
             </form>
@@ -31,32 +32,7 @@
         </div>
 
         @foreach($order->additions as $i => $addition)
-                <div class="box flex items-center p-2">
-                    <div class="w-20 text-center">{{ $i + 1 }}</div>
-                    <div class="w-56 text-center">{{ $addition->purposeHTML() }}</div>
-                    <div class="w-40 input-group">
-                        <input id="" type="number" class="form-control text-right update-data-ajax"
-                               value="{{ $addition->amount }}" aria-describedby="addition->amount"
-                               min="0" data-num="0" @if(!$order->isManager()) readonly @endif
-                               data-route="{{ route('admin.sales.order.update-addition', $addition) }}"
-                        >
-                        <div id="addition->amount" class="input-group-text">₽</div>
-                    </div>
-
-                    <div class="w-56 text-center">{{ $addition->comment }}</div>
-                    <div class="w-20 text-center">
-
-                        @if($order->isManager())
-                            <button class="btn btn-outline-danger ml-6 product-remove" data-num = "{{ $i }}"
-                                    data-id="{{ $addition->id }}" type="button" onclick="document.getElementById('form-remove-addition-{{ $addition->id }}').submit()">X</button>
-                            <form id="form-remove-addition-{{ $addition->id }}" method="post" action="{{ route('admin.sales.order.del-addition', $addition) }}">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        @endif
-
-                    </div>
-                </div>
+            <livewire:admin.sales.order.manager-addition :addition="$addition" :i="$i"/>
         @endforeach
 
         <div class="box flex items-center font-semibold p-2">
@@ -64,10 +40,19 @@
             <div class="w-56 text-center">ИТОГО</div>
             <div class="w-40 text-center">
                 <div class="w-40 input-group">
-                    <input id="additions-amount" type="number" class="form-control text-right" value="{{ $order->getAdditionsAmount() }}" aria-describedby="input-preorder-amount" readonly>
+                    <input id="additions-amount" type="number" class="form-control text-right"
+                           value="{{ $order->getAdditionsAmount() }}" aria-describedby="input-preorder-amount" readonly>
                     <div id="input-preorder-amount" class="input-group-text">₽</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('addition-order-update', (event) => {
+            document.getElementById('additions-amount').value = event.addition_amount;
+        });
+    });
+</script>

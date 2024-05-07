@@ -1,11 +1,13 @@
 <div class="search-product relative {{ $class }}" id="search-{{ $inputData }}"
     {{ !is_null($callback) ? 'data-callback="' . $callback . '"' : '' }}
-    {{ !empty($hiddenId) ? 'data-hidden="' . $hiddenId . '"' : '' }}>
+    {{ !empty($hiddenId) ? 'data-hidden="' . $hiddenId . '"' : '' }}
+
+>
 
     <input id="{{ $inputData }}" type="text" name="search" value="" class="form-control" placeholder="Поиск ..."
            data-route="{{ $route }}" data-url="" data-id="" data-name="" data-img="" data-code="" data-price="">
     @if(!empty($hiddenId))
-        <input type="hidden" id="hidden-id" name="{{ $hiddenId }}" value="">
+        <input type="hidden" id="hidden-id" name="{{ $hiddenId }}" value="" {{ !empty($wireModel) ? 'wire:model=' . $wireModel . ' ' : '' }}>
     @endif
     <x-base.transition
         class="search-product-result absolute right-0 z-10 mt-[3px] hidden w-full"
@@ -23,6 +25,12 @@
     </x-base.transition>
 </div>
 
+<script>
+  /*  let _hiddenInput = document.getElementById('hidden-id');
+    _hiddenInput.addEventListener('change', function (element) {
+        console.log(_hiddenInput.value);
+    });*/
+</script>
 
 @once
     @push('scripts')

@@ -16,14 +16,16 @@ class SearchProduct extends Component
     public string $hiddenId; //доп. скрытый input с value = id выбранного товара в id="hidden-id" name="$hiddenId"
     public mixed $callback;//ф-ция обратного вызова(), срабатывает при выборе элемента из списка
     public string $class;
+    public string $wireModel;
 
-    public function __construct(string $route, string $inputData, string $hiddenId = '', string $callback = null, string $class = '')
+    public function __construct(string $route, string $inputData, string $hiddenId = '', string $callback = null, string $class = '', string $wireModel = '')
     {
         $this->route = $route;
         $this->inputData = $inputData;
         $this->hiddenId = $hiddenId;
         $this->callback = $callback;
         $this->class = $class;
+        $this->wireModel = $wireModel;
     }
 
     /**

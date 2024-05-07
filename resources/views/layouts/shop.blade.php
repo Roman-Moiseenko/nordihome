@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <!--base href="https://39y.ru" /-->
-    <meta name="robots" content="noindex" />
+    <meta name="robots" content="noindex"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ url('images/favicon/32x32.png') }}" size="32x32">
@@ -13,20 +13,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'NORDY HOME - Интернет магазин товаров из Европы')</title>
-    <meta name="description" content="@yield('description', 'Интернет магазин товаров из Европы, с доставкой почтой и ТК по России')">
+    <meta name="description"
+          content="@yield('description', 'Интернет магазин товаров из Европы, с доставкой почтой и ТК по России')">
 
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
-
+    @livewireStyles
 @yield('head')
-    <!-- Scripts -->
+<!-- Scripts -->
     @vite(['resources/sass/shop.scss', 'resources/js/shop.js'])
     @stack('styles')
 </head>
 <body class="@yield('body')">
-
 
 
 @include('shop.header')
@@ -53,10 +53,11 @@
 <button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>
 @stack('scripts')
 <script>
-    let tagArr = document.getElementsByTagName("input");
+    /*let tagArr = document.getElementsByTagName("input");
     for (let i = 0; i < tagArr.length; i++) {
         tagArr[i].autocomplete = 'off';
-    }
+    }*/
 </script>
+@livewireScripts
 </body>
 </html>

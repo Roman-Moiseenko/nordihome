@@ -559,7 +559,7 @@ class OrderService
      */
     public function discount_order_percent(Order $order, float $discount_percent): Order
     {
-        if ($discount_percent > 49) throw new \DomainException('Скидка слишком высока');
+        if ($discount_percent > 100) throw new \DomainException('Скидка слишком высока');
         $base_amount = $order->getBaseAmountNotDiscount();
         $discount = (int)ceil($discount_percent * $base_amount / 100);
         return $this->discount_order($order, $discount);
@@ -691,7 +691,7 @@ class OrderService
      * @param int $amount
      * @return Order
      */
-    public function update_addition(OrderAddition $addition, int $amount): Order
+    public function addition_amount(OrderAddition $addition, int $amount): Order
     {
         $addition->amount = $amount;
         $addition->save();
@@ -701,11 +701,23 @@ class OrderService
     }
 
     /**
+     * Изменяем комментарий на услугу, возвращаем Заказ
+     * @param OrderAddition $addition
+     * @param string $comment
+     * @return void
+     */
+    public function addition_comment(OrderAddition $addition, string $comment): void
+    {
+        $addition->comment = $comment;
+        $addition->save();
+    }
+
+    /**
      * Удалить услугу, возвращает Заказ
      * @param OrderAddition $addition
      * @return Order
      */
-    public function delete_addition(OrderAddition $addition): Order
+    public function addition_delete(OrderAddition $addition): Order
     {
         $order = $addition->order;
         $this->logger->logOrder($order, 'Удалена услуга', $addition->purposeHTML(), price($addition->amount));

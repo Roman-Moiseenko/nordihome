@@ -35,7 +35,7 @@ class AdminMenu
             'sales' => [
                 'icon' => 'coins',
                 'title' => 'Продажи',
-                'can' => ['order','payment'],
+                'can' => ['order','payment', 'refund'],
                 'sub_menu' => [
                     'order' => [
                         'icon' => 'file-plus-2',
@@ -53,7 +53,7 @@ class AdminMenu
                         'icon' => 'refresh-ccw',
                         'title' => 'Возвраты',
                         'route_name' => 'admin.sales.refund.index',
-                        'can' => 'order',
+                        'can' => 'refund',
                     ],
                     'reserve' => [
                         'icon' => 'baggage-claim',

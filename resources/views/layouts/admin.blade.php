@@ -21,7 +21,8 @@
 <!-- BEGIN: CSS Assets-->
     @vite('resources/css/admin.css')
     @vite('resources/js/admin.js')
-@stack('styles')
+    @stack('styles')
+    @livewireStyles
 <!-- END: CSS Assets-->
 </head>
 <!-- END: Head -->
@@ -40,8 +41,15 @@
 @stack('scripts')
 <!-- END: Pages, layouts, components JS Assets-->
 <script type="text/javascript">
-    /* скрываем окно сообщения ч/з 3 сек */
+    //Уведомления ajax из Компонентов
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('window-notify', (event) => {
+            if(event.icon === undefined) event.icon = 'danger';
+            window.notification(event.title, event.message, event.icon);
+        });
+    });
 </script>
+@livewireScripts
 </body>
 
 </html>

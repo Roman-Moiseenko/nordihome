@@ -61,7 +61,7 @@ class OrderRepository
             });
         if ($filter == 'completed')
             $query->whereHas('status', function ($q) {
-                $q->where('value', OrderStatus::COMPLETED);
+                $q->where('value', '>=', OrderStatus::COMPLETED);
             });
         return $query;
     }

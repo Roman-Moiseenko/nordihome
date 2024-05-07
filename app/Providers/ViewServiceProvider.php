@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Livewire\Admin\Sales\Order\ManagerItem;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 
 class ViewServiceProvider extends ServiceProvider

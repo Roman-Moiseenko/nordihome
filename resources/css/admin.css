@@ -71,6 +71,9 @@ button.disabled {
     background-color: #a4a5a4 !important;
     border-color: #a4a5a4 !important;
 }
+.search-product {
+    z-index: 999;
+}
 .search-product-result .search-option {
     cursor: pointer;
     padding: 10px 20px;

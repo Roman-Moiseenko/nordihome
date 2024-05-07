@@ -10,6 +10,7 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Service\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use JetBrains\PhpStorm\ArrayShape;
@@ -50,11 +51,13 @@ class ParserService
 
     private HttpPage $httpPage;
     private Options $options;
+    private ProductService $productService;
 
-    public function __construct(HttpPage $httpPage)
+    public function __construct(HttpPage $httpPage, ProductService $productService)
     {
         $this->httpPage = $httpPage;
         $this->options = new Options();
+        $this->productService = $productService;
     }
 
     public function findProduct(Request $request): Product
@@ -70,6 +73,12 @@ class ParserService
                 'not_delivery' => !$this->options->shop->delivery_all,
             ];
 
+            $product = $this->productService->create_parser(
+                $parser_product['name'],
+                $this->toCode($code),
+                (Category::where('name', 'Прочее')->first())->id,
+                $arguments);
+
             $product = Product::register(
                 $parser_product['name'],
                 $this->toCode($code),
@@ -77,6 +86,7 @@ class ParserService
                 '',
                 $arguments
             );
+
             $product->short = $parser_product['description'];
             $product->brand_id = (Brand::where('name', 'Икеа')->first())->id;
             $product->dimensions = Dimensions::create(

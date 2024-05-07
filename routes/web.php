@@ -395,7 +395,7 @@ Route::group(
                         Route::post('/{order}/set-awaiting', 'OrderController@set_awaiting')->name('set-awaiting');
                         Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
                         Route::post('/{order}/completed', 'OrderController@completed')->name('completed');
-                        Route::post('/{order}/refund', 'OrderController@refund')->name('refund');
+
                         Route::post('/paid-payment/{payment}', 'OrderController@paid_payment')->name('paid-payment');
 
                         Route::post('/search-user', 'OrderController@search_user')->name('search-user');
@@ -424,6 +424,9 @@ Route::group(
                     function () {
                         Route::get('/index', 'RefundController@index')->name('index');
                         Route::get('/show/{refund}', 'RefundController@show')->name('show');
+                        Route::get('/create', 'RefundController@create')->name('create');
+                        Route::post('/store/{order}', 'RefundController@store')->name('store');
+
 
                     }
                 );

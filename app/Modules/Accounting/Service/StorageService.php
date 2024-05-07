@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Service;
 use App\Entity\Photo;
 use App\Modules\Accounting\Entity\MovementItemInterface;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -95,6 +96,22 @@ class StorageService
             $storage->photo()->save(Photo::upload($file));
         }
         $storage->refresh();
+    }
+
+    /**
+     * Добавление товара во все имеющиеся хранилища (с кол-вом 0), если его еще нет (для нового)
+     * @param Product $product
+     * @return void
+     */
+    public function add_product(Product $product)
+    {
+        /** @var Storage[] $storages */
+        $storages = Storage::get();
+        foreach ($storages as $storage) {
+            if (is_null($storage->getItem($product))) {
+                $storage->add($product, 0);
+            }
+        }
     }
 
 }

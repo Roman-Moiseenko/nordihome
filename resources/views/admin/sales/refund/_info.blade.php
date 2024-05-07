@@ -37,21 +37,8 @@
                        class="w-4 h-4"/>&nbsp;Комментарий&nbsp;<span class="font-medium">{{ $refund->comment }}</span>
     </div>
 
-
-
-    <div class="truncate sm:whitespace-normal flex items-center mt-5">
-        Баланс по Заказу:&nbsp; {{ price($refund->getBalanceOrder()) }}
-    </div>
-    <div class="truncate sm:whitespace-normal flex items-center">
-        Сумма по Возврату:&nbsp; {{ price($refund->getAmount()) }}
-    </div>
-
     <div class="truncate sm:whitespace-normal flex items-center font-medium mt-2">
-        Сумма на возврат:&nbsp; {{ price($refund->getRefundAmount()) }}
-    </div>
-
-    <div class="truncate sm:whitespace-normal flex items-center font-medium">
-        Текущий статус:&nbsp; {{ $refund->statusHTML() }}
+        Сумма возврата:&nbsp; {{ price($refund->amount) }}
     </div>
 </div>
 

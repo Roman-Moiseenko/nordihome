@@ -89,18 +89,6 @@ class SalesService
         $order->setStatus($status);
     }
 
-    public function refund(Order $order, string $comment)
-    {
-        if ($order->getExpenseAmount() > 0) {
-            $order->setStatus(OrderStatus::COMPLETED_REFUND);
-        } else {
-            $order->setStatus(OrderStatus::REFUND);
-        }
-
-        $order->clearReserve();//Возврат товаров в продажу
-        $this->refundService->create($order, $comment); //Создать документ на возврат
-    }
-
     public function completed(Order $order)
     {
         $order->setStatus(OrderStatus::COMPLETED);
@@ -123,7 +111,7 @@ class SalesService
      * @param string $_data
      * @return array
      */
-    #[ArrayShape(['remains' => "float", 'expense' => "int", 'disable' => "bool"])]
+    #[ArrayShape(['remains' => "float", 'discount'=> "float", 'expense' => "int", 'disable' => "bool"])]
     public function expenseCalculate(Order $order, string $_data): array
     {
         $remains = $order->getPaymentAmount() - $order->getExpenseAmount()+  $order->getCoupon() + $order->getDiscountOrder();
@@ -142,6 +130,7 @@ class SalesService
         return [
             'remains' => price($remains),
             'expense' => price($amount),
+            'discount' => price($order->getCoupon() + $order->getDiscountOrder()),
             'disable' => $amount > $remains || $amount == 0,
         ];
     }
