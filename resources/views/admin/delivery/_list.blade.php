@@ -7,7 +7,7 @@
     <x-base.table.td class="w-40"> {{ $delivery->created_at->translatedFormat('d F Y') }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $delivery->address }}</x-base.table.td>
     <x-base.table.td class="text-center"> {{ $delivery->status->value() }} </x-base.table.td>
-    @if($type != \App\Modules\Delivery\Entity\DeliveryOrder::STORAGE)
+    @if($type != \App\Modules\Order\Entity\Order\OrderExpense::DELIVERY_STORAGE)
     <x-base.table.td class="text-center"> {{ price($delivery->cost) }} </x-base.table.td>
     @endif
     <x-base.table.td class="table-report__action w-56">

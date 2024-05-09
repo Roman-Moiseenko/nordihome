@@ -14,6 +14,13 @@ class AdminMenu
                 'route_name' => 'admin.staff.index',
                 'can' => 'staff',
             ],
+            'worker' => [
+                'icon' => 'anvil',
+                'title' => 'Рабочие',
+                'route_name' => 'admin.worker.index',
+                'can' => 'staff',
+            ],
+
             'clients' => [
                 'icon' => 'users',
                 'title' => 'Клиенты',
@@ -76,16 +83,21 @@ class AdminMenu
                 ],
             ],
             'delivery' => [
-                'icon' => 'truck',
+                'icon' => 'plane',
                 'title' => 'Доставка',
                 'can' => ['order', 'delivery'],
                 'sub_menu' => [
-                    'storage' => [
+                    'truck' => [
+                        'icon' => 'truck',
+                        'title' => 'Транспорт',
+                        'route_name' => 'admin.delivery.truck.index',
+                    ],
+                /*    'storage' => [
                         'icon' => 'warehouse',
                         'title' => 'Самовывоз',
                         'route_name' => 'admin.delivery.storage',
                         'action' => true,
-                    ],
+                    ],*/
                     'local' => [
                         'icon' => 'map-pin',
                         'title' => 'Доставка по региону',
@@ -94,7 +106,7 @@ class AdminMenu
                     ],
                     'region' => [
                         'icon' => 'map',
-                        'title' => 'Доставка ТК',
+                        'title' => 'Доставка по РФ',
                         'route_name' => 'admin.delivery.region',
                         'action' => true,
                     ],

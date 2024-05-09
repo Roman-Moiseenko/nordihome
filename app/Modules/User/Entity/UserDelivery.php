@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
-use App\Casts\FullNameCast;
 use App\Casts\GeoAddressCast;
-use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
+use App\Modules\Order\Entity\Order\OrderExpense;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -48,17 +46,17 @@ class UserDelivery extends Model
 
     public function isStorage(): bool
     {
-        return $this->type == DeliveryOrder::STORAGE;
+        return $this->type == OrderExpense::DELIVERY_STORAGE;
     }
 
     public function isLocal(): bool
     {
-        return $this->type == DeliveryOrder::LOCAL;
+        return $this->type == OrderExpense::DELIVERY_LOCAL;
     }
 
     public function isRegion(): bool
     {
-        return $this->type == DeliveryOrder::REGION;
+        return $this->type == OrderExpense::DELIVERY_REGION;
     }
 
     public static function register(int $user_id): self

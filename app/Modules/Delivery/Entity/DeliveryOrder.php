@@ -6,6 +6,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Order\Entity\Order\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -16,8 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $point_storage_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property DeliveryStatus $status Текущий статус
- * @property DeliveryStatus[] $statuses
  * @property Order $order
  * @property Storage $point Точка (склад) выдачи/сбора товара
  */
@@ -25,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 
 //TODO Добавить поля
 // Накладная, Трек, ТК, время доставки - добавляются ответственным Responsible
-
+#[Deprecated]
 class DeliveryOrder extends Model
 {
 
@@ -61,9 +60,6 @@ class DeliveryOrder extends Model
             'address' => $address,
         ]);
 
-        $delivery->statuses()->create([
-            'value' => DeliveryStatus::WAIT_STAFF,
-        ]);
         return $delivery;
     }
 
@@ -84,15 +80,6 @@ class DeliveryOrder extends Model
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
-    public function status()
-    {
-        return $this->hasOne(DeliveryStatus::class, 'delivery_id', 'id')->latestOfMany();
-    }
-
-    public function statuses()
-    {
-        return $this->hasMany(DeliveryStatus::class, 'delivery_id', 'id');
-    }
 
     public function typeHTML()
     {

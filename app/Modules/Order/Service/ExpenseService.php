@@ -10,7 +10,6 @@ use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Options;
-use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
@@ -109,7 +108,7 @@ class ExpenseService
     {
         $expense = $this->create($request);
 
-        $expense->type = DeliveryOrder::STORAGE;
+        $expense->type = OrderExpense::DELIVERY_STORAGE;
         $expense->recipient = clone $expense->order->user->fullname;
         $expense->phone = $expense->order->user->phone;
         $expense->save();

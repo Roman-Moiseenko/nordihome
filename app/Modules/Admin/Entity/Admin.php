@@ -33,6 +33,7 @@ class Admin extends Authenticatable
 
     use HasApiTokens, HasFactory, Notifiable;//, FullNameTrait;
 
+    //public const ROLE_WORKER = 'worker'; //Все сотрудники
     public const ROLE_STAFF = 'staff'; //Все сотрудники
     public const ROLE_CHIEF = 'chief'; //Руководитель - назначение сотрудников, смена обязанностей
     public const ROLE_ADMIN = 'admin'; //Администратор - учет, логи и др.
@@ -42,6 +43,7 @@ class Admin extends Authenticatable
         self::ROLE_ADMIN => 'Администратор',
         self::ROLE_CHIEF => 'Руководитель',
         self::ROLE_STAFF => 'Сотрудник',
+        //self::ROLE_WORKER => 'Рабочий',
     ];
 
     public const ROLE_COLORS = [

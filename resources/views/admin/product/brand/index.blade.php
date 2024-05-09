@@ -16,22 +16,22 @@
         </div>
 
         <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-        <table class="table table-report -mt-2">
-            <thead>
-            <tr>
-                <th class="whitespace-nowrap">ЛОГО</th>
-                <th class="whitespace-nowrap">НАЗВАНИЕ</th>
-                <th class="text-center whitespace-nowrap">ОПИСАНИЕ</th>
-                <th class="text-center whitespace-nowrap">ССЫЛКА</th>
-                <th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($brands as $brand)
-                @include('admin.product.brand._list', ['brand' => $brand])
-            @endforeach
-            </tbody>
-        </table>
+            <table class="table table-report -mt-2">
+                <thead>
+                <tr>
+                    <th class="whitespace-nowrap">ЛОГО</th>
+                    <th class="whitespace-nowrap">НАЗВАНИЕ</th>
+                    <th class="text-center whitespace-nowrap">ОПИСАНИЕ</th>
+                    <th class="text-center whitespace-nowrap">ССЫЛКА</th>
+                    <th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($brands as $brand)
+                    @include('admin.product.brand._list', ['brand' => $brand])
+                @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 

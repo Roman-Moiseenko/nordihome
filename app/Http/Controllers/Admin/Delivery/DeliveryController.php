@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Admin\Delivery;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Delivery\Entity\DeliveryOrder;
-use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 

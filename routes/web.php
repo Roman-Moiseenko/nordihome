@@ -218,6 +218,8 @@ Route::group(
 
 
         Route::resource('staff', 'StaffController'); //CRUD
+        Route::resource('worker', 'WorkerController'); //CRUD
+        Route::post('/worker/{worker}/toggle', 'WorkerController@toggle')->name('worker.toggle');
 
         Route::get('/staff/{staff}/security', 'StaffController@security')->name('staff.security');
         Route::post('/staff/password/{staff}', 'StaffController@password')->name('staff.password');
@@ -333,6 +335,8 @@ Route::group(
                 Route::get('/local', 'DeliveryController@index_local')->name('local');
                 Route::get('/region', 'DeliveryController@index_region')->name('region');
                 Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
+
+                Route::resource('truck', 'TruckController');
                 //Действия
             }
         );

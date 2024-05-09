@@ -8,7 +8,6 @@ use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Admin\Entity\Admin;
-use App\Modules\Delivery\Entity\DeliveryOrder;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -42,6 +41,18 @@ class OrderExpense extends Model
     const STATUS_ASSEMBLING = 3;
     const STATUS_DELIVERY = 4;
     const STATUS_COMPLETED = 10;
+
+    const DELIVERY_STORAGE = 401;
+    const DELIVERY_LOCAL = 402;
+    const DELIVERY_REGION = 403;
+
+    const TYPES = [
+        '' => 'Неопределенно',
+        null => 'Неопределенно',
+        self::DELIVERY_STORAGE => 'Самовывоз из магазина',
+        self::DELIVERY_LOCAL => 'Доставка по региону',
+        self::DELIVERY_REGION => 'Доставка ТК по России',
+    ];
 
     const STATUSES = [
         self::STATUS_NEW => 'Новое',
@@ -79,6 +90,7 @@ class OrderExpense extends Model
     }
 
     //*** IS-...
+    //текущий статус
     public function isNew(): bool
     {
         return $this->status == self::STATUS_NEW;
@@ -115,6 +127,24 @@ class OrderExpense extends Model
     {
         return $this->status == self::STATUS_COMPLETED;
     }
+
+    //тип доставки
+    public function isStorage(): bool
+    {
+        return $this->type == self::DELIVERY_STORAGE;
+    }
+
+    public function isLocal(): bool
+    {
+        return $this->type == self::DELIVERY_LOCAL;
+    }
+
+    public function isRegion(): bool
+    {
+        return $this->type == self::DELIVERY_REGION;
+    }
+
+
     //*** SET-...
     public function completed()
     {
@@ -130,7 +160,7 @@ class OrderExpense extends Model
     }
 
     //*** GET-...
-    public function getAmount()
+    public function getAmount(): float|int
     {
         $result = 0;
         foreach ($this->items as $item) {
@@ -186,8 +216,7 @@ class OrderExpense extends Model
 
     public function typeHTML(): string
     {
-        if (is_null($this->type)) return 'Не выбрано';
-        return DeliveryOrder::TYPES[$this->type];
+        return self::TYPES[$this->type];
     }
 
 

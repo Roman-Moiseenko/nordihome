@@ -47,6 +47,7 @@ class DeliveryService
     /**
      * @param CartItemInterface[] $items
      */
+    //TODO Пересчет от адреса
     public function calculate(int $user_id, array $items): DeliveryData
     {
         $user_delivery = $this->user($user_id);

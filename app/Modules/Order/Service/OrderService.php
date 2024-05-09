@@ -13,13 +13,13 @@ use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Analytics\LoggerService;
-use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Service\CouponService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Product\Entity\Product;
@@ -305,11 +305,11 @@ class OrderService
         }
 
         if (isset($request['payment'])) $user->payment->setPayment($request['payment']);
-        if ($request['delivery'] == 'local') $user->delivery->setDeliveryType(DeliveryOrder::LOCAL);
-        if ($request['delivery'] == 'region') $user->delivery->setDeliveryType(DeliveryOrder::REGION);
+        if ($request['delivery'] == 'local') $user->delivery->setDeliveryType(OrderExpense::DELIVERY_LOCAL);
+        if ($request['delivery'] == 'region') $user->delivery->setDeliveryType(OrderExpense::DELIVERY_REGION);
         $storage = null;
         if (is_numeric($request['delivery'])) {
-            $user->delivery->setDeliveryType(DeliveryOrder::STORAGE);
+            $user->delivery->setDeliveryType(OrderExpense::DELIVERY_STORAGE);
             $storage = (int)$request['delivery'];
         }
         $Address = GeoAddress::create(

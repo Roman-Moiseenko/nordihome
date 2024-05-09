@@ -11,6 +11,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\Entity\LoggerCron;
+use App\Modules\Delivery\Entity\DeliveryTruck;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\Order;
@@ -33,6 +34,7 @@ use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+use App\Modules\Admin\Entity\Worker;
 
 /**  S H O P */
 /**  Пример рекурсии для вложенных категорий и товара */
@@ -204,7 +206,23 @@ Breadcrumbs::for('admin.staff.security', function (BreadcrumbTrail $trail, Admin
     $trail->parent('admin.staff.show', $staff);
     $trail->push('Сменить пароль', route('admin.staff.security', $staff));
 });
-
+//WORKER
+Breadcrumbs::for('admin.worker.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Рабочие', route('admin.worker.index'));
+});
+Breadcrumbs::for('admin.worker.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.worker.index');
+    $trail->push('Добавить нового', route('admin.worker.create'));
+});
+Breadcrumbs::for('admin.worker.show', function (BreadcrumbTrail $trail, Worker $worker) {
+    $trail->parent('admin.worker.index');
+    $trail->push($worker->fullname->getShortname(), route('admin.worker.show', $worker));
+});
+Breadcrumbs::for('admin.worker.edit', function (BreadcrumbTrail $trail, Worker $worker) {
+    $trail->parent('admin.worker.show', $worker);
+    $trail->push('Редактировать', route('admin.worker.edit', $worker));
+});
 ///// *** SHOP
 // PRODUCTS
 Breadcrumbs::for('admin.product.index', function (BreadcrumbTrail $trail) {
@@ -429,6 +447,25 @@ Breadcrumbs::for('admin.delivery.storage', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.delivery.all');
     $trail->push('Самовывоз', route('admin.delivery.storage'));
 });
+
+//TRUCK
+Breadcrumbs::for('admin.delivery.truck.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Транспорт', route('admin.delivery.truck.index'));
+});
+Breadcrumbs::for('admin.delivery.truck.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.delivery.truck.index');
+    $trail->push('Новый транспорт', route('admin.delivery.truck.create'));
+});
+Breadcrumbs::for('admin.delivery.truck.edit', function (BreadcrumbTrail $trail, DeliveryTruck $truck) {
+    $trail->parent('admin.delivery.truck.show', $truck);
+    $trail->push('Редактировать', route('admin.delivery.truck.edit', $truck));
+});
+Breadcrumbs::for('admin.delivery.truck.show', function (BreadcrumbTrail $trail, DeliveryTruck $truck) {
+    $trail->parent('admin.delivery.truck.index');
+    $trail->push($truck->name, route('admin.delivery.truck.show', $truck));
+});
+
 
 //SALES
 Breadcrumbs::for('admin.sales', function (BreadcrumbTrail $trail) {

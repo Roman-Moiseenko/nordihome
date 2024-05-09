@@ -5,7 +5,7 @@ namespace App\Modules\User\Entity;
 
 use App\Casts\FullNameCast;
 use App\Entity\FullName;
-use App\Modules\Delivery\Entity\DeliveryOrder;
+use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -200,7 +200,7 @@ class User extends Authenticatable
 
     public function htmlDelivery(): string
     {
-        $type = DeliveryOrder::TYPES[$this->delivery->type];
+        $type = OrderExpense::TYPES[$this->delivery->type];
         $address = $this->delivery->getAddressDelivery();
         return $type . ' ('. $address . ')';
     }
