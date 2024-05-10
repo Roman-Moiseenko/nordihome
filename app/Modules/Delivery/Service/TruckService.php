@@ -22,7 +22,7 @@ class TruckService
         return $truck;
     }
 
-    public function update(array $request, DeliveryTruck $truck)
+    public function update(array $request, DeliveryTruck $truck): DeliveryTruck
     {
         $truck->update([
             'name' => $request['name'],
@@ -33,6 +33,8 @@ class TruckService
         ]);
 
         if (isset($request['worker_id'])) $truck->setDriver((int)$request['worker_id']);
+        $truck->refresh();
+        return $truck;
     }
 
     public function draft(DeliveryTruck $truck)

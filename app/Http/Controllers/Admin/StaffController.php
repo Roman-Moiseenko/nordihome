@@ -92,7 +92,7 @@ class StaffController extends Controller
     {
         return $this->try_catch_admin(function () use($request, $staff) {
             $staff = $this->service->update($request, $staff);
-            return view('admin.staff.show', compact('staff'));
+            return redirect()->route('admin.staff.show', $staff);
         });
     }
 

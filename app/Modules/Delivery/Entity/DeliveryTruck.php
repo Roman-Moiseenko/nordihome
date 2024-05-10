@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $name
- * @property int $staff_id
+ * @property int $worker_id
  * @property float $weight
  * @property float $volume
  * @property bool $cargo
@@ -25,7 +25,7 @@ class DeliveryTruck extends Model
     ];
     protected $fillable = [
         'name',
-        'staff_id',
+        'worker_id',
         'weight',
         'volume',
         'cargo',
@@ -45,9 +45,9 @@ class DeliveryTruck extends Model
         ]);
     }
 
-    public function setDriver(int $staff_id)
+    public function setDriver(int $worker_id)
     {
-        $this->update(['staff_id' => $staff_id]);
+        $this->update(['worker_id' => $worker_id]);
     }
 
     public function draft()

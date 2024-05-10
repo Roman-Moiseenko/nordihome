@@ -19,7 +19,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('delivery_statuses', function (Blueprint $table) {
+        Schema::create('delivery_statuses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('delivery_id')->constrained('delivery_orders')->onDelete('cascade');
             $table->integer('value');
