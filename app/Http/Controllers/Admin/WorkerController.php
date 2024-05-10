@@ -63,7 +63,6 @@ class WorkerController extends Controller
         return $this->try_catch_admin(function () use($worker) {
             $posts = Worker::POSTS;
             $storages = Storage::orderBy('name')->get();
-
             return view('admin.worker.edit', compact('worker', 'posts', 'storages'));
         });
     }
@@ -72,7 +71,7 @@ class WorkerController extends Controller
     {
         return $this->try_catch_admin(function () use($request, $worker) {
             $worker = $this->service->update($request, $worker);
-            return view('admin.worker.show', compact('worker'));
+            return redirect()->route('admin.worker.show', compact('worker'));
         });
     }
 

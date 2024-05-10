@@ -61,16 +61,43 @@ class Worker extends Model
         return $worker;
     }
 
+    //*** IS-.....
+    public function isActive(): bool
+    {
+        return $this->active == true;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->active == false;
+    }
+
+    public function isDriver(): bool
+    {
+        return $this->post == self::DRIVER;
+    }
+    public function isLoader(): bool
+    {
+        return $this->post == self::LOADER;
+    }
+    public function isAssemble(): bool
+    {
+        return $this->post == self::ASSEMBLE;
+    }
+
+    //*** SET-....
     public function setTelegram(int $id): void
     {
         $this->telegram_user_id = $id;
         $this->save();
     }
+
     public function setStorage(int $id): void
     {
         $this->storage_id = $id;
         $this->save();
     }
+
     public function activated()
     {
         $this->active = true;
@@ -84,18 +111,14 @@ class Worker extends Model
 
     }
 
-    public function isActive(): bool
+    //*** RELATIONS
+    public function storage()
     {
-        return $this->active == true;
+        return $this->belongsTo(Storage::class, 'storage_id', 'id')->withDefault(['name' => '-']);
     }
 
     public function postHtml(): string
     {
         return self::POSTS[$this->post];
-    }
-
-    public function storage()
-    {
-        return $this->belongsTo(Storage::class, 'storage_id', 'id')->withDefault(['name' => '-']);
     }
 }
