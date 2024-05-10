@@ -24,15 +24,14 @@
                 <th class="whitespace-nowrap">НАЗВАНИЕ</th>
                 <th class="text-center whitespace-nowrap">ГРУЗОПОДЪЕМНОСТЬ</th>
                 <th class="text-center whitespace-nowrap">ОБЪЕМ</th>
-                <th class="text-center whitespace-nowrap">ТЕЛЕГРАМ</th>
-                <th class="text-center whitespace-nowrap">СКЛАД</th>
+                <th class="text-center whitespace-nowrap">ВОДИТЕЛЬ</th>
                 <th class="text-center whitespace-nowrap">АКТИВЕН</th>
                 <th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($workers as $worker)
-                @include('admin.worker._list', ['worker' => $worker])
+            @foreach($trucks as $truck)
+                @include('admin.delivery.truck._list', ['truck' => $truck])
             @endforeach
             </tbody>
         </table>
@@ -40,6 +39,5 @@
     </div>
 
     {{ $trucks->links('admin.components.paginator', ['pagination' => $pagination]) }}
-
 @endsection
 

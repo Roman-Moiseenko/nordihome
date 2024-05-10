@@ -12,8 +12,8 @@ class TruckService
     {
         $truck = DeliveryTruck::register(
             $request['name'],
-            $request['weight'] ?? 0,
-            $request['volume'] ?? 0,
+            (float)$request['weight'] ?? 0,
+            (float)$request['volume'] ?? 0,
             isset($request['cargo']),
             isset($request['service']),
         );

@@ -337,6 +337,7 @@ Route::group(
                 Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
 
                 Route::resource('truck', 'TruckController');
+                Route::post('/truck/toggle/{truck}', 'TruckController@toggle')->name('truck.toggle');
                 //Действия
             }
         );

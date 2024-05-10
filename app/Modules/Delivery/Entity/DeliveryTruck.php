@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity;
 
+use App\Modules\Admin\Entity\Worker;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @property int $id
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $cargo
  * @property bool $service
  * @property bool $active
+ * @property Worker $worker
  */
 class DeliveryTruck extends Model
 {
@@ -21,7 +24,7 @@ class DeliveryTruck extends Model
     protected $attributes = [
         'cargo' => true,
         'service' => true,
-        'staff_id' => null,
+        'worker_id' => null,
     ];
     protected $fillable = [
         'name',
@@ -44,6 +47,16 @@ class DeliveryTruck extends Model
             'active' => true,
         ]);
     }
+    //*** IS-.....
+    public function isActive(): bool
+    {
+        return $this->active == true;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->active == false;
+    }
 
     public function setDriver(int $worker_id)
     {
@@ -54,5 +67,19 @@ class DeliveryTruck extends Model
     {
         $this->active = false;
         $this->save();
+    }
+
+    //*** GET-....
+
+    #[Pure]
+    public function getNameWorker(): string
+    {
+        if (is_null($this->worker)) return 'Не назначен';
+        return $this->worker->fullname->getFullName();
+    }
+
+    public function worker()
+    {
+        return $this->belongsTo(Worker::class, 'worker_id', 'id');
     }
 }

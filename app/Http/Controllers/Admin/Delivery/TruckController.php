@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Delivery;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Entity\DeliveryTruck;
 use App\Modules\Delivery\Service\TruckService;
 use Illuminate\Http\Request;
@@ -30,7 +31,8 @@ class TruckController extends Controller
 
     public function create()
     {
-        return view('admin.delivery.truck.create');
+        $drivers = Worker::where('post', Worker::DRIVER)->where('active', true)->get();
+        return view('admin.delivery.truck.create', compact('drivers'));
     }
 
     public function store(Request $request)
@@ -54,7 +56,8 @@ class TruckController extends Controller
     public function edit(DeliveryTruck $truck)
     {
         return $this->try_catch_admin(function () use($truck) {
-            return view('admin.delivery.truck.edit', compact('truck'));
+            $drivers = Worker::where('post', Worker::DRIVER)->where('active', true)->get();
+            return view('admin.delivery.truck.edit', compact('truck', 'drivers'));
         });
     }
 

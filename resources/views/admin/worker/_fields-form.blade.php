@@ -11,8 +11,8 @@
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
                         <!-- Выбрать категорию -->
-                        {{ \App\Forms\Input::create('surname', ['placeholder' => 'Имя', 'value' => $worker->fullname->surname ?? '', 'class' => 'mt-3'])->show() }}
-                        {{ \App\Forms\Input::create('firstname', ['placeholder' => 'Фамилия', 'value' =>$worker->fullname->firstname ?? '', 'class' => 'mt-3'])->show() }}
+                        {{ \App\Forms\Input::create('surname', ['placeholder' => 'Фамилия', 'value' => $worker->fullname->surname ?? '', 'class' => 'mt-3'])->show() }}
+                        {{ \App\Forms\Input::create('firstname', ['placeholder' => 'Имя', 'value' =>$worker->fullname->firstname ?? '', 'class' => 'mt-3'])->show() }}
                         {{ \App\Forms\Input::create('secondname', ['placeholder' => 'Отчество', 'value' => $worker->fullname->secondname ?? '', 'class' => 'mt-3'])->show() }}
                         {{ \App\Forms\Input::create('phone', ['placeholder' => 'Телефон', 'value' => $worker->phone ?? '', 'class' => 'mt-3'])->show() }}
                         {{ \App\Forms\Input::create('telegram_user_id', ['placeholder' => 'Телеграм ID', 'value' => $worker->telegram_user_id ?? '', 'class' => 'mt-3'])->show() }}
