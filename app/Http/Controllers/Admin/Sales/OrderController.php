@@ -125,7 +125,7 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
-
+/*
     public function completed(Order $order)
     {
         return $this->try_catch_admin(function () use ($order) {
@@ -133,7 +133,7 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
-
+*/
     public function set_manager(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
@@ -195,13 +195,6 @@ class OrderController extends Controller
 
 
 
-    public function update_comment(Request $request, Order $order)
-    {
-        return $this->try_catch_ajax_admin(function () use ($request, $order) {
-            $this->orderService->update_comment($order, $request['value'] ?? '');
-            return response()->json(['notupdate' => true]);
-        });
-    }
 
 
     public function search_user(Request $request)
@@ -297,6 +290,16 @@ class OrderController extends Controller
     }
 
     ///Actions ушедшие в Компоненты LiveWire
+
+    /*
+    //**
+    public function update_comment(Request $request, Order $order)
+    {
+        return $this->try_catch_ajax_admin(function () use ($request, $order) {
+            $this->orderService->update_comment($order, $request['value'] ?? '');
+            return response()->json(['notupdate' => true]);
+        });
+    }
 
     //**
     public function add_item(Request $request, Order $order)
@@ -469,4 +472,5 @@ class OrderController extends Controller
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
+    */
 }

@@ -1,27 +1,5 @@
 <div class="grid grid-cols-12 gap-x-6">
     <div class="col-span-12">
-
-        @if($order->isManager())
-            <form method="post" action="{{ route('admin.sales.order.add-addition', $order) }}">
-                @csrf
-                <div class="mx-3 flex w-full mb-5">
-
-                    <select id="addition-purpose" name="purpose" class="form-select w-full lg:w-56">
-                        <option value="0"></option>
-                        @foreach(\App\Modules\Order\Entity\Order\OrderAddition::PAYS as $code => $name)
-                            <option value="{{ $code }}">{{ $name }}</option>
-                        @endforeach
-                    </select>
-                    {{ \App\Forms\Input::create('amount', ['placeholder' => 'Стоимость', 'value' => 0, 'class' => 'ml-2 w-40'])
-                        ->type('number')->min_max(0, null)->required()->group_text('₽', false)->show() }}
-                    {{ \App\Forms\Input::create('comment', ['placeholder' => 'Примечание', 'class' => 'ml-2 w-1/4'])
-                        ->show() }}
-                    <x-base.button id="add-addition" type="submit" variant="primary" class="ml-3">Добавить услугу в документ
-                    </x-base.button>
-                </div>
-            </form>
-        @endif
-
         <div class="box flex items-center font-semibold p-2">
             <div class="w-20 text-center">№ п/п</div>
             <div class="w-56 text-center">Услуга</div>
@@ -29,7 +7,6 @@
             <div class="w-56 text-center">Примечание</div>
             <div class="w-20 text-center">-</div>
         </div>
-
         @foreach($order->additions as $i => $addition)
                 <div class="box flex items-center p-2">
                     <div class="w-20 text-center">{{ $i + 1 }}</div>
@@ -37,8 +14,8 @@
                     <div class="w-40 input-group">
                         <input id="" type="number" class="form-control text-right update-data-ajax"
                                value="{{ $addition->amount }}" aria-describedby="addition->amount"
-                               min="0" data-num="0" @if(!$order->isManager()) readonly @endif
-                               data-route="{{ route('admin.sales.order.update-addition', $addition) }}"
+                               min="0" data-num="0"  readonly
+
                         >
                         <div id="addition->amount" class="input-group-text">₽</div>
                     </div>
@@ -46,14 +23,7 @@
                     <div class="w-56 text-center">{{ $addition->comment }}</div>
                     <div class="w-20 text-center">
 
-                        @if($order->isManager())
-                            <button class="btn btn-outline-danger ml-6 product-remove" data-num = "{{ $i }}"
-                                    data-id="{{ $addition->id }}" type="button" onclick="document.getElementById('form-remove-addition-{{ $addition->id }}').submit()">X</button>
-                            <form id="form-remove-addition-{{ $addition->id }}" method="post" action="{{ route('admin.sales.order.del-addition', $addition) }}">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        @endif
+
 
                     </div>
                 </div>

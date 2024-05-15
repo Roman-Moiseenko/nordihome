@@ -89,14 +89,14 @@ class SalesService
         $order->setStatus($status);
     }
 
-    public function completed(Order $order)
+  /*  public function completed(Order $order)
     {
         $order->setStatus(OrderStatus::COMPLETED);
         $order->finished = true;
         $order->save();
-        //TODO !!!!!
 
-    }
+
+    }*/
 
     public function createOrder(Request $request)
     {

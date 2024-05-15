@@ -32,10 +32,6 @@ class DeliveryService
         return [];
     }
 
-    public function storages()
-    {
-        return Storage::where('point_of_delivery', true)->get();
-    }
 
     public function companies(): array
     {
@@ -73,24 +69,4 @@ class DeliveryService
         return 22; //расстояние в км
     }
 
-    public function create(int $order_id, int $type_delivery, string $address)
-    {
-        $delivery = DeliveryOrder::register($order_id, $type_delivery, $address);
-        //TODO Оповещение о новых доставках
-        event($delivery);
-    }
-
-
-    /**
-     * Слушатель события создания Заказа
-     * @param OrderHasCreated $event
-     * @return void
-     */
-    public function handle(OrderHasCreated $event): void
-    {
-        //TODO перепланировать доставки... Возможно пока вообще убрать создание доставок, только после распоряжения
-        //$order = $event->order;
-        //DeliveryOrder::register($order->id, $this->user($order->user_id)->type, $this->user($order->user_id)->getAddressDelivery());
-        //event($delivery);
-    }
 }

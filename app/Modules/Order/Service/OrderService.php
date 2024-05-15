@@ -227,7 +227,6 @@ class OrderService
             throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
         }
 
-        //$OrderItems = $this->cart->getOrderItems();
         $order = Order::register($user->id, Order::ONLINE);
         if ($request->has('code')) {
             $coupon = $this->repository->getCoupon($request->get('code'));
@@ -239,8 +238,6 @@ class OrderService
         $items = ($request['preorder'] == 1) ? $this->cart->getItems() : $this->cart->getOrderItems();
         foreach ($items as $item) {
             if ($item->check) $this->add_product($order, $item->product->id, $item->quantity);
-            //$orderItem = $this->createItemFromCart($item);
-            //$order->items()->save($orderItem);
         }
         $this->cart->clearOrder();
         if ($request['preorder'] == 1) $this->cart->clearPreOrder();
@@ -825,4 +822,20 @@ class OrderService
         }
     }
 
+    public function copy(Order $order): Order
+    {
+        $new_order = clone $order;
+        $new_order->save();
+        foreach ($order->items as $item) {
+            $new_item = clone $item;
+            $new_order->items()->save($new_item);
+        }
+
+        foreach ($order->additions as $addition) {
+            $new_addition = clone $addition;
+            $new_order->additions()->save($new_addition);
+        }
+        $new_order->refresh();
+        return $new_order;
+    }
 }

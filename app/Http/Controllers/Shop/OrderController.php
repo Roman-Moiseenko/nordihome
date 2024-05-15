@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Shop;
 
 use App\Events\ThrowableHasAppeared;
+use App\Modules\Accounting\repository\StorageRepository;
+use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\PaymentService;
@@ -25,13 +27,15 @@ class OrderController extends Controller
     private OrderService $service;
 
     private ParserCart $parserCart;
+    private StorageRepository $storages;
 
     public function __construct(
         Cart            $cart,
         ParserCart      $parserCart,
         PaymentService  $payments,
         DeliveryService $deliveries,
-        OrderService    $service
+        OrderService    $service,
+        StorageRepository $storages,
     )
     {
         $this->middleware('auth:user', ['except' => 'create_click']);
@@ -41,6 +45,7 @@ class OrderController extends Controller
         $this->service = $service;
         $this->parserCart = $parserCart;
 
+        $this->storages = $storages;
     }
 
     public function create(Request $request)
@@ -59,8 +64,8 @@ class OrderController extends Controller
                 $preorder = 0;
             }
             $payments = $this->payments->get();
-            $storages = $this->deliveries->storages();
-            $companies = $this->deliveries->companies();
+            $storages = $this->storages->getPointDelivery();
+            $companies = DeliveryHelper::deliveries();
             $delivery_cost = $this->deliveries->calculate($user_id, $this->cart->getItems());
 
             return view('shop.order.create', compact('cart', 'payments',
@@ -78,8 +83,8 @@ class OrderController extends Controller
                 throw new \DomainException('Доступ ограничен');
             }
             $payments = $this->payments->get();
-            $storages = $this->deliveries->storages();
-            $companies = $this->deliveries->companies();
+            $storages = $this->storages->getPointDelivery();
+            $companies = DeliveryHelper::deliveries();
             $delivery_cost = $this->deliveries->calculate($user_id, $this->parserCart->getItems());
             $cart = $this->parserCart;
             return view('shop.order.create-parser', compact('cart', 'payments',

@@ -53,5 +53,6 @@ class TruckService
 
     public function delete(DeliveryTruck $truck)
     {
+
     }
 }

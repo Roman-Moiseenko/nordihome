@@ -370,32 +370,34 @@ Route::group(
                         //'namespace' => '',
                     ],
                     function () {
-                        Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
-                        Route::post('/{order}/add-addition', 'OrderController@add_addition')->name('add-addition');
+                        Route::post('/copy/{order}', 'OrderController@copy')->name('copy');
 
-                        Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
-                        Route::delete('/del-addition/{addition}', 'OrderController@del_addition')->name('del-addition');
+                        //Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
+                        //Route::post('/{order}/add-addition', 'OrderController@add_addition')->name('add-addition');
+
+                      /*  Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
+                        Route::delete('/del-addition/{addition}', 'OrderController@del_addition')->name('del-addition');*/
                         Route::delete('/{order}/destroy', 'OrderController@destroy')->name('destroy');
-                        Route::delete('/del-payment/{payment}', 'OrderController@del_payment')->name('del-payment');
-                        Route::post('/{item}/update-quantity', 'OrderController@update_quantity')->name('update-quantity');
-                        Route::post('/{item}/collect-reserve', 'OrderController@collect_reserve')->name('collect-reserve');
+                        //Route::delete('/del-payment/{payment}', 'OrderController@del_payment')->name('del-payment');
+                    //    Route::post('/{item}/update-quantity', 'OrderController@update_quantity')->name('update-quantity');
+                       // Route::post('/{item}/collect-reserve', 'OrderController@collect_reserve')->name('collect-reserve');
 
 
-                        Route::post('/{item}/update-sell', 'OrderController@update_sell')->name('update-sell');
-                        Route::post('/{item}/update-percent', 'OrderController@update_percent')->name('update-percent');
+                       // Route::post('/{item}/update-sell', 'OrderController@update_sell')->name('update-sell');
+                       // Route::post('/{item}/update-percent', 'OrderController@update_percent')->name('update-percent');
 
-                        Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
-                        Route::post('/{order}/discount', 'OrderController@discount')->name('discount');
-                        Route::post('/{order}/discount-percent', 'OrderController@discount_percent')->name('discount-percent');
+                      //  Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
+                      //  Route::post('/{order}/discount', 'OrderController@discount')->name('discount');
+                     //   Route::post('/{order}/discount-percent', 'OrderController@discount_percent')->name('discount-percent');
 
-                        Route::post('/{order}/fix-manual-item', 'OrderController@fix_manual_item')->name('fix-manual-item');
+                        //Route::post('/{order}/fix-manual-item', 'OrderController@fix_manual_item')->name('fix-manual-item');
                         //Route::post('/{order}/fix-manual-order', 'OrderController@fix_manual_order')->name('fix-manual-order');
-                        Route::post('/{order}/set-coupon', 'OrderController@set_coupon')->name('set-coupon');
+                        //Route::post('/{order}/set-coupon', 'OrderController@set_coupon')->name('set-coupon');
 
-                        Route::post('/{order}/update-comment', 'OrderController@update_comment')->name('update-comment');
-                        Route::post('/{item}/update-item-comment', 'OrderController@update_item_comment')->name('update-item-comment');
+                     //   Route::post('/{order}/update-comment', 'OrderController@update_comment')->name('update-comment');
+                     //   Route::post('/{item}/update-item-comment', 'OrderController@update_item_comment')->name('update-item-comment');
                         Route::post('/movement/{order}', 'OrderController@movement')->name('movement');
-                        Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
+                     //   Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
                         Route::post('/{order}/expense-calculate', 'OrderController@expense_calculate')->name('expense-calculate');
 
                         Route::post('/{order}/set-manager', 'OrderController@set_manager')->name('set-manager');
@@ -404,9 +406,9 @@ Route::group(
                         Route::post('/{order}/canceled', 'OrderController@canceled')->name('canceled');
                         Route::post('/{order}/set-awaiting', 'OrderController@set_awaiting')->name('set-awaiting');
                         Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
-                        Route::post('/{order}/completed', 'OrderController@completed')->name('completed');
+                        //Route::post('/{order}/completed', 'OrderController@completed')->name('completed');
 
-                        Route::post('/paid-payment/{payment}', 'OrderController@paid_payment')->name('paid-payment');
+                        //Route::post('/paid-payment/{payment}', 'OrderController@paid_payment')->name('paid-payment');
 
                         Route::post('/search-user', 'OrderController@search_user')->name('search-user');
                         Route::post('/search', 'OrderController@search')->name('search');
