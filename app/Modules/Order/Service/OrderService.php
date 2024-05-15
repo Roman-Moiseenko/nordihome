@@ -29,6 +29,7 @@ use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\UserDelivery;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -505,7 +506,6 @@ class OrderService
         return $order;
     }
 
-
     //** НА ВЕСЬ ЗАКАЗ
 
     /**
@@ -677,11 +677,11 @@ class OrderService
      * @param array $request
      * @return Order
      */
-    public function add_addition(Order $order, array $request): Order
+    public function add_addition(Order $order, int $purpose, float $amount, string $comment): Order
     {
-        if ((int)$request['purpose'] == 0) throw new \DomainException('Не выбрана дополнительная услуга!');
-        if ((int)$request['amount'] == 0) throw new \DomainException('Стоимость услуги должна быть больше нуля!');
-        $orderAddition = OrderAddition::new((int)$request['amount'], (int)$request['purpose'], $request['comment'] ?? '');
+        if ($purpose == 0) throw new \DomainException('Не выбрана дополнительная услуга!');
+        if ($amount == 0) throw new \DomainException('Стоимость услуги должна быть больше нуля!');
+        $orderAddition = OrderAddition::new($amount, $purpose, $comment);
         $order->additions()->save($orderAddition);
         $order->refresh();
         $this->logger->logOrder($order, 'Добавлена услуга', $orderAddition->purposeHTML(), price($orderAddition->amount));
@@ -824,17 +824,25 @@ class OrderService
 
     public function copy(Order $order): Order
     {
-        $new_order = clone $order;
+        //TODO Скопировать скидки???
+
+        $new_order = $order->replicate();
+        $new_order->created_at = Carbon::now();
+        $new_order->paid = false;
+        $new_order->finished = false;
         $new_order->save();
+        $new_order->statuses()->create(['value' => OrderStatus::FORMED]);
+        $new_order->setStatus(OrderStatus::SET_MANAGER);
+        $new_order->refresh();
+
         foreach ($order->items as $item) {
-            $new_item = clone $item;
-            $new_order->items()->save($new_item);
+            $this->add_product($new_order, $item->product_id, $item->quantity);
         }
 
         foreach ($order->additions as $addition) {
-            $new_addition = clone $addition;
-            $new_order->additions()->save($new_addition);
+            $this->add_addition($new_order, $addition->purpose, $addition->amount, $addition->comment);
         }
+
         $new_order->refresh();
         return $new_order;
     }

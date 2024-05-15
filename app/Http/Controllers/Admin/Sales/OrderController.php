@@ -141,20 +141,28 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
-
+/*
     public function set_status(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
             $this->service->setStatus($order, (int)$request['status']);
             return redirect()->back();
         });
-    }
+    }*/
 
     public function set_reserve(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
             $this->service->setReserveService($order, $request['reserve-date'], $request['reserve-time']);
             return redirect()->back();
+        });
+    }
+
+    public function copy(Order $order)
+    {
+        return $this->try_catch_admin(function () use ($order) {
+            $order = $this->orderService->copy($order);
+            return redirect()->route('admin.sales.order.show', $order);
         });
     }
 

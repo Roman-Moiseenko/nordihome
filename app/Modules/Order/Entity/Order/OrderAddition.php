@@ -13,7 +13,7 @@ use function now;
  * @property int $id
  * @property int $order_id
  * @property float $amount
- * @property Carbon $created_at
+// * @property Carbon $created_at
  * @property int $purpose
  * @property string $comment
  * @property Order $order
@@ -47,22 +47,22 @@ class OrderAddition extends Model
     protected $fillable = [
         'amount',
         'purpose',
-        'created_at',
+       // 'created_at',
         'comment',
     ];
-
+/*
     protected $casts = [
         'created_at' => 'datetime',
     ];
 
-
+*/
     public static function new(float $amount, int $purpose, string $comment = ''): self
     {
         return self::make([
             'amount' => $amount,
             'comment' => $comment,
             'purpose' => $purpose,
-            'created_at' => now(),
+            //'created_at' => now(),
         ]);
     }
 

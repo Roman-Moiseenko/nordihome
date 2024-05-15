@@ -41,7 +41,7 @@ class ManagerAdditions extends Component
     public function add_addition()
     {
         $this->service->add_addition($this->order,
-            ['purpose'=> $this->form_purpose, 'amount' => $this->form_amount, 'comment' => $this->form_comment]);
+            $this->form_purpose, $this->form_amount, $this->form_comment);
         $this->form_purpose = 0;
         $this->form_amount = 0;
         $this->form_comment = '';

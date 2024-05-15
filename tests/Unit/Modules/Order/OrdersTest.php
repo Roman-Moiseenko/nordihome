@@ -119,8 +119,8 @@ class OrdersTest extends TestCase
         self::assertEquals($sell_amount - $sell_amount * 0.05 - 5000 + $assemblage, $this->order->getTotalAmount());
 
         //Добавляем услуги
-        $this->order = $this->orderService->add_addition($this->order, ['purpose' => OrderAddition::PAY_DELIVERY, 'amount' => 3500, 'comment' => '***']);
-        $this->order = $this->orderService->add_addition($this->order, ['purpose' => OrderAddition::PAY_LIFTING, 'amount' => 1500, 'comment' => '***']);
+        $this->order = $this->orderService->add_addition($this->order, OrderAddition::PAY_DELIVERY, 3500, '***');
+        $this->order = $this->orderService->add_addition($this->order, OrderAddition::PAY_LIFTING, 1500,  '***');
         self::assertEquals(5000, $this->order->getAdditionsAmount());
 
         //Проверка на изменение цены услуги
