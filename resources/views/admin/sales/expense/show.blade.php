@@ -11,17 +11,26 @@
     </div>
     <div class="box p-3 mt-3">
         @if($expense->isNew())
-            <button class="btn btn-primary mr-3">На сборку</button>
+            <button class="btn btn-primary mr-3" onclick="document.getElementById('form-expense-assembly').submit();">На
+                сборку
+            </button>
             <button class="btn btn-secondary" type="button" data-tw-toggle="modal"
                     data-tw-target="#cancel-confirmation-modal"
-                    data-route = {{ route('admin.sales.expense.destroy', $expense) }}>
+                    data-route= {{ route('admin.sales.expense.destroy', $expense) }}>
                 Отменить
             </button>
+            <form id="form-expense-assembly" method="post"
+                  action="{{ route('admin.sales.expense.assembly', $expense) }}">
+                @csrf
+            </form>
         @endif
 
-        @if($expense->isCompleted())
-            <span class="font-medium">Заказ выдан</span>
+        @if($expense->isAssembly())
+            <button class="btn btn-primary mr-3">Распечатать накладную</button>
         @endif
+
+            <span class="font-medium text-center text-lg ml-3 text-primary">{{ $expense->statusHtml() }}</span>
+
     </div>
 
     <div class="box col-span-12 overflow-auto lg:overflow-visible p-4 mt-3">
@@ -59,13 +68,10 @@
         </x-base.table>
     </div>
 
-    <div class="grid grid-cols-12 gap-x-6 pb-20">
+    @if(!$expense->isStorage())
+        <livewire:admin.sales.expense.delivery :expense="$expense" :disabled="!$expense->isNew()"/>
+    @endif
 
-    </div>
-
-    <div class="grid grid-cols-12 gap-x-6 pb-20">
-
-    </div>
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
     'Вы действительно хотите отменить Распоряжение?<br>Этот процесс не может быть отменен.', 'cancel-confirmation-modal')->show() }}

@@ -336,6 +336,11 @@ Route::group(
                 Route::get('/region', 'DeliveryController@index_region')->name('region');
                 Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
 
+                Route::get('/calendar', 'CalendarController@index')->name('calendar.index');
+                Route::post('/assembling/{expense}', 'DeliveryController@assembling')->name('assembling');
+                Route::post('/delivery/{expense}', 'DeliveryController@delivery')->name('delivery');
+                Route::post('/completed/{expense}', 'DeliveryController@completed')->name('completed');
+
                 Route::resource('truck', 'TruckController');
                 Route::post('/truck/toggle/{truck}', 'TruckController@toggle')->name('truck.toggle');
                 //Действия
@@ -417,9 +422,11 @@ Route::group(
                     ],
                     function () {
                         Route::post('/create', 'ExpenseController@create')->name('create');
-                        Route::post('/issue', 'ExpenseController@issue')->name('issue');
+                        Route::post('/issue_shop', 'ExpenseController@issue_shop')->name('issue-shop');
+                        Route::post('/issue_warehouse', 'ExpenseController@issue_warehouse')->name('issue-warehouse');
                         Route::get('/show/{expense}', 'ExpenseController@show')->name('show');
                         Route::delete('/destroy/{expense}', 'ExpenseController@destroy')->name('destroy');
+                        Route::post('/assembly/{expense}', 'ExpenseController@assembly')->name('assembly');
                     }
                 );
                 //Возвраты

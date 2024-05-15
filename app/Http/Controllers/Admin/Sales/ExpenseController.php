@@ -37,19 +37,39 @@ class ExpenseController extends Controller
     {
         return $this->try_catch_ajax(function () use ($request) {
             $data = json_decode($request['data'], true);
+            //Заполнить default user
+            $expense = $this->service->create_expense($data);
 
-            $expense = $this->service->create($data);
             return response()->json(route('admin.sales.expense.show', $expense));
         });
     }
 
-    public function issue(Request $request)
+    public function issue_shop(Request $request)
     {
         return $this->try_catch_ajax(function () use ($request) {
             $data = json_decode($request['data'], true);
+            $expense = $this->service->issue_shop($data);
+            flash('Товар выдан', 'info');
+            return response()->json(route('admin.sales.order.show', $expense->order));
+        });
+    }
 
-            $expense = $this->service->issue($data);
+    public function issue_warehouse(Request $request)
+    {
+        return $this->try_catch_ajax(function () use ($request) {
+            $data = json_decode($request['data'], true);
+            $expense = $this->service->issue_warehouse($data);
+            flash('Заявка на выдачу сформирована. Распечатайте накладную', 'info');
             return response()->json(route('admin.sales.expense.show', $expense));
+        });
+    }
+
+    public function assembly(OrderExpense $expense)
+    {
+        return $this->try_catch(function () use ($expense) {
+            $order = $this->service->assembly($expense);
+            flash('Распоряжение отправлено на склад на сборку.', 'info');
+            return redirect()->route('admin.sales.order.show', $order);
         });
     }
 }

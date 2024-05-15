@@ -30,6 +30,7 @@
     </div>
 
     <div class="w-40 text-left">
+        <div> - </div>
         <input id="comment-{{ $item->id }}" type="text" class="form-control "
                value="{{ $item->comment }}" readonly
         >

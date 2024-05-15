@@ -85,19 +85,19 @@ class AdminMenu
             'delivery' => [
                 'icon' => 'plane',
                 'title' => 'Доставка',
-                'can' => ['order', 'delivery'],
+                'can' => ['delivery'],
                 'sub_menu' => [
                     'truck' => [
                         'icon' => 'truck',
                         'title' => 'Транспорт',
                         'route_name' => 'admin.delivery.truck.index',
                     ],
-                /*    'storage' => [
+                    'storage' => [
                         'icon' => 'warehouse',
-                        'title' => 'Самовывоз',
+                        'title' => 'Выдача со склада',
                         'route_name' => 'admin.delivery.storage',
                         'action' => true,
-                    ],*/
+                    ],
                     'local' => [
                         'icon' => 'map-pin',
                         'title' => 'Доставка по региону',
@@ -109,6 +109,12 @@ class AdminMenu
                         'title' => 'Доставка по РФ',
                         'route_name' => 'admin.delivery.region',
                         'action' => true,
+                    ],
+                    'calendar' => [
+                        'icon' => 'calendar-days',
+                        'title' => 'Календарь доставок',
+                        'route_name' => 'admin.delivery.calendar.index',
+                        //'action' => true,
                     ],
                 ],
 

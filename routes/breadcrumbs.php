@@ -461,7 +461,11 @@ Breadcrumbs::for('admin.delivery.truck.show', function (BreadcrumbTrail $trail, 
     $trail->parent('admin.delivery.truck.index');
     $trail->push($truck->name, route('admin.delivery.truck.show', $truck));
 });
-
+//CALENDAR
+Breadcrumbs::for('admin.delivery.calendar.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Календарь доставки', route('admin.delivery.calendar.index'));
+});
 
 //SALES
 Breadcrumbs::for('admin.sales', function (BreadcrumbTrail $trail) {

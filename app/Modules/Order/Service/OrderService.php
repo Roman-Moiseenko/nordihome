@@ -90,7 +90,7 @@ class OrderService
         }*/
         $result->payment = $user->payment;
 
-        /** @var UserDelivery delivery */
+
         $result->delivery = $user->delivery; //$this->deliveries->user($user->id);
         $result->email = $user->email;
         $result->phone = $user->phone;
@@ -117,10 +117,17 @@ class OrderService
             $user->payment->setInvoice($data['inn']);
         }
 
-        $user->delivery->setDeliveryType(isset($data['delivery']) ? (int)$data['delivery'] : null);
+        $user->delivery = (isset($data['delivery']) ? (int)$data['delivery'] : null);
 
-        if ($user->delivery->isRegion()) {
-            $user->delivery->setDeliveryTransport(
+
+        if ($user->delivery == OrderExpense::DELIVERY_REGION) {
+            $user->address->address = $data['address-region'] ?? '';
+            $user->address->post = $data['post-region'] ?? '';
+            $user->address->latitude = $data['latitude-region'] ?? '';
+            $user->address->longitude = $data['longitude-region'] ?? '';
+            $user->save();
+
+           /* $user->delivery->setDeliveryTransport(
                 $data['company'] ?? '',
                 GeoAddress::create(
                     $data['address-region'] ?? '',
@@ -128,9 +135,14 @@ class OrderService
                     $data['longitude-region'] ?? '',
                     $data['post-region'] ?? ''
                 )
-            );
+            );*/
         } else {
-            $user->delivery->setDeliveryLocal(
+            $user->address->address = $data['address-local'] ?? '';
+            $user->address->post = $data['post-local'] ?? '';
+            $user->address->latitude = $data['latitude-local'] ?? '';
+            $user->address->longitude = $data['longitude-local'] ?? '';
+            $user->save();
+          /*  $user->delivery->setDeliveryLocal(
                 isset($data['storage']) ? (int)$data['storage'] : null,
                 GeoAddress::create(
                     $data['address-local'] ?? '',
@@ -138,7 +150,7 @@ class OrderService
                     $data['longitude-local'] ?? '',
                     $data['post-local'] ?? ''
                 )
-            );
+            );*/
         }
         if (isset($data['fullname'])) {
             list ($surname, $firstname, $secondname) = explode(" ", $data['fullname']);
@@ -159,13 +171,14 @@ class OrderService
         $delivery_cost = $this->deliveries->calculate($user->id, $items);
 
         //TODO Сообщения об ошибках - неверное ИНН, Негабаритный груз для доставки (название продукта) $error
-
-        if ($user->delivery->isStorage() && empty($user->delivery->storage)) $enabled = false;
-        if ($user->delivery->isLocal() && empty($user->delivery->local->address)) $enabled = false;
-        if (
+        if ($user->isStorage()) $user->storage = $data['storage'] ?? null;
+        $user->save();
+        if ($user->delivery == OrderExpense::DELIVERY_STORAGE && empty($user->StorageDefault())) $enabled = false;
+        if ($user->delivery != OrderExpense::DELIVERY_STORAGE && empty($user->address->address)) $enabled = false;
+       /* if (
             $user->delivery->isRegion() &&
             (empty($user->delivery->region->address) || empty($user->delivery->company))
-        ) $enabled = false;
+        ) $enabled = false;*/
         $user->refresh();
         return [
             'payment' => [
@@ -173,10 +186,10 @@ class OrderService
                 'invoice' => $user->payment->invoice(),
             ],
             'delivery' => [
-                'delivery_local' => $user->delivery->local->address,
-                'delivery_address' => $user->delivery->region->address,
-                'company' => $user->delivery->company,
-                'storage' => $user->delivery->storage,
+                'delivery_local' => $user->address->address,
+                'delivery_address' => $user->address->address,
+                'company' => '', //$user->delivery->company,
+                'storage' => $user->StorageDefault(),
                 'fullname' => $user->fullname->getFullName(),
             ],
             'phone' => $user->phone,
@@ -305,11 +318,11 @@ class OrderService
         }
 
         if (isset($request['payment'])) $user->payment->setPayment($request['payment']);
-        if ($request['delivery'] == 'local') $user->delivery->setDeliveryType(OrderExpense::DELIVERY_LOCAL);
-        if ($request['delivery'] == 'region') $user->delivery->setDeliveryType(OrderExpense::DELIVERY_REGION);
+        if ($request['delivery'] == 'local') $user->delivery = OrderExpense::DELIVERY_LOCAL;
+        if ($request['delivery'] == 'region') $user->delivery = OrderExpense::DELIVERY_REGION;
         $storage = null;
         if (is_numeric($request['delivery'])) {
-            $user->delivery->setDeliveryType(OrderExpense::DELIVERY_STORAGE);
+            $user->delivery = OrderExpense::DELIVERY_STORAGE;
             $storage = (int)$request['delivery'];
         }
         $Address = GeoAddress::create(
@@ -318,11 +331,14 @@ class OrderService
             $data['longitude'] ?? '',
             $data['post'] ?? ''
         );
+        $user->address = $Address;
+        $user->save();
+/*
         if ($user->delivery->isRegion()) {
             $user->delivery->setDeliveryTransport(DeliveryHelper::deliveries()[0]['class'], $Address);
         } else {
             $user->delivery->setDeliveryLocal($storage, $Address);
-        }
+        }*/
         $product_id = $request['product_id'];
         /** @var Product $product */
         $product = Product::find($product_id);

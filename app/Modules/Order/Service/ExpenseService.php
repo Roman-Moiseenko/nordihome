@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Events\ExpenseHasAssembly;
 use App\Events\ExpenseHasCompleted;
+use App\Events\ExpenseHasDelivery;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCompleted;
 use App\Modules\Accounting\Entity\MovementProduct;
@@ -72,6 +74,19 @@ class ExpenseService
         return $expense;
     }
 
+    public function create_expense(array $request): OrderExpense
+    {
+        $expense = $this->create($request);
+        $user = $expense->order->user;
+        $expense->recipient = clone $user->fullname;
+        $expense->address = clone $user->address;
+        $expense->phone = $user->phone;
+        $expense->type = $user->delivery;
+        $expense->save();
+
+        return $expense;
+    }
+
     /**
      * Отмена распоряжения. Возвращаем кол-во в резерв и на склад. Удаляем записи и само распоряжение
      * @param OrderExpense $expense
@@ -100,11 +115,11 @@ class ExpenseService
     }
 
     /**
-     * ВЫдатьтовар со склада
+     * Регистрация выдачи товара на месте (без доставки)
      * @param array $request
      * @return OrderExpense
      */
-    public function issue(array $request): OrderExpense
+    private function issue(array $request): OrderExpense
     {
         $expense = $this->create($request);
 
@@ -113,14 +128,63 @@ class ExpenseService
         $expense->phone = $expense->order->user->phone;
         $expense->save();
         $expense->setNumber();
+        return $expense;
+    }
+
+    /**
+     * Выдать товар из магазина, витрины
+     * @param array $request
+     * @return OrderExpense
+     */
+    public function issue_shop(array $request): OrderExpense
+    {
+        $expense = $this->issue($request);
         $this->completed($expense);
         $expense->refresh();
         return $expense;
     }
 
-    public function assembly(OrderExpense $expense)
+    /**
+     * Выдать товар со склада
+     * @param array $request
+     * @return OrderExpense
+     */
+    public function issue_warehouse(array $request): OrderExpense
     {
+        $expense = $this->issue($request);
+        $this->assembly($expense);
+        $expense->refresh();
+        return $expense;
+    }
 
+    public function assembly(OrderExpense $expense): Order
+    {
+        if ($expense->isLocal() == false && $expense->isRegion() == false) throw new \DomainException('Не выбран тип доставки');
+        if ($expense->isLocal() && is_null($expense->calendar())) throw new \DomainException('Не выбрано время доставки');
+        if (empty($expense->phone) || empty($expense->address->address)) throw new \DomainException('Не указан адрес и/или телефон');
+
+        $expense->assembly();
+        event(new ExpenseHasAssembly($expense)); //Уведомление на склад на выдачу
+        return $expense->order;
+    }
+
+    public function assembling(OrderExpense $expense, int $worker_id)
+    {
+        $expense->worker_id = $worker_id;
+        $expense->status = OrderExpense::STATUS_ASSEMBLING;
+        $expense->save();
+    }
+
+    public function delivery(OrderExpense $expense, string $track = '')
+    {
+        if ($expense->isRegion()) {
+            if (empty($track)) throw new \DomainException('Не указан трек-номер посылки');
+            $expense->track = $track;
+            event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
+
+        }
+        $expense->status = OrderExpense::STATUS_DELIVERY;
+        $expense->save();
     }
 
     public function completed(OrderExpense $expense)

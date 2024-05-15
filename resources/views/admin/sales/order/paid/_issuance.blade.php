@@ -75,7 +75,37 @@
     </div-->
     <div class="w-56 text-center">
         <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-            <x-base.popover.button as="x-base.button" variant="primary" class="w-100"
+            <x-base.popover.button as="x-base.button" variant="warning" class="w-100"
+                                   id="button-issue-shop" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
+                Выдать с магазина
+                <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+            </x-base.popover.button>
+            <x-base.popover.panel>
+                <div class="p-2">
+                    <x-base.tom-select id="select-storage-issue-shop" name="storage" class=""
+                                       data-placeholder="Выберите Магазин">
+                        <option value="0"></option>
+                        @foreach($storages as $storage)
+                            <option value="{{ $storage->id }}"
+                            >{{ $storage->name }}</option>
+                        @endforeach
+                    </x-base.tom-select>
+
+                    <div class="flex items-center mt-3">
+                        <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
+                            Отмена
+                        </x-base.button>
+                        <button id="create-issue-shop" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expense.issue-shop') }}">
+                            Выдать
+                        </button>
+                    </div>
+                </div>
+            </x-base.popover.panel>
+        </x-base.popover>
+    </div>
+    <div class="w-56 text-center">
+        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="success" class="w-100"
                                    id="button-issue" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
                 Выдать со склада
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
@@ -95,7 +125,7 @@
                         <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
                             Отмена
                         </x-base.button>
-                        <button id="create-issue" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expense.issue') }}">
+                        <button id="create-issue" class="w-32 ml-2 btn btn-primary" type="button" data-route="{{ route('admin.sales.expense.issue-warehouse') }}">
                             Выдать
                         </button>
                     </div>
@@ -122,6 +152,9 @@
 
     let buttonIssue = document.getElementById('button-issue');
     let buttonCreateIssue = document.getElementById('create-issue');
+    let buttonIssueShop = document.getElementById('button-issue-shop');
+    let buttonCreateIssueShop = document.getElementById('create-issue-shop');
+
 
     setAjax(route, _check(), _updateData);
 
@@ -154,7 +187,6 @@
             return;
         } */
         data['order_id'] = {{ $order->id }};
-       // console.log(data);
         setAjax(route, data , _expenseShow);
     });
 
@@ -171,6 +203,20 @@
         setAjax(route, data , _expenseShow);
     });
 
+
+    buttonCreateIssueShop.addEventListener('click', function () {
+        let route = buttonCreateIssueShop.dataset.route;
+        let selectStorage = document.getElementById('select-storage-issue-shop');
+        let data = _check();
+        data['storage_id'] = Number(selectStorage.value);
+        if (data['storage_id'] === 0) {
+            window.notification('Неполные данные', 'Не выбран магазин получения товара', 'info');
+            return;
+        }
+        data['order_id'] = {{ $order->id }};
+        setAjax(route, data , _expenseShow);
+    });
+
     function _check() {
         let data = {items: [], additions: []};
         Array.from(checkboxUpdateData).forEach(function (checkbox) {
@@ -178,7 +224,6 @@
                 let id = checkbox.value;
                 let value = document.getElementById(checkbox.dataset.input).value;
                 let key = checkbox.getAttribute('name');
-                //console.log(id, value, key);
                 data[key].push({
                     id: id,
                     value: value
@@ -209,6 +254,7 @@
         discountAmount.innerText = data.discount;
         buttonExpense.disabled = data.disable;
         buttonIssue.disabled = data.disable;
+        buttonIssueShop.disabled = data.disable;
         //createExpense.disabled = data.disable;
     }
 

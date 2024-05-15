@@ -4,7 +4,9 @@ namespace App\Modules\User\Entity;
 
 
 use App\Casts\FullNameCast;
+use App\Casts\GeoAddressCast;
 use App\Entity\FullName;
+use App\Entity\GeoAddress;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,10 +25,13 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $verify_token
  * @property int $client
  * @property Wish[] $wishes
- * @property UserDelivery $delivery
+ * @property int $delivery
+ * @property int $storage
+// * @property UserDelivery $delivery
  * @property UserPayment $payment
  * @property Subscription[] $subscriptions
  * @property FullName $fullname
+ * @property GeoAddress $address
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -47,6 +52,8 @@ class User extends Authenticatable
 
     protected $attributes = [
         'fullname' => '{}',
+        'address' => '{}',
+        'delivery' => OrderExpense::DELIVERY_STORAGE,
     ];
 
     protected $fillable = [
@@ -55,6 +62,8 @@ class User extends Authenticatable
         'password',
         'status',
         'verify_token',
+        'delivery',
+        'storage',
     ];
 
     protected $hidden = [
@@ -67,6 +76,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'fullname' => FullNameCast::class,
+        'address' => GeoAddressCast::class
     ];
 
     //*** IS-...
@@ -171,11 +181,12 @@ class User extends Authenticatable
 
     //TODO Перенести в таблицу Users или сделать UserDefault
     // delivery и payment
+  /*
     public function delivery()
     {
         return $this->hasOne(UserDelivery::class, 'user_id', 'id')->withDefault();
     }
-
+*/
     public function payment()
     {
         $payments = PaymentHelper::payments();
@@ -200,8 +211,29 @@ class User extends Authenticatable
 
     public function htmlDelivery(): string
     {
-        $type = OrderExpense::TYPES[$this->delivery->type];
-        $address = $this->delivery->getAddressDelivery();
-        return $type . ' ('. $address . ')';
+        $type = OrderExpense::TYPES[$this->delivery];
+        //$address = $this->delivery->getAddressDelivery();
+        return $type . ' ('. $this->address->address . ')';
+    }
+
+    public function StorageDefault():? int
+    {
+        return $this->storage;
+        //if (is_null($this->storage))
+        //throw new \DomainException('Назначить поле хранилище');
+    }
+
+    public function isStorage(): bool
+    {
+        return $this->delivery == OrderExpense::DELIVERY_STORAGE;
+    }
+
+    public function isLocal(): bool
+    {
+        return $this->delivery == OrderExpense::DELIVERY_LOCAL;
+    }
+    public function isRegion(): bool
+    {
+        return $this->delivery == OrderExpense::DELIVERY_REGION;
     }
 }

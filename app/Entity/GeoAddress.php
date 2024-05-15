@@ -28,13 +28,15 @@ class GeoAddress
         return $geo;
     }
 
-    public static function fromArray(array $params): self
+    public static function fromArray(?array $params): self
     {
         $geo = new static();
-        $geo->address = $params['address'];
-        $geo->latitude = $params['latitude'];
-        $geo->longitude = $params['longitude'];
-        $geo->post = $params['post'];
+        if (!empty($params)) {
+            $geo->address = $params['address'];
+            $geo->latitude = $params['latitude'];
+            $geo->longitude = $params['longitude'];
+            $geo->post = $params['post'];
+        }
         return $geo;
     }
 

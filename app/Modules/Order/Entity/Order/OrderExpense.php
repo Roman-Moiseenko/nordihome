@@ -4,10 +4,14 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Casts\FullNameCast;
+use App\Casts\GeoAddressCast;
 use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Admin\Entity\Worker;
+use App\Modules\Delivery\Entity\Calendar;
+use App\Modules\Delivery\Entity\CalendarExpense;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,10 +22,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $order_id
  * @property int $storage_id
  * @property int $staff_id
+ * @property int $worker_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property int $status
  * @property string $comment
+ * @property string $track
  *
  * @property FullName $recipient
  * @property string $phone
@@ -33,6 +39,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Storage $storage
  * @property Order $order
  * @property Admin $staff
+ * @property Worker $worker
+ * @property Calendar[] $calendars
  */
 class OrderExpense extends Model
 {
@@ -77,7 +85,7 @@ class OrderExpense extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'recipient' => FullNameCast::class,
-        'address' => GeoAddress::class,
+        'address' => GeoAddressCast::class,
     ];
 
     public static function register(int $order_id, int $storage_id): self
@@ -152,6 +160,12 @@ class OrderExpense extends Model
         $this->save();
     }
 
+    public function assembly()
+    {
+        $this->status = self::STATUS_ASSEMBLY;
+        $this->save();
+    }
+
     public function setNumber()
     {
         $count = OrderExpense::where('number', '<>', null)->count();
@@ -173,7 +187,30 @@ class OrderExpense extends Model
         return $result;
     }
 
+    public function getWeight(): float
+    {
+        $result = 0.0;
+        foreach ($this->items as $item) {
+            $result += $item->orderItem->product->dimensions->weight() * $item->quantity;
+        }
+        return $result;
+    }
+
+    public function getVolume(): float
+    {
+        $result = 0.0;
+        foreach ($this->items as $item) {
+            $result += $item->orderItem->product->dimensions->volume() * $item->quantity;
+        }
+        return $result;
+    }
+
     //*** RELATIONS
+    public function worker()
+    {
+        return $this->belongsTo(Worker::class, 'worker_id', 'id');
+    }
+
     public function staff()
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
@@ -199,6 +236,19 @@ class OrderExpense extends Model
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
+    public function calendar():? Calendar
+    {
+        return $this->calendars()->first();
+        /*$item = CalendarExpense::where('expense_id', $this->id)->first();
+        if (is_null($item)) return null;
+        return Calendar::find($item->calendar_id);
+        */
+    }
+
+    public function calendars()
+    {
+        return $this->belongsToMany(Calendar::class, 'calendars_expenses', 'expense_id', 'calendar_id');
+    }
 
 
     //*** Хелперы

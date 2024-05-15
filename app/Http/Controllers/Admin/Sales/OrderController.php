@@ -220,10 +220,10 @@ class OrderController extends Controller
                     'phone' => $user->phone,
                     'email' => $user->email,
                     'name' => $user->fullname->firstname,
-                    'delivery' => $user->delivery->type,
-                    'storage' => $user->delivery->storage,
-                    'local' => $user->delivery->local->address,
-                    'region' => $user->delivery->region->address,
+                    'delivery' => $user->delivery, //->type,
+                    'storage' => $user->StorageDefault(),
+                    'local' => $user->address->address,
+                    'region' => $user->address->address,
                     'payment' => $user->payment->class_payment,
                 ];
                 return response()->json($result);
