@@ -361,7 +361,6 @@ Route::group(
 
                 Route::resource('order', 'OrderController');
                 Route::resource('payment', 'PaymentController');
-               // Route::resource('expense', 'ExpenseController');
                 //Заказы
                 Route::group(
                     [
@@ -371,13 +370,27 @@ Route::group(
                     ],
                     function () {
                         Route::post('/copy/{order}', 'OrderController@copy')->name('copy');
+                        Route::delete('/destroy/{order}', 'OrderController@destroy')->name('destroy');
+                        Route::post('/movement/{order}', 'OrderController@movement')->name('movement');
+                        Route::post('/expense-calculate/{order}', 'OrderController@expense_calculate')->name('expense-calculate');
 
+                        Route::post('/set-manager/{order}', 'OrderController@set_manager')->name('set-manager');
+                        Route::post('/set-reserve/{order}', 'OrderController@set_reserve')->name('set-reserve');
+
+                        Route::post('/canceled/{order}', 'OrderController@canceled')->name('canceled');
+                        Route::post('/set-awaiting/{order}', 'OrderController@set_awaiting')->name('set-awaiting');
+
+                        Route::post('/search-user', 'OrderController@search_user')->name('search-user');
+                        Route::post('/search', 'OrderController@search')->name('search');
+                        Route::post('/get-to-order', 'OrderController@get_to_order')->name('get-to-order');
+
+                        //Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
                         //Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
                         //Route::post('/{order}/add-addition', 'OrderController@add_addition')->name('add-addition');
 
                       /*  Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
                         Route::delete('/del-addition/{addition}', 'OrderController@del_addition')->name('del-addition');*/
-                        Route::delete('/{order}/destroy', 'OrderController@destroy')->name('destroy');
+
                         //Route::delete('/del-payment/{payment}', 'OrderController@del_payment')->name('del-payment');
                     //    Route::post('/{item}/update-quantity', 'OrderController@update_quantity')->name('update-quantity');
                        // Route::post('/{item}/collect-reserve', 'OrderController@collect_reserve')->name('collect-reserve');
@@ -396,23 +409,14 @@ Route::group(
 
                      //   Route::post('/{order}/update-comment', 'OrderController@update_comment')->name('update-comment');
                      //   Route::post('/{item}/update-item-comment', 'OrderController@update_item_comment')->name('update-item-comment');
-                        Route::post('/movement/{order}', 'OrderController@movement')->name('movement');
+
                      //   Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
-                        Route::post('/{order}/expense-calculate', 'OrderController@expense_calculate')->name('expense-calculate');
 
-                        Route::post('/{order}/set-manager', 'OrderController@set_manager')->name('set-manager');
-                        Route::post('/{order}/set-reserve', 'OrderController@set_reserve')->name('set-reserve');
-
-                        Route::post('/{order}/canceled', 'OrderController@canceled')->name('canceled');
-                        Route::post('/{order}/set-awaiting', 'OrderController@set_awaiting')->name('set-awaiting');
-                        Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
                         //Route::post('/{order}/completed', 'OrderController@completed')->name('completed');
 
                         //Route::post('/paid-payment/{payment}', 'OrderController@paid_payment')->name('paid-payment');
 
-                        Route::post('/search-user', 'OrderController@search_user')->name('search-user');
-                        Route::post('/search', 'OrderController@search')->name('search');
-                        Route::post('/get-to-order', 'OrderController@get_to_order')->name('get-to-order');
+
 
                     }
                 );
@@ -442,8 +446,6 @@ Route::group(
                         Route::get('/show/{refund}', 'RefundController@show')->name('show');
                         Route::get('/create', 'RefundController@create')->name('create');
                         Route::post('/store/{order}', 'RefundController@store')->name('store');
-
-
                     }
                 );
             }

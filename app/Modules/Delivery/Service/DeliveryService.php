@@ -5,7 +5,6 @@ namespace App\Modules\Delivery\Service;
 
 use App\Events\OrderHasCreated;
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
