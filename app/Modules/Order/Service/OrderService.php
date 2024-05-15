@@ -91,7 +91,7 @@ class OrderService
         $result->payment = $user->payment;
 
 
-        $result->delivery = $user->delivery; //$this->deliveries->user($user->id);
+        $result->delivery = $user->delivery;
         $result->email = $user->email;
         $result->phone = $user->phone;
         $result->user = $user;
@@ -175,10 +175,7 @@ class OrderService
         $user->save();
         if ($user->delivery == OrderExpense::DELIVERY_STORAGE && empty($user->StorageDefault())) $enabled = false;
         if ($user->delivery != OrderExpense::DELIVERY_STORAGE && empty($user->address->address)) $enabled = false;
-       /* if (
-            $user->delivery->isRegion() &&
-            (empty($user->delivery->region->address) || empty($user->delivery->company))
-        ) $enabled = false;*/
+
         $user->refresh();
         return [
             'payment' => [
@@ -333,12 +330,7 @@ class OrderService
         );
         $user->address = $Address;
         $user->save();
-/*
-        if ($user->delivery->isRegion()) {
-            $user->delivery->setDeliveryTransport(DeliveryHelper::deliveries()[0]['class'], $Address);
-        } else {
-            $user->delivery->setDeliveryLocal($storage, $Address);
-        }*/
+
         $product_id = $request['product_id'];
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -364,8 +356,6 @@ class OrderService
             $user = User::register($request['email'], $password);
             $user->update(['phone' => $request['phone']]);
             $user->setNameField(firstname: $request['name']);
-           /* $this->deliveries->user($user->id)
-                ->setFullName(new FullName('', $request['name'], ''));*/
             event(new UserHasCreated($user));
         } else {//2. Пользователь старый.
             $user = User::find((int)$request['user_id']);

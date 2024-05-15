@@ -34,14 +34,12 @@ class DeliveryService
 
     public function storages()
     {
-        $storages = Storage::where('point_of_delivery', true)->get();
-        return $storages;
+        return Storage::where('point_of_delivery', true)->get();
     }
 
     public function companies(): array
     {
-        $delivery = DeliveryHelper::deliveries();
-        return $delivery;
+        return DeliveryHelper::deliveries();
     }
 
     /**

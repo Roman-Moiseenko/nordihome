@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('calendars', function (Blueprint $table) {
+        Schema::create('calendar_periods', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('date_at')->unique();
+            $table->foreignId('calendar_id')->constrained('calendars')->onDelete('cascade');
+            $table->integer('time');
+            $table->float('weight')->default(0);
+            $table->float('volume')->default(0);
+            $table->integer('status');
         });
     }
 
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::drop('calendars');
+        Schema::drop('calendar_periods');
     }
 };

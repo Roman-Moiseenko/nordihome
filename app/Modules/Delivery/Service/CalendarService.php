@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Service;
 
 use App\Modules\Delivery\Entity\Calendar;
+use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryTruck;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use Carbon\Carbon;
@@ -18,18 +19,18 @@ class CalendarService
         $array = Calendar::where('date_at', '>=', now()->toDateString())->orderByDesc('date_at')->groupBy('date_at')->pluck('date_at')->toArray();
         $count = count($array);
 
-        if ($count < 5) {
+        if ($count < 6) {
             //TODO Создать новые дни по графику, см. выходные или без
             if ($count == 0) {
                 $begin = now()->addDay();
             } else {
                 $begin = Carbon::parse($array[0])->addDay();
             }
-            for ($i = 0; $i < 5 - $count; $i++) {
+            for ($i = 0; $i < 6 - $count; $i++) {
                 $this->create_date($begin->addDays($i));
             }
         }
-        $calendars = Calendar::where('date_at', '>', now()->toDateString())->orderBy('date_at')->take(10)->getModels();
+        $calendars = Calendar::where('date_at', '>', now()->toDateString())->orderBy('date_at')->take(6)->getModels();
         return $calendars;
     }
 
@@ -49,8 +50,9 @@ class CalendarService
             $volume += $truck->volume;
             $weight += $truck->weight;
         }
-        foreach (Calendar::PERIODS as $period => $name) {
-            Calendar::register($date, $period, $weight, $volume);
+        $calendar = Calendar::register($date);
+        foreach (CalendarPeriod::TIMES as $time => $name) {
+            $calendar->addPeriod($time, $weight, $volume);
         }
     }
 
@@ -60,30 +62,32 @@ class CalendarService
         return Calendar::where('date_at', $date->toDateString())->orderBy('date_at')->getModels();
     }
 
-    public function attach_expense(Calendar $calendar, OrderExpense $expense)
+    public function attach_expense(CalendarPeriod $calendarPeriod, OrderExpense $expense)
     {
-        $old_calendar = $expense->calendar();
-        $expense->calendars()->detach();
-        $expense->calendars()->attach($calendar->id);
+        $previousCalendarPeriod = $expense->calendarPeriod();
+        $expense->calendarPeriods()->detach();
+        $expense->calendarPeriods()->attach($calendarPeriod->id);
 
-        $old_calendar->refresh();
-        $calendar->refresh();
-        $this->check_full($old_calendar);
-        $this->check_full($calendar);
+        if (!is_null($previousCalendarPeriod)) {
+            $previousCalendarPeriod->refresh();
+            $this->check_full($previousCalendarPeriod);
+        }
+        $calendarPeriod->refresh();
+        $this->check_full($calendarPeriod);
     }
 
-    private function check_full(Calendar $calendar)
+    private function check_full(CalendarPeriod $calendarPeriod)
     {
-        if ($calendar->isCompleted()) throw new \DomainException('Доставка завершена, внесение изменений невозможно');
+        if ($calendarPeriod->isCompleted()) throw new \DomainException('Доставка завершена, внесение изменений невозможно');
         if (
-            ($calendar->freeWeight() < $calendar->weight / 10) ||
-            ($calendar->freeVolume() < $calendar->volume / 10)
+            ($calendarPeriod->freeWeight() < $calendarPeriod->weight / 10) ||
+            ($calendarPeriod->freeVolume() < $calendarPeriod->volume / 10)
         ) {
-            $calendar->status = Calendar::STATUS_FULL;
+            $calendarPeriod->status = CalendarPeriod::STATUS_FULL;
         } else {
-            $calendar->status = Calendar::STATUS_DRAFT;
+            $calendarPeriod->status = CalendarPeriod::STATUS_DRAFT;
         }
-        $calendar->save();
+        $calendarPeriod->save();
     }
 
 

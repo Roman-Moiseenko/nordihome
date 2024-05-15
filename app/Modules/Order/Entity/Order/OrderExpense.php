@@ -12,6 +12,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarExpense;
+use App\Modules\Delivery\Entity\CalendarPeriod;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -40,7 +41,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Order $order
  * @property Admin $staff
  * @property Worker $worker
- * @property Calendar[] $calendars
+ * @property CalendarPeriod[] $calendarPeriods
  */
 class OrderExpense extends Model
 {
@@ -238,16 +239,19 @@ class OrderExpense extends Model
 
     public function calendar():? Calendar
     {
-        return $this->calendars()->first();
-        /*$item = CalendarExpense::where('expense_id', $this->id)->first();
-        if (is_null($item)) return null;
-        return Calendar::find($item->calendar_id);
-        */
+
+        $period = $this->calendarPeriod();
+        return is_null($period) ? null : $period->calendar;
     }
 
-    public function calendars()
+    public function calendarPeriod():? CalendarPeriod
     {
-        return $this->belongsToMany(Calendar::class, 'calendars_expenses', 'expense_id', 'calendar_id');
+        return $this->calendarPeriods()->first();
+    }
+
+    public function calendarPeriods()
+    {
+        return $this->belongsToMany(CalendarPeriod::class, 'calendars_expenses', 'expense_id', 'period_id');
     }
 
 

@@ -70,7 +70,7 @@
             @if($disabled)
                 <h2 class="text-xl font-medium mb-2">Отгрузка:</h2>
                 <div class="text-lg">
-                    {{ $expense->calendar()->htmlDate() }} - {{ $expense->calendar()->periodHtml() }}.
+                    {{ $expense->calendar()->htmlDate() }} - {{ $expense->calendarPeriod()->timeHtml() }}.
                     <span class="text-success">{{ $expense->statusHtml() }}</span>
                 </div>
             @else

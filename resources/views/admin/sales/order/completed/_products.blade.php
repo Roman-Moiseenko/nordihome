@@ -39,7 +39,7 @@
 
         <div class="input-group ml-1">
             <input id="manual_percent" type="text" class="form-control  w-20 text-right update-data-ajax"
-                   value="{{ number_format($order->manual / $order->getBaseAmountNotDiscount() * 100, 2, '.') }}" aria-describedby="discount-percent"
+                   value="{{ ($order->getBaseAmountNotDiscount() == 0) ? '0.00' : number_format($order->manual / $order->getBaseAmountNotDiscount() * 100, 2, '.') }}" aria-describedby="discount-percent"
                    readonly
             >
             <div id="discount-percent" class="input-group-text">%</div>

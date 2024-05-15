@@ -3,14 +3,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Delivery;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Worker;
-use App\Modules\Delivery\Entity\DeliveryOrder;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use JetBrains\PhpStorm\ArrayShape;
 
 class DeliveryController extends Controller

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Sales\Expense;
 
 use App\Modules\Delivery\Entity\CalendarExpense;
+use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use Carbon\Carbon;
@@ -28,14 +29,14 @@ class Calendar extends Component
         $this->begin_date = now();
         $this->refresh_fields();
         $this->expense = $expense;
-        if (!is_null($expense->calendar())) $this->period = $expense->calendar()->id;
+        if (!is_null($expense->calendarPeriod())) $this->period = $expense->calendarPeriod()->id;
     }
 
     public function refresh_fields()
     {
-        $days = $this->service->Nearest();
-        $this->days = [];
-        foreach ($days as $day) {
+        //$days = $this->service->Nearest();
+        $this->days = $this->service->Nearest();
+      /*  foreach ($days as $day) {
             $this->days[$day->date_at->format('d-m-Y')][] = [
                 'id' => $day->id,
                 'period' => $day->periodHtml(),
@@ -43,12 +44,13 @@ class Calendar extends Component
                 'volume' => $day->freeVolume(),
                 'status' => $day->isDraft(),
             ];
-        }
+        }*/
     }
     public function set_period()
     {
-        $calendar = \App\Modules\Delivery\Entity\Calendar::find($this->period);
-        $this->service->attach_expense($calendar, $this->expense);
+        //$date, $period
+        $period = CalendarPeriod::find($this->period);
+        $this->service->attach_expense($period, $this->expense);
 
         $this->refresh_fields();
     }

@@ -50,18 +50,6 @@
             </form>
         </div>
     </div>
-    <script>
-        /* Filters */
-        const urlParams = new URLSearchParams(window.location.search);
-
-        let selectStatus = document.getElementById('select-status');
-        selectStatus.addEventListener('change', function () {
-            let p = selectStatus.options[selectStatus.selectedIndex].value;
-            urlParams.set('status', p);
-            window.location.search = urlParams;
-        });
-
-    </script>
     <div class="grid grid-cols-12 gap-6 mt-5">
 
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
