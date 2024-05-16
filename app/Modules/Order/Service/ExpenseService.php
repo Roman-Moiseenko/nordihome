@@ -26,8 +26,6 @@ class ExpenseService
 
     public function __construct(OrderReserveService $reserveService)
     {
-        /*$this->assemblage = (new Options())->shop->assemblage ?? 15;
-        $this->movements = $movements;*/
         $this->reserveService = $reserveService;
     }
 
@@ -189,15 +187,15 @@ class ExpenseService
     {
         $expense->completed();
         $expense->refresh();
-        $order = $expense->order;
-        if ($order->getExpenseAmount() == $order->getTotalAmount()) {
-            $check = true;
+        /** @var Order $order */
+        $order = Order::find($expense->order_id);
 
+        if (($order->getTotalAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) < 1) {
+            $check = true;
             foreach ($order->expenses as $_expense) {
                 if (!$_expense->isCompleted()) $check = false;
             }
-
-            //TODO Проверить все ли распоряжения выданы?
+            //Проверить все ли распоряжения выданы?
             if ($check) $expense->order->setStatus(OrderStatus::COMPLETED);
 
             event(new OrderHasCompleted($expense->order));
@@ -205,38 +203,4 @@ class ExpenseService
             event(new ExpenseHasCompleted($expense));
         }
     }
-
-    //Установить точку сборки
-    /*
-        public function setPoint(OrderExpense $expense, int $storage_id)
-        {
-            $storage = Storage::find($storage_id);
-            $expense->setPoint($storage->id); //1. Установить точку выдачи товара
-            $movements = $this->movements->createByExpense($expense); //2. Создаем перемещения, если нехватает товара
-            $expense->setStorage($storage->id); //3. В резервах товаров установить склад.
-            //event(new PointHasEstablished($order));
-            if (!is_null($movements)) event(new MovementHasCreated($movements));
-        }
-
-        public function create_original(Order $order)
-        {
-            $expense = OrderExpense::register_original($order->id);
-
-            foreach ($order->items as $item) {
-                $expenseItem = OrderExpenseItem::new($item->product_id, $item->quantity);
-                $expense->items()->save($expenseItem);
-                if ($item->assemblage) {
-                    $assemblage = $item->product->assemblage ?? ($item->getSellCost() * $item->getQuantity() * $this->assemblage / 100);
-
-                    $expenseAddition = OrderExpenseAddition::new('Сборка товара ' . $item->product->name, $assemblage);
-                    $expense->additions()->save($expenseAddition);
-                }
-            }
-
-            foreach ($order->additions as $addition) {
-                $expenseAddition = OrderExpenseAddition::new($addition->purposeHTML(), $addition->amount);
-                $expense->additions()->save($expenseAddition);
-            }
-
-        }*/
 }
