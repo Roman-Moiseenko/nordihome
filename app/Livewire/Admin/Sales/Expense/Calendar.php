@@ -34,21 +34,10 @@ class Calendar extends Component
 
     public function refresh_fields()
     {
-        //$days = $this->service->Nearest();
         $this->days = $this->service->Nearest();
-      /*  foreach ($days as $day) {
-            $this->days[$day->date_at->format('d-m-Y')][] = [
-                'id' => $day->id,
-                'period' => $day->periodHtml(),
-                'weight' => $day->freeWeight(),
-                'volume' => $day->freeVolume(),
-                'status' => $day->isDraft(),
-            ];
-        }*/
     }
     public function set_period()
     {
-        //$date, $period
         $period = CalendarPeriod::find($this->period);
         $this->service->attach_expense($period, $this->expense);
 
@@ -59,5 +48,14 @@ class Calendar extends Component
     public function render()
     {
         return view('livewire.admin.sales.expense.calendar');
+    }
+
+    public function exception($e, $stopPropagation)
+    {
+        if ($e instanceof \DomainException) {
+            $this->dispatch('window-notify', title: 'Внимание', message: $e->getMessage());
+            $stopPropagation();
+            $this->refresh_fields();
+        }
     }
 }

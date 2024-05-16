@@ -67,4 +67,13 @@ class Delivery extends Component
     {
         return view('livewire.admin.sales.expense.delivery');
     }
+
+    public function exception($e, $stopPropagation)
+    {
+        if ($e instanceof \DomainException) {
+            $this->dispatch('window-notify', title: 'Внимание', message: $e->getMessage());
+            $stopPropagation();
+            $this->refresh_fields();
+        }
+    }
 }

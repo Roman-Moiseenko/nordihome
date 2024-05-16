@@ -116,6 +116,12 @@ class AdminMenu
                         'route_name' => 'admin.delivery.calendar.index',
                         //'action' => true,
                     ],
+                    'schedule' => [
+                        'icon' => 'calendar-check',
+                        'title' => 'График доставок',
+                        'route_name' => 'admin.delivery.calendar.schedule',
+                        'action' => true,
+                    ],
                 ],
 
             ],

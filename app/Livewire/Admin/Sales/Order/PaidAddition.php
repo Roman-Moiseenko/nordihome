@@ -56,6 +56,7 @@ class PaidAddition extends Component
         if($e instanceof \DomainException) {
             $this->dispatch('window-notify', title: 'Ошибка в товаре', message: $e->getMessage());
             $stopPropagation();
+            $this->refresh_fields();
         }
     }
 }

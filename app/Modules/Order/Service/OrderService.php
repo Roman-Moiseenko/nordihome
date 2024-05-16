@@ -824,10 +824,10 @@ class OrderService
 
     public function copy(Order $order): Order
     {
-        //TODO Скопировать скидки???
 
         $new_order = $order->replicate();
         $new_order->created_at = Carbon::now();
+        $new_order->number = null;
         $new_order->paid = false;
         $new_order->finished = false;
         $new_order->save();
@@ -839,6 +839,7 @@ class OrderService
             $this->add_product($new_order, $item->product_id, $item->quantity);
         }
 
+        //TODO Копировать Услуги
         foreach ($order->additions as $addition) {
             $this->add_addition($new_order, $addition->purpose, $addition->amount, $addition->comment);
         }

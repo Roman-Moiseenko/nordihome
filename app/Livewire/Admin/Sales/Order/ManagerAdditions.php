@@ -58,6 +58,7 @@ class ManagerAdditions extends Component
         if($e instanceof \DomainException) {
             $this->dispatch('window-notify', title: 'Ошибка в Услугах', message: $e->getMessage());
             $stopPropagation();
+            $this->refresh_fields();
         }
     }
 }

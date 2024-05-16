@@ -337,6 +337,7 @@ Route::group(
                 Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
 
                 Route::get('/calendar', 'CalendarController@index')->name('calendar.index');
+                Route::get('/calendar/schedule', 'CalendarController@schedule')->name('calendar.schedule');
                 Route::post('/assembling/{expense}', 'DeliveryController@assembling')->name('assembling');
                 Route::post('/delivery/{expense}', 'DeliveryController@delivery')->name('delivery');
                 Route::post('/completed/{expense}', 'DeliveryController@completed')->name('completed');

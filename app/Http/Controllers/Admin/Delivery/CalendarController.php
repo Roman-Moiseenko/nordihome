@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Delivery;
 use App\Http\Controllers\Controller;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarPeriod;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CalendarController extends Controller
@@ -26,8 +27,32 @@ class CalendarController extends Controller
         };
             $calendars = $this->pagination($query, $request, $pagination);
 
-
             return view('admin.delivery.calendar.index', compact('calendars', 'filter', 'pagination'));
         });
+    }
+
+    public function schedule(Request $request)
+    {
+        return $this->try_catch_admin(function () use($request) {
+            $today = Carbon::now();
+            $begin = Carbon::parse($today->year . '-' . $today->month . '-01');
+            $month = 0;
+            $days = [];
+            while ($month < 3) {
+                $days[$begin->translatedFormat('F') . ' ' . $begin->year][] = [
+                    'day' => $begin->day,
+                    'month' => $begin->month,
+                    'year' => $begin->year,
+                    'disabled' => $begin->lte($today),
+                    'week' => $begin->dayOfWeekIso
+                    ];
+                //TODO Посчитать, что прошло 3 месяца
+                $month = $begin->month - $today->month;
+                $begin->addDay();
+            }
+
+            return view('admin.delivery.calendar.schedule', compact('days'));
+        });
+
     }
 }

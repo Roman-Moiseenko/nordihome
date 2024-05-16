@@ -30,7 +30,7 @@ class CalendarService
                 $this->create_date($begin->addDays($i));
             }
         }
-        $calendars = Calendar::where('date_at', '>', now()->toDateString())->orderBy('date_at')->take(6)->getModels();
+        $calendars = Calendar::where('date_at', '>', now()->toDateString())->orderBy('date_at')->getModels();
         return $calendars;
     }
 
@@ -54,6 +54,38 @@ class CalendarService
         foreach (CalendarPeriod::TIMES as $time => $name) {
             $calendar->addPeriod($time, $weight, $volume);
         }
+    }
+
+    public function addPeriod(Carbon $date, int $time)
+    {
+        if (is_null($calendar = Calendar::where('date_at', $date->toDateString())->first())) {
+            $calendar = Calendar::register($date);
+        }
+
+        /** @var DeliveryTruck[] $trucks */
+        $trucks = DeliveryTruck::where('active', true)->get();
+        $volume = 0;
+        $weight = 0;
+        foreach ($trucks as $truck) {
+            $volume += $truck->volume;
+            $weight += $truck->weight;
+        }
+        $calendar->addPeriod($time, $weight, $volume);
+    }
+
+    public function removePeriod(Carbon $date, int $time)
+    {
+        /** @var Calendar $calendar */
+        $calendar = Calendar::where('date_at', $date->toDateString())->first();
+        if (is_null($calendar)) return;
+
+        $period = $calendar->getPeriod($time);
+        if (is_null($period)) return;
+        if ($period->expenses()->count() > 0) throw new \DomainException('Нельзя удалить данное время, существуют отгрузки');
+
+        $period->delete();
+        $calendar->refresh();
+        if ($calendar->periods()->count() == 0) $calendar->delete();
     }
 
     public function get_day(Carbon $date)

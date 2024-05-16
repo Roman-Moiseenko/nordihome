@@ -466,7 +466,10 @@ Breadcrumbs::for('admin.delivery.calendar.index', function (BreadcrumbTrail $tra
     $trail->parent('admin.home');
     $trail->push('Календарь доставки', route('admin.delivery.calendar.index'));
 });
-
+Breadcrumbs::for('admin.delivery.calendar.schedule', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.delivery.calendar.index');
+    $trail->push('График доставки', route('admin.delivery.calendar.schedule'));
+});
 //SALES
 Breadcrumbs::for('admin.sales', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
