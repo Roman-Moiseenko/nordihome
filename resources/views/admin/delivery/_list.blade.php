@@ -1,7 +1,7 @@
 <x-base.table.tr>
     <x-base.table.td class="w-52">
 
-        <a href="{{ route('admin.sales.order.show', $expense->order_id) }}"> {{ $expense->order->htmlNum() }} </a>
+        <a href="{{ route('admin.sales.expense.show', $expense) }}"> {{ $expense->htmlNum() }} </a>
 
     </x-base.table.td>
     <x-base.table.td class="w-40"> {{ $expense->created_at->translatedFormat('d F Y') }}</x-base.table.td>

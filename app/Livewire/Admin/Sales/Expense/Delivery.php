@@ -46,13 +46,15 @@ class Delivery extends Component
         //Проверяем данные по умолчанию
         $user = $expense->order->user;
         if (empty($user->fullname->surname)) $user->fullname->surname = $this->surname;
-        if (empty($user->fullname->secondname)) $user->fullname->surname = $this->secondname;
-        if (empty($user->address->address)) $user->fullname->surname = $this->address;
-        $user->delivery = $this->delivery;
+        if (empty($user->fullname->secondname)) $user->fullname->secondname = $this->secondname;
+        if (empty($user->address->address)) $user->address->address = $this->address;
+
+        if (!empty($this->delivery)) {
+            $expense->type = $this->delivery;
+            $user->delivery = $this->delivery;
+        }
+
         $user->save();
-
-        if (!empty($this->delivery))$expense->type = $this->delivery;
-
         $expense->comment = $this->comment;
         $expense->save();
         $expense->refresh();

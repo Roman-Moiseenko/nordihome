@@ -31,12 +31,6 @@ class DeliveryController extends Controller
     {
         return $this->try_catch_admin(function () use($request) {
             return $this->view($request, OrderExpense::DELIVERY_LOCAL);
-            /*$filter = $request['filter'] ?? 'assembly';
-            $type = OrderExpense::DELIVERY_LOCAL;
-            $filter_count = $this->getFilterCount($type);
-            $query = $this->getExpense($type, $filter);
-            $expenses = $this->pagination($query, $request, $pagination);
-            return view('admin.delivery.index', compact('expenses', 'type', 'filter_count', 'filter', 'pagination'));*/
         });
     }
 

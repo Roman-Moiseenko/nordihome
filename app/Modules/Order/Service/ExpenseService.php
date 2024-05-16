@@ -160,7 +160,7 @@ class ExpenseService
         if ($expense->isLocal() == false && $expense->isRegion() == false) throw new \DomainException('Не выбран тип доставки');
         if ($expense->isLocal() && is_null($expense->calendar())) throw new \DomainException('Не выбрано время доставки');
         if (empty($expense->phone) || empty($expense->address->address)) throw new \DomainException('Не указан адрес и/или телефон');
-
+        $expense->setNumber();
         $expense->assembly();
         event(new ExpenseHasAssembly($expense)); //Уведомление на склад на выдачу
         return $expense->order;
@@ -188,9 +188,18 @@ class ExpenseService
     public function completed(OrderExpense $expense)
     {
         $expense->completed();
+        $expense->refresh();
+        $order = $expense->order;
+        if ($order->getExpenseAmount() == $order->getTotalAmount()) {
+            $check = true;
 
-        if ($expense->order->getExpenseAmount() == $expense->order->getTotalAmount()) {
-            $expense->order->setStatus(OrderStatus::COMPLETED);
+            foreach ($order->expenses as $_expense) {
+                if (!$_expense->isCompleted()) $check = false;
+            }
+
+            //TODO Проверить все ли распоряжения выданы?
+            if ($check) $expense->order->setStatus(OrderStatus::COMPLETED);
+
             event(new OrderHasCompleted($expense->order));
         } else {
             event(new ExpenseHasCompleted($expense));
