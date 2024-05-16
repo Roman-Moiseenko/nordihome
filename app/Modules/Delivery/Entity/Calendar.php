@@ -47,7 +47,7 @@ class Calendar extends Model
 
     public function periods()
     {
-        return $this->hasMany(CalendarPeriod::class, 'calendar_id', 'id');
+        return $this->hasMany(CalendarPeriod::class, 'calendar_id', 'id')->orderBy('time');
     }
 
     public function htmlDate(): string

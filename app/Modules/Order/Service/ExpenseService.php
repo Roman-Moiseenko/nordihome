@@ -22,22 +22,17 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 
 class ExpenseService
 {
-
-
-    private MovementService $movements;
-    private int $assemblage;
     private OrderReserveService $reserveService;
 
-    public function __construct(MovementService $movements, OrderReserveService $reserveService)
+    public function __construct(OrderReserveService $reserveService)
     {
-        $this->assemblage = (new Options())->shop->assemblage ?? 15;
-        $this->movements = $movements;
+        /*$this->assemblage = (new Options())->shop->assemblage ?? 15;
+        $this->movements = $movements;*/
         $this->reserveService = $reserveService;
     }
 
     public function create(array $request): OrderExpense
     {
-
         /** @var Storage $storage */
         $storage = Storage::find($request['storage_id']); //Откуда выдать товар
         /** @var Order $order */
