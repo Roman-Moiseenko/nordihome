@@ -49,25 +49,28 @@ class ExpenseService
             /** @var OrderItem $orderItem */
             $orderItem = OrderItem::find($item['id']);
             $quantity = (int)$item['value']; //Сколько выдать товара
-            $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
-            //Проверка на наличие на складе выдачи
-            $reserve = $orderItem->getReserveByStorage($storage->id);
-            if (is_null($reserve) || $reserve->quantity < $quantity)
-                throw new \DomainException('Товара нет в резерве на складе отгрузки, дождитесь исполнения поступления или перемещения!');
-            $this->reserveService->downReserve($orderItem, $quantity); //Убираем из резерва
-            $storageItem = $storage->getItem($orderItem->product);
-            $storageItem->sub($quantity); //Списываем со склада
+            if ($quantity > 0) {
+                $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
+                //Проверка на наличие на складе выдачи
+                $reserve = $orderItem->getReserveByStorage($storage->id);
+                if (is_null($reserve) || $reserve->quantity < $quantity)
+                    throw new \DomainException('Товара нет в резерве на складе отгрузки, дождитесь исполнения поступления или перемещения!');
+                $this->reserveService->downReserve($orderItem, $quantity); //Убираем из резерва
+                $storageItem = $storage->getItem($orderItem->product);
+                $storageItem->sub($quantity); //Списываем со склада
 
-            $storageItem->refresh();
-            if ($storageItem->quantity < 0) {
-                throw new \DomainException('Исключительная ситуация. Товар есть в резерве, НО требуется перемещение');
+                $storageItem->refresh();
+                if ($storageItem->quantity < 0) {
+                    throw new \DomainException('Исключительная ситуация. Товар есть в резерве, НО требуется перемещение');
+                }
             }
         }
         $expense->storage_id = $storage->id;
         $expense->save();
         $additions = $request['additions'] ?? [];
         foreach ($additions as $addition) {
-            $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
+            if ((float)$addition['value'] > 0)
+                $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
         }
         $expense->refresh();
 
