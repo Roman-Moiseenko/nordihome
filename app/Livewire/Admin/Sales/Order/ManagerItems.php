@@ -46,7 +46,8 @@ class ManagerItems extends Component
     #[On('add-product')]
     public function add_item($product_id, $quantity)
     {
-        $this->service->add_product($this->order, $product_id, $quantity);
+        if (!is_numeric($product_id)) throw new \DomainException('Что-то пошло не так, обновите страницу');
+        $this->service->add_product($this->order, (int)$product_id, (int)$quantity);
         $this->refresh_fields();
         $this->dispatch('update-amount-order');
     }
