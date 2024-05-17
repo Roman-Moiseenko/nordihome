@@ -95,34 +95,20 @@ class OrderController extends Controller
 
     public function create_click(Request $request)
     {
-        try {
-            $this->service->create_click($request);
+        return $this->try_catch(function () use ($request) {
+            $order = $this->service->create_click($request);
             flash('Ваш заказ успешно создан!');
-
-            return redirect()->back();
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
-            event(new ThrowableHasAppeared($e));
-        }
-        return redirect()->route('home');
+            return redirect()->route('cabinet.order.view', $order);
+        }, route('home'));
     }
 
     public function store_parser(Request $request)
     {
-        try {
+        return $this->try_catch(function () use ($request) {
             $order = $this->service->create_parser($request);
             flash('Ваш заказ успешно создан!');
-
-            return redirect()->route('shop.order.view', $order);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
-            event(new ThrowableHasAppeared($e));
-        }
-        return redirect()->route('home');
+            return redirect()->route('cabinet.order.view', $order);
+        }, route('home'));
     }
 
     public function create_pre(Request $request)
@@ -132,17 +118,11 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        try {
+        return $this->try_catch(function () use ($request) {
             $order = $this->service->create($request);
             flash('Ваш заказ успешно создан!');
             return redirect()->route('cabinet.order.view', $order);
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
-            event(new ThrowableHasAppeared($e));
-        }
-        return redirect()->route('home');
+        }, route('home'));
     }
     /*
         public function view(Request $request, Order $order)
@@ -162,24 +142,19 @@ class OrderController extends Controller
     //AJAX
     public function checkorder(Request $request)
     {
-        try {
+        return $this->try_catch_ajax(function () use ($request) {
             $result = $this->service->checkorder($request['data']);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
     }
 
     public function coupon(Request $request)
     {
-        $result = 0;
-        try {
+        return $this->try_catch_ajax(function () use ($request) {
+            $result = 0;
             if ($request->has('code')) $result = $this->service->coupon($request->get('code'));
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
-        }
-        return \response()->json($result);
+            return \response()->json($result);
+        });
+
     }
 }

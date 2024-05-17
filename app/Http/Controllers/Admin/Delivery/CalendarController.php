@@ -46,9 +46,12 @@ class CalendarController extends Controller
                     'disabled' => $begin->lte($today),
                     'week' => $begin->dayOfWeekIso
                     ];
-                //TODO Посчитать, что прошло 3 месяца
-                $month = $begin->month - $today->month;
                 $begin->addDay();
+                if ($begin->year == $today->year) {
+                    $month = $begin->month - $today->month;
+                } else {
+                    $month = (12 - $today->month) + $begin->month;
+                }
             }
 
             return view('admin.delivery.calendar.schedule', compact('days'));
