@@ -24,7 +24,6 @@ class AdminComposer
 
     public function compose(View $view): void
     {
-
         if (!is_null(request()->route())) {
             $pageName = request()->route()->getName();
             if ($pageName == null) {
@@ -61,11 +60,8 @@ class AdminComposer
                 $city = 'Калининград';
                 $view->with('categories', $this->categories->getTree());
                 $view->with('city', $city);
-
             }
         }
-
-
     }
 
     public function activeMenu($pageName, $layout): array

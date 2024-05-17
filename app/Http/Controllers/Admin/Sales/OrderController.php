@@ -35,10 +35,8 @@ class OrderController extends Controller
     private OrderRepository $repository;
     private ProductRepository $products;
     private OrderService $orderService;
-    private OrderReserveService $reserveService;
 
     public function __construct(
-        OrderReserveService $reserveService,
         SalesService        $service,
         OrderService        $orderService,
         StaffRepository     $staffs,
@@ -52,7 +50,6 @@ class OrderController extends Controller
         $this->products = $products;
         $this->orderService = $orderService;
         //TODO загрузка процента по сборке
-        $this->reserveService = $reserveService;
     }
 
     public function index(Request $request)
@@ -85,8 +82,6 @@ class OrderController extends Controller
             if ($order->isCanceled())
                 return view('admin.sales.order.canceled.show', compact('order'));
             abort(404, 'Неверный статус заказа');
-            //TODO Разные реализации в зависимости от статуса
-
         });
     }
 
@@ -106,8 +101,6 @@ class OrderController extends Controller
             return redirect()->route('admin.accounting.movement.show', $movement);
         });
     }
-
-
 
 
     public function destroy(Order $order)
@@ -191,19 +184,6 @@ class OrderController extends Controller
         });
     }
 
-    #[Deprecated]
-    public function fix_manual_item(OrderItem $item)
-    {
-        return $this->try_catch_ajax_admin(function () use ($item) {
-            $this->orderService->fix_manual_item($item);
-            return response()->json(true);
-        });
-    }
-
-
-
-
-
 
     public function search_user(Request $request)
     {
@@ -275,7 +255,6 @@ class OrderController extends Controller
                     'max' => $product->getCountSell(),
                     'preorder' => false,
                 ]);
-
             } else {
                 $free = false;
             }
@@ -287,8 +266,6 @@ class OrderController extends Controller
             } else {
                 $preorder = false;
             }
-
-
             $result = [
                 'free' => $free,
                 'preorder' => $preorder,

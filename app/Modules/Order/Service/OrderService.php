@@ -7,6 +7,7 @@ use App\Entity\GeoAddress;
 use App\Events\OrderHasCreated;
 use App\Events\OrderHasPaid;
 use App\Events\OrderHasPrepaid;
+use App\Events\PriceHasMinimum;
 use App\Events\UserHasCreated;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Service\MovementService;
@@ -83,15 +84,7 @@ class OrderService
         /** @var User $user */
         if (is_null($user)) $user = Auth::guard('user')->user();
         $result = new stdClass();
-/*
-        if ($user_payment = UserPayment::where('user_id', $user->id)->first()) {
-            $result->payment = $user_payment;
-        } else {
-            $result->payment = UserPayment::register($user->id);
-        }*/
         $result->payment = $user->payment;
-
-
         $result->delivery = $user->delivery;
         $result->email = $user->email;
         $result->phone = $user->phone;
@@ -128,30 +121,12 @@ class OrderService
             $user->address->longitude = $data['longitude-region'] ?? '';
             $user->save();
 
-           /* $user->delivery->setDeliveryTransport(
-                $data['company'] ?? '',
-                GeoAddress::create(
-                    $data['address-region'] ?? '',
-                    $data['latitude-region'] ?? '',
-                    $data['longitude-region'] ?? '',
-                    $data['post-region'] ?? ''
-                )
-            );*/
         } else {
             $user->address->address = $data['address-local'] ?? '';
             $user->address->post = $data['post-local'] ?? '';
             $user->address->latitude = $data['latitude-local'] ?? '';
             $user->address->longitude = $data['longitude-local'] ?? '';
             $user->save();
-          /*  $user->delivery->setDeliveryLocal(
-                isset($data['storage']) ? (int)$data['storage'] : null,
-                GeoAddress::create(
-                    $data['address-local'] ?? '',
-                    $data['latitude-local'] ?? '',
-                    $data['longitude-local'] ?? '',
-                    $data['post-local'] ?? ''
-                )
-            );*/
         }
         if (isset($data['fullname'])) {
             list ($surname, $firstname, $secondname) = explode(" ", $data['fullname']);
@@ -438,16 +413,6 @@ class OrderService
     //**** ФУНКЦИИ РАБОТЫ СО СКИДКАМИ
 
     //** ЭЛЕМЕНТЫ ЗАКАЗА
-    /**
-     * Ставим или убираем фиксацию цены в ручную
-     * @param OrderItem $item
-     * @return void
-     */
-    public function fix_manual_item(OrderItem $item)
-    {
-        $item->fix_manual = !$item->fix_manual;
-        $item->save();
-    }
 
     /**
      * Изменяем цену продажи товара для текущего заказа
@@ -459,12 +424,12 @@ class OrderService
     {
         $order = $item->order;
 
-        if ($item->product->getPriceMin() > $sell_cost) throw new \DomainException('Цена продажи меньше установленной минимальной!');
+        if ($item->product->getPriceMin() > $sell_cost) {
+            event(new PriceHasMinimum($item));
+        }
 
-        //if ($order->manual_calculation == false) throw new \DomainException('Ручная установка цены невозможна');
-        //$delta = $item->sell_cost - $sell_cost;
         $item->sell_cost = $sell_cost;
-        //$item->fix_manual = true; //Фиксируем цену
+
         $item->save();
         $order->refresh();
         $this->recalculation($order);
@@ -511,45 +476,27 @@ class OrderService
     /**
      * Ручная скидка для Заказа в рублях
      * @param Order $order
-     * @param int $discount
+     * @param float $discount
      * @return Order
      */
-    public function discount_order(Order $order, int $discount): Order
+    public function discount_order(Order $order, float $discount): Order
     {
-
         $order->manual = $discount;
         $order->save();
         //Раскидываем скидку на все товары не из акций
         $base_amount = $order->getBaseAmountNotDiscount();
         if ($base_amount == 0) throw new \DomainException('В заказе нет товаров для установки ручной скидки');
-        /*foreach ($order->items as $item) {
-            if (is_null($item->discount_id)) {
-                $base_amount += $item->base_cost * $item->quantity;
-            }
-        }*/
+
 
         $percent_item = $discount / $base_amount;
         foreach ($order->items as $item) {
             if (is_null($item->discount_id)) {
                 $sell_cost = (int)ceil($item->base_cost * (1 - $percent_item));
-                if ($item->product->getPriceMin() > $sell_cost)
-                    throw new \DomainException('Цена продажи меньше установленной минимальной для товара ' . $item->product->name);
-
+                if ($item->product->getPriceMin() > $sell_cost) event(new PriceHasMinimum($item));
                 $item->sell_cost = $sell_cost;
                 $item->save();
             }
         }
-        /*
-        if ($order->manual_calculation) { //Для ручного режима обсчитываем фиксированные скидки, это минимальное ограничение
-            $min_discount = 0;
-            foreach ($order->items as $item) {
-                if ($item->fix_manual) {
-                    $min_discount += ($item->base_cost - $item->sell_cost) * $item->quantity;
-                }
-            }
-            if ($discount < $min_discount) $discount = $min_discount;
-        }*/
-        //$this->recalculation($order);
         $order->refresh();
         return $order;
     }
@@ -593,7 +540,6 @@ class OrderService
             $order->discount_id = null;
             $order->discount_amount = 0;
         }
-
         //Ручная скидка от скидок за товары
         $order->manual = 0;
         foreach ($order->items as $item) {
@@ -608,69 +554,10 @@ class OrderService
             $coupon = Coupon::find($order->coupon_id);
             $order->coupon_amount = $this->coupons->discount($coupon, $order);
         }
-
-        /*
-         if ($order->manual_calculation == false) { //Авторасчет
-
-        $items = $this->calculator->calculate($items);
-        foreach ($items as $item) {
-            $item->save();
-        }
-        //Общие скидки
-        if (!is_null($discount = $this->calculator->discount($items))) {
-            $order->discount_id = $discount->id;
-        } else {
-            $order->discount_id = null;
-        }
-        $base_amount = $order->getBaseAmount(); //Общая сумма заказа
-        $discount_amount = is_null($discount) ? 0 : (int)ceil($base_amount * $discount->discount / 100);
-        $full_discount = $discount_amount + $order->coupon + $order->manual;
-        $founded_discount = 0; //Сумма, которая подвергнется скидкам
-        foreach ($order->items as $item) {
-            if (is_null($item->discount_type)) {
-                $founded_discount += $item->base_cost * $item->quantity;
-            }
-        }
-
-        $full_percent = $full_discount / $founded_discount;
-        foreach ($order->items as $item) {
-            if (is_null($item->discount_type)) {
-                $item->sell_cost = (int)ceil($item->base_cost * (1 - $full_percent));
-                $item->save();
-            }
-        }
-
-    } else {
-        $base_amount = $order->getBaseAmount();
-        $manual_base = $order->manual;
-        $founded_discount = 0; //Сумма, которая подвергнется скидкам
-        foreach ($order->items as $item) {
-        if ($item->fix_manual == false) {
-        $founded_discount += $item->base_cost * $item->quantity;
-        } else {
-            //от общей скидки на заказ отнимаем скидку на товар фиксированный
-            $manual_base -= ($item->base_cost - $item->sell_cost) * $item->quantity;
-        }
-        }
-
-        $full_percent = $manual_base / $founded_discount;
-        foreach ($order->items as $item) {
-            if ($item->fix_manual == false) {
-                $item->sell_cost = (int)ceil($item->base_cost * (1 - $full_percent));
-                $item->save();
-            }
-        }
-        }
-         */
-        // $full_percent = $full_discount / $base_amount; //В долях
-
-        //Пересчет общих скидок в товар
-
         $order->save();
     }
 
     //**** ФУНКЦИИ РАБОТЫ СО УСЛУГАМИ
-
     /**
      * Добавить в заказ доп.услугу
      * @param Order $order
@@ -744,7 +631,6 @@ class OrderService
 
 
     //**** ФУНКЦИИ ДРУГИЕ
-
     /**
      * Создать перемещение для заказа на основе резерва по складу отправки
      * @param Order $order
@@ -822,9 +708,13 @@ class OrderService
         }
     }
 
+    /**
+     * Копируем заказ
+     * @param Order $order
+     * @return Order
+     */
     public function copy(Order $order): Order
     {
-
         $new_order = $order->replicate();
         $new_order->created_at = Carbon::now();
         $new_order->number = null;
@@ -833,6 +723,10 @@ class OrderService
         $new_order->save();
         $new_order->statuses()->create(['value' => OrderStatus::FORMED]);
         $new_order->setStatus(OrderStatus::SET_MANAGER);
+
+        //Перенос ручной скидки, отключен
+        //$this->discount_order($new_order, $order->manual);
+
         $new_order->refresh();
 
         foreach ($order->items as $item) {

@@ -15,6 +15,7 @@ use App\Events\OrderHasCreated;
 use App\Events\OrderHasLogger;
 use App\Events\OrderHasRefund;
 use App\Events\PaymentHasPaid;
+use App\Events\PriceHasMinimum;
 use App\Events\PricingHasCompleted;
 use App\Events\ProductHasParsed;
 use App\Events\ProductHasPublished;
@@ -37,6 +38,7 @@ use App\Listeners\NotificationNewLogger;
 use App\Listeners\NotificationMovementNew;
 use App\Listeners\NotificationOrderCompleted;
 use App\Listeners\NotificationOrderNew;
+use App\Listeners\NotificationPriceMinimum;
 use App\Listeners\NotificationPricingCompleted;
 use App\Listeners\NotificationProductParserNew;
 use App\Listeners\NotificationProductPublished;
@@ -142,6 +144,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         ExpenseHasDelivery::class => [
             NotificationExpenseDelivery::class
+        ],
+
+        PriceHasMinimum::class => [
+            NotificationPriceMinimum::class,
         ],
     ];
 

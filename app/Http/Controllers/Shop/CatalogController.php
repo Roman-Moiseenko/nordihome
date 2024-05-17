@@ -17,12 +17,9 @@ class CatalogController extends Controller
 {
     private ShopRepository $repository;
 
-    //private AttributeRepository $attributes;
-
     public function __construct(ShopRepository $repository)
     {
         $this->repository = $repository;
-        //$this->attributes = $attributes;
     }
 
     public function index()
