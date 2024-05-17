@@ -155,9 +155,11 @@ class ExpenseService
 
     public function assembly(OrderExpense $expense): Order
     {
-        if ($expense->isLocal() == false && $expense->isRegion() == false) throw new \DomainException('Не выбран тип доставки');
-        if ($expense->isLocal() && is_null($expense->calendar())) throw new \DomainException('Не выбрано время доставки');
-        if (empty($expense->phone) || empty($expense->address->address)) throw new \DomainException('Не указан адрес и/или телефон');
+        if (!$expense->isStorage()) {
+            if ($expense->isLocal() == false && $expense->isRegion() == false) throw new \DomainException('Не выбран тип доставки');
+            if ($expense->isLocal() && is_null($expense->calendar())) throw new \DomainException('Не выбрано время доставки');
+            if (empty($expense->phone) || empty($expense->address->address)) throw new \DomainException('Не указан адрес и/или телефон');
+        }
         $expense->setNumber();
         $expense->assembly();
         event(new ExpenseHasAssembly($expense)); //Уведомление на склад на выдачу
