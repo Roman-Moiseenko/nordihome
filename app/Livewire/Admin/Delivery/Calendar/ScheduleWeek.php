@@ -12,15 +12,15 @@ class ScheduleWeek extends Component
         'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс',
     ];
 
-    private array $days;
+    //private array $days;
 
-    public bool $checked;
+    //public bool $checked;
 
     public function mount(int $week, array $days)
     {
-        $this->week = $week;
+      /*  $this->week = $week;
         $this->refresh_fields();
-        $this->days = $days;
+        $this->days = $days;*/
     }
 
     public function refresh_fields()
@@ -34,14 +34,14 @@ class ScheduleWeek extends Component
             }
         } */
     }
-
+/*
     public function save()
     {
-        //TODO Возможно сохранять здесь
+        //Возможно сохранять здесь
 
         $this->dispatch('update-schedule-day', week: $this->week + 1);
     }
-
+*/
     public function render()
     {
         return view('livewire.admin.delivery.calendar.schedule-week');

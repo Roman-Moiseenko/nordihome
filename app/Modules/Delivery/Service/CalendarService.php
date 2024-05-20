@@ -16,39 +16,47 @@ class CalendarService
      */
     public function Nearest(): array
     {
-        $array = Calendar::where('date_at', '>=', now()->toDateString())->orderByDesc('date_at')->groupBy('date_at')->pluck('date_at')->toArray();
-        $count = count($array);
-
-        if ($count < 6) {
-            //TODO Создать новые дни по графику, см. выходные или без
-            if ($count == 0) {
-                $begin = now()->addDay();
-            } else {
-                $begin = Carbon::parse($array[0])->addDay();
-            }
-            for ($i = 0; $i < 6 - $count; $i++) {
-                $this->create_date($begin->addDays($i));
-            }
-        }
-        $calendars = Calendar::where('date_at', '>', now()->toDateString())->orderBy('date_at')->getModels();
-        return $calendars;
+        $this->checkCalendarMonth(now()->month, now()->year);
+        $this->checkCalendarMonth(now()->addMonth()->month, now()->addMonth()->year);
+        return Calendar::where('date_at', '>', now()->toDateString())->orderBy('date_at')->getModels();
     }
 
-    public function create_date(Carbon $date)
+    public function checkCalendarMonth(int $month, int $year)
     {
+        $begin_date = Carbon::parse($year . '-' . $month . '-01');
 
-        $calendar = Calendar::where('date_at', $date->toDateString())->first();
-        if (!is_null($calendar)) return null;
+        if (Calendar::where('date_at', '>=', $begin_date->toDateString())->count() > 0) return;
+
         /** @var DeliveryTruck[] $trucks */
         $trucks = DeliveryTruck::where('active', true)->get();
-        //TODO Получаем доступный объем для грузовиков
-        // в дальнейшем в соответствии с календарем выезда
-
         $volume = 0;
         $weight = 0;
         foreach ($trucks as $truck) {
             $volume += $truck->volume;
             $weight += $truck->weight;
+        }
+
+
+        for ($i = 1; $i <= $begin_date->endOfMonth()->day; $i++) {
+            $day = Carbon::parse($year . '-' . $month . '-' . $i);
+            $this->create_date($day, $weight, $volume);
+        }
+    }
+
+    public function create_date(Carbon $date, float $weight = null, float $volume = null)
+    {
+
+        $calendar = Calendar::where('date_at', $date->toDateString())->first();
+        if (!is_null($calendar)) return null;
+        if ($weight == null || $volume == null) {
+            /** @var DeliveryTruck[] $trucks */
+            $trucks = DeliveryTruck::where('active', true)->get();
+            $volume = 0;
+            $weight = 0;
+            foreach ($trucks as $truck) {
+                $volume += $truck->volume;
+                $weight += $truck->weight;
+            }
         }
         $calendar = Calendar::register($date);
         foreach (CalendarPeriod::TIMES as $time => $name) {
@@ -88,12 +96,13 @@ class CalendarService
         if ($calendar->periods()->count() == 0) $calendar->delete();
     }
 
+    /*
     public function get_day(Carbon $date)
     {
         $this->create_date($date);
         return Calendar::where('date_at', $date->toDateString())->orderBy('date_at')->getModels();
     }
-
+*/
     public function attach_expense(CalendarPeriod $calendarPeriod, OrderExpense $expense)
     {
         $previousCalendarPeriod = $expense->calendarPeriod();
@@ -122,5 +131,6 @@ class CalendarService
         $calendarPeriod->save();
     }
 
+    //public f
 
 }

@@ -268,6 +268,11 @@ class OrderExpense extends Model
         return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
     }
 
+    public function htmlDate(): string
+    {
+        return $this->created_at->translatedFormat('d F Y');
+    }
+
     public function typeHTML(): string
     {
         return self::TYPES[$this->type];

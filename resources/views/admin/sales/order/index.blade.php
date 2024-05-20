@@ -10,32 +10,46 @@
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <form method="get" action="{{ route('admin.sales.order.index') }}">
-                <input type="radio" class="btn-check" name="filter" id="option1" autocomplete="off"
-                       value="all" onclick="this.form.submit();" @if($filter == 'all') checked @endif>
-                <label class="btn btn-primary" for="option1">Все</label>
-                <input type="radio" class="btn-check" name="filter" id="option2" autocomplete="off"
-                       value="new" onclick="this.form.submit();" @if($filter == 'new') checked @endif>
-                <label class="btn btn-success" for="option2">Новые
-                    @if($filter_count['new'] != 0)<span>{{ $filter_count['new'] }}</span> @endif
-                </label>
-                <input type="radio" class="btn-check" name="filter" id="option3" autocomplete="off"
-                       value="awaiting" onclick="this.form.submit();" @if($filter == 'awaiting') checked @endif>
-                <label class="btn btn-success" for="option3">На оплате
-                    @if($filter_count['awaiting'] != 0)<span>{{ $filter_count['awaiting'] }}</span> @endif
-                </label>
+            <form method="get" action="{{ route('admin.sales.order.index') }}" class="flex w-full">
+                <div>
+                    <input type="radio" class="btn-check" name="filter" id="option1" autocomplete="off"
+                           value="all" onclick="this.form.submit();" @if($filter == 'all') checked @endif>
+                    <label class="btn btn-primary" for="option1">Все</label>
+                    <input type="radio" class="btn-check" name="filter" id="option2" autocomplete="off"
+                           value="new" onclick="this.form.submit();" @if($filter == 'new') checked @endif>
+                    <label class="btn btn-success" for="option2">Новые
+                        @if($filter_count['new'] != 0)<span>{{ $filter_count['new'] }}</span> @endif
+                    </label>
+                    <input type="radio" class="btn-check" name="filter" id="option3" autocomplete="off"
+                           value="awaiting" onclick="this.form.submit();" @if($filter == 'awaiting') checked @endif>
+                    <label class="btn btn-success" for="option3">На оплате
+                        @if($filter_count['awaiting'] != 0)<span>{{ $filter_count['awaiting'] }}</span> @endif
+                    </label>
 
-                <input type="radio" class="btn-check" name="filter" id="option4" autocomplete="off"
-                       value="at-work" onclick="this.form.submit();" @if($filter == 'at-work') checked @endif>
-                <label class="btn btn-success" for="option4">В работе
-                    @if($filter_count['at-work'] != 0)<span>{{ $filter_count['at-work'] }}</span> @endif
-                </label>
-                <input type="radio" class="btn-check" name="filter" id="option5" autocomplete="off"
-                       value="canceled" onclick="this.form.submit();" @if($filter == 'canceled') checked @endif>
-                <label class="btn btn-secondary" for="option5">Отмененные</label>
-                <input type="radio" class="btn-check" name="filter" id="option6" autocomplete="off"
-                       value="completed" onclick="this.form.submit();" @if($filter == 'completed') checked @endif>
-                <label class="btn btn-secondary" for="option6">Завершенные</label>
+                    <input type="radio" class="btn-check" name="filter" id="option4" autocomplete="off"
+                           value="at-work" onclick="this.form.submit();" @if($filter == 'at-work') checked @endif>
+                    <label class="btn btn-success" for="option4">В работе
+                        @if($filter_count['at-work'] != 0)<span>{{ $filter_count['at-work'] }}</span> @endif
+                    </label>
+                    <input type="radio" class="btn-check" name="filter" id="option5" autocomplete="off"
+                           value="canceled" onclick="this.form.submit();" @if($filter == 'canceled') checked @endif>
+                    <label class="btn btn-secondary" for="option5">Отмененные</label>
+                    <input type="radio" class="btn-check" name="filter" id="option6" autocomplete="off"
+                           value="completed" onclick="this.form.submit();" @if($filter == 'completed') checked @endif>
+                    <label class="btn btn-secondary" for="option6">Завершенные</label>
+                </div>
+                <div class="ml-auto">
+                    <x-base.tom-select id="select-staff" name="staff_id"
+                                       class="w-72 bg-white" data-placeholder="Выберите ответственного">
+                        <option value="0"></option>
+                        @foreach($staffs as $staff)
+                            <option value="{{ $staff->id }}"
+                                {{ $staff->id == $staff_id ? 'selected' : ''}} >
+                                {{ $staff->fullname->getShortName() }}
+                            </option>
+                        @endforeach
+                    </x-base.tom-select>
+                </div>
 
             </form>
         </div>
@@ -141,6 +155,20 @@
             document.getElementById('input-email').value = '';
             document.getElementById('input-name').value = '';
             return true;
+        });
+
+    </script>
+
+    <script>
+        /* Filters */
+        //TODO Фильтр по дате
+        const urlParams = new URLSearchParams(window.location.search);
+
+        let selectStaff = document.getElementById('select-staff');
+        selectStaff.addEventListener('change', function () {
+            let p = selectStaff.options[selectStaff.selectedIndex].value;
+            urlParams.set('staff_id', p);
+            window.location.search = urlParams;
         });
 
     </script>

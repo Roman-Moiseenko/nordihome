@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Admin;
 
+use App\Livewire\Admin\Sales\Expense\Calendar;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Distributor;
@@ -75,6 +76,12 @@ class ClearCommand extends Command
             $item->delete();
         }
         $this->info('Стек заказов очищен');
+
+        $calendars = Calendar::get();
+        foreach ($calendars as $item) {
+            $item->delete();
+        }
+        $this->info('Календарь очищен');
 
         $this->info('*******');
         $distributor = Distributor::first();

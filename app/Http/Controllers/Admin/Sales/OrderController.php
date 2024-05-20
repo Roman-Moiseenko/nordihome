@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Sales;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\Order;
@@ -56,10 +57,15 @@ class OrderController extends Controller
     {
         return $this->try_catch_admin(function () use ($request) {
             $filter = $request['filter'] ?? 'all';
+            $staff_id = (int)$request['staff_id'] ?? 0;
             $filter_count = $this->repository->getFilterCount();
             $query = $this->repository->getOrders($filter);
+            if ($staff_id != 0) $query->where('manager_id', $staff_id);
             $orders = $this->pagination($query, $request, $pagination);
-            return view('admin.sales.order.index', compact('orders', 'pagination', 'filter', 'filter_count'));
+            $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function($query) {
+                $query->where('code', Responsibility::MANAGER_ORDER);
+            })->get();
+            return view('admin.sales.order.index', compact('orders', 'pagination', 'filter', 'filter_count', 'staffs', 'staff_id'));
         });
     }
 

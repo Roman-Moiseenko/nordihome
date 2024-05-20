@@ -56,8 +56,7 @@
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
-                        <x-base.table.th class="whitespace-nowrap">РАСПОРЯЖЕНИЕ </x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap">ДАТА</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap">РАСПОРЯЖЕНИЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">АДРЕС</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">СТАТУС</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>

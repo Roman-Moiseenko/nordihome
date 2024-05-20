@@ -69,7 +69,7 @@
     </div>
 
     @if(!$expense->isStorage())
-        <livewire:admin.sales.expense.delivery :expense="$expense" :disabled="!$expense->isNew()"/>
+        <livewire:admin.sales.expense.delivery :expense="$expense" :disabled="$expense->isCompleted()"/>
     @endif
 
 

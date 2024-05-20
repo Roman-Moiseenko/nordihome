@@ -77,7 +77,7 @@ class ExpenseService
         $expense->recipient = clone $user->fullname;
         $expense->address = clone $user->address;
         $expense->phone = $user->phone;
-        $expense->type = $user->delivery;
+        if (!$user->isStorage()) $expense->type = $user->delivery;
         $expense->save();
 
         return $expense;

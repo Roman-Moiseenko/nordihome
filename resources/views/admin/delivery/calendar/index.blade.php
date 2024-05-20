@@ -29,15 +29,11 @@
             </div>
 
             {{ $calendars->links('admin.components.count-paginator') }}
-
         </div>
-
     </div>
-    <div class="grid grid-cols-12 gap-6 mt-5 w-100">
+    <div class="flex flex-col mt-3">
         @foreach($calendars as $calendar)
-            <div class="intro-y col-span-6 md:col-span-4 lg:col-span-3">
-                @include('admin.delivery.calendar._calendar', ['calendar' => $calendar])
-            </div>
+            @include('admin.delivery.calendar._calendar', ['calendar' => $calendar])
         @endforeach
     </div>
     {{ $calendars->links('admin.components.paginator', ['pagination' => $pagination]) }}

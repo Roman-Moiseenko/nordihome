@@ -47,7 +47,7 @@ class ScheduleDay extends Component
             }
         }
     }
-
+/*
     #[On('update-schedule-day')]
     public function check_all($week)
     {
@@ -59,7 +59,7 @@ class ScheduleDay extends Component
             $this->refresh_fields();
         }
     }
-
+*/
     public function save()
     {
         foreach ($this->periods as $key => $period) {
