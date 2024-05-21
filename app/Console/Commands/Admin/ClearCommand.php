@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Admin;
 
-use App\Livewire\Admin\Sales\Expense\Calendar;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Distributor;
@@ -14,6 +13,7 @@ use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Accounting\Service\StorageService;
+use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\OrderReserve;
@@ -52,6 +52,12 @@ class ClearCommand extends Command
             $item->update(['count_for_sell' => 0]);
         }
         $this->info('Кол-во товаров обнулено');
+
+        $products = Product::where('published', false)->get();
+        foreach ($products as $item) {
+            $item->delete();
+        }
+        $this->info('Товары черновики удалены');
 
         $documents = ArrivalDocument::get();
         foreach ($documents as $item) {
@@ -94,8 +100,8 @@ class ClearCommand extends Command
             null
         );
 
+        $products = Product::where('published', true)->get();
         foreach ($products as $product) {
-
             //Добавляем в документ
             $item = ArrivalProduct::new(
                 $product->id,

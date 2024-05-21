@@ -79,14 +79,6 @@ class ParserService
                 (Category::where('name', 'Прочее')->first())->id,
                 $arguments);
 
-            $product = Product::register(
-                $parser_product['name'],
-                $this->toCode($code),
-                (Category::where('name', 'Прочее')->first())->id,
-                '',
-                $arguments
-            );
-
             $product->short = $parser_product['description'];
             $product->brand_id = (Brand::where('name', 'Икеа')->first())->id;
             $product->dimensions = Dimensions::create(
@@ -156,7 +148,9 @@ class ParserService
         $_res = $res[1][0];
         $_res = str_replace('&quot;', '"', $_res);
         $_data = json_decode($_res, true);
-        foreach ($_data['mediaGrid']['fullMediaList'] as $item) {
+        //dd($_data);
+        $_list_images = $_data['productGallery']['mediaList']; //$_data['mediaGrid']['fullMediaList']
+        foreach ($_list_images as $item) {
             if ($item['type'] == 'image' && $item['content']['type'] != 'MAIN_PRODUCT_IMAGE')
                 $result[] = $item['content']['url'];
         }
@@ -282,7 +276,6 @@ class ParserService
                     $dimensions->depth += $this->toLength($measurement) * $_quantity;
                 }
         }
-
         ////Описание и перевод
         $description = $_data['pipPriceModule']['productDescription'] .
             (empty($_data['pipPriceModule']['measurementText']) ? '' : ', ' . $_data['pipPriceModule']['measurementText']);

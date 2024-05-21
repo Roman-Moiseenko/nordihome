@@ -267,7 +267,7 @@ class Order extends Model
         if ($this->items()->count() == 0) return now();
         $item = $this->items()->where('preorder', false)->first();
 
-        if (is_null($item->reserves)) return now();
+        if (is_null($item) || is_null($item->reserves)) return now();
         /** @var OrderReserve $reserve */
         $reserve = $item->reserves()->first();
         if (empty($reserve)) return null;

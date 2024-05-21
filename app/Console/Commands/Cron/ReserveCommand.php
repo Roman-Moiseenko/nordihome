@@ -23,7 +23,7 @@ class ReserveCommand extends Command
         $this->info('Резерв - проверка');
 
         try {
-            $reserveService = new OrderReserveService();
+            //$reserveService = new OrderReserveService();
             /** @var Order[] $orders */
             $orders = [];
 

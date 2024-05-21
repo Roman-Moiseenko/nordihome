@@ -257,6 +257,8 @@ class OrderService
         $order->save();
         foreach ($OrderItems as $item) {
             $orderItemPre = OrderItem::new($item->product, $item->quantity, true, $order->user_id);
+            $orderItemPre->base_cost = $item->cost;
+            $orderItemPre->sell_cost = $item->cost;
             $order->items()->save($orderItemPre);
         }
         $this->parserCart->clear();

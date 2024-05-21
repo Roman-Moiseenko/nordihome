@@ -13,7 +13,7 @@ class StorageRepository
      */
     public function getPointDelivery(): array
     {
-        return Storage::where('point_of_delivery', true)->getModel();
+        return Storage::where('point_of_delivery', true)->getModels();
     }
 
     /**
@@ -22,6 +22,6 @@ class StorageRepository
      */
     public function getPointSale(): array
     {
-        return Storage::where('point_of_sale', true)->getModel();
+        return Storage::where('point_of_sale', true)->getModels();
     }
 }
