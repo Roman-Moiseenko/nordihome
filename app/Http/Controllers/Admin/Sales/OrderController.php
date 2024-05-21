@@ -31,21 +31,18 @@ use JetBrains\PhpStorm\Deprecated;
  */
 class OrderController extends Controller
 {
-    private SalesService $service;
     private StaffRepository $staffs;
     private OrderRepository $repository;
     private ProductRepository $products;
     private OrderService $orderService;
 
     public function __construct(
-        SalesService        $service,
         OrderService        $orderService,
         StaffRepository     $staffs,
         OrderRepository     $repository,
         ProductRepository   $products)
     {
         $this->middleware(['auth:admin', 'can:order']);
-        $this->service = $service;
         $this->staffs = $staffs;
         $this->repository = $repository;
         $this->products = $products;
@@ -112,7 +109,7 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         return $this->try_catch_admin(function () use ($order) {
-            $this->service->destroy($order);
+            $this->orderService->destroy($order);
             return redirect()->back();
         });
     }
@@ -120,7 +117,7 @@ class OrderController extends Controller
     public function canceled(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->canceled($order, (int)$request['comment']);
+            $this->orderService->canceled($order, (int)$request['comment']);
             return redirect()->back();
         });
     }
@@ -136,7 +133,7 @@ class OrderController extends Controller
     public function set_manager(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->setManager($order, (int)$request['staff_id']);
+            $this->orderService->setManager($order, (int)$request['staff_id']);
             return redirect()->back();
         });
     }
@@ -152,7 +149,7 @@ class OrderController extends Controller
     public function set_reserve(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->setReserveService($order, $request['reserve-date'], $request['reserve-time']);
+            $this->orderService->setReserveService($order, $request['reserve-date'], $request['reserve-time']);
             return redirect()->back();
         });
     }
@@ -173,7 +170,7 @@ class OrderController extends Controller
     public function set_awaiting(Order $order): mixed
     {
         return $this->try_catch_admin(function () use ($order) {
-            $this->service->setAwaiting($order);
+            $this->orderService->setAwaiting($order);
             return redirect()->back();
         });
     }
@@ -185,7 +182,7 @@ class OrderController extends Controller
     public function expense_calculate(Request $request, Order $order)
     {
         return $this->try_catch_ajax_admin(function () use ($request, $order) {
-            $result = $this->service->expenseCalculate($order, $request['data']);
+            $result = $this->orderService->expenseCalculate($order, $request['data']);
             return response()->json($result);
         });
     }

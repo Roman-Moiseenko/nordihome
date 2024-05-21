@@ -130,7 +130,7 @@ class OrdersTest extends TestCase
         $total = $this->order->getTotalAmount();
 
         //Проверка на изменение статуса, и переноса автоматической сборки в услугу
-        $this->salesService->setAwaiting($this->order);
+        $this->orderService->setAwaiting($this->order);
         $this->order->refresh();
         self::assertEquals(0, $this->order->getAssemblageAmount());
         self::assertEquals($total, $this->order->getTotalAmount());

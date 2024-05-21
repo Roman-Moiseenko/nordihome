@@ -4,12 +4,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Sales;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderPayment;
-use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Order\Repository\OrderRepository;
-use App\Modules\Order\Service\PaymentRepository;
+use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\PaymentService;
 use Illuminate\Http\Request;
 

@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace App\Modules\Order\Service;
 
 use App\Entity\GeoAddress;
+use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCreated;
 use App\Events\OrderHasPaid;
 use App\Events\OrderHasPrepaid;
 use App\Events\PriceHasMinimum;
 use App\Events\UserHasCreated;
+use App\Mail\OrderAwaiting;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
@@ -33,6 +35,7 @@ use App\Modules\User\Entity\UserDelivery;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
@@ -348,6 +351,85 @@ class OrderService
 
     //**** ФУНКЦИИ РАБОТЫ С ЗАКАЗОМ МЕНЕДЖЕРОМ
 
+    public function setManager(Order $order, int $staff_id)
+    {
+        $staff = Admin::find($staff_id);
+        if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
+        $order->setStatus(OrderStatus::SET_MANAGER);
+        $order->setManager($staff->id);
+    }
+
+    /**
+     * Отменить заказ
+     * @param Order $order
+     * @param string $comment
+     * @return void
+     */
+    public function canceled(Order $order, string $comment)
+    {
+        $order->clearReserve();
+        $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
+        event(new OrderHasCanceled($order));
+    }
+
+    /**
+     * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
+     * @param Order $order
+     * @return void
+     */
+    public function setAwaiting(Order $order)
+    {
+        if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
+        if ($order->getTotalAmount() == 0)  throw new \DomainException('Сумма заказа не может быть равно нулю');
+
+        foreach ($order->items as $item) {
+            if ($item->assemblage == true) {
+                $addition = OrderAddition::new($item->getAssemblage(), OrderAddition::PAY_ASSEMBLY, $item->product->name);
+                $order->additions()->save($addition);
+                $item->assemblage = false;
+                $item->save();
+            }
+        }
+        $order->setReserve(now()->addDays(3));
+        $order->setNumber();
+        $order->setStatus(OrderStatus::AWAITING);
+        $order->refresh();
+
+        //TODO Перенести в сервис UserServiceMail ????
+        Mail::to($order->user->email)->queue(new OrderAwaiting($order));
+        flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
+    }
+
+    /**
+     * Удалить заказ, если еще нет с ним работы
+     * @param Order $order
+     * @return void
+     */
+    public function destroy(Order $order)
+    {
+        if ($order->status->value == OrderStatus::FORMED) {
+            $order->delete();
+        } else {
+            throw new \DomainException('Нельзя удалить заказ, который уже в работе');
+        }
+    }
+
+    /**
+     * Установить новое время резерва
+     * @param Order $order
+     * @param string $date
+     * @param string $time
+     * @return void
+     */
+    public function setReserveService(Order $order, string $date, string $time)
+    {
+        $new_reserve = $date . ' ' . $time . ':00';
+        $order->setReserve(Carbon::parse($new_reserve));
+    }
+
+
+    //** ФУНКЦИИ РАБОТЫ С ЭЛЕМЕНТАМИ ЗАКАЗА
+
     /**
      * Добавить в заказ товар. НОВАЯ ВЕРСИЯ
      * @param Order $order
@@ -409,11 +491,6 @@ class OrderService
         return $order;
     }
 
-
-    //**** ФУНКЦИИ РАБОТЫ СО СКИДКАМИ
-
-    //** ЭЛЕМЕНТЫ ЗАКАЗА
-
     /**
      * Изменяем цену продажи товара для текущего заказа
      * @param OrderItem $item
@@ -471,7 +548,13 @@ class OrderService
         return $order;
     }
 
-    //** НА ВЕСЬ ЗАКАЗ
+    public function update_item_comment(OrderItem $item, string $comment)
+    {
+        $item->comment = $comment;
+        $item->save();
+    }
+
+    //** СКИДКИ НА ВЕСЬ ЗАКАЗ
 
     /**
      * Ручная скидка для Заказа в рублях
@@ -662,12 +745,14 @@ class OrderService
         $order->save();
     }
 
-    public function update_item_comment(OrderItem $item, string $comment)
-    {
-        $item->comment = $comment;
-        $item->save();
-    }
 
+
+    /**
+     * Установить скидку по купону
+     * @param Order $order
+     * @param string $code
+     * @return Order
+     */
     public function set_coupon(Order $order, string $code)
     {
         if (empty($code)) {
@@ -740,5 +825,37 @@ class OrderService
 
         $new_order->refresh();
         return $new_order;
+    }
+
+    /**
+     * Пересчет суммы для выдачи товара по распоряжению.
+     * Остаток неизрасходованного лимита денег должен быть выше
+     * стоимости товаров и услуг для нового распоряжения
+     * @param Order $order
+     * @param string $_data
+     * @return array
+     */
+    #[ArrayShape(['remains' => "float", 'discount'=> "float", 'expense' => "int", 'disable' => "bool"])]
+    public function expenseCalculate(Order $order, string $_data): array
+    {
+        $remains = $order->getPaymentAmount() - $order->getExpenseAmount()+  $order->getCoupon() + $order->getDiscountOrder();
+        $data = json_decode($_data, true);
+        $amount = 0;
+
+        foreach ($data['items'] as $item) { //Суммируем по товарам
+            $id_item = (int)$item['id'];
+            $amount += $order->getItemById($id_item)->sell_cost * (int)$item['value'];
+        }
+
+        foreach ($data['additions'] as $addition) { //Суммируем по услугам
+            $amount += (float)$addition['value'];
+        }
+
+        return [
+            'remains' => price($remains),
+            'expense' => price($amount),
+            'discount' => price($order->getCoupon() + $order->getDiscountOrder()),
+            'disable' => $amount > $remains || $amount == 0,
+        ];
     }
 }

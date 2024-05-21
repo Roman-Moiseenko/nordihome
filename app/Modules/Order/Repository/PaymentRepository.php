@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Service;
+namespace App\Modules\Order\Repository;
 
 use App\Modules\Order\Entity\Order\OrderPayment;
 use Illuminate\Http\Request;

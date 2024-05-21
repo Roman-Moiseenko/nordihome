@@ -15,17 +15,13 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class SalesService
 {
 
-    private RefundService $refundService;
-
-    public function __construct(RefundService $refundService)
-    {
-        $this->refundService = $refundService;
-    }
-
+    #[Deprecated]
     public function setManager(Order $order, int $staff_id)
     {
         $staff = Admin::find($staff_id);
@@ -34,6 +30,7 @@ class SalesService
         $order->setManager($staff->id);
     }
 
+    #[Deprecated]
     public function setReserveService(Order $order, string $date, string $time)
     {
         $new_reserve = $date . ' ' . $time . ':00';
@@ -45,6 +42,7 @@ class SalesService
      * @param Order $order
      * @return void
      */
+    #[Deprecated]
     public function setAwaiting(Order $order)
     {
         if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
@@ -67,7 +65,7 @@ class SalesService
         flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
     }
 
-
+    #[Deprecated]
     public function destroy(Order $order)
     {
         if ($order->status->value == OrderStatus::FORMED) {
@@ -77,30 +75,18 @@ class SalesService
         }
     }
 
+    /**
+     * Отменить заказ
+     * @param Order $order
+     * @param string $comment
+     * @return void
+     */
+    #[Deprecated]
     public function canceled(Order $order, string $comment)
     {
         $order->clearReserve();
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         event(new OrderHasCanceled($order));
-    }
-
-    public function setStatus(Order $order, int $status)
-    {
-        $order->setStatus($status);
-    }
-
-  /*  public function completed(Order $order)
-    {
-        $order->setStatus(OrderStatus::COMPLETED);
-        $order->finished = true;
-        $order->save();
-
-
-    }*/
-
-    public function createOrder(Request $request)
-    {
-        return null;
     }
 
     /**
@@ -112,6 +98,7 @@ class SalesService
      * @return array
      */
     #[ArrayShape(['remains' => "float", 'discount'=> "float", 'expense' => "int", 'disable' => "bool"])]
+    #[Deprecated]
     public function expenseCalculate(Order $order, string $_data): array
     {
         $remains = $order->getPaymentAmount() - $order->getExpenseAmount()+  $order->getCoupon() + $order->getDiscountOrder();
