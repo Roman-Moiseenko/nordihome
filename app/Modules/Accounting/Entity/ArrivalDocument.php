@@ -55,6 +55,9 @@ class ArrivalDocument extends Model implements MovementInterface
                                     string $comment, ?int $staff_id): self
     {
 
+        if (empty($number)) {
+            $number = self::count() + 1;
+        }
         return self::create([
             'number' => $number,
             'distributor_id' => $distributor_id,

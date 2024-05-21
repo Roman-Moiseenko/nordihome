@@ -28,8 +28,9 @@
         @csrf
     </form>
     <div class="box flex items-center font-semibold p-2 mt-3">
-        <div class="w-20 text-center">№ п/п</div>
-        <div class="w-1/4 text-center">Товар</div>
+        <div class="w-20">№ п/п</div>
+        <div class="w-32">Артикул</div>
+        <div class="w-1/4">Товар</div>
         <div class="w-40 text-center">Кол-во</div>
         <div class="w-40 text-center">Цена</div>
     </div>
@@ -37,6 +38,7 @@
         <div class="box flex items-center px-2" data-id="{{ $item->id }}"
              data-route="{{ route('admin.accounting.departure.set', $item->id) }}">
             <div class="w-20">{{ ($i + 1) }}</div>
+            <div class="w-32">{{ $item->product->code }}</div>
             <div class="w-1/4">{{ $item->product->name }}</div>
             <div class="w-40 input-group">
                 <input id="quantity-{{ $item->id }}" type="number" class="form-control text-right departure-input-listen"
@@ -62,6 +64,7 @@
 
     <div class="box flex items-center px-2 mt-3">
         <div class="w-20"></div>
+        <div class="w-32"></div>
         <div class="w-1/4">ИТОГО</div>
 
         <div class="w-40 input-group">

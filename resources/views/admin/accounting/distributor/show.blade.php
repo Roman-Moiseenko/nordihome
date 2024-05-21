@@ -25,6 +25,7 @@
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap">IMG</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap">АРТИКУЛ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ТОВАР</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ЗАКУПОЧНАЯ ЦЕНА</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">НАЛИЧИЕ</x-base.table.th>

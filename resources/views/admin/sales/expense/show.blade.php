@@ -5,7 +5,7 @@
     <div>
         <div class="intro-y flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
-                Распоряжение {{ $expense->htmlNum() . ' от ' . $expense->created_at->format('d-M-Y') }}
+                Распоряжение {{ $expense->htmlNum() . ' от ' . $expense->htmlDate() }}
             </h1>
         </div>
     </div>
@@ -37,7 +37,9 @@
         <x-base.table class="table table-hover">
             <x-base.table.thead class="table-dark">
                 <x-base.table.tr>
-                    <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
+                    <x-base.table.th class="whitespace-nowrap"></x-base.table.th>
+                    <x-base.table.th class="text-center whitespace-nowrap">АРТИКУЛ</x-base.table.th>
+                    <x-base.table.th class="text-center whitespace-nowrap">ТОВАР</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">ЯЧЕЙКА ХРАНЕНИЯ</x-base.table.th>
                     <x-base.table.th class="text-center whitespace-nowrap">ПРИМЕЧАНИЕ</x-base.table.th>

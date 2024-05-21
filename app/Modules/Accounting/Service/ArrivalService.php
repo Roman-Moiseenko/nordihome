@@ -42,18 +42,19 @@ class ArrivalService
         $this->movementService = $movementService;
     }
 
-    public function create(array $request): ArrivalDocument
+    public function create(int $distributor_id): ArrivalDocument
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
         /** @var Distributor $distributor */
-        $distributor = Distributor::find((int)$request['distributor']);
+        $distributor = Distributor::find($distributor_id);
+        $storage = Storage::where('default', true)->first();
         return ArrivalDocument::register(
-            $request['number'] ?? '',
+            '',
             $distributor->id,
-            (int)$request['storage'],
+            $storage->id,
             $distributor->currency,
-            $request['comment'] ?? '',
+            '',
             $manager->id
         );
     }

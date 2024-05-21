@@ -1,7 +1,8 @@
 
-<h2 class=" mt-3 font-medium">Товар в наличии</h2>
+<h2 class=" mt-3 font-medium">Товар в заказе</h2>
 <div class="box flex items-center font-semibold p-2">
-    <div class="w-20 text-center">№ п/п</div>
+    <div class="w-10 text-center">№ п/п</div>
+    <div class="w-32 text-center">Артикул</div>
     <div class="w-1/4 text-center">Товар/Габариты</div>
     <div class="w-32 text-center">Базовая/ Продажа</div>
     <div class="w-20 text-center">Скидка</div>

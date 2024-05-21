@@ -553,7 +553,7 @@ Route::group(
                 Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
                 Route::resource('distributor', 'DistributorController'); //CRUD
                 Route::resource('currency', 'CurrencyController'); //CRUD
-                Route::resource('arrival', 'ArrivalController'); //CRUD
+                Route::resource('arrival', 'ArrivalController')->except(['store']); //CRUD
                 Route::resource('movement', 'MovementController')->except(['edit', 'update']); //CRUD
                 Route::resource('departure', 'DepartureController'); //CRUD
                 Route::resource('supply', 'SupplyController'); //CRUD

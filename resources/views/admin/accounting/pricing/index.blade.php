@@ -72,7 +72,8 @@
             </x-base.table>
         </div>
     </div>
-
+    {{ \App\Forms\ModalDelete::create('Вы уверены?',
+        'Вы действительно хотите удалить ценообразование?<br>Этот процесс не может быть отменен.')->show() }}
     {{ $pricing_documents->links('admin.components.paginator', ['pagination' => $pagination]) }}
 
 @endsection

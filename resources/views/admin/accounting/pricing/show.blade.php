@@ -25,6 +25,7 @@
     </form>
     <div class="box flex items-center font-semibold p-2 mt-3">
         <div class="w-20 text-center">№ п/п</div>
+        <div class="w-32">Артикул</div>
         <div class="w-56 text-center">Товар</div>
         <div class="w-40 text-center">Себестоимость (₽)</div>
         <div class="w-40 text-center">Розн. цена (₽)</div>
@@ -37,7 +38,8 @@
     @foreach($pricing->pricingProducts as $i => $item)
         <div class="box flex items-center px-2"
              data-route="{{ route('admin.accounting.pricing.set', $item->id) }}">
-            <div class="w-20">{{ ($i + 1) }}</div>
+            <div class="w-20 text-center">{{ ($i + 1) }}</div>
+            <div class="w-32">{{ $item->product->code }}</div>
             <div class="w-56 ">{{ $item->product->name }}</div>
 
             <div class="w-40 input-group">

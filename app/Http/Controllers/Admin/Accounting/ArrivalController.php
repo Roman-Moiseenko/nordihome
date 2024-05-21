@@ -54,14 +54,15 @@ class ArrivalController extends Controller
     public function create(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
-            $distributors = Distributor::get();
-            $storages = Storage::get();
-            return view('admin.accounting.arrival.create', compact('distributors', 'storages'));
+            $arrival = $this->service->create((int)$request['distributor']);
+            return redirect()->route('admin.accounting.arrival.show', $arrival);
         });
     }
 
     public function store(Request $request)
     {
+        throw new \DomainException('Неверный вызов!!!!');
+        /*
         $request->validate([
             'distributor' => 'required',
             'storage' => 'required',
@@ -69,7 +70,7 @@ class ArrivalController extends Controller
         return $this->try_catch_admin(function () use($request) {
             $arrival = $this->service->create($request->only(['distributor', 'storage', 'number']));
             return redirect()->route('admin.accounting.arrival.show', $arrival);
-        });
+        });*/
     }
 
     public function show(ArrivalDocument $arrival)
@@ -82,6 +83,7 @@ class ArrivalController extends Controller
 
     public function edit(ArrivalDocument $arrival)
     {
+        //TODO Возможно удалить edit и update
         return $this->try_catch_admin(function () use($arrival) {
             $distributors = Distributor::get();
             $storages = Storage::get();

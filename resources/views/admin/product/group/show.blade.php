@@ -27,7 +27,10 @@
             <div class="image-fit w-10 h-10">
                 <img class="rounded-full" src="{{ $product->getImage() }}" alt="{{ $product->name }}">
             </div>
-            <div class="w-1/4 ml-4">
+            <div class="w-32 text-center">
+                {{ $product->code }}
+            </div>
+            <div class="w-1/4 font-medium">
                 <a href="{{ route('admin.product.show', $product) }}">{{ $product->name }}</a>
             </div>
             <div class="w-auto text-slate-500 flex items-center mx-5">

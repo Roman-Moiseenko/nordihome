@@ -86,6 +86,7 @@
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap">ИКОНКА</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">АРТИКУЛ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КАТЕГОРИЯ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДОСТУПНО ДЛЯ ПРОДАЖИ</x-base.table.th>
