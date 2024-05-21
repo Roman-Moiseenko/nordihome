@@ -26,13 +26,6 @@ class PaymentService
         $this->orderService = $orderService;
     }
 
-    #[Deprecated]
-    public function user(int $user_id): UserPayment
-    {
-        if ($user = UserPayment::where('user_id', $user_id)->first()) return $user;
-        return UserPayment::register($user_id);
-    }
-
     public function get(): array
     {
         //Получаем список всех платежных вариантов
@@ -74,6 +67,7 @@ class PaymentService
 
         $order->payments()->save($payment);
         $order->refresh();
+        $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
 
         $this->orderService->check_payment($order);
     }

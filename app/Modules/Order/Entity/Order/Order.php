@@ -5,6 +5,7 @@ namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Order\Entity\OrderReserve;
@@ -45,6 +46,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Admin $manager
  * @property Coupon $coupon
  * @property OrderRefund $refund
+ * @property LoggerOrder[] $logs
  */
 class Order extends Model
 {
@@ -593,6 +595,11 @@ class Order extends Model
         return $this->belongsToMany(MovementDocument::class, 'orders_movements', 'order_id', 'movement_id');
     }
 
+    public function logs()
+    {
+        return $this->hasMany(LoggerOrder::class, 'order_id', 'id')->orderByDesc('created_at');
+    }
+
     /**
      * Возвращает true если весь товар из заказа не имеет резерва
      * @return bool
@@ -616,6 +623,11 @@ class Order extends Model
     {
         if (is_null($this->number)) return 'б/н';
         return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function htmlNumDate(): string
+    {
+        return $this->htmlNum() . ' от ' . $this->htmlDate();
     }
 
     public function statusHtml(): string

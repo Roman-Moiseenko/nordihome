@@ -513,6 +513,11 @@ Breadcrumbs::for('admin.sales.order.show', function (BreadcrumbTrail $trail, Ord
     $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.sales.order.show', $order));
 });
 
+Breadcrumbs::for('admin.sales.order.log', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('admin.sales.order.show', $order);
+    $trail->push('Лог заказа', route('admin.sales.order.log', $order));
+});
+
 //EXPENSE
 Breadcrumbs::for('admin.sales.expense.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');

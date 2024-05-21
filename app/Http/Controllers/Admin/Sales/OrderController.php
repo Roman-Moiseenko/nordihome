@@ -88,7 +88,6 @@ class OrderController extends Controller
         });
     }
 
-
     public function store(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
@@ -105,7 +104,6 @@ class OrderController extends Controller
         });
     }
 
-
     public function destroy(Order $order)
     {
         return $this->try_catch_admin(function () use ($order) {
@@ -120,6 +118,11 @@ class OrderController extends Controller
             $this->orderService->canceled($order, (int)$request['comment']);
             return redirect()->back();
         });
+    }
+
+    public function log(Order $order)
+    {
+        return view('admin.sales.order.log', compact('order'));
     }
 /*
     public function completed(Order $order)

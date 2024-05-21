@@ -9,6 +9,9 @@
     <x-base.table.td class="text-center font-medium"><a href="{{ route('admin.users.show', $order->user) }}">{{ $order->user->email }}</a></x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
+            <a class="flex items-center mr-3" href="{{ route('admin.sales.order.log', $order) }}">
+                <x-base.lucide icon="history" class="w-4 h-4"/>
+                Log </a>
             <a class="flex items-center mr-3" href="{{ route('admin.sales.order.show', $order) }}">
                 <x-base.lucide icon="check-square" class="w-4 h-4"/>
                 Edit </a>

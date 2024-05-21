@@ -12,6 +12,7 @@ use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
@@ -23,10 +24,15 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 class ExpenseService
 {
     private OrderReserveService $reserveService;
+    private LoggerService $logger;
 
-    public function __construct(OrderReserveService $reserveService)
+    public function __construct(
+        OrderReserveService $reserveService,
+        LoggerService       $logger,
+    )
     {
         $this->reserveService = $reserveService;
+        $this->logger = $logger;
     }
 
     public function create(array $request): OrderExpense
@@ -66,7 +72,7 @@ class ExpenseService
                 $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
         }
         $expense->refresh();
-
+        $this->logger->logOrder($expense->order, 'Создано распоряжение на выдачу', '', $expense->htmlNumDate());
         return $expense;
     }
 
@@ -99,8 +105,11 @@ class ExpenseService
 
             $item->delete();
         }
+        $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу', '', $expense->htmlNumDate());
         $expense->delete();
         $order->refresh();
+
+
         return $order;
     }
 
@@ -137,6 +146,7 @@ class ExpenseService
         $expense = $this->issue($request);
         $this->completed($expense);
         $expense->refresh();
+        $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
         return $expense;
     }
 
@@ -150,6 +160,7 @@ class ExpenseService
         $expense = $this->issue($request);
         $this->assembly($expense);
         $expense->refresh();
+        $this->logger->logOrder($expense->order, 'Выдать товар со склада', '', $expense->htmlNumDate());
         return $expense;
     }
 
@@ -163,6 +174,7 @@ class ExpenseService
         $expense->setNumber();
         $expense->assembly();
         event(new ExpenseHasAssembly($expense)); //Уведомление на склад на выдачу
+        $this->logger->logOrder($expense->order, 'Распоряжение отправлено на сборку', '', $expense->htmlNumDate());
         return $expense->order;
     }
 
@@ -170,6 +182,8 @@ class ExpenseService
     {
         $expense->worker_id = $worker_id;
         $expense->status = OrderExpense::STATUS_ASSEMBLING;
+        $this->logger->logOrder($expense->order, 'Назначен сборщик распоряжению', $expense->htmlNumDate(), $expense->worker->fullname->getFullName());
+
         $expense->save();
     }
 
@@ -183,6 +197,8 @@ class ExpenseService
         }
         $expense->status = OrderExpense::STATUS_DELIVERY;
         $expense->save();
+        $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '' );
+
     }
 
     public function completed(OrderExpense $expense)
@@ -201,8 +217,12 @@ class ExpenseService
             if ($check) $expense->order->setStatus(OrderStatus::COMPLETED);
 
             event(new OrderHasCompleted($expense->order));
+            $this->logger->logOrder($expense->order, 'Заказ завершен', '', '');
+
         } else {
             event(new ExpenseHasCompleted($expense));
+            $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate() );
+
         }
     }
 }

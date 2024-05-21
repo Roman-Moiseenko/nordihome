@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Service;
 
+use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryTruck;
@@ -11,6 +12,14 @@ use Carbon\Carbon;
 
 class CalendarService
 {
+
+    private LoggerService $logger;
+
+    public function __construct(LoggerService $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * @return Calendar[]
      */
@@ -115,6 +124,9 @@ class CalendarService
         }
         $calendarPeriod->refresh();
         $this->check_full($calendarPeriod);
+
+        $this->logger->logOrder($expense->order, 'Установлена дата отгрузки', $calendarPeriod->calendar->htmlDate(),  $calendarPeriod->timeHtml());
+
     }
 
     private function check_full(CalendarPeriod $calendarPeriod)

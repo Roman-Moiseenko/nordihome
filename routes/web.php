@@ -385,6 +385,8 @@ Route::group(
                         Route::post('/search', 'OrderController@search')->name('search');
                         Route::post('/get-to-order', 'OrderController@get_to_order')->name('get-to-order');
 
+                        Route::get('/log/{order}', 'OrderController@log')->name('log');
+
                         //Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
                         //Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
                         //Route::post('/{order}/add-addition', 'OrderController@add_addition')->name('add-addition');

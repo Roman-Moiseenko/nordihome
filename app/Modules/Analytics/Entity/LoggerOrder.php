@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Analytics\Entity;
 
+use App\Modules\Admin\Entity\Admin;
+use App\Modules\Order\Entity\Order\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +16,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $action - действие
  * @property string $object - объект изменения
  * @property string $value - новое значение
+ *
+ * @property Admin $staff
+ * @property Order $order
  */
 class LoggerOrder extends Model
 {
@@ -41,5 +46,20 @@ class LoggerOrder extends Model
             'object' => $object,
             'value' => $value,
         ]);
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
+
+    public function htmlDate(): string
+    {
+        return $this->created_at->translatedFormat('d F Y H:i:s');
     }
 }

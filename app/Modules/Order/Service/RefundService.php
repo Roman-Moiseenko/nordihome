@@ -5,6 +5,7 @@ namespace App\Modules\Order\Service;
 
 use App\Events\OrderHasRefund;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderRefund;
@@ -14,6 +15,13 @@ use JetBrains\PhpStorm\Deprecated;
 
 class RefundService
 {
+
+    private LoggerService $logger;
+
+    public function __construct(LoggerService $logger)
+    {
+        $this->logger = $logger;
+    }
 
     #[Deprecated]
     public function refund(Order $order, string $comment)
@@ -85,6 +93,8 @@ class RefundService
 
         $order->setStatus(OrderStatus::COMPLETED_REFUND);
         $order->clearReserve();//Возврат товаров в продажу
+        $this->logger->logOrder($order, 'Заказ завершен с возвратом', '', '');
+
     }
 
     #[Deprecated]

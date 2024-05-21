@@ -278,5 +278,10 @@ class OrderExpense extends Model
         return self::TYPES[$this->type];
     }
 
+    public function htmlNumDate(): string
+    {
+        return $this->htmlNum() . ' от ' . $this->htmlDate();
+    }
+
 
 }

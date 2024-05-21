@@ -345,6 +345,8 @@ class OrderService
         $order->setStatus(OrderStatus::SET_MANAGER);
         $order->setManager($staff->id);
         $order->refresh();
+        $this->logger->logOrder($order, 'Заказ создан менеджером', '', '');
+
         return $order;
     }
 
@@ -353,10 +355,12 @@ class OrderService
 
     public function setManager(Order $order, int $staff_id)
     {
+        /** @var Admin $staff */
         $staff = Admin::find($staff_id);
         if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
         $order->setStatus(OrderStatus::SET_MANAGER);
         $order->setManager($staff->id);
+        $this->logger->logOrder($order, 'Назначен менеджер', '', $staff->fullname->getFullName());
     }
 
     /**
@@ -370,6 +374,7 @@ class OrderService
         $order->clearReserve();
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
         event(new OrderHasCanceled($order));
+        $this->logger->logOrder($order, 'Заказ отменен менеджером', '', $comment);
     }
 
     /**
@@ -394,6 +399,7 @@ class OrderService
         $order->setNumber();
         $order->setStatus(OrderStatus::AWAITING);
         $order->refresh();
+        $this->logger->logOrder($order, 'Заказ отправлен на оплату', '', '');
 
         //TODO Перенести в сервис UserServiceMail ????
         Mail::to($order->user->email)->queue(new OrderAwaiting($order));
@@ -425,6 +431,7 @@ class OrderService
     {
         $new_reserve = $date . ' ' . $time . ':00';
         $order->setReserve(Carbon::parse($new_reserve));
+        $this->logger->logOrder($order, 'Новое время резерва', '', $new_reserve);
     }
 
 
@@ -458,6 +465,8 @@ class OrderService
         }
         $order->refresh();
         $this->recalculation($order);
+        $this->logger->logOrder($order, 'Добавлен товар', $product->name, $quantity . ' шт.');
+
         return $order;
     }
 
@@ -486,7 +495,7 @@ class OrderService
 
         $this->recalculation($order);
         $order->refresh();
-        $this->logger->logOrder($order, 'Изменено кол-во товара', $item->product->name, (string)$quantity);
+        $this->logger->logOrder($order, 'Изменено кол-во товара', $item->product->name, (string)$quantity . ' шт.');
 
         return $order;
     }
@@ -526,7 +535,7 @@ class OrderService
         if ($percent > 100) throw new \DomainException('Скидка слишком высока');
 
         $sell_cost = (int)ceil($item->base_cost - $item->base_cost * $percent / 100);
-        return $this->update_sell($item, $sell_cost);
+        return $this->update_sell($item, $sell_cost); //ф-ция сохраняет лог
     }
 
     /**
@@ -581,6 +590,8 @@ class OrderService
             }
         }
         $order->refresh();
+        $this->logger->logOrder($order, 'Установлена общая скидка', '', price($discount));
+
         return $order;
     }
 
@@ -595,7 +606,9 @@ class OrderService
         if ($discount_percent > 100) throw new \DomainException('Скидка слишком высока');
         $base_amount = $order->getBaseAmountNotDiscount();
         $discount = (int)ceil($discount_percent * $base_amount / 100);
-        return $this->discount_order($order, $discount);
+        $this->logger->logOrder($order, 'Установлена общая скидка', 'в %%', $discount_percent);
+
+        return $this->discount_order($order, $discount); //ф-ция имеет лог
     }
 
     /**
@@ -728,6 +741,7 @@ class OrderService
             'storage_in' => $storage_in,
         ]);
         $order->movements()->attach($movement->id);
+        $movement->refresh();
 
         foreach ($order->items as $item) {
             if (!is_null($reserve = $item->getReserveByStorage($storage_out))) {
@@ -736,6 +750,12 @@ class OrderService
                 }
             }
         }
+        $this->logger->logOrder(
+            $order,
+            'Создано перемещение для заказа',
+            '',
+            $movement->storageOut->name . ' -> ' . $movement->storageIn->name);
+
         return $movement;
     }
 
@@ -768,6 +788,9 @@ class OrderService
         $order->save();
         $order->refresh();
         $this->recalculation($order);
+        $this->logger->logOrder($order, 'Скидка по купону', empty($code) ? 'Удалена' : 'Установлена',
+            !empty($coupon) ? $coupon->bonus : '');
+
         return $order;
     }
 
@@ -824,6 +847,8 @@ class OrderService
         }
 
         $new_order->refresh();
+        $this->logger->logOrder($new_order, 'Создан заказ копированием', '', $order->htmlNumDate());
+
         return $new_order;
     }
 
