@@ -69,7 +69,6 @@ class StorageService
         foreach ($items as $item) {
             $product = $item->getProduct();
             $storage->add($product, $item->getQuantity());
-            $product->setCountSell($product->getCountSell() + $item->getQuantity());
         }
     }
     /**
@@ -83,7 +82,7 @@ class StorageService
         foreach ($items as $item) {
             $product = $item->getProduct();
             $storage->sub($product, $item->getQuantity());
-            $product->setCountSell($product->getCountSell() - $item->getQuantity());
+//            $product->setCountSell($product->getCountSell() - $item->getQuantity());
         }
     }
 

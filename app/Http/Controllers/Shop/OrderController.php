@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Shop;
 
 use App\Events\ThrowableHasAppeared;
-use App\Modules\Accounting\repository\StorageRepository;
+use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Order\Service\OrderService;

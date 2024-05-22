@@ -20,9 +20,13 @@ use App\Modules\Order\Entity\OrderReserve;
 
 use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
+use Illuminate\Console\ConfirmableTrait;
+use function Laravel\Prompts\confirm;
 
 class ClearCommand extends Command
 {
+    use ConfirmableTrait;
+
     protected $signature = 'db:clear';
 
     protected $description = 'Очистка базы, для тестирования';
@@ -30,6 +34,11 @@ class ClearCommand extends Command
 
     public function handle(): bool
     {
+
+        if (! $this->confirmToProceed()) {
+            return false;
+        }
+
         $orders = Order::get();
         foreach ($orders as $order) {
             $order->delete();
@@ -116,7 +125,6 @@ class ClearCommand extends Command
 
         $storagesService = new StorageService();
         $storagesService->arrival($arrival->storage, $arrival->arrivalProducts()->getModels());
-
 
         $arrival->completed();
 

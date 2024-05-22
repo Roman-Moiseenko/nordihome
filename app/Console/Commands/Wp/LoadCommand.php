@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace App\Console\Commands\Wp;
 
 use App\Entity\Photo;
+use App\Modules\Accounting\Entity\PricingDocument;
+use App\Modules\Accounting\Entity\PricingProduct;
+use App\Modules\Accounting\Service\PricingService;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
@@ -11,50 +15,56 @@ use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
 
 
+use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use function public_path;
 
 class LoadCommand extends Command
 {
+
+    use ConfirmableTrait;
+
     private int $count_categories = 0;
     private int $count_products = 0;
+    private PricingDocument $pricing;
     private string $storage;
     private Options $options;
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'wp:load
     {--type= : catalog / product / "пусто"}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Загрузка данных';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
+        if (! $this->confirmToProceed()) {
+            return false;
+        }
 
         $this->storage = public_path() . '/temp/';
         $type = $this->option('type');
         $this->options = new Options(); //Настройки Магазина для товара
-
+/*
         if ($type == null) {
             $this->loadCatalog();
+            $this->pricing = PricingDocument::register($staff->id);
             $this->loadProduct();
-        }
-        if ($type == 'catalog') {
+            $this->pricing->refresh();
+            $pricingService->completed($this->pricing);
+        }*/
+        if ($type == 'catalog' || $type == null) {
             $this->loadCatalog();
         }
-        if ($type == 'product') {
+        if ($type == 'product' || $type == null) {
+
+            $staff = Admin::where('role', Admin::ROLE_ADMIN)->first();
+            $pricingService = new PricingService();
+            $this->pricing = PricingDocument::register($staff->id);
+
             $this->loadProduct();
+
+            $this->pricing->refresh();
+            $pricingService->completed($this->pricing);
         }
         return true;
     }
@@ -92,7 +102,7 @@ class LoadCommand extends Command
         $this->info('Товары загружены - ' . $this->count_products);
     }
 
-    private function create_product($data, $brand_id)
+    private function create_product($data, $brand_id): string
     {
         if (empty($data['sku'])) return $data['name'] . ' **** нет артикула';
         //if (empty($data['sku'])) $data['sku'] = Str::uuid();
@@ -124,7 +134,8 @@ class LoadCommand extends Command
         $product->old_slug = $data['slug'];
         $product->save();
         //Цена
-        $product->setPrice((float)$data['price']);
+        $this->add_pricing($product->id, (float)$data['price']);
+        //$product->setPrice((float)$data['price']);
         //Изображения
         foreach ($data['images'] as $data_img) {
             $url = $data_img['url'];
@@ -183,6 +194,13 @@ class LoadCommand extends Command
         $result->refresh();
 
         return $result->slug;
+    }
+
+    private function add_pricing(int $product_id, float $retail)
+    {
+        $this->pricing->pricingProducts()->save(
+            PricingProduct::new($product_id, 0, $retail, 0, 0, 0)
+        );
     }
 
 /*

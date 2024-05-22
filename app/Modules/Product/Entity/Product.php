@@ -413,8 +413,8 @@ class Product extends Model
     #[Deprecated]
     public function setCountSell(int $count): void
     {
-        $this->count_for_sell = $count;
-        $this->save();
+        //$this->count_for_sell = $count;
+        //$this->save();
     }
 
 
@@ -422,10 +422,10 @@ class Product extends Model
      * Кол-во доступное для продажи по всем точкам, за минусом резерва
      * @return int
      */
+    #[Pure]
     public function getCountSell(): int
     {
         //return $this->count_for_sell;
-        //TODO Заменить на динамический подсчет
         return $this->getQuantity() - $this->getQuantityReserve();
     }
 

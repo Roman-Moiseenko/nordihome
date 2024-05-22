@@ -438,8 +438,8 @@ class DatabaseSeeder extends Seeder
             );
             $product->dimensions = $dimension;
 
-            $product->setPrice($item['price']);
-            $product->setCountSell($item['count']);
+            //$product->setPrice($item['price']);
+            //$product->setCountSell($item['count']);
             $product->brand_id = $item['brand'];
             $product->save();
             $product->update([

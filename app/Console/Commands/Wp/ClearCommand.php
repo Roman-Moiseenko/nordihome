@@ -6,9 +6,13 @@ namespace App\Console\Commands\Wp;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
+use Illuminate\Console\ConfirmableTrait;
 
 class ClearCommand extends Command
 {
+
+    use ConfirmableTrait;
+
     protected $signature = 'wp:clear {catalog} {product}';
 
     /**
@@ -23,6 +27,10 @@ class ClearCommand extends Command
      */
     public function handle()
     {
+        if (! $this->confirmToProceed()) {
+            return false;
+        }
+
         $catalog_id = $this->argument('catalog');
         $product_id = $this->argument('product');
         $this->clear_product($product_id);
