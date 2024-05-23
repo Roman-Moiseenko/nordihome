@@ -13,6 +13,7 @@ use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Accounting\Service\StorageService;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
@@ -126,11 +127,14 @@ class ClearCommand extends Command
         }
         $this->info('Избранное очищено');
 
-        $notifies = DB::table('notifications')->get();
-        foreach ($notifies as $item) {
-            $item->delete();
+        /** @var Admin[] $staffs */
+        $staffs = Admin::get();
+        //$notifies = DB::table('notifications')->get();
+        foreach ($staffs as $staff) {
+            $staff->notifications()->delete();
+
         }
-        $this->info('Уведомления очищено');
+        $this->info('Уведомления очищены');
 
         $this->info('*******');
         $distributor = Distributor::first();

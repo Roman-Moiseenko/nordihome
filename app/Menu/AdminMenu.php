@@ -274,6 +274,7 @@ class AdminMenu
                         'icon' => 'bell-ring',
                         'title' => 'Уведомления',
                         'route_name' => 'admin.staff.notification',
+                        'action' => true,
                     ],
                     'mail' => [
                         'icon' => 'mail',
