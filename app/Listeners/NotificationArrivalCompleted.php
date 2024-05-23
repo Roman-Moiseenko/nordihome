@@ -5,9 +5,13 @@ namespace App\Listeners;
 use App\Events\ArrivalHasCompleted;
 use App\Mail\ProductArrival;
 use App\Modules\Accounting\Entity\ArrivalProduct;
+use App\Modules\Admin\Entity\Admin;
+use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\SubscriptionService;
 use App\Modules\User\UserRepository;
+use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
@@ -15,17 +19,22 @@ use Illuminate\Support\Facades\Mail;
 class NotificationArrivalCompleted
 {
     private array $users;
+    private StaffRepository $staffs;
 
     /**
      * Create the event listener.
      */
-    public function __construct(SubscriptionService $subscriptionService, UserRepository $userRepository)
+    public function __construct(
+        SubscriptionService $subscriptionService,
+        UserRepository      $userRepository,
+        StaffRepository     $staffs)
     {
         if ($subscriptionService->check_subscription(self::class)) {
             $this->users = $userRepository->getUsersBySubscription(self::class);
         } else {
             $this->users = [];
         }
+        $this->staffs = $staffs;
     }
 
     /**
@@ -33,14 +42,23 @@ class NotificationArrivalCompleted
      */
     public function handle(ArrivalHasCompleted $event): void
     {
-        //TODO Уведомляем Сотрудников через телеграм ??
 
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+
+        foreach ($staffs as $staff) {
+            $staff->notify(new StaffMessage(
+                'Поступление товаров на склад',
+                $event->arrival->htmlNumDate(),
+                route('admin.accounting.arrival.show', $event->arrival),
+                'folder-input'
+            ));
+        }
 
         if (!empty($this->users)) {
             $products = []; //Список товаров в поступлении, которых не было
             /** @var ArrivalProduct $arrivalProduct */
             foreach ($event->arrival->arrivalProducts()->getModels() as $arrivalProduct) {
-                if ($arrivalProduct->product->getCountSell() <=  $arrivalProduct->quantity) { //Кол-во на продажу, до поступления было = 0
+                if ($arrivalProduct->product->getCountSell() <= $arrivalProduct->quantity) { //Кол-во на продажу, до поступления было = 0
                     $products[] = $arrivalProduct->product;
                 }
             }

@@ -213,12 +213,10 @@ Route::group(
 
             }
         );
+        Route::get('/staff/notification', 'StaffController@notification')->name('staff.notification');
+        Route::post('/staff/notification-read/{notification}', 'StaffController@notification_read')->name('staff.notification-read');
 
 
-
-
-        Route::resource('staff', 'StaffController'); //CRUD
-        Route::resource('worker', 'WorkerController'); //CRUD
         Route::post('/worker/{worker}/toggle', 'WorkerController@toggle')->name('worker.toggle');
 
         Route::get('/staff/{staff}/security', 'StaffController@security')->name('staff.security');
@@ -227,6 +225,8 @@ Route::group(
         Route::post('/staff/photo/{staff}', 'StaffController@setPhoto')->name('staff.photo');
         Route::post('/staff/response/{staff}', 'StaffController@response')->name('staff.response');
 
+        Route::resource('staff', 'StaffController'); //CRUD
+        Route::resource('worker', 'WorkerController'); //CRUD
         //**** SHOP
         //Product
         Route::group(
@@ -386,7 +386,7 @@ Route::group(
                         Route::post('/get-to-order', 'OrderController@get_to_order')->name('get-to-order');
 
                         Route::get('/log/{order}', 'OrderController@log')->name('log');
-
+                        Route::post('/take/{order}', 'OrderController@take')->name('take');
                         //Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
                         //Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
                         //Route::post('/{order}/add-addition', 'OrderController@add_addition')->name('add-addition');

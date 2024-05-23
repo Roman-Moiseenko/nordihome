@@ -202,6 +202,12 @@ Breadcrumbs::for('admin.staff.security', function (BreadcrumbTrail $trail, Admin
     $trail->push('Сменить пароль', route('admin.staff.security', $staff));
 });
 
+
+Breadcrumbs::for('admin.staff.notification', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Уведомления', route('admin.staff.notification'));
+});
+
 //WORKER
 Breadcrumbs::for('admin.worker.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');

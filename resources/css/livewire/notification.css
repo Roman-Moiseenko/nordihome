@@ -1,0 +1,30 @@
+.notification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.0);
+    z-index: 3;
+}
+
+.notification-dropdown {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    margin: 0;
+
+    z-index: 4;
+}
+
+.notification-dropdown.no-show {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-out;
+}
+
+.notification-dropdown.show {
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+    visibility: visible;
+}

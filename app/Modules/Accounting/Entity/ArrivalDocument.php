@@ -182,7 +182,10 @@ class ArrivalDocument extends Model implements MovementInterface
         return  $this->created_at->translatedFormat('d F');
     }
 
-
+    public function htmlNumDate(): string
+    {
+        return $this->htmlNum() . ' от ' . $this->htmlDate();
+    }
 
 
 }

@@ -616,7 +616,7 @@ class Order extends Model
     ///*** Хелперы
     public function htmlDate(): string
     {
-        return $this->created_at->translatedFormat('d F');
+        return $this->created_at->translatedFormat('d F Y');
     }
 
     public function htmlNum(): string

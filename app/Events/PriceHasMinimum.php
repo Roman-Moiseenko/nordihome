@@ -22,7 +22,6 @@ class PriceHasMinimum
      */
     public function __construct(OrderItem $item)
     {
-        //
         $this->item = $item;
     }
 

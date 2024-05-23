@@ -13,6 +13,8 @@ use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCompleted;
 use App\Events\OrderHasCreated;
 use App\Events\OrderHasLogger;
+use App\Events\OrderHasPaid;
+use App\Events\OrderHasPrepaid;
 use App\Events\OrderHasRefund;
 use App\Events\PaymentHasPaid;
 use App\Events\PriceHasMinimum;
@@ -38,6 +40,8 @@ use App\Listeners\NotificationNewLogger;
 use App\Listeners\NotificationMovementNew;
 use App\Listeners\NotificationOrderCompleted;
 use App\Listeners\NotificationOrderNew;
+use App\Listeners\NotificationOrderPaid;
+use App\Listeners\NotificationOrderPrepaid;
 use App\Listeners\NotificationPriceMinimum;
 use App\Listeners\NotificationPricingCompleted;
 use App\Listeners\NotificationProductParserNew;
@@ -73,8 +77,9 @@ class EventServiceProvider extends ServiceProvider
             NotificationPromotionMoved::class
         ],
         ProductHasParsed::class => [
+            NotificationProductParserNew::class,
             ParsingImageProduct::class,
-            NotificationProductParserNew::class
+
         ],
         OrderHasCreated::class => [
             NotificationOrderNew::class,
@@ -107,6 +112,13 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasRefund::class => [
             NotificationRefundNew::class
+        ],
+
+        OrderHasPrepaid::class => [
+            NotificationOrderPrepaid::class,
+        ],
+        OrderHasPaid::class => [
+            NotificationOrderPaid::class
         ],
         DepartureHasCompleted::class => [
             NotificationDepartureNew::class,

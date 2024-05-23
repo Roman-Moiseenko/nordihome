@@ -212,4 +212,9 @@ class MovementDocument extends Model implements MovementInterface
         if ($this->staff_id == null) return 'Не установлен';
         return $this->staff->fullname->getFullName();
     }
+
+    public function htmlNumDate(): string
+    {
+        return $this->htmlNum() . ' от ' . $this->htmlDate();
+    }
 }

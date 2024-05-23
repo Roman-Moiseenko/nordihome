@@ -3,17 +3,18 @@
 namespace App\Listeners;
 
 use App\Events\OrderHasRefund;
+use App\Modules\Admin\Repository\StaffRepository;
+use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 class NotificationRefundNew
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
+    private StaffRepository $staffs;
+
+    public function __construct(StaffRepository $staffs)
     {
-        //
+        $this->staffs = $staffs;
     }
 
     /**
@@ -21,10 +22,14 @@ class NotificationRefundNew
      */
     public function handle(OrderHasRefund $event): void
     {
-        $refund = $event->order->refund;
-
-        //
-        //TODO Уведомляем кто работает с возратом
-        // Уведомляем руководство что возврат
+        $staffs = $this->staffs->getChief();
+        foreach ($staffs as $staff) {
+            $staff->notify(new StaffMessage(
+                'Возврат по заказу',
+                'Заказ ' . $event->order->htmlNumDate(),
+                route('admin.sales.order.show', $event->order),
+                'refresh-ccw'
+            ));
+        }
     }
 }

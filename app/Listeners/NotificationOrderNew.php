@@ -11,15 +11,14 @@ use Illuminate\Support\Facades\Mail;
 
 class NotificationOrderNew
 {
-    private StaffRepository $repository;
+    private StaffRepository $staffs;
 
     /**
      * Create the event listener.
      */
     public function __construct(StaffRepository $repository)
     {
-        //
-        $this->repository = $repository;
+        $this->staffs = $repository;
     }
 
     /**
@@ -30,11 +29,15 @@ class NotificationOrderNew
         //Письмо клиенту о новом заказе
         Mail::to($event->order->user->email)->queue(new OrderNew($event->order));
 
-        $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
-        $message = "Новый заказ\nТип " . $event->order->getType();
         foreach ($staffs as $staff) {
-            $staff->notify(new StaffMessage($message));
+            $staff->notify(new StaffMessage(
+                'Новый заказ',
+                $event->order->getType(),
+                route('admin.sales.order.show', $event->order),
+                'file-plus-2'
+            ));
         }
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\ArrayShape;
 
 /**
+ * Списание товаров
  * @property int $id
  * @property string $number
  * @property Carbon $created_at
@@ -105,5 +106,21 @@ class DepartureDocument extends Model implements MovementInterface
     {
         if ($this->staff_id == null) return 'Не установлен';
         return $this->staff->fullname->getFullName();
+    }
+
+    //*** Helpers
+    public function htmlNum(): string
+    {
+        return $this->number;
+    }
+
+    public function htmlDate(): string
+    {
+        return  $this->created_at->translatedFormat('d F');
+    }
+
+    public function htmlNumDate(): string
+    {
+        return $this->htmlNum() . ' от ' . $this->htmlDate();
     }
 }

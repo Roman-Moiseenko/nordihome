@@ -273,7 +273,7 @@ class AdminMenu
                     'notification' => [
                         'icon' => 'bell-ring',
                         'title' => 'Уведомления',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.staff.notification',
                     ],
                     'mail' => [
                         'icon' => 'mail',

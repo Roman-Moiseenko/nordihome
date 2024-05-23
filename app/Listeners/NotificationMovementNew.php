@@ -11,25 +11,24 @@ use Illuminate\Queue\InteractsWithQueue;
 
 class NotificationMovementNew
 {
-    private StaffRepository $repository;
+    private StaffRepository $staffs;
 
-    public function __construct(StaffRepository $repository)
+    public function __construct(StaffRepository $staffs)
     {
-        $this->repository = $repository;
+        $this->staffs = $staffs;
     }
 
     public function handle(MovementHasCreated $event): void
     {
-        $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_ACCOUNTING);
-        //TODO
-        $text = '';/*
-        foreach ($event->documents as $document) {
-            $text .= "\n со склада " . $document->storageOut->name . " \n на склад " . $document->storageIn->name;
-        }
-*/
-        $message = "Новое перемещение" . $text;
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ACCOUNTING);
+
         foreach ($staffs as $staff) {
-            $staff->notify(new StaffMessage($message));
+            $staff->notify(new StaffMessage(
+                "Новое перемещение",
+                $event->document->htmlNumDate(),
+                route('admin.accounting.movement.show', $event->document),
+                'folder-sync'
+            ));
         }
     }
 }

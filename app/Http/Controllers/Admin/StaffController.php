@@ -9,6 +9,8 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Admin\Service\StaffService;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Auth;
 
 
 class StaffController extends Controller
@@ -109,6 +111,27 @@ class StaffController extends Controller
         return $this->try_catch_admin(function () use($staff) {
             $this->service->activate($staff);
             return redirect()->route('admin.staff.index');
+        });
+    }
+
+    public function notification(Request $request)
+    {
+        return $this->try_catch_admin(function () use ($request) {
+            /** @var Admin $staff */
+            $staff = Auth::guard('admin')->user();
+            $query = $staff->notifications();
+            $notifications = $this->pagination($query, $request, $pagination);
+
+            return view('admin.staff.notification', compact('notifications', 'pagination'));
+        });
+    }
+
+    public function notification_read(DatabaseNotification $notification)
+    {
+        return $this->try_catch_ajax_admin(function () use ($notification) {
+            //dd($notification);
+            $notification->markAsRead();
+            return response()->json(true);
         });
     }
 

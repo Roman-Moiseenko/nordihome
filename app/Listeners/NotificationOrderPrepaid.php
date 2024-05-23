@@ -3,17 +3,19 @@
 namespace App\Listeners;
 
 use App\Events\OrderHasPrepaid;
+use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Admin\Repository\StaffRepository;
+use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 class NotificationOrderPrepaid
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
+    private StaffRepository $staffs;
+
+    public function __construct(StaffRepository $staffs)
     {
-        //
+        $this->staffs = $staffs;
     }
 
     /**
@@ -21,7 +23,18 @@ class NotificationOrderPrepaid
      */
     public function handle(OrderHasPrepaid $event): void
     {
-        //$event->order
-        //TODO Уведомляем менеджера и клиента, что его оплата внесена
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+
+        foreach ($staffs as $staff) {
+            if ($event->order->manager_id == $staff->id) {
+                $staff->notify(new StaffMessage(
+                    'Внесена предоплата по заказу',
+                    'Заказ ' . $event->order->htmlNumDate(),
+                    route('admin.sales.order.show', $event->order),
+                    'credit-card'
+                ));
+            }
+        }
+        //TODO Уведомляем клиента, что его оплата внесена
     }
 }

@@ -27,9 +27,13 @@ class NotificationProductParserNew
     {
         $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_PRODUCT);
 
-        $message = "Добавлен новый товар через Парсер\n Артикул товара " . $event->product->code;
         foreach ($staffs as $staff) {
-            $staff->notify(new StaffMessage($message));
+            $staff->notify(new StaffMessage(
+                'Добавлен новый товар через Парсер',
+                "Артикул товара " . $event->product->code,
+                route('admin.product.edit', $event->product),
+                'package-open'
+            ));
         }
     }
 }

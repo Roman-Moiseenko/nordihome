@@ -22,5 +22,6 @@ class NotificationNewLogger
     public function handle(OrderHasLogger $event): void
     {
         //TODO Уведомляем сборщика, что надо собрать заказ
+        // На будущее, только Телеграм .....
     }
 }

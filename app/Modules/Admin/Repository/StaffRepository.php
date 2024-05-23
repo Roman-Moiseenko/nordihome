@@ -17,6 +17,18 @@ class StaffRepository
         })->get();
     }
 
+    public function getStaffsByCodes(array $codes)
+    {
+        return Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($q) use ($codes) {
+            $q->whereIn('code', $codes);
+        })->get();
+    }
+
+    public function getChief()
+    {
+        return Admin::where('role', Admin::ROLE_CHIEF)->get();
+    }
+
     public function getIndex(Request $request)
     {
         $query = Admin::orderByDesc('id');

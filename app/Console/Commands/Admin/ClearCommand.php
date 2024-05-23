@@ -19,8 +19,14 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\OrderReserve;
 
 use App\Modules\Product\Entity\Product;
+use App\Modules\Shop\Cart\Storage\DBStorage;
+use App\Modules\User\Entity\CartCookie;
+use App\Modules\User\Entity\CartStorage;
+use App\Modules\User\Entity\ParserStorage;
+use App\Modules\User\Entity\Wish;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
+use Illuminate\Support\Facades\DB;
 use function Laravel\Prompts\confirm;
 
 class ClearCommand extends Command
@@ -28,9 +34,7 @@ class ClearCommand extends Command
     use ConfirmableTrait;
 
     protected $signature = 'db:clear';
-
     protected $description = 'Очистка базы, для тестирования';
-
 
     public function handle(): bool
     {
@@ -97,6 +101,36 @@ class ClearCommand extends Command
             $item->delete();
         }
         $this->info('Календарь очищен');
+
+        $cart = CartStorage::get();
+        foreach ($cart as $item) {
+            $item->delete();
+        }
+        $this->info('Корзина очищена');
+
+        $cart2 = CartCookie::get();
+        foreach ($cart2 as $item) {
+            $item->delete();
+        }
+        $this->info('Куки очищены');
+
+        $cart3 = ParserStorage::get();
+        foreach ($cart3 as $item) {
+            $item->delete();
+        }
+        $this->info('Корзина парсера очищена');
+
+        $wish = Wish::get();
+        foreach ($wish as $item) {
+            $item->delete();
+        }
+        $this->info('Избранное очищено');
+
+        $notifies = DB::table('notifications')->get();
+        foreach ($notifies as $item) {
+            $item->delete();
+        }
+        $this->info('Уведомления очищено');
 
         $this->info('*******');
         $distributor = Distributor::first();

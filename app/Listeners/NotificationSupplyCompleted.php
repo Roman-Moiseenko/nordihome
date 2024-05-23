@@ -3,17 +3,19 @@
 namespace App\Listeners;
 
 use App\Events\SupplyHasCompleted;
+use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Admin\Repository\StaffRepository;
+use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 class NotificationSupplyCompleted
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
+    private StaffRepository $staffs;
+
+    public function __construct(StaffRepository $staffs)
     {
-        //
+        $this->staffs = $staffs;
     }
 
     /**
@@ -21,6 +23,14 @@ class NotificationSupplyCompleted
      */
     public function handle(SupplyHasCompleted $event): void
     {
-        //TODO Уведомления тем, кто принимает заказ. На склады где созданы поступления ???
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        foreach ($staffs as $staff) {
+            $staff->notify(new StaffMessage(
+                'Поступление товара от поставщика',
+                $event->supply->distributor->name,
+                route('admin.accounting.storage.show', $event->supply),
+                'folder-pen'
+            ));
+        }
     }
 }

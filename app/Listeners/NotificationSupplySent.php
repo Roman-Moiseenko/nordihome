@@ -3,17 +3,17 @@
 namespace App\Listeners;
 
 use App\Events\SupplyHasSent;
+use App\Modules\Admin\Repository\StaffRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 class NotificationSupplySent
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
+    private StaffRepository $staffs;
+
+    public function __construct(StaffRepository $staffs)
     {
-        //
+        $this->staffs = $staffs;
     }
 
     /**

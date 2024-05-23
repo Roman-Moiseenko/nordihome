@@ -38,7 +38,8 @@
 
         </div>
         <!-- END: Search -->
-        <!-- BEGIN: Notifications -->
+        <livewire:admin.notification  />
+        <!-- BEGIN: Notifications
         <x-base.popover class="intro-x mr-4 sm:mr-6">
             <x-base.popover.button
                 class="relative block text-white/70 outline-none before:absolute before:top-[-2px] before:right-0 before:h-[8px] before:w-[8px] before:rounded-full before:bg-danger before:content-['']"
@@ -86,20 +87,20 @@
             </x-base.popover.panel>
         </x-base.popover>
 
-        <!-- END: Notifications -->
+         END: Notifications -->
         <!-- BEGIN: Account Menu -->
         <x-base.menu>
             <x-base.menu.button
                 class="image-fit zoom-in intro-x block h-8 w-8 scale-110 overflow-hidden rounded-full shadow-lg"
             >
-                <img src="{{ $current_user->getPhoto() }}">
+                <img src="{{ $admin->getPhoto() }}">
             </x-base.menu.button>
             <x-base.menu.items
                 class="relative mt-px w-56 bg-primary/80 text-white before:absolute before:inset-0 before:z-[-1] before:block before:rounded-md before:bg-black"
             >
                 <x-base.menu.header class="font-normal">
-                    <div class="font-medium">{{ $current_user->fullname->getShortName() }}</div>
-                    <div class="text-xs text-white/60 mt-0.5 dark:text-slate-500">{{ $current_user->post }}</div>
+                    <div class="font-medium">{{ $admin->fullname->getShortName() }}</div>
+                    <div class="text-xs text-white/60 mt-0.5 dark:text-slate-500">{{ $admin->post }}</div>
                 </x-base.menu.header>
                 <x-base.menu.divider class="bg-white/[0.08]" />
                 <x-base.menu.item class="hover:bg-white/5">

@@ -37,10 +37,13 @@ class NotificationPricingCompleted
     {
         $staffs = $this->staffRepository->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
-        $message = "Изменились цены на товар\n Необходимо сверить с наличием и распечатать ценники\n Документ" .
-            $event->pricing->htmlNum() . ' от ' . $event->pricing->htmlDate();
         foreach ($staffs as $staff) {
-            $staff->notify(new StaffMessage($message));
+            $staff->notify(new StaffMessage(
+                'Изменились цены на товар',
+                'Необходимо сверить с наличием и распечатать ценники',
+                route('admin.accounting.pricing.show', $event->pricing),
+                'badge-russian-ruble'
+            ));
         }
 
         if (!empty($this->users)) {

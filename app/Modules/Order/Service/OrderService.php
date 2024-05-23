@@ -807,9 +807,9 @@ class OrderService
             $order->setPaid();
             event(new OrderHasPaid($order));
         } else {
+            event(new OrderHasPrepaid($order));
             if ($order->status->value == OrderStatus::AWAITING) {
                 $order->setStatus(OrderStatus::PREPAID);
-                event(new OrderHasPrepaid($order));
             }
         }
         //Если купон в заказе, то завершаем его использование

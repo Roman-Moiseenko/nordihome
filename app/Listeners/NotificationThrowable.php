@@ -29,10 +29,10 @@ class NotificationThrowable
         })->get();
 
 
-        $message = "Ошибка на сайте:\n" . $event->throwable->getMessage() . "\n" . $event->throwable->getFile() . "\n" . $event->throwable->getLine();
+        $message = $event->throwable->getMessage() . "\n" . $event->throwable->getFile() . "\n" . $event->throwable->getLine();
 
         foreach ($staffs as $staff) {
-            $staff->notify(new StaffMessage($message));
+            $staff->notify(new StaffMessage('Ошибка на сайте:', $message));
             Mail::to($staff->email)->send(new AdminThrowable($event->throwable));
         }
     }

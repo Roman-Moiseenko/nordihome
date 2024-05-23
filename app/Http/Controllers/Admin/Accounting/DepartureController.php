@@ -10,7 +10,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\DepartureService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
-use App\UseCase\PaginationService;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
