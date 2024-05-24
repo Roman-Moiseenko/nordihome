@@ -10,11 +10,15 @@ use App\Modules\Shop\Parser\HttpPage;
 use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Parser\ProductParser;
 use Illuminate\Console\Command;
+use Tests\CreatesApplication;
 
 class ParserCommand extends Command
 {
+    use CreatesApplication;
+
     protected $signature = 'cron:parser';
     protected $description = 'Парсим цены товаров';
+    protected $app;
 
     public function handle()
     {
@@ -22,8 +26,8 @@ class ParserCommand extends Command
         $change = false;
         try {
             $this->info('Парсим цены товаров');
-
-            $service = new ParserService(new HttpPage());
+            $this->app = $this->createApplication();
+            $service = $this->app->make('App\Modules\Shop\Parser\ParserService'); //new ParserService(new HttpPage());
             $products = ProductParser::where('order', true)->get();
             $this->info('Товаров - ' . $products->count());
             /** @var ProductParser $product */
