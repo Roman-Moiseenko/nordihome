@@ -3,11 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\ReserveHasTimeOut;
+use App\Mail\OrderReserveOut;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationReserveTimeOut
 {
@@ -35,9 +37,8 @@ class NotificationReserveTimeOut
             }
         }
 
-        if ($event->timeOut && $event->order->isAwaiting()) {
-            //TODO письмо клиенту что резерв закончился
+        if ($event->order->isAwaiting()) {
+            Mail::to($event->order->user->email)->queue(new OrderReserveOut($event->order, $event->timeOut));
         }
-
     }
 }

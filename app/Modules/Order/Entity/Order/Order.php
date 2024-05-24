@@ -37,6 +37,7 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderStatus[] $statuses
  * @property OrderAddition[] $additions //Дополнения к заказу (услуги)
  * @property OrderPayment[] $payments //Платежи за заказ
+ * @property OrderPayment $payment //Последний платежи за заказ
  * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
  * @property OrderItem[] $items
  * @property User $user
@@ -573,6 +574,15 @@ class Order extends Model
     public function payments()
     {
         return $this->hasMany(OrderPayment::class, 'order_id', 'id');
+    }
+
+    /**
+     * Последний платеж
+     * @return mixed
+     */
+    public function payment()
+    {
+        return $this->hasMany(OrderPayment::class, 'order_id', 'id')->latestOfMany();
     }
 
     public function status()

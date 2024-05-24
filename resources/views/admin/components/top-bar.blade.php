@@ -39,55 +39,7 @@
         </div>
         <!-- END: Search -->
         <livewire:admin.notification  />
-        <!-- BEGIN: Notifications
-        <x-base.popover class="intro-x mr-4 sm:mr-6">
-            <x-base.popover.button
-                class="relative block text-white/70 outline-none before:absolute before:top-[-2px] before:right-0 before:h-[8px] before:w-[8px] before:rounded-full before:bg-danger before:content-['']"
-            >
-                <x-base.lucide
-                    class="h-5 w-5 dark:text-slate-500"
-                    icon="Bell"
-                />
-            </x-base.popover.button>
-            <x-base.popover.panel class="mt-2 w-[280px] p-5 sm:w-[350px]">
-                <div class="mb-5 font-medium">Notifications</div>
-                @foreach (array_slice($fakers, 0, 5) as $fakerKey => $faker)
-                    <div @class([
-                        'cursor-pointer relative flex items-center',
-                        'mt-5' => $fakerKey,
-                    ])>
-                        <div class="image-fit relative mr-1 h-12 w-12 flex-none">
-                            <img
-                                class="rounded-full"
-                                src="/images/no-image.jpg"
-                                alt="Midone Tailwind HTML Admin Template"
-                            />
-                            <div
-                                class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-success dark:border-darkmode-600">
-                            </div>
-                        </div>
-                        <div class="ml-2 overflow-hidden">
-                            <div class="flex items-center">
-                                <a
-                                    class="mr-5 truncate font-medium"
-                                    href=""
-                                >
-                                    {{ $faker['users'][0]['name'] }}
-                                </a>
-                                <div class="ml-auto whitespace-nowrap text-xs text-slate-400">
-                                    {{ $faker['times'][0] }}
-                                </div>
-                            </div>
-                            <div class="mt-0.5 w-full truncate text-slate-500">
-                                {{ $faker['news'][0]['short_content'] }}
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </x-base.popover.panel>
-        </x-base.popover>
 
-         END: Notifications -->
         <!-- BEGIN: Account Menu -->
         <x-base.menu>
             <x-base.menu.button

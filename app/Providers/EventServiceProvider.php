@@ -42,6 +42,7 @@ use App\Listeners\NotificationOrderCompleted;
 use App\Listeners\NotificationOrderNew;
 use App\Listeners\NotificationOrderPaid;
 use App\Listeners\NotificationOrderPrepaid;
+use App\Listeners\NotificationPaymentNew;
 use App\Listeners\NotificationPriceMinimum;
 use App\Listeners\NotificationPricingCompleted;
 use App\Listeners\NotificationProductParserNew;
@@ -105,7 +106,7 @@ class EventServiceProvider extends ServiceProvider
             NotificationNewPointStorage::class
         ],*/
         PaymentHasPaid::class => [
-
+            NotificationPaymentNew::class,
         ],
         OrderHasLogger::class => [
             NotificationNewLogger::class,

@@ -3,11 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\OrderHasPaid;
+use App\Mail\OrderPaid;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationOrderPaid
 {
@@ -34,7 +36,8 @@ class NotificationOrderPaid
                     'credit-card'
                 ));
             } }
+        Mail::to($event->order->user->email)->queue(new OrderPaid($event->order));
 
-        //TODO Уведомляем клиента, что его заказ полностью оплачен
+
     }
 }

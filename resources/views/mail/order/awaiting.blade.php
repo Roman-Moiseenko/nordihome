@@ -1,10 +1,9 @@
 <x-mail::message>
 <x-mail::panel>
-#Ваш заказ {{ $order->htmlNum() }}
+#Ваш заказ {{ $order->htmlNumDate() }}
 </x-mail::panel>
 
 ## Информация по заказу
-
 
 
 @component('mail::table')

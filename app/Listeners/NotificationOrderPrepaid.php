@@ -3,11 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\OrderHasPrepaid;
+use App\Mail\OrderPrepaid;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationOrderPrepaid
 {
@@ -35,6 +37,8 @@ class NotificationOrderPrepaid
                 ));
             }
         }
-        //TODO Уведомляем клиента, что его оплата внесена
+
+        Mail::to($event->order->user->email)->queue(new OrderPrepaid($event->order));
+
     }
 }

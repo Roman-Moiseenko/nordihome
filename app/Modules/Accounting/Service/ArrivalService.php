@@ -157,11 +157,9 @@ class ArrivalService
         //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
         foreach ($arrival->arrivalProducts as $item) {
             $this->distributors->arrival($arrival->distributor, $item->product_id, $item->cost_currency);
-            $item->product->setPrice($item->price_sell);
         }
 
         $arrival->completed();
-
 
         //У поступления есть заказ поставщику
         if (!is_null($arrival->supply)) {
@@ -188,12 +186,6 @@ class ArrivalService
                     }
                 }
 
-            }
-            //Оповещаем всех менеджеров по их Заказам
-            foreach ($orders as $order) {
-                //TODO Надо ли оповещать клиента?
-                $message = 'Товар по заказу ' . $order->htmlNum() . ' прибыл на основной склад';
-                $order->manager->notify(new StaffMessage($message));
             }
 
             //Создаем перемещения для заказов

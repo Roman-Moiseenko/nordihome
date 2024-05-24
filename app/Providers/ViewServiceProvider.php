@@ -24,7 +24,5 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', 'App\View\AdminComposer');
-        //TODO Удалить, после добавки реальный notification в колокольчике сотрудника
-        View::composer('*', 'App\View\FakerComposer');
     }
 }

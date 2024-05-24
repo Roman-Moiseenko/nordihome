@@ -28,7 +28,7 @@ class NotificationSupplyCompleted
             $staff->notify(new StaffMessage(
                 'Поступление товара от поставщика',
                 $event->supply->distributor->name,
-                route('admin.accounting.storage.show', $event->supply),
+                route('admin.accounting.supply.show', $event->supply),
                 'folder-pen'
             ));
         }

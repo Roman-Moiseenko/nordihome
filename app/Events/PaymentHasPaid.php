@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Entity\Order\OrderPayment;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -12,14 +12,13 @@ class PaymentHasPaid
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public OrderAddition $payment;
+    public OrderPayment $payment;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(OrderAddition $payment)
+    public function __construct(OrderPayment $payment)
     {
-        //
         $this->payment = $payment;
     }
 

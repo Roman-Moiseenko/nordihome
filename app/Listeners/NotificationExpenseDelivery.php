@@ -3,24 +3,20 @@
 namespace App\Listeners;
 
 use App\Events\ExpenseHasDelivery;
+use App\Mail\ExpenseDelivery;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationExpenseDelivery
 {
-    /**
-     * Create the event listener.
-     */
+
     public function __construct()
     {
-        //
     }
 
-    /**
-     * Handle the event.
-     */
     public function handle(ExpenseHasDelivery $event): void
     {
-        //TODO Уведомляем клиента, что его заказ отправлен и ему присвоен трек-номер
+        if ($event->expense->isRegion()) Mail::to($event->expense->order->user->email)->queue(new ExpenseDelivery($event->expense));
     }
 }

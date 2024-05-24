@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Events\PaymentHasPaid;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\Order;
@@ -70,6 +71,8 @@ class PaymentService
         $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
 
         $this->orderService->check_payment($order);
+
+        event(new PaymentHasPaid($payment));
     }
 
     public function update(OrderPayment $payment, Request $request): OrderPayment
