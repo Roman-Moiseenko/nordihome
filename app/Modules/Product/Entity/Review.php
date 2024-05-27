@@ -3,9 +3,9 @@
 
 namespace App\Modules\Product\Entity;
 
-
 use App\Entity\Photo;
 use App\Entity\Video;
+use App\Modules\Discount\Entity\DiscountReview;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -17,21 +17,24 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $text
  * @property int $rating
  * @property int $status
- * @property bool $active
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Photo[] $photos
- * @property Video[] $videos
+ * @property Photo $photo
+ * @property Video $video
+ * @property DiscountReview $discount
+ *
+ * @property User $user
+ * @property Product $product
  */
 class Review extends Model
 {
     const STATUS_DRAFT = 5501;
-    const STATUS_MODERATION = 5502;
+    const STATUS_MODERATED = 5502;
     const STATUS_PUBLISHED = 5503;
     const STATUS_BLOCKED = 5504;
     const STATUSES = [
         self::STATUS_DRAFT => 'Черновик',
-        self::STATUS_MODERATION => 'На модерации',
+        self::STATUS_MODERATED => 'На модерации',
         self::STATUS_PUBLISHED => 'Опубликован',
         self::STATUS_BLOCKED => 'Заблокирован',
     ];
@@ -42,7 +45,6 @@ class Review extends Model
         'user_id',
         'text',
         'rating',
-        'active',
         'status'
     ];
 
@@ -69,11 +71,44 @@ class Review extends Model
             'user_id' => $user_id,
             'text' => $text,
             'rating' => $rating,
-            'status' => self::STATUS_MODERATION,
+            'status' => self::STATUS_MODERATED,
         ]);
     }
 
+    //*** IS-...
+
+    public function isDraft(): bool
+    {
+        return $this->status == self::STATUS_DRAFT;
+    }
+
+    public function isModerated(): bool
+    {
+        return $this->status == self::STATUS_MODERATED;
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->status == self::STATUS_PUBLISHED;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->status == self::STATUS_BLOCKED;
+    }
+
+
+    public function isProduct(int $product_id): bool
+    {
+        return $this->product_id == $product_id;
+    }
+
     //*** RELATIONS
+    public function discount()
+    {
+        return $this->hasOne(DiscountReview::class, 'review_id', 'id');
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
@@ -84,24 +119,29 @@ class Review extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function photos()
+    public function photo()
     {
-        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');;
+        return $this->morphOne(Photo::class, 'imageable');//->orderBy('sort');;
     }
 
-    public function videos()
+    public function video()
     {
-        return $this->morphMany(Video::class, 'videoable');
+        return $this->morphOne(Video::class, 'videoable');
     }
 
     //*** Helpers
     public function htmlDate(): string
     {
-        return $this->created_at->translatedFormat('j F Y H:i');
+        if ($this->updated_at == null) {
+            return $this->created_at->translatedFormat('j F Y H:i');
+        } else {
+            return $this->updated_at->translatedFormat('j F Y H:i');
+        }
     }
 
     public function statusHtml(): string
     {
         return self::STATUSES[$this->status];
     }
+
 }

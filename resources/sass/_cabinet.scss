@@ -132,6 +132,45 @@
     }
 }
 
+//REVIEWS
+.review-item {
+    display: flex;
+    .product-img {
+
+        img {
+            width: 60px;
+            height: 60px;
+        }
+    }
+    .product-info {
+        width: 30%;
+        align-items: center;
+        margin-left: 20px;
+        display: grid;
+    }
+    .review-info {
+        align-items: center;
+        margin-left: auto;
+        display: grid;
+        width: 200px;
+        >.status {
+            width: fit-content;
+        }
+        >.date {
+            font-size: $font-size-base * 0.9;
+        }
+    }
+    .review-button {
+        width: 40px;
+        display: grid;
+        align-items: center;
+    }
+}
+
+//REVIEW
+
+
+
 @media screen and (max-width: 991px) {
     .view-option {
         .field {

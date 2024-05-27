@@ -23,7 +23,7 @@ class WelcomToShop
             $event->user->id,
             $this->options->shop->coupon_first_bonus,
             now(),
-            now()->addHours($this->options->shop->coupon_first_time));
+            now()->addDays($this->options->shop->coupon_first_time));
         Mail::to($event->user->email)->queue(new UserRegister($event->user, $coupon));
     }
 }

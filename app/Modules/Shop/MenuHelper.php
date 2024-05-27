@@ -137,6 +137,11 @@ class MenuHelper
                 'icon' => 'fa-light fa-cart-shopping',
                 'url' => route('shop.cart.view'),
             ],
+            'review' => [
+                'name' => 'Мои отзывы',
+                'icon' => 'fa-sharp fa-light fa-message-smile',
+                'url' => route('cabinet.review.index'),
+            ],
             'options' => [
                 'name' => 'Настройки',
                 'icon' => 'fa-light fa-user-gear',

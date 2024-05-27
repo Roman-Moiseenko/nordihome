@@ -23,7 +23,6 @@
                 </x-base.table.thead>
                 <x-base.table.tbody>
                     @foreach($orders as $order)
-
                         @include('admin.sales.parser._list', ['order' => $order])
                     @endforeach
                 </x-base.table.tbody>

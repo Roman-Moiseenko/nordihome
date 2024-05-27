@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Cabinet;
 
 
 use App\Http\Controllers\Controller;
@@ -10,6 +10,8 @@ use App\Modules\User\Entity\User;
 use App\Modules\User\Service\SubscriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use function response;
+use function view;
 
 class OptionsController extends Controller
 {

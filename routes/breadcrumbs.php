@@ -28,6 +28,7 @@ use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Entity\Review;
 use App\Modules\Shop\Parser\ProductParser;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\Subscription;
@@ -164,6 +165,16 @@ Breadcrumbs::for('cabinet.order.view', function (BreadcrumbTrail $trail, Order $
     $trail->parent('cabinet.order.index');
     $trail->push('Заказ ' . $order->htmlNum(), route('cabinet.order.view', $order));
 });
+
+Breadcrumbs::for('cabinet.review.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('cabinet.view');
+    $trail->push('Мои Отзывы', route('cabinet.review.index'));
+});
+Breadcrumbs::for('cabinet.review.show', function (BreadcrumbTrail $trail, Review $review) {
+    $trail->parent('cabinet.review.index');
+    $trail->push($review->product->name, route('cabinet.review.show', $review));
+});
+
 /**  A D M I N  */
 
 
@@ -757,6 +768,19 @@ Breadcrumbs::for('admin.analytics.cron.show', function (BreadcrumbTrail $trail, 
     $trail->parent('admin.home');
     $trail->push($cron->event, route('admin.analytics.cron.show', $cron));
 });
+
+/////FEEDBACK
+//REVIEW
+Breadcrumbs::for('admin.feedback.review.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Отзывы на товары', route('admin.feedback.review.index'));
+});
+Breadcrumbs::for('admin.feedback.review.show', function (BreadcrumbTrail $trail, Review $review) {
+    $trail->parent('admin.feedback.review.index');
+    $trail->push($review->product->name . ': ' . $review->user->fullname->firstname, route('admin.feedback.review.show', $review));
+});
+
+
 /////PAGES
 //WIDGET
 Breadcrumbs::for('admin.page.widget.index', function (BreadcrumbTrail $trail) {

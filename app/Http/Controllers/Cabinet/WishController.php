@@ -1,15 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Cabinet;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\WishService;
 use App\Modules\User\UserRepository;
 use Illuminate\Support\Facades\Auth;
+use function response;
+use function view;
 
 class WishController extends Controller
 {

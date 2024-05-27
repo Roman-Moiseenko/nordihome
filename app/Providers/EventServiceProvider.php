@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\ArrivalHasCompleted;
+use App\Events\CouponHasCreated;
 use App\Events\DepartureHasCompleted;
 use App\Events\ExpenseHasAssembly;
 use App\Events\ExpenseHasCompleted;
@@ -23,12 +24,14 @@ use App\Events\ProductHasParsed;
 use App\Events\ProductHasPublished;
 use App\Events\PromotionHasMoved;
 use App\Events\ReserveHasTimeOut;
+use App\Events\ReviewHasEdit;
 use App\Events\SupplyHasCompleted;
 use App\Events\SupplyHasSent;
 use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasCreated;
 use App\Events\UserHasRegistered;
 use App\Listeners\CheckNotificationStatus;
+use App\Listeners\NotificationCouponCreated;
 use App\Listeners\NotificationExpenseAssembly;
 use App\Listeners\NotificationExpenseCompleted;
 use App\Listeners\NotificationExpenseDelivery;
@@ -49,6 +52,7 @@ use App\Listeners\NotificationProductParserNew;
 use App\Listeners\NotificationProductPublished;
 use App\Listeners\NotificationRefundNew;
 use App\Listeners\NotificationReserveTimeOut;
+use App\Listeners\NotificationReviewEdit;
 use App\Listeners\NotificationSupplyCompleted;
 use App\Listeners\NotificationSupplySent;
 use App\Listeners\NotificationThrowable;
@@ -161,6 +165,12 @@ class EventServiceProvider extends ServiceProvider
 
         PriceHasMinimum::class => [
             NotificationPriceMinimum::class,
+        ],
+        CouponHasCreated::class => [
+            NotificationCouponCreated::class
+        ],
+        ReviewHasEdit::class => [
+            NotificationReviewEdit::class,
         ],
     ];
 

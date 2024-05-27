@@ -33,16 +33,26 @@ Route::group(
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
         Route::post('/page/map', 'PageController@map_data')->name('page.map');
         Route::put('/page/email', 'PageController@email')->name('page.email');
+        Route::group([
+            'as' => 'product.',
+            'prefix' => 'product',
+        ], function () {
 
-        Route::post('/product/search', 'ProductController@search')->name('product.search');
-        Route::post('/product/count-for-sell/{product}', 'ProductController@count_for_sell')->name('product.count-for-sell');
-        Route::get('/product/{slug}', 'ProductController@view')->name('product.view');
+            Route::post('/search', 'ProductController@search')->name('search');
+            Route::post('/count-for-sell/{product}', 'ProductController@count_for_sell')->name('count-for-sell');
+            Route::get('/{slug}', 'ProductController@view')->name('view');
+
+            Route::get('/review/{review}', 'ProductController@review')->name('review.show');
+        });
+
         Route::post('/catalog/search', 'CatalogController@search')->name('category.search');
         Route::get('/catalog', 'CatalogController@index')->name('category.index');
         Route::get('/catalog/{slug}', 'CatalogController@view')->name('category.view');
 
 
         Route::get('/cart', 'CartController@view')->name('cart.view');
+
+
 
         Route::get('/promotion/{slug}', 'PromotionController@view')->name('promotion.view');
         //Корзина AJAX
@@ -101,7 +111,7 @@ Route::group(
 Route::group([
     'as' => 'cabinet.',
     'prefix' => 'cabinet',
-    'namespace' => 'App\Http\Controllers\User',
+    'namespace' => 'App\Http\Controllers\Cabinet',
     'middleware' => ['user_cookie_id'],
 ],
     function () {
@@ -137,6 +147,14 @@ Route::group([
         ], function () {
             Route::get('/', 'OrderController@index')->name('index');
             Route::get('/{order}', 'OrderController@view')->name('view');
+
+        });
+        Route::group([
+            'as' => 'review.',
+            'prefix' => 'review',
+        ], function() {
+            Route::get('/', 'ReviewController@index')->name('index');
+            Route::get('/show/{review}', 'ReviewController@show')->name('show');
 
         });
     }
@@ -210,7 +228,6 @@ Route::group(
                         Route::post('/draft/{subscription}', 'SubscriptionController@draft')->name('draft');
                     }
                 );
-
             }
         );
         Route::get('/staff/notification', 'StaffController@notification')->name('staff.notification');
@@ -260,13 +277,13 @@ Route::group(
                 Route::post('/tag/{tag}/rename', 'TagController@rename')->name('tag.rename');
                 Route::delete('/tag/{tag}/destroy', 'TagController@destroy')->name('tag.destroy');
 
-                Route::get('/equivalent', 'EquivalentController@index')->name('equivalent.index');
-                Route::get('/equivalent/show', 'EquivalentController@show')->name('equivalent.show');
-                Route::post('/equivalent/store', 'EquivalentController@create')->name('equivalent.store');
+               // Route::get('/equivalent', 'EquivalentController@index')->name('equivalent.index');
+                //Route::get('/equivalent/show', 'EquivalentController@show')->name('equivalent.show');
+                //Route::post('/equivalent/store', 'EquivalentController@create')->name('equivalent.store');
                 Route::post('/equivalent/{equivalent}/rename', 'EquivalentController@rename')->name('equivalent.rename');
                 Route::post('/equivalent/{equivalent}/add-product', 'EquivalentController@add_product')->name('equivalent.add-product');
                 Route::delete('/equivalent/{equivalent}/del-product/{product}', 'EquivalentController@del_product')->name('equivalent.del-product');
-                Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
+                //Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
                 Route::post('/equivalent/{equivalent}/json-products', 'EquivalentController@json_products')->name('equivalent.json-products');
 
                 Route::post('/group/{group}/add-product', 'GroupController@add_product')->name('group.add-product');
@@ -371,7 +388,7 @@ Route::group(
                     ],
                     function () {
                         Route::post('/copy/{order}', 'OrderController@copy')->name('copy');
-                        Route::delete('/destroy/{order}', 'OrderController@destroy')->name('destroy');
+                        //Route::delete('/destroy/{order}', 'OrderController@destroy')->name('destroy');
                         Route::post('/movement/{order}', 'OrderController@movement')->name('movement');
                         Route::post('/expense-calculate/{order}', 'OrderController@expense_calculate')->name('expense-calculate');
 
@@ -576,6 +593,20 @@ Route::group(
 
             }
         );
+        //FEEDBACK
+        Route::group([
+            'prefix' => 'feedback',
+            'as' => 'feedback.',
+            'namespace' => 'Feedback',
+        ], function() {
+
+            Route::get('/review', 'ReviewController@index')->name('review.index');
+            Route::get('/review/{review}', 'ReviewController@show')->name('review.show');
+            Route::post('/review/{review}/published', 'ReviewController@published')->name('review.published');
+            Route::post('/review/{review}/blocked', 'ReviewController@blocked')->name('review.blocked');
+
+
+        });
 
         //AJAX Product
         Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');

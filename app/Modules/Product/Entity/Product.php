@@ -78,6 +78,8 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderReserve[] $reserves
  * @property StorageItem[] $storageItems
  * @property OrderItem[] $orderItems
+ * @property Review[] $reviews
+ * @property Review[] $reviewsAll
  */
 class Product extends Model
 {
@@ -563,6 +565,16 @@ class Product extends Model
 
 
     //*** RELATIONS
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id', 'id')->where('status', Review::STATUS_PUBLISHED)->orderByDesc('created_at');
+    }
+
+    public function reviewsAll()
+    {
+        return $this->hasMany(Review::class, 'product_id', 'id');
+    }
     //ТОВАРНЫЙ УЧЕТ
 
     public function storageItems()
@@ -590,8 +602,6 @@ class Product extends Model
     {
         return $this->hasMany(CartCookie::class, 'product_id', 'id');
     }
-
-
 
     public function prices()
     {
@@ -753,7 +763,34 @@ class Product extends Model
 
     public function countReviews(): string
     {
+        //if ($this->reviews)
+        $text = $this->reviews()->count() . ' отзыв';
+        $count = $this->reviews()->count();
+        if ($count == 1 || ($count > 20 && $count % 10 == 1)) {
+            return $text;
+        }
+
+        if (in_array($count, [2, 3, 4]) || (in_array($count & 10, [2, 3, 4]) && $count % 100 > 20)) {
+            return $text . 'а';
+        }
+        if (($count > 4 && $count < 19) || in_array($count % 10, [5, 6, 7, 8, 9, 0])) {
+            return $text . 'ов';
+        }
         //TODO Сделать отзывы
         return '0 отзывов';
+    }
+
+    public function updateReview()
+    {
+        $this->current_rating = 0;
+        if ($this->reviews()->count() == 0) {
+            $this->save();
+            return;
+        }
+        foreach ($this->reviews as $review) {
+            $this->current_rating += $review->rating;
+        }
+        $this->current_rating = ($this->current_rating) / $this->reviews()->count();
+        $this->save();
     }
 }

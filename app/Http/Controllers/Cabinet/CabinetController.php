@@ -1,14 +1,15 @@
 <?php
 
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Cabinet;
 
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\UserService;
 use Illuminate\Http\Request;
+use function response;
+use function view;
 
 class CabinetController extends Controller
 {

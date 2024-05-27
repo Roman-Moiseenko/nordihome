@@ -37,6 +37,8 @@ class Responsibility extends Model
     public const MANAGER_REFUND = 1012; //refund
 
     public const MANAGER_SUPPLY = 1013; //supply
+    public const MANAGER_REVIEW = 1014; //supply
+    public const MANAGER_FEEDBACK = 1015; //feedback
 
     //Отчеты и/или Контроль
     public const REPORT_THROWABLE = 2001;
@@ -58,6 +60,9 @@ class Responsibility extends Model
         self::MANAGER_OPTIONS => 'Настройки сайта',
         self::MANAGER_REFUND => 'Работа с возвратами',
         self::MANAGER_SUPPLY => 'Заказ товаров',
+        self::MANAGER_REVIEW => 'Работа с отзывами',
+        self::MANAGER_FEEDBACK => 'Обратная связь',
+
         // ----------------------- //
         self::REPORT_THROWABLE => 'Report: Логи по ошибкам сайта',
         self::REPORT_OTHER => 'Report: Другие отчеты',

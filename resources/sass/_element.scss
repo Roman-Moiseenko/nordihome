@@ -94,3 +94,50 @@
         }
     }
 }
+
+//Рейтинг звездочки поле выбора
+
+.rating-area {
+    overflow: hidden;
+}
+.rating-area:not(:checked) > input {
+    display: none;
+}
+.rating-area:not(:checked) > label {
+    float: right;
+    width: 24px;
+    padding: 0;
+
+    font-size: 20px;
+    line-height: 32px;
+    color: lightgrey;
+    // text-shadow: 1px 1px #bbb;
+}
+.rating-area.edit:not(:checked) > label {
+    cursor: pointer;
+}
+.rating-area:not(:checked) > label:before {
+    content: '\f005';
+    font-family: "Font Awesome 6 Pro", serif;
+    font-weight: 600;
+}
+.rating-area > input:checked ~ label {
+    color: gold;
+    // text-shadow: 1px 1px #c60;
+}
+.rating-area.edit:not(:checked) > label:hover,
+.rating-area.edit:not(:checked) > label:hover ~ label {
+    color: gold;
+}
+.rating-area.edit > input:checked + label:hover,
+.rating-area.edit > input:checked + label:hover ~ label,
+.rating-area.edit > input:checked ~ label:hover,
+.rating-area.edit > input:checked ~ label:hover ~ label,
+.rating-area.edit > label:hover ~ input:checked ~ label {
+    color: gold;
+    text-shadow: 1px 1px goldenrod;
+}
+
+.rate-area > label:active {
+    position: relative;
+}

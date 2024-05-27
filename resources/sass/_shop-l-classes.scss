@@ -259,7 +259,9 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
     padding: 10px;
 }
 
-
+.no-resize {
+    resize: none;
+}
 
 
 /// Check
@@ -397,4 +399,8 @@ $font-letter-spacing: (
     --bs-btn-disabled-color: #000;
     --bs-btn-disabled-bg: #D7B56D;
     --bs-btn-disabled-border-color: #D7B56D;
+}
+
+progress {
+    width: 100%;
 }

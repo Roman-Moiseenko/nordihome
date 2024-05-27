@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Cabinet;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\Order;
-
 use Illuminate\Support\Facades\Auth;
+use function view;
 
 /**
  * Контроллер для просмотра заказов клиента

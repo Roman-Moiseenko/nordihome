@@ -192,7 +192,7 @@
     function _check() {
         let data = {items: [], additions: []};
         Array.from(checkboxUpdateData).forEach(function (checkbox) {
-            if (checkbox.checked) {
+            if (checkbox.checked && !checkbox.disabled) {
                 let id = checkbox.value;
                 let value = document.getElementById(checkbox.dataset.input).value;
                 let key = checkbox.getAttribute('name');

@@ -5,18 +5,21 @@ namespace App\Listeners;
 use App\Events\OrderHasCompleted;
 use App\Jobs\RequestReview;
 use App\Mail\OrderCompleted;
+use App\Modules\Admin\Entity\Options;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class NotificationOrderCompleted
 {
+    private int $bonus_discount_delay;
+
     /**
      * Create the event listener.
      */
     public function __construct()
     {
-        //
+        $this->bonus_discount_delay = (new Options())->shop->bonus_discount_delay;
     }
 
     /**
@@ -27,6 +30,12 @@ class NotificationOrderCompleted
 
         Mail::to($event->order->user->email)->queue(new OrderCompleted($event->order));
         //Отправляем в очередь для запроса отзывов на купленный товар и начисления бонусов
-        RequestReview::dispatch($event->order)->delay(now()->addDays(3));
+        //TODO Переключить на продакшн
+        RequestReview::dispatch($event->order)->delay(now()->addMinutes(1));
+
+        return;
+
+        RequestReview::dispatch($event->order)->delay(now()->addDays($this->bonus_discount_delay));
+
     }
 }

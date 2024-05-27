@@ -41,6 +41,8 @@ class AuthServiceProvider extends ServiceProvider
         * MANAGER_OPTIONS = options
         * MANAGER_REFUND = refund
         * MANAGER_SUPPLY = supply
+        * MANAGER_REVIEW = review
+        * MANAGER_FEEDBACK = feedback
         */
 
         Gate::define('admin-panel', function (Admin $user) {
@@ -86,6 +88,12 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('supply', function (Admin $user) {
             return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_SUPPLY);
+        });
+        Gate::define('review', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_REVIEW);
+        });
+        Gate::define('feedback', function (Admin $user) {
+            return $user->isChief() || $user->isAdmin() || $user->isResponsibility(Responsibility::MANAGER_FEEDBACK);
         });
 
         //TODO Добавить доступы разграничения

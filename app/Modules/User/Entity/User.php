@@ -9,6 +9,7 @@ use App\Entity\FullName;
 use App\Entity\GeoAddress;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
+use App\Modules\Product\Entity\Review;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -32,6 +33,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Subscription[] $subscriptions
  * @property FullName $fullname
  * @property GeoAddress $address
+ * @property Review[] $reviews
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -174,6 +176,11 @@ class User extends Authenticatable
     }
 
     //RELATIONS
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id', 'id');
+    }
+
     public function wishes()
     {
         return $this->hasMany(Wish::class, 'user_id', 'id');
@@ -235,5 +242,13 @@ class User extends Authenticatable
     public function isRegion(): bool
     {
         return $this->delivery == OrderExpense::DELIVERY_REGION;
+    }
+
+    public function getReview(int $product_id): ?Review
+    {
+        foreach ($this->reviews as $review) {
+            if ($review->isProduct($product_id)) return $review;
+        }
+        return null;
     }
 }

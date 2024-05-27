@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Entity;
 
+use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $min_amount //Минимальная сумма заказа
  * @property int $who //кто выдал
  * @property int $rrr //Основание/условие выдачи
+ * @property User $user
  */
 class Coupon extends Model
 {
@@ -82,6 +84,21 @@ class Coupon extends Model
         for ($i = 0; $i < rand(3, 5); $i++) {
             $this->code .= $a[rand(0, 35)];
         }
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function htmlStart(): string
+    {
+        return $this->started_at->translatedFormat('j F Y');
+    }
+
+    public function htmlFinish(): string
+    {
+        return $this->finished_at->translatedFormat('j F Y');
     }
 }
 
