@@ -69,6 +69,8 @@ class ReviewService
         if ($review->status == Review::STATUS_PUBLISHED) {
             $review->status = Review::STATUS_MODERATED;
             $review->save();
+            $review->refresh();
+            $review->product->updateReview();
         }
         event(new ReviewHasEdit($review));
         return $review;
