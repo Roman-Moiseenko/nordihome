@@ -35,7 +35,7 @@
                         <div>
                             <a href="#reviews" title="Отзывы реальных покупателей"
                                aria-label="Отзывы реальных покупателей">{{ $product->countReviews() }}</a>
-                            @include('shop.widgets.stars', ['rating' => $product->current_rating])
+                            @include('shop.widgets.stars', ['rating' => $product->current_rating, 'show_number' => true])
                         </div>
                     </div>
                     <div class="price-brand-block">

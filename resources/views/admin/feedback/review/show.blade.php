@@ -17,9 +17,12 @@
     <div class="mt-3 mb-3">
         <div class="mt-1 font-medium text-base">Отзыв: </div>
         <div class="ml-3">{{ $review->text }}</div>
+        @if(!is_null($review->photo))
+            <img src="{{ $review->photo->getThumbUrl('original') }}" />
+        @endif
     </div>
     <hr/>
-    <div>
+    <div class="flex">
         @if($review->isModerated())
             <button class="btn btn-success"
                onclick="event.preventDefault();document.getElementById('review-published-{{ $review->id }}').submit();">

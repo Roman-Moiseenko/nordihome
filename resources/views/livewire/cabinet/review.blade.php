@@ -37,9 +37,10 @@
     </div>
     <div class="mt-3">
         @if(!is_null($review->photo))
-            Фотография
+            <div class="">Фотография товара</div>
+            <img src="{{ $review->photo->getThumbUrl('thumb') }}" class="mt-2">
         @endif
-        @if($edit && is_null($review->photo))
+        @if($edit)
             <div
                 x-data="{ uploading: false, progress: 0 }"
                 x-on:livewire-upload-start="uploading = true"
@@ -57,6 +58,7 @@
                 </div>
             </div>
             @if ($image)
+                    <div class="">Новое изображение товара</div>
                 <img src="{{ $image->temporaryUrl() }}" style="width: 100px; height: 100px;" class="mt-2">
             @endif
         @endif

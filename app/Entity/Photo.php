@@ -39,6 +39,7 @@ class Photo extends Model
 
     private string $urlUpload;
 
+    /** @var UploadedFile $fileForUpload */
     private  $fileForUpload;
 
     public function imageable()
@@ -204,8 +205,12 @@ class Photo extends Model
         if (!file_exists($pathThumbs)) {
             mkdir($pathThumbs, 0777, true);
         }
-        //Переносим Файл
-        $this->fileForUpload->move($path, $this->fileForUpload->getClientOriginalName());
+        //dd($path);
+        //dd($this->fileForUpload->getPath());
+        //TODO Копирование вместо Переносим Файл??
+        //$this->fileForUpload->move($path, $this->fileForUpload->getClientOriginalName());
+
+        copy($this->fileForUpload->getPath() . '/' . $this->fileForUpload->getFilename(),$path . $this->fileForUpload->getClientOriginalName());
         //Очищаем все thumbs
         $this->clearThumbs();
         unset($this->fileForUpload);

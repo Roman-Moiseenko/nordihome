@@ -4,7 +4,8 @@
     <x-base.table.td class="text-center">{{ $review->rating }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $review->htmlDate() }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $review->statusHtml() }}</x-base.table.td>
-    <x-base.table.td class="text-center">{{ $review->text }}</x-base.table.td>
+    <x-base.table.td class="">{{ $review->text }}</x-base.table.td>
+    <x-base.table.td class="w-20 text-center">@if(!is_null($review->photo)) <img src="{{ $review->photo->getThumbUrl('mini') }}" /> @endif</x-base.table.td>
 
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">

@@ -50,6 +50,7 @@
                         <x-base.table.th class="w-32 whitespace-nowrap text-center">ДАТА</x-base.table.th>
                         <x-base.table.th class="w-32 whitespace-nowrap text-center">СТАТУС</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ОТЗЫВ</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap text-center">PHOTO</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>

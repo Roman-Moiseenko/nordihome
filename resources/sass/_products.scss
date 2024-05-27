@@ -638,3 +638,31 @@
     }
 }
 
+//ОТЗЫВЫ
+.review-product-item {
+    margin: 20px 100px;
+    border-radius: $radius-big;
+    border: 1px solid var(--bs-gray-400);
+    padding: 20px;
+    .rating-data {
+        display: flex;
+        .user {
+
+        }
+        .rating-date {
+            margin-left: auto;
+            display: grid;
+            .rating {
+
+            }
+            .date {
+                font-size: $font-size-base * 0.9;
+            }
+        }
+    }
+}
+@media screen and (max-width: 991px) {
+    .review-product-item {
+        margin: 10px;
+    }
+}
