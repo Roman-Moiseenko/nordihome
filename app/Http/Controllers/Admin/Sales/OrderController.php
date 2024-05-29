@@ -133,7 +133,7 @@ class OrderController extends Controller
     public function invoice(Order $order)
     {
         return $this->try_catch_admin(function () use ($order) {
-            $file = $this->report->pdf($order);
+            $file = $this->report->xlsx($order);
             ob_end_clean();
             ob_start();
             return response()->file($file);

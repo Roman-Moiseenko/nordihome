@@ -49,11 +49,14 @@ class InvoiceReport
         $begin_row_products = 15; //TODO Перенести в настройки отчетов
         $_from = $begin_row_products;
         $_to = $begin_row_products + 1;
-
+        $count_items = $order->items()->count();
+        $count_additions = $order->additions()->count();
         foreach ($order->items as $i => $item) {
 
-            $activeWorksheet->insertNewRowBefore($_from, 1);
-            $this->service->copyRows($activeWorksheet, 'A' . $_to . ':J' . $_to, 'A' . $_from);
+            if ($i < $count_items - 1 && $count_additions == 0) {
+                $activeWorksheet->insertNewRowBefore($_from, 1);
+                $this->service->copyRows($activeWorksheet, 'A' . $_to . ':J' . $_to, 'A' . $_from);
+            }
 
             $activeWorksheet->setCellValue([1, $begin_row_products + $i], ($i + 1));
             $activeWorksheet->setCellValue([2, $begin_row_products + $i], $item->product->name);
@@ -67,23 +70,21 @@ class InvoiceReport
             $_to++;
         }
 
-        $count = $order->items()->count();
-
         //Список Услуг
         foreach ($order->additions as $j => $addition) {
 
-            if ($j < $order->additions()->count() - 1) {
+            if ($j < $count_additions - 1) {
                 $activeWorksheet->insertNewRowBefore($_from, 1);
                 $this->service->copyRows($activeWorksheet, 'A' . $_to . ':J' . $_to, 'A' . $_from);
             }
 
-            $activeWorksheet->setCellValue([1, $begin_row_products + $count + $j], ($j + 1 + $count));
-            $activeWorksheet->setCellValue([2, $begin_row_products + $count + $j], $addition->purposeHTML());
-            $activeWorksheet->setCellValue([6, $begin_row_products + $count + $j], '-');
-            $activeWorksheet->setCellValue([7, $begin_row_products + $count + $j], 1);
-            $activeWorksheet->setCellValue([8, $begin_row_products + $count + $j], 'услуга');
-            $activeWorksheet->setCellValue([9, $begin_row_products + $count + $j], price($addition->amount));
-            $activeWorksheet->setCellValue([10, $begin_row_products + $count + $j], price($addition->amount));
+            $activeWorksheet->setCellValue([1, $begin_row_products + $count_items + $j], ($j + 1 + $count_items));
+            $activeWorksheet->setCellValue([2, $begin_row_products + $count_items + $j], $addition->purposeHTML());
+            $activeWorksheet->setCellValue([6, $begin_row_products + $count_items + $j], '-');
+            $activeWorksheet->setCellValue([7, $begin_row_products + $count_items + $j], 1);
+            $activeWorksheet->setCellValue([8, $begin_row_products + $count_items + $j], 'услуга');
+            $activeWorksheet->setCellValue([9, $begin_row_products + $count_items + $j], price($addition->amount));
+            $activeWorksheet->setCellValue([10, $begin_row_products + $count_items + $j], price($addition->amount));
 
             $_from++;
             $_to++;
@@ -100,6 +101,12 @@ class InvoiceReport
         $spreadsheet = $this->create_xls($order);
 
         $file = storage_path() . '/report/order/' . $order->id . '.xlsx';
+
+        $path = pathinfo($file, PATHINFO_DIRNAME);
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save($file);
         return $file;
@@ -109,6 +116,11 @@ class InvoiceReport
     {
         $spreadsheet = $this->create_xls($order);
         $file = storage_path() . '/report/order/' . $order->id . '.pdf';
+
+        $path = pathinfo($file, PATHINFO_DIRNAME);
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
 
         $writer = new Mpdf($spreadsheet);
         $writer->setEditHtmlCallback(function ($html) {

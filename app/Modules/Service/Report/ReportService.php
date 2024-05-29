@@ -25,15 +25,21 @@ class ReportService
             ['миллион', 'миллиона', 'миллионов', 0],
             ['миллиард', 'миллиарда', 'миллиардов', 0],
         ];
-        //
-        list($rub, $kop) = explode('.', sprintf("%015.2f", floatval($price)));
-        $out = array();
+
+
+        if (strpos((string)$price, '.') != false) {
+            list($rub, $kop) = array_pad(explode('.', sprintf("%015.2f", floatval($price))), 2, 0);
+        } else {
+            list($rub, $kop) = array_pad(explode(',', sprintf("%015.2f", floatval($price))), 2, 0);
+        }
+        $out = [];
         if (intval($rub) > 0) {
             foreach (str_split($rub, 3) as $uk => $v) { // by 3 symbols
                 if (!intval($v)) continue;
                 $uk = sizeof($unit) - $uk - 1; // unit key
                 $gender = $unit[$uk][3];
-                list($i1, $i2, $i3) = array_map('intval', str_split($v, 1));
+
+                list($i1, $i2, $i3) = array_pad(array_map('intval', str_split($v, 1)),3, 0);
                 // mega-logic
                 $out[] = $hundred[$i1]; # 1xx-9xx
                 if ($i2 > 1) $out[] = $tens[$i2] . ' ' . $ten[$gender][$i3]; # 20-99
