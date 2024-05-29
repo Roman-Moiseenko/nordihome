@@ -19,6 +19,7 @@ use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\SalesService;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\Deprecated;
@@ -35,12 +36,15 @@ class OrderController extends Controller
     private OrderRepository $repository;
     private ProductRepository $products;
     private OrderService $orderService;
+    private InvoiceReport $report;
 
     public function __construct(
-        OrderService        $orderService,
-        StaffRepository     $staffs,
-        OrderRepository     $repository,
-        ProductRepository   $products)
+        OrderService      $orderService,
+        StaffRepository   $staffs,
+        OrderRepository   $repository,
+        ProductRepository $products,
+        InvoiceReport     $report,
+    )
     {
         $this->middleware(['auth:admin', 'can:order']);
         $this->staffs = $staffs;
@@ -48,6 +52,7 @@ class OrderController extends Controller
         $this->products = $products;
         $this->orderService = $orderService;
         //TODO загрузка процента по сборке
+        $this->report = $report;
     }
 
     public function index(Request $request)
@@ -59,7 +64,7 @@ class OrderController extends Controller
             $query = $this->repository->getOrders($filter);
             if ($staff_id != 0) $query->where('manager_id', $staff_id);
             $orders = $this->pagination($query, $request, $pagination);
-            $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function($query) {
+            $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
                 $query->where('code', Responsibility::MANAGER_ORDER);
             })->get();
             return view('admin.sales.order.index', compact('orders', 'pagination', 'filter', 'filter_count', 'staffs', 'staff_id'));
@@ -124,15 +129,28 @@ class OrderController extends Controller
     {
         return view('admin.sales.order.log', compact('order'));
     }
-/*
-    public function completed(Order $order)
+
+    public function invoice(Order $order)
     {
         return $this->try_catch_admin(function () use ($order) {
-            $this->service->completed($order);
-            return redirect()->back();
+            $file = $this->report->pdf($order);
+            ob_end_clean();
+            ob_start();
+            return response()->file($file);
+            // return response()->download($file); //Для скачивания
+            //return response()->file($file); //для открытия pdf имя = id
         });
     }
-*/
+
+    /*
+        public function completed(Order $order)
+        {
+            return $this->try_catch_admin(function () use ($order) {
+                $this->service->completed($order);
+                return redirect()->back();
+            });
+        }
+    */
     public function set_manager(Request $request, Order $order)
     {
         return $this->try_catch_admin(function () use ($request, $order) {
@@ -140,14 +158,15 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
-/*
-    public function set_status(Request $request, Order $order)
-    {
-        return $this->try_catch_admin(function () use ($request, $order) {
-            $this->service->setStatus($order, (int)$request['status']);
-            return redirect()->back();
-        });
-    }*/
+
+    /*
+        public function set_status(Request $request, Order $order)
+        {
+            return $this->try_catch_admin(function () use ($request, $order) {
+                $this->service->setStatus($order, (int)$request['status']);
+                return redirect()->back();
+            });
+        }*/
 
     public function set_reserve(Request $request, Order $order)
     {

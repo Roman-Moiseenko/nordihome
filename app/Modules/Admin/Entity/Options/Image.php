@@ -12,6 +12,7 @@ class Image
     public array $path;
     public array $default;
 
+
     public static function createFromArray(array $image): self
     {
         $_image = new static();
@@ -30,5 +31,9 @@ class Image
         return  public_path() . $this->path[$string];
     }
 
+    public function getStoragePath(string $string): string
+    {
+        return  storage_path() . $this->path[$string];
+    }
 
 }

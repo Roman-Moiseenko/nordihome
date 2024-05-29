@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Service;
 
 use App\Entity\GeoAddress;
+use App\Events\OrderHasAwaiting;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCreated;
 use App\Events\OrderHasPaid;
@@ -403,8 +404,9 @@ class OrderService
         $order->refresh();
         $this->logger->logOrder($order, 'Заказ отправлен на оплату', '', '');
 
-        //TODO Перенести в сервис UserServiceMail ????
-        Mail::to($order->user->email)->queue(new OrderAwaiting($order));
+        event(new OrderHasAwaiting($order));
+
+
         flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
     }
 

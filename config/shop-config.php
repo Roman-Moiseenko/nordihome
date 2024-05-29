@@ -52,7 +52,14 @@ return [
 
         ],//другие параметры
     ],
+    //TODO Перенести в DB
+    'report' => [
+        'base_path' => '',
+        'invoice' => [
+            'template' => '/template/_invoice.xlsx',
 
+            ],
+    ],
     /* SHOP => DB*/
 
     'shop' => [

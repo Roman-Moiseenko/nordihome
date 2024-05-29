@@ -66,6 +66,7 @@ class Photo extends Model
         $this->createThumbsOnSave = $options->image->createThumbsOnSave;
         $this->createThumbsOnRequest = $options->image->createThumbsOnRequest;
 
+        //TODO Сделать переключение  м/у getPublicPath и getStoragePath
         $this->catalogUpload = $options->image->getPublicPath('uploads');
         $this->catalogThumb =   $options->image->getPublicPath('cache');
 

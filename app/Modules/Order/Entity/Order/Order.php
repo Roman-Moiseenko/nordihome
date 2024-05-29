@@ -10,6 +10,7 @@ use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Service\Entity\Report;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -48,7 +49,9 @@ use JetBrains\PhpStorm\Pure;
  * @property Coupon $coupon
  * @property OrderRefund $refund
  * @property LoggerOrder[] $logs
+ * @property Report $invoice
  */
+
 class Order extends Model
 {
     const ONLINE = 701;
@@ -529,6 +532,11 @@ class Order extends Model
     }
 
     ///*** Relations *************************************************************************************
+
+    public function invoice()
+    {
+        return $this->morphOne(Report::class, 'reportable');
+    }
 
     public function refund()
     {

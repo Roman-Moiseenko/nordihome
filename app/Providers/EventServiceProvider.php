@@ -10,6 +10,7 @@ use App\Events\ExpenseHasCompleted;
 use App\Events\ExpenseHasDelivery;
 use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
+use App\Events\OrderHasAwaiting;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCompleted;
 use App\Events\OrderHasCreated;
@@ -35,6 +36,7 @@ use App\Listeners\NotificationCouponCreated;
 use App\Listeners\NotificationExpenseAssembly;
 use App\Listeners\NotificationExpenseCompleted;
 use App\Listeners\NotificationExpenseDelivery;
+use App\Listeners\NotificationOrderAwaiting;
 use App\Listeners\NotificationOrderCanceled;
 use App\Listeners\NotificationMovementCompleted;
 use App\Listeners\NotificationArrivalCompleted;
@@ -172,6 +174,10 @@ class EventServiceProvider extends ServiceProvider
         ReviewHasEdit::class => [
             NotificationReviewEdit::class,
         ],
+        OrderHasAwaiting::class => [
+            NotificationOrderAwaiting::class,
+        ],
+
     ];
 
     /**

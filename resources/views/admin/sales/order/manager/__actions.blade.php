@@ -58,4 +58,11 @@
             </form>
         </x-base.popover.panel>
     </x-base.popover>
+
+    <button class="btn btn-success-soft ml-auto" type="button"
+            onclick="document.getElementById('form-order-invoice').submit();"
+    >Предварительный счет</button>
+    <form id="form-order-invoice" method="post" action="{{ route('admin.sales.order.invoice', $order) }}">
+        @csrf
+    </form>
 </div>
