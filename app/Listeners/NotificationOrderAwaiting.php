@@ -28,9 +28,7 @@ class NotificationOrderAwaiting
      */
     public function handle(OrderHasAwaiting $event): void
     {
-        //TODO Перенести в сервис UserServiceMail ????
         //Создать счет.
-
         $invoice = $this->invoiceReport->xlsx($event->order);
         $event->order->invoice()->create(['file' => $invoice, 'name' => 'Счет на оплату (первоначальный)']);
 

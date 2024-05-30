@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Sales;
 
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderAwaiting;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
@@ -22,6 +23,7 @@ use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
@@ -142,6 +144,15 @@ class OrderController extends Controller
         });
     }
 
+    public function send_invoice(Order $order)
+    {
+        return $this->try_catch_admin(function () use ($order) {
+            Mail::to($order->user->email)->queue(new OrderAwaiting($order));
+
+            flash('Счет отправлен клиенту');
+            return redirect()->back();
+        });
+    }
     /*
         public function completed(Order $order)
         {

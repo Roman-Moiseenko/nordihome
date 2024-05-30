@@ -42,7 +42,8 @@
                     <div class="p-2">
 
                         <x-base.form-label for="select-storage-out" class="mt-3">Хранилище Убытие</x-base.form-label>
-                        <x-base.tom-select id="select-storage-out" name="storage_out" class="w-full" data-placeholder="Выберите хранилище">
+                        <x-base.tom-select id="select-storage-out" name="storage_out" class="w-full"
+                                           data-placeholder="Выберите хранилище">
                             <option value="0"></option>
                             @foreach($storages as $storage)
                                 <option value="{{ $storage->id }}">
@@ -52,7 +53,8 @@
                         </x-base.tom-select>
 
                         <x-base.form-label for="select-storage-in" class="mt-3">Хранилище Прибытие</x-base.form-label>
-                        <x-base.tom-select id="select-storage-in" name="storage_in" class="w-full" data-placeholder="Выберите хранилище">
+                        <x-base.tom-select id="select-storage-in" name="storage_in" class="w-full"
+                                           data-placeholder="Выберите хранилище">
                             <option value="0"></option>
                             @foreach($storages as $storage)
                                 <option value="{{ $storage->id }}">
@@ -73,5 +75,14 @@
                 </form>
             </x-base.popover.panel>
         </x-base.popover>
+    @endif
+    @if($order->isPrepaid())
+        <button class="w-32 ml-auto btn btn-success-soft" type="button"
+                onclick="document.getElementById('form-send-invoice').submit();">
+            Отправить счет повторно
+        </button>
+        <form id="form-send-invoice" method="post" action="{{ route('admin.sales.order.send-invoice', $order) }}">
+            @csrf
+        </form>
     @endif
 </div>
