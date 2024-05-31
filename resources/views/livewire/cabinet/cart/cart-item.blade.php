@@ -54,7 +54,7 @@
                                     {{ (!is_null($user) && (\App\Modules\Product\Entity\Product::find($item['product_id']))->isWish($user->id)) ? 'btn-warning' : 'btn-light'  }}"
                         data-product="{{ $item['product_id'] }}"><i
                         class="fa-light fa-heart"></i></button>
-                <button class="btn btn-light cartitem-trash" data-product="{{ $item['product_id'] }}"><i
+                <button class="btn btn-light" wire:click="del_item"><i
                         class="fa-light fa-trash-can"></i></button>
             </div>
         </div>

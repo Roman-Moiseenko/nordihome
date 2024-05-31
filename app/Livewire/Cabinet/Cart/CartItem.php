@@ -40,20 +40,18 @@ class CartItem extends Component
 
     public function sub_item()
     {
-        $this->quantity--;
+       // $this->quantity--;
         $this->cart->sub($this->item['product_id'], 1);
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
-
     }
 
     public function plus_item()
     {
-        $this->quantity++;
+       // $this->quantity++;
         $this->cart->plus($this->item['product_id'], 1);
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
-
     }
 
     public function set_item()
@@ -61,12 +59,17 @@ class CartItem extends Component
         $this->cart->set($this->item['product_id'], $this->quantity);
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
-
     }
 
     public function check_item()
     {
         $this->cart->check($this->item['product_id']);
+        $this->dispatch('update-header-cart');
+    }
+
+    public function del_item()
+    {
+        $this->cart->remove($this->item['product_id']);
         $this->dispatch('update-header-cart');
     }
 
