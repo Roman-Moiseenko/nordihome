@@ -40,6 +40,8 @@ class CartController extends Controller
         });
     }
 
+
+/*
     public function sub(Request $request, Product $product) //sub, set_count, clear
     {
 
@@ -49,7 +51,8 @@ class CartController extends Controller
             return \response()->json($cart);
         });
     }
-
+    */
+    /*
     public function set(Request $request, Product $product) //sub, set_count, clear
     {
         return $this->try_catch_ajax(function () use ($request, $product) {
@@ -59,6 +62,7 @@ class CartController extends Controller
             return \response()->json($cart);
         });
     }
+    */
 
     public function remove(Request $request, Product $product) //sub, set_count, clear
     {
@@ -90,6 +94,8 @@ class CartController extends Controller
         });
     }
 
+
+/*
     public function check(Request $request, Product $product)
     {
         return $this->try_catch_ajax(function () use ($request, $product) {
@@ -108,4 +114,5 @@ class CartController extends Controller
             return \response()->json($cart);
         });
     }
+    */
 }

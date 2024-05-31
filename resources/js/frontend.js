@@ -382,6 +382,16 @@ window.$ = jQuery;
     }
 
     /** СТРАНИЦА CART - КОРЗИНА **/
+    if (main.hasClass('cart-page')) {
+        $('#preorder-true').on('change', function () {
+            if (this.checked) $('input[name=preorder]').val(true);
+        });
+        $('#preorder-false').on('change', function () {
+            if (this.checked) $('input[name=preorder]').val(false);
+        });
+    }
+
+
     /*
     if (main.hasClass('cart-page')) {
         let cartItemSet = $('.cartitem-set');

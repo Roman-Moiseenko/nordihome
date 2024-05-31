@@ -18,7 +18,7 @@
             </div>
             <div class="available fs-7 mt-1"
                  @if(is_null($item['available'])) style="display: none" @endif
-            > Товар на предзаказ, доступно - <span class="available-count">{{ $item['available'] }}</span> шт.</div>
+            > Товар на предзаказ@if(!is_null($item['discount_cost'])) (акция не распространяется)@endif, доступно - <span class="available-count">{{ $item['available'] }}</span> шт.</div>
             <div class="costblock">
                 <div class="cost"
                      @if(!is_null($item['discount_cost'])) style="display: none" @endif>

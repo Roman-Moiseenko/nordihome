@@ -324,6 +324,16 @@ class Cart
         }
     }
 
+    public function clear_check()
+    {
+        $this->loadItems();
+        foreach ($this->items as $item) {
+            if ($item->check) {
+                $this->remove($item->product->id);
+            }
+        }
+    }
+
     public function check_all(bool $all)
     {
         $this->loadItems();

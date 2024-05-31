@@ -19,7 +19,7 @@ class CartPage extends Component
     public float $amount;
     public float $discount;
     public bool $preorder;
-
+    public bool $button_trash;
     public bool $check_all;
 
     public function boot()
@@ -43,18 +43,28 @@ class CartPage extends Component
         $this->count = $this->cart->info->order->count + $this->cart->info->pre_order->count;
         $this->preorder = $this->cart->info->preorder;
         $this->check_all = $this->cart->info->check_all;
+        $this->button_trash = false;
+        foreach ($this->items as $item) {
+            if ($item['check']) $this->button_trash = true;
+        }
+
     }
 
     public function check_items()
     {
         $this->cart->check_all($this->check_all);
-        //$this->refresh_data();
-        return redirect(request()->header('Referer'));
+        $this->dispatch('update-header-cart');
+        $this->dispatch('update-item-cart');
+    }
+
+    public function del_select()
+    {
+        $this->cart->clear_check();
+        $this->dispatch('update-header-cart');
     }
 
     public function render()
     {
-        //$items = $this->cart->getItems();
         return view('livewire.cabinet.cart.cart-page');
     }
 }

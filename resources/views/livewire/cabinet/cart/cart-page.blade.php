@@ -13,7 +13,9 @@
             >
             <label class="" for="checked-all">Выбрать все</label>
         </div>
-        <button id="cart-trash" class="btn btn-light ms-3 p-1">Удалить выбранные</button>
+        @if($button_trash)
+        <button id="cart-trash" class="btn btn-light ms-3 p-1" wire:click="del_select">Удалить выбранные</button>
+        @endif
     </div>
     @foreach($items as $item)
         <livewire:cabinet.cart.cart-item :item="$item" :key="$item['product_id']"/>

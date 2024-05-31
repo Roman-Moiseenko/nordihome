@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cabinet\Cart;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CartItem extends Component
@@ -28,9 +29,13 @@ class CartItem extends Component
         $this->check = $item['check'];
     }
 
+    #[On('update-item-cart')]
     public function refresh_data()
     {
+        $this->cart->loadItems();
         $this->item = $this->cart->ItemData($this->cart->getItem($this->item['product_id']));
+        $this->quantity = $this->item['quantity'];
+        $this->check = $this->item['check'];
     }
 
     public function sub_item()
@@ -38,8 +43,8 @@ class CartItem extends Component
         $this->quantity--;
         $this->cart->sub($this->item['product_id'], 1);
         $this->dispatch('update-header-cart');
-        //$this->refresh_data();
-        return redirect(request()->header('Referer'));
+        $this->dispatch('update-item-cart')->self();
+
     }
 
     public function plus_item()
@@ -47,16 +52,16 @@ class CartItem extends Component
         $this->quantity++;
         $this->cart->plus($this->item['product_id'], 1);
         $this->dispatch('update-header-cart');
-        //$this->refresh_data();
-        return redirect(request()->header('Referer'));
+        $this->dispatch('update-item-cart')->self();
+
     }
 
     public function set_item()
     {
         $this->cart->set($this->item['product_id'], $this->quantity);
         $this->dispatch('update-header-cart');
-        //$this->refresh_data();
-        return redirect(request()->header('Referer'));
+        $this->dispatch('update-item-cart')->self();
+
     }
 
     public function check_item()

@@ -58,6 +58,7 @@ class OrderController extends Controller
                 throw new \DomainException('Доступ ограничен');
             }
             $preorder = true;
+            //dd($request['preorder']);
 
             if ($request->has('preorder') && ($request->get('preorder') == "false")) {
                 $preorder = false;
