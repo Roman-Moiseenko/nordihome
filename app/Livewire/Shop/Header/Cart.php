@@ -62,7 +62,9 @@ class Cart extends Component
     public function del_item($id)
     {
         $this->cart->remove($id);
-        return redirect(request()->header('Referer'));
+        $this->dispatch('update-header-cart');
+
+        //return redirect(request()->header('Referer'));
     }
 
     public function clear_cart()
