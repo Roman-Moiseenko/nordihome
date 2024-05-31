@@ -20,6 +20,7 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\OrderReserve;
 
 use App\Modules\Product\Entity\Product;
+use App\Modules\Service\Entity\Report;
 use App\Modules\Shop\Cart\Storage\DBStorage;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
@@ -129,12 +130,19 @@ class ClearCommand extends Command
 
         /** @var Admin[] $staffs */
         $staffs = Admin::get();
-        //$notifies = DB::table('notifications')->get();
         foreach ($staffs as $staff) {
             $staff->notifications()->delete();
 
         }
         $this->info('Уведомления очищены');
+
+        /** @var Report[] $reports */
+        $reports = Report::get();
+        foreach ($reports as $report) {
+            unlink($report->file);
+            $report->delete();
+        }
+        $this->info('Отчеты удалены');
 
         $this->info('*******');
         $distributor = Distributor::first();

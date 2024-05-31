@@ -10,6 +10,6 @@
 
 @section('subcontent')
     <div class="box-card">
-        <livewire:cabinet.review :review="$review"  />
+        <livewire:cabinet.review :review="$review" />
     </div>
 @endsection

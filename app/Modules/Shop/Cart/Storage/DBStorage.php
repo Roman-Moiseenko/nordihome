@@ -115,4 +115,5 @@ class DBStorage implements StorageInterface
     {
         CartStorage::destroy($id);
     }
+
 }

@@ -41,7 +41,7 @@
                     <button id="button-to-order" class="btn btn-dark w-100 py-3" onclick="document.getElementById('form-order-create').submit();">{{ $user->payment->online() ? 'Оплатить' : 'Оформить' }} </button>
                     <div class="d-flex justify-content-between mt-3">
                         <div class="fs-5">Ваш заказ</div>
-                        <div id="order-count-products" class="fs-5">{{ $cart['common']['count'] }} * масса в кг</div>
+                        <div id="order-count-products" class="fs-5">{{ $cart['common']['count'] }} товар(а/ов)</div>
                     </div>
                     <div class="d-flex justify-content-between mt-4">
                         <div class="fs-6">Полная стоимость</div>
@@ -70,7 +70,7 @@
                         @csrf
                     <input type="text" class="form-control p-2" name="coupon" />
 
-                        <input type="hidden" name="preorder" value="{{ $preorder }}">
+                        <input type="hidden" name="preorder" value="{{ $preorder ? 1 : 0}}">
                     </form>
                     <div class="coupon-info" style="display:none;">
                         <div>Скидка по купону:</div>

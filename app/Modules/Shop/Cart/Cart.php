@@ -88,7 +88,7 @@ class Cart
     public function set(Product $product, $quantity)
     {
         if ($quantity == 0) {
-            $this->remove($product);
+            $this->remove($product->id);
             return;
         }
         $old_quantity = $this->getQuantity($product->id);
@@ -96,15 +96,16 @@ class Cart
         if ($quantity < $old_quantity) $this->sub($product, $old_quantity - $quantity);
     }
 
-    public function remove(Product $product)
+    public function remove(int $product_id): bool
     {
         $this->loadItems();
         foreach ($this->items as $i => $current) {
-            if ($current->isProduct($product->id)) {
+            if ($current->isProduct($product_id)) {
                 $this->storage->remove($current);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     public function clear()
@@ -176,15 +177,15 @@ class Cart
     }
 
     #[ArrayShape(['common' => "array", 'items' => "array", 'items_order' => "array", 'items_preorder' => "array"])]
-    public function getCartToFront($tz): array
+    public function getCartToFront($tz, bool $preorder = true): array
     {
         $this->items = [];
         $this->loadItems();
         return [
-            'common' => $this->CommonData(),
+            'common' => $this->CommonData($preorder),
             'items' => $this->ItemsData($tz, $this->items),
             'items_order' => $this->ItemsData($tz, $this->itemsOrder),
-            'items_preorder' => $this->ItemsData($tz, $this->itemsPreOrder),
+            'items_preorder' => ($preorder) ? $this->ItemsData($tz, $this->itemsPreOrder) : [],
         ];
 
     }
@@ -241,13 +242,13 @@ class Cart
         'count_preorder' => "int",
         'full_cost_preorder' => "float|int"
     ])]
-    private function CommonData(): array
+    private function CommonData(bool $preorder = true): array
     {
         return [
-            'count' => $this->info->order->count, //Кол-во товаров
-            'full_cost' => $this->info->order->amount, //Полная стоимость
+            'count' => $this->info->order->count + ($preorder ? $this->info->pre_order->count : 0), //Кол-во товаров *
+            'full_cost' => $this->info->order->amount + ($preorder ? $this->info->pre_order->amount : 0), //Полная стоимость *
             'discount' => $this->info->order->discount, //Скидка
-            'amount' => $this->info->order->amount - $this->info->order->discount, //Итого со скидкой
+            'amount' => $this->info->order->amount - $this->info->order->discount + ($preorder ? $this->info->pre_order->amount : 0), //Итого со скидкой *
             'check_all' => $this->info->check_all,
             'preorder' => $this->info->preorder,
 
@@ -260,7 +261,7 @@ class Cart
     {
         foreach ($ids as $id) {
             $product = Product::find((int)$id);
-            $this->remove($product);
+            $this->remove($product->id);
         }
     }
 

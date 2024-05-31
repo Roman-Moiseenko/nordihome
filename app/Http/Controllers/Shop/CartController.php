@@ -63,7 +63,7 @@ class CartController extends Controller
     public function remove(Request $request, Product $product) //sub, set_count, clear
     {
         return $this->try_catch_ajax(function () use ($request, $product) {
-            $this->cart->remove($product);
+            $this->cart->remove($product->id);
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         });

@@ -57,12 +57,20 @@ class OrderController extends Controller
             } else {
                 throw new \DomainException('Доступ ограничен');
             }
-            $cart = $this->cart->getCartToFront($request['tz']);
+            $preorder = true;
+
+            if ($request->has('preorder') && ($request->get('preorder') == "false")) {
+                $preorder = false;
+            }
+
+            $cart = $this->cart->getCartToFront($request['tz'], $preorder);
+            /*
             $preorder = 1;
             if ($request->has('preorder') && ($request->get('preorder') == "false")) {//Очищаем корзину от излишков
                 $cart['items_preorder'] = [];
                 $preorder = 0;
             }
+            */
             $payments = $this->payments->get();
             $storages = $this->storages->getPointDelivery();
             $companies = DeliveryHelper::deliveries();

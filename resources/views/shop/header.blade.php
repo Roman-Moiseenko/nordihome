@@ -93,7 +93,7 @@
                     </li>
 
                     <li class="nav-item">
-                        @include('shop.widgets.header.cart')
+                        <livewire:shop.header.cart />
                     </li>
 
                 </ul>
