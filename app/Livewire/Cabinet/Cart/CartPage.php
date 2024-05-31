@@ -48,7 +48,8 @@ class CartPage extends Component
     public function check_items()
     {
         $this->cart->check_all($this->check_all);
-        $this->refresh_data();
+        //$this->refresh_data();
+        return redirect(request()->header('Referer'));
     }
 
     public function render()

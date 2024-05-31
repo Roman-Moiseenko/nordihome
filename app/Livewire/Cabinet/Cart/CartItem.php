@@ -28,11 +28,18 @@ class CartItem extends Component
         $this->check = $item['check'];
     }
 
+    public function refresh_data()
+    {
+        $this->item = $this->cart->ItemData($this->cart->getItem($this->item['product_id']));
+    }
+
     public function sub_item()
     {
         $this->quantity--;
         $this->cart->sub($this->item['product_id'], 1);
         $this->dispatch('update-header-cart');
+        //$this->refresh_data();
+        return redirect(request()->header('Referer'));
     }
 
     public function plus_item()
@@ -40,12 +47,16 @@ class CartItem extends Component
         $this->quantity++;
         $this->cart->plus($this->item['product_id'], 1);
         $this->dispatch('update-header-cart');
+        //$this->refresh_data();
+        return redirect(request()->header('Referer'));
     }
 
     public function set_item()
     {
         $this->cart->set($this->item['product_id'], $this->quantity);
         $this->dispatch('update-header-cart');
+        //$this->refresh_data();
+        return redirect(request()->header('Referer'));
     }
 
     public function check_item()

@@ -219,7 +219,7 @@ class Cart
         $result = [];
         /** @var CartItem $item */
         foreach ($items as $item) {
-            $result[] = [
+            $result[] = $this->ItemData($item); /* [
                 'id' => $item->id,
                 'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
                 'name' => $item->getProduct()->name,
@@ -234,9 +234,49 @@ class Cart
                 'remove' => route('shop.cart.remove', $item->getProduct()->id),
                 'check' => $item->check,
                 'available' => ($item->preorder()) ? $item->availability() : null,
-            ];
+            ];*/
         }
         return $result;
+    }
+
+    /**
+     * @param CartItem $item
+     * @return array
+     */
+    #[ArrayShape([
+        'id' => 'int',
+        'img' => 'string',
+        'name' => 'string',
+        'url' => 'string',
+        'product_id' => 'int',
+        'cost' => 'float',
+        'price' => 'float',
+        'quantity' => 'int',
+        'discount_id' => 'int|null',
+        'discount_cost' => 'float|null',
+        'discount_name' => 'string',
+        'remove' => 'string',
+        'check' => 'boolean',
+        'available' => 'int|null',
+    ])]
+    public function ItemData(CartItem $item): array
+    {
+        return [
+            'id' => $item->id,
+            'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
+            'name' => $item->getProduct()->name,
+            'url' => route('shop.product.view', $item->getProduct()->slug),
+            'product_id' => $item->getProduct()->id,
+            'cost' => $item->base_cost * $item->getQuantity(),
+            'price' => empty($item->discount_cost) ? $item->base_cost : $item->discount_cost,
+            'quantity' => $item->getQuantity(),
+            'discount_id' => $item->discount_id ?? null,
+            'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
+            'discount_name' => $item->discount_name,
+            'remove' => route('shop.cart.remove', $item->getProduct()->id),
+            'check' => $item->check,
+            'available' => ($item->preorder()) ? $item->availability() : null,
+        ];
     }
 
     #[ArrayShape([
