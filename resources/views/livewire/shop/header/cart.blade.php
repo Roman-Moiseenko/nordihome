@@ -11,7 +11,7 @@
         <div class="dropdown-menu menu-widget-popup" aria-labelledby="dropdown-cart">
             @if($count == 0)
                 <div id="cart-empty">
-                    У вас нет товаров в корзине {{ $test }} {{ $count }}
+                    У вас нет товаров в корзине
                 </div>
             @else
                 <div id="cart-not-empty">

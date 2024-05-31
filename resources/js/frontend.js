@@ -20,28 +20,28 @@ window.$ = jQuery;
     let main = $('main');
 
     //Проверяем корзину виджета при загрузке
+//TODO Удалить и вынести
+    /*
+      if ($('#cart-header').length) {
+       /*
+          setTimeout(function () {
+              $.post('/cart_post/cart', {tz: -(new Date().getTimezoneOffset())}, function (data) {
+                  _error(data);
+                  widget_cart(data);
+                  CartData = data;
+              });
+          }, 250);
 
-    if ($('#cart-header').length) {
-        setTimeout(function () {
-            $.post('/cart_post/cart', {tz: -(new Date().getTimezoneOffset())}, function (data) {
-                _error(data);
-                widget_cart(data);
-                CartData = data;
-            });
-        }, 250);
+          $('#clear-cart').on('click', function () {
+              let route = $(this).data('route');
+              $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
+                  _error(data);
+                  widget_cart(data);
+              })
+          });
 
-        //TODO Удалить и вынести
-        /*
-        $('#clear-cart').on('click', function () {
-            let route = $(this).data('route');
-            $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
-                _error(data);
-                widget_cart(data);
-            })
-        });
-        */
     }
-
+    */
 
     //Проверяем избранное виджет при загрузке
     if ($('#wish-header').length) {
@@ -313,7 +313,7 @@ window.$ = jQuery;
         window.Livewire.dispatch('update-header-cart');
         return true;
 
-
+/*
         let items = data.items;
         let common = data.common;
         let cartItemTemplate = $('#cart-item-template');
@@ -378,6 +378,7 @@ window.$ = jQuery;
                 widget_cart(data);
             })
         });
+        */
     }
 
     /** СТРАНИЦА CART - КОРЗИНА **/
@@ -451,6 +452,7 @@ window.$ = jQuery;
         });
 
         //Выделение и сброс всех элементов
+        /*
         $('#checked-all').on('change', function () {
             if (this.checked) {
                 $('.checked-item').each(function () {
@@ -473,6 +475,8 @@ window.$ = jQuery;
                 page_cart(data);
             });
         });
+        */
+/*
         $('.checked-item').on('change', function () {
             let _all_check = true;
             let _show_trash = false;
@@ -495,6 +499,7 @@ window.$ = jQuery;
                 page_cart(data);
             });
         });
+        */
         //Очистка корзины
         $('#cart-trash').on('click', function () {
         let products = new Array();

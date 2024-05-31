@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart;
 
+use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Storage\HybridStorage;
@@ -21,6 +22,7 @@ class Cart
     private HybridStorage $storage;
     private CalculatorOrder $calculator;
     public CartInfo $info;
+    private $pre_order;
 
 
     public function __construct(HybridStorage $storage, CalculatorOrder $calculator)
@@ -30,6 +32,7 @@ class Cart
         $this->info = new CartInfo();
         $this->itemsOrder = [];
         $this->itemsPreOrder = [];
+        $this->pre_order = (new Options())->shop->pre_order;
     }
 
     public function getItems(): array
@@ -59,25 +62,28 @@ class Cart
                 return;
             }
         }
+        if (!$this->pre_order && $product->getCountSell() < $quantity) {
+            throw new \DomainException('Превышение остатка');
+        }
         $this->storage->add(CartItem::create($product, $quantity, $options));
     }
 
-    public function plus(Product $product, $quantity)
+    public function plus(int $product_id, $quantity)
     {
         $this->loadItems();
         foreach ($this->items as $i => $current) {
-            if ($current->isProduct($product->id)) {
+            if ($current->isProduct($product_id)) {
                 $this->storage->plus($current, $quantity);
                 return;
             }
         }
     }
 
-    public function sub(Product $product, $quantity)
+    public function sub(int $product_id, $quantity)
     {
         $this->loadItems();
         foreach ($this->items as $i => $current) {
-            if ($current->isProduct($product->id)) {
+            if ($current->isProduct($product_id)) {
                 $this->storage->sub($current, $quantity);
                 return;
             }
@@ -85,15 +91,15 @@ class Cart
         throw new \DomainException('Элемент не найден');
     }
 
-    public function set(Product $product, $quantity)
+    public function set(int $product_id, $quantity)
     {
         if ($quantity == 0) {
-            $this->remove($product->id);
+            $this->remove($product_id);
             return;
         }
-        $old_quantity = $this->getQuantity($product->id);
-        if ($quantity > $old_quantity) $this->plus($product, $quantity - $old_quantity);
-        if ($quantity < $old_quantity) $this->sub($product, $old_quantity - $quantity);
+        $old_quantity = $this->getQuantity($product_id);
+        if ($quantity > $old_quantity) $this->plus($product_id, $quantity - $old_quantity);
+        if ($quantity < $old_quantity) $this->sub($product_id, $old_quantity - $quantity);
     }
 
     public function remove(int $product_id): bool
@@ -183,9 +189,9 @@ class Cart
         $this->loadItems();
         return [
             'common' => $this->CommonData($preorder),
-            'items' => $this->ItemsData($tz, $this->items),
-            'items_order' => $this->ItemsData($tz, $this->itemsOrder),
-            'items_preorder' => ($preorder) ? $this->ItemsData($tz, $this->itemsPreOrder) : [],
+            'items' => $this->ItemsData($this->items),
+            'items_order' => $this->ItemsData($this->itemsOrder),
+            'items_preorder' => ($preorder) ? $this->ItemsData($this->itemsPreOrder) : [],
         ];
 
     }
@@ -206,9 +212,10 @@ class Cart
         'check' => 'bool',
         'available' => 'int|null'
     ])]
-    private function ItemsData($tz, array $items): array
+
+    public function ItemsData(array $items): array
     {
-        $timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
+        //$timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
         $result = [];
         /** @var CartItem $item */
         foreach ($items as $item) {
@@ -265,11 +272,11 @@ class Cart
         }
     }
 
-    public function check(Product $product)
+    public function check(int $product_id)
     {
         $this->loadItems();
         foreach ($this->items as $current) {
-            if ($current->isProduct($product->id)) {
+            if ($current->isProduct($product_id)) {
                 $current->check();
                 $this->storage->check($current);
                 return;
@@ -291,7 +298,7 @@ class Cart
         $this->loadItems();
         foreach ($this->items as $i => $item) {
             if ($item->preorder()) {
-                $this->set($item->product, $item->availability());
+                $this->set($item->product->id, $item->availability());
 
                 if ($item->quantity == 0) {
                     unset($this->items[$i]);

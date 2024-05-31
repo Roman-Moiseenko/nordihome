@@ -12,33 +12,26 @@ class CartItem implements CartItemInterface
     public Product $product;
     public int $id;
     public int $quantity;
-    public float $base_cost = -1; //Базовая цена  - используется для удобства = $product->getLastPrice()
-    public float $discount_cost = 0; //Цена со скидкой
-    public string $discount_name = ''; //Название акции
+    public float $base_cost; //Базовая цена  - используется для удобства = $product->getLastPrice()
+    public float $discount_cost; //Цена со скидкой
+    public string $discount_name; //Название акции
     public int $discount_id;
     public string $discount_type; //Класс скидка Promotion или Bonus
     public array $options;
-    public bool $pre_order;
+//    public bool $pre_order;
     public bool $check;
 
-    public function __construct()
-    {
-        $this->pre_order = (new Options())->shop->pre_order;
-        //$this->reserve = null;
-    }
-
-    public static function create(Product $product, int $quantity, array $options, bool $check_quantity = true): self
+    public static function create(Product $product, int $quantity, array $options): self
     {
         $item = new static();
 
-        if (!$item->pre_order && $product->getCountSell() < $quantity && $check_quantity == true) {
-            throw new \DomainException('Превышение остатка');
-        }
         $item->product = $product;
         $item->quantity = $quantity;
         $item->options = $options;
         $item->base_cost = $product->getLastPrice();
         $item->check = true;
+        $item->discount_name = '';
+        $item->discount_cost = 0;
         return $item;
     }
 
@@ -51,6 +44,8 @@ class CartItem implements CartItemInterface
         $item->options = $options;
         $item->check = $check;
         $item->base_cost = $product->getLastPrice();
+        $item->discount_name = '';
+        $item->discount_cost = 0;
         return $item;
     }
 

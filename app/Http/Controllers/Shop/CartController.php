@@ -44,7 +44,7 @@ class CartController extends Controller
     {
 
         return $this->try_catch_ajax(function () use ($request, $product) {
-            $this->cart->sub($product, 1);
+            $this->cart->sub($product->id, 1);
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         });
@@ -54,7 +54,7 @@ class CartController extends Controller
     {
         return $this->try_catch_ajax(function () use ($request, $product) {
             if (!$request->has('quantity')) return;
-            $this->cart->set($product, (int)$request->get('quantity'));
+            $this->cart->set($product->id, (int)$request->get('quantity'));
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         });
@@ -93,7 +93,7 @@ class CartController extends Controller
     public function check(Request $request, Product $product)
     {
         return $this->try_catch_ajax(function () use ($request, $product) {
-            $this->cart->check($product);
+            $this->cart->check($product->id);
             $cart = $this->cart->getCartToFront($request['tz']);
             return \response()->json($cart);
         });

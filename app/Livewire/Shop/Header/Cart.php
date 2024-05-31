@@ -23,7 +23,6 @@ class Cart extends Component
     public function boot()
     {
         $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
-        //$this->tz = $request['tz'];
     }
 
 
@@ -64,20 +63,6 @@ class Cart extends Component
     {
         $this->cart->remove($id);
         return redirect(request()->header('Referer'));
-        //$this->refresh_fields();
-        /*$this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
-        $this->cart->loadItems();*/
-        //$this->count = $this->cart->info->all->count;
-
-        /*
-        if ($this->cart->remove($id)) {
-            $this->cart->loadItems();
-
-            $this->refresh_fields();
-        }
-*/
-        //$this->dispatch('shop.header.cart:refresh');
-
     }
 
     public function clear_cart()
