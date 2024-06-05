@@ -22,7 +22,7 @@
                         {{ \App\Forms\Input::create('name', ['placeholder' => 'Логин'])->group(['icon' => 'user', 'size' => 16])
                             ->validate($message ?? '')->show() }}
                         {{ \App\Forms\Input::create('email', ['placeholder' => 'Email', 'class' => 'mt-3'])->group('@')
-                            ->validate($message ?? '')->show() }}
+                            ->show() }}
                         {{ \App\Forms\Input::create('phone', ['placeholder' => 'Телефон', 'class' => 'mt-3'])->group(['icon' => 'phone', 'size' => 16])
                             ->validate($message ?? '')->show() }}
                         {{ \App\Forms\Input::create('chat_id', ['placeholder' => 'Чат ID телеграм', 'class' => 'mt-3'])->group(['icon' => 'send', 'size' => 16])

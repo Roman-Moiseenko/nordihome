@@ -105,12 +105,16 @@ class LoadCommand extends Command
 
     private function create_product($data, $brand_id): string
     {
-        if (empty($data['sku'])) return $data['name'] . ' **** нет артикула';
+
+        $product_name = trim($data['name']);
+        $product_code = trim($data['sku']);
+        if (empty($product_code)) return '********************* ' . $product_name . ' **** нет артикула';
         //if (empty($data['sku'])) $data['sku'] = Str::uuid();
-        if (Product::where('code', $data['sku'])->first() != null) return $data['sku'] . '* уже создан *';
-        if (Product::where('name', $data['name'])->first() != null) $data['name'] = $data['name'] . ' ' . $data['sku'];
+
+        if (Product::where('code', $product_code)->first() != null) return $product_code . '* уже создан *';
+        if (Product::where('name', $product_name)->first() != null) $product_name = $product_name . ' ' . $product_code;
             //return $data['name'] . '* уже создан * - дубль имени';
-        if (empty($data['categories'])) return $data['name'] . '* нет категории *';
+        if (empty($data['categories'])) return '********************* ' . $product_name . '* нет категории *';
 
         $this->count_products++;
 
@@ -121,9 +125,9 @@ class LoadCommand extends Command
             $_cat = Category::where('name', $data_cat['name'])->first();
             if ($_cat != null) $cat_ids[] = $_cat->id;
         }
-        if (empty($data['sku']) || empty($cat_ids))
-            return '*********** ---error--- ' . $data['name'] . '(' . $data['sku'] . ')' . json_encode($data['categories']);
-        $product = Product::register($data['name'], (string)$data['sku'], $cat_ids[0]);
+        if (empty($cat_ids))
+            return '*********** ---error--- ' . $product_name . '(' . $product_code . ')' . json_encode($data['categories']);
+        $product = Product::register($product_name, $product_code, $cat_ids[0]);
         //Вторичные категории
         for ($i = 1; $i < count($cat_ids); $i++) {
             $product->categories()->attach($cat_ids[$i]);

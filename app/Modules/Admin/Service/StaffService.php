@@ -18,7 +18,7 @@ class StaffService
         //Основные поля
         $admin = Admin::new(
             $request['name'],
-            $request['email'],
+            $request['email'] ?? '',
             $request['phone'],
             $request['password']
         );
@@ -80,7 +80,7 @@ class StaffService
     public function update(Request $request, Admin $admin): Admin
     {
         $admin->name = $request['name'];
-        $admin->email = $request['email'];
+        $admin->email = $request['email'] ?? '';
         $admin->phone = $request['phone'];
 
         $admin->setFullName(new FullName(
