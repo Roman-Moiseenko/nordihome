@@ -16,10 +16,10 @@ class BotCommand extends Command
             ->options([
                 'timeout' => 0,
             ])->get();
-
+        //$this->info(json_encode($updates));
         if($updates['ok']) {
             foreach ($updates['result'] as $user) {
-                $this->info($user['message']['chat']['username'] . ' - ' . $user['message']['chat']['id']);
+                $this->info($user['message']['chat']['first_name'] . ' (' . $user['message']['chat']['username'] . ') - ' . $user['message']['chat']['id']);
             }
         }
         return true;
