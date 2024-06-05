@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\Wp;
 
 use App\Entity\Photo;
+use App\Jobs\LoadingImageProduct;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Service\PricingService;
@@ -120,7 +121,8 @@ class LoadCommand extends Command
             $_cat = Category::where('name', $data_cat['name'])->first();
             if ($_cat != null) $cat_ids[] = $_cat->id;
         }
-        if (!isset($data['sku']) || empty($cat_ids)) return 'error ' . json_encode($data);
+        if (empty($data['sku']) || empty($cat_ids))
+            return '---error--- ' . $data['name'] . '(' . $data['sku'] . ')' . json_encode($data['categories']);
         $product = Product::register($data['name'], (string)$data['sku'], $cat_ids[0]);
         //Вторичные категории
         for ($i = 1; $i < count($cat_ids); $i++) {
@@ -137,19 +139,21 @@ class LoadCommand extends Command
         $this->add_pricing($product->id, (float)$data['price']);
         //$product->setPrice((float)$data['price']);
         //Изображения
+
         foreach ($data['images'] as $data_img) {
             $url = $data_img['url'];
             $alt = $data_img['alt'];
+            LoadingImageProduct::dispatch($product, $url, $alt);
             //$upload_file_name = $this->copy_file($data_img);
             //$upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
-            try {
+  /*          try {
                 $sort = count($product->photos);
                 $product->photo()->save(Photo::uploadByUrl($url, '', $sort, $alt));
                 $product->refresh();
             } catch (\Throwable $e) {
                 $this->error('Файл не загрузился ' . $url);
             }
-
+*/
 
         }
         $product->published = true;
@@ -180,14 +184,16 @@ class LoadCommand extends Command
 
         if (!empty(Category::where('name', $name)->first())) return $name . ' * уже создана *';
         $this->count_categories++;
-        if (empty($parent)) {
+        if (empty($parent) || is_array($parent)) {
             $result = Category::register($name);
-        } else {
+        } elseif(is_string($parent)) {
             $cat_parent = Category::where('name', $parent)->first();
-            if (!is_null($cat_parent)) //$this->info($parent);
+
             $result = Category::register($name, $cat_parent->id);
+        } else {
+            return ' еrror - ' . json_encode($parent);
         }
-        if (empty($result)) return ' еррор' . json_encode($parent);
+
         //Загрузка изображения
        // $upload_file_name = $this->copy_file($file);
        // $upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
