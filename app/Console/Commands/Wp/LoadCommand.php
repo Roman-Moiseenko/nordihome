@@ -120,7 +120,7 @@ class LoadCommand extends Command
             $_cat = Category::where('name', $data_cat['name'])->first();
             if ($_cat != null) $cat_ids[] = $_cat->id;
         }
-
+        if (!isset($data['sku']) || empty($cat_ids)) return 'error ' . json_encode($data);
         $product = Product::register($data['name'], (string)$data['sku'], $cat_ids[0]);
         //Вторичные категории
         for ($i = 1; $i < count($cat_ids); $i++) {
@@ -184,8 +184,10 @@ class LoadCommand extends Command
             $result = Category::register($name);
         } else {
             $cat_parent = Category::where('name', $parent)->first();
+            if (!is_null($cat_parent)) //$this->info($parent);
             $result = Category::register($name, $cat_parent->id);
         }
+        if (empty($result)) return ' еррор' . json_encode($parent);
         //Загрузка изображения
        // $upload_file_name = $this->copy_file($file);
        // $upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
