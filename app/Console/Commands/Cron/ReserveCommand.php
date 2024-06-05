@@ -28,7 +28,7 @@ class ReserveCommand extends Command
             $orders = [];
 
             //$reserves = Reserve::where('reserve_at', '<', now())->where('quantity', '>', 0)->get();
-            $reserves = OrderReserve::where('reserve_at', '<', now())->where('quantity', '>', 0)->get();
+            $reserves = OrderReserve::where('reserve_at', '<', now())->where('reserve_at', '>', now()->subMinutes(9))->where('quantity', '>', 0)->get();
 
             if ($reserves->count() > 0) {
                 $logger = LoggerCron::new($this->description);
