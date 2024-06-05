@@ -122,7 +122,7 @@ class LoadCommand extends Command
             if ($_cat != null) $cat_ids[] = $_cat->id;
         }
         if (empty($data['sku']) || empty($cat_ids))
-            return '---error--- ' . $data['name'] . '(' . $data['sku'] . ')' . json_encode($data['categories']);
+            return '*********** ---error--- ' . $data['name'] . '(' . $data['sku'] . ')' . json_encode($data['categories']);
         $product = Product::register($data['name'], (string)$data['sku'], $cat_ids[0]);
         //Вторичные категории
         for ($i = 1; $i < count($cat_ids); $i++) {
