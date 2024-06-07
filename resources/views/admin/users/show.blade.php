@@ -13,14 +13,14 @@
                     {{ $user->email }} еще данные?
                 </div>
                 <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                    <i data-lucide="mail" width="24" height="24"
-                       class="lucide lucide-mail w-4 h-4 mr-2"></i> {{ $user->email }}</div>
+                    <livewire:admin.user.edit.email :user="$user"/>
+                </div>
                 <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                    <i data-lucide="phone" width="24" height="24" class="lucide lucide-phone w-4 h-4 mr-2"></i>
-                    {{ $user->phone }} </div>
+                    <livewire:admin.user.edit.phone :user="$user"/>
+                </div>
                 <div class="truncate sm:whitespace-normal flex mt-3">
-                    <i data-lucide="home" width="24" height="24" class="lucide lucide-home w-4 h-4 mr-2"></i>
-                    {{ 'Калининградская область' }} </div>
+                    <livewire:admin.user.edit.delivery :user="$user"/>
+                </div>
             </div>
             <div
                 class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">

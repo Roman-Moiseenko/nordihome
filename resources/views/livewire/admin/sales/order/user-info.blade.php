@@ -6,19 +6,13 @@
             <a href="{{ route('admin.users.show', $order->user) }}">{{ $order->userFullName() }}</a>
         </div>
         <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
-            <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;<a
-                href="mailto:{{ $order->user->email }}">{{ $order->user->email }}</a>
+            <livewire:admin.user.edit.email :user="$order->user" :edit="$edit"/>
         </div>
         <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
-            <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ $order->user->phone }}
+            <livewire:admin.user.edit.phone :user="$order->user" :edit="$edit"/>
         </div>
-        <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
-            <x-base.lucide icon="map" class="w-4 h-4"/>&nbsp;{{ $order->user->htmlDelivery() }}&nbsp;
-            @if($edit)
-            <button class="btn btn-warning-soft btn-sm ml-1">
-                <x-base.lucide icon="pencil" class="w-4 h-4"/>
-            </button>
-            @endif
+        <div class="truncate sm:whitespace-normal  ml-4 my-auto">
+            <livewire:admin.user.edit.delivery :user="$order->user" :edit="$edit"/>
         </div>
         <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
             <x-base.lucide icon="coins" class="w-4 h-4"/>&nbsp;{{ $order->user->htmlPayment() }}&nbsp;
