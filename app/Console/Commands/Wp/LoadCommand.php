@@ -8,6 +8,7 @@ use App\Jobs\LoadingImageProduct;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Service\PricingService;
+use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Brand;
@@ -32,6 +33,8 @@ class LoadCommand extends Command
     private string $storage;
     private Options $options;
 
+    private StorageService $storageService;
+
     protected $signature = 'wp:load
     {--type= : catalog / product / "пусто"}';
     protected $description = 'Загрузка данных';
@@ -45,14 +48,9 @@ class LoadCommand extends Command
         $this->storage = public_path() . '/temp/';
         $type = $this->option('type');
         $this->options = new Options(); //Настройки Магазина для товара
-/*
-        if ($type == null) {
-            $this->loadCatalog();
-            $this->pricing = PricingDocument::register($staff->id);
-            $this->loadProduct();
-            $this->pricing->refresh();
-            $pricingService->completed($this->pricing);
-        }*/
+
+        $this->storageService = new StorageService();
+
         if ($type == 'catalog' || $type == null) {
             $this->loadCatalog();
         }
@@ -87,7 +85,7 @@ class LoadCommand extends Command
 
     private function loadProduct()
     {
-        $brand = Brand::orderBy('id')->first();
+        $brand = Brand::where('name', 'Икеа')->first();
         if ($brand == null) {
             $brand = Brand::register('NONAME');
         }
@@ -166,6 +164,10 @@ class LoadCommand extends Command
         $product->not_local = !$this->options->shop->delivery_local;
         $product->not_delivery = !$this->options->shop->delivery_all;
         $product->save();
+
+        $this->storageService->add_product($product);
+        //$this->storageService->add_product($product);
+
         return $product->name . ' (' . $product->code . ')';
     }
 

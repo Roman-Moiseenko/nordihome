@@ -42,7 +42,7 @@ class ArrivalService
         $this->movementService = $movementService;
     }
 
-    public function create(int $distributor_id): ArrivalDocument
+    public function create(int $distributor_id, bool $is_manager = true): ArrivalDocument
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
@@ -55,7 +55,7 @@ class ArrivalService
             $storage->id,
             $distributor->currency,
             '',
-            $manager->id
+            $is_manager ? $manager->id : null
         );
     }
 

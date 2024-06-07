@@ -61,7 +61,7 @@ use App\Listeners\NotificationThrowable;
 use App\Listeners\NotificationUserCreated;
 use App\Listeners\ParsingImageProduct;
 use App\Listeners\NotificationPromotionMoved;
-use App\Listeners\WelcomToShop;
+use App\Listeners\WelcomeToShop;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Notifications\Events\NotificationSending;
 
@@ -78,7 +78,7 @@ class EventServiceProvider extends ServiceProvider
              SendEmailVerificationNotification::class,
          ],*/
         UserHasRegistered::class => [
-            WelcomToShop::class
+            WelcomeToShop::class
         ],
         PromotionHasMoved::class => [
             NotificationPromotionMoved::class

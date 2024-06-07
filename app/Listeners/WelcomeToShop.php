@@ -8,7 +8,7 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
 use Illuminate\Support\Facades\Mail;
 
-class WelcomToShop
+class WelcomeToShop
 {
     private Options $options;
 

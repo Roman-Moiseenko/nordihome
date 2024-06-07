@@ -373,7 +373,7 @@ class Schema
                 "mainEntityOfPage" => route('shop.product.view', $product->slug),
                 "url" => route('shop.product.view', $product->slug),
                 "name" => $product->name,
-                "image" => $product->photo->getThumbUrl('card'),
+                "image" => is_null($product->photo) ? $product->getImage() : $product->photo->getThumbUrl('card'),
                 "description" => strip_tags($product->description),
                 "Offers" => [
                     "@type" => "Offer",
