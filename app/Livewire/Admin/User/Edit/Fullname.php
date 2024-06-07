@@ -13,6 +13,7 @@ class Fullname extends Component
     public string $surname;
     public string $firstname;
     public string $secondname;
+    public string $route = '/';
 
     public bool $change = false;
 
@@ -23,6 +24,7 @@ class Fullname extends Component
         $this->surname = $user->fullname->surname;
         $this->firstname = $user->fullname->firstname;
         $this->secondname = $user->fullname->secondname;
+        $this->route = route('admin.users.show', $user);
     }
 
     public function open_change()

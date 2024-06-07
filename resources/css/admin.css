@@ -143,3 +143,6 @@ input.btn-check:checked + label:hover {
     background: #fafafa;
     margin: 1px;
 }
+.w-100 {
+    width: 25rem;
+}

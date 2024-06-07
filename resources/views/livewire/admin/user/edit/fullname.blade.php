@@ -12,7 +12,7 @@
     </div>
     <div class="flex items-center" @if($change) style="display: none" @endif>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user" class="lucide lucide-user stroke-1.5 w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span class="ml-2">{{ $surname . ' ' . $firstname . ' ' . $secondname}}</span>
+        <a class="ml-2 font-medium text-success" href="{{ $route }}">{{ $surname . ' ' . $firstname . ' ' . $secondname}}</a>
         @if($edit)
             <button class="btn btn-warning-soft btn-sm ml-1" wire:click="open_change">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="pencil" class="lucide lucide-pencil stroke-1.5 w-4 h-4"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path><path d="m15 5 4 4"></path></svg>

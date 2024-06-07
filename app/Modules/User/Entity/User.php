@@ -246,8 +246,12 @@ class User extends Authenticatable
     public function htmlDelivery(): string
     {
         $type = OrderExpense::TYPES[$this->delivery];
-        //$address = $this->delivery->getAddressDelivery();
-        return $type . ' ('. $this->address->address . ')';
+        if (in_array($this->delivery, [OrderExpense::DELIVERY_REGION, OrderExpense::DELIVERY_LOCAL])) {
+            $address = ' (' . $this->address->address . ')';
+        } else {
+            $address = '';
+        }
+        return $type . $address;
     }
 
     public function StorageDefault():? int
