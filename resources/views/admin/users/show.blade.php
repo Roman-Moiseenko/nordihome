@@ -28,21 +28,21 @@
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
                         <i data-lucide="package" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
-                        {{ '5' }} </div>
+                        {{ $all . ' (' . $completed . ')' }} </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
                         <i data-lucide="russian-ruble" width="24" height="24"
                            class="lucide lucide-mail w-4 h-4 mr-2"></i>
-                        {{ '9 999 999' }} </div>
+                        {{ price($amount_all) . ' (' . price($amount_completed) . ')' }} </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
                         <i data-lucide="clock" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
-                        {{ '12.03.2023' }} </div>
+                        {{ $user->getLastOrder()->htmlDate() }} </div>
                 </div>
             </div>
             <div
                 class="mt-6 lg:mt-0 flex-1 px-5 border-t lg:border-0 border-slate-200/60 dark:border-darkmode-400 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-5">Sales Growth</div>
                 <div class="flex items-center justify-center lg:justify-start mt-2">
-                    <div class="mr-2 w-20 flex"> USP: <span class="ml-3 font-medium text-success">+23%</span></div>
+                    <div class="mr-2 w-20 flex"> Данные анализа: <span class="ml-3 font-medium text-success">+23%</span></div>
                     <div class="w-3/4">
                         <div class="h-[55px]">
                             <canvas class="simple-line-chart-1 -mr-5" width="733" height="137"
@@ -69,14 +69,13 @@
             <h2 class="text-lg">Заказы клиента</h2>
         </div>
         <table class="table table-report -mt-2 dropdown-table">
-            <!-- foreach ($user->orders() as $order) -->
-            @for($j =1; $j < random_int(3, 7); $j++)
+            @foreach ($user->orders as $j => $order)
                 <tr class="intro-x zoom-in tr-dropdown" target="show-{{$j}}" show="hide">
-                    <td class="w-10">{{'Дата заказа'}}</td>
-                    <td class="">{{'Кол-во товаров'}}</td>
-                    <td class="">{{'Сумма заказа'}}</td>
-                    <td class="">{{'Доставка (куда и чем)'}}</td>
-                    <td class="">{{'Статус'}}</td>
+                    <td class=""><a href="{{ route('admin.sales.order.show', $order) }}" class="font-medium text-success">{{ $order->htmlNumDate() }}</a></td>
+                    <td class="">Товаров: {{ $order->getQuantity() }}</td>
+                    <td class="">Сумма к оплате: {{ $order->getTotalAmount() }}</td>
+                    <td class="">{{ '' }}</td>
+                    <td class="">{{ $order->statusHtml() }}</td>
                     <td class="w-10 text-right">
                         <div>
                             <i data-lucide="chevron-down" width="24" height="24"
@@ -88,29 +87,25 @@
                     <td colspan="6">
                         <table class="table table-hover">
                             <tbody>
-                            <!-- foreach ($order->items() as $item) -->
-                            @for($i =1; $i < random_int(2, 10); $i++)
+                            @foreach ($order->items as $i => $item)
                                 <tr>
-                                    <td>{{ $i }}</td>
-                                    <td>{{ 'IMG' }}</td>
-                                    <td>{{'Название'}}</td>
-                                    <td>{{'Кол-во'}}</td>
-                                    <td>{{'Цена'}}</td>
-                                    <td>{{'Сумма'}}</td>
+                                    <td class="w-10">{{ $i + 1 }}</td>
+                                    <td class="w-20"><img src="{{ $item->product->getImage() }}"></td>
+                                    <td>{{ $item->product->name }}</td>
+                                    <td>{{ $item->quantity }} шт.</td>
+                                    <td>{{ price($item->sell_cost) }}</td>
+                                    <td>{{ price($item->sell_cost * $item->quantity) }}</td>
                                 </tr>
-                            @endfor
-                            <!-- endforeach -->
+                            @endforeach
                             </tbody>
                         </table>
                     </td>
                 </tr>
-        @endfor
-        <!-- endforeach -->
+        @endforeach
         </table>
     </div>
 
     <script>
-
         let elements = document.querySelectorAll(".tr-dropdown");
         Array.from(elements).forEach(function (element) {
             element.addEventListener('click', function () {

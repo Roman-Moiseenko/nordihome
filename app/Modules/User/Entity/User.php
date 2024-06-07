@@ -7,6 +7,7 @@ use App\Casts\FullNameCast;
 use App\Casts\GeoAddressCast;
 use App\Entity\FullName;
 use App\Entity\GeoAddress;
+use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Product\Entity\Review;
@@ -15,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Pure;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -28,12 +30,13 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Wish[] $wishes
  * @property int $delivery
  * @property int $storage
-// * @property UserDelivery $delivery
+
  * @property UserPayment $payment
  * @property Subscription[] $subscriptions
  * @property FullName $fullname
  * @property GeoAddress $address
  * @property Review[] $reviews
+ * @property Order[] $orders
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -81,6 +84,28 @@ class User extends Authenticatable
         'address' => GeoAddressCast::class
     ];
 
+    public static function register(string $email, string $password): self
+    {
+        return static::create([
+            'email' => $email,
+            //'phone' => $phone,
+            'password' => Hash::make($password),
+            'verify_token' => rand(1234, 9876), //Str::uuid(),
+            'status' => self::STATUS_WAIT,
+        ]);
+    }
+
+    public static function new(string $email, string $phone): self
+    {
+        return static::create([
+            'email' => $email,
+            'phone' => $phone,
+            'password' => bcrypt(Str::random()),
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+
     //*** IS-...
     public function isWait(): bool
     {
@@ -118,31 +143,8 @@ class User extends Authenticatable
         return $this->client == self::CLIENT_SPECIAL;
     }
 
-    /**
-     * @return string
-     */
 
-    public static function register(string $email, string $password): self
-    {
-        return static::create([
-            'email' => $email,
-            //'phone' => $phone,
-            'password' => Hash::make($password),
-            'verify_token' => rand(1234, 9876), //Str::uuid(),
-            'status' => self::STATUS_WAIT,
-        ]);
-    }
-
-
-    public static function new(string $email, string $phone): self
-    {
-        return static::create([
-            'email' => $email,
-            'phone' => $phone,
-            'password' => bcrypt(Str::random()),
-            'status' => self::STATUS_ACTIVE,
-        ]);
-    }
+    //*** SET-.....
 
     public function setPassword(string $password)
     {
@@ -175,7 +177,32 @@ class User extends Authenticatable
         $this->save();
     }
 
+    //*** GET-....
+    public function getLastOrder():? Order
+    {
+        return $this->orders()->first();
+    }
+
+    #[Pure] public function getAmountOrders(): float
+    {
+        $result = 0.0;
+        foreach ($this->orders as $order) {
+            if ($order->isCompleted()) {
+                $result += $order->getExpenseAmount();
+            } else {
+                $result += $order->getTotalAmount();
+            }
+        }
+        return $result;
+    }
+
     //RELATIONS
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id', 'id')->orderByDesc('created_at');
+    }
+
     public function reviews()
     {
         return $this->hasMany(Review::class, 'user_id', 'id');

@@ -35,7 +35,7 @@
                         <x-base.table.th class="whitespace-nowrap border-b-0">
                             Клиент
                         </x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap border-b-0">
+                        <x-base.table.th class="whitespace-nowrap text-center border-b-0">
                             Последний заказ
                         </x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap border-b-0 text-center">
@@ -60,16 +60,28 @@
                                 </a>
                             </x-base.table.td>
                             <x-base.table.td class="text-center">
-                                <span class="text-slate-500  text-xs p-1 mt-0.5 rounded-full text-white bg-success">2 дня</span>
+                                @if(is_null($user->getLastOrder()))
+                                    <span class="text-slate-500  text-xs p-1 mt-0.5 rounded-full text-white bg-secondary">нет</span>
+                                @else
+                                    @if($days=$user->getLastOrder()->created_at->diff(now())->days < 30)
+                                <span class="text-slate-500  text-xs p-1 mt-0.5 rounded-full text-white bg-success">
+                                    {{ $days }} дней
+                                </span>
+                                        @else
+                                        <span class="text-slate-500  text-xs p-1 mt-0.5 rounded-full text-white bg-warning">
+                                    {{ (int)($days / 30) }} месяцев
+                                </span>
+                                    @endif
+                                @endif
                             </x-base.table.td>
                             <x-base.table.td class="text-center">
-                                2
+                                {{ $user->orders()->count() }}
                             </x-base.table.td>
                             <x-base.table.td class="text-center">
-                                9 999 ₽
+                                {{ price($user->getAmountOrders()) }}
                             </x-base.table.td>
                             <x-base.table.td class="text-right">
-                                Калининградская область
+                                {{ $user->address->address }}
                             </x-base.table.td>
                         </x-base.table.tr>
                     @endforeach

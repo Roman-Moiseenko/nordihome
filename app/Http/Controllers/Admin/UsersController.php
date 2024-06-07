@@ -39,9 +39,29 @@ class UsersController extends Controller
     public function show(User $user)
     {
         return $this->try_catch_admin(function () use($user) {
-            return view('admin.users.show', compact('user'));
+
+            $all = 0;
+            $completed = 0;
+            $amount_all = 0;
+            $amount_completed = 0;
+            foreach ($user->orders as $order) {
+                $all++;
+                $amount_all += $order->getTotalAmount();
+                if ($order->isCompleted()) {
+                    $completed++;
+                    $amount_completed += $order->getExpenseAmount();
+                }
+            }
+
+            /*$all = $user->orders()->count();
+            $completed = $user->orders()->where('finished', true)->count();*/
+
+            return view('admin.users.show', compact('user', 'all', 'completed', 'amount_all', 'amount_completed'));
         });
     }
+
+
+
 
     public function verify(User $user)
     {
