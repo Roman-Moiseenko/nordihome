@@ -1,7 +1,7 @@
 <h2 class=" mt-3 font-medium">Действия</h2>
 <div class="box flex p-3 lg:justify-start buttons-block items-start">
-    <x-base.popover class="inline-block w-100" placement="bottom-start">
-        <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Установить резерв
+    <x-base.popover class="inline-block" placement="bottom-start">
+        <x-base.popover.button as="x-base.button" variant="warning" class="">Установить резерв
             <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
         </x-base.popover.button>
         <x-base.popover.panel>
@@ -34,8 +34,8 @@
     <form id="form-set-awaiting" method="post" action="{{ route('admin.sales.order.set-awaiting', $order) }}">
         @csrf
     </form>
-    <x-base.popover class="inline-block mt-auto w-100 ml-2" placement="bottom-start">
-        <x-base.popover.button as="x-base.button" variant="secondary" class="w-100">Отменить
+    <x-base.popover class="inline-block mt-auto ml-2" placement="bottom-start">
+        <x-base.popover.button as="x-base.button" variant="secondary" class="">Отменить
             <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
         </x-base.popover.button>
         <x-base.popover.panel>

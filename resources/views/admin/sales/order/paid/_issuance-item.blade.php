@@ -64,8 +64,8 @@
     <div class=" ml-auto">
         @if($item->preorder)
             @if(is_null($item->supplyStack))
-                <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-                    <x-base.popover.button as="x-base.button" variant="dark" class="w-100"
+                <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+                    <x-base.popover.button as="x-base.button" variant="dark" class=""
                                            id="button-supply-stack" type="button">
                         В Заказ
                         <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>

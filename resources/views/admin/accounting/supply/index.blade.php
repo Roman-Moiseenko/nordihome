@@ -78,8 +78,8 @@
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
 
-            <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-                <x-base.popover.button as="x-base.button" variant="primary" class="w-100"
+            <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="primary" class=""
                                        id="button-supply-stack" type="button">
                     Создать Документ
                     <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>

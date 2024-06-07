@@ -1,7 +1,7 @@
 <div class="flex flex-col lg:justify-start buttons-block items-start">
     @if($admin->isAdmin() || $admin->isChief())
-        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-            <x-base.popover.button as="x-base.button" variant="primary" class="w-100">Назначить
+        <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="primary" class="">Назначить
                 ответственного
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
             </x-base.popover.button>

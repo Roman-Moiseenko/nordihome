@@ -11,8 +11,8 @@
         <div class="flex justify-center items-center">
             @if($expense->isAssembly())
 
-                <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-                    <x-base.popover.button as="x-base.button" variant="warning" class="w-100">
+                <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+                    <x-base.popover.button as="x-base.button" variant="warning" class="">
                         Назначить сборщика
                         <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
                     </x-base.popover.button>
@@ -55,8 +55,8 @@
                     </form>
                 @endif
                 @if($expense->isRegion())
-                    <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-                        <x-base.popover.button as="x-base.button" type="button" variant="success" class="w-100">
+                    <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+                        <x-base.popover.button as="x-base.button" type="button" variant="success" class="">
                             На доставке
                             <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
                         </x-base.popover.button>

@@ -1,8 +1,8 @@
 <h2 class=" mt-3 font-medium">Действия</h2>
 <div class="box flex p-3 lg:justify-start buttons-block items-start">
     @if(!is_null($order->getReserveTo()))
-        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-            <x-base.popover.button as="x-base.button" variant="warning" class="w-100">Установить резерв
+        <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="warning" class="">Установить резерв
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
             </x-base.popover.button>
             <x-base.popover.panel>
@@ -32,8 +32,8 @@
     @endif
 
     @if($order->getQuantity() > $order->getQuantityExpense())
-        <x-base.popover class="inline-block mt-auto w-100 ml-3" placement="bottom-start">
-            <x-base.popover.button as="x-base.button" variant="dark" class="w-100">Перемещение
+        <x-base.popover class="inline-block mt-auto ml-3" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="dark" class="">Перемещение
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
             </x-base.popover.button>
             <x-base.popover.panel>

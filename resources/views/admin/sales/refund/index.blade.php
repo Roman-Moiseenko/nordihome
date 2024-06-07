@@ -11,8 +11,8 @@
         <!-- Управление -->
 
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <x-base.popover class="inline-block mt-auto w-100 mt-2" placement="bottom-start">
-                <x-base.popover.button as="x-base.button" variant="primary" class="w-100">Создать Возврат
+            <x-base.popover class="inline-block mt-auto mt-2" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="primary" class="">Создать Возврат
                     <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
                 </x-base.popover.button>
                 <x-base.popover.panel>

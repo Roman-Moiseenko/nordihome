@@ -46,8 +46,8 @@
     </div>
 
     <div class="w-56 text-center">
-        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-            <x-base.popover.button as="x-base.button" variant="warning" class="w-100"
+        <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="warning" class=""
                                    id="button-issue-shop" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
                 Выдать с магазина
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
@@ -76,8 +76,8 @@
         </x-base.popover>
     </div>
     <div class="w-56 text-center">
-        <x-base.popover class="inline-block mt-auto w-100" placement="bottom-start">
-            <x-base.popover.button as="x-base.button" variant="success" class="w-100"
+        <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+            <x-base.popover.button as="x-base.button" variant="success" class=""
                                    id="button-issue" data-disabled="{{ ($order->getTotalAmount() > $order->getPaymentAmount()) }}">
                 Выдать со склада
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
