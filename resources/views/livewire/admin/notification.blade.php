@@ -10,7 +10,17 @@
         </button>
         <div class="notification-dropdown {{ $visible ? 'show' : 'no-show' }}" @if($count == 0) style="display: none" @endif>
             <div class="dropdown-content rounded-md border-transparent bg-white shadow-[0px_3px_10px_#00000017] mt-2 w-[280px] p-5 sm:w-[460px]">
-                <div class="mb-5 font-medium">Уведомления</div>
+                <div class="mb-5 flex">
+                    <div class="font-medium">
+                        Уведомления
+                    </div>
+                    <div class="ml-auto">
+                        <button wire:click="remove_all" title="Отметить все прочитанными" class="text-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        </button>
+                    </div>
+                </div>
+
                 @foreach($notifications as $notification)
                     <livewire:admin.notification.item :notification="$notification" :key="$notification->id"  />
                 @endforeach
