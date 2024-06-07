@@ -9,8 +9,12 @@
     <div class="intro-y box px-5 pt-5 mt-5">
         <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
             <div class="flex flex-1 flex-col justify-center items-center lg:items-start ml-4 mt-4">
+
                 <div class="truncate sm:whitespace-normal font-medium text-lg">
-                    {{ $user->email }} еще данные?
+                    {{ $user->email }}
+                </div>
+                <div class="truncate sm:whitespace-normal flex items-center mt-3">
+                    <livewire:admin.user.edit.fullname :user="$user"/>
                 </div>
                 <div class="truncate sm:whitespace-normal flex items-center mt-3">
                     <livewire:admin.user.edit.email :user="$user"/>
