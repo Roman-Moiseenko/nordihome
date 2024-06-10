@@ -60,16 +60,35 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
-            $filter = $request['filter'] ?? 'all';
+            $filter = $request['status'] ?? 'all';
+
+            $filters = [
+                'staff_id' => (int)$request['staff_id'] ?? null,
+                'manager_id' => (int)$request['staff_id'] ?? null,
+                'user' => $request['user'] ?? null,
+                'condition' => $request['condition'] ?? null,
+            ];
+
+
+
             $staff_id = (int)$request['staff_id'] ?? 0;
             $filter_count = $this->repository->getFilterCount();
-            $query = $this->repository->getOrders($filter);
+
+            //Фильтр
+            if ($request->has('search')) {
+                //Доп фильтр
+                $query = $this->repository->getOrders($filters);
+            } else {
+                //Выбор по типу
+                $query = $this->repository->getOrdersByWork($filter);
+            }
+
             if ($staff_id != 0) $query->where('manager_id', $staff_id);
             $orders = $this->pagination($query, $request, $pagination);
             $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
                 $query->where('code', Responsibility::MANAGER_ORDER);
             })->get();
-            return view('admin.sales.order.index', compact('orders', 'pagination', 'filter', 'filter_count', 'staffs', 'staff_id'));
+            return view('admin.sales.order.index', compact('orders', 'pagination', 'filter', 'filter_count', 'staffs', 'filters'));
         });
     }
 

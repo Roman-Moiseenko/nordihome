@@ -5,6 +5,7 @@ namespace App\Modules\Order\Repository;
 
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
@@ -35,7 +36,32 @@ class OrderRepository
         return Order::where('finished', true)->orderByDesc('created_at');
     }
 
-    public function getOrders(string $filter)
+    public function getOrders(array $filters)
+    {
+        $query = Order::orderByDesc('created_at');
+        $user_field = $filters['user'] ?? null;
+        $condition = $filters['condition'] ?? null;
+        $staff = $filters['staff_id'] ?? null;
+
+        if (!is_null($user_field)) {
+
+            $users = User::where('phone', 'like', "%$user_field%")
+                ->orWhere('email', 'like', "%$user_field%")
+                ->orWhere('fullname', 'like', "%$user_field%")
+                ->pluck('id')->toArray();
+            $query->whereIn('user_id', $users);
+        }
+
+
+        if (!is_null($condition)) $query->whereHas('status', function ($q) use($condition) {
+            $q->where('value' , $condition);
+        });
+
+        if (!is_null($staff)) $query->where('manager_id', $staff);
+        return $query;
+    }
+
+    public function getOrdersByWork(string $filter)
     {
         $query = Order::orderByDesc('created_at');
         //$filter = $request['filter'];

@@ -39,7 +39,12 @@
                         {{ price($amount_all) . ' (' . price($amount_completed) . ')' }} </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
                         <i data-lucide="clock" width="24" height="24" class="lucide lucide-mail w-4 h-4 mr-2"></i>
-                        {{ $user->getLastOrder()->htmlDate() }} </div>
+                        @if(is_null($user->getLastOrder()))
+                            <span class="text-secondary">Нет</span>
+                        @else
+                        {{ $user->getLastOrder()->htmlDate() }}
+                        @endif
+                    </div>
                 </div>
             </div>
             <div

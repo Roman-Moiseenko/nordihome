@@ -12,29 +12,29 @@
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <form method="get" action="{{ route('admin.sales.order.index') }}" class="flex w-full">
                 <div>
-                    <input type="radio" class="btn-check" name="filter" id="option1" autocomplete="off"
+                    <input type="radio" class="btn-check" name="status" id="option1" autocomplete="off"
                            value="all" onclick="this.form.submit();" @if($filter == 'all') checked @endif>
                     <label class="btn btn-primary" for="option1">Все</label>
-                    <input type="radio" class="btn-check" name="filter" id="option2" autocomplete="off"
+                    <input type="radio" class="btn-check" name="status" id="option2" autocomplete="off"
                            value="new" onclick="this.form.submit();" @if($filter == 'new') checked @endif>
                     <label class="btn btn-success" for="option2">Новые
                         @if($filter_count['new'] != 0)<span>{{ $filter_count['new'] }}</span> @endif
                     </label>
-                    <input type="radio" class="btn-check" name="filter" id="option3" autocomplete="off"
+                    <input type="radio" class="btn-check" name="status" id="option3" autocomplete="off"
                            value="awaiting" onclick="this.form.submit();" @if($filter == 'awaiting') checked @endif>
                     <label class="btn btn-success" for="option3">На оплате
                         @if($filter_count['awaiting'] != 0)<span>{{ $filter_count['awaiting'] }}</span> @endif
                     </label>
 
-                    <input type="radio" class="btn-check" name="filter" id="option4" autocomplete="off"
+                    <input type="radio" class="btn-check" name="status" id="option4" autocomplete="off"
                            value="at-work" onclick="this.form.submit();" @if($filter == 'at-work') checked @endif>
                     <label class="btn btn-success" for="option4">В работе
                         @if($filter_count['at-work'] != 0)<span>{{ $filter_count['at-work'] }}</span> @endif
                     </label>
-                    <input type="radio" class="btn-check" name="filter" id="option5" autocomplete="off"
+                    <input type="radio" class="btn-check" name="status" id="option5" autocomplete="off"
                            value="canceled" onclick="this.form.submit();" @if($filter == 'canceled') checked @endif>
                     <label class="btn btn-secondary" for="option5">Отмененные</label>
-                    <input type="radio" class="btn-check" name="filter" id="option6" autocomplete="off"
+                    <input type="radio" class="btn-check" name="status" id="option6" autocomplete="off"
                            value="completed" onclick="this.form.submit();" @if($filter == 'completed') checked @endif>
                     <label class="btn btn-secondary" for="option6">Завершенные</label>
                 </div>
@@ -44,7 +44,7 @@
                         <option value="0"></option>
                         @foreach($staffs as $staff)
                             <option value="{{ $staff->id }}"
-                                {{ $staff->id == $staff_id ? 'selected' : ''}} >
+                                {{ $staff->id == $filters['staff_id'] ? 'selected' : ''}} >
                                 {{ $staff->fullname->getShortName() }}
                             </option>
                         @endforeach
@@ -58,6 +58,58 @@
                     type="button">Создать заказ
             </button>
             {{ $orders->links('admin.components.count-paginator') }}
+            <div class="ml-auto">
+
+                <x-base.popover class="inline-block mt-auto" placement="left-start">
+                    <x-base.popover.button as="x-base.button" variant="primary" class=""><i data-lucide="filter" width="20" height="20"></i>
+                    </x-base.popover.button>
+                    <x-base.popover.panel>
+                        <x-base.button id="close-add-group" class="ml-auto"
+                                       data-tw-dismiss="dropdown" variant="secondary" type="button">
+                            X
+                        </x-base.button>
+                        <form action="" METHOD="GET">
+                            <div class="p-2">
+                                <input type="hidden" name="search" value="1" />
+                                {{ old('user') }}
+                                <input class="form-control" name="user" placeholder="Клиент,Телефон,ИНН,Email" value="{{ $filters['user'] }}">
+
+                                <select class="form-control mt-1" name="condition">
+                                    <option value="0" disabled selected>Состояние заказа</option>
+                                    @foreach(\App\Modules\Order\Entity\Order\OrderStatus::STATUSES as $key => $name)
+                                        <option value="{{ $key }}"
+                                            {{ $key == $filters['condition'] ? 'selected' : ''}} >
+                                        {{ $name }}</option>
+                                    @endforeach
+                                </select>
+
+                                <x-base.tom-select id="select-staff" name="staff_id"
+                                                   class="w-full bg-white mt-1" data-placeholder="Выберите ответственного">
+                                    <option value="0" disabled selected>Выберите ответственного</option>
+                                    @foreach($staffs as $staff)
+                                        <option value="{{ $staff->id }}"
+                                            {{ $staff->id == $filters['staff_id'] ? 'selected' : ''}} >
+                                            {{ $staff->fullname->getShortName() }}
+                                        </option>
+                                    @endforeach
+                                </x-base.tom-select>
+
+
+                                <div class="flex items-center mt-3">
+                                    <x-base.button id="clear-filter" class="w-32 ml-auto"
+                                                   variant="secondary" type="button">
+                                        Сбросить
+                                    </x-base.button>
+                                    <x-base.button class="w-32 ml-2" variant="primary" type="submit">
+                                        Фильтр
+                                    </x-base.button>
+                                </div>
+                            </div>
+                        </form>
+                    </x-base.popover.panel>
+                </x-base.popover>
+
+            </div>
         </div>
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">
@@ -170,6 +222,12 @@
             let p = selectStaff.options[selectStaff.selectedIndex].value;
             urlParams.set('staff_id', p);
             window.location.search = urlParams;
+        });
+
+
+        let clearFilter = document.getElementById('clear-filter');
+        clearFilter.addEventListener('click', function () {
+            window.location.href = window.location.href.split("?")[0];
         });
 
     </script>

@@ -58,6 +58,15 @@ class OrderStatus extends Model
         self::AWAITING => 'Ожидает оплаты',
         self::PREPAID => 'Внесена предоплата',
         self::PAID => 'Оплачен',
+
+        self::COMPLETED => 'Завершен',
+        self::COMPLETED_REFUND => 'Завершен с возвратом',
+        self::CANCEL => 'Отменен',
+        self::CANCEL_BY_CUSTOMER => 'Отменен клиентом',
+        self::REFUND => 'Возврат оплаты',
+    ];
+
+    const CONDITIONS = [
         self::ISSUED_SELLER => 'Оформлен у поставщика',
         self::ON_PACKAGE => 'На комплектации',
         self::CUSTOMS => 'Проходит таможенный контроль',
@@ -69,13 +78,7 @@ class OrderStatus extends Model
         self::DELIVERY_LOCAL => 'Готов для отправки по региону',
         self::DELIVERY_LOCAL_SEND => 'Отправлен',
         self::READY => 'Готов к выдаче',
-        self::COMPLETED => 'Завершен',
-        self::COMPLETED_REFUND => 'Завершен с возвратом',
-        self::CANCEL => 'Отменен',
-        self::CANCEL_BY_CUSTOMER => 'Отменен клиентом',
-        self::REFUND => 'Возврат оплаты',
     ];
-
 
     protected $fillable = [
         'order_id',
