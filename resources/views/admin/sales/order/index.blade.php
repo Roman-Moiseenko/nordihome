@@ -61,7 +61,10 @@
             <div class="ml-auto">
 
                 <x-base.popover class="inline-block mt-auto" placement="left-start">
-                    <x-base.popover.button as="x-base.button" variant="primary" class=""><i data-lucide="filter" width="20" height="20"></i>
+                    <x-base.popover.button as="x-base.button" variant="primary" class="button_counter"><i data-lucide="filter" width="20" height="20"></i>
+                        @if($filters['count'] > 0)
+                        <span>{{ $filters['count'] }}</span>
+                        @endif
                     </x-base.popover.button>
                     <x-base.popover.panel>
                         <x-base.button id="close-add-group" class="ml-auto"

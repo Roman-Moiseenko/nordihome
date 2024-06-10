@@ -64,12 +64,15 @@ class OrderController extends Controller
 
             $filters = [
                 'staff_id' => $request['staff_id'] ?? null,
-                //'manager_id' => (int)$request['staff_id'] ?? null,
                 'user' => $request['user'] ?? null,
                 'condition' => $request['condition'] ?? null,
                 'comment' => $request['comment'] ?? null,
             ];
-
+            $_filter_count = 0;
+            foreach ($filters as $item) {
+                if (!is_null($item)) $_filter_count++;
+            }
+            $filters['count'] = $_filter_count;
 
 
             $staff_id = (int)$request['staff_id'] ?? 0;
