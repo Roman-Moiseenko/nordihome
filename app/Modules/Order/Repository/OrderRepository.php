@@ -39,9 +39,10 @@ class OrderRepository
     public function getOrders(array $filters)
     {
         $query = Order::orderByDesc('created_at');
-        $user_field = $filters['user'] ?? null;
-        $condition = $filters['condition'] ?? null;
-        $staff = $filters['staff_id'] ?? null;
+        $user_field = $filters['user'];
+        $condition = $filters['condition'];
+        $staff = $filters['staff_id'];
+        $comment = $filters['comment'];
 
         if (!is_null($user_field)) {
 
@@ -58,6 +59,9 @@ class OrderRepository
         });
 
         if (!is_null($staff)) $query->where('manager_id', $staff);
+
+        if (!is_null($comment)) $query->where('comment', 'like', "%$comment%");
+        //dd($filters);
         return $query;
     }
 

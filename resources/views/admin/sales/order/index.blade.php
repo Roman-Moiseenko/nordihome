@@ -41,7 +41,7 @@
                 <div class="ml-auto">
                     <x-base.tom-select id="select-staff" name="staff_id"
                                        class="w-72 bg-white" data-placeholder="Выберите ответственного">
-                        <option value="0"></option>
+                        <option value=""></option>
                         @foreach($staffs as $staff)
                             <option value="{{ $staff->id }}"
                                 {{ $staff->id == $filters['staff_id'] ? 'selected' : ''}} >
@@ -71,21 +71,23 @@
                         <form action="" METHOD="GET">
                             <div class="p-2">
                                 <input type="hidden" name="search" value="1" />
-                                {{ old('user') }}
                                 <input class="form-control" name="user" placeholder="Клиент,Телефон,ИНН,Email" value="{{ $filters['user'] }}">
 
-                                <select class="form-control mt-1" name="condition">
-                                    <option value="0" disabled selected>Состояние заказа</option>
+                                <x-base.tom-select class="w-full bg-white mt-1" name="condition"
+                                                   data-placeholder="Состояние заказа"
+                                >
+
+                                    <option value="" disabled selected>Состояние заказа</option>
                                     @foreach(\App\Modules\Order\Entity\Order\OrderStatus::STATUSES as $key => $name)
                                         <option value="{{ $key }}"
                                             {{ $key == $filters['condition'] ? 'selected' : ''}} >
                                         {{ $name }}</option>
                                     @endforeach
-                                </select>
+                                </x-base.tom-select>
 
                                 <x-base.tom-select id="select-staff" name="staff_id"
                                                    class="w-full bg-white mt-1" data-placeholder="Выберите ответственного">
-                                    <option value="0" disabled selected>Выберите ответственного</option>
+                                    <option value="" disabled selected>Выберите ответственного</option>
                                     @foreach($staffs as $staff)
                                         <option value="{{ $staff->id }}"
                                             {{ $staff->id == $filters['staff_id'] ? 'selected' : ''}} >
@@ -93,7 +95,7 @@
                                         </option>
                                     @endforeach
                                 </x-base.tom-select>
-
+                                <input class="form-control mt-1" name="comment" placeholder="Комментарий" value="{{ $filters['comment'] }}">
 
                                 <div class="flex items-center mt-3">
                                     <x-base.button id="clear-filter" class="w-32 ml-auto"
