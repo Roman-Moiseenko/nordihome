@@ -63,14 +63,15 @@
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
-                        <x-base.table.th class="w-20 whitespace-nowrap"></x-base.table.th>
-                        <x-base.table.th class="w-40 whitespace-nowrap">№</x-base.table.th>
-                        <x-base.table.th class="w-40 whitespace-nowrap text-center">ДАТА</x-base.table.th>
+                        <x-base.table.th class="w-10 whitespace-nowrap"></x-base.table.th>
+                        <x-base.table.th class="w-32 whitespace-nowrap">№</x-base.table.th>
+                        <x-base.table.th class="w-32 whitespace-nowrap text-center">ДАТА</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap text-center">ОТВЕТСТВЕННЫЙ</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap text-center">КЛИЕНТ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">СУММА</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ТОВАРОВ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ИТОГО</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">СТАТУС</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap text-center">КЛИЕНТ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>

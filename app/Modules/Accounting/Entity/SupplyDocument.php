@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Product;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SupplyDocument extends Model
 {
+    use HtmlInfoData;
+
     const CREATED = 1201;
     const SENT = 1202;
     const COMPLETED = 1205;
@@ -151,18 +154,7 @@ class SupplyDocument extends Model
 
     //** HELPERS */
 
-    public function htmlNum(): string
-    {
-        if (empty($this->number)) return 'б/н';
-        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
-    }
-
-    public function htmlDate(): string
-    {
-        return  $this->created_at->translatedFormat('d F');
-    }
-
-    public function statusHTML()
+    public function statusHTML(): string
     {
         return self::STATUSES[$this->status];
     }

@@ -12,6 +12,7 @@ use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Service\Entity\Report;
 use App\Modules\User\Entity\User;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\Deprecated;
@@ -54,6 +55,8 @@ use JetBrains\PhpStorm\Pure;
 
 class Order extends Model
 {
+    use HtmlInfoData;
+
     const ONLINE = 701;
     const MANUAL = 702;
     const SHOP = 703;
@@ -632,21 +635,6 @@ class Order extends Model
     }
 
     ///*** Хелперы
-    public function htmlDate(): string
-    {
-        return $this->created_at->translatedFormat('d F Y');
-    }
-
-    public function htmlNum(): string
-    {
-        if (is_null($this->number)) return 'б/н';
-        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
-    }
-
-    public function htmlNumDate(): string
-    {
-        return $this->htmlNum() . ' от ' . $this->htmlDate();
-    }
 
     public function statusHtml(): string
     {

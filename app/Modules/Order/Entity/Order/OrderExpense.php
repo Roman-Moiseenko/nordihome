@@ -13,6 +13,7 @@ use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarExpense;
 use App\Modules\Delivery\Entity\CalendarPeriod;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,6 +46,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderExpense extends Model
 {
+    use HtmlInfoData;
+
     const STATUS_NEW = 1;
     const STATUS_ASSEMBLY = 2;
     const STATUS_ASSEMBLING = 3;
@@ -262,26 +265,11 @@ class OrderExpense extends Model
         return self::STATUSES[$this->status];
     }
 
-    public function htmlNum(): string
-    {
-        if (is_null($this->number)) return 'б/н';
-        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
-    }
-
-    public function htmlDate(): string
-    {
-        return $this->created_at->translatedFormat('d F Y');
-    }
-
     public function typeHTML(): string
     {
         return self::TYPES[$this->type];
     }
 
-    public function htmlNumDate(): string
-    {
-        return $this->htmlNum() . ' от ' . $this->htmlDate();
-    }
 
 
 }

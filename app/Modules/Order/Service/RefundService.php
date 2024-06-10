@@ -43,10 +43,11 @@ class RefundService
         $additions = $params['addition'] ?? [];
         $payments = $params['payment'] ?? [];
         $comment = $params['comment'] ?? '';
+        $number = $params['number'] ?? '';
 
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
-        $refund = OrderRefund::register($order->id, $staff->id, $comment);
+        $refund = OrderRefund::register($order->id, $staff->id, $comment, $number);
 
         $amount_items = 0;
         foreach ($items as $id => $quantity) {
@@ -102,7 +103,7 @@ class RefundService
     {
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
-        $refund = OrderRefund::register($order->id, $staff->id, $comment);
+        $refund = OrderRefund::register($order->id, $staff->id, $comment, '');
 
         foreach ($order->items as $item) {
             if ($remains = $item->getRemains()) {

@@ -130,10 +130,7 @@
                         </div>
                         <div class="mt-5">
                             @foreach($order->payments as $payment)
-
                                 <div class="box-in-box flex items-center p-2">
-
-
                                     <div class="w-1/4">
                                         {{ $payment->methodHTML() }}
                                     </div>
@@ -148,17 +145,18 @@
                                         <div id="addition->amount" class="input-group-text">₽</div>
                                     </div>
                                 </div>
-
                             @endforeach
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="box mt-3 p-5">
-                <input class="form-control" name="comment" type="text" placeholder="Основание возврата / Комментарий">
+            <div class="box mt-3 p-5 flex">
+                <input class="form-control w-40" name="number" type="text" placeholder="Номер документа">
+                <input class="form-control ml-2" name="comment" type="text" placeholder="Основание возврата / Комментарий">
             </div>
 
-            <button class="btn btn-success mt-3">
+
+            <button class="btn btn-success mt-3" type="submit">
                 Сохранить
             </button>
         </form>

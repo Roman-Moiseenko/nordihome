@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $order_id
  * @property int $staff_id
+ * @property string $number
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $comment
@@ -23,6 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderRefund extends Model
 {
+    use HtmlInfoData;
+
  /*   const NEW = 80;
     const CONFIRMED = 81; //Проставляет ответственный за деньги, руководитель
     const PAID = 82; //Проставляет Бухгалтер
@@ -43,6 +47,7 @@ class OrderRefund extends Model
         'updated_at',
         'comment',
         'amount',
+        'number'
     ];
 
     protected $casts = [
@@ -50,12 +55,13 @@ class OrderRefund extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function register(int $order_id, int $staff_id, string $comment): self
+    public static function register(int $order_id, int $staff_id, string $comment, string $number): self
     {
         return self::create([
             'order_id' => $order_id,
             'staff_id' => $staff_id,
             'comment' => $comment,
+            'number' => $number
         ]);
     }
 /*
@@ -117,8 +123,5 @@ class OrderRefund extends Model
     }
 
     ///*** Хелперы
-    public function htmlDate(): string
-    {
-        return $this->created_at->translatedFormat('d F');
-    }
+
 }

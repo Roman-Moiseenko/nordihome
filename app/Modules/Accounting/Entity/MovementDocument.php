@@ -7,6 +7,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Product\Entity\Product;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\ArrayShape;
@@ -30,6 +31,8 @@ use JetBrains\PhpStorm\ArrayShape;
  */
 class MovementDocument extends Model implements MovementInterface
 {
+    use HtmlInfoData;
+
     const STATUS_DRAFT = 11; //Черновик
     const STATUS_DEPARTURE = 12; //На убытие
     const STATUS_ARRIVAL = 13; //В Пути
@@ -183,12 +186,6 @@ class MovementDocument extends Model implements MovementInterface
         return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
     }
 
-    public function htmlDate(): string
-    {
-        return  $this->created_at->translatedFormat('d F Y');
-    }
-
-
     public function setNumber()
     {
         $this->number = MovementDocument::where('number', '<>', null)->count() + 1;
@@ -213,8 +210,4 @@ class MovementDocument extends Model implements MovementInterface
         return $this->staff->fullname->getFullName();
     }
 
-    public function htmlNumDate(): string
-    {
-        return $this->htmlNum() . ' от ' . $this->htmlDate();
-    }
 }

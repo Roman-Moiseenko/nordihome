@@ -1,12 +1,14 @@
 <x-base.table.tr>
     <x-base.table.td class="text-center"> * </x-base.table.td>
-    <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.sales.order.show', $order) }}">{{ $order->htmlNum() }}</a></x-base.table.td>
-    <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.sales.order.show', $order) }}">{{ $order->htmlDate() }}</a></x-base.table.td>
+    <x-base.table.td class=""><a href="{{ route('admin.sales.order.show', $order) }}">{{ $order->htmlNum() }}</a></x-base.table.td>
+    <x-base.table.td class=""><a href="{{ route('admin.sales.order.show', $order) }}">{{ $order->htmlShortDate() }}</a></x-base.table.td>
+    <x-base.table.td class="text-center font-medium">{{ $order->manager->fullname->getShortName() }}</x-base.table.td>
+    <x-base.table.td class="text-center font-medium"><a href="{{ route('admin.users.show', $order->user) }}">{{ $order->user->email }}</a></x-base.table.td>
     <x-base.table.td class="text-center">{{ price($order->getBaseAmount()) }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->getQuantity() }} шт.</x-base.table.td>
     <x-base.table.td class="text-center">{{ price($order->getTotalAmount()) }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->status->value() }}</x-base.table.td>
-    <x-base.table.td class="text-center font-medium"><a href="{{ route('admin.users.show', $order->user) }}">{{ $order->user->email }}</a></x-base.table.td>
+
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
             <a class="flex items-center mr-3" href="{{ route('admin.sales.order.log', $order) }}">

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\ArrayShape;
@@ -24,6 +25,8 @@ use JetBrains\PhpStorm\ArrayShape;
  */
 class DepartureDocument extends Model implements MovementInterface
 {
+    use HtmlInfoData;
+
     protected $table = 'departure_documents';
 
     protected $fillable = [
@@ -108,19 +111,5 @@ class DepartureDocument extends Model implements MovementInterface
         return $this->staff->fullname->getFullName();
     }
 
-    //*** Helpers
-    public function htmlNum(): string
-    {
-        return $this->number;
-    }
 
-    public function htmlDate(): string
-    {
-        return  $this->created_at->translatedFormat('d F');
-    }
-
-    public function htmlNumDate(): string
-    {
-        return $this->htmlNum() . ' от ' . $this->htmlDate();
-    }
 }

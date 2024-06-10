@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,9 @@ use JetBrains\PhpStorm\ArrayShape;
  */
 class ArrivalDocument extends Model implements MovementInterface
 {
+
+    use HtmlInfoData;
+
     protected $table = 'arrival_documents';
 
     protected $fillable = [
@@ -169,22 +173,6 @@ class ArrivalDocument extends Model implements MovementInterface
     public function pricing()
     {
         return $this->hasOne(PricingDocument::class, 'arrival_id', 'id');
-    }
-
-    //*** Helpers
-    public function htmlNum(): string
-    {
-        return $this->number;
-    }
-
-    public function htmlDate(): string
-    {
-        return  $this->created_at->translatedFormat('d F');
-    }
-
-    public function htmlNumDate(): string
-    {
-        return $this->htmlNum() . ' от ' . $this->htmlDate();
     }
 
 

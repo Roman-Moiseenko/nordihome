@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,8 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PricingDocument extends Model
 {
-    protected $table = 'pricing_documents';
+    use HtmlInfoData;
 
+    protected $table = 'pricing_documents';
     protected $fillable = [
         'number',
         'completed',
@@ -82,20 +84,8 @@ class PricingDocument extends Model
     }
 
 
-    //** HELPERS */
 
-    public function htmlNum(): string
-    {
-        if (empty($this->number)) return 'б/н';
-        return '№ ' . str_pad((string)$this->number, 6, '0', STR_PAD_LEFT);
-    }
-
-    public function htmlDate(): string
-    {
-        return  $this->created_at->translatedFormat('d F');
-    }
-
-    public function isProduct(int $product_id)
+    public function isProduct(int $product_id): bool
     {
         foreach ($this->pricingProducts as $item) {
             if ($item->product_id == $product_id) return true;
