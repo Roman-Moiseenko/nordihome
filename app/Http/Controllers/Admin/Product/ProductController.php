@@ -37,18 +37,28 @@ class ProductController extends Controller
     {
         return $this->try_catch_admin(function () use($request) {
             $categories = Category::defaultOrder()->withDepth()->get();
-            $published = $request['published'] ?? 'all';
-            $query = Product::orderBy('name');
 
-            if (!empty($category_id = $request->get('category_id')) && $category_id != 0) {
-                $query->whereHas('categories', function ($q) use ($category_id, $published) {
-                    $q->where('id', '=', $category_id);
-                    if ($published == 'active') $q->where('published', '=', true);
-                    if ($published == 'draft') $q->where('published', '=', false);
-                })->orWhere('main_category_id', '=', $category_id);
+            $filters = [
+                'product' => $request['product'] ?? null,
+                'category' => $request['category_id'] ?? null,
+                'published' => $request['published'] ?? null,
+            ];
+            $_filter_count = 0;
+            $_filter_text = '';
+            foreach ($filters as $key => $item) {
+                if (!is_null($item)) {
+                    $_filter_count++;
+                    if ($key == 'product') $_filter_text .= $item . ', ';
+                    if ($key == 'category') $_filter_text .= Category::find($item)->name . ', ';
+                    if ($key == 'published') $_filter_text .= $item;
+
+                }
             }
-            if ($published == 'active') $query->where('published', '=', true);
-            if ($published == 'draft') $query->where('published', '=', false);
+            $filters['count'] = $_filter_count;
+            $filters['text'] = $_filter_text;
+
+
+
 
             /*
             if (!empty($search = $request['search'])) {
@@ -56,10 +66,11 @@ class ProductController extends Controller
                     ->orWhere('name', 'LIKE', "%{$search}%");
             }
              */
+            $query = $this->repository->getFilter($filters);
             $products = $this->pagination($query, $request, $pagination);
 
             return view('admin.product.product.index', compact('products', 'pagination',
-                'categories', 'category_id', 'published'));
+                'categories', 'filters'));
         });
     }
 

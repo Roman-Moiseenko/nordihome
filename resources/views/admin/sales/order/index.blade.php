@@ -58,8 +58,9 @@
                     type="button">Создать заказ
             </button>
             {{ $orders->links('admin.components.count-paginator') }}
-            <div class="ml-auto">
 
+            <!-- Фильтр -->
+            <div class="ml-auto">
                 <x-base.popover class="inline-block mt-auto" placement="left-start">
                     <x-base.popover.button as="x-base.button" variant="primary" class="button_counter"><i data-lucide="filter" width="20" height="20"></i>
                         @if($filters['count'] > 0)
@@ -113,7 +114,6 @@
                         </form>
                     </x-base.popover.panel>
                 </x-base.popover>
-
             </div>
         </div>
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">

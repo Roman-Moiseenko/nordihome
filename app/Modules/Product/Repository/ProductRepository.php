@@ -73,13 +73,31 @@ class ProductRepository
     }
 
 
-
-    public function getFilter(int $category_id, \Illuminate\Http\Request $request): array
+    public function getFilter(array $filters)
     {
-        $products = Product::where('main_category_id', '=', $category_id)->get();
-        return [];
-    }
 
+        //$published = $request['published'] ?? 'all';
+        $query = Product::orderBy('name');
+        $product = $filters['product'];
+
+
+        if (!empty($filters['product'])) $query->where(function ($q) use ($product) {
+            $q->where('name', 'like', "%$product%")
+                ->orWhere('code', 'like', "%$product%")
+                ->orWhere('code_search', 'like', "%$product%");
+        });
+
+        if (!empty($filters['category'])) {
+            $query->where(function ($qq) use ($filters) {
+               $qq->whereHas('categories', function ($q) use ($filters) {
+                   $q->where('id', $filters['category']);
+               })->orWhere('main_category_id', $filters['category']);
+            });
+        }
+        if ($filters['published'] == 'active') $query->where('published', '=', true);
+        if ($filters['published'] == 'draft') $query->where('published', '=', false);
+        return $query;
+    }
 
 
 }

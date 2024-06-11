@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Base\Entity;
 
+use JetBrains\PhpStorm\Pure;
+
 class Dimensions
 {
 
@@ -21,7 +23,7 @@ class Dimensions
     const TYPE_LENGTH = 2;
     const TYPE_DIAMETER = 3;
 
-    //TODO Реализовать
+    //TODO Реализовать выбор и показ
     // Высота, Ширина, Глубина
     // Высота, Ширина, Длина
     // Высота, Диаметр
@@ -52,6 +54,32 @@ class Dimensions
         $dimension->type = $type;
 
         return $dimension;
+    }
+
+    #[Pure] public static function fromArray(?array $params)
+    {
+        $dimension = new static();
+        if (!empty($params)) {
+            $dimension->width = $params['width'];
+            $dimension->height = $params['height'];
+            $dimension->depth = $params['depth'];
+            $dimension->weight = $params['weight'];
+            $dimension->measure = $params['measure'];
+            $dimension->type = $params['type'];
+        }
+        return $dimension;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'width' => $this->width,
+            'height' => $this->height,
+            'depth' => $this->depth,
+            'weight' => $this->weight,
+            'measure' => $this->measure ?? self::MEASURE_G,
+            'type' => $this->type ?? self::TYPE_DEPTH,
+        ];
     }
 
     public function weight(): float

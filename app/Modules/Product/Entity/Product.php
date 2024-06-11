@@ -741,7 +741,7 @@ class Product extends Model
 
 
 
-
+/*
     public static function boot()
     {
         parent::boot();
@@ -754,7 +754,7 @@ class Product extends Model
            // $product->dimensions = \App\Modules\Base\Entity\Dimensions::load($product->dimensions_json);
         });
     }
-
+*/
     /**
      * Имеется действующая акция
      * @return bool
