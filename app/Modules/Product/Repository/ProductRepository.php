@@ -84,7 +84,10 @@ class ProductRepository
         if (!empty($filters['product'])) $query->where(function ($q) use ($product) {
             $q->where('name', 'like', "%$product%")
                 ->orWhere('code', 'like', "%$product%")
-                ->orWhere('code_search', 'like', "%$product%");
+                ->orWhere('code_search', 'like', "%$product%")
+                ->orWhereHas('series', function ($series) use ($product){
+                    $series->where('name', 'like', "%$product%");
+                });
         });
 
         if (!empty($filters['category'])) {

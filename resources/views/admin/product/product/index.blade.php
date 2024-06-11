@@ -98,7 +98,7 @@
                         </x-base.button>
                         <form action="" METHOD="GET">
                             <div class="p-2">
-                                <input class="form-control" name="product" placeholder="Название, Артикул" value="{{ $filters['product'] }}">
+                                <input class="form-control" name="product" placeholder="Название, Артикул, Серия" value="{{ $filters['product'] }}">
 
                                 <x-base.tom-select id="select-category" name="category_id"
                                                    class="w-full mt-3" data-placeholder="Выберите категорию">
