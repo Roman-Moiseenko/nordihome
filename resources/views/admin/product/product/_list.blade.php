@@ -17,7 +17,7 @@
     </x-base.table.td>
     <x-base.table.td class="text-center"><span class="text-success">{{ $product->getCountSell() }}</span> / <span class="text-danger">{{ $product->getReserveCount() }}</span></x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
-        <div class="flex justify-center items-center">
+        <div class="flex justify-end items-center">
             <a class="flex items-center mr-3" href="#"
                onclick="event.preventDefault(); document.getElementById('form-toggle-{{ $product->id }}').submit();">
             @if($product->isPublished())
