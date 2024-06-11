@@ -136,7 +136,32 @@ input.btn-check:checked + label:hover {
     background: rgb(var(--color-danger));
 }
 .circle.green:before {
-    background: rgb(var(--color-success));/* #02ab0f;*/
+    background: rgb(var(--color-success));
+}
+.circle.empty:before {
+    border: 1px solid rgb(var(--color-slate-400));
+    background: #fff;
+}
+.circle.warning:before {
+    background: rgb(var(--color-warning));
+}
+/*
+.circle.half-green:before, .circle.half-green:after {
+    width: 6px;
+}
+.circle.half-green:after {
+    content: "";
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgb(var(--color-success));
+}*/
+.circle.half-green:before {
+    border: 1px solid rgb(var(--color-slate-400));
+    background: linear-gradient( 90deg, rgb(var(--color-success)), rgb(var(--color-success)) 49%, white 49%, white 51%, white 51% )
 }
 .box-in-box {
     border-radius: 10px;
