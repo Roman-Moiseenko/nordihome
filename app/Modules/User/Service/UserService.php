@@ -4,7 +4,6 @@
 namespace App\Modules\User\Service;
 
 
-use App\Entity\FullName;
 use App\Mail\VerifyMail;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;

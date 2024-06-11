@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Entity;
 
-use App\Casts\FullNameCast;
-use App\Entity\FullName;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Base\Casts\FullNameCast;
+use App\Modules\Base\Entity\FullName;
 use Illuminate\Database\Eloquent\Model;
 
 /**

@@ -5,8 +5,8 @@
         <div class="flex">
             <div>
         <select id="input-dimensions-measure" name="dimensions-measure" class="form-select w-full lg:w-40">
-            <option value="{{ App\Entity\Dimensions::MEASURE_G }}" {{ ($product->dimensions->measure == App\Entity\Dimensions::MEASURE_G ? 'selected' : '')  }}>{{ App\Entity\Dimensions::MEASURE_G }}</option>
-            <option value="{{ App\Entity\Dimensions::MEASURE_KG }}" {{ ($product->dimensions->measure == App\Entity\Dimensions::MEASURE_KG ? 'selected' : '')  }}>{{ App\Entity\Dimensions::MEASURE_KG }}</option>
+            <option value="{{ App\Modules\Base\Entity\Dimensions::MEASURE_G }}" {{ ($product->dimensions->measure == App\Modules\Base\Entity\Dimensions::MEASURE_G ? 'selected' : '')  }}>{{ App\Modules\Base\Entity\Dimensions::MEASURE_G }}</option>
+            <option value="{{ App\Modules\Base\Entity\Dimensions::MEASURE_KG }}" {{ ($product->dimensions->measure == App\Modules\Base\Entity\Dimensions::MEASURE_KG ? 'selected' : '')  }}>{{ App\Modules\Base\Entity\Dimensions::MEASURE_KG }}</option>
         </select>
             </div>
             {{ \App\Forms\Input::create('dimensions-weight',

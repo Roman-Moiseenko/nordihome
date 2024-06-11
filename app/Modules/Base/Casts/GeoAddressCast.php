@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Casts;
+namespace App\Modules\Base\Casts;
 
-use App\Entity\FullName;
+use App\Modules\Base\Entity\GeoAddress;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
-class FullNameCast implements CastsAttributes
+class GeoAddressCast implements CastsAttributes
 {
 
     public function get(Model $model, string $key, mixed $value, array $attributes)
     {
-        return FullName::fromArray(json_decode($value, true));
+        return GeoAddress::fromArray(json_decode($value, true));
     }
 
     public function set(Model $model, string $key, mixed $value, array $attributes)

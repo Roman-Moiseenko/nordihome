@@ -3,9 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Entity\Dimensions;
-
-
+use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeGroup;
@@ -18,6 +16,7 @@ use App\Modules\Product\Repository\BrandRepository;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\User\Entity\User;
 use Illuminate\Database\Seeder;
+
 
 class DatabaseSeeder extends Seeder
 {

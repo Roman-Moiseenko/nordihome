@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Modules\Product\Entity;
 
-use App\Entity\Dimensions;
+use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Photo;
@@ -62,7 +62,7 @@ class ProductTest extends TestCase
 
 
         //Габариты
-        $dimensions = Dimensions::create($width = 45, $height = 100, $depth = 20, $weight = 12500, $measure = Dimensions::MEASURE_G); //Для Shop
+        $dimensions = \App\Modules\Base\Entity\Dimensions::create($width = 45, $height = 100, $depth = 20, $weight = 12500, $measure = Dimensions::MEASURE_G); //Для Shop
         //$package = Dimensions::create($width2 = 20, $height2 = 40, $depth2 = 15, $weight2 = 14); //Для Delivery
         $product->dimensions = $dimensions;
         //$product->setPackage($package);

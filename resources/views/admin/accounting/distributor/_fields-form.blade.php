@@ -10,9 +10,9 @@
             <div class="p-5">
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
-                        {{ \App\Forms\Input::create('name', ['placeholder' => 'Название', 'value' => $distributor->name ?? '', 'class' => 'mt-5'])->show() }}
-
-                        <x-base.tom-select id="select-currency" name="currency_id" class="w-full mt-3" data-placeholder="Выберите валюту документа">
+                        {{ \App\Forms\Input::create('name', ['placeholder' => 'Название', 'value' => $distributor->name ?? '', 'class' => 'mt-5'])->label('Поставщик')->show() }}
+                        <label for="select-currency" class="inline-block mb-2 mt-3">Валюта</label>
+                        <x-base.tom-select id="select-currency" name="currency_id" class="w-full" data-placeholder="Выберите валюту документа">
                             <option value="0"></option>
                             @foreach($currencies as $currency)
                                 <option value="{{ $currency->id }}"

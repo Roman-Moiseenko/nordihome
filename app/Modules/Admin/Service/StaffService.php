@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Service;
 
-use App\Entity\FullName;
 use App\Entity\Photo;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Base\Entity\FullName;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;

@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
-use App\Casts\FullNameCast;
-use App\Casts\GeoAddressCast;
-use App\Entity\FullName;
-use App\Entity\GeoAddress;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Worker;
+use App\Modules\Base\Casts\FullNameCast;
+use App\Modules\Base\Casts\GeoAddressCast;
+use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Entity\Calendar;
-use App\Modules\Delivery\Entity\CalendarExpense;
 use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
@@ -31,10 +29,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $comment
  * @property string $track
  *
- * @property FullName $recipient
+ * @property \App\Modules\Base\Entity\FullName $recipient
  * @property string $phone
  * @property int $type
- * @property GeoAddress $address
+ * @property \App\Modules\Base\Entity\GeoAddress $address
  *
  * @property OrderExpenseItem[] $items
  * @property OrderExpenseAddition[] $additions

@@ -3,16 +3,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Parser;
 
-use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Events\ProductHasParsed;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Service\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use JetBrains\PhpStorm\ArrayShape;
 
 class ParserService

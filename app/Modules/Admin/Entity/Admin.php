@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Entity;
 
-use App\Casts\FullNameCast;
-use App\Entity\FullName;
 use App\Entity\Photo;
+use App\Modules\Base\Casts\FullNameCast;
+use App\Modules\Base\Entity\FullName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,7 +24,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $active //Не заблокирован
  * @property string $post //Должность
  * @property int $telegram_user_id
- * @property FullName $fullname
+ * @property \App\Modules\Base\Entity\FullName $fullname
  * @property Responsibility[] $responsibilities
  * @property Photo $photo
  */
@@ -87,7 +87,7 @@ class Admin extends Authenticatable
             'password' => Hash::make($password),
             'role' => self::ROLE_STAFF,
             'active' => true,
-            'fullname' => new FullName(),
+            'fullname' => new \App\Modules\Base\Entity\FullName(),
         ]);
     }
 
@@ -145,7 +145,7 @@ class Admin extends Authenticatable
         $this->save();
     }
 
-    public function setFullName(FullName $fullname): void
+    public function setFullName(\App\Modules\Base\Entity\FullName $fullname): void
     {
         $this->fullname = $fullname;
     }

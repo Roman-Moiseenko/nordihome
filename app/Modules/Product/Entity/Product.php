@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Entity\Dimensions;
 use App\Entity\Photo;
 use App\Entity\Video;
-use App\Modules\Accounting\Entity\DistributorProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
+use App\Modules\Base\Casts\DimensionsCast;
+use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
@@ -32,7 +32,7 @@ use JetBrains\PhpStorm\Pure;
  * @property string $description
  * @property string $short
  * @property int $main_category_id
- * @property string $dimensions_json
+// * @property string $dimensions_json
  * @property int $frequency
  * @property int $brand_id
  * @property float $current_rating
@@ -46,6 +46,9 @@ use JetBrains\PhpStorm\Pure;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $published_at
+ * @property int $series_id
+ * @property Dimensions $dimensions
+ *
  * @property Tag[] $tags
  * @property Category $category
  * @property Category[] $categories
@@ -71,7 +74,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Modification $modification
  * @property ModificationProduct $modification_product
  * @property Series $series
- * @property int $series_id
+ *
  * @property CartStorage[] $cartStorages
  * @property CartCookie[] $cartCookies
  * @property Wish[] $wishes
@@ -98,18 +101,19 @@ class Product extends Model
         self::FREQUENCY_NOT => 'Нет',
     ];
 
-    public Dimensions $dimensions;
+    //public \App\Modules\Base\Entity\Dimensions $dimensions;
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'published_at' => 'datetime',
+        'dimensions' => DimensionsCast::class,
     ];
 
     protected $attributes = [
         'short' => '',
         'description' => '',
-        'dimensions_json' => '{}',
+//        'dimensions_json' => '{}',
         'frequency' => self::FREQUENCY_NOT,
         'count_for_sell' => 0,
         'current_rating' => 0,
@@ -147,7 +151,7 @@ class Product extends Model
 
     //РЕГИСТРАТОРЫ
 
-
+/*
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -155,7 +159,7 @@ class Product extends Model
         //Конфигурация
         //$this->options = new Options();
     }
-
+*/
     public function sluggable()
     {
         return ['slug' => ['source' => 'name']];
@@ -742,12 +746,12 @@ class Product extends Model
     {
         parent::boot();
         self::saving(function (Product $product) {
-            $product->dimensions_json = $product->dimensions->toSave();
-            if ($product->getCountSell() < 0) throw new \DomainException('Кол-во товаров должно быть >= 0');
+           // $product->dimensions_json = $product->dimensions->toSave();
+           // if ($product->getCountSell() < 0) throw new \DomainException('Кол-во товаров должно быть >= 0');
         });
 
         self::retrieved(function (Product $product) {
-            $product->dimensions = Dimensions::load($product->dimensions_json);
+           // $product->dimensions = \App\Modules\Base\Entity\Dimensions::load($product->dimensions_json);
         });
     }
 

@@ -124,6 +124,7 @@
 
     <div class="box flex items-center px-2 mt-3">
         <div class="w-20"></div>
+        <div class="w-32"></div>
         <div class="w-1/4">ИТОГО</div>
 
         <div class="w-40 input-group">

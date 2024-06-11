@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity\Transport;
 
-use App\Casts\GeoAddressCast;
-use App\Entity\GeoAddress;
+use App\Modules\Base\Casts\GeoAddressCast;
+use App\Modules\Base\Entity\GeoAddress;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use function now;

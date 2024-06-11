@@ -1,7 +1,7 @@
 <?php
 
-use App\Entity\FullName;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Base\Entity\FullName;
 use App\Modules\User\Entity\UserDelivery;
 use Illuminate\Database\Migrations\Migration;
 

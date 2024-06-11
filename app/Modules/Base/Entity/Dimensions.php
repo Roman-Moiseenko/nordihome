@@ -1,18 +1,36 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Modules\Base\Entity;
 
 class Dimensions
 {
-    public float $width;
-    public float $height;
-    public float $depth;
+
+    public float $width; //X
+    public float $depth; //Y
+    public float $height; //Z
+
+    public int $type;
     public float $weight;
     public string $measure;
 
     const MEASURE_G = 'г';
     const MEASURE_KG = 'кг';
+
+    const TYPE_DEPTH = 1;
+    const TYPE_LENGTH = 2;
+    const TYPE_DIAMETER = 3;
+
+    //TODO Реализовать
+    // Высота, Ширина, Глубина
+    // Высота, Ширина, Длина
+    // Высота, Диаметр
+
+    const CAPTION_TYPES = [
+        self::TYPE_DEPTH => ['высота', 'ширина', 'глубина'],
+        self::TYPE_LENGTH => ['высота', 'ширина', 'длина'],
+        self::TYPE_DIAMETER => ['высота', 'диаметр', null],
+    ];
 
     public function __construct()
     {
@@ -23,7 +41,7 @@ class Dimensions
         $this->weight = 0.0;
     }
 
-    public static function create($width, $height, $depth, $weight, $measure = self::MEASURE_G): self
+    public static function create($width, $height, $depth, $weight, $measure = self::MEASURE_G, $type = self::TYPE_DEPTH): self
     {
         $dimension = new static();
         $dimension->width = $width;
@@ -31,6 +49,7 @@ class Dimensions
         $dimension->depth = $depth;
         $dimension->weight = $weight;
         $dimension->measure = $measure;
+        $dimension->type = $type;
 
         return $dimension;
     }

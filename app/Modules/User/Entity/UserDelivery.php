@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
-use App\Casts\GeoAddressCast;
-use App\Entity\GeoAddress;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Base\Casts\GeoAddressCast;
+use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use Illuminate\Database\Eloquent\Model;
