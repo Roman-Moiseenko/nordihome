@@ -23,11 +23,6 @@ class Dimensions
     const TYPE_LENGTH = 2;
     const TYPE_DIAMETER = 3;
 
-    //TODO Реализовать выбор и показ
-    // Высота (Z), Ширина (X), Глубина (Y)
-    // Высота, Ширина, Длина
-    // Высота, Диаметр
-
     const CAPTION_TYPES = [
         self::TYPE_DEPTH => ['Высота', 'Ширина', 'Глубина'],
         self::TYPE_LENGTH => ['Высота', 'Ширина', 'Длина'],
@@ -47,6 +42,7 @@ class Dimensions
         $this->height = 0.0;
         $this->depth = 0.0;
         $this->weight = 0.0;
+        $this->type = self::TYPE_DEPTH;
     }
 
     public static function create($width, $height, $depth, $weight, $measure = self::MEASURE_G, int $type = self::TYPE_DEPTH): self
@@ -71,7 +67,7 @@ class Dimensions
             $dimension->depth = $params['depth'];
             $dimension->weight = $params['weight'];
             $dimension->measure = $params['measure'];
-            $dimension->type = $params['type'];
+            $dimension->type = $params['type'] ?? self::TYPE_DEPTH;
         }
         return $dimension;
     }

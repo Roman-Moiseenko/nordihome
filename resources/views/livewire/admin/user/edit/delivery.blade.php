@@ -18,9 +18,9 @@
             </div>
         </div>
 
-        <div class="flex">
-            <input class="form-control ml-2" wire:model="address">
-            <button class="btn btn-success-soft btn-sm ml-1" wire:click="save_change">
+        <div class="flex mb-1">
+            <input class="form-control ml-2 mt-1" wire:model="address" placeholder="Адрес клиента">
+            <button class="btn btn-success-soft btn-sm ml-1 mt-1" wire:click="save_change">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                      class="lucide lucide-save">
@@ -30,7 +30,7 @@
                     <path d="M7 3v4a1 1 0 0 0 1 1h7"/>
                 </svg>
             </button>
-            <button class="btn btn-secondary btn-sm ml-1" wire:click="close_change">
+            <button class="btn btn-secondary btn-sm ml-1 mt-1" wire:click="close_change">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                      class="lucide lucide-x">

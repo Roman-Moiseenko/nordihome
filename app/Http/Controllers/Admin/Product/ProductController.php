@@ -59,13 +59,6 @@ class ProductController extends Controller
 
 
 
-
-            /*
-            if (!empty($search = $request['search'])) {
-                $query->where('code_search', 'LIKE', "%{$search}%")->orWhere('code', 'LIKE', "%{$search}%")
-                    ->orWhere('name', 'LIKE', "%{$search}%");
-            }
-             */
             $query = $this->repository->getFilter($filters);
             $products = $this->pagination($query, $request, $pagination);
 

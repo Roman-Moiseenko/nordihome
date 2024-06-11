@@ -1,15 +1,21 @@
 <x-base.table.tr>
     <x-base.table.td>
         <div class="image-fit w-10 h-10">
-            <img class="rounded-full" src="{{ $product->getImage() }}" alt="{{ $product->name }}">
+            <img class="" src="{{ $product->getImage() }}" alt="{{ $product->name }}">
         </div>
     </x-base.table.td>
     <x-base.table.td class="text-center">{{ $product->code }}</x-base.table.td>
     <x-base.table.td><a href="{{ route('admin.product.edit', $product) }}"
                                       class="font-medium whitespace-nowrap">{{ $product->name }}</a> {{ ($product->published) ? '' : '(Черновик)' }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $product->category->name }}</x-base.table.td>
-    <x-base.table.td class="text-center">{{ $product->getCountSell() }}</x-base.table.td>
-    <x-base.table.td class="text-center">{{ $product->getReserveCount() }}</x-base.table.td>
+    <x-base.table.td class="text-center whitespace-nowrap">{{ price($product->getPriceRetail()) }}
+        @if($product->hasPromotion())
+            <div class="text-danger font-medium">
+                {{ price($product->promotion()->pivot->price) }}
+            </div>
+        @endif
+    </x-base.table.td>
+    <x-base.table.td class="text-center"><span class="text-success">{{ $product->getCountSell() }}</span> / <span class="text-danger">{{ $product->getReserveCount() }}</span></x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
             <a class="flex items-center mr-3" href="#"
@@ -26,10 +32,10 @@
             <a class="flex items-center mr-3" href="{{ route('admin.product.edit', $product) }}">
                 <x-base.lucide icon="check-square" class="w-4 h-4"/>
                 Edit </a>
-            <a class="flex items-center text-danger" href="#"
+            <!--a class="flex items-center text-danger" href="#"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.destroy', $product) }}
                ><x-base.lucide icon="trash-2" class="w-4 h-4"/>
-                Delete </a>
+                Delete </a-->
         </div>
     </x-base.table.td>
 </x-base.table.tr>
