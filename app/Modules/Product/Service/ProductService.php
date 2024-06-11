@@ -150,9 +150,10 @@ class ProductService
         $product->dimensions = Dimensions::create(
             (float)$request['dimensions-width'],
             (float)$request['dimensions-height'],
-            (float)$request['dimensions-depth'],
+            (float)$request['dimensions-depth'] ?? 0,
             (float)$request['dimensions-weight'],
-            $request['dimensions-measure']
+            $request['dimensions-measure'],
+            (int)$request['dimensions-type']
         );
         $product->not_local = !isset($request['local']);
         $product->not_delivery = !isset($request['delivery']);

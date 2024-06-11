@@ -24,14 +24,20 @@ class Dimensions
     const TYPE_DIAMETER = 3;
 
     //TODO Реализовать выбор и показ
-    // Высота, Ширина, Глубина
+    // Высота (Z), Ширина (X), Глубина (Y)
     // Высота, Ширина, Длина
     // Высота, Диаметр
 
     const CAPTION_TYPES = [
-        self::TYPE_DEPTH => ['высота', 'ширина', 'глубина'],
-        self::TYPE_LENGTH => ['высота', 'ширина', 'длина'],
-        self::TYPE_DIAMETER => ['высота', 'диаметр', null],
+        self::TYPE_DEPTH => ['Высота', 'Ширина', 'Глубина'],
+        self::TYPE_LENGTH => ['Высота', 'Ширина', 'Длина'],
+        self::TYPE_DIAMETER => ['Высота', 'Диаметр', ''],
+    ];
+
+    const TYPES = [
+        self::TYPE_DEPTH => 'Глубина',
+        self::TYPE_LENGTH => 'Длина',
+        self::TYPE_DIAMETER => 'Диаметр',
     ];
 
     public function __construct()
@@ -43,7 +49,7 @@ class Dimensions
         $this->weight = 0.0;
     }
 
-    public static function create($width, $height, $depth, $weight, $measure = self::MEASURE_G, $type = self::TYPE_DEPTH): self
+    public static function create($width, $height, $depth, $weight, $measure = self::MEASURE_G, int $type = self::TYPE_DEPTH): self
     {
         $dimension = new static();
         $dimension->width = $width;
@@ -115,5 +121,30 @@ class Dimensions
     {
         $volume = (int)(($this->height * $this->width * $this->depth) * 100) / 100;
         return  $volume / 1000000;
+    }
+
+    public function typeHtml():string
+    {
+        return self::TYPES[$this->type];
+    }
+
+    public function nameX(): string
+    {
+        return self::CAPTION_TYPES[$this->type][1];
+    }
+
+    public function nameY(): string
+    {
+        return self::CAPTION_TYPES[$this->type][2];
+    }
+
+    public function nameZ(): string
+    {
+        return self::CAPTION_TYPES[$this->type][0];
+    }
+
+    public function notDiameter():bool
+    {
+        return $this->type != self::TYPE_DIAMETER;
     }
 }

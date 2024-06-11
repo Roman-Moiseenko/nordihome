@@ -4,10 +4,10 @@
     <div class="col-span-12 lg:col-span-8">
         <div class="flex">
             <div>
-        <select id="input-dimensions-measure" name="dimensions-measure" class="form-select w-full lg:w-40">
-            <option value="{{ App\Modules\Base\Entity\Dimensions::MEASURE_G }}" {{ ($product->dimensions->measure == App\Modules\Base\Entity\Dimensions::MEASURE_G ? 'selected' : '')  }}>{{ App\Modules\Base\Entity\Dimensions::MEASURE_G }}</option>
-            <option value="{{ App\Modules\Base\Entity\Dimensions::MEASURE_KG }}" {{ ($product->dimensions->measure == App\Modules\Base\Entity\Dimensions::MEASURE_KG ? 'selected' : '')  }}>{{ App\Modules\Base\Entity\Dimensions::MEASURE_KG }}</option>
-        </select>
+                <select id="input-dimensions-measure" name="dimensions-measure" class="form-select w-full lg:w-40">
+                    <option value="{{ App\Modules\Base\Entity\Dimensions::MEASURE_G }}" {{ ($product->dimensions->measure == App\Modules\Base\Entity\Dimensions::MEASURE_G ? 'selected' : '')  }}>{{ App\Modules\Base\Entity\Dimensions::MEASURE_G }}</option>
+                    <option value="{{ App\Modules\Base\Entity\Dimensions::MEASURE_KG }}" {{ ($product->dimensions->measure == App\Modules\Base\Entity\Dimensions::MEASURE_KG ? 'selected' : '')  }}>{{ App\Modules\Base\Entity\Dimensions::MEASURE_KG }}</option>
+                </select>
             </div>
             {{ \App\Forms\Input::create('dimensions-weight',
                 ['placeholder' => 'Вес', 'class' => 'ml-0 w-full lg:ml-4 lg:w-40', 'value' => $product->dimensions->weight])
@@ -15,15 +15,25 @@
 
         </div>
         <div class="flex mt-3">
-            {{ \App\Forms\Input::create('dimensions-width',
-                ['placeholder' => 'Ширина', 'class' => 'ml-0 w-full lg:w-40', 'value' => $product->dimensions->width])
-                ->help('Ширина (см)')->show() }}
+            <div>
+            <select id="input-dimensions-type" name="dimensions-type" class="form-select w-full lg:w-40">
+                @foreach(App\Modules\Base\Entity\Dimensions::TYPES as $type => $name)
+                <option value="{{ $type }}" {{ ($product->dimensions->type == $type ? 'selected' : '')  }}>{{ $name }}</option>
+                @endforeach
+            </select>
+            </div>
             {{ \App\Forms\Input::create('dimensions-height',
                 ['placeholder' => 'Высота', 'class' => 'ml-0 w-full lg:ml-4 lg:w-40', 'value' => $product->dimensions->height])
-                ->help('Высота (см)')->show() }}
+                ->help($product->dimensions->nameZ() . ' (см)')->show() }}
+
+            {{ \App\Forms\Input::create('dimensions-width',
+                ['placeholder' => 'Ширина', 'class' => 'ml-0 w-full lg:ml-4 lg:w-40', 'value' => $product->dimensions->width])
+                ->help($product->dimensions->nameX() . ' (см)')->show() }}
+            @if($product->dimensions->notDiameter())
             {{ \App\Forms\Input::create('dimensions-depth',
                 ['placeholder' => 'Глубина', 'class' => 'ml-0 w-full lg:ml-4 lg:w-40', 'value' => $product->dimensions->depth])
-                ->help('Глубина (см)')->show() }}
+                ->help($product->dimensions->nameY() . ' (см)')->show() }}
+            @endif
         </div>
     </div>
 </div>
