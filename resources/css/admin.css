@@ -185,3 +185,23 @@ input.btn-check:checked + label:hover {
     right: -10px;
     font-size: 0.75rem;
 }
+/* Цвет и смещение таблицы для подкатегорий */
+
+.bg-slate-category {
+    padding-left: 48px !important;
+}
+.bg-slate-category.depth-category-0 {
+    background: rgb(var(--color-slate-200)) !important;
+}
+.bg-slate-category.depth-category-1 {
+    background: rgb(var(--color-slate-300)) !important;
+}
+.bg-slate-category.depth-category-2 {
+    background: rgb(var(--color-slate-400)) !important;
+}
+.bg-slate-category.depth-category-3 {
+    background: rgb(var(--color-slate-500)) !important;
+}
+.bg-slate-category.depth-category-4 {
+    background: rgb(var(--color-slate-600)) !important;
+}

@@ -48,9 +48,9 @@
     </td>
 </tr>
 @if(count($category->children) != 0)
-    <tr id="children-{{ $category->id }}" class="hidden" style="background-color: #e5e7eb !important;">
-        <td colspan="6" style="padding: 0;">
-            <div class="px-4 bg-slate-100">
+    <tr id="children-{{ $category->id }}" class="hidden">
+        <td colspan="6" style="" class="bg-slate-category depth-category-{{ $category->depth }}">
+            <div class="">
             <table class="table table-report -mt-2">
                 <tbody>
                     @foreach($category->children as $children)

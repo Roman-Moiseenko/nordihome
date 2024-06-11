@@ -94,8 +94,8 @@ class CategoryRepository
 
     public function getTree(int $parent_id = null)
     {
-        if (is_null($parent_id)) return Category::defaultOrder()->get()->toTree();
-        return Category::defaultOrder()->descendantsOf($parent_id)->toTree();
+        if (is_null($parent_id)) return Category::defaultOrder()->withDepth()->get()->toTree();
+        return Category::defaultOrder()->withDepth()->descendantsOf($parent_id)->toTree();
     }
 
     /**
