@@ -29,9 +29,9 @@
             <form id="form-toggle-{{ $product->id }}" method="post" action="{{ route('admin.product.toggle', $product) }}">
                 @csrf
             </form>
-            <a class="flex items-center mr-3" href="{{ route('admin.product.edit', $product) }}">
-                <x-base.lucide icon="check-square" class="w-4 h-4"/>
-                Edit </a>
+            <a class="flex items-center mr-3" href="{{ route('admin.product.show', $product) }}">
+                <x-base.lucide icon="eye" class="w-4 h-4"/>
+                View </a>
             <!--a class="flex items-center text-danger" href="#"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.product.destroy', $product) }}
                ><x-base.lucide icon="trash-2" class="w-4 h-4"/>
