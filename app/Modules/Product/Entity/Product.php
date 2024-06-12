@@ -683,7 +683,7 @@ class Product extends Model
 
     public function photos()
     {
-        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');//->where('sort', '>',0);
+        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort')->orderBy('id');//->where('sort', '>',0);
     }
 
     public function photo_next()

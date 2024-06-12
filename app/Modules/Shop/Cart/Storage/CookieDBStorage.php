@@ -17,7 +17,7 @@ class CookieDBStorage implements StorageInterface
     public function __construct()
     {
         $this->user_ui = Cookie::get('user_cookie_id');
-        if (empty($this->user_ui)) throw new \DomainException('Что-то пошло не так, user_cookie_id пустой');
+        //if (empty($this->user_ui)) throw new \DomainException('Что-то пошло не так, user_cookie_id пустой');
     }
 
     public function load(): array
