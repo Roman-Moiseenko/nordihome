@@ -112,8 +112,8 @@ class Product extends Model
 
     protected $attributes = [
         'short' => '',
+        'dimensions' => '{}',
         'description' => '',
-//        'dimensions_json' => '{}',
         'frequency' => self::FREQUENCY_NOT,
         'count_for_sell' => 0,
         'current_rating' => 0,
@@ -143,6 +143,7 @@ class Product extends Model
         'code_search',
         'series_id',
         'published_at',
+       // 'description',
     ];
 
     protected $hidden = [
@@ -206,6 +207,7 @@ class Product extends Model
             'code' => $code,
             'code_search' => $code_search,
             'main_category_id' => $main_category_id,
+            //'description' => '{}',
         ];
 
         return self::create(array_merge($data, $arguments));
@@ -545,12 +547,16 @@ class Product extends Model
         return StorageItem::where('product_id', $this->id)->getModels();
     }
 
-    public function getImage(): string
+    public function getImage(string $thumb = ''): string
     {
         if (empty($this->photo->file)) {
             return '/images/no-image.jpg';
         } else {
-            return $this->photo->getUploadUrl();
+            if ($thumb == '') {
+                return $this->photo->getUploadUrl();
+            } else {
+                return $this->photo->getThumbUrl($thumb);
+            }
         }
     }
 

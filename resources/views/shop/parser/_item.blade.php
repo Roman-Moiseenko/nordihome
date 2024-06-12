@@ -1,6 +1,6 @@
 <div class="parser-item box-card">
     <div class="image">
-        <img src="{{ $item->product->photo->getThumbUrl('thumb') }}" alt="{{ $item->product->name }}">
+        <img src="{{ $item->product->getImage('thumb') }}" alt="{{ $item->product->name }}">
     </div>
     <div class="data">
         <h4>{{ $item->product->name }}</h4>

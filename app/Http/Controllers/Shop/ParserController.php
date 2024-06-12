@@ -44,7 +44,7 @@ class ParserController extends Controller
             'search' => 'required|min:8'
         ]);
 
-        return $this->try_catch(function () use ($request, $user_ui) {
+       return $this->try_catch(function () use ($request, $user_ui) {
             $product = $this->service->findProduct($request);
             $this->cart->load($user_ui);
             $this->cart->add($product);

@@ -87,7 +87,7 @@ class ParserService
                 $parser_product['dimensions']->weight,
                 Dimensions::MEASURE_KG);
             $product->save();
-            $product->photo()->save(Photo::uploadByUrl($parser_product['image']));
+            if (!empty($parser_product['image'])) $product->photo()->save(Photo::uploadByUrl($parser_product['image']));
             $product->refresh();
 
             //4. Создаем ProductParsing
@@ -224,6 +224,7 @@ class ParserService
         $json_product = $this->httpPage->getPage($url, '_cache');
 
         $_array = json_decode($json_product, true);
+       //dd($_array);
 
         if ($_array == null)
             throw new \DomainException('На сайте содержаться неверные данные о продукте');
@@ -233,12 +234,12 @@ class ParserService
         //Парсим первычный JSON
         $name = $item['name'];
         $link = $item['pipUrl'];
-        $image = $item['mainImageUrl'];
+        $image = $item['mainImageUrl'] ?? '';
         $price = $item['salesPrice']['numeral'];
 
         //Проверяем, была ли предыдущая цена.
-        if (isset($item['salesPrice']['previous'])) {
-            $_previous = (float)(str_replace(' ', '', $item['salesPrice']['previous']['wholeNumber']) . '.' . $item['salesPrice']['previous']['decimals']);
+        if (isset($item['salesPrice']['lowestPreviousSalesPrice'])) {
+            $_previous = (float)(str_replace(' ', '', $item['salesPrice']['lowestPreviousSalesPrice']['wholeNumber']) . '.' . $item['salesPrice']['lowestPreviousSalesPrice']['decimals']);
             if ($_previous > (float)$price) $price = $_previous;
         }
 
