@@ -256,7 +256,7 @@ class ProductService
     public function destroy(Product $product)
     {
         if ($product->orderItems()->count()) {
-            throw new \DomainException('Товар в заказах. Удалить нельзя');
+            $product->setDraft(); //throw new \DomainException('Товар в заказах. Удалить нельзя');
         }
         $product->delete();
         //TODO При удалении, удалять все связанные файлы Фото и Видео
