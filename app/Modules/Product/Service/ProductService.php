@@ -244,22 +244,23 @@ class ProductService
     public function moderation(Product $product): void
     {
         //TODO Проверка на заполнение
-        $product->setModeration();
+       // $product->setModeration();
     }
 
     public function approved(Product $product): void
     {
         //TODO Проверка на заполнение
-        $product->setApproved();
+        //$product->setApproved();
     }
 
     public function destroy(Product $product)
     {
-
-        //TODO Проверка на продажи и Отзывы- через сервисы reviewService->isSet($product->id) reviewOrder->isSet($product->id)
+        if ($product->orderItems()->count()) {
+            throw new \DomainException('Товар в заказах. Удалить нельзя');
+        }
+        $product->delete();
         //TODO При удалении, удалять все связанные файлы Фото и Видео
-        if ($product->id > 0)
-            throw new \DomainException('Тестируем. Удалить Продукт нельзя');
+
     }
 
     private function tags(Request $request, Product &$product)
@@ -366,6 +367,20 @@ class ProductService
         $product->setDraft();
     }
 
+    public function action(string $action, array $ids)
+    {
+        foreach ($ids as $product_id) {
+            /** @var Product $product */
+            $product = Product::find($product_id);
+
+            if ($action == 'draft' && $product->isPublished()) $product->setDraft();
+            if ($action == 'published' && !$product->isPublished()) $product->setPublished();
+
+            if ($action == 'remove') $this->destroy($product);
+        }
+
+
+    }
 
 
 }

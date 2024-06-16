@@ -254,6 +254,7 @@ Route::group(
             ],
             function () {
 
+                Route::post('/action', 'ProductController@action')->name('action');
 
                 //Доп. - сменить категорию, добавить фото
                 Route::get('/attribute/groups', 'AttributeController@groups')->name('attribute.groups');

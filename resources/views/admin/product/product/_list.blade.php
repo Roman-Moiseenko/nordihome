@@ -1,4 +1,7 @@
-<x-base.table.tr>
+<x-base.table.tr class="tr-with-hidden">
+    <x-base.table.td class="py-0 px-0">
+        <input class="form-check-input check-products" type="checkbox" name="check[]" value="{{ $product->id }}" />
+    </x-base.table.td>
     <x-base.table.td>
         <div class="image-fit w-10 h-10">
             <img class="" src="{{ $product->getImage() }}" alt="{{ $product->name }}">

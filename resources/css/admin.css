@@ -210,6 +210,10 @@ input.btn-check:checked + label:hover {
 .button-manage-product {
     display: none;
 }
+.tr-with-hidden:hover .button-manage-product {
+    display: block;
+}
+
 .td-with-hidden:hover > .button-manage-product {
     display: block;
 }

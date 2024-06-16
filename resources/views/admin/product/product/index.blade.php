@@ -9,71 +9,7 @@
             @endif
         </h2>
     </div>
-    @if(false)
-    <div class="intro-y box p-5 mt-5">
-        <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 lg:col-span-3">
-                <x-base.form-label for="select-category">Категории</x-base.form-label>
-                <x-base.tom-select id="select-category" name="category_id"
-                                   class="w-full" data-placeholder="Выберите категорию">
-                    <option value="0"></option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}"
-                            {{ $category->id == $filters['category'] ? 'selected' : ''}} >
-                            @for($i = 0; $i<$category->depth; $i++) - @endfor
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </x-base.tom-select>
-            </div>
-            <div class="col-span-12 lg:col-span-2 border-l pl-4 flex">
-                <div class="">
-                    <div class="form-check mr-3">
-                        <input id="published-all" class="form-check-input check-published" type="radio" name="published" value="all" {{ $filters['published'] == 'all' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="published-all">Все</label>
-                    </div>
-                    <div class="form-check mr-3 mt-2 sm:mt-0">
-                        <input id="published-active" class="form-check-input check-published" type="radio" name="published" value="active" {{ $filters['published'] == 'active' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="published-active">Опубликованные</label>
-                    </div>
-                    <div class="form-check mr-3 mt-2 sm:mt-0">
-                        <input id="published-draft" class="form-check-input check-published" type="radio" name="published" value="draft" {{ $filters['published'] == 'draft' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="published-draft">Черновики</label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-span-12 lg:col-span-4 border-l pl-4 flex flex-col">
-                <x-base.form-label>Поиск товара по названию или артикулу</x-base.form-label>
-                <x-searchProduct id="search-product-select" route="{{ route('admin.product.search') }}"
-                                 input-data="product-product" hidden-id="product_id" class="w-full"  callback="_callback()"/>
-            </div>
-        </div>
-    </div>
-    @endif
-    <script>
-        /* Filters */
-        const urlParams = new URLSearchParams(window.location.search);
 
-        let selectCategory = document.getElementById('select-category');
-        selectCategory.addEventListener('change', function () {
-            let p = selectCategory.options[selectCategory.selectedIndex].value;
-            urlParams.set('category_id', p);
-            window.location.search = urlParams;
-        });
-
-        let checkPublished = document.querySelectorAll('.check-published');
-        checkPublished.forEach(function (item) {
-            item.addEventListener('click', function () {
-                let v = item.value;
-                urlParams.set('published', v);
-                window.location.search = urlParams;
-            });
-        });
-
-        function _callback() {
-            window.location.href = document.getElementById('product-product').dataset.url;
-        }
-    </script>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
@@ -148,6 +84,9 @@
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
+                        <x-base.table.th class="w-10 text-center">
+                            <input id="check-all" class="form-check-input" type="checkbox"  value="" />
+                        </x-base.table.th>
                         <x-base.table.th class="w-10 text-center whitespace-nowrap">IMG</x-base.table.th>
                         <x-base.table.th class="w-32 text-center whitespace-nowrap">АРТИКУЛ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
@@ -163,6 +102,17 @@
                 </x-base.table.tbody>
             </x-base.table>
         </div>
+        <div class="col-span-12 mt-3 flex">
+            <x-base.tom-select id="actions" class="w-52 bg-white">
+                <option value="not" disabled selected>Действия</option>
+                <option value="draft">В черновик</option>
+                <option value="published">Опубликовать</option>
+                <option value="remove">Удалить</option>
+            </x-base.tom-select>
+            <button id="action-check" type="button" class="btn btn-primary-soft ml-2"
+                    data-route="{{ route('admin.product.action') }}"
+                    disabled>Применить</button>
+        </div>
     </div>
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
@@ -174,5 +124,90 @@
     clearFilter.addEventListener('click', function () {
         window.location.href = window.location.href.split("?")[0];
     });
+
+    let checkAll = document.getElementById('check-all');
+    let checkProducts = document.querySelectorAll('.check-products');
+    let actionsSelect = document.getElementById('actions');
+    let actionButton = document.getElementById('action-check');
+
+    //Выделить все элементы, снять все элементы
+    checkAll.addEventListener('change', function () {
+        Array.from(checkProducts).forEach(function (checkProduct) {
+            checkProduct.checked = checkAll.checked;
+        });
+        _button();
+    });
+
+
+    //при снятии/выделении элемента checkProducts менять checkAll, если один элемент выделен, то actionButton активен, иначе disabled
+    Array.from(checkProducts).forEach(function (checkProduct) {
+        checkProduct.addEventListener('change', function () {
+            checkAll.checked = _check_all() === 1;
+            _button();
+        });
+    });
+
+    //если выбран элемент actionsSelect сделать активным  actionButton
+    actionsSelect.addEventListener('change', function () {
+        _button();
+    });
+
+    function _check_all() {  //Проверка комбинация нажаты все, ни одной или несколько чекбоксов
+        let _check = false, _uncheck = false;
+        Array.from(checkProducts).forEach(function (checkProduct) {
+            if (checkProduct.checked) {
+                _check = true;
+            } else {
+                _uncheck = true;
+            }
+        });
+
+        if (_check === true && _uncheck === true) return 0; //'Есть нажатые и не нажатые';
+        if (_check === false && _uncheck === true) return -1; //'Все не нажаты';
+        if (_check === true && _uncheck === false) return 1; //'Все нажаты';
+    }
+
+    //обработка actionButton
+    actionButton.addEventListener('click', function () {
+        let route = actionButton.dataset.route;
+        let data = {action: actionsSelect.value, ids: []};
+
+        Array.from(checkProducts).forEach(function (checkProduct) {
+            if (checkProduct.checked) data.ids.push(checkProduct.value);
+        });
+        //console.log(data);
+
+        setAjax(route, data);
+    });
+
+    function _button() {
+        if (actionsSelect.value !== 'not' && _check_all() >= 0) {
+            actionButton.disabled = false;
+        } else  {
+            actionButton.disabled = true;
+        }
+    }
+
+
+
+    function setAjax(route, data) {
+        let _params = '_token=' + '{{ csrf_token() }}' + '&data=' + JSON.stringify(data);
+        let request = new XMLHttpRequest();
+        request.open('POST', route);
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.send(_params);
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let data = JSON.parse(request.responseText);
+                if (data.error !== undefined) {
+                    //Notification
+                    window.notification('Ошибка!', data.error, 'danger');
+                } else {
+                    window.location.reload();
+                }
+            }
+        };
+    }
+
 </script>
 @endsection

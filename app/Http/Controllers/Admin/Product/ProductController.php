@@ -140,6 +140,16 @@ class ProductController extends Controller
     }
 
     //AJAX
+
+    public function action(Request $request)
+    {
+        return $this->try_catch_ajax_admin(function () use($request) {
+            $data = json_decode($request['data'], true);
+            $this->service->action($data['action'], $data['ids']);
+            return \response()->json(true);
+        });
+    }
+
     public function search(Request $request)
     {
         return $this->try_catch_ajax_admin(function () use($request) {
