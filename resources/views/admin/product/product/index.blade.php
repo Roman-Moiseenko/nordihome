@@ -153,8 +153,7 @@
                         <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
                         <x-base.table.th class="w-40 text-center whitespace-nowrap">КАТЕГОРИЯ</x-base.table.th>
                         <x-base.table.th class="w-32 text-center whitespace-nowrap">ЦЕНА</x-base.table.th>
-                        <x-base.table.th class="w-32 text-center whitespace-nowrap">НАЛИЧИЕ</x-base.table.th>
-                        <x-base.table.th class="text-right whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
+                        <x-base.table.th class="w-32 text-right whitespace-nowrap">НАЛИЧИЕ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>
@@ -165,6 +164,9 @@
             </x-base.table>
         </div>
     </div>
+
+    {{ \App\Forms\ModalDelete::create('Вы уверены?',
+    'Вы действительно хотите удалить товар?<br>Этот процесс не может быть отменен.')->show() }}
 
     {{ $products->links('admin.components.paginator', ['pagination' => $pagination]) }}
 <script>
