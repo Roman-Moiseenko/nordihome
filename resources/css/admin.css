@@ -205,3 +205,9 @@ input.btn-check:checked + label:hover {
 .bg-slate-category.depth-category-4 {
     background: rgb(var(--color-slate-600)) !important;
 }
+.button-manage-product {
+    display: none;
+}
+.button-manage-product:hover {
+    display: block;
+}

@@ -31,7 +31,7 @@ class CashTypePayment extends PaymentAbstract
 
     public static function name(): string
     {
-        return 'Наличными при получении';
+        return 'Наличные';
     }
 
     public static function sort(): int

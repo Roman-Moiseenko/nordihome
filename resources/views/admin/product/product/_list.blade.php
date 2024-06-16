@@ -6,7 +6,9 @@
     </x-base.table.td>
     <x-base.table.td class="text-center">{{ $product->code }}</x-base.table.td>
     <x-base.table.td><a href="{{ route('admin.product.edit', $product) }}"
-                                      class="font-medium whitespace-nowrap">{{ $product->name }}</a> {{ ($product->published) ? '' : '(Черновик)' }}</x-base.table.td>
+                                      class="font-medium whitespace-nowrap">{{ $product->name }}</a> {{ ($product->published) ? '' : '(Черновик)' }}
+    <div class="fs-8 button-manage-product">Кнопки управления товаром</div>
+    </x-base.table.td>
     <x-base.table.td class="text-center">{{ $product->category->name }}</x-base.table.td>
     <x-base.table.td class="text-center whitespace-nowrap">{{ price($product->getPriceRetail()) }}
         @if($product->hasPromotion())
