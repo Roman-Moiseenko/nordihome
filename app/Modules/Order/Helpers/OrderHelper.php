@@ -20,6 +20,7 @@ class OrderHelper
             if (!is_null($order->invoice) && $order->invoice->created_at->lte(now()->subDays(3)))
                 $type = 'red';
         }
+        if ($order->isPaid() && $order->getPaymentAmount() > $order->getTotalAmount()) $type = 'double-green';
 
         return '<span class="circle ' . $type . '"></span>';
     }

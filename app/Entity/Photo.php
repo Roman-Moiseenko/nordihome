@@ -95,6 +95,7 @@ class Photo extends Model
             $storage . $upload_file_name,
             $upload_file_name,
             null, null, true);
+        //TODO Очистка папки $storage
         return self::upload($upload, $type, $sort, $alt);
     }
 

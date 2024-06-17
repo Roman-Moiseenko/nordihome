@@ -163,6 +163,25 @@ input.btn-check:checked + label:hover {
     border: 1px solid rgb(var(--color-slate-400));
     background: linear-gradient( 90deg, rgb(var(--color-success)), rgb(var(--color-success)) 49%, white 49%, white 51%, white 51% )
 }
+
+.circle.double-green:before{
+    background: rgb(var(--color-success));
+    left: -4px;
+    right: 4px;
+}
+.circle.double-green:after{
+    background: rgb(var(--color-success));
+    right: -4px;
+    left: 4px;
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .box-in-box {
     border-radius: 10px;
     background: #fafafa;
