@@ -119,6 +119,7 @@
     'Вы действительно хотите удалить товар?<br>Этот процесс не может быть отменен.')->show() }}
 
     {{ $products->links('admin.components.paginator', ['pagination' => $pagination]) }}
+    <div class="pt-16 mt-16"> </div>
 <script>
     let clearFilter = document.getElementById('clear-filter');
     clearFilter.addEventListener('click', function () {
