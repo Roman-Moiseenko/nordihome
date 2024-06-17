@@ -41,10 +41,10 @@ class PageController extends Controller
 
     public function email(Request $request)
     {
-        abort(404);
+        //abort(404);
         //TODO Обратная связь
         // Необходимо сохранение писем в базе и передача их на Исполнение
-        //Mail::to($request['email'])->queue(new FeedBack($request['email'], $request['phone'], $request['message']));
+        Mail::to($request['email'])->queue(new FeedBack($request['email'], $request['phone'], $request['message']));
         //return redirect()->back();
     }
 }

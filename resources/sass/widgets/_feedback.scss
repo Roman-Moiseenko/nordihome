@@ -1,0 +1,10 @@
+.feedback-send {
+    display: grid;
+    align-items: center;
+    height: 100%;
+    > div {
+        margin: auto;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+}

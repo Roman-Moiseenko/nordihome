@@ -23,7 +23,8 @@
     @include('shop.old_widget.otzivi')
     @include('shop.old_widget.voprosi')
     @include('shop.old_widget.nalich-i-zakaz2')
-    @include('shop.widgets.contact')
+    <livewire:shop.widget.feedback />
+
 
     <div class="mt-3">
         @include('shop.widgets.map')
