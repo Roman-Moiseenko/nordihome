@@ -37,7 +37,7 @@
             @csrf
         </form>
     @if($admin->isStaff())
-        <button class="btn btn-primary" onclick="document.getElementById('form-order-take').submit();">Взять заказ</button>
+        <button class="btn btn-primary mt-2" onclick="document.getElementById('form-order-take').submit();">Взять заказ</button>
         <form id="form-order-take" method="post" action="{{ route('admin.sales.order.take', $order) }}">
             @csrf
         </form>

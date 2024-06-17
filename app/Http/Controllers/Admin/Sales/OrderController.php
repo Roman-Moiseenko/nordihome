@@ -23,6 +23,7 @@ use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -189,6 +190,18 @@ class OrderController extends Controller
     {
         return $this->try_catch_admin(function () use ($request, $order) {
             $this->orderService->setManager($order, (int)$request['staff_id']);
+            return redirect()->back();
+        });
+    }
+
+    public function take(Order $order)
+    {
+        return $this->try_catch_admin(function () use ($order) {
+            /** @var Admin $staff */
+            $staff = Auth::guard('admin')->user();
+
+            $this->orderService->setManager($order, $staff->id);
+            flash('Вы взяли заказ в работу');
             return redirect()->back();
         });
     }

@@ -301,6 +301,17 @@ class Order extends Model
         return $this->manager()->first();
     }
 
+    public function getNameManager(bool $short = false): string
+    {
+        if (is_null($this->manager)) return '-';
+        if ($short) {
+            return $this->manager->fullname->getShortName();
+        } else {
+            return $this->manager->fullname->getFullName();
+        }
+
+    }
+
     //Суммы по заказу*******************
 
     /**
