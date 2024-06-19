@@ -40,7 +40,7 @@ class HomeController extends Controller
         $widgets = [];
         try {
             //TODO После исправления акций включить
-            $widgets = []; //Widget::get();
+            $widgets = Widget::where('active', true)->get();
         } catch (\Throwable $e) {
             flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
             event(new ThrowableHasAppeared($e));

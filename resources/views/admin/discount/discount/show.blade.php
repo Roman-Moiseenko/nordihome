@@ -17,6 +17,10 @@
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center">
                         <x-base.lucide class="w-4 h-4"
+                                       icon="captions"/>&nbsp;{{ $discount->title }}
+                    </div>
+                    <div class="truncate sm:whitespace-normal flex items-center mt-3">
+                        <x-base.lucide class="w-4 h-4"
                                        icon="calendar-clock"/>&nbsp;{{ $discount->caption() }}
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">

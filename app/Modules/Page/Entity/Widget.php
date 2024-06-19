@@ -80,6 +80,7 @@ class Widget extends Model
     {
         return self::WIDGET_TEMPLATES[$this->template];
     }
+
     private function DataWidget(): DataWidget
     {
         /** @var DataWidgetInterface $item */
