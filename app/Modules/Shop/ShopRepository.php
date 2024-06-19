@@ -92,10 +92,10 @@ class ShopRepository
             $query->whereIn('brand_id', $brands);
         }
 
-        //Наличие
-        if (!empty($request['in_stock'])) {
+        //TODO Наличие
+      /*  if (!empty($request['in_stock'])) {
             $query->where('count_for_sell', '>', 0);
-        }
+        }*/
         //Цена
         if (isset($request['price'])) {
             if (!empty($min = $request['price'][0]) && is_numeric($min)) {
@@ -207,14 +207,15 @@ class ShopRepository
 
 
         //Предзаказ
-        if (!$this->options->shop->pre_order) {
+        //TODO Фильтр по наличию ????
+    /*    if (!$this->options->shop->pre_order) {
             $query->where('count_for_sell', '>', 0);
         } else {
             $query->where(function ($_query) {
                 $_query->where('pre_order', true)->OrWhere('count_for_sell', '>', 0);
             });
         }
-
+*/
         return $query->get();
     }
 

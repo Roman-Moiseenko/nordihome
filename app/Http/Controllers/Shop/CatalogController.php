@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Shop;
 
 use App\Events\ThrowableHasAppeared;
+use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
@@ -16,10 +17,12 @@ use Illuminate\Support\Facades\Cookie;
 class CatalogController extends Controller
 {
     private ShopRepository $repository;
+    private bool $preorder;
 
     public function __construct(ShopRepository $repository)
     {
         $this->repository = $repository;
+        $this->preorder = (new Options())->shop->pre_order;
     }
 
     public function index()
@@ -60,6 +63,7 @@ class CatalogController extends Controller
             $brands = [];
 
             $products = $this->repository->ProductsByCategory($category->id);
+            //dd(count($products));
             /** @var Product $product */
             foreach ($products as $i => $product) {
                 if ($i == 0) {
@@ -69,7 +73,16 @@ class CatalogController extends Controller
                     if ($product->getLastPrice() < $minPrice) $minPrice = $product->getLastPrice();
                     if ($product->getLastPrice() > $maxPrice) $maxPrice = $product->getLastPrice();
                 }
-                $product_ids[] = $product->id;
+
+                if ($request->has('in_stock')) {
+                    if ($product->getCountSell() > 0)
+                        $product_ids[] = $product->id;
+                } else {
+                    if ($this->preorder || $product->pre_order == true || $product->getCountSell() > 0)
+                        $product_ids[] = $product->id;
+                }
+                //if ($product->getCountSell() > 0 || $product->pre_order == true)
+               // $product_ids[] = $product->id;
                 $brands[$product->brand->id] = [
                     'name' => $product->brand->name,
                     'image' => $product->brand->getImage(),
