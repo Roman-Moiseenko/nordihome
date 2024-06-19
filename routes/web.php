@@ -394,6 +394,7 @@ Route::group(
                         Route::post('/expense-calculate/{order}', 'OrderController@expense_calculate')->name('expense-calculate');
                         Route::post('/invoice/{order}', 'OrderController@invoice')->name('invoice');
                         Route::post('/send-invoice/{order}', 'OrderController@send_invoice')->name('send-invoice');
+                        Route::post('/resend-invoice/{order}', 'OrderController@resend_invoice')->name('resend-invoice');
 
                         Route::post('/set-manager/{order}', 'OrderController@set_manager')->name('set-manager');
                         Route::post('/set-reserve/{order}', 'OrderController@set_reserve')->name('set-reserve');

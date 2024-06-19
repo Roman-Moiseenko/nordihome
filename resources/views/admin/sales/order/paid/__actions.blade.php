@@ -77,12 +77,23 @@
         </x-base.popover>
     @endif
     @if($order->isPrepaid())
-        <button class="w-32 ml-auto btn btn-success-soft" type="button"
-                onclick="document.getElementById('form-send-invoice').submit();">
-            Отправить счет повторно
-        </button>
-        <form id="form-send-invoice" method="post" action="{{ route('admin.sales.order.send-invoice', $order) }}">
-            @csrf
-        </form>
+        <div class="ml-auto flex flex-nowrap">
+            <button class="btn btn-success-soft" type="button"
+                    onclick="document.getElementById('form-send-invoice').submit();">
+                Отправить счет повторно
+            </button>
+            <form id="form-send-invoice" method="post" action="{{ route('admin.sales.order.send-invoice', $order) }}">
+                @csrf
+            </form>
+
+            <button class="ml-2 btn btn-primary-soft" type="button"
+                    onclick="document.getElementById('form-resend-invoice').submit();">
+                Пересоздать счет
+            </button>
+            <form id="form-resend-invoice" method="post"
+                  action="{{ route('admin.sales.order.resend-invoice', $order) }}">
+                @csrf
+            </form>
+        </div>
     @endif
 </div>

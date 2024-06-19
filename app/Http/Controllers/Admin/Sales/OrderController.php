@@ -177,6 +177,18 @@ class OrderController extends Controller
             return redirect()->back();
         });
     }
+
+    public function resend_invoice(Order $order)
+    {
+        return $this->try_catch_admin(function () use ($order) {
+            $this->report->xlsx($order);
+
+            Mail::to($order->user->email)->queue(new OrderAwaiting($order));
+
+            flash('Счет создан заново и отправлен клиенту');
+            return redirect()->back();
+        });
+    }
     /*
         public function completed(Order $order)
         {
