@@ -40,11 +40,7 @@ class FullName
             $full->surname = $params['surname'];
             $full->firstname = $params['firstname'];
             $full->secondname = $params['secondname'];
-        } /*else {
-            $full->surname = '';
-            $full->firstname = '';
-            $full->secondname = '';
-        }*/
+        }
         return $full;
     }
 

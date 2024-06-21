@@ -257,10 +257,10 @@ class AdminMenu
                         'title' => 'Курс валют',
                         'route_name' => 'admin.accounting.currency.index',
                     ],
-                    'company' => [
+                    'organization' => [
                         'icon' => 'landmark',
                         'title' => 'Организации',
-                        'route_name' => 'admin.home',
+                        'route_name' => 'admin.accounting.organization.index',
                         'can' => '',
                     ],
                 ],

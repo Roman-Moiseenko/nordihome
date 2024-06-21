@@ -581,6 +581,8 @@ Route::group(
                 Route::resource('departure', 'DepartureController'); //CRUD
                 Route::resource('supply', 'SupplyController'); //CRUD
                 Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
+                Route::resource('organization', 'OrganizationController'); //CRUD
+
             }
         );
 
