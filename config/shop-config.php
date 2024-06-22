@@ -57,8 +57,11 @@ return [
         'base_path' => '',
         'invoice' => [
             'template' => '/template/_invoice.xlsx',
-
             ],
+        'trade12' => [
+            'template' => '/template/_trade12.xlsx',
+        ],
+
     ],
     /* SHOP => DB*/
 

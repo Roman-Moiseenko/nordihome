@@ -7,7 +7,7 @@
     <x-base.table.td class="text-center">{{ $organization->INN }}</x-base.table.td>
 
     <x-base.table.td class="text-center">{{ $organization->chief->getShortName() }}</x-base.table.td>
-
+    <x-base.table.td class="text-center"><x-yesNo status="{{ $organization->default }}" lucide="" class="justify-center"/></x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
             <a class="flex items-center mr-3" href="{{ route('admin.accounting.organization.show', $organization) }}">

@@ -1,7 +1,6 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-
     <div>
         <div class="intro-y flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
@@ -9,12 +8,12 @@
             </h1>
         </div>
     </div>
-    <div class="box p-3 mt-3">
+    <div class="box p-3 mt-3 flex">
         @if($expense->isNew())
             <button class="btn btn-primary mr-3" onclick="document.getElementById('form-expense-assembly').submit();">На
                 сборку
             </button>
-            <button class="btn btn-secondary" type="button" data-tw-toggle="modal"
+            <button class="btn btn-secondary mr-3" type="button" data-tw-toggle="modal"
                     data-tw-target="#cancel-confirmation-modal"
                     data-route= {{ route('admin.sales.expense.destroy', $expense) }}>
                 Отменить
@@ -24,13 +23,11 @@
                 @csrf
             </form>
         @endif
-
-        @if($expense->isAssembly())
-            <button class="btn btn-primary mr-3">Распечатать накладную</button>
-        @endif
-
-            <span class="font-medium text-center text-lg ml-3 text-primary">{{ $expense->statusHtml() }}</span>
-
+        <button class="btn btn-primary mr-3" onclick="document.getElementById('form-open-trade12').submit();">Распечатать накладную</button>
+        <div class="font-medium text-lg ml-3 text-primary my-auto"> | {{ $expense->statusHtml() }}</div>
+        <form id="form-open-trade12" method="post" action="{{ route('admin.sales.expense.trade12', $expense) }}">
+            @csrf
+        </form>
     </div>
 
     <div class="box col-span-12 overflow-auto lg:overflow-visible p-4 mt-3">
@@ -73,7 +70,6 @@
     @if(!$expense->isStorage())
         <livewire:admin.sales.expense.delivery :expense="$expense" :disabled="$expense->isCompleted()"/>
     @endif
-
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
     'Вы действительно хотите отменить Распоряжение?<br>Этот процесс не может быть отменен.', 'cancel-confirmation-modal')->show() }}

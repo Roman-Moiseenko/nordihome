@@ -52,12 +52,11 @@ class ReportService
         $out[] = $kop . ' ' . $this->morph($kop, $unit[0][0], $unit[0][1], $unit[0][2]); // kop
         $string = trim(preg_replace('/ {2,}/', ' ', join(' ', $out)));
 
-        return mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string));
+        return $this->firstUp($string);//mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string));
     }
 
     /**
      * Склоняем словоформу
-     * @ author runcore
      */
     private function morph($n, $f1, $f2, $f5)
     {
@@ -67,6 +66,30 @@ class ReportService
         if ($n > 1 && $n < 5) return $f2;
         if ($n == 1) return $f1;
         return $f5;
+    }
+
+    public function CountToText(int $number, bool $ne = false): string
+    {
+        $hundred = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+        $ten = [
+            ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'],
+            ['', 'одно', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'],
+        ];
+        $a20 = [10 => 'десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+        $tens = [2 => 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+        $gender = $ne ? 1 : 0;
+
+        $_h = intdiv($number, 100); //Сотни
+        $_hd = $number % 100;
+        if ($_hd > 19) {
+            $_d = intdiv($_hd, 10); //Десятки
+            $_e = $_hd % 10; //Единицы
+            return $this->firstUp($hundred[$_h] . ' ' . $tens[$_d] . ' ' . $ten[$gender][$_e]);
+        }
+        if ($_hd > 9) {
+            return $this->firstUp($hundred[$_h] . ' ' . $a20[$_hd]);
+        }
+        return $this->firstUp($hundred[$_h] . ' ' . $ten[$gender][$_hd]);
     }
 
     public function copyRows(Worksheet $sheet, $srcRange, $dstCell, Worksheet $destSheet = null)
@@ -148,5 +171,11 @@ class ReportService
                 $destSheet->mergeCells($merge);
             }
         }
+    }
+
+    private function firstUp(string $string): string
+    {
+        $string = trim($string);
+        return mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string));
     }
 }

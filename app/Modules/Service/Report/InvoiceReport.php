@@ -28,6 +28,8 @@ class InvoiceReport
         $spreadsheet = IOFactory::load($this->template);
         $activeWorksheet = $spreadsheet->getActiveSheet();
 
+        //TODO Данные об организации - в счет
+
         //Данные о клиенте и Данные отчета
         for ($row = 1; $row < 50; $row++) {
             for ($col = 1; $col < 50; ++$col) {

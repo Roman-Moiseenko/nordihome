@@ -6,16 +6,19 @@ namespace App\Http\Controllers\Admin\Sales;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
+use App\Modules\Service\Report\Trade12Report;
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
     private ExpenseService $service;
+    private Trade12Report $report;
 
-    public function __construct(ExpenseService $service)
+    public function __construct(ExpenseService $service, Trade12Report $report)
     {
         $this->middleware(['auth:admin', 'can:order']);
         $this->service = $service;
+        $this->report = $report;
     }
 
 
@@ -29,6 +32,16 @@ class ExpenseController extends Controller
             $order = $this->service->cancel($expense);
             flash('Распоряжение успешно удалено. Товар возвращен в резерв и хранилище.', 'info');
             return redirect()->route('admin.sales.order.show', $order);
+        });
+    }
+
+    public function trade12(OrderExpense $expense)
+    {
+        return $this->try_catch_admin(function () use ($expense) {
+            $file = $this->report->xlsx($expense);
+            ob_end_clean();
+            ob_start();
+            return response()->file($file);
         });
     }
 

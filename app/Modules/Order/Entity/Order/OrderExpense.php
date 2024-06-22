@@ -8,6 +8,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
+use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarPeriod;
@@ -29,10 +30,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $comment
  * @property string $track
  *
- * @property \App\Modules\Base\Entity\FullName $recipient
+ * @property FullName $recipient
  * @property string $phone
  * @property int $type
- * @property \App\Modules\Base\Entity\GeoAddress $address
+ * @property GeoAddress $address
  *
  * @property OrderExpenseItem[] $items
  * @property OrderExpenseAddition[] $additions
@@ -187,6 +188,16 @@ class OrderExpense extends Model
         }
 
         return $result;
+    }
+
+    public function getQuantity(): int
+    {
+        $result = 0;
+        foreach ($this->items as $item) {
+            $result += $item->quantity;
+        }
+
+        return $result + $this->additions()->count();
     }
 
     public function getWeight(): float

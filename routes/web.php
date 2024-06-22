@@ -457,6 +457,7 @@ Route::group(
                         Route::get('/show/{expense}', 'ExpenseController@show')->name('show');
                         Route::delete('/destroy/{expense}', 'ExpenseController@destroy')->name('destroy');
                         Route::post('/assembly/{expense}', 'ExpenseController@assembly')->name('assembly');
+                        Route::post('/trade12/{expense}', 'ExpenseController@trade12')->name('trade12');
                     }
                 );
                 //Возвраты

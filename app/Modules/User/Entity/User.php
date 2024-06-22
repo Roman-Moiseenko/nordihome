@@ -26,6 +26,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * @property string $verify_token
  * @property int $client
+ * @property bool $legal
+ * @property string $document_name
  * @property Wish[] $wishes
  * @property int $delivery
  * @property int $storage
@@ -35,6 +37,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property \App\Modules\Base\Entity\GeoAddress $address
  * @property Review[] $reviews
  * @property Order[] $orders
+ *
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -57,6 +60,7 @@ class User extends Authenticatable
         'fullname' => '{}',
         'address' => '{}',
         'delivery' => OrderExpense::DELIVERY_STORAGE,
+        'legal' => false,
     ];
 
     protected $fillable = [
@@ -194,6 +198,11 @@ class User extends Authenticatable
         return $result;
     }
 
+    public function getDocumentName(): string
+    {
+        if ($this->legal) return $this->document_name;
+        return 'Без договора';
+    }
     //RELATIONS
 
     public function orders()
@@ -280,4 +289,6 @@ class User extends Authenticatable
         }
         return null;
     }
+
+
 }
