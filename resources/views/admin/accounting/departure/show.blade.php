@@ -7,26 +7,28 @@
         </h2>
     </div>
     @if(!$departure->isCompleted())
-    <form action="{{ route('admin.accounting.departure.add', $departure) }}" method="POST">
-        @csrf
         <div class="box flex p-5 items-center">
-            <div class="mx-3 flex w-full">
-                <x-searchProduct route="{{ route('admin.accounting.departure.search', $departure) }}"
-                                 input-data="departure-product" hidden-id="product_id" class="w-56"/>
-                {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
-                <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
-                </x-base.button>
-                <a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.departure.edit', $departure) }}">
-                    <x-base.lucide icon="check-square" class="w-4 h-4"/>
-                    Редактировать параметры</a>
-                <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
-            </div>
+            <form action="{{ route('admin.accounting.departure.add', $departure) }}" method="POST">
+                @csrf
+                <div class="mx-3 flex w-full">
+                    <x-searchProduct route="{{ route('admin.accounting.departure.search', $departure) }}"
+                                     input-data="departure-product" hidden-id="product_id" class="w-56"/>
+                    {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
+                    <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
+                    </x-base.button>
+                    <!--a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.departure.edit', $departure) }}">
+                        <x-base.lucide icon="check-square" class="w-4 h-4"/>
+                        Редактировать параметры</a-->
+                </div>
+            </form>
+            <x-listCodeProducts route="{{ route('admin.accounting.departure.add-products', $departure) }}" caption-button="Добавить товары в документ" class="ml-3"/>
+            <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
+            <form id="form-completed" method="post" action="{{ route('admin.accounting.departure.completed', $departure) }}">
+                @csrf
+            </form>
         </div>
-    </form>
     @endif
-    <form id="form-completed" method="post" action="{{ route('admin.accounting.departure.completed', $departure) }}">
-        @csrf
-    </form>
+
     <div class="box flex items-center font-semibold p-2 mt-3">
         <div class="w-20">№ п/п</div>
         <div class="w-32">Артикул</div>

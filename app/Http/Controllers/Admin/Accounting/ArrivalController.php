@@ -113,11 +113,24 @@ class ArrivalController extends Controller
 
     public function add(Request $request, ArrivalDocument $arrival)
     {
+
         return $this->try_catch_admin(function () use($request, $arrival) {
             $this->service->add(
                 $arrival,
-                $request->only(['product_id', 'quantity'])
+                (int)$request['product_id'],
+                (int)$request['quantity']
             );
+            return redirect()->route('admin.accounting.arrival.show', $arrival);
+        });
+    }
+
+    public function add_products(Request $request, ArrivalDocument $arrival)
+    {
+        $request->validate([
+            'products' => 'required',
+        ]);
+        return $this->try_catch_admin(function () use($request, $arrival) {
+            $this->service->add_products($arrival, $request['products']);
             return redirect()->route('admin.accounting.arrival.show', $arrival);
         });
     }

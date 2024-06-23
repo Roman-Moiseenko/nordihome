@@ -48,14 +48,19 @@ class DepartureService
         $departure->delete();
     }
 
-    public function add(Request $request, DepartureDocument $departure): DepartureDocument
+    public function add(DepartureDocument $departure, int $product_id, int $quantity): ?DepartureDocument
     {
         if ($departure->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
 
         /** @var Product $product */
-        $product = Product::find($request['product_id']);
+        $product = Product::find($product_id);
+        if ($departure->isProduct($product_id)) {
+            flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
+            return null;
+        }
+
         $free_quantity = $departure->storage->getAvailable($product);
-        $quantity = min((int)$request['quantity'], $free_quantity);
+        $quantity = min($quantity, $free_quantity);
 
         //Добавляем в документ
         $departure->departureProducts()->create([
@@ -65,6 +70,19 @@ class DepartureService
         ]);
         $departure->refresh();
         return $departure;
+    }
+
+    public function add_products(DepartureDocument $departure, string $textarea): void
+    {
+        $list = explode(PHP_EOL, $textarea);
+        foreach ($list as $item) {
+            $product = Product::whereCode($item)->first();
+            if (!is_null($product)) {
+                $this->add($departure, $product->id, 1);
+            } else {
+                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+            }
+        }
     }
 
     //Для AJAX

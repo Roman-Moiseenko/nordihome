@@ -87,7 +87,16 @@ class PromotionController extends Controller
             'product_id' => 'required|integer|gt:0',
         ]);
         return $this->try_catch_admin(function () use ($request, $promotion) {
-            $this->service->add_product((int)$request['product_id'], $promotion);
+            $this->service->add_product($promotion, (int)$request['product_id']);
+            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        });
+    }
+
+    public function add_products(Request $request, Promotion $promotion)
+    {
+
+        return $this->try_catch_admin(function () use ($request, $promotion) {
+            $this->service->add_products($promotion, $request['products']);
             return redirect()->route('admin.discount.promotion.show', compact('promotion'));
         });
     }

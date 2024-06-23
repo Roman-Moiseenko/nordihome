@@ -95,17 +95,32 @@ class PromotionService
         return $promotion;
     }
 
-    public function add_product(int $product_id, Promotion $promotion): Promotion
+    public function add_product(Promotion $promotion, int $product_id): Promotion
     {
-        //if (empty($request['product_id'])) throw new \DomainException('Не выбран товар');
         $product = Product::find($product_id);
         if (!$promotion->isProduct($product->id)) {
             $promotion->products()->attach($product->id, ['price' => 0]);
             $this->setPriceProduct($promotion, $product);
             $promotion->refresh();
-            return $promotion;
+        } else {
+            flash('Товар ' . $product->name . ' уже добавлен в акцию', 'warning');
         }
-        throw new \DomainException('Товар уже добавлен в акцию');
+        //throw new \DomainException('Товар уже добавлен в акцию');
+        return $promotion;
+    }
+
+    public function add_products(Promotion $promotion, string $textarea): Promotion
+    {
+        $list = explode(PHP_EOL, $textarea);
+        foreach ($list as $item) {
+            $product = Product::whereCode($item)->first();
+            if (!is_null($product)) {
+                $this->add_product($promotion, $product->id);
+            } else {
+                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+            }
+        }
+        return $promotion;
     }
 
     public function del_product(Product $product, Promotion $promotion)

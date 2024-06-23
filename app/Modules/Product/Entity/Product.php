@@ -178,7 +178,7 @@ class Product extends Model
      */
     public static function register(string $name, string $code, int $main_category_id, string $slug = '', array $arguments = []): self
     {
-        $code_search = str_replace(['-', ',', '.', '_'], '', $code);
+        $code_search = str_replace(['-', ',', '.', '_', ':'], '', $code);
 
         //TODO Возможно перенести в сервис, тогда в Парсере - вызывать сервис
         if (!empty(Product::where('name', '=', $name)->first())) {
@@ -803,4 +803,12 @@ class Product extends Model
         $this->current_rating = ($this->current_rating) / $this->reviews()->count();
         $this->save();
     }
+
+    public function scopeWhereCode($query, $code)
+    {
+        return $query->where(function ($q) use ($code) {
+            $q->where('code', $code)->orWhere('code_search', $code);
+        });
+    }
+
 }

@@ -115,7 +115,15 @@ class PricingController extends Controller
     public function add(Request $request, PricingDocument $pricing)
     {
         return $this->try_catch_admin(function () use($request, $pricing) {
-            $pricing = $this->service->add($pricing, (int)$request['product_id']);
+            $this->service->add($pricing, (int)$request['product_id']);
+            return redirect()->route('admin.accounting.pricing.show', $pricing);
+        });
+    }
+
+    public function add_products(Request $request, PricingDocument $pricing)
+    {
+        return $this->try_catch_admin(function () use($request, $pricing) {
+            $this->service->add_products($pricing, $request['products']);
             return redirect()->route('admin.accounting.pricing.show', $pricing);
         });
     }

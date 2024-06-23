@@ -28,6 +28,8 @@
                     </x-base.button>
                 </div>
             </form>
+
+                <x-listCodeProducts route="{{ route('admin.accounting.movement.add-products', $movement) }}" caption-button="Добавить товары в документ" class="ml-3"/>
             @endif
             <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-activate').submit();">Активировать документ</button>
         </div>

@@ -86,22 +86,28 @@ class ArrivalService
 
     /**
      * @param ArrivalDocument $arrival
-     * @param array{product_id: int, quantity: int} $request
-     * @return ArrivalProduct
+     * @param int $product_id
+     * @param int $quantity
+     * @return ArrivalProduct|null
      */
-    public function add(ArrivalDocument $arrival, array $request): ArrivalProduct
+    public function add(ArrivalDocument $arrival, int $product_id, int $quantity):? ArrivalProduct
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
-
         /** @var Product $product */
-        $product = Product::find($request['product_id']);
-        $distributor_cost = $arrival->distributor->getCostItem($product->id); //Ищем у поставщика товар, если есть, берем закупочную цену
+        $product = Product::find($product_id);
+
+        if ($arrival->isProduct($product_id)) {
+            flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
+            return null;
+        }
+
+        $distributor_cost = is_null($arrival->distributor) ? 0 : $arrival->distributor->getCostItem($product->id); //Ищем у поставщика товар, если есть, берем закупочную цену
         $product_sell = $product->getLastPrice();
 
         //Добавляем в документ
         $item = ArrivalProduct::new(
             $product->id,
-            (int)$request['quantity'],
+            $quantity,
             $distributor_cost,
             $arrival->exchange_fix * $distributor_cost,
             $product_sell
@@ -112,6 +118,19 @@ class ArrivalService
         $arrival->refresh();
 
         return $item;
+    }
+
+    public function add_products(ArrivalDocument $arrival, string $textarea): void
+    {
+        $list = explode(PHP_EOL, $textarea);
+        foreach ($list as $item) {
+            $product = Product::whereCode($item)->first();
+            if (!is_null($product)) {
+                $this->add($arrival, $product->id, 1);
+            } else {
+                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+            }
+        }
     }
 
     //Для AJAX

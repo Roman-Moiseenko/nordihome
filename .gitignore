@@ -5,6 +5,7 @@
 /public/cache
 /public/hot
 /public/storage
+/public/temp
 /storage/*.key
 /vendor
 /.env
@@ -20,7 +21,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-
+.gitignore
 # Project exclude paths
 /bootstrap/cache/
 /storage/

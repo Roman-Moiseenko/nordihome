@@ -13,6 +13,7 @@ use App\Modules\Product\IWidgetHome;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -43,8 +44,7 @@ class Promotion extends Model implements DataWidgetInterface
 
     const TYPE = 'Акция';
 
-    //Позволяем себя слушать
-    private array $observers = [];
+  /*  private array $observers = [];
 
 
     public function attach(Observer $observer)
@@ -66,7 +66,7 @@ class Promotion extends Model implements DataWidgetInterface
             $observer->update($this);
         }
     }
-
+*/
     //////////////////////////////////////////////
     protected $casts = [
         'start_at' => 'datetime',
@@ -164,7 +164,6 @@ class Promotion extends Model implements DataWidgetInterface
         $this->published = false;
     }
 
-
     public function isProduct(int $product_id): bool
     {
         foreach ($this->products as $product) {
@@ -173,6 +172,7 @@ class Promotion extends Model implements DataWidgetInterface
         return false;
     }
 
+    #[Deprecated]
     public function isGroup(int $id): bool
     {
         foreach ($this->groups as $group) {
@@ -189,31 +189,16 @@ class Promotion extends Model implements DataWidgetInterface
     public function countProducts(): int
     {
         return $this->products()->count();
-        /*
-        $count = 0;
-        //if (is_null($this->groups())) return 0;
-        foreach ($this->groups as $group) {
-            $count += count($group->products);
-        }
-        return $count;*/
     }
 
     public function products()//: array
     {
-
         return $this->belongsToMany(
             Product::class, 'promotions_products',
             'promotion_id', 'product_id')->withPivot('price');
-    /*
-        $products = [];
-        foreach ($this->groups as $group) {
-            foreach ($group->products as $product) {
-                $products[] = $product;
-            }
-        }
-        return $products; */
     }
 
+    #[Deprecated]
     public function groups()
     {
         return $this->belongsToMany(
@@ -256,7 +241,6 @@ class Promotion extends Model implements DataWidgetInterface
         }
         return null;
     }
-
 
     public function getDataWidget(array $params = []): DataWidget
     {

@@ -18,22 +18,24 @@
     @endif
     </div>
     @if(!$arrival->isCompleted())
-    <form action="{{ route('admin.accounting.arrival.add', $arrival) }}" method="POST">
-        @csrf
         <div class="box flex p-5 mt-3 items-center">
             <div class="mx-3 flex w-full">
+                <form action="{{ route('admin.accounting.arrival.add', $arrival) }}" method="POST" class="flex">
+                    @csrf
                 <x-searchProduct route="{{ route('admin.accounting.arrival.search', $arrival) }}"
                                  input-data="arrival-product" hidden-id="product_id" class="w-56"/>
                 {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
-                <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
-                </x-base.button>
-                <a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.arrival.edit', $arrival) }}">
+                <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ</x-base.button>
+                </form>
+                <x-listCodeProducts route="{{ route('admin.accounting.arrival.add-products', $arrival) }}" caption-button="Добавить товары в документ" class="ml-3"/>
+                <!--a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.arrival.edit', $arrival) }}">
                     <x-base.lucide icon="check-square" class="w-4 h-4"/>
-                    Редактировать параметры</a>
+                    Редактировать параметры</a-->
+
                 <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
             </div>
         </div>
-    </form>
+
     @endif
     <form id="form-completed" method="post" action="{{ route('admin.accounting.arrival.completed', $arrival) }}">
         @csrf

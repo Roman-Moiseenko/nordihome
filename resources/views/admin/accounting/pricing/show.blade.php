@@ -7,22 +7,24 @@
         </h2>
     </div>
     @if(!$pricing->isCompleted())
-    <form action="{{ route('admin.accounting.pricing.add', $pricing) }}" method="POST">
-        @csrf
         <div class="box flex p-5 items-center">
-            <div class="mx-3 flex w-full">
-                <x-searchProduct route="{{ route('admin.accounting.pricing.search', $pricing) }}"
-                                 input-data="prising-product" hidden-id="product_id" class="w-56"/>
-                <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ</x-base.button>
+            <form action="{{ route('admin.accounting.pricing.add', $pricing) }}" method="POST">
+                @csrf
+                <div class="mx-3 flex w-full">
+                    <x-searchProduct route="{{ route('admin.accounting.pricing.search', $pricing) }}"
+                                     input-data="prising-product" hidden-id="product_id" class="w-56"/>
+                    <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ</x-base.button>
+                </div>
+            </form>
+            <x-listCodeProducts route="{{ route('admin.accounting.pricing.add-products', $pricing) }}" caption-button="Добавить товары в документ" class="ml-3"/>
 
-                <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
-            </div>
+            <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
+            <form id="form-completed" method="post" action="{{ route('admin.accounting.pricing.completed', $pricing) }}">
+                @csrf
+            </form>
         </div>
-    </form>
     @endif
-    <form id="form-completed" method="post" action="{{ route('admin.accounting.pricing.completed', $pricing) }}">
-        @csrf
-    </form>
+
     <div class="box flex items-center font-semibold p-2 mt-3">
         <div class="w-20 text-center">№ п/п</div>
         <div class="w-32">Артикул</div>

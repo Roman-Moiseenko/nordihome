@@ -8,6 +8,7 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\DataWidget;
 use App\Modules\Page\Entity\DataWidgetInterface;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  * @property Photo $photo
  * @property Product[] $products
- * @property Promotion[] $promotions
+// * @property Promotion[] $promotions
  */
 class Group extends Model implements DataWidgetInterface
 {
@@ -38,6 +39,7 @@ class Group extends Model implements DataWidgetInterface
         return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
 
+    #[Deprecated]
     public function promotions()
     {
         return $this->belongsToMany(

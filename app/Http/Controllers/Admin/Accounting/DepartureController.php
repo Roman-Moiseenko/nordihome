@@ -107,7 +107,15 @@ class DepartureController extends Controller
     public function add(Request $request, DepartureDocument $departure)
     {
         return $this->try_catch_admin(function () use($request, $departure) {
-            $this->service->add($request, $departure);
+            $this->service->add($departure, (int)$request['product_id'], (int)$request['quantity']);
+            return redirect()->route('admin.accounting.departure.show', $departure);
+        });
+    }
+
+    public function add_products(Request $request, DepartureDocument $departure)
+    {
+        return $this->try_catch_admin(function () use($request, $departure) {
+            $this->service->add_products($departure, $request['products']);
             return redirect()->route('admin.accounting.departure.show', $departure);
         });
     }

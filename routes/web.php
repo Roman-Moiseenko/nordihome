@@ -256,17 +256,24 @@ Route::group(
 
                 Route::post('/action', 'ProductController@action')->name('action');
 
-                //Доп. - сменить категорию, добавить фото
-                Route::get('/attribute/groups', 'AttributeController@groups')->name('attribute.groups');
-                Route::delete('/attribute/group-destroy/{group}', 'AttributeController@group_destroy')->name('attribute.group-destroy');
+                //Атрибуты
+                Route::group([
+                    'prefix' => 'attribute',
+                    'as' => 'attribute.',
+                ], function() {
+                    //Доп. - сменить категорию, добавить фото
+                    Route::get('/groups', 'AttributeController@groups')->name('groups');
+                    Route::delete('/group-destroy/{group}', 'AttributeController@group_destroy')->name('group-destroy');
 
-                Route::post('/attribute/group-add', 'AttributeController@group_add')->name('attribute.group-add');
-                Route::post('/attribute/group-rename/{group}', 'AttributeController@group_rename')->name('attribute.group-rename');
-                Route::post('/attribute/variant-image/{variant}', 'AttributeController@variant_image')->name('attribute.variant-image');
-                //Route::post('/attribute/get_by_categories', 'AttributeController@get_by_categories')->name('attribute.get-by-categories');
+                    Route::post('/group-add', 'AttributeController@group_add')->name('group-add');
+                    Route::post('/group-rename/{group}', 'AttributeController@group_rename')->name('group-rename');
+                    Route::post('/variant-image/{variant}', 'AttributeController@variant_image')->name('variant-image');
+                    //Route::post('/get_by_categories', 'AttributeController@get_by_categories')->name('get-by-categories');
 
-                Route::post('/attribute/{group}/group-up', 'AttributeController@group_up')->name('attribute.group-up');
-                Route::post('/attribute/{group}/group-down', 'AttributeController@group_down')->name('attribute.group-down');
+                    Route::post('/group-up/{group}', 'AttributeController@group_up')->name('group-up');
+                    Route::post('/group-down/{group}', 'AttributeController@group_down')->name('group-down');
+                });
+
 
                 Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');
                 Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
@@ -287,9 +294,18 @@ Route::group(
                 //Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
                 Route::post('/equivalent/{equivalent}/json-products', 'EquivalentController@json_products')->name('equivalent.json-products');
 
-                Route::post('/group/{group}/add-product', 'GroupController@add_product')->name('group.add-product');
-                Route::delete('/group/{group}/del-product', 'GroupController@del_product')->name('group.del-product');
-                Route::post('/group/{group}/search', 'GroupController@search')->name('group.search');
+                //Группа товаров
+                Route::group([
+                    'prefix' => 'group',
+                    'as' => 'group.',
+                ], function() {
+                    Route::post('/add-products/{group}', 'GroupController@add_products')->name('add-products');
+                    Route::post('/add-product/{group}', 'GroupController@add_product')->name('add-product');
+                    Route::delete('/del-product/{group}', 'GroupController@del_product')->name('del-product');
+                    Route::post('/search/{group}', 'GroupController@search')->name('search');
+                });
+
+
 
                 Route::post('/modification/{modification}/set-modifications', 'ModificationController@set_modifications')->name('modification.set-modifications');
                 Route::post('/modification/search', 'ModificationController@search')->name('modification.search');
@@ -317,18 +333,25 @@ Route::group(
                 'namespace' => 'Discount',
             ],
             function () {
-                Route::post('/promotion/{promotion}/add-group', 'PromotionController@add_group')->name('promotion.add-group');
-                Route::post('/promotion/{promotion}/add-product', 'PromotionController@add_product')->name('promotion.add-product');
-                Route::post('/promotion/{promotion}/search', 'PromotionController@search')->name('promotion.search');
-                Route::post('/promotion/{promotion}/set-product/{product}', 'PromotionController@set_product')->name('promotion.set-product');
-                Route::delete('/promotion/{promotion}/del-product/{product}', 'PromotionController@del_product')->name('promotion.del-product');
+                Route::group([
+                    'prefix' => 'promotion',
+                    'as' => 'promotion.',
+                ], function () {
+                    //Route::post('/{promotion}/add-group', 'PromotionController@add_group')->name('add-group');
+                    Route::post('/add-product/{promotion}', 'PromotionController@add_product')->name('add-product');
+                    Route::post('/add-products/{promotion}', 'PromotionController@add_products')->name('add-products');
+                    Route::post('/search/{promotion}', 'PromotionController@search')->name('search');
+                    Route::post('/{promotion}/set-product/{product}', 'PromotionController@set_product')->name('set-product');
+                    Route::delete('/{promotion}/del-product/{product}', 'PromotionController@del_product')->name('del-product');
+
+                    Route::delete('/{promotion}/del-group/{group}', 'PromotionController@del_group')->name('del-group');
+                    Route::post('/published/{promotion}', 'PromotionController@published')->name('published');
+                    Route::post('/draft/{promotion}', 'PromotionController@draft')->name('draft');
+                    Route::post('/stop/{promotion}', 'PromotionController@stop')->name('stop');
+                    Route::post('/start/{promotion}', 'PromotionController@start')->name('start');
+                });
 
 
-                Route::delete('/promotion/{promotion}/del-group/{group}', 'PromotionController@del_group')->name('promotion.del-group');
-                Route::post('/promotion/{promotion}/published', 'PromotionController@published')->name('promotion.published');
-                Route::post('/promotion/{promotion}/draft', 'PromotionController@draft')->name('promotion.draft');
-                Route::post('/promotion/{promotion}/stop', 'PromotionController@stop')->name('promotion.stop');
-                Route::post('/promotion/{promotion}/start', 'PromotionController@start')->name('promotion.start');
 
                 Route::post('/discount/widget', 'DiscountController@widget')->name('discount.widget');
                 Route::post('/discount/{discount}/published', 'DiscountController@published')->name('discount.published');
@@ -516,7 +539,9 @@ Route::group(
                 ],
                     function () {
                         Route::post('/search/{arrival}', 'ArrivalController@search')->name('search');
+                        Route::post('/add-products/{arrival}', 'ArrivalController@add_products')->name('add-products');
                         Route::post('/add/{arrival}', 'ArrivalController@add')->name('add');
+
                         Route::post('/completed/{arrival}', 'ArrivalController@completed')->name('completed');
                         Route::post('/set/{item}', 'ArrivalController@set')->name('set');
                         Route::delete('/remove-item/{item}', 'ArrivalController@remove_item')->name('remove-item');
@@ -528,6 +553,8 @@ Route::group(
                     function () {
                         Route::post('/search/{movement}', 'MovementController@search')->name('search');
                         Route::post('/add/{movement}', 'MovementController@add')->name('add');
+                        Route::post('/add-products/{movement}', 'MovementController@add_products')->name('add-products');
+
                         Route::post('/activate/{movement}', 'MovementController@activate')->name('activate');
                         Route::post('/departure/{movement}', 'MovementController@departure')->name('departure');
                         Route::post('/arrival/{movement}', 'MovementController@arrival')->name('arrival');
@@ -541,6 +568,7 @@ Route::group(
                     function () {
                         Route::post('/search/{departure}', 'DepartureController@search')->name('search');
                         Route::post('/add/{departure}', 'DepartureController@add')->name('add');
+                        Route::post('/add-products/{departure}', 'DepartureController@add_products')->name('add-products');
                         Route::post('/completed/{departure}', 'DepartureController@completed')->name('completed');
                         Route::post('/set/{item}', 'DepartureController@set')->name('set');
                         Route::delete('/remove-item/{item}', 'DepartureController@remove_item')->name('remove-item');
@@ -554,6 +582,7 @@ Route::group(
                         Route::delete('/del-stack/{stack}', 'SupplyController@del_stack')->name('del-stack');
                         Route::post('/add-stack/{item}', 'SupplyController@add_stack')->name('add-stack');
                         Route::post('/add-product/{supply}', 'SupplyController@add_product')->name('add-product');
+                        Route::post('/add-products/{supply}', 'SupplyController@add_products')->name('add-products');
                         Route::post('/set-product/{product}', 'SupplyController@set_product')->name('set-product');
                         Route::delete('/del-product/{product}', 'SupplyController@del_product')->name('del-product');
                         Route::post('/search/{supply}', 'SupplyController@search')->name('search');
@@ -568,6 +597,7 @@ Route::group(
                     function () {
                         Route::post('/search/{pricing}', 'PricingController@search')->name('search');
                         Route::post('/add/{pricing}', 'PricingController@add')->name('add');
+                        Route::post('/add-products/{pricing}', 'PricingController@add_products')->name('add-products');
                         Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
                         Route::post('/create-arrival/{arrival}', 'PricingController@create_arrival')->name('create-arrival');
                         Route::post('/set/{item}', 'PricingController@set')->name('set');

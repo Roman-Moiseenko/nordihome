@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Service;
 
 use App\Events\SupplyHasCompleted;
 use App\Events\SupplyHasSent;
+use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
@@ -83,6 +84,20 @@ class SupplyService
         $supply->addProduct($product, $quantity);//Добавляем товар в Заказ
     }
 
+    public function add_products(SupplyDocument $supply, string $textarea): void
+    {
+        $list = explode(PHP_EOL, $textarea);
+        foreach ($list as $item) {
+            $product = Product::whereCode($item)->first();
+            if (!is_null($product)) {
+                $this->add_product($supply, $product->id, 1);
+            } else {
+                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+            }
+        }
+    }
+
+
     public function del_product(SupplyProduct $supplyProduct)
     {
         $supply = $supplyProduct->supply;
@@ -124,20 +139,12 @@ class SupplyService
         $storage_base = Storage::where('default', true)->first()->id;
 
         //Создаем Поступление на базовый склад
-        $arrival = $this->arrivalService->create([
-            'number' => 'Из заказа ' . $supply->htmlNum(),
-            'distributor' => $distributor->id,
-            'storage' => $storage_base,
-        ]);
+        $arrival = $this->arrivalService->create($distributor->id);
         $arrival->supply_id = $supply->id;
         $arrival->save();
         foreach ($supply->products as $supplyProduct) {
             //Добавляем товар в поступление
-            $this->arrivalService->add($arrival, [
-                    'product_id' => $supplyProduct->product_id,
-                    'quantity' => $supplyProduct->quantity
-                ]
-            );
+            $this->arrivalService->add($arrival, $supplyProduct->product_id, $supplyProduct->quantity);
         }
 /*
         //Хранилища из стека по текущему заказу

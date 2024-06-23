@@ -18,18 +18,21 @@ class GroupService
         return $group;
     }
 
-    public function add_product(Request $request, Group $group)
+    public function add_product(Group $group, int $product_id)
     {
-        //TODO Если группа в акции, Установить цену для товара
-        $group->products()->attach((int)$request['product_id']);
+        if (!$group->isProduct($product_id))
+            $group->products()->attach($product_id);
+    }
 
-        foreach ($group->promotions as $promotion) {
-            if ($promotion->isStarted()) {
-                $discount = $promotion->pivot->discount;
-                $product = Product::find((int)$request['product_id']);
-                $new_price = is_null($discount) ? null : (int)ceil($product->getLastPrice() * (1 - $discount / 100));
-                $group->products()->updateExistingPivot($product->id, ['price' => $new_price]);
-                return;
+    public function add_products(Group $group, string $textarea)
+    {
+        $list = explode(PHP_EOL, $textarea);
+        foreach ($list as $item) {
+            $product = Product::whereCode($item)->first();
+            if (!is_null($product)) {
+                $this->add_product($group, $product->id);
+            } else {
+                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
             }
         }
     }

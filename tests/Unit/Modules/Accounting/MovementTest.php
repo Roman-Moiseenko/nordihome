@@ -45,14 +45,14 @@ class MovementTest extends TestCase
         $storage_02 = Storage::register($this->organization->id, 'склад 2', true, true);
 
         //Поступления товара
-        $arrival_01 = $this->arrivalService->create(['distributor' => $this->distributor->id, 'storage' => $storage_01->id, 'number']);
-        $arrival_02 = $this->arrivalService->create(['distributor' => $this->distributor->id, 'storage' => $storage_02->id, 'number']);
+        $arrival_01 = $this->arrivalService->create($this->distributor->id);
+        $arrival_02 = $this->arrivalService->create($this->distributor->id);
 
-        $arrival_01_product_01 = $this->arrivalService->add($arrival_01, ['product_id' => $product_01->id, 'quantity' => 10]);
-        $arrival_01_product_02 = $this->arrivalService->add($arrival_01, ['product_id' => $product_02->id, 'quantity' => 5]);
+        $arrival_01_product_01 = $this->arrivalService->add($arrival_01, $product_01->id, 10);
+        $arrival_01_product_02 = $this->arrivalService->add($arrival_01, $product_02->id, 5);
 
-        $arrival_02_product_01 = $this->arrivalService->add($arrival_02, ['product_id' => $product_02->id, 'quantity' => 5]);
-        $arrival_02_product_02 = $this->arrivalService->add($arrival_02, ['product_id' => $product_03->id, 'quantity' => 10]);
+        $arrival_02_product_01 = $this->arrivalService->add($arrival_02, $product_02->id,  5);
+        $arrival_02_product_02 = $this->arrivalService->add($arrival_02, $product_03->id,  10);
 
 
         $this->arrivalService->completed($arrival_01);
@@ -77,8 +77,8 @@ class MovementTest extends TestCase
         //Перемещение
         ///Черновик
         $movement = $this->movementService->create(['number' => '01', 'storage_out' => $storage_02->id, 'storage_in' => $storage_01->id]);
-        $this->movementService->add($movement, ['product_id'=> $product_02->id, 'quantity' => 5]);
-        $this->movementService->add($movement, ['product_id'=> $product_03->id, 'quantity' => 5]);
+        $this->movementService->add($movement, $product_02->id, 5);
+        $this->movementService->add($movement, $product_03->id, 5);
 
         ///На отправку
         $this->movementService->activate($movement);

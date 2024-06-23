@@ -84,7 +84,6 @@ class SupplyController extends Controller
         });
     }
 
-
     public function show(SupplyDocument $supply)
     {
         return $this->try_catch_admin(function () use ($supply) {
@@ -141,6 +140,14 @@ class SupplyController extends Controller
     {
         return $this->try_catch_admin(function () use ($supply, $request) {
             $this->service->add_product($supply, (int)$request['product_id'], (int)$request['quantity']);
+            return redirect()->back();
+        });
+    }
+
+    public function add_products(SupplyDocument $supply, Request $request)
+    {
+        return $this->try_catch_admin(function () use ($supply, $request) {
+            $this->service->add_products($supply, $request['products']);
             return redirect()->back();
         });
     }

@@ -6,21 +6,23 @@
             {{ $group->name }}
         </h2>
     </div>
-    <form action="{{ route('admin.product.group.add-product', $group) }}" method="POST">
-        @csrf
-        <div class="box flex p-5 items-center">
-
-            <div class="image-fit w-10 h-10">
-                <img class="rounded-full" src="{{ $group->getImage() }}" alt="{{ $group->name }}">
-            </div>
-            <div class="w-1/2 lg:w-1/4 mx-3">
+    <div class="box flex p-5 items-center">
+        <div class="image-fit w-10 h-10">
+            <img class="rounded-full" src="{{ $group->getImage() }}" alt="{{ $group->name }}">
+        </div>
+        <form action="{{ route('admin.product.group.add-product', $group) }}" method="POST" class="flex ml-3">
+            @csrf
+            <div class="mr-3 w-100">
                 <x-searchProduct route="{{ route('admin.product.group.search', $group) }}" input-data="group-product" hidden-id="product_id"/>
             </div>
             <div>
-                <x-base.button id="add-product" type="submit" variant="primary">Добавить товар в группу</x-base.button>
+                <x-base.button id="add-product" type="submit" variant="primary">Найти и добавить товар в группу</x-base.button>
             </div>
-        </div>
-    </form>
+        </form>
+        <x-listCodeProducts route="{{ route('admin.product.group.add-products', $group) }}" caption-button="Добавить товары в группу" class="ml-3"/>
+    </div>
+
+
 
     @foreach($group->products as $product)
         <div class="w-full mt-3 box p-5 flex items-center">

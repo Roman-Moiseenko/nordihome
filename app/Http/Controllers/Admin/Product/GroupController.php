@@ -88,10 +88,20 @@ class GroupController extends Controller
     public function add_product(Request $request, Group $group)
     {
         return $this->try_catch_admin(function () use($request, $group) {
-            $this->service->add_product($request, $group);
+            $this->service->add_product($group, (int)$request['product_id']);
             return redirect()->route('admin.product.group.show', compact('group'));
         });
     }
+
+    public function add_products(Request $request, Group $group)
+    {
+        return $this->try_catch_admin(function () use($request, $group) {
+
+            $this->service->add_products($group, $request['products']);
+            return redirect()->route('admin.product.group.show', compact('group'));
+        });
+    }
+
 
     public function del_product(Request $request, Group $group)
     {

@@ -1,0 +1,12 @@
+.area-code-products {
+    position: relative;
+    resize: none;
+    width: 200px;
+}
+.area-code-products.show-area {
+    resize: vertical;
+    position: absolute;
+    top: 0;
+    width: 200px;
+    z-index: 9999;
+}

@@ -98,8 +98,7 @@ class MovementService
         }
         $document->completed();
         if (!empty($document->order())) { //Уведомляем менеджера, что товар поступил
-            $message = 'Перемещение товара по заказу ' . $document->order()->htmlNum();
-            $document->order()->manager->notify(new StaffMessage($message));
+            $document->order()->manager->notify(new StaffMessage('Перемещение товара по заказу', $document->order()->htmlNum()));
         }
 
     }
@@ -110,19 +109,36 @@ class MovementService
         $movement->delete();
     }
 
-    public function add(MovementDocument $movement, array $request): MovementDocument
+    public function add(MovementDocument $movement, int $product_id, int $quantity):? MovementDocument
     {
         if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
 
         /** @var Product $product */
-        $product = Product::find($request['product_id']);
+        $product = Product::find($product_id);
+        if ($movement->isProduct($product_id)) {
+            flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
+            return null;
+        }
         $free_quantity = $movement->storageOut->getAvailable($product);
-        $quantity = min((int)$request['quantity'], $free_quantity);
+        $quantity = min($quantity, $free_quantity);
 
         //Добавляем в документ
         $movement->addProduct($product, $quantity);
         $movement->refresh();
         return $movement;
+    }
+
+    public function add_products(MovementDocument $movement, string $textarea): void
+    {
+        $list = explode(PHP_EOL, $textarea);
+        foreach ($list as $item) {
+            $product = Product::whereCode($item)->first();
+            if (!is_null($product)) {
+                $this->add($movement, $product->id, 1);
+            } else {
+                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+            }
+        }
     }
 
     //Для AJAX

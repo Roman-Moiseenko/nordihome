@@ -88,7 +88,7 @@ class MovementController extends Controller
             return view('admin.accounting.movement.edit', compact('movement'), compact('storages'));
         });
     }
-
+/*
     public function update(Request $request, MovementDocument $movement)
     {
         $request->validate([
@@ -99,7 +99,7 @@ class MovementController extends Controller
             $movement = $this->service->update($request, $movement);
             return redirect()->route('admin.accounting.movement.show', $movement);
         });
-    }
+    }*/
 
     public function destroy(MovementDocument $movement)
     {
@@ -112,10 +112,19 @@ class MovementController extends Controller
     public function add(Request $request, MovementDocument $movement)
     {
         return $this->try_catch_admin(function () use($request, $movement) {
-            $this->service->add($movement, $request->only(['product_id', 'quantity']));
+            $this->service->add($movement, (int)$request['product_id'], (int)$request['quantity']);
             return redirect()->route('admin.accounting.movement.show', $movement);
         });
     }
+
+    public function add_products(Request $request, MovementDocument $movement)
+    {
+        return $this->try_catch_admin(function () use($request, $movement) {
+            $this->service->add_products($movement, $request['products']);
+            return redirect()->route('admin.accounting.movement.show', $movement);
+        });
+    }
+
 
     public function remove_item(MovementProduct $item)
     {

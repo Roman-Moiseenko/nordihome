@@ -49,12 +49,16 @@ class PricingService
         $pricing->delete();
     }
 
-    public function add(PricingDocument $pricing, int $product_id)
+    public function add(PricingDocument $pricing, int $product_id): PricingDocument
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, менять данные нельзя');
 
         /** @var Product $product */
         $product = Product::find($product_id);
+        if ($pricing->isProduct($product_id)) {
+            flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
+            return $pricing;
+        }
 
         $pricingProduct = PricingProduct::new(
             $product->id,
@@ -65,6 +69,20 @@ class PricingService
             $product->getPriceMin());
         $pricing->pricingProducts()->save($pricingProduct);
         $pricing->refresh();
+        return $pricing;
+    }
+
+    public function add_products(PricingDocument $pricing, string $textarea): PricingDocument
+    {
+        $list = explode(PHP_EOL, $textarea);
+        foreach ($list as $item) {
+            $product = Product::whereCode($item)->first();
+            if (!is_null($product)) {
+                $this->add($pricing, $product->id);
+            } else {
+                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+            }
+        }
         return $pricing;
     }
 
