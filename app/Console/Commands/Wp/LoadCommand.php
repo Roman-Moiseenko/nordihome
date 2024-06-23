@@ -146,17 +146,6 @@ class LoadCommand extends Command
             $url = $data_img['url'];
             $alt = $data_img['alt'];
             LoadingImageProduct::dispatch($product, $url, $alt);
-            //$upload_file_name = $this->copy_file($data_img);
-            //$upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
-  /*          try {
-                $sort = count($product->photos);
-                $product->photo()->save(Photo::uploadByUrl($url, '', $sort, $alt));
-                $product->refresh();
-            } catch (\Throwable $e) {
-                $this->error('Файл не загрузился ' . $url);
-            }
-*/
-
         }
         $product->published = true;
         $product->pre_order = $this->options->shop->pre_order;

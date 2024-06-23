@@ -87,7 +87,7 @@ class ParserService
                 $parser_product['dimensions']->weight,
                 Dimensions::MEASURE_KG);
             $product->save();
-            if (!empty($parser_product['image'])) $product->photo()->save(Photo::uploadByUrl($parser_product['image']));
+            if (!empty($parser_product['image'])) $product->photo()->save(Photo::uploadByUrlProxy($parser_product['image']));
             $product->refresh();
 
             //4. Создаем ProductParsing

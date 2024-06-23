@@ -4,14 +4,20 @@
 namespace App\Modules\Shop\Parser;
 
 
+use App\Modules\Admin\Entity\Options;
+use JetBrains\PhpStorm\Deprecated;
+
 class HttpPage
 {
     protected ?Cache $cache;
     protected array $parsdomains = [];
+    private \stdClass $options;
 
     public function __construct(Cache $cache = null)
     {
         $this->cache = $cache;
+        $this->options = (new Options())->shop;
+
     }
 
     public function addDomainToRequest(string $url)
@@ -81,6 +87,11 @@ class HttpPage
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 
+                if (!empty($this->options->proxy_ip)) {
+                    curl_setopt($curl, CURLOPT_PROXY, $this->options->proxy_ip);
+                    curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->options->proxy_user);
+                }
+
                 $result["response"] = curl_exec($curl);
                 if (!curl_errno($curl)) {
                     $info = curl_getinfo($curl);
@@ -103,6 +114,7 @@ class HttpPage
         return $result;
     }
 
+
     public function getHeaders(string $url): array
     {
         if ($this->isUseCache()) {
@@ -119,5 +131,39 @@ class HttpPage
             $headers = @get_headers($url);
         }
         return $headers;
+    }
+
+    /**
+     * Загрузить содержимое файла через Прокси
+     * @param $url
+     * @return bool|string
+     */
+    #[Deprecated]
+    public function dlFile($url): bool|string
+    {
+        $headers = [
+            "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0",
+            "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            //"Accept-Encoding: gzip, deflate",
+            "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+            "Cache-Control: max-age=0",
+            "Connection: keep-alive",
+            "x-client-id: b6c117e5-ae61-4ef5-b4cc-e0b1e37f0631"
+        ];
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt ($curl, CURLOPT_URL,$url);
+        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ($curl, CURLOPT_CONNECTTIMEOUT, 300);
+        curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
+        if (!empty($this->options->proxy_ip)) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->options->proxy_ip);
+            curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->options->proxy_user);
+        }
+
+        $content = curl_exec($curl);
+        curl_close($curl);
+        return $content;
     }
 }

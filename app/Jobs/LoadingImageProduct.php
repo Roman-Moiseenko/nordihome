@@ -18,16 +18,15 @@ class LoadingImageProduct implements ShouldQueue
     private Product $product;
     private string $image_url;
     private string $image_alt;
+    private bool $proxy;
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(Product $product, string $image_url, string $image_alt = '')
+    public function __construct(Product $product, string $image_url, string $image_alt = '', bool $proxy = false)
     {
         //
         $this->product = $product;
         $this->image_url = $image_url;
         $this->image_alt = $image_alt;
+        $this->proxy = $proxy;
     }
 
     /**
@@ -36,6 +35,11 @@ class LoadingImageProduct implements ShouldQueue
     public function handle(): void
     {
         $sort = count($this->product->photos);
-        $this->product->photo()->save(Photo::uploadByUrl($this->image_url, '', $sort, $this->image_alt));
+        if ($this->proxy) {
+            $photo = Photo::uploadByUrlProxy($this->image_url, '', $sort, $this->image_alt); //Через прокси
+        } else {
+            $photo = Photo::uploadByUrl($this->image_url, '', $sort, $this->image_alt);
+        }
+        $this->product->photo()->save($photo);
     }
 }

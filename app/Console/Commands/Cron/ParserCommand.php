@@ -6,8 +6,6 @@ namespace App\Console\Commands\Cron;
 
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Shop\Parser\HttpPage;
-use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Parser\ProductParser;
 use Illuminate\Console\Command;
 use Tests\CreatesApplication;

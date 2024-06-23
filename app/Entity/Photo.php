@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Jobs\ClearTempFile;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Shop\Parser\HttpPage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
@@ -86,18 +88,40 @@ class Photo extends Model
         return $photo;
     }
 
+    public static function uploadByUrlProxy(string $url, string $type = '', int $sort = 0, string $alt = ''): self
+    {
+        $storage = public_path() . '/temp/';
+        $upload_file_name = basename($url);
+        $http = new HttpPage();
+        $content = $http->getPage($url);// dlFile($url);
+        $fp = fopen($storage . $upload_file_name,'x');
+        fwrite($fp, $content);
+        fclose($fp);
+
+        $upload = new UploadedFile(
+            $storage . $upload_file_name,
+            $upload_file_name,
+            null, null, true);
+
+        ClearTempFile::dispatch($storage . $upload_file_name)->delay(now()->addMinutes(30)); //Удаление временного файла через 30 минут
+        return self::upload($upload, $type, $sort, $alt);
+    }
+
     public static function uploadByUrl(string $url, string $type = '', int $sort = 0, string $alt = ''): self
     {
         $storage = public_path() . '/temp/';
         $upload_file_name = basename($url);
         copy($url, $storage . $upload_file_name);
+
         $upload = new UploadedFile(
             $storage . $upload_file_name,
             $upload_file_name,
             null, null, true);
-        //TODO Очистка папки $storage
+
+        ClearTempFile::dispatch($storage . $upload_file_name)->delay(now()->addMinutes(30)); //Удаление временного файла через 30 минут
         return self::upload($upload, $type, $sort, $alt);
     }
+
 
     // Set и Is
     public function setSort(int $sort): void
