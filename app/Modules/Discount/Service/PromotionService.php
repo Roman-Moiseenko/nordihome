@@ -111,7 +111,7 @@ class PromotionService
 
     public function add_products(Promotion $promotion, string $textarea): Promotion
     {
-        $list = explode(PHP_EOL, $textarea);
+        $list = explode("\r\n", $textarea);
         foreach ($list as $item) {
             $product = Product::whereCode($item)->first();
             if (!is_null($product)) {

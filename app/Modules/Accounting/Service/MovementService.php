@@ -130,7 +130,7 @@ class MovementService
 
     public function add_products(MovementDocument $movement, string $textarea): void
     {
-        $list = explode(PHP_EOL, $textarea);
+        $list = explode("\r\n", $textarea);
         foreach ($list as $item) {
             $product = Product::whereCode($item)->first();
             if (!is_null($product)) {

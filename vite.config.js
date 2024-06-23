@@ -114,6 +114,8 @@ export default defineConfig({
                 "resources/js/components/vertical-bar-chart/index.js",
                 "resources/js/components/widget/index.js",
                 'resources/js/components/search-product/index.js',
+                'resources/js/components/list-code-products/index.js',
+                'resources/css/components/_list-code-products.css',
             ],
             refresh: true,
         }),

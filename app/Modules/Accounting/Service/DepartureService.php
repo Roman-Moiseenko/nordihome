@@ -74,7 +74,7 @@ class DepartureService
 
     public function add_products(DepartureDocument $departure, string $textarea): void
     {
-        $list = explode(PHP_EOL, $textarea);
+        $list = explode("\r\n", $textarea);
         foreach ($list as $item) {
             $product = Product::whereCode($item)->first();
             if (!is_null($product)) {
