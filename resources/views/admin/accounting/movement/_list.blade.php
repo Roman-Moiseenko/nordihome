@@ -12,9 +12,9 @@
     <x-base.table.td class="text-center">{{ $movement->storageOut->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $movement->storageIn->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $movement->getInfoData()['quantity'] }}</x-base.table.td>
-    <x-base.table.td class="text-center">{{ price($movement->getInfoData()['cost']) }}</x-base.table.td>
-    <x-base.table.td class="table-report__action w-56">
-        <div class="flex justify-center items-center">
+    <x-base.table.td class="text-center">{{ $movement->getComment() }}</x-base.table.td>
+    <x-base.table.td class="w-32">
+        <div class="flex justify-end items-center">
             @if($movement->isDraft())
             <a class="flex items-center text-danger" href="#"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route={{ route('admin.accounting.movement.destroy', $movement) }}

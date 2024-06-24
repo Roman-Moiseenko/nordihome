@@ -56,6 +56,7 @@
             <h2 class=" mt-3 font-medium">Товары в заказе</h2>
             <div class="box flex items-center font-semibold p-2">
                 <div class="w-20 text-center">№ п/п</div>
+                <div class="w-40 text-center">Артикул</div>
                 <div class="w-1/4 text-center">Товар</div>
                 <div class="w-20 text-center">Кол-во</div>
                 <div class="w-20 text-center">Х</div>
@@ -63,6 +64,7 @@
             @foreach($supply->products as $i => $product)
                 <div class="box flex items-center p-2">
                     <div class="w-20 text-center">{{ $i + 1 }}</div>
+                    <div class="w-40 text-center">{{ $product->product->code }}</div>
                     <div class="w-1/4">
                         <a class="text-success font-medium" href="{{ route('admin.product.show', $product->product) }}">{{ $product->product->name }}</a>
                     </div>
@@ -86,6 +88,10 @@
                 </div>
             @endforeach
         </div>
+    </div>
+
+    <div class="box mt-3 p-5">
+        <livewire:admin.accounting.edit-comment :document="$supply" />
     </div>
 
 <script>

@@ -20,16 +20,12 @@ class DepartureService
         $this->storages = $storages;
     }
 
-    public function create(Request $request): DepartureDocument
+    public function create(int $storage_id): DepartureDocument
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
-        return DepartureDocument::register(
-            $request['number'],
-            (int)$request['storage_id'],
-            $request['comment'] ?? '',
-            $manager->id,
-        );
+        //dd($storage_id);
+        return DepartureDocument::register($storage_id, $manager->id);
     }
 
     public function update(Request $request, DepartureDocument $departure): DepartureDocument

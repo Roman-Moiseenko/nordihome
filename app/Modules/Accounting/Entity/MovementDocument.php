@@ -29,7 +29,7 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property MovementProduct[] $movementProducts
  * @property Admin $staff
  */
-class MovementDocument extends Model implements MovementInterface
+class MovementDocument extends Model implements AccountingDocument
 {
     use HtmlInfoData;
 
@@ -208,6 +208,17 @@ class MovementDocument extends Model implements MovementInterface
     {
         if ($this->staff_id == null) return 'Не установлен';
         return $this->staff->fullname->getFullName();
+    }
+
+    public function setComment(string $comment): void
+    {
+        $this->comment = $comment;
+        $this->save();
+    }
+
+    public function getComment(): string
+    {
+        return $this->comment;
     }
 
 }

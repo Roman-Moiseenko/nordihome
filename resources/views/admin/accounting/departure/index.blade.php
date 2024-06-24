@@ -20,7 +20,6 @@
                         </option>
                     @endforeach
                 </x-base.tom-select>
-
             </div>
 
             <div class="col-span-12 lg:col-span-3 border-l pl-4 flex">
@@ -57,8 +56,6 @@
             }
             window.location.search = urlParams;
         });
-
-
         let checkPublished = document.querySelectorAll('.check-completed');
         checkPublished.forEach(function (item) {
             item.addEventListener('click', function () {
@@ -72,12 +69,40 @@
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
 
-            <button class="btn btn-primary shadow-md mr-2"
-                    onclick="window.location.href='{{ route('admin.accounting.departure.create') }}'">Создать Документ
-            </button>
+            <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+                <x-base.popover.button as="x-base.button" variant="primary" class=""
+                                       id="button-supply-stack" type="button">
+                    Создать Документ
+                    <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
+                </x-base.popover.button>
+                <x-base.popover.panel>
+                    <form method="post" action="{{ route('admin.accounting.departure.store') }}">
+                        @csrf
+                        <div class="p-2">
+                            <x-base.tom-select id="select-distributor" name="storage" class=""
+                                               data-placeholder="Хранилище списания">
+                                <option value="0"></option>
+                                @foreach($storages as $storage)
+                                    <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                                @endforeach
+                            </x-base.tom-select>
+
+                            <div class="flex items-center mt-3">
+                                <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">
+                                    Отмена
+                                </x-base.button>
+                                <button class="w-32 ml-2 btn btn-primary" type="submit">
+                                    Создать
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </x-base.popover.panel>
+            </x-base.popover>
+
+
             {{ $departures->links('admin.components.count-paginator') }}
         </div>
-
 
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">
@@ -87,7 +112,8 @@
                         <x-base.table.th class="text-center whitespace-nowrap">СПИСАНИЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">СУММА СПИСАНИЯ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">КОММЕНТАРИЙ</x-base.table.th>
+                        <x-base.table.th class="text-right whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>
@@ -100,5 +126,4 @@
     </div>
 
     {{ $departures->links('admin.components.paginator', ['pagination' => $pagination]) }}
-
 @endsection

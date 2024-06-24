@@ -23,7 +23,7 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property DepartureProduct[] $departureProducts
  * @property Admin $staff
  */
-class DepartureDocument extends Model implements MovementInterface
+class DepartureDocument extends Model implements AccountingDocument
 {
     use HtmlInfoData;
 
@@ -41,13 +41,12 @@ class DepartureDocument extends Model implements MovementInterface
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $number, int $storage_id, string $comment, int $staff_id): self
+    public static function register(int $storage_id, int $staff_id): self
     {
         return self::create([
-            'number' => $number,
+            'number' => self::count() + 1,
             'storage_id' => $storage_id,
             'completed' => false,
-            'comment' => $comment,
             'staff_id' => $staff_id,
         ]);
     }
@@ -111,5 +110,14 @@ class DepartureDocument extends Model implements MovementInterface
         return $this->staff->fullname->getFullName();
     }
 
+    public function setComment(string $comment): void
+    {
+        $this->comment = $comment;
+        $this->save();
+    }
 
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
 }

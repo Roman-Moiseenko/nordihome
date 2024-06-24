@@ -133,6 +133,7 @@
                         <x-base.table.th class="text-center whitespace-nowrap">ПОСТАВЩИК</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">СТАТУС</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">КОММЕНТАРИЙ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>

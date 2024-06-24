@@ -607,10 +607,10 @@ Route::group(
                 Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
                 Route::resource('distributor', 'DistributorController'); //CRUD
                 Route::resource('currency', 'CurrencyController'); //CRUD
-                Route::resource('arrival', 'ArrivalController')->except(['store']); //CRUD
-                Route::resource('movement', 'MovementController')->except(['edit', 'update']); //CRUD
-                Route::resource('departure', 'DepartureController'); //CRUD
-                Route::resource('supply', 'SupplyController'); //CRUD
+                Route::resource('arrival', 'ArrivalController')->except(['create', 'edit', 'update']); //CRUD
+                Route::resource('movement', 'MovementController')->except(['create', 'edit', 'update']); //CRUD
+                Route::resource('departure', 'DepartureController')->except(['create', 'edit', 'update']); //CRUD
+                Route::resource('supply', 'SupplyController')->except(['edit', 'update']); //CRUD
                 Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
                 Route::resource('organization', 'OrganizationController'); //CRUD
 

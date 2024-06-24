@@ -31,8 +31,6 @@
         /* Filters */
         //TODO Фильтр по дате
         const urlParams = new URLSearchParams(window.location.search);
-
-
         let checkPublished = document.querySelectorAll('.check-completed');
         checkPublished.forEach(function (item) {
             item.addEventListener('click', function () {
@@ -61,7 +59,8 @@
                         <x-base.table.th class="text-center whitespace-nowrap">ОТВЕТСТВЕННЫЙ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ПОСТУПЛЕНИЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ПРОВЕДЕН</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">КОММЕНТАРИЙ</x-base.table.th>
+                        <x-base.table.th class="text-right whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>

@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property PricingProduct[] $pricingProducts
  * @property Admin $staff
  */
-class PricingDocument extends Model
+class PricingDocument extends Model implements AccountingDocument
 {
     use HtmlInfoData;
 
@@ -55,6 +55,14 @@ class PricingDocument extends Model
         return $this->completed == true;
     }
 
+    public function isProduct(int $product_id): bool
+    {
+        foreach ($this->pricingProducts as $item) {
+            if ($item->product_id == $product_id) return true;
+        }
+        return false;
+    }
+
     public function setNumber()
     {
         $this->number = PricingDocument::where('number', '<>', null)->count() + 1;
@@ -84,12 +92,14 @@ class PricingDocument extends Model
     }
 
 
-
-    public function isProduct(int $product_id): bool
+    public function setComment(string $comment): void
     {
-        foreach ($this->pricingProducts as $item) {
-            if ($item->product_id == $product_id) return true;
-        }
-        return false;
+        $this->comment = $comment;
+        $this->save();
+    }
+
+    public function getComment(): string
+    {
+        return $this->comment;
     }
 }

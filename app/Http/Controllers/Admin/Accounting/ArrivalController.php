@@ -51,26 +51,16 @@ class ArrivalController extends Controller
         });
     }
 
-    public function create(Request $request)
+
+    public function store(Request $request)
     {
+        $request->validate([
+            'distributor' => 'required',
+        ]);
         return $this->try_catch_admin(function () use($request) {
             $arrival = $this->service->create((int)$request['distributor']);
             return redirect()->route('admin.accounting.arrival.show', $arrival);
         });
-    }
-
-    public function store(Request $request)
-    {
-        throw new \DomainException('Неверный вызов!!!!');
-        /*
-        $request->validate([
-            'distributor' => 'required',
-            'storage' => 'required',
-        ]);
-        return $this->try_catch_admin(function () use($request) {
-            $arrival = $this->service->create($request->only(['distributor', 'storage', 'number']));
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
-        });*/
     }
 
     public function show(ArrivalDocument $arrival)
@@ -78,28 +68,6 @@ class ArrivalController extends Controller
         return $this->try_catch_admin(function () use($arrival) {
             $info = $arrival->getInfoData();
             return view('admin.accounting.arrival.show', compact('arrival', 'info'));
-        });
-    }
-
-    public function edit(ArrivalDocument $arrival)
-    {
-        //TODO Возможно удалить edit и update
-        return $this->try_catch_admin(function () use($arrival) {
-            $distributors = Distributor::get();
-            $storages = Storage::get();
-            return view('admin.accounting.arrival.edit', compact('arrival'), compact('distributors', 'storages'));
-        });
-    }
-
-    public function update(Request $request, ArrivalDocument $arrival)
-    {
-        $request->validate([
-            'distributor' => 'required',
-            'storage' => 'required',
-        ]);
-        return $this->try_catch_admin(function () use($request, $arrival) {
-            $arrival = $this->service->update($request, $arrival);
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
         });
     }
 

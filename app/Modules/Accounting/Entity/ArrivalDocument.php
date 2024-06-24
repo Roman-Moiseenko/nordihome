@@ -31,7 +31,7 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property Admin $staff
  * @property PricingDocument $pricing
  */
-class ArrivalDocument extends Model implements MovementInterface
+class ArrivalDocument extends Model implements AccountingDocument
 {
 
     use HtmlInfoData;
@@ -176,4 +176,14 @@ class ArrivalDocument extends Model implements MovementInterface
     }
 
 
+    public function setComment(string $comment): void
+    {
+        $this->comment = $comment;
+        $this->save();
+    }
+
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
 }

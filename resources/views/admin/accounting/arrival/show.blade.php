@@ -28,10 +28,6 @@
                 <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ</x-base.button>
                 </form>
                 <x-listCodeProducts route="{{ route('admin.accounting.arrival.add-products', $arrival) }}" caption-button="Добавить товары в документ" class="ml-3"/>
-                <!--a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.arrival.edit', $arrival) }}">
-                    <x-base.lucide icon="check-square" class="w-4 h-4"/>
-                    Редактировать параметры</a-->
-
                 <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
             </div>
         </div>
@@ -113,11 +109,12 @@
         </div>
     </div>
 
+    <div class="box mt-3 p-5">
+        <livewire:admin.accounting.edit-comment :document="$arrival" />
+    </div>
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
      'Вы действительно хотите удалить товар из списка?<br>Этот процесс не может быть отменен.')->show() }}
-
-
 
     <script>
         let elementListens = document.querySelectorAll('.arrival-input-listen');

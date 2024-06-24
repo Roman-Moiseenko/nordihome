@@ -13,6 +13,7 @@ use App\Modules\Product\Repository\ProductRepository;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use function Symfony\Component\Translation\t;
 
 class DepartureController extends Controller
 {
@@ -47,24 +48,13 @@ class DepartureController extends Controller
         });
     }
 
-    /*******/
-
-
-    public function create(Request $request)
-    {
-        return $this->try_catch_admin(function () use($request) {
-            $storages = Storage::get();
-            return view('admin.accounting.departure.create', compact('storages'));
-        });
-    }
-
     public function store(Request $request)
     {
         $request->validate([
-            'storage_id' => 'required',
+            'storage' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request) {
-            $departure = $this->service->create($request);
+            $departure = $this->service->create((int)$request['storage']);
             return redirect()->route('admin.accounting.departure.show', $departure);
         });
     }
@@ -74,25 +64,6 @@ class DepartureController extends Controller
         return $this->try_catch_admin(function () use($departure) {
             $info = $departure->getInfoData();
             return view('admin.accounting.departure.show', compact('departure', 'info'));
-        });
-    }
-
-    public function edit(DepartureDocument $departure)
-    {
-        return $this->try_catch_admin(function () use($departure) {
-            $storages = Storage::get();
-            return view('admin.accounting.departure.edit', compact('departure'), compact('storages'));
-        });
-    }
-
-    public function update(Request $request, DepartureDocument $departure)
-    {
-        $request->validate([
-            'storage_id' => 'required',
-        ]);
-        return $this->try_catch_admin(function () use($request, $departure) {
-            $departure = $this->service->update($request, $departure);
-            return redirect()->route('admin.accounting.departure.show', $departure);
         });
     }
 

@@ -53,14 +53,6 @@ class PricingController extends Controller
             return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
         });
     }
-  /*  public function store(Request $request)
-    {
-
-        return $this->try_catch_admin(function () use($request) {
-            $pricing = $this->service->create($request->only(['distributor', 'storage', 'number']));
-            return redirect()->route('admin.accounting.pricing.show', $pricing);
-        });
-    } */
 
     public function show(PricingDocument $pricing)
     {
@@ -69,25 +61,6 @@ class PricingController extends Controller
         });
     }
 
-
-/*
-    public function edit(PricingDocument $pricing)
-    {
-        return $this->try_catch_admin(function () use($pricing) {
-
-            return view('admin.accounting.pricing.edit', compact('pricing'));
-        });
-    }
-
-    public function update(Request $request, PricingDocument $pricing)
-    {
-
-        return $this->try_catch_admin(function () use($request, $pricing) {
-            $pricing = $this->service->update($request->all(), $pricing);
-            return redirect()->route('admin.accounting.pricing.show', $pricing);
-        });
-    }
-*/
     public function destroy(PricingDocument $pricing)
     {
         return $this->try_catch_admin(function () use($pricing) {

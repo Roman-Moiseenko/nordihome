@@ -137,6 +137,9 @@
 
     </div>
 
+    <div class="box mt-3 p-5">
+        <livewire:admin.accounting.edit-comment :document="$movement" />
+    </div>
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
      'Вы действительно хотите удалить товар из списка?<br>Этот процесс не может быть отменен.')->show() }}

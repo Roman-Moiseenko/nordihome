@@ -13,9 +13,10 @@
     </x-base.table.td>
 
     <x-base.table.td class="text-center"><x-yesNo status="{{ $pricing->isCompleted() }}" lucide="" class="justify-center"/></x-base.table.td>
+    <x-base.table.td class="text-center">{{ $pricing->getComment() }}</x-base.table.td>
 
-    <x-base.table.td class="table-report__action w-56">
-        <div class="flex justify-center items-center">
+    <x-base.table.td class="w-32">
+        <div class="flex justify-end items-center">
             @if(!$pricing->isCompleted())
             <a class="flex items-center text-danger" href="#"
                data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ route('admin.accounting.pricing.destroy', $pricing) }}

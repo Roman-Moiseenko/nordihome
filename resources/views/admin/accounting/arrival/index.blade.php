@@ -95,8 +95,8 @@
                     <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
                 </x-base.popover.button>
                 <x-base.popover.panel>
-                    <form method="get" action="{{ route('admin.accounting.arrival.create') }}">
-
+                    <form method="post" action="{{ route('admin.accounting.arrival.store') }}">
+                        @csrf
                         <div class="p-2">
                             <x-base.tom-select id="select-distributor" name="distributor" class=""
                                                data-placeholder="Выберите Поставщика">
@@ -133,7 +133,8 @@
                         <x-base.table.th class="text-center whitespace-nowrap">ХРАНИЛИЩЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">СУММА ЗАКУПА</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">КОММЕНТАРИЙ</x-base.table.th>
+                        <x-base.table.th class="text-right whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>

@@ -53,14 +53,6 @@ class MovementController extends Controller
         });
     }
 
-    public function create(Request $request)
-    {
-        return $this->try_catch_admin(function () use($request) {
-            $storages = Storage::get();
-            return view('admin.accounting.movement.create', compact('storages'));
-        });
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -80,26 +72,6 @@ class MovementController extends Controller
             return view('admin.accounting.movement.show', compact('movement', 'info'));
         });
     }
-
-    public function edit(MovementDocument $movement)
-    {
-        return $this->try_catch_admin(function () use($movement) {
-            $storages = Storage::get();
-            return view('admin.accounting.movement.edit', compact('movement'), compact('storages'));
-        });
-    }
-/*
-    public function update(Request $request, MovementDocument $movement)
-    {
-        $request->validate([
-            'storage_in' => 'required',
-            'storage_out' => 'required',
-        ]);
-        return $this->try_catch_admin(function () use($request, $movement) {
-            $movement = $this->service->update($request, $movement);
-            return redirect()->route('admin.accounting.movement.show', $movement);
-        });
-    }*/
 
     public function destroy(MovementDocument $movement)
     {

@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Distributor $distributor
  * @property Admin $staff
  */
-class SupplyDocument extends Model
+class SupplyDocument extends Model implements AccountingDocument
 {
     use HtmlInfoData;
 
@@ -175,6 +175,17 @@ class SupplyDocument extends Model
     {
         if ($this->staff_id == null) return 'Не установлен';
         return $this->staff->fullname->getFullName();
+    }
+
+    public function setComment(string $comment): void
+    {
+        $this->comment = $comment;
+        $this->save();
+    }
+
+    public function getComment(): string
+    {
+        return $this->comment;
     }
 
 }

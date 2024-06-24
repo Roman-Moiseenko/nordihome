@@ -122,8 +122,8 @@
                         <x-base.table.th class="text-center whitespace-nowrap">УБЫТИЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">ПРИБЫТИЕ</x-base.table.th>
                         <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ТОВАРОВ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">СУММА ПЕРЕМЕЩЕНИЯ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
+                        <x-base.table.th class="text-center whitespace-nowrap">КОММЕНТАРИЙ</x-base.table.th>
+                        <x-base.table.th class="text-right whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>

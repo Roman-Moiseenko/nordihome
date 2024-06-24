@@ -14,11 +14,7 @@
                     <x-searchProduct route="{{ route('admin.accounting.departure.search', $departure) }}"
                                      input-data="departure-product" hidden-id="product_id" class="w-56"/>
                     {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
-                    <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
-                    </x-base.button>
-                    <!--a class="btn btn-outline-primary ml-5" href="{{ route('admin.accounting.departure.edit', $departure) }}">
-                        <x-base.lucide icon="check-square" class="w-4 h-4"/>
-                        Редактировать параметры</a-->
+                    <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ</x-base.button>
                 </div>
             </form>
             <x-listCodeProducts route="{{ route('admin.accounting.departure.add-products', $departure) }}" caption-button="Добавить товары в документ" class="ml-3"/>
@@ -81,11 +77,12 @@
         </div>
     </div>
 
+    <div class="box mt-3 p-5">
+        <livewire:admin.accounting.edit-comment :document="$departure" />
+    </div>
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
      'Вы действительно хотите удалить товар из списка?<br>Этот процесс не может быть отменен.')->show() }}
-
-
 
     <script>
         let elementListens = document.querySelectorAll('.departure-input-listen');
