@@ -46,7 +46,7 @@
 
                         _inputHidden.val($(this).data('id'));
                         _inputHidden.trigger('change');
-                        console.log('****');
+                        //console.log('****');
                         //document.getElementById('hidden-id').value = $(this).data('id');
                         //document.getElementById('hidden-id').dispatchEvent(new Event('input'));
                         //document.getElementById('hidden-id').dispatchEvent(new Event('change'));

@@ -113,6 +113,10 @@
         <livewire:admin.accounting.edit-comment :document="$arrival" />
     </div>
 
+    <div class="box mt-3 p-5">
+        <livewire:admin.search quantity="0" route-add="{{ route('admin.accounting.arrival.add', $arrival) }}" />
+    </div>
+
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
      'Вы действительно хотите удалить товар из списка?<br>Этот процесс не может быть отменен.')->show() }}
 
