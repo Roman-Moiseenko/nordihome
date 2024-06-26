@@ -163,6 +163,21 @@ class ProductController extends Controller
         });
     }
 
+    public function search_add(Request $request)
+    {
+        return $this->try_catch_ajax_admin(function () use($request) {
+            $result = [];
+            //return \response()->json($request->all());
+            $products = $this->repository->search($request['search']);
+            /** @var Product $product */
+            foreach ($products as $product) {
+                $result[] = $this->repository->toArrayForSearch($product);
+            }
+            return \response()->json($result);
+        });
+    }
+
+
     public function search_bonus(Request $request)
     {
         return $this->try_catch_ajax_admin(function () use($request) {

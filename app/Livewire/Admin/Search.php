@@ -45,7 +45,12 @@ class Search extends Component
         $products = $this->repository->search($search);
         $data = [];
         foreach ($products as $product) {
-            $data[] = ['name' => $product->name, 'id' => $product->id, 'code' => $product->code];
+            $data[] = [
+                'name' => $product->name,
+                'id' => $product->id,
+                'code' => $product->code,
+                'code_search' => $product->code_search,
+                ];
         }
 
         $this->dispatch('update-tom-select', data: json_encode($data));
@@ -61,6 +66,11 @@ class Search extends Component
     public function render()
     {
         return view('livewire.admin.search');
+    }
+
+    public function add()
+    {
+
     }
 
     public function exception($e, $stopPropagation) {

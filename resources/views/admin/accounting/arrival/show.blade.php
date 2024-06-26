@@ -20,13 +20,8 @@
     @if(!$arrival->isCompleted())
         <div class="box flex p-5 mt-3 items-center">
             <div class="mx-3 flex w-full">
-                <form action="{{ route('admin.accounting.arrival.add', $arrival) }}" method="POST" class="flex">
-                    @csrf
-                <x-searchProduct route="{{ route('admin.accounting.arrival.search', $arrival) }}"
-                                 input-data="arrival-product" hidden-id="product_id" class="w-56"/>
-                {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
-                <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ</x-base.button>
-                </form>
+                <x-searchAddProduct route-save="{{ route('admin.accounting.arrival.add', $arrival) }}" quantity="1"/>
+
                 <x-listCodeProducts route="{{ route('admin.accounting.arrival.add-products', $arrival) }}" caption-button="Добавить товары в документ" class="ml-3"/>
                 <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
             </div>
@@ -113,9 +108,7 @@
         <livewire:admin.accounting.edit-comment :document="$arrival" />
     </div>
 
-    <div class="box mt-3 p-5">
-        <livewire:admin.search quantity="0" route-add="{{ route('admin.accounting.arrival.add', $arrival) }}" />
-    </div>
+
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
      'Вы действительно хотите удалить товар из списка?<br>Этот процесс не может быть отменен.')->show() }}

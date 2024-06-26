@@ -323,6 +323,19 @@ Route::group(
                 Route::resource('equivalent', 'EquivalentController'); //CRUD
                 Route::resource('group', 'GroupController'); //CRUD
                 Route::resource('modification', 'ModificationController'); //CRUD
+
+
+                Route::post('/{product}/file-upload', 'ProductController@file_upload')->name('file-upload');
+                Route::post('/{product}/get-images', 'ProductController@get_images')->name('get-images');
+                Route::post('/{product}/del-image', 'ProductController@del_image')->name('del-image');
+                Route::post('/{product}/up-image', 'ProductController@up_image')->name('up-image');
+                Route::post('/{product}/down-image', 'ProductController@down_image')->name('down-image');
+                Route::post('/{product}/alt-image', 'ProductController@alt_image')->name('alt-image');
+                Route::post('/search', 'ProductController@search')->name('search');
+                Route::post('/search-add', 'ProductController@search_add')->name('search-add');
+                Route::post('/search_bonus', 'ProductController@search_bonus')->name('search-bonus');
+                Route::post('/{product}/attr-modification', 'ProductController@attr_modification')->name('attr-modification');
+                Route::post('/toggle/{product}', 'ProductController@toggle')->name('toggle');
             }
         );
         //Discount
@@ -431,40 +444,6 @@ Route::group(
 
                         Route::get('/log/{order}', 'OrderController@log')->name('log');
                         Route::post('/take/{order}', 'OrderController@take')->name('take');
-                        //Route::post('/{order}/set-status', 'OrderController@set_status')->name('set-status');
-                        //Route::post('/{order}/add-item', 'OrderController@add_item')->name('add-item');
-                        //Route::post('/{order}/add-addition', 'OrderController@add_addition')->name('add-addition');
-
-                      /*  Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
-                        Route::delete('/del-addition/{addition}', 'OrderController@del_addition')->name('del-addition');*/
-
-                        //Route::delete('/del-payment/{payment}', 'OrderController@del_payment')->name('del-payment');
-                    //    Route::post('/{item}/update-quantity', 'OrderController@update_quantity')->name('update-quantity');
-                       // Route::post('/{item}/collect-reserve', 'OrderController@collect_reserve')->name('collect-reserve');
-
-
-                       // Route::post('/{item}/update-sell', 'OrderController@update_sell')->name('update-sell');
-                       // Route::post('/{item}/update-percent', 'OrderController@update_percent')->name('update-percent');
-
-                      //  Route::post('/{addition}/update-addition', 'OrderController@update_addition')->name('update-addition');
-                      //  Route::post('/{order}/discount', 'OrderController@discount')->name('discount');
-                     //   Route::post('/{order}/discount-percent', 'OrderController@discount_percent')->name('discount-percent');
-
-                        //Route::post('/{order}/fix-manual-item', 'OrderController@fix_manual_item')->name('fix-manual-item');
-                        //Route::post('/{order}/fix-manual-order', 'OrderController@fix_manual_order')->name('fix-manual-order');
-                        //Route::post('/{order}/set-coupon', 'OrderController@set_coupon')->name('set-coupon');
-
-                     //   Route::post('/{order}/update-comment', 'OrderController@update_comment')->name('update-comment');
-                     //   Route::post('/{item}/update-item-comment', 'OrderController@update_item_comment')->name('update-item-comment');
-
-                     //   Route::post('/{item}/check-assemblage', 'OrderController@check_assemblage')->name('check-assemblage');
-
-                        //Route::post('/{order}/completed', 'OrderController@completed')->name('completed');
-
-                        //Route::post('/paid-payment/{payment}', 'OrderController@paid_payment')->name('paid-payment');
-
-
-
                     }
                 );
                 //Распоряжения
@@ -523,7 +502,6 @@ Route::group(
                 Route::post('/contact/{contact}/down', 'ContactController@down')->name('contact.down');
             }
         );
-
 
         //ACCOUNTING
         Route::group(
@@ -646,16 +624,9 @@ Route::group(
         });
 
         //AJAX Product
-        Route::post('product/{product}/file-upload', 'Product\ProductController@file_upload')->name('product.file-upload');
-        Route::post('product/{product}/get-images', 'Product\ProductController@get_images')->name('product.get-images');
-        Route::post('product/{product}/del-image', 'Product\ProductController@del_image')->name('product.del-image');
-        Route::post('product/{product}/up-image', 'Product\ProductController@up_image')->name('product.up-image');
-        Route::post('product/{product}/down-image', 'Product\ProductController@down_image')->name('product.down-image');
-        Route::post('product/{product}/alt-image', 'Product\ProductController@alt_image')->name('product.alt-image');
-        Route::post('product/search', 'Product\ProductController@search')->name('product.search');
-        Route::post('product/search_bonus', 'Product\ProductController@search_bonus')->name('product.search-bonus');
-        Route::post('product/{product}/attr-modification', 'Product\ProductController@attr_modification')->name('product.attr-modification');
-        Route::post('product/toggle/{product}', 'Product\ProductController@toggle')->name('product.toggle');
+
+
+
 
         Route::resource('product', 'Product\ProductController'); //CRUD
 

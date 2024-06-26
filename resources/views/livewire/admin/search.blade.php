@@ -1,15 +1,12 @@
 <div>
-    <div>
-        {{ $comment }}
-    </div>
     <div wire:ignore class="flex">
         <select id="select" class="tom-select form-control w-100" >
             <option value="0"></option>
         </select>
-        {{ $routeAdd }}
         @if($quantity)
-            <input class="form-control w-20" type="number" wire:model="_quantity">
+            <input class="form-control w-20 ml-2" type="number" wire:model="_quantity">
         @endif
+        <button class="btn btn-primary ml-2" type="button" wire:click="add">Добавить товар в документ</button>
     </div>
 
     <script>
@@ -40,7 +37,7 @@
             //settings.clearOptions();
             let items = JSON.parse(el.data);
             items.forEach(function (item) {
-                select.addOption({value: item.id, text: item.code + ' ' + item.name});
+                select.addOption({value: item.id, text: item.code + ' ' + item.name + ' (' + item.code_search + ')'});
             });
         });
     </script>

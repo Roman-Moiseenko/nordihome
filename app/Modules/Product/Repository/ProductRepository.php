@@ -66,6 +66,7 @@ class ProductRepository
             'id' => $product->id,
             'name' => $product->name,
             'code' => $product->code,
+            'code_search' => $product->code_search,
             'image' => $product->getImage(),
             'price' => $product->getLastPrice(),
             'url' => route('admin.product.edit', $product),
