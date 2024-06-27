@@ -19,7 +19,7 @@
             labelField: 'name',
             searchField: ['name','code', 'code_search'],
             create: false,
-            maxOptions: 10,
+            maxOptions: 16,
             onChange:function (value) {//Выбор элемента
                 if (value === '') {
                     selectProductId = 0;

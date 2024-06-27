@@ -8,10 +8,10 @@ use Illuminate\View\Component;
 
 class SearchAddProduct extends Component
 {
-    public string $route;
-    public string $event;
-    public bool $quantity;
-    public bool $parser;
+    public string $route; //Ссылка на добавление товара в документ. Метод POST.
+    public string $event; //Событие на добавление товара в документ. Через компонент Livewire
+    public bool $quantity; //Поле quantity
+    public bool $parser; //request-параметр на парсинг товара
 
     /**
      * Create a new component instance.
@@ -25,6 +25,9 @@ class SearchAddProduct extends Component
         $this->parser = $parser;
         if (empty($routeSave) && empty($event)) {
             throw new \DomainException('Не заполнен маршрут или событие');
+        }
+        if (!empty($routeSave) && !empty($event)) {
+            throw new \DomainException('Заполнен маршрут и событие! Должен быть только один');
         }
     }
 
