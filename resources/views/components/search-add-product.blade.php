@@ -1,6 +1,6 @@
 <div class="flex">
     <span id="data" data-route="{{ route('admin.product.search-add') }}"></span>
-    <select id="search-product-component" class="tom-select form-control w-100">
+    <select id="search-product-component" class="tom-select form-control w-72">
         <option id="0"></option>
     </select>
     @if($quantity)

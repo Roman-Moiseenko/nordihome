@@ -8,16 +8,8 @@
     </div>
     @if(!$pricing->isCompleted())
         <div class="box flex p-5 items-center">
-            <form action="{{ route('admin.accounting.pricing.add', $pricing) }}" method="POST">
-                @csrf
-                <div class="mx-3 flex w-full">
-                    <x-searchProduct route="{{ route('admin.accounting.pricing.search', $pricing) }}"
-                                     input-data="prising-product" hidden-id="product_id" class="w-56"/>
-                    <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ</x-base.button>
-                </div>
-            </form>
+            <x-searchAddProduct route-save="{{ route('admin.accounting.pricing.add', $pricing) }}" quantity="0"/>
             <x-listCodeProducts route="{{ route('admin.accounting.pricing.add-products', $pricing) }}" caption-button="Добавить товары в документ" class="ml-3"/>
-
             <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
             <form id="form-completed" method="post" action="{{ route('admin.accounting.pricing.completed', $pricing) }}">
                 @csrf

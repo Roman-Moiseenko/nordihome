@@ -15,16 +15,8 @@
             <!-- Управление -->
             @if($supply->isCreated())
             <div class="box flex p-5">
-                <form method="post" action="{{ route('admin.accounting.supply.add-product', $supply) }}">
-                    @csrf
-                    <div class="mx-3 flex w-full">
-                        <x-searchProduct route="{{ route('admin.accounting.supply.search', $supply) }}"
-                                         input-data="supply-product" hidden-id="product_id" class="w-56"/>
-                        {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->type('number')->min_max(1, null)->show() }}
-                        <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
-                        </x-base.button>
-                    </div>
-                </form>
+
+                <x-searchAddProduct route-save="{{ route('admin.accounting.supply.add-product', $supply) }}" quantity="1"/>
                 <x-listCodeProducts route="{{ route('admin.accounting.supply.add-products', $supply) }}" caption-button="Добавить товары в документ" class="ml-3"/>
 
                 <form method="post" action="{{ route('admin.accounting.supply.sent', $supply) }}" class="ml-auto">

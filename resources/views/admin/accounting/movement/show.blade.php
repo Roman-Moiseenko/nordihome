@@ -18,17 +18,7 @@
 
         <div class="box flex p-3 items-center flex w-full">
             @if(empty($movement->order()))
-            <form action="{{ route('admin.accounting.movement.add', $movement) }}" method="POST">
-                @csrf
-                <div class="mx-3 flex">
-                    <x-searchProduct route="{{ route('admin.accounting.movement.search', $movement) }}"
-                                     input-data="movement-product" hidden-id="product_id" class="w-56"/>
-                    {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
-                    <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ
-                    </x-base.button>
-                </div>
-            </form>
-
+                <x-searchAddProduct route-save="{{ route('admin.accounting.movement.add', $movement) }}" quantity="1"/>
                 <x-listCodeProducts route="{{ route('admin.accounting.movement.add-products', $movement) }}" caption-button="Добавить товары в документ" class="ml-3"/>
             @endif
             <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-activate').submit();">Активировать документ</button>

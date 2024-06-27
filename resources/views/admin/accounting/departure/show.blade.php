@@ -8,15 +8,7 @@
     </div>
     @if(!$departure->isCompleted())
         <div class="box flex p-5 items-center">
-            <form action="{{ route('admin.accounting.departure.add', $departure) }}" method="POST">
-                @csrf
-                <div class="mx-3 flex w-full">
-                    <x-searchProduct route="{{ route('admin.accounting.departure.search', $departure) }}"
-                                     input-data="departure-product" hidden-id="product_id" class="w-56"/>
-                    {{ \App\Forms\Input::create('quantity', ['placeholder' => 'Кол-во', 'value' => 1, 'class' => 'ml-2 w-20'])->show() }}
-                    <x-base.button id="add-product" type="submit" variant="primary" class="ml-3">Добавить товар в документ</x-base.button>
-                </div>
-            </form>
+            <x-searchAddProduct route-save="{{ route('admin.accounting.departure.add', $departure) }}" quantity="1"/>
             <x-listCodeProducts route="{{ route('admin.accounting.departure.add-products', $departure) }}" caption-button="Добавить товары в документ" class="ml-3"/>
             <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
             <form id="form-completed" method="post" action="{{ route('admin.accounting.departure.completed', $departure) }}">

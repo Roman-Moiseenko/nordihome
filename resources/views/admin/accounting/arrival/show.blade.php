@@ -21,7 +21,6 @@
         <div class="box flex p-5 mt-3 items-center">
             <div class="mx-3 flex w-full">
                 <x-searchAddProduct route-save="{{ route('admin.accounting.arrival.add', $arrival) }}" quantity="1"/>
-
                 <x-listCodeProducts route="{{ route('admin.accounting.arrival.add-products', $arrival) }}" caption-button="Добавить товары в документ" class="ml-3"/>
                 <button type="button" class="ml-auto btn btn-danger" onclick="document.getElementById('form-completed').submit();">Провести документ</button>
             </div>
