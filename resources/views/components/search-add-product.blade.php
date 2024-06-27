@@ -1,5 +1,6 @@
-<div class="flex">
-    <span id="data" data-route="{{ $routeSearch }}" data-parser="{{ $parser }}" data-published="{{ $published }}"></span>
+<div class="flex search-add-product">
+    <span id="data" data-route="{{ $routeSearch }}" data-parser="{{ $parser }}" data-published="{{ $published }}"
+          data-show-stock="{{ $showStock }}" data-show-count="{{ $showCount }}" data-token="{{ csrf_token() }}"></span>
     <select id="search-product-component" class="tom-select form-control w-{{ $width }}">
         <option id="0"></option>
     </select>
@@ -11,6 +12,7 @@
     </button>
 
     <script>
+        /*
         let selectProductId = 0;
         let inputQuantity = document.getElementById('input-quantity-component');
         let buttonSend = document.getElementById('button-send-component');
@@ -85,6 +87,8 @@
             }
         };
         let selectTom = new TomSelect('#search-product-component', settings);
+
+
         if (inputQuantity !== null)
             inputQuantity.onkeydown = function (e) {
                 if (e.keyCode === 13) {
@@ -129,6 +133,11 @@
                 selectTom.clear();
             });
         }
-
+*/
     </script>
 </div>
+@once
+    @push('scripts')
+        @vite('resources/js/components/search-add-product.js')
+    @endpush
+@endonce

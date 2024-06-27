@@ -764,6 +764,7 @@ class OrderService
 
     public function update_comment(Order $order, string $comment): void
     {
+        $this->logger->logOrder($order, 'Изменен комментарий', $order->comment, $comment);
         $order->comment = $comment;
         $order->save();
     }

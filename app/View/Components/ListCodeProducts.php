@@ -15,7 +15,6 @@ class ListCodeProducts extends Component
 
     public function __construct(string $route, string $captionButton)
     {
-
         $this->route = $route;
         $this->captionButton = $captionButton;
     }

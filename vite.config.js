@@ -112,10 +112,15 @@ export default defineConfig({
                 "resources/js/components/tom-select/index.js",
                 "resources/js/components/top-bar/index.js",
                 "resources/js/components/vertical-bar-chart/index.js",
-                "resources/js/components/widget/index.js",
+
+                //Собственные
+                "resources/js/components/widget.js",
                 'resources/js/components/search-product/index.js',
-                'resources/js/components/list-code-products/index.js',
+                'resources/js/components/list-code-products.js',
                 'resources/css/components/_list-code-products.css',
+                'resources/js/components/search-add-product.js',
+
+
             ],
             refresh: true,
         }),

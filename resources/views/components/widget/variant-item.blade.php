@@ -5,6 +5,6 @@
 
 @once
     @push('scripts')
-        @vite('resources/js/components/widget/index.js')
+        @vite('resources/js/components/widget.js')
     @endpush
 @endonce

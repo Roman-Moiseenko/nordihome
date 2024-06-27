@@ -13,7 +13,7 @@
 </div>
 @once
     @push('scripts')
-        @vite('resources/js/components/list-code-products/index.js')
+        @vite('resources/js/components/list-code-products.js')
     @endpush
 
     @push('scripts')

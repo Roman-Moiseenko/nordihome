@@ -25,15 +25,8 @@
     </x-base.transition>
 </div>
 
-<script>
-  /*  let _hiddenInput = document.getElementById('hidden-id');
-    _hiddenInput.addEventListener('change', function (element) {
-        console.log(_hiddenInput.value);
-    });*/
-</script>
-
 @once
     @push('scripts')
-        @vite('resources/js/components/search-product/index.js')
+        @vite('resources/js/components/search-product.js')
     @endpush
 @endonce
