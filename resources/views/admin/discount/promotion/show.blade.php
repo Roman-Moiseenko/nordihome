@@ -115,20 +115,10 @@
         </ul>
     </div>
 
-    <div class="box flex items-center">
-        <form action="{{ route('admin.discount.promotion.add-product', $promotion) }}" method="POST">
-            @csrf
-            <div class="flex p-5 items-center">
-                <div class="w-100">
-                    <x-searchProduct route="{{ route('admin.discount.promotion.search', $promotion) }}" input-data="promotion-product" hidden-id="product_id"/>
-                </div>
-                <div>
-                    <x-base.button id="add-product" type="submit" variant="primary">Найти и добавить товар в акцию</x-base.button>
-                </div>
-            </div>
-        </form>
+    <div class="box p-5 flex items-center">
+        <x-searchAddProduct route-save="{{ route('admin.discount.promotion.add-product', $promotion) }}" width="100"
+                            published="1" caption="Добавить товар в Акцию"/>
         <x-listCodeProducts route="{{ route('admin.discount.promotion.add-products', $promotion) }}" caption-button="Добавить товары в акцию" class="ml-3"/>
-
     </div>
 
 

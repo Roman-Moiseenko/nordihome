@@ -4,7 +4,7 @@
     <div>
         <div class="intro-y flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
-                {{ $order->htmlDate() . ' ' .$order->htmlNum() }} {{ $order->statusHtml() }}
+                {{ $order->htmlDate() . ' ' .$order->htmlNum() }} {{ $order->statusHtml() }} <em>{{ $order->getType() }}</em>
             </h1>
         </div>
     </div>

@@ -18,6 +18,7 @@ class SearchAddProduct extends Component
     public bool $showImage = false; //Показывать изображение в списке !! На будущее !!
     public bool $showStock = false; //Показывать кружок в наличии или нет товар
     public bool $showCount = false; //Показывать кол-во в списке
+    public string $caption = ''; //Подпись для кнопки
 
     public string $routeSearch; //Адрес поиска
 
@@ -27,7 +28,8 @@ class SearchAddProduct extends Component
      */
     public function __construct(string $routeSave = '', string $event = '', bool $published = false,
                                 bool   $quantity = false, bool $parser = false, int $width = 72,
-                                bool   $showImage = false, bool $showStock = false, bool $showCount = false
+                                bool   $showImage = false, bool $showStock = false, bool $showCount = false,
+                                string $caption = 'Добавить товар в документ'
     )
     {
         if (empty($routeSave) && empty($event)) {
@@ -47,6 +49,7 @@ class SearchAddProduct extends Component
         $this->showImage = $showImage;
         $this->showStock = $showStock;
         $this->showCount = $showCount;
+        $this->caption = $caption;
 
         $this->routeSearch = route('admin.product.search-add');
     }

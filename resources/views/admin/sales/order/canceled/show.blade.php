@@ -49,7 +49,6 @@
         </div>
         <div class="col-span-3 lg:block">
             <div class="fixed fixed-top pt-5">
-
                 @include('admin.sales.order.canceled._actions')
                 <div class="relative mt-2 rounded-md border border-info bg-info/20 p-5">
                     <h2 class="text-lg font-medium">Общая информация</h2>
