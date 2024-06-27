@@ -45,7 +45,7 @@ class ParserController extends Controller
         ]);
 
        return $this->try_catch(function () use ($request, $user_ui) {
-            $product = $this->service->findProduct($request);
+            $product = $this->service->findProduct($request['search']);
             $this->cart->load($user_ui);
             $this->cart->add($product);
             return redirect()->route('shop.parser.view');

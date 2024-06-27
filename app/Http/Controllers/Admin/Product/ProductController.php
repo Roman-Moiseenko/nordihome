@@ -167,12 +167,15 @@ class ProductController extends Controller
     {
         return $this->try_catch_ajax_admin(function () use($request) {
             $result = [];
-            //return \response()->json($request->all());
             $products = $this->repository->search($request['search']);
+
+            //Применить map()
             /** @var Product $product */
             foreach ($products as $product) {
+                if (!$request->has('published') || ($request->has('published') && $product->isPublished()))
                 $result[] = $this->repository->toArrayForSearch($product);
             }
+
             return \response()->json($result);
         });
     }

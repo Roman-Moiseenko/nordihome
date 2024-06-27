@@ -60,6 +60,7 @@ class ProductRepository
         return $query->get();
     }
 
+
     public function toArrayForSearch(Product $product): array
     {
         return [
@@ -70,6 +71,8 @@ class ProductRepository
             'image' => $product->getImage(),
             'price' => $product->getLastPrice(),
             'url' => route('admin.product.edit', $product),
+            'count' => $product->getCountSell(),
+            'stock' => $product->getCountSell() > 0,
         ];
     }
 
@@ -80,7 +83,6 @@ class ProductRepository
         //$published = $request['published'] ?? 'all';
         $query = Product::orderBy('name');
         $product = $filters['product'];
-
 
         if (!empty($filters['product'])) $query->where(function ($q) use ($product) {
             $q->where('name', 'like', "%$product%")

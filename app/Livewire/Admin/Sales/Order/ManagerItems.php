@@ -52,6 +52,15 @@ class ManagerItems extends Component
         $this->dispatch('update-amount-order');
     }
 
+    #[On('add-parser')]
+    public function add_item_parser($search, $quantity)
+    {
+        $this->service->add_parser($this->order, $search, (int)$quantity);
+
+        $this->refresh_fields();
+        $this->dispatch('update-amount-order');
+    }
+
     public function render()
     {
         return view('livewire.admin.sales.order.manager-items');

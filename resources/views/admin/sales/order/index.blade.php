@@ -125,7 +125,7 @@
                         <x-base.table.th class="w-32 whitespace-nowrap text-center">ДАТА</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ОТВЕТСТВЕННЫЙ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">КЛИЕНТ</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap text-center">СУММА</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap text-center">ТИП</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ТОВАРОВ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ИТОГО</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">СТАТУС</x-base.table.th>
@@ -165,6 +165,12 @@
                     <div class="col-span-12">
                         <x-base.form-label for="input-name">Имя</x-base.form-label>
                         <x-base.form-input id="input-name" type="text" name="name" placeholder="Имя"/>
+                    </div>
+                    <div class="">
+                        <div class="form-check items-center">
+                            <x-base.form-input id="input-parser" type="checkbox" name="parser" class="form-check-input" placeholder="Парсер"/>
+                            <x-base.form-label for="input-parser" class="mb-0 ml-2 cursor-pointer">Парсер</x-base.form-label>
+                        </div>
                     </div>
                 </x-base.dialog.description>
 

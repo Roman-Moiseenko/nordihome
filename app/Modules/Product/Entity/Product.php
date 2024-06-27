@@ -12,6 +12,7 @@ use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
+use App\Modules\Shop\Parser\ProductParser;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
 use App\Modules\User\Entity\User;
@@ -83,6 +84,7 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderItem[] $orderItems
  * @property Review[] $reviews
  * @property Review[] $reviewsAll
+ * @property ProductParser $parser
  */
 class Product extends Model
 {
@@ -575,6 +577,11 @@ class Product extends Model
 
 
     //*** RELATIONS
+
+    public function parser()
+    {
+        return $this->hasOne(ProductParser::class, 'product_id', 'id');
+    }
 
     public function reviews()
     {

@@ -28,6 +28,8 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
+use App\Modules\Shop\Parser\ParserService;
+use App\Modules\Shop\Parser\ProductParser;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -51,11 +53,15 @@ class OrderService
     private LoggerService $logger;
     private MovementService $movementService;
     private OrderReserveService $reserveService;
+    private ParserService $parserService;
+    private stdClass $shop_options;
+
 
     public function __construct(
         DeliveryService     $deliveries,
         Cart                $cart,
         ParserCart          $parserCart,
+        ParserService       $parserService,
         ShopRepository      $repository,
         CouponService       $coupons,
         CalculatorOrder     $calculator,
@@ -66,7 +72,8 @@ class OrderService
     {
         $this->deliveries = $deliveries;
         $this->cart = $cart;
-        $this->coupon = (new Options())->shop->coupon;
+        $this->shop_options = (new Options())->shop;
+        //$this->coupon = (new Options())->shop->coupon;
         $this->repository = $repository;
         $this->coupons = $coupons;
         // $this->minutes = (new Options())->shop->reserve_order;
@@ -76,6 +83,7 @@ class OrderService
         $this->logger = $logger;
         $this->movementService = $movementService;
         $this->reserveService = $reserveService;
+        $this->parserService = $parserService;
     }
 
     #[Deprecated]
@@ -183,7 +191,7 @@ class OrderService
         $coupon = $this->repository->getCoupon($code);
         if (!empty($coupon)) {
             $amountCart = ($this->cart->getCartToFront(0))['common']['amount'];
-            $maxDiscount = round($amountCart * $this->coupon / 100);
+            $maxDiscount = round($amountCart * $this->shop_options->coupon / 100);
             return min($coupon->bonus, $maxDiscount);
         }
         return 0;
@@ -221,18 +229,6 @@ class OrderService
         $order->refresh();
         $this->recalculation($order);
 
-        //Предзаказ
-        /*
-        if ($request['preorder'] == 1 && //В заказе установлена метка для предзаказа.
-            !empty($PreOrderItems = $this->cart->getPreOrderItems())) {//и кол-во товаров не пусто
-            foreach ($PreOrderItems as $item) {
-                $orderItem = $this->createItemFromCart($item);
-                $orderItem->preorder = true;
-                $order->items()->save($orderItem);
-            }
-            $this->cart->clearPreOrder();
-        }
-*/
         event(new OrderHasCreated($order));
         return $order;
     }
@@ -337,8 +333,11 @@ class OrderService
             //Обновить Имя
             $user->setNameField(firstname: $request['name']);
         }
-        $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
-
+        if (isset($request['parser'])) {
+            $order = Order::register($user->id, Order::PARSER); //Создаем пустой заказ
+        } else {
+            $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
+        }
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $order->setStatus(OrderStatus::SET_MANAGER);
@@ -469,6 +468,7 @@ class OrderService
 
         return $order;
     }
+
 
     /**
      * Изменения кол-ва товара, с учетом "в наличии" и перерасчетом всего заказа. НОВАЯ ВЕРСИЯ.
@@ -622,20 +622,24 @@ class OrderService
         /** @var OrderItem[] $items */
         $items = $order->items()->getModels();
 
-        //Ищем акционные и бонусные товары
-        /** @var OrderItem[] $items */
-        $items = $this->calculator->calculate($items);
-        foreach ($items as $item) {
-            $item->save();
+        //Если заказ не через Парсер, ищем бонусы и скидки
+        if (!$order->isParser()) {
+            //Ищем акционные и бонусные товары
+            /** @var OrderItem[] $items */
+            $items = $this->calculator->calculate($items);
+            foreach ($items as $item) {
+                $item->save();
+            }
+            //Общие скидки, если имеется, фиксируем сумму (т.к. %% в будущем может измениться)
+            if (!is_null($discount = $this->calculator->discount($items))) {
+                $order->discount_id = $discount->id;
+                $order->discount_amount = (int)ceil($order->getBaseAmount() * $discount->discount / 100);
+            } else {
+                $order->discount_id = null;
+                $order->discount_amount = 0;
+            }
         }
-        //Общие скидки, если имеется, фиксируем сумму (т.к. %% в будущем может измениться)
-        if (!is_null($discount = $this->calculator->discount($items))) {
-            $order->discount_id = $discount->id;
-            $order->discount_amount = (int)ceil($order->getBaseAmount() * $discount->discount / 100);
-        } else {
-            $order->discount_id = null;
-            $order->discount_amount = 0;
-        }
+
         //Ручная скидка от скидок за товары
         $order->manual = 0;
         foreach ($order->items as $item) {
@@ -725,7 +729,6 @@ class OrderService
         return $item->order;
     }
 
-
     //**** ФУНКЦИИ ДРУГИЕ
     /**
      * Создать перемещение для заказа на основе резерва по складу отправки
@@ -764,8 +767,6 @@ class OrderService
         $order->comment = $comment;
         $order->save();
     }
-
-
 
     /**
      * Установить скидку по купону
@@ -882,5 +883,35 @@ class OrderService
             'discount' => price($order->getCoupon() + $order->getDiscountOrder()),
             'disable' => $amount > $remains || $amount == 0,
         ];
+    }
+
+    /**
+     * Добавление товара в заказ, через Парсер
+     * @param Order $order
+     * @param $search
+     * @param int $quantity
+     * @return void
+     */
+    public function add_parser(Order $order, $search, int $quantity)
+    {
+        if (!$order->isParser()) throw new \DomainException('Заказ не под Парсер');
+        $product = $this->parserService->findProduct($search);
+
+        $cost_item = ceil($this->shop_options->parser_coefficient * $product->parser->price);
+
+
+        $orderItemPre = OrderItem::new($product, $quantity, true, $order->user_id);
+
+        $orderItemPre->base_cost = (int)$cost_item;
+        $orderItemPre->sell_cost = (int)$cost_item;
+
+        $order->items()->save($orderItemPre);
+
+        $order->refresh();
+        $this->recalculation($order);
+        $this->logger->logOrder($order, 'Добавлен товар через Парсер', $product->name, $quantity . ' шт.');
+
+        //return $order;
+
     }
 }

@@ -59,9 +59,9 @@ class ParserService
         $this->productService = $productService;
     }
 
-    public function findProduct(Request $request): Product
+    public function findProduct(string $search): Product
     {
-        $code = $this->formatCode($request['search']);
+        $code = $this->formatCode($search);
         $product = Product::where('code_search', $code)->first();//Ищем товар в базе
         if (empty($product)) {//1. Добавляем черновик товара (Артикул, Главное фото, Название, Краткое описание, Базовая цена, published = false)
             $parser_product = $this->parsingData($code); //Парсим основные данные

@@ -122,7 +122,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
-            $order = $this->orderService->create_sales($request->only(['user_id', 'email', 'phone', 'name']));
+            $order = $this->orderService->create_sales($request->only(['user_id', 'email', 'phone', 'name', 'parser']));
             return redirect()->route('admin.sales.order.show', $order);
         });
     }
@@ -296,6 +296,7 @@ class OrderController extends Controller
         });
     }
 
+    #[Deprecated]
     public function search(Request $request)
     {
         return $this->try_catch_ajax_admin(function () use ($request) {
@@ -311,6 +312,7 @@ class OrderController extends Controller
         });
     }
 
+    #[Deprecated]
     public function get_to_order(Request $request)
     {
         return $this->try_catch_ajax_admin(function () use ($request) {
