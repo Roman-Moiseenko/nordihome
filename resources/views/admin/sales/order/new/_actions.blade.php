@@ -1,4 +1,4 @@
-<div class="flex flex-col lg:justify-start buttons-block items-start">
+<div class="flex flex-row lg:justify-start buttons-block items-start">
     @if($admin->isAdmin() || $admin->isChief())
         <x-base.popover class="inline-block mt-auto" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="primary" class="">Назначить
@@ -31,15 +31,15 @@
             </x-base.popover.panel>
         </x-base.popover>
     @endif
-    <button class="btn btn-secondary mt-2" onclick="document.getElementById('form-order-delete').submit();">Удалить</button>
-        <form id="form-order-delete" method="post" action="{{ route('admin.sales.order.destroy', $order) }}">
-            @method('DELETE')
-            @csrf
-        </form>
     @if($admin->isStaff())
-        <button class="btn btn-primary mt-2" onclick="document.getElementById('form-order-take').submit();">Взять заказ</button>
+        <button class="btn btn-primary ml-2" onclick="document.getElementById('form-order-take').submit();">Взять заказ</button>
         <form id="form-order-take" method="post" action="{{ route('admin.sales.order.take', $order) }}">
             @csrf
         </form>
     @endif
+    <button class="btn btn-secondary ml-2" onclick="document.getElementById('form-order-delete').submit();">Удалить</button>
+    <form id="form-order-delete" method="post" action="{{ route('admin.sales.order.destroy', $order) }}">
+        @method('DELETE')
+        @csrf
+    </form>
 </div>

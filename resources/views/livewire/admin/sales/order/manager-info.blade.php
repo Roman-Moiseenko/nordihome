@@ -3,9 +3,13 @@
     <div class="box p-3 flex flex-col items-center lg:items-start mt-2">
 
         <div class="truncate sm:whitespace-normal flex items-center">
-            <x-base.lucide icon="contact"
-                           class="w-4 h-4"/>&nbsp;{{ $order->getManager()->fullname->getFullName() }} -
-            менеджер
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="contact" class="lucide lucide-contact stroke-1.5 w-4 h-4"><path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><line x1="8" x2="8" y1="2" y2="4"></line><line x1="16" x2="16" y1="2" y2="4"></line></svg>
+            &nbsp;
+            @if(is_null($order->getManager()))
+                Менеджер не назначен
+            @else
+            {{ $order->getManager()->fullname->getFullName() }} - менеджер
+            @endif
         </div>
         <div class="flex mt-3">
             <div class="">
@@ -18,7 +22,7 @@
         <div class="form-control mt-4">
             <label class="form-check-label" for="order-comment">Комментарий</label>
             <input class="form-control" type="text"
-                   wire:change="set_comment" wire:model="comment" wire:loading.attr="disabled"
+                   wire:change="set_comment" wire:model="comment" wire:loading.attr="disabled"  @if(!$edit) disabled readonly @endif
             >
         </div>
     </div>

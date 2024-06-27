@@ -1,31 +1,46 @@
-@extends('layouts.side-menu')
+@extends('admin.sales.order.order')
 
-@section('subcontent')
-    <div>
-        <div class="intro-y flex items-center mt-8">
-            <h1 class="text-lg font-medium mr-auto">
-                {{ $order->htmlDate() . ' ' .$order->htmlNum() }} {{ $order->statusHtml() }}
-            </h1>
-        </div>
-    </div>
-    <div class="grid grid-cols-12 gap-x-6 pb-20">
-        <!-- ORDER -->
-        <div class="col-span-11 lg:col-span-9">
-            <div class="intro-y box p-5 mt-5 block-menus-order">
-                <div class="rounded-md border border-slate-200/60 p-5">
-                    <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
-                        <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
-                        Товары
-                    </div>
-                    <div class="mt-5">
-                        @include('admin.sales.order.new._products')
-                    </div>
-                </div>
+
+@section('actions')
+    @include('admin.sales.order.new._actions')
+@endsection
+
+@section('showcontent')
+    <div class="intro-y box p-5 mt-5 block-menus-order">
+        <div class="rounded-md border border-slate-200/60 p-5">
+            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+                <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
+                Товары
             </div>
-        </div>
-        <div class="col-span-3 lg:block">
-            <div class="fixed fixed-top pt-5">
-                @include('admin.sales.order.new._actions')
+            <div class="mt-5">
+                <h2 class=" mt-3 font-medium">Товар в наличии</h2>
+                <div class="box flex items-center font-semibold p-2">
+                    <div class="w-10 text-center">№ п/п</div>
+                    <div class="w-32 text-center">Артикул</div>
+                    <div class="w-1/4 text-center">Товар</div>
+                    <div class="w-32 text-center">Цена продажи</div>
+                    <div class="w-20 text-center">Кол-во</div>
+                    <div class="w-20 text-center">Сумма</div>
+                </div>
+                @foreach($order->items as $i => $item)
+                    <div class="box flex items-center p-2">
+
+                        <div class="w-10 text-center">{{ $i + 1 }}</div>
+                        <div class="w-32">{{ $item->product->code }}</div>
+                        <div class="w-1/4">{{ $item->product->name }} @if($item->preorder) <b>(предзаказ)</b> @endif</div>
+                        <div class="w-32 text-center px-1">{{ price($item->sell_cost) }}</div>
+                        <div class="w-20 px-1 text-center">{{ $item->quantity }}</div>
+                        <div class="w-32 text-center px-1">{{ price($item->sell_cost * $item->quantity) }}</div>
+                    </div>
+                @endforeach
+                <div class="box flex items-center font-semibold p-2">
+                    <div class="w-10 text-center"></div>
+                    <div class="w-32"></div>
+                    <div class="w-1/4 text-left">ИТОГО</div>
+                    <div class="w-32 text-center"></div>
+                    <div class="w-20 text-center"></div>
+                    <div class="w-20 text-center">{{ price($order->getSellAmount()) }}</div>
+                </div>
             </div>
         </div>
     </div>

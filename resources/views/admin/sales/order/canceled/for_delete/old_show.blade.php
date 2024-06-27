@@ -1,37 +1,56 @@
-@extends('admin.sales.order.order')
+@extends('layouts.side-menu')
 
-@section('actions')
-    @include('admin.sales.order.awaiting._actions', ['order' => $order])
-@endsection
+@section('subcontent')
+    <div>
+        <div class="intro-y flex items-center mt-8">
+            <h1 class="text-lg font-medium mr-auto">
+                {{ $order->htmlDate() . ' ' .$order->htmlNum() }} {{ $order->statusHtml() }}
+            </h1>
+        </div>
+    </div>
+    <div class="grid grid-cols-12 gap-x-6 pb-20">
+        <!-- ORDER -->
+        <div class="col-span-11 lg:col-span-9">
 
-@section('showcontent')
-
-        <div class="intro-y box p-5 mt-5 block-menus-order">
-            <div class="rounded-md border border-slate-200/60 p-5">
-                <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
-                    <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
-                    Товары
-                </div>
-                <div class="mt-5">
-                    @include('admin.sales.order.awaiting._products')
+            <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="rounded-md border border-slate-200/60 p-5">
+                    <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+                        <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
+                        Информация
+                    </div>
+                    <div class="mt-5">
+                        @include('admin.sales.order.canceled._info')
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="intro-y box p-5 mt-5 block-menus-order">
-            <div class="rounded-md border border-slate-200/60 p-5">
-                <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
-                    <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
-                    Услуги
-                </div>
-                <div class="mt-5">
-                    @include('admin.sales.order.awaiting._additions')
+            <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="rounded-md border border-slate-200/60 p-5">
+                    <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+                        <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
+                        Товары
+                    </div>
+                    <div class="mt-5">
+                        @include('admin.sales.order.canceled._products')
+                    </div>
                 </div>
             </div>
+            <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="rounded-md border border-slate-200/60 p-5">
+                    <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+                        <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
+                        Услуги
+                    </div>
+                    <div class="mt-5">
+                        @include('admin.sales.order.canceled._additions')
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-
         <div class="col-span-3 lg:block">
-            <div class="relative mt-2 rounded-md border border-info bg-info/20 p-5">
+            <div class="fixed fixed-top pt-5">
+                @include('admin.sales.order.canceled._actions')
+                <div class="relative mt-2 rounded-md border border-info bg-info/20 p-5">
                     <h2 class="text-lg font-medium">Общая информация</h2>
                     <div class="mt-2 leading-relaxed text-slate-600">
                         <div class="">
@@ -86,5 +105,7 @@
                         Доставка рассчитывается в ручном режиме.
                     </div>
                 </div>
+            </div>
         </div>
+    </div>
 @endsection

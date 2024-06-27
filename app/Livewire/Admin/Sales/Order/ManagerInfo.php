@@ -15,7 +15,8 @@ class ManagerInfo extends Component
 
     public string $comment;
     public string $volume;
-    public  string $weight;
+    public string $weight;
+    public bool $edit;
 
     private OrderService $service;
 
@@ -28,6 +29,12 @@ class ManagerInfo extends Component
     {
         $this->order = $order;
         $this->comment = $order->comment;
+        if ($order->isCanceled() || $order->isCompleted()) {
+            $this->edit = false;
+        } else {
+            $this->edit = true;
+        }
+
         //$this->refresh_fields();
     }
     #[On('update-amount-order')]

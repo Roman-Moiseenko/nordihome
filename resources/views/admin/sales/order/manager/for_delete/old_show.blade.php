@@ -1,45 +1,55 @@
-@extends('admin.sales.order.order')
+@extends('layouts.side-menu')
 
-@section('actions')
-    @include('admin.sales.order.manager._actions', ['order' => $order])
-@endsection
-
-@section('showcontent')
-    <div class="intro-y box p-5 mt-5 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
-            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
-                <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
-                Товары
-            </div>
-            <div class="mt-5">
-                <div class="mx-3 flex w-full mb-5">
-                    @if($order->isParser())
-                        <x-searchAddParser event="add-parser" quantity="1" width="100"/>
-                    @else
-                        <x-searchAddProduct event="add-product" quantity="1" parser="1" width="100" show-stock="1" published="1" caption="Добавить товар"/>
-                    @endif
+@section('subcontent')
+    <div>
+        <div class="intro-y flex items-center mt-8">
+            <h1 class="text-lg font-medium mr-auto">
+                {{ $order->htmlDate() . ' ' .$order->htmlNum() }} {{ $order->statusHtml() }} <em>{{ $order->getType() }}</em>
+            </h1>
+        </div>
+    </div>
+    <div class="grid grid-cols-12 gap-x-6 pb-20">
+        <!-- ORDER -->
+        <div class="col-span-12 lg:col-span-12">
+            <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="rounded-md border border-slate-200/60 p-5">
+                    <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+                        <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
+                        Информация
+                    </div>
+                    <div class="mt-5">
+                        @include('admin.sales.order.manager._info')
+                    </div>
                 </div>
-                <livewire:admin.sales.order.manager-items :order="$order"/>
-                <livewire:admin.sales.order.manager-amount :order="$order"/>
+            </div>
+            <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="rounded-md border border-slate-200/60 p-5">
+                    <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+                        <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
+                        Товары
+                    </div>
+                    <div class="mt-5">
+                        @include('admin.sales.order.manager._products')
+                    </div>
+                </div>
+            </div>
+            <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="rounded-md border border-slate-200/60 p-5">
+                    <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+                        <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
+                        Услуги
+                    </div>
+                    <div class="mt-5">
+                        <livewire:admin.sales.order.manager-additions :order="$order" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="intro-y box p-5 mt-5 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
-            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
-                <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
-                Услуги
-            </div>
-            <div class="mt-5">
-                <livewire:admin.sales.order.manager-additions :order="$order" />
-            </div>
-        </div>
-    </div>
+
 
     <script>
-        /*
         let inputUpdateData = document.querySelectorAll('.update-data-ajax');
-
         Array.from(inputUpdateData).forEach(function (input) {
             input.addEventListener('change', function () {
                 let value = input.value;
@@ -84,6 +94,5 @@
                 }
             };
         }
-        */
     </script>
 @endsection

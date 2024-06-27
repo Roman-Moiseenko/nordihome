@@ -1,4 +1,4 @@
-<div class="flex flex-col lg:justify-start buttons-block items-start">
+<div class="flex flex-row lg:justify-start buttons-block items-start">
     <button class="w-32 mb-2 btn btn-success-soft" type="button"
             onclick="document.getElementById('form-send-invoice').submit();">
         Отправить счет повторно
@@ -7,7 +7,7 @@
         @csrf
     </form>
 
-    <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+    <x-base.popover class="inline-block ml-2" placement="bottom-start">
         <x-base.popover.button as="x-base.button" variant="warning" class="">Установить резерв
             <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
         </x-base.popover.button>
@@ -36,7 +36,7 @@
         </x-base.popover.panel>
     </x-base.popover>
 
-    <x-base.popover class="inline-block mt-auto mt-2" placement="bottom-start">
+    <x-base.popover class="inline-block ml-2" placement="bottom-start">
         <x-base.popover.button as="x-base.button" variant="secondary" class="">Отменить
             <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>
         </x-base.popover.button>
