@@ -58,7 +58,6 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) 
         }
         $trail->push($category->name, route('shop.category.view', $category->slug));
     }
-
 });
 
 
@@ -80,11 +79,21 @@ Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, $slug) {
         $trail->push($product->name, route('shop.product.view', $product->slug)); // Крошка - Товар
         }
 });
+//Черновик
+Breadcrumbs::for('shop.product.view-draft', function (BreadcrumbTrail $trail, Product $product) {
+    if (is_null($product->main_category_id)) {
+        $trail->parent('shop.category.index');
+    } else {
+        $trail->parent('shop.category.view', $product->main_category_id);
+    }
+    $trail->push($product->name, route('shop.product.view-draft', $product)); // Крошка - Товар
+});
 //****/
 Breadcrumbs::for('errors.404', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Страница не найдена');
 });
+
 
 
 Breadcrumbs::for('shop.cart.view', function (BreadcrumbTrail $trail) {

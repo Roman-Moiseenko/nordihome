@@ -57,8 +57,6 @@ class ProductController extends Controller
             $filters['count'] = $_filter_count;
             $filters['text'] = $_filter_text;
 
-
-
             $query = $this->repository->getFilter($filters);
             $products = $this->pagination($query, $request, $pagination);
 

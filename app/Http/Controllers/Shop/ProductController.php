@@ -20,20 +20,23 @@ class ProductController extends Controller
 
     public function __construct(ShopRepository $repository)
     {
+        $this->middleware(['auth:admin'])->only(['view_draft']);
         $this->repository = $repository;
+
     }
 
     public function view($slug)
     {
-
         $product = $this->repository->getProductBySlug($slug);
-        if (empty($product)) {
+        if (empty($product) || !$product->isPublished()) {
             abort(404);
         }
-        return $this->try_catch(function () use ($slug, $product) {
+
+        return $this->try_catch(function () use ($product) {
             $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
             $description = $product->short;
-            $productAttributes = [];
+            $productAttributes = $this->repository->getProdAttributes($product);
+            /*$productAttributes = [];
             foreach ($product->prod_attributes as $attribute) {
                 $value = $attribute->Value();
                 if (is_array($value)) {
@@ -45,39 +48,25 @@ class ProductController extends Controller
                     'name' => $attribute->name,
                     'value' => $value,
                 ];
-            }
+            }*/
             return view('shop.product.view', compact('product', 'title', 'description', 'productAttributes'));
         });
+    }
 
-/*
+    public function view_draft(Product $product)
+    {
+        if ($product->isPublished()) {
+            flash('Товар опубликован, неверная ссылка');
+            return redirect()->back();
+        }
 
-        try {
-            $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
+        return $this->try_catch(function () use ($product) {
+            $title = 'Черновик ' . $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
             $description = $product->short;
-            $productAttributes = [];
-            foreach ($product->prod_attributes as $attribute) {
-                $value = $attribute->Value();
-                if (is_array($value)) {
-                    $value = implode(', ', array_map(function ($id) use ($attribute) {
-                        return $attribute->getVariant((int)$id)->name;
-                    }, $attribute->Value()));
-                }
-
-                $productAttributes[$attribute->group->name][] = [
-                    'name' => $attribute->name,
-                    'value' => $value,
-                ];
-            }
-
+            $productAttributes = $this->repository->getProdAttributes($product);
 
             return view('shop.product.view', compact('product', 'title', 'description', 'productAttributes'));
-        } catch (\DomainException $e) {
-            flash($e->getMessage(), 'danger');
-        } catch (\Throwable $e) {
-            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
-            event(new ThrowableHasAppeared($e));
-        }
-        return redirect()->back();*/
+        });
     }
 
     public function old_slug($old_slug)
@@ -90,20 +79,12 @@ class ProductController extends Controller
     //Ajax
     public function search(Request $request)
     {
-        if (empty($request['search'])) return ;
+        if (empty($request['search'])) return \response()->json(false);
 
         return $this->try_catch_ajax(function () use ($request) {
             $result = $this->repository->search($request['search']);
             return \response()->json($result);
         });
-
-      /*  try {
-            $result = $this->repository->search($request['search']);
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
-        }
-        return \response()->json($result);*/
     }
 
 

@@ -44,21 +44,15 @@
                     <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                         <x-base.button class="w-full py-3" type="submit" variant="primary">Обновить</x-base.button>
                     </div>
-                    <div class="box relative mt-10 rounded-md border p-5 dark:border-0 dark:bg-darkmode-600">
-                        Блок Изображения <br>
 
-                        <x-base.lucide class="absolute top-0 right-0 mt-5 mr-3 h-12 w-12 text-warning/80" icon="Lightbulb"/>
-                        <h2 class="text-lg font-medium">Блок Изображения </h2>
-
-                        <div class="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-500">
-                            <div>
-                                Краткая инструкция по заполнению карточки товара
-                            </div>
-                            <div class="mt-2">
-                                Дополнительный текст
-                            </div>
-                        </div>
+                    <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
+                        <a class="w-full py-3 btn btn-primary-soft"
+                           href="{{ ($product->isPublished()) ? route('shop.product.view', $product->slug) : route('shop.product.view-draft', $product) }}"
+                        >
+                            Просмотр
+                        </a>
                     </div>
+
                 </div>
             </div>
 

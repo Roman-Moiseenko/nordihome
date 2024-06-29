@@ -493,4 +493,22 @@ class ShopRepository
         return Promotion::where('slug', $slug)->where('published', true)->firstOrFail();
     }
 
+    public function getProdAttributes(Product $product): array
+    {
+        $productAttributes = [];
+        foreach ($product->prod_attributes as $attribute) {
+            $value = $attribute->Value();
+            if (is_array($value)) {
+                $value = implode(', ', array_map(function ($id) use ($attribute) {
+                    return $attribute->getVariant((int)$id)->name;
+                }, $attribute->Value()));
+            }
+            $productAttributes[$attribute->group->name][] = [
+                'name' => $attribute->name,
+                'value' => $value,
+            ];
+        }
+        return $productAttributes;
+    }
+
 }

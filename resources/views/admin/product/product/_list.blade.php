@@ -13,7 +13,9 @@
         <div class="mt-1 fs-8 button-manage-product text-primary">
             <a class="fs-8" href="{{ route('admin.product.edit', $product) }}">Изменить</a> |
             <a class="fs-8" href="{{ route('admin.product.show', $product) }}">Статистика</a> |
-            <a class="fs-8" href="{{ route('shop.product.view', $product->slug) }}" target="_blank">Просмотр</a> |
+            <a class="fs-8" href="{{ ($product->isPublished()) ? route('shop.product.view', $product->slug) : route('shop.product.view-draft', $product) }}" target="_blank">
+                Просмотр
+            </a> |
             <a class="text-success fs-8" href="#"
                onclick="event.preventDefault(); document.getElementById('form-toggle-{{ $product->id }}').submit();">
                 @if($product->isPublished())

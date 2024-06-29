@@ -41,6 +41,7 @@ Route::group(
             Route::post('/search', 'ProductController@search')->name('search');
             Route::post('/count-for-sell/{product}', 'ProductController@count_for_sell')->name('count-for-sell');
             Route::get('/{slug}', 'ProductController@view')->name('view');
+            Route::get('/draft/{product}', 'ProductController@view_draft')->name('view-draft');
 
             Route::get('/review/{review}', 'ProductController@review')->name('review.show');
         });
@@ -168,6 +169,9 @@ Route::group(
     function () {
         //Route::get('/login', 'LoginController@showLoginForm')->name('login');
         Route::post('/login', 'LoginController@login')->name('login');
+        Route::get('/login', function () {
+            abort(404);
+        });
         Route::post('/login_register', 'LoginController@login_registration')->name('login_register');
         Route::any('/logout', 'LoginController@logout')->name('logout');
 
