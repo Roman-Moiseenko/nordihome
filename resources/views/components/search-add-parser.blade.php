@@ -4,7 +4,7 @@
         <input id="input-quantity-component" class="form-control w-20 ml-2" type="number" value="1" min="1">
     @endif
     <button id="button-send-component" class="btn btn-primary ml-2" type="button" data-route="{{ $route }}"
-            data-event="{{ $event }}">Добавить товар в документ
+            data-event="{{ $event }}">{{ $caption }}
     </button>
 
     <script>
@@ -49,7 +49,7 @@
                 }
             );
 
-            Livewire.on('update-amount-order', (event) => {
+            Livewire.on('clear-search-product', (event) => {
                 inputSearch.value = '';
                 inputSearch.disabled = false;
                 if (inputQuantity !== null) {

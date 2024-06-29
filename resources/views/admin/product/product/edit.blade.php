@@ -7,6 +7,7 @@
         </h2>
     </div>
 
+
     <form action="{{ route('admin.product.update', $product) }}" METHOD="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')

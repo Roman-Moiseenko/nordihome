@@ -50,6 +50,6 @@
             };
         }
 
-        new TomSelect(this, options);
+        if ($(this).tomselect === undefined && !$(this).hasClass('search-product')) new TomSelect(this, options);
     });
 })();

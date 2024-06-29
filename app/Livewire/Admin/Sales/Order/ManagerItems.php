@@ -50,6 +50,7 @@ class ManagerItems extends Component
         $this->service->add_product($this->order, (int)$product_id, (int)$quantity);
         $this->refresh_fields();
         $this->dispatch('update-amount-order');
+        $this->dispatch('clear-search-product');
     }
 
     #[On('add-parser')]
@@ -59,6 +60,7 @@ class ManagerItems extends Component
 
         $this->refresh_fields();
         $this->dispatch('update-amount-order');
+        $this->dispatch('clear-search-product');
     }
 
     public function render()

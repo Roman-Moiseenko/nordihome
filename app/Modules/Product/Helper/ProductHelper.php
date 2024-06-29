@@ -148,7 +148,7 @@ class ProductHelper
                 'anchor' => 'composite'
             ],
             'bonus' => [
-                'livewire' => false,
+                'livewire' => true,
                 'include' => '_bonus',
                 'caption' => 'Бонусные товары',
                 'anchor' => 'bonus'

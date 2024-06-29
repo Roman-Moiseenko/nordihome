@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $product_id
  * @property int $bonus_id
  * @property int $discount
+ * @property Product $product
  */
 class Bonus extends Model
 {
@@ -18,5 +19,8 @@ class Bonus extends Model
         'discount',
     ];
 
-
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
 }

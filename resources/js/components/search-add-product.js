@@ -79,8 +79,8 @@
                     }
                 }
             };
-            let selectTom = new TomSelect('#search-product-component', settings);
-
+            let _selectContainer = $(this).find('.tom-select');
+            let selectTom = new TomSelect(_selectContainer, settings);
 
             if (inputQuantity !== null)
                 inputQuantity.onkeydown = function (e) {
@@ -121,10 +121,15 @@
                         quantity: quantity,
                     }
                 );
-                window.Livewire.on('update-amount-order', (event) => {
+                window.Livewire.on('clear-search-product', (event) => {
                     selectTom.clearOptions();
                     selectTom.clear();
                 });
+                //TODO Заменить и Удалить Протестировать
+            /*    window.Livewire.on('update-amount-order', (event) => {
+                    selectTom.clearOptions();
+                    selectTom.clear();
+                });*/
             }
 
         });
