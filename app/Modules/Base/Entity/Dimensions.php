@@ -35,6 +35,11 @@ class Dimensions
         self::TYPE_DIAMETER => 'Диаметр',
     ];
 
+    const MEASURES = [
+        self::MEASURE_G,
+        self::MEASURE_KG
+    ];
+
     public function __construct()
     {
         $this->measure = self::MEASURE_G;
