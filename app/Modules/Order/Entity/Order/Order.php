@@ -63,7 +63,7 @@ class Order extends Model
     const PARSER = 704;
     const TYPES = [
         self::ONLINE => 'Интернет-магазин',
-        self::MANUAL => 'Вручную',
+        self::MANUAL => 'Менеджер',
         self::SHOP => 'Магазин',
         self::PARSER => 'Парсер',
     ];
