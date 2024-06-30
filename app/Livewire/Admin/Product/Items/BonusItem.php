@@ -23,7 +23,6 @@ class BonusItem extends Component
     public function refresh_field()
     {
         $this->discount = $this->bonus->pivot->discount;
-
     }
 
     public function remove()
@@ -40,5 +39,13 @@ class BonusItem extends Component
     public function render()
     {
         return view('livewire.admin.product.items.bonus-item');
+    }
+
+    public function exception($e, $stopPropagation) {
+        if($e instanceof \DomainException) {
+            $this->dispatch('window-notify', title: 'Ошибка с ценой бонуса', message: $e->getMessage());
+            $stopPropagation();
+            $this->refresh_fields();
+        }
     }
 }

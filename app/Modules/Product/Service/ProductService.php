@@ -96,6 +96,8 @@ class ProductService
 
     public function update(Request $request, Product $product): Product
     {
+        //TODO Удалить блоки которые через Livewire
+
         /* SECTION 1*/
         //Основная
         $product->name = $request['name'];
@@ -148,17 +150,18 @@ class ProductService
         }
         /* SECTION 5*/
         //Габариты и доставка
-        $product->dimensions = Dimensions::create(
-            (float)$request['dimensions-width'],
-            (float)$request['dimensions-height'],
-            (float)$request['dimensions-depth'] ?? 0,
-            (float)$request['dimensions-weight'],
-            $request['dimensions-measure'],
-            (int)$request['dimensions-type']
-        );
-        $product->not_local = !isset($request['local']);
-        $product->not_delivery = !isset($request['delivery']);
-
+        if ($request->has('dimensions-measure')) { //Если не компонент livewire
+            $product->dimensions = Dimensions::create(
+                (float)$request['dimensions-width'],
+                (float)$request['dimensions-height'],
+                (float)$request['dimensions-depth'] ?? 0,
+                (float)$request['dimensions-weight'],
+                $request['dimensions-measure'],
+                (int)$request['dimensions-type']
+            );
+            $product->not_local = !isset($request['local']);
+            $product->not_delivery = !isset($request['delivery']);
+        }
         /* SECTION 6*/
         //Атрибуты
         $product->prod_attributes()->detach();
@@ -177,27 +180,17 @@ class ProductService
 
         /* SECTION 7*/
         //Цена, кол-во, статус, периодичность
+        if ($request->has('pre_order')) { //Если не компонент livewire
+            $product->pre_order = isset($request['pre_order']);
+            $product->only_offline = isset($request['offline']);
 
-        //Не сохранять цену и кол-во, если торговый учет
-        /*
-        if (!$this->options->shop->accounting) {
-            $product->setCountSell((int)($request['count-for-sell'] ?? 0));
-            if (!empty($request['last-price']) && (float)$request['last-price'] > 0.99) {
-                $product->setPrice((float)$request['last-price']);
-            }
+            $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
         }
-*/
-        $product->pre_order = isset($request['pre_order']);
-        $product->only_offline = isset($request['offline']);
-
-        $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
-
         /* SECTION 8*/
 
         /* SECTION 9*/
         //Аналоги
         $new_equivalent_id = $request['equivalent_id'] ?? 0;
-
 
         if ($new_equivalent_id == 0 && !is_null($product->equivalent)) {
             $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
@@ -214,29 +207,34 @@ class ProductService
 
         /* SECTION 10*/
         //Сопутствующие
-        $product->related()->detach();
-        if (!empty($request['related'])) {
-            foreach ($request['related'] as $related) {
-                if ($product->id != (int)$related) $product->related()->attach((int)$related);
-            }
-        }
-
-        /* SECTION 13*/
-        //Бонусный товар
-        $product->bonus()->detach();
-        if (!empty($request['bonus'])) {
-            foreach ($request['bonus'] as $key => $bonus) {
-                if ($product->id != (int)$bonus) {
-                    $product->bonus()->attach((int)$bonus, ['discount' => (int)$request['discount'][$key]]);
+        if ($request->has('related')) { //Если не компонент livewire
+            $product->related()->detach();
+            if (!empty($request['related'])) {
+                foreach ($request['related'] as $related) {
+                    if ($product->id != (int)$related) $product->related()->attach((int)$related);
                 }
             }
         }
-
+        /* SECTION 13*/
+        //Бонусный товар
+        if ($request->has('bonus')) { //Если не компонент livewire
+            $product->bonus()->detach();
+            if (!empty($request['bonus'])) {
+                foreach ($request['bonus'] as $key => $bonus) {
+                    if ($product->id != (int)$bonus) {
+                        $product->bonus()->attach((int)$bonus, ['discount' => (int)$request['discount'][$key]]);
+                    }
+                }
+            }
+        }
         $product->push();
-        if (isset($request['published'])) {
-            $this->published($product);
-        } else {
-            $this->draft($product);
+
+        if ($request->has('published')) { //Если не компонент livewire
+            if (isset($request['published'])) {
+                $this->published($product);
+            } else {
+                $this->draft($product);
+            }
         }
         return $product;
     }

@@ -9,16 +9,8 @@ use Livewire\Component;
 
 class Bonus extends Component
 {
-
     public Product $product;
 
-   /* public ProductService $service;
-
-    public function boot(ProductService $service)
-    {
-        $this->service = $service;
-    }
-*/
     public function mount(Product $product)
     {
         $this->product = $product;
@@ -34,6 +26,8 @@ class Bonus extends Component
     #[On('add-bonus')]
     public function add($product_id)
     {
+        if ($this->product->id === $product_id) throw new \DomainException('Товар совпадает с текущим');
+        if ($this->product->isBonus($product_id)) throw new \DomainException('Товар уже добавлен в Бонусные');
 
         $bonus = \App\Modules\Product\Entity\Bonus::where('bonus_id', $product_id)->first();
         if (!is_null($bonus)) throw new \DomainException('Товар уже назначен бонусным у товара ' . $bonus->product->name);
@@ -54,7 +48,7 @@ class Bonus extends Component
 
     public function exception($e, $stopPropagation) {
         if($e instanceof \DomainException) {
-            $this->dispatch('window-notify', title: 'Ошибка в Уведомлениях', message: $e->getMessage());
+            $this->dispatch('window-notify', title: 'Ошибка при добавлении Бонуса', message: $e->getMessage());
             $stopPropagation();
             $this->refresh_fields();
         }

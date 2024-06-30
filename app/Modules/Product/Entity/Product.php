@@ -120,7 +120,7 @@ class Product extends Model
         'count_for_sell' => 0,
         'current_rating' => 0,
         'published' => false,
-        'pre_order' => false,
+        'pre_order' => true,
         'series_id' => null,
         'published_at' => null,
     ];
@@ -152,22 +152,14 @@ class Product extends Model
 
     ];
 
-    //РЕГИСТРАТОРЫ
 
-/*
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-        $this->dimensions = new Dimensions();
-        //Конфигурация
-        //$this->options = new Options();
-    }
-*/
+
     public function sluggable()
     {
         return ['slug' => ['source' => 'name']];
     }
 
+    //РЕГИСТРАТОРЫ
     /**
      * Регистрация товара, с учетом дублей по имени - добавляем номер
      * Для дублирования артикула - вызываем исключение
@@ -267,6 +259,22 @@ class Product extends Model
     {
         $wish = $this->wishes()->where('user_id', $user_id)->first();
         return !empty($wish);
+    }
+
+    public function isBonus(int $product_id): bool
+    {
+        foreach ($this->bonus as $bonus) {
+            if ($bonus->id == $product_id) return true;
+        }
+        return false;
+    }
+
+    public function isRelated(int $product_id): bool
+    {
+        foreach ($this->related as $related) {
+            if ($related->id == $product_id) return true;
+        }
+        return false;
     }
 
     //*** SET-....

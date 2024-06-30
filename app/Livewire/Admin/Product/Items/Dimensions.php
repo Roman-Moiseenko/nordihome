@@ -35,10 +35,10 @@ class Dimensions extends Component
     public function mount(Product $product)
     {
         $this->product = $product;
-        $this->refresh_field();
+        $this->refresh_fields();
     }
 
-    public function refresh_field()
+    public function refresh_fields()
     {
         $this->weight = $this->product->dimensions->weight;
         $this->height = $this->product->dimensions->height;
@@ -69,5 +69,13 @@ class Dimensions extends Component
     public function render()
     {
         return view('livewire.admin.product.items.dimensions');
+    }
+
+    public function exception($e, $stopPropagation) {
+        if($e instanceof \DomainException) {
+            $this->dispatch('window-notify', title: 'Ошибка', message: $e->getMessage());
+            $stopPropagation();
+            $this->refresh_fields();
+        }
     }
 }

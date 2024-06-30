@@ -54,10 +54,13 @@
         bottom: 10px;
         width: 278px;
         min-width: 278px;
-        border: 1px solid var(--bs-gray-400);
-        border-radius: $radius-card;
+
         background: var(--bs-white);
         transition: $transition-slow;
+        .borders {
+            border: 1px solid var(--bs-gray-400);
+            border-radius: $radius-card;
+        }
         .mobile-close {
             display: none;
             cursor: pointer;
@@ -73,6 +76,9 @@
         .attribute-filter {
             border-bottom: 1px solid var(--bs-gray-400);
             padding: 12px;
+            hr {
+                margin: 1rem -12px;
+            }
         }
         .buttons-filter {
             padding: 12px;
