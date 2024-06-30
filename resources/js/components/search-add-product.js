@@ -12,6 +12,7 @@
             let show_stock = $(this).find("#data").data('show-stock');//document.getElementById('data').dataset.parser;
             let show_count = $(this).find("#data").data('show-count');//document.getElementById('data').dataset.parser;
             let token = $(this).find("#data").data('token');//document.getElementById('data').dataset.parser;
+            let quantity = $(this).find("#data").data('quantity');
 
 
             let settings = {
@@ -27,7 +28,7 @@
                         return;
                     }
                     selectProductId = value;
-                    if (inputQuantity !== null) {
+                    if (quantity) {
                         inputQuantity.focus();
                     } else {
                         buttonSend.focus();

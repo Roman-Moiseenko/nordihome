@@ -1,6 +1,6 @@
 <div class="flex search-add-product @if($column) flex-col @endif">
     <span id="data" data-route="{{ $routeSearch }}" data-parser="{{ $parser }}" data-published="{{ $published }}"
-          data-show-stock="{{ $showStock }}" data-show-count="{{ $showCount }}" data-token="{{ csrf_token() }}"></span>
+          data-show-stock="{{ $showStock }}" data-show-count="{{ $showCount }}" data-token="{{ csrf_token() }}" data-quantity="{{ $quantity }}"></span>
     <select id="search-product-component" class="tom-select search-product form-control
     @if($column) w-full @else w-{{ $width }} @endif">
         <option id="0"></option>
