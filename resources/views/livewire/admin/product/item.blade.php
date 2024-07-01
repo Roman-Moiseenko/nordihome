@@ -1,5 +1,5 @@
 <div>
-    <div id="{{ $item }}" data-is-top="0" class="intro-y box p-5 mt-5 block-menus-product">
+    <div id="{{ $item }}" data-is-top="0" class="box p-5 mt-5 block-menus-product">
         <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
             <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" class="lucide lucide-chevron-down stroke-1.5 mr-2 h-4 w-4"><path d="m6 9 6 6 6-6"></path></svg>

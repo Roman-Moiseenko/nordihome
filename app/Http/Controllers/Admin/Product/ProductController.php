@@ -109,6 +109,7 @@ class ProductController extends Controller
                         ->where('_rgt', '>=' ,$product->category->_rgt);
                 })
                 ->get();
+
             //$equivalents = Equivalent::orderBy('name')->where('category_id', $product->main_category_id)->get();
 
             return view('admin.product.product.edit', compact('product', 'categories',

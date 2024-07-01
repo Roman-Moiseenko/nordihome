@@ -1,10 +1,12 @@
 <div>
-    {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}<div class="grid grid-cols-12 gap-x-6">
-        <div class="col-span-12 lg:col-span-4">
+    <div class="grid grid-cols-12 gap-x-6">
+        <div class="col-span-12 lg:col-span-4" wire:ignore>
             <x-base.form-label for="select-equivalent">Связанная группа аналогичных товаров</x-base.form-label>
             <x-base.tom-select id="select-equivalent" name="equivalent_id" class="w-full"
-                               data-placeholder="Выберите группу аналогов товара">
-                <option value="0"></option>
+                               data-placeholder="Выберите группу аналогов товара"
+                               wire:change="change" wire:model="equivalent_id"  wire:loading.attr="disabled">
+                <option value="0">~ Без группы ~</option>
+                @if(!is_null($equivalents))
                 @foreach($equivalents as $equivalent)
                     <option value="{{ $equivalent->id }}"
                         {{ $equivalent->id == $equivalent_id ? 'selected' : ''}}
@@ -12,6 +14,7 @@
                         {{ $equivalent->name }}
                     </option>
                 @endforeach
+                @endif
             </x-base.tom-select>
         </div>
         <div class="col-span-12 lg:col-span-8">

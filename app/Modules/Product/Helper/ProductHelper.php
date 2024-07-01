@@ -74,12 +74,11 @@ class ProductHelper
                 'anchor' => 'modification'
             ],
             'equivalent' => [
-                'livewire' => false,
+                'livewire' => true,
                 'include' => '_equivalent',
                 'caption' => 'Аналоги',
                 'anchor' => 'equivalent'
             ],
-
             'related' => [
                 'livewire' => true,
                 'include' => '_related',
