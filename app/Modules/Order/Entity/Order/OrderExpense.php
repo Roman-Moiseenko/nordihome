@@ -78,6 +78,9 @@ class OrderExpense extends Model
         'address' => '{}',
     ];
     protected $table = 'order_expenses';
+    protected $touches = [
+        'order',
+    ];
     protected $fillable = [
         'order_id',
         'storage_id',

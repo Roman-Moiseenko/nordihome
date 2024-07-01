@@ -241,3 +241,7 @@ input.btn-check:checked + label:hover {
 * > .intro-y:nth-child(1) {
     z-index: inherit !important;
 }
+* > .intro-y:nth-child(2) {
+    z-index: inherit !important;
+}
+

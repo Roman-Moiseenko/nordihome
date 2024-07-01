@@ -30,7 +30,8 @@ use JetBrains\PhpStorm\Pure;
  * @property string $comment
  * @property int $reserve_id
  * @property bool $assemblage - требуется сборка
- *
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property Order $order
  * @property Product $product
@@ -41,7 +42,6 @@ use JetBrains\PhpStorm\Pure;
  */
 class OrderItem extends Model implements CartItemInterface
 {
-    public $timestamps = false;
     protected $fillable = [
         'quantity',
         'product_id',
@@ -58,14 +58,18 @@ class OrderItem extends Model implements CartItemInterface
         'supply_stack_id',
         'fix_manual',
     ];
-
     protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
         'options' => 'json',
         'base_cost' => 'float',
         'sell_cost' => 'float',
         'preorder' => 'bool',
         'fix_manual' => 'bool'
     ];
+    protected $touches = [
+        'order',
+        ];
 
     public static function new(Product $product, int $quantity, bool $preorder, int $user_id): self
     {

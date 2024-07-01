@@ -15,6 +15,9 @@ use function now;
  * @property float $amount
  * @property int $purpose
  * @property string $comment
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ *
  * @property Order $order
  * @property OrderExpenseAddition[] $expenseAdditions
  */
@@ -41,8 +44,9 @@ class OrderAddition extends Model
     ];
 
     protected $table = 'order_additions';
-
-    public $timestamps = false;
+    protected $touches = [
+        'order',
+    ];
     protected $fillable = [
         'amount',
         'purpose',

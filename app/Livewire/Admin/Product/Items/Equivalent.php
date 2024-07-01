@@ -21,15 +21,12 @@ class Equivalent extends Component
 
     public function boot()
     {
-
        $this->service = new EquivalentService();
     }
 
     public function mount(Product $product)
     {
-
         $this->product = $product;
-
         $this->refresh_fields();
     }
 

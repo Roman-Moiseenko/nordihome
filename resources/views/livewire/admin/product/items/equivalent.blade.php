@@ -22,8 +22,18 @@
             <div id="equivalent-products" class="mt-3 ml-3">
                 @if($equivalent_id != 0)
                     @foreach($product->equivalent_product->equivalent->products as $_product)
-                        <div class="mt-1 border-b text-center text-slate-400">
-                            {{ $_product->name }}
+                        <div class="mt-1 border-b text-center @if($_product->id == $product->id) font-medium @endif flex items-center">
+                            <div class="w-10">
+                                <div class="image-fit w-10 h-10">
+                                    <img class="" src="{{ $_product->getImage('thumb') }}" alt="">
+                                </div>
+                            </div>
+                            <div class="w-32 ml-2">
+                                {{ $_product->code }}
+                            </div>
+                            <div class="ml-2">
+                                {{ $_product->name }}
+                            </div>
                         </div>
                     @endforeach
                 @endif

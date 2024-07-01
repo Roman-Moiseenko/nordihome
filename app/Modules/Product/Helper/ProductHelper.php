@@ -92,13 +92,13 @@ class ProductHelper
                 'anchor' => 'bonus'
             ],
             'option' => [
-                'livewire' => false,
+                'livewire' => true,
                 'include' => '_option',
                 'caption' => 'Опции',
                 'anchor' => 'option'
             ],
             'composite' => [
-                'livewire' => false,
+                'livewire' => true,
                 'include' => '_composite',
                 'caption' => 'Составной товар',
                 'anchor' => 'composite'

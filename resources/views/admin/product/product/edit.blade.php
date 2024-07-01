@@ -19,7 +19,7 @@
                     @if($menu['livewire'])
                         <livewire:admin.product.item :product="$product" :item="$menu['anchor']" :caption="$menu['caption']"/>
                     @else
-                        <div id="{{ $menu['anchor'] }}" data-is-top="{{ $n == 'common' ? 1 : 0 }}" class="intro-y box p-5 mt-5 block-menus-product">
+                        <div id="{{ $menu['anchor'] }}" data-is-top="{{ $n == 'common' ? 1 : 0 }}" class="box p-5 mt-5 block-menus-product">
                             <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
                                 <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
                                     <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/> {{ $menu['caption'] }}
