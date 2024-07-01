@@ -6,8 +6,8 @@
             <option value="0"></option>
             @foreach($equivalents as $equivalent)
                 <option value="{{ $equivalent->id }}"
-                @if(!is_null($product->equivalent))
-                    {{ $equivalent->id == $product->equivalent->id ? 'selected' : ''}}
+                @if(!is_null($product->equivalent_product))
+                    {{ $equivalent->id == $product->equivalent_product->equivalent_id ? 'selected' : ''}}
                     @endif
                 >
                     {{ $equivalent->name }}
@@ -18,8 +18,8 @@
     <div class="col-span-12 lg:col-span-8">
         <h3 class="font-medium text-center">Товары из группы</h3>
         <div id="equivalent-products" class="mt-3 ml-3">
-        @if(!is_null($product->equivalent))
-            @foreach($product->equivalent->products as $_product)
+        @if(!is_null($product->equivalent_product))
+            @foreach($product->equivalent_product->equivalent->products as $_product)
                 <div class="mt-1 border-b text-center text-slate-400">
                     {{ $_product->name }}
                 </div>

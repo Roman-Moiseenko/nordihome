@@ -18,10 +18,10 @@ class ManagerItem extends Component
 
 
     private OrderService $service;
-    public $sell_percent;
-    public $sell_cost;
+    public float $sell_percent;
+    public float $sell_cost;
     public bool $assemblage;
-    public $quantity;
+    public int $quantity;
 
     public function boot(OrderService $service)
     {

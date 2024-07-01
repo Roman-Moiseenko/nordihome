@@ -17,10 +17,10 @@ class BonusItem extends Component
     {
         $this->bonus = $bonus;
         $this->product = $product;
-        $this->refresh_field();
+        $this->refresh_fields();
     }
 
-    public function refresh_field()
+    public function refresh_fields()
     {
         $this->discount = $this->bonus->pivot->discount;
     }

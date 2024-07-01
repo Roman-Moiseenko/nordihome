@@ -8,6 +8,11 @@ class Cache
 {
     protected string $cachPath = './cache/';
 
+    public function __construct()
+    {
+        $this->cachPath = storage_path() . '/cache/';
+    }
+
     public function setPath($path) {
         $this->cachPath = $path;
     }
@@ -21,6 +26,9 @@ class Cache
     }
 
     public function set($key, $value) {
+        if (!file_exists($this->cachPath . $key)) {
+            mkdir($this->cachPath . $key, 0777);
+        }
         file_put_contents($this->cachPath . $key, $value);
     }
 

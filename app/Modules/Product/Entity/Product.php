@@ -152,8 +152,6 @@ class Product extends Model
 
     ];
 
-
-
     public function sluggable()
     {
         return ['slug' => ['source' => 'name']];
@@ -206,7 +204,6 @@ class Product extends Model
 
         return self::create(array_merge($data, $arguments));
     }
-
 
     //ФУНЦИИ СОСТОЯНИЯ
     public function isVisible(): bool

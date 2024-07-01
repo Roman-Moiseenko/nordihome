@@ -49,11 +49,11 @@ class ProductHelper
                 'caption' => 'Изображения',
                 'anchor' => 'images'
             ],
-            'videos' => [
-                'livewire' => false,
-                'include' => '_videos',
+            'video' => [
+                'livewire' => true,
+                'include' => '_video',
                 'caption' => 'Видео обзоры',
-                'anchor' => 'videos'
+                'anchor' => 'video'
             ],
             'attributes' => [
                 'livewire' => false,

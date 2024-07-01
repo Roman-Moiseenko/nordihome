@@ -12,7 +12,7 @@
         </button>
         <div class="flex justify-between items-center m-3">
             <div class="flex items-center">
-                <div class="image-fit w-10 h-10"><img class="rounded-full" src="{{ $bonus->getImage() }}" alt=""></div>
+                <div class="image-fit w-10 h-10"><img class="rounded-full" src="{{ $bonus->getImage('thumb') }}" alt=""></div>
                 <div class="text-left ml-3">{{ $bonus->name . ' (' . $bonus->code . ')' }}</div>
             </div>
             <div class="text-right font-medium ml-auto mr-3 text-danger"><s>{{ price($bonus->getLastPrice()) }}</s></div>

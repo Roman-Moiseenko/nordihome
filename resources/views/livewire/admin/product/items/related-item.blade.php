@@ -10,7 +10,7 @@
         </button>
         <div class="flex justify-between items-center m-3">
             <div class="flex items-center">
-                <div class="image-fit w-10 h-10"><img class="rounded-full" src="{{ $related->getImage() }}" alt="">
+                <div class="image-fit w-10 h-10"><img class="rounded-full" src="{{ $related->getImage('thumb') }}" alt="">
                 </div>
                 <div class="text-left ml-3">{{ $related->name }}</div>
             </div>

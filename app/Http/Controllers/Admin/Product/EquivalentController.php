@@ -51,7 +51,13 @@ class EquivalentController extends Controller
     public function show(Equivalent $equivalent)
     {
         return $this->try_catch_admin(function () use($equivalent) {
-            $_products = Product::orderBy('name')->where('main_category_id', '=', $equivalent->category->id)->get();
+            //$_products = Product::orderBy('name')->where('main_category_id', $equivalent->category->id)->get();
+            //дочерние категории
+            $_products = Product::orderBy('name')
+                ->where('main_category_id', '>=' ,$equivalent->category->_lft)
+                ->where('main_category_id', '<=' ,$equivalent->category->_rgt)
+                ->get();
+
             $products = [];
             //Очистка уже добавленных категорий
             foreach ($_products as $product) {

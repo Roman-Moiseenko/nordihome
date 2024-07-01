@@ -138,6 +138,7 @@ class ProductService
 
         /* SECTION 4*/
         //Видеообзоры
+        /*
         $product->videos()->delete();
         if (!empty($request['video_url'])) {
             foreach ($request['video_url'] as $i => $item) {
@@ -148,6 +149,7 @@ class ProductService
                         $request['video_text'][$i] ?? '', $i));
             }
         }
+        */
         /* SECTION 5*/
         //Габариты и доставка
         if ($request->has('dimensions-measure')) { //Если не компонент livewire

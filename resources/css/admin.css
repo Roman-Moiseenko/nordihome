@@ -238,3 +238,6 @@ input.btn-check:checked + label:hover {
 .td-with-hidden:hover > .button-manage-product {
     display: block;
 }
+* > .intro-y:nth-child(1) {
+    z-index: inherit !important;
+}
