@@ -103,7 +103,13 @@ class ProductController extends Controller
             $series = Series::orderBy('name')->get();
             $groups = AttributeGroup::orderBy('name')->get();
             $options = $this->options;
-            $equivalents = Equivalent::orderBy('name')->where('category_id', $product->main_category_id)->get();
+            $equivalents = Equivalent::orderBy('name')
+                ->whereHas('category', function ($query) use ($product) {
+                    $query->where('_lft', '<=' ,$product->category->_lft)
+                        ->where('_rgt', '>=' ,$product->category->_rgt);
+                })
+                ->get();
+            //$equivalents = Equivalent::orderBy('name')->where('category_id', $product->main_category_id)->get();
 
             return view('admin.product.product.edit', compact('product', 'categories',
                 'menus', 'brands', 'tags', 'groups', 'options', 'equivalents', 'series'));

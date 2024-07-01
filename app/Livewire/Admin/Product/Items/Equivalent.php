@@ -13,6 +13,7 @@ class Equivalent extends Component
     public Product $product;
     public ProductEquivalent $equivalents;
     private EquivalentService $service;
+    public int $equivalent_id;
 
     public function boot(EquivalentService $service)
     {
@@ -22,7 +23,18 @@ class Equivalent extends Component
     public function mouth(Product $product)
     {
         $this->product = $product;
-        $this->equivalents = ProductEquivalent::orderBy('name')->where('category_id', '=', $product->main_category_id)->get();
+        $this->equivalent_id = ($product->equivalent_product) ? 0 : $product->equivalent_product->equivalent_id;
+        $this->equivalents = ProductEquivalent::orderBy('name')
+            ->whereHas('category', function ($query) use ($product) {
+                $query->where('_lft', '<=' ,$product->category->_lft)
+                    ->where('_rgt', '>=' ,$product->category->_rgt);
+            })
+            ->get();
+    }
+
+    public function change()
+    {
+
     }
 
     public function render()

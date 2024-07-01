@@ -79,6 +79,7 @@ class ProductHelper
                 'caption' => 'Аналоги',
                 'anchor' => 'equivalent'
             ],
+
             'related' => [
                 'livewire' => true,
                 'include' => '_related',

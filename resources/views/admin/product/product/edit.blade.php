@@ -31,6 +31,7 @@
                         </div>
                     @endif
                 @endforeach
+
             </div>
 
             <div class="col-span-2 hidden lg:block">
