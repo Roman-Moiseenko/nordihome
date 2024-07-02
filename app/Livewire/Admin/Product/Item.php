@@ -13,7 +13,7 @@ class Item extends Component
     public string $item;
     public string $element;
 
-    public function mount(Product $product, string $item = '', string $caption = ' **** ')
+    public function mount(Product $product, string $item, string $caption = 'Нет заголовка')
     {
         $this->product = $product;
         $this->item = $item;

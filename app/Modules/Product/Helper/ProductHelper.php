@@ -13,11 +13,11 @@ class ProductHelper
                 'caption' => 'Общие параметры',
                 'anchor' => 'common'
             ],
-            'description' => [
+            /*'description' => [
                 'include' => '_description',
                 'caption' => 'Описание',
                 'anchor' => 'description'
-            ],
+            ],*/
         ];
     }
 
@@ -31,8 +31,14 @@ class ProductHelper
                 'caption' => 'Общие параметры',
                 'anchor' => 'common',
             ],
-            'description' => [
+           /* 'description' => [
                 'livewire' => false,
+                'include' => '_description',
+                'caption' => 'Описание',
+                'anchor' => 'description'
+            ],*/
+            'description' => [
+                'livewire' => true,
                 'include' => '_description',
                 'caption' => 'Описание',
                 'anchor' => 'description'

@@ -9,12 +9,6 @@ class TagRepository
 {
     public function exists(mixed $id): bool
     {
-
-        try {
-            Tag::findOrFail($id);
-        } catch (\Throwable $e) {
-            return false;
-        }
-        return true;
+        return !is_null(Tag::find($id));
     }
 }

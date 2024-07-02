@@ -70,12 +70,14 @@ class ProductService
 
         /* SECTION 2*/
         //Описание, короткое описание, теги
+        /*
         $product->description = $request['description'] ?? '';
         $product->short = $request['short'] ?? '';
 
         $this->tags($request, $product);
-
+*/
         $product->push();
+
         $this->storageService->add_product($product);
         return $product;
 
@@ -131,11 +133,12 @@ class ProductService
         $this->series($request, $product);
         /* SECTION 2*/
         //Описание, короткое описание, теги
+        /*
         $product->description = $request['description'] ?? '';
         $product->short = $request['short'] ?? '';
         $product->tags()->detach();
         $this->tags($request, $product);
-
+*/
         /* SECTION 4*/
         //Видеообзоры
         /*
