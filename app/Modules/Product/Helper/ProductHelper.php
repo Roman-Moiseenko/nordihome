@@ -13,11 +13,6 @@ class ProductHelper
                 'caption' => 'Общие параметры',
                 'anchor' => 'common'
             ],
-            /*'description' => [
-                'include' => '_description',
-                'caption' => 'Описание',
-                'anchor' => 'description'
-            ],*/
         ];
     }
 
@@ -26,17 +21,11 @@ class ProductHelper
     {
         return [
             'common' => [
-                'livewire' => false,
+                'livewire' => true,
                 'include' => '_common',
                 'caption' => 'Общие параметры',
                 'anchor' => 'common',
             ],
-           /* 'description' => [
-                'livewire' => false,
-                'include' => '_description',
-                'caption' => 'Описание',
-                'anchor' => 'description'
-            ],*/
             'description' => [
                 'livewire' => true,
                 'include' => '_description',
@@ -61,11 +50,11 @@ class ProductHelper
                 'caption' => 'Видео обзоры',
                 'anchor' => 'video'
             ],
-            'attributes' => [
-                'livewire' => false,
-                'include' => '_attributes',
+            'attribute' => [
+                'livewire' => true,
+                'include' => '_attribute',
                 'caption' => 'Атрибуты',
-                'anchor' => 'attributes'
+                'anchor' => 'attribute'
             ],
             'management' => [
                 'livewire' => true,

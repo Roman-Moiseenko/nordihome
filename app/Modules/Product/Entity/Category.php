@@ -103,7 +103,6 @@ class Category extends Model
         return Category::orderBy('_lft')->where('_lft', '<=', $this->_lft)->where('_rgt', '>=', $this->_rgt)->get();
     }
 
-
     //TODO Вывести список своих атрибутов и родительских в show()
     public function all_attributes(): array
     {

@@ -1,8 +1,8 @@
 <script>
     //TODO select для атрибутов сделать Tom-Select с группами и протестировать повторный запуск window._updateTomSelect(id_tom_select)
 
-    let _selMainCat = document.getElementById('select-category');
-    let _selCats = document.getElementById('select-categories');
+    let _selMainCat = document.getElementById('select-category-component');
+    let _selCats = document.getElementById('select-categories-component');
     let _ListAttributes = [];
 
     const _name_point_attribute = 'point-insert-attribute';

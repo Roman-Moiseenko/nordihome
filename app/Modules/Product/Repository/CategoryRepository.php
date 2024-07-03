@@ -12,21 +12,12 @@ class CategoryRepository
 {
     public function exists(int $id): bool
     {
-        try {
-            Category::findOrFail($id);
-        } catch (\Throwable $e) {
-            return false;
-        }
-        return true;
+        return !is_null(Category::find($id));
     }
 
     public function existAndGet(int $id): ?Category
     {
-        try {
-            return Category::findOrFail($id);
-        } catch (\Throwable $e) {
-            return null;
-        }
+        return Category::find($id);
     }
 
     //Формируем массив для передачи json ч/з ajax списка доступных атрибутов для товара
@@ -54,6 +45,7 @@ class CategoryRepository
         }
         $_attr = array_unique($_attr);
         foreach ($_attr as $id_attribute) {
+            /** @var Attribute $attr_obj */
             $attr_obj = Attribute::find($id_attribute);
             $value = $product->Value($id_attribute);
             $result[$id_attribute] = [

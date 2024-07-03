@@ -18,6 +18,7 @@ use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use JetBrains\PhpStorm\Deprecated;
 
 class ProductController extends Controller
 {
@@ -117,6 +118,7 @@ class ProductController extends Controller
         });
     }
 
+    #[Deprecated]
     public function update(Request $request, Product $product)
     {
         return $this->try_catch_admin(function () use($request, $product) {

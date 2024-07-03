@@ -1,14 +1,14 @@
 <div>
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12 lg:col-span-8">
-            <div class="relative pl-5 pr-5 xl:pr-10 py-10 bg-slate-50 rounded-md mt-3">
+            <div class="relative pl-5 pr-5 xl:pr-10 pt-10 pb-5 bg-slate-50 rounded-md mt-3">
                 <div class="input-form">
                     <input type="text" class="form-control" placeholder="Ссылка на видео" wire:model="url">
                 </div>
                 <div class="input-form mt-3 ">
                     <input type="text" class="form-control" placeholder="Заголовок" wire:model="caption">
                 </div>
-                <textarea class="form-control sm:mr-2 mt-3" rows="4" placeholder="Краткое описание" wire:model="text"></textarea>
+                <textarea class="form-control sm:mr-2 mt-3" rows="2" placeholder="Краткое описание" wire:model="text"></textarea>
             </div>
             @foreach($product->videos as $video)
                 <livewire:admin.product.items.video-item :video="$video" :key="$video->id"/>

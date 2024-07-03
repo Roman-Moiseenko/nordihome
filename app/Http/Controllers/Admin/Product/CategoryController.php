@@ -9,6 +9,7 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Service\CategoryService;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\Deprecated;
 
 class CategoryController extends Controller
 {
@@ -107,6 +108,7 @@ class CategoryController extends Controller
     }
 
     //AJAX
+    /*
     public function json_attributes(Request $request)
     {
         return $this->try_catch_ajax_admin(function () use($request) {
@@ -116,5 +118,5 @@ class CategoryController extends Controller
             return \response()->json($result);
         });
     }
-
+*/
 }

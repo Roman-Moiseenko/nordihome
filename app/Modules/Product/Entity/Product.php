@@ -33,7 +33,7 @@ use JetBrains\PhpStorm\Pure;
  * @property string $description
  * @property string $short
  * @property int $main_category_id
-// * @property string $dimensions_json
+ * // * @property string $dimensions_json
  * @property int $frequency
  * @property int $brand_id
  * @property float $current_rating
@@ -145,7 +145,7 @@ class Product extends Model
         'code_search',
         'series_id',
         'published_at',
-       // 'description',
+        // 'description',
     ];
 
     protected $hidden = [
@@ -158,6 +158,7 @@ class Product extends Model
     }
 
     //РЕГИСТРАТОРЫ
+
     /**
      * Регистрация товара, с учетом дублей по имени - добавляем номер
      * Для дублирования артикула - вызываем исключение
@@ -332,6 +333,7 @@ class Product extends Model
     }
 
     //*** ЦЕНЫ
+
     /**
      * @return float Последняя назначенная цена с учетом если цены не назначены
      */
@@ -580,7 +582,6 @@ class Product extends Model
     }
 
 
-
     //*** RELATIONS
 
     public function parser()
@@ -597,6 +598,7 @@ class Product extends Model
     {
         return $this->hasMany(Review::class, 'product_id', 'id');
     }
+
     //ТОВАРНЫЙ УЧЕТ
 
     public function storageItems()
@@ -759,20 +761,20 @@ class Product extends Model
 
 
 
-/*
-    public static function boot()
-    {
-        parent::boot();
-        self::saving(function (Product $product) {
-           // $product->dimensions_json = $product->dimensions->toSave();
-           // if ($product->getCountSell() < 0) throw new \DomainException('Кол-во товаров должно быть >= 0');
-        });
+    /*
+        public static function boot()
+        {
+            parent::boot();
+            self::saving(function (Product $product) {
+               // $product->dimensions_json = $product->dimensions->toSave();
+               // if ($product->getCountSell() < 0) throw new \DomainException('Кол-во товаров должно быть >= 0');
+            });
 
-        self::retrieved(function (Product $product) {
-           // $product->dimensions = \App\Modules\Base\Entity\Dimensions::load($product->dimensions_json);
-        });
-    }
-*/
+            self::retrieved(function (Product $product) {
+               // $product->dimensions = \App\Modules\Base\Entity\Dimensions::load($product->dimensions_json);
+            });
+        }
+    */
     /**
      * Имеется действующая акция
      * @return bool
@@ -821,6 +823,22 @@ class Product extends Model
         return $query->where(function ($q) use ($code) {
             $q->where('code', $code)->orWhere('code_search', $code);
         });
+    }
+
+    /**
+     * Проверяет участвует ли данный атрибут в Модификации
+     * @param int $attribute_id
+     * @return bool
+     */
+    public function AttributeIsModification(int $attribute_id): bool
+    {
+        if (is_null($this->modification)) return false;
+        foreach ($this->modification->prod_attributes as $attribute) {
+            if ($attribute->id == $attribute_id) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

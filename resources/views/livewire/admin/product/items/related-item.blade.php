@@ -1,6 +1,6 @@
 <div>
     <div class="relative pt-5 pb-1 py-3 bg-slate-50 dark:bg-transparent dark:border rounded-md mt-3">
-        <button type="button" class="text-slate-300 absolute top-0 right-0 mr-4 mt-4" wire:click="remove">
+        <button type="button" class="text-slate-600 absolute top-0 right-0 mr-4 mt-4" wire:click="remove" title="Удалить аксессуар">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x"
                  class="lucide lucide-x stroke-1.5 h-4 w-4">

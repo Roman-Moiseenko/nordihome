@@ -7,14 +7,9 @@
         </h2>
     </div>
 
-
-    <form action="{{ route('admin.product.update', $product) }}" METHOD="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-        <div class="grid grid-cols-11 gap-x-6 pb-20">
+    <div class="grid grid-cols-11 gap-x-6 pb-20">
             <!-- PRODUCT -->
             <div class="col-span-11 lg:col-span-9">
-
                 @foreach($menus as $n => $menu)
                     @if($menu['livewire'])
                         <livewire:admin.product.item :product="$product" :item="$menu['anchor']" :caption="$menu['caption']"/>
@@ -31,9 +26,7 @@
                         </div>
                     @endif
                 @endforeach
-
             </div>
-
             <div class="col-span-2 hidden lg:block">
                 <div class="fixed fixed-top pt-5">
                     <ul
@@ -45,26 +38,15 @@
                             </li>
                         @endforeach
                     </ul>
-                    <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
-                        <x-base.button class="w-full py-3" type="submit" variant="primary">Обновить</x-base.button>
-                    </div>
 
                     <div class="mt-5 flex flex-col justify-end gap-2 md:flex-row">
                         <a class="w-full py-3 btn btn-primary-soft"
                            href="{{ ($product->isPublished()) ? route('shop.product.view', $product->slug) : route('shop.product.view-draft', $product) }}"
-                        >
-                            Просмотр
-                        </a>
+                        >Просмотр</a>
                     </div>
-
                 </div>
             </div>
-
         </div>
-    </form>
-
-
-
 
     <script>
         //Scrolling and ActiveMenu
@@ -102,8 +84,6 @@
                 }
             });
         }
-
-
     </script>
     <!--Модальное окно для загрузки изображений в товар-->
     <x-base.dialog id="static-backdrop-modal-preview" staticBackdrop>
@@ -144,4 +124,7 @@
             window.Dropzone.forElement('#myDropzoneElementID').removeAllFiles(true);
         });
     </script>
+
+
+
 @endsection

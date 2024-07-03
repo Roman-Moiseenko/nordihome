@@ -14,6 +14,7 @@ use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\TagRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Deprecated;
 
 
 class ProductService
@@ -96,12 +97,13 @@ class ProductService
         return $product;
     }
 
+    #[Deprecated]
     public function update(Request $request, Product $product): Product
     {
-        //TODO Удалить блоки которые через Livewire
 
         /* SECTION 1*/
         //Основная
+        /*
         $product->name = $request['name'];
         $product->code = $request['code'];
         $product->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
@@ -130,7 +132,9 @@ class ProductService
                 }
             }
         }
+
         $this->series($request, $product);
+        */
         /* SECTION 2*/
         //Описание, короткое описание, теги
         /*
@@ -155,6 +159,7 @@ class ProductService
         */
         /* SECTION 5*/
         //Габариты и доставка
+        /*
         if ($request->has('dimensions-measure')) { //Если не компонент livewire
             $product->dimensions = Dimensions::create(
                 (float)$request['dimensions-width'],
@@ -167,8 +172,10 @@ class ProductService
             $product->not_local = !isset($request['local']);
             $product->not_delivery = !isset($request['delivery']);
         }
+        */
         /* SECTION 6*/
         //Атрибуты
+        /*
         $product->prod_attributes()->detach();
         foreach ($product->getPossibleAttribute() as $key => $attribute) {
             if (isset($request['attribute_' . $key])) {
@@ -182,19 +189,20 @@ class ProductService
                 $product->prod_attributes()->attach($attribute->id, ['value' => json_encode($value)]);
             }
         }
-
+*/
         /* SECTION 7*/
         //Цена, кол-во, статус, периодичность
+        /*
         if ($request->has('pre_order')) { //Если не компонент livewire
             $product->pre_order = isset($request['pre_order']);
             $product->only_offline = isset($request['offline']);
 
             $product->frequency = $request['frequency'] ?? Product::FREQUENCY_NOT;
-        }
+        }*/
         /* SECTION 8*/
-
         /* SECTION 9*/
         //Аналоги
+        /*
         $new_equivalent_id = $request['equivalent_id'] ?? 0;
 
         if ($new_equivalent_id == 0 && !is_null($product->equivalent)) {
@@ -209,9 +217,10 @@ class ProductService
                 $this->equivalentService->addProductByIds((int)$new_equivalent_id, $product->id);
             }
         }
-
+*/
         /* SECTION 10*/
         //Сопутствующие
+        /*
         if ($request->has('related')) { //Если не компонент livewire
             $product->related()->detach();
             if (!empty($request['related'])) {
@@ -220,8 +229,10 @@ class ProductService
                 }
             }
         }
+        */
         /* SECTION 13*/
         //Бонусный товар
+        /*
         if ($request->has('bonus')) { //Если не компонент livewire
             $product->bonus()->detach();
             if (!empty($request['bonus'])) {
@@ -232,8 +243,9 @@ class ProductService
                 }
             }
         }
-        $product->push();
-
+        */
+        //$product->push();
+/*
         if ($request->has('published')) { //Если не компонент livewire
             if (isset($request['published'])) {
                 $this->published($product);
@@ -241,6 +253,7 @@ class ProductService
                 $this->draft($product);
             }
         }
+        */
         return $product;
     }
 

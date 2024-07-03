@@ -2,7 +2,6 @@
 
 <html class="light default" lang="ru-RU" >
 <!-- BEGIN: Head -->
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -47,6 +46,20 @@
         Livewire.on('window-notify', (event) => {
             if(event.icon === undefined) event.icon = 'danger';
             window.notification(event.title, event.message, event.icon);
+        });
+
+
+        Livewire.on('tom-select-sync', (elem) => {
+            let _sel = document.getElementById(elem.id);
+            let values = JSON.parse(elem.value);
+
+            if (Array.isArray(values)) {
+                values.forEach(function(value) {
+                    _sel.tomselect.addItem(value);
+                });
+            } else {
+                _sel.tomselect.addItem(elem.value);
+            }
         });
     });
 </script>

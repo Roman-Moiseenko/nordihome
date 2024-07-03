@@ -282,7 +282,7 @@ Route::group(
                 Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');
                 Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
                 Route::get('/category/{category}/child', 'CategoryController@child')->name('category.child');
-                Route::post('/category/json_attributes', 'CategoryController@json_attributes')->name('attribute.json-attributes');
+                //Route::post('/category/json_attributes', 'CategoryController@json_attributes')->name('attribute.json-attributes');
 
                 Route::get('/tags', 'TagController@index')->name('tag.index');
                 Route::post('/tag/create', 'TagController@create')->name('tag.create');

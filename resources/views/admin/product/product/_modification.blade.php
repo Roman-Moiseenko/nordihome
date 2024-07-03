@@ -46,19 +46,22 @@
                     </div>
                     <div class="ml-3">
                         <a href="{{ route('admin.product.show', $_product) }}"
-                           class="font-medium whitespace-nowrap">{{ $_product->name }}</a>
+                           class="font-medium ">{{ $_product->name }}</a>
                     </div>
-                    <div class="ml-3 font-medium">{{ $_product->code }}</div>
+                    <div class="ml-3 font-medium whitespace-nowrap">{{ $_product->code }}</div>
                 </div>
-                <div class="ml-3">
+                <div class="ml-auto">
                     @php
                         $j = 0;
                     @endphp
+
                     @foreach(json_decode($_product->pivot->values_json, true) as $attr_id => $variant_id)
-                        <span class="px-3 py-2 mr-3 rounded-full border border-{{ $colorForAttr[$j] }} text-{{ $colorForAttr[$j] }}">
+                        @if(!is_null($_product->getProdAttribute($attr_id)))
+                        <span class="px-3 py-2 mr-3 rounded-full whitespace-nowrap border border-{{ $colorForAttr[$j] }} text-{{ $colorForAttr[$j] }}">
                     {{ $_product->getProdAttribute($attr_id)->getVariant($variant_id)->name }}
                 </span>
                         @php $j++; @endphp
+                        @endif
                     @endforeach
                 </div>
             </div>

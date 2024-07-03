@@ -245,3 +245,7 @@ input.btn-check:checked + label:hover {
     z-index: inherit !important;
 }
 
+select:disabled + div.tom-select > div.ts-control {
+    background: rgb(var(--color-slate-200)) !important;
+    cursor: not-allowed;
+}

@@ -11,8 +11,8 @@ class Video extends Component
 
     public Product $product;
     public string $url;
-    public string $caption;
-    public string $text;
+    public string $caption = '';
+    public string $text = '';
 
     public function mount(Product $product)
     {
@@ -26,7 +26,6 @@ class Video extends Component
         $this->product->refresh();
     }
 
-    //#[On('add-video')]
     public function add()
     {
         if (empty($this->url)) throw new \DomainException('Не указана ссылка на видео');
