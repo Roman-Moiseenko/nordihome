@@ -24,7 +24,6 @@
 
         }
     }
-
 }
 
 //Кнопка Scroll Up
@@ -140,4 +139,33 @@
 
 .rate-area > label:active {
     position: relative;
+}
+
+//Элемент с загрузкой
+.show-load {
+    display: none;
+}
+.hide-load {
+    display: block;
+}
+
+.loading {
+    .show-load {
+        display: block;
+        animation-name: rotation;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
+    .hide-load {
+        display: none;
+    }
+}
+@keyframes rotation {
+    0% {
+        transform:rotate(0deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
 }

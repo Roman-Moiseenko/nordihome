@@ -23,14 +23,15 @@
                 </div>
                 <div>
                     @if(!is_null($user))
-                        <a class="
-                {{ $is_wish ? 'is-wish' : 'to-wish' }}" data-product="{{ $product->id }}"
-                           type="button" title="В Избранное" wire:click="toggle_wish"><i
-                                class="{{ $is_wish ? 'fa-solid' : 'fa-light' }} fa-heart"></i></a>
+                        <a class="{{ $is_wish ? 'is-wish' : 'to-wish' }}"
+                           type="button" title="В Избранное" wire:click="toggle_wish">
+                            <i class="{{ $is_wish ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
+                        </a>
                     @else
                         <a class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
-                           onclick="event.preventDefault();"><i
-                                class="fa-light fa-heart" type="button" title="В Избранное"></i></a>
+                           onclick="event.preventDefault();">
+                            <i class="fa-light fa-heart" type="button" title="В Избранное"></i>
+                        </a>
                     @endif
                 </div>
             </div>
@@ -46,7 +47,10 @@
                 @endif
             </div>
             <div class="product-card-to-cart">
-                <button class="to-cart btn btn-dark" data-product="{{ $product->id }}">В Корзину</button>
+                <button class="to-cart btn btn-dark" data-product="{{ $product->id }}" wire:click="to_cart" wire:loading.class="loading" wire:loading.attr="disabled">
+                    <span class="hide-load">В Корзину</span>
+                    <span class="show-load"><i class="fa-sharp fa-light fa-loader"></i></span>
+                </button>
                 <button class="one-click btn btn-outline-dark"
                         data-product="{{ $product->id }}" type="button" data-bs-toggle="modal" data-bs-target="#buy-click"
                         onclick="document.getElementById('one-click-product-id').value={{$product->id}};"
