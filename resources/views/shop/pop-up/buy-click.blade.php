@@ -56,7 +56,6 @@
                         <img src="/images/logo-nordi-home-2.svg" alt="NORDI Home" class="img-fluid img-logo">
                     </div>
                 </div>
-
             </form>
         </div>
     </div>

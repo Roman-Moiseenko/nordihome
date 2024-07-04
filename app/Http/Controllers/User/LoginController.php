@@ -200,9 +200,9 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        //$this->guard()->logout();
-        if (Auth::guard('admin')->check()) throw new \DomainException('Пользователь Админ');
-        if (Auth::guard('user')->check()) $this->guard()->logout();
+        $this->guard()->logout();
+        //if (Auth::guard('admin')->check()) throw new \DomainException('Пользователь Админ');
+        //if (Auth::guard('user')->check()) $this->guard()->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

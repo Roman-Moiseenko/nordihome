@@ -16,7 +16,7 @@
         </div>
         <div class="product-card-review">
             <div>
-                <a href="{{ route('shop.product.view', $product->slug) }}/#review">
+                <a href="{{ route('shop.product.view', $product->slug) }}/#review" title="Отзывы реальных покупателей на {{ $product->name }}">
                     <i class="fa-solid fa-star"></i>{{ $product->current_rating }} <span
                         class="">{{ $product->countReviews() }}</span>
                 </a>

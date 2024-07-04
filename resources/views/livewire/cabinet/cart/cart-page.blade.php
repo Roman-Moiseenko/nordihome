@@ -18,7 +18,7 @@
         @endif
     </div>
     @foreach($items as $item)
-        <livewire:cabinet.cart.cart-item :item="$item" :key="$item['product_id']"/>
+        <livewire:cabinet.cart.cart-item :item="$item" :key="$item['product_id']" :user="$user"/>
     @endforeach
     </div>
 

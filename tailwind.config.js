@@ -126,7 +126,7 @@ module.exports = {
                     "--color-dark": toRGB(colors.slate["800"]),
                 },
                 // Default dark-mode colors
-                ".dark": {
+            /*    ".dark": {
                     "--color-primary": toRGB(colors.cyan["800"]),
                     "--color-darkmode-50": "87 103 132",
                     "--color-darkmode-100": "74 90 121",
@@ -198,7 +198,7 @@ module.exports = {
                     "&.dark": {
                         "--color-primary": toRGB(colors.indigo["700"]),
                     },
-                },
+                },*/
             });
 
             // Animation delay utilities

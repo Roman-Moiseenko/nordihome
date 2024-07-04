@@ -271,6 +271,9 @@
 .menu-widget-popup {
     width: 480px;
     padding: 10px;
+    button {
+        background: var(--bs-white);
+    }
 }
 
 //КОРЗИНА / ИЗБРАННОЕ
@@ -327,6 +330,7 @@
 
 .wish-item-trash {
     margin-right: 4px;
+
 }
 
 .cart-item-info, .wish-item-info {

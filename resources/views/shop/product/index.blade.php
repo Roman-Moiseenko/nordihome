@@ -116,7 +116,6 @@
                         <a href="{{ route('shop.category.view', [$category->slug, 'tag_id' => $tag->id]) }}"
                            class="tag-filter" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
                     @endif
-
                 @endforeach
             </div>
             <div class="products">

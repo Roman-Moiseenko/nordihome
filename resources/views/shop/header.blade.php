@@ -79,7 +79,7 @@
                         </li>
                     @endguest
                     <li class="nav-item">
-                        @include('shop.widgets.header.wish')
+                        <livewire:shop.header.wish :user="$user"/>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"

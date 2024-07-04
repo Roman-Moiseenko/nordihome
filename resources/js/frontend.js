@@ -641,7 +641,12 @@ window.$ = jQuery;
         }
     });
     //Обновление виджета избранное
+
+
     function widget_wish(items) {
+        window.Livewire.dispatch('update-header-wish');
+        return true;
+/*
         let wishItemTemplate = $('#wish-item-template');
         let counterWish = $('#counter-wish');
         $('div[id^="wish-item-N"]').remove();
@@ -675,6 +680,7 @@ window.$ = jQuery;
             _item.show();
             _item.appendTo('.wish-body');
         }
+
         $(document).on('click', '.remove-item-wish', function (e) {
             let route = $(this).data('route');
             let item = $(this).data('item');
@@ -697,6 +703,7 @@ window.$ = jQuery;
 
             })
         });
+        */
     }
 
     /** ОФОРМЛЕНИЕ ЗАКАЗА  */

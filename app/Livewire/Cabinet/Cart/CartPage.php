@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cabinet\Cart;
 
+use App\Modules\User\Entity\User;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -21,14 +22,16 @@ class CartPage extends Component
     public bool $preorder;
     public bool $button_trash;
     public bool $check_all;
+    public mixed $user;
 
     public function boot()
     {
         $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
     }
 
-    public function  mount()
+    public function mount(mixed $user)
     {
+        $this->user = $user;
         $this->refresh_data();
     }
 
