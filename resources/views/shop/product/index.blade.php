@@ -121,7 +121,9 @@
             <div class="products">
                 <div class="row">
                 @foreach($products as $product)
-                    @include('shop.cards.card-4x')
+                    <div class="col-6 col-sm-4 col-lg-3 mb-5">
+                        <livewire:shop.products.product-card :product="$product" :user="$user"/>
+                    </div>
                 @endforeach
                 </div>
             </div>

@@ -44,6 +44,7 @@ window.$ = jQuery;
     */
 
     //Проверяем избранное виджет при загрузке
+    /*
     if ($('#wish-header').length) {
         setTimeout(function () {
             $.post('/cabinet/wish/get', {tz: -(new Date().getTimezoneOffset())}, function (data) {
@@ -67,7 +68,7 @@ window.$ = jQuery;
             })
         });
     }
-
+*/
 
     /**  ПОИСК в ТОП-МЕНЮ    ***/
         //INPUT поиска
@@ -294,8 +295,6 @@ window.$ = jQuery;
         let _productId = $(this).data('product');
         let _quantity = 1;
         let _options = $(this).data('options');
-
-
 
         $.post(
             '/cart_post/add/' + _productId, {
@@ -609,6 +608,8 @@ window.$ = jQuery;
 */
 
     /** ДОБАВИТЬ В ИЗБРАННОЕ **/
+
+    /*
     $('.product-wish-toggle').on('click', function (item) {
         item.preventDefault();
         let _productId = $(this).data('product');
@@ -642,69 +643,70 @@ window.$ = jQuery;
     });
     //Обновление виджета избранное
 
+*/
 
-    function widget_wish(items) {
-        window.Livewire.dispatch('update-header-wish');
-        return true;
-/*
-        let wishItemTemplate = $('#wish-item-template');
-        let counterWish = $('#counter-wish');
-        $('div[id^="wish-item-N"]').remove();
-        if (items.length === 0) { //Элементов нет, показываем пустую заглушку
-            $('#wish-block').addClass('hidden');
-            counterWish.hide();
-        } else {
-            $('#wish-block').removeClass('hidden');
-            $('#widget-wish-all-count').text(items.length);
-            counterWish.text(items.length);
-            counterWish.show();
-        }
+    /*   function widget_wish(items) {
+           window.Livewire.dispatch('update-header-wish');
+           return true;
 
-        for (let i = 0; i < items.length; i++) {
-            let _item = wishItemTemplate;
+           let wishItemTemplate = $('#wish-item-template');
+           let counterWish = $('#counter-wish');
+           $('div[id^="wish-item-N"]').remove();
+           if (items.length === 0) { //Элементов нет, показываем пустую заглушку
+               $('#wish-block').addClass('hidden');
+               counterWish.hide();
+           } else {
+               $('#wish-block').removeClass('hidden');
+               $('#widget-wish-all-count').text(items.length);
+               counterWish.text(items.length);
+               counterWish.show();
+           }
 
-            _item.find($('.wish-item-img')).attr('src', items[i].img);
-            _item.find($('.wish-item-url')).html(items[i].name);
-            _item.find($('.wish-item-url')).attr('href', items[i].url);
+           for (let i = 0; i < items.length; i++) {
+               let _item = wishItemTemplate;
 
-            _item.find($('.wish-item-cost')).each(function () {
-                    $(this).html(price_format(items[i].cost));
-                }
-            );
+               _item.find($('.wish-item-img')).attr('src', items[i].img);
+               _item.find($('.wish-item-url')).html(items[i].name);
+               _item.find($('.wish-item-url')).attr('href', items[i].url);
 
-            _item.find($('.remove-item-wish')).attr('data-route', items[i].remove);
-            _item.find($('.remove-item-wish')).attr('data-item', items[i].product_id);
+               _item.find($('.wish-item-cost')).each(function () {
+                       $(this).html(price_format(items[i].cost));
+                   }
+               );
 
-            _item = _item.clone();
-            _item.attr('id', 'wish-item-N' + (i + 1));
-            _item.show();
-            _item.appendTo('.wish-body');
-        }
+               _item.find($('.remove-item-wish')).attr('data-route', items[i].remove);
+               _item.find($('.remove-item-wish')).attr('data-item', items[i].product_id);
 
-        $(document).on('click', '.remove-item-wish', function (e) {
-            let route = $(this).data('route');
-            let item = $(this).data('item');
-            e.preventDefault();
-            $.post(route, {}, function (data) {
-                _error(data);
-                if (data.state === false) {
-                    let buttonProduct = $('.product-wish-toggle[data-product=' + item + ']');
-                    let iconButton = buttonProduct.find('i');
-                    buttonProduct.addClass('btn-light to-wish');
-                    buttonProduct.removeClass('btn-warning is-wish');
-                    iconButton.addClass('fa-light');
-                    iconButton.removeClass('fa-solid');
-                }
-                if ($('body').hasClass('wish')) {
-                    location.reload();
-                } else {
-                    widget_wish(data.items);
-                }
+               _item = _item.clone();
+               _item.attr('id', 'wish-item-N' + (i + 1));
+               _item.show();
+               _item.appendTo('.wish-body');
+           }
 
-            })
-        });
-        */
-    }
+           $(document).on('click', '.remove-item-wish', function (e) {
+               let route = $(this).data('route');
+               let item = $(this).data('item');
+               e.preventDefault();
+               $.post(route, {}, function (data) {
+                   _error(data);
+                   if (data.state === false) {
+                       let buttonProduct = $('.product-wish-toggle[data-product=' + item + ']');
+                       let iconButton = buttonProduct.find('i');
+                       buttonProduct.addClass('btn-light to-wish');
+                       buttonProduct.removeClass('btn-warning is-wish');
+                       iconButton.addClass('fa-light');
+                       iconButton.removeClass('fa-solid');
+                   }
+                   if ($('body').hasClass('wish')) {
+                       location.reload();
+                   } else {
+                       widget_wish(data.items);
+                   }
+
+               })
+           });
+
+       }*/
 
     /** ОФОРМЛЕНИЕ ЗАКАЗА  */
     if (main.hasClass('order-page-create') || main.hasClass('order-page-create-parser') ) {
