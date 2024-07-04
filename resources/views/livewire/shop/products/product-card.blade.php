@@ -23,15 +23,16 @@
                 </div>
                 <div>
                     @if(!is_null($user))
-                        <a class="{{ $is_wish ? 'is-wish' : 'to-wish' }}"
+                        <button class="{{ $is_wish ? 'is-wish' : 'to-wish' }}" type="button"
                            title="В Избранное" wire:click="toggle_wish">
                             <i class="{{ $is_wish ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
-                        </a>
+                        </button>
                     @else
-                        <a class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
+                        <button class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
+                                type="button"
                            onclick="event.preventDefault();">
                             <i class="fa-light fa-heart" type="button" title="В Избранное"></i>
-                        </a>
+                        </button>
                     @endif
                 </div>
             </div>

@@ -10,8 +10,8 @@ class Wish extends Component
 {
 
     public ?User $user;
-    public int $count;
-    public array $items;
+    public int $count = 0;
+    public array $items = [];
 
     public function mount($user)
     {
@@ -22,6 +22,7 @@ class Wish extends Component
     #[On('update-header-wish')]
     public function refresh_fields()
     {
+        if (!is_null($this->user))
         $this->items = array_map(function (\App\Modules\User\Entity\Wish $wish) {
             return [
                 'id' => $wish->id,

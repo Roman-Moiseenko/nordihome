@@ -168,3 +168,7 @@
         transform:rotate(360deg);
     }
 }
+//Кнопки избранное
+button.to-wish, button.is-wish {
+    background: var(--bs-white);
+}

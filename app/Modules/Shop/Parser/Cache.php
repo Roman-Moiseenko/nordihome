@@ -26,8 +26,8 @@ class Cache
     }
 
     public function set($key, $value) {
-        if (!file_exists($this->cachPath . $key)) {
-            mkdir(pathinfo($this->cachPath . $key, PATHINFO_DIRNAME), 0777);
+        if (!file_exists($this->cachPath)) {
+            mkdir($this->cachPath, 0777, true);
         }
         file_put_contents($this->cachPath . $key, $value);
     }

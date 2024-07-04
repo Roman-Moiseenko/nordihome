@@ -15,9 +15,9 @@ class VariantItem extends Component
     private bool $image_type;
     public mixed $selected = '';
     public bool $checked = false;
+    public string $alt;
 
-
-    public function __construct(string $name, string $id, string $caption, string $image = '', bool $checked = false)
+    public function __construct(string $name, string $id, string $caption, string $image = '', bool $checked = false, string $alt = '')
     {
         /*if (!empty($selected)) {
             if (is_string($selected)) {
@@ -33,6 +33,7 @@ class VariantItem extends Component
         $this->id = $id;
         $this->caption = $caption;
         $this->image = $image;
+        $this->alt = $alt;
     }
 
     public function render(): View|Closure|string

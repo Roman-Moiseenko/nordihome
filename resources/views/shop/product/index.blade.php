@@ -61,7 +61,9 @@
                         @foreach($brands as $id => $brand)
                             <x-widget.variant-item name="brands[]" id="{{ $id }}" caption="{{ $brand['name'] }}"
                                                    image="{{ $brand['image'] }}"
-                                                   checked="{{ $request->has('brands') ? in_array($id, $request->get('brands')) : false }}" />
+                                                   checked="{{ $request->has('brands') ? in_array($id, $request->get('brands')) : false }}"
+                                                   alt="{{ $brand['name'] }}"
+                            />
                         @endforeach
                     </x-widget.variant>
                     @endif
@@ -92,6 +94,7 @@
                                                                caption="{{ $variant['name'] }}"
                                                                image="{{ $variant['image'] }}"
                                                                checked="{{ $request->has('a_' . $attribute['id']) ? in_array($variant['id'], $request->get('a_' . $attribute['id'])) : false }}"
+                                                               alt="{{ $variant['name'] }}"
                                         />
                                     @endforeach
                                 </x-widget.variant>

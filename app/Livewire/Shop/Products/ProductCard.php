@@ -18,7 +18,7 @@ class ProductCard extends Component
     {
         $this->product = $product;
         $this->user = $user;
-        $this->is_wish = $product->isWish($user->id);
+        $this->is_wish = !is_null($user) && $product->isWish($user->id);
     }
 
     public function toggle_wish()
