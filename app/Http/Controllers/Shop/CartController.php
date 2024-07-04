@@ -35,8 +35,8 @@ class CartController extends Controller
 
         return $this->try_catch_ajax(function () use ($request, $product) {
             $this->cart->add($product, 1, $request['options'] ?? []);
-            $cart = $this->cart->getCartToFront($request['tz']);
-            return \response()->json($cart);
+            //$cart = $this->cart->getCartToFront($request['tz']);
+            return \response()->json(true);
         });
     }
 

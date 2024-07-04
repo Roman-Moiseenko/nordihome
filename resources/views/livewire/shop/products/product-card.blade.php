@@ -24,7 +24,7 @@
                 <div>
                     @if(!is_null($user))
                         <a class="{{ $is_wish ? 'is-wish' : 'to-wish' }}"
-                           type="button" title="В Избранное" wire:click="toggle_wish">
+                           title="В Избранное" wire:click="toggle_wish">
                             <i class="{{ $is_wish ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
                         </a>
                     @else
@@ -47,7 +47,7 @@
                 @endif
             </div>
             <div class="product-card-to-cart">
-                <button class="to-cart btn btn-dark" data-product="{{ $product->id }}" wire:click="to_cart" wire:loading.class="loading" wire:loading.attr="disabled">
+                <button type="button" class="btn btn-dark" data-product="{{ $product->id }}" wire:click="to_cart" wire:loading.class="loading" wire:loading.attr="disabled">
                     <span class="hide-load">В Корзину</span>
                     <span class="show-load"><i class="fa-sharp fa-light fa-loader"></i></span>
                 </button>

@@ -303,11 +303,13 @@
 
 //ВИДЖЕТЫ
 .to-wish {
+    cursor: pointer;
     &:hover {
         color: #ffc107;
     }
 }
 .is-wish {
+    cursor: pointer;
     color: #ffc107;
     &:hover {
         color: #ffca2c;
