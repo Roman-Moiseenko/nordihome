@@ -21,6 +21,7 @@ export default defineConfig({
                 'resources/js/shop.js',
                 'resources/js/admin.js',
                 'resources/css/admin.css',
+
                 'resources/css/livewire/notification.css',
                 // Vendor
                 "resources/js/vendor/accordion/index.js",

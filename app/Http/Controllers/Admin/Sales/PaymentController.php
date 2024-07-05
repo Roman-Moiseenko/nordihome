@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Sales;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Admin\Entity\Admin;
+use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Order\Repository\OrderRepository;
@@ -29,9 +31,22 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
-            $query = $this->repository->getIndex($request);
+            $filters = [
+                'staff_id' => $request['staff_id'] ?? null,
+                'user' => $request['user'] ?? null,
+                'order' => $request['order'] ?? null,
+            ];
+            $_filter_count = 0;
+            foreach ($filters as $item) {
+                if (!is_null($item)) $_filter_count++;
+            }
+            $filters['count'] = $_filter_count;
+            $query = $this->repository->getIndex($filters);
             $payments = $this->pagination($query, $request, $pagination);
-            return view('admin.sales.payment.index', compact('payments', 'pagination'));
+            $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
+                $query->where('code', Responsibility::MANAGER_PAYMENT);
+            })->get();
+            return view('admin.sales.payment.index', compact('payments', 'pagination', 'staffs', 'filters'));
         });
     }
 
