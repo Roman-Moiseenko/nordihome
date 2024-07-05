@@ -11,7 +11,7 @@
     <div class="flex h-full items-center">
         <!-- BEGIN: Logo -->
         <a href="{{ route('admin.home') }}" class="logo -intro-x hidden md:flex xl:w-[180px] block">
-            <img class="w-6" src="{{ Vite::asset('resources/images/logo.svg') }}"/>
+            <img class="w-8 h-8" src="{{ Vite::asset('resources/images/logo.png') }}"/>
             <span class="logo__text text-white text-lg ml-3">NORDI HOME</span>
         </a>
         <!-- END: Logo -->
