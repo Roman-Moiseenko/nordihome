@@ -20,7 +20,7 @@
                             Товаров в корзине <span>{{ $count }}</span>
                         </div>
                         <div>
-                            <a id="clear-cart" wire:click="clear_cart" href="#" data-route="{{ route('shop.cart.clear') }}">Очистить корзину</a>
+                            <button wire:click="clear_cart">Очистить корзину</button>
                         </div>
                     </div>
                     <div class="cart-body">

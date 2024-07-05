@@ -1,7 +1,6 @@
 <?php
 
-use App\Modules\Product\Entity\Modification;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -308,7 +307,15 @@ Route::group(
                     Route::delete('/del-product/{group}', 'GroupController@del_product')->name('del-product');
                     Route::post('/search/{group}', 'GroupController@search')->name('search');
                 });
-
+                //Серия товаров
+                Route::group([
+                    'prefix' => 'series',
+                    'as' => 'series.',
+                ], function() {
+                    Route::post('/add-product/{series}', 'SeriesController@add_product')->name('add-product');
+                    Route::post('/add-products/{series}', 'SeriesController@add_products')->name('add-products');
+                    Route::delete('/del-product/{series}', 'SeriesController@del_product')->name('del-product');
+                });
 
 
                 Route::post('/modification/{modification}/set-modifications', 'ModificationController@set_modifications')->name('modification.set-modifications');
@@ -327,6 +334,7 @@ Route::group(
                 Route::resource('equivalent', 'EquivalentController'); //CRUD
                 Route::resource('group', 'GroupController'); //CRUD
                 Route::resource('modification', 'ModificationController'); //CRUD
+                Route::resource('series', 'SeriesController')->except(['create', 'edit']); //CRUD
 
 
                 Route::post('/{product}/file-upload', 'ProductController@file_upload')->name('file-upload');

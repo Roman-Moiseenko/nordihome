@@ -300,10 +300,11 @@ class ProductService
         if (is_numeric($_series)) {
             $product->series_id = (int)$_series;
         } else {
-            $series = $this->seriesService->registerName($_series); //Создаем Серию
+            $series = $this->seriesService->create($_series); //Создаем Серию
             $product->series_id = $series->id;
         }
     }
+
 
     ///Работа с Фото Продукта
     public function addPhoto(Request $request, Product $product)

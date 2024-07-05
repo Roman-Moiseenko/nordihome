@@ -9,16 +9,10 @@ use Illuminate\Http\Request;
 
 class SeriesService
 {
-    public function register(Request $request): Series
-    {
-        $series = Series::register($request['name']);
-        return $series;
-    }
-
-    public function registerName(string $name): Series
+    public function create(string $name): Series
     {
         $series = Series::where('name', $name)->first();
-        if (empty($series)) $series = Series::register($name);
+        if (is_null($series)) $series = Series::register($name);
         return $series;
     }
 
@@ -37,4 +31,45 @@ class SeriesService
         }
         Series::destroy($series->id);
     }
+
+    public function add_product(Series $series, int $product_id)
+    {
+        /** @var Product $product */
+        $product = Product::find($product_id);
+        $product->series_id = $series->id;
+        $product->save();
+    }
+
+    public function add_products(Series $series, array $products)
+    {
+        foreach ($products as $product_id) {
+            $this->add_product($series, $product_id);
+        }
+    }
+
+    public function remove_product(Series $series, int $product_id)
+    {
+        /** @var Product $product */
+        $product = Product::find($product_id);
+        if ($series->id != $product->series_id) throw new \DomainException('Не совпадение серий');
+        $product->series_id = null;
+        $product->save();
+    }
+
+    public function remove(Series $series)
+    {
+        foreach ($series->products as $product) {
+            $product->series_id = null;
+            $product->save();
+        }
+        $series->delete();
+    }
+
+    public function update(Series $series, string $name)
+    {
+        $series->name = $name;
+        $series->save();
+    }
+
+
 }

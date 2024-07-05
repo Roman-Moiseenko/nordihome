@@ -200,7 +200,7 @@ class Common extends Component
         if (is_numeric($this->series_id)) {
             $this->product->series_id = (int)$this->series_id;
         } else {
-            $series = $seriesService->registerName($this->series_id); //Создаем Серию
+            $series = $seriesService->create($this->series_id); //Создаем Серию
             $this->product->series_id = $series->id;
         }
         $this->save();

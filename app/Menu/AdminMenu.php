@@ -176,6 +176,11 @@ class AdminMenu
                         'title' => 'Бренды',
                         'route_name' => 'admin.product.brand.index',
                     ],
+                    'series' => [
+                        'icon' => 'component',
+                        'title' => 'Серии',
+                        'route_name' => 'admin.product.series.index',
+                    ],
                     'parser' => [
                         'icon' => 'package-search',
                         'title' => 'Парсер',

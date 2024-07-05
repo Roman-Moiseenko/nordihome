@@ -30,6 +30,7 @@ use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Review;
+use App\Modules\Product\Entity\Series;
 use App\Modules\Shop\Parser\ProductParser;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\Subscription;
@@ -93,8 +94,6 @@ Breadcrumbs::for('errors.404', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Страница не найдена');
 });
-
-
 
 Breadcrumbs::for('shop.cart.view', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
@@ -406,6 +405,16 @@ Breadcrumbs::for('admin.product.parser.index', function (BreadcrumbTrail $trail)
 Breadcrumbs::for('admin.product.parser.show', function (BreadcrumbTrail $trail, ProductParser $productParser) {
     $trail->parent('admin.product.index');
     $trail->push($productParser->product->name, route('admin.product.parser.show', $productParser));
+});
+
+//SERIES
+Breadcrumbs::for('admin.product.series.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Серии товаров', route('admin.product.series.index'));
+});
+Breadcrumbs::for('admin.product.series.show', function (BreadcrumbTrail $trail, Series $series) {
+    $trail->parent('admin.product.series.index');
+    $trail->push($series->name, route('admin.product.series.show', $series));
 });
 
 ///// *** DISCOUNT
