@@ -48,6 +48,7 @@
    ];
     @endphp
 
+
     <h1 class="text-lg mb-5">Режим тестирования</h1>
     <div class="box p-3">
         <h2 class="text-base font-medium mb-2">Последние изменения:</h2>

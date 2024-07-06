@@ -110,6 +110,7 @@
             </div>
         </div>
         <div class="list">
+            @if(count($tags) > 0)
             <div class="box-card top-tags">
                 @foreach($tags as $tag)
                     @if($tag_id == $tag->id)
@@ -121,6 +122,7 @@
                     @endif
                 @endforeach
             </div>
+            @endif
             <div class="products">
                 <div class="row">
                 @foreach($products as $product)

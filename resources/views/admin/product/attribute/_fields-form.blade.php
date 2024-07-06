@@ -55,10 +55,11 @@
             <div class="p-5">
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
+                        {{ \App\Forms\Input::create('name', ['placeholder' => 'Название атрибута', 'value' => $attribute->name ?? ''])->label('Атрибут *')->show() }}
                         <!-- Выбрать категорию -->
-                        <x-base.form-label for="select-category">Категория</x-base.form-label>
-                        <x-base.tom-select id="select-category" name="categories[]" class="w-full" data-placeholder="Выберите категории" multiple>
-                            <option value="0"></option>
+                        <x-base.form-label for="select-category" class="mt-3">Категория *</x-base.form-label>
+                        <x-base.tom-select id="select-category" name="categories[]" class="w-full {{ $errors->has('categories') ? 'has-error' : '' }}" data-placeholder="Выберите категории" multiple>
+                            <option value=""></option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}"
                                     @if(!is_null($attribute)){{ $attribute->isCategory($category) ? 'selected' : ''}}@endif>
@@ -67,11 +68,13 @@
                                 </option>
                             @endforeach
                         </x-base.tom-select>
-
+                        @error('categories')
+                        <div class="pristine-error text-danger mt-2">Обязательное поле</div>
+                        @enderror
                     <!-- Выбрать группу -->
-                        <x-base.form-label for="select-group" class="mt-3">Группа</x-base.form-label>
-                        <x-base.tom-select id="select-group" name="group_id" class="w-full" data-placeholder="Выберите группу">
-                            <option value="0"></option>
+                        <x-base.form-label for="select-group" class="mt-3">Группа *</x-base.form-label>
+                        <x-base.tom-select id="select-group" name="group_id" class="w-full {{ $errors->has('group_id') ? 'has-error' : '' }}" data-placeholder="Выберите группу">
+                            <option value=""></option>
                             @foreach($groups as $group)
                                 <option value="{{ $group->id }}"
                                 @if(!empty(old('group_id')))
@@ -84,7 +87,11 @@
                                 </option>
                             @endforeach
                         </x-base.tom-select>
-                        {{ \App\Forms\Input::create('name', ['placeholder' => 'Атрибут', 'value' => $attribute->name ?? '', 'class' => 'mt-3'])->show() }}
+                        @error('group_id')
+                            <div class="pristine-error text-danger mt-2">Обязательное поле</div>
+                        @enderror
+
+
                         <!-- Флажки -->
                         <x-base.form-switch class="mt-3">
                             <x-base.form-switch.input id="checkbox-multiple" type="checkbox" name="multiple"
@@ -108,7 +115,7 @@
                                         ])->show() }}
 
                         <!-- ТИП АТРИБУТА -->
-                        <x-base.form-label for="select-type" class="mt-3">Тип значения атрибута</x-base.form-label>
+                        <x-base.form-label for="select-type" class="mt-3">Тип значения атрибута *</x-base.form-label>
                         <x-base.form-select id="select-type" class="sm:mr-2" aria-label="Тип значения атрибута" name="type">
                             @foreach(\App\Modules\Product\Entity\Attribute::ATTRIBUTES as $_type => $_name)
                             <option value="{{ $_type }}"
@@ -150,6 +157,7 @@
             </h2>
             <div class="mt-5 font-medium"></div>
             <div class="leading-relaxed mt-2 text-slate-600 dark:text-slate-500">
+                <div><b>Название атрибута</b> не является уникальным полем, для несмежных категорий оно может совпадать.</div>
                 <div>Поле <b>категория</b> привязывает атрибут к категории и его дочерним категориям.</div>
                 <div class="mt-2">Поле <b>группа</b> позволяет сгруппировать характеристики на странице товара.</div>
                 <div class="mt-2">Для <b>картинок</b> используйте форматы с прозрачным фоном и размером не более 200х200.
