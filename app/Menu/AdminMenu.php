@@ -181,6 +181,11 @@ class AdminMenu
                         'title' => 'Серии',
                         'route_name' => 'admin.product.series.index',
                     ],
+                    'priority' => [
+                        'icon' => 'flag-triangle-right  ',
+                        'title' => 'Приоритет',
+                        'route_name' => 'admin.product.priority.index',
+                    ],
                     'parser' => [
                         'icon' => 'package-search',
                         'title' => 'Парсер',

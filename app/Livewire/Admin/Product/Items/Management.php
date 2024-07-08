@@ -17,6 +17,7 @@ class Management extends Component
     public bool $pre_order;
     public bool $offline;
     public int $frequency;
+    public bool $priority;
 
     public bool $shop_pre_order;
     public bool $only_offline;
@@ -45,6 +46,8 @@ class Management extends Component
         $this->pre_order = $this->shop_pre_order && $this->product->pre_order;
         $this->offline = $this->only_offline || $this->product->only_offline;
 
+        $this->priority = $this->product->priority;
+
         $this->frequency = $this->product->frequency;
     }
 
@@ -61,6 +64,7 @@ class Management extends Component
         if (!$this->only_offline) $this->product->only_offline = $this->offline;
 
         $this->product->frequency = $this->frequency;
+        $this->product->priority = $this->priority;
         $this->product->save();
     }
 

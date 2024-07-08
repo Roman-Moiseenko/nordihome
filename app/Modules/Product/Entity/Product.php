@@ -49,6 +49,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Carbon $published_at
  * @property int $series_id
  * @property Dimensions $dimensions
+ * @property bool $priority
  *
  * @property Tag[] $tags
  * @property Category $category
@@ -123,6 +124,7 @@ class Product extends Model
         'pre_order' => true,
         'series_id' => null,
         'published_at' => null,
+        'priority' => false,
     ];
 
     protected $fillable = [
@@ -145,6 +147,7 @@ class Product extends Model
         'code_search',
         'series_id',
         'published_at',
+        'priority',
         // 'description',
     ];
 
@@ -285,6 +288,12 @@ class Product extends Model
     public function setDescription(string $description): void
     {
         $this->description = $description;
+    }
+
+    public function setPriority(bool $priority): void
+    {
+        $this->priority = $priority;
+        $this->save();
     }
 
     #[Deprecated]

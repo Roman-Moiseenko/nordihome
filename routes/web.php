@@ -317,6 +317,18 @@ Route::group(
                     Route::delete('/del-product/{series}', 'SeriesController@del_product')->name('del-product');
                 });
 
+                //Приоритеты
+                Route::group([
+                    'prefix' => 'priority',
+                    'as' => 'priority.',
+                ], function() {
+                    Route::get('/', 'PriorityController@index')->name('index');
+                    Route::post('/add-product', 'PriorityController@add_product')->name('add-product');
+                    Route::post('/add-products', 'PriorityController@add_products')->name('add-products');
+                    Route::delete('/del-product/{product}', 'PriorityController@del_product')->name('del-product');
+                });
+
+
 
                 Route::post('/modification/{modification}/set-modifications', 'ModificationController@set_modifications')->name('modification.set-modifications');
                 Route::post('/modification/search', 'ModificationController@search')->name('modification.search');

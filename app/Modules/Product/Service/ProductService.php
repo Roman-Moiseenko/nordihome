@@ -280,6 +280,7 @@ class ProductService
 
     }
 
+
     private function tags(Request $request, Product &$product)
     {
         if (empty($request['tags'])) return;
@@ -397,5 +398,21 @@ class ProductService
             if ($action == 'remove') $this->destroy($product);
         }
 
+    }
+
+    //Приоритетные товары
+    public function setPriorityProduct(int $product_id)
+    {
+        $product = Product::find($product_id);
+        $product->setPriority(true);
+    }
+
+
+    public function setPriorityProducts(array $codes)
+    {
+        foreach ($codes as $code) {
+            $product = Product::where('code', trim($code))->first();
+            $product->setPriority(true);
+        }
     }
 }

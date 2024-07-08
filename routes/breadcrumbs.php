@@ -416,6 +416,11 @@ Breadcrumbs::for('admin.product.series.show', function (BreadcrumbTrail $trail, 
     $trail->parent('admin.product.series.index');
     $trail->push($series->name, route('admin.product.series.show', $series));
 });
+//PRIORITY
+Breadcrumbs::for('admin.product.priority.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Приоритетный показ товаров', route('admin.product.priority.index'));
+});
 
 ///// *** DISCOUNT
 // PROMOTION
