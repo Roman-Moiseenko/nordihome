@@ -146,7 +146,7 @@ class Product extends Model
         'not_local',
         'code_search',
         'series_id',
-        'published_at',
+        //'published_at',
         'priority',
         // 'description',
     ];
@@ -210,6 +210,14 @@ class Product extends Model
     }
 
     //ФУНЦИИ СОСТОЯНИЯ
+
+    public function isNew(): bool
+    {
+        if ($this->published_at == null) return false;
+        if ($this->published_at->gte(now()->subMonth())) return true;
+        return false;
+    }
+
     public function isVisible(): bool
     {/*
         if ($this->status != self::STATUS_PUBLISHED) return false;

@@ -54,7 +54,7 @@ class Management extends Component
 
     public function save()
     {
-        $this->product->published = $this->published;
+        //$this->product->published = $this->published;
         if (!$this->accounting) {
             $this->product->setPrice($this->price);
             $this->product->setCountSell($this->count);
@@ -66,6 +66,12 @@ class Management extends Component
         $this->product->frequency = $this->frequency;
         $this->product->priority = $this->priority;
         $this->product->save();
+
+        if (!$this->product->isPublished() && $this->published) {
+            $service = app()->make('\App\Modules\Product\Service\ProductService');
+            $service->published($this->product);
+        }
+
     }
 
     public function render()

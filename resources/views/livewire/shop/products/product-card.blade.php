@@ -10,7 +10,10 @@
                          alt="{{ empty($product->photo_next()->alt) ? $product->name : $product->photo_next()->alt }}">
 
                     @if($product->hasPromotion())
-                        <div class="promotion-label"><span>Акция</span></div>
+                        <div class="product-label promotion"><span>Акция</span></div>
+                    @endif
+                    @if($product->isNew())
+                        <div class="product-label new"><span>NEW</span></div>
                     @endif
                 </a>
             </div>

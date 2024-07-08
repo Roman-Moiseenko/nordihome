@@ -21,10 +21,10 @@
                 {{ $product->code }}
             </div>
             <div class="w-1/4 font-medium">
-                <a href="{{ route('admin.product.show', $product) }}">{{ $product->name }}</a>
+                <a href="{{ route('admin.product.edit', $product) }}">{{ $product->name }}</a>
             </div>
             <div class="w-auto text-slate-500 flex items-center mx-5">
-                <x-base.lucide icon="external-link" class="w-4 h-4"/> {{ $product->category->getSlug() . '/' . $product->getSlug() }}
+                <x-base.lucide icon="file-box" class="w-4 h-4"/> {{ $product->category->name }}
             </div>
             <div class="ml-auto w-40">
                 <a class="flex items-center text-danger" href="#"

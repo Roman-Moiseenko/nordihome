@@ -214,6 +214,27 @@
         opacity: 1;
     }
 }
+.product-label {
+    position: absolute;
+    z-index: 3;
+    right: 4px;
+    top: 4px;
+    border-radius: 50%;
+
+    width: 60px;
+    height: 60px;
+    color: #fff;
+    display: grid;
+    >span {
+        margin: auto;
+    }
+    &.promotion {
+        background: var(--bs-discount-color);
+    }
+    &.new {
+        background: var(--bs-green);
+    }
+}
 
 .promotion-label {
     position: absolute;
@@ -230,6 +251,7 @@
         margin: auto;
     }
 }
+
 
 .product-card-name {
     padding: 4px;
