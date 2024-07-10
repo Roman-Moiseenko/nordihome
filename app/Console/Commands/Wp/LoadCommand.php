@@ -147,15 +147,15 @@ class LoadCommand extends Command
             $alt = $data_img['alt'];
             LoadingImageProduct::dispatch($product, $url, $alt);
         }
-        $product->published = true;
+
         $product->pre_order = $this->options->shop->pre_order;
         $product->only_offline = $this->options->shop->only_offline;
         $product->not_local = !$this->options->shop->delivery_local;
         $product->not_delivery = !$this->options->shop->delivery_all;
         $product->save();
-
+        $product->setPublished();
         $this->storageService->add_product($product);
-        //$this->storageService->add_product($product);
+
 
         return $product->name . ' (' . $product->code . ')';
     }

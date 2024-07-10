@@ -1,7 +1,7 @@
 <x-base.table.tr>
     <x-base.table.td class="">
         <a href="{{ route('admin.accounting.arrival.show', $arrival) }}"
-           class="font-medium whitespace-nowrap">{{ $arrival->number . ' от ' . $arrival->created_at->format('d-m-Y') }}</a> {{ ($arrival->completed) ? '' : '(Черновик)' }}
+           class="font-medium whitespace-nowrap">{{ $arrival->htmlNumDate() }}</a> {{ ($arrival->completed) ? '' : '(Черновик)' }}
     </x-base.table.td>
     <x-base.table.td class="text-center">{{ $arrival->distributor->name }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $arrival->storage->name }}</x-base.table.td>

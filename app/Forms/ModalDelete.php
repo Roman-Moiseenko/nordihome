@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Forms;
 
+use JetBrains\PhpStorm\ArrayShape;
+
 class ModalDelete
 {
     private array $params;
@@ -26,5 +28,17 @@ class ModalDelete
     public function show()
     {
         return view('forms.modal-delete', $this->params);
+    }
+
+    #[ArrayShape(['class' => "string", 'data-tw-toggle' => "string", 'data-tw-target' => "string", 'data-route' => "string"])]
+    public static function attributes(string $route): array
+    {
+        return [
+            'class' => 'flex items-center text-danger',
+            //Вызов Модального окна со ссылкой на удаление.
+            'data-tw-toggle' => "modal",
+            'data-tw-target' => "#delete-confirmation-modal",
+            'data-route' => $route,
+        ];
     }
 }

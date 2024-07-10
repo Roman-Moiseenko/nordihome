@@ -145,6 +145,11 @@
             </x-base.table>
         </div>
     </div>
+
+    <div class="mt-3">
+        <livewire:admin.accounting.arrival-table />
+    </div>
+
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
         'Вы действительно хотите удалить поступление?<br>Этот процесс не может быть отменен.')->show() }}
     {{ $arrivals->links('admin.components.paginator', ['pagination' => $pagination]) }}

@@ -112,6 +112,7 @@ class ArrivalDocument extends Model implements AccountingDocument
         'cost_currency' => 'float',
         'price_sell' => 'float',
         'cost_ru' => 'float',
+        'currency_sign' => 'string',
     ])]
     public function getInfoData(): array
     {
@@ -124,12 +125,13 @@ class ArrivalDocument extends Model implements AccountingDocument
             $price_sell += $item->quantity * $item->price_sell;
         }
         $cost_ru = ceil($cost_currency * $this->exchange_fix * 100) / 100;
-
+        //dd($this->currency_id);
         return [
             'quantity' => $quantity,
             'cost_currency' => $cost_currency,
             'price_sell' => $price_sell,
             'cost_ru' => $cost_ru,
+            //'currency_sign' => $this->currency->sign,
         ];
     }
 
