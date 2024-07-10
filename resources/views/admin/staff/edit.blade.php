@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Редактирование профиля сотрудника
         </h2>
@@ -12,8 +12,8 @@
 
         <div class="grid grid-cols-12 gap-6 mt-5">
             <!-- Основные данные -->
-            <div class="intro-y col-span-12 lg:col-span-6">
-                <div class="intro-y box">
+            <div class="col-span-12 lg:col-span-6">
+                <div class="box">
                     <div
                         class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
                         <h2 class="font-medium text-base mr-auto">
@@ -33,8 +33,8 @@
                 </div>
             </div>
             <!-- Фото + Фио -->
-            <div class="intro-y col-span-12 lg:col-span-6">
-                <div class="intro-y box">
+            <div class="col-span-12 lg:col-span-6">
+                <div class="box">
                     <div
                         class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
                         <h2 class="font-medium text-base mr-auto">
@@ -56,8 +56,8 @@
                 </div>
             </div>
             <!-- Доступ и должность -->
-            <div class="intro-y col-span-12">
-                <div class="intro-y box">
+            <div class="col-span-12">
+                <div class="box">
                     <div
                         class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
                         <h2 class="font-medium text-base mr-auto">
@@ -65,14 +65,14 @@
                         </h2>
                     </div>
                     <div class="p-5 grid grid-cols-12 gap-4">
-                        <div class="intro-y col-span-12 lg:col-span-4">
+                        <div class="col-span-12 lg:col-span-4">
                             {{ \App\Forms\Input::create('post', ['placeholder' => 'Должность', 'value' => $staff->post])->show() }}
                         </div>
-                        <div class="intro-y col-span-12 lg:col-span-4">
+                        <div class="col-span-12 lg:col-span-4">
                             {{ \App\Forms\Select::create('role', ['placeholder' => 'Доступ', 'value' => $staff->role ])->disabled($staff->isCurrent() )->options($roles)->show() }}
 
                         </div>
-                        <div class="intro-y col-span-12 lg:col-span-4 text-right">
+                        <div class="col-span-12 lg:col-span-4 text-right">
                             <button type="submit" class="btn btn-primary shadow-md mr-2 ml-auto">Сохранить</button>
                         </div>
                     </div>

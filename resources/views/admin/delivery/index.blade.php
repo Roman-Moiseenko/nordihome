@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             @if($type == \App\Modules\Order\Entity\Order\OrderExpense::DELIVERY_LOCAL)
                 Заказы на доставку по области

@@ -54,7 +54,15 @@ class ArrivalTable extends DataTableComponent
             return [
                 'default' => true,
                 'class' => 'text-gray-50',
-            ];})
+            ];})->setTdAttributes(function(Column $column, $row, $columnIndex, $rowIndex) {
+                if ($column->isField('comment') || $column->isField('staff_id')) {
+                    return [
+                        'default' => false,
+                        'class' => 'px-6 py-4 text-sm dark:text-white',
+                    ];
+                }
+                return ['default' => true];
+            })
             ->setColumnSelectDisabled()
             ->setTableRowUrl(function($row) {
                 return route('admin.accounting.arrival.show', $row->id);
@@ -85,7 +93,11 @@ class ArrivalTable extends DataTableComponent
             format(fn($value, $row, Column $column) =>
                 $row->getInfoData()['cost_currency'] . ' ' . $value
             ),
-            Column::make("Комментарий", "comment"),
+            Column::make("Комментарий", "comment")->attributes(function($row) {
+                return [
+                    'class' => '',
+                ];
+            }), //->collapseAlways()
             Column::make("Ответственный", "staff_id")
                 ->sortable()->format(function($value, $row, Column $column) {
                     if (!is_null($row->staff)) return $row->staff->fullname->getFullName();

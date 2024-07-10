@@ -29,7 +29,7 @@
             };
         }
     </script>
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             {{ $modification->name }}
         </h2>
@@ -67,7 +67,7 @@
             </div>
         @endforeach
     </div>
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Список товаров
         </h2>
@@ -103,7 +103,7 @@
             </div>
         </div>
     @endforeach
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Добавить товары в модификацию
         </h2>

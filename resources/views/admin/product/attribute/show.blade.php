@@ -2,14 +2,14 @@
 
 @section('subcontent')
     <div>
-        <div class="intro-y flex items-center mt-8">
+        <div class="flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
                 {{ $attribute->name }}
             </h1>
         </div>
     </div>
 
-    <div class="intro-y box px-5 pt-5 mt-5">
+    <div class="box px-5 pt-5 mt-5">
         <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
             <div class="flex flex-1 px-5 items-center justify-center lg:justify-start">
                 <div class="w-20 h-20 sm:w-24 sm:h-24 flex-none lg:w-32 lg:h-32 image-fit relative">
@@ -72,7 +72,7 @@
 
     @if($attribute->isVariant())
         <div class="grid grid-cols-12 gap-6 mt-5">
-            <div class="intro-y lg:col-span-4 md:col-span-6 col-span-12">
+            <div class="lg:col-span-4 md:col-span-6 col-span-12">
         <h2 class="font-medium mt-3">Варианты</h2>
 
         @foreach($attribute->variants as $variant)
@@ -92,7 +92,7 @@
             </div>
         @endforeach
             </div>
-            <div class="intro-y col-span-4 hidden 2xl:block">
+            <div class="col-span-4 hidden 2xl:block">
                 <div class="mt-10 bg-warning/20 dark:bg-darkmode-600 border border-warning dark:border-0 rounded-md relative p-5">
                     <x-base.lucide icon="lightbulb" class="w-12 h-12 mr-2 text-warning/80 absolute top-0 right-0 mt-5 mr-3"/>
                     <h2 class="text-lg font-medium">

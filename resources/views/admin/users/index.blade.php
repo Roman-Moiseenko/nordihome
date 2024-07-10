@@ -1,10 +1,10 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <h2 class="intro-y text-lg font-medium mt-10">Клиенты</h2>
+    <h2 class="text-lg font-medium mt-10">Клиенты</h2>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
-        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+        <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             {{ $users->links('admin.components.count-paginator') }}
                 <form action="?" method="GET">
                     <div class="flex flex-wrap sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
@@ -28,7 +28,7 @@
                 </form>
         </div>
 
-        <div class="intro-y box col-span-12 overflow-auto lg:overflow-visible p-4">
+        <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>

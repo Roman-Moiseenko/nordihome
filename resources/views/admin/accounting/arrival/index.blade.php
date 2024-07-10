@@ -6,7 +6,7 @@
             Поступления товара
         </h2>
     </div>
-    <div class="intro-y box p-5 mt-5">
+    <div class="box p-5 mt-5">
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 lg:col-span-3">
                 <x-base.form-label for="select-distributor">Поставщик</x-base.form-label>

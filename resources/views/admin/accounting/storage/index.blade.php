@@ -8,13 +8,13 @@
     </div>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
-        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+        <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <button class="btn btn-primary shadow-md mr-2"
                     onclick="window.location.href='{{ route('admin.accounting.storage.create') }}'">Добавить Хранилище
             </button>
         </div>
 
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
+        <div class="col-span-12 overflow-auto lg:overflow-visible">
         <table class="table table-report -mt-2">
             <thead>
             <tr>

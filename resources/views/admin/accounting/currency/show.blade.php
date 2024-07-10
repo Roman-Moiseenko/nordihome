@@ -2,14 +2,14 @@
 
 @section('subcontent')
     <div>
-        <div class="intro-y flex items-center mt-8">
+        <div class="flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
                 {{ $currency->name }}
             </h1>
         </div>
     </div>
 
-    <div class="intro-y box px-5 py-5 mt-5">
+    <div class="box px-5 py-5 mt-5">
         <!-- Управление -->
         <div class="my-2">
             <h2>Установленный курс</h2>

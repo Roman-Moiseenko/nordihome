@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Создать группу
         </h2>
@@ -10,7 +10,7 @@
         @csrf
         <div class="grid grid-cols-12 gap-6 mt-5">
             <!-- Основные данные -->
-            <div class="intro-y col-span-12">
+            <div class="col-span-12">
                 <div class="intro-y box">
                     <div
                         class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">

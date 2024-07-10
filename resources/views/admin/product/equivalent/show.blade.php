@@ -2,13 +2,13 @@
 
 @section('subcontent')
     <div>
-        <div class="intro-y flex items-center mt-8">
+        <div class="flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
                 {{ $equivalent->name }}
             </h1>
         </div>
     </div>
-    <div class="intro-y box p-5 mt-5">
+    <div class="box p-5 mt-5">
         <x-base.popover class="inline-block mt-auto" placement="bottom-start">
             <x-base.popover.button as="x-base.button" variant="primary">Переименовать
                 <x-base.lucide class="w-4 h-4 ml-2" icon="ChevronDown"/>

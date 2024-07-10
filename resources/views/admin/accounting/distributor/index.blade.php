@@ -15,7 +15,7 @@
             {{ $distributors->links('admin.components.count-paginator') }}
         </div>
 
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
+        <div class="col-span-12 overflow-auto lg:overflow-visible">
             <table class="table table-report -mt-2">
                 <thead>
                 <tr>

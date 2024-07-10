@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             {{ $arrival->number . ' от ' . $arrival->created_at->format('d-m-Y') . ' (' . $arrival->distributor->name. ') - ' . $arrival->storage->name }}
         </h2>
