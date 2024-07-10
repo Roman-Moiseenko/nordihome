@@ -42,8 +42,6 @@
                     </form>
                 </x-base.popover.panel>
             </x-base.popover>
-
-            {{ $arrivals->links('admin.components.count-paginator') }}
         </div>
     </div>
 
@@ -53,5 +51,4 @@
 
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
         'Вы действительно хотите удалить поступление?<br>Этот процесс не может быть отменен.')->show() }}
-    {{ $arrivals->links('admin.components.paginator', ['pagination' => $pagination]) }}
 @endsection
