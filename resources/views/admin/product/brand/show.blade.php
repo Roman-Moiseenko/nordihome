@@ -2,13 +2,13 @@
 
 @section('subcontent')
 <div>
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
             {{ $brand->name }}
         </h1>
     </div>
 </div>
-<div class="intro-y box px-5 pt-5 mt-5">
+<div class="box px-5 pt-5 mt-5">
     <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
         <div class="flex flex-1 px-5 items-center justify-center lg:justify-start">
             <div class="w-20 h-20 sm:w-24 sm:h-24 flex-none lg:w-32 lg:h-32 image-fit relative">
@@ -75,7 +75,7 @@
     </ul>
 </div>
 
-<div class="intro-y box px-5 py-5 mt-5">
+<div class="box px-5 py-5 mt-5">
     Сведения о продажах и об интересе клиентов, <br>
     Об общих запасах, кол-во видов товара и общем кол-ве и сумме<br>
     Акции по бренду - создать (переход в Акции) <br>

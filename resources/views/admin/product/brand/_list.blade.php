@@ -1,4 +1,4 @@
-<tr class="intro-x">
+<tr class="">
     <td class="w-20">
         <div class="image-fit w-10 h-10">
             <img class="rounded-full" src="{{ $brand->getImage() }}" alt="{{ $brand->name }}">

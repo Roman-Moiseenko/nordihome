@@ -2,13 +2,13 @@
 
 @section('subcontent')
 <div>
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
             {{ $category->name }}
         </h1>
     </div>
 </div>
-<div class="intro-y box px-5 pt-5 mt-5">
+<div class="box px-5 pt-5 mt-5">
 
     <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
         <div class="flex flex-1 px-5 items-center justify-center lg:justify-start">
@@ -73,7 +73,7 @@
         </li>
     </ul>
 </div>
-<div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-4">
+<div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-4">
     <button class="btn btn-primary shadow-md mr-2"
             onclick="window.location.href='{{ route('admin.product.category.child', $category) }}'">Добавить Подкатегорию
     </button>

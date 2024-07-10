@@ -1,4 +1,4 @@
-<tr class="intro-x">
+<tr class="">
     <td class=""><a href="{{ route('admin.worker.show', $worker) }}"
                         class="font-medium whitespace-nowrap">{{ $worker->fullname->getFullName() }}</a></td>
     <td class="text-center">{{ $worker->postHtml() }}</td>

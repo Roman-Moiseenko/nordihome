@@ -51,7 +51,7 @@
                 </x-base.table.thead>
                 <x-base.table.tbody>
                     @foreach ($users as $user)
-                        <x-base.table.tr class="intro-x">
+                        <x-base.table.tr class="">
                             <x-base.table.td>
                                 <a href="{{ route('admin.users.show', $user) }}">
                                     <span class="font-medium">{{ $user->email }}</span>

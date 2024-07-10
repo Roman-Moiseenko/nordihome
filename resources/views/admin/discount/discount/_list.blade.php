@@ -1,4 +1,4 @@
-<tr class="intro-x">
+<tr class="">
     <td class="w-40"><a href="{{ route('admin.discount.discount.show', $discount) }}"
                         class="font-medium whitespace-nowrap">{{ $discount->name }}</a></td>
     <td class="w-20">{{ $discount->discount }} %</td>

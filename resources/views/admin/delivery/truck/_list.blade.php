@@ -1,4 +1,4 @@
-<tr class="intro-x">
+<tr class="">
     <td class=""><a href="{{ route('admin.delivery.truck.show', $truck) }}"
                         class="font-medium whitespace-nowrap">{{ $truck->name }}</a></td>
     <td class="text-center">{{ $truck->weight }}</td>

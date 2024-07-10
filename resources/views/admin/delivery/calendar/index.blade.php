@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Календарь доставки по области
         </h2>
@@ -9,7 +9,7 @@
 
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
-        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+        <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
                 <form method="get" action="{{ url()->current() }}">
                     <input type="radio" class="btn-check" name="filter" id="option2" autocomplete="off"

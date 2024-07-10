@@ -2,7 +2,7 @@
 
 @section('subcontent')
     <div>
-        <div class="intro-y flex items-center mt-8">
+        <div class="flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
                 Возврат на заказ {{ $order->htmlDate() . ' ' .$order->htmlNum() }}
             </h1>
@@ -11,7 +11,7 @@
 
     <div class="grid grid-cols-12 gap-x-6 pb-10">
         <div class="col-span-12 lg:col-span-12">
-            <div class="intro-y box p-5 mt-5 block-menus-order">
+            <div class="box p-5 mt-5 block-menus-order">
                 <div class="rounded-md border border-slate-200/60 p-5">
                     <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                         <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
@@ -43,7 +43,7 @@
         <form class="col-span-12" method="post" action="{{ route('admin.sales.refund.store', $order) }}">
             @csrf
             <div class="col-span-12 lg:col-span-12">
-                <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="box p-5 mt-5 block-menus-order">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
@@ -122,7 +122,7 @@
             </div>
 
             <div class="col-span-12 lg:col-span-12">
-                <div class="intro-y box p-5 mt-5 block-menus-order">
+                <div class="box p-5 mt-5 block-menus-order">
                     <div class="rounded-md border border-slate-200/60 p-5">
                         <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                             <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>

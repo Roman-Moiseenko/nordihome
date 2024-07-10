@@ -1,4 +1,4 @@
-<div class="intro-y col-span-12 md:col-span-6 lg:col-span-4">
+<div class="col-span-12 md:col-span-6 lg:col-span-4">
     <div class="box">
         <div class="flex items-start px-5 pt-5">
             <div class="w-full flex flex-col lg:flex-row items-center">

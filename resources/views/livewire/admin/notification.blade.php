@@ -1,6 +1,6 @@
 
 <div id="notify-component" wire:poll.10s="refresh_fields">
-    <div class="intro-x mr-4 sm:mr-6">
+    <div class="mr-4 sm:mr-6">
         <button wire:click="toggle_visible"
             class="relative block text-white/70 outline-none
             before:absolute before:top-[-2px] before:right-0

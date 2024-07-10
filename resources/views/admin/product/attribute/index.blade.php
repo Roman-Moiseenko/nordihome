@@ -1,12 +1,12 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Атрибуты
         </h2>
     </div>
-    <div class="intro-y box p-5 mt-5">
+    <div class="box p-5 mt-5">
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 lg:col-span-3">
                 <x-base.form-label for="select-category">Категории</x-base.form-label>

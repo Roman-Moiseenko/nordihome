@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8 mb-3">
+    <div class="flex items-center mt-8 mb-3">
         <h2 class="text-lg font-medium mr-auto">
             {{ $movement->number . ' от ' . $movement->created_at->format('d-m-Y') . ' (' . $movement->storageOut->name. ' -> ' . $movement->storageIn->name . ')' }}
         </h2>

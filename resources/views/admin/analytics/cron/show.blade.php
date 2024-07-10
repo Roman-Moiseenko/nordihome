@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             {{ $cron->event . ' от ' . $cron->created_at->format('d-m-Y H:i')  }}
         </h2>

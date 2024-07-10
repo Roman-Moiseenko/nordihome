@@ -1,14 +1,14 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Серии товаров
         </h2>
     </div>
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
-        <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+        <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
 
             <x-base.popover class="inline-block mt-auto" placement="bottom-start">
                 <x-base.popover.button as="x-base.button" variant="primary" class=""
@@ -38,7 +38,7 @@
             {{ $list->links('admin.components.count-paginator') }}
         </div>
 
-        <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
+        <div class="col-span-12 overflow-auto lg:overflow-visible">
             <table class="table table-report -mt-2">
                 <thead>
                 <tr>
@@ -50,7 +50,7 @@
                 </thead>
                 <tbody>
                 @foreach($list as $series)
-                    <tr class="intro-x">
+                    <tr class="">
                         <td class=""><a href="{{ route('admin.product.series.show', $series) }}"
                                             class="font-medium whitespace-nowrap">{{ $series->name }}</a></td>
                         <td class="w-40 text-center whitespace-nowrap">{{ $series->products()->count() }}</td>

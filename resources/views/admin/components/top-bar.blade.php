@@ -10,20 +10,20 @@
 ])>
     <div class="flex h-full items-center">
         <!-- BEGIN: Logo -->
-        <a href="{{ route('admin.home') }}" class="logo -intro-x hidden md:flex xl:w-[180px] block">
+        <a href="{{ route('admin.home') }}" class="logo hidden md:flex xl:w-[180px] block">
             <img class="w-8 h-8" src="{{ Vite::asset('resources/images/logo.png') }}"/>
             <span class="logo__text text-white text-lg ml-3">NORDI HOME</span>
         </a>
         <!-- END: Logo -->
         <!-- BEGIN: Breadcrumb -->
-        <nav aria-label="breadcrumb" class="-intro-x h-[45px] mr-auto">
+        <nav aria-label="breadcrumb" class="h-[45px] mr-auto">
             @section('breadcrumbs')
                 {{\Diglactic\Breadcrumbs\Breadcrumbs::render()}}
             @show
         </nav>
         <!-- END: Breadcrumb -->
         <!-- BEGIN: Search -->
-        <div class="intro-x relative mr-3 sm:mr-6">
+        <div class="relative mr-3 sm:mr-6">
             <div class="search relative hidden sm:block">
                 <input type="text" class="search__input form-control border-transparent" placeholder="Search...">
                 <i data-lucide="Search" width="24" height="24"

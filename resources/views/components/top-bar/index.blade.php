@@ -12,7 +12,7 @@
         <a
             href=""
             @class([
-                '-intro-x hidden md:flex',
+                'hidden md:flex',
                 'xl:w-[180px]' => $layout == 'side-menu',
                 'xl:w-auto' => $layout == 'simple-menu',
                 'w-auto' => $layout == 'top-menu',
@@ -36,7 +36,7 @@
         <!-- BEGIN: Breadcrumb -->
         <x-base.breadcrumb
             @class([
-                'h-[45px] md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto -intro-x',
+                'h-[45px] md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto',
                 'md:pl-6' => $layout != 'top-menu',
                 'md:pl-10' => $layout == 'top-menu',
             ])
@@ -52,7 +52,7 @@
         </x-base.breadcrumb>
         <!-- END: Breadcrumb -->
         <!-- BEGIN: Search -->
-        <div class="intro-x relative mr-3 sm:mr-6">
+        <div class="relative mr-3 sm:mr-6">
             <div class="search relative hidden sm:block">
                 <x-base.form-input
                     class="w-56 rounded-full border-transparent bg-slate-200 pr-8 shadow-none transition-[width] duration-300 ease-in-out focus:w-72 focus:border-transparent dark:bg-darkmode-400"
@@ -171,7 +171,7 @@
         </div>
         <!-- END: Search -->
         <!-- BEGIN: Notifications -->
-        <x-base.popover class="intro-x mr-4 sm:mr-6">
+        <x-base.popover class="mr-4 sm:mr-6">
             <x-base.popover.button
                 class="relative block text-white/70 outline-none before:absolute before:top-[-2px] before:right-0 before:h-[8px] before:w-[8px] before:rounded-full before:bg-danger before:content-['']"
             >

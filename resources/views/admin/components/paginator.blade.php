@@ -1,6 +1,6 @@
 
 @if ($paginator->hasPages())
-<div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center mt-3">
+<div class="col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center mt-3">
     <nav class="w-full sm:w-auto sm:mr-auto">
         <ul class="pagination">
             @if ($paginator->onFirstPage())

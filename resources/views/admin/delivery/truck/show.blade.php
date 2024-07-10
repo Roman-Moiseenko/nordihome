@@ -1,12 +1,12 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
             {{ $truck->name}}
         </h1>
     </div>
-    <div class="intro-y box px-5 pt-5 mt-5">
+    <div class="box px-5 pt-5 mt-5">
         <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
             <div class="mt-6 lg:mt-0 flex-1 px-5 border-l border-r border-slate-200/60 dark:border-darkmode-400 border-t lg:border-t-0 pt-5 lg:pt-0">
                 <div class="font-medium text-center lg:text-left lg:mt-3">Контакты</div>
@@ -33,7 +33,7 @@
         </ul>
     </div>
 
-    <div class="intro-y box px-5 py-5 mt-5">
+    <div class="box px-5 py-5 mt-5">
         Календарь работ<br>Архив и другие стат.данные<br>
     </div>
 

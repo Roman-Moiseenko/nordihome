@@ -1,12 +1,12 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h1 class="text-xl font-medium mr-auto">
             {{ $user->email }} еще данные?
         </h1>
     </div>
-    <div class="intro-y box px-5 pt-5 mt-5">
+    <div class="box px-5 pt-5 mt-5">
         <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
             <div class="flex flex-1 flex-col justify-center items-center lg:items-start ml-4 mt-4">
 
@@ -73,13 +73,13 @@
     </div>
 
 
-    <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
+    <div class="col-span-12 overflow-auto lg:overflow-visible">
         <div class="pt-3 pb-2">
             <h2 class="text-lg">Заказы клиента</h2>
         </div>
         <table class="table table-report -mt-2 dropdown-table">
             @foreach ($user->orders as $j => $order)
-                <tr class="intro-x zoom-in tr-dropdown" target="show-{{$j}}" show="hide">
+                <tr class="zoom-in tr-dropdown" target="show-{{$j}}" show="hide">
                     <td class=""><a href="{{ route('admin.sales.order.show', $order) }}" class="font-medium text-success">{{ $order->htmlNumDate() }}</a></td>
                     <td class="">Товаров: {{ $order->getQuantity() }}</td>
                     <td class="">Сумма к оплате: {{ $order->getTotalAmount() }}</td>

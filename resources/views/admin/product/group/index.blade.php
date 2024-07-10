@@ -1,12 +1,12 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Группы товаров
         </h2>
     </div>
-    <div class="intro-y box p-5 mt-5">
+    <div class="box p-5 mt-5">
         <form method="GET" action="{{ route('admin.product.group.index') }}">
         <div class="flex">
                 <input class="form-control w-52" name="search" value="{{ old('search') ?? '' }}">

@@ -2,13 +2,13 @@
 
 @section('subcontent')
     <div>
-        <div class="intro-y flex items-center mt-8">
+        <div class="flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
                 {{ $widget->name }}
             </h1>
         </div>
     </div>
-    <div class="intro-y box px-5 pt-5 mt-5">
+    <div class="box px-5 pt-5 mt-5">
 
         <div class="flex flex-col lg:flex-row border-b border-slate-200/60 dark:border-darkmode-400 pb-5 -mx-5">
             <div

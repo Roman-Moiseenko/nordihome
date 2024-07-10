@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="intro-y flex items-center mt-8">
+    <div class="flex items-center mt-8">
         <h2 class="text-lg font-medium mr-auto">
             Группы атрибутов
         </h2>
@@ -30,7 +30,7 @@
         </x-base.popover.panel>
 
     </x-base.popover>
-    <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
+    <div class="col-span-12 overflow-auto lg:overflow-visible">
         <x-base.table class="-mt-2 border-separate border-spacing-y-[10px]">
             <x-base.table.thead>
                 <x-base.table.tr>
@@ -51,7 +51,7 @@
             <x-base.table.tbody>
 
                 @foreach ($groups as $group)
-                    <x-base.table.tr class="intro-x">
+                    <x-base.table.tr class="">
                         <x-base.table.td
                             class="w-40 border-b-0 bg-white shadow-[20px_3px_20px_#0000000b] first:rounded-l-md last:rounded-r-md dark:bg-darkmode-600"
                         > {{ $group->name }}

@@ -1,4 +1,4 @@
-<div class="intro-y box p-5 mt-5 block-menus-product">
+<div class="box p-5 mt-5 block-menus-product">
     <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
         <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
             <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/> Налоговые сведения
@@ -31,7 +31,7 @@
 </div>
 
 
-<div class="intro-y box p-5 mt-5 block-menus-product">
+<div class="box p-5 mt-5 block-menus-product">
     <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
         <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
             <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/> Банковские сведения
@@ -56,7 +56,7 @@
     </div>
 </div>
 
-<div class="intro-y box p-5 mt-5 block-menus-product">
+<div class="box p-5 mt-5 block-menus-product">
     <div class="rounded-md border border-slate-200/60 p-5 dark:border-darkmode-400">
         <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium dark:border-darkmode-400">
             <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/> Контактные данные
