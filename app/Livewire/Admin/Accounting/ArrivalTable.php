@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Accounting;
 
 use App\Forms\ModalDelete;
 use App\Helpers\IconHelper;
+use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Admin\Entity\Admin;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
@@ -129,6 +130,10 @@ class ArrivalTable extends DataTableComponent
         foreach (Admin::getModels() as $admin) {
             $admins[$admin->id] = $admin->fullname->getShortName();
         }
+        $distributors[0] = '';
+        foreach (Distributor::getModels() as $distributor) {
+            $distributors[$distributor->id] = $distributor->name;
+        }
 
         return [
          /*   DateRangeFilter::make('Период c')->filter(function (Builder $builder, array $dateRange) { // Expects an array.
@@ -149,6 +154,15 @@ class ArrivalTable extends DataTableComponent
                 ])
                 ->filter(function(Builder $builder, string $value) {
                     $builder->where('number', 'like', '%'.$value.'%');
+                }),
+            SelectFilter::make('Поставщик', 'distributor_id')
+                //->setFilterPillTitle('Ответственный')
+                //->setFilterPillValues($admins)
+                ->options($distributors)
+                ->filter(function(Builder $builder, string $value) {
+                    if ((int)$value != 0) {
+                        $builder->where('distributor_id', (int)$value);
+                    }
                 }),
             SelectFilter::make('Ответственный', 'staff_id')
                 //->setFilterPillTitle('Ответственный')

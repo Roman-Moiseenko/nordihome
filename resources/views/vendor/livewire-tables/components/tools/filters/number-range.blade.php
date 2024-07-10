@@ -8,10 +8,10 @@
 
 
         <div @class([
-            'mt-4 h-22 pt-8 pb-4 grid gap-10' => $isTailwind,
+            'text-sm mt-4 h-22 pt-8 pb-4 grid gap-10' => $isTailwind,
             'mt-4 h-22 w-100 pb-4 pt-2 grid gap-10' => $isBootstrap,
             ]) wire:ignore>
-            <div 
+            <div
                 id="{{ $tableName }}-numberRange-{{ $filterKey }}-wrapper" data-ticks-position='bottom'
                 @class([
                     'range-slider flat' => $isTailwind,
@@ -23,7 +23,7 @@
                 ' x-init="updateStyles">
 
                 <input type="range" min="{{ $minRange }}" max="{{ $maxRange }}" value="{{ $currentMin }}"
-                    id="{{ $tableName }}-numberRange-{{ $filterKey }}-min" x-model='filterMin' x-on:change="updateWire()" 
+                    id="{{ $tableName }}-numberRange-{{ $filterKey }}-min" x-model='filterMin' x-on:change="updateWire()"
                     oninput="this.parentNode.style.setProperty('--value-a',this.value); this.parentNode.style.setProperty('--text-value-a', JSON.stringify(this.value))"
                     />
                 <output></output>
