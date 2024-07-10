@@ -30,14 +30,17 @@ class ModalDelete
         return view('forms.modal-delete', $this->params);
     }
 
+    /**
+     * Атрибуты для ссылки вызова модального окна в livewire-Таблице
+     */
     #[ArrayShape(['class' => "string", 'data-tw-toggle' => "string", 'data-tw-target' => "string", 'data-route' => "string"])]
-    public static function attributes(string $route): array
+    public static function attributes(string $route, string $target = 'delete-confirmation-modal'): array
     {
         return [
             'class' => 'flex items-center text-danger',
             //Вызов Модального окна со ссылкой на удаление.
             'data-tw-toggle' => "modal",
-            'data-tw-target' => "#delete-confirmation-modal",
+            'data-tw-target' => "#" . $target,
             'data-route' => $route,
         ];
     }

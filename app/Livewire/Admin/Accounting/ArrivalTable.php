@@ -24,11 +24,6 @@ class ArrivalTable extends DataTableComponent
    // protected $model = ArrivalDocument::class;
     public bool $sortingPillsStatus = false;
 
-    public array $columnSearch = [
-        'name' => null,
-        'email' => null,
-    ];
-
     public string $search;
     public function builder(): Builder
     {
@@ -136,11 +131,6 @@ class ArrivalTable extends DataTableComponent
         }
 
         return [
-         /*   DateRangeFilter::make('Период c')->filter(function (Builder $builder, array $dateRange) { // Expects an array.
-                $builder
-                    ->where('created_at', '>=', $dateRange['minDate']) // minDate is the start date selected
-                    ->where('created_at', '<=', $dateRange['maxDate']); // maxDate is the end date selected
-            }),*/
             DateFilter::make('Период c')->filter(function(Builder $builder, string $value) {
                 $builder->where('created_at', '>=', $value);
             }),
@@ -156,8 +146,6 @@ class ArrivalTable extends DataTableComponent
                     $builder->where('number', 'like', '%'.$value.'%');
                 }),
             SelectFilter::make('Поставщик', 'distributor_id')
-                //->setFilterPillTitle('Ответственный')
-                //->setFilterPillValues($admins)
                 ->options($distributors)
                 ->filter(function(Builder $builder, string $value) {
                     if ((int)$value != 0) {
@@ -165,8 +153,6 @@ class ArrivalTable extends DataTableComponent
                     }
                 }),
             SelectFilter::make('Ответственный', 'staff_id')
-                //->setFilterPillTitle('Ответственный')
-                //->setFilterPillValues($admins)
                 ->options($admins)
                 ->filter(function(Builder $builder, string $value) {
                     if ((int)$value != 0) {
