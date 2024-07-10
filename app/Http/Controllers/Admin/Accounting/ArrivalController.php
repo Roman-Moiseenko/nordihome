@@ -30,9 +30,9 @@ class ArrivalController extends Controller
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
-            $query = ArrivalDocument::orderByDesc('created_at');
+            //$query = ArrivalDocument::orderByDesc('created_at');
             $distributors = Distributor::orderBy('name')->get();
-            $storages = Storage::orderBy('name')->get();
+           /* $storages = Storage::orderBy('name')->get();
 
             $completed = $request['completed'] ?? 'all';
             if ($completed == 'active') $query->where('completed', '=', true);
@@ -45,9 +45,9 @@ class ArrivalController extends Controller
             }
 
             $arrivals = $this->pagination($query, $request, $pagination);
-
+*/
             return view('admin.accounting.arrival.index',
-                compact('arrivals', 'pagination', 'completed', 'storages', 'distributors', 'storage_id', 'distributor_id'));
+                compact(/*'arrivals', 'pagination', 'completed', 'storages', 'storage_id', 'distributor_id',*/ 'distributors'));
         });
     }
 

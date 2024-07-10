@@ -31,10 +31,10 @@ class DepartureController extends Controller
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use ($request) {
-            $query = DepartureDocument::orderByDesc('created_at');
+           // $query = DepartureDocument::orderByDesc('created_at');
             $storages = Storage::orderBy('name')->get();
 
-            $completed = $request['completed'] ?? 'all';
+           /* $completed = $request['completed'] ?? 'all';
             if ($completed == 'active') $query->where('completed', '=', true);
             if ($completed == 'draft') $query->where('completed', '=', false);
 
@@ -42,9 +42,9 @@ class DepartureController extends Controller
                 $query->where('storage_id', $storage_id);
             }
 
-            $departures = $this->pagination($query, $request, $pagination);
+            $departures = $this->pagination($query, $request, $pagination);*/
             return view('admin.accounting.departure.index',
-                compact('departures', 'pagination', 'completed', 'storages', 'storage_id'));
+                compact(/*'departures', 'pagination', 'completed', 'storage_id',*/ 'storages'));
         });
     }
 

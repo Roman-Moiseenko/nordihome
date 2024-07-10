@@ -28,13 +28,13 @@ class PricingController extends Controller
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
-            $query = PricingDocument::orderByDesc('created_at');
+           /* $query = PricingDocument::orderByDesc('created_at');
             $completed = $request['completed'] ?? 'all';
             if ($completed == 'active') $query->where('completed', '=', true);
             if ($completed == 'draft') $query->where('completed', '=', false);
-            $pricing_documents = $this->pagination($query, $request, $pagination);
-            return view('admin.accounting.pricing.index',
-                compact('pricing_documents', 'pagination', 'completed'));
+            $pricing_documents = $this->pagination($query, $request, $pagination); */
+            return view('admin.accounting.pricing.index'/*,
+                compact('pricing_documents', 'pagination', 'completed')*/);
         });
     }
 

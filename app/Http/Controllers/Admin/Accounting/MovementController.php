@@ -31,9 +31,9 @@ class MovementController extends Controller
     public function index(Request $request)
     {
         return $this->try_catch_admin(function () use($request) {
-            $query = MovementDocument::orderByDesc('created_at');
+            //$query = MovementDocument::orderByDesc('created_at');
             $storages = Storage::orderBy('name')->get();
-
+/*
             $completed = $request['completed'] ?? 'all';
             if ($completed == 'draft') $query->where('status', MovementDocument::STATUS_DRAFT);
             if ($completed == 'departure') $query->where('status', MovementDocument::STATUS_DEPARTURE);
@@ -47,9 +47,9 @@ class MovementController extends Controller
                 $query->where('storage_out', $storage_out);
             }
 
-            $movements = $this->pagination($query, $request, $pagination);
+            $movements = $this->pagination($query, $request, $pagination);*/
             return view('admin.accounting.movement.index',
-                compact('movements', 'pagination', 'completed', 'storages', 'storage_in', 'storage_out'));
+                compact(/*'movements', 'pagination', 'completed', 'storage_in', 'storage_out',*/ 'storages'));
         });
     }
 
