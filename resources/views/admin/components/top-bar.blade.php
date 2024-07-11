@@ -8,7 +8,7 @@
     "before:content-[''] before:absolute before:h-[65px] before:inset-0 before:top-0 before:mx-7 before:bg-primary/30 before:mt-3 before:rounded-xl before:hidden before:md:block before:dark:bg-darkmode-600/30",
     "after:content-[''] after:absolute after:inset-0 after:h-[65px] after:mx-3 after:bg-primary after:mt-5 after:rounded-xl after:shadow-md after:hidden after:md:block after:dark:bg-darkmode-600",
 ])>
-    <div class="flex h-full items-center">
+    <div class="nav-top-z-index flex h-full items-center">
         <!-- BEGIN: Logo -->
         <a href="{{ route('admin.home') }}" class="logo hidden md:flex xl:w-[180px] block">
             <img class="w-8 h-8" src="{{ Vite::asset('resources/images/logo.png') }}"/>

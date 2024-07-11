@@ -77,7 +77,7 @@ class PaymentTable extends DataTableComponent
                 ->html(),
             Column::make("Сумма", "amount")
                 ->sortable()->format(fn($value, $row, Column $column) => price($row->amount)),
-            Column::make('Заказ', 'order_id')
+            Column::make('Заказ', 'order_id')->sortable()
                 ->format(fn($value, $row, Column $column) => $row->order->htmlNumDate()),
             Column::make('Клиент', 'order.user_id')->sortable()
                 ->format(fn($value, $row, Column $column) => $row->order->user->fullname->getFullName()),

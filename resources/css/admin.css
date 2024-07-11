@@ -248,3 +248,9 @@ select:disabled + div.tom-select > div.ts-control {
     background: rgb(var(--color-slate-200)) !important;
     cursor: not-allowed;
 }
+.nav-top-z-index > div {
+    z-index: 1;
+}
+.logo {
+    z-index: 1;
+}
