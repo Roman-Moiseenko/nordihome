@@ -5,6 +5,7 @@ namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
+use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderPayment extends Model
 {
+
     protected $table = 'order_payments';
     protected $casts = [
         'created_at' => 'datetime',
@@ -63,5 +65,10 @@ class OrderPayment extends Model
     public function getUserFullName(): string
     {
         return $this->order->user->fullname->getFullName();
+    }
+
+    public function htmlDate(string $field = 'created_at'):string
+    {
+        return $this->$field->translatedFormat('d F Y H:i');
     }
 }
