@@ -9,7 +9,7 @@
     </div>
     @if(!empty($movement->order()))
     <div class="m-2 p-2 box">
-        <a class="text-success font-medium" href="{{ route('admin.sales.order.show', $movement->order()) }}" target="_blank">
+        <a class="text-success font-medium" href="{{ route('admin.order.show', $movement->order()) }}" target="_blank">
             Заказ {{ $movement->order()->htmlNum() . ' от ' . $movement->order()->htmlDate()}}
         </a>
     </div>

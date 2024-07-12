@@ -31,7 +31,7 @@ class NotificationPaymentNew
                 $staff->notify(new StaffMessage(
                     'Поступила оплата по заказу',
                     $event->payment->order->htmlNumDate(),
-                    route('admin.sales.order.show', $event->payment->order),
+                    route('admin.order.show', $event->payment->order),
                     'credit-card'
                 ));
             }

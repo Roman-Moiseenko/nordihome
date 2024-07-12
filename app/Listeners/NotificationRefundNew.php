@@ -27,7 +27,7 @@ class NotificationRefundNew
             $staff->notify(new StaffMessage(
                 'Возврат по заказу',
                 'Заказ ' . $event->order->htmlNumDate(),
-                route('admin.sales.order.show', $event->order),
+                route('admin.order.show', $event->order),
                 'refresh-ccw'
             ));
         }

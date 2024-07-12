@@ -31,7 +31,7 @@ class NotificationReserveTimeOut
                 $staff->notify(new StaffMessage(
                     'Резерв по товару',
                     ($event->timeOut ? 'Закончилось время резерва' : 'Закачивается время резерва, осталось менее 12 ч.') . ' ' . $event->order->htmlNumDate(),
-                    route('admin.sales.order.show', $event->order),
+                    route('admin.order.show', $event->order),
                     'baggage-claim'
                 ));
             }

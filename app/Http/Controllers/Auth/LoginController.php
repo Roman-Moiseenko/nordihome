@@ -86,7 +86,7 @@ class LoginController extends Controller
                 flash('Не верифицирован', 'danger');
                 return back();
             }
-                return redirect()->intended(route('home'));
+                return redirect()->intended(route('shop.home'));
         }
         $this->incrementLoginAttempts($request);
         throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);

@@ -221,7 +221,7 @@
         <!-- BEGIN: Account Menu -->
         <x-base.menu>
             <x-base.menu.button
-                class="image-fit zoom-in intro-x block h-8 w-8 scale-110 overflow-hidden rounded-full shadow-lg"
+                class="image-fit zoom-in block h-8 w-8 scale-110 overflow-hidden rounded-full shadow-lg"
             >
                 <img
                     src="/images/no-image.jpg"

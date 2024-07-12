@@ -29,7 +29,7 @@ class NotificationExpenseAssembly
             $staff->notify(new StaffMessage(
                 'Поступило распоряжение на сборку',
                 $event->expense->htmlNumDate(),
-                route('admin.sales.expense.show', $event->expense),
+                route('admin.order.expense.show', $event->expense),
                 'truck'
             ));
         }

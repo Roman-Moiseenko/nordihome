@@ -28,7 +28,7 @@ class NotificationPriceMinimum
             $staff->notify(new StaffMessage(
                 'Установлена цена ниже минимальной',
                 $event->item->product->name . ' - ' . price($event->item->sell_cost),
-                route('admin.sales.order.show', $event->item->order),
+                route('admin.order.show', $event->item->order),
                 'badge-russian-ruble'
             ));
         }

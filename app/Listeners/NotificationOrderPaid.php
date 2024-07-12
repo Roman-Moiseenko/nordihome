@@ -32,7 +32,7 @@ class NotificationOrderPaid
                 $staff->notify(new StaffMessage(
                     'Заказ оплачен',
                     'Заказ ' . $event->order->htmlNumDate(),
-                    route('admin.sales.order.show', $event->order),
+                    route('admin.order.show', $event->order),
                     'credit-card'
                 ));
             } }

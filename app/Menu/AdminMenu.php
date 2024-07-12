@@ -29,17 +29,29 @@ class AdminMenu
                     'users' => [
                         'icon' => 'user-search',
                         'title' => 'Список',
-                        'route_name' => 'admin.users.index',
+                        'route_name' => 'admin.user.index',
                     ],
                     'subscriptions' => [
                         'icon' => 'bell-ring',
                         'title' => 'Подписки',
                         'route_name' => 'admin.user.subscription.index',
                     ],
+                    'cart' => [
+                        'icon' => 'shopping-cart',
+                        'title' => 'Корзина',
+                        'route_name' => 'admin.user.cart.index',
+                        'can' => 'order',
+                    ],
+                    'wish' => [
+                        'icon' => 'heart',
+                        'title' => 'Избранное',
+                        'route_name' => 'admin.user.wish.index',
+                        'can' => 'order',
+                    ],
                 ],
             ],
             'divider',
-            'sales' => [
+            'orders' => [
                 'icon' => 'coins',
                 'title' => 'Продажи',
                 'can' => ['order','payment', 'refund'],
@@ -47,39 +59,29 @@ class AdminMenu
                     'order' => [
                         'icon' => 'file-plus-2',
                         'title' => 'Заказы',
-                        'route_name' => 'admin.sales.order.index',
+                        'route_name' => 'admin.order.index',
                         'can' => 'order',
                     ],
                     'payment' => [
                         'icon' => 'credit-card',
                         'title' => 'Платежи',
-                        'route_name' => 'admin.sales.payment.index',
+                        'route_name' => 'admin.order.payment.index',
                         'can' => 'payment',
                     ],
                     'refund' => [
                         'icon' => 'refresh-ccw',
                         'title' => 'Возвраты',
-                        'route_name' => 'admin.sales.refund.index',
+                        'route_name' => 'admin.order.refund.index',
                         'can' => 'refund',
                     ],
                     'reserve' => [
                         'icon' => 'baggage-claim',
                         'title' => 'Резерв',
-                        'route_name' => 'admin.sales.reserve.index',
+                        'route_name' => 'admin.order.reserve.index',
                         'can' => 'order',
                     ],
-                    'cart' => [
-                        'icon' => 'shopping-cart',
-                        'title' => 'Корзина',
-                        'route_name' => 'admin.sales.cart.index',
-                        'can' => 'order',
-                    ],
-                    'wish' => [
-                        'icon' => 'heart',
-                        'title' => 'Избранное',
-                        'route_name' => 'admin.sales.wish.index',
-                        'can' => 'order',
-                    ],
+
+
                 ],
             ],
             'delivery' => [

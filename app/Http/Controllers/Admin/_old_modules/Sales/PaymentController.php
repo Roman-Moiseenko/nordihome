@@ -1,0 +1,105 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin\_old_modules\Sales;
+
+use App\Http\Controllers\Controller;
+use App\Modules\Admin\Entity\Admin;
+use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Entity\Payment\PaymentHelper;
+use App\Modules\Order\Repository\OrderRepository;
+use App\Modules\Order\Repository\PaymentRepository;
+use App\Modules\Order\Service\PaymentService;
+use Illuminate\Http\Request;
+use function redirect;
+use function view;
+
+class PaymentController extends Controller
+{
+
+    private PaymentService $service;
+    private PaymentRepository $repository;
+    private OrderRepository $orders;
+
+    public function __construct(PaymentService $service, PaymentRepository $repository, OrderRepository $orders)
+    {
+        $this->middleware(['auth:admin', 'can:payment']);
+        $this->service = $service;
+        $this->repository = $repository;
+        $this->orders = $orders;
+    }
+
+    public function index(Request $request)
+    {
+        return $this->try_catch_admin(function () use ($request) {
+            $filters = [
+                'staff_id' => $request['staff_id'] ?? null,
+                'user' => $request['user'] ?? null,
+                'order' => $request['order'] ?? null,
+            ];
+            $_filter_count = 0;
+            foreach ($filters as $item) {
+                if (!is_null($item)) $_filter_count++;
+            }
+            $filters['count'] = $_filter_count;
+            $query = $this->repository->getIndex($filters);
+            $payments = $this->pagination($query, $request, $pagination);
+            $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
+                $query->where('code', Responsibility::MANAGER_PAYMENT);
+            })->get();
+            return view('admin.sales.payment.index', compact('payments', 'pagination', 'staffs', 'filters'));
+        });
+    }
+
+    public function create()
+    {
+        return $this->try_catch_admin(function () {
+            $methods = PaymentHelper::payments();
+            $orders = $this->orders->getNotPaidYet();
+            return view('admin.sales.payment.create', compact('methods', 'orders'));
+        });
+    }
+
+    public function store(Request $request)
+    {
+        return $this->try_catch_admin(function () use ($request) {
+            $payment = $this->service->create($request->only(['order', 'amount', 'method', 'document']));
+            return redirect()->route('admin.order.payment.index');
+        });
+    }
+
+    public function edit(OrderPayment $payment)
+    {
+        return $this->try_catch_admin(function () use ($payment) {
+            $methods = PaymentHelper::payments();
+            $orders = $this->orders->getNotPaidYet($payment->order_id);
+            return view('admin.sales.payment.edit', compact('payment', 'methods', 'orders'));
+        });
+    }
+
+    public function update(OrderPayment $payment, Request $request)
+    {
+        return $this->try_catch_admin(function () use ($payment, $request) {
+            $payment = $this->service->update($payment, $request);
+            return redirect()->route('admin.order.payment.index');
+            //return redirect()->route('admin.order.payment.show', $payment);
+        });
+    }
+
+    public function show(OrderPayment $payment)
+    {
+        return $this->try_catch_admin(function () use ($payment) {
+            return redirect()->route('admin.order.payment.index');
+            //return view('admin.order.payment.show', $payment);
+        });
+    }
+
+    public function destroy(OrderPayment $payment)
+    {
+        return $this->try_catch_admin(function () use ($payment) {
+            $this->service->destroy($payment);
+            return redirect()->route('admin.order.payment.index');
+        });
+    }
+}

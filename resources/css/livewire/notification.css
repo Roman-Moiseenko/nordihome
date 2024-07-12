@@ -14,9 +14,11 @@
     top: 20px;
     margin: 0;
 
-    z-index: 4;
+    z-index: 51;
 }
-
+#notify-component {
+    z-index: 2;
+}
 .notification-dropdown.no-show {
     opacity: 0;
     visibility: hidden;

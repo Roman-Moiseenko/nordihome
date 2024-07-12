@@ -59,7 +59,7 @@
                 <x-base.lucide icon="phone" class="w-3 h-3 mr-2"/> {{ $staff->phone }}</div>
         </div>
         <div class="text-center lg:text-right p-5 border-t border-slate-200/60 dark:border-darkmode-400">
-            <button class="btn btn-primary py-1 px-2 mr-2 {{ $staff->isBlocked() ? 'disabled' : '' }}" onclick="window.location.href=' {{ $staff->isBlocked() ? '' : route('home') }}'">Сообщение</button>
+            <button class="btn btn-primary py-1 px-2 mr-2 {{ $staff->isBlocked() ? 'disabled' : '' }}" onclick="window.location.href=' {{ $staff->isBlocked() ? '' : route('shop.home') }}'">Сообщение</button>
             <button onclick="window.location.href='{{ route('admin.staff.show', $staff) }}'" class="btn btn-outline-secondary py-1 px-2">Профиль</button>
         </div>
     </div>

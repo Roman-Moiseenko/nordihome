@@ -10,7 +10,7 @@
     <div class="mt-1 font-medium text-lg">
         <a href="{{ route('admin.product.show', $review->product) }}">{{ $review->product->name }}</a>
     </div>
-    <div class="mt-1 font-medium text-lg"><a href="{{ route('admin.users.show', $review->user) }}">{{ $review->user->fullname->getFullName() }}</a></div>
+    <div class="mt-1 font-medium text-lg"><a href="{{ route('admin.user.show', $review->user) }}">{{ $review->user->fullname->getFullName() }}</a></div>
     <hr/>
     <div class="mt-2">Рейтинг: {{ $review->rating }} Дата публикации {{ $review->htmlDate() }} Текущий статус: {{ $review->statusHtml() }}</div>
     <hr/>

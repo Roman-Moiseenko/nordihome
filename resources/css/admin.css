@@ -1,4 +1,4 @@
-@import "./dashboard.css";
+/*@import "./dashboard.css";*/
 @import "./_tailwind.css";
 
 @import "./_roboto.css";
@@ -248,9 +248,7 @@ select:disabled + div.tom-select > div.ts-control {
     background: rgb(var(--color-slate-200)) !important;
     cursor: not-allowed;
 }
-.nav-top-z-index > div {
+.nav-top-z-index > div, .nav-top-z-index > nav, .logo{
     z-index: 1;
 }
-.logo {
-    z-index: 1;
-}
+

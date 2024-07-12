@@ -104,7 +104,7 @@
     <nav class="menu-mobile">
         <ul class="menu-list">
             <li class="menu-item">
-                <a href="{{ route('home') }}" class="nav-link d-flex flex-column text-center">
+                <a href="{{ route('shop.home') }}" class="nav-link d-flex flex-column text-center">
                     <i class="fa-light fa-house fs-3"></i>
                     <span class="fs-8">Главная</span>
                 </a>

@@ -20,7 +20,7 @@
                                 {{ $expense->getWeight() . ' кг ' . $expense->getVolume() . ' м3'}}
                             </div>
                             <div class="w-56 text-right">
-                                <a href="{{ route('admin.sales.expense.show', $expense) }}" class="text-success">
+                                <a href="{{ route('admin.order.expense.show', $expense) }}" class="text-success">
                                 {{ $expense->htmlNum() . ' - ' . $expense->statusHtml() }}
                                 </a>
                             </div>

@@ -28,6 +28,9 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        $this->mapModulesRoutesAdmin();
+        $this->mapModulesRoutesWeb();
+
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api')
@@ -36,5 +39,66 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+    }
+
+    public function map()
+    {
+
+    }
+
+    /**
+     * Маршруты для админки с аутентификацией
+     * @return void
+     */
+    protected function mapModulesRoutesAdmin()
+    {
+        $modules_folder = app_path('Modules');
+        $modules = $this->getModulesList($modules_folder);
+
+        foreach ($modules as $module) {
+            $routesPath = $modules_folder . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . 'routes_admin.php';
+
+            if (file_exists($routesPath)) {
+                Route::prefix('admin')
+                    ->middleware(['web', 'auth:admin', 'logger'])
+                    ->as('admin.')
+                    ->namespace("\\App\\Modules\\$module\Controllers")
+                    ->group($routesPath);
+            }
+        }
+    }
+
+    /**
+     * Маршруты `web` самостоятельные
+     * @return void
+     */
+    protected function mapModulesRoutesWeb()
+    {
+        $modules_folder = app_path('Modules');
+        $modules = $this->getModulesList($modules_folder);
+
+        foreach ($modules as $module) {
+            $routesPath = $modules_folder . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . 'routes_web.php';
+
+            if (file_exists($routesPath)) {
+                Route::middleware(['web'])
+                    ->namespace("\\App\\Modules\\$module\Controllers")
+                    ->group($routesPath);
+            }
+        }
+    }
+
+    private function getModulesList(string $modules_folder): array
+    {
+        return
+            array_values(
+                array_filter(
+                    scandir($modules_folder),
+                    function ($item) use ($modules_folder) {
+                        return is_dir($modules_folder.DIRECTORY_SEPARATOR.$item) && ! in_array($item, ['.', '..']);
+                    }
+                )
+            );
     }
 }

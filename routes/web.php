@@ -4,20 +4,30 @@
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::class, 'verify'])->name('register.verify');
+Route::any('/api/telegram', [\App\Http\Controllers\Api\TelegramController::class, 'get'])->name('api.telegram');
+
+//Admin
+Route::get('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);//->name('admin.login');
+Route::any('/admin/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('admin.logout');
+
+
 //Shop
 
-Route::get('/sitemap.xml', [App\Http\Controllers\Shop\SitemapXmlController::class, 'index'])->name('sitemap');
-
+//Route::get('/sitemap.xml', [App\Http\Controllers\_\Shop\SitemapXmlController::class, 'index'])->name('sitemap');
+/*
 Route::group(
     [
         'middleware' => ['user_cookie_id'],
     ],
     function () {
-        Route::get('/', [App\Http\Controllers\Shop\HomeController::class, 'index'])->name('home');
+       // Route::get('/', [App\Http\Controllers\_\Shop\HomeController::class, 'index'])->name('home');
     }
 );
-
+*/
 //Shop - функции магазина
+/*
 Route::group(
     [
         'as' => 'shop.',
@@ -26,12 +36,13 @@ Route::group(
     ],
     function () {
 
+        Route::get('/', 'HomeController@index')->name('home');
         //Route::post('/review', 'ReviewController@index')->name('review');
         Route::get('/shop/{old_slug}', 'ProductController@old_slug');
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
         Route::post('/page/map', 'PageController@map_data')->name('page.map');
-        Route::put('/page/email', 'PageController@email')->name('page.email');
+        //Route::put('/page/email', 'PageController@email')->name('page.email');
         Route::group([
             'as' => 'product.',
             'prefix' => 'product',
@@ -105,9 +116,10 @@ Route::group(
 
     }
 );
-
+*/
 
 //Cabinet - функции кабинета клиента
+/*
 Route::group([
     'as' => 'cabinet.',
     'prefix' => 'cabinet',
@@ -159,8 +171,9 @@ Route::group([
         });
     }
 );
-
-Route::group(
+*/
+//Аутентификация
+/*Route::group(
     [
         'namespace' => 'App\Http\Controllers\User',
         'middleware' => ['user_cookie_id'],
@@ -185,17 +198,12 @@ Route::group(
         Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
     }
 );
+*/
 
 
-Route::get('/verify/{token}', [\App\Http\Controllers\Auth\RegisterController::class, 'verify'])->name('register.verify');
 
-//Admin
-Route::get('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);//->name('admin.login');
-Route::any('/admin/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('admin.logout');
 
-Route::post('/file-upload', [\App\Http\Controllers\Admin\StaffController::class, 'test']);
-
+/*
 Route::group(
     [
         'prefix' => 'admin',
@@ -204,7 +212,7 @@ Route::group(
         'middleware' => ['auth:admin', 'logger'],
     ],
     function () {
-        Route::get('/', 'HomeController@index')->name('home');
+//        Route::get('/', 'HomeController@index')->name('home');
 
         //Route::resource('users', 'UsersController');
         Route::get('/users', 'UsersController@index')->name('users.index');
@@ -233,6 +241,8 @@ Route::group(
                 );
             }
         );
+
+
         Route::get('/staff/notification', 'StaffController@notification')->name('staff.notification');
         Route::post('/staff/notification-read/{notification}', 'StaffController@notification_read')->name('staff.notification-read');
 
@@ -247,8 +257,12 @@ Route::group(
 
         Route::resource('staff', 'StaffController'); //CRUD
         Route::resource('worker', 'WorkerController'); //CRUD
+
+
         //**** SHOP
+
         //Product
+
         Route::group(
             [
                 'prefix' => 'product',
@@ -362,7 +376,10 @@ Route::group(
                 Route::post('/toggle/{product}', 'ProductController@toggle')->name('toggle');
             }
         );
+
+
         //Discount
+
         Route::group(
             [
                 'prefix' => 'discount',
@@ -401,6 +418,7 @@ Route::group(
         );
 
         //Delivery
+
         Route::group(
             [
                 'prefix' => 'delivery',
@@ -425,83 +443,87 @@ Route::group(
                 //Действия
             }
         );
+
         //Sales - продажи
 
-        Route::group(
-            [
-                'prefix' => 'sales',
-                'as' => 'sales.',
-                'namespace' => 'Sales',
-            ],
-            function () {
-                Route::get('/cart', 'CartController@index')->name('cart.index');
-                Route::get('/reserve', 'ReserveController@index')->name('reserve.index');
-                Route::get('/wish', 'WishController@index')->name('wish.index');
-
-                Route::resource('order', 'OrderController');
-                Route::resource('payment', 'PaymentController');
-                //Заказы
                 Route::group(
                     [
-                        'prefix' => 'order',
-                        'as' => 'order.',
-                        //'namespace' => '',
+                        'prefix' => 'sales',
+                        'as' => 'sales.',
+                        'namespace' => 'Sales',
                     ],
                     function () {
-                        Route::post('/copy/{order}', 'OrderController@copy')->name('copy');
-                        //Route::delete('/destroy/{order}', 'OrderController@destroy')->name('destroy');
-                        Route::post('/movement/{order}', 'OrderController@movement')->name('movement');
-                        Route::post('/expense-calculate/{order}', 'OrderController@expense_calculate')->name('expense-calculate');
-                        Route::post('/invoice/{order}', 'OrderController@invoice')->name('invoice');
-                        Route::post('/send-invoice/{order}', 'OrderController@send_invoice')->name('send-invoice');
-                        Route::post('/resend-invoice/{order}', 'OrderController@resend_invoice')->name('resend-invoice');
+                       // Route::get('/cart', 'CartController@index')->name('cart.index');
+        //                Route::get('/reserve', 'ReserveController@index')->name('reserve.index');
+                     // Route::get('/wish', 'WishController@index')->name('wish.index');
 
-                        Route::post('/set-manager/{order}', 'OrderController@set_manager')->name('set-manager');
-                        Route::post('/set-reserve/{order}', 'OrderController@set_reserve')->name('set-reserve');
+                        Route::resource('order', 'OrderController');
+                        Route::resource('payment', 'PaymentController');
+                        //Заказы
+                        Route::group(
+                            [
+                                'prefix' => 'order',
+                                'as' => 'order.',
+                                //'namespace' => '',
+                            ],
+                            function () {
+                                Route::post('/copy/{order}', 'OrderController@copy')->name('copy');
+                                //Route::delete('/destroy/{order}', 'OrderController@destroy')->name('destroy');
+                                Route::post('/movement/{order}', 'OrderController@movement')->name('movement');
+                                Route::post('/expense-calculate/{order}', 'OrderController@expense_calculate')->name('expense-calculate');
+                                Route::post('/invoice/{order}', 'OrderController@invoice')->name('invoice');
+                                Route::post('/send-invoice/{order}', 'OrderController@send_invoice')->name('send-invoice');
+                                Route::post('/resend-invoice/{order}', 'OrderController@resend_invoice')->name('resend-invoice');
 
-                        Route::post('/canceled/{order}', 'OrderController@canceled')->name('canceled');
-                        Route::post('/set-awaiting/{order}', 'OrderController@set_awaiting')->name('set-awaiting');
+                                Route::post('/set-manager/{order}', 'OrderController@set_manager')->name('set-manager');
+                                Route::post('/set-reserve/{order}', 'OrderController@set_reserve')->name('set-reserve');
 
-                        Route::post('/search-user', 'OrderController@search_user')->name('search-user');
-                        Route::post('/search', 'OrderController@search')->name('search');
-                        //Route::post('/get-to-order', 'OrderController@get_to_order')->name('get-to-order');
+                                Route::post('/canceled/{order}', 'OrderController@canceled')->name('canceled');
+                                Route::post('/set-awaiting/{order}', 'OrderController@set_awaiting')->name('set-awaiting');
 
-                        Route::get('/log/{order}', 'OrderController@log')->name('log');
-                        Route::post('/take/{order}', 'OrderController@take')->name('take');
-                    }
-                );
-                //Распоряжения
-                Route::group(
-                    [
-                        'prefix' => 'expense',
-                        'as' => 'expense.',
-                    ],
-                    function () {
-                        Route::post('/create', 'ExpenseController@create')->name('create');
-                        Route::post('/issue_shop', 'ExpenseController@issue_shop')->name('issue-shop');
-                        Route::post('/issue_warehouse', 'ExpenseController@issue_warehouse')->name('issue-warehouse');
-                        Route::get('/show/{expense}', 'ExpenseController@show')->name('show');
-                        Route::delete('/destroy/{expense}', 'ExpenseController@destroy')->name('destroy');
-                        Route::post('/assembly/{expense}', 'ExpenseController@assembly')->name('assembly');
-                        Route::post('/trade12/{expense}', 'ExpenseController@trade12')->name('trade12');
-                    }
-                );
-                //Возвраты
-                Route::group(
-                    [
-                        'prefix' => 'refund',
-                        'as' => 'refund.',
-                    ],
-                    function () {
-                        Route::get('/index', 'RefundController@index')->name('index');
-                        Route::get('/show/{refund}', 'RefundController@show')->name('show');
-                        Route::get('/create', 'RefundController@create')->name('create');
-                        Route::post('/store/{order}', 'RefundController@store')->name('store');
-                    }
-                );
+                                Route::post('/search-user', 'OrderController@search_user')->name('search-user');
+                                Route::post('/search', 'OrderController@search')->name('search');
+                                //Route::post('/get-to-order', 'OrderController@get_to_order')->name('get-to-order');
+
+                                Route::get('/log/{order}', 'OrderController@log')->name('log');
+                                Route::post('/take/{order}', 'OrderController@take')->name('take');
+                            }
+                        );
+                        //Распоряжения
+                        Route::group(
+                            [
+                                'prefix' => 'expense',
+                                'as' => 'expense.',
+                            ],
+                            function () {
+                                Route::post('/create', 'ExpenseController@create')->name('create');
+                                Route::post('/issue_shop', 'ExpenseController@issue_shop')->name('issue-shop');
+                                Route::post('/issue_warehouse', 'ExpenseController@issue_warehouse')->name('issue-warehouse');
+                                Route::get('/show/{expense}', 'ExpenseController@show')->name('show');
+                                Route::delete('/destroy/{expense}', 'ExpenseController@destroy')->name('destroy');
+                                Route::post('/assembly/{expense}', 'ExpenseController@assembly')->name('assembly');
+                                Route::post('/trade12/{expense}', 'ExpenseController@trade12')->name('trade12');
+                            }
+                        );
+                        //Возвраты
+                        Route::group(
+                            [
+                                'prefix' => 'refund',
+                                'as' => 'refund.',
+                            ],
+                            function () {
+                                Route::get('/index', 'RefundController@index')->name('index');
+                                Route::get('/show/{refund}', 'RefundController@show')->name('show');
+                                Route::get('/create', 'RefundController@create')->name('create');
+                                Route::post('/store/{order}', 'RefundController@store')->name('store');
+                            }
+                        );
+
             }
+
         );
         //Pages
+
         Route::group(
             [
                 'prefix' => 'page',
@@ -528,6 +550,7 @@ Route::group(
         );
 
         //ACCOUNTING
+
         Route::group(
             [
                 'prefix' => 'accounting',
@@ -638,13 +661,10 @@ Route::group(
             'as' => 'feedback.',
             'namespace' => 'Feedback',
         ], function() {
-
             Route::get('/review', 'ReviewController@index')->name('review.index');
             Route::get('/review/{review}', 'ReviewController@show')->name('review.show');
             Route::post('/review/{review}/published', 'ReviewController@published')->name('review.published');
             Route::post('/review/{review}/blocked', 'ReviewController@blocked')->name('review.blocked');
-
-
         });
 
         //AJAX Product
@@ -652,10 +672,10 @@ Route::group(
 
 
 
-        Route::resource('product', 'Product\ProductController'); //CRUD
+        //Route::resource('product', 'Product\ProductController'); //CRUD
 
         //Настройки
-        Route::group(
+       Route::group(
             [
                 'prefix' => 'settings',
                 'as' => 'settings.',
@@ -668,7 +688,7 @@ Route::group(
         );
     }
 );
-
+*/
 //API
 
-Route::any('/api/telegram', [\App\Http\Controllers\Api\TelegramController::class, 'get'])->name('api.telegram');
+

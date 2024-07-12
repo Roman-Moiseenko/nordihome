@@ -24,7 +24,7 @@ class Fullname extends Component
         $this->surname = $user->fullname->surname;
         $this->firstname = $user->fullname->firstname;
         $this->secondname = $user->fullname->secondname;
-        $this->route = route('admin.users.show', $user);
+        $this->route = route('admin.user.show', $user);
     }
 
     public function open_change()

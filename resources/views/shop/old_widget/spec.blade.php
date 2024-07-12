@@ -13,6 +13,6 @@
             </div>
         </div>
         <div class="col-12 col-lg-6"
-             style="background: url({{ route('home') . '/images/pages/home/novosely.jpg' }}) center center / cover no-repeat;"></div>
+             style="background: url({{ route('shop.home') . '/images/pages/home/novosely.jpg' }}) center center / cover no-repeat;"></div>
     </div>
 </div>

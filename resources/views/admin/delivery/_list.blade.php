@@ -1,7 +1,7 @@
 <x-base.table.tr>
     <x-base.table.td class="w-52">
 
-        <a href="{{ route('admin.sales.expense.show', $expense) }}" class="font-medium text-success"> {{ $expense->htmlNum() . ' от ' . $expense->htmlDate() }}  </a>
+        <a href="{{ route('admin.order.expense.show', $expense) }}" class="font-medium text-success"> {{ $expense->htmlNum() . ' от ' . $expense->htmlDate() }}  </a>
 
     </x-base.table.td>
     <x-base.table.td class="text-center">{{ $expense->address->address }}</x-base.table.td>

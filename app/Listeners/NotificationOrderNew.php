@@ -35,7 +35,7 @@ class NotificationOrderNew
             $staff->notify(new StaffMessage(
                 'Новый заказ',
                 $event->order->getType(),
-                route('admin.sales.order.show', $event->order),
+                route('admin.order.show', $event->order),
                 'file-plus-2'
             ));
         }

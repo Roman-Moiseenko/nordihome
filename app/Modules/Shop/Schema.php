@@ -17,7 +17,7 @@ class Schema
 
     public function __construct()
     {
-        $this->url = route('home');
+        $this->url = route('shop.home');
     }
 
     public function ProductPage(Product $product)

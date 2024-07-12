@@ -32,7 +32,7 @@ class NotificationOrderPrepaid
                 $staff->notify(new StaffMessage(
                     'Внесена предоплата по заказу',
                     'Заказ ' . $event->order->htmlNumDate(),
-                    route('admin.sales.order.show', $event->order),
+                    route('admin.order.show', $event->order),
                     'credit-card'
                 ));
             }

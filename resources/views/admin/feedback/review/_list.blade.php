@@ -1,6 +1,6 @@
 <x-base.table.tr>
     <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.product.show', $review->product) }}">{{ $review->product->name }}</a></x-base.table.td>
-    <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.users.show', $review->user) }}">{{ $review->user->fullname->getFullName() }}</a></x-base.table.td>
+    <x-base.table.td class="w-40 font-medium"><a href="{{ route('admin.user.show', $review->user) }}">{{ $review->user->fullname->getFullName() }}</a></x-base.table.td>
     <x-base.table.td class="text-center">{{ $review->rating }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $review->htmlDate() }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $review->statusHtml() }}</x-base.table.td>
