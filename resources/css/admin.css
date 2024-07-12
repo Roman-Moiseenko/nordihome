@@ -252,3 +252,87 @@ select:disabled + div.tom-select > div.ts-control {
     z-index: 1;
 }
 
+.login{
+    position: relative;
+    overflow: hidden;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+.dark .login{
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-darkmode-600) / var(--tw-bg-opacity));
+}
+@media (max-width: calc(1280px - 1px)) {
+    .login{
+        --tw-bg-opacity: 1;
+        background-color: rgb(var(--color-primary) / var(--tw-bg-opacity));
+    }
+    .dark .login{
+        --tw-bg-opacity: 1;
+        background-color: rgb(var(--color-darkmode-800) / var(--tw-bg-opacity));
+    }
+}
+.login:before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    margin-top: -28%;
+    margin-bottom: -15%;
+    margin-left: -13%;
+    width: 57%;
+    --tw-rotate: -4deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    border-radius: 100%;
+    background-color: rgb(var(--color-primary) / 0.2);
+}
+.dark .login:before{
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-darkmode-400) / var(--tw-bg-opacity));
+}
+@media (max-width: calc(1280px - 1px)) {
+    .login:before{
+        display: none;
+    }
+}
+.login:after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    margin-top: -20%;
+    margin-bottom: -12%;
+    margin-left: -13%;
+    width: 57%;
+    --tw-rotate: -4deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    border-radius: 100%;
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-primary) / var(--tw-bg-opacity));
+}
+.dark .login:after{
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-darkmode-700) / var(--tw-bg-opacity));
+}
+@media (max-width: calc(1280px - 1px)) {
+    .login:after{
+        display: none;
+    }
+}
+.login .login__input {
+    min-width: 350px;
+}
+@media (max-width: calc(1280px - 1px)) {
+    .login .login__input{
+        min-width: 100%;
+    }
+}
+.login .image-block {
+    z-index: 1;
+}

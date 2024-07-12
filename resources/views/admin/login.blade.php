@@ -11,13 +11,13 @@ login
     <div class="container sm:px-10">
         <div class="block xl:grid grid-cols-2 gap-4">
             <!-- BEGIN: Login Info -->
-            <div class="hidden xl:flex flex-col min-h-screen">
+            <div class="image-block hidden xl:flex flex-col min-h-screen">
                 <a href="" class=" flex items-center pt-5">
-                    <img alt="Nordi Home" class="w-6" src="{{ Vite::asset('resources/images/logo.svg') }}">
+                    <img alt="Nordi Home" class="w-6" src="{{ Vite::asset('resources/images/logo.png') }}">
                     <span class="text-white text-lg ml-3"> NORDI HOME </span>
                 </a>
                 <div class="my-auto">
-                    <img alt="Midone - HTML Admin Template" class="w-1/2 -mt-16"
+                    <img alt="WebSite 39 CRM-Shop-Online" class="w-1/2 -mt-16"
                          src="{{ Vite::asset('resources/images/illustration.svg') }}">
                     <div class="text-white font-medium text-4xl leading-tight mt-10">
                         Система управления бизнесом
