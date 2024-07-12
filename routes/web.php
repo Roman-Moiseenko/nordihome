@@ -12,7 +12,6 @@ Route::get('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, '
 Route::post('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);//->name('admin.login');
 Route::any('/admin/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('admin.logout');
 
-
 //Shop
 
 //Route::get('/sitemap.xml', [App\Http\Controllers\_\Shop\SitemapXmlController::class, 'index'])->name('sitemap');
