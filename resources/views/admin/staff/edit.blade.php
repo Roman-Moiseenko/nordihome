@@ -23,9 +23,11 @@
                     <div class="p-5">
                         {{ \App\Forms\Input::create('name', ['placeholder' => 'Логин', 'value' => $staff->name])->group(['icon' => 'user', 'size' => 16])
                             ->validate($message ?? '')->show() }}
-                        {{ \App\Forms\Input::create('email', ['placeholder' => 'Email', 'value' => $staff->email, 'class' => 'mt-3'])->group('@')
+                        {{ \App\Forms\Input::create('email', ['placeholder' => 'Email', 'value' => $staff->email, 'class' => 'mt-3', 'class_input' => 'mask-email'])->group('@')
                             ->validate($message ?? '')->show() }}
-                        {{ \App\Forms\Input::create('phone', ['placeholder' => 'Телефон', 'value' => $staff->phone, 'class' => 'mt-3'])->group(['icon' => 'phone', 'size' => 16])
+                        {{ \App\Forms\Input::create('phone',
+                            ['placeholder' => 'Телефон', 'value' => $staff->phone, 'class' => 'mt-3', 'class_input' => 'mask-phone'])
+                            ->group(['icon' => 'phone', 'size' => 16])
                             ->validate($message ?? '')->show() }}
                         {{ \App\Forms\Input::create('chat_id', ['placeholder' => 'Чат ID телеграм', 'value' => $staff->telegram_user_id, 'class' => 'mt-3'])->group(['icon' => 'send', 'size' => 16])
                             ->validate($message ?? '')->show() }}

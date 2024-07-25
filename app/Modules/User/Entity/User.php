@@ -26,7 +26,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * @property string $verify_token
  * @property int $client
- * @property bool $legal
+ * @property bool $legal //Юридическое лицо
  * @property string $document_name
  * @property Wish[] $wishes
  * @property int $delivery

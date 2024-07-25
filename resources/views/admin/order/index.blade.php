@@ -156,11 +156,11 @@
                     <x-base.form-input id="input-id" type="hidden" name="user_id"/>
                     <div class="col-span-12">
                         <x-base.form-label for="input-phone">Телефон</x-base.form-label>
-                        <x-base.form-input id="input-phone" class="input-search-user" type="text" name="phone" placeholder="89000000000" required />
+                        <x-base.form-input id="input-phone" class="input-search-user mask-phone" type="text" name="phone" placeholder="+7 (___) ___-__-__" required />
                     </div>
                     <div class="col-span-12">
                         <x-base.form-label for="input-email">Почта</x-base.form-label>
-                        <x-base.form-input id="input-email" class="input-search-user" type="text" name="email" placeholder="example@gmail.com" required />
+                        <x-base.form-input id="input-email" class="input-search-user mask-email" type="text" name="email" placeholder="example@gmail.com" required />
                     </div>
                     <div class="col-span-12">
                         <x-base.form-label for="input-name">Имя</x-base.form-label>

@@ -10,7 +10,7 @@
     @if(!empty($group_text) && $pos_left)
         <div class="input-group-text">{{ $group_text }}</div>
     @endif
-    <input id="{{ $id }}" type="{{ $type }}" name="{{ $name }}" class="form-control "
+    <input id="{{ $id }}" type="{{ $type }}" name="{{ $name }}" class="form-control {{ $class_input }}"
            placeholder="{{ $placeholder }}" @if(!empty($group)) aria-describedby="input-group-{{ $name }}" @endif
            value="{{ old($name) ?? $value }}" {{ $disabled }} @if($required) required @endif
            @if(!is_null($min)) min="{{ $min }}" @endif @if(!is_null($max)) min="{{ $max }}" @endif
