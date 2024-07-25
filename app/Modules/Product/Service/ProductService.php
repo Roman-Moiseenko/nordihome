@@ -3,17 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
-use App\Entity\Photo;
-use App\Entity\Video;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Options;
-use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Product\Entity\Bonus;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\TagRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
 
 
@@ -345,7 +341,7 @@ class ProductService
 
     public function downPhoto(Request $request, Product $product)
     {
-        /** @var Photo[] $photos */
+        /** @var \App\Modules\Base\Entity\Photo[] $photos */
         $photos = [];
         foreach ($product->photos as $i => $photo) {
             $photos[] = $photo;

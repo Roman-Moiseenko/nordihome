@@ -4,6 +4,7 @@ namespace App\Modules\User\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\RegisterService;
 use App\Providers\RouteServiceProvider;
@@ -29,7 +30,7 @@ class RegisterController extends Controller
 
     public function verify($token)
     {
-        if (!$user = User::where('verify_token', $token)->first()) {
+        if (!$user = Admin::where('verify_token', $token)->first()) {
             flash('Ошибка верификации', 'danger');
             return redirect()->route('login');
         }

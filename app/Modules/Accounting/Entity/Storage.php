@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Entity\Photo;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -22,7 +22,7 @@ use JetBrains\PhpStorm\Pure;
  * @property bool $point_of_sale
  * @property bool $point_of_delivery
  * @property bool $default
- * @property Photo $photo
+ * @property \App\Modules\Base\Entity\Photo $photo
  * @property Organization $organization
  * @property StorageItem[] $items
  * @property StorageDepartureItem[] $departureItems
@@ -176,7 +176,7 @@ class Storage extends Model
 
     public function photo()
     {
-        return $this->morphOne(Photo::class, 'imageable')->withDefault();
+        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->withDefault();
     }
 
     public function add(Product $product, int $quantity): StorageItem

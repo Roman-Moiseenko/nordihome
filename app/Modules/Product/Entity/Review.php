@@ -3,8 +3,8 @@
 
 namespace App\Modules\Product\Entity;
 
-use App\Entity\Photo;
-use App\Entity\Video;
+use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Entity\Video;
 use App\Modules\Discount\Entity\DiscountReview;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Photo $photo
- * @property Video $video
+ * @property \App\Modules\Base\Entity\Video $video
  * @property DiscountReview $discount
  *
  * @property User $user
@@ -121,7 +121,7 @@ class Review extends Model
 
     public function photo()
     {
-        return $this->morphOne(Photo::class, 'imageable');//->orderBy('sort');;
+        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable');//->orderBy('sort');;
     }
 
     public function video()

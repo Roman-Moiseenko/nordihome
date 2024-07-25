@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Entity\Photo;
+use App\Modules\Base\Entity\Photo;
 use Illuminate\Database\Eloquent\Model;
-use function Laravel\Prompts\select;
 
 /**
  * @property int $id

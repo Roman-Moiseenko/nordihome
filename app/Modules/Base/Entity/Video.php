@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Modules\Base\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+
 /**
  * @property int $id
  * @property int $object_id

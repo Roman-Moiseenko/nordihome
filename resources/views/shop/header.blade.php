@@ -34,6 +34,7 @@
             </div>
         </div>
     </div>
+
     <nav class="menu-bottom navbar navbar-expand-md navbar-light bg-white">
         <div class="menu-container container-xl">
             <div class="menu-bottom-catalog">

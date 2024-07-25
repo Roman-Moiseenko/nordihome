@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Entity\Photo;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\DataWidget;
 use App\Modules\Page\Entity\DataWidgetInterface;
@@ -36,7 +36,7 @@ class Group extends Model implements DataWidgetInterface
 
     public function photo()
     {
-        return $this->morphOne(Photo::class, 'imageable')->withDefault();
+        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->withDefault();
     }
 
     #[Deprecated]

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
-use App\Entity\Photo;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;

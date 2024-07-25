@@ -13,7 +13,7 @@
             <nav class="side-nav z-50 -mt-4 hidden w-[105px] overflow-x-hidden px-5 pb-16 pt-32 md:block xl:w-[260px]">
                 <ul>
                     @foreach ($sideMenu as $menuKey => $menu)
-                        @if ($menu == 'divider')
+                        @if (strpos($menuKey, 'divider') != false)
                             <li class="side-nav__divider my-6"></li>
                         @else
                             @canany($menu['can'] ?? '')

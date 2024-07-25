@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Modules\Admin\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -8,6 +8,9 @@ use App\Modules\User\Entity\User;
 use App\Modules\User\Service\RegisterService;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
+
+use function flash;
+use function redirect;
 
 class RegisterController extends Controller
 {

@@ -30,7 +30,7 @@ class Video extends Component
     {
         if (empty($this->url)) throw new \DomainException('Не указана ссылка на видео');
         $this->product->videos()->save(
-            \App\Entity\Video::register($this->url, $this->caption, $this->text)
+            \App\Modules\Base\Entity\Video::register($this->url, $this->caption, $this->text)
         );
 
         $this->url = '';

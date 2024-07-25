@@ -264,8 +264,6 @@ class User extends Authenticatable
     public function StorageDefault():? int
     {
         return $this->storage;
-        //if (is_null($this->storage))
-        //throw new \DomainException('Назначить поле хранилище');
     }
 
     public function isStorage(): bool

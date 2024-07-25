@@ -80,8 +80,6 @@ class AdminMenu
                         'route_name' => 'admin.order.reserve.index',
                         'can' => 'order',
                     ],
-
-
                 ],
             ],
             'delivery' => [
@@ -316,7 +314,7 @@ class AdminMenu
                 ],
             ],
             'divider',
-            'frontend' => [
+            'page' => [
                 'icon' => 'monitor',
                 'title' => 'Фронтенд',
                 'can' => 'options',
@@ -371,6 +369,7 @@ class AdminMenu
                     ],
                 ],
             ],
+
             'analytics' => [
                 'icon' => 'scroll-text',
                 'title' => 'Логгеры',

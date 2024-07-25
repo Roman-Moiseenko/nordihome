@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Entity\Photo;
-use App\Entity\Video;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Base\Casts\DimensionsCast;
 use App\Modules\Base\Entity\Dimensions;
+use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Entity\Video;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
@@ -55,9 +55,9 @@ use JetBrains\PhpStorm\Pure;
  * @property Category $category
  * @property Category[] $categories
  * @property Attribute[] $prod_attributes
- * @property Photo $photo
- * @property Photo $photo_next
- * @property Photo[] $photos
+ * @property \App\Modules\Base\Entity\Photo $photo
+ * @property \App\Modules\Base\Entity\Photo $photo_next
+ * @property \App\Modules\Base\Entity\Photo[] $photos
  * @property Video[] $videos
  *
  * @property ProductPriceRetail[] $prices
@@ -720,7 +720,7 @@ class Product extends Model
 
     public function photos()
     {
-        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort')->orderBy('id');//->where('sort', '>',0);
+        return $this->morphMany(\App\Modules\Base\Entity\Photo::class, 'imageable')->orderBy('sort')->orderBy('id');//->where('sort', '>',0);
     }
 
     public function photo_next()

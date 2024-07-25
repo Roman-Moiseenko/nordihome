@@ -45,6 +45,7 @@
 @guest
     @include('shop.pop-up.login')
 @endguest
+
 @include('shop.pop-up.buy-click')
 @include('shop.pop-up.notification')
 

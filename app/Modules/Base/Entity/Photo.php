@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Modules\Base\Entity;
 
 use App\Jobs\ClearTempFile;
 use App\Modules\Admin\Entity\Options;
@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
+use function class_basename;
+use function now;
+use function public_path;
 
 /**
  * @property int $id

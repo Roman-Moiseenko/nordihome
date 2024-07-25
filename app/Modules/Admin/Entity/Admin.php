@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Entity;
 
-use App\Entity\Photo;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Entity\FullName;
+use App\Modules\Base\Entity\Photo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,9 +24,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $active //Не заблокирован
  * @property string $post //Должность
  * @property int $telegram_user_id
- * @property \App\Modules\Base\Entity\FullName $fullname
+ * @property FullName $fullname
  * @property Responsibility[] $responsibilities
- * @property Photo $photo
+ * @property \App\Modules\Base\Entity\Photo $photo
  */
 class Admin extends Authenticatable
 {
@@ -87,7 +87,7 @@ class Admin extends Authenticatable
             'password' => Hash::make($password),
             'role' => self::ROLE_STAFF,
             'active' => true,
-            'fullname' => new \App\Modules\Base\Entity\FullName(),
+            'fullname' => new FullName(),
         ]);
     }
 
@@ -145,7 +145,7 @@ class Admin extends Authenticatable
         $this->save();
     }
 
-    public function setFullName(\App\Modules\Base\Entity\FullName $fullname): void
+    public function setFullName(FullName $fullname): void
     {
         $this->fullname = $fullname;
     }
@@ -162,7 +162,7 @@ class Admin extends Authenticatable
 
     public function photo()
     {
-        return $this->morphOne(Photo::class, 'imageable')->withDefault();
+        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->withDefault();
     }
 
 

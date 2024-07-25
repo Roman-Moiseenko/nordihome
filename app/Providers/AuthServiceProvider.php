@@ -45,6 +45,10 @@ class AuthServiceProvider extends ServiceProvider
         * MANAGER_FEEDBACK = feedback
         */
 
+        Gate::before(function (Admin $user) {
+            return $user->isAdmin() || $user->isChief();
+        });
+
         Gate::define('admin-panel', function (Admin $user) {
             return $user->isAdmin() || $user->isChief();
         });

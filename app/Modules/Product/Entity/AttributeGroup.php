@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Entity\Photo;
-use App\Entity\Picture;
+use App\Modules\Base\Entity\Photo;
 use Illuminate\Database\Eloquent\Model;
 
 /**

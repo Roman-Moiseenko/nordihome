@@ -10,9 +10,9 @@ class VideoItem extends Component
     public string $url;
     public string $caption;
     public string $text;
-    public \App\Entity\Video $video;
+    public \App\Modules\Base\Entity\Video $video;
 
-    public function mount(\App\Entity\Video $video)
+    public function mount(\App\Modules\Base\Entity\Video $video)
     {
         $this->video = $video;
         $this->refresh_fields();

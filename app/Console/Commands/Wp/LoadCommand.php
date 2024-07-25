@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Wp;
 
-use App\Entity\Photo;
 use App\Jobs\LoadingImageProduct;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
@@ -11,16 +10,14 @@ use App\Modules\Accounting\Service\PricingService;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
-
-
 use Illuminate\Console\ConfirmableTrait;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use function public_path;
+
 
 class LoadCommand extends Command
 {

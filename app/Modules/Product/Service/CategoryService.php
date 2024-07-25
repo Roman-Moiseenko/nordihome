@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
-use App\Entity\Photo;
 use App\Modules\Product\Entity\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;

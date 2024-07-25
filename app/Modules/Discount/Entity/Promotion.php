@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Entity;
 
-use App\Entity\Observer;
-use App\Entity\Photo;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Page\Entity\DataWidget;
 use App\Modules\Page\Entity\DataWidgetInterface;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
-use App\Modules\Product\IWidgetHome;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -23,7 +21,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property Carbon $start_at
  * @property Carbon $finish_at
  * @property Photo $image
- * @property Photo $icon
+ * @property \App\Modules\Base\Entity\Photo $icon
  * @property bool $menu
  * @property bool $show_title //Показывать заголовок акции на карточках
  * @property string $title
@@ -213,7 +211,7 @@ class Promotion extends Model implements DataWidgetInterface
 
     public function icon()
     {
-        return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
+        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
     }
 
     public function getImage(): string

@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
-use App\Entity\Photo;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Attribute;
-use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\AttributeVariant;
-use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\AttributeGroupRepository;
+use App\Modules\Product\Repository\CategoryRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class AttributeService
 {

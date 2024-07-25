@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Entity\Photo;
+use App\Modules\Base\Entity\Photo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
  * @property Attribute $attribute
  * @property string $name
  * @property string $slug
- * @property Photo $image
+ * @property \App\Modules\Base\Entity\Photo $image
  */
 class AttributeVariant extends Model
 {
@@ -37,7 +37,7 @@ class AttributeVariant extends Model
 
     public function image()
     {
-        return $this->morphOne(Photo::class, 'imageable')->withDefault();
+        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->withDefault();
     }
 
     public function getImage(): string

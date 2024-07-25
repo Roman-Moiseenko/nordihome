@@ -39,6 +39,8 @@ class Handler extends ExceptionHandler
 
         return redirect()->guest(route('login'));
     }
+
+
     public function render($request, Throwable $e)
     {
 

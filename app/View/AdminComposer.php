@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\View;
 
-use App\Menu\AdminMenu;
+use App\Modules\Base\Helpers\AdminMenu;
 use App\Menu\AdminProfileMenu;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Shop\MenuHelper;

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Service;
 
-use App\Entity\Photo;
 use App\Modules\Accounting\Entity\MovementItemInterface;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;

@@ -32,7 +32,7 @@
         <ul class="py-2">
             <!-- BEGIN: First Child -->
             @foreach ($sideMenu as $menuKey => $menu)
-                @if ($menu == 'divider')
+                @if (strpos($menuKey, 'divider') != false)
                     <li class="menu__divider my-6"></li>
                 @else
                     <li>

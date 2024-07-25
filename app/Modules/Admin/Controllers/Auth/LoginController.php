@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Modules\Admin\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Admin;
@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
+
+use function back;
+use function flash;
+use function redirect;
+use function trans;
 
 class LoginController extends Controller
 {

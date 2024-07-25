@@ -2,10 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Entity\Photo;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
