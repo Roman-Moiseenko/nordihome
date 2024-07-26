@@ -11,7 +11,8 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" name="email" placeholder="Электронная почта" required autofocus="autofocus">
+                            <input type="email" class="form-control" name="email" placeholder="Электронная почта"
+                                   required autofocus="autofocus" autocomplete="off">
                             <label for="email">Электронная почта</label>
                         </div>
                         <div class="form-floating input-group ">
@@ -22,7 +23,8 @@
                         </div>
                         <div id="password-error" class="fs-7 text-danger" style="display: none">Неверный пароль</div>
                         <div class="form-floating my-3">
-                            <input type="text" class="form-control" name="verify_token" id="verify_token" placeholder="Код верификации" autocomplete="on">
+                            <input type="text" class="form-control" name="verify_token" id="verify_token"
+                                   placeholder="Код верификации" autocomplete="on" autocomplete="off">
                             <label for="verify_token">Код подтверждения (с почты)</label>
                             <span id="token-error" class="fs-7 text-danger" style="display: none">Неверный код подтверждения</span>
                         </div>

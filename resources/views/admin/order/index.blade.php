@@ -75,12 +75,11 @@
                         <form action="" METHOD="GET">
                             <div class="p-2">
                                 <input type="hidden" name="search" value="1" />
-                                <input class="form-control" name="user" placeholder="Клиент,Телефон,ИНН,Email" value="{{ $filters['user'] }}">
-
+                                <input class="form-control" name="user" placeholder="Клиент,Телефон,ИНН,Email"
+                                       value="{{ $filters['user'] }}" autocomplete="off">
                                 <x-base.tom-select class="w-full bg-white mt-1" name="condition"
                                                    data-placeholder="Состояние заказа"
                                 >
-
                                     <option value="" disabled selected>Состояние заказа</option>
                                     @foreach(\App\Modules\Order\Entity\Order\OrderStatus::STATUSES as $key => $name)
                                         <option value="{{ $key }}"
@@ -99,8 +98,8 @@
                                         </option>
                                     @endforeach
                                 </x-base.tom-select>
-                                <input class="form-control mt-1" name="comment" placeholder="Комментарий" value="{{ $filters['comment'] }}">
-
+                                <input class="form-control mt-1" name="comment" placeholder="Комментарий"
+                                       value="{{ $filters['comment'] }}" autocomplete="off">
                                 <div class="flex items-center mt-3">
                                     <x-base.button id="clear-filter" class="w-32 ml-auto"
                                                    variant="secondary" type="button">

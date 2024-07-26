@@ -1,7 +1,7 @@
 <div>
-    <input id="input-search-component" type="text" class="form-control w-{{ $width }}" placeholder="Введите артикул или ссылку"/>
+    <input id="input-search-component" type="text" class="form-control w-{{ $width }}" placeholder="Введите артикул или ссылку" autocomplete="off"/>
     @if($quantity)
-        <input id="input-quantity-component" class="form-control w-20 ml-2" type="number" value="1" min="1">
+        <input id="input-quantity-component" class="form-control w-20 ml-2" type="number" value="1" min="1" autocomplete="off">
     @endif
     <button id="button-send-component" class="btn btn-primary ml-2" type="button" data-route="{{ $route }}"
             data-event="{{ $event }}">{{ $caption }}

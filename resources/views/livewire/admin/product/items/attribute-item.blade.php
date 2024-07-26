@@ -33,7 +33,7 @@
                         <label class="form-check-label" for="checkbox_{{ $attribute->id }}">{{ $attribute->name }}</label>
                     </div>
                 @else
-                    <input type="text" class="form-control" placeholder="Значение"
+                    <input type="text" class="form-control" placeholder="Значение" autocomplete="off"
                            wire:model="_value" wire:change="save" wire:loading.attr="disabled">
                 @endif
             </div>

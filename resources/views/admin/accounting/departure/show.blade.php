@@ -32,12 +32,13 @@
             <div class="w-1/4">{{ $item->product->name }}</div>
             <div class="w-40 input-group">
                 <input id="quantity-{{ $item->id }}" type="number" class="form-control text-right departure-input-listen"
-                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0" {{ $departure->isCompleted() ? 'readonly' : '' }}>
+                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0" {{ $departure->isCompleted() ? 'readonly' : '' }}
+                       autocomplete="off">
                 <div id="input-quantity" class="input-group-text">шт.</div>
             </div>
             <div class="w-40 input-group">
                 <input id="cost-{{ $item->id }}" type="number" class="form-control text-right departure-input-listen"
-                       value="{{ $item->cost }}" aria-describedby="input-quantity" min="0" readonly>
+                       value="{{ $item->cost }}" aria-describedby="input-quantity" min="0" readonly autocomplete="off">
                 <div id="input-quantity" class="input-group-text">₽</div>
             </div>
             @if(!$departure->isCompleted())
@@ -59,12 +60,12 @@
 
         <div class="w-40 input-group">
             <input id="quantity-amount" type="number" class="form-control text-right departure-input-listen"
-                   value="{{ $info['quantity'] }}" aria-describedby="input-quantity" min="0" readonly>
+                   value="{{ $info['quantity'] }}" aria-describedby="input-quantity" min="0" readonly autocomplete="off">
             <div id="input-quantity" class="input-group-text">шт.</div>
         </div>
         <div class="w-40 input-group">
             <input id="cost-amount" type="number" class="form-control text-right departure-input-listen"
-                   value="{{ $info['cost'] }}" aria-describedby="input-quantity" min="0" readonly>
+                   value="{{ $info['cost'] }}" aria-describedby="input-quantity" min="0" readonly autocomplete="off">
             <div id="input-quantity" class="input-group-text">₽</div>
         </div>
     </div>

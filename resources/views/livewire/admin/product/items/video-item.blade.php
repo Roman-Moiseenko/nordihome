@@ -9,11 +9,11 @@
             </svg>
         </button>
         <div class="input-form">
-            <input type="text" class="form-control" placeholder="Ссылка на видео"
+            <input type="text" class="form-control" placeholder="Ссылка на видео" autocomplete="off"
                    wire:model="url" wire:change="save" wire:loading.attr="disabled">
         </div>
         <div class="input-form mt-3 ">
-            <input type="text" class="form-control" placeholder="Заголовок"
+            <input type="text" class="form-control" placeholder="Заголовок" autocomplete="off"
                    wire:model="caption" wire:change="save" wire:loading.attr="disabled">
         </div>
         <textarea class="form-control sm:mr-2 mt-3" rows="2"

@@ -11,7 +11,7 @@
         <span class="text-right font-medium ml-auto mr-3 text-danger"><s>{{ $product->getLastPrice() }}</s></span>
         <input class="promotion-product form-control form-input w-40 ml-3" type="number" placeholder="Новая цена"
                data-route="{{ route('admin.discount.promotion.set-product', [$promotion, $product]) }}"
-               value="{{ $product->pivot->price }}"> ₽
+               value="{{ $product->pivot->price }}" autocomplete="off"> ₽
 
     </x-base.table.td>
     <x-base.table.td class="table-report__action w-56">

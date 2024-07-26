@@ -20,7 +20,8 @@
             <input type="hidden" name="inn" id="input-inn-hidden">
         </div>
         <div class="input-group" id="d---0" {!! $user->payment->invoice() == '' ? '' : ' style="display: none"' !!}>
-            <input type="text" class="form-control" id="input-inn" aria-describedby="emailHelp" placeholder="Введите ИНН">
+            <input type="text" class="form-control" id="input-inn" aria-describedby="emailHelp"
+                   placeholder="Введите ИНН" autocomplete="off">
             <button class="btn btn-outline-secondary input-to-hidden" type="button" from="input-inn" to="input-inn-hidden">Сохранить</button>
         </div>
     </div>

@@ -63,7 +63,7 @@
                     <div class="w-20 px-1 text-center">
                         <input id="quantity-{{ $product->id }}" type="number" class="form-control text-center update-data-ajax"
                                value="{{ $product->quantity }}" aria-describedby="input-quantity"
-                               min="{{ $supply->getQuantityStack($product->product) }}"
+                               min="{{ $supply->getQuantityStack($product->product) }}" autocomplete="off"
                                data-route="{{ route('admin.accounting.supply.set-product', $product) }}" @if(!$supply->isCreated()) disabled @endif
                         >
                     </div>

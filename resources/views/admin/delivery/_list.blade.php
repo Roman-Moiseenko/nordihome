@@ -65,7 +65,7 @@
                                 @csrf
                                 <div class="p-2">
 
-                                    <input class="form-control" name="track" placeholder="Трек-номер">
+                                    <input class="form-control" name="track" placeholder="Трек-номер" autocomplete="off">
 
                                     <div class="flex items-center mt-3">
                                         <x-base.button id="close-add-group" class="w-32 ml-auto"

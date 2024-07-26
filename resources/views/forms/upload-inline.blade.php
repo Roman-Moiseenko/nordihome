@@ -16,8 +16,8 @@
         </div>
         @endif
         <button type="button" class="btn btn-primary w-full">{{ empty($src) ? 'Загрузить фото' : 'Заменить фото' }}</button>
-        <input id="{{$id_prefix}}-upload" name="{{ $name }}" type="file" class="w-full h-full top-0 left-0 absolute opacity-0">
-        <input id="{{$id_prefix}}-clear" name="{{$id_prefix}}-clear" type="hidden">
+        <input id="{{$id_prefix}}-upload" name="{{ $name }}" type="file" class="w-full h-full top-0 left-0 absolute opacity-0" autocomplete="off">
+        <input id="{{$id_prefix}}-clear" name="{{$id_prefix}}-clear" type="hidden" autocomplete="off">
     </div>
 </div>
 <script type="text/javascript">

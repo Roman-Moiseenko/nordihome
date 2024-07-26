@@ -21,7 +21,7 @@
                     @csrf
                 </form>
                 <button class="decrease-button btn btn-outline-dark"  data-code="{{ $item->product->id }}"><i class="fa-light fa-minus"></i></button>
-                <input id="count-{{ $item->product->id }}" type="text" class="form-control parser-set-input"
+                <input id="count-{{ $item->product->id }}" type="text" class="form-control parser-set-input" autocomplete="off"
                        data-product="{{ $item->product->id }}" value="{{ $item->quantity }}"/>
                 <button class="increase-button btn btn-outline-dark" data-code="{{ $item->product->id }}"><i class="fa-light fa-plus"></i></button>
             </div>

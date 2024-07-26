@@ -15,7 +15,7 @@
 
                 <div class="input-form ml-0 w-full lg:ml-4 lg:w-40 ">
                     <input id="input-dimensions-weight" type="text" class="form-control " placeholder="Вес"
-                           wire:model="weight" wire:change="save" wire:loading.attr="disabled">
+                           wire:model="weight" wire:change="save" wire:loading.attr="disabled" autocomplete="off">
                     <div class="form-help text-right">Вес</div>
                 </div>
             </div>
@@ -32,20 +32,20 @@
                 <div class="input-form ml-0 w-full lg:ml-4 lg:w-40 ">
                     <input id="input-dimensions-height" type="text" class="form-control"
                            placeholder="{{ $product->dimensions->nameZ() }}"
-                           wire:model="height" wire:change="save" wire:loading.attr="disabled">
+                           wire:model="height" wire:change="save" wire:loading.attr="disabled" autocomplete="off">
                     <div class="form-help text-right">{{ $product->dimensions->nameZ() }} (см)</div>
                 </div>
 
                 <div class="input-form ml-0 w-full lg:ml-4 lg:w-40 ">
                     <input id="input-dimensions-width" type="text" class="form-control"
-                           placeholder="{{ $product->dimensions->nameX() }}"
+                           placeholder="{{ $product->dimensions->nameX() }}" autocomplete="off"
                            wire:model="width" wire:change="save" wire:loading.attr="disabled">
                     <div class="form-help text-right">{{ $product->dimensions->nameX() }} (см)</div>
                 </div>
 
                 @if($product->dimensions->notDiameter())
                     <div class="input-form ml-0 w-full lg:ml-4 lg:w-40 ">
-                        <input id="input-dimensions-depth" type="text" class="form-control"
+                        <input id="input-dimensions-depth" type="text" class="form-control" autocomplete="off"
                                placeholder="{{ $product->dimensions->nameY() }}"
                                wire:model="depth" wire:change="save" wire:loading.attr="disabled">
                         <div class="form-help text-right">{{ $product->dimensions->nameY() }} (см)</div>

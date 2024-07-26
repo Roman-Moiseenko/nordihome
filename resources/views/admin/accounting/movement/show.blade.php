@@ -79,7 +79,7 @@
 
             <div class="w-40 input-group">
                 <input id="quantity-{{ $item->id }}" type="number" class="form-control text-right movement-input-listen"
-                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0"
+                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0"  autocomplete="off"
                        @if(!empty($movement->order()))
                            max="{{ $item->quantity }}"
                        @endif

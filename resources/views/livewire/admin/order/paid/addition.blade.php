@@ -6,7 +6,7 @@
             <input id="addition-amount-{{ $addition->id }}" type="number" class="form-control text-right update-data-ajax"
                    value="{{ $addition->getRemains() }}" aria-describedby="addition-amount"
                    min="0" max="{{ $addition->getRemains() }}" {{ $addition->getRemains() == 0 ? 'disabled' : '' }}
-                   wire:change="set_amount" wire:model="amount" wire:loading.attr="disabled"
+                   wire:change="set_amount" wire:model="amount" wire:loading.attr="disabled" autocomplete="off"
             >
             <div id="addition-amount" class="input-group-text">₽</div>
         </div>
@@ -18,7 +18,7 @@
                     {{ $addition->getRemains() == 0 ? 'disabled' : 'checked' }}
                     data-input="addition-amount-{{ $addition->id }}" name="additions"
                        wire:change="toggle_enabled" wire:model="enabled" wire:loading.attr="disabled"
-                       value="{{ $addition->id }}"
+                       value="{{ $addition->id }}" autocomplete="off"
                 >
                 <label class="form-check-label" for="additions-check-{{ $addition->id }}"></label>
             </div>

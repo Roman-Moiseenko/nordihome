@@ -25,7 +25,7 @@
         <!-- BEGIN: Search -->
         <div class="relative mr-3 sm:mr-6">
             <div class="search relative hidden sm:block">
-                <input type="text" class="search__input form-control border-transparent" placeholder="Search...">
+                <input type="text" class="search__input form-control border-transparent" placeholder="Search..." autocomplete="off">
                 <i data-lucide="Search" width="24" height="24"
                    class="absolute inset-y-0 right-0 my-auto mr-3 h-5 w-5 text-slate-600 dark:text-slate-500"></i>
             </div>

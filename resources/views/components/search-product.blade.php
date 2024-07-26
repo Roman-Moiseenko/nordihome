@@ -5,7 +5,7 @@
 >
 
     <input id="{{ $inputData }}" type="text" name="search" value="" class="form-control" placeholder="Поиск ..."
-           data-route="{{ $route }}" data-url="" data-id="" data-name="" data-img="" data-code="" data-price="">
+           data-route="{{ $route }}" data-url="" data-id="" data-name="" data-img="" data-code="" data-price="" autocomplete="off">
     @if(!empty($hiddenId))
         <input type="hidden" id="hidden-id" name="{{ $hiddenId }}" value="" {{ !empty($wireModel) ? 'wire:model=' . $wireModel . ' ' : '' }}>
     @endif

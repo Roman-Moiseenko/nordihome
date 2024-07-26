@@ -65,7 +65,7 @@
                                             <div class="w-40 input-group">
                                                 <input type="number" class="form-control" name="item[{{ $item->id }}].quantity"
                                                        value="0"
-                                                       min="0" max="{{ $item->quantity }}"
+                                                       min="0" max="{{ $item->quantity }}" autocomplete="off"
                                                 >
                                                 <div id="addition->amount" class="input-group-text">шт.</div>
                                             </div>
@@ -140,7 +140,7 @@
                                     <div class="w-40 input-group">
                                         <input type="number" class="form-control" name="payment[{{ $payment->id }}]amount"
                                                value="{{ 0 }}"
-                                               min="0" max="{{ $payment->amount }}"
+                                               min="0" max="{{ $payment->amount }}" autocomplete="off"
                                         >
                                         <div id="addition->amount" class="input-group-text">₽</div>
                                     </div>
@@ -151,8 +151,8 @@
                 </div>
             </div>
             <div class="box mt-3 p-5 flex">
-                <input class="form-control w-40" name="number" type="text" placeholder="Номер документа">
-                <input class="form-control ml-2" name="comment" type="text" placeholder="Основание возврата / Комментарий">
+                <input class="form-control w-40" name="number" type="text" placeholder="Номер документа" autocomplete="off">
+                <input class="form-control ml-2" name="comment" type="text" placeholder="Основание возврата / Комментарий" autocomplete="off">
             </div>
 
 

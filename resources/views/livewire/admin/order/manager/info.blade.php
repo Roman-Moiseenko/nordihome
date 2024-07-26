@@ -21,7 +21,7 @@
         </div>
         <div class="form-control mt-4">
             <label class="form-check-label" for="order-comment">Комментарий</label>
-            <input class="form-control" type="text"
+            <input class="form-control" type="text" autocomplete="off"
                    wire:change="set_comment" wire:model="comment" wire:loading.attr="disabled"  @if(!$edit) disabled readonly @endif
             >
         </div>

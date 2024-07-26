@@ -4,14 +4,14 @@
         <div class="w-56 text-center">{{ $addition->purposeHTML() }}</div>
         <div class="w-40 input-group">
             <input type="number" class="form-control text-right" aria-describedby="addition-amount"
-                   min="0"
+                   min="0" autocomplete="off"
                    wire:change="set_amount" wire:model="amount" wire:loading.attr="disabled"
             >
             <div id="addition-amount" class="input-group-text">₽</div>
         </div>
 
         <div class="w-56 text-center ml-2">
-            <input type="text" class="form-control text-right"
+            <input type="text" class="form-control text-right" autocomplete="off"
                    wire:change="set_comment" wire:model="comment" wire:loading.attr="disabled"
             >
         </div>

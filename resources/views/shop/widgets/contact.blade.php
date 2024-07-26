@@ -42,11 +42,12 @@
                 @method('PUT')
                 @csrf
                 <div class="form-floating mt-2">
-                    <input type="email" class="form-control" name="email" placeholder="Электронная почта" required="">
+                    <input type="email" class="form-control mask-email" name="email" placeholder="Электронная почта"
+                           required="" autocomplete="off">
                     <label for="email">Электронная почта</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" name="phone" placeholder="Телефон" required="" >
+                    <input type="text" class="form-control mask-phone" name="phone" placeholder="Телефон" required="" autocomplete="off">
                     <label for="phone">Телефон</label>
                 </div>
                 <div class="form-floating mt-3">

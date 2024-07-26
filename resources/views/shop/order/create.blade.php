@@ -68,8 +68,7 @@
                     <form id="form-order-create" method="POST" action="{{ route('shop.order.create') }}">
                         @method('PUT')
                         @csrf
-                    <input type="text" class="form-control p-2" name="coupon" />
-
+                        <input type="text" class="form-control p-2" name="coupon" autocomplete="off"/>
                         <input type="hidden" name="preorder" value="{{ $preorder ? 1 : 0}}">
                     </form>
                     <div class="coupon-info" style="display:none;">

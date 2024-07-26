@@ -3,7 +3,7 @@
     <div class="box mt-3 flex items-center p-2">
         <div class="flex items-center">
             <label for="coupon_code" class="mr-3">Купон на скидку: </label>
-            <input type="text" class="w-20 form-control text-center"
+            <input type="text" class="w-20 form-control text-center" autocomplete="off"
                    wire:change="set_coupon" wire:model="coupon" wire:loading.attr="disabled"
             >
             <div class="input-group">
@@ -18,14 +18,14 @@
             <label for="discount_order" class="mr-3">Скидка вручную: </label>
             <div class="input-group">
                 <input type="number" class="w-32 form-control text-right"
-                       min="0"
+                       min="0" autocomplete="off"
                        wire:change="set_manual" wire:model="manual" wire:loading.attr="disabled"
                 >
                 <div id="discount-order" class="input-group-text">₽</div>
             </div>
 
             <div class="input-group ml-1">
-                <input type="text" class="form-control  w-20 text-right"
+                <input type="text" class="form-control  w-20 text-right" autocomplete="off"
                        wire:change="set_percent" wire:model="percent" wire:loading.attr="disabled"
                 >
                 <div id="discount-percent" class="input-group-text">%</div>

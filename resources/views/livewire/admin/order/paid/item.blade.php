@@ -12,7 +12,7 @@
             <input id="item-quantity-{{ $item->id }}" type="number" class="form-control text-center update-data-ajax"
                    min="1" max="{{ $item->getRemains() }}" {{ $item->getRemains() == 0 ? 'disabled' : '' }}
                    @if($item->preorder && is_null($item->reserve)) disabled @endif
-                   value="{{ $item->getRemains() }}"
+                   value="{{ $item->getRemains() }}" autocomplete="off"
                    wire:change="set_quantity" wire:model="quantity" wire:loading.attr="disabled"
             >
         </div>
@@ -48,7 +48,7 @@
         <div class="w-20 text-center">
             <div class="form-check form-switch justify-center mt-3">
                 <input id="item-{{ $item->id }}" class="form-check-input update-data-ajax" type="checkbox"
-                       data-input="item-quantity-{{ $item->id }}" name="items"
+                       data-input="item-quantity-{{ $item->id }}" name="items" autocomplete="off"
                        @if($item->preorder && is_null($item->reserve) || ($item->getRemains() == 0)) disabled
                        @else checked @endif
 
@@ -70,7 +70,7 @@
                         <x-base.popover.panel>
                             <form method="post" action="{{ route('admin.accounting.supply.add-stack', $item) }}">
                                 @csrf
-                                <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                <input type="hidden" name="item_id" value="{{ $item->id }}" autocomplete="off">
                                 <div class="p-2">
                                     <x-base.tom-select id="select-storage-supply" name="storage" class=""
                                                        data-placeholder="Выберите Склад поступления">

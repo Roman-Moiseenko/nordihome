@@ -41,16 +41,18 @@
                 <h2>Форма обратной связи</h2>
                 <div @if($send) style="display: none" @endif>
                     <div class="form-floating mt-2">
-                        <input type="email" class="form-control" placeholder="Электронная почта" required="" wire:model="email">
+                        <input type="email" class="form-control mask-email" placeholder="Электронная почта" required=""
+                               wire:model="email" autocomplete="off">
                         <label for="email">Электронная почта</label>
                     </div>
                     <div class="form-floating mt-3">
-                        <input type="text" class="form-control" placeholder="Телефон" required=""  wire:model="phone">
+                        <input type="text" class="form-control mask-phone" placeholder="Телефон" required=""
+                               wire:model="phone" autocomplete="off">
                         <label for="phone">Телефон</label>
                     </div>
                     <div class="form-floating mt-3">
                         <textarea id="message" class="form-control" placeholder="Сообщение" required="" rows="8" style="height: 150px"
-                                  wire:model="text"
+                                wire:model="text"
                         ></textarea>
                         <label for="message">Сообщение</label>
                     </div>

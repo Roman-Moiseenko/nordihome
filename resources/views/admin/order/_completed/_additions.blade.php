@@ -34,7 +34,8 @@
             <div class="w-56 text-center">ИТОГО</div>
             <div class="w-40 text-center">
                 <div class="w-40 input-group">
-                    <input id="additions-amount" type="number" class="form-control text-right" value="{{ $order->getAdditionsAmount() }}" aria-describedby="input-preorder-amount" readonly>
+                    <input id="additions-amount" type="number" class="form-control text-right"
+                           value="{{ $order->getAdditionsAmount() }}" aria-describedby="input-preorder-amount" readonly>
                     <div id="input-preorder-amount" class="input-group-text">₽</div>
                 </div>
             </div>

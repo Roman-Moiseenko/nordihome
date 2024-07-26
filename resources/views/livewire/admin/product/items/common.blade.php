@@ -3,18 +3,18 @@
         <div class="col-span-12 lg:col-span-6">
             <div class="input-form mt-6 ">
                 <input id="input-name" type="text" class="form-control @if(isset($errors['name'])) border-danger @endif" placeholder="Товар"
-                       wire:model="name" wire:change="save" wire:loading.attr="disabled">
+                       wire:model="name" wire:change="save" wire:loading.attr="disabled" autocomplete="off">
                 <div class="form-help text-right">Уникальное наименование до 120 символов</div>
             </div>
 
             <div class="input-form mt-3 ">
                 <input id="input-code" type="text" class="form-control @if(isset($errors['code'])) border-danger @endif" placeholder="Артикул"
-                       wire:model="code" wire:change="save" wire:loading.attr="disabled">
+                       wire:model="code" wire:change="save" wire:loading.attr="disabled" autocomplete="off">
                 <div class="form-help text-right">Уникальный код (SKU)</div>
             </div>
             <div class="input-form mt-3 ">
                 <input id="input-slug" type="text" class="form-control @if(isset($errors['slug'])) border-danger @endif" placeholder="Slug"
-                       wire:model="slug" wire:change="save" wire:loading.attr="disabled">
+                       wire:model="slug" wire:change="save" wire:loading.attr="disabled" autocomplete="off">
                 <div class="form-help text-right">Оставьте пустым для автоматического заполнения</div>
             </div>
         </div>

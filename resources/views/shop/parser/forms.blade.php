@@ -13,11 +13,12 @@
     <div id="hidden-company-block" class="parser-flex">
         <div class="parser-col-6">
             <label for="inn">ИНН компании <span class="red">*</span></label>
-            <input class="user-form-input" type="text" id="inn" name="inn" placeholder="ИНН" value="{inn}"/>
+            <input class="user-form-input" type="text" id="inn" name="inn" placeholder="ИНН" value="{inn}"
+                   autocomplete="off"/>
         </div>
         <div class="parser-col-6">
             <label for="company-name">Название компании <span class="red">*</span></label>
-            <input class="user-form-input" type="text" id="company-name" name="company-name"
+            <input class="user-form-input" type="text" id="company-name" name="company-name" autocomplete="off"
                    placeholder="Название компании" value="{company_name}"/>
         </div>
     </div>
@@ -25,30 +26,30 @@
         <div class="parser-col-4">
             <label for="user-surname">Фамилия <span class="red">*</span></label>
             <input class="user-form-input" type="text" id="user-surname" name="user-surname" placeholder="Фамилия"
-                   value="{user_surname}"/>
+                   value="{user_surname}" autocomplete="off"/>
         </div>
         <div class="parser-col-4">
             <label for="user-firstname">Имя <span class="red">*</span></label>
             <input class="user-form-input" type="text" id="user-firstname" name="user-firstname" placeholder="Имя"
-                   value="{user_firstname}"/>
+                   value="{user_firstname}" autocomplete="off"/>
         </div>
         <div class="parser-col-4">
             <label for="user-middlename">Отчество</label>
             <input class="user-form-input" type="text" id="user-middlename" name="user-middlename" placeholder="Отчество"
-                   value="{user_middlename}"/>
+                   value="{user_middlename}" autocomplete="off"/>
         </div>
 
     </div>
     <div class="parser-flex">
         <div class="parser-col-6">
             <label for="user-phone">Телефон <span class="red">*</span></label>
-            <input class="user-form-input" type="text" id="user-phone" name="user-phone"
+            <input class="user-form-input mask-phone" type="text" id="user-phone" name="user-phone" autocomplete="off"
                    placeholder="+7(999) 999 9999" value="{user_phone}" data-mask="+7(999) 999 9999"/>
         </div>
         <div class="parser-col-6">
             <label for="user-email">Электронная почта <span class="red">*</span></label>
-            <input class="user-form-input" type="text" id="user-email" name="user-email"
-                   placeholder="email@email.ru" value="{user_email}"/>
+            <input class="user-form-input mask-email" type="text" id="user-email" name="user-email"
+                   placeholder="email@email.ru" value="{user_email}" autocomplete="off"/>
         </div>
     </div>
     <div class="parser-flex parser-delivery">
@@ -65,7 +66,7 @@
     <div id="delivery-hidden-region">
 
         <label for="user-address">Адрес доставки <span class="red">*</span></label>
-        <input class="user-form-input" id="user-address" name="user-address" value="{user_address}"/>
+        <input class="user-form-input" id="user-address" name="user-address" value="{user_address}" autocomplete="off"/>
     </div>
     <div id="delivery-hidden-local">
         <div>

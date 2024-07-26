@@ -31,12 +31,12 @@
                     <x-base.popover.panel>
                         <form action="{{ route('admin.product.equivalent.store') }}" METHOD="POST">
                             @csrf
-                            <input id="category_id" type="hidden" name="category_id" value="">
+                            <input id="category_id" type="hidden" name="category_id" value=" autocomplete="off"">
                             <div class="p-2">
                                 <div>
                                     <div class="text-xs text-left">Группа аналогов</div>
                                     <x-base.form-input name="name" class="flex-1 mt-2" type="text"
-                                                       placeholder="Уникальное имя"/>
+                                                       placeholder="Уникальное имя" autocomplete="off"/>
                                 </div>
                                 <div class="flex items-center mt-3">
                                     <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown"

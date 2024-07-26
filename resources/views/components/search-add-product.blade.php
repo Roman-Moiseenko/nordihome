@@ -6,7 +6,7 @@
         <option id="0"></option>
     </select>
     @if($quantity)
-        <input id="input-quantity-component" class="form-control w-20 ml-2" type="number" value="1" min="1">
+        <input id="input-quantity-component" class="form-control w-20 ml-2" type="number" value="1" min="1" autocomplete="off">
     @endif
     <button id="button-send-component" class="btn btn-primary @if($column) mt-2 @else ml-2 @endif" type="button" data-route="{{ $route }}"
             data-event="{{ $event }}">{{ $caption }}

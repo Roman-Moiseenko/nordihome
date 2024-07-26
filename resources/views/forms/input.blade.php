@@ -14,6 +14,7 @@
            placeholder="{{ $placeholder }}" @if(!empty($group)) aria-describedby="input-group-{{ $name }}" @endif
            value="{{ old($name) ?? $value }}" {{ $disabled }} @if($required) required @endif
            @if(!is_null($min)) min="{{ $min }}" @endif @if(!is_null($max)) min="{{ $max }}" @endif
+           autocomplete="off"
     >
     @if(!empty($group_text) && !$pos_left)
         <div class="input-group-text">{{ $group_text }}</div>

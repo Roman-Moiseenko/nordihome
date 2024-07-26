@@ -35,7 +35,7 @@
                         wire:click="sub_item" wire:loading.attr="disabled"
                 >
                     <i class="fa-light fa-minus"></i></button>
-                <input type="text" class="form-control"
+                <input type="text" class="form-control" autocomplete="off"
                        data-product="{{ $item['product_id'] }}" value="{{ $item['quantity'] }}"
                        wire:change="set_item" wire:model="quantity" wire:loading.attr="disabled"
                 />

@@ -10,12 +10,12 @@
                     <div class="flex flex-wrap sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                         <div class="w-56 relative text-slate-500 mr-2">
                             <input type="text" class="form-control w-56 box pr-10" name="city"
-                                   placeholder="Поиск по городу">
+                                   placeholder="Поиск по городу" autocomplete="off">
                             <i data-lucide="search" width="24" height="24"
                                class="lucide lucide-search w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0"></i>
                         </div>
                         <div class="w-56 relative text-slate-500 mr-2">
-                            <input type="text" class="form-control w-56 box pr-10" name="name" placeholder="Поиск по имени">
+                            <input type="text" class="form-control w-56 box pr-10" name="name" placeholder="Поиск по имени" autocomplete="off">
                             <i data-lucide="search" width="24" height="24"
                                class="lucide lucide-search w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0"></i>
                         </div>

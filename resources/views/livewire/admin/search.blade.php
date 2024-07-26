@@ -4,7 +4,7 @@
             <option value="0"></option>
         </select>
         @if($quantity)
-            <input class="form-control w-20 ml-2" type="number" wire:model="_quantity">
+            <input class="form-control w-20 ml-2" type="number" wire:model="_quantity" autocomplete="off">
         @endif
         <button class="btn btn-primary ml-2" type="button" wire:click="add">Добавить товар в документ</button>
     </div>

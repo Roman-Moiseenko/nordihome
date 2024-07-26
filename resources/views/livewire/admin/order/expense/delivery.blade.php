@@ -4,17 +4,17 @@
             <div class="col-span-12 lg:col-span-4">
                 <label>Получатель</label>
                 <div class="input-form">
-                    <input type="text" class="form-control" placeholder="Фамилия"
+                    <input type="text" class="form-control" placeholder="Фамилия" autocomplete="off"
                            wire:change="save" wire:model="surname" wire:loading.attr="disabled"
                            @if($disabled) disabled @endif>
                 </div>
                 <div class="input-form mt-3">
-                    <input type="text" class="form-control" placeholder="Имя"
+                    <input type="text" class="form-control" placeholder="Имя" autocomplete="off"
                            wire:change="save" wire:model="firstname" wire:loading.attr="disabled"
                            @if($disabled) disabled @endif>
                 </div>
                 <div class="input-form mt-3">
-                    <input type="text" class="form-control" placeholder="Отчество"
+                    <input type="text" class="form-control" placeholder="Отчество" autocomplete="off"
                            wire:change="save" wire:model="secondname" wire:loading.attr="disabled"
                            @if($disabled) disabled @endif>
                 </div>
@@ -23,11 +23,11 @@
                 <label>Контакты</label>
                 <div class="input-form">
                     <input type="text" class="form-control mask-phone" placeholder="+7 (___) ___-__-__"
-                           wire:change="save" wire:model="phone" wire:loading.attr="disabled"
+                           wire:change="save" wire:model="phone" wire:loading.attr="disabled" autocomplete="off"
                            @if($disabled) disabled @endif>
                 </div>
                 <div class="input-form mt-3">
-                    <input type="text" class="form-control" placeholder="Адрес"
+                    <input type="text" class="form-control" placeholder="Адрес" autocomplete="off"
                            wire:change="save" wire:model="address" wire:loading.attr="disabled"
                            @if($disabled) disabled @endif>
                 </div>

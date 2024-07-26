@@ -44,7 +44,7 @@
                 <div class="mt-5">
                     <x-base.form-label for="name-modification" class="inline-block mb-2 mt-3">Название модификации
                     </x-base.form-label>
-                    <input id="name-modification" type="text" class="form-control mt-1" value="" name="name">
+                    <input id="name-modification" type="text" class="form-control mt-1" value="" name="name" autocomplete="off">
                 </div>
                 <x-base.form-label for="select-attributes" class="mt-3">Выберите атрибуты</x-base.form-label>
                 <x-base.tom-select id="select-attributes" name="attribute_id[]" class="w-full"

@@ -3,10 +3,10 @@
         <div class="col-span-12 lg:col-span-8">
             <div class="relative pl-5 pr-5 xl:pr-10 pt-10 pb-5 bg-slate-50 rounded-md mt-3">
                 <div class="input-form">
-                    <input type="text" class="form-control" placeholder="Ссылка на видео" wire:model="url">
+                    <input type="text" class="form-control" placeholder="Ссылка на видео" wire:model="url" autocomplete="off">
                 </div>
                 <div class="input-form mt-3 ">
-                    <input type="text" class="form-control" placeholder="Заголовок" wire:model="caption">
+                    <input type="text" class="form-control" placeholder="Заголовок" wire:model="caption" autocomplete="off">
                 </div>
                 <textarea class="form-control sm:mr-2 mt-3" rows="2" placeholder="Краткое описание" wire:model="text"></textarea>
             </div>

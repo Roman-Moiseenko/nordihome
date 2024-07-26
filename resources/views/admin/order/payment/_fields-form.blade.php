@@ -40,8 +40,8 @@
 
                         {{ \App\Forms\Input::create('amount', ['placeholder' => 'Сумма', 'value' => $payment->amount ?? '', 'class' => 'mt-3'])
                             ->type('number')->required()->label('Сумма')->min_max(1)->show() }}
-                        {{ \App\Forms\Input::create('document', ['placeholder' => 'Документ', 'value' => $payment->document ?? '', 'class' => 'mt-3'])
-                            ->label('Документ')->show() }}
+                        {{ \App\Forms\Input::create('document', ['placeholder' => 'Документ/Комментарий', 'value' => $payment->document ?? '', 'class' => 'mt-3'])
+                            ->label('Документ/Комментарий')->show() }}
                     </div>
                     <div class="col-span-12 lg:col-span-6">
 

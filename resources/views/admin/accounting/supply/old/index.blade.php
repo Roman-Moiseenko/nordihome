@@ -26,22 +26,22 @@
                 <div class="">
                     <div class="form-check mr-3">
                         <input id="completed-all" class="form-check-input check-completed" type="radio" name="completed"
-                               value="all" {{ $completed == 'all' ? 'checked' : '' }}>
+                               value="all" {{ $completed == 'all' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-all">Все</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
                         <input id="completed-created" class="form-check-input check-completed" type="radio" name="completed"
-                               value="created" {{ $completed == 'created' ? 'checked' : '' }}>
+                               value="created" {{ $completed == 'created' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-created">Новые</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
                         <input id="completed-sent" class="form-check-input check-completed" type="radio" name="completed"
-                               value="sent" {{ $completed == 'sent' ? 'checked' : '' }}>
+                               value="sent" {{ $completed == 'sent' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-sent">В работе</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
                         <input id="completed-completed" class="form-check-input check-completed" type="radio" name="completed"
-                               value="completed" {{ $completed == 'completed' ? 'checked' : '' }}>
+                               value="completed" {{ $completed == 'completed' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-completed">Завершенные</label>
                     </div>
                 </div>

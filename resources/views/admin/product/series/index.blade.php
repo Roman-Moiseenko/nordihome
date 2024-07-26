@@ -20,7 +20,7 @@
                     <form method="post" action="{{ route('admin.product.series.store') }}">
                         @csrf
                         <div class="p-2">
-                            <input name="name" type="text" class="form-control" value="" placeholder="Название серии">
+                            <input name="name" type="text" class="form-control" value="" placeholder="Название серии" autocomplete="off">
 
                             <div class="flex items-center mt-3">
                                 <x-base.button id="close-add-group" class="w-32 ml-auto" data-tw-dismiss="dropdown" variant="secondary" type="button">

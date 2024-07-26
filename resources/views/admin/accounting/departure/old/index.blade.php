@@ -25,15 +25,18 @@
             <div class="col-span-12 lg:col-span-3 border-l pl-4 flex">
                 <div class="">
                     <div class="form-check mr-3">
-                        <input id="completed-all" class="form-check-input check-completed" type="radio" name="completed" value="all" {{ $completed == 'all' ? 'checked' : '' }}>
+                        <input id="completed-all" class="form-check-input check-completed" type="radio" name="completed"
+                               value="all" {{ $completed == 'all' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-all">Все</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
-                        <input id="completed-true" class="form-check-input check-completed" type="radio" name="completed" value="active" {{ $completed == 'active' ? 'checked' : '' }}>
+                        <input id="completed-true" class="form-check-input check-completed" type="radio" name="completed"
+                               value="active" {{ $completed == 'active' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-true">Проведенные</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
-                        <input id="completed-false" class="form-check-input check-completed" type="radio" name="completed" value="draft" {{ $completed == 'draft' ? 'checked' : '' }}>
+                        <input id="completed-false" class="form-check-input check-completed" type="radio" name="completed"
+                               value="draft" {{ $completed == 'draft' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-false">Черновики</label>
                     </div>
                 </div>

@@ -39,27 +39,32 @@
             <div class="w-40 input-group">
                 <input type="number" class="form-control text-right" value="{{ $item->product->getPriceCost($pricing->isCompleted()) }}" readonly>
                 <input id="price_cost-{{ $item->id }}" type="number" name="price_cost"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_cost }}" @if($pricing->isCompleted()) readonly @endif>
+                       class="form-control text-right pricing-input-listen" value="{{ $item->price_cost }}"
+                       @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
             <div class="w-40 input-group">
                 <input type="number" class="form-control text-right" value="{{ $item->product->getPriceRetail($pricing->isCompleted()) }}" readonly>
                 <input id="price_retail-{{ $item->id }}" type="number" name="price_retail"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_retail }}" @if($pricing->isCompleted()) readonly @endif>
+                       class="form-control text-right pricing-input-listen" value="{{ $item->price_retail }}"
+                       @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
             <div class="w-40 input-group">
                 <input type="number" class="form-control text-right" value="{{ $item->product->getPriceBulk($pricing->isCompleted()) }}" readonly>
                 <input id="price_bulk-{{ $item->id }}" type="number" name="price_bulk"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_bulk }}" @if($pricing->isCompleted()) readonly @endif>
+                       class="form-control text-right pricing-input-listen" value="{{ $item->price_bulk }}"
+                       @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
             <div class="w-40 input-group">
                 <input type="number" class="form-control text-right" value="{{ $item->product->getPriceSpecial($pricing->isCompleted()) }}" readonly>
                 <input id="price_special-{{ $item->id }}" type="number"  name="price_special"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_special }}" @if($pricing->isCompleted()) readonly @endif>
+                       class="form-control text-right pricing-input-listen" value="{{ $item->price_special }}"
+                       @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
             <div class="w-40 input-group">
                 <input type="number" class="form-control text-right" value="{{ $item->product->getPriceMin($pricing->isCompleted()) }}" readonly>
                 <input id="price_min-{{ $item->id }}" type="number"  name="price_min"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_min }}" @if($pricing->isCompleted()) readonly @endif>
+                       class="form-control text-right pricing-input-listen" value="{{ $item->price_min }}"
+                       @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
 
 

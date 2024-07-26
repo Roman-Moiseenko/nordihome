@@ -42,7 +42,7 @@ login
                         </div>
                         <div class="mt-8">
                             <input type="text" name="name" class="login__input form-control py-3 px-4 block"
-                                   placeholder="Логин" id="name" value="{{ old('name') }}" required autocomplete="name"
+                                   placeholder="Логин" id="name" value="{{ old('name') }}" required autocomplete="off"
                                    autofocus>
                             @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -51,7 +51,7 @@ login
                             @enderror
                             <input type="password" name="password"
                                    class="login__input form-control py-3 px-4 block mt-4"
-                                   placeholder="Пароль">
+                                   placeholder="Пароль" autocomplete="off">
                             @error('password')
                             <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -61,7 +61,7 @@ login
                         <div class="flex text-slate-600 dark:text-slate-500 text-xs sm:text-sm mt-4">
                             <div class="flex items-center mr-auto">
                                 <input id="remember" name="remember" type="checkbox"
-                                       class="form-check-input border mr-2" {{ old('remember') ? 'checked' : '' }}>
+                                       class="form-check-input border mr-2" {{ old('remember') ? 'checked' : '' }} autocomplete="off">
                                 <label class="cursor-pointer select-none" for="remember">Запомнить меня</label>
                             </div>
 

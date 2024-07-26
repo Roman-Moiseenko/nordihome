@@ -32,7 +32,7 @@
         <div class="set-value">
             <button class="btn btn-outline-dark cartitem-sub" data-product="{{ $item['product_id'] }}">
                 <i class="fa-light fa-minus"></i></button>
-            <input type="text" class="form-control cartitem-set"
+            <input type="text" class="form-control cartitem-set" autocomplete="off"
                    data-product="{{ $item['product_id'] }}" value="{{ $item['quantity'] }}"/>
             <button class="btn btn-outline-dark cartitem-plus" data-product="{{ $item['product_id'] }}">
                 <i class="fa-light fa-plus"></i></button>

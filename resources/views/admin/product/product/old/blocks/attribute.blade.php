@@ -31,7 +31,8 @@
                            id="checkbox_{{ $attribute->id }}" name="attribute_{{ $attribute->id }}" {{ (!is_null($value) && $value) ? 'checked' : '' }}>
                     <label for="checkbox_{{ $attribute->id }}" class="cursor-pointer ml-2">{{ $attribute->name }}</label></div>
             @else
-                <input type="text" name="attribute_{{ $attribute->id }}" class="form-control " placeholder="Значение" value="{{ $value ?? '' }}">
+                <input type="text" name="attribute_{{ $attribute->id }}" class="form-control "
+                       placeholder="Значение" value="{{ $value ?? '' }}" autocomplete="off">
             @endif
         </div>
     @endif

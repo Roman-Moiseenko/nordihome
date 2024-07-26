@@ -7,7 +7,7 @@
             @csrf
             <div class="modal-body p-10 text-center">
                 <p>Введите новый пароль</p>
-                <input id="field-pass" class="form-control" type="text" name="password"/>
+                <input id="field-pass" class="form-control" type="text" name="password" autocomplete="off"/>
             </div>
             <div class="modal-footer">
                 <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="modal-body p-10 text-center">
                     <p>Введите новый пароль</p>
-                    <input id="field-pass" class="form-control" type="text" name="password"/>
+                    <input id="field-pass" class="form-control" type="text" name="password" autocomplete="off"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-20 mr-1">

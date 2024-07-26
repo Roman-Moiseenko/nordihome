@@ -18,7 +18,7 @@
             <div class="text-right font-medium ml-auto mr-3 text-danger"><s>{{ price($bonus->getLastPrice()) }}</s></div>
             <div>
                 <input class="form-control form-input w-40 ml-3" type="text" placeholder="Новая цена" title="Новая цена"
-                       wire:model="discount"  wire:change="save" wire:loading.attr="disabled"> ₽
+                       wire:model="discount"  wire:change="save" wire:loading.attr="disabled" autocomplete="off"> ₽
             </div>
         </div>
     </div>

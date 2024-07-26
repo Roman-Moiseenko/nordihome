@@ -47,22 +47,24 @@
             <div class="w-1/4">{{ $item->product->name }}</div>
             <div class="w-40 input-group">
                 <input id="currency-{{ $item->id }}" type="number" class="form-control text-right arrival-input-listen"
-                       value="{{ $item->cost_currency }}" aria-describedby="input-currency" min="0" {{ $arrival->isCompleted() ? 'readonly' : '' }}>
+                       value="{{ $item->cost_currency }}" aria-describedby="input-currency" min="0" {{ $arrival->isCompleted() ? 'readonly' : '' }}
+                       autocomplete="off">
                 <div id="input-currency" class="input-group-text">{{ $item->document->currency->sign }}</div>
             </div>
             <div class="w-40 input-group">
                 <input id="quantity-{{ $item->id }}" type="number" class="form-control text-right arrival-input-listen"
-                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0" {{ $arrival->isCompleted() ? 'readonly' : '' }}>
+                       value="{{ $item->quantity }}" aria-describedby="input-quantity" min="0" {{ $arrival->isCompleted() ? 'readonly' : '' }}
+                       autocomplete="off">
                 <div id="input-quantity" class="input-group-text">шт.</div>
             </div>
             <div class="w-40 input-group">
                 <input id="cost_ru-{{ $item->id }}" type="number" class="form-control text-right"
-                       value="{{ $item->cost_ru }}" aria-describedby="input-cost_ru" readonly>
+                       value="{{ $item->cost_ru }}" aria-describedby="input-cost_ru" readonly autocomplete="off">
                 <div id="input-cost_ru" class="input-group-text">₽</div>
             </div>
             <div class="w-40 input-group">
                 <input id="sell-{{ $item->id }}" type="number" class="form-control text-right arrival-input-listen"
-                       value="{{ $item->price_sell }}" aria-describedby="input-sell" min="0" readonly>
+                       value="{{ $item->price_sell }}" aria-describedby="input-sell" min="0" readonly autocomplete="off">
                 <div id="input-sell" class="input-group-text">₽</div>
             </div>
             @if(!$arrival->isCompleted())
@@ -83,22 +85,22 @@
         <div class="w-1/4">ИТОГО</div>
         <div class="w-40 input-group">
             <input id="currency-amount" type="number" class="form-control text-right arrival-input-listen"
-                   value="{{ $info['cost_currency'] }}" aria-describedby="input-currency" min="0" readonly>
+                   value="{{ $info['cost_currency'] }}" aria-describedby="input-currency" min="0" readonly autocomplete="off">
             <div id="input-currency" class="input-group-text">{{ $arrival->currency->sign }}</div>
         </div>
         <div class="w-40 input-group">
             <input id="quantity-amount" type="number" class="form-control text-right arrival-input-listen"
-                   value="{{ $info['quantity'] }}" aria-describedby="input-quantity" min="0" readonly>
+                   value="{{ $info['quantity'] }}" aria-describedby="input-quantity" min="0" readonly autocomplete="off">
             <div id="input-quantity" class="input-group-text">шт.</div>
         </div>
         <div class="w-40 input-group">
             <input id="cost_ru-amount" type="number" class="form-control text-right"
-                   value="{{ $info['cost_ru'] }}" aria-describedby="input-cost_ru" readonly>
+                   value="{{ $info['cost_ru'] }}" aria-describedby="input-cost_ru" readonly autocomplete="off">
             <div id="input-cost_ru" class="input-group-text">₽</div>
         </div>
         <div class="w-40 input-group">
             <input id="sell-amount" type="number" class="form-control text-right arrival-input-listen"
-                   value="{{ $info['price_sell'] }}" aria-describedby="input-sell" min="0" readonly>
+                   value="{{ $info['price_sell'] }}" aria-describedby="input-sell" min="0" readonly autocomplete="off">
             <div id="input-sell" class="input-group-text">₽</div>
         </div>
     </div>

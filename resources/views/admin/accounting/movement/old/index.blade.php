@@ -40,27 +40,27 @@
                 <div class="">
                     <div class="form-check mr-3">
                         <input id="completed-all" class="form-check-input check-completed" type="radio" name="completed"
-                               value="all" {{ $completed == 'all' ? 'checked' : '' }}>
+                               value="all" {{ $completed == 'all' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-all">Все</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
                         <input id="completed-completed" class="form-check-input check-completed" type="radio" name="completed"
-                               value="completed" {{ $completed == 'completed' ? 'checked' : '' }}>
+                               value="completed" {{ $completed == 'completed' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-completed">Завершенные</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
                         <input id="completed-draft" class="form-check-input check-completed" type="radio" name="completed"
-                               value="draft" {{ $completed == 'draft' ? 'checked' : '' }}>
+                               value="draft" {{ $completed == 'draft' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-draft">Черновики</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
                         <input id="completed-departure" class="form-check-input check-completed" type="radio" name="completed"
-                               value="departure" {{ $completed == 'departure' ? 'checked' : '' }}>
+                               value="departure" {{ $completed == 'departure' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-departure">На отбытии</label>
                     </div>
                     <div class="form-check mr-3 mt-2 sm:mt-0">
                         <input id="completed-arrival" class="form-check-input check-completed" type="radio" name="completed"
-                               value="arrival" {{ $completed == 'arrival' ? 'checked' : '' }}>
+                               value="arrival" {{ $completed == 'arrival' ? 'checked' : '' }} autocomplete="off">
                         <label class="form-check-label" for="completed-arrival">В пути</label>
                     </div>
                 </div>

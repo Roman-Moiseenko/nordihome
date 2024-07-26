@@ -15,7 +15,7 @@
                         </select>
                         <div class="input-group ml-2 w-40 ">
                             <input id="input-amount" type="number" name="amount" class="form-control"
-                                   placeholder="Стоимость" value="0" required="" min="0"
+                                   placeholder="Стоимость" value="0" required="" min="0" autocomplete="off"
                                    wire:model="form_amount">
                             <div class="input-group-text">₽</div>
 
@@ -23,7 +23,7 @@
                         </div>
                         <div class="input-form ml-2 w-1/4 ">
                             <input id="input-comment" type="text" name="comment" class="form-control "
-                                   placeholder="Примечание" value=""
+                                   placeholder="Примечание" value="" autocomplete="off"
                                    wire:model="form_comment"
                             >
                         </div>

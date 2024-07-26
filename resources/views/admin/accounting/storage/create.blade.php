@@ -8,7 +8,7 @@
     </div>
     <form method="POST" action="{{ route('admin.accounting.storage.store') }}" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="parent_id">
+        <input type="hidden" name="parent_id" autocomplete="off">
         @include('admin.accounting.storage._fields-form', ['storage' => null])
     </form>
 

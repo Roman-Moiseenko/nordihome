@@ -22,7 +22,7 @@
                     <form id="parser-search-form" method="post" action="{{ route('shop.parser.search') }}">
                         @csrf
                         <div class="form">
-                            <input id="search-parser-field" type="text" name="search" class="form-control" required/>
+                            <input id="search-parser-field" type="text" name="search" class="form-control" required autocomplete="off"/>
                             <button id="search-parser-button" class="btn btn-dark py-2 px-4" type="submit">ИСКАТЬ</button>
                         </div>
                     </form>

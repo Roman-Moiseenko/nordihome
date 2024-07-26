@@ -39,7 +39,8 @@
                 <input type="hidden" name="post-local" value="{{ $user->address->post }}">
             </div>
             <div class="input-group" id="d---1" {!! $user->address->address == '' ? '' : ' style="display: none"' !!}>
-                <input type="text" class="form-control" id="input-delivery-local" aria-describedby="emailHelp" placeholder="Начните вводить адрес">
+                <input type="text" class="form-control" id="input-delivery-local"
+                       aria-describedby="emailHelp" placeholder="Начните вводить адрес" autocomplete="off">
                 <button class="btn btn-outline-secondary input-to-hidden" type="button" from="input-delivery-local" to="input-delivery-local-hidden">Сохранить</button>
             </div>
         </div>
@@ -62,7 +63,8 @@
                 <input type="hidden" name="post-region" value="{{ $user->address->post }}">
             </div>
             <div class="input-group" id="d---2" {!! $user->address->address == '' ? '' : ' style="display: none"' !!}>
-                <input type="text" class="form-control" id="input-delivery-region" aria-describedby="emailHelp" placeholder="Начните вводить адрес">
+                <input type="text" class="form-control" id="input-delivery-region" aria-describedby="emailHelp"
+                       placeholder="Начните вводить адрес" autocomplete="off">
                 <button class="btn btn-outline-secondary input-to-hidden" type="button" from="input-delivery-region" to="input-delivery-region-hidden">Сохранить</button>
             </div>
         </div>

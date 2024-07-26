@@ -12,13 +12,13 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" name="email" placeholder="Электронная почта" required
-                                   value="{{ is_null($user) ? '' : $user->email }}">
+                            <input type="email" class="form-control mask-email" name="email" placeholder="Электронная почта" required
+                                   value="{{ is_null($user) ? '' : $user->email }}" autocomplete="off">
                             <label for="email">Электронная почта</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" name="phone" placeholder="Телефон" required
-                                   value="{{ is_null($user) ? '' : $user->phone }}">
+                            <input type="text" class="form-control mask-phone" name="phone" placeholder="Телефон" required
+                                   value="{{ is_null($user) ? '' : $user->phone }}" autocomplete="off">
                             <label for="phone">Телефон</label>
                         </div>
 
@@ -44,7 +44,7 @@
                             <label for="delivery">Выберите способ получения товара</label>
                         </div>
                         <div id="delivery_address" class="form-floating mb-3" style="display: none">
-                            <input type="text" class="form-control" name="address" placeholder="Адрес">
+                            <input type="text" class="form-control" name="address" placeholder="Адрес" autocomplete="off">
                             <label for="address">Адрес</label>
                         </div>
                         <div id="buy-click-error" class="fs-7 text-danger"></div>

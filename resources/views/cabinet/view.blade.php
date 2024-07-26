@@ -12,7 +12,8 @@
             <span id="data-fullname" class="data"
                   style="display: {{ $user->fullname->isEmpty() ? 'none' :' inherit' }};">{{ $user->fullname->getFullName() }}</span>
             <div id="group-fullname" class="input-group" style="display: {{ !$user->fullname->isEmpty() ? 'none' :' inherit' }};">
-                <input type="text" class="form-control" id="input-fullname" aria-describedby="Фамилия получателя" placeholder="Фамилия Имя Отчество"  autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');">
+                <input type="text" class="form-control" id="input-fullname" aria-describedby="Фамилия получателя" placeholder="Фамилия Имя Отчество"
+                       autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');">
                 <button id="save-fullname" class="btn btn-outline-secondary" type="button"
                         data-route="{{ route('cabinet.fullname', $user) }}"
                 >Сохранить</button>
@@ -25,7 +26,7 @@
             <span id="data-phone" class="data"
                   style="display: {{ empty($user->phone) ? 'none' :' inherit' }};" >{{ $user->phone }}</span>
             <div id="group-phone" class="input-group" style="display: {{ !empty($user->phone) ? 'none' :' inherit' }};">
-                <input type="text" class="form-control" id="input-phone" aria-describedby="Телефон получателя" placeholder="Телефон">
+                <input type="text" class="form-control" id="input-phone" aria-describedby="Телефон получателя" placeholder="Телефон" autocomplete="off">
                 <button id="save-phone" class="btn btn-outline-secondary" type="button"
                         data-route="{{ route('cabinet.phone', $user) }}"
                 >Сохранить</button>
@@ -41,7 +42,7 @@
             <span class="label">Email для входа:</span>
             <span id="data-email" class="data" style="display: {{ empty($user->email) ? 'none' :' inherit' }};" >{{ $user->email }}</span>
             <div id="group-email" class="input-group" style="display: {{ !empty($user->email) ? 'none' :' inherit' }};">
-                <input type="text" class="form-control" id="input-email" aria-describedby="Email получателя" placeholder="Email">
+                <input type="text" class="form-control" id="input-email" aria-describedby="Email получателя" placeholder="Email" autocomplete="off">
                 <button id="save-email" class="btn btn-outline-secondary" type="button"
                         data-route="{{ route('cabinet.email', $user) }}"
                 >Сохранить</button>

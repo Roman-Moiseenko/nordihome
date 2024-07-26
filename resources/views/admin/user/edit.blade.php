@@ -8,7 +8,8 @@
 
         <div class="form-group">
             <label for="name" class="col-form-label">Name</label>
-            <input id="name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name', $user->name) }}" required>
+            <input id="name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name"
+                   value="{{ old('name', $user->name) }}" required autocomplete="off">
             @if ($errors->has('name'))
                 <span class="invalid-feedback"><strong>{{ $errors->first('name') }}</strong></span>
             @endif
