@@ -28,7 +28,7 @@
                         <x-base.lucide icon="mail" class="w-4 h-4"/>&nbsp;{{ $staff->email }}
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                        <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ $staff->phone }}
+                        <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ phone($staff->phone) }}
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
                         <x-base.lucide icon="send" class="w-4 h-4"/>&nbsp;{{ $staff->telegram_user_id }}

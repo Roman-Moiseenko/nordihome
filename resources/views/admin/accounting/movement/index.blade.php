@@ -1,11 +1,12 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
-        <h2 class="text-lg font-medium mr-auto">
-            Перемещения товара
-        </h2>
-    </div>
+
+    <h2 class="text-lg font-medium mr-auto mt-8">Перемещения товара</h2>
+
+    <button data-tw-toggle="modal" data-tw-target="#modal-create-movement" class="btn btn-primary shadow-md mr-2 mt-5"
+            type="button">Создать Документ
+    </button>
 
     <div class="mt-3">
         <livewire:admin.accounting.movement-table />
@@ -16,7 +17,6 @@
 
     <x-base.dialog id="modal-create-movement" staticBackdrop>
         <x-base.dialog.panel>
-
             <form action="{{ route('admin.accounting.movement.store') }}" method="POST">
                 @csrf
                 <x-base.dialog.title>

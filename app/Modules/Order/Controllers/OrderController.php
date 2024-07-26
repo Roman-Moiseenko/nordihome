@@ -271,9 +271,11 @@ class OrderController extends Controller
 
     public function search_user(Request $request)
     {
+        //TODO В Репозиторий
         return $this->try_catch_ajax_admin(function () use ($request) {
 
-            $data = $request['data'];
+            $data = preg_replace("/[^0-9]/", "", $request['data']);
+
             /** @var User $user */
             $user = User::where('phone', $data)->OrWhere('email', $data)->first();
 
@@ -282,7 +284,7 @@ class OrderController extends Controller
             } else {
                 $result = [
                     'id' => $user->id,
-                    'phone' => $user->phone,
+                    'phone' => phone($user->phone),
                     'email' => $user->email,
                     'name' => $user->fullname->firstname,
                     'delivery' => $user->delivery, //->type,

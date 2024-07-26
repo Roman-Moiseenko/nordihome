@@ -8,11 +8,9 @@ use App\Mail\PromotionFinishing;
 use App\Mail\PromotionStarted;
 use App\Mail\PromotionStarting;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\User\Entity\User;
+use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\SubscriptionService;
-use App\Modules\User\UserRepository;
 use Carbon\Carbon;
-
 use Illuminate\Support\Facades\Mail;
 
 class NotificationPromotionMoved

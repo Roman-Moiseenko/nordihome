@@ -81,7 +81,7 @@ class StaffService
     {
         $admin->name = $request['name'];
         $admin->email = $request['email'] ?? '';
-        $admin->phone = $request['phone'];
+        $admin->phone = preg_replace("/[^0-9]/", "", $request['phone']);
 
         $admin->setFullName(new FullName(
             $request['surname'],

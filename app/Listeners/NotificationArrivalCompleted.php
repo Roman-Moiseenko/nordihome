@@ -5,15 +5,11 @@ namespace App\Listeners;
 use App\Events\ArrivalHasCompleted;
 use App\Mail\ProductArrival;
 use App\Modules\Accounting\Entity\ArrivalProduct;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
-use App\Modules\User\Entity\User;
+use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\SubscriptionService;
-use App\Modules\User\UserRepository;
 use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class NotificationArrivalCompleted

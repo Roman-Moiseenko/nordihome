@@ -173,7 +173,7 @@ class OrderService
                 'storage' => $user->StorageDefault(),
                 'fullname' => $user->fullname->getFullName(),
             ],
-            'phone' => $user->phone,
+            'phone' => phone($user->phone),
             'amount' => [
                 'delivery' => $delivery_cost,
                 'caption' => $user->payment->online() ? 'Оплатить' : 'Оформить',
@@ -325,7 +325,7 @@ class OrderService
         if (empty($request['user_id'])) {//1. Пользователь новый.
             $password = Str::random(8); /// регистрируем его и отправляем ему письмо, со ссылкой верификации
             $user = User::register($request['email'], $password);
-            $user->update(['phone' => $request['phone']]);
+            $user->setPhone($request['phone']);
             $user->setNameField(firstname: $request['name']);
             event(new UserHasCreated($user));
         } else {//2. Пользователь старый.

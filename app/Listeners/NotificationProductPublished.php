@@ -5,11 +5,9 @@ namespace App\Listeners;
 use App\Events\ProductHasPublished;
 use App\Mail\ProductNew;
 use App\Modules\Product\Entity\Product;
+use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\SubscriptionService;
-use App\Modules\User\UserRepository;
 use Carbon\Carbon;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class NotificationProductPublished

@@ -6,6 +6,7 @@ namespace App\Modules\User\Entity;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FullName;
+use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
@@ -34,7 +35,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property UserPayment $payment
  * @property Subscription[] $subscriptions
  * @property FullName $fullname
- * @property \App\Modules\Base\Entity\GeoAddress $address
+ * @property GeoAddress $address
  * @property Review[] $reviews
  * @property Order[] $orders
  *
@@ -145,8 +146,13 @@ class User extends Authenticatable
         return $this->client == self::CLIENT_SPECIAL;
     }
 
-
     //*** SET-.....
+
+    public function setPhone(string $phone)
+    {
+        $this->phone = preg_replace("/[^0-9]/", "", $phone);
+        $this->save();
+    }
 
     public function setPassword(string $password)
     {

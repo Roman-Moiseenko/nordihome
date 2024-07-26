@@ -56,7 +56,7 @@
 
                 {{ $staff->email }}</div>
             <div class="flex items-center justify-center lg:justify-start text-slate-500 mt-1">
-                <x-base.lucide icon="phone" class="w-3 h-3 mr-2"/> {{ $staff->phone }}</div>
+                <x-base.lucide icon="phone" class="w-3 h-3 mr-2"/> {{ phone($staff->phone) }}</div>
         </div>
         <div class="text-center lg:text-right p-5 border-t border-slate-200/60 dark:border-darkmode-400">
             <button class="btn btn-primary py-1 px-2 mr-2 {{ $staff->isBlocked() ? 'disabled' : '' }}" onclick="window.location.href=' {{ $staff->isBlocked() ? '' : route('shop.home') }}'">Сообщение</button>

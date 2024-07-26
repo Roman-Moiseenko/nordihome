@@ -22,7 +22,7 @@
             <div class="col-span-12 lg:col-span-4">
                 <label>Контакты</label>
                 <div class="input-form">
-                    <input type="text" class="form-control mask-phone" placeholder="+7 (___) ___-__-__"
+                    <input type="text" class="form-control mask-phone" placeholder="8 (___) ___-__-__"
                            wire:change="save" wire:model="phone" wire:loading.attr="disabled" autocomplete="off"
                            @if($disabled) disabled @endif>
                 </div>

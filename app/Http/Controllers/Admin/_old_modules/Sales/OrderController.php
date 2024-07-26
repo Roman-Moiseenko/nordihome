@@ -282,7 +282,7 @@ class OrderController extends Controller
             } else {
                 $result = [
                     'id' => $user->id,
-                    'phone' => $user->phone,
+                    'phone' => phone($user->phone),
                     'email' => $user->email,
                     'name' => $user->fullname->firstname,
                     'delivery' => $user->delivery, //->type,

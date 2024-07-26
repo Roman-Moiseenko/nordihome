@@ -26,8 +26,8 @@ class UserService
     {
         $phone = trim($request['phone']);
         if ($phone == $user->phone) return false;
-        $user->phone = $phone;
-        $user->save();
+        $user->setPhone($phone);
+
         return true;
     }
 

@@ -1,17 +1,10 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
-        <h2 class="text-lg font-medium mr-auto">
-            Списание товара
-        </h2>
-    </div>
 
-    <div class="grid grid-cols-12 gap-6 mt-5">
-        <!-- Управление -->
-        <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
+    <h2 class="text-lg font-medium mr-auto mt-8">Списание товара</h2>
 
-            <x-base.popover class="inline-block mt-auto" placement="bottom-start">
+    <x-base.popover class="inline-block mt-5" placement="bottom-start">
                 <x-base.popover.button as="x-base.button" variant="primary" class=""
                                        id="button-supply-stack" type="button">
                     Создать Документ
@@ -41,9 +34,7 @@
                     </form>
                 </x-base.popover.panel>
             </x-base.popover>
-        </div>
 
-    </div>
     <div class="mt-3">
         <livewire:admin.accounting.departure-table />
     </div>

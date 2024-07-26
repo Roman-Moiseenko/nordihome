@@ -18,7 +18,7 @@ class Phone extends Component
     {
         $this->user = $user;
         $this->edit = $edit;
-        $this->phone = $user->phone;
+        $this->phone = phone($user->phone);
     }
 
     public function open_change()
@@ -28,7 +28,7 @@ class Phone extends Component
 
     public function save_change()
     {
-        $this->user->phone = $this->phone;
+        $this->user->setPhone($this->phone);
         $this->user->save();
         $this->user->refresh();
         $this->change = false;
@@ -36,7 +36,7 @@ class Phone extends Component
 
     public function close_change()
     {
-        $this->phone = $this->user->phone;
+        $this->phone = phone($this->user->phone);
         $this->change = false;
     }
 

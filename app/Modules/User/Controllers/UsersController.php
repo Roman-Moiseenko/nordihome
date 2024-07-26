@@ -5,8 +5,8 @@ namespace App\Modules\User\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\User\Entity\User;
+use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\RegisterService;
-use App\Modules\User\UserRepository;
 use Illuminate\Http\Request;
 use function redirect;
 use function view;

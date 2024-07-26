@@ -91,5 +91,9 @@
         </div>
     </div>
 
+    <div class="mt-3">
+        <livewire:admin.user.user-table />
+    </div>
+
     {{ $users->links('admin.components.paginator', ['pagination' => $pagination]) }}
 @endsection

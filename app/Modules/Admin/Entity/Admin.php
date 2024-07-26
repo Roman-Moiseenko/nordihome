@@ -83,7 +83,7 @@ class Admin extends Authenticatable
         return static::create([
             'name' => $name,
             'email' => $email,
-            'phone' => $phone,
+            'phone' => preg_replace("/[^0-9]/", "", $phone),
             'password' => Hash::make($password),
             'role' => self::ROLE_STAFF,
             'active' => true,
@@ -96,7 +96,7 @@ class Admin extends Authenticatable
         return static::make([
             'name' => $name,
             'email' => $email,
-            'phone' => $phone,
+            'phone' => preg_replace("/[^0-9]/", "", $phone),
             'password' => Hash::make($password),
             'role' => self::ROLE_STAFF,
             'active' => true,
@@ -128,6 +128,12 @@ class Admin extends Authenticatable
     public function isStaff(): bool
     {
         return $this->role == self::ROLE_STAFF;
+    }
+
+    public function setPhone(string $phone)
+    {
+        $this->phone = preg_replace("/[^0-9]/", "", $phone);
+        $this->save();
     }
 
     public function setRole($role): void
