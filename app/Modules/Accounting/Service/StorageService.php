@@ -8,6 +8,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class StorageService
@@ -16,47 +17,47 @@ class StorageService
     public function create(Request $request)
     {
         $storage = Storage::register(
-            $request['organization_id'],
-            $request['name'],
+            $request->integer('organization_id'),
+            $request->string('name')->trim()->value(),
             $request->has('sale'),
             $request->has('delivery')
         );
-        if (!empty($request['address'])) $storage->setAddress($request['post'] ?? '', $request['city'] ?? '', $request['address']);
-        if (!empty($request['latitude']) && !empty($request['longitude']))
-            $storage->setCoordinate($request['latitude'], $request['longitude']);
-        $this->photo($storage, $request->file('file'));
-        if (!empty($request['default'])) {
-            Storage::where('default', true)->update(['default' => false]);
-            $storage->setDefault();
-        }
+        $this->save_fields($request, $storage);
         return $storage;
     }
 
     public function update(Request $request, Storage $storage)
     {
         $storage->organization_id = $request['organization_id'];
-        $storage->name = $request['name'];
+        $storage->name = $request->string('name')->trim()->value();
         $storage->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
         $storage->point_of_sale = $request->has('sale');
         $storage->point_of_delivery = $request->has('delivery');
         $storage->save();
 
-        if (!empty($request['address'])) $storage->setAddress($request['post'] ?? '', $request['city'] ?? '', $request['address']);
-        if (!empty($request['latitude']) && !empty($request['longitude']))
-            $storage->setCoordinate((float)$request['latitude'], (float)$request['longitude']);
-        $this->photo($storage, $request->file('file'));
+        $this->save_fields($request, $storage);
 
-        if (!empty($request['default'])) {
-            Storage::where('default', true)->update(['default' => false]);
-            $storage->setDefault();
-        }
         if (empty($request['default']) && $storage->default == true) {
             flash('Склад по умолчанию должен быть назначен! Выберите нужный склад, и сделайте его по умолчанию.', 'warning');
         }
-
-        return $storage;
     }
 
+    private function save_fields(Request $request, Storage $storage)
+    {
+        if ($request->has('address'))
+            $storage->setAddress(
+                $request->string('post')->trim()->value(),
+                $request->string('city')->trim()->value(),
+                $request->string('address')->trim()->value()
+            );
+        if ($request->has('latitude') && $request->has('longitude'))
+            $storage->setCoordinate($request['latitude'], $request['longitude']);
+        $this->photo($storage, $request->file('file'));
+        if ($request->has('default')) {
+            Storage::where('default', true)->update(['default' => false]);
+            $storage->setDefault();
+        }
+    }
 
     /**
      * Поступление товара списком
@@ -65,12 +66,14 @@ class StorageService
      */
     public function arrival(Storage $storage, array $items)
     {
-        //Поступление товара, списком
-        foreach ($items as $item) {
-            $product = $item->getProduct();
-            $storage->add($product, $item->getQuantity());
-        }
+        DB::transaction(function () use ($storage, $items) {
+            foreach ($items as $item) {
+                $product = $item->getProduct();
+                $storage->add($product, $item->getQuantity());
+            }
+        });
     }
+
     /**
      * Списание товара списком
      * @param MovementItemInterface[] $items
@@ -78,12 +81,13 @@ class StorageService
      */
     public function departure(Storage $storage, array $items)
     {
-        //Списание товара, списком
-        foreach ($items as $item) {
-            $product = $item->getProduct();
-            $storage->sub($product, $item->getQuantity());
-//            $product->setCountSell($product->getCountSell() - $item->getQuantity());
-        }
+        DB::transaction(function () use ($storage, $items) {
+            foreach ($items as $item) {
+                $product = $item->getProduct();
+                $storage->sub($product, $item->getQuantity());
+            }
+        });
+
     }
 
     public function photo(Storage $storage, $file): void

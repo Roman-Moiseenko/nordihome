@@ -60,7 +60,10 @@ class MovementController extends Controller
             'storage_in' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request) {
-            $movement = $this->service->create($request->only(['number', 'storage_out', 'storage_in']));
+            $movement = $this->service->create(
+                $request->integer('storage_out'),
+                $request->integer('storage_in'),
+            );
             return redirect()->route('admin.accounting.movement.show', $movement);
         });
     }

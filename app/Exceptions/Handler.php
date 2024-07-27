@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Events\ThrowableHasAppeared;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -58,8 +59,18 @@ class Handler extends ExceptionHandler
                 }
             }
 
-
         }
+
+        if ($e instanceof \DomainException) {
+            if ($request->ajax()) {
+                return \response()->json(['error' => $e->getMessage()]);
+            } else {
+                flash($e->getMessage(), 'danger');
+                return redirect()->back();
+            }
+        }
+
+        if (!config('app.debug')) event(new ThrowableHasAppeared($e));
         return parent::render($request, $e);
     }
 }

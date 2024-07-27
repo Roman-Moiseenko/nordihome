@@ -43,8 +43,12 @@ class SupplyService
         if (!is_null($stack->orderItem)) throw new \DomainException('Нельзя удалить товар из стека под Заказ клиенту!');
         $staff = $stack->staff;
         //Оповещение Менеджера
-        $message = "Товар " . $stack->product->name . "\n  из стека Поставщику удален";
-        $staff->notify(new StaffMessage($message));
+        $staff->notify(new StaffMessage(
+            'Из стека поставщику удален товар',
+            $stack->product->name,
+            '',
+            'folder-pen'
+        ));
         $stack->delete();
     }
 
@@ -58,17 +62,20 @@ class SupplyService
 
     public function create(int $distributor_id, array $data): SupplyDocument
     {
-        $distributor = Distributor::find($distributor_id);
-        $supply = $this->create_empty($distributor);
+        DB::transaction(function () use ($distributor_id, $data, &$supply) {
 
-        foreach ($data as $stack_id) {
-            /** @var SupplyStack $stack */
-            $stack = SupplyStack::find((int)$stack_id); //В стеке указываем Документ на заказ
-            $stack->supply_id = $supply->id;
-            $stack->save();
-            $supply->addProduct($stack->product, $stack->quantity);
-            $supply->refresh();
-        }
+            $distributor = Distributor::find($distributor_id);
+            $supply = $this->create_empty($distributor);
+
+            foreach ($data as $stack_id) {
+                /** @var SupplyStack $stack */
+                $stack = SupplyStack::find((int)$stack_id); //В стеке указываем Документ на заказ
+                $stack->supply_id = $supply->id;
+                $stack->save();
+                $supply->addProduct($stack->product, $stack->quantity);
+                $supply->refresh();
+            }
+        });
         return $supply;
     }
 

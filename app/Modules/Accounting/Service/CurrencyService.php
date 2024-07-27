@@ -12,17 +12,17 @@ class CurrencyService
     public function create(Request $request)
     {
         return Currency::register(
-            $request['name'],
-            $request['sign'],
-            (float)$request['exchange'],
+            $request->string('name')->trim()->value(),
+            $request->string('sign')->trim()->value(),
+           $request->float('exchange'),
         );
     }
 
     public function update(Request $request, Currency $currency): Currency
     {
-        $currency->name = $request['name'];
-        $currency->sign = $request['sign'];
-        $currency->exchange = $request['exchange'];
+        $currency->name = $request->string('name')->trim()->value();
+        $currency->sign = $request->string('sign')->trim()->value();
+        $currency->exchange = $request->float('exchange');
         $currency->save();
         return $currency;
     }

@@ -76,7 +76,7 @@ class MovementTest extends TestCase
 
         //Перемещение
         ///Черновик
-        $movement = $this->movementService->create(['number' => '01', 'storage_out' => $storage_02->id, 'storage_in' => $storage_01->id]);
+        $movement = $this->movementService->create($storage_02->id, $storage_01->id);
         $this->movementService->add($movement, $product_02->id, 5);
         $this->movementService->add($movement, $product_03->id, 5);
 

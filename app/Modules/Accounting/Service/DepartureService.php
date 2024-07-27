@@ -10,6 +10,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DepartureService
 {
@@ -31,8 +32,8 @@ class DepartureService
     public function update(Request $request, DepartureDocument $departure): DepartureDocument
     {
         if ($departure->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
-        $departure->number = $request['number'] ?? '';
-        $departure->storage_id = (int)$request['storage_id'];
+        $departure->number = $request->string('number')->trim()->value();
+        $departure->storage_id = $request->integer('storage_id');
         $departure->save();
 
         return $departure;
@@ -86,7 +87,7 @@ class DepartureService
     {
         if ($item->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         //Меняем данные
-        $item->quantity = (int)$request['quantity'];
+        $item->quantity = $request->integer('quantity');
         $item->save();
         return $item->document->getInfoData();
     }
@@ -94,8 +95,10 @@ class DepartureService
     public function completed(DepartureDocument $departure)
     {
         //Проведение документа
-        $this->storages->departure($departure->storage, $departure->departureProducts()->getModels());
-        $departure->completed();
-        event(new DepartureHasCompleted($departure));
+        DB::transaction(function () use ($departure) {
+            $this->storages->departure($departure->storage, $departure->departureProducts()->getModels());
+            $departure->completed();
+            event(new DepartureHasCompleted($departure));
+        });
     }
 }

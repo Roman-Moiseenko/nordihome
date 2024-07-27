@@ -11,35 +11,30 @@ use App\Modules\Admin\Entity\Admin;
 
 use App\Modules\Product\Entity\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PricingService
 {
 
-    public function create(): PricingDocument
+    public function create(int $arrival_id = null): PricingDocument
     {
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
-        return PricingDocument::register($staff->id);
-    }
 
-    public function create_arrival(ArrivalDocument $arrival): PricingDocument
-    {
-        $pricing = $this->create();
-        $pricing->update(['arrival_id' => $arrival->id]);
-        $pricing->refresh();
-        foreach ($arrival->arrivalProducts as $arrivalProduct) {
-            $this->add($pricing, $arrivalProduct->product_id);
+        $pricing = PricingDocument::register($staff->id);
+        if (!is_null($arrival_id)) {
+            $pricing->arrival_id = $arrival_id;
+            $pricing->save();
         }
         return $pricing;
     }
 
-    public function update(array $request, PricingDocument $pricing): PricingDocument
+    public function create_arrival(ArrivalDocument $arrival):? PricingDocument
     {
-        $pricing->update([
-            'number' => $request['number'],
-            'comment' => $request['comment'],
-        ]);
-        $pricing->refresh();
+        $pricing = $this->create($arrival->id);
+        foreach ($arrival->arrivalProducts as $arrivalProduct) {
+            $this->add($pricing, $arrivalProduct->product_id);
+        }
         return $pricing;
     }
 
@@ -105,38 +100,38 @@ class PricingService
     public function completed(PricingDocument $pricing)
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ уже проведен');
+        DB::transaction(function () use ($pricing) {
+            $pricing->number = PricingDocument::where('number', '<>', null)->count() + 1;
+            $pricing->completed = true;
+            $pricing->save();
+            $pricing->refresh();
+            foreach ($pricing->pricingProducts as $pricingProduct) {
+                $product = $pricingProduct->product;
+                $founded = 'Установка цен № ' . $pricing->htmlNum() . ' от ' . $pricing->htmlDate();
+                $product->pricesCost()->create([
+                    'value' => $pricingProduct->price_cost,
+                    'founded' => $founded,
+                ]);
+                $product->pricesRetail()->create([
+                    'value' => $pricingProduct->price_retail,
+                    'founded' => $founded,
+                ]);
+                $product->pricesBulk()->create([
+                    'value' => $pricingProduct->price_bulk,
+                    'founded' => $founded,
+                ]);
+                $product->pricesSpecial()->create([
+                    'value' => $pricingProduct->price_special,
+                    'founded' => $founded,
+                ]);
+                $product->pricesMin()->create([
+                    'value' => $pricingProduct->price_min,
+                    'founded' => $founded,
+                ]);
+            }
 
-        $pricing->number = PricingDocument::where('number', '<>', null)->count() + 1;
-        $pricing->completed = true;
-        $pricing->save();
-        $pricing->refresh();
-        foreach ($pricing->pricingProducts as $pricingProduct) {
-            $product = $pricingProduct->product;
-            $founded = 'Установка цен № ' . $pricing->htmlNum() . ' от ' . $pricing->htmlDate();
-            $product->pricesCost()->create([
-                'value' => $pricingProduct->price_cost,
-                'founded' => $founded,
-            ]);
-            $product->pricesRetail()->create([
-                'value' => $pricingProduct->price_retail,
-                'founded' => $founded,
-            ]);
-            $product->pricesBulk()->create([
-                'value' => $pricingProduct->price_bulk,
-                'founded' => $founded,
-            ]);
-            $product->pricesSpecial()->create([
-                'value' => $pricingProduct->price_special,
-                'founded' => $founded,
-            ]);
-            $product->pricesMin()->create([
-                'value' => $pricingProduct->price_min,
-                'founded' => $founded,
-            ]);
-        }
-
-        event(new PricingHasCompleted($pricing));
-        return $pricing;
+            event(new PricingHasCompleted($pricing));
+        });
     }
 
 }

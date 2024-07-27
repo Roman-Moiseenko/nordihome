@@ -34,73 +34,72 @@ class MovementService
         $this->reserveService = $reserveService;
     }
 
-    public function create(array $request): MovementDocument
+    public function create(int $storage_out, int $storage_in): MovementDocument
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
 
-        $storage_out = (int)$request['storage_out'];
-        $storage_in = (int)$request['storage_in'];
-
-        /*$movement = MovementDocument::where('storage_out', $storage_out)->where('storage_in', $storage_in)->where('status', MovementDocument::STATUS_DRAFT)->first();
-        if (!empty($movement)) return $movement;*/
-
         return MovementDocument::register(
             $storage_out,
             $storage_in,
-            $request['comment'] ?? '',
             $manager->id
         );
     }
 
     public function activate(MovementDocument $document)
     {
-        $storageOut = $document->storageOut;
-        foreach ($document->movementProducts as $movementProduct) {
-            $departureItem = StorageDepartureItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
-            $storageOut->departureItems()->save($departureItem);
-        }
-        $document->departure();
-        $document->setNumber();
+        DB::transaction(function () use ($document) {
+            $storageOut = $document->storageOut;
+            foreach ($document->movementProducts as $movementProduct) {
+                $departureItem = StorageDepartureItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
+                $storageOut->departureItems()->save($departureItem);
+            }
+            $document->departure();
+            $document->setNumber();
+        });
     }
 
     public function departure(MovementDocument $document)
     {
-        $storageOut = $document->storageOut;
-        $storageIn = $document->storageIn;
-        // Удаляем товар из Storage и создаем StorageArrivalItem
-        foreach ($document->movementProducts as $movementProduct) {
-            //удаляем из Storage и StorageDepartureItem
-            $departureItem = $movementProduct->departureItem;
-            $storageOut->sub($departureItem->product, $departureItem->quantity);
-            $departureItem->delete();
-            //создаем StorageArrivalItem
-            $arrivalItem = StorageArrivalItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
-            $storageIn->arrivalItems()->save($arrivalItem);
-        }
-        $document->arrival();
+        DB::transaction(function () use ($document) {
+            $storageOut = $document->storageOut;
+            $storageIn = $document->storageIn;
+            // Удаляем товар из Storage и создаем StorageArrivalItem
+            foreach ($document->movementProducts as $movementProduct) {
+                //удаляем из Storage и StorageDepartureItem
+                $departureItem = $movementProduct->departureItem;
+                $storageOut->sub($departureItem->product, $departureItem->quantity);
+                $departureItem->delete();
+                //создаем StorageArrivalItem
+                $arrivalItem = StorageArrivalItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
+                $storageIn->arrivalItems()->save($arrivalItem);
+            }
+            $document->arrival();
+        });
+
     }
 
     public function arrival(MovementDocument $document)
     {
-        $storageIn = $document->storageIn;
-        foreach ($document->movementProducts as $movementProduct) {
-            $arrivalItem = $movementProduct->arrivalItem;
-            $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
-            $arrivalItem->delete();//удаляем StorageArrivalItem
+        DB::transaction(function () use ($document) {
+            $storageIn = $document->storageIn;
+            foreach ($document->movementProducts as $movementProduct) {
+                $arrivalItem = $movementProduct->arrivalItem;
+                $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
+                $arrivalItem->delete();//удаляем StorageArrivalItem
 
-            //Если перемещение под заказ, то резервируем
-            if (!empty($document->order()))
-                $this->reserveService->ReserveWithMovement(
-                    $document->storageOut, $document->storageIn,
-                    $movementProduct->orderItem,
-                    $movementProduct->quantity);
-        }
-        $document->completed();
-        if (!empty($document->order())) { //Уведомляем менеджера, что товар поступил
-            $document->order()->manager->notify(new StaffMessage('Перемещение товара по заказу', $document->order()->htmlNum()));
-        }
-
+                //Если перемещение под заказ, то резервируем
+                if (!empty($document->order()))
+                    $this->reserveService->ReserveWithMovement(
+                        $document->storageOut, $document->storageIn,
+                        $movementProduct->orderItem,
+                        $movementProduct->quantity);
+            }
+            $document->completed();
+            if (!empty($document->order())) { //Уведомляем менеджера, что товар поступил
+                $document->order()->manager->notify(new StaffMessage('Перемещение товара по заказу', $document->order()->htmlNum()));
+            }
+        });
     }
 
     public function destroy(MovementDocument $movement)
@@ -146,7 +145,7 @@ class MovementService
     {
         if (!$item->document->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
         //Меняем данные
-        $item->quantity = (int)$request['quantity'];
+        $item->quantity = $request->integer('quantity');
         $item->save();
         return $item->document->getInfoData();
     }

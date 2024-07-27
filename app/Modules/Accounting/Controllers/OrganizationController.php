@@ -21,11 +21,9 @@ class OrganizationController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = Organization::orderBy('created_at');
-            $organizations = $this->pagination($query, $request, $pagination);
-            return view('admin.accounting.organization.index', compact('organizations', 'pagination'));
-        });
+        $query = Organization::orderBy('created_at');
+        $organizations = $this->pagination($query, $request, $pagination);
+        return view('admin.accounting.organization.index', compact('organizations', 'pagination'));
     }
 
     public function create()
@@ -38,40 +36,30 @@ class OrganizationController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
-        return $this->try_catch_admin(function () use($request) {
-            $organization = $this->service->create($request->all());
-            return redirect()->route('admin.accounting.organization.index');
-        });
+        $this->service->create($request->all());
+        return redirect()->route('admin.accounting.organization.index');
     }
 
     public function show(Organization $organization)
     {
-        return $this->try_catch_admin(function () use($organization) {
-            return view('admin.accounting.organization.show', compact('organization'));
-        });
+        return view('admin.accounting.organization.show', compact('organization'));
     }
 
     public function edit(Organization $organization)
     {
-        return $this->try_catch_admin(function () use($organization) {
-            return view('admin.accounting.organization.edit', compact('organization'));
-        });
+        return view('admin.accounting.organization.edit', compact('organization'));
     }
 
     public function update(Request $request, Organization $organization)
     {
-        return $this->try_catch_admin(function () use($request, $organization) {
-            $organization = $this->service->update($organization, $request->all());
-            return redirect()->route('admin.accounting.organization.edit', $organization);
-        });
+        $organization = $this->service->update($organization, $request->all());
+        return redirect()->route('admin.accounting.organization.edit', $organization);
     }
 
     public function destroy(Organization $organization)
     {
-        return $this->try_catch_admin(function () use($organization) {
-            $this->service->delete($organization);
-            return redirect()->route('admin.accounting.organization.index');
-        });
+        $this->service->delete($organization);
+        return redirect()->route('admin.accounting.organization.index');
     }
 
 }

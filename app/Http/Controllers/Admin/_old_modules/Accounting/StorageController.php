@@ -84,7 +84,7 @@ class StorageController extends Controller
             'organization_id' => 'required',
         ]);
         return $this->try_catch_admin(function () use($request, $storage) {
-            $storage = $this->service->update($request, $storage);
+            $this->service->update($request, $storage);
             return redirect()->route('admin.accounting.storage.show', $storage);
         });
     }

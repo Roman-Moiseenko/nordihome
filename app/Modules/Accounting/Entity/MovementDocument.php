@@ -62,13 +62,12 @@ class MovementDocument extends Model implements AccountingDocument
         'updated_at' => 'datetime',
     ];
 
-    public static function register(int $storage_out, int $storage_in, string $comment, int $staff_id): self
+    public static function register(int $storage_out, int $storage_in, int $staff_id): self
     {
         return self::create([
             'storage_out' => $storage_out,
             'storage_in' => $storage_in,
             'status' => self::STATUS_DRAFT,
-            'comment' => $comment,
             'staff_id' => $staff_id,
         ]);
     }

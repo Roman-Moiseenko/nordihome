@@ -29,26 +29,8 @@ class ArrivalController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            //$query = ArrivalDocument::orderByDesc('created_at');
-            $distributors = Distributor::orderBy('name')->get();
-           /* $storages = Storage::orderBy('name')->get();
-
-            $completed = $request['completed'] ?? 'all';
-            if ($completed == 'active') $query->where('completed', '=', true);
-            if ($completed == 'draft') $query->where('completed', '=', false);
-            if (!empty($distributor_id = $request->get('distributor_id'))) {
-                $query->where('distributor_id', $distributor_id);
-            }
-            if (!empty($storage_id = $request->get('storage_id'))) {
-                $query->where('storage_id', $storage_id);
-            }
-
-            $arrivals = $this->pagination($query, $request, $pagination);
-*/
-            return view('admin.accounting.arrival.index',
-                compact(/*'arrivals', 'pagination', 'completed', 'storages', 'storage_id', 'distributor_id',*/ 'distributors'));
-        });
+        $distributors = Distributor::orderBy('name')->get();
+        return view('admin.accounting.arrival.index', compact('distributors'));
     }
 
 
@@ -57,39 +39,31 @@ class ArrivalController extends Controller
         $request->validate([
             'distributor' => 'required',
         ]);
-        return $this->try_catch_admin(function () use($request) {
-            $arrival = $this->service->create((int)$request['distributor']);
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
-        });
+
+        $arrival = $this->service->create((int)$request['distributor']);
+        return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 
     public function show(ArrivalDocument $arrival)
     {
-        return $this->try_catch_admin(function () use($arrival) {
-            $info = $arrival->getInfoData();
-            return view('admin.accounting.arrival.show', compact('arrival', 'info'));
-        });
+        $info = $arrival->getInfoData();
+        return view('admin.accounting.arrival.show', compact('arrival', 'info'));
     }
 
     public function destroy(ArrivalDocument $arrival)
     {
-        return $this->try_catch_admin(function () use($arrival) {
-            $this->service->destroy($arrival);
-            return redirect()->back();
-        });
+        $this->service->destroy($arrival);
+        return redirect()->back();
     }
 
     public function add(Request $request, ArrivalDocument $arrival)
     {
-
-        return $this->try_catch_admin(function () use($request, $arrival) {
-            $this->service->add(
-                $arrival,
-                (int)$request['product_id'],
-                (int)$request['quantity']
-            );
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
-        });
+        $this->service->add(
+            $arrival,
+            $request->integer('product_id'),
+            $request->integer('quantity')
+        );
+        return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 
     public function add_products(Request $request, ArrivalDocument $arrival)
@@ -97,53 +71,43 @@ class ArrivalController extends Controller
         $request->validate([
             'products' => 'required',
         ]);
-        return $this->try_catch_admin(function () use($request, $arrival) {
-            $this->service->add_products($arrival, $request['products']);
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
-        });
+        $this->service->add_products($arrival, $request['products']);
+        return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 
     public function remove_item(ArrivalProduct $item)
     {
-        return $this->try_catch_admin(function () use($item) {
-            $arrival = $item->document;
-            $item->delete();
-            return redirect()->route('admin.accounting.arrival.show', $arrival);
-        });
+        $arrival = $item->document;
+        $item->delete();
+        return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 
     public function completed(ArrivalDocument $arrival)
     {
-        return $this->try_catch_admin(function () use($arrival) {
-            $this->service->completed($arrival);
-            return redirect()->route('admin.accounting.arrival.index');
-        });
+        $this->service->completed($arrival);
+        return redirect()->route('admin.accounting.arrival.index');
     }
 
     //AJAX
     public function set(Request $request, ArrivalProduct $item)
     {
-        return $this->try_catch_ajax_admin(function () use($request, $item) {
-            $cost_ru = $this->service->set($request, $item);
-            return response()->json([
-                'cost_ru' => $cost_ru,
-                'info' => $item->document->getInfoData(),
-            ]);
-        });
+        $cost_ru = $this->service->set($request, $item);
+        return response()->json([
+            'cost_ru' => $cost_ru,
+            'info' => $item->document->getInfoData(),
+        ]);
     }
 
     public function search(Request $request, ArrivalDocument $arrival)
     {
-        return $this->try_catch_ajax_admin(function () use($request, $arrival) {
-            $result = [];
-            $products = $this->products->search($request['search']);
-            /** @var Product $product */
-            foreach ($products as $product) {
-                if (!$arrival->isProduct($product->id)) {
-                    $result[] = $this->products->toArrayForSearch($product);
-                }
+        $result = [];
+        $products = $this->products->search($request['search']);
+        /** @var Product $product */
+        foreach ($products as $product) {
+            if (!$arrival->isProduct($product->id)) {
+                $result[] = $this->products->toArrayForSearch($product);
             }
-            return \response()->json($result);
-        });
+        }
+        return \response()->json($result);
     }
 }

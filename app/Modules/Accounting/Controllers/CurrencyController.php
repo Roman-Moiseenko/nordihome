@@ -21,10 +21,8 @@ class CurrencyController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $currencies = Currency::orderBy('name')->get();
-            return view('admin.accounting.currency.index', compact('currencies'));
-        });
+        $currencies = Currency::orderBy('name')->get();
+        return view('admin.accounting.currency.index', compact('currencies'));
     }
 
     public function create(Request $request)
@@ -37,44 +35,33 @@ class CurrencyController extends Controller
         $request->validate([
             'name' => 'required|string',
         ]);
-        return $this->try_catch_admin(function () use($request) {
-            $currency = $this->service->create($request);
-            return redirect()->route('admin.accounting.currency.show', $currency);
-        });
+        $currency = $this->service->create($request);
+        return redirect()->route('admin.accounting.currency.show', $currency);
     }
 
     public function show(Currency $currency)
     {
-        return $this->try_catch_admin(function () use($currency) {
-            return view('admin.accounting.currency.show', compact('currency'));
-        });
-
+        return view('admin.accounting.currency.show', compact('currency'));
     }
 
     public function edit(Currency $currency)
     {
-        return $this->try_catch_admin(function () use($currency) {
-            return view('admin.accounting.currency.edit', compact('currency'));
-        });
-
+        return view('admin.accounting.currency.edit', compact('currency'));
     }
 
     public function update(Request $request, Currency $currency)
     {
         $request->validate([
             'name' => 'required',
+            'exchange' => 'required|numeric'
         ]);
-        return $this->try_catch_admin(function () use($request, $currency) {
-            $currency = $this->service->update($request, $currency);
-            return redirect()->route('admin.accounting.currency.show', $currency);
-        });
+        $currency = $this->service->update($request, $currency);
+        return redirect()->route('admin.accounting.currency.show', $currency);
     }
 
     public function destroy(Currency $currency)
     {
-        return $this->try_catch_admin(function () use($currency) {
-            $this->service->destroy($currency);
-            return redirect()->back();
-        });
+        $this->service->destroy($currency);
+        return redirect()->back();
     }
 }

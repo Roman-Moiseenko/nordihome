@@ -25,18 +25,14 @@ class StorageController extends Controller
 
     public function index()
     {
-        return $this->try_catch_admin(function () {
             $storages = Storage::orderBy('name')->get();
             return view('admin.accounting.storage.index', compact('storages'));
-        });
     }
 
     public function create(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
             $organizations = Organization::get();
             return view('admin.accounting.storage.create', compact('organizations'));
-        });
     }
 
     public function store(Request $request)
@@ -45,36 +41,21 @@ class StorageController extends Controller
             'name' => 'required|string',
             'organization_id' => 'required|int',
         ]);
-        return $this->try_catch_admin(function () use($request) {
             $storage = $this->service->create($request);
             return redirect()->route('admin.accounting.storage.show', $storage);
-        });
     }
 
     public function show(Request $request, Storage $storage)
     {
-        return $this->try_catch_admin(function () use($request, $storage) {
             $query = $storage->items();
-            /*
-             * Поиск по товару, нужен ли?
-            if (!empty($search = $request['search'])) {
-                $query->whereHas('product', function ($q) use ($search) {
-                    $q->where('code_search', 'LIKE', "%{$search}%")
-                        ->orWhere('name', 'LIKE', "% {$search}%");
-                });
-            }
-            */
             $items = $this->pagination($query, $request, $pagination);
             return view('admin.accounting.storage.show', compact('storage', 'items', 'pagination'));
-        });
     }
 
     public function edit(Storage $storage)
     {
-        return $this->try_catch_admin(function () use($storage) {
             $organizations = Organization::get();
             return view('admin.accounting.storage.edit', compact('storage', 'organizations'));
-        });
     }
 
     public function update(Request $request, Storage $storage)
@@ -83,9 +64,7 @@ class StorageController extends Controller
             'name' => 'required',
             'organization_id' => 'required',
         ]);
-        return $this->try_catch_admin(function () use($request, $storage) {
-            $storage = $this->service->update($request, $storage);
+            $this->service->update($request, $storage);
             return redirect()->route('admin.accounting.storage.show', $storage);
-        });
     }
 }

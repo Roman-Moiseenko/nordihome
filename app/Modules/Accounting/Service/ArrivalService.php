@@ -7,19 +7,17 @@ use App\Events\ArrivalHasCompleted;
 use App\Events\MovementHasCreated;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
-use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Service\OrderReserveService;
-
 use App\Modules\Product\Entity\Product;
-use App\Notifications\StaffMessage;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
 
 class ArrivalService
@@ -61,20 +59,22 @@ class ArrivalService
 
     public function update(Request $request, ArrivalDocument $arrival): ArrivalDocument
     {
-        if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
-        $arrival->number = $request['number'] ?? '';
-        $arrival->distributor_id = (int)$request['distributor'];
-        $arrival->storage_id = (int)$request['storage'];
-        $arrival->save();
-        /** @var Distributor $distributor */
-        $distributor = Distributor::find((int)$request['distributor']);
-        $currency = $distributor->currency;
-        if ($currency->id != $arrival->currency_id) {
-            $arrival->currency_id = $currency->id;
-            $arrival->setExchange($currency->exchange);
-        } elseif ($currency->exchange != $arrival->exchange_fix) {
-            $arrival->setExchange($currency->exchange);
-        }
+        DB::transaction(function () use ($request, $arrival) {
+            if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
+            $arrival->number = $request->string('number')->trim()->value();
+            $arrival->distributor_id = $request->integer('distributor');
+            $arrival->storage_id = $request->integer('storage');
+            $arrival->save();
+            /** @var Distributor $distributor */
+            $distributor = Distributor::find($arrival->distributor_id);
+            $currency = $distributor->currency;
+            if ($currency->id != $arrival->currency_id) {
+                $arrival->currency_id = $currency->id;
+                $arrival->setExchange($currency->exchange);
+            } elseif ($currency->exchange != $arrival->exchange_fix) {
+                $arrival->setExchange($currency->exchange);
+            }
+        });
         return $arrival;
     }
 
@@ -112,10 +112,9 @@ class ArrivalService
             $arrival->exchange_fix * $distributor_cost,
             $product_sell
         );
-        $product->refresh();
-
+        //$product->refresh();
         $arrival->arrivalProducts()->save($item);
-        $arrival->refresh();
+        //$arrival->refresh();
 
         return $item;
     }
@@ -139,10 +138,10 @@ class ArrivalService
         if ($item->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
 
         //Меняем данные
-        $item->quantity = (int)$request['quantity'];
-        $item->cost_currency = (float)$request['cost'];
+        $item->quantity = $request->integer('quantity');
+        $item->cost_currency = $request->float('cost');
         $item->cost_ru = ceil($item->document->exchange_fix * $item->cost_currency * 100) / 100;
-        $item->price_sell = (int)$request['price'];
+        $item->price_sell = $request->integer('price');
         $item->save();
         return $item->cost_ru;
     }
@@ -172,79 +171,75 @@ class ArrivalService
      */
     public function completed(ArrivalDocument $arrival)
     {
-        $this->storages->arrival($arrival->storage, $arrival->arrivalProducts()->getModels());
-        //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
-        foreach ($arrival->arrivalProducts as $item) {
-            $this->distributors->arrival($arrival->distributor, $item->product_id, $item->cost_currency);
-        }
+        DB::transaction(function () use ($arrival) {
+            $this->storages->arrival($arrival->storage, $arrival->arrivalProducts()->getModels());
+            //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
+            foreach ($arrival->arrivalProducts as $item) {
+                $this->distributors->arrival($arrival->distributor, $item->product_id, $item->cost_currency);
+            }
+            $arrival->completed();
 
-        $arrival->completed();
-
-        //У поступления есть заказ поставщику
-        if (!is_null($arrival->supply)) {
-            //Создаем перемещения под все заказы со статусом на отбытие
-            $orders_movement = [];
-            $storages_movement = [];
-            $orders = [];
-            foreach ($arrival->supply->stacks as $stack) {
-                //Поступления, для которых есть стек из заказа, ставим в резерв
-                if (!is_null($stack->orderItem)) {
-                    $this->reserveService->toReserveStorage($stack->orderItem, $arrival->storage, $stack->quantity);
-                    $stack->orderItem->preorder = false;
-                    $stack->orderItem->save();
-                    //сохраняем список $orders для оповещения
-                    $orders[$stack->orderItem->order_id] = $stack->orderItem->order;
-                }
-
-                if ($stack->storage_id != $arrival->storage_id) { //Хранилище отличается, требуется Перемещение
-
-                    if (!is_null($stack->orderItem)) { //Из заказа
-                        $orders_movement[$stack->orderItem->order->id][] = $stack;
-                    } else { //Перемещение от менеджера
-                        $storages_movement[$stack->storage_id][] = $stack;
+            //У поступления есть заказ поставщику
+            if (!is_null($arrival->supply)) {
+                //Создаем перемещения под все заказы со статусом на отбытие
+                $orders_movement = [];
+                $storages_movement = [];
+                $orders = [];
+                foreach ($arrival->supply->stacks as $stack) {
+                    //Поступления, для которых есть стек из заказа, ставим в резерв
+                    if (!is_null($stack->orderItem)) {
+                        $this->reserveService->toReserveStorage($stack->orderItem, $arrival->storage, $stack->quantity);
+                        $stack->orderItem->preorder = false;
+                        $stack->orderItem->save();
+                        //сохраняем список $orders для оповещения
+                        $orders[$stack->orderItem->order_id] = $stack->orderItem->order;
                     }
+
+                    if ($stack->storage_id != $arrival->storage_id) { //Хранилище отличается, требуется Перемещение
+
+                        if (!is_null($stack->orderItem)) { //Из заказа
+                            $orders_movement[$stack->orderItem->order->id][] = $stack;
+                        } else { //Перемещение от менеджера
+                            $storages_movement[$stack->storage_id][] = $stack;
+                        }
+                    }
+
                 }
 
-            }
+                //Создаем перемещения для заказов
+                /** @var SupplyStack $stack */
+                foreach ($orders_movement as $order_id => $stacks) {
+                    /** @var Order $order */
+                    $order = Order::find($order_id);
+                    $movement = $this->movementService->create(
+                        $arrival->storage_id,
+                        $stacks[0]->storage_id //По первому элементу определяем хранилище
+                    );
 
-            //Создаем перемещения для заказов
-            /** @var SupplyStack $stack */
-            foreach ($orders_movement as $order_id => $stacks) {
-                /** @var Order $order */
-                $order = Order::find($order_id);
-                $movement = $this->movementService->create([
-                    'number' => 'Заказ ' . $order->htmlNum(),
-                    'storage_out' => $arrival->storage_id,
-                    'storage_in' => $stacks[0]->storage_id, //По первому элементу определяем хранилище
-                ]);
+                    $order->movements()->attach($movement->id);
 
-                $order->movements()->attach($movement->id);
-
-                foreach ($stacks as $stack) {
-                    $movement->addProduct($stack->product, $stack->quantity, $stack->orderItem->id);
+                    foreach ($stacks as $stack) {
+                        $movement->addProduct($stack->product, $stack->quantity, $stack->orderItem->id);
+                    }
+                    $movement->refresh();
+                    $this->movementService->activate($movement);
+                    event(new MovementHasCreated($movement));
                 }
-                $movement->refresh();
-                $this->movementService->activate($movement);
-                event(new MovementHasCreated($movement));
-            }
-            //Создаем перемещения от менеджеров
-            /** @var SupplyStack $stack */
-            foreach ($storages_movement as $storageIn_id => $stacks) {
-                $movement = $this->movementService->create([
-                    'number' => 'Заказ от менеджеров',
-                    'storage_out' => $arrival->storage_id,
-                    'storage_in' => $storageIn_id,
-                ]);
-                foreach ($stacks as $stack) {
-                    $movement->addProduct($stack->product, $stack->quantity);
+                //Создаем перемещения от менеджеров
+                /** @var SupplyStack $stack */
+                foreach ($storages_movement as $storageIn_id => $stacks) {
+                    $movement = $this->movementService->create($arrival->storage_id, $storageIn_id);
+                    foreach ($stacks as $stack) {
+                        $movement->addProduct($stack->product, $stack->quantity);
+                    }
+                    $movement->refresh();
+                    $this->movementService->activate($movement);
+                    event(new MovementHasCreated($movement));
                 }
-                $movement->refresh();
-                $this->movementService->activate($movement);
-                event(new MovementHasCreated($movement));
             }
-        }
 
-        event(new ArrivalHasCompleted($arrival));
+            event(new ArrivalHasCompleted($arrival));
+        });
     }
 
 }

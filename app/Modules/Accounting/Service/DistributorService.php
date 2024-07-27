@@ -6,21 +6,24 @@ namespace App\Modules\Accounting\Service;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DistributorService
 {
 
     public function create(Request $request): Distributor
     {
-        $distributor = Distributor::register($request['name'], (int)$request['currency_id']);
+        $distributor = Distributor::register(
+            $request->string('name')->trim()->value(),
+            $request->integer('currency_id'));
 
         return $distributor;
     }
 
     public function update(Request $request, Distributor $distributor): Distributor
     {
-        $distributor->name = $request['name'];
-        $distributor->currency_id = (int)$request['currency_id'];
+        $distributor->name = $request->string('name')->trim()->value();
+        $distributor->currency_id = $request->integer('currency_id');
         $distributor->save();
         return $distributor;
     }
@@ -33,7 +36,6 @@ class DistributorService
 
     public function arrival(Distributor $distributor, int $product_id, float $cost)
     {
-        //Поступление товара, списком
         /** @var Product $_product */
         $_product = Product::find($product_id);
         foreach ($distributor->products as $product) {

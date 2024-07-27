@@ -75,7 +75,7 @@ class PricingController extends Controller
     public function completed(PricingDocument $pricing)
     {
         return $this->try_catch_admin(function () use($pricing) {
-            $pricing = $this->service->completed($pricing);
+            $this->service->completed($pricing);
             return redirect()->route('admin.accounting.pricing.index');
         });
     }

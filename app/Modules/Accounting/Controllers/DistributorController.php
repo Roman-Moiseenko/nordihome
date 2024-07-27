@@ -17,7 +17,7 @@ class DistributorController extends Controller
 {
     private DistributorService $service;
 
-    public function __construct(DistributorService $service )
+    public function __construct(DistributorService $service)
     {
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
@@ -25,11 +25,9 @@ class DistributorController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = Distributor::orderBy('name');
-            $distributors = $this->pagination($query, $request, $pagination);
-            return view('admin.accounting.distributor.index', compact('distributors', 'pagination'));
-        });
+        $query = Distributor::orderBy('name');
+        $distributors = $this->pagination($query, $request, $pagination);
+        return view('admin.accounting.distributor.index', compact('distributors', 'pagination'));
     }
 
     public function create(Request $request)
@@ -43,27 +41,21 @@ class DistributorController extends Controller
         $request->validate([
             'name' => 'required|string',
         ]);
-        return $this->try_catch_admin(function () use($request) {
-            $distributor = $this->service->create($request);
-            return redirect()->route('admin.accounting.distributor.show', $distributor);
-        });
+        $distributor = $this->service->create($request);
+        return redirect()->route('admin.accounting.distributor.show', $distributor);
     }
 
     public function show(Distributor $distributor, Request $request)
     {
-        return $this->try_catch_admin(function () use($distributor, $request) {
-            $query = DistributorProduct::where('distributor_id', $distributor->id);
-            $items = $this->pagination($query, $request, $pagination);
-            return view('admin.accounting.distributor.show', compact('distributor', 'items', 'pagination'));
-        });
+        $query = DistributorProduct::where('distributor_id', $distributor->id);
+        $items = $this->pagination($query, $request, $pagination);
+        return view('admin.accounting.distributor.show', compact('distributor', 'items', 'pagination'));
     }
 
     public function edit(Distributor $distributor)
     {
-        return $this->try_catch_admin(function () use($distributor) {
-            $currencies = Currency::get();
-            return view('admin.accounting.distributor.edit', compact('distributor', 'currencies'));
-        });
+        $currencies = Currency::get();
+        return view('admin.accounting.distributor.edit', compact('distributor', 'currencies'));
     }
 
     public function update(Request $request, Distributor $distributor)
@@ -71,17 +63,13 @@ class DistributorController extends Controller
         $request->validate([
             'name' => 'required',
         ]);
-        return $this->try_catch_admin(function () use($request, $distributor) {
-            $distributor = $this->service->update($request, $distributor);
-            return redirect()->route('admin.accounting.distributor.show', $distributor);
-        });
+        $distributor = $this->service->update($request, $distributor);
+        return redirect()->route('admin.accounting.distributor.show', $distributor);
     }
 
     public function destroy(Distributor $distributor)
     {
-        return $this->try_catch_admin(function () use($distributor) {
-            $this->service->destroy($distributor);
-            return redirect()->back();
-        });
+        $this->service->destroy($distributor);
+        return redirect()->back();
     }
 }

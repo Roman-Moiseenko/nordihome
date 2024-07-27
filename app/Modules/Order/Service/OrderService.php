@@ -739,10 +739,7 @@ class OrderService
      */
     public function movement(Order $order, int $storage_out, int $storage_in): MovementDocument
     {
-        $movement = $this->movementService->create([
-            'storage_out' => $storage_out,
-            'storage_in' => $storage_in,
-        ]);
+        $movement = $this->movementService->create($storage_out, $storage_in);
         $order->movements()->attach($movement->id);
         $movement->refresh();
 
