@@ -19,19 +19,14 @@ class ActivityController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use ($request) {
-            $query = LoggerActivity::orderByDesc('created_at');
-            $activities = $this->pagination($query, $request, $pagination);
-            return view('admin.analytics.activity.index', compact('activities', 'pagination'));
-
-        });
+        $query = LoggerActivity::orderByDesc('created_at');
+        $activities = $this->pagination($query, $request, $pagination);
+        return view('admin.analytics.activity.index', compact('activities', 'pagination'));
     }
-/*
-    public function show(LoggerCron $cron)
-    {
-        return $this->try_catch_admin(function () use ($cron){
-            return view('admin.analytics.cron.show', compact('cron'));
-        });
+    /*
+        public function show(LoggerCron $cron)
+        {
+             return view('admin.analytics.cron.show', compact('cron'));
 
-    }*/
+        }*/
 }

@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Events\ThrowableHasAppeared;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -69,8 +70,8 @@ class Handler extends ExceptionHandler
                 return redirect()->back();
             }
         }
-
-        if (!config('app.debug')) event(new ThrowableHasAppeared($e));
+        if (!($e instanceof TokenMismatchException))
+            if (!config('app.debug')) event(new ThrowableHasAppeared($e));
         return parent::render($request, $e);
     }
 }

@@ -66,7 +66,7 @@ class TruckController extends Controller
     public function update(Request $request, DeliveryTruck $truck)
     {
         return $this->try_catch_admin(function () use($request, $truck) {
-            $truck = $this->service->update($request->all(), $truck);
+            $this->service->update($request->all(), $truck);
             return redirect()->route('admin.delivery.truck.show', compact('truck'));
         });
     }

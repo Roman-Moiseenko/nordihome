@@ -19,17 +19,13 @@ class CronController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use ($request) {
-            $query = LoggerCron::orderByDesc('created_at');
-            $crons = $this->pagination($query, $request, $pagination);
-            return view('admin.analytics.cron.index', compact('crons', 'pagination'));
-        });
+        $query = LoggerCron::orderByDesc('created_at');
+        $crons = $this->pagination($query, $request, $pagination);
+        return view('admin.analytics.cron.index', compact('crons', 'pagination'));
     }
 
     public function show(LoggerCron $cron)
     {
-        return $this->try_catch_admin(function () use ($cron){
-            return view('admin.analytics.cron.show', compact('cron'));
-        });
+        return view('admin.analytics.cron.show', compact('cron'));
     }
 }

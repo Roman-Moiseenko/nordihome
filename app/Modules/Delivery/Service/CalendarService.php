@@ -9,6 +9,7 @@ use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryTruck;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CalendarService
 {
@@ -44,7 +45,6 @@ class CalendarService
             $volume += $truck->volume;
             $weight += $truck->weight;
         }
-
 
         for ($i = 1; $i <= $begin_date->endOfMonth()->day; $i++) {
             $day = Carbon::parse($year . '-' . $month . '-' . $i);
@@ -92,41 +92,39 @@ class CalendarService
 
     public function removePeriod(Carbon $date, int $time)
     {
-        /** @var Calendar $calendar */
-        $calendar = Calendar::where('date_at', $date->toDateString())->first();
-        if (is_null($calendar)) return;
+        DB::transaction(function () use ($date, $time) {
+            /** @var Calendar $calendar */
+            $calendar = Calendar::where('date_at', $date->toDateString())->first();
+            if (is_null($calendar)) return;
 
-        $period = $calendar->getPeriod($time);
-        if (is_null($period)) return;
-        if ($period->expenses()->count() > 0) throw new \DomainException('Нельзя удалить данное время, существуют отгрузки');
+            $period = $calendar->getPeriod($time);
+            if (is_null($period)) return;
+            if ($period->expenses()->count() > 0) throw new \DomainException('Нельзя удалить данное время, существуют отгрузки');
 
-        $period->delete();
-        $calendar->refresh();
-        if ($calendar->periods()->count() == 0) $calendar->delete();
+            $period->delete();
+            $calendar->refresh();
+            if ($calendar->periods()->count() == 0) $calendar->delete();
+        });
+
     }
 
-    /*
-    public function get_day(Carbon $date)
-    {
-        $this->create_date($date);
-        return Calendar::where('date_at', $date->toDateString())->orderBy('date_at')->getModels();
-    }
-*/
+
     public function attach_expense(CalendarPeriod $calendarPeriod, OrderExpense $expense)
     {
-        $previousCalendarPeriod = $expense->calendarPeriod();
-        $expense->calendarPeriods()->detach();
-        $expense->calendarPeriods()->attach($calendarPeriod->id);
+        DB::transaction(function () use ($calendarPeriod, $expense) {
+            $previousCalendarPeriod = $expense->calendarPeriod();
+            $expense->calendarPeriods()->detach();
+            $expense->calendarPeriods()->attach($calendarPeriod->id);
 
-        if (!is_null($previousCalendarPeriod)) {
-            $previousCalendarPeriod->refresh();
-            $this->check_full($previousCalendarPeriod);
-        }
-        $calendarPeriod->refresh();
-        $this->check_full($calendarPeriod);
+            if (!is_null($previousCalendarPeriod)) {
+                $previousCalendarPeriod->refresh();
+                $this->check_full($previousCalendarPeriod);
+            }
+            $calendarPeriod->refresh();
+            $this->check_full($calendarPeriod);
 
-        $this->logger->logOrder($expense->order, 'Установлена дата отгрузки', $calendarPeriod->calendar->htmlDate(),  $calendarPeriod->timeHtml());
-
+            $this->logger->logOrder($expense->order, 'Установлена дата отгрузки', $calendarPeriod->calendar->htmlDate(),  $calendarPeriod->timeHtml());
+        });
     }
 
     private function check_full(CalendarPeriod $calendarPeriod)
@@ -142,7 +140,5 @@ class CalendarService
         }
         $calendarPeriod->save();
     }
-
-    //public f
 
 }

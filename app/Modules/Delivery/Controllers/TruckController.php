@@ -16,17 +16,14 @@ class TruckController extends Controller
     public function __construct(TruckService $service)
     {
         $this->middleware(['auth:admin']);
-
         $this->service = $service;
     }
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = DeliveryTruck::orderBy('name')->where('active', true);
-            $trucks = $this->pagination($query, $request, $pagination);
-            return view('admin.delivery.truck.index', compact('trucks', 'pagination'));
-        });
+        $query = DeliveryTruck::orderBy('name')->where('active', true);
+        $trucks = $this->pagination($query, $request, $pagination);
+        return view('admin.delivery.truck.index', compact('trucks', 'pagination'));
     }
 
     public function create()
@@ -40,40 +37,30 @@ class TruckController extends Controller
         $request->validate([
             'name' => 'required|string',
         ]);
-        return $this->try_catch_admin(function () use($request) {
-            $truck = $this->service->register($request->all());
-            return redirect()->route('admin.delivery.truck.show', compact('truck'));
-        });
+        $truck = $this->service->register($request->all());
+        return redirect()->route('admin.delivery.truck.show', compact('truck'));
     }
 
     public function show(DeliveryTruck $truck)
     {
-        return $this->try_catch_admin(function () use($truck) {
-            return view('admin.delivery.truck.show', compact('truck'));
-        });
+        return view('admin.delivery.truck.show', compact('truck'));
     }
 
     public function edit(DeliveryTruck $truck)
     {
-        return $this->try_catch_admin(function () use($truck) {
-            $drivers = Worker::where('post', Worker::DRIVER)->where('active', true)->get();
-            return view('admin.delivery.truck.edit', compact('truck', 'drivers'));
-        });
+        $drivers = Worker::where('post', Worker::DRIVER)->where('active', true)->get();
+        return view('admin.delivery.truck.edit', compact('truck', 'drivers'));
     }
 
     public function update(Request $request, DeliveryTruck $truck)
     {
-        return $this->try_catch_admin(function () use($request, $truck) {
-            $truck = $this->service->update($request->all(), $truck);
-            return redirect()->route('admin.delivery.truck.show', compact('truck'));
-        });
+        $this->service->update($request->all(), $truck);
+        return redirect()->route('admin.delivery.truck.show', compact('truck'));
     }
 
     public function destroy(DeliveryTruck $truck)
     {
-        return $this->try_catch_admin(function () use($truck) {
-            $this->service->delete($truck);
-            return redirect()->route('admin.delivery.truck.index');
-        });
+        $this->service->delete($truck);
+        return redirect()->route('admin.delivery.truck.index');
     }
 }
