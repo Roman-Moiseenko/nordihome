@@ -15,7 +15,7 @@
                         <x-base.lucide icon="user" class="w-4 h-4"/>&nbsp;{{ $worker->fullname->getFullName() }}
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
-                        <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ $worker->phone }}
+                        <x-base.lucide icon="phone" class="w-4 h-4"/>&nbsp;{{ phone($worker->phone) }}
                     </div>
                     <div class="truncate sm:whitespace-normal flex items-center mt-3">
                         <x-base.lucide icon="send" class="w-4 h-4"/>&nbsp;{{ $worker->telegram_user_id }}

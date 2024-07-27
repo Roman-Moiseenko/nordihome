@@ -13,13 +13,13 @@ class WorkerService
     {
         if ((int)$request['post'] == 0) throw new \DomainException('Не выбрана специализация');
         $worker = Worker::register(
-            $request['surname'],
-            $request['firstname'],
-            $request['secondname'] ?? '',
-            (int)$request['post'],
-            $request['phone'] ?? '',
+            $request->string('surname')->trim()->value(),
+            $request->string('firstname')->trim()->value(),
+            $request->string('secondname')->trim()->value(),
+            $request->integer('post'),
         );
-        if (!is_null($request['telegram_user_id'])) $worker->setTelegram((int)$request['telegram_user_id']);
+        $worker->setPhone($request->string('phone')->trim()->value());
+        if (!is_null($request['telegram_user_id'])) $worker->setTelegram((int)$request->integer('telegram_user_id'));
         if (!is_null($request['storage_id']) && (int)$request['storage_id'] != 0) $worker->setStorage((int)$request['storage_id']);
         return $worker;
     }
@@ -35,16 +35,16 @@ class WorkerService
 
     public function update(Request $request, Worker $worker): Worker
     {
-
-        $worker->fullname->surname = $request['surname'];
-        $worker->fullname->firstname = $request['firstname'];
-        $worker->fullname->secondname = $request['secondname'] ?? '';
+        $worker->fullname->surname = $request->string('surname')->trim()->value();
+        $worker->fullname->firstname = $request->string('firstname')->trim()->value();
+        $worker->fullname->secondname = $request->string('secondname')->trim()->value();
         $worker->save();
 
         $worker->update([
-            'post' => (int)$request['post'],
-            'phone' => $request['phone'] ?? '',
+            'post' => $request->integer('post'),
         ]);
+        $worker->setPhone($request->string('phone')->trim()->value());
+
         if (!is_null($request['telegram_user_id'])) $worker->setTelegram((int)$request['telegram_user_id']);
         if (!is_null($request['storage_id']) && (int)$request['storage_id'] != 0) $worker->setStorage((int)$request['storage_id']);
         $worker->refresh();

@@ -18,10 +18,9 @@ class SettingService
         }
     }
 
-
     public function set(Request $request, Setting $setting)
     {
-        $setting_id = $setting->id; //(int)$request['setting_id'];
+        $setting_id = $setting->id;
         $keys = $request->all();
 
         $items = SettingItem::where('setting_id', $setting_id)->get();

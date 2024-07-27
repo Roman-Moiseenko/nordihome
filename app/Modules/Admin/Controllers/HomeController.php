@@ -16,8 +16,6 @@ class HomeController extends Controller
 
     public function index()
     {
-        return $this->try_catch_admin(function () {
-            return view('admin.home', ['layout' => 'admin']);
-        });
+        return view('admin.home', ['layout' => 'admin']);
     }
 }

@@ -98,7 +98,7 @@ class StaffController extends Controller
     public function update(UpdateRequest $request, Admin $staff)
     {
         return $this->try_catch_admin(function () use($request, $staff) {
-            $staff = $this->service->update($request, $staff);
+            $this->service->update($request, $staff);
             return redirect()->route('admin.staff.show', $staff);
         });
     }

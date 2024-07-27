@@ -106,6 +106,7 @@ class Admin extends Authenticatable
     public function blocked(): void
     {
         $this->active = false;
+        $this->save();
     }
 
     public function isBlocked(): bool
@@ -159,6 +160,7 @@ class Admin extends Authenticatable
     public function activated()
     {
         $this->active = true;
+        $this->save();
     }
 
     public function isCurrent(): bool

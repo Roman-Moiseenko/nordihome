@@ -32,51 +32,39 @@ class StaffController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $selected = $request['role'] ?? '';
-            $roles = Admin::ROLES;
-            $query = $this->repository->getIndex($request);
-            $admins = $this->pagination($query, $request, $pagination);
-            return view('admin.staff.index', compact('admins', 'roles', 'selected', 'pagination'));
-        });
+        $selected = $request['role'] ?? '';
+        $roles = Admin::ROLES;
+        $query = $this->repository->getIndex($request);
+        $admins = $this->pagination($query, $request, $pagination);
+        return view('admin.staff.index', compact('admins', 'roles', 'selected', 'pagination'));
     }
 
     public function create()
     {
-        return $this->try_catch_admin(function () {
-            $roles = Admin::ROLES;
-            return view('admin.staff.create', compact('roles'));
-        });
+        $roles = Admin::ROLES;
+        return view('admin.staff.create', compact('roles'));
     }
 
     public function store(RegisterRequest $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $staff = $this->service->register($request);
-            return redirect()->route('admin.staff.show', compact('staff'));
-        });
+        $staff = $this->service->register($request);
+        return redirect()->route('admin.staff.show', compact('staff'));
     }
 
     public function show(Admin $staff)
     {
-        return $this->try_catch_admin(function () use($staff) {
-            return view('admin.staff.show', compact('staff'));
-        });
+        return view('admin.staff.show', compact('staff'));
     }
 
     public function edit(Admin $staff)
     {
-        return $this->try_catch_admin(function () use($staff) {
-            $roles = Admin::ROLES;
-            return view('admin.staff.edit', compact('staff', 'roles'));
-        });
+        $roles = Admin::ROLES;
+        return view('admin.staff.edit', compact('staff', 'roles'));
     }
 
     public function security(Admin $staff)
     {
-        return $this->try_catch_admin(function () use($staff) {
-            return view('admin.staff.security', compact('staff'));
-        });
+        return view('admin.staff.security', compact('staff'));
     }
 
     public function password(Request $request, Admin $staff)
@@ -84,56 +72,43 @@ class StaffController extends Controller
         $request->validate([
             'password' => 'required|string|min:6',
         ]);
-        return $this->try_catch_admin(function () use($request, $staff) {
-            $this->service->setPassword($request['password'], $staff);
-            flash('Пароль успешно изменен', 'success');
-            return redirect()->back();
-        });
+        $this->service->setPassword($request['password'], $staff);
+        flash('Пароль успешно изменен', 'success');
+        return redirect()->back();
     }
 
     public function update(UpdateRequest $request, Admin $staff)
     {
-        return $this->try_catch_admin(function () use($request, $staff) {
-            $staff = $this->service->update($request, $staff);
-            return redirect()->route('admin.staff.show', $staff);
-        });
+        $this->service->update($request, $staff);
+        return redirect()->route('admin.staff.show', $staff);
     }
 
     public function destroy(Admin $staff)
     {
-        return $this->try_catch_admin(function () use($staff) {
-            $this->service->blocking($staff);
-            return redirect()->route('admin.staff.index');
-        });
+        $this->service->blocking($staff);
+        return redirect()->route('admin.staff.index');
     }
 
     public function activate(Admin $staff)
     {
-        return $this->try_catch_admin(function () use($staff) {
-            $this->service->activate($staff);
-            return redirect()->route('admin.staff.index');
-        });
+        $this->service->activate($staff);
+        return redirect()->route('admin.staff.index');
     }
 
     public function notification(Request $request)
     {
-        return $this->try_catch_admin(function () use ($request) {
-            /** @var Admin $staff */
-            $staff = Auth::guard('admin')->user();
-            $query = $staff->notifications();
-            $notifications = $this->pagination($query, $request, $pagination);
+        /** @var Admin $staff */
+        $staff = Auth::guard('admin')->user();
+        $query = $staff->notifications();
+        $notifications = $this->pagination($query, $request, $pagination);
 
-            return view('admin.staff.notification', compact('notifications', 'pagination'));
-        });
+        return view('admin.staff.notification', compact('notifications', 'pagination'));
     }
 
     public function notification_read(DatabaseNotification $notification)
     {
-        return $this->try_catch_ajax_admin(function () use ($notification) {
-            //dd($notification);
-            $notification->markAsRead();
-            return response()->json(true);
-        });
+        $notification->markAsRead();
+        return response()->json(true);
     }
 
     public function test(Request $request)
@@ -146,10 +121,7 @@ class StaffController extends Controller
     //AJAX
     public function response(Request $request, Admin $staff)
     {
-        return $this->try_catch_ajax_admin(function () use($request, $staff) {
-            $this->service->responsibility((int)$request['code'], $staff);
-            return response()->json(true);
-        });
-
+        $this->service->responsibility((int)$request['code'], $staff);
+        return response()->json(true);
     }
 }

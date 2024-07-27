@@ -9,6 +9,7 @@ use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class StaffService
@@ -45,7 +46,6 @@ class StaffService
     public function setRole(string $role, Admin $admin): void
     {
         $admin->setRole($role);
-        $admin->update();
     }
 
     public function setPassword(string $password, Admin $admin): void
@@ -59,13 +59,11 @@ class StaffService
             throw new \DomainException('Сотрудник не заблокирован');
         }
         $admin->activated();
-        $admin->update();
     }
 
     public function blocking(Admin $admin): void
     {
-
-        /** @var \App\Modules\Admin\Entity\Admin $current */
+        /** @var Admin $current */
         $current = Auth::guard('admin')->user();//Проверка на себя,
         if ($current->id == $admin->id) {
             throw new \DomainException('Нельзя заблокировать самого себя');
@@ -74,38 +72,33 @@ class StaffService
             throw new \DomainException('Сотрудник уже заблокирован');
         }
         $admin->blocked();
-        $admin->update();
     }
 
-    public function update(Request $request, Admin $admin): Admin
+    public function update(Request $request, Admin $admin)
     {
-        $admin->name = $request['name'];
-        $admin->email = $request['email'] ?? '';
-        $admin->phone = preg_replace("/[^0-9]/", "", $request['phone']);
+        DB::transaction(function () use ($request, $admin){
+            $admin->name = $request->string('name')->trim()->value();
+            $admin->email = $request->string('email')->trim()->value();
+            $admin->phone = preg_replace("/[^0-9]/", "", $request['phone']);
 
-        $admin->setFullName(new FullName(
-            $request['surname'],
-            $request['firstname'],
-            $request['secondname']
-        ));
-        $admin->telegram_user_id = $request['chat_id'] ?? null;
+            $admin->setFullName(new FullName(
+                $request['surname'],
+                $request['firstname'],
+                $request['secondname']
+            ));
+            $admin->telegram_user_id = $request['chat_id'] ?? null;
 
-        $admin->post = $request['post'];
-        if (!$admin->isCurrent()) $admin->setRole($request['role']);
-        $admin->update();
+            $admin->post = $request['post'];
+            if (!$admin->isCurrent()) $admin->setRole($request['role']);
+            $admin->update();
 
-        //Фото
-
-        if ($request['image-clear'] == 'delete') {
-            $admin->photo->delete();
-            //$admin->save();
-        }
-
-        $this->photo($admin, $request->file('file'));
-
-        $admin->save();
-        $admin->refresh();
-        return $admin;
+            //Фото
+            if ($request['image-clear'] == 'delete') {
+                $admin->photo->delete();
+            }
+            $this->photo($admin, $request->file('file'));
+            $admin->save();
+        });
     }
 
     public function setResponsibility(Request $request, Admin $admin)
@@ -121,7 +114,6 @@ class StaffService
     public function responsibility(int $code, Admin $admin)
     {
         if (!$admin->isStaff()) throw new \DomainException('Обязанность назначается только персоналу');
-
         $admin->toggleResponsibilities($code);
     }
 

@@ -46,11 +46,10 @@ class Worker extends Model
         'fullname' => FullNameCast::class
     ];
 
-    public static function register(string $surname, string $firstname, string $secondname, int $post, string $phone): self
+    public static function register(string $surname, string $firstname, string $secondname, int $post): self
     {
         /** @var Worker $worker */
         $worker = self::make([
-            'phone' => $phone,
             'post' => $post,
             'active' => true,
         ]);
@@ -120,5 +119,11 @@ class Worker extends Model
     public function postHtml(): string
     {
         return self::POSTS[$this->post];
+    }
+
+    public function setPhone(string $value)
+    {
+        $this->phone = preg_replace("/[^0-9]/", "", $value);
+        $this->save();
     }
 }

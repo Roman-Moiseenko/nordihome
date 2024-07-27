@@ -14,7 +14,7 @@
                         {{ \App\Forms\Input::create('surname', ['placeholder' => 'Фамилия', 'value' => $worker->fullname->surname ?? '', 'class' => 'mt-3'])->show() }}
                         {{ \App\Forms\Input::create('firstname', ['placeholder' => 'Имя', 'value' =>$worker->fullname->firstname ?? '', 'class' => 'mt-3'])->show() }}
                         {{ \App\Forms\Input::create('secondname', ['placeholder' => 'Отчество', 'value' => $worker->fullname->secondname ?? '', 'class' => 'mt-3'])->show() }}
-                        {{ \App\Forms\Input::create('phone', ['placeholder' => 'Телефон', 'value' => $worker->phone ?? '', 'class' => 'mt-3'])->show() }}
+                        {{ \App\Forms\Input::create('phone', ['placeholder' => 'Телефон', 'value' => phone($worker->phone) ?? '', 'class' => 'mt-3', 'class_input' => 'mask-phone'])->show() }}
                         {{ \App\Forms\Input::create('telegram_user_id', ['placeholder' => 'Телеграм ID', 'value' => $worker->telegram_user_id ?? '', 'class' => 'mt-3'])->show() }}
                         <x-base.form-label for="select-post" class="mt-3">Специализация</x-base.form-label>
                         <x-base.tom-select id="select-post" name="post" class="w-full" data-placeholder="Выберите специализацию">

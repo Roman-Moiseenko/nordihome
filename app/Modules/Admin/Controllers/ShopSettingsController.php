@@ -24,25 +24,21 @@ class ShopSettingsController extends Controller
 
     public function index()
     {
-        return $this->try_catch_admin(function () {
-            $setting = Setting::where('slug', 'shop')->first();
-            $items = SettingItem::orderBy('sort')->where('setting_id', $setting->id)->getModels();
-            $groups = [];
+        $setting = Setting::where('slug', 'shop')->first();
+        $items = SettingItem::orderBy('sort')->where('setting_id', $setting->id)->getModels();
+        $groups = [];
 
-            /** @var SettingItem $item */
-            foreach ($items as $item) {
-                $groups[$item->tab][] = $item;
-            }
-            return view('admin.settings.shop', compact('groups', 'setting'));
-        });
+        /** @var SettingItem $item */
+        foreach ($items as $item) {
+            $groups[$item->tab][] = $item;
+        }
+        return view('admin.settings.shop', compact('groups', 'setting'));
     }
 
     public function update(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $setting = Setting::where('slug', 'shop')->first();
-            $this->service->set($request, $setting);
-            return redirect()->route('admin.settings.shop');
-        });
+        $setting = Setting::where('slug', 'shop')->first();
+        $this->service->set($request, $setting);
+        return redirect()->route('admin.settings.shop');
     }
 }

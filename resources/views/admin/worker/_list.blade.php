@@ -2,7 +2,7 @@
     <td class=""><a href="{{ route('admin.worker.show', $worker) }}"
                         class="font-medium whitespace-nowrap">{{ $worker->fullname->getFullName() }}</a></td>
     <td class="text-center">{{ $worker->postHtml() }}</td>
-    <td class="text-center">{{ $worker->phone }}</td>
+    <td class="text-center">{{ phone($worker->phone) }}</td>
     <td class="text-center">{{ $worker->telegram_user_id }}</td>
     <td class="text-center">{{ $worker->storage->name }}</td>
     <td class="text-center"><x-yesNo status="{{ $worker->active }}" lucide="" class="justify-center"/></td>
