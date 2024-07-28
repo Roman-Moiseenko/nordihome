@@ -80,7 +80,6 @@ class ReviewService
     {
         $order_id = $review->discount->order_id;
         $user = $review->user;
-
         $amount = 0;
 
         foreach ($user->reviews as $item) {

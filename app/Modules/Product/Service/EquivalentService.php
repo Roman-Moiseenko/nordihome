@@ -12,14 +12,16 @@ class EquivalentService
 
     public function register(Request $request): Equivalent
     {
-        $equivalent = Equivalent::register($request['name'], (int)$request['category_id']);
-        return $equivalent;
+        return Equivalent::register(
+            $request->string('name')->trim()->value(),
+            $request->integer('category_id')
+        );
     }
 
     public function rename(Request $request, Equivalent $equivalent): Equivalent
     {
         $equivalent->update([
-            'name' => $request['name'],
+            'name' => $request->string('name')->trim()->value(),
         ]);
         return $equivalent;
     }
@@ -32,7 +34,7 @@ class EquivalentService
 
     public function add_product(Request $request, Equivalent $equivalent)
     {
-        $id = (int)$request['product_id'];
+        $id = $request->integer('product_id');
         if(!$equivalent->isProduct($id)) $equivalent->products()->attach($id);
     }
 

@@ -20,27 +20,21 @@ class SeriesController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = Series::orderBy('name');
-            $list = $this->pagination($query, $request, $pagination);
-            return view('admin.product.series.index', compact('list', 'pagination'));
-        });
+        $query = Series::orderBy('name');
+        $list = $this->pagination($query, $request, $pagination);
+        return view('admin.product.series.index', compact('list', 'pagination'));
     }
 
     public function store(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $series = $this->service->create($request['name']);
-            return redirect()->route('admin.product.series.show', compact('series'));
-        });
+        $series = $this->service->create($request['name']);
+        return redirect()->route('admin.product.series.show', compact('series'));
     }
 
     public function update(Series $series, Request $request)
     {
-        return $this->try_catch_admin(function () use($series, $request) {
-            $this->service->update($series, $request['name']);
-            return redirect()->route('admin.product.series.show', compact('series'));
-        });
+        $this->service->update($series, $request['name']);
+        return redirect()->route('admin.product.series.show', compact('series'));
     }
 
     public function show(Series $series)
@@ -50,36 +44,25 @@ class SeriesController extends Controller
 
     public function add_product(Request $request, Series $series)
     {
-        return $this->try_catch_admin(function () use($request, $series) {
-
-            $this->service->add_product($series, (int)$request['product_id']);
-            return redirect()->route('admin.product.series.show', compact('series'));
-        });
+        $this->service->add_product($series, (int)$request['product_id']);
+        return redirect()->route('admin.product.series.show', compact('series'));
     }
 
     public function add_products(Request $request, Series $series)
     {
-        return $this->try_catch_admin(function () use($request, $series) {
-
-
-            $this->service->add_products($series, $request['products']);
-            return redirect()->route('admin.product.series.show', compact('series'));
-        });
+        $this->service->add_products($series, $request['products']);
+        return redirect()->route('admin.product.series.show', compact('series'));
     }
 
     public function del_product(Request $request, Series $series)
     {
-        return $this->try_catch_admin(function () use($request, $series) {
-            $this->service->remove_product($series, (int)$request['product_id']);
-            return redirect()->back();
-        });
+        $this->service->remove_product($series, (int)$request['product_id']);
+        return redirect()->back();
     }
 
     public function destroy(Series $series)
     {
-        return $this->try_catch_admin(function () use($series) {
-            $this->service->remove($series);
-            return redirect()->back();
-        });
+        $this->service->remove($series);
+        return redirect()->back();
     }
 }

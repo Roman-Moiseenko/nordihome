@@ -13,11 +13,11 @@ class CategoryService
     public function register(Request $request): Category
     {
         $category = Category::register(
-            $request['name'],
+            $request->string('name')->trim()->value(),
             $request['parent_id'] ?? null,
-            $request['slug'] ?? '',
-            $request['title'] ?? '',
-            $request['description'] ?? ''
+            $request->string('slug')->trim()->value(),
+            $request->string('title')->trim()->value(),
+            $request->string('description')->trim()->value()
         );
 
         $this->image($category, $request->file('image'));
@@ -29,14 +29,15 @@ class CategoryService
 
     public function update(Request $request, Category $category): Category
     {
-        $category->name = $request['name'];
-        if (isset($request['parent_id'])) {
+        $category->name = $request->string('name')->trim()->value();
+        if ($request->has('parent_id')) {
             $category->parent_id = (int)$request['parent_id'] == 0 ? null : (int)$request['parent_id'];
         }
-        $category->description = $request['description'] ?? '';
-        $category->title = $request['title'] ?? '';
-        if ($category->slug != $request['slug']) {
-            $category->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
+        $category->description = $request->string('description')->trim()->value();
+        $category->title = $request->string('title')->trim()->value();
+        $new_slug = $request->string('slug')->trim()->value();
+        if ($category->slug != $new_slug) {
+            $category->slug = empty($new_slug) ? Str::slug($category->name) : $new_slug;
         }
 
         if ($request['image-clear'] == 'delete') {

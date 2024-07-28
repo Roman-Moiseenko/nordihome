@@ -41,9 +41,7 @@ class AttributeGroupService
     {
         $groups = AttributeGroup::orderBy('sort')->get();
         $count = count($groups);
-
         for ($i = 1; $i < $count; $i++) {
-
             if ($group->isId($groups[$i]->id)) {
                 $prev = $groups[$i - 1]->sort;
                 $next = $group->sort;
@@ -57,9 +55,7 @@ class AttributeGroupService
     {
         $groups = AttributeGroup::orderBy('sort')->get();
         $count = count($groups);
-
         for ($i = 0; $i < $count - 1; $i++) {
-
             if ($group->isId($groups[$i]->id)) {
                 $prev = $groups[$i + 1]->sort;
                 $next = $group->sort;

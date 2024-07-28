@@ -25,9 +25,10 @@ class ModificationService
         foreach ($request['attribute_id'] as $id) {
             if ($_attr = $this->attributes->existAndGet((int)$id)) $attributes[] = $_attr;
         }
-        $modification = Modification::register($request['name'], (int)$request['product_id'], $attributes);
-
-        return $modification;
+        return Modification::register(
+            $request->string('name')->trim()->value(),
+            $request->integer('product_id'),
+            $attributes);
     }
 
     public function update(Request $request, Modification $modification): Modification
@@ -37,10 +38,10 @@ class ModificationService
             if ($_attr = $this->attributes->existAndGet((int)$id)) $attributes[] = $_attr;
         }
 
-        $modification->name = $request['name'];
-        if ((int)$request['product_id'] !== $modification->base_product_id || !empty(array_diff($attributes, $modification->prod_attributes))) {
+        $modification->name = $request->string('name')->trim()->value();
+        if ($request->integer('product_id') !== $modification->base_product_id || !empty(array_diff($attributes, $modification->prod_attributes))) {
             $modification->products()->detach();
-            $modification->base_product_id = (int)$request['product_id'];
+            $modification->base_product_id = $request->integer('product_id');
             $modification->prod_attributes = $attributes;
         }
         $modification->save();
@@ -50,13 +51,11 @@ class ModificationService
 
     public function set_modifications(Request $request, Modification $modification): Modification
     {
-        //TODO Тестировать
         foreach ($request['products'] as $key => $product_id) {
             $values = [];
             foreach ($request['attributes'][$key] as $j => $attribute_id) {
                 $values[$attribute_id] = $request['values'][$key][$j];
             }
-
             $modification->products()->attach($product_id, ['values_json' => json_encode($values)]);
         }
         $modification->push();
@@ -72,7 +71,7 @@ class ModificationService
 
     public function add_product(Request $request, Modification $modification)
     {
-        $product_id = (int)$request['product_id'];
+        $product_id = $request->integer('product_id');
         $product = $this->products->existAndGet($product_id);
         $_values = json_decode($request['values'], true);
         $values = [];
@@ -90,7 +89,7 @@ class ModificationService
 
     public function del_product(Request $request, Modification $modification)
     {
-        $product_id = (int)$request['product_id'];
+        $product_id = $request->integer('product_id');
         $modification->products()->detach($product_id);
     }
 

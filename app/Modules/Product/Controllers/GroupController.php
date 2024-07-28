@@ -24,21 +24,17 @@ class GroupController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = Group::orderBy('name');
-            if (!empty($name = $request['search'])) {
-                $query = $query->where('name', 'LIKE', "%{$name}%");
-            }
-            $groups = $this->pagination($query, $request, $pagination);
-            return view('admin.product.group.index', compact('groups', 'pagination'));
-        });
+        $query = Group::orderBy('name');
+        if (!empty($name = $request['search'])) {
+            $query = $query->where('name', 'LIKE', "%{$name}%");
+        }
+        $groups = $this->pagination($query, $request, $pagination);
+        return view('admin.product.group.index', compact('groups', 'pagination'));
     }
 
     public function create()
     {
-        return $this->try_catch_admin(function () {
-            return view('admin.product.group.create');
-        });
+        return view('admin.product.group.create');
     }
 
     public function store(Request $request)
@@ -46,24 +42,18 @@ class GroupController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
-        return $this->try_catch_admin(function () use($request) {
-            $group = $this->service->create($request);
-            return redirect()->route('admin.product.group.show', compact('group'));
-        });
+        $group = $this->service->create($request);
+        return redirect()->route('admin.product.group.show', compact('group'));
     }
 
     public function show(Group $group)
     {
-        return $this->try_catch_admin(function () use($group) {
-            return view('admin.product.group.show', compact('group'));
-        });
+        return view('admin.product.group.show', compact('group'));
     }
 
     public function edit(Group $group)
     {
-        return $this->try_catch_admin(function () use($group) {
-            return view('admin.product.group.edit', compact('group'));
-        });
+        return view('admin.product.group.edit', compact('group'));
     }
 
     public function update(Request $request, Group $group)
@@ -71,59 +61,47 @@ class GroupController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
-        return $this->try_catch_admin(function () use($request, $group) {
-            $group = $this->service->update($request, $group);
-            return redirect()->route('admin.product.group.show', compact('group'));
-        });
+        $group = $this->service->update($request, $group);
+        return redirect()->route('admin.product.group.show', compact('group'));
     }
 
     public function destroy(Group $group)
     {
-        return $this->try_catch_admin(function () use($group) {
-            $this->service->delete($group);
-            return redirect()->route('admin.product.group.index');
-        });
+        $this->service->delete($group);
+        return redirect()->route('admin.product.group.index');
     }
 
     public function add_product(Request $request, Group $group)
     {
-        return $this->try_catch_admin(function () use($request, $group) {
-            $this->service->add_product($group, (int)$request['product_id']);
-            return redirect()->route('admin.product.group.show', compact('group'));
-        });
+        $this->service->add_product($group, (int)$request['product_id']);
+        return redirect()->route('admin.product.group.show', compact('group'));
     }
 
     public function add_products(Request $request, Group $group)
     {
-        return $this->try_catch_admin(function () use($request, $group) {
 
-            $this->service->add_products($group, $request['products']);
-            return redirect()->route('admin.product.group.show', compact('group'));
-        });
+        $this->service->add_products($group, $request['products']);
+        return redirect()->route('admin.product.group.show', compact('group'));
     }
 
 
     public function del_product(Request $request, Group $group)
     {
-        return $this->try_catch_admin(function () use($request, $group) {
-            $this->service->del_product($request, $group);
-            return redirect()->route('admin.product.group.show', compact('group'));
-        });
+        $this->service->del_product($request, $group);
+        return redirect()->route('admin.product.group.show', compact('group'));
     }
 
     //AJAX
     public function search(Request $request, Group $group)
     {
-        return $this->try_catch_ajax_admin(function () use($request, $group) {
-            $result = [];
-            $products = $this->products->search($request['search']);
-            /** @var Product $product */
-            foreach ($products as $product) {
-                if (!$group->isProduct($product->id)) {
-                    $result[] = $this->products->toArrayForSearch($product);
-                }
+        $result = [];
+        $products = $this->products->search($request['search']);
+        /** @var Product $product */
+        foreach ($products as $product) {
+            if (!$group->isProduct($product->id)) {
+                $result[] = $this->products->toArrayForSearch($product);
             }
-            return \response()->json($result);
-        });
+        }
+        return \response()->json($result);
     }
 }

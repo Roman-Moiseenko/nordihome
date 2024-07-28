@@ -12,9 +12,11 @@ class GroupService
 {
     public function create(Request $request): Group
     {
-        $group = Group::register($request['name'], $request['description'] ?? '');
+        $group = Group::register(
+            $request->string('name')->trim()->value(),
+            $request->string('description')->trim()->value()
+        );
         $this->photo($group, $request->file('file'));
-
         return $group;
     }
 
@@ -39,14 +41,14 @@ class GroupService
 
     public function del_product(Request $request, Group $group)
     {
-        $group->products()->detach((int)$request['product_id']);
+        $group->products()->detach($request->integer('product_id'));
     }
 
     public function update(Request $request, Group $group): Group
     {
         $group->update([
-            'name' => $request['name'],
-            'description' => $request['description'],
+            'name' => $request->string('name')->trim()->value(),
+            'description' => $request->string('description')->trim()->value(),
         ]);
         $this->photo($group, $request->file('file'));
         return $group;
@@ -69,14 +71,4 @@ class GroupService
         $group->refresh();
     }
 
-    /*
-    public function setPriceFromPromotion(int $group_id, ?int $discount)
-    {
-        $group = Group::find($group_id);
-        foreach ($group->products as $product) {
-            $new_price = is_null($discount) ? null : (int)ceil($product->getLastPrice() * (1 - $discount / 100));
-            $group->products()->updateExistingPivot($product->id, ['price' => $new_price]);
-        }
-    }
-    */
 }

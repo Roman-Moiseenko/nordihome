@@ -19,37 +19,28 @@ class PriorityController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = Product::where('priority', true);
-            $products = $this->pagination($query, $request, $pagination);
-            return view('admin.product.priority.index', compact('products', 'pagination'));
-        });
+        $query = Product::where('priority', true);
+        $products = $this->pagination($query, $request, $pagination);
+        return view('admin.product.priority.index', compact('products', 'pagination'));
     }
 
 
     public function add_product(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $this->service->setPriorityProduct($request->integer('product_id'));
-            return redirect()->back();
-        });
+        $this->service->setPriorityProduct($request->integer('product_id'));
+        return redirect()->back();
     }
 
     public function add_products(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-
-            $this->service->setPriorityProducts($request['products']);
-            return redirect()->back();
-        });
+        $this->service->setPriorityProducts($request['products']);
+        return redirect()->back();
     }
 
     public function del_product(Product $product)
     {
-        return $this->try_catch_admin(function () use($product) {
-            $product->setPriority(false);
-            return redirect()->back();
-        });
+        $product->setPriority(false);
+        return redirect()->back();
     }
 
 }

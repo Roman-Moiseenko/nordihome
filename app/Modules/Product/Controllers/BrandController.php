@@ -27,11 +27,9 @@ class BrandController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = $this->repository->getIndex();
-            $brands = $this->pagination($query, $request, $pagination);
-            return view('admin.product.brand.index', compact('brands', 'pagination'));
-        });
+        $query = $this->repository->getIndex();
+        $brands = $this->pagination($query, $request, $pagination);
+        return view('admin.product.brand.index', compact('brands', 'pagination'));
     }
 
     public function create()
@@ -44,39 +42,29 @@ class BrandController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
-        return $this->try_catch_admin(function () use($request) {
-            $brand = $this->service->register($request);
-            return redirect()->route('admin.product.brand.show', compact('brand'));
-        });
+        $brand = $this->service->register($request);
+        return redirect()->route('admin.product.brand.show', compact('brand'));
     }
 
     public function show(Brand $brand)
     {
-        return $this->try_catch_admin(function () use($brand) {
-            return view('admin.product.brand.show', compact('brand'));
-        });
+        return view('admin.product.brand.show', compact('brand'));
     }
 
     public function edit(Brand $brand)
     {
-        return $this->try_catch_admin(function () use($brand) {
-            return view('admin.product.brand.edit', compact('brand'));
-        });
+        return view('admin.product.brand.edit', compact('brand'));
     }
 
     public function update(Request $request, Brand $brand)
     {
-        return $this->try_catch_admin(function () use($request, $brand) {
-            $brand = $this->service->update($request, $brand);
-            return redirect()->route('admin.product.brand.show', compact('brand'));
-        });
+        $brand = $this->service->update($request, $brand);
+        return redirect()->route('admin.product.brand.show', compact('brand'));
     }
 
     public function destroy(Brand $brand)
     {
-        return $this->try_catch_admin(function () use($brand) {
-            $this->service->delete($brand);
-            return redirect()->route('admin.product.brand.index');
-        });
+        $this->service->delete($brand);
+        return redirect()->route('admin.product.brand.index');
     }
 }

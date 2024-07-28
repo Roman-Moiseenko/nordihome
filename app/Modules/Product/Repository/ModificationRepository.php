@@ -8,6 +8,13 @@ use App\Modules\Product\Entity\ModificationProduct;
 
 class ModificationRepository
 {
+    public function getIndex(string $name)
+    {
+        $query = Modification::orderBy('name');
+        if (!empty($name)) $query->where('name', 'LIKE', "%{$name}%");
+
+        return $query;
+    }
 
     //Массив всех товаров которые входят во все модификации
     public function getAllIdsArray()

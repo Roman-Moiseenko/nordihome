@@ -10,6 +10,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\TagRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
 
 
@@ -45,39 +46,32 @@ class ProductService
 
     public function create(Request $request): Product
     {
-        //TODO Переделать под получения массива $request->all()
-
-        /* SECTION 1*/
-        $arguments = [
-            'pre_order' => $this->options->shop->pre_order,
-            'only_offline' => $this->options->shop->only_offline,
-            'not_local' => !$this->options->shop->delivery_local,
-            'not_delivery' => !$this->options->shop->delivery_all,
-        ];
-        $product = Product::register($request['name'], $request['code'], (int)$request['category_id'], $request['slug'] ?? '', $arguments);
-        $product->brand_id = $request['brand_id'];
-        if (!empty($request['categories'])) {
-            foreach ($request['categories'] as $category_id) {
-                if ($this->categories->exists((int)$category_id))
-                    $product->categories()->attach((int)$category_id);
+        DB::transaction(function () use ($request, &$product) {
+            $arguments = [
+                'pre_order' => $this->options->shop->pre_order,
+                'only_offline' => $this->options->shop->only_offline,
+                'not_local' => !$this->options->shop->delivery_local,
+                'not_delivery' => !$this->options->shop->delivery_all,
+            ];
+            $product = Product::register(
+                $request->string('name')->trim()->value(),
+                $request->string('code')->trim()->value(),
+                $request->integer('category_id'),
+                $request->string('slug')->trim()->value(),
+                $arguments);
+            $product->brand_id = $request->integer('brand_id');
+            if (!empty($request['categories'])) {
+                foreach ($request['categories'] as $category_id) {
+                    if ($this->categories->exists((int)$category_id))
+                        $product->categories()->attach((int)$category_id);
+                }
             }
-        }
-        //Серия
-        $this->series($request, $product);
+            $this->series($request, $product);
+            $product->push();
+            $this->storageService->add_product($product);
+        });
 
-        /* SECTION 2*/
-        //Описание, короткое описание, теги
-        /*
-        $product->description = $request['description'] ?? '';
-        $product->short = $request['short'] ?? '';
-
-        $this->tags($request, $product);
-*/
-        $product->push();
-
-        $this->storageService->add_product($product);
         return $product;
-
     }
 
     public function create_parser(string $name, string $code, int $category_id, array $arguments): Product
@@ -253,7 +247,6 @@ class ProductService
         return $product;
     }
 
-
     public function moderation(Product $product): void
     {
         //TODO Проверка на заполнение
@@ -275,7 +268,6 @@ class ProductService
         //TODO При удалении, удалять все связанные файлы Фото и Видео
 
     }
-
 
     private function tags(Request $request, Product &$product)
     {
@@ -302,7 +294,6 @@ class ProductService
         }
     }
 
-
     ///Работа с Фото Продукта
     public function addPhoto(Request $request, Product $product)
     {
@@ -322,7 +313,7 @@ class ProductService
 
     public function upPhoto(Request $request, Product $product)
     {
-        $photo_id = (int)$request['photo_id'];
+        $photo_id = $request->integer('photo_id');
 
         $photos = [];
         foreach ($product->photos as $i => $photo) {
@@ -341,13 +332,13 @@ class ProductService
 
     public function downPhoto(Request $request, Product $product)
     {
-        /** @var \App\Modules\Base\Entity\Photo[] $photos */
+        /** @var Photo[] $photos */
         $photos = [];
         foreach ($product->photos as $i => $photo) {
             $photos[] = $photo;
         }
 
-        $photo_id = (int)$request['photo_id'];
+        $photo_id = $request->integer('photo_id');
         for ($i = 0; $i < count($photos) - 1; $i++) {
             if ($photos[$i]->id == $photo_id) {
                 $prev = $photos[$i + 1]->sort;
@@ -360,15 +351,14 @@ class ProductService
 
     public function altPhoto(Request $request, Product $product)
     {
-        $id = $request['photo_id'];
-        $alt = $request['alt'];
+        $id = $request->integer('photo_id');
+        $alt = $request->string('alt')->trim()->value();
         foreach ($product->photos as $photo) {
-            if ($photo->id === (int)$id) {
+            if ($photo->id === $id) {
                 $photo->update(['alt' => $alt]);
             }
         }
     }
-
 
     public function published(Product $product): void
     {
@@ -387,10 +377,8 @@ class ProductService
         foreach ($ids as $product_id) {
             /** @var Product $product */
             $product = Product::find($product_id);
-
             if ($action == 'draft' && $product->isPublished()) $product->setDraft();
             if ($action == 'published' && !$product->isPublished()) $product->setPublished();
-
             if ($action == 'remove') $this->destroy($product);
         }
 

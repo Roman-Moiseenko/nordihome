@@ -12,9 +12,9 @@ class BrandService
     public function register(Request $request): Brand
     {
         $brand = Brand::register(
-            $request['name'],
-            $request['description'] ?? '',
-            $request['url'] ?? ''
+            $request->string('name')->trim()->value(),
+            $request->string('description')->trim()->value(),
+            $request->string('url')->trim()->value()
         );
 
         if (!empty($request['sameAs']) && is_array($request['sameAs']))
@@ -28,9 +28,9 @@ class BrandService
 
     public function update(Request $request, Brand $brand)
     {
-        $brand->name = $request['name'];
-        $brand->description = $request['description'] ?? '';
-        $brand->url = $request['url'] ?? '';
+        $brand->name = $request->string('name')->trim()->value();
+        $brand->description = $request->string('description')->trim()->value();
+        $brand->url = $request->string('url')->trim()->value();
         $brand->setSameAs($request['sameAs']);
         $brand->update();
         if ($request['file-clear'] == 'delete') {

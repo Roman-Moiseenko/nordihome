@@ -71,5 +71,4 @@ class SeriesService
         $series->save();
     }
 
-
 }
