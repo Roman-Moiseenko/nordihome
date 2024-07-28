@@ -30,7 +30,11 @@
 
 
 @include('shop.header')
-@include('flash::message')
+
+
+@include('shop.widgets.flash')
+
+
 
 @section('breadcrumbs')
     <div class="container-xl">

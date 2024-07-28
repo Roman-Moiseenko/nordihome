@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\Deprecated;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    #[Deprecated]
     public function try_catch($callback, $return = '', $level = 'warning')
     {
         DB::beginTransaction();
@@ -35,6 +37,7 @@ class Controller extends BaseController
         return empty($return) ? redirect()->back() : redirect($return);
     }
 
+    #[Deprecated]
     public function try_catch_ajax($callback)
     {
         DB::beginTransaction();
@@ -57,6 +60,7 @@ class Controller extends BaseController
         }
     }
 
+    #[Deprecated]
     public function try_catch_admin($callback, $return = '', $level = 'danger')
     {
         DB::beginTransaction();
@@ -78,6 +82,7 @@ class Controller extends BaseController
         return empty($return) ? redirect()->back() : redirect($return);
     }
 
+    #[Deprecated]
     public function try_catch_ajax_admin($callback)
     {
         DB::beginTransaction();

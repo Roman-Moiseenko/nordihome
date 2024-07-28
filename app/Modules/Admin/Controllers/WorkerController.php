@@ -47,9 +47,7 @@ class WorkerController extends Controller
 
     public function show(Worker $worker)
     {
-        return $this->try_catch_admin(function () use ($worker) {
-            return view('admin.worker.show', compact('worker'));
-        });
+        return view('admin.worker.show', compact('worker'));
     }
 
     public function edit(Worker $worker)

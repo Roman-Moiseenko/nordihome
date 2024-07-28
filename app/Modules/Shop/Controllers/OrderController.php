@@ -32,12 +32,12 @@ class OrderController extends Controller
     private PaymentRepository $paymentRepository;
 
     public function __construct(
-        Cart            $cart,
-        ParserCart      $parserCart,
-        PaymentService  $payments,
+        Cart              $cart,
+        ParserCart        $parserCart,
+        PaymentService    $payments,
         PaymentRepository $paymentRepository,
-        DeliveryService $deliveries,
-        OrderService    $service,
+        DeliveryService   $deliveries,
+        OrderService      $service,
         StorageRepository $storages,
     )
     {
@@ -56,63 +56,58 @@ class OrderController extends Controller
     {
 
 
-            if (Auth::guard('user')->check()) {
-                $user_id = Auth::guard('user')->user()->id;
-            } else {
-                throw new \DomainException('Доступ ограничен');
-            }
-            $preorder = true;
+        if (Auth::guard('user')->check()) {
+            $user_id = Auth::guard('user')->user()->id;
+        } else {
+            throw new \DomainException('Доступ ограничен');
+        }
+        $preorder = true;
 
-            if ($request->has('preorder') && ($request->get('preorder') == "false")) {
-                $preorder = false;
-            }
+        if ($request->has('preorder') && ($request->get('preorder') == "false")) {
+            $preorder = false;
+        }
 
-            $cart = $this->cart->getCartToFront($request['tz'], $preorder);
+        $cart = $this->cart->getCartToFront($request['tz'], $preorder);
 
-            $payments = $this->paymentRepository->getPayments();
-            $storages = $this->storages->getPointDelivery();
-            $companies = DeliveryHelper::deliveries();
-            $delivery_cost = $this->deliveries->calculate($user_id, $this->cart->getItems());
+        $payments = $this->paymentRepository->getPayments();
+        $storages = $this->storages->getPointDelivery();
+        $companies = DeliveryHelper::deliveries();
+        $delivery_cost = $this->deliveries->calculate($user_id, $this->cart->getItems());
 
-            return view('shop.order.create', compact('cart', 'payments',
-                'storages', 'companies', 'delivery_cost', 'preorder'));
+        return view('shop.order.create', compact('cart', 'payments',
+            'storages', 'companies', 'delivery_cost', 'preorder'));
 
 
     }
 
     public function create_parser(Request $request)
     {
-            if (Auth::guard('user')->check()) {
-                $user_id = Auth::guard('user')->user()->id;
-            } else {
-                throw new \DomainException('Доступ ограничен');
-            }
-            $payments = $this->paymentRepository->getPayments();
-            $storages = $this->storages->getPointDelivery();
-            $companies = DeliveryHelper::deliveries();
-            $delivery_cost = $this->deliveries->calculate($user_id, $this->parserCart->getItems());
-            $cart = $this->parserCart;
-            return view('shop.order.create-parser', compact('cart', 'payments',
-                'storages', 'companies', 'delivery_cost'));
+        if (Auth::guard('user')->check()) {
+            $user_id = Auth::guard('user')->user()->id;
+        } else {
+            throw new \DomainException('Доступ ограничен');
+        }
+        $payments = $this->paymentRepository->getPayments();
+        $storages = $this->storages->getPointDelivery();
+        $companies = DeliveryHelper::deliveries();
+        $delivery_cost = $this->deliveries->calculate($user_id, $this->parserCart->getItems());
+        $cart = $this->parserCart;
+        return view('shop.order.create-parser', compact('cart', 'payments',
+            'storages', 'companies', 'delivery_cost'));
 
     }
 
     public function create_click(Request $request)
     {
-        return $this->try_catch(function () use ($request) {
-            $order = $this->service->create_click($request);
-            flash('Ваш заказ успешно создан!');
-            return redirect()->route('cabinet.order.view', $order);
-        }, route('shop.home'));
+        $order = $this->service->create_click($request);
+        return redirect()->route('cabinet.order.view', $order)->with('success', 'Ваш заказ успешно создан!');
     }
 
     public function store_parser(Request $request)
     {
-        return $this->try_catch(function () use ($request) {
-            $order = $this->service->create_parser($request);
-            flash('Ваш заказ успешно создан!');
-            return redirect()->route('cabinet.order.view', $order);
-        }, route('shop.home'));
+        $order = $this->service->create_parser($request);
+
+        return redirect()->route('cabinet.order.view', $order)->with('success', 'Ваш заказ успешно создан!');
     }
 
     public function create_pre(Request $request)
@@ -122,11 +117,9 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        return $this->try_catch(function () use ($request) {
-            $order = $this->service->create($request);
-            flash('Ваш заказ успешно создан!');
-            return redirect()->route('cabinet.order.view', $order);
-        }, route('shop.home'));
+        $order = $this->service->create($request);
+
+        return redirect()->route('cabinet.order.view', $order)->with('success', 'Ваш заказ успешно создан!');
     }
     /*
         public function view(Request $request, Order $order)
@@ -146,19 +139,14 @@ class OrderController extends Controller
     //AJAX
     public function checkorder(Request $request)
     {
-        return $this->try_catch_ajax(function () use ($request) {
-            $result = $this->service->checkorder($request['data']);
-            return \response()->json($result);
-        });
+        $result = $this->service->checkorder($request['data']);
+        return \response()->json($result);
     }
 
     public function coupon(Request $request)
     {
-        return $this->try_catch_ajax(function () use ($request) {
-            $result = 0;
-            if ($request->has('code')) $result = $this->service->coupon($request->get('code'));
-            return \response()->json($result);
-        });
-
+        $result = 0;
+        if ($request->has('code')) $result = $this->service->coupon($request->get('code'));
+        return \response()->json($result);
     }
 }

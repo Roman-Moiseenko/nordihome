@@ -28,7 +28,6 @@ class ProductController extends Controller
     {
         $product = $this->repository->getProductBySlug($slug);
         if (empty($product) || !$product->isPublished()) abort(404);
-
         $title = $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
@@ -46,7 +45,6 @@ class ProductController extends Controller
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
         return view('shop.product.view', compact('product', 'title', 'description', 'productAttributes'));
-
     }
 
     public function old_slug($old_slug)
@@ -62,9 +60,7 @@ class ProductController extends Controller
         if (empty($request['search'])) return \response()->json(false);
         $result = $this->repository->search($request['search']);
         return \response()->json($result);
-
     }
-
 
     public function count_for_sell(Product $product)
     {

@@ -50,9 +50,7 @@ class Handler extends ExceptionHandler
             if (request()->is('admin/*')) {
                 if ($e->getStatusCode() == 404)
                     return response()->view('errors.' . 'admin_404', [], 404);
-            }
-            else
-            {
+            } else {
                 if ($e->getStatusCode() == 404)
                     return response()->view('errors.' . '404', [], 404);
             }
@@ -64,11 +62,12 @@ class Handler extends ExceptionHandler
             if ($request->ajax()) {
                 return \response()->json(['error' => $e->getMessage()]);
             } else {
-                flash($e->getMessage(), 'danger');
+
                 if (request()->is('admin/*')) { //Админ панель
+                    flash($e->getMessage(), 'danger');
                     return redirect()->back();
                 } else { //Клиентская часть
-                    return redirect()->route('shop.home');
+                    return redirect()->route('shop.home')->with('danger', $e->getMessage());
                 }
             }
         }
@@ -79,9 +78,9 @@ class Handler extends ExceptionHandler
             } else {
                 //Если режим не Debug отправляем сообщения
                 event(new ThrowableHasAppeared($e));
+                flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'danger');
+                return redirect()->back();
             }
-
-
         }
         return parent::render($request, $e);
     }

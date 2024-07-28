@@ -37,14 +37,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $widgets = [];
-        try {
-            //TODO После исправления акций включить
-            $widgets = Widget::where('active', true)->get();
-        } catch (\Throwable $e) {
-            flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'info');
-            event(new ThrowableHasAppeared($e));
-        }
+        $widgets = Widget::where('active', true)->get();
         return view('shop.home', compact('widgets'));
     }
 

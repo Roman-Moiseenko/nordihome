@@ -56,7 +56,6 @@ class CatalogController extends Controller
         $brands = [];
 
         $products = $this->repository->ProductsByCategory($category->id);
-        //dd(count($products));
         /** @var Product $product */
         foreach ($products as $i => $product) {
             if ($i == 0) {

@@ -256,7 +256,6 @@ class OrderController extends Controller
     #[Deprecated]
     public function search(Request $request)
     {
-        return $this->try_catch_ajax_admin(function () use ($request) {
             $result = [];
             $products = $this->products->search($request['search']);
             /** @var Product $product */
@@ -266,13 +265,11 @@ class OrderController extends Controller
                 );
             }
             return \response()->json($result);
-        });
     }
 
     #[Deprecated]
     public function get_to_order(Request $request)
     {
-        return $this->try_catch_ajax_admin(function () use ($request) {
             $product_id = (int)$request['product_id'];
             $quantity = (int)$request['quantity'];
             $user_id = (int)$request['user_id'];
@@ -314,7 +311,7 @@ class OrderController extends Controller
                 'preorder' => $preorder,
             ];
             return \response()->json($result);
-        });
+
     }
 
     ///Actions ушедшие в Компоненты LiveWire
