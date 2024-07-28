@@ -30,10 +30,8 @@ class PageController extends Controller
 
     public function map_data(Request $request)
     {
-        return $this->try_catch_ajax(function () use ($request) {
             $map = $this->repository->getMapData($request);
             return response()->json($map);
-        });
     }
 
     public function email(Request $request)

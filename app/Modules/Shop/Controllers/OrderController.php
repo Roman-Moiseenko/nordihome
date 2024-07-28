@@ -54,7 +54,7 @@ class OrderController extends Controller
 
     public function create(Request $request)
     {
-        return $this->try_catch(function () use ($request) {
+
 
             if (Auth::guard('user')->check()) {
                 $user_id = Auth::guard('user')->user()->id;
@@ -62,20 +62,13 @@ class OrderController extends Controller
                 throw new \DomainException('Доступ ограничен');
             }
             $preorder = true;
-            //dd($request['preorder']);
 
             if ($request->has('preorder') && ($request->get('preorder') == "false")) {
                 $preorder = false;
             }
 
             $cart = $this->cart->getCartToFront($request['tz'], $preorder);
-            /*
-            $preorder = 1;
-            if ($request->has('preorder') && ($request->get('preorder') == "false")) {//Очищаем корзину от излишков
-                $cart['items_preorder'] = [];
-                $preorder = 0;
-            }
-            */
+
             $payments = $this->paymentRepository->getPayments();
             $storages = $this->storages->getPointDelivery();
             $companies = DeliveryHelper::deliveries();
@@ -83,13 +76,12 @@ class OrderController extends Controller
 
             return view('shop.order.create', compact('cart', 'payments',
                 'storages', 'companies', 'delivery_cost', 'preorder'));
-        }, route('shop.home'));
+
 
     }
 
     public function create_parser(Request $request)
     {
-        return $this->try_catch(function () use ($request) {
             if (Auth::guard('user')->check()) {
                 $user_id = Auth::guard('user')->user()->id;
             } else {
@@ -102,7 +94,6 @@ class OrderController extends Controller
             $cart = $this->parserCart;
             return view('shop.order.create-parser', compact('cart', 'payments',
                 'storages', 'companies', 'delivery_cost'));
-        }, route('shop.home'));
 
     }
 

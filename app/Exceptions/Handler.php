@@ -45,33 +45,44 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-
         if ($this->isHttpException($e)) {
-
+            //TODO Добавить все ошибки http
             if (request()->is('admin/*')) {
-                if ($e->getStatusCode() == 404) {
+                if ($e->getStatusCode() == 404)
                     return response()->view('errors.' . 'admin_404', [], 404);
-                }
             }
             else
             {
-                if ($e->getStatusCode() == 404) {
+                if ($e->getStatusCode() == 404)
                     return response()->view('errors.' . '404', [], 404);
-                }
             }
 
         }
 
+        //Исключение CRM
         if ($e instanceof \DomainException) {
             if ($request->ajax()) {
                 return \response()->json(['error' => $e->getMessage()]);
             } else {
                 flash($e->getMessage(), 'danger');
-                return redirect()->back();
+                if (request()->is('admin/*')) { //Админ панель
+                    return redirect()->back();
+                } else { //Клиентская часть
+                    return redirect()->route('shop.home');
+                }
             }
         }
-        if (!($e instanceof TokenMismatchException))
-            if (!config('app.debug')) event(new ThrowableHasAppeared($e));
+        if (!($e instanceof TokenMismatchException)) {
+            if (config('app.debug')) {
+                if ($request->ajax())
+                    return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
+            } else {
+                //Если режим не Debug отправляем сообщения
+                event(new ThrowableHasAppeared($e));
+            }
+
+
+        }
         return parent::render($request, $e);
     }
 }

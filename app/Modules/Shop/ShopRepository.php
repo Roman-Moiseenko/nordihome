@@ -129,7 +129,7 @@ class ShopRepository
                 if ($attr->isNumeric()) {
                     $min = $item[0];
                     $max = $item[1];
-                    //Получаем все позиции где товары для текущего атрибута
+                    //Получаем все позиции, где товары для текущего атрибута
                     $_attr_prods = AttributeProduct::where('attribute_id', '=', $attr_id)->whereIn('product_id', $product_ids)->get();
 
                     //Исключаем id товара, которые не удовлетворяют условиям > или <
