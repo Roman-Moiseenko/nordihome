@@ -9,6 +9,7 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
+use Illuminate\Support\Facades\DB;
 
 class OrderReserveService
 {
@@ -31,27 +32,29 @@ class OrderReserveService
      */
     public function toReserve(OrderItem $orderItem, int $quantity)
     {
-        if ($orderItem->product->getCountSell() < $quantity)
-            throw new \DomainException('Нельзя поставить товар ' . $orderItem->product->name .
-                ' в резерв, в наличии ' . $orderItem->product->getCountSell());
-        $storageItem = $this->storage->getItem($orderItem->product);
-        if ($storageItem->getFreeToSell() >= $quantity) {
-            OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
-        } else {
-            OrderReserve::register($orderItem->id, $storageItem->id, $storageItem->getFreeToSell(), $this->minutes);
-            $quantity -= $storageItem->getFreeToSell();
-            foreach ($orderItem->product->storageItems as $_storageItem) {
-                if ($quantity > 0 && $_storageItem->id != $storageItem->id) {
-                    if ($quantity > $_storageItem->getFreeToSell()) {
-                        OrderReserve::register($orderItem->id, $_storageItem->id, $_storageItem->getFreeToSell(), $this->minutes);
-                        $quantity -= $_storageItem->getFreeToSell();
-                    } else {
-                        OrderReserve::register($orderItem->id, $_storageItem->id, $quantity, $this->minutes);
-                        $quantity = 0;
+        DB::transaction(function () use ($orderItem, $quantity) {
+            if ($orderItem->product->getCountSell() < $quantity)
+                throw new \DomainException('Нельзя поставить товар ' . $orderItem->product->name .
+                    ' в резерв, в наличии ' . $orderItem->product->getCountSell());
+            $storageItem = $this->storage->getItem($orderItem->product);
+            if ($storageItem->getFreeToSell() >= $quantity) {
+                OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
+            } else {
+                OrderReserve::register($orderItem->id, $storageItem->id, $storageItem->getFreeToSell(), $this->minutes);
+                $quantity -= $storageItem->getFreeToSell();
+                foreach ($orderItem->product->storageItems as $_storageItem) {
+                    if ($quantity > 0 && $_storageItem->id != $storageItem->id) {
+                        if ($quantity > $_storageItem->getFreeToSell()) {
+                            OrderReserve::register($orderItem->id, $_storageItem->id, $_storageItem->getFreeToSell(), $this->minutes);
+                            $quantity -= $_storageItem->getFreeToSell();
+                        } else {
+                            OrderReserve::register($orderItem->id, $_storageItem->id, $quantity, $this->minutes);
+                            $quantity = 0;
+                        }
                     }
                 }
             }
-        }
+        });
     }
 
     /**
@@ -75,18 +78,20 @@ class OrderReserveService
      */
     public function upReserve(OrderItem $orderItem, int $delta)
     {
-        foreach ($orderItem->product->storageItems as $storageItem) {
-            $free_quantity = $storageItem->getFreeToSell();
-            if ($free_quantity != 0) {//В данном хранилище есть товар
-                if ($delta <= $free_quantity) {
-                    $this->AddReserveOrderItem($orderItem, $storageItem, $delta);
-                    return;
-                } else {
-                    $delta -= $free_quantity;
-                    $this->AddReserveOrderItem($orderItem, $storageItem, $free_quantity);
+        DB::transaction(function () use ($orderItem, $delta) {
+            foreach ($orderItem->product->storageItems as $storageItem) {
+                $free_quantity = $storageItem->getFreeToSell();
+                if ($free_quantity != 0) {//В данном хранилище есть товар
+                    if ($delta <= $free_quantity) {
+                        $this->AddReserveOrderItem($orderItem, $storageItem, $delta);
+                        return;
+                    } else {
+                        $delta -= $free_quantity;
+                        $this->AddReserveOrderItem($orderItem, $storageItem, $free_quantity);
+                    }
                 }
             }
-        }
+        });
     }
 
     /**
@@ -97,16 +102,18 @@ class OrderReserveService
      */
     public function downReserve(OrderItem $orderItem, int $delta)
     {
-        foreach ($orderItem->reserves as $reserve) {
-            if ($delta < $reserve->quantity) {
-                $reserve->quantity -= $delta; //Уменьшение на $delta
-                $reserve->save();
-                return;
-            } else {
-                $delta -= $reserve->quantity;
-                $reserve->delete();
+        DB::transaction(function () use ($orderItem, $delta) {
+            foreach ($orderItem->reserves as $reserve) {
+                if ($delta < $reserve->quantity) {
+                    $reserve->quantity -= $delta; //Уменьшение на $delta
+                    $reserve->save();
+                    return;
+                } else {
+                    $delta -= $reserve->quantity;
+                    $reserve->delete();
+                }
             }
-        }
+        });
     }
 
     public function delete(OrderReserve $reserve)

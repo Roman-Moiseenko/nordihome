@@ -35,6 +35,7 @@ use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
@@ -86,20 +87,6 @@ class OrderService
         $this->parserService = $parserService;
     }
 
-    #[Deprecated]
-    public function default_user_data(User $user = null): stdClass
-    {
-        /** @var User $user */
-        if (is_null($user)) $user = Auth::guard('user')->user();
-        $result = new stdClass();
-        $result->payment = $user->payment;
-        $result->delivery = $user->delivery;
-        $result->email = $user->email;
-        $result->phone = $user->phone;
-        $result->user = $user;
-        return $result;
-    }
-
     //**** ФУНКЦИИ СОЗДАНИЯ ЗАКАЗА
 
     #[ArrayShape(['payment' => "array", 'delivery' => "array", 'phone' => "string", 'amount' => "array"])]
@@ -120,7 +107,6 @@ class OrderService
         }
 
         $user->delivery = (isset($data['delivery']) ? (int)$data['delivery'] : null);
-
 
         if ($user->delivery == OrderExpense::DELIVERY_REGION) {
             $user->address->address = $data['address-region'] ?? '';
@@ -204,32 +190,34 @@ class OrderService
      */
     public function create(Request $request): Order
     {
-        if (Auth::guard('user')->check()) {
-            /** @var User $user */
-            $user = Auth::guard('user')->user();
-        } else {
-            throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
-        }
+        DB::transaction(function () use ($request, &$order) {
+            if (Auth::guard('user')->check()) {
+                /** @var User $user */
+                $user = Auth::guard('user')->user();
+            } else {
+                throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
+            }
 
-        $order = Order::register($user->id, Order::ONLINE);
-        if ($request->has('code')) {
-            $coupon = $this->repository->getCoupon($request->get('code'));
+            $order = Order::register($user->id, Order::ONLINE);
+            if ($request->has('code')) {
+                $coupon = $this->repository->getCoupon($request->get('code'));
+                $order->coupon_id = $coupon->id;
+                $order->save();
+            }
 
-            $order->coupon_id = $coupon->id;
-            $order->save();
-        }
+            $items = ($request['preorder'] == 1) ? $this->cart->getItems() : $this->cart->getOrderItems();
+            foreach ($items as $item) {
+                if ($item->check) $this->add_product($order, $item->product->id, $item->quantity);
+            }
+            $this->cart->clearOrder();
+            if ($request['preorder'] == 1) $this->cart->clearPreOrder();
 
-        $items = ($request['preorder'] == 1) ? $this->cart->getItems() : $this->cart->getOrderItems();
-        foreach ($items as $item) {
-            if ($item->check) $this->add_product($order, $item->product->id, $item->quantity);
-        }
-        $this->cart->clearOrder();
-        if ($request['preorder'] == 1) $this->cart->clearPreOrder();
+            $order->refresh();
+            $this->recalculation($order);
 
-        $order->refresh();
-        $this->recalculation($order);
+            event(new OrderHasCreated($order));
 
-        event(new OrderHasCreated($order));
+        });
         return $order;
     }
 
@@ -239,24 +227,26 @@ class OrderService
      */
     public function create_parser(): Order
     {
-        if (Auth::guard('user')->check()) {
-            /** @var User $user */
-            $user = Auth::guard('user')->user();
-        } else {
-            throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
-        }
-        $OrderItems = $this->parserCart->getItems();
-        $order = Order::register($user->id, Order::PARSER);
-        $order->save();
-        foreach ($OrderItems as $item) {
-            $orderItemPre = OrderItem::new($item->product, $item->quantity, true, $order->user_id);
-            $orderItemPre->base_cost = $item->cost;
-            $orderItemPre->sell_cost = $item->cost;
-            $order->items()->save($orderItemPre);
-        }
-        $this->parserCart->clear();
-        $this->recalculation($order);
-        event(new OrderHasCreated($order));
+        DB::transaction(function () use (&$order) {
+            if (Auth::guard('user')->check()) {
+                /** @var User $user */
+                $user = Auth::guard('user')->user();
+            } else {
+                throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
+            }
+            $OrderItems = $this->parserCart->getItems();
+            $order = Order::register($user->id, Order::PARSER);
+            $order->save();
+            foreach ($OrderItems as $item) {
+                $orderItemPre = OrderItem::new($item->product, $item->quantity, true, $order->user_id);
+                $orderItemPre->base_cost = $item->cost;
+                $orderItemPre->sell_cost = $item->cost;
+                $order->items()->save($orderItemPre);
+            }
+            $this->parserCart->clear();
+            $this->recalculation($order);
+            event(new OrderHasCreated($order));
+        });
         return $order;
     }
 
@@ -267,51 +257,48 @@ class OrderService
      */
     public function create_click(Request $request)
     {
-        if (Auth::guard('user')->check()) { //Проверяем клиент залогинен
-            //$default = $this->default_user_data();
-            $user = Auth::guard('user')->user();
-        } else {
-            $email = $request['email'];
-            $phone = $request['phone'];
-
-            $user = User::where('email', $email)->first();
-            if (empty($user)) {
-                $password = Str::random(8);
-                $user = User::register($email, $password);
-                $user->update(['phone' => $phone]);
-
-                event(new UserHasCreated($user));
+        DB::transaction(function () use ($request, &$order) {
+            if (Auth::guard('user')->check()) { //Проверяем клиент залогинен
+                $user = Auth::guard('user')->user();
+            } else {
+                $email = $request->string('email')->trim()->value();
+                $user = User::where('email', $email)->first();
+                if (empty($user)) {
+                    $password = Str::random(8);
+                    $user = User::register($email, $password);
+                    $user->setPhone($request->string('phone')->trim()->value());
+                    event(new UserHasCreated($user));
+                }
             }
-            //$default = $this->default_user_data($user);
-        }
 
-        if (isset($request['payment'])) $user->payment->setPayment($request['payment']);
-        if ($request['delivery'] == 'local') $user->delivery = OrderExpense::DELIVERY_LOCAL;
-        if ($request['delivery'] == 'region') $user->delivery = OrderExpense::DELIVERY_REGION;
-        $storage = null;
-        if (is_numeric($request['delivery'])) {
-            $user->delivery = OrderExpense::DELIVERY_STORAGE;
-            $storage = (int)$request['delivery'];
-        }
-        $Address = GeoAddress::create(
-            $data['address'] ?? '',
-            $data['latitude'] ?? '',
-            $data['longitude'] ?? '',
-            $data['post'] ?? ''
-        );
-        $user->address = $Address;
-        $user->save();
+            if (isset($request['payment'])) $user->payment->setPayment($request['payment']);
+            if ($request['delivery'] == 'local') $user->delivery = OrderExpense::DELIVERY_LOCAL;
+            if ($request['delivery'] == 'region') $user->delivery = OrderExpense::DELIVERY_REGION;
+            $storage = null;
+            if (is_numeric($request['delivery'])) {
+                $user->delivery = OrderExpense::DELIVERY_STORAGE;
+                $storage = (int)$request['delivery'];
+            }
+            $Address = GeoAddress::create(
+                $request->string('address')->trim()->value(),
+                $request->string('latitude')->trim()->value(),
+                $request->string('longitude')->trim()->value(),
+                $request->string('post')->trim()->value()
+            );
+            $user->address = $Address;
+            $user->save();
 
-        $product_id = $request['product_id'];
-        /** @var Product $product */
-        $product = Product::find($product_id);
+            $product_id = $request->integer('product_id');
+            /** @var Product $product */
+            $product = Product::find($product_id);
 
-        if ($product->getLastPrice($user->id) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
-        $order = Order::register($user->id, Order::ONLINE);
+            if ($product->getLastPrice($user->id) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
+            $order = Order::register($user->id, Order::ONLINE);
 
-        $order = $this->add_product($order, $product->id, 1);
-        $this->recalculation($order);
-        event(new OrderHasCreated($order));
+            $order = $this->add_product($order, $product->id, 1);
+            $this->recalculation($order);
+            event(new OrderHasCreated($order));
+        });
         return $order;
     }
 
@@ -322,28 +309,30 @@ class OrderService
      */
     public function create_sales(array $request): Order
     {
-        if (empty($request['user_id'])) {//1. Пользователь новый.
-            $password = Str::random(8); /// регистрируем его и отправляем ему письмо, со ссылкой верификации
-            $user = User::register($request['email'], $password);
-            $user->setPhone($request['phone']);
-            $user->setNameField(firstname: $request['name']);
-            event(new UserHasCreated($user));
-        } else {//2. Пользователь старый.
-            $user = User::find((int)$request['user_id']);
-            //Обновить Имя
-            $user->setNameField(firstname: $request['name']);
-        }
-        if (isset($request['parser'])) {
-            $order = Order::register($user->id, Order::PARSER); //Создаем пустой заказ
-        } else {
-            $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
-        }
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
-        $order->setStatus(OrderStatus::SET_MANAGER);
-        $order->setManager($staff->id);
-        $order->refresh();
-        $this->logger->logOrder($order, 'Заказ создан менеджером', '', '');
+        DB::transaction(function () use ($request, &$order) {
+            if (empty($request['user_id'])) {//1. Пользователь новый.
+                $password = Str::random(8); /// регистрируем его и отправляем ему письмо, со ссылкой верификации
+                $user = User::register($request['email'], $password);
+                $user->setPhone($request['phone']);
+                $user->setNameField(firstname: $request['name']);
+                event(new UserHasCreated($user));
+            } else {//2. Пользователь старый.
+                $user = User::find((int)$request['user_id']);
+                //Обновить Имя
+                $user->setNameField(firstname: $request['name']);
+            }
+            if (isset($request['parser'])) {
+                $order = Order::register($user->id, Order::PARSER); //Создаем пустой заказ
+            } else {
+                $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
+            }
+            /** @var Admin $staff */
+            $staff = Auth::guard('admin')->user();
+            $order->setStatus(OrderStatus::SET_MANAGER);
+            $order->setManager($staff->id);
+            $order->refresh();
+            $this->logger->logOrder($order, 'Заказ создан менеджером', '', '');
+        });
 
         return $order;
     }
@@ -382,27 +371,27 @@ class OrderService
      */
     public function setAwaiting(Order $order)
     {
-        if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
-        if ($order->getTotalAmount() == 0)  throw new \DomainException('Сумма заказа не может быть равно нулю');
+        DB::transaction(function () use ($order) {
+            if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
+            if ($order->getTotalAmount() == 0)  throw new \DomainException('Сумма заказа не может быть равно нулю');
 
-        foreach ($order->items as $item) {
-            if ($item->assemblage == true) {
-                $addition = OrderAddition::new($item->getAssemblage(), OrderAddition::PAY_ASSEMBLY, $item->product->name);
-                $order->additions()->save($addition);
-                $item->assemblage = false;
-                $item->save();
+            foreach ($order->items as $item) {
+                if ($item->assemblage == true) {
+                    $addition = OrderAddition::new($item->getAssemblage(), OrderAddition::PAY_ASSEMBLY, $item->product->name);
+                    $order->additions()->save($addition);
+                    $item->assemblage = false;
+                    $item->save();
+                }
             }
-        }
-        $order->setReserve(now()->addDays(3));
-        $order->setNumber();
-        $order->setStatus(OrderStatus::AWAITING);
-        $order->refresh();
-        $this->logger->logOrder($order, 'Заказ отправлен на оплату', '', '');
+            $order->setReserve(now()->addDays(3));
+            $order->setNumber();
+            $order->setStatus(OrderStatus::AWAITING);
+            $order->refresh();
+            $this->logger->logOrder($order, 'Заказ отправлен на оплату', '', '');
 
-        event(new OrderHasAwaiting($order));
-
-
-        flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
+            event(new OrderHasAwaiting($order));
+            flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
+        });
     }
 
     /**
@@ -433,9 +422,7 @@ class OrderService
         $this->logger->logOrder($order, 'Новое время резерва', '', $new_reserve);
     }
 
-
     //** ФУНКЦИИ РАБОТЫ С ЭЛЕМЕНТАМИ ЗАКАЗА
-
     /**
      * Добавить в заказ товар. НОВАЯ ВЕРСИЯ
      * @param Order $order
@@ -481,21 +468,23 @@ class OrderService
         $delta = $quantity - $item->quantity;
         if ($delta == 0) return $item->order;
 
-        if (!$item->preorder) {
-            if ($delta > 0) {
-                $delta = min($item->product->getCountSell(), $delta);
-                $this->reserveService->upReserve($item, abs($delta));
-            } else {
-                $this->reserveService->downReserve($item, abs($delta));
+        DB::transaction(function () use ($item, $delta, &$order) {
+            if (!$item->preorder) {
+                if ($delta > 0) {
+                    $delta = min($item->product->getCountSell(), $delta);
+                    $this->reserveService->upReserve($item, abs($delta));
+                } else {
+                    $this->reserveService->downReserve($item, abs($delta));
+                }
             }
-        }
-        $item->quantity += $delta;
-        $item->save();
-        $order = $item->order;
+            $item->quantity += $delta;
+            $item->save();
+            $order = $item->order;
 
-        $this->recalculation($order);
-        $order->refresh();
-        $this->logger->logOrder($order, 'Изменено кол-во товара', $item->product->name, (string)$quantity . ' шт.');
+            $this->recalculation($order);
+            $order->refresh();
+            $this->logger->logOrder($order, 'Изменено кол-во товара', $item->product->name, (string)$quantity . ' шт.');
+        });
 
         return $order;
     }
@@ -509,13 +498,10 @@ class OrderService
     public function update_sell(OrderItem $item, int $sell_cost): Order
     {
         $order = $item->order;
-
         if ($item->product->getPriceMin() > $sell_cost) {
             event(new PriceHasMinimum($item));
         }
-
         $item->sell_cost = $sell_cost;
-
         $item->save();
         $order->refresh();
         $this->recalculation($order);
@@ -578,7 +564,6 @@ class OrderService
         //Раскидываем скидку на все товары не из акций
         $base_amount = $order->getBaseAmountNotDiscount();
         if ($base_amount == 0) throw new \DomainException('В заказе нет товаров для установки ручной скидки');
-
 
         $percent_item = $discount / $base_amount;
         foreach ($order->items as $item) {
@@ -739,22 +724,24 @@ class OrderService
      */
     public function movement(Order $order, int $storage_out, int $storage_in): MovementDocument
     {
-        $movement = $this->movementService->create($storage_out, $storage_in);
-        $order->movements()->attach($movement->id);
-        $movement->refresh();
+        DB::transaction(function () use ($order, $storage_out, $storage_in, &$movement) {
+            $movement = $this->movementService->create($storage_out, $storage_in);
+            $order->movements()->attach($movement->id);
+            $movement->refresh();
 
-        foreach ($order->items as $item) {
-            if (!is_null($reserve = $item->getReserveByStorage($storage_out))) {
-                if ($reserve->quantity > 0) {
-                    $movement->addProduct($item->product, $reserve->quantity, $item->id);
+            foreach ($order->items as $item) {
+                if (!is_null($reserve = $item->getReserveByStorage($storage_out))) {
+                    if ($reserve->quantity > 0) {
+                        $movement->addProduct($item->product, $reserve->quantity, $item->id);
+                    }
                 }
             }
-        }
-        $this->logger->logOrder(
-            $order,
-            'Создано перемещение для заказа',
-            '',
-            $movement->storageOut->name . ' -> ' . $movement->storageIn->name);
+            $this->logger->logOrder(
+                $order,
+                'Создано перемещение для заказа',
+                '',
+                $movement->storageOut->name . ' -> ' . $movement->storageIn->name);
+        });
 
         return $movement;
     }
@@ -822,31 +809,29 @@ class OrderService
      */
     public function copy(Order $order): Order
     {
-        $new_order = $order->replicate();
-        $new_order->created_at = Carbon::now();
-        $new_order->number = null;
-        $new_order->paid = false;
-        $new_order->finished = false;
-        $new_order->save();
-        $new_order->statuses()->create(['value' => OrderStatus::FORMED]);
-        $new_order->setStatus(OrderStatus::SET_MANAGER);
+        DB::transaction(function () use ($order, &$new_order) {
+            $new_order = $order->replicate();
+            $new_order->created_at = Carbon::now();
+            $new_order->number = null;
+            $new_order->paid = false;
+            $new_order->finished = false;
+            $new_order->save();
+            $new_order->statuses()->create(['value' => OrderStatus::FORMED]);
+            $new_order->setStatus(OrderStatus::SET_MANAGER);
+            $new_order->refresh();
 
-        //Перенос ручной скидки, отключен
-        //$this->discount_order($new_order, $order->manual);
+            foreach ($order->items as $item) {
+                $this->add_product($new_order, $item->product_id, $item->quantity);
+            }
 
-        $new_order->refresh();
+            //TODO Копировать Услуги
+            foreach ($order->additions as $addition) {
+                $this->add_addition($new_order, $addition->purpose, $addition->amount, $addition->comment);
+            }
 
-        foreach ($order->items as $item) {
-            $this->add_product($new_order, $item->product_id, $item->quantity);
-        }
-
-        //TODO Копировать Услуги
-        foreach ($order->additions as $addition) {
-            $this->add_addition($new_order, $addition->purpose, $addition->amount, $addition->comment);
-        }
-
-        $new_order->refresh();
-        $this->logger->logOrder($new_order, 'Создан заказ копированием', '', $order->htmlNumDate());
+            $new_order->refresh();
+            $this->logger->logOrder($new_order, 'Создан заказ копированием', '', $order->htmlNumDate());
+        });
 
         return $new_order;
     }
@@ -865,12 +850,10 @@ class OrderService
         $remains = $order->getPaymentAmount() - $order->getExpenseAmount()+  $order->getCoupon() + $order->getDiscountOrder();
         $data = json_decode($_data, true);
         $amount = 0;
-
         foreach ($data['items'] as $item) { //Суммируем по товарам
             $id_item = (int)$item['id'];
             $amount += $order->getItemById($id_item)->sell_cost * (int)$item['value'];
         }
-
         foreach ($data['additions'] as $addition) { //Суммируем по услугам
             $amount += (float)$addition['value'];
         }
@@ -896,20 +879,13 @@ class OrderService
         $product = $this->parserService->findProduct($search);
 
         $cost_item = ceil($this->shop_options->parser_coefficient * $product->parser->price);
-
-
         $orderItemPre = OrderItem::new($product, $quantity, true, $order->user_id);
-
         $orderItemPre->base_cost = (int)$cost_item;
         $orderItemPre->sell_cost = (int)$cost_item;
-
         $order->items()->save($orderItemPre);
 
         $order->refresh();
         $this->recalculation($order);
         $this->logger->logOrder($order, 'Добавлен товар через Парсер', $product->name, $quantity . ' шт.');
-
-        //return $order;
-
     }
 }

@@ -22,19 +22,15 @@ class ParserController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = $this->repository->getParser();
-            $orders = $this->pagination($query, $request, $pagination);
-            return view('admin.sales.parser.index', compact('orders', 'pagination'));
-        });
+        $query = $this->repository->getParser();
+        $orders = $this->pagination($query, $request, $pagination);
+        return view('admin.sales.parser.index', compact('orders', 'pagination'));
     }
 
     public function show(Request $request, Order $order)
     {
-        return $this->try_catch_admin(function () use($request, $order) {
-            if ($order->isParser()) return view('admin.sales.parser.show', compact('order'));
-            flash('Заказ не через парсер', 'warning');
-            return redirect()->back();
-        });
+        if ($order->isParser()) return view('admin.sales.parser.show', compact('order'));
+        flash('Заказ не через парсер', 'warning');
+        return redirect()->back();
     }
 }

@@ -19,6 +19,7 @@ use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use Illuminate\Support\Facades\DB;
 
 
 class ExpenseService
@@ -37,42 +38,45 @@ class ExpenseService
 
     public function create(array $request): OrderExpense
     {
-        /** @var Storage $storage */
-        $storage = Storage::find($request['storage_id']); //Откуда выдать товар
-        /** @var Order $order */
-        $order = Order::find($request['order_id']);
+        DB::transaction(function () use ($request, &$expense) {
+            /** @var Storage $storage */
+            $storage = Storage::find($request['storage_id']); //Откуда выдать товар
+            /** @var Order $order */
+            $order = Order::find($request['order_id']);
 
-        $expense = OrderExpense::register($order->id, $storage->id);
-        $items = $request['items'];
-        foreach ($items as $item) {
-            /** @var OrderItem $orderItem */
-            $orderItem = OrderItem::find($item['id']);
-            $quantity = (int)$item['value']; //Сколько выдать товара
-            if ($quantity > 0) {
-                $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
-                //Проверка на наличие на складе выдачи
-                $reserve = $orderItem->getReserveByStorage($storage->id);
-                if (is_null($reserve) || $reserve->quantity < $quantity)
-                    throw new \DomainException('Товара нет в резерве на складе отгрузки, дождитесь исполнения поступления или перемещения!');
-                $this->reserveService->downReserve($orderItem, $quantity); //Убираем из резерва
-                $storageItem = $storage->getItem($orderItem->product);
-                $storageItem->sub($quantity); //Списываем со склада
+            $expense = OrderExpense::register($order->id, $storage->id);
+            $items = $request['items'];
+            foreach ($items as $item) {
+                /** @var OrderItem $orderItem */
+                $orderItem = OrderItem::find($item['id']);
+                $quantity = (int)$item['value']; //Сколько выдать товара
+                if ($quantity > 0) {
+                    $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
+                    //Проверка на наличие на складе выдачи
+                    $reserve = $orderItem->getReserveByStorage($storage->id);
+                    if (is_null($reserve) || $reserve->quantity < $quantity)
+                        throw new \DomainException('Товара нет в резерве на складе отгрузки, дождитесь исполнения поступления или перемещения!');
+                    $this->reserveService->downReserve($orderItem, $quantity); //Убираем из резерва
+                    $storageItem = $storage->getItem($orderItem->product);
+                    $storageItem->sub($quantity); //Списываем со склада
 
-                $storageItem->refresh();
-                if ($storageItem->quantity < 0) {
-                    throw new \DomainException('Исключительная ситуация. Товар есть в резерве, НО требуется перемещение');
+                    $storageItem->refresh();
+                    if ($storageItem->quantity < 0) {
+                        throw new \DomainException('Исключительная ситуация. Товар есть в резерве, НО требуется перемещение');
+                    }
                 }
             }
-        }
-        $expense->storage_id = $storage->id;
-        $expense->save();
-        $additions = $request['additions'] ?? [];
-        foreach ($additions as $addition) {
-            if ((float)$addition['value'] > 0)
-                $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
-        }
-        $expense->refresh();
-        $this->logger->logOrder($expense->order, 'Создано распоряжение на выдачу', '', $expense->htmlNumDate());
+            $expense->storage_id = $storage->id;
+            $expense->save();
+            $additions = $request['additions'] ?? [];
+            foreach ($additions as $addition) {
+                if ((float)$addition['value'] > 0)
+                    $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
+            }
+            $expense->refresh();
+            $this->logger->logOrder($expense->order, 'Создано распоряжение на выдачу', '', $expense->htmlNumDate());
+        });
+
         return $expense;
     }
 
@@ -96,19 +100,18 @@ class ExpenseService
      */
     public function cancel(OrderExpense $expense): Order
     {
-        $order = $expense->order;
-        foreach ($expense->items as $item) {
-
-            $expense->storage->add($item->orderItem->product, $item->quantity);
-            $expense->storage->refresh();
-            $this->reserveService->upReserve($item->orderItem, $item->quantity);
-
-            $item->delete();
-        }
-        $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу', '', $expense->htmlNumDate());
-        $expense->delete();
-        $order->refresh();
-
+        DB::transaction(function () use($expense, &$order) {
+            $order = $expense->order;
+            foreach ($expense->items as $item) {
+                $expense->storage->add($item->orderItem->product, $item->quantity);
+                $expense->storage->refresh();
+                $this->reserveService->upReserve($item->orderItem, $item->quantity);
+                $item->delete();
+            }
+            $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу', '', $expense->htmlNumDate());
+            $expense->delete();
+            $order->refresh();
+        });
 
         return $order;
     }
@@ -143,10 +146,12 @@ class ExpenseService
      */
     public function issue_shop(array $request): OrderExpense
     {
-        $expense = $this->issue($request);
-        $this->completed($expense);
-        $expense->refresh();
-        $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
+        DB::transaction(function () use ($request, &$expense) {
+            $expense = $this->issue($request);
+            $this->completed($expense);
+            $expense->refresh();
+            $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
+        });
         return $expense;
     }
 
@@ -193,36 +198,33 @@ class ExpenseService
             if (empty($track)) throw new \DomainException('Не указан трек-номер посылки');
             $expense->track = $track;
             event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
-
         }
         $expense->status = OrderExpense::STATUS_DELIVERY;
         $expense->save();
         $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '' );
-
     }
 
     public function completed(OrderExpense $expense)
     {
-        $expense->completed();
-        $expense->refresh();
-        /** @var Order $order */
-        $order = Order::find($expense->order_id);
+        DB::transaction(function () use ($expense) {
+            $expense->completed();
+            $expense->refresh();
+            /** @var Order $order */
+            $order = Order::find($expense->order_id);
 
-        if (($order->getTotalAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) < 1) {
-            $check = true;
-            foreach ($order->expenses as $_expense) {
-                if (!$_expense->isCompleted()) $check = false;
+            if (($order->getTotalAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) < 1) {
+                $check = true;
+                foreach ($order->expenses as $_expense) {
+                    if (!$_expense->isCompleted()) $check = false;
+                }
+                //Проверить все ли распоряжения выданы?
+                if ($check) $expense->order->setStatus(OrderStatus::COMPLETED);
+                event(new OrderHasCompleted($expense->order));
+                $this->logger->logOrder($expense->order, 'Заказ завершен', '', '');
+            } else {
+                event(new ExpenseHasCompleted($expense));
+                $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate() );
             }
-            //Проверить все ли распоряжения выданы?
-            if ($check) $expense->order->setStatus(OrderStatus::COMPLETED);
-
-            event(new OrderHasCompleted($expense->order));
-            $this->logger->logOrder($expense->order, 'Заказ завершен', '', '');
-
-        } else {
-            event(new ExpenseHasCompleted($expense));
-            $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate() );
-
-        }
+        });
     }
 }

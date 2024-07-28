@@ -14,6 +14,7 @@ use App\Modules\Product\Repository\ProductRepository;
 use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use JetBrains\PhpStorm\Deprecated;
 
 class PromotionController extends Controller
 {
@@ -23,10 +24,10 @@ class PromotionController extends Controller
     private ProductRepository $products;
 
     public function __construct(
-        PromotionService $service,
+        PromotionService    $service,
         PromotionRepository $repository,
-        GroupRepository $groups,
-        ProductRepository $products)
+        GroupRepository     $groups,
+        ProductRepository   $products)
     {
         $this->middleware(['auth:admin', 'can:discount']);
         $this->service = $service;
@@ -37,11 +38,9 @@ class PromotionController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use ($request) {
-            $query = $this->repository->getIndex();
-            $promotions = $this->pagination($query, $request, $pagination);
-            return view('admin.discount.promotion.index', compact('promotions', 'pagination'));
-        });
+        $query = $this->repository->getIndex();
+        $promotions = $this->pagination($query, $request, $pagination);
+        return view('admin.discount.promotion.index', compact('promotions', 'pagination'));
     }
 
     public function create()
@@ -54,18 +53,14 @@ class PromotionController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
-        return $this->try_catch_admin(function () use ($request) {
-            $promotion = $this->service->create($request);
-            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-        });
+        $promotion = $this->service->create($request);
+        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
     }
 
     public function show(Promotion $promotion)
     {
-        return $this->try_catch_admin(function () use ($promotion) {
-            $groups = $this->groups->getNotInPromotions($promotion);
-            return view('admin.discount.promotion.show', compact('promotion', 'groups'));
-        });
+        $groups = $this->groups->getNotInPromotions($promotion);
+        return view('admin.discount.promotion.show', compact('promotion', 'groups'));
     }
 
     public function edit(Promotion $promotion)
@@ -75,10 +70,8 @@ class PromotionController extends Controller
 
     public function update(Request $request, Promotion $promotion)
     {
-        return $this->try_catch_admin(function () use ($request, $promotion) {
-            $promotion = $this->service->update($request, $promotion);
-            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-        });
+        $this->service->update($request, $promotion);
+        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
     }
 
     public function add_product(Request $request, Promotion $promotion)
@@ -86,140 +79,70 @@ class PromotionController extends Controller
         $request->validate([
             'product_id' => 'required|integer|gt:0',
         ]);
-        return $this->try_catch_admin(function () use ($request, $promotion) {
-            $this->service->add_product($promotion, (int)$request['product_id']);
-            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-        });
+        $this->service->add_product($promotion, (int)$request['product_id']);
+        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
     }
 
     public function add_products(Request $request, Promotion $promotion)
     {
-
-        return $this->try_catch_admin(function () use ($request, $promotion) {
-            $this->service->add_products($promotion, $request['products']);
-            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-        });
+        $this->service->add_products($promotion, $request['products']);
+        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
     }
 
     public function del_product(Promotion $promotion, Product $product)
     {
-        return $this->try_catch_admin(function () use ($promotion, $product) {
-            $this->service->del_product($product, $promotion);
-            return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-        });
+        $this->service->del_product($product, $promotion);
+        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
     }
 
     public function set_product(Request $request, Promotion $promotion, Product $product)
     {
-        return $this->try_catch_ajax_admin(function () use ($request, $promotion, $product) {
-            $this->service->set_product($request, $promotion, $product);
-            return response()->json(true);
-        });
+        $this->service->set_product($request, $promotion, $product);
+        return response()->json(true);
     }
 
-    /*
-        public function add_group(Request $request, Promotion $promotion)
-        {
-            $request->validate([
-                'group_id' => 'required|integer|gt:0',
-                'discount' => 'required',
-            ]);
-
-            try {
-                $this->service->add_group($request, $promotion);
-                return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-            } catch (\DomainException $e) {
-                flash($e->getMessage(), 'danger');
-            } catch (\Throwable $e) {
-                event(new ThrowableHasAppeared($e));
-                flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-            }
-            return redirect()->back();
-
-        }
-
-        public function del_group(Promotion $promotion, Group $group)
-        {
-            try {
-                $this->service->del_group($group, $promotion);
-                return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-            } catch (\DomainException $e) {
-                flash($e->getMessage(), 'danger');
-            } catch (\Throwable $e) {
-                event(new ThrowableHasAppeared($e));
-                flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-            }
-            return redirect()->back();
-        }
-
-        public function set_group(Request $request, Promotion $promotion)
-        {
-            try {
-                $this->service->set_group($request, $promotion);
-                return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-            } catch (\DomainException $e) {
-                flash($e->getMessage(), 'danger');
-            } catch (\Throwable $e) {
-                event(new ThrowableHasAppeared($e));
-                flash('Техническая ошибка! Информация направлена разработчику', 'danger');
-            }
-            return redirect()->back();
-        }
-
-    */
     public function destroy(Promotion $promotion)
     {
-        return $this->try_catch_admin(function () use ($promotion) {
-            $this->service->delete($promotion);
-            return redirect()->route('admin.discount.promotion.index');
-        });
+        $this->service->delete($promotion);
+        return redirect()->route('admin.discount.promotion.index');
     }
 
     //Команды
     public function draft(Promotion $promotion)
     {
-        return $this->try_catch_admin(function () use ($promotion) {
-            $this->service->draft($promotion);
-            return redirect()->back();
-        });
+        $this->service->draft($promotion);
+        return redirect()->back();
     }
 
     public function published(Promotion $promotion)
     {
-        return $this->try_catch_admin(function () use ($promotion) {
-            $this->service->published($promotion);
-            return redirect()->back();
-        });
+        $this->service->published($promotion);
+        return redirect()->back();
     }
 
     public function stop(Promotion $promotion)
     {
-        return $this->try_catch_admin(function () use ($promotion) {
-            $this->service->stop($promotion);
-            return redirect()->back();
-        });
+        $this->service->stop($promotion);
+        return redirect()->back();
     }
 
     public function start(Promotion $promotion)
     {
-        return $this->try_catch_admin(function () use ($promotion) {
-            $this->service->start($promotion);
-            return redirect()->back();
-        });
+        $this->service->start($promotion);
+        return redirect()->back();
     }
 
+    #[Deprecated]
     public function search(Request $request, Promotion $promotion)
     {
-        return $this->try_catch_ajax_admin(function () use ($request, $promotion) {
-            $result = [];
-            $products = $this->products->search($request['search']);
-            /** @var Product $product */
-            foreach ($products as $product) {
-                if (!$promotion->isProduct($product->id)) {
-                    $result[] = $this->products->toArrayForSearch($product);
-                }
+        $result = [];
+        $products = $this->products->search($request['search']);
+        /** @var Product $product */
+        foreach ($products as $product) {
+            if (!$promotion->isProduct($product->id)) {
+                $result[] = $this->products->toArrayForSearch($product);
             }
-            return \response()->json($result);
-        });
+        }
+        return \response()->json($result);
     }
 }

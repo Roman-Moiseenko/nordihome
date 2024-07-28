@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\PaymentService;
 use App\Modules\Shop\Cart\Cart;
@@ -31,11 +32,13 @@ class OrderController extends Controller
 
     private ParserCart $parserCart;
     private StorageRepository $storages;
+    private PaymentRepository $paymentRepository;
 
     public function __construct(
         Cart            $cart,
         ParserCart      $parserCart,
         PaymentService  $payments,
+        PaymentRepository $paymentRepository,
         DeliveryService $deliveries,
         OrderService    $service,
         StorageRepository $storages,
@@ -49,6 +52,7 @@ class OrderController extends Controller
         $this->parserCart = $parserCart;
 
         $this->storages = $storages;
+        $this->paymentRepository = $paymentRepository;
     }
 
     public function create(Request $request)
@@ -75,7 +79,7 @@ class OrderController extends Controller
                 $preorder = 0;
             }
             */
-            $payments = $this->payments->get();
+            $payments = $this->paymentRepository->getPayments();
             $storages = $this->storages->getPointDelivery();
             $companies = DeliveryHelper::deliveries();
             $delivery_cost = $this->deliveries->calculate($user_id, $this->cart->getItems());
@@ -94,7 +98,7 @@ class OrderController extends Controller
             } else {
                 throw new \DomainException('Доступ ограничен');
             }
-            $payments = $this->payments->get();
+            $payments = $this->paymentRepository->getPayments();
             $storages = $this->storages->getPointDelivery();
             $companies = DeliveryHelper::deliveries();
             $delivery_cost = $this->deliveries->calculate($user_id, $this->parserCart->getItems());

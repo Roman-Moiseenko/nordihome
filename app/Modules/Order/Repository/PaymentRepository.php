@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Repository;
 
 use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 
@@ -37,5 +38,19 @@ class PaymentRepository
 
 
         return $query;
+    }
+
+    /**
+     * Cписок всех платежных вариантов
+     * @return array
+     */
+    public function getPayments(): array
+    {
+        //Получаем список всех платежных вариантов
+        $payments = PaymentHelper::payments();
+        usort($payments, function ($a, $b) {
+            return $a['sort'] > $b['sort'];
+        });
+        return $payments;
     }
 }

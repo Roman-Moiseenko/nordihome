@@ -11,6 +11,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Service\GroupService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PromotionService
@@ -18,81 +19,66 @@ class PromotionService
 
     public function create(Request $request): Promotion
     {
-        $start = empty($request['start']) ? null : Carbon::parse($request['start']);
-        $finish = Carbon::parse($request['finish']);
+        DB::transaction(function () use ($request, &$promotion) {
 
-        if (!is_null($start)) {
-            if ($start->lte(now())) throw new \DomainException('Дата начала акции должна быть больше текущей');
-            if ($finish->lte($start)) throw new \DomainException('Дата окончания акции должна быть больше даты начала');
-        } else {
-            if ($finish->lte(now())) throw new \DomainException('Дата окончания акции должна быть больше текущей');
-        }
+            $this->checkStartFinish($start, $finish, $request);
 
-        $promotion = Promotion::register(
-            $request->get('name'),
-            $request->get('title') ?? '',
-            $finish->format('Y-m-d'),
-            $request->has('menu'),
-            is_null($start) ? null : $start->format('Y-m-d'),
-            $request->get('slug') ?? ''
-        );
+            $promotion = Promotion::register(
+                $request->get('name'),
+                $request->get('title') ?? '',
+                $finish->format('Y-m-d'),
+                $request->has('menu'),
+                is_null($start) ? null : $start->format('Y-m-d'),
+                $request->get('slug') ?? ''
+            );
 
-        $promotion->show_title = $request->has('show_title');
-        $this->image($promotion, $request->file('image'));
-        $this->icon($promotion, $request->file('icon'));
+            $promotion->show_title = $request->has('show_title');
+            $this->image($promotion, $request->file('image'));
+            $this->icon($promotion, $request->file('icon'));
 
-        $promotion->discount = (int)($request['discount'] ?? 0);
-        $promotion->description = $request['description'] ?? '';
-        $promotion->condition_url = $request['condition_url'] ?? '';
+            $promotion->discount = $request->integer('discount');
+            $promotion->description = $request->string('description')->trim()->value();
+            $promotion->condition_url = $request->string('condition_url')->trim()->value();
 
-        $promotion->save();
+            $promotion->save();
+        });
         return $promotion;
 
     }
 
     public function update(Request $request, Promotion $promotion)
     {
-
-        $promotion->update([
-            'name' => $request->get('name'),
-            'title' => $request->get('title') ?? '',
-            'slug' => empty($request['slug']) ? Str::slug($request['name']) : $request['slug'],
-            'menu' => $request->has('menu'),
-            'description' => $request['description'] ?? '',
-            'condition_url' => $request['condition_url'] ?? '',
-            'show_title' => $request->has('show_title'),
-        ]);
-
-        $this->image($promotion, $request->file('image'));
-        $this->icon($promotion, $request->file('icon'));
-
-        $promotion->save();
-
-        if (!$promotion->isPublished()) {
-            $start = empty($request['start']) ? null : Carbon::parse($request['start']);
-            $finish = Carbon::parse($request['finish']);
-            if (!is_null($start)) {
-                if ($start->lte(now())) throw new \DomainException('Дата начала акции должна быть больше текущей');
-                if ($finish->lte($start)) throw new \DomainException('Дата окончания акции должна быть больше даты начала');
-            } else {
-                if ($finish->lte(now())) throw new \DomainException('Дата окончания акции должна быть больше текущей');
-            }
-
+        DB::transaction(function () use ($request, $promotion) {
             $promotion->update([
-                'start_at' => is_null($start) ? null : $start->format('Y-m-d'),
-                'finish_at' => $finish->format('Y-m-d'),
+                'name' => $request->string('name')->trim()->value(),
+                'title' => $request->string('title')->trim()->value(),
+                'slug' => empty($request['slug']) ? Str::slug($request['name']) : $request['slug'],
+                'menu' => $request->has('menu'),
+                'description' => $request->string('description')->trim()->value(),
+                'condition_url' => $request->string('condition_url')->trim()->value(),
+                'show_title' => $request->has('show_title'),
             ]);
-        }
 
-        if ($promotion->discount != (int)$request['discount']) {
-            $promotion->discount = (int)$request['discount'];
+            $this->image($promotion, $request->file('image'));
+            $this->icon($promotion, $request->file('icon'));
             $promotion->save();
-            foreach ($promotion->products as $product) {
-                $this->setPriceProduct($promotion, $product);
-            }
-        }
 
-        return $promotion;
+            if (!$promotion->isPublished()) {
+                $this->checkStartFinish($start, $finish, $request);
+                $promotion->update([
+                    'start_at' => is_null($start) ? null : $start->format('Y-m-d'),
+                    'finish_at' => $finish->format('Y-m-d'),
+                ]);
+            }
+
+            if ($promotion->discount != $request->integer('discount')) {
+                $promotion->discount = $request->integer('discount');
+                $promotion->save();
+                foreach ($promotion->products as $product) {
+                    $this->setPriceProduct($promotion, $product);
+                }
+            }
+        });
     }
 
     public function add_product(Promotion $promotion, int $product_id): Promotion
@@ -136,14 +122,12 @@ class PromotionService
         Promotion::destroy($promotion->id);
     }
 
-
     public function image(Promotion $promotion, $file): void
     {
         if (empty($file)) return;
         $promotion->image->newUploadFile($file, 'image');
         $promotion->refresh();
     }
-
 
     public function icon(Promotion $promotion, $file): void
     {
@@ -211,6 +195,11 @@ class PromotionService
         throw new \DomainException('Нельзя отправить акцию в черновики');
     }
 
+    public function set_product(Request $request, Promotion $promotion, Product $product)
+    {
+        $new_price = (int)$request['price'];
+        $promotion->products()->updateExistingPivot($product->id, ['price' => $new_price]);
+    }
 
     private function setPriceProduct(Promotion $promotion, Product $product)
     {
@@ -218,9 +207,21 @@ class PromotionService
         $promotion->products()->updateExistingPivot($product->id, ['price' => $new_price]);
     }
 
-    public function set_product(Request $request, Promotion $promotion, Product $product)
+    /**
+     * Проверяем дату начала акции, возвращаем даты начала и конца акции
+     * @param $start
+     * @param $finish
+     * @return void
+     */
+    private function checkStartFinish(&$start, &$finish, Request $request): void
     {
-        $new_price = (int)$request['price'];
-        $promotion->products()->updateExistingPivot($product->id, ['price' => $new_price]);
+        $start = empty($request['start']) ? null : Carbon::parse($request['start']);
+        $finish = Carbon::parse($request['finish']);
+        if (!is_null($start)) {
+            if ($start->lte(now())) throw new \DomainException('Дата начала акции должна быть больше текущей');
+            if ($finish->lte($start)) throw new \DomainException('Дата окончания акции должна быть больше даты начала');
+        } else {
+            if ($finish->lte(now())) throw new \DomainException('Дата окончания акции должна быть больше текущей');
+        }
     }
 }

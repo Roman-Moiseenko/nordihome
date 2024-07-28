@@ -77,7 +77,7 @@ class PromotionController extends Controller
     public function update(Request $request, Promotion $promotion)
     {
         return $this->try_catch_admin(function () use ($request, $promotion) {
-            $promotion = $this->service->update($request, $promotion);
+            $this->service->update($request, $promotion);
             return redirect()->route('admin.discount.promotion.show', compact('promotion'));
         });
     }

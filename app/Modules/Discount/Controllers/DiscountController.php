@@ -22,19 +22,14 @@ class DiscountController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $discounts = Discount::orderBy('name')->get();
-            return view('admin.discount.discount.index', compact('discounts'));
-        });
+        $discounts = Discount::orderBy('name')->get();
+        return view('admin.discount.discount.index', compact('discounts'));
     }
 
     public function create()
     {
-        return $this->try_catch_admin(function () {
-            return view('admin.discount.discount.create');
-        });
+        return view('admin.discount.discount.create');
     }
-
 
     public function store(Request $request)
     {
@@ -45,10 +40,8 @@ class DiscountController extends Controller
             '_from' => 'required',
         ]);
 
-        return $this->try_catch_admin(function () use($request) {
-            $discount = $this->service->create($request);
-            return redirect()->route('admin.discount.discount.show', compact('discount'));
-        });
+        $discount = $this->service->create($request);
+        return redirect()->route('admin.discount.discount.show', compact('discount'));
     }
 
     public function show(Discount $discount)
@@ -63,43 +56,33 @@ class DiscountController extends Controller
 
     public function update(Request $request, Discount $discount)
     {
-        return $this->try_catch_admin(function () use($request, $discount) {
-            $discount = $this->service->update($request, $discount);
-            return redirect()->route('admin.discount.discount.show', compact('discount'));
-        });
+        $discount = $this->service->update($request, $discount);
+        return redirect()->route('admin.discount.discount.show', compact('discount'));
     }
 
     public function destroy(Discount $discount)
     {
-        return $this->try_catch_admin(function () use($discount) {
-            $this->service->delete($discount);
-            return redirect()->route('admin.discount.discount.index');
-        });
+        $this->service->delete($discount);
+        return redirect()->route('admin.discount.discount.index');
     }
 
     //Команды
     public function draft(Discount $discount)
     {
-        return $this->try_catch_admin(function () use($discount) {
-            $this->service->draft($discount);
-            return back();
-        });
+        $this->service->draft($discount);
+        return back();
     }
 
     public function published(Discount $discount)
     {
-        return $this->try_catch_admin(function () use($discount) {
-            $this->service->published($discount);
-            return back();
-        });
+        $this->service->published($discount);
+        return back();
     }
 
     //AJAX
     public function widget(Request $request)
     {
-        return $this->try_catch_ajax_admin(function () use($request) {
-            $class = Discount::namespace() . '\\' . $request['class'];
-            return \response()->json($class::widget());
-        });
+        $class = Discount::namespace() . '\\' . $request['class'];
+        return \response()->json($class::widget());
     }
 }

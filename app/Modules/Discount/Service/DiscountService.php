@@ -11,27 +11,26 @@ class DiscountService
 
     public function create(Request $request)
     {
-        $discount = Discount::register(
-            $request['name'],
-            $request['title'] ?? '',
-            (int)$request['discount'],
-            $request['class'],
-            $request['_from'],
-            $request['_to'] ?? '',
-        );
+        return Discount::register(
+            $request->string('name')->trim()->value(),
+            $request->string('title')->trim()->value(),
+            $request->integer('discount'),
 
-        return $discount;
+            $request->string('class')->trim()->value(),
+            $request->string('_from')->trim()->value(),
+            $request->string('_to')->trim()->value(),
+        );
     }
 
     public function update(Request $request, Discount $discount)
     {
         $discount->update([
-            'name' => $request['name'],
-            'title' => $request['title'] ?? '',
-            'discount' => (int)$request['discount'],
-            'class' => $request['class'],
-            '_from' => $request['_from'],
-            '_to' => $request['_to'] ?? '',
+            'name' => $request->string('name')->trim()->value(),
+            'title' => $request->string('title')->trim()->value(),
+            'discount' => $request->integer('discount'),
+            'class' => $request->string('class')->trim()->value(),
+            $request->string('_from')->trim()->value(),
+            $request->string('_to')->trim()->value(),
         ]);
         $discount->active = false;
         $discount->save();

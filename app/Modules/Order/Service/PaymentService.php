@@ -13,6 +13,7 @@ use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\User\Entity\UserPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
 
 class PaymentService
@@ -27,31 +28,24 @@ class PaymentService
         $this->orderService = $orderService;
     }
 
-    public function get(): array
-    {
-        //Получаем список всех платежных вариантов
-        $payments = PaymentHelper::payments();
-        usort($payments, function ($a, $b) {
-            return $a['sort'] > $b['sort'];
-        });
-        return $payments;
-    }
-
     public function create(array $request): OrderPayment
     {
-        /** @var Order $order */
-        $order = Order::find((int)$request['order']);
-        if ($order->status->value != OrderStatus::AWAITING && $order->status->value != OrderStatus::PREPAID)
-            throw new \DomainException('Нельзя внести платеж за заказ!');
-        $payment = OrderPayment::new((float)$request['amount'], $request['method'], $request['document'] ?? '');
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
-        $payment->staff_id = $staff->id;
-        $order->payments()->save($payment);
-        $order->refresh();
-        $this->orderService->check_payment($order);
+        DB::transaction(function () use ($request, &$payment) {
+            /** @var Order $order */
+            $order = Order::find((int)$request['order']);
+            if ($order->status->value != OrderStatus::AWAITING && $order->status->value != OrderStatus::PREPAID)
+                throw new \DomainException('Нельзя внести платеж за заказ!');
+            $payment = OrderPayment::new((float)$request['amount'], $request['method'], $request['document'] ?? '');
+            /** @var Admin $staff */
+            $staff = Auth::guard('admin')->user();
+            $payment->staff_id = $staff->id;
+            $order->payments()->save($payment);
+            $order->refresh();
+            $this->orderService->check_payment($order);
 
-        $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
+            $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
+        });
+
         return $payment;
     }
 
@@ -62,17 +56,19 @@ class PaymentService
      */
     public function create_online(array $data)
     {
-        /** @var Order $order */
-        $order = Order::find((int)$data['order_id']);
-        $payment = OrderPayment::new((float)$data['amount'], $data['method'], $data['document'] ?? '');
+        DB::transaction(function () use ($data) {
+            /** @var Order $order */
+            $order = Order::find((int)$data['order_id']);
+            $payment = OrderPayment::new((float)$data['amount'], $data['method'], $data['document'] ?? '');
 
-        $order->payments()->save($payment);
-        $order->refresh();
-        $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
+            $order->payments()->save($payment);
+            $order->refresh();
+            $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
 
-        $this->orderService->check_payment($order);
+            $this->orderService->check_payment($order);
 
-        event(new PaymentHasPaid($payment));
+            event(new PaymentHasPaid($payment));
+        });
     }
 
     public function update(OrderPayment $payment, Request $request): OrderPayment
