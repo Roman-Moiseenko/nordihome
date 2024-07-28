@@ -18,10 +18,8 @@ class WishController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $query = Product::orderBy('name')->Has('wishes');
-            $products = $this->pagination($query, $request, $pagination);
-            return view('admin.user.wish.index', compact('products', 'pagination'));
-        });
+        $query = Product::orderBy('name')->Has('wishes');
+        $products = $this->pagination($query, $request, $pagination);
+        return view('admin.user.wish.index', compact('products', 'pagination'));
     }
 }

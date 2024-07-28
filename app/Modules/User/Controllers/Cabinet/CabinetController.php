@@ -24,9 +24,7 @@ class CabinetController extends Controller
 
     public function view(User $user)
     {
-        return $this->try_catch(function () {
-            return view('cabinet.view');
-        });
+        return view('cabinet.view');
     }
 
     public function profile(User $user)
@@ -40,41 +38,32 @@ class CabinetController extends Controller
     }
 
     //AJAX
-
+    //TODO Перенести в Livewire
     public function fullname(User $user, Request $request)
     {
-        return $this->try_catch_ajax(function () use ($user, $request) {
-            $result = $this->service->setFullname($user, $request);
-            $user->refresh();
-            return response()->json($result);
-        });
+        $result = $this->service->setFullname($user, $request);
+        $user->refresh();
+        return response()->json($result);
     }
 
     public function phone(User $user, Request $request)
     {
-        return $this->try_catch_ajax(function () use ($user, $request) {
-            $result = $this->service->setPhone($user, $request);
-            $user->refresh();
-            return response()->json($result);
-        });
+        $result = $this->service->setPhone($user, $request);
+        $user->refresh();
+        return response()->json($result);
     }
 
     public function email(User $user, Request $request)
     {
-        return $this->try_catch_ajax(function () use ($user, $request) {
-            $result = $this->service->setEmail($user, $request);
-            $user->refresh();
-            return response()->json($result);
-        });
-
+        $result = $this->service->setEmail($user, $request);
+        $user->refresh();
+        return response()->json($result);
     }
 
     public function password(User $user, Request $request)
     {
-        return $this->try_catch_ajax(function () use ($user, $request) {
-            $result = $this->service->setPassword($user, $request);
-            $user->refresh();
-            return response()->json($result);
-        });
+        $result = $this->service->setPassword($user, $request);
+        $user->refresh();
+        return response()->json($result);
     }
 }

@@ -16,17 +16,11 @@ class ReviewController extends Controller
 
     public function index()
     {
-        return $this->try_catch(function () {
-
-            return view('cabinet.review.index');
-        });
+        return view('cabinet.review.index');
     }
 
     public function show(Review $review)
     {
-        return $this->try_catch(function () use ($review) {
-
-            return view('cabinet.review.show', compact('review'));
-        });
+        return view('cabinet.review.show', compact('review'));
     }
 }

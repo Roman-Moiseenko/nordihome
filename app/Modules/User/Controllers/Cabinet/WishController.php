@@ -26,56 +26,48 @@ class WishController extends Controller
 
     public function index()
     {
-        return $this->try_catch(function () {
-            $user_id = Auth::guard('user')->user()->id;
-            $products = Product::whereHas('wishes', function ($query) use ($user_id) {
-                $query->where('user_id', $user_id);
-            })->get();
-            return view('cabinet.wish', compact('products'));
-        });
+        $user_id = Auth::guard('user')->user()->id;
+        $products = Product::whereHas('wishes', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        })->get();
+        return view('cabinet.wish', compact('products'));
     }
 
     //Ajax
     public function toggle(Product $product)
     {
-        return $this->try_catch_ajax(function () use ($product) {
-            /** @var User $user */
-            $user = Auth::guard('user')->user();
-            $result = $this->service->toggle($user->id, $product->id);
-            $products = $this->repository->getWish($user);
+        /** @var User $user */
+        $user = Auth::guard('user')->user();
+        $result = $this->service->toggle($user->id, $product->id);
+        $products = $this->repository->getWish($user);
 
-            return response()->json([
-                'items' => $products,
-                'state' => $result,
-            ]);
-        });
+        return response()->json([
+            'items' => $products,
+            'state' => $result,
+        ]);
     }
 
     public function get()
     {
-        return $this->try_catch_ajax(function () {
-            if (!Auth::guard('user')->check())
-                return response()->json([
-                    'items' => [],
-                ]);
-            /** @var User $user */
-            $user = Auth::guard('user')->user();
-            $products = $this->repository->getWish($user);
+        if (!Auth::guard('user')->check())
             return response()->json([
-                'items' => $products,
+                'items' => [],
             ]);
-        });
+        /** @var User $user */
+        $user = Auth::guard('user')->user();
+        $products = $this->repository->getWish($user);
+        return response()->json([
+            'items' => $products,
+        ]);
     }
 
     public function clear()
     {
-        return $this->try_catch_ajax(function () {
-            /** @var User $user */
-            $user = Auth::guard('user')->user();
-            $this->service->clear($user->id);
+        /** @var User $user */
+        $user = Auth::guard('user')->user();
+        $this->service->clear($user->id);
 
-            return response()->json(true);
-        });
+        return response()->json(true);
     }
 
 }

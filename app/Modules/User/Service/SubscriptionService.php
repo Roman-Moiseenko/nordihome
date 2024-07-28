@@ -17,7 +17,6 @@ class SubscriptionService
     public function check_subscription(string $class): bool
     {
         if (Subscription::where('listener', $class)->count() == 0) {
-
             Subscription::register($class, '** Заголовок для клиента **', '** Описание для клиента **', $class);
             return false; //Вновь созданная, использовать еще нельзя
         }
@@ -27,9 +26,9 @@ class SubscriptionService
     public function update(Subscription $subscription, Request $request): Subscription
     {
         $subscription->update([
-            'name' => $request['name'],
-            'title' => $request['title'],
-            'description' => $request['description'],
+            'name' => $request->string('name')->trim()->value(),
+            'title' => $request->string('title')->trim()->value(),
+            'description' => $request->string('description')->trim()->value(),
         ]);
         $subscription->refresh();
         return $subscription;

@@ -33,12 +33,9 @@ class OptionsController extends Controller
     //AJAX
     public function subscription(Subscription $subscription)
     {
-
-        return $this->try_catch_ajax(function () use ($subscription) {
-            /** @var User $user */
-            $user = Auth::guard('user')->user();
-            $this->service->toggle($user, $subscription);
-            return response()->json(true);
-        });
+        /** @var User $user */
+        $user = Auth::guard('user')->user();
+        $this->service->toggle($user, $subscription);
+        return response()->json(true);
     }
 }

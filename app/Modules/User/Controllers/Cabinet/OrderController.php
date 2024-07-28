@@ -20,16 +20,12 @@ class OrderController extends Controller
 
     public function view(Order $order)
     {
-        return $this->try_catch(function () use ($order) {
-            return view('cabinet.order.view', compact('order'));
-        });
+        return view('cabinet.order.view', compact('order'));
     }
 
     public function index()
     {
-        return $this->try_catch(function () {
-            $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
-            return view('cabinet.order.index', compact('orders'));
-        });
+        $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
+        return view('cabinet.order.index', compact('orders'));
     }
 }
