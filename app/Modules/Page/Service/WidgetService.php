@@ -12,22 +12,21 @@ class WidgetService
 
     public function create(Request $request)
     {
-        $widget = Widget::register(
-            $request['name'],
-            $request['data_class'],
-            (int)$request['data_id'],
-            $request['template'],
+        return Widget::register(
+            $request->string('name')->trim()->value(),
+            $request->string('data_class')->trim()->value(),
+            $request->integer('data_id'),
+            $request->string('template')->trim()->value(),
             $request['params'] ?? [],
         );
-        return $widget;
     }
 
     public function update(Request $request, Widget $widget)
     {
-        $widget->name = $request['name'];
-        $widget->data_class = $request['data_class'];
-        $widget->data_id = $request['data_id'];
-        $widget->template = $request['template'];
+        $widget->name = $request->string('name')->trim()->value();
+        $widget->data_class = $request->string('data_class')->trim()->value();
+        $widget->data_id = $request->integer('data_id');
+        $widget->template = $request->string('template')->trim()->value();
         $widget->params = $request['params'] ?? [];
         $widget->save();
         return $widget;

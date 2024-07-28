@@ -11,25 +11,23 @@ class ContactService
 
     public function create(Request $request)
     {
-        $contact = Contact::register(
-            name: $request['name'],
-            icon: $request['icon'],
-            color: $request['color'],
-            url: $request['url'],
-            type: (int)$request['type']
+        return Contact::register(
+            name: $request->string('name')->trim()->value(),
+            icon: $request->string('icon')->trim()->value(),
+            color: $request->string('color')->trim()->value(),
+            url: $request->string('url')->trim()->value(),
+            type: $request->integer('type')
         );
-
-        return $contact;
     }
 
     public function update(Request $request, Contact $contact)
     {
         $contact->update([
-            'name' => $request['name'],
-            'icon' => $request['icon'],
-            'color' => $request['color'],
-            'url' => $request['url'],
-            'type' => (int)$request['type']
+            'name' => $request->string('name')->trim()->value(),
+            'icon' => $request->string('icon')->trim()->value(),
+            'color' => $request->string('color')->trim()->value(),
+            'url' => $request->string('url')->trim()->value(),
+            'type' => $request->integer('type')
         ]);
         $contact->refresh();
         return $contact;

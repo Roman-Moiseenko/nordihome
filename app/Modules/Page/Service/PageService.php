@@ -11,30 +11,28 @@ class PageService
 
     public function create(Request $request): Page
     {
-        $page = Page::register(
-            $request['name'],
-            $request['slug'],
-            $request['title'],
-            $request['description'] ?? '',
-            $request['template'],
+        return Page::register(
+            $request->string('name')->trim()->value(),
+            $request->string('slug')->trim()->value(),
+            $request->string('title')->trim()->value(),
+            $request->string('description')->trim()->value(),
+            $request->string('template')->trim()->value(),
             $request->has('menu'),
             $request['parent_id'],
         );
-        return $page;
     }
 
-    public function update(Request $request, Page $page): Page
+    public function update(Request $request, Page $page)
     {
         $page->update([
-            'name' => $request['name'],
-            'slug' => $request['slug'],
-            'title' => $request['title'],
-            'description' => $request['description'] ?? '',
-            'template' => $request['template'],
+            'name' => $request->string('name')->trim()->value(),
+            'slug' => $request->string('slug')->trim()->value(),
+            'title' => $request->string('title')->trim()->value(),
+            'description' => $request->string('description')->trim()->value(),
+            'template' => $request->string('template')->trim()->value(),
             'menu' => $request->has('menu'),
             'parent_id' => $request['parent_id'],
         ]);
-        return $page;
     }
 
     public function destroy(Page $page)

@@ -21,19 +21,15 @@ class PageController extends Controller
 
     public function index(Request $request)
     {
-        return $this->try_catch_admin(function () use($request) {
-            $pages = Page::get();
-            return view('admin.page.page.index', compact('pages'));
-        });
+        $pages = Page::get();
+        return view('admin.page.page.index', compact('pages'));
     }
 
     public function create()
     {
-        return $this->try_catch_admin(function () {
-            $templates = Page::PAGES_TEMPLATES;
-            $pages = Page::where('parent_id', null)->get();
-            return view('admin.page.page.create', compact('templates', 'pages'));
-        });
+        $templates = Page::PAGES_TEMPLATES;
+        $pages = Page::where('parent_id', null)->get();
+        return view('admin.page.page.create', compact('templates', 'pages'));
     }
 
     public function store(Request $request)
@@ -43,26 +39,20 @@ class PageController extends Controller
             'title' => 'required|string|min:6',
             'template' => 'required',
         ]);
-        return $this->try_catch_admin(function () use($request) {
-            $page = $this->service->create($request);
-            return redirect()->route('admin.page.page.show', $page);
-        });
+        $page = $this->service->create($request);
+        return redirect()->route('admin.page.page.show', $page);
     }
 
     public function show(Page $page)
     {
-        return $this->try_catch_admin(function () use($page) {
-            return view('admin.page.page.show', compact('page'));
-        });
+        return view('admin.page.page.show', compact('page'));
     }
 
     public function edit(Page $page)
     {
-        return $this->try_catch_admin(function () use($page) {
-            $templates = Page::PAGES_TEMPLATES;
-            $pages = Page::where('parent_id', null)->get();
-            return view('admin.page.page.edit', compact('page', 'templates', 'pages'));
-        });
+        $templates = Page::PAGES_TEMPLATES;
+        $pages = Page::where('parent_id', null)->get();
+        return view('admin.page.page.edit', compact('page', 'templates', 'pages'));
     }
 
     public function update(Request $request, Page $page)
@@ -72,42 +62,32 @@ class PageController extends Controller
             'title' => 'required|string|min:6',
             'template' => 'required',
         ]);
-        return $this->try_catch_admin(function () use($request, $page) {
-            $page = $this->service->update($request, $page);
-            return redirect()->route('admin.page.page.show', $page);
-        });
+        $this->service->update($request, $page);
+        return redirect()->route('admin.page.page.show', $page);
     }
 
     public function text(Request $request, Page $page)
     {
-        return $this->try_catch_admin(function () use($request, $page) {
-            $page = $this->service->setText($request, $page);
-            return redirect()->route('admin.page.page.show', $page);
-        });
+        $page = $this->service->setText($request, $page);
+        return redirect()->route('admin.page.page.show', $page);
     }
 
     public function draft(Page $page)
     {
-        return $this->try_catch_admin(function () use($page) {
-            $page->draft();
-            return redirect()->back();
-        });
+        $page->draft();
+        return redirect()->back();
     }
 
     public function published(Page $page)
     {
-        return $this->try_catch_admin(function () use($page) {
-            $page->published();
-            return redirect()->back();
-        });
+        $page->published();
+        return redirect()->back();
     }
 
     public function destroy(Page $page)
     {
-        return $this->try_catch_admin(function () use($page) {
-            $this->service->destroy($page);
-            return redirect()->route('admin.page.page.index');
-        });
+        $this->service->destroy($page);
+        return redirect()->route('admin.page.page.index');
     }
 
 }
