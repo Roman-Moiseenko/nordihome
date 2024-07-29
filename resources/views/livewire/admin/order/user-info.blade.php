@@ -14,12 +14,7 @@
             <livewire:admin.user.edit.delivery :user="$order->user" :edit="$edit"/>
         </div>
         <div class="truncate sm:whitespace-normal flex items-center ml-4 my-auto">
-            <x-base.lucide icon="coins" class="w-4 h-4"/>&nbsp;{{ $order->user->htmlPayment() }}&nbsp;
-            @if($edit)
-            <button class="btn btn-warning-soft btn-sm ml-1">
-                <x-base.lucide icon="pencil" class="w-4 h-4"/>
-            </button>
-            @endif
+            <livewire:admin.user.edit.payment :user="$order->user" :edit="$edit"/>
         </div>
     </div>
 </div>

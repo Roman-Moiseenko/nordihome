@@ -468,7 +468,7 @@ class OrderService
         $delta = $quantity - $item->quantity;
         if ($delta == 0) return $item->order;
 
-        DB::transaction(function () use ($item, $delta, &$order) {
+        DB::transaction(function () use ($item, $delta, $quantity, &$order) {
             if (!$item->preorder) {
                 if ($delta > 0) {
                     $delta = min($item->product->getCountSell(), $delta);
