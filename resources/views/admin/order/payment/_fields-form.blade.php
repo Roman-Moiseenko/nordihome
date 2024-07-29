@@ -10,20 +10,21 @@
             <div class="p-5">
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
-                        <x-base.form-label for="select-order">Заказ</x-base.form-label>
-                        <x-base.tom-select id="select-order" name="order" class="w-full" data-placeholder="Выберите Заказ">
-                            <option value="0"></option>
-                            @foreach($orders as $order)
-                                <option value="{{ $order->id }}"
-                                @if($payment)
-                                    {{ $payment->order_id == $order->id ? 'selected' : ''}}
-                                    @endif
-                                >
-                                    {{ $order->htmlNum() }}
-                                </option>
-                            @endforeach
-                        </x-base.tom-select>
-
+                        @if(is_null($payment))
+                            <x-base.form-label for="select-order">Заказ</x-base.form-label>
+                            <x-base.tom-select id="select-order" name="order" class="w-full" data-placeholder="Выберите Заказ">
+                                <option value="0"></option>
+                                @foreach($orders as $order)
+                                    <option value="{{ $order->id }}"
+                                    @if($payment)
+                                        {{ $payment->order_id == $order->id ? 'selected' : ''}}
+                                        @endif
+                                    >
+                                        {{ $order->htmlNum() }}
+                                    </option>
+                                @endforeach
+                            </x-base.tom-select>
+                        @endif
                         <x-base.form-label for="select-method" class="mt-3">Способ оплаты</x-base.form-label>
                         <x-base.tom-select id="select-method" name="method" class="w-full" data-placeholder="Выберите способ оплаты">
                             <option value="0"></option>

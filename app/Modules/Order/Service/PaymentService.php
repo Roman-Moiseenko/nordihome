@@ -74,12 +74,14 @@ class PaymentService
     public function update(OrderPayment $payment, Request $request): OrderPayment
     {
         $order = $payment->order;
+        $amount = $request->float('amount');
+        if ($amount == 0) throw new \DomainException('Сумма не может быть равна нулю!');
         if ($order->status->value != OrderStatus::PREPAID)
             throw new \DomainException('Нельзя внести изменения в платеж за заказ!');
 
-        if ($payment->amount != (float)$request['amount']) {
+        if ($payment->amount != $amount) {
             $old_value = price($payment->amount);
-            $payment->amount = (float)$request['amount'];
+            $payment->amount = $amount;
             $new_value = price($payment->amount);
             $this->logger->logOrder($order, 'Изменена сумма оплаты', $old_value, $new_value);
         }
@@ -91,7 +93,7 @@ class PaymentService
             $this->logger->logOrder($order, 'Изменен способ оплаты', $old_value, $new_value);
         }
 
-        $payment->document = $request['document'] ?? '';
+        $payment->document = $request->string('document')->trim()->value();
         $payment->save();
         $payment->refresh();
 
