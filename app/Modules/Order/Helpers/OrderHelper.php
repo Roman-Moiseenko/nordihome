@@ -12,17 +12,22 @@ class OrderHelper
     public static function pictogram(Order $order): string
     {
         $type = 'empty';
-
+        $text = $order->statusHtml();
         if ($order->isAwaiting()) $type = 'warning';
         if ($order->isPaid()) $type = 'green';
         if ($order->isPrepaid()) $type = 'half-green';
         if ($order->isAwaiting() || $order->isPrepaid()) {
-            if (!is_null($order->invoice) && $order->invoice->created_at->lte(now()->subDays(3)))
+            if (!is_null($order->invoice) && $order->invoice->created_at->lte(now()->subDays(3))) {
                 $type = 'red';
+                $text = 'Оплата просрочена';
+            }
         }
-        if ($order->isPaid() && $order->getPaymentAmount() > $order->getTotalAmount()) $type = 'double-green';
+        if ($order->isPaid() && $order->getPaymentAmount() > $order->getTotalAmount()) {
+            $type = 'double-green';
+            $text = 'Переплата';
+        };
 
-        return '<span class="circle ' . $type . '"></span>';
+        return '<span class="circle ' . $type . '" title="' . $text . '"></span>';
     }
 
     #[ArrayShape(['user' => "string[]", 'products' => "string[]", 'additions' => "string[]"])]

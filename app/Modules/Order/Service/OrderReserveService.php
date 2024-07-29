@@ -170,6 +170,7 @@ class OrderReserveService
         $storageItem = $storageIn->getItem($orderItem->product);
         $storageItems = StorageItem::where('product_id', $orderItem->product_id)->where('id', '<>', $storageItem->id)->get(); //Остальные ячейки хранилища
         $quantity = min($quantity, $storageItem->getFreeToSell());
+        if ($quantity == 0) throw new \DomainException('На складе получателя отсутствует товар для переноса резерва');
 
         /** @var StorageItem[] $storageItems */
 

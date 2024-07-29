@@ -165,10 +165,10 @@
                         <x-base.form-label for="input-name">Имя</x-base.form-label>
                         <x-base.form-input id="input-name" type="text" name="name" placeholder="Имя"/>
                     </div>
-                    <div class="">
+                    <div class="col-span-12">
                         <div class="form-check items-center">
-                            <x-base.form-input id="input-parser" type="checkbox" name="parser" class="form-check-input" placeholder="Парсер"/>
-                            <x-base.form-label for="input-parser" class="mb-0 ml-2 cursor-pointer">Парсер</x-base.form-label>
+                            <x-base.form-input id="input-parser" type="checkbox" name="parser" class="form-check-input w-4" placeholder="Парсер"/>
+                            <x-base.form-label for="input-parser" class="mb-0 ml-2 cursor-pointer">Парсер - под заказ из Ikea</x-base.form-label>
                         </div>
                     </div>
                 </x-base.dialog.description>

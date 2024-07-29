@@ -65,7 +65,7 @@ class Item extends Component
 
     public function exception($e, $stopPropagation) {
         if($e instanceof \DomainException) {
-            $this->dispatch('window-notify', title: 'Ошибка в товаре', message: $e->getMessage());
+            $this->dispatch('window-notify', title: 'Ошибка', message: $e->getMessage());
             $stopPropagation();
             $this->refresh_fields();
         }
