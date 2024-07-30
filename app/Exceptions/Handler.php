@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Events\ThrowableHasAppeared;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
 use Throwable;
@@ -54,7 +55,6 @@ class Handler extends ExceptionHandler
                 if ($e->getStatusCode() == 404)
                     return response()->view('errors.' . '404', [], 404);
             }
-
         }
 
         //Исключение CRM
@@ -71,13 +71,14 @@ class Handler extends ExceptionHandler
                 }
             }
         }
-        if (!($e instanceof TokenMismatchException)) {
+        if (!($e instanceof TokenMismatchException) && !($e instanceof AuthenticationException)) {
             if (config('app.debug')) {
                 if ($request->ajax())
                     return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
             } else {
                 //Если режим не Debug отправляем сообщения
-                event(new ThrowableHasAppeared($e));
+
+                    event(new ThrowableHasAppeared($e));
                 flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'danger');
                 return redirect()->back();
             }
