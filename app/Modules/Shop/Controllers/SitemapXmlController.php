@@ -71,7 +71,7 @@ class SitemapXmlController extends Controller
                 'date' => now()->format('c'),
                 'changefreq' => 'daily'
             ];
-        }, ['home']);
+        }, ['shop.home']);
     }
 
     private function promotions(): array

@@ -291,7 +291,7 @@ class OrderService
             $product_id = $request->integer('product_id');
             /** @var Product $product */
             $product = Product::find($product_id);
-
+            if (is_null($product)) throw new \DomainException('Данный товар не найден');
             if ($product->getLastPrice($user->id) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
             $order = Order::register($user->id, Order::ONLINE);
 
