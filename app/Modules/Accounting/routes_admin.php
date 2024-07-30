@@ -14,7 +14,6 @@ Route::group(
             'as' => 'arrival.',
         ],
             function () {
-                Route::post('/search/{arrival}', 'ArrivalController@search')->name('search');
                 Route::post('/add-products/{arrival}', 'ArrivalController@add_products')->name('add-products');
                 Route::post('/add/{arrival}', 'ArrivalController@add')->name('add');
 
@@ -27,7 +26,6 @@ Route::group(
             'as' => 'movement.',
         ],
             function () {
-                Route::post('/search/{movement}', 'MovementController@search')->name('search');
                 Route::post('/add/{movement}', 'MovementController@add')->name('add');
                 Route::post('/add-products/{movement}', 'MovementController@add_products')->name('add-products');
 
@@ -42,7 +40,6 @@ Route::group(
             'as' => 'departure.',
         ],
             function () {
-                Route::post('/search/{departure}', 'DepartureController@search')->name('search');
                 Route::post('/add/{departure}', 'DepartureController@add')->name('add');
                 Route::post('/add-products/{departure}', 'DepartureController@add_products')->name('add-products');
                 Route::post('/completed/{departure}', 'DepartureController@completed')->name('completed');
@@ -61,7 +58,6 @@ Route::group(
                 Route::post('/add-products/{supply}', 'SupplyController@add_products')->name('add-products');
                 Route::post('/set-product/{product}', 'SupplyController@set_product')->name('set-product');
                 Route::delete('/del-product/{product}', 'SupplyController@del_product')->name('del-product');
-                Route::post('/search/{supply}', 'SupplyController@search')->name('search');
                 Route::post('/sent/{supply}', 'SupplyController@sent')->name('sent');
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
 
@@ -71,7 +67,6 @@ Route::group(
             'as' => 'pricing.',
         ],
             function () {
-                Route::post('/search/{pricing}', 'PricingController@search')->name('search');
                 Route::post('/add/{pricing}', 'PricingController@add')->name('add');
                 Route::post('/add-products/{pricing}', 'PricingController@add_products')->name('add-products');
                 Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
@@ -89,6 +84,5 @@ Route::group(
         Route::resource('supply', 'SupplyController')->except(['edit', 'update']); //CRUD
         Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
         Route::resource('organization', 'OrganizationController'); //CRUD
-
     }
 );

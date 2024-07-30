@@ -83,17 +83,4 @@ class PricingController extends Controller
         return response()->json(true);
     }
 
-    public function search(Request $request, PricingDocument $pricing)
-    {
-        $result = [];
-        $products = $this->products->search($request['search']);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$pricing->isProduct($product->id)) {
-                $result[] = $this->products->toArrayForSearch($product);
-            }
-        }
-        return \response()->json($result);
-    }
-
 }

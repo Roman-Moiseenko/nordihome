@@ -104,17 +104,4 @@ class MovementController extends Controller
         return response()->json($result);
     }
 
-    public function search(Request $request, MovementDocument $movement)
-    {
-        $result = [];
-        $products = $this->products->search($request['search']);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$movement->isProduct($product->id)) {
-                $result[] = $this->products->toArrayForSearch($product);
-            }
-        }
-        return \response()->json($result);
-    }
-
 }

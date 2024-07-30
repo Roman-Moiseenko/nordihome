@@ -26,8 +26,6 @@ Route::group(
         Route::post('/set-awaiting/{order}', 'OrderController@set_awaiting')->name('set-awaiting');
 
         Route::post('/search-user', 'OrderController@search_user')->name('search-user');
-        Route::post('/search', 'OrderController@search')->name('search');
-        //Route::post('/get-to-order', 'OrderController@get_to_order')->name('get-to-order');
 
         Route::get('/log/{order}', 'OrderController@log')->name('log');
         Route::post('/take/{order}', 'OrderController@take')->name('take');

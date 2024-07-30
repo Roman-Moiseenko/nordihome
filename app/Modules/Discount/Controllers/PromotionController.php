@@ -132,17 +132,4 @@ class PromotionController extends Controller
         return redirect()->back();
     }
 
-    #[Deprecated]
-    public function search(Request $request, Promotion $promotion)
-    {
-        $result = [];
-        $products = $this->products->search($request['search']);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$promotion->isProduct($product->id)) {
-                $result[] = $this->products->toArrayForSearch($product);
-            }
-        }
-        return \response()->json($result);
-    }
 }

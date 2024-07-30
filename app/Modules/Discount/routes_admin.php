@@ -16,7 +16,6 @@ Route::group(
             //Route::post('/{promotion}/add-group', 'PromotionController@add_group')->name('add-group');
             Route::post('/add-product/{promotion}', 'PromotionController@add_product')->name('add-product');
             Route::post('/add-products/{promotion}', 'PromotionController@add_products')->name('add-products');
-            Route::post('/search/{promotion}', 'PromotionController@search')->name('search');
             Route::post('/{promotion}/set-product/{product}', 'PromotionController@set_product')->name('set-product');
             Route::delete('/{promotion}/del-product/{product}', 'PromotionController@del_product')->name('del-product');
 

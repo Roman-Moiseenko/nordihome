@@ -97,17 +97,4 @@ class ArrivalController extends Controller
             'info' => $item->document->getInfoData(),
         ]);
     }
-
-    public function search(Request $request, ArrivalDocument $arrival)
-    {
-        $result = [];
-        $products = $this->products->search($request['search']);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$arrival->isProduct($product->id)) {
-                $result[] = $this->products->toArrayForSearch($product);
-            }
-        }
-        return \response()->json($result);
-    }
 }

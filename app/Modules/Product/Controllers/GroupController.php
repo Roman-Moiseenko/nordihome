@@ -91,17 +91,4 @@ class GroupController extends Controller
         return redirect()->route('admin.product.group.show', compact('group'));
     }
 
-    //AJAX
-    public function search(Request $request, Group $group)
-    {
-        $result = [];
-        $products = $this->products->search($request['search']);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$group->isProduct($product->id)) {
-                $result[] = $this->products->toArrayForSearch($product);
-            }
-        }
-        return \response()->json($result);
-    }
 }

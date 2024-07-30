@@ -57,7 +57,6 @@ Route::group(
             Route::post('/add-products/{group}', 'GroupController@add_products')->name('add-products');
             Route::post('/add-product/{group}', 'GroupController@add_product')->name('add-product');
             Route::delete('/del-product/{group}', 'GroupController@del_product')->name('del-product');
-            Route::post('/search/{group}', 'GroupController@search')->name('search');
         });
         //Серия товаров
         Route::group([

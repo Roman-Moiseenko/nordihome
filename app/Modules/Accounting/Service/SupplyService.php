@@ -215,5 +215,11 @@ class SupplyService
         event(new SupplyHasCompleted($supply));
     }
 
+    public function destroy(SupplyDocument $supply)
+    {
+        $supply->delete();
+
+    }
+
 
 }

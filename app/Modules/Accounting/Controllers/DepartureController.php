@@ -87,17 +87,4 @@ class DepartureController extends Controller
         return response()->json($result);
     }
 
-    public function search(Request $request, DepartureDocument $departure)
-    {
-        $result = [];
-        $products = $this->products->search($request['search']);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$departure->isProduct($product->id)) {
-                $result[] = $this->products->toArrayForSearch($product);
-            }
-        }
-        return \response()->json($result);
-    }
-
 }

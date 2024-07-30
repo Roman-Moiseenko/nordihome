@@ -64,6 +64,12 @@ class SupplyController extends Controller
         return view('admin.accounting.supply.show', compact('supply'));
     }
 
+    public function destroy(SupplyDocument $supply)
+    {
+        $this->service->destroy($supply);
+        return redirect()->back();
+    }
+
     public function sent(SupplyDocument $supply): RedirectResponse
     {
         $this->service->sent($supply);
@@ -122,18 +128,5 @@ class SupplyController extends Controller
     {
         $this->service->set_product($product, $request->integer('quantity'));
         return response()->json(true);
-    }
-
-    public function search(Request $request, SupplyDocument $supply)
-    {
-        $result = [];
-        $products = $this->products->search($request['search']);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$supply->isProduct($product)) {
-                $result[] = $this->products->toArrayForSearch($product);
-            }
-        }
-        return \response()->json($result);
     }
 }
