@@ -28,6 +28,7 @@ class ParserController extends Controller
         $user_ui = $request->attributes->get('user_ui');
 
         $cart = $this->cart;
+        //if ()
         $cart->load($user_ui);
 
         $title = 'Купить товары Икеа по артикулу в Калининграде и с доставкой по России';
