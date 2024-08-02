@@ -68,8 +68,12 @@ class Management extends Component
         $this->product->save();
 
         if (!$this->product->isPublished() && $this->published) {
+
             $service = app()->make('\App\Modules\Product\Service\ProductService');
             $service->published($this->product);
+        } else {
+            $this->product->published = false;
+            $this->product->save();
         }
 
     }
