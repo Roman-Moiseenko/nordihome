@@ -4,20 +4,23 @@
 namespace App\Modules\Shop\Parser;
 
 
-use App\Modules\Admin\Entity\Options;
+
+use App\Modules\Setting\Entity\Parser;
+use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\Deprecated;
 
 class HttpPage
 {
     protected ?Cache $cache;
     protected array $parsdomains = [];
-    private \stdClass $options;
+    private Parser $parser;
 
     public function __construct(Cache $cache = null)
     {
         $this->cache = $cache;
-        $this->options = (new Options())->shop;
 
+        $settings = new SettingRepository();
+        $this->parser =  $settings->getParser();
     }
 
     public function addDomainToRequest(string $url)
@@ -88,9 +91,9 @@ class HttpPage
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 
-                if (!empty($this->options->proxy_ip)) {
-                    curl_setopt($curl, CURLOPT_PROXY, $this->options->proxy_ip);
-                    curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->options->proxy_user);
+                if (!empty($this->parser->proxy_ip)) {
+                    curl_setopt($curl, CURLOPT_PROXY, $this->parser->proxy_ip);
+                    curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->parser->proxy_user);
                 }
 
                 $result["response"] = curl_exec($curl);
@@ -158,9 +161,9 @@ class HttpPage
         curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt ($curl, CURLOPT_CONNECTTIMEOUT, 300);
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
-        if (!empty($this->options->proxy_ip)) {
-            curl_setopt($curl, CURLOPT_PROXY, $this->options->proxy_ip);
-            curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->options->proxy_user);
+        if (!empty($this->parser->proxy_ip)) {
+            curl_setopt($curl, CURLOPT_PROXY, $this->parser->proxy_ip);
+            curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->parser->proxy_user);
         }
 
         $content = curl_exec($curl);

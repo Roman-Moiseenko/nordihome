@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Entity;
 
-
-
 use App\Modules\Admin\Entity\Options\Image;
 use App\Modules\Admin\Entity\Options\Shop;
 use Illuminate\Support\Facades\Config;
@@ -29,16 +27,18 @@ class Options
         $this->report = Config::get('shop-config.report');
     }
 
-    #[NoReturn] public function __get($name)
+    /*
+    public function __get($name)
     {
         $setting = Setting::where('slug', $name)->first();
         $object = new stdClass();
         $items = SettingItem::where('setting_id', '=', $setting->id)->get();
         /** @var SettingItem $item */
+    /*
         foreach ($items as $item) {
             $key = $item->key;
             $object->$key = $item->value;
         }
         return $object;
-    }
+    }*/
 }

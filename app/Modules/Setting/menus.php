@@ -4,7 +4,7 @@ return [
     'settings' => [
         'sort' => 110,
         'icon' => 'settings',
-        'title' => 'Настройки2',
+        'title' => 'Настройки',
         'can' => 'admin-panel',
         'sub_menu' => [
             'common' => [

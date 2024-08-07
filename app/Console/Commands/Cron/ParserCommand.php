@@ -10,6 +10,7 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Parser\ProductParser;
 use Illuminate\Console\Command;
 use JetBrains\PhpStorm\Deprecated;
@@ -25,8 +26,10 @@ class ParserCommand extends Command
 
     public function handle()
     {
+        $settings = new SettingRepository();
+
         $logger = LoggerCron::new($this->description);
-        $coeff = (float)((new Options())->shop->parser_coefficient);
+
 
         $this->info('Парсим цены товаров');
         $ikea = Brand::where('name', Brand::IKEA)->first();
@@ -37,7 +40,7 @@ class ParserCommand extends Command
 
         foreach ($products as $product) {
             $this->info('Отправлен в очередь - ' . $product->name . ' ' . $product->code);
-            ParserPriceProduct::dispatch($logger->id, $product->id, $coeff);
+            ParserPriceProduct::dispatch($logger->id, $product->id, $settings->getParser()->parser_coefficient);
         }
     }
 

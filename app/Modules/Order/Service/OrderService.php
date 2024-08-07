@@ -13,7 +13,7 @@ use App\Events\UserHasCreated;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Entity\Options;
+
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Service\DeliveryService;
@@ -25,11 +25,12 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Parser;
+use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\Parser\ParserService;
-use App\Modules\Shop\Parser\ProductParser;
 use App\Modules\Shop\ShopRepository;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -38,15 +39,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Deprecated;
-use stdClass;
+
 
 class OrderService
 {
 
     private DeliveryService $deliveries;
     private Cart $cart;
-    private int $coupon;
     private ShopRepository $repository;
     private CouponService $coupons;
     private ParserCart $parserCart;
@@ -55,7 +54,9 @@ class OrderService
     private MovementService $movementService;
     private OrderReserveService $reserveService;
     private ParserService $parserService;
-    private stdClass $shop_options;
+
+    private \App\Modules\Setting\Entity\Coupon $coupon_set;
+    private Parser $parser_set;
 
 
     public function __construct(
@@ -69,22 +70,25 @@ class OrderService
         LoggerService       $logger,
         MovementService     $movementService,
         OrderReserveService $reserveService,
+        SettingRepository   $settings,
     )
     {
+        $this->coupon_set = $settings->getCoupon();
+        $this->parser_set = $settings->getParser();
+
         $this->deliveries = $deliveries;
         $this->cart = $cart;
-        $this->shop_options = (new Options())->shop;
-        //$this->coupon = (new Options())->shop->coupon;
+
+
         $this->repository = $repository;
         $this->coupons = $coupons;
-        // $this->minutes = (new Options())->shop->reserve_order;
-        // $this->reserves = $reserves;
         $this->parserCart = $parserCart;
         $this->calculator = $calculator;
         $this->logger = $logger;
         $this->movementService = $movementService;
         $this->reserveService = $reserveService;
         $this->parserService = $parserService;
+
     }
 
     //**** ФУНКЦИИ СОЗДАНИЯ ЗАКАЗА
@@ -177,7 +181,7 @@ class OrderService
         $coupon = $this->repository->getCoupon($code);
         if (!empty($coupon)) {
             $amountCart = ($this->cart->getCartToFront(0))['common']['amount'];
-            $maxDiscount = round($amountCart * $this->shop_options->coupon / 100);
+            $maxDiscount = round($amountCart * $this->coupon_set->coupon / 100);
             return min($coupon->bonus, $maxDiscount);
         }
         return 0;
@@ -886,7 +890,7 @@ class OrderService
         if (!$order->isParser()) throw new \DomainException('Заказ не под Парсер');
         $product = $this->parserService->findProduct($search);
 
-        $cost_item = ceil($this->shop_options->parser_coefficient * $product->parser->price);
+        $cost_item = ceil($this->parser_set->parser_coefficient * $product->parser->price);
         $orderItemPre = OrderItem::new($product, $quantity, true);
         $orderItemPre->setCost((int)$cost_item, (int)$cost_item);
 

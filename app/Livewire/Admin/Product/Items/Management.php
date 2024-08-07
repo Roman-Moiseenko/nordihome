@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Product\Items;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Repository\SettingRepository;
 use Livewire\Component;
 
 class Management extends Component
@@ -25,10 +26,12 @@ class Management extends Component
 
     public function boot()
     {
-        $options = new Options();
-        $this->accounting = $options->shop->accounting;
-        $this->shop_pre_order = $options->shop->pre_order;
-        $this->only_offline = $options->shop->only_offline;
+
+        $settings = new SettingRepository();
+        $common = $settings->getCommon();
+        $this->accounting = $common->accounting;
+        $this->shop_pre_order = $common->pre_order;
+        $this->only_offline = $common->only_offline;
     }
 
     public function mount(Product $product)

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'options' => [
+  /*  'options' => [
         'sort' => 100,
         'icon' => 'settings',
         'title' => 'Настройки',
@@ -23,5 +23,5 @@ return [
                 'route_name' => 'admin.home',
             ],
         ],
-    ],
+    ],*/
 ];

@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Parser;
 
 use App\Events\ProductHasParsed;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Service\ProductService;
+use App\Modules\Setting\Entity\Common;
+use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\ArrayShape;
 
 class ParserService
@@ -51,14 +52,16 @@ class ParserService
     ];
 
     private HttpPage $httpPage;
-    private Options $options;
     private ProductService $productService;
+    private Common $common;
 
-    public function __construct(HttpPage $httpPage, ProductService $productService)
+
+
+    public function __construct(HttpPage $httpPage, ProductService $productService, SettingRepository $settings)
     {
         $this->httpPage = $httpPage;
-        $this->options = new Options();
         $this->productService = $productService;
+        $this->common = $settings->getCommon();
     }
 
     public function findProduct(string $search): Product
@@ -69,10 +72,10 @@ class ParserService
         if (empty($product)) {//1. Добавляем черновик товара (Артикул, Главное фото, Название, Краткое описание, Базовая цена, published = false)
             $parser_product = $this->parsingData($code); //Парсим основные данные
             $arguments = [      //Опции магазина
-                'pre_order' => $this->options->shop->pre_order,
-                'only_offline' => $this->options->shop->only_offline,
-                'not_local' => !$this->options->shop->delivery_local,
-                'not_delivery' => !$this->options->shop->delivery_all,
+                'pre_order' => $this->common->pre_order,
+                'only_offline' => $this->common->only_offline,
+                'not_local' => !$this->common->delivery_local,
+                'not_delivery' => !$this->common->delivery_all,
             ];
 
             $product = $this->productService->create_parser(

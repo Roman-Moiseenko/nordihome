@@ -19,8 +19,6 @@ class StorageCommand extends Command
     use ConfirmableTrait, CreatesApplication;
 
     protected $app;
-    private Options $options;
-
     private StorageService $storageService;
     private ArrivalService $arrivalService;
 
@@ -31,31 +29,23 @@ class StorageCommand extends Command
 
     public function handle()
     {
-        if (! $this->confirmToProceed()) {
-            return;
-        }
+        if (! $this->confirmToProceed()) return;
 
         $this->app = $this->createApplication();
         $this->storageService = $this->app->make('App\Modules\Accounting\Service\StorageService');
         $this->arrivalService = $this->app->make('App\Modules\Accounting\Service\ArrivalService');
-
         $this->info('Старт');
-
         $count = $this->option('count');
-        $this->options = new Options(); //Настройки Магазина для товара
-
         $products = Product::where('published', true)->get();
 
         if (is_numeric($count)) {
             $distributor = Distributor::where('name', 'Икеа Польша')->first();
-            //$_id = is_null($distributor) ? 2 : $distributor->id;
             $arrival = $this->arrivalService->create($distributor->id, false);
             $this->info('Создали поступление');
 
             foreach ($products as $product) {
                 $this->arrivalService->add($arrival, $product->id,  $count);
                 $this->info('Товар ' . $product->name . ' Добавлен');
-
             }
             $this->arrivalService->completed($arrival);
             $this->info('Поступление проведено');
@@ -66,8 +56,6 @@ class StorageCommand extends Command
             }
             $this->info('Товары в хранилища загружены');
         }
-
-
     }
 
 

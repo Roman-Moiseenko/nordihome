@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\User\Entity\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,12 +26,14 @@ class UserReview extends Mailable
      */
     public function __construct(User $user, array $products)
     {
-        //
+        $settings = new SettingRepository();
+        $coupon = $settings->getCoupon();
+
         $this->products = $products;
         $this->user = $user;
 
-        $this->bonus_amount = (new Options())->shop->bonus_amount;
-        $this->bonus_review = (new Options())->shop->bonus_review;
+        $this->bonus_amount = $coupon->bonus_amount;
+        $this->bonus_review = $coupon->bonus_review;
     }
 
     /**

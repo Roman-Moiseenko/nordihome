@@ -14,6 +14,8 @@ use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Common;
+use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use function public_path;
@@ -28,13 +30,13 @@ class LoadCommand extends Command
     private int $count_products = 0;
     private PricingDocument $pricing;
     private string $storage;
-    private Options $options;
 
     private StorageService $storageService;
 
     protected $signature = 'wp:load
     {--type= : catalog / product / "пусто"}';
     protected $description = 'Загрузка данных';
+    private Common $common;
 
     public function handle()
     {
@@ -44,7 +46,9 @@ class LoadCommand extends Command
 
         $this->storage = public_path() . '/temp/';
         $type = $this->option('type');
-        $this->options = new Options(); //Настройки Магазина для товара
+
+        $settings = new SettingRepository();
+        $this->common = $settings->getCommon();
 
         $this->storageService = new StorageService();
 
@@ -100,15 +104,12 @@ class LoadCommand extends Command
 
     private function create_product($data, $brand_id): string
     {
-
         $product_name = trim($data['name']);
         $product_code = trim($data['sku']);
         if (empty($product_code)) return '********************* ' . $product_name . ' **** нет артикула';
-        //if (empty($data['sku'])) $data['sku'] = Str::uuid();
 
         if (Product::where('code', $product_code)->first() != null) return $product_code . '* уже создан *';
         if (Product::where('name', $product_name)->first() != null) $product_name = $product_name . ' ' . $product_code;
-            //return $data['name'] . '* уже создан * - дубль имени';
         if (empty($data['categories'])) return '********************* ' . $product_name . '* нет категории *';
 
         $this->count_products++;
@@ -136,23 +137,21 @@ class LoadCommand extends Command
         $product->save();
         //Цена
         $this->add_pricing($product->id, (float)$data['price']);
-        //$product->setPrice((float)$data['price']);
-        //Изображения
 
+        //Изображения
         foreach ($data['images'] as $data_img) {
             $url = $data_img['url'];
             $alt = $data_img['alt'];
             LoadingImageProduct::dispatch($product, $url, $alt);
         }
 
-        $product->pre_order = $this->options->shop->pre_order;
-        $product->only_offline = $this->options->shop->only_offline;
-        $product->not_local = !$this->options->shop->delivery_local;
-        $product->not_delivery = !$this->options->shop->delivery_all;
+        $product->pre_order = $this->common->pre_order;
+        $product->only_offline = false;
+        $product->not_local = !$this->common->delivery_local;
+        $product->not_delivery = !$this->common->delivery_all;
         $product->save();
         $product->setPublished();
         $this->storageService->add_product($product);
-
 
         return $product->name . ' (' . $product->code . ')';
     }
@@ -185,12 +184,9 @@ class LoadCommand extends Command
         } else {
             return ' еrror - ' . json_encode($parent);
         }
-
         //Загрузка изображения
-       // $upload_file_name = $this->copy_file($file);
-       // $upload = new UploadedFile($this->storage . $upload_file_name, $upload_file_name, null, null, true);
         $result->image()->save(Photo::uploadByUrl($file, 'image'));
-        //$result->image->newUploadFile($upload, 'image');
+
         $result->refresh();
 
         return $result->slug;
@@ -203,15 +199,4 @@ class LoadCommand extends Command
         );
     }
 
-/*
-    private function copy_file(string $url): string
-    {
-        $filename = basename($url);
-
-        if (copy($url, $this->storage . $filename)) {
-            return $filename;
-        }
-        throw new \DomainException('Файл по ссылке ' . $url . ' не загрузился');
-    }
-*/
 }

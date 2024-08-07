@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Product\Items;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Repository\SettingRepository;
 use Livewire\Component;
 use function view;
 
@@ -27,9 +28,10 @@ class Dimensions extends Component
 
     public function boot()
     {
-        $options = new Options();
-        $this->delivery_local = $options->shop->delivery_local;
-        $this->delivery_all = $options->shop->delivery_all;
+        $settings = new SettingRepository();
+        $common = $settings->getCommon();
+        $this->delivery_local = $common->delivery_local;
+        $this->delivery_all = $common->delivery_all;
     }
 
     public function mount(Product $product)

@@ -9,6 +9,7 @@ use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\AttributeRepository;
+use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,10 +20,11 @@ class CatalogController extends Controller
     private ShopRepository $repository;
     private bool $preorder;
 
-    public function __construct(ShopRepository $repository)
+    public function __construct(ShopRepository $repository, SettingRepository $settings)
     {
         $this->repository = $repository;
-        $this->preorder = (new Options())->shop->pre_order;
+        //$settings->getCommon()->pre_order;
+        $this->preorder = $settings->getCommon()->pre_order;
     }
 
     public function index()
@@ -98,6 +100,7 @@ class CatalogController extends Controller
 
 
     }
+
 
     public function search(Request $request)
     {

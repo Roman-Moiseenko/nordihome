@@ -14,6 +14,7 @@ use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Tag;
+use App\Modules\Setting\Repository\SettingRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,11 +22,12 @@ use Illuminate\Support\Facades\Auth;
 class ShopRepository
 {
 
-    private Options $options;
+    private \App\Modules\Setting\Entity\Web $web;
 
     public function __construct()
     {
-        $this->options = new Options();
+        $settingRepository = new SettingRepository();
+        $this->web = $settingRepository->getWeb();
     }
 
     public function getProductBySlug($slug):? Product
@@ -163,7 +165,7 @@ class ShopRepository
             }
         }
 
-        return $query->whereIn('id', $product_ids)->paginate($this->options->shop->paginate);
+        return $query->whereIn('id', $product_ids)->paginate($this->web->paginate);
     }
 
 

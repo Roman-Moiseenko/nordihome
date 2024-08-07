@@ -12,6 +12,7 @@ use App\Modules\Discount\Entity\DiscountReview;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Review;
+use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\User\Entity\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,10 +21,12 @@ class ReviewService
     private bool $bonus_review;
     private float $bonus_amount;
 
-    public function __construct()
+    public function __construct(SettingRepository $settings)
     {
-        $this->bonus_amount = (new Options())->shop->bonus_amount;
-        $this->bonus_review = (new Options())->shop->bonus_review;;
+        $coupon = $settings->getCoupon();
+
+        $this->bonus_amount = $coupon->bonus_amount;
+        $this->bonus_review = $coupon->bonus_review;;
     }
 
     public function createEmpty(Product $product, User $user, Order $order): Review

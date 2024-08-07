@@ -6,6 +6,7 @@ namespace App\Modules\Discount\Service;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\Pure;
 
 class CouponService
@@ -13,9 +14,9 @@ class CouponService
     //TODO Купоны считаем
     private $coupon;
 
-    public function __construct()
+    public function __construct(SettingRepository $settings)
     {
-        $this->coupon = (new Options())->shop->coupon;
+        $this->coupon = $settings->getCoupon()->coupon;
     }
 
     #[Pure]

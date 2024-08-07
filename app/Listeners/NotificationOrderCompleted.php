@@ -6,6 +6,7 @@ use App\Events\OrderHasCompleted;
 use App\Jobs\RequestReview;
 use App\Mail\OrderCompleted;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
@@ -19,7 +20,9 @@ class NotificationOrderCompleted
      */
     public function __construct()
     {
-        $this->bonus_discount_delay = (new Options())->shop->bonus_discount_delay;
+        $settings = new SettingRepository();
+        $coupon = $settings->getCoupon();
+        $this->bonus_discount_delay = $coupon->bonus_discount_delay;
     }
 
     /**
