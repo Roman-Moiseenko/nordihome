@@ -28,7 +28,7 @@ class StaffMessage extends Notification implements ShouldQueue
 
     public function via(object $notifiable): array
     {
-        if (app()->environment() === 'production') return ['telegram', 'database'];
+        if (app()->environment() === 'production' && $notifiable->telegram_user_id > 0) return ['telegram', 'database'];
         return ['database'];
     }
 

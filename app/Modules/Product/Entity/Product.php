@@ -51,6 +51,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $series_id
  * @property Dimensions $dimensions
  * @property bool $priority
+ * @property bool $not_sale
  *
  * @property Tag[] $tags
  * @property Category $category
@@ -127,6 +128,7 @@ class Product extends Model
         'series_id' => null,
         'published_at' => null,
         'priority' => false,
+        'not_sale' => false,
     ];
 
     protected $fillable = [
@@ -148,6 +150,7 @@ class Product extends Model
         'not_local',
         'code_search',
         'series_id',
+        'not_sale',
         //'published_at',
         'priority',
         // 'description',
@@ -197,6 +200,12 @@ class Product extends Model
     }
 
     //ФУНЦИИ СОСТОЯНИЯ
+
+    public function isSale(): bool
+    {
+        return $this->not_sale == false;
+    }
+
     public function isNew(): bool
     {
         if ($this->published_at == null) return false;
@@ -271,6 +280,24 @@ class Product extends Model
 
     //*** SET-....
     //SET и GET
+    /**
+     * Снять с продажи (показываться на сайте будет, купить нельзя)
+     */
+    public function setNotSale(): void
+    {
+        $this->not_sale = true;
+        $this->save();
+    }
+
+    /**
+     * Вернуть в продажу
+     */
+    public function setForSale(): void
+    {
+        $this->not_sale = false;
+        $this->save();
+    }
+
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
@@ -339,8 +366,8 @@ class Product extends Model
      */
     public function getLastPrice(): float
     {
+        if (!$this->isSale()) return 0;
         //TODO Привязка к Аутентификации!!!
-
         if (!is_null($user = Auth::guard('user')->user())) {
             /** @var User $user */
             if ($user->isBulk()) return $this->getPriceBulk(); //Оптовый клиент

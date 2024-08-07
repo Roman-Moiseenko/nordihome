@@ -36,7 +36,7 @@ class WidgetController extends Controller
     public function store(Request $request)
     {
         $widget = $this->service->create($request);
-        return view('admin.page.widget.show', compact('widget'));
+        return redirect()->route('admin.page.widget.show', $widget);
     }
 
     public function show(Widget $widget)

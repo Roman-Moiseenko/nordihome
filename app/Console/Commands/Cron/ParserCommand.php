@@ -13,6 +13,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Parser\ProductParser;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\Deprecated;
 use Tests\CreatesApplication;
 
@@ -35,14 +36,31 @@ class ParserCommand extends Command
         $ikea = Brand::where('name', Brand::IKEA)->first();
 
         /** @var Product[] $products */
-        $products = Product::where('brand_id', $ikea->id)->where('published', true)->getModels(); //ProductParser::where('order', true)->get();
+        $products = Product::where('brand_id', $ikea->id)
+            ->where('published', true)
+            ->where('not_sale', false)
+            ->getModels();
         $this->info('Товаров - ' . count($products));
 
         foreach ($products as $product) {
-            $this->info('Отправлен в очередь - ' . $product->name . ' ' . $product->code);
-            ParserPriceProduct::dispatch($logger->id, $product->id, $settings->getParser()->parser_coefficient);
+            if ($this->isIkea($product->code, $product->code_search)) {
+                $this->info('Отправлен в очередь - ' . $product->name . ' ' . $product->code);
+                ParserPriceProduct::dispatch($logger->id, $product->id, $settings->getParser()->parser_coefficient);
+            } else {
+                $this->info('*    * Не Икеа ' . $product->name . ' ' . $product->code);
+                Log::warning('*    * Не Икеа ' . $product->name . ' ' . $product->code);
+            }
         }
     }
+
+    public function isIkea($code, $code_search): bool
+    {
+        if (strlen($code) != 10) return false;
+        if (strlen($code_search) != 8) return false;
+        if (!is_numeric($code_search)) return false;
+        return true;
+    }
+
 
     #[Deprecated]
     private function parser_product()

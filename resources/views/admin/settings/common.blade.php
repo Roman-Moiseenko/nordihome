@@ -56,7 +56,10 @@
             </div>
             <div class="p-2">
                 <!-- 3 столбец -->
-
+                <div class="p-4 border-b">
+                {{ \App\Forms\Select::create('group_last_id', ['placeholder' => 'Группа Последний шанс', 'value' => $common->group_last_id ])
+                ->options($groups)->label('Группа в которую переносятся остатки товаров снятых с продажи')->show() }}
+                </div>
             </div>
         </div>
         <div class="form-group mt-5">

@@ -23,12 +23,14 @@ class NotificationProductBlocked
      */
     public function handle(ProductHasBlocked $event): void
     {
+        if ($event->product->getQuantity() == 0) return;
+        //Уведомляем, если кол-во товара на остатках > 0
         $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_PRODUCT);
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
-                'Товар снят с продажи (IKEA-Парсер)',
-                "Артикул товара " . $event->product->code,
+                'Товар снят с продажи ',
+                "Артикул товара " . $event->product->code . ' Общее кол-во = ' . $event->product->getQuantity(),
                 route('admin.product.edit', $event->product),
                 'package-open'
             ));

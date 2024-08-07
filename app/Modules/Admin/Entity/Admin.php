@@ -54,6 +54,9 @@ class Admin extends Authenticatable
 
     protected string $guard = 'admin';
 
+    protected $attributes = [
+        'telegram_user_id' => 0,
+    ];
     protected $fillable = [
         'id',
         'name',
@@ -190,6 +193,7 @@ class Admin extends Authenticatable
 */
     public function routeNotificationForTelegram(): int
     {
+        if (is_null($this->telegram_user_id)) return 0;
         return $this->telegram_user_id;
     }
 

@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
+use App\Events\ProductHasBlocked;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\TagRepository;
+use App\Modules\Setting\Entity\Common;
+use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
@@ -24,14 +28,19 @@ class ProductService
     private EquivalentService $equivalentService;
     private SeriesService $seriesService;
     private StorageService $storageService;
+    private Common $common_set;
+    private GroupService $groupService;
 
-    public function __construct(Options            $options,
-                                CategoryRepository $categories,
-                                TagRepository      $tags,
-                                TagService         $tagService,
-                                EquivalentService  $equivalentService,
-                                SeriesService      $seriesService,
-                                StorageService     $storageService,
+    public function __construct(
+        Options            $options,
+        CategoryRepository $categories,
+        TagRepository      $tags,
+        TagService         $tagService,
+        EquivalentService  $equivalentService,
+        SeriesService      $seriesService,
+        StorageService     $storageService,
+        SettingRepository  $settings,
+        GroupService       $groupService,
     )
     {
         //Конфигурация
@@ -42,6 +51,9 @@ class ProductService
         $this->equivalentService = $equivalentService;
         $this->seriesService = $seriesService;
         $this->storageService = $storageService;
+
+        $this->common_set = $settings->getCommon();
+        $this->groupService = $groupService;
     }
 
     public function create(Request $request): Product
@@ -235,22 +247,22 @@ class ProductService
         }
         */
         //$product->push();
-/*
-        if ($request->has('published')) { //Если не компонент livewire
-            if (isset($request['published'])) {
-                $this->published($product);
-            } else {
-                $this->draft($product);
-            }
-        }
-        */
+        /*
+                if ($request->has('published')) { //Если не компонент livewire
+                    if (isset($request['published'])) {
+                        $this->published($product);
+                    } else {
+                        $this->draft($product);
+                    }
+                }
+                */
         return $product;
     }
 
     public function moderation(Product $product): void
     {
         //TODO Проверка на заполнение
-       // $product->setModeration();
+        // $product->setModeration();
     }
 
     public function approved(Product $product): void
@@ -268,6 +280,29 @@ class ProductService
         //TODO При удалении, удалять все связанные файлы Фото и Видео
 
     }
+
+    public function notSale(Product $product)
+    {
+        $product->not_sale = true;
+        $product->save();
+
+    }
+
+
+    public function CheckNotSale(Product $product)
+    {
+        if ($product->getQuantity() == 0) {
+            $product->setNotSale();
+            event(new ProductHasBlocked($product));
+        } else {
+            if ($this->common_set->group_last_id > 0) {
+                /** @var Group $group */
+                $group = Group::find($this->common_set->group_last_id);
+                $this->groupService->add_product($group, $product->id);
+            }
+        }
+    }
+
 
     private function tags(Request $request, Product &$product)
     {
@@ -366,7 +401,8 @@ class ProductService
         if ($product->getLastPrice() == 0) throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
 
         if (is_null($product->photo)) {
-            throw new \DomainException('Для товара ' . $product->name . ' нет главного фото');}
+            throw new \DomainException('Для товара ' . $product->name . ' нет главного фото');
+        }
         $product->setPublished();
     }
 

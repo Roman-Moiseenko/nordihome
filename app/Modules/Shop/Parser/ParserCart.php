@@ -5,6 +5,8 @@ namespace App\Modules\Shop\Parser;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Parser;
+use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\User\Entity\ParserStorage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -19,12 +21,12 @@ class ParserCart //Repository
 
     private int|null $user_id = null;
     private string|null $user_ui = null;
-    private Options $options;
+    private Parser $parser;
 
-    public function __construct(Options $options)
+
+    public function __construct(SettingRepository $settings)
     {
-        $this->options = $options;
-        //$this->reload();
+        $this->parser = $settings->getParser();
     }
 
     public function load(string $user_ui = '')
@@ -59,7 +61,7 @@ class ParserCart //Repository
             $weight += (int)$item->product->dimensions->weight * $item->quantity;
         }
         $this->weight = $weight;
-        $this->delivery = max($this->getCostDelivery($weight) * $weight, $this->options->shop->parser_delivery);
+        $this->delivery = max($this->getCostDelivery($weight) * $weight, $this->parser->parser_delivery);
         $this->amount = $amount;
     }
 
@@ -70,7 +72,7 @@ class ParserCart //Repository
                 return (int)$item['value'];
             }
         }
-        return $this->options->shop->parser_delivery;
+        return $this->parser->parser_delivery;
     }
 
     public function add($product, $quantity = 1)
@@ -133,7 +135,7 @@ class ParserCart //Repository
         return array_map(function (ParserStorage $storage) {
             /** @var ProductParser $product_parser */
             $product_parser = ProductParser::where('product_id', $storage->product_id)->first();
-            $cost_item = ceil($this->options->shop->parser_coefficient * $product_parser->price);
+            $cost_item = ceil($this->parser->parser_coefficient * $product_parser->price);
             return new ParserItem(
                 $product_parser->product,
                 $product_parser,
