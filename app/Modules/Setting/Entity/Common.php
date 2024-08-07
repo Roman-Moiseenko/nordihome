@@ -11,4 +11,9 @@ class Common extends AbstractSetting
     public bool $delivery_local = false;
     public bool $delivery_all = false;
     public bool $accounting = false;
+
+    public function view()
+    {
+        return view('admin.settings.common', ['common' => $this]);
+    }
 }

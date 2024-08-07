@@ -8,6 +8,8 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Setting\Entity\Web;
+use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
@@ -17,11 +19,14 @@ class ProductController extends Controller
 {
 
     private ShopRepository $repository;
+    private Web $web;
 
-    public function __construct(ShopRepository $repository)
+
+    public function __construct(ShopRepository $repository, SettingRepository $settings)
     {
         $this->middleware(['auth:admin'])->only(['view_draft']);
         $this->repository = $repository;
+        $this->web = $settings->getWeb();
     }
 
     public function view($slug)
@@ -41,7 +46,8 @@ class ProductController extends Controller
             flash('Товар опубликован, неверная ссылка');
             return redirect()->back();
         }
-        $title = 'Черновик ' . $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
+        $title = 'Черновик ' . $product->name . ' купить по цене ' . $product->getLastPrice() . '₽ ☛ Доставка по всей России ★★★
+        Интернет-магазин ' . $this->web->title_city;
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
         return view('shop.product.view', compact('product', 'title', 'description', 'productAttributes'));

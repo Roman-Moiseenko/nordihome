@@ -24,4 +24,8 @@ class Parser extends AbstractSetting
     public string $proxy_user = '';
 
 
+    public function view()
+    {
+        return view('admin.settings.parser', ['parser' => $this]);
+    }
 }

@@ -17,4 +17,5 @@ abstract class AbstractSetting
             }
         }
     }
+    abstract public function view();
 }

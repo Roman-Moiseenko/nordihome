@@ -11,4 +11,9 @@ class Coupon extends AbstractSetting
     public bool $bonus_review = false;
     public int $bonus_amount = 0;
     public int $bonus_discount_delay = 0;
+
+    public function view()
+    {
+        return view('admin.settings.coupon', ['coupon' => $this]);
+    }
 }

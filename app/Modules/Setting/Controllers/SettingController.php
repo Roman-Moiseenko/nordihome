@@ -29,26 +29,25 @@ class SettingController extends Controller
     public function common()
     {
         $common = $this->repository->getCommon();
-        return view('admin.settings.common', compact('common'));
-
+        return $common->view();
     }
 
     public function coupon()
     {
         $coupon = $this->repository->getCoupon();
-        return view('admin.settings.coupon', compact('coupon'));
+        return $coupon->view();
     }
 
     public function parser()
     {
         $parser = $this->repository->getParser();
-        return view('admin.settings.parser', compact('parser'));
+        return $parser->view();
     }
 
     public function web()
     {
         $web = $this->repository->getWeb();
-        return view('admin.settings.web', compact('web'));
+        return $web->view();
     }
 
 

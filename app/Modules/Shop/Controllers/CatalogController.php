@@ -9,6 +9,8 @@ use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\AttributeRepository;
+use App\Modules\Setting\Entity\Common;
+use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
@@ -18,22 +20,23 @@ use Illuminate\Support\Facades\Cookie;
 class CatalogController extends Controller
 {
     private ShopRepository $repository;
-    private bool $preorder;
+
+    private Common $common;
+    private Web $web;
 
     public function __construct(ShopRepository $repository, SettingRepository $settings)
     {
         $this->repository = $repository;
-        //$settings->getCommon()->pre_order;
-        $this->preorder = $settings->getCommon()->pre_order;
+        $this->web = $settings->getWeb();
+        $this->common = $settings->getCommon();
     }
 
     public function index()
     {
-
         $categories = $this->repository->getRootCategories();
-        //TODO $title и $description вынести в настройки магазина
-        $title = 'Каталог товаров интернет-магазина NORDIHOME';
-        $description = 'Ассортимент товаров из Европы известных брендов с доставкой по России почтой и транспортными компаниями';
+
+        $title = $this->web->categories_title;
+        $description = $this->web->categories_desc;
 
         return view('shop.catalog', compact('categories', 'title', 'description'));
 
@@ -72,7 +75,7 @@ class CatalogController extends Controller
                 if ($product->getCountSell() > 0)
                     $product_ids[] = $product->id;
             } else {
-                if ($this->preorder || $product->pre_order == true || $product->getCountSell() > 0)
+                if ($this->common->pre_order || $product->pre_order == true || $product->getCountSell() > 0)
                     $product_ids[] = $product->id;
             }
             //if ($product->getCountSell() > 0 || $product->pre_order == true)
@@ -90,9 +93,10 @@ class CatalogController extends Controller
         $order = $request['order'] ?? 'name';
         $products = $this->repository->filter($request, $product_ids);
 
-        //TODO Контакты и время работы
-        $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин NORDI HOME ' .
-            ' Калининград ☎ [+7(4012) 37-37-30] (Круглосуточно)';
+        $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ' .
+            $this->web->title_city . ' ☎ ' . $this->web->title_contact;
+            /*'NORDI HOME ' .
+            ' Калининград ☎ [+7(4012) 37-37-30] (Круглосуточно)';*/
 
         return view('shop.product.index',
             compact('category', 'products', 'prod_attributes', 'tags',

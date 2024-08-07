@@ -31,8 +31,29 @@
 
             </div>
             <div class="p-2">
-                <!-- 3 столбец -->
+                <h2 class="font-medium">SEO-настройки (Заголовки)</h2>
+                <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('categories_title',
+                        ['placeholder' => 'SEO-текст', 'class' => 'w-full lg:w-100', 'value' => $web->categories_title])->
+                        label('meta-Title для списка категорий')->show() }}
+                </div>
+                <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('categories_desc',
+                        ['placeholder' => 'SEO-текст', 'class' => 'w-full lg:w-100', 'value' => $web->categories_desc])->
+                        label('meta-Description для списка категорий')->show() }}
+                </div>
 
+                <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('title_contact',
+                        ['placeholder' => '[+8 800 00 000 00000] (Круглосуточно)', 'class' => 'w-full lg:w-100', 'value' => $web->title_contact])->
+                        label('meta-Title Контактные данные')->show() }}
+                </div>
+
+                <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('title_city',
+                        ['placeholder' => 'Coca-Cola Москва', 'class' => 'w-full lg:w-100', 'value' => $web->title_city])->
+                        label('meta-Title Бренд и Город')->show() }}
+                </div>
             </div>
         </div>
         <div class="form-group mt-5">
