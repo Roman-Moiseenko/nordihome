@@ -2,12 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Events\ProductHasParsed;
+use App\Events\ParserPriceHasChange;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Notifications\StaffMessage;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
-class NotificationProductParserNew
+class NotificationParserPriceChange
 {
     private StaffRepository $repository;
 
@@ -19,15 +21,15 @@ class NotificationProductParserNew
     /**
      * Handle the event.
      */
-    public function handle(ProductHasParsed $event): void
+    public function handle(ParserPriceHasChange $event): void
     {
         $staffs = $this->repository->getStaffsByCode(Responsibility::MANAGER_PRODUCT);
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
-                'Добавлен новый товар через Парсер',
-                "Артикул товара " . $event->product->code,
-                route('admin.product.edit', $event->product),
+                'Изменилась цена в Икеа',
+                "Артикул товара " . $event->productParser->product->code,
+                route('admin.product.edit', $event->productParser->product),
                 'package-open'
             ));
         }

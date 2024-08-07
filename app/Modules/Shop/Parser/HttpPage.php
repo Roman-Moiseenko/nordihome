@@ -43,7 +43,8 @@ class HttpPage
                 //$res = array("error" => null, "response" => FALSE);
                 $res = $this->request($url);
                 if ($res['http_code'] != '200') {
-                    var_dump($res);
+                    //var_dump($res);
+                    return null;
                 }
                 if ($res['error'] === NULL && $res['http_code'] == '200') {
                     $result = $res["response"];

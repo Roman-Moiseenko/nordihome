@@ -20,7 +20,7 @@ class DraftCommand extends Command
                 $product->published = false;
                 $product->save();
 
-                $this->info('Товар ' . $product->name . ' отправлен в черновик!');
+                $this->info('Товар ' . $product->name . ' (' . $product->id .') отправлен в черновик!');
             }
         }
 

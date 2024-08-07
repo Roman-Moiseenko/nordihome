@@ -18,30 +18,18 @@ use Tests\CreatesApplication;
 
 class RequestReview implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, CreatesApplication;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private Order $order;
-    protected Application $app;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(Order $order)
     {
         $this->order = $order;
     }
 
-    /**
-     * Создаются черновые варианты отзывов на доставленные товары, и пакетно отправляются клиенту
-     */
-    public function handle(): void
+    public function handle(ReviewService $service): void
     {
-
         try {
-            $this->app = $this->createApplication();
-            /** @var ReviewService $service */
-            $service = $this->app->make('App\Modules\Product\Service\ReviewService');
-
             $user = $this->order->user;
             $products = [];
             foreach ($this->order->expenses as $expense) {

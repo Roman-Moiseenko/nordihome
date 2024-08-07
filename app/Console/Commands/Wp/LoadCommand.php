@@ -199,7 +199,7 @@ class LoadCommand extends Command
     private function add_pricing(int $product_id, float $retail)
     {
         $this->pricing->pricingProducts()->save(
-            PricingProduct::new($product_id, 0, $retail, 0, 0, 0)
+            PricingProduct::new($product_id, 0, $retail, 0, 0, 0, 0)
         );
     }
 

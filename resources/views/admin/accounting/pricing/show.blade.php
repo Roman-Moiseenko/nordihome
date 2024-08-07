@@ -26,6 +26,7 @@
         <div class="w-40 text-center">Опт. цена (₽)</div>
         <div class="w-40 text-center">Спец. цена (₽)</div>
         <div class="w-40 text-center">Мин. цена (₽)</div>
+        <div class="w-40 text-center">Заказ. цена (₽)</div>
     </div>
 
 
@@ -66,7 +67,12 @@
                        class="form-control text-right pricing-input-listen" value="{{ $item->price_min }}"
                        @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
-
+            <div class="w-40 input-group">
+                <input type="number" class="form-control text-right" value="{{ $item->product->getPricePre($pricing->isCompleted()) }}" readonly>
+                <input id="price_pre-{{ $item->id }}" type="number"  name="price_pre"
+                       class="form-control text-right pricing-input-listen" value="{{ $item->price_pre }}"
+                       @if($pricing->isCompleted()) readonly @endif autocomplete="off">
+            </div>
 
             @if(!$pricing->isCompleted())
                 <button class="btn btn-outline-danger ml-6" type="button" onclick="document.getElementById('form-delete-item-{{ $item->id }}').submit();">

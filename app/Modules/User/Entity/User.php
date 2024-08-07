@@ -89,6 +89,8 @@ class User extends Authenticatable
 
     public static function register(string $email, string $password): self
     {
+        $user = User::where('email', $email)->first();
+        if (!is_null($user)) throw new \DomainException('Пользователь с таким email уже существует');
         return static::create([
             'email' => $email,
             //'phone' => $phone,

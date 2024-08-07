@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class ProductRepository
 {
     /**
-     * Репозиторий для передачи данных в другие модулю (шлюз)
+     * Репозиторий для передачи данных в другие модули (шлюз)
      * Либо сделать Шлюз get + query
      * \Bus\FletchProduct и \Bus\QueryProduct
      * в QueryProduct setCountForSell(%id, %count) и если нет ТУ то setPriceForSell($id, $price)

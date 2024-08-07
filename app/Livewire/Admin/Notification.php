@@ -21,18 +21,19 @@ class Notification extends Component
     public function boot()
     {
         $this->staff = Auth::guard('admin')->user();
-        //$this->count = $this->staff->unreadNotifications()->count();
+        $this->count = $this->staff->unreadNotifications()->count();
     }
 
     public function mount()
     {
+
         $this->count = 0;
         $this->refresh_fields();
     }
 
     public function refresh_fields()
     {
-        //$count2 = $this->count;
+
         if (
             $this->new_notify == false &&
             $this->count < $this->staff->unreadNotifications()->count()
@@ -44,7 +45,7 @@ class Notification extends Component
         }
         $this->count = $this->staff->unreadNotifications()->count();
         $this->notifications = $this->staff->unreadNotifications()->getModels();
-       // $this->dispatch('lucide-icons', count1: $this->count, count2: $count2);
+        $this->dispatch('lucide-icons');
     }
 
     #[On('update-notifications')]
@@ -75,8 +76,8 @@ class Notification extends Component
         foreach ($this->notifications as $notification) {
             $notification->markAsRead();
         }
-
-        $this->refresh_fields();
+       $this->refresh_fields();
+        $this->visible = false;
     }
 
     public function render()

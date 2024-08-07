@@ -38,7 +38,7 @@
 
         </div>
         <!-- END: Search -->
-        <livewire:admin.notification  />
+        <livewire:admin.notification />
 
         <!-- BEGIN: Account Menu -->
         <x-base.menu>

@@ -18,9 +18,11 @@ use App\Events\OrderHasLogger;
 use App\Events\OrderHasPaid;
 use App\Events\OrderHasPrepaid;
 use App\Events\OrderHasRefund;
+use App\Events\ParserPriceHasChange;
 use App\Events\PaymentHasPaid;
 use App\Events\PriceHasMinimum;
 use App\Events\PricingHasCompleted;
+use App\Events\ProductHasBlocked;
 use App\Events\ProductHasParsed;
 use App\Events\ProductHasPublished;
 use App\Events\PromotionHasMoved;
@@ -47,9 +49,11 @@ use App\Listeners\NotificationOrderCompleted;
 use App\Listeners\NotificationOrderNew;
 use App\Listeners\NotificationOrderPaid;
 use App\Listeners\NotificationOrderPrepaid;
+use App\Listeners\NotificationParserPriceChange;
 use App\Listeners\NotificationPaymentNew;
 use App\Listeners\NotificationPriceMinimum;
 use App\Listeners\NotificationPricingCompleted;
+use App\Listeners\NotificationProductBlocked;
 use App\Listeners\NotificationProductParserNew;
 use App\Listeners\NotificationProductPublished;
 use App\Listeners\NotificationRefundNew;
@@ -176,6 +180,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasAwaiting::class => [
             NotificationOrderAwaiting::class,
+        ],
+        ProductHasBlocked::class => [
+            NotificationProductBlocked::class,
+        ],
+        ParserPriceHasChange::class => [
+            NotificationParserPriceChange::class,
         ],
 
     ];

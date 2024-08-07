@@ -1,0 +1,36 @@
+<?php
+declare(strict_types=1);
+
+use App\Modules\Page\Entity\Contact;
+use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Entity\Widget;
+use Diglactic\Breadcrumbs\Breadcrumbs;
+use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+
+
+
+Breadcrumbs::for('admin.setting.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Настройки', route('admin.setting.index'));
+});
+
+
+
+Breadcrumbs::for('admin.setting.parser', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.setting.index');
+    $trail->push('Парсер', route('admin.setting.parser'));
+});
+Breadcrumbs::for('admin.setting.common', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.setting.index');
+    $trail->push('Общие', route('admin.setting.common'));
+});
+
+Breadcrumbs::for('admin.setting.coupon', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.setting.index');
+    $trail->push('Купоны', route('admin.setting.coupon'));
+});
+Breadcrumbs::for('admin.setting.web', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.setting.index');
+    $trail->push('Сайт', route('admin.setting.web'));
+});
+

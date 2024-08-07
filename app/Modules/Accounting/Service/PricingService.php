@@ -61,7 +61,9 @@ class PricingService
             $product->getPriceRetail(),
             $product->getPriceBulk(),
             $product->getPriceSpecial(),
-            $product->getPriceMin());
+            $product->getPriceMin(),
+            $product->getPricePre()
+        );
         $pricing->pricingProducts()->save($pricingProduct);
         $pricing->refresh();
         return $pricing;
@@ -89,6 +91,8 @@ class PricingService
         if (!empty($request['price_bulk'])) $product->price_bulk = (float)$request['price_bulk'];
         if (!empty($request['price_special'])) $product->price_special = (float)$request['price_special'];
         if (!empty($request['price_min'])) $product->price_min = (float)$request['price_min'];
+        if (!empty($request['price_pre'])) $product->price_pre = (float)$request['price_pre'];
+
         $product->save();
     }
 
@@ -126,6 +130,10 @@ class PricingService
                 ]);
                 $product->pricesMin()->create([
                     'value' => $pricingProduct->price_min,
+                    'founded' => $founded,
+                ]);
+                $product->pricesPre()->create([
+                    'value' => $pricingProduct->price_pre,
                     'founded' => $founded,
                 ]);
             }

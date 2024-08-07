@@ -1,0 +1,1496 @@
+{
+    "ecomMarket": true,
+    "primary": [
+        {
+            "title": "Produkty",
+            "link": "https://www.ikea.com/pl/pl/cat/produkty-products/",
+            "main": true,
+            "productsDropdown": true,
+            "items": [
+                {
+                    "title": "Nowości",
+                    "link": "https://www.ikea.com/pl/pl/new/",
+                    "mobileMenuImageUrl": "https://www.ikea.com/pl/pl/local-apps/files/PH198563.jpg"
+                },
+                {
+                    "link": "https://www.ikea.com/pl/pl/cat/kolekcje-collections/",
+                    "title": "Kolekcje",
+                    "mobileMenuImageUrl": "https://www.ikea.com/pl/pl/local-apps/files/PH198260.jpg"
+                },
+                {
+                    "title": "Najczęściej kupowane",
+                    "mobileMenuImageUrl": "https://www.ikea.com/pl/pl/local-apps/files/PH195757.jpg",
+                    "link": "https://www.ikea.com/pl/pl/cat/best-sellers/",
+                    "subItems": []
+                },
+                {
+                    "title": "Motywy przewodnie",
+                    "link": "https://www.ikea.com/pl/pl/cat/themes-themes/",
+                    "mobileMenuImageUrl": "https://www.ikea.com/pl/pl/local-apps/files/PH186466.jpg"
+                }
+            ]
+        },
+        {
+            "title": "Pomieszczenia",
+            "link": "https://www.ikea.com/pl/pl/rooms/",
+            "main": true,
+            "items": [
+                {
+                    "title": "Sypialnia",
+                    "link": "https://www.ikea.com/pl/pl/rooms/bedroom/",
+                    "categoryList": "bm003,bm002,19053,55984,tl004,10451,20656,st007,tl002,46053,st002,20489,20657,55012,10653",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/773bbaf99b6e4a77/original/PH199464.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "bm003"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "bm002"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "19053"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "55984"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "tl004",
+                            "image": "https://www.ikea.com/pl/pl/local-apps/images/visualnavigation/PX102280.jpg",
+                            "url": "https://www.ikea.com/pl/pl/cat/tekstylia-do-sypialni-tl004/",
+                            "title": "Tekstylia do sypialni"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10451"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20656"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "st007"
+                        },
+                        {
+                            "id": "tl002",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "46053"
+                        },
+                        {
+                            "id": "st002",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20489",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20657",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "pub68c5ca50",
+                            "type": "pub",
+                            "isManual": false,
+                            "url": "https://www.ikea.com/pl/pl/campaigns/dobry-sen-z-ikea-pub68c5ca50",
+                            "title": "Dobry sen z IKEA"
+                        },
+                        {
+                            "id": "55012",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10653",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Pokój dzienny",
+                    "link": "https://www.ikea.com/pl/pl/rooms/living-room/",
+                    "subItems": [],
+                    "categoryList": "fu003,fu006,10705,10475,st002,10410,10653,de001,tl001,46053,19053,10757,10550,st004,55984",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/28c074d29a314fcf/original/PH199061.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "fu003"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "fu006"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10705"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10475"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "st002"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "st003"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "image": "",
+                            "title": "",
+                            "url": "",
+                            "id": "10653"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "de001"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "tl001"
+                        },
+                        {
+                            "id": "46053",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "19053",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10757"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10550"
+                        },
+                        {
+                            "id": "st004",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "55984",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Kuchnia",
+                    "link": "https://www.ikea.com/pl/pl/rooms/kitchen/",
+                    "categoryList": "ka003,ka002,24255,pub6f2a6ac1,kt001,10471,24261,24264,19121,20676,16298,16282",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/23134b9f3e03c91d/original/PH199571.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "id": "ka003",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "ka002",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "24255"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "700293"
+                        },
+                        {
+                            "id": "kt001",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10471"
+                        },
+                        {
+                            "id": "24261",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "24264"
+                        },
+                        {
+                            "id": "19121",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20676",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "16298",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "16282",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "manual",
+                            "isManual": true,
+                            "id": "pub9194d4a0",
+                            "title": "Rozwiązania do sortowania odpadów",
+                            "url": "https://www.ikea.com/pl/pl/product-guides/znajdz-rozwiazanie-do-sortowania-odpadow-dopasowane-do-twoich-potrzeb-pub9194d4a0",
+                            "image": "https://www.ikea.com/ext/ingkadam/m/173df71607b92ed1/original/PH158121-crop001.jpg"
+                        }
+                    ]
+                },
+                {
+                    "title": "Balkon i ogród",
+                    "link": "https://www.ikea.com/pl/pl/rooms/outdoor/",
+                    "categoryList": "700351,700350,59249,21964,17887,21957,17893,pp001,54942,10760,17897,15937,21963,21958,700349,34205",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/1aa62472a4e11f83/original/PH190443.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "700351"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "700350"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "59249"
+                        },
+                        {
+                            "id": "21964",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "17887"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "21957"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "17893"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "pp001"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "54942"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10760"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "17897"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "15937"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "21963"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "21958"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "700349"
+                        },
+                        {
+                            "id": "34205",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Jadalnia",
+                    "link": "https://www.ikea.com/pl/pl/rooms/dining/",
+                    "categoryList": "21825,25219,19145,21829,59244,25221,18860,20542,18868,10412,16044,20538,pubb543bd70,10769",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/3ddd956db38c7d71/original/PH199011.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "21825"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "25219"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "19145"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "21829"
+                        },
+                        {
+                            "id": "59244",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "25221"
+                        },
+                        {
+                            "type": "manual",
+                            "isManual": true,
+                            "title": "Stoły do kuchni",
+                            "url": "https://www.ikea.com/pl/pl/cat/stoly-do-jadalni-21825/?filters=f-feature%3A59017#product-list-skip",
+                            "image": "https://www.ikea.com/pl/pl/local-apps/campaigns/menu/PE894966.jpg"
+                        },
+                        {
+                            "id": "18860",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20542",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "18868",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10412"
+                        },
+                        {
+                            "id": "16044",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20538",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "pubb543bd70",
+                            "type": "pub",
+                            "isManual": false,
+                            "url": "https://www.ikea.com/pl/pl/rooms/dining/how-to/oswietlenie-jadalni-pubb543bd70",
+                            "title": "Oświetlenie jadalni"
+                        },
+                        {
+                            "id": "10769",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Łazienka",
+                    "link": "https://www.ikea.com/pl/pl/rooms/bathroom/",
+                    "categoryList": "10555,20719,20802,lc001,46079,20723,20724,40690",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/6b83b665f3194461/original/PH199503.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "700450"
+                        },
+                        {
+                            "id": "ba002",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20490",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10555",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "ba003",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "tl003",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10736",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20723",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "40690",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20724",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20719",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Pokój niemowlęcy",
+                    "link": "https://www.ikea.com/pl/pl/rooms/childrens-room/pokoj-niemowlecy-pub0fac2450",
+                    "categoryList": "45780,18706,18835,18755,18690,18701,18773,18716,31772,16249",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/5f1550458644f026/original/PH199501.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "45783"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18701"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "45781"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "45855"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18690"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18692"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18695"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18706"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "45782"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18716"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "31772"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18773"
+                        }
+                    ]
+                },
+                {
+                    "title": "Pokój dziecięcy",
+                    "link": "https://www.ikea.com/pl/pl/rooms/childrens-room/pokoj-dzieciecy-pubeef0daa9",
+                    "categoryList": "18723,18724,18707,18767,18768,24714,18708,18730,18734,20474,18773,16257",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/764ebf87b7f5a78/original/PH198709.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18723"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18724"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18707"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18767"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18768"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "24714"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18708"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18730"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18730"
+                        },
+                        {
+                            "id": "18734",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20474",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "18773",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "16257"
+                        }
+                    ]
+                },
+                {
+                    "title": "Pokój młodzieżowy",
+                    "link": "https://www.ikea.com/pl/pl/rooms/childrens-room/pokoj-mlodziezowy-pub34978bd1",
+                    "categoryList": "bm003,bm002,tl004,19053,49142,20652,55002,st002,10398,46053,st004,11465,de001,10653,st007",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/40aacabdb49d2b8f/original/PH199361.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "pub",
+                            "isManual": false,
+                            "id": "pub8dcc3d51",
+                            "url": "https://www.ikea.com/pl/pl/rooms/childrens-room/lozka-mlodziezowe-pub8dcc3d51",
+                            "title": "Łóżko młodzieżowe – wygoda, styl i funkcjonalność"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "bm002"
+                        },
+                        {
+                            "type": "pub",
+                            "isManual": false,
+                            "id": "pub84718241",
+                            "url": "https://www.ikea.com/pl/pl/rooms/childrens-room/posciel-mlodziezowa-pub84718241",
+                            "title": "Pościel młodzieżowa, pościel dla nastolatków"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "19053"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20652"
+                        },
+                        {
+                            "type": "pub",
+                            "isManual": false,
+                            "id": "pub3bfab011",
+                            "url": "https://www.ikea.com/pl/pl/rooms/home-office/biurka-mlodziezowe-pub3bfab011",
+                            "title": "Biurka młodzieżowe – nowoczesne i funkcjonalne"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "55002"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "st002"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10398"
+                        },
+                        {
+                            "type": "pub",
+                            "isManual": false,
+                            "id": "pubbb3f49a0",
+                            "url": "https://www.ikea.com/pl/pl/rooms/childrens-room/how-to/oswietlenie-pokoju-mlodziezowego-pubbb3f49a0",
+                            "title": "Oświetlenie pokoju młodzieżowego"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "46053"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "st004"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "11465"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "de001"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10653"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "st007"
+                        }
+                    ]
+                },
+                {
+                    "link": "https://www.ikea.com/pl/pl/rooms/gaming-room/",
+                    "title": "Pokój gamingowy",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/3a589afa3619b44a/original/PH187080.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "id": "47070",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "47067"
+                        },
+                        {
+                            "id": "55397",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "56516",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "16195",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10711",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20502",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "st007",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10573",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "he001",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "24830",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Domowe biuro",
+                    "link": "https://www.ikea.com/pl/pl/rooms/home-office/",
+                    "categoryList": "20649,20652,55002,11811,10711,24830,10385,st002,10398,20502,st007,10573,10551,16195,he001,10757",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/2345c6d3fe01268b/original/PH199092.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "id": "20649",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20652"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "55002"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "11811"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10711"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "24830"
+                        },
+                        {
+                            "id": "10385",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "st002",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10398",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "20502",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "st007",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10573",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10551",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "16195",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "he001",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10757",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "title": "Przedpokój",
+                    "link": "https://www.ikea.com/pl/pl/rooms/hallway/",
+                    "categoryList": "10456,19053,55984,10455,st004,16274,10698,10452,10550,st005,pub45563020,55012,10398,20489,10797,10689",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/145b69d715a93770/original/PH199354.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10456"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "19053"
+                        },
+                        {
+                            "id": "55984",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10455"
+                        },
+                        {
+                            "id": "st004",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "16274"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10698"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10452"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10550"
+                        },
+                        {
+                            "id": "st005",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "pub",
+                            "isManual": false,
+                            "id": "pub45563020",
+                            "url": "https://www.ikea.com/pl/pl/rooms/hallway/how-to/oswietlenie-przedpokoju-pub45563020",
+                            "title": "Oświetlenie przedpokoju"
+                        },
+                        {
+                            "id": "55012",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "10398",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20489"
+                        },
+                        {
+                            "id": "10797",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10689"
+                        }
+                    ]
+                },
+                {
+                    "link": "https://www.ikea.com/pl/pl/rooms/laundry/",
+                    "title": "Pomieszczenie gospodarcze",
+                    "categoryList": "10397,700440,16200,21958,st006,10797,20609,20602,20608,18750,10459,16292,42948,20826,55984",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/424f59086a22a36b/original/PH199517.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "700490"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "48925"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10397"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "st006"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10797"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "55004"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20601"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20602"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20608"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10459"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "16292"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20826"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "45730"
+                        },
+                        {
+                            "id": "700331",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "47394",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "link": "https://www.ikea.com/pl/pl/rooms/garage/",
+                    "title": "Garaż i piwnica",
+                    "image": "https://www.ikea.com/ext/ingkadam/m/76274fc5b5beb2f5/original/PH193584.jpg?f=xxxs",
+                    "roomRelatedCategories": [
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "700440"
+                        },
+                        {
+                            "id": "16200",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "21958",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20660"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "10797"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "20617"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "16292"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "37900"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "16213"
+                        },
+                        {
+                            "type": "cat",
+                            "isManual": false,
+                            "id": "18753"
+                        },
+                        {
+                            "id": "18741",
+                            "type": "cat",
+                            "isManual": false
+                        },
+                        {
+                            "id": "46052",
+                            "type": "cat",
+                            "isManual": false
+                        }
+                    ]
+                },
+                {
+                    "title": "IKEA dla Firm",
+                    "link": "https://www.ikea.com/pl/pl/ikea-business/",
+                    "categoryList": "",
+                    "image": "https://www.ikea.com/images/jasne-przestronne-biuro-z-kilkoma-czarnymi-krzeslami-biurowy-edb43d0d7ad449750a5d59279db28530.jpg?f=xxxs",
+                    "roomRelatedCategories": []
+                }
+            ],
+            "productsDropdown": false
+        }
+    ],
+    "secondary": [
+        {
+            "title": "Nowości",
+            "link": "https://www.ikea.com/pl/pl/new/",
+            "items": [
+                {
+                    "title": "Nowe produkty",
+                    "link": "https://www.ikea.com/pl/pl/new/new-products/?sort=NEWEST"
+                },
+                {
+                    "title": "Kolekcja tkanin Tyg",
+                    "link": "https://www.ikea.com/pl/pl/cat/kolekcja-tyg-700571/"
+                },
+                {
+                    "title": "Kolekcja vintage Nytillverkad",
+                    "link": "https://www.ikea.com/pl/pl/cat/kolekcja-nytillverkad-62094/"
+                }
+            ],
+            "promotionIds": [
+                "25f371fb-4f17-41c8-97cb-4d809c2e5d13",
+                "bf6d3a3e-2b29-413e-bb3b-6b1349e59e3b",
+                "49142e60-5403-4e31-b24b-215c273ad068"
+            ]
+        },
+        {
+            "link": "https://www.ikea.com/pl/pl/offers/",
+            "title": "Oferty i promocje",
+            "promotion": {
+                "links": []
+            },
+            "items": [
+                {
+                    "title": "Powrót do szkoły",
+                    "link": "https://www.ikea.com/pl/pl/campaigns/back-to-school/"
+                },
+                {
+                    "title": "Nowa niższa cena",
+                    "link": "https://www.ikea.com/pl/pl/cat/lower-price/"
+                },
+                {
+                    "title": "Oferty dla Klubowiczów IKEA Family",
+                    "link": "https://www.ikea.com/pl/pl/offers/family-offers/"
+                },
+                {
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/okazje-na-okraglo-pub63b48c50",
+                    "title": "Produkty drugiej szansy"
+                },
+                {
+                    "title": "Produkty do 20,-",
+                    "link": "https://www.ikea.com/pl/pl/campaigns/dobre-za-drobne-pubc9d163ea"
+                },
+                {
+                    "title": "Nasze najniższe ceny",
+                    "link": "https://www.ikea.com/pl/pl/cat/lowest-price/"
+                },
+                {
+                    "title": "Ostatnie sztuki",
+                    "link": "https://www.ikea.com/pl/pl/cat/last-chance/"
+                }
+            ],
+            "promotionIds": [
+                "5ef19acc-f089-4e51-88e9-76b29a473150",
+                "28fd027b-8203-48d3-af26-f0f46507cae6",
+                "c28e7ec8-9c0b-4ced-8f0e-1110879cce42"
+            ]
+        },
+        {
+            "title": "Inspiracje",
+            "link": "https://www.ikea.com/pl/pl/ideas/",
+            "items": [
+                {
+                    "title": "Pomysły na przechowywanie w całym domu",
+                    "link": "https://www.ikea.com/pl/pl/ideas/storage/"
+                },
+                {
+                    "title": "Inspiracje dla pomieszczeń",
+                    "link": "https://www.ikea.com/pl/pl/ideas/rooms-inspiration/"
+                },
+                {
+                    "title": "Trendy",
+                    "link": "https://www.ikea.com/pl/pl/ideas/trendy-pub22280310"
+                },
+                {
+                    "title": "Codzienne rytuały",
+                    "link": "https://www.ikea.com/pl/pl/ideas/everyday-rituals/"
+                },
+                {
+                    "title": "Pomysły na prezent",
+                    "link": "https://www.ikea.com/pl/pl/ideas/gift-ideas/"
+                },
+                {
+                    "link": "https://www.ikea.com/pl/pl/product-guides/sustainable-products/",
+                    "title": "Przewodnik po bardziej zrównoważonym życiu",
+                    "linkNewWindow": false
+                }
+            ],
+            "promotionIds": [
+                "9e0c1534-ad03-4e6c-9d73-bbd68522a10b"
+            ]
+        },
+        {
+            "title": "Planowanie i projektowanie",
+            "link": "https://www.ikea.com/pl/pl/customer-service/services/planning-consultation/",
+            "items": [
+                {
+                    "title": "Usługi planowania kuchni",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/planning-consultation/planowanie-kuchni-pub490ac090"
+                },
+                {
+                    "title": "Usługi planowania miejsca do przechowywania",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/planning-consultation/planowanie-miejsca-na-przechowywanie-pub9f21a810"
+                },
+                {
+                    "title": "Usługi projektowania wnętrz",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/planning-consultation/projektowanie-wnetrz-pub89f3ab20"
+                },
+                {
+                    "title": "Usługi projektowania dla firm",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/planning-consultation/projektowanie-wnetrz-dla-firm-pub8ad36750"
+                },
+                {
+                    "title": "Narzędzia do planowania",
+                    "link": "https://www.ikea.com/pl/pl/planners/"
+                },
+                {
+                    "title": "IKEA Kreativ",
+                    "link": "https://www.ikea.com/pl/pl/home-design/"
+                }
+            ],
+            "promotionIds": [
+                "196e52f2-6a49-46ef-a696-cc8110dbbe4f"
+            ]
+        },
+        {
+            "title": "Usługi",
+            "link": "https://www.ikea.com/pl/pl/customer-service/services/",
+            "items": [
+                {
+                    "title": "Montaż mebli",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/assembly/#5724ee5d-8e2e-11eb-865f-d15818944f42"
+                },
+                {
+                    "title": "Montaż i instalacja kuchni",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/assembly/montaz-i-instalacja-kuchni-pubc6df5290"
+                },
+                {
+                    "link": "https://www.ikea.com/pl/pl/customer-service/spare-parts/",
+                    "title": "Zamawianie części montażowych"
+                },
+                {
+                    "title": "Dostawa",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/delivery/"
+                },
+                {
+                    "title": "Oddaj i Zyskaj",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/buy-back/"
+                },
+                {
+                    "title": "Na raty w IKEA",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/finance-options/"
+                },
+                {
+                    "title": "Zakupy przez telefon lub czat",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/shopping-at-ikea/remote-shopping/"
+                },
+                {
+                    "title": "Usługi dla firm",
+                    "link": "https://www.ikea.com/pl/pl/customer-service/services/#ec772970-ca79-11ee-a218-97b5d8f1e250"
+                }
+            ]
+        }
+    ],
+    "tertiary": [
+        {
+            "link": "https://www.ikea.com/pl/pl/stores/",
+            "title": "Sklepy i Studia planowania i zamówień IKEA"
+        },
+        {
+            "link": "https://www.ikea.com/pl/pl/stores/restaurant/",
+            "title": "Restauracja",
+            "main": false
+        },
+        {
+            "title": "IKEA Family",
+            "link": "https://www.ikea.com/pl/pl/ikea-family/",
+            "main": false,
+            "visibility": "both",
+            "linkNewWindow": true
+        },
+        {
+            "link": "https://www.ikea.com/pl/pl/ikea-business/",
+            "title": "IKEA dla Firm"
+        },
+        {
+            "title": "Skontaktuj się z nami",
+            "link": "https://www.ikea.com/pl/pl/customer-service/contact-us/",
+            "main": false
+        }
+    ],
+    "localeStrings": {
+        "SITE_MENU_CLOSE_MENU": "Zamknij menu",
+        "SITE_MENU_GO_BACK": "Wróć",
+        "SITE_MENU_SEARCH": "Szukaj",
+        "SITE_MENU_SHOP_ALL_LINK": "Zobacz wszystko",
+        "SITE_MENU_SEE_ALL_IN": "Zobacz wszystkie w {{category}}",
+        "TABS_NAVIGATION_SEE_PREVIOUS_ITEMS": "Zobacz poprzednie pozycje",
+        "TABS_NAVIGATION_SEE_NEXT_ITEMS": "Zobacz kolejne pozycje",
+        "SKIP_LISTING": "Pomiń listę",
+        "TABS_NAVIGATION_EXPLORE_CATEGORY": "Odkrywaj {{category}}",
+        "LOCALISATION_SELECT_LANGUAGE": "Wybierz preferowany język",
+        "LOCALISATION_CURRENT_STORE_HEADING": "Jesteś w polskim sklepie internetowym",
+        "LOCALISATION_CHANGE_COUNTRY_LINK": "Zmień kraj/region",
+        "LOCALISATION_CHANGE_COUNTRY_DISCLAIMER": "Twój koszyk zostanie opróżniony, jeśli zmienisz kraj/region."
+    },
+    "promotions": [
+        {
+            "id": "5ef19acc-f089-4e51-88e9-76b29a473150",
+            "userFriendlyId": 10,
+            "background": "family",
+            "stores": [],
+            "start": "2024-07-01T11:50:00.000Z",
+            "end": "2025-08-31T11:50:00.000Z",
+            "editorsNote": "raty 10x0%",
+            "title": "Radość w pełni, a płatność w kawałkach! 10 rat 0% w IKEA",
+            "body": "O czymkolwiek marzysz, możesz już dziś cieszyć się tym w pełni, a płatność rozłożyć na 10 wygodnych rat z RRSO 0%. Oferta dla Klubowiczów IKEA Family.",
+            "promotionUrl": "https://www.ikea.com/pl/pl/customer-service/services/finance-options/#d607c6a0-3224-11ef-bd4d-b3d2fdcca071"
+        },
+        {
+            "id": "28fd027b-8203-48d3-af26-f0f46507cae6",
+            "userFriendlyId": 11,
+            "background": "family",
+            "stores": [],
+            "start": "2024-07-16T10:00:00.000Z",
+            "end": "2024-09-23T10:00:00.000Z",
+            "editorsNote": "-15% na biurka do 23.09",
+            "title": "-15% na biurka",
+            "body": "Oferta dla Klubowiczów IKEA Family i IKEA Business Network, obowiązuje od 16.07.2024 r. do 23.09.2024 r. lub do wyczerpania zapasów. IKEA.pl/regulaminy.",
+            "promotionUrl": "https://www.ikea.com/pl/pl/cat/biurka-20649/"
+        },
+        {
+            "id": "5e035ca8-1473-4d84-a03e-5e62b9df892b",
+            "userFriendlyId": 12,
+            "background": "default",
+            "stores": [],
+            "start": "2024-07-22T11:17:00.000Z",
+            "end": "2025-06-30T22:00:00.000Z",
+            "editorsNote": "Dobry Sen",
+            "title": "Sprawdź produkty i porady na dobry sen z IKEA",
+            "body": "",
+            "promotionUrl": "https://www.ikea.com/pl/pl/campaigns/dobry-sen-z-ikea-pub68c5ca50",
+            "imageUrl": "https://www.ikea.com/pl/pl/local-apps/files/PH198382.jpg"
+        },
+        {
+            "id": "c28e7ec8-9c0b-4ced-8f0e-1110879cce42",
+            "userFriendlyId": 14,
+            "background": "newLowerPrice",
+            "stores": [],
+            "start": "2024-07-23T14:32:00.000Z",
+            "end": "2024-08-31T22:30:00.000Z",
+            "editorsNote": "Nowa niższa cena",
+            "title": "Nowa niższa cena",
+            "body": "Odkryj funkcjonalne meble i akcesoria w nowych, niższych cenach. Płać mniej – miej więcej radości!",
+            "promotionUrl": "https://www.ikea.com/pl/pl/cat/lower-price/"
+        },
+        {
+            "id": "9e0c1534-ad03-4e6c-9d73-bbd68522a10b",
+            "userFriendlyId": 15,
+            "background": "default",
+            "stores": [],
+            "start": "2024-07-24T07:42:00.000Z",
+            "end": "2025-12-31T22:40:00.000Z",
+            "title": "Pomysły i porady na lepiej zorganizowany dom",
+            "editorsNote": "SATH",
+            "body": "Zainspiruj się do stworzenia uporządkowanej i dobrze zorganizowanej przestrzeni.",
+            "promotionUrl": "https://www.ikea.com/pl/pl/ideas/storage/"
+        },
+        {
+            "id": "196e52f2-6a49-46ef-a696-cc8110dbbe4f",
+            "userFriendlyId": 16,
+            "background": "default",
+            "stores": [],
+            "start": "2024-07-24T07:44:00.000Z",
+            "end": "2024-08-23T07:44:00.000Z",
+            "title": "Poznaj usługi projektowania",
+            "promotionUrl": "https://www.ikea.com/pl/pl/customer-service/services/planning-consultation/",
+            "body": "Możesz to zrobić sam, ale nie musisz. Skorzystaj z doświadczenia i kreatywności projektantów IKEA i urządź swoje wnętrza pięknie i funkcjonalnie. Spotkaj się z nami w sklepie lub online.",
+            "editorsNote": "Usługi projektowania"
+        },
+        {
+            "id": "49142e60-5403-4e31-b24b-215c273ad068",
+            "userFriendlyId": 17,
+            "background": "new",
+            "stores": [],
+            "start": "2024-08-01T07:03:00.000Z",
+            "end": "2024-08-31T07:03:00.000Z",
+            "title": "Przygotuj się na powrót do szkoły",
+            "editorsNote": "nowość B2S",
+            "promotionUrl": "https://www.ikea.com/pl/pl/campaigns/back-to-school/"
+        },
+        {
+            "id": "25f371fb-4f17-41c8-97cb-4d809c2e5d13",
+            "userFriendlyId": 18,
+            "background": "new",
+            "stores": [],
+            "start": "2024-08-01T07:05:00.000Z",
+            "end": "2024-08-31T07:05:00.000Z",
+            "editorsNote": "nowość sierpień",
+            "title": "Sierpniowa porcja nowości do sypialni i całego domu",
+            "promotionUrl": "https://www.ikea.com/pl/pl/new/"
+        },
+        {
+            "id": "bf6d3a3e-2b29-413e-bb3b-6b1349e59e3b",
+            "userFriendlyId": 19,
+            "background": "new",
+            "stores": [],
+            "start": "2024-08-01T07:07:00.000Z",
+            "end": "2024-08-31T07:07:00.000Z",
+            "promotionUrl": "https://www.ikea.com/pl/pl/campaigns/starting-college/",
+            "title": "Niezbędniki na uczelnię i do akademika",
+            "editorsNote": "nowość B2C"
+        }
+    ],
+    "businessHeader": {
+        "primary": [],
+        "secondary": []
+    }
+}

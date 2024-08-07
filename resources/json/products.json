@@ -1,0 +1,146 @@
+{
+    "usergroup": "[]",
+    "testActivationTriggers": {},
+    "moreProducts": {
+        "productWindow": [
+            {
+                "name": "TRIXIG",
+                "typeName": "Zestaw narzędzi, 15 szt.",
+                "itemMeasureReferenceText": "",
+                "mainImageUrl": "https://www.ikea.com/pl/pl/images/products/trixig-zestaw-narzedzi-15-szt__1223642_pe914725_s5.jpg",
+                "pipUrl": "https://www.ikea.com/pl/pl/p/trixig-zestaw-narzedzi-15-szt-90492786/",
+                "id": "90492786",
+                "itemNoGlobal": "90492786",
+                "onlineSellable": true,
+                "lastChance": false,
+                "gprDescription": {
+                    "numberOfVariants": 0,
+                    "variants": []
+                },
+                "colors": [],
+                "badge": {
+                    "type": "TOP_SELLER",
+                    "text": "Top Seller"
+                },
+                "tag": "NONE",
+                "quickFacts": [],
+                "features": [],
+                "availability": [],
+                "ratingValue": 4.9,
+                "ratingCount": 12,
+                "itemNo": "90492786",
+                "itemType": "ART",
+                "salesPrice": {
+                    "currencyCode": "PLN",
+                    "numeral": 39.0,
+                    "current": {
+                        "prefix": "",
+                        "wholeNumber": "39",
+                        "separator": "",
+                        "decimals": "",
+                        "suffix": ",-",
+                        "isRegularCurrency": false
+                    },
+                    "isBreathTaking": true,
+                    "discount": "",
+                    "tag": "NONE",
+                    "priceText": "Cena"
+                },
+                "mainImageAlt": "TRIXIG Zestaw narzędzi, 15 szt.",
+                "businessStructure": {
+                    "homeFurnishingBusinessName": "Home organisation",
+                    "homeFurnishingBusinessNo": "18",
+                    "productAreaName": "Kits, tools and chemical products",
+                    "productAreaNo": "1881",
+                    "productRangeAreaName": "Clean, care \u0026 repair",
+                    "productRangeAreaNo": "188"
+                },
+                "categoryPath": [
+                    {
+                        "name": "Majsterkowanie w domu",
+                        "key": "hi001"
+                    },
+                    {
+                        "name": "Narzędzia i akcesoria do montażu",
+                        "key": "16292"
+                    },
+                    {
+                        "name": "Narzędzia",
+                        "key": "16293"
+                    }
+                ],
+                "heroBackoffData": {},
+                "optimizelyAttributes": {
+                    "PRODUCT_TYPE": "standard"
+                }
+            },
+            {
+                "name": "TRIXIG",
+                "typeName": "Zestaw do piłowania, 5 szt.",
+                "itemMeasureReferenceText": "",
+                "mainImageUrl": "https://www.ikea.com/pl/pl/images/products/trixig-zestaw-do-pilowania-5-szt__1222994_pe914754_s5.jpg",
+                "pipUrl": "https://www.ikea.com/pl/pl/p/trixig-zestaw-do-pilowania-5-szt-10546905/",
+                "id": "10546905",
+                "itemNoGlobal": "10546905",
+                "onlineSellable": true,
+                "lastChance": false,
+                "gprDescription": {
+                    "numberOfVariants": 0,
+                    "variants": []
+                },
+                "colors": [],
+                "tag": "NONE",
+                "quickFacts": [],
+                "features": [],
+                "availability": [],
+                "ratingValue": 5.0,
+                "ratingCount": 2,
+                "itemNo": "10546905",
+                "itemType": "ART",
+                "salesPrice": {
+                    "currencyCode": "PLN",
+                    "numeral": 24.99,
+                    "current": {
+                        "prefix": "",
+                        "wholeNumber": "24",
+                        "separator": ",",
+                        "decimals": "99",
+                        "suffix": "",
+                        "isRegularCurrency": false
+                    },
+                    "isBreathTaking": false,
+                    "discount": "",
+                    "tag": "NONE",
+                    "priceText": "Cena"
+                },
+                "mainImageAlt": "TRIXIG Zestaw do piłowania, 5 szt.",
+                "businessStructure": {
+                    "homeFurnishingBusinessName": "Home organisation",
+                    "homeFurnishingBusinessNo": "18",
+                    "productAreaName": "Kits, tools and chemical products",
+                    "productAreaNo": "1881",
+                    "productRangeAreaName": "Clean, care \u0026 repair",
+                    "productRangeAreaNo": "188"
+                },
+                "categoryPath": [
+                    {
+                        "name": "Majsterkowanie w domu",
+                        "key": "hi001"
+                    },
+                    {
+                        "name": "Narzędzia i akcesoria do montażu",
+                        "key": "16292"
+                    },
+                    {
+                        "name": "Narzędzia",
+                        "key": "16293"
+                    }
+                ],
+                "heroBackoffData": {},
+                "optimizelyAttributes": {
+                    "PRODUCT_TYPE": "standard"
+                }
+            }
+        ]
+    }
+}

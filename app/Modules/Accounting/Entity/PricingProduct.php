@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $price_bulk
  * @property float $price_special
  * @property float $price_min
+ * @property float $price_pre
  *
  * @property Product $product
  * @property PricingDocument $document
@@ -31,9 +32,13 @@ class PricingProduct extends Model
         'price_bulk',
         'price_special',
         'price_min',
+        'price_pre',
     ];
 
-    public static function new(int $product_id, float $price_cost, float $price_retail, float $price_bulk, float $price_special, float $price_min): self
+    public static function new(int $product_id,
+                               float $price_cost, float $price_retail,
+                               float $price_bulk, float $price_special,
+                               float $price_min, float $price_pre): self
     {
         return self::make([
             'product_id' => $product_id,
@@ -42,6 +47,7 @@ class PricingProduct extends Model
             'price_bulk' => $price_bulk,
             'price_special' => $price_special,
             'price_min' => $price_min,
+            'price_pre' => $price_pre,
         ]);
     }
 

@@ -225,6 +225,7 @@ class OrderService
      * Создание заказа из корзины парсера клиента
      * @return Order
      */
+    //TODO Переделать на получение полных данных из базы
     public function create_parser(): Order
     {
         DB::transaction(function () use (&$order) {
@@ -238,9 +239,8 @@ class OrderService
             $order = Order::register($user->id, Order::PARSER);
             $order->save();
             foreach ($OrderItems as $item) {
-                $orderItemPre = OrderItem::new($item->product, $item->quantity, true, $order->user_id);
-                $orderItemPre->base_cost = $item->cost;
-                $orderItemPre->sell_cost = $item->cost;
+                $orderItemPre = OrderItem::new($item->product, $item->quantity, true);
+                $orderItemPre->setCost($item->cost, $item->cost);
                 $order->items()->save($orderItemPre);
             }
             $this->parserCart->clear();
@@ -439,14 +439,21 @@ class OrderService
             $quantity_preorder = $quantity - $product->getCountSell(); //По предзаказу
             $quantity = $product->getCountSell(); //в наличии
         }
+
+        $last_price = $product->getLastPrice($order->user_id);
         if ($quantity > 0) {
-            $orderItem = OrderItem::new($product, $quantity, false, $order->user_id);
+            $orderItem = OrderItem::new($product, $quantity, false);
+            if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены');
+            $orderItem->setCost($last_price, $last_price);
             $order->items()->save($orderItem);
             $this->reserveService->toReserve($orderItem, $quantity);
         }
 
         if ($quantity_preorder > 0) {
-            $orderItemPre = OrderItem::new($product, $quantity_preorder, true, $order->user_id);
+            $orderItemPre = OrderItem::new($product, $quantity_preorder, true);
+            $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
+            if ($pre_price == 0) throw new \DomainException('Нельзя добавить товар без цены');
+            $orderItemPre->setCost($last_price, $pre_price);
             $order->items()->save($orderItemPre);
         }
         $order->refresh();
@@ -873,15 +880,16 @@ class OrderService
      * @param int $quantity
      * @return void
      */
+    //TODO Переделать на получение полных данных из базы
     public function add_parser(Order $order, $search, int $quantity)
     {
         if (!$order->isParser()) throw new \DomainException('Заказ не под Парсер');
         $product = $this->parserService->findProduct($search);
 
         $cost_item = ceil($this->shop_options->parser_coefficient * $product->parser->price);
-        $orderItemPre = OrderItem::new($product, $quantity, true, $order->user_id);
-        $orderItemPre->base_cost = (int)$cost_item;
-        $orderItemPre->sell_cost = (int)$cost_item;
+        $orderItemPre = OrderItem::new($product, $quantity, true);
+        $orderItemPre->setCost((int)$cost_item, (int)$cost_item);
+
         $order->items()->save($orderItemPre);
 
         $order->refresh();

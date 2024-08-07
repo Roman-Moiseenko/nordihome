@@ -30,7 +30,7 @@
 </div>
 
 <script>
-
+/*
     document.addEventListener('livewire:init', () => {
         Livewire.hook('morph.added',  ({ el }) => {
             lucide.createIcons();
@@ -39,6 +39,7 @@
             lucide.createIcons();
         });
     });
+    */
 </script>
 
 

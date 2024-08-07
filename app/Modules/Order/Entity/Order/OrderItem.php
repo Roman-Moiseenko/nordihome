@@ -71,13 +71,13 @@ class OrderItem extends Model implements CartItemInterface
         'order',
         ];
 
-    public static function new(Product $product, int $quantity, bool $preorder, int $user_id): self
+    public static function new(Product $product, int $quantity, bool $preorder/*, int $user_id*/): self
     {
         return self::make([
             'quantity' => $quantity,
             'product_id' => $product->id,
-            'base_cost' => $product->getLastPrice($user_id),
-            'sell_cost' => $product->getLastPrice($user_id),
+            //'base_cost' => $product->getLastPrice($user_id),
+            //'sell_cost' => $product->getLastPrice($user_id),
             'options' => [],
             'preorder' => $preorder,
         ]);
@@ -278,6 +278,18 @@ class OrderItem extends Model implements CartItemInterface
     public function getPreorder(): bool
     {
         return $this->preorder;
+    }
+
+    /**
+     * Функция НЕ сохраняет данные в базу
+     * @param float|null $base
+     * @param float|null $sell
+     * @return void
+     */
+    public function setCost(float|null $base, float|null $sell): void
+    {
+        if (!is_null($base)) $this->base_cost = $base;
+        if (!is_null($sell)) $this->sell_cost = $sell;
     }
 
 

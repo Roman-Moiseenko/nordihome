@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Brand extends Model
 {
     const DEFAULT = 1;
+    const IKEA = 'Икеа';
 
     private array $sameAs = [];
     protected $fillable = [

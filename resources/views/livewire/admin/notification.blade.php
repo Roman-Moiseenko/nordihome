@@ -1,5 +1,5 @@
 
-<div id="notify-component" wire:poll.10s="refresh_fields">
+<div id="notify-component">
     <div class="mr-4 sm:mr-6">
         <button wire:click="toggle_visible"
             class="relative block text-white/70 outline-none
@@ -11,10 +11,13 @@
         <div class="notification-dropdown {{ $visible ? 'show' : 'no-show' }}" @if($count == 0) style="display: none" @endif>
             <div class="dropdown-content rounded-md border-transparent bg-white shadow-[0px_3px_10px_#00000017] mt-2 w-[280px] p-5 sm:w-[460px]">
                 <div class="mb-5 flex">
-                    <div class="font-medium">
+                    <button wire:click="close_dropdown" title="Закрыть" class="btn p-1 text-success items-center font-medium text-lg my-auto w-10 flex-none">
+                        X
+                    </button>
+                    <div class="font-medium my-auto ml-1">
                         Уведомления
                     </div>
-                    <div class="ml-auto">
+                    <div class="ml-auto my-auto">
                         <button wire:click="remove_all" title="Отметить все прочитанными" class="text-danger">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                         </button>
@@ -34,13 +37,7 @@
     @endpush
 @endonce
 
-<script>
-    window.addEventListener('click', function(e){
-        if (!document.getElementById('notify-component').contains(e.target)){
-            Livewire.dispatch('close-notifications');
-        }
-    });
-</script>
+
 
 @once
     @push('styles')

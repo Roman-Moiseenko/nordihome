@@ -18,6 +18,9 @@ class ParserService
     const STORE = 203; //Код магазина в стране
     const API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
     const API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks';
+    const API_URL_PRODUCTS = 'https://sik.search.blue.cdtapps.com/pl/pl/product-list-page/more-products?category=%s&start=%s&end=%s';
+
+//https://www.ikea.com/pl/pl/catalog/products/70332124/?type=xml&dataset=normal,allImages,prices,attributes
 
     const STORES = [
         203 => 'Гданьск',
@@ -61,6 +64,7 @@ class ParserService
     public function findProduct(string $search): Product
     {
         $code = $this->formatCode($search);
+        /** @var Product $product */
         $product = Product::where('code_search', $code)->first();//Ищем товар в базе
         if (empty($product)) {//1. Добавляем черновик товара (Артикул, Главное фото, Название, Краткое описание, Базовая цена, published = false)
             $parser_product = $this->parsingData($code); //Парсим основные данные
@@ -78,7 +82,7 @@ class ParserService
                 $arguments);
 
             $product->short = $parser_product['description'];
-            $product->brand_id = (Brand::where('name', 'Икеа')->first())->id;
+            $product->brand_id = (Brand::where('name', Brand::IKEA)->first())->id;
             $product->dimensions = Dimensions::create(
                 $parser_product['dimensions']->width,
                 $parser_product['dimensions']->height,
@@ -96,6 +100,15 @@ class ParserService
 
             event(new ProductHasParsed($product));
             return $product;
+        } elseif ($product->dimensions->width == 0) {
+            $parser_product = $this->parsingData($code);
+            $product->dimensions = Dimensions::create(
+                $parser_product['dimensions']->width,
+                $parser_product['dimensions']->height,
+                $parser_product['dimensions']->depth,
+                $parser_product['dimensions']->weight,
+                Dimensions::MEASURE_KG);
+            $product->save();
         }
 
         $productParser = ProductParser::where('product_id', $product->id)->first();
@@ -146,7 +159,7 @@ class ParserService
         $_res = $res[1][0];
         $_res = str_replace('&quot;', '"', $_res);
         $_data = json_decode($_res, true);
-        //dd($_data);
+
         $_list_images = $_data['productGallery']['mediaList']; //$_data['mediaGrid']['fullMediaList']
         foreach ($_list_images as $item) {
             if ($item['type'] == 'image' && $item['content']['type'] != 'MAIN_PRODUCT_IMAGE')
@@ -155,6 +168,7 @@ class ParserService
         return $result;
     }
 
+    /** Добавить в Cron для парсинга кол-ва в базе */
     public function parsingQuantity(string $code): array
     {
         $url = sprintf(self::API_URL_QUANTITY, $code);
@@ -189,7 +203,7 @@ class ParserService
         return $result;
     }
 
-    private function createProductParsing(int $product_id, array $parser_product): ProductParser
+    public function createProductParsing(int $product_id, array $parser_product): ProductParser
     {
         return ProductParser::register(
             $product_id,
@@ -217,13 +231,15 @@ class ParserService
         'pack' => "mixed",
         'composite' => "array"
     ])]
-    private function parsingData(string $code): array|float
+    public function parsingData(string $code): array|float
     {
         $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
         $json_product = $this->httpPage->getPage($url, '_cache');
 
+        if ($json_product == null) {
+            throw new \DomainException('Неверный код товара');
+        }
         $_array = json_decode($json_product, true);
-       //dd($_array);
 
         if ($_array == null)
             throw new \DomainException('На сайте содержаться неверные данные о продукте');
@@ -330,4 +346,18 @@ class ParserService
         return $width;
     }
 
+
+    //Список товаров
+
+    public function getProducts(string $category, int $start, int $end): array
+    {
+        $url = sprintf(self::API_URL_PRODUCTS, $category, $start, $end); //API для поиска товара
+        $json_product = $this->httpPage->getPage($url, '_cache');
+
+        if ($json_product == null) {
+            throw new \DomainException('Неверные данные');
+        }
+        $_array = json_decode($json_product, true);
+        return $_array['moreProducts']['productWindow'];
+    }
 }

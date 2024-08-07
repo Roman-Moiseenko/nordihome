@@ -17,7 +17,7 @@ class AdminMenu
             if (!isset($a['sort'])) return true;
             if (!isset($b['sort'])) return false;
 
-            return $a['sort'] > $b['sort'];
+            return ($a['sort'] < $b['sort']) ? -1 : 1;
         });
         return $menus;
     }

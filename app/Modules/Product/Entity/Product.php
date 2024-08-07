@@ -66,6 +66,7 @@ use JetBrains\PhpStorm\Pure;
  * @property ProductPriceBulk[] $pricesBulk
  * @property ProductPriceSpecial[] $pricesSpecial
  * @property ProductPriceMin[] $pricesMin
+ * @property ProductPricePre[] $pricesPre
  * @property Promotion[] $promotions Все акции в которых есть товар
  * @property Equivalent $equivalent
  * @property EquivalentProduct $equivalent_product
@@ -177,18 +178,17 @@ class Product extends Model
         $code_search = str_replace(['-', ',', '.', '_', ':'], '', $code);
 
         //TODO Возможно перенести в сервис, тогда в Парсере - вызывать сервис
-        if (!empty(Product::where('name', '=', $name)->first())) {
+        if (!empty(Product::where('name', $name)->first())) {
             //Ищем все товары 49483964
-            $products = Product::where('name', 'LIKE', "%$name%")->get();
+            /*$products = Product::where('name', 'LIKE', "%$name%")->get();
             $max_number = 0;
             foreach ($products as $product) {
                 $number = substr($product->name, strlen($name));
                 if (empty($number)) $number = 0;
                 if ($number > $max_number) $max_number = $number;
-
             }
-            $max_number++;
-            $name .= '-' . $max_number;
+            $max_number++;*/
+            $name .= ' ' . $code;
         }
         //throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
         if (!empty(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
@@ -434,6 +434,24 @@ class Product extends Model
         return $model->value;
     }
 
+    /**
+     * Цена на предзаказ, если цена не определена, возвращаем текущую
+     * @param bool $previous
+     * @return float
+     */
+    public function getPricePre(bool $previous = false): float
+    {
+        if ($this->pricesPre()->count() == 0) return 0;
+        if ($previous == true) {
+            /** @var ProductPriceMin $model */
+            $model = $this->pricesPre()->skip(1)->first();
+            if (empty($model)) return 0;
+        } else {
+            $model = $this->pricesPre()->skip(0)->first();
+        }
+        return $model->value;
+    }
+
     //*** КОЛ_ВО
     public function getReserveCount(): int
     {
@@ -673,6 +691,11 @@ class Product extends Model
     public function pricesMin()
     {
         return $this->hasMany(ProductPriceMin::class, 'product_id', 'id')->orderByDesc('id');
+    }
+
+    public function pricesPre()
+    {
+        return $this->hasMany(ProductPricePre::class, 'product_id', 'id')->orderByDesc('id');
     }
 
     //ХАРАКТЕРИСТИКИ ТОВАРА

@@ -56,6 +56,16 @@ class ProductParser extends Model
         ]);
     }
 
+    public function isBlock(): bool
+    {
+        return $this->order == false;
+    }
+
+    public function priceEquivalent($price): bool
+    {
+        return $this->price == $price;
+    }
+
     public function setQuantity(array $quantity)
     {
         $this->update(['quantity' => $quantity]);
@@ -76,10 +86,7 @@ class ProductParser extends Model
         $this->update(['order' => true]);
     }
 
-    public function isBlock(): bool
-    {
-        return $this->order == false;
-    }
+
 
     public function product()
     {
