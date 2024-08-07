@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Shop;
 
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
@@ -14,6 +13,7 @@ use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Tag;
+use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Auth;
 class ShopRepository
 {
 
-    private \App\Modules\Setting\Entity\Web $web;
+    private Web $web;
 
     public function __construct()
     {

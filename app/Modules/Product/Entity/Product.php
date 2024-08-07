@@ -19,6 +19,7 @@ use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
@@ -175,42 +176,27 @@ class Product extends Model
      */
     public static function register(string $name, string $code, int $main_category_id, string $slug = '', array $arguments = []): self
     {
-        $code_search = str_replace(['-', ',', '.', '_', ':'], '', $code);
+        if (!empty(Product::where('code', '=', $code)->first()))
+            throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
 
-        //TODO Возможно перенести в сервис, тогда в Парсере - вызывать сервис
-        if (!empty(Product::where('name', $name)->first())) {
-            //Ищем все товары 49483964
-            /*$products = Product::where('name', 'LIKE', "%$name%")->get();
-            $max_number = 0;
-            foreach ($products as $product) {
-                $number = substr($product->name, strlen($name));
-                if (empty($number)) $number = 0;
-                if ($number > $max_number) $max_number = $number;
-            }
-            $max_number++;*/
-            $name .= ' ' . $code;
-        }
-        //throw new \DomainException('Дублирование. Товар ' . $name . ' уже существует');
-        if (!empty(Product::where('code', '=', $code)->first())) throw new \DomainException('Дублирование. Товар с артикулом ' . $code . ' уже существует');
+        if (!empty(Product::where('name', $name)->first())) $name .= ' ' . $code;
+
         $slug = empty($slug) ? Str::slug($name) : $slug;
+        if (Product::where('slug', $slug)->first() != null) $slug = Str::uuid();
 
-        if (Product::where('slug', $slug)->first() != null) {
-            $slug = Str::uuid();
-        }
+        $code_search = str_replace(['-', ',', '.', '_', ':'], '', $code);
         $data = [
             'name' => $name,
             'slug' => empty($slug) ? Str::slug($name) : $slug,
             'code' => $code,
             'code_search' => $code_search,
             'main_category_id' => $main_category_id,
-            //'description' => '{}',
         ];
 
         return self::create(array_merge($data, $arguments));
     }
 
     //ФУНЦИИ СОСТОЯНИЯ
-
     public function isNew(): bool
     {
         if ($this->published_at == null) return false;
@@ -218,12 +204,9 @@ class Product extends Model
         return false;
     }
 
+    #[Deprecated]
     public function isVisible(): bool
-    {/*
-        if ($this->status != self::STATUS_PUBLISHED) return false;
-        if ($this->getCountSell() == 0 and $this->sell_method == self::SELL_OFFLINE) return false;
-        if ($this->sell_method == self::SELL_OFFLINE) return false;
-        return true;*/
+    {
         return true;
     }
 
@@ -354,11 +337,12 @@ class Product extends Model
     /**
      * @return float Последняя назначенная цена с учетом если цены не назначены
      */
-    public function getLastPrice(int $user_id = null): float
+    public function getLastPrice(): float
     {
-        if (!is_null($user_id)) {
+        //TODO Привязка к Аутентификации!!!
+
+        if (!is_null($user = Auth::guard('user')->user())) {
             /** @var User $user */
-            $user = User::find($user_id);
             if ($user->isBulk()) return $this->getPriceBulk(); //Оптовый клиент
             if ($user->isSpecial()) return $this->getPriceSpecial(); //Спец Клиент
         }

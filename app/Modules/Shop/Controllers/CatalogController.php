@@ -55,12 +55,14 @@ class CatalogController extends Controller
 
         //TODO Переделать в запросы 1. получить только id Product,
         // 2. Получить мин и макс цены из таблицы напрямую whereIn($product_id, $product_ids), 3. Также получить бренды
+
         $minPrice = 10;
         $maxPrice = 999999999;
         $product_ids = [];
         $brands = [];
 
         $products = $this->repository->ProductsByCategory($category->id);
+
         /** @var Product $product */
         foreach ($products as $i => $product) {
             if ($i == 0) {
@@ -78,8 +80,7 @@ class CatalogController extends Controller
                 if ($this->common->pre_order || $product->pre_order == true || $product->getCountSell() > 0)
                     $product_ids[] = $product->id;
             }
-            //if ($product->getCountSell() > 0 || $product->pre_order == true)
-            // $product_ids[] = $product->id;
+
             $brands[$product->brand->id] = [
                 'name' => $product->brand->name,
                 'image' => $product->brand->getImage(),
@@ -101,7 +102,6 @@ class CatalogController extends Controller
         return view('shop.product.index',
             compact('category', 'products', 'prod_attributes', 'tags',
                 'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order'));
-
 
     }
 
