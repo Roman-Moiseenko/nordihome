@@ -21,7 +21,7 @@ class ParserCommand extends Command
 {
     use CreatesApplication;
 
-    protected $signature = 'cron:parser';
+    protected $signature = 'cron:parser-price';
     protected $description = 'Парсим цены товаров';
     protected $app;
 
@@ -41,16 +41,21 @@ class ParserCommand extends Command
             ->where('not_sale', false)
             ->getModels();
         $this->info('Товаров - ' . count($products));
-
+        $to_job = 0;
         foreach ($products as $product) {
             if ($this->isIkea($product->code, $product->code_search)) {
                 $this->info('Отправлен в очередь - ' . $product->name . ' ' . $product->code);
+                $to_job++;
                 ParserPriceProduct::dispatch($logger->id, $product->id, $settings->getParser()->parser_coefficient);
             } else {
                 $this->info('*    * Не Икеа ' . $product->name . ' ' . $product->code);
                 Log::warning('*    * Не Икеа ' . $product->name . ' ' . $product->code);
             }
+
         }
+        $this->info('***  ************************ ***');
+        $this->info('*** Всего отправлено в очередь - ' . $to_job);
+
     }
 
     public function isIkea($code, $code_search): bool

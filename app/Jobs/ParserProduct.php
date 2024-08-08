@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Parser\ParserService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -29,6 +30,23 @@ class ParserProduct implements ShouldQueue
      */
     public function handle(ParserService $service): void
     {
-        $service->findProduct($this->code);
+        /** @var Product $product */
+        $product = Product::find($this->code);
+
+        if (is_null($product)) { //Новый товар
+            $service->findProduct($this->code);
+        } else {
+            //Если нет данных о размерах
+            if (is_null($product->dimensions) || ($product->dimensions->height == 0)) {
+                $service->findProduct($this->code);
+            }
+
+            if ($product->isPublished() && !$product->isSale()) { //Опубликован, но снят с продажи,
+                $product->setForSale(); // появился снова.
+            }
+
+        }
+
+
     }
 }

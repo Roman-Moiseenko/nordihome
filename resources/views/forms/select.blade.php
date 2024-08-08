@@ -5,7 +5,6 @@
 <select id="{{ $id }}" name="{{ $name }}"
         class="form-select sm:mr-2 {{ $class }} {{ $errors->has($name) ? 'has-error' : '' }}"
         aria-label="{{ $placeholder }}" {{ $disabled }}>
-    <option value="0"></option>
     @foreach($options as $key => $value)
         <option
             value="{{ $key }}"

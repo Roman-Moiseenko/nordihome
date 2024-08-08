@@ -17,11 +17,11 @@ class Common extends AbstractSetting
 
     public function view()
     {
-        $groups = Group::orderBy('name')->get()->map(function (Group $item) {
-            return [$item->id] = $item->name;
-        })->toArray();
-
-
+        $groups[0] = '';
+        $_groups = Group::orderBy('name')->get();
+        foreach ($_groups as $item) {
+            $groups[$item->id] = $item->name;
+        };
         return view('admin.settings.common', ['common' => $this, 'groups' => $groups]);
     }
 }

@@ -1,14 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Console\Commands\Wp;
+namespace App\Console\Commands\Cron;
 
 use App\Jobs\ParserProduct;
-use App\Modules\Product\Entity\Category;
-use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Parser\ParserService;
 use Illuminate\Console\Command;
-use Illuminate\Console\ConfirmableTrait;
 use Tests\CreatesApplication;
 
 class ParserIkeaCommand extends Command
@@ -16,7 +13,7 @@ class ParserIkeaCommand extends Command
 
     use CreatesApplication;
 
-    protected $signature = 'parser:ikea';
+    protected $signature = 'cron:parser-product';
 
     protected $description = 'Спарсить все товары Икеа';
     /**
@@ -52,8 +49,6 @@ class ParserIkeaCommand extends Command
             'rm001',
             'pt001',
             'hi001',
-            //
-
         ]; //Url-ы категорий
 
         $app = $this->createApplication();
@@ -84,7 +79,7 @@ class ParserIkeaCommand extends Command
             $code = $product['itemNo'];
             ParserProduct::dispatch($code);
         }
-        $this->info('В очередь отправлены');
+        $this->info('**** В очередь отправлены');
     }
 
 }

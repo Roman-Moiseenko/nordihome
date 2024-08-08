@@ -103,7 +103,7 @@ class ParserService
 
             event(new ProductHasParsed($product));
             return $product;
-        } elseif ($product->dimensions->width == 0) {
+        } elseif (is_null($product->dimensions) || ($product->dimensions->width == 0)) {
             $parser_product = $this->parsingData($code);
             $product->dimensions = Dimensions::create(
                 $parser_product['dimensions']->width,
