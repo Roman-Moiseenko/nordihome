@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
+use App\Events\ParserPriceHasChange;
 use App\Events\ProductHasBlocked;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Options;
@@ -12,15 +13,15 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\TagRepository;
 use App\Modules\Setting\Entity\Common;
+use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\Deprecated;
-
 
 class ProductService
 {
-
     private Options $options;
     private CategoryRepository $categories;
     private TagRepository $tags;
@@ -29,7 +30,9 @@ class ProductService
     private SeriesService $seriesService;
     private StorageService $storageService;
     private Common $common_set;
+    private Parser $parser_set;
     private GroupService $groupService;
+
 
     public function __construct(
         Options            $options,
@@ -53,6 +56,7 @@ class ProductService
         $this->storageService = $storageService;
 
         $this->common_set = $settings->getCommon();
+        $this->parser_set = $settings->getParser();
         $this->groupService = $groupService;
     }
 
@@ -291,16 +295,18 @@ class ProductService
 
     public function CheckNotSale(Product $product)
     {
-        if ($product->getQuantity() == 0) {
+        if ($product->getQuantity() == 0 && $product->isSale()) {
             $product->setNotSale();
             event(new ProductHasBlocked($product));
-        } else {
-            if ($this->common_set->group_last_id > 0) {
-                /** @var Group $group */
-                $group = Group::find($this->common_set->group_last_id);
-                $this->groupService->add_product($group, $product->id);
-            }
+            return;
         }
+
+        if ($this->common_set->group_last_id > 0 && $product->getQuantity() != 0) {
+            /** @var Group $group */
+            $group = Group::find($this->common_set->group_last_id);
+            $this->groupService->add_product($group, $product->id);
+        }
+
     }
 
 
@@ -430,12 +436,54 @@ class ProductService
         $product->setPriority(true);
     }
 
-
     public function setPriorityProducts(array $codes)
     {
         foreach ($codes as $code) {
             $product = Product::where('code', trim($code))->first();
             $product->setPriority(true);
+        }
+    }
+
+    /**
+     * Расчет цены для товаров Икеа (через Парсинг)
+     * вызывать при изменении одно параметра: цена в Икеа, коэф.наценки, коэф-ты для товаров (хруп., санкцц.)
+     */
+
+    public function setCostProductIkea(int $product_id, string $founded, bool $event = true)
+    {
+        /** @var Product $product */
+        $product = Product::find($product_id);
+        if (is_null($product->parser)) {
+            Log::info('товара Икеа не имеет запись в парсере ' . $product->code);
+            return;
+        }
+        $bulk = ($product->parser->price * $this->parser_set->parser_coefficient +
+            $product->dimensions->weight() * ($product->parser->isFragile() ? $this->parser_set->cost_weight_fragile : $this->parser_set->cost_weight)) *
+            ($product->parser->isSanctioned() ? (1 + $this->parser_set->cost_sanctioned/100) : 1);
+        $retail = ceil($bulk * (1 + $this->parser_set->cost_retail / 100));
+        $retail = (int)ceil($retail / 100) * 100 - 10;
+
+        $pre = $product->parser->price * $this->parser_set->parser_coefficient;
+        $min = (int)($retail / 2);
+
+        if ($product->getPriceBulk() != $bulk)
+            $product->pricesBulk()->create(['value' => $bulk, 'founded' => $founded]);
+
+        if ($product->pricesRetail() != $retail) {
+            $product->pricesRetail()->create(['value' => $retail, 'founded' => $founded]);
+            $product->pricesMin()->create(['value' => $min, 'founded' => $founded]);
+        }
+        if ($product->pricesPre() != $pre)
+            $product->pricesPre()->create(['value' => $pre, 'founded' => $founded]);
+
+        if ($event) event(new ParserPriceHasChange($product->parser));
+    }
+
+    public function updateCostAllProductsIkea()
+    {
+        $products = Product::where('published', true)->where('not_sale', false)->pluck('id')->toArray();
+        foreach ($products as $product_id) {
+            $this->setCostProductIkea($product_id, 'Изменение коэффициентов наценки',false);
         }
     }
 }

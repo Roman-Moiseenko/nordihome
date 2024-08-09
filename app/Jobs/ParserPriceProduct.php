@@ -22,13 +22,12 @@ class ParserPriceProduct implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private float $coeff;
     private int $logger_id;
     private int $product_id;
 
-    public function __construct(int $logger_id, int $product_id, float $coeff)
+    public function __construct(int $logger_id, int $product_id)
     {
-        $this->coeff = $coeff;
+
         $this->logger_id = $logger_id;
         $this->product_id = $product_id;
     }
@@ -38,7 +37,7 @@ class ParserPriceProduct implements ShouldQueue
         /** @var Product $product */
         $product = Product::find($this->product_id);
         $logger = LoggerCron::find($this->logger_id);
-        $coeff = $this->coeff;
+
 
 
         $parser_product = ProductParser::where('product_id', $product->id)->first();
@@ -46,6 +45,8 @@ class ParserPriceProduct implements ShouldQueue
             try {
                 $parser_product_data = $serviceParser->parsingData($product->code_search);
                 $parser_product = $serviceParser->createProductParsing($product->id, $parser_product_data);
+                $serviceProduct->setCostProductIkea($product->id, 'Парсинг - ' . now());
+
             } catch (\DomainException $e) {
                 $logger->items()->create([
                     'object' => $product->code,
@@ -68,18 +69,13 @@ class ParserPriceProduct implements ShouldQueue
             //Проверка цены с таблицы Парсера
             if (!$parser_product->priceEquivalent($price)) { //Цена изменилась, уведомляем менеджера
                 $parser_product->setCost($price);
-                event(new ParserPriceHasChange($parser_product));
+                $serviceProduct->setCostProductIkea($product->id, 'Парсинг - ' . now());
             }
             //Проверка цены по предзаказу
-            if ($product->getPricePre() != ceil($price * $coeff)) {
-                //Устанавливаем цену для предзаказа
-                $product->pricesPre()->create(['value' => ceil($price * $coeff), 'founded' => 'Парсинг - ' . now()]);
-                $logger->items()->create([
-                    'object' => $product->code . ' ' . $product->name,
-                    'action' => 'Изменилась цена (' . $product->price . ')',
-                    'value' => price($price),
-                ]);
-            }
+            //TODO Расчет всех цен для товара
+
+
+
         }
     }
 

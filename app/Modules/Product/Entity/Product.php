@@ -587,7 +587,6 @@ class Product extends Model
      */
     public function getStorages(): array
     {
-
         return Storage::whereHas('items', function ($q) {
             $q->where('product_id', $this->id);
         })->getModels();

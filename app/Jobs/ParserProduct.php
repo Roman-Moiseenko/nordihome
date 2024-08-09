@@ -31,7 +31,7 @@ class ParserProduct implements ShouldQueue
     public function handle(ParserService $service): void
     {
         /** @var Product $product */
-        $product = Product::find($this->code);
+        $product = Product::where('code_search', $this->code)->first();
 
         if (is_null($product)) { //Новый товар
             $service->findProduct($this->code);

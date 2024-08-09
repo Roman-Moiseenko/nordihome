@@ -35,8 +35,6 @@
                     Заблокировать
                 @endif
             </a>
-
-
             <form id="form-fragile-{{ $parser->id }}" method="post" action="{{ route('admin.product.parser.fragile', $parser) }}">
                 @csrf
             </form>

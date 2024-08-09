@@ -36,6 +36,13 @@
                         label('Коэффициент наценки за санкционный (%)')->type('number')->show() }}
                 </div>
                 <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('cost_retail',
+                        ['placeholder' => '', 'class' => 'w-full lg:w-100', 'value' => $parser->cost_retail ])->
+                        label('Коэффициент наценки на розницу')->type('number')->show() }}
+                </div>
+
+
+                <div class="p-4 border-b">
                     {{ \App\Forms\Input::create('proxy_ip',
                         ['placeholder' => '195.20.0.20:8080', 'class' => 'w-full lg:w-100', 'value' => $parser->proxy_ip])->
                         label('Адрес прокси-сервера. Формат записи ip:port')->show() }}
