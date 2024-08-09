@@ -38,10 +38,8 @@ class ParserPriceProduct implements ShouldQueue
         $product = Product::find($this->product_id);
         $logger = LoggerCron::find($this->logger_id);
 
-
-
         $parser_product = ProductParser::where('product_id', $product->id)->first();
-        if (is_null($parser_product)) {
+        if (is_null($parser_product)) { //Товар есть, в таблице парсера нет.
             try {
                 $parser_product_data = $serviceParser->parsingData($product->code_search);
                 $parser_product = $serviceParser->createProductParsing($product->id, $parser_product_data);
@@ -53,7 +51,7 @@ class ParserPriceProduct implements ShouldQueue
                     'action' => 'Не спарсился',
                     'value' => '',
                 ]);
-                $serviceProduct->CheckNotSale($product);
+                $serviceProduct->CheckNotSale($product); //Убираем из продажи
                 return;
             } catch (\Throwable $e) {
                 event(new ThrowableHasAppeared($e));
@@ -67,15 +65,11 @@ class ParserPriceProduct implements ShouldQueue
 
         } else {
             //Проверка цены с таблицы Парсера
-            if (!$parser_product->priceEquivalent($price)) { //Цена изменилась, уведомляем менеджера
+            if (!$parser_product->priceEquivalent($price)) { //Цена изменилась
                 $parser_product->setCost($price);
                 $serviceProduct->setCostProductIkea($product->id, 'Парсинг - ' . now());
             }
-            //Проверка цены по предзаказу
-            //TODO Расчет всех цен для товара
-
-
-
+            if (!$product->isSale()) $product->setForSale(); //Цена на Икеа парсится, а товар снят с продажи, значит возвращаем
         }
     }
 
