@@ -14,6 +14,19 @@
     </div>
     <div class="grid grid-cols-12 gap-x-6 my-5">
         <div class="col-span-12 lg:col-span-4 lg:mr-20">
+            <h3 class="font-medium">Снят с продажи</h3>
+        </div>
+        <div class="col-span-12 lg:col-span-8">
+            <div class="form-check form-switch ">
+                <input id="checkbox-not_sale" class="form-check-input" type="checkbox"
+                       wire:model="not_sale" wire:change="save" wire:loading.attr="disabled">
+                <label class="form-check-label" for="checkbox-not_sale">Включить</label>
+            </div>
+
+        </div>
+    </div>
+    <div class="grid grid-cols-12 gap-x-6 my-5">
+        <div class="col-span-12 lg:col-span-4 lg:mr-20">
             <h3 class="font-medium">Приоритетный показ</h3>
         </div>
         <div class="col-span-12 lg:col-span-8">

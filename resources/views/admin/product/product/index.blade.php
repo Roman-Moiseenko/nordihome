@@ -63,6 +63,13 @@
                                     </div>
                                 </div>
 
+                                <div class="mt-3">
+                                    <div class="form-check mr-3 mt-2 sm:mt-0">
+                                        <input id="not-sale" class="form-check-input check-published" type="checkbox" name="not_sale"
+                                            {{ !is_null($filters['not_sale']) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="not-sale">Снятые с продажи</label>
+                                    </div>
+                                </div>
                                 <div class="flex items-center mt-3">
                                     <x-base.button id="clear-filter" class="w-32 ml-auto"
                                                    variant="secondary" type="button">

@@ -19,6 +19,7 @@ class Management extends Component
     public bool $offline;
     public int $frequency;
     public bool $priority;
+    public bool $not_sale;
 
     public bool $shop_pre_order;
     public bool $only_offline;
@@ -30,6 +31,7 @@ class Management extends Component
         $settings = new SettingRepository();
         $common = $settings->getCommon();
         $this->accounting = $common->accounting;
+
         $this->shop_pre_order = $common->pre_order;
         $this->only_offline = $common->only_offline;
     }
@@ -43,15 +45,18 @@ class Management extends Component
     public function refresh_fields()
     {
         $this->published = $this->product->published;
-        $this->price = $this->product->getLastPrice();
+        $this->price = $this->product->getPriceRetail();
         $this->count = $this->product->getCountSell();
 
         $this->pre_order = $this->shop_pre_order && $this->product->pre_order;
         $this->offline = $this->only_offline || $this->product->only_offline;
+        $this->not_sale = $this->product->not_sale;
 
         $this->priority = $this->product->priority;
 
         $this->frequency = $this->product->frequency;
+
+
     }
 
 
@@ -68,6 +73,7 @@ class Management extends Component
 
         $this->product->frequency = $this->frequency;
         $this->product->priority = $this->priority;
+        $this->product->not_sale = $this->not_sale;
         $this->product->save();
 
         if (!$this->product->isPublished() && $this->published) {

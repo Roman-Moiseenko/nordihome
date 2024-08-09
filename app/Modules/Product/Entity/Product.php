@@ -370,8 +370,8 @@ class Product extends Model
         //TODO Привязка к Аутентификации!!!
         if (!is_null($user = Auth::guard('user')->user())) {
             /** @var User $user */
-            if ($user->isBulk()) return $this->getPriceBulk(); //Оптовый клиент
-            if ($user->isSpecial()) return $this->getPriceSpecial(); //Спец Клиент
+            if ($user->isBulk() && $this->getPriceBulk() != 0) return $this->getPriceBulk(); //Оптовый клиент
+            if ($user->isSpecial() && $this->getPriceSpecial() != 0) return $this->getPriceSpecial(); //Спец Клиент
         }
         return $this->getPriceRetail();
     }

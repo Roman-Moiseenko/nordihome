@@ -19,6 +19,9 @@ class ParserService
     const STORE = 203; //Код магазина в стране
     const API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
     const API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks';
+
+//https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=10579401&expand=StoresList,Restocks,SalesLocations,DisplayLocations,
+
     const API_URL_PRODUCTS = 'https://sik.search.blue.cdtapps.com/pl/pl/product-list-page/more-products?category=%s&start=%s&end=%s';
 
 //https://www.ikea.com/pl/pl/catalog/products/70332124/?type=xml&dataset=normal,allImages,prices,attributes
@@ -176,6 +179,9 @@ class ParserService
     {
         $url = sprintf(self::API_URL_QUANTITY, $code);
         $json_quantity = $this->httpPage->getPage($url, '_cache');
+        if ($json_quantity == null) {
+            throw new \DomainException('Неверный артикул или ссылка 0');
+        }
         $array_quantity = json_decode($json_quantity, true);
         $result = [];
         if ($array_quantity == null)
@@ -355,6 +361,7 @@ class ParserService
     public function getProducts(string $category, int $start, int $end): array
     {
         $url = sprintf(self::API_URL_PRODUCTS, $category, $start, $end); //API для поиска товара
+
         $json_product = $this->httpPage->getPage($url, '_cache');
 
         if ($json_product == null) {

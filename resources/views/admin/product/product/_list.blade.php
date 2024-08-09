@@ -7,9 +7,17 @@
             <img class="" src="{{ $product->getImage() }}" alt="{{ $product->name }}">
         </div>
     </x-base.table.td>
-    <x-base.table.td class="text-center">{{ $product->code }}</x-base.table.td>
+    <x-base.table.td class="text-center">
+        <span class="@if(!$product->isPublished()) italic @endif @if(!$product->isSale()) text-danger @endif">
+        {{ $product->code }}
+        </span>
+    </x-base.table.td>
     <x-base.table.td class="td-with-hidden"><a href="{{ route('admin.product.edit', $product) }}"
-                                      class="font-medium whitespace-nowrap">{{ $product->name }}</a> {{ ($product->published) ? '' : '(Черновик)' }}
+                                      class="font-medium whitespace-nowrap
+   @if(!$product->isPublished()) italic @endif @if(!$product->isSale()) text-danger @endif
+">{{ $product->name }}</a>
+        {{ ($product->isPublished()) ? '' : '(Черновик)' }}
+        {{ ($product->isSale()) ? '' : '(Снят с продажи)' }}
         <div class="mt-1 fs-8 button-manage-product text-primary">
             <a class="fs-8" href="{{ route('admin.product.edit', $product) }}">Изменить</a> |
             <a class="fs-8" href="{{ route('admin.product.show', $product) }}">Статистика</a> |

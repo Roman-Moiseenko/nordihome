@@ -57,7 +57,7 @@ class ParserIkeaCommand extends Command
             $this->info('Категория ' . $category);
             $products = [];
             $start = 0;
-            $end = 5;
+            $end = 1000;
             do {
                 $this->info('старт=' . $start . ' финиш=' . $end);
                 $list = $this->service->getProducts($category, $start, $end);

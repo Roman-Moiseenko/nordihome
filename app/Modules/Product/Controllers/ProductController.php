@@ -42,6 +42,7 @@ class ProductController extends Controller
             'product' => $request['product'] ?? null,
             'category' => $request['category_id'] ?? null,
             'published' => $request['published'] ?? null,
+            'not_sale' => $request['not_sale'] ?? null,
         ];
         $_filter_count = 0;
         $_filter_text = '';
@@ -51,6 +52,7 @@ class ProductController extends Controller
                 if ($key == 'product') $_filter_text .= $item . ', ';
                 if ($key == 'category') $_filter_text .= Category::find($item)->name . ', ';
                 if ($key == 'published') $_filter_text .= $item;
+                if ($key == 'not_sale') $_filter_text .= $item;
             }
         }
         $filters['count'] = $_filter_count;

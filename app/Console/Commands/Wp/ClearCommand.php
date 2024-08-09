@@ -42,7 +42,8 @@ class ClearCommand extends Command
     {
         $this->warn('Очистка каталогов');
         Category::where('id', '>', $catalog_id)->update(['parent_id' => null]);
-        $categories = Category::where('id', '>', $catalog_id)->get();
+        $categories = Category::where('id', '>', $catalog_id)->getModels();
+        $this->info('Каталогов - ' . count($categories));
         foreach ($categories as $category) {
             $category->image->delete();
         }
@@ -54,7 +55,8 @@ class ClearCommand extends Command
     private function clear_product($product_id)
     {
         $this->warn('Очистка товаров');
-        $products = Product::where('id', '>', $product_id)->get();
+        $products = Product::where('id', '>', $product_id)->getModels();
+        $this->info('Товаров - ' . count($products));
         foreach ($products as $product) {
             foreach ($product->photos as $photo) {
                 $photo->delete();
