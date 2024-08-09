@@ -19,6 +19,22 @@
                         ['placeholder' => '', 'class' => 'w-full lg:w-100', 'value' => $parser->parser_delivery])->
                         label('Минимальная стоимость доставки')->type('number')->show() }}
                 </div>
+
+                <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('cost_weight',
+                        ['placeholder' => '', 'class' => 'w-full lg:w-100', 'value' => $parser->cost_weight])->
+                        label('Доб.стоимость товара за 1 кг веса (руб.)')->type('number')->show() }}
+                </div>
+                <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('cost_weight_fragile',
+                        ['placeholder' => '', 'class' => 'w-full lg:w-100', 'value' => $parser->cost_weight_fragile ])->
+                        label('Доб.стоимость товара за 1 кг веса для ХРУПКОГО товара (руб.)')->type('number')->show() }}
+                </div>
+                <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('cost_sanctioned',
+                        ['placeholder' => '', 'class' => 'w-full lg:w-100', 'value' => $parser->cost_sanctioned ])->
+                        label('Коэффициент наценки за санкционный (%)')->type('number')->show() }}
+                </div>
                 <div class="p-4 border-b">
                     {{ \App\Forms\Input::create('proxy_ip',
                         ['placeholder' => '195.20.0.20:8080', 'class' => 'w-full lg:w-100', 'value' => $parser->proxy_ip])->
@@ -27,7 +43,7 @@
                 <div class="p-4 border-b">
                     {{ \App\Forms\Input::create('proxy_user',
                         ['placeholder' => 'user111:p@Sw0rD', 'class' => 'w-full lg:w-100', 'value' => $parser->proxy_user])->
-                        label('Доступ к прокси-серверу. Формат записи логин:парол')->show() }}
+                        label('Доступ к прокси-серверу. Формат записи логин:пароль')->show() }}
                 </div>
 
             </div>

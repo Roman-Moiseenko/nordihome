@@ -7,6 +7,9 @@ class Parser extends AbstractSetting
 {
     public int $parser_coefficient = 0;
     public int $parser_delivery = 0;
+    public int $cost_weight = 0;
+    public int $cost_weight_fragile = 0;
+    public int $cost_sanctioned = 0;
 
     public int $parser_delivery_0 = 0;
     public int $parser_delivery_1 = 0;

@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $price //Цена в злотах
  * @property array $quantity
  * @property string $link
+ * @property bool $fragile
+ * @property bool $sanctioned
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Product $product
@@ -40,7 +42,9 @@ class ProductParser extends Model
         'price',
         'order',
         'quantity',
-        'link'
+        'link',
+        'fragile',
+        'sanctioned'
     ];
 
     public static function register(int $product_id, int $packs, float $price, array $composite, string $link): self
@@ -53,12 +57,25 @@ class ProductParser extends Model
             'quantity' => [],
             'order' => true,
             'link' => $link,
+            'fragile' => false,
+            'sanctioned' => false
         ]);
     }
+
 
     public function isBlock(): bool
     {
         return $this->order == false;
+    }
+
+    public function isFragile(): bool
+    {
+        return $this->fragile == true;
+    }
+
+    public function isSanctioned(): bool
+    {
+        return $this->sanctioned == true;
     }
 
     public function priceEquivalent($price): bool
@@ -86,7 +103,17 @@ class ProductParser extends Model
         $this->update(['order' => true]);
     }
 
+    public function toggleFragile()
+    {
+        $this->fragile = !$this->fragile;
+        $this->save();
+    }
 
+    public function toggleSanctioned()
+    {
+        $this->sanctioned = !$this->sanctioned;
+        $this->save();
+    }
 
     public function product()
     {

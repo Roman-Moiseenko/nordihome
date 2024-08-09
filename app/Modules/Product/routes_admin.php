@@ -89,7 +89,8 @@ Route::group(
         Route::get('/parser', 'ParserController@index')->name('parser.index');
         Route::get('/parser/{parser}/show', 'ParserController@show')->name('parser.show');
         Route::post('/parser/{parser}/block', 'ParserController@block')->name('parser.block');
-        Route::post('/parser/{parser}/unblock', 'ParserController@unblock')->name('parser.unblock');
+        Route::post('/parser/{parser}/fragile', 'ParserController@fragile')->name('parser.fragile');
+        Route::post('/parser/{parser}/sanctioned', 'ParserController@sanctioned')->name('parser.sanctioned');
 
         Route::resource('brand', 'BrandController'); //CRUD
         Route::resource('category', 'CategoryController'); //CRUD

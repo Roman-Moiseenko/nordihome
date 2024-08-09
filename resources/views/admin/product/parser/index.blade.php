@@ -83,16 +83,16 @@
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
-                        <x-base.table.th class="whitespace-nowrap">ИКОНКА</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap">АРТИКУЛ</x-base.table.th>
+                        <x-base.table.th class="w-10 whitespace-nowrap">ИКОНКА</x-base.table.th>
+                        <x-base.table.th class="w-32 whitespace-nowrap">АРТИКУЛ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap">ТОВАР</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">КАТЕГОРИЯ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">КОЛ-ВО ПАЧЕК</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ЦЕНА (Zl)</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ДОСТУПЕН</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">СОСТАВНОЙ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">НАЛИЧИЕ</x-base.table.th>
-                        <x-base.table.th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</x-base.table.th>
+                        <x-base.table.th class="w-32 text-center whitespace-nowrap">КАТЕГОРИЯ</x-base.table.th>
+                        <x-base.table.th class="w-25 text-center whitespace-nowrap">КОЛ-ВО ПАЧЕК</x-base.table.th>
+                        <x-base.table.th class="w-25 text-center whitespace-nowrap">ЦЕНА (Zl)</x-base.table.th>
+                        <x-base.table.th class="w-10 text-center whitespace-nowrap">ХРУП.</x-base.table.th>
+                        <x-base.table.th class="w-10 text-center whitespace-nowrap">САНК.</x-base.table.th>
+                        <x-base.table.th class="w-10 text-center whitespace-nowrap">ДОСТ.</x-base.table.th>
+                        <x-base.table.th class="w-32 text-center whitespace-nowrap">СОСТАВНОЙ</x-base.table.th>=
                     </x-base.table.tr>
                 </x-base.table.thead>
                 <x-base.table.tbody>

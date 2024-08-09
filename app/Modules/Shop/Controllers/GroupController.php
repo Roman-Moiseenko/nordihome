@@ -19,7 +19,7 @@ class GroupController extends Controller
     public function view(string $slug)
     {
         $group = $this->repository->getGroupBySlug($slug);
-        $products = $group->products()->take(18);
+        $products = $group->products;
         $title = 'Группа товаров ' . $group->name . ' | Цены снижены в интернет-магазине';
         $description = $group->description;
         return view('shop.group', compact('group', 'products', 'title', 'description'));
