@@ -7,6 +7,7 @@ use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GroupService
 {
@@ -14,8 +15,11 @@ class GroupService
     {
         $group = Group::register(
             $request->string('name')->trim()->value(),
-            $request->string('description')->trim()->value()
+            $request->string('description')->trim()->value(),
+            $request->string('slug')->trim()->value(),
+            $request->has('published')
         );
+
         $this->photo($group, $request->file('file'));
         return $group;
     }
@@ -46,10 +50,16 @@ class GroupService
 
     public function update(Request $request, Group $group): Group
     {
+        $slug = $request->string('slug')->trim()->value();
+        $name = $request->string('name')->trim()->value();
+
         $group->update([
-            'name' => $request->string('name')->trim()->value(),
+            'name' => $name,
             'description' => $request->string('description')->trim()->value(),
+            'slug' => empty($slug) ? Str::slug($name) : $slug,
+            'published' => $request->has('published')
         ]);
+
         $this->photo($group, $request->file('file'));
         return $group;
     }
@@ -69,6 +79,14 @@ class GroupService
             $group->photo()->save(Photo::upload($file));
         }
         $group->refresh();
+    }
+
+    public function publishedById(int $data_id): void
+    {
+        /** @var Group $group */
+        $group = Group::find($data_id);
+        $group->published = true;
+        $group->save();
     }
 
 }

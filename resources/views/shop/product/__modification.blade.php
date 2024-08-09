@@ -8,7 +8,7 @@
                          alt="{{ $_product->photo->alt }}">
                 @else
                     <a href="{{ route('shop.product.view', $_product->slug) }}"
-                       title="{{ $_product->name }}">
+                       title="{{ ($_product->isSale() ? '' : 'Снят с продажи! ') . $_product->name }}">
                         <img src="{{ $_product->photo->getThumbUrl('thumb') }}"
                              alt="{{ $_product->photo->alt }}">
                     </a>

@@ -26,7 +26,6 @@
                 selectId.tomselect.clear();
                 selectId.tomselect.clearOptions();
                 //Заполнение selectId
-
                 for (let id in ids) {
                     if(Number(id) === Number(data_id)) {
                         selectId.appendChild(new Option(ids[id], id, true, true));
@@ -36,6 +35,7 @@
                 }
                 selectId.tomselect.sync();
             } else {
+                //console.log(request.responseText);
             }
         };
     }

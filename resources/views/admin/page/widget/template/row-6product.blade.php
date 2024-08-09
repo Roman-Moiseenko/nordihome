@@ -1,5 +1,7 @@
 <div class="container-xl shop-home-widget">
-    <h2 class="fs-4">{{ $widget->title }}</h2>
+    <a href="{{ $widget->url }}" title="{{ $widget->title }}">
+        <h2 class="fs-4">{{ $widget->title }}</h2>
+    </a>
     <div class="row list-mini-widget">
         @foreach($widget->items as $item)
             <div class="col-lg-2">
@@ -9,7 +11,6 @@
                         <span class="price">{{ price($item['price']) }}</span>
                     </div>
                 </a>
-
             </div>
         @endforeach
     </div>

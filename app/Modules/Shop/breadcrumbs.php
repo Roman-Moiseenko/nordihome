@@ -69,7 +69,13 @@ Breadcrumbs::for('shop.parser.view', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('shop.promotion.view', function (BreadcrumbTrail $trail, $slug) {
     $promotion = (new ShopRepository())->getPromotionBySlug($slug);
     $trail->parent('shop.home');
-    $trail->push($promotion->title, route('shop.promotion.view', $slug));
+    $trail->push('Акция ' . $promotion->title, route('shop.promotion.view', $slug));
+});
+
+Breadcrumbs::for('shop.group.view', function (BreadcrumbTrail $trail, $slug) {
+    $group = (new ShopRepository())->getGroupBySlug($slug);
+    $trail->parent('shop.home');
+    $trail->push('Группа товаров ' . $group->name, route('shop.group.view', $slug));
 });
 
 Breadcrumbs::for('errors.404', function (BreadcrumbTrail $trail) {

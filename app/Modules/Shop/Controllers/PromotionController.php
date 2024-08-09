@@ -21,7 +21,7 @@ class PromotionController extends Controller
     public function view(string $slug)
     {
         $promotion = $this->repository->getPromotionBySlug($slug);
-        $products = $promotion->products();
+        $products = $promotion->products;
         $title = 'Акция ' . $promotion->title . ' | Цены снижены в интернет-магазине';
         $description = $promotion->description;
         return view('shop.promotion', compact('promotion', 'products', 'title', 'description'));

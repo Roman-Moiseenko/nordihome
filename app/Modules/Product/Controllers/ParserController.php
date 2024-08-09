@@ -5,30 +5,29 @@ namespace App\Modules\Product\Controllers;
 
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
+use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Repository\ParserRepository;
 use App\Modules\Shop\Parser\ProductParser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
 class ParserController extends Controller
 {
-    public function __construct()
+    private ParserRepository $repository;
+
+    public function __construct(ParserRepository $repository)
     {
         $this->middleware(['auth:admin', 'can:product']);
+        $this->repository = $repository;
     }
 
     public function index(Request $request)
     {
-        $published = $request['published'] ?? 'all';
-
-        $query = ProductParser::orderBy('created_at');
-        if ($published == 'active') $query->whereHas('product', function ($q) {
-            $q->where('published', '=', true);
-        });
-        if ($published == 'draft') $query->whereHas('product', function ($q) {
-            $q->where('published', '=', false);
-        });
+        $categories = Category::defaultOrder()->withDepth()->get();
+        $query = $this->repository->getFilter($request, $filters);
         $parsers = $this->pagination($query, $request, $pagination);
-        return view('admin.product.parser.index', compact('parsers', 'pagination', 'published'));
+
+        return view('admin.product.parser.index', compact('parsers', 'pagination', 'categories', 'filters'));
     }
 
 

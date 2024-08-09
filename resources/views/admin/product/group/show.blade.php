@@ -13,6 +13,7 @@
         <x-searchAddProduct route-save="{{ route('admin.product.group.add-product', $group) }}" width="100"
                             published="1" caption="Добавить товар в группу"/>
         <x-listCodeProducts route="{{ route('admin.product.group.add-products', $group) }}" caption-button="Добавить товары в группу" class="ml-3"/>
+        <a class="btn btn-primary ml-auto" href="{{ route('admin.product.group.edit', $group) }}">Редактировать</a>
     </div>
 
     @foreach($group->products as $product)

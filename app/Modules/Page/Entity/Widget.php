@@ -23,8 +23,8 @@ class Widget extends Model
         'Акция' => Promotion::class,
         'Группа товаров' => Group::class,
         //'Товар' => Product::class,
-        'Банер (В разработке)' => '1',
-        'Карта (В разработке)' => '2'
+      //  'Банер (В разработке)' => '1',
+     //   'Карта (В разработке)' => '2'
     ];
 
     const WIDGET_TEMPLATES = [

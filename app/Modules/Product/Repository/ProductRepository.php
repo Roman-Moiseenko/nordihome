@@ -4,7 +4,9 @@
 namespace App\Modules\Product\Repository;
 
 
+use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProductRepository
@@ -77,10 +79,30 @@ class ProductRepository
     }
 
 
-    public function getFilter(array $filters)
+    public function getFilter(Request $request, &$filters)
     {
 
-        //$published = $request['published'] ?? 'all';
+        $filters = [
+            'product' => $request['product'] ?? null,
+            'category' => $request['category_id'] ?? null,
+            'published' => $request['published'] ?? null,
+            'not_sale' => $request['not_sale'] ?? null,
+        ];
+        $_filter_count = 0;
+        $_filter_text = '';
+        foreach ($filters as $key => $item) {
+            if (!is_null($item)) {
+                $_filter_count++;
+                if ($key == 'product') $_filter_text .= $item . ', ';
+                if ($key == 'category') $_filter_text .= Category::find($item)->name . ', ';
+                if ($key == 'published') $_filter_text .= $item;
+                if ($key == 'not_sale') $_filter_text .= $item;
+            }
+        }
+        $filters['count'] = $_filter_count;
+        $filters['text'] = $_filter_text;
+
+
         $query = Product::orderBy('name');
         $product = $filters['product'];
 

@@ -8,11 +8,14 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\DataWidget;
 use App\Modules\Page\Entity\DataWidgetInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
  * @property string $name
+ * @property string $slug
+ * @property bool $published
  * @property string $description
  * @property Photo $photo
  * @property Product[] $products
@@ -22,21 +25,32 @@ class Group extends Model implements DataWidgetInterface
 {
     public $timestamps = false;
 
-    protected $fillable = [
-        'name', 'description',
+    protected $attributes = [
+        'published' => false,
     ];
 
-    public static function register(string $name, string $description = ''): static
+    protected $fillable = [
+        'name', 'description', 'slug', 'published'
+    ];
+
+    public static function register(string $name, string $description = '', string $slug = '', bool $published = false): static
     {
         return static::create([
             'name' => $name,
             'description' => $description,
+            'slug' => empty($slug) ? Str::slug($name) : $slug,
+            'published' => $published,
         ]);
+    }
+
+
+    public function setVisible(array $visible)
+    {
     }
 
     public function photo()
     {
-        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->withDefault();
+        return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
 
     #[Deprecated]
@@ -73,6 +87,7 @@ class Group extends Model implements DataWidgetInterface
     public function getDataWidget(array $params = []): DataWidget
     {
         $data = new DataWidget();
+        if (!empty($this->slug)) $data->url = route('shop.group.view', $this->slug);
         $data->image = $this->photo;
         $data->title = $this->name;
         $data->items = array_map(function (Product $product) {

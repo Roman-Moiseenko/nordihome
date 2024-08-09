@@ -4,8 +4,11 @@
             <img class="rounded-full" src="{{ $parser->product->getImage() }}" alt="{{ $parser->product->name }}">
         </div>
     </x-base.table.td>
+    <x-base.table.td class="text-center">{{ $parser->product->code }}</x-base.table.td>
     <x-base.table.td class="w-40"><a href="{{ route('admin.product.edit', $parser->product) }}"
                                       class="font-medium whitespace-nowrap">{{ $parser->product->name }}</a> {{ ($parser->product->published) ? '' : '(Черновик)' }}</x-base.table.td>
+
+
     <x-base.table.td class="text-center">{{ $parser->product->category->name }}</x-base.table.td>
     <x-base.table.td class="w-40 text-center">{{ $parser->packs }}</x-base.table.td>
     <x-base.table.td class="w-40 text-center">{{ $parser->price }}</x-base.table.td>

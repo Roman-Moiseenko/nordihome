@@ -5,20 +5,33 @@ namespace App\Modules\Page\Service;
 
 use App\Modules\Page\Entity\DataWidgetInterface;
 use App\Modules\Page\Entity\Widget;
+use App\Modules\Product\Entity\Group;
+use App\Modules\Product\Service\GroupService;
 use Illuminate\Http\Request;
 
 class WidgetService
 {
+    private GroupService $groupService;
+
+    public function __construct(GroupService $groupService)
+    {
+        $this->groupService = $groupService;
+    }
 
     public function create(Request $request)
     {
-        return Widget::register(
+        $widget = Widget::register(
             $request->string('name')->trim()->value(),
             $request->string('data_class')->trim()->value(),
             $request->integer('data_id'),
             $request->string('template')->trim()->value(),
             $request['params'] ?? [],
         );
+
+        if ($widget->data_class == Group::class)
+            $this->groupService->publishedById($widget->data_id);
+
+        return $widget;
     }
 
     public function update(Request $request, Widget $widget)

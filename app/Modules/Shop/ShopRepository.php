@@ -11,6 +11,7 @@ use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeProduct;
 use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Tag;
 use App\Modules\Setting\Entity\Web;
@@ -515,6 +516,11 @@ class ShopRepository
             ];
         }
         return $productAttributes;
+    }
+
+    public function getGroupBySlug(string $slug): Group
+    {
+        return Group::where('slug', $slug)->firstOrFail();
     }
 
 }
