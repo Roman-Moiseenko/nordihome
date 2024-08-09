@@ -40,24 +40,30 @@
                     </div>
                     <div class="price-brand-block">
                         <div class="view-price">
-                        @if(!$product->hasPromotion())
-                            @if($product->getPreviousPrice() > $product->getLastPrice())
-                                <div class="comment">* Цена на товар снижена</div>
-                                <span class="discount-price">{{ price($product->getLastPrice()) }}</span>
-                                <span class="base-price">{{ price($product->getPreviousPrice()) }}</span>
+                            @if($product->isSale())
+                                @if(!$product->hasPromotion())
+                                    @if($product->getPreviousPrice() > $product->getLastPrice())
+                                        <div class="comment">* Цена на товар снижена</div>
+                                        <span class="discount-price">{{ price($product->getLastPrice()) }}</span>
+                                        <span class="base-price">{{ price($product->getPreviousPrice()) }}</span>
+                                    @else
+                                        {{ price($product->getLastPrice()) }}
+                                    @endif
+                                @else
+                                    <div class="comment">* Цена по акции {{ $product->promotion()->title }}</div>
+                                    <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span>
+                                    <span class="base-price">{{ price($product->getLastPrice()) }}</span>
+                                @endif
                             @else
                                 {{ price($product->getLastPrice()) }}
                             @endif
-                        @else
-                            <div class="comment">* Цена по акции {{ $product->promotion()->title }}</div>
-                            <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span>
-                            <span class="base-price">{{ price($product->getLastPrice()) }}</span>
-                        @endif
                         <div class="count-product">
-                            @if($product->getCountSell() > 0)
-                                Товар в наличии
-                            @else
-                                Только под заказ
+                            @if($product->isSale())
+                                @if($product->getCountSell() > 0)
+                                    Товар в наличии
+                                @else
+                                    Только под заказ
+                                @endif
                             @endif
                         </div>
                     </div>
@@ -71,12 +77,16 @@
                         </div>
                     </div>
                     <div class="product-card-to-cart">
+                        @if($product->isSale())
                         <button class="to-cart btn btn-dark" data-product="{{ $product->id }}">В Корзину</button>
                         <button class="one-click btn btn-outline-dark"
                                 data-product="{{ $product->id }}" type="button" data-bs-toggle="modal" data-bs-target="#buy-click"
                                 onclick="document.getElementById('one-click-product-id').value={{$product->id}};"
                         >В 1 Клик!
                         </button>
+                        @else
+                            <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
+                        @endif
                     </div>
                     @include('shop.product.__modification', ['modification' => $product->modification, 'current_id' => $product->id])
                     @include('shop.product.__related', ['related' => $product->related])

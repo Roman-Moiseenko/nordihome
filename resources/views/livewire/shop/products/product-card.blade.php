@@ -44,13 +44,18 @@
                    title="{{ $product->name }}">{{ $product->name }}</a>
             </div>
             <div class="product-card-info">
-                @if(!$product->hasPromotion())
-                    {{ price($product->getLastPrice()) }}
+                @if($product->isSale())
+                    @if(!$product->hasPromotion())
+                        {{ price($product->getLastPrice()) }}
+                    @else
+                        <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span><span class="base-price">{{ price($product->getLastPrice()) }}</span>
+                    @endif
                 @else
-                    <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span><span class="base-price">{{ price($product->getLastPrice()) }}</span>
+                    {{ price($product->getLastPrice()) }}
                 @endif
             </div>
             <div class="product-card-to-cart">
+                @if($product->isSale())
                 <button type="button" class="btn btn-dark" data-product="{{ $product->id }}" wire:click="to_cart" wire:loading.class="loading" wire:loading.attr="disabled">
                     <span class="hide-load">В Корзину</span>
                     <span class="show-load"><i class="fa-sharp fa-light fa-loader"></i></span>
@@ -59,6 +64,9 @@
                         data-product="{{ $product->id }}" type="button" data-bs-toggle="modal" data-bs-target="#buy-click"
                         onclick="document.getElementById('one-click-product-id').value={{$product->id}};"
                 >В 1 Клик!</button>
+                @else
+                    <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
+                @endif
             </div>
         </div>
 </div>

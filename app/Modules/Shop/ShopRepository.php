@@ -200,6 +200,8 @@ class ShopRepository
     {
 
         $query = Product::where('published', true);
+        //TODO Показывать товары снятые с продажи?
+        // $query->where('not_sale', false);
 
         $query->where(function ($_query) use ($id) {
             $_query->where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {

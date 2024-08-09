@@ -76,11 +76,12 @@ class Management extends Component
         $this->product->not_sale = $this->not_sale;
         $this->product->save();
 
+        //dd([!$this->product->isPublished() , $this->published]);
         if (!$this->product->isPublished() && $this->published) {
 
             $service = app()->make('\App\Modules\Product\Service\ProductService');
             $service->published($this->product);
-        } else {
+        } elseif ($this->product->isPublished() && !$this->published) {
             $this->product->published = false;
             $this->product->save();
         }
