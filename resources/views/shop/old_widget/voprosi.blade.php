@@ -1,5 +1,5 @@
 <div class="knopki-2">
-    <a href="{{ route('shop.catalog.index') }}" class=""><h2
+    <a href="{{ route('shop.category.index') }}" class=""><h2
             class="">КАТАЛОГ ТОВАРОВ В НАЛИЧИИ</h2></a>
     <a href="{{ route('shop.parser.view') }}" class="">
         <h2 class="">ВСЕ ТОВАРЫ ИКЕА ПОД ЗАКАЗ ИЗ ЕВРОПЫ</h2></a></div>

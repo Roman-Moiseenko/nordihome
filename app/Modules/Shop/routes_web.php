@@ -32,7 +32,7 @@ Route::group(
         });
 
         Route::group([
-            'as' => 'catalog.',
+            'as' => 'category.',
             'prefix' => 'catalog',
         ], function () {
             Route::post('/search', 'CatalogController@search')->name('search');
