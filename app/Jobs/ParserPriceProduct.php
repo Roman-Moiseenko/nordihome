@@ -72,12 +72,12 @@ class ParserPriceProduct implements ShouldQueue
             if (!$product->isSale()) $product->setForSale(); //Цена на Икеа парсится, а товар снят с продажи, значит возвращаем
         }
     }
-
+/*
     public function isIkea($code, $code_search): bool
     {
         if (strlen($code) != 10) return false;
         if (strlen($code_search) != 8) return false;
         if (!is_numeric($code_search)) return false;
         return true;
-    }
+    }*/
 }

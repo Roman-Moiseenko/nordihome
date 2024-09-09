@@ -28,7 +28,6 @@ use JetBrains\PhpStorm\Deprecated;
  * @property bool $published //Опубликовать из черновиков. Опубликованные запускаются автоматически по Cron-у
  * @property bool $active // по Cron if ($start_at > time() && $published) $active = true;
  * @property string $slug  //По title, если существует, добавляем год
- * @property Group[] $groups
  * @property int $discount
  * @property Product[] $products
  */

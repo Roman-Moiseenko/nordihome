@@ -100,7 +100,8 @@ class OrderController extends Controller
     public function create_click(Request $request)
     {
         $order = $this->service->create_click($request);
-        return redirect()->route('cabinet.order.view', $order)->with('success', 'Ваш заказ успешно создан!');
+        //->route('cabinet.order.view', $order)
+        return redirect()->back()->with('success', 'Ваш заказ успешно создан!');
     }
 
     public function store_parser(Request $request)

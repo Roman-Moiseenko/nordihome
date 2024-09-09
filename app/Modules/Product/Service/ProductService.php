@@ -469,11 +469,11 @@ class ProductService
         if ($product->getPriceBulk() != $bulk)
             $product->pricesBulk()->create(['value' => $bulk, 'founded' => $founded]);
 
-        if ($product->pricesRetail() != $retail) {
+        if ($product->getPriceRetail() != $retail) {
             $product->pricesRetail()->create(['value' => $retail, 'founded' => $founded]);
             $product->pricesMin()->create(['value' => $min, 'founded' => $founded]);
         }
-        if ($product->pricesPre() != $pre)
+        if ($product->getPricePre() != $pre)
             $product->pricesPre()->create(['value' => $pre, 'founded' => $founded]);
 
         if ($event) event(new ParserPriceHasChange($product->parser));

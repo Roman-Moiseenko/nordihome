@@ -74,13 +74,12 @@ Route::group(
         Route::get('/register/verify', 'RegisterController@verify')->name('register.verify');
         Route::get('/register', 'RegisterController@showRegistrationForm')->name('register');
         Route::post('/register', 'RegisterController@register');
-
-
+        
         Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
         Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
         Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
         Route::get('/password/confirm', 'ConfirmPasswordController@showConfirmForm')->name('password.confirm');
         Route::post('/password/confirm', 'ConfirmPasswordController@confirm');
-        Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+        Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
     }
 );

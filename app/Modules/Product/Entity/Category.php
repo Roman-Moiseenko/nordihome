@@ -16,8 +16,8 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property string $slug
  * @property string $title
  * @property string $description
- * @property \App\Modules\Base\Entity\Photo $image
- * @property \App\Modules\Base\Entity\Photo $icon
+ * @property Photo $image
+ * @property Photo $icon
  * @property Category $parent
  * @property Category[] $children
  * @property Attribute[] $prod_attributes
@@ -66,12 +66,12 @@ class Category extends Model
 
     public function image()
     {
-        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->where('type', '=','image')->withDefault();
+        return $this->morphOne(Photo::class, 'imageable')->where('type', '=','image')->withDefault();
     }
 
     public function icon()
     {
-        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
+        return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
     }
 
     public function getImage(): string

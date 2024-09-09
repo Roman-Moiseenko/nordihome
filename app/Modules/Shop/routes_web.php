@@ -8,18 +8,16 @@ Route::get('/sitemap.xml', 'SitemapXmlController@index')->name('sitemap');
 Route::group(
     [
         'as' => 'shop.',
-        //'namespace' => 'App\Http\Controllers\Shop',
         'middleware' => ['user_cookie_id'],
     ],
     function () {
 
         Route::get('/', 'HomeController@index')->name('home');
-        //Route::post('/review', 'ReviewController@index')->name('review');
         Route::get('/shop/{old_slug}', 'ProductController@old_slug');
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
         Route::post('/page/map', 'PageController@map_data')->name('page.map');
-        //Route::put('/page/email', 'PageController@email')->name('page.email');
+
         Route::group([
             'as' => 'product.',
             'prefix' => 'product',
@@ -33,13 +31,16 @@ Route::group(
             Route::get('/review/{review}', 'ProductController@review')->name('review.show');
         });
 
-        Route::post('/catalog/search', 'CatalogController@search')->name('category.search');
-        Route::get('/catalog', 'CatalogController@index')->name('category.index');
-        Route::get('/catalog/{slug}', 'CatalogController@view')->name('category.view');
-
+        Route::group([
+            'as' => 'catalog.',
+            'prefix' => 'catalog',
+        ], function () {
+            Route::post('/search', 'CatalogController@search')->name('search');
+            Route::get('/{slug}', 'CatalogController@view')->name('view');
+            Route::get('/', 'CatalogController@index')->name('index');
+        });
 
         Route::get('/cart', 'CartController@view')->name('cart.view');
-
 
 
         Route::get('/promotion/{slug}', 'PromotionController@view')->name('promotion.view');

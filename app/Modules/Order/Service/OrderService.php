@@ -271,7 +271,7 @@ class OrderService
                     $password = Str::random(8);
                     $user = User::register($email, $password);
                     $user->setPhone($request->string('phone')->trim()->value());
-                    event(new UserHasCreated($user));
+                    //event(new UserHasCreated($user));
                 }
             }
 
