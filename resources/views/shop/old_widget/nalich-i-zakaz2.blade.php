@@ -1,6 +1,6 @@
 <div class="main-catalog-mini nalich-i-zakaz2">
     <div class="">
-        <a href="{{ route('shop.category.index') }}" class="c-mini-item">
+        <a href="{{ route('shop.catalog.index') }}" class="c-mini-item">
             <img src="/images/pages/home/t-nalichie-1-min.jpg" alt="Товары Икеа в наличии">
             <div class="heading">Товары в наличии</div>
         </a>
