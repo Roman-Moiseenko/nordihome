@@ -441,11 +441,18 @@ class OrderService
      * @param int $quantity
      * @return Order
      */
-    public function add_product(Order $order, int $product_id, int $quantity): Order
+    public function add_product(Order $order, int $product_id, int $quantity, bool $preorder = false): Order
     {
         /** @var Product $product */
         $product = Product::find($product_id);
-        $quantity_preorder = 0;
+        //По предзаказу
+        if ($preorder) {
+            $quantity_preorder = $quantity;
+            $quantity = 0;
+        } else {
+            $quantity_preorder = 0;
+        }
+
         if ($product->getCountSell() <= $quantity) {
             $quantity_preorder = $quantity - $product->getCountSell(); //По предзаказу
             $quantity = $product->getCountSell(); //в наличии

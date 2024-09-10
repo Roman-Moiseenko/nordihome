@@ -5,6 +5,7 @@
 
             let selectProductId = 0;
             let inputQuantity = $(this).find("#input-quantity-component");
+            let inputPreorder = $(this).find("#input-preorder-component");
             let buttonSend = $(this).find("#button-send-component");//document.getElementById('');
             let route = $(this).find("#data").data('route');//  document.getElementById('data').dataset.route;
             let parser = $(this).find("#data").data('parser');//document.getElementById('data').dataset.parser;
@@ -93,16 +94,18 @@
             buttonSend.on('click', function () {
                 let routeAdd = buttonSend.data('route');
                 let eventAdd = buttonSend.data('event');
-                let quantity = 0;
+                let quantity = 0; let preorder = null;
                 if (inputQuantity !== null) quantity = inputQuantity.val();
+                if (inputPreorder !== null) preorder = inputPreorder.is(':checked');
                 if (selectProductId !== 0) {
-                    if (routeAdd !== '') send_route(routeAdd, quantity);
-                    if (eventAdd !== '') send_event(eventAdd, quantity);
+                    if (routeAdd !== '') send_route(routeAdd, quantity, preorder);
+                    if (eventAdd !== '') send_event(eventAdd, quantity, preorder);
                 }
             });
 
-            function send_route(routeAdd, quantity) {
+            function send_route(routeAdd, quantity, preorder) {
                 let _params = '_token=' + token + '&product_id=' + selectProductId + '&quantity=' + quantity;
+                if (preorder !== null) _params = _params + '&preorder=' + preorder;
                 let request = new XMLHttpRequest();
                 request.open('POST', routeAdd);
                 request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -114,23 +117,19 @@
                 };
             }
 
-            function send_event(eventAdd, quantity) {
+            function send_event(eventAdd, quantity, preorder) {
                 window.Livewire.dispatch(
                     eventAdd,
                     {
                         product_id: selectProductId,
                         quantity: quantity,
+                        preorder: preorder,
                     }
                 );
                 window.Livewire.on('clear-search-product', (event) => {
                     selectTom.clearOptions();
                     selectTom.clear();
                 });
-                //TODO Заменить и Удалить Протестировать
-            /*    window.Livewire.on('update-amount-order', (event) => {
-                    selectTom.clearOptions();
-                    selectTom.clear();
-                });*/
             }
         });
 })();

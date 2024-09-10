@@ -44,10 +44,11 @@ class Items extends Component
     }
 
     #[On('add-product')]
-    public function add_item($product_id, $quantity)
+    public function add_item($product_id, $quantity, $preorder)
     {
+
         if (!is_numeric($product_id)) throw new \DomainException('Что-то пошло не так, обновите страницу');
-        $this->service->add_product($this->order, (int)$product_id, (int)$quantity);
+        $this->service->add_product($this->order, (int)$product_id, (int)$quantity, $preorder);
         $this->refresh_fields();
         $this->dispatch('update-amount-order');
         $this->dispatch('clear-search-product');

@@ -16,7 +16,10 @@
                     @if($order->isParser())
                         <x-searchAddParser event="add-parser" quantity="1" width="100"/>
                     @else
-                        <x-searchAddProduct event="add-product" quantity="1" parser="1" width="100" show-stock="1" published="1" caption="Добавить товар"/>
+                        <x-searchAddProduct event="add-product"
+                                            quantity="1" parser="1" width="100"
+                                            show-stock="1" published="1" preorder="1"
+                                            caption="Добавить товар"/>
                     @endif
                 </div>
                 <livewire:admin.order.manager.items :order="$order"/>

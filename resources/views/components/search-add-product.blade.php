@@ -8,6 +8,12 @@
     @if($quantity)
         <input id="input-quantity-component" class="form-control w-20 ml-2" type="number" value="1" min="1" autocomplete="off">
     @endif
+    @if($preorder)
+        <div class="flex items-center">
+            <input id="input-preorder-component" class="form-check-input w-4 ml-2 mr-1" type="checkbox" autocomplete="off">
+            <label for="input-preorder-component" class="cursor-pointer">Под заказ</label>
+        </div>
+    @endif
     <button id="button-send-component" class="btn btn-primary @if($column) mt-2 @else ml-2 @endif" type="button" data-route="{{ $route }}"
             data-event="{{ $event }}">{{ $caption }}
     </button>

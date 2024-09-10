@@ -54,11 +54,11 @@
             </form>
         </div>
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <button data-tw-toggle="modal" data-tw-target="#modal-create-order" class="btn btn-primary shadow-md mr-2"
+            <button data-tw-toggle="modal" data-tw-target="#modal-create-order" class="btn btn-primary shadow-md mr-2" style="display: none"
                     type="button">Создать заказ
             </button>
             <button class="btn btn-primary shadow-md mr-2"
-                    type="button" onclick="event.preventDefault(); document.getElementById('form-create-order').submit()">Создать заказ*
+                    type="button" onclick="event.preventDefault(); document.getElementById('form-create-order').submit()">Создать заказ
             </button>
             <form id="form-create-order" method="post" action="{{ route('admin.order.store') }}">
                 @csrf
