@@ -57,6 +57,13 @@
             <button data-tw-toggle="modal" data-tw-target="#modal-create-order" class="btn btn-primary shadow-md mr-2"
                     type="button">Создать заказ
             </button>
+            <button class="btn btn-primary shadow-md mr-2"
+                    type="button" onclick="event.preventDefault(); document.getElementById('form-create-order').submit()">Создать заказ*
+            </button>
+            <form id="form-create-order" method="post" action="{{ route('admin.order.store') }}">
+                @csrf
+            </form>
+
             {{ $orders->links('admin.components.count-paginator') }}
 
             <!-- Фильтр -->

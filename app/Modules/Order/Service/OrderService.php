@@ -314,6 +314,9 @@ class OrderService
     public function create_sales(array $request): Order
     {
         DB::transaction(function () use ($request, &$order) {
+
+            //TODO Найти или создать клиента по phone и/или email
+            /*
             if (empty($request['user_id'])) {//1. Пользователь новый.
                 $password = Str::random(8); /// регистрируем его и отправляем ему письмо, со ссылкой верификации
                 $user = User::register($request['email'], $password);
@@ -324,12 +327,16 @@ class OrderService
                 $user = User::find((int)$request['user_id']);
                 //Обновить Имя
                 $user->setNameField(firstname: $request['name']);
-            }
+            }*/
+           /*
             if (isset($request['parser'])) {
                 $order = Order::register($user->id, Order::PARSER); //Создаем пустой заказ
             } else {
                 $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
             }
+            */
+            $order = Order::register(null, Order::MANUAL); //Создаем пустой заказ
+
             /** @var Admin $staff */
             $staff = Auth::guard('admin')->user();
             $order->setStatus(OrderStatus::SET_MANAGER);

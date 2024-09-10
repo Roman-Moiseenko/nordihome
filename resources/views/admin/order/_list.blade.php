@@ -3,7 +3,16 @@
     <x-base.table.td class=""><a href="{{ route('admin.order.show', $order) }}" class="font-medium text-success">{{ $order->htmlNum() }}</a></x-base.table.td>
     <x-base.table.td class=""><a href="{{ route('admin.order.show', $order) }}" class="font-medium text-success">{{ $order->htmlShortDate() }}</a></x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->getNameManager(true) }}</x-base.table.td>
-    <x-base.table.td class="text-center"><a href="{{ route('admin.user.show', $order->user) }}">{{ $order->user->email }}</a></x-base.table.td>
+    <x-base.table.td class="text-center">
+        @if(!is_null($order->user_id))
+            <a href="{{ route('admin.user.show', $order->user) }}">
+                {{ $order->user->getPublicName() }}<br>
+                {{ phone($order->user->phone) }}
+            </a>
+        @else
+            Гость
+        @endif
+    </x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->getType() }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->getQuantity() }} шт.</x-base.table.td>
     <x-base.table.td class="text-center">{{ price($order->getTotalAmount()) }}</x-base.table.td>

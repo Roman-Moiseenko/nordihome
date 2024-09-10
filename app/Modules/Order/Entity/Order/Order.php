@@ -87,7 +87,7 @@ class Order extends Model
         'coupon_amount' => 'float',
     ];
 
-    public static function register(int $user_id, int $type = self::ONLINE): self
+    public static function register(int|null $user_id, int $type = self::ONLINE): self
     {
         $order = self::create([
             'user_id' => $user_id,
@@ -585,7 +585,13 @@ class Order extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this
+            ->belongsTo(User::class, 'user_id', 'id')
+            ->withDefault(function (User $user) {
+                $user->fullname->surname = 'Не установлен';
+                $user->email = null;
+                $user->phone = '';
+            });
     }
 
     public function additions()

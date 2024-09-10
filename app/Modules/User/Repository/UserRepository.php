@@ -7,6 +7,7 @@ use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 
 class UserRepository
@@ -74,5 +75,37 @@ class UserRepository
             'count' => $user->orders()->count(),
             'amount' => price($user->getAmountOrders())
         ];
+    }
+
+    public function findOrCreate(string $phone = null, string $email = null): User
+    {
+        if (empty($phone) && empty($email)) throw new \DomainException('Должен быть заполнен хотя бы один параметр');
+
+        if (!empty($phone)) {
+            if (is_null($user = User::where('phone', $phone)->get())) {
+                $user = User::create([
+                    'phone' => $phone,
+                    'email' => $email,
+                    'password' => Str::random(8),
+                ]);
+            }
+            return $user;
+        }
+
+        if (!empty($email)) {
+
+            if (is_null($user = User::where('email', $email)->get())) {
+                $user = User::create([
+                    'phone' => $phone,
+                    'email' => $email,
+                    'password' => Str::random(8),
+                ]);
+            }
+            return $user;
+
+        }
+
+        throw new \DomainException('Что-то пошло не так');
+
     }
 }

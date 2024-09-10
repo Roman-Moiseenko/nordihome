@@ -211,6 +211,13 @@ class User extends Authenticatable
         if ($this->legal) return $this->document_name;
         return 'Без договора';
     }
+
+    public function getPublicName(): string
+    {
+        //TODO Если Юр.лицо выводим ИНН, Название
+
+        return $this->fullname->getFullName();
+    }
     //RELATIONS
 
     public function orders()

@@ -73,11 +73,8 @@ class OrderController extends Controller
             if (!is_null($item)) $_filter_count++;
         }
         $filters['count'] = $_filter_count;
-
-
         $staff_id = (int)$request['staff_id'] ?? 0;
         $filter_count = $this->repository->getFilterCount();
-
         //Фильтр
         if ($request->has('search')) {
             //Доп фильтр
@@ -117,7 +114,9 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $order = $this->orderService->create_sales($request->only(['user_id', 'email', 'phone', 'name', 'parser']));
+
+        //$order = $this->orderService->create_sales($request->only(['user_id', 'email', 'phone', 'name', 'parser']));
+        $order = $this->orderService->create_sales([]);
         return redirect()->route('admin.order.show', $order);
     }
 
