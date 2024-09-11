@@ -297,8 +297,9 @@ class ProductService
     {
         if ($product->orderItems()->count()) {
             $product->setDraft(); //throw new \DomainException('Товар в заказах. Удалить нельзя');
+        } else {
+            $product->delete();
         }
-        $product->delete();
         //TODO При удалении, удалять все связанные файлы Фото и Видео
 
     }

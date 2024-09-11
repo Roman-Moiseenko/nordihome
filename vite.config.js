@@ -120,6 +120,7 @@ export default defineConfig({
                 'resources/js/components/list-code-products.js',
                 'resources/css/components/_list-code-products.css',
                 'resources/js/components/search-add-product.js',
+                'resources/js/components/create-add-product.js',
 
 
             ],

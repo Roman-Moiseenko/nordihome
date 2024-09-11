@@ -129,9 +129,15 @@ class ProductController extends Controller
 
     public function action(Request $request)
     {
-        $data = json_decode($request['data'], true);
-        $this->service->action($data['action'], $data['ids']);
-        return \response()->json(true);
+        //return \response()->json(['error' => $request['data']]);
+        try {
+            $data = json_decode($request['data'], true);
+            $this->service->action($data['action'], $data['ids']);
+            return \response()->json(true);
+        } catch (\Throwable $e) {
+            return \response()->json(['error' => $e->getMessage()]);
+        }
+
     }
 
     public function search(Request $request)
