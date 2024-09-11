@@ -445,15 +445,15 @@ class OrderService
     {
         /** @var Product $product */
         $product = Product::find($product_id);
+        $quantity_preorder = 0;
         //По предзаказу
-        if ($preorder) {
+        if ($preorder == true) {
             $quantity_preorder = $quantity;
             $quantity = 0;
-        } else {
-            $quantity_preorder = 0;
         }
 
-        if ($product->getCountSell() <= $quantity) {
+
+        if ($quantity > 0 && $product->getCountSell() <= $quantity) {
             $quantity_preorder = $quantity - $product->getCountSell(); //По предзаказу
             $quantity = $product->getCountSell(); //в наличии
         }
@@ -474,6 +474,7 @@ class OrderService
             $orderItemPre->setCost($last_price, $pre_price);
             $order->items()->save($orderItemPre);
         }
+
         $order->refresh();
         $this->recalculation($order);
         $this->logger->logOrder($order, 'Добавлен товар', $product->name, $quantity . ' шт.');

@@ -61,6 +61,20 @@ class ProductController extends Controller
         return redirect()->route('admin.product.edit', compact('product'));
     }
 
+    public function fast_create(Request $request)
+    {
+        $product = $this->service->create($request);
+        $product->pricesRetail()->create([
+            'value' => $request->integer('price'),
+            'founded' => 'Создано из заказа',
+        ]);
+        $product->pricesPre()->create([
+            'value' => $request->integer('price'),
+            'founded' => 'Создано из заказа',
+        ]);
+        return response()->json($product->id);
+    }
+
     public function show(Product $product)
     {
         return view('admin.product.product.show', compact('product'));

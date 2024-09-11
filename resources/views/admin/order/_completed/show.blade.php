@@ -6,8 +6,8 @@
 
 @section('showcontent')
     <div class=" box p-3 mt-3 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
-            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+        <div class="rounded-md border border-slate-200/60 p-3">
+            <div class="flex items-center border-b border-slate-200/60 pb-3 text-base font-medium">
                 <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                 Выданные Товары и Услуги
             </div>
@@ -23,7 +23,7 @@
     </div>
     @if(!is_null($order->refund))
     <div class="box p-3 mt-3 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
+        <div class="rounded-md border border-slate-200/60 p-3">
             <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
                 <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                 Возврат товаров и услуг
@@ -38,8 +38,8 @@
     @endif
     @if($order->expenses->count() > 0)
     <div class="box p-3 mt-3 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
-            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+        <div class="rounded-md border border-slate-200/60 p-3">
+            <div class="flex items-center border-b border-slate-200/60 pb-3 text-base font-medium">
                 <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                 Распоряжения
             </div>
@@ -51,8 +51,8 @@
     @endif
     @if($order->movements->count() > 0)
     <div class="box p-3 mt-3 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
-            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+        <div class="rounded-md border border-slate-200/60 p-3">
+            <div class="flex items-center border-b border-slate-200/60 pb-3 text-base font-medium">
                 <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                 Перемещения
             </div>
@@ -64,8 +64,8 @@
     @endif
     @if($order->payments->count() > 0)
     <div class="box p-3 mt-3 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
-            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+        <div class="rounded-md border border-slate-200/60 p-3">
+            <div class="flex items-center border-b border-slate-200/60 pb-3 text-base font-medium">
                 <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                 Платежи
             </div>

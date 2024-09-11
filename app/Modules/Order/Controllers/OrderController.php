@@ -18,6 +18,7 @@ use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Order\Service\SalesService;
+use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Service\Report\InvoiceReport;

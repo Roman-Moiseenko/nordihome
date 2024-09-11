@@ -25,7 +25,7 @@
                             <livewire:admin.order.manager.info :order="$order" />
                         </div>
                         <div class="col-span-12 lg:col-span-12">
-                            <div class="box flex p-3 lg:justify-start buttons-block items-start">
+                            <div class="flex mt-3 lg:justify-start buttons-block items-start">
                                 @yield('actions')
                             </div>
                         </div>

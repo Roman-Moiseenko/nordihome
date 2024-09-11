@@ -5,6 +5,7 @@ namespace App\Modules\Product\Service;
 
 use App\Events\ParserPriceHasChange;
 use App\Events\ProductHasBlocked;
+use App\Events\ProductHasFastCreate;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Photo;
@@ -64,10 +65,10 @@ class ProductService
     {
         DB::transaction(function () use ($request, &$product) {
             $arguments = [
-                'pre_order' => $this->options->shop->pre_order,
-                'only_offline' => $this->options->shop->only_offline,
-                'not_local' => !$this->options->shop->delivery_local,
-                'not_delivery' => !$this->options->shop->delivery_all,
+                'pre_order' => $this->common_set->pre_order,
+                'only_offline' => $this->common_set->only_offline,
+                'not_local' => !$this->common_set->delivery_local,
+                'not_delivery' => !$this->common_set->delivery_all,
             ];
             $product = Product::register(
                 $request->string('name')->trim()->value(),
@@ -100,6 +101,23 @@ class ProductService
             $arguments
         );
         $this->storageService->add_product($product);
+        return $product;
+    }
+
+    public function create_fast(Request $request): Product
+    {
+        $product = $this->create($request);
+
+        $product->pricesRetail()->create([
+            'value' => $request->integer('price'),
+            'founded' => 'Создано из заказа',
+        ]);
+        $product->pricesPre()->create([
+            'value' => $request->integer('price'),
+            'founded' => 'Создано из заказа',
+        ]);
+
+        event(new ProductHasFastCreate($product));
         return $product;
     }
 

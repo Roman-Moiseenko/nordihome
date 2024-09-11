@@ -5,9 +5,9 @@
 @endsection
 
 @section('showcontent')
-        <div class="box p-5 mt-5 block-menus-order">
-            <div class="rounded-md border border-slate-200/60 p-5">
-                <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+        <div class="box p-3 mt-3 block-menus-order">
+            <div class="rounded-md border border-slate-200/60 p-3">
+                <div class="flex items-center border-b border-slate-200/60 pb-3 text-base font-medium">
                     <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                     Товары
                 </div>
@@ -16,9 +16,9 @@
                 </div>
             </div>
         </div>
-        <div class="box p-5 mt-5 block-menus-order">
-            <div class="rounded-md border border-slate-200/60 p-5">
-                <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+        <div class="box p-3 mt-3 block-menus-order">
+            <div class="rounded-md border border-slate-200/60 p-3">
+                <div class="flex items-center border-b border-slate-200/60 pb-3 text-base font-medium">
                     <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                     Услуги
                 </div>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-span-3 lg:block">
-            <div class="relative mt-2 rounded-md border border-info bg-info/20 p-5">
+            <div class="relative mt-2 rounded-md border border-info bg-info/20 p-3">
                     <h2 class="text-lg font-medium">Общая информация</h2>
                     <div class="mt-2 leading-relaxed text-slate-600">
                         <div class="">

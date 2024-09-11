@@ -23,6 +23,7 @@ use App\Events\PaymentHasPaid;
 use App\Events\PriceHasMinimum;
 use App\Events\PricingHasCompleted;
 use App\Events\ProductHasBlocked;
+use App\Events\ProductHasFastCreate;
 use App\Events\ProductHasParsed;
 use App\Events\ProductHasPublished;
 use App\Events\PromotionHasMoved;
@@ -54,6 +55,7 @@ use App\Listeners\NotificationPaymentNew;
 use App\Listeners\NotificationPriceMinimum;
 use App\Listeners\NotificationPricingCompleted;
 use App\Listeners\NotificationProductBlocked;
+use App\Listeners\NotificationProductFastCreat;
 use App\Listeners\NotificationProductParserNew;
 use App\Listeners\NotificationProductPublished;
 use App\Listeners\NotificationRefundNew;
@@ -187,7 +189,9 @@ class EventServiceProvider extends ServiceProvider
         ParserPriceHasChange::class => [
             NotificationParserPriceChange::class,
         ],
-
+        ProductHasFastCreate::class => [
+            NotificationProductFastCreat::class,
+        ],
     ];
 
     /**

@@ -6,13 +6,13 @@
 @endsection
 
 @section('showcontent')
-    <div class="box p-5 mt-5 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
-            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+    <div class="box p-3 mt-3 block-menus-order">
+        <div class="rounded-md border border-slate-200/60 p-3">
+            <div class="flex items-center border-b border-slate-200/60 pb-3 text-base font-medium">
                 <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                 Товары
             </div>
-            <div class="mt-5">
+            <div class="mt-3">
                 <h2 class=" mt-3 font-medium">Товар в наличии</h2>
                 <div class="box flex items-center font-semibold p-2">
                     <div class="w-10 text-center">№ п/п</div>
