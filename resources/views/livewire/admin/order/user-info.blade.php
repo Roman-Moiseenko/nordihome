@@ -1,6 +1,13 @@
 <div>
-    <h2 class=" mt-3 font-medium">Контакты клиенты</h2>
-    <div class="box p-3 flex flex-row items-center flex-wrap lg:items-start mt-4">
+
+    <div>
+        <span class="mt-3 font-medium">Клиент</span> <span>{{ $order->user->getPublicName() }}</span>
+        <button type="button" class="btn btn-outline-primary p-1" wire:click="toggle_fields" @if($show) style="transform:rotate(180deg);" @endif>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" class="lucide lucide-chevron-down stroke-1.5 h-4 w-4"><path d="m6 9 6 6 6-6"></path></svg>
+        </button>
+    </div>
+
+    <div class="box p-3 flex flex-row items-center flex-wrap lg:items-start mt-4" @if(!$show) style="display:none;" @endif>
         @if(!is_null($order->user_id))
             <div class="truncate sm:whitespace-normal flex items-center my-auto">
                 <livewire:admin.user.edit.fullname :user="$order->user" :edit="$edit"/>
@@ -19,12 +26,7 @@
             </div>
         @else
             <div class="flex flex-col">
-
-                <button class="w-32 btn btn-primary shadow-md mr-2" type="button" wire:click="show_fields" @if($show) style="display:none;" @endif>
-                    Клиент
-                </button>
-
-                <div class="flex" @if(!$show) style="display:none;" @endif>
+                <div class="flex">
                     <div>
                         <label class="inline-block mb-2" for="input-phone">Телефон</label>
                         <input id="input-phone" class="mask-phone form-control"
@@ -44,7 +46,7 @@
                         />
                     </div>
                 </div>
-                <div class="mt-3" @if(!$show) style="display:none;" @endif>
+                <div class="mt-3">
                     <button id="modal-cancel" class="mr-1 w-24 btn btn-outline-secondary" wire:click="close_fields" type="button">
                         Отмена
                     </button>

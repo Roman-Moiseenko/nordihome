@@ -88,10 +88,9 @@ class UserInfo extends Component
         $this->close_fields();
     }
 
-    public function show_fields()
+    public function toggle_fields()
     {
-
-        $this->show = true;
+        $this->show = !$this->show;
     }
 
     public function close_fields()

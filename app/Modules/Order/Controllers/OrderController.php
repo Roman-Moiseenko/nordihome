@@ -86,9 +86,11 @@ class OrderController extends Controller
 
         if ($staff_id != 0) $query->where('manager_id', $staff_id);
         $orders = $this->pagination($query, $request, $pagination);
+
         $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
             $query->where('code', Responsibility::MANAGER_ORDER);
         })->get();
+
         return view('admin.order.index', compact('orders', 'pagination', 'filter', 'filter_count', 'staffs', 'filters'));
     }
 

@@ -132,7 +132,6 @@
                         <x-base.table.th class="whitespace-nowrap text-center">ОТВЕТСТВЕННЫЙ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">КЛИЕНТ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ТИП</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap text-center">ТОВАРОВ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ИТОГО</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">СТАТУС</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ДЕЙСТВИЯ</x-base.table.th>

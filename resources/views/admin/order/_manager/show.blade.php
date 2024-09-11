@@ -27,9 +27,9 @@
             </div>
         </div>
     </div>
-    <div class="box p-5 mt-5 block-menus-order">
-        <div class="rounded-md border border-slate-200/60 p-5">
-            <div class="flex items-center border-b border-slate-200/60 pb-5 text-base font-medium">
+    <div class="box p-3 mt-5 block-menus-order">
+        <div class="rounded-md border border-slate-200/60 p-3">
+            <div class="flex items-center border-b border-slate-200/60 pb-3 text-base font-medium">
                 <x-base.lucide class="mr-2 h-4 w-4" icon="ChevronDown"/>
                 Услуги
             </div>

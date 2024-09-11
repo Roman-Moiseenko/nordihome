@@ -5,7 +5,7 @@ namespace App\Modules\Feedback\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Review;
-use App\Modules\Product\ReviewRepository;
+use App\Modules\Product\Repository\ReviewRepository;
 use App\Modules\Product\Service\ReviewService;
 use Illuminate\Http\Request;
 

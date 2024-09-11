@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Product;
+namespace App\Modules\Product\Repository;
 
 use App\Modules\Product\Entity\Review;
 

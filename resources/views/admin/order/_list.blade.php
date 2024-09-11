@@ -14,7 +14,6 @@
         @endif
     </x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->getType() }}</x-base.table.td>
-    <x-base.table.td class="text-center">{{ $order->getQuantity() }} шт.</x-base.table.td>
     <x-base.table.td class="text-center">{{ price($order->getTotalAmount()) }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $order->status->value() }}</x-base.table.td>
 

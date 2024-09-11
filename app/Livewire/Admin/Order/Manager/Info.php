@@ -17,6 +17,7 @@ class Info extends Component
     public string $volume;
     public string $weight;
     public bool $edit;
+    public bool $show = false;
 
     private OrderService $service;
 
@@ -45,6 +46,11 @@ class Info extends Component
     /*    $this->weight = $this->order->getWeight();
         $this->volume = $this->order->getVolume();
         $this->comment = $this->order->comment;*/
+    }
+
+    public function toggle_fields()
+    {
+        $this->show = !$this->show;
     }
 
     public function set_comment()
