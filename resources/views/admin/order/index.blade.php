@@ -19,10 +19,7 @@
             <form id="form-create-order" method="post" action="{{ route('admin.order.store') }}">
                 @csrf
             </form>
-
             {{ $orders->links('admin.components.count-paginator') }}
-
-
             <!-- Фильтр -->
             <div class="ml-auto">
                 <x-tableFilter :count="$filters['count'] ?? null">
@@ -58,7 +55,7 @@
             </div>
         </div>
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
-            <x-base.table class="table table-hover">
+            <x-base.table class="table table-hover table-striped">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
                         <x-base.table.th class="w-10 whitespace-nowrap">ОПЛ</x-base.table.th>
@@ -81,7 +78,6 @@
         </div>
     </div>
     {{ $orders->links('admin.components.paginator') }}
-
 
     <x-base.dialog id="modal-create-order" staticBackdrop>
         <x-base.dialog.panel>
@@ -121,7 +117,6 @@
             </form>
         </x-base.dialog.panel>
     </x-base.dialog>
-
     <script>
         let inputSearchUser = document.querySelectorAll('.input-search-user');
         Array.from(inputSearchUser).forEach(function (input) {
@@ -160,25 +155,5 @@
             document.getElementById('input-name').value = '';
             return true;
         });
-
-    </script>
-
-    <script>
-
-        /*   const urlParams = new URLSearchParams(window.location.search);
-
-           let selectStaff = document.getElementById('select-staff');
-           selectStaff.addEventListener('change', function () {
-               let p = selectStaff.options[selectStaff.selectedIndex].value;
-               urlParams.set('staff_id', p);
-               window.location.search = urlPars;
-           });
-
-   /*
-           let clearFilter = document.getElementById('clear-filter');
-           clearFilter.addEventListener('click', function () {
-               window.location.href = window.location.href.split("?")[0];
-           });
-   */
     </script>
 @endsection
