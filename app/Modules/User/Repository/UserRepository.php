@@ -6,12 +6,47 @@ namespace App\Modules\User\Repository;
 use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 
 class UserRepository
 {
+
+    public function getIndex(Request $request, &$filters): Arrayable
+    {
+        $query = User::orderByDesc('id');
+        $filters = [];
+        if (($name = $request->string('name')) != '') {
+            $filters['name'] = $name;
+            $query->where('phone', 'LIKE', "%$name%")
+                ->orWhere('email', 'like', "%$name%")
+                ->orWhereRaw("LOWER(fullname) like LOWER('%$name%')");
+
+        }
+        if (($address = $request->string('address')) != '') {
+            $filters['address'] = $address;
+            $query->whereRaw("LOWER(address) like LOWER('%$address%')");
+        }
+
+        if (count($filters) > 0) $filters['count'] = count($filters);
+
+        return $query->paginate($request->input('p', 20))
+            ->withQueryString()
+            ->through(fn(User $user) => [
+                'id' => $user->id,
+                'name' => $user->getPublicName(),
+                'email' => $user->email,
+                'phone' => phone($user->phone),
+                'address' => $user->address->address,
+                'data' => $this->getOrderData($user->id),
+
+                'url' => route('admin.user.show', $user),
+            ]);
+
+    }
+
     public function getWish(User $user): array
     {
         return array_map(function (Wish $wish) {
@@ -24,24 +59,6 @@ class UserRepository
                 'product_id' => $wish->product->id,
             ];
         }, $user->wishes()->getModels());
-    }
-
-    public function getIndex(Request $request)
-    {
-        $query = User::orderByDesc('id');
-        if (!empty($value = $request->get('id'))) {
-            $query->where('id', $value);
-        }
-        if (!empty($value = $request->get('phone'))) {
-            $query->where('phone', 'like', '%' . $value . '%');
-        }
-        if (!empty($value = $request->get('email'))) {
-            $query->where('email', 'like', '%' . $value . '%');
-        }
-        if (!empty($value = $request->get('status'))) {
-            $query->where('status', $value);
-        }
-        return $query;
     }
 
     public function getUsersBySubscription(string $class)

@@ -19,6 +19,7 @@ class OrderRepository
     {
         $query = Order::orderByDesc('created_at');
         $filters = [];
+
         if ($request->string('user') != '') {
             $user = $request->string('user')->trim()->value();
             $filters['user'] = $user;

@@ -29,10 +29,9 @@ class UsersController extends Controller
             User::STATUS_WAIT => 'В Ожидании',
             User::STATUS_ACTIVE => 'Подтвержден',
         ];
-        $query = $this->repository->getIndex($request);
-        $users = $this->pagination($query, $request, $pagination);
+        $users = $this->repository->getIndex($request, $filters);
 
-        return view('admin.user.index', compact('users', 'statuses', 'pagination'));
+        return view('admin.user.index', compact('users' ,'filters', 'statuses'));
     }
 
     public function show(User $user)
