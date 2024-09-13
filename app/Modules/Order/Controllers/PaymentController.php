@@ -6,6 +6,7 @@ namespace App\Modules\Order\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Order\Repository\OrderRepository;
@@ -19,33 +20,39 @@ class PaymentController extends Controller
     private PaymentService $service;
     private PaymentRepository $repository;
     private OrderRepository $orders;
+    private StaffRepository $staffs;
 
-    public function __construct(PaymentService $service, PaymentRepository $repository, OrderRepository $orders)
+    public function __construct(
+        PaymentService    $service,
+        PaymentRepository $repository,
+        OrderRepository   $orders,
+        StaffRepository   $staffs,
+    )
     {
         $this->middleware(['auth:admin', 'can:payment']);
         $this->service = $service;
         $this->repository = $repository;
         $this->orders = $orders;
+        $this->staffs = $staffs;
     }
 
     public function index(Request $request)
     {
+        /*
         $filters = [
             'staff_id' => $request['staff_id'] ?? null,
             'user' => $request['user'] ?? null,
             'order' => $request['order'] ?? null,
         ];
-        $_filter_count = 0;
-        foreach ($filters as $item) {
-            if (!is_null($item)) $_filter_count++;
-        }
-        $filters['count'] = $_filter_count;
-        $query = $this->repository->getIndex($filters);
-        $payments = $this->pagination($query, $request, $pagination);
-        $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
+*/
+
+        $payments = $this->repository->getIndex($request, $filters);
+        $staffs = $this->staffs->getStaffsChiefs();
+        /*Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
             $query->where('code', Responsibility::MANAGER_PAYMENT);
         })->get();
-        return view('admin.order.payment.index', compact('payments', 'pagination', 'staffs', 'filters'));
+        */
+        return view('admin.order.payment.index', compact('payments', 'staffs', 'filters'));
     }
 
     public function create()

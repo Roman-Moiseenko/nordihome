@@ -23,9 +23,9 @@ class OrderRepository
             $user = $request->string('user')->trim()->value();
             $filters['user'] = $user;
             $query->whereHas('user', function ($q) use ($user) {
-                $q->where('fullname', 'LIKE', "%$user%")
+                $q->where('phone', 'LIKE', "%$user%")
                     ->orWhere('email', 'like', "%$user%")
-                    ->orWhere('phone', 'LIKE', "%$user%");
+                    ->orWhereRaw("LOWER(fullname) like LOWER('%$user%')");
             });
         }
         if ($request->string('comment') != '') {
