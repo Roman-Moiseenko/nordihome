@@ -56,3 +56,25 @@ if (!function_exists('phone')) {
             mb_substr($value, 4, 3) . '-' . mb_substr($value, 7, 2) . '-' . mb_substr($value, 9, 2);
     }
 }
+
+if (!function_exists('shortname')) {
+    function shortname($value): string
+    {
+        if (empty($value)) return '';
+        return ($value['surname'] ?? '') . ' ' .
+            mb_substr($value['firstname'], 0, 1) . '.' .
+            (!empty($value['secondname']) ? mb_substr($value['secondname'], 0, 1) . '.' : '') ;
+    }
+}
+
+if (!function_exists('fullname')) {
+    function fullname($value): string
+    {
+        if (empty($value)) return '';
+
+
+        return ($value['surname'] ?? '') . ' ' .
+            $value['firstname'] . ' ' .
+            (!empty($value['secondname']) ? ' ' . $value['secondname'] : '') ;
+    }
+}

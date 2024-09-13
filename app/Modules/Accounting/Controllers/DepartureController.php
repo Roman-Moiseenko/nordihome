@@ -7,7 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Repository\DepartureRepository;
 use App\Modules\Accounting\Service\DepartureService;
+use App\Modules\Admin\Entity\Admin;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 
@@ -19,19 +22,30 @@ class DepartureController extends Controller
 {
     private DepartureService $service;
     private ProductRepository $products;
+    private DepartureRepository $repository;
+    private StaffRepository $staffs;
 
 
-    public function __construct(DepartureService $service, ProductRepository $products)
+    public function __construct(
+        DepartureService $service,
+        ProductRepository $products,
+        DepartureRepository $repository,
+        StaffRepository $staffs,
+    )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->products = $products;
+        $this->repository = $repository;
+        $this->staffs = $staffs;
     }
 
     public function index(Request $request)
     {
         $storages = Storage::orderBy('name')->get();
-        return view('admin.accounting.departure.index', compact('storages'));
+        $departures = $this->repository->getIndex($request, $filters);
+        $staffs = $this->staffs->getStaffsChiefs();
+        return view('admin.accounting.departure.index', compact('departures', 'filters', 'staffs', 'storages'));
     }
 
     public function store(Request $request)

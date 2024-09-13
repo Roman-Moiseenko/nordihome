@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
+use App\Modules\Accounting\Repository\PricingRepository;
 use App\Modules\Accounting\Service\PricingService;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\Request;
@@ -17,17 +19,29 @@ class PricingController extends Controller
 
     private PricingService $service;
     private ProductRepository $products;
+    private PricingRepository $repository;
+    private StaffRepository $staffs;
 
-    public function __construct(PricingService $service, ProductRepository $products)
+    public function __construct(
+        PricingService $service,
+        ProductRepository $products,
+        PricingRepository $repository,
+        StaffRepository $staffs,
+    )
     {
         $this->middleware(['auth:admin', 'can:pricing']);
         $this->service = $service;
         $this->products = $products;
+        $this->repository = $repository;
+        $this->staffs = $staffs;
     }
 
     public function index(Request $request)
     {
-        return view('admin.accounting.pricing.index');
+        $pricings = $this->repository->getIndex($request, $filters);
+        $staffs = $this->staffs->getStaffsChiefs();
+
+        return view('admin.accounting.pricing.index', compact('pricings', 'filters', 'staffs'));
     }
 
     public function create(Request $request)

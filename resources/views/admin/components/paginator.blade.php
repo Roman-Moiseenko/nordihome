@@ -1,6 +1,7 @@
 
-@if ($paginator->hasPages())
+
 <div class="col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center mt-3">
+    @if ($paginator->hasPages())
     <nav class="w-full sm:w-auto sm:mr-auto">
         <ul class="pagination">
             @if ($paginator->onFirstPage())
@@ -66,14 +67,20 @@
                 @endif
         </ul>
     </nav>
+    @endif
 
-    <select id="select-pagination" name="p" class="w-20 form-select box mt-3 sm:mt-0">
+    <select id="select-pagination" name="p" class="w-20 form-select box mt-3 sm:mt-0 ml-auto">
         @foreach(Illuminate\Support\Facades\Config::get((isset($card)) ? 'shop-config.options-card' : 'shop-config.options-list') as $value)
-        <option value="{{ $value }}" {{ ($value == $pagination) ? 'selected' : ''}}>{{ $value }}</option>
+            <option value="{{ $value }}">{{ $value }}</option>
         @endforeach
     </select>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
+
+        let url = new URL(window.location.href);
+        let c = url.searchParams.get("p");
+        let selectPagination = document.getElementById('select-pagination');
+        if (c !== null) selectPagination.value = c;
         let select = document.getElementById('select-pagination');
         select.addEventListener('change', function () {
             let p = select.options[select.selectedIndex].value;
@@ -83,4 +90,4 @@
     </script>
 </div>
 
-@endif
+

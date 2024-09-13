@@ -10,7 +10,11 @@ use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Repository\ArrivalRepository;
+use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Service\ArrivalService;
+use App\Modules\Admin\Entity\Admin;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\Request;
@@ -19,18 +23,30 @@ class ArrivalController extends Controller
 {
     private ArrivalService $service;
     private ProductRepository $products;
+    private ArrivalRepository $repository;
+    private StaffRepository $staffs;
 
-    public function __construct(ArrivalService $service, ProductRepository $products)
+    public function __construct(
+        ArrivalService $service,
+        ProductRepository $products,
+        ArrivalRepository $repository,
+        StaffRepository $staffs,
+    )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->products = $products;
+        $this->repository = $repository;
+        $this->staffs = $staffs;
     }
 
     public function index(Request $request)
     {
         $distributors = Distributor::orderBy('name')->get();
-        return view('admin.accounting.arrival.index', compact('distributors'));
+        $staffs = $this->staffs->getStaffsChiefs();
+        $arrivals = $this->repository->getIndex($request, $filters);
+
+        return view('admin.accounting.arrival.index', compact('arrivals', 'filters', 'distributors', 'staffs'));
     }
 
 

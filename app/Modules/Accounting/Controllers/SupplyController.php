@@ -12,7 +12,9 @@ use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Repository\StackRepository;
+use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Accounting\Service\SupplyService;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
@@ -23,28 +25,42 @@ class SupplyController extends Controller
 {
     private SupplyService $service;
     private ProductRepository $products;
-    private StackRepository $repository;
+    private StackRepository $stacks;
+    private SupplyRepository $repository;
+    private StaffRepository $staffs;
 
-    public function __construct(SupplyService $service, ProductRepository $products, StackRepository $repository)
+    public function __construct(
+        SupplyService $service,
+        ProductRepository $products,
+        StackRepository $stacks,
+        SupplyRepository $repository,
+        StaffRepository $staffs,
+    )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->products = $products;
+        $this->stacks = $stacks;
         $this->repository = $repository;
+        $this->staffs = $staffs;
     }
 
     public function index(Request $request)
     {
         $distributors = Distributor::orderBy('name')->get();
         $stack_count = SupplyStack::where('supply_id', null)->count();
+        $supplies = $this->repository->getIndex($request, $filters);
+        $statuses = SupplyDocument::STATUSES;
+        $staffs = $this->staffs->getStaffsChiefs();
+
         return view('admin.accounting.supply.index',
-            compact('distributors', 'stack_count'));
+            compact('supplies', 'filters', 'distributors', 'stack_count', 'statuses', 'staffs'));
     }
 
     public function create(Request $request)
     {
         $distributor = Distributor::find($request->integer('distributor'));
-        $stacks = $this->repository->getByDistributor($distributor);
+        $stacks = $this->stacks->getByDistributor($distributor);
         if (!empty($stacks)) { //Если стек не пуст, то показываем
             return view('admin.accounting.supply.create', compact('stacks', 'distributor'));
         } else { //Иначе создаем пустой заказ

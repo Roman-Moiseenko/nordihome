@@ -131,7 +131,7 @@ class ArrivalDocument extends Model implements AccountingDocument
             'cost_currency' => $cost_currency,
             'price_sell' => $price_sell,
             'cost_ru' => $cost_ru,
-            //'currency_sign' => $this->currency->sign,
+            'currency_sign' => $this->currency->sign,
         ];
     }
 

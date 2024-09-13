@@ -41,6 +41,8 @@ class AdminComposer
                 $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
                 $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
                 $view->with('admin', $admin);
+            } elseif($layout == 'livewire') {
+                //
             } else {
                 if ($layout == 'shop') {
                     $view->with('schema', new Schema());
@@ -58,6 +60,7 @@ class AdminComposer
                 $view->with('user', $user);
                 $view->with('config', Config::get('shop-config.frontend'));
                 $city = 'Калининград';
+
                 $view->with('categories', $this->categories->getTree());
                 $view->with('city', $city);
             }

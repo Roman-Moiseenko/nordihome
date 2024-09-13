@@ -61,7 +61,7 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
-        $filter = $request['status'] ?? 'all';
+  /*      $filter = $request['status'] ?? 'all';
 
         $filters = [
             'staff_id' => $request['staff_id'] ?? null,
@@ -87,12 +87,15 @@ class OrderController extends Controller
 
         if ($staff_id != 0) $query->where('manager_id', $staff_id);
         $orders = $this->pagination($query, $request, $pagination);
+        */
+
+        $orders = $this->repository->getIndex($request, $filters);
 
         $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
             $query->where('code', Responsibility::MANAGER_ORDER);
         })->get();
 
-        return view('admin.order.index', compact('orders', 'pagination', 'filter', 'filter_count', 'staffs', 'filters'));
+        return view('admin.order.index', compact('orders','filters', 'staffs'));
     }
 
     public function show(Request $request, Order $order)

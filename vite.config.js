@@ -121,7 +121,7 @@ export default defineConfig({
                 'resources/css/components/_list-code-products.css',
                 'resources/js/components/search-add-product.js',
                 'resources/js/components/create-add-product.js',
-
+                'resources/js/components/table-filter.js',
 
             ],
             refresh: true,

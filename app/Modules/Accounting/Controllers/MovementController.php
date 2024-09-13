@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Repository\MovementRepository;
 use App\Modules\Accounting\Service\MovementService;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use App\UseCase\PaginationService;
@@ -20,18 +22,30 @@ class MovementController extends Controller
 {
     private MovementService $service;
     private ProductRepository $products;
+    private StaffRepository $staffs;
+    private MovementRepository $repository;
 
-    public function __construct(MovementService $service, ProductRepository $products)
+    public function __construct(
+        MovementService    $service,
+        ProductRepository  $products,
+        StaffRepository    $staffs,
+        MovementRepository $repository,
+    )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->products = $products;
+        $this->staffs = $staffs;
+        $this->repository = $repository;
     }
 
     public function index(Request $request)
     {
         $storages = Storage::orderBy('name')->get();
-        return view('admin.accounting.movement.index', compact('storages'));
+        $staffs = $this->staffs->getStaffsChiefs();
+        $movements = $this->repository->getIndex($request, $filters);
+        $statuses = MovementDocument::STATUSES;
+        return view('admin.accounting.movement.index', compact('movements', 'filters', 'staffs', 'storages', 'statuses'));
     }
 
     public function store(Request $request)

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Helpers;
 
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderStatus;
 use JetBrains\PhpStorm\ArrayShape;
 
 class OrderHelper
@@ -28,6 +29,13 @@ class OrderHelper
         };
 
         return '<span class="circle ' . $type . '" title="' . $text . '"></span>';
+    }
+
+    public static function status(Order $order): string
+    {
+        $text = $order->statusHtml();
+
+        return '<span class="rounded-full">' . $text . '</span>';
     }
 
     #[ArrayShape(['user' => "string[]", 'products' => "string[]", 'additions' => "string[]"])]

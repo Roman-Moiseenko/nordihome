@@ -4,8 +4,8 @@
     @endif
     {{ $title }}
     @if($status)
-    <span class="ml-1 rounded bg-success/20 text-success px-2 ">Да</span>
+        <span class="rounded bg-success/20 text-success px-2 mx-auto">Да</span>
     @else
-    <span class="ml-1 rounded bg-danger/20 text-danger px-2 ">Нет</span>
+        <span class="rounded bg-danger/20 text-danger px-2 mx-auto">Нет</span>
     @endif
 </div>

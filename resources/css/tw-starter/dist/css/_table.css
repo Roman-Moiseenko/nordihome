@@ -15,10 +15,10 @@
     }
   }
   th {
-    @apply font-medium px-5 py-3 border-b-2 dark:border-darkmode-300;
+    @apply font-medium px-2 py-3 border-b-2 dark:border-darkmode-300 text-xs;
   }
   td {
-    @apply px-5 py-3 border-b dark:border-darkmode-300;
+    @apply px-2 py-2 border-b dark:border-darkmode-300;
   }
   &.table-dark {
     @apply bg-dark text-white dark:bg-black/30;

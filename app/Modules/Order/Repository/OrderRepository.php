@@ -3,39 +3,72 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Repository;
 
+
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Helpers\OrderHelper;
 use App\Modules\User\Entity\User;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 
 class OrderRepository
 {
-    #[Deprecated]
-    public function getNewOrders()
+    public function getIndex(Request $request, &$filters): Arrayable
     {
-        return Order::where('finished', false)->where('preorder', false)->orderByDesc('created_at');
+        $query = Order::orderByDesc('created_at');
+        $filters = [];
+        if ($request->string('user') != '') {
+            $user = $request->string('user')->trim()->value();
+            $filters['user'] = $user;
+            $query->whereHas('user', function ($q) use ($user) {
+                $q->where('fullname', 'LIKE', "%$user%")
+                    ->orWhere('email', 'like', "%$user%")
+                    ->orWhere('phone', 'LIKE', "%$user%");
+            });
+        }
+        if ($request->string('comment') != '') {
+            $comment = $request->string('comment')->trim()->value();
+            $filters['comment'] = $comment;
+            $query->where('comment', 'like', "%$comment%");
+        }
+        if ($request->integer('condition') > 0) {
+            $condition = $request->integer('condition');
+            $filters['condition'] = $condition;
+            $query->whereHas('status', function ($q) use($condition) {
+                $q->where('value' , $condition);
+            });
+        }
+        if ($request->integer('manager_id') > 0) {
+            $manager_id = $request->integer('manager_id');
+            $filters['manager_id'] = $manager_id;
+            $query->where('manager_id', $manager_id);
+        }
+
+        if (count($filters) > 0) $filters['count'] = count($filters);
+
+        return $query->paginate($request->input('p', 20))
+            ->withQueryString()
+            ->through(fn(Order $order) => [
+                'id' => $order->id,
+                'opl' => OrderHelper::pictogram($order),
+                'otg' => OrderHelper::pictogram($order),
+                'number' => $order->htmlNum(),
+                'date' => $order->htmlDate(),
+                'manager' => is_null($order->manager_id) ? 'Не назначен' : $order->manager->fullname->getShortname(),
+                'user' => $order->user->getPublicName(),
+                'amount' => price($order->getTotalAmount()),
+                'status' => $order->status->value,
+                'status_html' => OrderHelper::status($order),
+
+                'url' => route('admin.order.show', $order),
+                'destroy' => route('admin.order.destroy', $order),
+                'log' => route('admin.order.log', $order),
+            ]);
     }
 
     #[Deprecated]
-    public function getPreOrders()
-    {
-        return Order::where('finished', false)->where('preorder', true)->where('type', '<>', Order::PARSER)->orderByDesc('created_at');
-    }
-
-    #[Deprecated]
-    public function getParser()
-    {
-        return Order::where('finished', false)->where('preorder', true)->where('type', Order::PARSER)->orderByDesc('created_at');
-    }
-
-    #[Deprecated]
-    public function getExecuted()
-    {
-        return Order::where('finished', true)->orderByDesc('created_at');
-    }
-
     public function getOrders(array $filters)
     {
         $query = Order::orderByDesc('created_at');
@@ -45,7 +78,6 @@ class OrderRepository
         $comment = $filters['comment'];
 
         if (!is_null($user_field)) {
-
             $users = User::where('phone', 'like', "%$user_field%")
                 ->orWhere('email', 'like', "%$user_field%")
                 ->orWhere('fullname', 'like', "%$user_field%")
@@ -65,6 +97,7 @@ class OrderRepository
         return $query;
     }
 
+    #[Deprecated]
     public function getOrdersByWork(string $filter)
     {
         $query = Order::orderByDesc('created_at');
@@ -97,6 +130,7 @@ class OrderRepository
     }
 
     #[ArrayShape(['new' => "int", 'awaiting' => "int", 'at-work' => "int"])]
+    #[Deprecated]
     public function getFilterCount(): array
     {
         return [
@@ -125,4 +159,6 @@ class OrderRepository
         if (!is_null($order_id)) $query->orWhere('id', $order_id);
         return $query->orderBy('number')->get();
     }
+
+
 }

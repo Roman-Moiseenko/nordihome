@@ -10,50 +10,6 @@
     <div class="grid grid-cols-12 gap-6 mt-5">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-            <form method="get" action="{{ route('admin.order.index') }}" class="flex w-full">
-                <div>
-                    <input type="radio" class="btn-check" name="status" id="option1" autocomplete="off"
-                           value="all" onclick="this.form.submit();" @if($filter == 'all') checked @endif>
-                    <label class="btn btn-primary" for="option1">Все</label>
-                    <input type="radio" class="btn-check" name="status" id="option2" autocomplete="off"
-                           value="new" onclick="this.form.submit();" @if($filter == 'new') checked @endif>
-                    <label class="btn btn-success" for="option2">Новые
-                        @if($filter_count['new'] != 0)<span>{{ $filter_count['new'] }}</span> @endif
-                    </label>
-                    <input type="radio" class="btn-check" name="status" id="option3" autocomplete="off"
-                           value="awaiting" onclick="this.form.submit();" @if($filter == 'awaiting') checked @endif>
-                    <label class="btn btn-success" for="option3">На оплате
-                        @if($filter_count['awaiting'] != 0)<span>{{ $filter_count['awaiting'] }}</span> @endif
-                    </label>
-
-                    <input type="radio" class="btn-check" name="status" id="option4" autocomplete="off"
-                           value="at-work" onclick="this.form.submit();" @if($filter == 'at-work') checked @endif>
-                    <label class="btn btn-success" for="option4">В работе
-                        @if($filter_count['at-work'] != 0)<span>{{ $filter_count['at-work'] }}</span> @endif
-                    </label>
-                    <input type="radio" class="btn-check" name="status" id="option5" autocomplete="off"
-                           value="canceled" onclick="this.form.submit();" @if($filter == 'canceled') checked @endif>
-                    <label class="btn btn-secondary" for="option5">Отмененные</label>
-                    <input type="radio" class="btn-check" name="status" id="option6" autocomplete="off"
-                           value="completed" onclick="this.form.submit();" @if($filter == 'completed') checked @endif>
-                    <label class="btn btn-secondary" for="option6">Завершенные</label>
-                </div>
-                <div class="ml-auto">
-                    <x-base.tom-select id="select-staff" name="staff_id"
-                                       class="w-72 bg-white" data-placeholder="Выберите ответственного">
-                        <option value=""></option>
-                        @foreach($staffs as $staff)
-                            <option value="{{ $staff->id }}"
-                                {{ $staff->id == $filters['staff_id'] ? 'selected' : ''}} >
-                                {{ $staff->fullname->getShortName() }}
-                            </option>
-                        @endforeach
-                    </x-base.tom-select>
-                </div>
-
-            </form>
-        </div>
-        <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <button data-tw-toggle="modal" data-tw-target="#modal-create-order" class="btn btn-primary shadow-md mr-2" style="display: none"
                     type="button">Создать заказ
             </button>
@@ -66,72 +22,51 @@
 
             {{ $orders->links('admin.components.count-paginator') }}
 
+
             <!-- Фильтр -->
             <div class="ml-auto">
-                <x-base.popover class="inline-block mt-auto" placement="left-start">
-                    <x-base.popover.button as="x-base.button" variant="primary" class="button_counter"><i data-lucide="filter" width="20" height="20"></i>
-                        @if($filters['count'] > 0)
-                        <span>{{ $filters['count'] }}</span>
-                        @endif
-                    </x-base.popover.button>
-                    <x-base.popover.panel>
-                        <x-base.button id="close-add-group" class="ml-auto"
-                                       data-tw-dismiss="dropdown" variant="secondary" type="button">
-                            X
-                        </x-base.button>
-                        <form action="" METHOD="GET">
-                            <div class="p-2">
-                                <input type="hidden" name="search" value="1" />
-                                <input class="form-control" name="user" placeholder="Клиент,Телефон,ИНН,Email"
-                                       value="{{ $filters['user'] }}" autocomplete="off">
-                                <x-base.tom-select class="w-full bg-white mt-1" name="condition"
-                                                   data-placeholder="Состояние заказа"
-                                >
-                                    <option value="" disabled selected>Состояние заказа</option>
-                                    @foreach(\App\Modules\Order\Entity\Order\OrderStatus::STATUSES as $key => $name)
-                                        <option value="{{ $key }}"
-                                            {{ $key == $filters['condition'] ? 'selected' : ''}} >
-                                        {{ $name }}</option>
-                                    @endforeach
-                                </x-base.tom-select>
+                <x-tableFilter :count="$filters['count'] ?? null">
+                    <input class="form-control" name="user" placeholder="Клиент,Телефон,ИНН,Email"
+                           value="{{ $filters['user'] ?? '' }}" autocomplete="off">
+                    <x-base.tom-select class="w-full bg-white mt-1" name="condition"
+                                       data-placeholder="Состояние заказа"
+                    >
+                        <option value="" disabled selected>Состояние заказа</option>
+                        @foreach(\App\Modules\Order\Entity\Order\OrderStatus::STATUSES as $key => $name)
+                            <option value="{{ $key }}"
+                            @if(isset($filters['condition'])) {{ $key == $filters['condition'] ? 'selected' : ''}} @endif
+                            >{{ $name }}</option>
+                        @endforeach
+                    </x-base.tom-select>
 
-                                <x-base.tom-select id="select-staff" name="staff_id"
-                                                   class="w-full bg-white mt-1" data-placeholder="Выберите ответственного">
-                                    <option value="" disabled selected>Выберите ответственного</option>
-                                    @foreach($staffs as $staff)
-                                        <option value="{{ $staff->id }}"
-                                            {{ $staff->id == $filters['staff_id'] ? 'selected' : ''}} >
-                                            {{ $staff->fullname->getShortName() }}
-                                        </option>
-                                    @endforeach
-                                </x-base.tom-select>
-                                <input class="form-control mt-1" name="comment" placeholder="Комментарий"
-                                       value="{{ $filters['comment'] }}" autocomplete="off">
-                                <div class="flex items-center mt-3">
-                                    <x-base.button id="clear-filter" class="w-32 ml-auto"
-                                                   variant="secondary" type="button">
-                                        Сбросить
-                                    </x-base.button>
-                                    <x-base.button class="w-32 ml-2" variant="primary" type="submit">
-                                        Фильтр
-                                    </x-base.button>
-                                </div>
-                            </div>
-                        </form>
-                    </x-base.popover.panel>
-                </x-base.popover>
+                    <x-base.tom-select id="select-staff" name="staff_id"
+                                       class="w-full bg-white mt-1" data-placeholder="Выберите ответственного">
+                        <option value="" disabled selected>Выберите ответственного</option>
+                        @foreach($staffs as $staff)
+                            <option value="{{ $staff->id }}"
+                            @if(isset($filters['staff_id']))
+                                {{ $staff->id == $filters['staff_id'] ? 'selected' : ''}}
+                                @endif
+                            >
+                                {{ $staff->fullname->getShortName() }}
+                            </option>
+                        @endforeach
+                    </x-base.tom-select>
+                    <input class="form-control mt-1" name="comment" placeholder="Комментарий"
+                           value="{{ $filters['comment'] ?? '' }}" autocomplete="off">
+                </x-tableFilter>
             </div>
         </div>
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
                     <x-base.table.tr>
-                        <x-base.table.th class="w-10 whitespace-nowrap"></x-base.table.th>
+                        <x-base.table.th class="w-10 whitespace-nowrap">ОПЛ</x-base.table.th>
+                        <x-base.table.th class="w-10 whitespace-nowrap">ОТГ</x-base.table.th>
                         <x-base.table.th class="w-32 whitespace-nowrap">№</x-base.table.th>
                         <x-base.table.th class="w-32 whitespace-nowrap text-center">ДАТА</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ОТВЕТСТВЕННЫЙ</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">КЛИЕНТ</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap text-center">ТИП</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ИТОГО</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">СТАТУС</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ДЕЙСТВИЯ</x-base.table.th>
@@ -139,13 +74,13 @@
                 </x-base.table.thead>
                 <x-base.table.tbody>
                     @foreach($orders as $order)
-                        @include('admin.order._list', ['order' => $order])
+                        @include('admin.order._list', ['item' => $order])
                     @endforeach
                 </x-base.table.tbody>
             </x-base.table>
         </div>
     </div>
-    {{ $orders->links('admin.components.paginator', ['pagination' => $pagination]) }}
+    {{ $orders->links('admin.components.paginator') }}
 
 
     <x-base.dialog id="modal-create-order" staticBackdrop>
@@ -229,22 +164,21 @@
     </script>
 
     <script>
-        /* Filters */
-        //TODO Фильтр по дате
-        const urlParams = new URLSearchParams(window.location.search);
 
-        let selectStaff = document.getElementById('select-staff');
-        selectStaff.addEventListener('change', function () {
-            let p = selectStaff.options[selectStaff.selectedIndex].value;
-            urlParams.set('staff_id', p);
-            window.location.search = urlParams;
-        });
+        /*   const urlParams = new URLSearchParams(window.location.search);
 
+           let selectStaff = document.getElementById('select-staff');
+           selectStaff.addEventListener('change', function () {
+               let p = selectStaff.options[selectStaff.selectedIndex].value;
+               urlParams.set('staff_id', p);
+               window.location.search = urlPars;
+           });
 
-        let clearFilter = document.getElementById('clear-filter');
-        clearFilter.addEventListener('click', function () {
-            window.location.href = window.location.href.split("?")[0];
-        });
-
+   /*
+           let clearFilter = document.getElementById('clear-filter');
+           clearFilter.addEventListener('click', function () {
+               window.location.href = window.location.href.split("?")[0];
+           });
+   */
     </script>
 @endsection

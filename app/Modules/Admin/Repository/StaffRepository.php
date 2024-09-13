@@ -37,4 +37,9 @@ class StaffRepository
         }
         return $query;
     }
+
+    public function getStaffsChiefs()
+    {
+        return Admin::where('role', Admin::ROLE_STAFF)->orWhere('role', Admin::ROLE_CHIEF)->getModels();
+    }
 }
