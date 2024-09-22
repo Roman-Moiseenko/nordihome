@@ -15,7 +15,7 @@ Breadcrumbs::for('admin.order.index', function (BreadcrumbTrail $trail) {
 
 
 Breadcrumbs::for('admin.order.reserve.index', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.sales');
+    $trail->parent('admin.home');
     $trail->push('Резерв', route('admin.order.reserve.index'));
 });
 

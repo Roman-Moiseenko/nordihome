@@ -106,8 +106,8 @@ class StaffService
         if (!$admin->isStaff()) throw new \DomainException('Обязанность назначается только персоналу');
         $admin->responsibilities()->delete();
         $responses = $request['response'];
-        foreach ($responses as $respons) {
-            $admin->responsibilities()->save(Responsibility::new((int)$respons));
+        foreach ($responses as $response) {
+            $admin->responsibilities()->save(Responsibility::new((int)$response));
         }
     }
 

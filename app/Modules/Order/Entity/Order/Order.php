@@ -35,6 +35,7 @@ use JetBrains\PhpStorm\Pure;
  * @property string $comment
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
  * @property OrderAddition[] $additions //Дополнения к заказу (услуги)
