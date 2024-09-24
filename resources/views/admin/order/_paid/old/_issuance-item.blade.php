@@ -2,7 +2,7 @@
     <div class="w-20 text-center">{{ $i + 1 }}</div>
     <div class="w-1/4">
         <div>{{ $item->product->name }}  @if($item->preorder) <b>(предзаказ)</b> @endif</div>
-        <div>{{ $item->product->dimensions->weight() }} кг | {{ $item->product->dimensions->volume() }} м3</div>
+        <div>{{ $item->product->weight() }} кг | {{ $item->product->volume() }} м3</div>
     </div>
     <div class="w-32 text-center px-1">{{ price($item->sell_cost) }}</div>
     <div class="w-20 px-1 text-center">

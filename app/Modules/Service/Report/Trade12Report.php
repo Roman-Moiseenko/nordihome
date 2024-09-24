@@ -176,7 +176,7 @@ class Trade12Report
         $this->activeWorksheet->setCellValue([14, self::BEGIN_ROW+ $i], 'шт.');
         $this->activeWorksheet->setCellValue([15, self::BEGIN_ROW+ $i], $item->quantity);
         $this->activeWorksheet->setCellValue([18, self::BEGIN_ROW+ $i], $item->quantity);
-        $this->activeWorksheet->setCellValue([24, self::BEGIN_ROW+ $i], $item->orderItem->product->dimensions->weight() * $item->quantity); //Вес
+        $this->activeWorksheet->setCellValue([24, self::BEGIN_ROW+ $i], $item->orderItem->product->weight() * $item->quantity); //Вес
 
         $this->activeWorksheet->setCellValue([26, self::BEGIN_ROW+ $i], $item->orderItem->sell_cost);
         $this->activeWorksheet->setCellValue([29, self::BEGIN_ROW+ $i], $item->orderItem->sell_cost * $item->quantity);

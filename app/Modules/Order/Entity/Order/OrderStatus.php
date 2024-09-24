@@ -44,13 +44,16 @@ class OrderStatus extends Model
 
     ///Выдача
     const READY = 260;// 'Готов к выдаче'
-    const COMPLETED = 290; //Выдан (завершен)
-    const COMPLETED_REFUND = 291; //Выдан частично, с возвратом части товара (завершен)
+
 
     ///Отмененные статусы
     const CANCEL = 280;//
     const CANCEL_BY_CUSTOMER = 281;//
     const REFUND = 282; //Возврат денег
+
+    //Завершен успешно
+    const COMPLETED = 290; //Выдан (завершен)
+    const COMPLETED_REFUND = 291; //Выдан частично, с возвратом части товара (завершен)
 
     const STATUSES = [
         self::FORMED => 'Сформирован',

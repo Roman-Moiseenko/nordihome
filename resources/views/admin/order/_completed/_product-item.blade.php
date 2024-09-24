@@ -3,7 +3,7 @@
     <div class="w-32 text-center">{{ $item->product->code }}</div>
     <div class="w-1/4">
         <div>{{ $item->product->name }}</div>
-        <div>{{ $item->product->dimensions->weight() }} кг | {{ $item->product->dimensions->volume() }} м3</div>
+        <div>{{ $item->product->weight() }} кг | {{ $item->product->volume() }} м3</div>
     </div>
     <div class="w-32 text-center px-1">
         <div>{{ price($item->base_cost) }}</div>

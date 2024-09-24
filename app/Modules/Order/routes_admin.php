@@ -68,4 +68,4 @@ Route::group(
     }
 );
 
-Route::resource('order', 'OrderController');
+Route::resource('order', 'OrderController')->except(['destroy']);

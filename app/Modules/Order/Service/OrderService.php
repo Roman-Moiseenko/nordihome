@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 
 class OrderService
@@ -410,6 +411,7 @@ class OrderService
      * @param Order $order
      * @return void
      */
+    #[Deprecated]
     public function destroy(Order $order)
     {
         if ($order->status->value == OrderStatus::FORMED) {
@@ -461,7 +463,7 @@ class OrderService
         $last_price = $product->getLastPrice($order->user_id);
         if ($quantity > 0) {
             $orderItem = OrderItem::new($product, $quantity, false);
-            if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены');
+            if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);
             $orderItem->setCost($last_price, $last_price);
             $order->items()->save($orderItem);
             $this->reserveService->toReserve($orderItem, $quantity);
@@ -470,7 +472,7 @@ class OrderService
         if ($quantity_preorder > 0) {
             $orderItemPre = OrderItem::new($product, $quantity_preorder, true);
             $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
-            if ($pre_price == 0) throw new \DomainException('Нельзя добавить товар без цены');
+            if ($pre_price == 0) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
             $orderItemPre->setCost($last_price, $pre_price);
             $order->items()->save($orderItemPre);
         }
@@ -847,10 +849,10 @@ class OrderService
             $new_order->refresh();
 
             foreach ($order->items as $item) {
-                $this->add_product($new_order, $item->product_id, $item->quantity);
+                if ($item->product->isSale())
+                    $this->add_product($new_order, $item->product_id, $item->quantity);
             }
 
-            //TODO Копировать Услуги
             foreach ($order->additions as $addition) {
                 $this->add_addition($new_order, $addition->purpose, $addition->amount, $addition->comment);
             }

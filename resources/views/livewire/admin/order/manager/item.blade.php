@@ -4,13 +4,13 @@
         <div class="w-32 text-center">{{ $item->product->code }}</div>
         <div class="w-1/4">
             <div>{{ $item->product->name }}</div>
-            <div>{{ $item->product->dimensions->weight() }} кг | {{ $item->product->dimensions->volume() }} м3</div>
+            <div>{{ $item->product->weight() }} кг | {{ $item->product->volume() }} м3</div>
         </div>
         <div class="w-32 text-center px-1">
             <div>{{ price($item->base_cost) }}</div>
 
             <input type="number" class="form-control text-center" autocomplete="off"
-                   min="0" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
+                   min="0" max="{{ $item->base_cost }}" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
                    wire:change="set_sell" wire:model="sell_cost" wire:loading.attr="disabled"
             >
 
@@ -18,7 +18,7 @@
         <div class="w-20 text-center px-1">
             <div>%</div>
             <input type="text" class="form-control text-center" autocomplete="off"
-                   min="0" max="50" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
+                   min="0" max="100" @if(!$edit || ($item->product->hasPromotion() && $item->preorder == false)) readonly @endif
                    wire:change="set_percent" wire:model="sell_percent" wire:loading.attr="disabled"
             >
         </div>

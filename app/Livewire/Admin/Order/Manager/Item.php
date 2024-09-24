@@ -63,6 +63,7 @@ class Item extends Component
 
     public function set_sell()
     {
+        if ((int)$this->sell_cost > $this->item->base_cost) $this->sell_cost = $this->item->base_cost;
         $this->service->update_sell($this->item, (int)$this->sell_cost);
         $this->refresh_fields();
         $this->dispatch('update-amount-order');
@@ -76,6 +77,7 @@ class Item extends Component
     }
     public function set_percent()
     {
+        if ((float)$this->sell_percent > 100) $this->sell_percent = 100;
         $this->service->discount_item_percent($this->item, (float)$this->sell_percent);
         $this->refresh_fields();
         $this->dispatch('update-amount-order');

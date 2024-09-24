@@ -12,15 +12,22 @@
 
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
-            <a class="flex items-center mr-3" href="{{ $item['log'] }}">
-                <x-base.lucide icon="history" class="w-4 h-4"/>Log
+            <a class="flex items-center mr-3 text-warning" href="{{ $item['copy'] }}"
+               onclick="event.preventDefault(); document.getElementById('copy-{{ $item['id'] }}').submit();">
+                <x-base.lucide icon="copy" class="w-4 h-4"/>Copy
             </a>
-            <a class="flex items-center mr-3" href="{{ $item['url'] }}">
-                <x-base.lucide icon="check-square" class="w-4 h-4"/>Edit
+            <form id="copy-{{ $item['id'] }}" method="post" action="{{ $item['copy'] }}">
+                @csrf
+            </form>
+            @if($item['has_cancel'])
+            <a class="flex items-center mr-3 text-danger" href="{{ $item['canceled'] }}"
+               onclick="event.preventDefault(); document.getElementById('cancel-{{ $item['id'] }}').submit();">
+                <x-base.lucide icon="ban" class="w-4 h-4"/>Cancel
             </a>
-            <a class="flex items-center text-danger" href="#" data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal" data-route = {{ $item['destroy'] }}>
-                <x-base.lucide icon="trash-2" class="w-4 h-4"/>Delete
-            </a>
+                <form id="cancel-{{ $item['id'] }}" method="post" action="{{ $item['canceled'] }}">
+                    @csrf
+                </form>
+            @endif
         </div>
     </x-base.table.td>
 </x-base.table.tr>

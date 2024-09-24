@@ -104,7 +104,6 @@ class ParserService
                 $_prod = $this->findProduct($composite['code']);
                 $product->composites()->attach($_prod, ['quantity' => $composite['quantity']]);
             }
-            //$this->product->composites()->attach($product_id, ['quantity' => $quantity]);
 
             //4. Создаем ProductParsing
             $productParser = $this->createProductParsing($product->id, $parser_product);

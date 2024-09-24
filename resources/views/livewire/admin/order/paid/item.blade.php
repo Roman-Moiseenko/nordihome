@@ -4,7 +4,7 @@
         <div class="w-32 text-center">{{ $item->product->code }}</div>
         <div class="w-1/4">
             <div>{{ $item->product->name }}  @if($item->preorder) <b>(предзаказ)</b> @endif</div>
-            <div>{{ $item->product->dimensions->weight() }} кг | {{ $item->product->dimensions->volume() }} м3</div>
+            <div>{{ $item->product->weight() }} кг | {{ $item->product->volume() }} м3</div>
             <div class="font-medium"><em>{{ $item->comment }}</em></div>
         </div>
         <div class="w-32 text-center px-1">{{ price($item->sell_cost) }}</div>

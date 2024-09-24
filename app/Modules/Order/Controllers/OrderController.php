@@ -132,6 +132,7 @@ class OrderController extends Controller
         return redirect()->route('admin.accounting.movement.show', $movement);
     }
 
+    #[Deprecated]
     public function destroy(Order $order)
     {
         $this->orderService->destroy($order);

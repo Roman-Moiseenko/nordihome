@@ -382,6 +382,18 @@ class Product extends Model
         return $weight;
     }
 
+    public function volume(): float|int
+    {
+        $weight = 0;
+        if ($this->composites()->count() > 0) {
+            foreach ($this->composites as $composite)
+                $weight += $composite->volume() * $composite->pivot->quantity;
+        } else {
+            $weight = $this->packages->volume();
+        }
+        return $weight;
+    }
+
     public function getSlug(): string
     {
         return $this->slug;

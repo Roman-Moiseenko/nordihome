@@ -62,10 +62,13 @@ class OrderRepository
                 'amount' => price($order->getTotalAmount()),
                 'status' => $order->status->value,
                 'status_html' => OrderHelper::status($order),
-
+                'has_cancel' => !($order->InWork() || $order->isCanceled() || $order->isCompleted()),
                 'url' => route('admin.order.show', $order),
-                'destroy' => route('admin.order.destroy', $order),
-                'log' => route('admin.order.log', $order),
+                //'destroy' => route('admin.order.destroy', $order),
+               // 'log' => route('admin.order.log', $order),
+
+                'canceled' => route('admin.order.canceled', $order),
+                'copy' => route('admin.order.copy', $order),
             ]);
     }
 
