@@ -477,7 +477,7 @@ class ProductService
             return;
         }
         $bulk = ($product->parser->price * $this->parser_set->parser_coefficient +
-            $product->dimensions->weight() * ($product->parser->isFragile() ? $this->parser_set->cost_weight_fragile : $this->parser_set->cost_weight)) *
+            $product->weight() * ($product->parser->isFragile() ? $this->parser_set->cost_weight_fragile : $this->parser_set->cost_weight)) *
             ($product->parser->isSanctioned() ? (1 + $this->parser_set->cost_sanctioned/100) : 1);
         $retail = ceil($bulk * (1 + $this->parser_set->cost_retail / 100));
         $retail = (int)ceil($retail / 100) * 100 - 10;

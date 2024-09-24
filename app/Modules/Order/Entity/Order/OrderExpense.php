@@ -207,7 +207,7 @@ class OrderExpense extends Model
     {
         $result = 0.0;
         foreach ($this->items as $item) {
-            $result += $item->orderItem->product->dimensions->weight() * $item->quantity;
+            $result += $item->orderItem->product->weight() * $item->quantity;
         }
         return $result;
     }
@@ -216,7 +216,7 @@ class OrderExpense extends Model
     {
         $result = 0.0;
         foreach ($this->items as $item) {
-            $result += $item->orderItem->product->dimensions->volume() * $item->quantity;
+            $result += $item->orderItem->product->packages->volume() * $item->quantity;
         }
         return $result;
     }

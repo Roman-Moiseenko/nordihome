@@ -68,7 +68,7 @@ class ProductTest extends TestCase
         //$product->setPackage($package);
        // $product->getWidth();
         //self::assertEquals($product->getWidth(), $width);
-        self::assertEquals($product->dimensions->weight(), 12.5);
+        self::assertEquals($product->weight(), 12.5);
 
     }
 

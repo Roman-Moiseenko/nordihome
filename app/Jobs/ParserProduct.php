@@ -17,17 +17,11 @@ class ParserProduct implements ShouldQueue
 
     private string $code;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(string $code)
     {
         $this->code = $code;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(ParserService $service): void
     {
         /** @var Product $product */
@@ -36,17 +30,11 @@ class ParserProduct implements ShouldQueue
         if (is_null($product)) { //Новый товар
             $service->findProduct($this->code);
         } else {
-            //Если нет данных о размерах
-            if (is_null($product->dimensions) || ($product->dimensions->height == 0)) {
+            if (empty($product->packages->packages)) //Если нет данных о размерах
                 $service->findProduct($this->code);
-            }
 
-            if ($product->isPublished() && !$product->isSale()) { //Опубликован, но снят с продажи,
+            if ($product->isPublished() && !$product->isSale())  //Опубликован, но снят с продажи,
                 $product->setForSale(); // появился снова.
-            }
-
         }
-
-
     }
 }

@@ -1,0 +1,1395 @@
+{
+    "buyModule": {
+        "productName": "HEMNES",
+        "productNumber": "40583840",
+        "productType": "ART",
+        "onlineSellable": true,
+        "isFood": false,
+        "noJavascriptLabel": "Musisz włączyć obsługę JavaScript aby robić zakupy na IKEA.com",
+        "currency": "PLN",
+        "priceExclTax": 1218.7,
+        "ratings": 4.8,
+        "hydrate": true
+    },
+    "productGallery": {
+        "productName": "HEMNES",
+        "mediaList": [
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1389318_PE965186_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1389318_PE965186",
+                    "type": "MAIN_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1389318_pe965186_s5.jpg"
+                }
+            },
+            {
+                "type": "video",
+                "content": {
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "0774521_FE000083",
+                    "mimeType": "video/mp4",
+                    "type": "PRODUCT_USAGE_VIDEO",
+                    "poster": {
+                        "mimeType": "image/jpeg",
+                        "url": "https://www.ikea.com/pvid/0774521_fe000083.jpg"
+                    },
+                    "url": "https://www.ikea.com/pvid/0774521_fe000083.mp4"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1327300_PE944406_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1327300_PE944406",
+                    "type": "CONTEXT_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327300_pe944406_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1327301_PE944403_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1327301_PE944403",
+                    "type": "CONTEXT_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327301_pe944403_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1327299_PE944405_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1327299_PE944405",
+                    "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327299_pe944405_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1327298_PE944404_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1327298_PE944404",
+                    "type": "QUALITY_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327298_pe944404_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1327294_PE944400_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1327294_PE944400",
+                    "type": "NON_STANDARDIZED_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327294_pe944400_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1327297_PE944407_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1327297_PE944407",
+                    "type": "NON_STANDARDIZED_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327297_pe944407_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1327296_PE944402_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1327296_PE944402",
+                    "type": "NON_STANDARDIZED_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327296_pe944402_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1327295_PE944401_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1327295_PE944401",
+                    "type": "NON_STANDARDIZED_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327295_pe944401_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1014369_PE829634_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1014369_PE829634",
+                    "type": "MEASUREMENT_ILLUSTRATION",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1014369_pe829634_s5.jpg"
+                }
+            }
+        ],
+        "showMediaInteractions": true,
+        "thumbnailsLimit": 6,
+        "showThumbnailsNavigation": {
+            "top": false,
+            "bottom": true
+        },
+        "badge": {
+            "label": "Kolekcja limitowana",
+            "variant": "limited-edition"
+        },
+        "textDirection": "ltr",
+        "a11yShowNextImageLabel": "Pokaż następne zdjęcie",
+        "a11yShowPreviousImageLabel": "Pokaż poprzednie zdjęcie",
+        "a11yThumbnailsLabel": "Miniatura {thumbnailPosition} z {thumbnailCount}.",
+        "a11yShowAllMediaLabel": "Pokaż wszystkie zdjęcia, otwórz widok.",
+        "showAllMediaText": "Wszystkie media",
+        "productGalleryDescriptionText": "{counter} {productName} obrazy",
+        "skipGalleryText": "Pomiń zdjęcia",
+        "hydrate": true
+    },
+    "pipPriceModule": {
+        "productId": "40583840",
+        "isNew": true,
+        "isNlp": false,
+        "isFamily": false,
+        "isTro": false,
+        "isDiscontinued": false,
+        "productName": "HEMNES",
+        "productDescription": "Rama leżanki z 3 szufladami, żółty",
+        "measurementText": "80x200 cm",
+        "measurementLinkAriaLabel": "80x200 cm. Pokaż wymiary",
+        "price": {
+            "mainPriceProps": {
+                "price": {
+                    "integer": "1 499",
+                    "decimals": ""
+                },
+                "unit": "",
+                "currencySymbol": "",
+                "separator": ",",
+                "hasTrailingCurrency": false,
+                "hasHighlight": false,
+                "hasStrikeThrough": false,
+                "isSmall": false,
+                "isSecondary": false,
+                "currencySuffixZeroDecimals": ",-"
+            },
+            "secondaryMainPriceProps": null,
+            "previousPriceProps": null,
+            "secondaryPreviousPriceProps": null,
+            "previousPriceText": "Cena dla pozostałych klientów",
+            "lowestPreviousPriceProps": null,
+            "secondaryLowestPreviousPriceProps": null,
+            "comparisonPriceText": null,
+            "discount": "",
+            "vatInfoText": null
+        },
+        "priceDisclaimersProps": null,
+        "productReviewsProps": {
+            "title": "Opinie",
+            "loadingText": "Wczytywanie opinii",
+            "eventLabel": "pip_reviews",
+            "productId": "40583840",
+            "productType": "ART",
+            "averageRatingProps": {
+                "rating": 4.8,
+                "icons": [
+                    {
+                        "type": "filled",
+                        "id": "star-icon-1"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-2"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-3"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-4"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-5"
+                    }
+                ],
+                "reviewCount": 611,
+                "reviews": true,
+                "renderHeader": false,
+                "reviewText": "(611)",
+                "ariaLabel": "Opinia: 4.8 na 5 gwiazdki. Recenzje ogółem: 611"
+            },
+            "enableRatingsAndReviews": true,
+            "reviews": [
+                {
+                    "ratingValue": 5,
+                    "name": "Magda",
+                    "text": "Super. Ładnie wykonane. Cała seria Hemnes godna polecenia. ",
+                    "title": "Łozko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Joanna",
+                    "text": "Łóżko jest rewelacyjne, zakupiliśmy dwa dla córek. Jakoś wykonania bardzo dobra, materace naprawdę godne polecenia, wielkość spania rewelacja, łóżko bardzo wygodnie się rozkłada, szuflady bardzo pojemne. Jedna córka śpi na połowie łóżka, ponieważ bez rozkładania jest już duża powierzchnia. Naprawdę polecam!!!",
+                    "title": "Najlepszy zakup w ostatnim czasie"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Bartosz",
+                    "text": "kolejne dziecko wyrosło i dostało HERMESA\nkonstrukcja sprawdzona",
+                    "title": "łóżko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Agnieszka",
+                    "text": "Świetne łóżko dla nastolatków. Rewelacyjna jest opcja wyboru spania dla jednej lub 2 osób. Pojemne szuflady na pościel.  Kupowałam z transportem. Wszystko bez najmniejszych zarzutów. Polecam.",
+                    "title": "Świetne łóżko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Małgorzata",
+                    "text": "Solidne, wygodne. Córka bardzo zadowolona. ",
+                    "title": "Łóżko "
+                },
+                {
+                    "ratingValue": 3,
+                    "name": "Paweł",
+                    "text": "Ciężko się składa i rozklada",
+                    "title": "Srednie"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Sandra",
+                    "text": "Jesteśmy bardZo zadowoleni z jakości łóżka. Zszokowani dokładnością instrukcji. To był nasz pierwszy i nie ostatni zakup mebli w Ikei. Teraz będziemy kompletować zestaw szaf dla córek. ",
+                    "title": "Polecam!"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Paweł",
+                    "text": "w instrukcji mogłoby się znaleźć, w którym kartonie znajduje się część do danego montażu",
+                    "title": "ok"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Katarzyna",
+                    "text": "Bardzo dobry produkt ",
+                    "title": "Pokój dziecka "
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Stanisław",
+                    "text": "Wszystko super!",
+                    "title": "Wszystko super!"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Krzysztof",
+                    "text": "Łózko po mimo że wygląda na ( według mnie ) masywne to w pokoju znika - fajna opcja że jest rozkładane + fajne pojemne 3 szuflady ",
+                    "title": "wygodne"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Tetiana",
+                    "text": "Bardzo wygodne!",
+                    "title": "Polecam"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Magdalena",
+                    "text": "Polecam córka zadowolona ",
+                    "title": "Wygodne łóżko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Katarzyna",
+                    "text": "Łóżko kupione dla córki, ale zdarza się że i ja z nią zasypiam. Mamy materace sprężynowe. Super wygodne, duże no i można złożyć.",
+                    "title": "Dla nas rewelacja."
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Edyta",
+                    "text": "Bardzo dobra jakość w stosunku do ceny. Z opcji rozkładania nie bedziemy korzystać, ale fajnie że jest taka możliwość. Złożenie łóżka nie jest trudne. Zdecydowaliśmy się na zakup drugiego łóżka w kolorze szarym dla syna.",
+                    "title": "Polecam"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Izabela",
+                    "text": "Łóżko jest super! Kupiliśmy do niego 2 grubsze i dość ciężkie materace i absolutnie nic nie dzieje się z ramą łóżka. Łóżko kupione dla dzieci ale często śpimy tam z mężem. Nie trzeszczy i nie pęka czego bałam się po przeczytaniu niektórych komentarzy.",
+                    "title": "Super, polecam!"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Adam",
+                    "text": "Bardzo dobry",
+                    "title": "Bardzo dobry"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Donata",
+                    "text": "Super łóżko",
+                    "title": "Super łóżko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Iwona",
+                    "text": "SUPER",
+                    "title": "SUPER"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Agnieszka",
+                    "text": "Super",
+                    "title": "Super"
+                }
+            ]
+        },
+        "productDiscountsProps": null,
+        "questionsAndAnswersProps": null,
+        "ecoWeeeFees": null,
+        "timeFrame": null,
+        "energyLabelProps": null,
+        "repairabilityIndex": null,
+        "ecoWeeeFeeExcludeText": "",
+        "totalPriceText": "",
+        "ecoWeeeFeeLinkText": "",
+        "ecoWeeeFeeLink": null,
+        "validToFromText": "",
+        "validToFromAndWhileSupplyLastText": "",
+        "whileSupplyLastText": null,
+        "isLastChance": false,
+        "energyInformationLocalProps": null,
+        "deliveryPageUrl": null,
+        "siteFolder": "pl/pl",
+        "lastChanceText": "Ostatnie sztuki",
+        "deliveryText": "Cena nie obejmuje",
+        "deliveryLinkText": "koszty wysyłki",
+        "newLowerPriceText": "Nowa\nniższa\ncena",
+        "familyMemberText": "Oferta dla Klubowiczów IKEA Family",
+        "newProductText": "Nowość",
+        "priceText": "Cena",
+        "previousPriceText": "Najniższa cena z 30 dni przed obniżką",
+        "regularPriceText": "Cena dla pozostałych klientów",
+        "omnibusDisclosureText": "Najniższa cena z 30 dni przed obniżką",
+        "previousPriceScreenReaderText": "Najniższa cena z 30 dni przed obniżką",
+        "hydrate": true
+    },
+    "productInformationSection": {
+        "isClient": false,
+        "dimensionProps": {
+            "title": "Wymiary",
+            "chooseDifferentSizeLinkText": "Wybierz inny rozmiar",
+            "dimensions": [
+                {
+                    "measure": "70 cm",
+                    "name": "Głębokość szuflady (wewnętrzna)",
+                    "type": "00202"
+                },
+                {
+                    "measure": "83 cm",
+                    "name": "Wysokość",
+                    "type": "00041"
+                },
+                {
+                    "measure": "20 cm",
+                    "name": "Wysokość szuflady (wewnątrz)",
+                    "type": "00495"
+                },
+                {
+                    "measure": "200 cm",
+                    "name": "Dł. materaca",
+                    "type": "00105"
+                },
+                {
+                    "measure": "80 cm",
+                    "name": "Szer. materaca",
+                    "type": "00104"
+                },
+                {
+                    "measure": "100 cm",
+                    "name": "Szerokość",
+                    "type": "00047"
+                },
+                {
+                    "measure": "51 cm",
+                    "name": "Szerokość szuflady (wewnętrzna)",
+                    "type": "00244"
+                }
+            ],
+            "images": [
+                {
+                    "imageFileName": "1014369_PE829634_S5.JPG",
+                    "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                    "id": "1014369_PE829634",
+                    "type": "MEASUREMENT_ILLUSTRATION",
+                    "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1014369_pe829634_s5.jpg"
+                }
+            ],
+            "fallbackImage": {
+                "imageFileName": "1389318_PE965186_S5.JPG",
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1389318_PE965186",
+                "type": "MAIN_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1389318_pe965186_s5.jpg"
+            },
+            "eventLabel": "pip_measurements",
+            "packaging": {
+                "id": "measurements-packaging",
+                "title": "Opakowanie",
+                "contentProps": {
+                    "packages": [
+                        {
+                            "name": "HEMNES",
+                            "typeName": "Rama leżanki z 3 szufladami",
+                            "itemNo": "40583840",
+                            "articleNumber": {
+                                "label": "Numer artykułu",
+                                "value": "405.838.40"
+                            },
+                            "measurements": [
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "53 cm",
+                                        "value": 53
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "6 cm",
+                                        "value": 6
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "205 cm",
+                                        "value": 205
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "26.20 kg",
+                                        "value": 26.2
+                                    }
+                                ],
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "29 cm",
+                                        "value": 29
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "6 cm",
+                                        "value": 6
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "205 cm",
+                                        "value": 205
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "23.30 kg",
+                                        "value": 23.3
+                                    }
+                                ],
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "84 cm",
+                                        "value": 84
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "6 cm",
+                                        "value": 6
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "100 cm",
+                                        "value": 100
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "24.50 kg",
+                                        "value": 24.5
+                                    }
+                                ],
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "84 cm",
+                                        "value": 84
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "6 cm",
+                                        "value": 6
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "100 cm",
+                                        "value": 100
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "24.00 kg",
+                                        "value": 24
+                                    }
+                                ]
+                            ],
+                            "quantity": {
+                                "label": "Paczka(i)",
+                                "value": 1
+                            },
+                            "multiPackDisclaimerText": "Ten produkt składa się kilku paczek"
+                        }
+                    ],
+                    "totalNoOfPackagesText": "Ten produkt składa się z 4 paczek.",
+                    "maxMeasurments": {
+                        "weightText": "26.20 kg",
+                        "widthText": "84 cm",
+                        "lengthText": "205 cm",
+                        "heightText": "6 cm",
+                        "diameterText": ""
+                    }
+                }
+            }
+        },
+        "includedProductsProps": null,
+        "productDetailsProps": {
+            "title": "Informacje o produkcie",
+            "eventLabel": "pip_details",
+            "section": "details",
+            "productDescriptionProps": {
+                "paragraphs": [
+                    "Dzięki tej leżance szybko i łatwo stworzysz miejsce dla gości zostających na noc. Wystarczy wysunąć podstawę łóżka i w jednej chwili zyskasz podwójne łóżko.",
+                    "Duże szuflady to świetne miejsce na zapasowe koce, poduszki, pościel lub inne rzeczy, które chcesz gdzieś przechować, a jednocześnie mieć w zasięgu ręki.",
+                    "Wysoka rama stwarza przytulne wrażenie kokonu i jest lakierowana, dlatego jest łatwa w utrzymaniu.",
+                    "Dodając miękkie, puszyste poduszki jako oparcie, z łatwością zamienisz tę leżankę w wygodną sofę."
+                ],
+                "designerLabel": "Projektant",
+                "designerName": "IKEA of Sweden"
+            },
+            "accordionObject": {
+                "keyBenefits": null,
+                "goodToKnow": {
+                    "id": "product-details-good-to-know",
+                    "title": "Dobrze wiedzieć",
+                    "contentProps": {
+                        "goodToKnow": [
+                            {
+                                "name": "Combined with",
+                                "text": "Można łączyć z innymi meblami z serii HEMNES."
+                            },
+                            {
+                                "name": "Sold separately",
+                                "text": "Materac i pościel sprzedawane są oddzielnie."
+                            },
+                            {
+                                "name": "Included",
+                                "text": "W komplecie dno łóżka z listew."
+                            },
+                            {
+                                "name": "Functions (other)",
+                                "text": "Leżanka nie jest przeznaczona do użytku jako dwa łóżka pojedyncze, tylko jako łóżko podwójne, gdy jej podstawa jest wysunięta."
+                            }
+                        ]
+                    }
+                },
+                "materialsAndCare": {
+                    "id": "product-details-material-and-care",
+                    "title": "Materiały i konserwacja",
+                    "contentProps": {
+                        "materials": [
+                            {
+                                "materials": [
+                                    {
+                                        "material": "Płyta pilśniowa, Farba akrylowa, Lakier poliestrowy",
+                                        "part": "Noga/ Wypełnienie końcowe łóżka/ Tył/ Szyna tylna góry/ Rama przednia szuflady/ Przód szuflady:"
+                                    },
+                                    {
+                                        "material": "Lita sosna",
+                                        "part": "Podstawa łóżka/ Szyna spodnia:"
+                                    },
+                                    {
+                                        "material": "Płyta wiórowa, folia melaminowa",
+                                        "part": "Pojemnik:"
+                                    },
+                                    {
+                                        "material": "Płyta pilśniowa, Farba akrylowa",
+                                        "part": "Dno szuflady:"
+                                    },
+                                    {
+                                        "material": "Płyta wiórowa, Folia plastikowa",
+                                        "part": "Tył szuflady/ Boki szuflady:"
+                                    }
+                                ]
+                            }
+                        ],
+                        "careInstructions": [
+                            {
+                                "texts": [
+                                    "Wycierać szmatką zwilżoną delikatnym środkiem do czyszczenia.",
+                                    "Wycierać czystą, suchą szmatką."
+                                ]
+                            }
+                        ],
+                        "proposition65": [],
+                        "woodDeclarationProps": null,
+                        "detailsMaterialText": "Materiały",
+                        "detailsCareText": "Pielęgnacja",
+                        "ariaOpensInNewTabLabel": "{tekst} (otwiera się w nowej zakładce)",
+                        "warningText": "Uwaga"
+                    }
+                },
+                "safetyAndCompliance": null,
+                "sustainabilityAndEnvironment": null,
+                "assemblyAndDocuments": {
+                    "id": "product-details-assembly-and-documents",
+                    "title": "Instrukcja montażu i dokumenty",
+                    "contentProps": {
+                        "attachments": {
+                            "assembly": {
+                                "header": "Instrukcja montażu",
+                                "attachments": [
+                                    {
+                                        "id": "405.838.40",
+                                        "url": "https://www.ikea.com/pl/pl/assembly_instructions/hemnes-rama-lezanki-z-3-szufladami-zolty__AA-1913852-7-2.pdf",
+                                        "label": "HEMNES Rama leżanki z 3 szufladami"
+                                    }
+                                ]
+                            },
+                            "software": {
+                                "header": "Software",
+                                "attachments": []
+                            },
+                            "declaration": {
+                                "header": "Deklaracja Zgodności",
+                                "attachments": []
+                            },
+                            "other": {
+                                "header": "Inne dokumenty",
+                                "attachments": []
+                            },
+                            "customerDisassembly": {
+                                "header": "Instrukcja demontażu",
+                                "attachments": []
+                            },
+                            "professionalDisassembly": {
+                                "header": "Demontaż &amp; Recycling (dla profesjonalistów z branży)",
+                                "attachments": []
+                            },
+                            "manual": {
+                                "header": "Zalecenia I instrukcje dotyczące pielęgnacji",
+                                "attachments": [
+                                    {
+                                        "id": "405.838.40",
+                                        "url": "https://www.ikea.com/pl/pl/manuals/hemnes-rama-lezanki-z-3-szufladami-zolty__AA-2180177-2-2.pdf",
+                                        "label": "HEMNES Rama leżanki z 3 szufladami"
+                                    }
+                                ]
+                            }
+                        },
+                        "ariaOpensInNewTabLabel": "{tekst} (otwiera się w nowej zakładce)"
+                    }
+                },
+                "compliance": null
+            },
+            "productId": "40583840",
+            "articleNumberLabel": "Numer artykułu"
+        },
+        "productReviewsProps": {
+            "title": "Opinie",
+            "loadingText": "Wczytywanie opinii",
+            "eventLabel": "pip_reviews_section",
+            "section": "reviews",
+            "productId": "40583840",
+            "productType": "ART",
+            "averageRatingProps": {
+                "rating": 4.8,
+                "icons": [
+                    {
+                        "type": "filled",
+                        "id": "star-icon-1"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-2"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-3"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-4"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-5"
+                    }
+                ],
+                "reviewCount": 611,
+                "reviews": true,
+                "renderHeader": false,
+                "reviewText": "(611)",
+                "ariaLabel": "Opinia: 4.8 na 5 gwiazdki. Recenzje ogółem: 611"
+            },
+            "enableRatingsAndReviews": true,
+            "reviews": [
+                {
+                    "ratingValue": 5,
+                    "name": "Magda",
+                    "text": "Super. Ładnie wykonane. Cała seria Hemnes godna polecenia. ",
+                    "title": "Łozko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Joanna",
+                    "text": "Łóżko jest rewelacyjne, zakupiliśmy dwa dla córek. Jakoś wykonania bardzo dobra, materace naprawdę godne polecenia, wielkość spania rewelacja, łóżko bardzo wygodnie się rozkłada, szuflady bardzo pojemne. Jedna córka śpi na połowie łóżka, ponieważ bez rozkładania jest już duża powierzchnia. Naprawdę polecam!!!",
+                    "title": "Najlepszy zakup w ostatnim czasie"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Bartosz",
+                    "text": "kolejne dziecko wyrosło i dostało HERMESA\nkonstrukcja sprawdzona",
+                    "title": "łóżko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Agnieszka",
+                    "text": "Świetne łóżko dla nastolatków. Rewelacyjna jest opcja wyboru spania dla jednej lub 2 osób. Pojemne szuflady na pościel.  Kupowałam z transportem. Wszystko bez najmniejszych zarzutów. Polecam.",
+                    "title": "Świetne łóżko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Małgorzata",
+                    "text": "Solidne, wygodne. Córka bardzo zadowolona. ",
+                    "title": "Łóżko "
+                },
+                {
+                    "ratingValue": 3,
+                    "name": "Paweł",
+                    "text": "Ciężko się składa i rozklada",
+                    "title": "Srednie"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Sandra",
+                    "text": "Jesteśmy bardZo zadowoleni z jakości łóżka. Zszokowani dokładnością instrukcji. To był nasz pierwszy i nie ostatni zakup mebli w Ikei. Teraz będziemy kompletować zestaw szaf dla córek. ",
+                    "title": "Polecam!"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Paweł",
+                    "text": "w instrukcji mogłoby się znaleźć, w którym kartonie znajduje się część do danego montażu",
+                    "title": "ok"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Katarzyna",
+                    "text": "Bardzo dobry produkt ",
+                    "title": "Pokój dziecka "
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Stanisław",
+                    "text": "Wszystko super!",
+                    "title": "Wszystko super!"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Krzysztof",
+                    "text": "Łózko po mimo że wygląda na ( według mnie ) masywne to w pokoju znika - fajna opcja że jest rozkładane + fajne pojemne 3 szuflady ",
+                    "title": "wygodne"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Tetiana",
+                    "text": "Bardzo wygodne!",
+                    "title": "Polecam"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Magdalena",
+                    "text": "Polecam córka zadowolona ",
+                    "title": "Wygodne łóżko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Katarzyna",
+                    "text": "Łóżko kupione dla córki, ale zdarza się że i ja z nią zasypiam. Mamy materace sprężynowe. Super wygodne, duże no i można złożyć.",
+                    "title": "Dla nas rewelacja."
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Edyta",
+                    "text": "Bardzo dobra jakość w stosunku do ceny. Z opcji rozkładania nie bedziemy korzystać, ale fajnie że jest taka możliwość. Złożenie łóżka nie jest trudne. Zdecydowaliśmy się na zakup drugiego łóżka w kolorze szarym dla syna.",
+                    "title": "Polecam"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Izabela",
+                    "text": "Łóżko jest super! Kupiliśmy do niego 2 grubsze i dość ciężkie materace i absolutnie nic nie dzieje się z ramą łóżka. Łóżko kupione dla dzieci ale często śpimy tam z mężem. Nie trzeszczy i nie pęka czego bałam się po przeczytaniu niektórych komentarzy.",
+                    "title": "Super, polecam!"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Adam",
+                    "text": "Bardzo dobry",
+                    "title": "Bardzo dobry"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Donata",
+                    "text": "Super łóżko",
+                    "title": "Super łóżko"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Iwona",
+                    "text": "SUPER",
+                    "title": "SUPER"
+                },
+                {
+                    "ratingValue": 5,
+                    "name": "Agnieszka",
+                    "text": "Super",
+                    "title": "Super"
+                }
+            ]
+        },
+        "technicalInformationProps": false,
+        "questionsAndAnswersProps": null,
+        "hydrate": true
+    },
+    "productStylePicker": {
+        "variationStyles": [
+            {
+                "title": "Wybierz kolor",
+                "selectedOption": "Żółty",
+                "code": "COLOUR",
+                "allOptions": [
+                    {
+                        "title": "Biały",
+                        "url": "https://www.ikea.com/pl/pl/p/hemnes-rama-lezanki-z-3-szufladami-bialy-90349326/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1180454_PE896328_S5.JPG",
+                            "alt": "HEMNES Rama leżanki z 3 szufladami, biały, 80x200 cm",
+                            "id": "1180454_PE896328",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-bialy__1180454_pe896328_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "1 299",
+                                "separator": ","
+                            },
+                            "priceNumeral": 1299
+                        },
+                        "linkId": "90349326"
+                    },
+                    {
+                        "title": "Szary",
+                        "url": "https://www.ikea.com/pl/pl/p/hemnes-rama-lezanki-z-3-szufladami-szary-60372276/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1163073_PE890114_S5.JPG",
+                            "alt": "HEMNES Rama leżanki z 3 szufladami, szary, 80x200 cm",
+                            "id": "1163073_PE890114",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-szary__1163073_pe890114_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "1 499",
+                                "separator": ","
+                            },
+                            "priceNumeral": 1499
+                        },
+                        "linkId": "60372276"
+                    },
+                    {
+                        "title": "Żółty",
+                        "url": "https://www.ikea.com/pl/pl/p/hemnes-rama-lezanki-z-3-szufladami-zolty-40583840/",
+                        "isSelected": true,
+                        "image": {
+                            "imageFileName": "1389318_PE965186_S5.JPG",
+                            "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                            "id": "1389318_PE965186",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1389318_pe965186_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "1 499",
+                                "separator": ","
+                            },
+                            "priceNumeral": 1499
+                        },
+                        "linkId": "40583840"
+                    }
+                ],
+                "options": [
+                    {
+                        "title": "Biały",
+                        "url": "https://www.ikea.com/pl/pl/p/hemnes-rama-lezanki-z-3-szufladami-bialy-90349326/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1180454_PE896328_S5.JPG",
+                            "alt": "HEMNES Rama leżanki z 3 szufladami, biały, 80x200 cm",
+                            "id": "1180454_PE896328",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-bialy__1180454_pe896328_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "1 299",
+                                "separator": ","
+                            },
+                            "priceNumeral": 1299
+                        },
+                        "linkId": "90349326"
+                    },
+                    {
+                        "title": "Szary",
+                        "url": "https://www.ikea.com/pl/pl/p/hemnes-rama-lezanki-z-3-szufladami-szary-60372276/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1163073_PE890114_S5.JPG",
+                            "alt": "HEMNES Rama leżanki z 3 szufladami, szary, 80x200 cm",
+                            "id": "1163073_PE890114",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-szary__1163073_pe890114_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "1 499",
+                                "separator": ","
+                            },
+                            "priceNumeral": 1499
+                        },
+                        "linkId": "60372276"
+                    },
+                    {
+                        "title": "Żółty",
+                        "url": "https://www.ikea.com/pl/pl/p/hemnes-rama-lezanki-z-3-szufladami-zolty-40583840/",
+                        "isSelected": true,
+                        "image": {
+                            "imageFileName": "1389318_PE965186_S5.JPG",
+                            "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                            "id": "1389318_PE965186",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1389318_pe965186_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "1 499",
+                                "separator": ","
+                            },
+                            "priceNumeral": 1499
+                        },
+                        "linkId": "40583840"
+                    }
+                ],
+                "sortOnPrice": true,
+                "hiddenCount": 0,
+                "ariaLabel": "kolor warianty dla HEMNES"
+            }
+        ],
+        "ariaLabelCurrentVariation": "Bieżąca odmiana {title}",
+        "hydrate": true
+    },
+    "stickyProductBar": {
+        "serverOnlineSellable": true,
+        "isFood": false,
+        "hydrate": true
+    },
+    "stockcheckSection": {
+        "itemNo": "40583840",
+        "itemType": "ART",
+        "itemName": "HEMNES",
+        "typeName": "Rama leżanki z 3 szufladami",
+        "visibleItemNo": "405.838.40",
+        "numberOfPackages": 4,
+        "packagingProps": {
+            "packages": [
+                {
+                    "name": "HEMNES",
+                    "typeName": "Rama leżanki z 3 szufladami",
+                    "itemNo": "40583840",
+                    "articleNumber": {
+                        "label": "Numer artykułu",
+                        "value": "405.838.40"
+                    },
+                    "measurements": [
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "53 cm",
+                                "value": 53
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "6 cm",
+                                "value": 6
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "205 cm",
+                                "value": 205
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "26.20 kg",
+                                "value": 26.2
+                            }
+                        ],
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "29 cm",
+                                "value": 29
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "6 cm",
+                                "value": 6
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "205 cm",
+                                "value": 205
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "23.30 kg",
+                                "value": 23.3
+                            }
+                        ],
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "84 cm",
+                                "value": 84
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "6 cm",
+                                "value": 6
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "100 cm",
+                                "value": 100
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "24.50 kg",
+                                "value": 24.5
+                            }
+                        ],
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "84 cm",
+                                "value": 84
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "6 cm",
+                                "value": 6
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "100 cm",
+                                "value": 100
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "24.00 kg",
+                                "value": 24
+                            }
+                        ]
+                    ],
+                    "quantity": {
+                        "label": "Paczka(i)",
+                        "value": 1
+                    },
+                    "multiPackDisclaimerText": "Ten produkt składa się kilku paczek"
+                }
+            ],
+            "totalNoOfPackagesText": "Ten produkt składa się z 4 paczek.",
+            "maxMeasurments": {
+                "weightText": "26.20 kg",
+                "widthText": "84 cm",
+                "lengthText": "205 cm",
+                "heightText": "6 cm",
+                "diameterText": ""
+            }
+        },
+        "loading": true,
+        "subProducts": [],
+        "hydrate": true
+    },
+    "availabilityGroup": {
+        "isCustomMade": false,
+        "isFood": false,
+        "serverOnlineSellable": true,
+        "header": "Możliwości zakupu",
+        "deliveryHeader": "Dostawa",
+        "storeHeader": "W magazynie",
+        "hydrate": true,
+        "loadingMessage": "Sprawdzanie dostępności..."
+    }
+}"><div class="pip-product__left-top"><div class="js-product-gallery pip-product-gallery" data-initial-props="{
+    "a11yShowAllMediaLabel": "Pokaż wszystkie zdjęcia, otwórz widok.",
+    "a11yShowNextImageLabel": "Pokaż następne zdjęcie",
+    "a11yShowPreviousImageLabel": "Pokaż poprzednie zdjęcie",
+    "a11yThumbnailsLabel": "Miniatura {thumbnailPosition} z {thumbnailCount}.",
+    "badge": {
+        "label": "Kolekcja limitowana",
+        "variant": "limited-edition"
+    },
+    "hydrate": true,
+    "mediaList": [
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1389318_PE965186",
+                "imageFileName": "1389318_PE965186_S5.JPG",
+                "type": "MAIN_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1389318_pe965186_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "0774521_FE000083",
+                "mimeType": "video/mp4",
+                "poster": {
+                    "mimeType": "image/jpeg",
+                    "url": "https://www.ikea.com/pvid/0774521_fe000083.jpg"
+                },
+                "type": "PRODUCT_USAGE_VIDEO",
+                "url": "https://www.ikea.com/pvid/0774521_fe000083.mp4"
+            },
+            "type": "video"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1327300_PE944406",
+                "imageFileName": "1327300_PE944406_S5.JPG",
+                "type": "CONTEXT_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327300_pe944406_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1327301_PE944403",
+                "imageFileName": "1327301_PE944403_S5.JPG",
+                "type": "CONTEXT_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327301_pe944403_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1327299_PE944405",
+                "imageFileName": "1327299_PE944405_S5.JPG",
+                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327299_pe944405_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1327298_PE944404",
+                "imageFileName": "1327298_PE944404_S5.JPG",
+                "type": "QUALITY_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327298_pe944404_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1327294_PE944400",
+                "imageFileName": "1327294_PE944400_S5.JPG",
+                "type": "NON_STANDARDIZED_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327294_pe944400_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1327297_PE944407",
+                "imageFileName": "1327297_PE944407_S5.JPG",
+                "type": "NON_STANDARDIZED_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327297_pe944407_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1327296_PE944402",
+                "imageFileName": "1327296_PE944402_S5.JPG",
+                "type": "NON_STANDARDIZED_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327296_pe944402_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1327295_PE944401",
+                "imageFileName": "1327295_PE944401_S5.JPG",
+                "type": "NON_STANDARDIZED_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1327295_pe944401_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "HEMNES Rama leżanki z 3 szufladami, żółty, 80x200 cm",
+                "id": "1014369_PE829634",
+                "imageFileName": "1014369_PE829634_S5.JPG",
+                "type": "MEASUREMENT_ILLUSTRATION",
+                "url": "https://www.ikea.com/pl/pl/images/products/hemnes-rama-lezanki-z-3-szufladami-zolty__1014369_pe829634_s5.jpg"
+            },
+            "type": "image"
+        }
+    ],
+    "productGalleryDescriptionText": "{counter} {productName} obrazy",
+    "productName": "HEMNES",
+    "showAllMediaText": "Wszystkie media",
+    "showMediaInteractions": true,
+    "showThumbnailsNavigation": {
+        "bottom": true,
+        "top": false
+    },
+    "skipGalleryText": "Pomiń zdjęcia",
+    "textDirection": "ltr",
+    "thumbnailsLimit": 6
+}

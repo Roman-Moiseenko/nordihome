@@ -34,7 +34,7 @@ class ParserCommand extends Command
 
         /** @var Product[] $products */
         $products = Product::where('brand_id', $ikea->id)
-            ->where('published', true)
+            //->where('published', true)
             //->where('not_sale', false)
             ->getModels();
         $this->info('Товаров - ' . count($products));
@@ -45,8 +45,11 @@ class ParserCommand extends Command
                 $to_job++;
                 ParserPriceProduct::dispatch($logger->id, $product->id);
 
-                if ($product->dimensions->height == 0)
+                if (empty($product->packages->packages)) {
+                    $this->info(' * * * Спарсить Габариты * ');
                     ParserProduct::dispatch($product->code_search); //Спарсить Габариты
+                }
+
 
             } else {
                 $this->info('*    * Не Икеа ' . $product->name . ' ' . $product->code);

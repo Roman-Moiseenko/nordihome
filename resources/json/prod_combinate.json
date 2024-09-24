@@ -1,0 +1,1252 @@
+{
+    "buyModule": {
+        "productName": "SEGERÖN",
+        "productNumber": "19494841",
+        "productType": "SPR",
+        "onlineSellable": false,
+        "isFood": false,
+        "noJavascriptLabel": "Musisz włączyć obsługę JavaScript aby robić zakupy na IKEA.com",
+        "currency": "PLN",
+        "priceExclTax": 332.52,
+        "ratings": 5,
+        "hydrate": true
+    },
+    "productGallery": {
+        "productName": "SEGERÖN",
+        "mediaList": [
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1147120_PE883270_S5.JPG",
+                    "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                    "id": "1147120_PE883270",
+                    "type": "MAIN_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1147120_pe883270_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1185517_PE898420_S5.JPG",
+                    "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                    "id": "1185517_PE898420",
+                    "type": "INSPIRATIONAL_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1185517_pe898420_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1175396_PH190446_S5.JPG",
+                    "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                    "id": "1175396_PH190446",
+                    "type": "INSPIRATIONAL_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1175396_ph190446_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1175390_PH190455_S5.JPG",
+                    "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                    "id": "1175390_PH190455",
+                    "type": "INSPIRATIONAL_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1175390_ph190455_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1175394_PH190447_S5.JPG",
+                    "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                    "id": "1175394_PH190447",
+                    "type": "INSPIRATIONAL_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1175394_ph190447_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1191009_PE900387_S5.JPG",
+                    "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                    "id": "1191009_PE900387",
+                    "type": "INSPIRATIONAL_IMAGE",
+                    "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1191009_pe900387_s5.jpg"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "imageFileName": "1177069_PE895232_S5.JPG",
+                    "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                    "id": "1177069_PE895232",
+                    "type": "MEASUREMENT_ILLUSTRATION",
+                    "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1177069_pe895232_s5.jpg"
+                }
+            }
+        ],
+        "showMediaInteractions": true,
+        "thumbnailsLimit": 6,
+        "showThumbnailsNavigation": {
+            "top": false,
+            "bottom": true
+        },
+        "badge": null,
+        "textDirection": "ltr",
+        "a11yShowNextImageLabel": "Pokaż następne zdjęcie",
+        "a11yShowPreviousImageLabel": "Pokaż poprzednie zdjęcie",
+        "a11yThumbnailsLabel": "Miniatura {thumbnailPosition} z {thumbnailCount}.",
+        "a11yShowAllMediaLabel": "Pokaż wszystkie zdjęcia, otwórz widok.",
+        "showAllMediaText": "Wszystkie media",
+        "productGalleryDescriptionText": "{counter} {productName} obrazy",
+        "skipGalleryText": "Pomiń zdjęcia",
+        "hydrate": true
+    },
+    "pipPriceModule": {
+        "productId": "19494841",
+        "isNew": false,
+        "isNlp": false,
+        "isFamily": false,
+        "isTro": false,
+        "isDiscontinued": false,
+        "productName": "SEGERÖN",
+        "productDescription": "Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+        "measurementText": "",
+        "measurementLinkAriaLabel": ". Pokaż wymiary",
+        "price": {
+            "mainPriceProps": {
+                "price": {
+                    "integer": "409",
+                    "decimals": ""
+                },
+                "unit": "",
+                "currencySymbol": "",
+                "separator": ",",
+                "hasTrailingCurrency": false,
+                "hasHighlight": false,
+                "hasStrikeThrough": false,
+                "isSmall": false,
+                "isSecondary": false,
+                "currencySuffixZeroDecimals": ",-"
+            },
+            "secondaryMainPriceProps": null,
+            "previousPriceProps": null,
+            "secondaryPreviousPriceProps": null,
+            "previousPriceText": "Cena dla pozostałych klientów",
+            "lowestPreviousPriceProps": null,
+            "secondaryLowestPreviousPriceProps": null,
+            "comparisonPriceText": null,
+            "discount": "",
+            "vatInfoText": null
+        },
+        "priceDisclaimersProps": null,
+        "productReviewsProps": {
+            "title": "Opinie",
+            "loadingText": "Wczytywanie opinii",
+            "eventLabel": "pip_reviews",
+            "productId": "19494841",
+            "productType": "SPR",
+            "averageRatingProps": {
+                "rating": 5,
+                "icons": [
+                    {
+                        "type": "filled",
+                        "id": "star-icon-1"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-2"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-3"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-4"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-5"
+                    }
+                ],
+                "reviewCount": 1,
+                "reviews": true,
+                "renderHeader": false,
+                "reviewText": "(1)",
+                "ariaLabel": "Opinia: 5 na 5 gwiazdki. Recenzje ogółem: 1"
+            },
+            "enableRatingsAndReviews": true,
+            "reviews": [
+                {
+                    "ratingValue": 5,
+                    "name": "Olga",
+                    "text": "Niestety był kłopot z poduszkami. Otrzymałam jedynie poszewki, sklep wycofał się z przesłania wypełnienia. Kupiłam na allegro przepłacając sporo. ",
+                    "title": "krzesła wygodne i wydają się trwałe"
+                }
+            ]
+        },
+        "productDiscountsProps": null,
+        "questionsAndAnswersProps": null,
+        "ecoWeeeFees": null,
+        "timeFrame": null,
+        "energyLabelProps": null,
+        "repairabilityIndex": null,
+        "ecoWeeeFeeExcludeText": "",
+        "totalPriceText": "",
+        "ecoWeeeFeeLinkText": "",
+        "ecoWeeeFeeLink": null,
+        "validToFromText": "",
+        "validToFromAndWhileSupplyLastText": "",
+        "whileSupplyLastText": null,
+        "isLastChance": false,
+        "energyInformationLocalProps": null,
+        "deliveryPageUrl": null,
+        "siteFolder": "pl/pl",
+        "lastChanceText": "Ostatnie sztuki",
+        "deliveryText": "Cena nie obejmuje",
+        "deliveryLinkText": "koszty wysyłki",
+        "newLowerPriceText": "Nowa\nniższa\ncena",
+        "familyMemberText": "Oferta dla Klubowiczów IKEA Family",
+        "newProductText": "Nowość",
+        "priceText": "Cena",
+        "previousPriceText": "Najniższa cena z 30 dni przed obniżką",
+        "regularPriceText": "Cena dla pozostałych klientów",
+        "omnibusDisclosureText": "Najniższa cena z 30 dni przed obniżką",
+        "previousPriceScreenReaderText": "Najniższa cena z 30 dni przed obniżką",
+        "hydrate": true
+    },
+    "productInformationSection": {
+        "isClient": false,
+        "dimensionProps": {
+            "title": "Wymiary",
+            "chooseDifferentSizeLinkText": "Wybierz inny rozmiar",
+            "dimensions": [
+                {
+                    "measure": "63 cm",
+                    "name": "Głębokość",
+                    "type": "00044"
+                },
+                {
+                    "measure": "73 cm",
+                    "name": "Wysokość",
+                    "type": "00041"
+                },
+                {
+                    "measure": "47 cm",
+                    "name": "Głębokość siedziska",
+                    "type": "00036"
+                },
+                {
+                    "measure": "46 cm",
+                    "name": "Wysokość siedziska",
+                    "type": "00039"
+                },
+                {
+                    "measure": "48 cm",
+                    "name": "Szerokość siedziska",
+                    "type": "00037"
+                },
+                {
+                    "measure": "110 kg",
+                    "name": "Przetestowano dla",
+                    "type": "00287"
+                },
+                {
+                    "measure": "67 cm",
+                    "name": "Szerokość",
+                    "type": "00047"
+                }
+            ],
+            "images": [
+                {
+                    "imageFileName": "1177069_PE895232_S5.JPG",
+                    "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                    "id": "1177069_PE895232",
+                    "type": "MEASUREMENT_ILLUSTRATION",
+                    "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1177069_pe895232_s5.jpg"
+                }
+            ],
+            "fallbackImage": {
+                "imageFileName": "1147120_PE883270_S5.JPG",
+                "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                "id": "1147120_PE883270",
+                "type": "MAIN_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1147120_pe883270_s5.jpg"
+            },
+            "eventLabel": "pip_measurements",
+            "packaging": {
+                "id": "measurements-packaging",
+                "title": "Opakowanie",
+                "contentProps": {
+                    "packages": [
+                        {
+                            "name": "SEGERÖN",
+                            "typeName": "Krzesło z podłokietnikami, ogr.",
+                            "itemNo": "19494841",
+                            "articleNumber": {
+                                "label": "Numer artykułu",
+                                "value": "194.948.41"
+                            },
+                            "measurements": [],
+                            "quantity": {
+                                "label": "Paczka(i)",
+                                "value": 1
+                            },
+                            "multiPackDisclaimerText": "Ten produkt składa się kilku paczek"
+                        },
+                        {
+                            "name": "SEGERÖN",
+                            "typeName": "Krzesło z podłokietnikami, ogr.",
+                            "itemNo": "10514754",
+                            "articleNumber": {
+                                "label": "Numer artykułu",
+                                "value": "105.147.54"
+                            },
+                            "measurements": [
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "68 cm",
+                                        "value": 68
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "37 cm",
+                                        "value": 37
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "74 cm",
+                                        "value": 74
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "6.70 kg",
+                                        "value": 6.7
+                                    }
+                                ]
+                            ],
+                            "quantity": {
+                                "label": "Paczka(i)",
+                                "value": 1
+                            },
+                            "multiPackDisclaimerText": false
+                        },
+                        {
+                            "name": "FRÖSÖN",
+                            "typeName": "Pokrycie poduszkę krzesła",
+                            "itemNo": "10391710",
+                            "articleNumber": {
+                                "label": "Numer artykułu",
+                                "value": "103.917.10"
+                            },
+                            "measurements": [
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "11 cm",
+                                        "value": 11
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "4 cm",
+                                        "value": 4
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "26 cm",
+                                        "value": 26
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "0.24 kg",
+                                        "value": 0.24
+                                    }
+                                ]
+                            ],
+                            "quantity": {
+                                "label": "Paczka(i)",
+                                "value": 1
+                            },
+                            "multiPackDisclaimerText": false
+                        },
+                        {
+                            "name": "DUVHOLMEN",
+                            "typeName": "Poduszka wewn poduchy krzesła",
+                            "itemNo": "80391844",
+                            "articleNumber": {
+                                "label": "Numer artykułu",
+                                "value": "803.918.44"
+                            },
+                            "measurements": [
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "48 cm",
+                                        "value": 48
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "4 cm",
+                                        "value": 4
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "48 cm",
+                                        "value": 48
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "0.44 kg",
+                                        "value": 0.44
+                                    }
+                                ]
+                            ],
+                            "quantity": {
+                                "label": "Paczka(i)",
+                                "value": 1
+                            },
+                            "multiPackDisclaimerText": false
+                        }
+                    ],
+                    "totalNoOfPackagesText": "Ten produkt składa się z 3 paczek.",
+                    "maxMeasurments": {
+                        "weightText": "6.70 kg",
+                        "widthText": "68 cm",
+                        "lengthText": "74 cm",
+                        "heightText": "37 cm",
+                        "diameterText": ""
+                    }
+                }
+            }
+        },
+        "includedProductsProps": {
+            "title": "Elementy w zestawie",
+            "subTitle": "Ten produkt składa się z kilku części. Poniżej możesz zobaczyć szczegóły na ich temat.",
+            "eventLabel": "pip_whats_included",
+            "section": "included-products",
+            "includedProductCardsProps": [
+                {
+                    "mainImage": {
+                        "imageFileName": "1138767_PE880069_S5.JPG",
+                        "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony",
+                        "id": "1138767_PE880069",
+                        "type": "MAIN_PRODUCT_IMAGE",
+                        "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony__1138767_pe880069_s5.jpg"
+                    },
+                    "pipUrl": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-10514754/",
+                    "productDescription": "Krzesło z podłokietnikami, ogr.",
+                    "productMeasurementText": "",
+                    "productName": "SEGERÖN",
+                    "quantity": 1
+                },
+                {
+                    "mainImage": {
+                        "imageFileName": "0685056_PE721329_S5.JPG",
+                        "alt": "FRÖSÖN Pokrycie poduszkę krzesła, zewnętrzne beżowy, 44x44 cm",
+                        "id": "0685056_PE721329",
+                        "type": "MAIN_PRODUCT_IMAGE",
+                        "url": "https://www.ikea.com/pl/pl/images/products/froesoen-pokrycie-poduszke-krzesla-zewnetrzne-bezowy__0685056_pe721329_s5.jpg"
+                    },
+                    "pipUrl": "https://www.ikea.com/pl/pl/p/froesoen-pokrycie-poduszke-krzesla-zewnetrzne-bezowy-10391710/",
+                    "productDescription": "Pokrycie poduszkę krzesła",
+                    "productMeasurementText": "44x44 cm",
+                    "productName": "FRÖSÖN",
+                    "quantity": 1
+                },
+                {
+                    "mainImage": {
+                        "imageFileName": "0684487_PE721200_S5.JPG",
+                        "alt": "DUVHOLMEN Poduszka wewn poduchy krzesła, zewnętrzne szary, 44x44 cm",
+                        "id": "0684487_PE721200",
+                        "type": "MAIN_PRODUCT_IMAGE",
+                        "url": "https://www.ikea.com/pl/pl/images/products/duvholmen-poduszka-wewn-poduchy-krzesla-zewnetrzne-szary__0684487_pe721200_s5.jpg"
+                    },
+                    "pipUrl": "https://www.ikea.com/pl/pl/p/duvholmen-poduszka-wewn-poduchy-krzesla-zewnetrzne-szary-80391844/",
+                    "productDescription": "Poduszka wewn poduchy krzesła",
+                    "productMeasurementText": "44x44 cm",
+                    "productName": "DUVHOLMEN",
+                    "quantity": 1
+                }
+            ]
+        },
+        "productDetailsProps": {
+            "title": "Informacje o produkcie",
+            "eventLabel": "pip_details",
+            "section": "details",
+            "productDescriptionProps": {
+                "paragraphs": [
+                    "Wodę po deszczu można po prostu strzepnąć, ponieważ pokrycie poduchy jest hydrofobowe.",
+                    "Pokrycie poduchy łatwo utrzymać w czystości i świeżości, gdyż można je zdejmować i prać w pralce.",
+                    "Kolor pokrycia poduchy dłużej wygląda świeżo, gdyż pokrycie jest odporne na blaknięcie.",
+                    "Łatwo przymocować poduszkę na krzesło za pomocą elastycznego paska. Nie trzeba wiązać - wystarczy przełożyć plastikową szpilkę przez pętelkę.",
+                    "Ten produkt jest trwały i łatwy w pielęgnacji, ponieważ jest wykonany z lakierowanej proszkowo stalowej ramy oraz wyplatanego ręcznie sznurka."
+                ],
+                "designerLabel": "Projektant",
+                "designerName": ""
+            },
+            "accordionObject": {
+                "keyBenefits": null,
+                "goodToKnow": {
+                    "id": "product-details-good-to-know",
+                    "title": "Dobrze wiedzieć",
+                    "contentProps": {
+                        "goodToKnow": [
+                            {
+                                "name": "Combined with",
+                                "text": "Można uzupełnić podkładem antypoślizgowym STOPP, który utrzyma poduchy na miejscu. Podkład można z łatwością złożyć lub dociąć do odpowiedniego rozmiaru."
+                            }
+                        ]
+                    }
+                },
+                "materialsAndCare": {
+                    "id": "product-details-material-and-care",
+                    "title": "Materiały i konserwacja",
+                    "contentProps": {
+                        "materials": [
+                            {
+                                "materials": [
+                                    {
+                                        "material": "stal, stal, stal, Poliestrowa powłoka proszkowa",
+                                        "part": "Rama siedziska:"
+                                    },
+                                    {
+                                        "material": "100% poliester",
+                                        "part": "Sznur:"
+                                    },
+                                    {
+                                        "material": "stal, stal, Poliestrowa powłoka proszkowa",
+                                        "part": "NOTRANS:"
+                                    }
+                                ],
+                                "productType": "Krzesło z podłokietnikami, ogr."
+                            },
+                            {
+                                "materials": [
+                                    {
+                                        "material": "100% poliester (min. 90% z recyklingu)"
+                                    }
+                                ],
+                                "productType": "Pokrycie poduszkę krzesła"
+                            },
+                            {
+                                "materials": [
+                                    {
+                                        "material": "100% polipropylen",
+                                        "part": "Pokrycie:"
+                                    },
+                                    {
+                                        "material": "100% poliester (min. 80% z recyklingu)",
+                                        "part": "Wypełnienie:"
+                                    },
+                                    {
+                                        "material": "pianka poliuretanowa",
+                                        "part": "Wypełnienie, rdzeń:"
+                                    }
+                                ],
+                                "productType": "Poduszka wewn poduchy krzesła"
+                            }
+                        ],
+                        "careInstructions": [],
+                        "proposition65": [],
+                        "woodDeclarationProps": null,
+                        "detailsMaterialText": "Materiały",
+                        "detailsCareText": "Pielęgnacja",
+                        "ariaOpensInNewTabLabel": "{tekst} (otwiera się w nowej zakładce)",
+                        "warningText": "Uwaga"
+                    }
+                },
+                "safetyAndCompliance": null,
+                "sustainabilityAndEnvironment": null,
+                "assemblyAndDocuments": {
+                    "id": "product-details-assembly-and-documents",
+                    "title": "Instrukcja montażu i dokumenty",
+                    "contentProps": {
+                        "attachments": {
+                            "assembly": {
+                                "header": "Instrukcja montażu",
+                                "attachments": [
+                                    {
+                                        "id": "105.147.54",
+                                        "url": "https://www.ikea.com/pl/pl/assembly_instructions/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony__AA-2310811-1-2.pdf",
+                                        "label": "SEGERÖN Krzesło z podłokietnikami, ogr."
+                                    }
+                                ]
+                            },
+                            "software": {
+                                "header": "Software",
+                                "attachments": []
+                            },
+                            "declaration": {
+                                "header": "Deklaracja Zgodności",
+                                "attachments": []
+                            },
+                            "other": {
+                                "header": "Inne dokumenty",
+                                "attachments": []
+                            },
+                            "customerDisassembly": {
+                                "header": "Instrukcja demontażu",
+                                "attachments": []
+                            },
+                            "professionalDisassembly": {
+                                "header": "Demontaż &amp; Recycling (dla profesjonalistów z branży)",
+                                "attachments": []
+                            },
+                            "manual": {
+                                "header": "Zalecenia I instrukcje dotyczące pielęgnacji",
+                                "attachments": [
+                                    {
+                                        "id": "105.147.54",
+                                        "url": "https://www.ikea.com/pl/pl/manuals/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony__AA-2335755-5-2.pdf",
+                                        "label": "SEGERÖN Krzesło z podłokietnikami, ogr."
+                                    }
+                                ]
+                            }
+                        },
+                        "ariaOpensInNewTabLabel": "{tekst} (otwiera się w nowej zakładce)"
+                    }
+                },
+                "compliance": null
+            },
+            "productId": "19494841",
+            "articleNumberLabel": "Numer artykułu"
+        },
+        "productReviewsProps": {
+            "title": "Opinie",
+            "loadingText": "Wczytywanie opinii",
+            "eventLabel": "pip_reviews_section",
+            "section": "reviews",
+            "productId": "19494841",
+            "productType": "SPR",
+            "averageRatingProps": {
+                "rating": 5,
+                "icons": [
+                    {
+                        "type": "filled",
+                        "id": "star-icon-1"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-2"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-3"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-4"
+                    },
+                    {
+                        "type": "filled",
+                        "id": "star-icon-5"
+                    }
+                ],
+                "reviewCount": 1,
+                "reviews": true,
+                "renderHeader": false,
+                "reviewText": "(1)",
+                "ariaLabel": "Opinia: 5 na 5 gwiazdki. Recenzje ogółem: 1"
+            },
+            "enableRatingsAndReviews": true,
+            "reviews": [
+                {
+                    "ratingValue": 5,
+                    "name": "Olga",
+                    "text": "Niestety był kłopot z poduszkami. Otrzymałam jedynie poszewki, sklep wycofał się z przesłania wypełnienia. Kupiłam na allegro przepłacając sporo. ",
+                    "title": "krzesła wygodne i wydają się trwałe"
+                }
+            ]
+        },
+        "technicalInformationProps": false,
+        "questionsAndAnswersProps": null,
+        "hydrate": true
+    },
+    "productStylePicker": {
+        "variationStyles": [
+            {
+                "title": "Wybierz kolor",
+                "selectedOption": "Ciemnozielony/Frösön/Duvholmen beżowy",
+                "code": "COLOUR",
+                "allOptions": [
+                    {
+                        "title": "Biały/beżowy/Frösön/Duvholmen beżowy",
+                        "url": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-bialy-bezowy-froesoen-duvholmen-bezowy-s99494842/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1147135_PE883282_S5.JPG",
+                            "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., biały/beżowy/Frösön/Duvholmen beżowy",
+                            "id": "1147135_PE883282",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-bialy-bezowy-froesoen-duvholmen-bezowy__1147135_pe883282_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "409",
+                                "separator": ","
+                            },
+                            "priceNumeral": 409
+                        },
+                        "linkId": "s99494842"
+                    },
+                    {
+                        "title": "Ciemnozielony/Frösön/Duvholmen beżowy",
+                        "url": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy-s19494841/",
+                        "isSelected": true,
+                        "image": {
+                            "imageFileName": "1147120_PE883270_S5.JPG",
+                            "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                            "id": "1147120_PE883270",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1147120_pe883270_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "409",
+                                "separator": ","
+                            },
+                            "priceNumeral": 409
+                        },
+                        "linkId": "s19494841"
+                    },
+                    {
+                        "title": "Ciemnozielony/Frösön/Duvholmen ciemny beżowo-zielony",
+                        "url": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-ciemny-bezowo-zielony-s39494840/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1147124_PE883274_S5.JPG",
+                            "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen ciemny beżowo-zielony",
+                            "id": "1147124_PE883274",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-ciemny-bezowo-zielony__1147124_pe883274_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "409",
+                                "separator": ","
+                            },
+                            "priceNumeral": 409
+                        },
+                        "linkId": "s39494840"
+                    },
+                    {
+                        "title": "Ciemnozielony/Frösön/Duvholmen wzór w paski",
+                        "url": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-wzor-w-paski-s69533034/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1239752_PE919066_S5.JPG",
+                            "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen wzór w paski",
+                            "id": "1239752_PE919066",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-wzor-w-paski__1239752_pe919066_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "409",
+                                "separator": ","
+                            },
+                            "priceNumeral": 409
+                        },
+                        "linkId": "s69533034"
+                    }
+                ],
+                "options": [
+                    {
+                        "title": "Biały/beżowy/Frösön/Duvholmen beżowy",
+                        "url": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-bialy-bezowy-froesoen-duvholmen-bezowy-s99494842/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1147135_PE883282_S5.JPG",
+                            "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., biały/beżowy/Frösön/Duvholmen beżowy",
+                            "id": "1147135_PE883282",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-bialy-bezowy-froesoen-duvholmen-bezowy__1147135_pe883282_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "409",
+                                "separator": ","
+                            },
+                            "priceNumeral": 409
+                        },
+                        "linkId": "s99494842"
+                    },
+                    {
+                        "title": "Ciemnozielony/Frösön/Duvholmen beżowy",
+                        "url": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy-s19494841/",
+                        "isSelected": true,
+                        "image": {
+                            "imageFileName": "1147120_PE883270_S5.JPG",
+                            "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                            "id": "1147120_PE883270",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1147120_pe883270_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "409",
+                                "separator": ","
+                            },
+                            "priceNumeral": 409
+                        },
+                        "linkId": "s19494841"
+                    },
+                    {
+                        "title": "Ciemnozielony/Frösön/Duvholmen ciemny beżowo-zielony",
+                        "url": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-ciemny-bezowo-zielony-s39494840/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1147124_PE883274_S5.JPG",
+                            "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen ciemny beżowo-zielony",
+                            "id": "1147124_PE883274",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-ciemny-bezowo-zielony__1147124_pe883274_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "409",
+                                "separator": ","
+                            },
+                            "priceNumeral": 409
+                        },
+                        "linkId": "s39494840"
+                    },
+                    {
+                        "title": "Ciemnozielony/Frösön/Duvholmen wzór w paski",
+                        "url": "https://www.ikea.com/pl/pl/p/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-wzor-w-paski-s69533034/",
+                        "isSelected": false,
+                        "image": {
+                            "imageFileName": "1239752_PE919066_S5.JPG",
+                            "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen wzór w paski",
+                            "id": "1239752_PE919066",
+                            "type": "MAIN_PRODUCT_IMAGE",
+                            "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-wzor-w-paski__1239752_pe919066_s5.jpg"
+                        },
+                        "priceProps": {
+                            "priceFormat": {
+                                "priceFormatter": "0[ ]0[,]?00",
+                                "currencySuffix": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": ""
+                            },
+                            "revampPrice": {
+                                "numDecimals": 0,
+                                "hasTrailingCurrency": false,
+                                "currencySuffix": "",
+                                "decimals": "",
+                                "currencySuffixZeroDecimals": ",-",
+                                "currencyPrefix": "",
+                                "currencySymbol": "",
+                                "integer": "409",
+                                "separator": ","
+                            },
+                            "priceNumeral": 409
+                        },
+                        "linkId": "s69533034"
+                    }
+                ],
+                "sortOnPrice": true,
+                "hiddenCount": 0,
+                "ariaLabel": "kolor warianty dla SEGERÖN"
+            }
+        ],
+        "ariaLabelCurrentVariation": "Bieżąca odmiana {title}",
+        "hydrate": true
+    },
+    "stickyProductBar": {
+        "serverOnlineSellable": false,
+        "isFood": false,
+        "hydrate": true
+    },
+    "stockcheckSection": {
+        "itemNo": "19494841",
+        "itemType": "SPR",
+        "itemName": "SEGERÖN",
+        "typeName": "Krzesło z podłokietnikami, ogr.",
+        "visibleItemNo": "194.948.41",
+        "numberOfPackages": 3,
+        "packagingProps": {
+            "packages": [
+                {
+                    "name": "SEGERÖN",
+                    "typeName": "Krzesło z podłokietnikami, ogr.",
+                    "itemNo": "19494841",
+                    "articleNumber": {
+                        "label": "Numer artykułu",
+                        "value": "194.948.41"
+                    },
+                    "measurements": [],
+                    "quantity": {
+                        "label": "Paczka(i)",
+                        "value": 1
+                    },
+                    "multiPackDisclaimerText": "Ten produkt składa się kilku paczek"
+                },
+                {
+                    "name": "SEGERÖN",
+                    "typeName": "Krzesło z podłokietnikami, ogr.",
+                    "itemNo": "10514754",
+                    "articleNumber": {
+                        "label": "Numer artykułu",
+                        "value": "105.147.54"
+                    },
+                    "measurements": [
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "68 cm",
+                                "value": 68
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "37 cm",
+                                "value": 37
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "74 cm",
+                                "value": 74
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "6.70 kg",
+                                "value": 6.7
+                            }
+                        ]
+                    ],
+                    "quantity": {
+                        "label": "Paczka(i)",
+                        "value": 1
+                    },
+                    "multiPackDisclaimerText": false
+                },
+                {
+                    "name": "FRÖSÖN",
+                    "typeName": "Pokrycie poduszkę krzesła",
+                    "itemNo": "10391710",
+                    "articleNumber": {
+                        "label": "Numer artykułu",
+                        "value": "103.917.10"
+                    },
+                    "measurements": [
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "11 cm",
+                                "value": 11
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "4 cm",
+                                "value": 4
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "26 cm",
+                                "value": 26
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "0.24 kg",
+                                "value": 0.24
+                            }
+                        ]
+                    ],
+                    "quantity": {
+                        "label": "Paczka(i)",
+                        "value": 1
+                    },
+                    "multiPackDisclaimerText": false
+                },
+                {
+                    "name": "DUVHOLMEN",
+                    "typeName": "Poduszka wewn poduchy krzesła",
+                    "itemNo": "80391844",
+                    "articleNumber": {
+                        "label": "Numer artykułu",
+                        "value": "803.918.44"
+                    },
+                    "measurements": [
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "48 cm",
+                                "value": 48
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "4 cm",
+                                "value": 4
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "48 cm",
+                                "value": 48
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "0.44 kg",
+                                "value": 0.44
+                            }
+                        ]
+                    ],
+                    "quantity": {
+                        "label": "Paczka(i)",
+                        "value": 1
+                    },
+                    "multiPackDisclaimerText": false
+                }
+            ],
+            "totalNoOfPackagesText": "Ten produkt składa się z 3 paczek.",
+            "maxMeasurments": {
+                "weightText": "6.70 kg",
+                "widthText": "68 cm",
+                "lengthText": "74 cm",
+                "heightText": "37 cm",
+                "diameterText": ""
+            }
+        },
+        "loading": true,
+        "subProducts": [
+            {
+                "itemNo": "10514754",
+                "itemType": "ART",
+                "name": "SEGERÖN",
+                "type": "Krzesło z podłokietnikami, ogr.",
+                "quantity": 1
+            },
+            {
+                "itemNo": "10391710",
+                "itemType": "ART",
+                "name": "FRÖSÖN",
+                "type": "Pokrycie poduszkę krzesła",
+                "quantity": 1
+            },
+            {
+                "itemNo": "80391844",
+                "itemType": "ART",
+                "name": "DUVHOLMEN",
+                "type": "Poduszka wewn poduchy krzesła",
+                "quantity": 1
+            }
+        ],
+        "hydrate": true
+    },
+    "availabilityGroup": {
+        "isCustomMade": false,
+        "isFood": false,
+        "serverOnlineSellable": false,
+        "header": "Możliwości zakupu",
+        "deliveryHeader": "Dostawa",
+        "storeHeader": "W magazynie",
+        "hydrate": true,
+        "loadingMessage": "Sprawdzanie dostępności..."
+    }
+}"><div class="pip-product__left-top"><div class="js-product-gallery pip-product-gallery" data-initial-props="{
+    "a11yShowAllMediaLabel": "Pokaż wszystkie zdjęcia, otwórz widok.",
+    "a11yShowNextImageLabel": "Pokaż następne zdjęcie",
+    "a11yShowPreviousImageLabel": "Pokaż poprzednie zdjęcie",
+    "a11yThumbnailsLabel": "Miniatura {thumbnailPosition} z {thumbnailCount}.",
+    "badge": null,
+    "hydrate": true,
+    "mediaList": [
+        {
+            "content": {
+                "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                "id": "1147120_PE883270",
+                "imageFileName": "1147120_PE883270_S5.JPG",
+                "type": "MAIN_PRODUCT_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1147120_pe883270_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                "id": "1185517_PE898420",
+                "imageFileName": "1185517_PE898420_S5.JPG",
+                "type": "INSPIRATIONAL_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1185517_pe898420_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                "id": "1175396_PH190446",
+                "imageFileName": "1175396_PH190446_S5.JPG",
+                "type": "INSPIRATIONAL_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1175396_ph190446_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                "id": "1175390_PH190455",
+                "imageFileName": "1175390_PH190455_S5.JPG",
+                "type": "INSPIRATIONAL_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1175390_ph190455_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                "id": "1175394_PH190447",
+                "imageFileName": "1175394_PH190447_S5.JPG",
+                "type": "INSPIRATIONAL_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1175394_ph190447_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                "id": "1191009_PE900387",
+                "imageFileName": "1191009_PE900387_S5.JPG",
+                "type": "INSPIRATIONAL_IMAGE",
+                "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1191009_pe900387_s5.jpg"
+            },
+            "type": "image"
+        },
+        {
+            "content": {
+                "alt": "SEGERÖN Krzesło z podłokietnikami, ogr., ciemnozielony/Frösön/Duvholmen beżowy",
+                "id": "1177069_PE895232",
+                "imageFileName": "1177069_PE895232_S5.JPG",
+                "type": "MEASUREMENT_ILLUSTRATION",
+                "url": "https://www.ikea.com/pl/pl/images/products/segeroen-krzeslo-z-podlokietnikami-ogr-ciemnozielony-froesoen-duvholmen-bezowy__1177069_pe895232_s5.jpg"
+            },
+            "type": "image"
+        }
+    ],
+    "productGalleryDescriptionText": "{counter} {productName} obrazy",
+    "productName": "SEGERÖN",
+    "showAllMediaText": "Wszystkie media",
+    "showMediaInteractions": true,
+    "showThumbnailsNavigation": {
+        "bottom": true,
+        "top": false
+    },
+    "skipGalleryText": "Pomiń zdjęcia",
+    "textDirection": "ltr",
+    "thumbnailsLimit": 6
+}

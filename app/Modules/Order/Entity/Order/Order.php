@@ -501,7 +501,7 @@ class Order extends Model
     {
         $weight = 0;
         foreach ($this->items as $item) {
-            $weight += $item->quantity * $item->product->dimensions->weight();
+            $weight += $item->quantity * $item->product->weight();
         }
         return $weight;
     }

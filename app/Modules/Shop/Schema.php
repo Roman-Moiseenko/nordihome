@@ -322,7 +322,7 @@ class Schema
             "weight" => [
                 "@type" => "QuantitativeValue",
                 "unitCode" => "KGM",
-                "value" => $product->dimensions->weight
+                "value" => $product->weight()
             ],
             //TODO Серия и Цвета
 

@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Parser;
 
 use App\Events\ProductHasParsed;
 use App\Modules\Base\Entity\Dimensions;
+use App\Modules\Base\Entity\Package;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
@@ -72,6 +73,7 @@ class ParserService
         $code = $this->formatCode($search);
         /** @var Product $product */
         $product = Product::where('code_search', $code)->first();//Ищем товар в базе
+
         if (empty($product)) {//1. Добавляем черновик товара (Артикул, Главное фото, Название, Краткое описание, Базовая цена, published = false)
             $parser_product = $this->parsingData($code); //Парсим основные данные
             $arguments = [      //Опции магазина
@@ -89,15 +91,20 @@ class ParserService
 
             $product->short = $parser_product['description'];
             $product->brand_id = (Brand::where('name', Brand::IKEA)->first())->id;
-            $product->dimensions = Dimensions::create(
-                $parser_product['dimensions']->width,
-                $parser_product['dimensions']->height,
-                $parser_product['dimensions']->depth,
-                $parser_product['dimensions']->weight,
-                Dimensions::MEASURE_KG);
+            foreach ($parser_product['packages'] as $item) {
+                $product->packages->add($item);
+            }
+
             $product->save();
             if (!empty($parser_product['image'])) $product->photo()->save(Photo::uploadByUrlProxy($parser_product['image']));
             $product->refresh();
+
+            //Проверяем есть ли товары в составе
+            foreach ($parser_product['composite'] as $composite) {
+                $_prod = $this->findProduct($composite['code']);
+                $product->composites()->attach($_prod, ['quantity' => $composite['quantity']]);
+            }
+            //$this->product->composites()->attach($product_id, ['quantity' => $quantity]);
 
             //4. Создаем ProductParsing
             $productParser = $this->createProductParsing($product->id, $parser_product);
@@ -106,16 +113,16 @@ class ParserService
 
             event(new ProductHasParsed($product));
             return $product;
-        } elseif (is_null($product->dimensions) || ($product->dimensions->width == 0)) {
+        } elseif (empty($product->packages->packages)) {
             $parser_product = $this->parsingData($code);
-            $product->dimensions = Dimensions::create(
-                $parser_product['dimensions']->width,
-                $parser_product['dimensions']->height,
-                $parser_product['dimensions']->depth,
-                $parser_product['dimensions']->weight,
-                Dimensions::MEASURE_KG);
+
+            foreach ($parser_product['packages'] as $item) {
+                $product->packages->add($item);
+            }
+
             $product->save();
         }
+
 
         $productParser = ProductParser::where('product_id', $product->id)->first();
         if (empty($productParser)) {
@@ -235,7 +242,7 @@ class ParserService
         'description' => "array|string",
         'link' => "string",
         'image' => "string",
-        'dimensions' => Dimensions::class,
+        'packages' => 'array',
         'price' => "float",
         'pack' => "mixed",
         'composite' => "array"
@@ -288,16 +295,25 @@ class ParserService
         }
 
         $pack = $_data['stockcheckSection']['numberOfPackages']; //Кол-во пачек
-        $dimensions = new Dimensions(); //габариты
+        $packages = [];
+     //   $dimensions = new Dimensions(); //габариты
         $_packages = $_data['stockcheckSection']['packagingProps']['packages'];
         foreach ($_packages as $_item) {
             $_quantity = $_item['quantity']['value']; //кол-во элементов в пачке данного товара
             if (count($_item['measurements']) != 0) //Пропускаем для самого товара, только по составным
                 foreach ($_item['measurements'] as $measurement) { //Если товар в 1 пачке разбит на несколько
-                    $dimensions->weight += $this->toWeight($measurement) * $_quantity;
+                    $packages[] = Package::create(
+                        $this->toHeight($measurement),
+                        $this->toWidth($measurement),
+                        $this->toLength($measurement),
+                        $this->toWeight($measurement),
+                        $_quantity,
+                    );
+
+                 /*   $dimensions->weight += $this->toWeight($measurement) * $_quantity;
                     $dimensions->height += $this->toHeight($measurement) * $_quantity;
                     $dimensions->width += $this->toWidth($measurement) * $_quantity;
-                    $dimensions->depth += $this->toLength($measurement) * $_quantity;
+                    $dimensions->depth += $this->toLength($measurement) * $_quantity;*/
                 }
         }
         ////Описание и перевод
@@ -312,7 +328,8 @@ class ParserService
             'description' => $description,
             'link' => $link,
             'image' => $image,
-            'dimensions' => $dimensions,
+            //'dimensions' => $dimensions,
+            'packages' => $packages,
             'price' => $price,
             'pack' => $pack,
             'composite' => $composite,

@@ -58,7 +58,7 @@ class ParserCart //Repository
         /** @var ParserItem $item */
         foreach ($this->items as $item) {
             $amount += $item->cost * $item->quantity;
-            $weight += (int)$item->product->dimensions->weight * $item->quantity;
+            $weight += (int)$item->product->weight() * $item->quantity;
         }
         $this->weight = $weight;
         $this->delivery = max($this->getCostDelivery($weight) * $weight, $this->parser->parser_delivery);

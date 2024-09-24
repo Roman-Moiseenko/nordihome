@@ -6,7 +6,9 @@ namespace App\Modules\Product\Entity;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Base\Casts\DimensionsCast;
+use App\Modules\Base\Casts\PackagesCast;
 use App\Modules\Base\Entity\Dimensions;
+use App\Modules\Base\Entity\Packages;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Discount\Entity\Promotion;
@@ -49,7 +51,8 @@ use JetBrains\PhpStorm\Pure;
  * @property Carbon $updated_at
  * @property Carbon $published_at
  * @property int $series_id
- * @property Dimensions $dimensions
+ * @property Dimensions $dimensions //Без веса,
+ * @property Packages $packages //Упаковка + вес
  * @property bool $priority
  * @property bool $not_sale
  *
@@ -57,9 +60,9 @@ use JetBrains\PhpStorm\Pure;
  * @property Category $category
  * @property Category[] $categories
  * @property Attribute[] $prod_attributes
- * @property \App\Modules\Base\Entity\Photo $photo
- * @property \App\Modules\Base\Entity\Photo $photo_next
- * @property \App\Modules\Base\Entity\Photo[] $photos
+ * @property Photo $photo
+ * @property Photo $photo_next
+ * @property Photo[] $photos
  * @property Video[] $videos
  *
  * @property ProductPriceRetail[] $prices
@@ -89,10 +92,10 @@ use JetBrains\PhpStorm\Pure;
  * @property Review[] $reviews
  * @property Review[] $reviewsAll
  * @property ProductParser $parser
+ * @property Product[] $composites
  */
 class Product extends Model
 {
-
     const FREQUENCY_MAJOR = 101;
     const FREQUENCY_AVERAGE = 102;
     const FREQUENCY_SMALL = 103;
@@ -114,11 +117,13 @@ class Product extends Model
         'updated_at' => 'datetime',
         'published_at' => 'datetime',
         'dimensions' => DimensionsCast::class,
+        'packages' => PackagesCast::class,
     ];
 
     protected $attributes = [
         'short' => '',
         'dimensions' => '{}',
+        'packages' => '[]',
         'description' => '',
         'frequency' => self::FREQUENCY_NOT,
         'count_for_sell' => 0,
@@ -154,6 +159,7 @@ class Product extends Model
         //'published_at',
         'priority',
         // 'description',
+        'packages',
     ];
 
     protected $hidden = [
@@ -270,6 +276,15 @@ class Product extends Model
         return false;
     }
 
+    public function isComposite(int $product_id): bool
+    {
+        foreach ($this->composites as $composite) {
+            if ($composite->id == $product_id) return true;
+        }
+        return false;
+    }
+
+
     public function isRelated(int $product_id): bool
     {
         foreach ($this->related as $related) {
@@ -354,6 +369,19 @@ class Product extends Model
         */
 
     //*** GET-....
+
+    public function weight(): float|int
+    {
+        $weight = 0;
+        if ($this->composites()->count() > 0) {
+            foreach ($this->composites as $composite)
+            $weight += $composite->weight() * $composite->pivot->quantity;
+        } else {
+            $weight = $this->packages->weight();
+        }
+        return $weight;
+    }
+
     public function getSlug(): string
     {
         return $this->slug;
@@ -644,6 +672,11 @@ class Product extends Model
         return $this->hasMany(Review::class, 'product_id', 'id');
     }
 
+    public function composites()
+    {
+        return $this->belongsToMany(Product::class, 'composites', 'parent_id', 'child_id')->withPivot('quantity');
+    }
+
     //ТОВАРНЫЙ УЧЕТ
 
     public function storageItems()
@@ -753,7 +786,7 @@ class Product extends Model
 
     public function photos()
     {
-        return $this->morphMany(\App\Modules\Base\Entity\Photo::class, 'imageable')->orderBy('sort')->orderBy('id');//->where('sort', '>',0);
+        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort')->orderBy('id');//->where('sort', '>',0);
     }
 
     public function photo_next()

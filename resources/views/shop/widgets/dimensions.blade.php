@@ -7,7 +7,7 @@
     </div>
     <div class="weight">
         <img src="/images/dimensions/weight.png">
-        <div class="measure">{{ $dimensions->weight . ' ' . $dimensions->measure }}</div>
+        <div class="measure">{{ '' }}</div>
     </div>
     <div class="delivery">
         <ul>

@@ -183,7 +183,7 @@ class Trade12Report
         $this->activeWorksheet->setCellValue([39, self::BEGIN_ROW+ $i], $item->orderItem->sell_cost * $item->quantity);
 
         $amount['quantity'] += $item->quantity;
-        $amount['weight'] += $item->orderItem->product->dimensions->weight() * $item->quantity;
+        $amount['weight'] += $item->orderItem->product->weight() * $item->quantity;
         $amount['amount'] += $item->orderItem->sell_cost * $item->quantity;
         $amount['amount_nds'] = $amount['amount'];
     }

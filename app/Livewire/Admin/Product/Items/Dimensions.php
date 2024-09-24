@@ -26,6 +26,9 @@ class Dimensions extends Component
     public bool $delivery_local;
     public bool $delivery_all;
 
+
+    public array $packages;
+
     public function boot()
     {
         $settings = new SettingRepository();
@@ -42,30 +45,54 @@ class Dimensions extends Component
 
     public function refresh_fields()
     {
-        $this->weight = $this->product->dimensions->weight;
+
         $this->height = $this->product->dimensions->height;
         $this->width = $this->product->dimensions->width;
         $this->depth = $this->product->dimensions->depth;
-        $this->measure = $this->product->dimensions->measure;
         $this->type = $this->product->dimensions->type;
 
         $this->local = $this->delivery_local && $this->product->isLocal();
         $this->delivery = !$this->product->not_delivery;
+
+        $this->packages = [];
+        foreach ($this->product->packages->packages as $package)
+            $this->packages[] = $package->toArray();
     }
 
     public function save()
     {
-        $this->product->dimensions->weight = $this->weight;
+
         $this->product->dimensions->height = $this->height;
         $this->product->dimensions->width = $this->width;
         $this->product->dimensions->depth = $this->depth;
-        $this->product->dimensions->measure = $this->measure;
         $this->product->dimensions->type = $this->type;
+
+        $this->product->packages->cleare();
+
+        foreach ($this->packages as $package) {
+            $this->product->packages->create(
+                params: $package
+            );
+        }
 
         if ($this->delivery_local) $this->product->not_local = !$this->local;
         if ($this->delivery_all) $this->product->not_delivery = !$this->delivery;
 
         $this->product->save();
+    }
+
+    public function add()
+    {
+        $this->product->packages->create();
+        $this->product->save();
+        $this->refresh_fields();
+    }
+
+    public function remove($key)
+    {
+        unset($this->packages[$key]);
+        $this->save();
+        $this->refresh_fields();
     }
 
     public function render()
