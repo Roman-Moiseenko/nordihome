@@ -4,16 +4,9 @@
     <div>
         <div class="flex items-center mt-8">
             <h1 class="text-lg font-medium mr-auto">
-                {{ $organization->name }}
+                {{ $organization->full_name }}
             </h1>
         </div>
     </div>
-    <div class="font-medium text-xl text-danger mt-6">
-        В разработке. Сведения об организации
-        <ol>
-            <li>???: </li>
-
-        </ol>
-
-    </div>
+    <x-company.info :company="$organization" route="{{ route('admin.accounting.organization.edit', $organization) }}" />
 @endsection

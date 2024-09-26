@@ -9,60 +9,86 @@ use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
- * @property string $name
+ *
+ * @property GeoAddress $legal_address
+ * @property GeoAddress $actual_address
+ *
+ * @property string $full_name
  * @property string $short_name
- * @property GeoAddress $address
- * @property string $INN
- * @property string $KPP
- * @property string $OGRN
- * @property string BIK
- * @property string $bank
+ * @property string $inn
+ * @property string $kpp
+ * @property string $ogrn
+ *
+ * @property string $bik
+ * @property string $bank_name
  * @property string $corr_account
- * @property string $account
+ * @property string $pay_account
+ *
  * @property string $email
  * @property string $phone
- * @property string $post_chief //Должность
+ * @property OrganizationContact[] $contacts
+ * @property string $post //Должность
  * @property FullName $chief
- * @property bool $default
+ * @property bool $active
+ * @property bool $default ///Удалить
  * @property Carbon $created_at
  * @property Carbon $updated_at
-// * @property Storage[] $storages
+ * @property Organization[] $holding
+
  */
 class Organization extends Model
 {
     protected $fillable = [
-        'name',
+        'full_name',
         'short_name',
-        'INN',
+        'inn',
+        'active',
     ];
 
     protected $attributes = [
-        'address' => '{}',
+        'legal_address' => '{}',
+        'actual_address' => '{}',
         'chief' => '{}',
     ];
 
-    public $timestamps = false;
     protected $casts = [
-        'address' => GeoAddressCast::class,
+        'legal_address' => GeoAddressCast::class,
+        'actual_address' => GeoAddressCast::class,
         'chief' => FullNameCast::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $name, string $short_name, string $INN): self
+    public static function register(string $full_name, string $short_name, string $inn): self
     {
         return self::create([
-            'name' => $name,
+            'full_name' => $full_name,
             'short_name' => $short_name,
-            'INN' => $INN,
+            'inn' => $inn,
+            'active' => true,
         ]);
+    }
+
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(OrganizationContact::class, 'organization_id', 'id');
     }
 
     public function isDefault(): bool
     {
         return $this->default == true;
+    }
+
+    public function isContact(int $id): bool
+    {
+        foreach ($this->contacts as $contact) {
+            if ($contact->id == $id) return true;
+        }
+
+        return false;
     }
 }

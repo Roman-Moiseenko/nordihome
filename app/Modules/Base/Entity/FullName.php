@@ -13,9 +13,20 @@ class FullName
 
     public function __construct($surname = '', $firstname = '', $secondname = '')
     {
-        $this->surname = $surname;
-        $this->firstname = $firstname;
-        $this->secondname = $secondname;
+        $this->surname = $surname ?? '';
+        $this->firstname = $firstname ?? '';
+        $this->secondname = $secondname ?? '';
+    }
+
+    public static function create($surname = '', $firstname = '', $secondname = '', array $params = [])
+    {
+        $fio = new static($surname, $firstname, $secondname);
+        if (!empty($params)) {
+            $fio->surname = $params['surname'] ?? '';
+            $fio->firstname = $params['firstname'] ?? '';
+            $fio->secondname = $params['secondname'] ?? '';
+        }
+        return $fio;
     }
 
     public function getFullName(): string

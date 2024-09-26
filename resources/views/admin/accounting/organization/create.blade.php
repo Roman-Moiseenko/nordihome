@@ -8,8 +8,8 @@
     </div>
     <form method="POST" action="{{ route('admin.accounting.organization.store') }}" enctype="multipart/form-data">
         @csrf
+        <x-company.fields />
 
-        @include('admin.accounting.organization._fields-form', ['organization' => null])
         <button type="submit" class="btn btn-success mt-5">Сохранить</button>
     </form>
 

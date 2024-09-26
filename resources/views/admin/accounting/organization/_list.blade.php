@@ -1,13 +1,13 @@
 <x-base.table.tr>
     <x-base.table.td class="">
-        <a href="{{ route('admin.accounting.organization.edit', $organization) }}"
+        <a href="{{ route('admin.accounting.organization.show', $organization) }}"
            class="font-medium whitespace-nowrap">{{ $organization->short_name }}</a>
     </x-base.table.td>
 
-    <x-base.table.td class="text-center">{{ $organization->INN }}</x-base.table.td>
+    <x-base.table.td class="text-center">{{ $organization->inn }}</x-base.table.td>
 
     <x-base.table.td class="text-center">{{ $organization->chief->getShortName() }}</x-base.table.td>
-    <x-base.table.td class="text-center"><x-yesNo status="{{ $organization->default }}" lucide="" class="justify-center"/></x-base.table.td>
+    <x-base.table.td class="text-center">тип</x-base.table.td>
     <x-base.table.td class="table-report__action w-56">
         <div class="flex justify-center items-center">
             <a class="flex items-center mr-3" href="{{ route('admin.accounting.organization.show', $organization) }}">

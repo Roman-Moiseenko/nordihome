@@ -9,7 +9,6 @@
     <form method="POST" action="{{ route('admin.accounting.distributor.update', $distributor) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-
         @include('admin.accounting.distributor._fields-form', ['distributor' => $distributor])
     </form>
 @endsection

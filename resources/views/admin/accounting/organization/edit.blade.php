@@ -9,8 +9,8 @@
     <form method="POST" action="{{ route('admin.accounting.organization.update', $organization) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+        <x-company.fields :company="$organization" />
 
-        @include('admin.accounting.organization._fields-form', ['organization' => $organization])
         <button type="submit" class="btn btn-success mt-5">Сохранить</button>
     </form>
 @endsection

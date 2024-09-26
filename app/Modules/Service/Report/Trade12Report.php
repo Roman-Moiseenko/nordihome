@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Service\Report;
 
 use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
@@ -95,13 +96,16 @@ class Trade12Report
 
     private function _general_info(OrderExpense $expense, int $page_count)
     {
-        /** @var Organization $organization */
-        $organization = Organization::where('default', true)->first();
-        $organization_text = $organization->name .
-            ', ИНН ' . $organization->INN .
-            ', ' . $organization->address->post . ', ' . $organization->address->address .
+
+        //TODO Выбор организации продавца, default или по id
+        /** @var Trader $trader */
+        $trader = Trader::where('default', true)->first();
+        $organization = $trader->organization;
+        $organization_text = $organization->full_name .
+            ', ИНН ' . $organization->inn .
+            ', ' . $organization->legal_address->post . ', ' . $organization->legal_address->address .
             ', тел: ' . $organization->phone .
-            ', р/с ' . $organization->account . ', в банке ' . $organization->bank . ', БИК ' . $organization->BIK . ', к/с ' . $organization->corr_account;
+            ', р/с ' . $organization->pay_account . ', в банке ' . $organization->bank_name . ', БИК ' . $organization->bik . ', к/с ' . $organization->corr_account;
         $_count = $expense->items()->count() + $expense->additions()->count();
         $_quantity = $expense->getQuantity();
 
@@ -121,7 +125,7 @@ class Trade12Report
                     $value = str_replace('{month}', (string)$expense->created_at->translatedFormat('F'), (string)$value);
                     $value = str_replace('{year}', (string)$expense->created_at->format('Y'), (string)$value);
 
-                    $value = str_replace('{post_chief}', (string)$organization->post_chief, (string)$value);
+                    $value = str_replace('{post_chief}', (string)$organization->post, (string)$value);
                     $value = str_replace('{chief}', (string)$organization->chief->getShortname(), (string)$value);
 
                     $value = str_replace('{count}', $this->service->CountToText($_count), (string)$value);

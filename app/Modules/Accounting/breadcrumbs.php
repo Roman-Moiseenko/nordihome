@@ -10,6 +10,7 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
+use App\Modules\Accounting\Entity\Trader;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -148,6 +149,24 @@ Breadcrumbs::for('admin.accounting.pricing.show', function (BreadcrumbTrail $tra
     $trail->push($pricing->number . ' от ' . $pricing->created_at->format('d-m-Y'), route('admin.accounting.pricing.show', $pricing));
 });
 
+//DISTRIBUTOR
+Breadcrumbs::for('admin.accounting.trader.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Продавцы', route('admin.accounting.trader.index'));
+});
+Breadcrumbs::for('admin.accounting.trader.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.trader.index');
+    $trail->push('Добавить', route('admin.accounting.trader.create'));
+});
+Breadcrumbs::for('admin.accounting.trader.show', function (BreadcrumbTrail $trail, Trader $trader) {
+    $trail->parent('admin.accounting.trader.index');
+    $trail->push($trader->name, route('admin.accounting.trader.show', $trader));
+});
+Breadcrumbs::for('admin.accounting.trader.edit', function (BreadcrumbTrail $trail, Trader $trader) {
+    $trail->parent('admin.accounting.trader.show', $trader);
+    $trail->push('Редактировать', route('admin.accounting.trader.edit', $trader));
+});
+
 //ORGANIZATION
 Breadcrumbs::for('admin.accounting.organization.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
@@ -159,7 +178,7 @@ Breadcrumbs::for('admin.accounting.organization.create', function (BreadcrumbTra
 });
 Breadcrumbs::for('admin.accounting.organization.show', function (BreadcrumbTrail $trail, Organization $organization) {
     $trail->parent('admin.accounting.organization.index');
-    $trail->push($organization->name, route('admin.accounting.organization.show', $organization));
+    $trail->push($organization->short_name, route('admin.accounting.organization.show', $organization));
 });
 Breadcrumbs::for('admin.accounting.organization.edit', function (BreadcrumbTrail $trail, Organization $organization) {
     $trail->parent('admin.accounting.organization.show', $organization);

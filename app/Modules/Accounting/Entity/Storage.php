@@ -13,7 +13,6 @@ use JetBrains\PhpStorm\Pure;
  * @property int $id
  * @property string $name
  * @property string $slug
- * @property int $organization_id
  * @property float $latitude
  * @property float $longitude
  * @property string $post //Почтовый индекс
@@ -22,8 +21,7 @@ use JetBrains\PhpStorm\Pure;
  * @property bool $point_of_sale
  * @property bool $point_of_delivery
  * @property bool $default
- * @property \App\Modules\Base\Entity\Photo $photo
- * @property Organization $organization
+ * @property Photo $photo
  * @property StorageItem[] $items
  * @property StorageDepartureItem[] $departureItems
  * @property StorageArrivalItem[] $arrivalItems
@@ -34,7 +32,6 @@ class Storage extends Model
     protected $fillable = [
         'name',
         'slug',
-        'organization_id',
         'latitude',
         'longitude',
         'post',
@@ -45,10 +42,9 @@ class Storage extends Model
         'default',
     ];
 
-    public static function register(int $organization_id, string $name, bool $point_of_sale, bool $point_of_delivery, string $slug = ''): self
+    public static function register(string $name, bool $point_of_sale, bool $point_of_delivery, string $slug = ''): self
     {
         return self::create([
-            'organization_id' => $organization_id,
             'name' => $name,
             'slug' => empty($slug) ? Str::slug($name) : $slug,
             'point_of_sale' => $point_of_sale,
@@ -154,11 +150,6 @@ class Storage extends Model
     }
 
     //*** RELATIONS
-    public function organization()
-    {
-        return $this->belongsTo(Organization::class, 'organization_id', 'id');
-    }
-
     public function items()
     {
         return $this->hasMany(StorageItem::class, 'storage_id', 'id');
@@ -176,7 +167,7 @@ class Storage extends Model
 
     public function photo()
     {
-        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->withDefault();
+        return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
 
     public function add(Product $product, int $quantity): StorageItem

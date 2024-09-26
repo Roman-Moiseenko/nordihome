@@ -25,46 +25,42 @@ class StorageController extends Controller
 
     public function index()
     {
-            $storages = Storage::orderBy('name')->get();
-            return view('admin.accounting.storage.index', compact('storages'));
+        $storages = Storage::orderBy('name')->get();
+        return view('admin.accounting.storage.index', compact('storages'));
     }
 
     public function create(Request $request)
     {
-            $organizations = Organization::get();
-            return view('admin.accounting.storage.create', compact('organizations'));
+        return view('admin.accounting.storage.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
-            'organization_id' => 'required|int',
         ]);
-            $storage = $this->service->create($request);
-            return redirect()->route('admin.accounting.storage.show', $storage);
+        $storage = $this->service->create($request);
+        return redirect()->route('admin.accounting.storage.show', $storage);
     }
 
     public function show(Request $request, Storage $storage)
     {
-            $query = $storage->items();
-            $items = $this->pagination($query, $request, $pagination);
-            return view('admin.accounting.storage.show', compact('storage', 'items', 'pagination'));
+        $query = $storage->items();
+        $items = $this->pagination($query, $request, $pagination);
+        return view('admin.accounting.storage.show', compact('storage', 'items', 'pagination'));
     }
 
     public function edit(Storage $storage)
     {
-            $organizations = Organization::get();
-            return view('admin.accounting.storage.edit', compact('storage', 'organizations'));
+        return view('admin.accounting.storage.edit', compact('storage'));
     }
 
     public function update(Request $request, Storage $storage)
     {
         $request->validate([
             'name' => 'required',
-            'organization_id' => 'required',
         ]);
-            $this->service->update($request, $storage);
-            return redirect()->route('admin.accounting.storage.show', $storage);
+        $this->service->update($request, $storage);
+        return redirect()->route('admin.accounting.storage.show', $storage);
     }
 }

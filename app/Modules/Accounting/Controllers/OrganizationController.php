@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Entity\OrganizationContact;
 use App\Modules\Accounting\Service\OrganizationService;
 use Illuminate\Http\Request;
 
@@ -34,9 +35,9 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string'
+            'inn' => 'required'
         ]);
-        $this->service->create($request->all());
+        $this->service->create($request);
         return redirect()->route('admin.accounting.organization.index');
     }
 
@@ -52,7 +53,7 @@ class OrganizationController extends Controller
 
     public function update(Request $request, Organization $organization)
     {
-        $organization = $this->service->update($organization, $request->all());
+        $organization = $this->service->update($organization, $request);
         return redirect()->route('admin.accounting.organization.edit', $organization);
     }
 
@@ -61,5 +62,26 @@ class OrganizationController extends Controller
         $this->service->delete($organization);
         return redirect()->route('admin.accounting.organization.index');
     }
+
+    public function add_contact(Request $request, Organization $organization)
+    {
+        $this->service->add_contact($organization, $request);
+        return redirect()->back();
+    }
+
+    public function del_contact(OrganizationContact $contact)
+    {
+        $this->service->del_contact($contact);
+        return redirect()->back();
+    }
+
+    public function set_contact(OrganizationContact $contact, Request $request)
+    {
+        $this->service->set_contact($contact, $request);
+        return redirect()->back();
+    }
+
+
+
 
 }

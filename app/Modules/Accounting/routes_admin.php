@@ -75,6 +75,18 @@ Route::group(
                 Route::delete('/remove-item/{item}', 'PricingController@remove_item')->name('remove-item');
             });
 
+        Route::group([
+            'prefix' => 'organization',
+            'as' => 'organization.',
+        ],
+            function () {
+                Route::post('/add-contact/{organization}', 'OrganizationController@add_contact')->name('add-contact');
+                Route::post('/del-contact/{contact}', 'OrganizationController@del_contact')->name('del-contact');
+                Route::post('/set-contact/{contact}', 'OrganizationController@set_contact')->name('set-contact');
+
+
+            });
+
         Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
         Route::resource('distributor', 'DistributorController'); //CRUD
         Route::resource('currency', 'CurrencyController'); //CRUD
@@ -84,5 +96,6 @@ Route::group(
         Route::resource('supply', 'SupplyController')->except(['edit', 'update']); //CRUD
         Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
         Route::resource('organization', 'OrganizationController'); //CRUD
+        Route::resource('trader', 'TraderController'); //CRUD
     }
 );

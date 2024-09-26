@@ -122,7 +122,8 @@ export default defineConfig({
                 'resources/js/components/search-add-product.js',
                 'resources/js/components/create-add-product.js',
                 'resources/js/components/table-filter.js',
-
+                'resources/js/components/company/fields.js',
+                'resources/js/components/company/info.js',
             ],
             refresh: true,
         }),

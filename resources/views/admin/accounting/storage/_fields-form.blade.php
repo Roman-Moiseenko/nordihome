@@ -10,20 +10,6 @@
             <div class="p-5">
                 <div class="grid grid-cols-12 gap-2">
                     <div class="col-span-12 lg:col-span-6">
-
-                        <x-base.tom-select id="select-organisation" name="organization_id" class="w-full" data-placeholder="Выберите организацию">
-                            <option value="0"></option>
-                        @foreach($organizations as $organization)
-                            <option value="{{ $organization->id }}"
-                                   @if($storage)
-                                {{ $storage->organization_id == $organization->id ? 'selected' : ''}}
-                                @endif
-                                >
-                                {{ $organization->name }}
-                            </option>
-                        @endforeach
-                        </x-base.tom-select>
-
                         {{ \App\Forms\Input::create('name', ['placeholder' => 'Название', 'value' => $storage->name ?? '', 'class' => 'mt-5'])->show() }}
                         {{ \App\Forms\Input::create('slug', ['placeholder' => 'Ссылка/slug', 'value' => $storage->slug ?? '', 'class' => 'mt-3'])->show() }}
 

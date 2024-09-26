@@ -33,7 +33,7 @@ return [
                 'route_name' => 'admin.accounting.pricing.index',
             ],
             'distributors' => [
-                'icon' => 'building',
+                'icon' => 'factory',
                 'title' => 'Поставщики',
                 'route_name' => 'admin.accounting.distributor.index',
             ],
@@ -46,6 +46,12 @@ return [
                 'icon' => 'candlestick-chart',
                 'title' => 'Курс валют',
                 'route_name' => 'admin.accounting.currency.index',
+            ],
+            'trader' => [
+                'icon' => 'building-2',
+                'title' => 'Продавцы',
+                'route_name' => 'admin.accounting.trader.index',
+                'can' => '',
             ],
             'organization' => [
                 'icon' => 'landmark',

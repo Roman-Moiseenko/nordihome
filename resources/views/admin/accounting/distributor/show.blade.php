@@ -1,25 +1,14 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div>
-        <div class="flex items-center mt-8">
-            <h1 class="text-lg font-medium mr-auto">
-                {{ $distributor->name }}
-            </h1>
-        </div>
-    </div>
 
+    <x-company.info
+        :title="$distributor->name"
+        :company="$distributor->organization"
+        route="{{ route('admin.accounting.organization.edit', $distributor->organization) }}"
+        :show="false"
+    />
     <div class="grid grid-cols-12 gap-6 mt-5">
-        <!-- Управление -->
-        <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-
-            <button class="btn btn-primary shadow-md mr-2"
-                    onclick="window.location.href='{{ route('admin.accounting.distributor.edit', $distributor) }}'">
-                Редактировать
-            </button>
-            {{ $items->links('admin.components.count-paginator') }}
-        </div>
-
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">
                 <x-base.table.thead class="table-dark">
@@ -40,5 +29,6 @@
             </x-base.table>
         </div>
     {{ $items->links('admin.components.paginator', ['pagination' => $pagination]) }}
+    </div>
 
 @endsection

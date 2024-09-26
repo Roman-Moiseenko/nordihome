@@ -17,7 +17,7 @@ class StorageService
     public function create(Request $request)
     {
         $storage = Storage::register(
-            $request->integer('organization_id'),
+            //$request->integer('organization_id'),
             $request->string('name')->trim()->value(),
             $request->has('sale'),
             $request->has('delivery')
@@ -28,7 +28,7 @@ class StorageService
 
     public function update(Request $request, Storage $storage)
     {
-        $storage->organization_id = $request['organization_id'];
+       // $storage->organization_id = $request['organization_id'];
         $storage->name = $request->string('name')->trim()->value();
         $storage->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
         $storage->point_of_sale = $request->has('sale');
