@@ -62,7 +62,8 @@ class DistributorController extends Controller
     public function edit(Distributor $distributor)
     {
         $currencies = Currency::get();
-        return view('admin.accounting.distributor.edit', compact('distributor', 'currencies'));
+        $organizations = Organization::orderBy('short_name')->where('active', true)->getModels();
+        return view('admin.accounting.distributor.edit', compact('distributor', 'currencies', 'organizations'));
     }
 
     public function update(Request $request, Distributor $distributor)
