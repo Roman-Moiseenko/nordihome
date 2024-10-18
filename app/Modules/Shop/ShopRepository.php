@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop;
 
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
@@ -469,11 +470,13 @@ class ShopRepository
 
     public function getMapData(): array
     {
-        return array_map(function (Storage $storage) {
+        $trader = Trader::where('default', true)->first();
+
+        return array_map(function (Storage $storage) use ($trader) {
             return [
                 'latitude' => $storage->latitude,
                 'longitude' => $storage->longitude,
-                'iconCaption' => $storage->organization->short_name,
+                'iconCaption' => $trader->name, //$trader->organization->short_name,
                 'balloonContent' => $storage->address,
             ];
         }, Storage::getModels());

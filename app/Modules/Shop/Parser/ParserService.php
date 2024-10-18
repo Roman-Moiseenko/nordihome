@@ -251,6 +251,8 @@ class ParserService
         $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
         $json_product = $this->httpPage->getPage($url, '_cache');
 
+        //dd([$url, $json_product]);
+
         if ($json_product == null) {
             throw new \DomainException('Неверный код товара');
         }

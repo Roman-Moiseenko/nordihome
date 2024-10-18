@@ -6,7 +6,7 @@
         <h4>{{ $item->product->name }}</h4>
         <div class="description-product">{{ $item->product->short }}</div>
         <div><span>Артикул: </span><span class="code-selected">{{ $item->product->code }}</span></div>
-        <div><span>Вес: </span><strong>{{ $item->product->dimensions->weight }} кг</strong></div>
+        <div><span>Вес: </span><strong>{{ $item->product->weight() }} кг</strong></div>
         <div><span>Кол-во пачек: </span><strong>{{ $item->parser->packs }} шт.</strong></div>
         <div><span>Наличие в ИКЕА: </span></div>
         <div class="quantity">{!! $item->storages !!}</div>

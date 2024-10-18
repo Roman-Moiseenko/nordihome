@@ -66,6 +66,7 @@ class HttpPage
 
     protected function request($url): array
     {
+
         $result = ["error" => null, "response" => FALSE, "http_code" => '200'];
         $headers = [
             "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0",
@@ -91,12 +92,13 @@ class HttpPage
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 
-                if (!empty($this->parser->proxy_ip)) {
+                if (!empty($this->parser->proxy_ip) && $this->parser->with_proxy) {
                     curl_setopt($curl, CURLOPT_PROXY, $this->parser->proxy_ip);
                     curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->parser->proxy_user);
                 }
 
                 $result["response"] = curl_exec($curl);
+               // dd($result);
                 if (!curl_errno($curl)) {
                     $info = curl_getinfo($curl);
                     $result["http_code"] = $info['http_code'];

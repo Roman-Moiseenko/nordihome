@@ -32,9 +32,9 @@
                         </x-base.form-switch>
 
                         <x-base.form-switch class="mt-3">
-                            <x-base.form-switch.input id="checkbox-default" type="checkbox" name="default"
+                            <x-base.form-switch.input id="checkbox-active" type="checkbox" name="active"
                                                       checked="{{ !is_null($trader) ? ($trader->active ? 'checked' : '') : '' }}"/>
-                            <x-base.form-switch.label for="checkbox-default">Активна</x-base.form-switch.label>
+                            <x-base.form-switch.label for="checkbox-active">Активна</x-base.form-switch.label>
                         </x-base.form-switch>
                     </div>
                 </div>

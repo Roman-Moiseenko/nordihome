@@ -13,6 +13,9 @@ Route::group(
     function () {
 
         Route::get('/', 'HomeController@index')->name('home');
+        Route::post('/', function () {
+            return abort(404);
+        });
         Route::get('/shop/{old_slug}', 'ProductController@old_slug');
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');

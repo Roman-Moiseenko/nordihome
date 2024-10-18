@@ -41,7 +41,13 @@
                         label('Коэффициент наценки на розницу')->type('number')->show() }}
                 </div>
 
-
+                <div class="p-4 border-b">
+                    {{ \App\Forms\CheckSwitch::create('with_proxy', [
+         'placeholder' => 'Через proxy',
+         'value' => $parser->with_proxy,
+         'class' => '',
+         ])->show() }}
+                </div>
                 <div class="p-4 border-b">
                     {{ \App\Forms\Input::create('proxy_ip',
                         ['placeholder' => '195.20.0.20:8080', 'class' => 'w-full lg:w-100', 'value' => $parser->proxy_ip])->

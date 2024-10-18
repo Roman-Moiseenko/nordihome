@@ -24,6 +24,7 @@ class Parser extends AbstractSetting
     public int $parser_delivery_9 = 0;
     public int $parser_delivery_10 = 0;
 
+    public bool $with_proxy = false;
     public string $proxy_ip = '';
     public string $proxy_user = '';
 
