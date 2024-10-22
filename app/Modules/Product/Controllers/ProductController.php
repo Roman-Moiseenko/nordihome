@@ -16,6 +16,7 @@ use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Helper\ProductHelper;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\ProductService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use JetBrains\PhpStorm\Deprecated;
@@ -39,9 +40,16 @@ class ProductController extends Controller
         $categories = Category::defaultOrder()->withDepth()->get();
         $query = $this->repository->getFilter($request, $filters);
         $products = $this->pagination($query, $request, $pagination);
-
+        //$query = Product::orderBy('id');
+        $count = [
+            'all' => Product::count(),
+            'active' => Product::where('published', true)->count(),
+            'draft' => Product::where('published', false)->count(),
+            'not_sale' => Product::where('not_sale', true)->count(),
+            'delete' => Product::onlyTrashed()->count(),
+        ];
         return view('admin.product.product.index', compact('products', 'pagination',
-            'categories', 'filters'));
+            'categories', 'filters', 'count'));
     }
 
     public function create(Request $request)
@@ -109,13 +117,42 @@ class ProductController extends Controller
         return redirect()->route('admin.product.edit', compact('product'));
     }
 
-    public function destroy(Product $product)
+    public function destroy(Product $product): RedirectResponse
     {
         $this->service->destroy($product);
-        return redirect()->route('admin.product.product.index');
+        return redirect()->back();//route('admin.product.index');
     }
 
-    public function toggle(Product $product) //Переключение между Опубликовано и Чернови
+    public function restore(int $id): RedirectResponse
+    {
+
+        $product = Product::onlyTrashed()->where('id', $id)->first();
+        $product->restore();
+        flash('Товар восстановлен', 'success');
+        return redirect()->back();//route('admin.product.index');
+    }
+
+    public function full_delete(int $id): RedirectResponse
+    {
+        $product = Product::onlyTrashed()->where('id', $id)->first();
+        $product->forceDelete();
+        flash('Товар удален полностью', 'success');
+        return redirect()->back();//route('admin.product.index');
+    }
+
+    public function sale(Product $product): RedirectResponse
+    {
+        $product->not_sale = !$product->not_sale;
+        $product->save();
+        if ($product->isSale()) {
+            flash('Товар возвращен в продажу', 'success');
+        } else {
+            flash('Товар убран из продажи', 'warning');
+        }
+        return redirect()->back();
+    }
+
+    public function toggle(Product $product) //Переключение между Опубликовано и Черновик
     {
         if ($product->isPublished()) {
             $this->service->draft($product);

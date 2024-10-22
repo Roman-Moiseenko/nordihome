@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
+    <div class="flex items-center mt-5">
         <h2 class="text-lg font-medium mr-auto">
             Редактирование бренда
         </h2>
@@ -9,7 +9,7 @@
     <form method="POST" action="{{ route('admin.product.brand.update', $brand) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        <div class="grid grid-cols-12 gap-6 mt-5">
+        <div class="grid grid-cols-12 gap-4 mt-5">
             <!-- Основные данные -->
             <div class="col-span-12">
                 <div class="box">

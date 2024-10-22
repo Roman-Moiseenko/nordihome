@@ -296,21 +296,20 @@ class ProductService
     public function destroy(Product $product)
     {
         if ($product->orderItems()->count()) {
-            $product->setDraft(); //throw new \DomainException('Товар в заказах. Удалить нельзя');
+            $product->setDraft(); throw new \DomainException('Товар в заказах. Удалить нельзя, перемещен в черновик');
+
         } else {
             $product->delete();
+            flash('Товар удален. Возможно восстановление', 'success');
         }
         //TODO При удалении, удалять все связанные файлы Фото и Видео
-
     }
 
     public function notSale(Product $product)
     {
         $product->not_sale = true;
         $product->save();
-
     }
-
 
     public function CheckNotSale(Product $product)
     {

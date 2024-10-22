@@ -3,7 +3,7 @@
 @section('subcontent')
 
     <h2 class="text-lg font-medium mr-auto mt-4">Перемещения товара</h2>
-    <div class="grid grid-cols-12 gap-6">
+    <div class="grid grid-cols-12 gap-4">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-4">
             <button data-tw-toggle="modal" data-tw-target="#modal-create-movement" class="btn btn-primary shadow-md mr-2"

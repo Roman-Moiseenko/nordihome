@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
+    <div class="flex items-center mt-5">
         <h1 class="text-xl font-medium mr-auto">
             {{ $user->email }} еще данные?
         </h1>

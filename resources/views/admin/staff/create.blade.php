@@ -1,14 +1,14 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
+    <div class="flex items-center mt-5">
         <h2 class="text-lg font-medium mr-auto">
             Создание нового сотрудника
         </h2>
     </div>
     <form method="POST" action="{{ route('admin.staff.store') }}" enctype="multipart/form-data">
         @csrf
-        <div class="grid grid-cols-12 gap-6 mt-5">
+        <div class="grid grid-cols-12 gap-4 mt-5">
             <!-- Основные данные -->
             <div class="col-span-12 lg:col-span-6">
                 <div class="box">

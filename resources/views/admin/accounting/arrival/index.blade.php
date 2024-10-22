@@ -2,7 +2,7 @@
 
 @section('subcontent')
     <h2 class="text-lg font-medium mr-auto mt-4">Поступления товара</h2>
-    <div class="grid grid-cols-12 gap-6">
+    <div class="grid grid-cols-12 gap-4">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-4">
             <x-base.popover class="inline-block" placement="bottom-start">

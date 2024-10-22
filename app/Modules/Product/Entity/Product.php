@@ -21,6 +21,7 @@ use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
@@ -96,6 +97,8 @@ use JetBrains\PhpStorm\Pure;
  */
 class Product extends Model
 {
+    use SoftDeletes;
+
     const FREQUENCY_MAJOR = 101;
     const FREQUENCY_AVERAGE = 102;
     const FREQUENCY_SMALL = 103;

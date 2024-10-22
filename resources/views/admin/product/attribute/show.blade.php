@@ -2,7 +2,7 @@
 
 @section('subcontent')
     <div>
-        <div class="flex items-center mt-8">
+        <div class="flex items-center mt-5">
             <h1 class="text-lg font-medium mr-auto">
                 {{ $attribute->name }}
             </h1>
@@ -71,7 +71,7 @@
     </div>
 
     @if($attribute->isVariant())
-        <div class="grid grid-cols-12 gap-6 mt-5">
+        <div class="grid grid-cols-12 gap-4 mt-5">
             <div class="lg:col-span-4 md:col-span-6 col-span-12">
         <h2 class="font-medium mt-3">Варианты</h2>
 

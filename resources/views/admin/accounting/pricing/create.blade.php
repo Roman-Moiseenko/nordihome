@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
+    <div class="flex items-center mt-5">
         <h2 class="text-lg font-medium mr-auto">
             Создание Ценообразование
         </h2>

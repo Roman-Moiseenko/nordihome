@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
+    <div class="flex items-center mt-5">
         <h2 class="text-lg font-medium mr-auto">
             @if($type == \App\Modules\Order\Entity\Order\OrderExpense::DELIVERY_LOCAL)
                 Заказы на доставку по области
@@ -15,7 +15,7 @@
 
         </h2>
     </div>
-    <div class="grid grid-cols-12 gap-6 mt-5">
+    <div class="grid grid-cols-12 gap-4 mt-5">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <form method="get" action="{{ url()->current() }}">
@@ -50,7 +50,7 @@
             </form>
         </div>
     </div>
-    <div class="grid grid-cols-12 gap-6 mt-5">
+    <div class="grid grid-cols-12 gap-4 mt-5">
 
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">

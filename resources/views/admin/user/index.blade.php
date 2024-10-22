@@ -2,7 +2,7 @@
 
 @section('subcontent')
     <h2 class="text-lg font-medium mt-4">Клиенты</h2>
-    <div class="grid grid-cols-12 gap-6">
+    <div class="grid grid-cols-12 gap-4">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-4">
             <a class="btn btn-primary" href="{{ route('admin.home') }}">Добавить клиента ? </a>

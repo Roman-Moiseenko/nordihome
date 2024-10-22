@@ -1,13 +1,13 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
+    <div class="flex items-center mt-5">
         <h2 class="text-lg font-medium mr-auto">
             Предзаказы
         </h2>
     </div>
 
-    <div class="grid grid-cols-12 gap-6 mt-5">
+    <div class="grid grid-cols-12 gap-4 mt-5">
 
         <div class="box col-span-12 overflow-auto lg:overflow-visible p-4">
             <x-base.table class="table table-hover">

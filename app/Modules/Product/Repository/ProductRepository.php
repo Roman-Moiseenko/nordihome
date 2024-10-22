@@ -124,6 +124,7 @@ class ProductRepository
         }
         if ($filters['published'] == 'active') $query->where('published', true);
         if ($filters['published'] == 'draft') $query->where('published', false);
+        if ($filters['published'] == 'delete') $query->onlyTrashed();
         if ($filters['not_sale'] != null) $query->where('not_sale', true);
         return $query;
     }

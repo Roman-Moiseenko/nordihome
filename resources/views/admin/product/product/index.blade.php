@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
+    <div class="flex items-center mt-5">
         <h2 class="text-lg font-medium mr-auto">
             Товары
             @if($filters['count'] > 0)
@@ -10,15 +10,20 @@
         </h2>
     </div>
 
-    <div class="grid grid-cols-12 gap-6 mt-5">
+    <div class="grid grid-cols-12 gap-4">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
 
             <button class="btn btn-primary shadow-md mr-2"
                     onclick="window.location.href='{{ route('admin.product.create') }}'">Создать товар
             </button>
-            {{ $products->links('admin.components.count-paginator') }}
-
+            <div>
+                <a class="fs-7 text-blue-800" href="{{ route('admin.product.index') }}">Все товары</a> ({{ $count['all'] }}) |
+                <a class="fs-7 text-blue-800" href="{{ route('admin.product.index', ['published' => 'active']) }}">Опубликованные</a> ({{ $count['active'] }}) |
+                <a class="fs-7 text-blue-800" href="{{ route('admin.product.index', ['not_sale' => 'on']) }}">Снятые с продажи</a> ({{ $count['not_sale'] }}) |
+                <a class="fs-7 text-blue-800" href="{{ route('admin.product.index', ['published' => 'draft']) }}">Черновики</a> ({{ $count['draft'] }}) |
+                <a class="fs-7 text-blue-800" href="{{ route('admin.product.index', ['published' => 'delete']) }}">Удаленные</a> ({{ $count['delete'] }})
+            </div>
         <!-- Фильтр -->
             <div class="ml-auto">
                 <x-base.popover class="inline-block mt-auto" placement="left-start">
@@ -60,6 +65,10 @@
                                     <div class="form-check mr-3 mt-2 sm:mt-0">
                                         <input id="published-draft" class="form-check-input check-published" type="radio" name="published" value="draft" {{ $filters['published'] == 'draft' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="published-draft">Черновики</label>
+                                    </div>
+                                    <div class="form-check mr-3 mt-2 sm:mt-0">
+                                        <input id="published-delete" class="form-check-input check-published" type="radio" name="published" value="delete" {{ $filters['published'] == 'delete' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="published-delete">Удаленные</label>
                                     </div>
                                 </div>
 

@@ -40,7 +40,7 @@ login
                         @csrf
                         <div class="mt-2 text-slate-400 xl:hidden text-center">Система управления бизнесом NORDI HOME. Управляйте своей сетью магазинов в одном месте
                         </div>
-                        <div class="mt-8">
+                        <div class="mt-5">
                             <input type="text" name="name" class="login__input form-control py-3 px-4 block"
                                    placeholder="Логин" id="name" value="{{ old('name') }}" required autocomplete="off"
                                    autofocus>
@@ -66,7 +66,7 @@ login
                             </div>
 
                         </div>
-                        <div class="mt-5 xl:mt-8 text-center xl:text-left">
+                        <div class="mt-5 xl:mt-5 text-center xl:text-left">
                             <button type="submit" class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Вход</button>
                             <!-- button class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
                                 Register

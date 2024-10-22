@@ -1,12 +1,12 @@
 @extends('layouts.side-menu')
 
 @section('subcontent')
-    <div class="flex items-center mt-8">
+    <div class="flex items-center mt-5">
         <h2 class="text-lg font-medium mr-auto">
             Бренды
         </h2>
     </div>
-    <div class="grid grid-cols-12 gap-6 mt-5">
+    <div class="grid grid-cols-12 gap-4 mt-5">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
             <button class="btn btn-primary shadow-md mr-2"

@@ -2,7 +2,7 @@
 
 @section('subcontent')
     <div>
-        <div class="flex items-center mt-8">
+        <div class="flex items-center mt-5">
             <h1 class="text-lg font-medium mr-auto">
                 Возврат на заказ {{ $order->htmlDate() . ' ' .$order->htmlNum() }}
             </h1>

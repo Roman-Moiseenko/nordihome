@@ -3,7 +3,7 @@
 @section('subcontent')
     {{ dd('УДАЛИТЬ') }}
     <div>
-        <div class="flex items-center mt-8">
+        <div class="flex items-center mt-5">
             <h1 class="text-lg font-medium mr-auto">
                 {{ $contact->name }}
             </h1>

@@ -113,6 +113,9 @@ Route::group(
         Route::post('/search_bonus', 'ProductController@search_bonus')->name('search-bonus');
         Route::post('/{product}/attr-modification', 'ProductController@attr_modification')->name('attr-modification');
         Route::post('/toggle/{product}', 'ProductController@toggle')->name('toggle');
+        Route::post('/sale/{product}', 'ProductController@sale')->name('sale');
+        Route::post('/restore/{id}', 'ProductController@restore')->name('restore');
+        Route::delete('/full-delete/{id}', 'ProductController@full_delete')->name('full-delete');
         Route::post('/fast-create', 'ProductController@fast_create')->name('fast-create');
     }
 );

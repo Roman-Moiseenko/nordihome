@@ -1,5 +1,5 @@
 
-<div class="grid grid-cols-12 gap-6 mt-5">
+<div class="grid grid-cols-12 gap-4 mt-5">
     <!-- Основные данные -->
     <div class="col-span-12">
         <div class="box">
