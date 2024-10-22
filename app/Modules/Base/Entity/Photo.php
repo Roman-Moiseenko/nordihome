@@ -49,7 +49,7 @@ class Photo extends Model
 
     public function imageable()
     {
-        return $this->morphTo();
+        return $this->morphTo()->withTrashed();
     }
 
     //Генерация пути
