@@ -13,6 +13,7 @@ use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\ShopRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
@@ -39,7 +40,6 @@ class CatalogController extends Controller
         $description = $this->web->categories_desc;
 
         return view('shop.catalog', compact('categories', 'title', 'description'));
-
     }
 
     public function view(Request $request, $slug)
@@ -77,7 +77,7 @@ class CatalogController extends Controller
                 if ($product->getCountSell() > 0)
                     $product_ids[] = $product->id;
             } else {
-                if ($this->common->pre_order || $product->pre_order == true || $product->getCountSell() > 0)
+                if ($this->common->pre_order || $product->pre_order || $product->getCountSell() > 0)
                     $product_ids[] = $product->id;
             }
 
@@ -106,7 +106,7 @@ class CatalogController extends Controller
     }
 
 
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $result = [];
         if (empty($request['category'])) return \response()->json($result);

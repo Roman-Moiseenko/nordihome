@@ -107,6 +107,7 @@ Route::group(
         Route::post('/{product}/up-image', 'ProductController@up_image')->name('up-image');
         Route::post('/{product}/down-image', 'ProductController@down_image')->name('down-image');
         Route::post('/{product}/alt-image', 'ProductController@alt_image')->name('alt-image');
+        Route::post('/{product}/move-image', 'ProductController@move_image')->name('move-image');
         Route::post('/search', 'ProductController@search')->name('search');
         Route::post('/search-add', 'ProductController@search_add')->name('search-add');
         Route::post('/search_bonus', 'ProductController@search_bonus')->name('search-bonus');

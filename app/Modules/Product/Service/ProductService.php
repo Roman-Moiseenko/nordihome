@@ -371,10 +371,8 @@ class ProductService
         }
     }
 
-    public function upPhoto(Request $request, Product $product)
+    public function upPhoto(int $photo_id, Product $product): void
     {
-        $photo_id = $request->integer('photo_id');
-
         $photos = [];
         foreach ($product->photos as $i => $photo) {
             $photos[] = $photo;
@@ -390,7 +388,8 @@ class ProductService
         }
     }
 
-    public function downPhoto(Request $request, Product $product)
+
+    public function downPhoto(int $photo_id, Product $product): void
     {
         /** @var Photo[] $photos */
         $photos = [];
@@ -398,7 +397,6 @@ class ProductService
             $photos[] = $photo;
         }
 
-        $photo_id = $request->integer('photo_id');
         for ($i = 0; $i < count($photos) - 1; $i++) {
             if ($photos[$i]->id == $photo_id) {
                 $prev = $photos[$i + 1]->sort;
@@ -408,6 +406,23 @@ class ProductService
             }
         }
     }
+
+    public function movePhoto(Request $request, Product $product): void
+    {
+        $new_sort = $request->input('new_sort');
+        /** @var Photo[] $photos */
+        $photos = $product->photos()->getModels();
+        foreach ($new_sort as $new => $old) {
+            if ($new != (int)$old) {
+                foreach ($photos as $photo) {
+                    if ($photo->sort == (int)$old) {
+                        Photo::where('id', $photo->id)->update(['sort' => $new]);
+                    }
+                }
+            }
+        }
+    }
+
 
     public function altPhoto(Request $request, Product $product)
     {
@@ -477,8 +492,8 @@ class ProductService
             return;
         }
         $bulk = ($product->parser->price * $this->parser_set->parser_coefficient +
-            $product->weight() * ($product->parser->isFragile() ? $this->parser_set->cost_weight_fragile : $this->parser_set->cost_weight)) *
-            ($product->parser->isSanctioned() ? (1 + $this->parser_set->cost_sanctioned/100) : 1);
+                $product->weight() * ($product->parser->isFragile() ? $this->parser_set->cost_weight_fragile : $this->parser_set->cost_weight)) *
+            ($product->parser->isSanctioned() ? (1 + $this->parser_set->cost_sanctioned / 100) : 1);
         $retail = ceil($bulk * (1 + $this->parser_set->cost_retail / 100));
         $retail = (int)ceil($retail / 100) * 100 - 10;
 
@@ -502,7 +517,7 @@ class ProductService
     {
         $products = Product::where('published', true)->where('not_sale', false)->pluck('id')->toArray();
         foreach ($products as $product_id) {
-            $this->setCostProductIkea($product_id, 'Изменение коэффициентов наценки',false);
+            $this->setCostProductIkea($product_id, 'Изменение коэффициентов наценки', false);
         }
     }
 }

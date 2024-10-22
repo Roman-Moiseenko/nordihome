@@ -22,7 +22,7 @@
     function _getImageHTML(_image) {
         let _id = _image.id;
         return '' +
-            '<div class="p-5 border-2 border-dashed rounded-md shadow-sm border-slate-200/60 dark:border-darkmode-400">' +
+            '<div class="p-5 border-2 border-dashed rounded-md shadow-sm border-slate-200/60 image-drag-drop" data-sort="' + _image.sort + '">' +
                 '<div class="relative h-40 w-40 mx-auto cursor-pointer image-fit zoom-in">' +
                     '<img class="rounded-md" src="' + _image.url + '" alt="' + _image.alt + '" title="' + _image.alt + '"/>' +
                     '<div id="delete-photo-' + _id + '" data-id="' + _id + '" title="Удалить фотографию?" class="tooltip w-5 h-5 flex items-center justify-center absolute rounded-full text-white bg-danger right-0 top-0 -mr-2 -mt-2"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="x" data-lucide="x" class="lucide lucide-x w-4 h-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> </div>' +
@@ -178,5 +178,50 @@
     }
 </script>
 
+@once
+    @push('styles')
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+        <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+    @endpush
+@endonce
 
+<script>
+    (function () {
+        "use strict"
+        let blockImages = $("#block-images");
+        blockImages.sortable({
+            stop: function( event, ui ) {
+                let sort = Number(ui.item.attr('data-sort'))
+                let prev = ui.item.prev()
+                let next = ui.item.next()
+                let delta;
+                if (prev.length !== 0) {
+                    delta = sort - prev.data('sort')
+                } else {
+                    delta = sort - next.data('sort') + 1;
+                }
 
+                //Отправляем сохранять, если верно
+                if (delta !== 0) {
+                    let new_sort = [];
+                    blockImages.find('.image-drag-drop').each(function() {
+                        new_sort.push(Number($(this).attr('data-sort')));
+                    })
+
+                    $.post('/admin/product/{{ $product->id }}/move-image', {
+                        _token: '{{ csrf_token() }}',
+                        new_sort: new_sort,
+                    }, function (data) {
+                        if (data === true) {
+                            let _i = 0;
+                            blockImages.find('.image-drag-drop').each(function() {
+                                $(this).attr('data-sort', _i);
+                                _i++;
+                            })
+                        }
+                    })
+                }
+            }
+        });
+    })();
+</script>

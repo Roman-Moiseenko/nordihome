@@ -60,10 +60,10 @@
                         </div>
                         <div class="cart-footer-button d-flex">
                             <button class="btn btn-outline-dark"
-                                    @guest()
+                                @guest()
                                     data-bs-toggle="modal" data-bs-target="#login-popup"
-                                    @endguest
-                                    @auth('user')
+                                @endguest
+                                @auth('user')
                                     onclick="document.getElementById('to-order').submit()"
                                 @endauth
                             >Оформить</button>

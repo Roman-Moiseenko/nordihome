@@ -201,6 +201,7 @@ class ProductController extends Controller
                 'id' => $photo->id,
                 'url' => $photo->getUploadUrl(),
                 'alt' => $photo->alt,
+                'sort' => $photo->sort,
             ];
         }
         return \response()->json($result);
@@ -214,13 +215,13 @@ class ProductController extends Controller
 
     public function up_image(Request $request, Product $product)
     {
-        $this->service->upPhoto($request, $product);
+        $this->service->upPhoto($request->integer('photo_id'), $product);
         return \response()->json(true);
     }
 
     public function down_image(Request $request, Product $product)
     {
-        $this->service->downPhoto($request, $product);
+        $this->service->downPhoto($request->integer('photo_id'), $product);
         return \response()->json(true);
     }
 
@@ -228,6 +229,17 @@ class ProductController extends Controller
     {
         $this->service->altPhoto($request, $product);
         return \response()->json(true);
+    }
+
+    public function move_image(Request $request, Product $product)
+    {
+        try {
+            $this->service->movePhoto($request, $product);
+            return \response()->json(true);
+        } catch (\Throwable $e) {
+            return \response()->json($e->getMessage());
+        }
+
     }
 
     public function file_upload(Request $request, Product $product)
