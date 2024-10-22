@@ -10,6 +10,7 @@ use App\Modules\Product\Entity\Series;
 use App\Modules\Shop\Parser\ProductParser;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+use App\Modules\Product\Entity\Category;
 
 Breadcrumbs::for('admin.product.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');

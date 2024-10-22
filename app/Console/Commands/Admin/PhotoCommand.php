@@ -47,7 +47,7 @@ class PhotoCommand extends Command
 
         $this->info('Процесс исправления запущен');
         /** @var Product[] $products */
-        $products = Product::where('published', true)->get();
+        $products = Product::withTrashed()->get();
         $this->info('Кол-во товаров - ' . $products->count());
         $_count = 0;
         foreach ($products as $product) {
