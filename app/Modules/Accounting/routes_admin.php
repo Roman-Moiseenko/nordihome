@@ -83,8 +83,8 @@ Route::group(
                 Route::post('/add-contact/{organization}', 'OrganizationController@add_contact')->name('add-contact');
                 Route::post('/del-contact/{contact}', 'OrganizationController@del_contact')->name('del-contact');
                 Route::post('/set-contact/{contact}', 'OrganizationController@set_contact')->name('set-contact');
-
-
+                Route::get('/holdings', 'OrganizationController@holdings')->name('holdings');
+                Route::post('/holding-detach/{organization}', 'OrganizationController@holding_detach')->name('holding-detach');
             });
 
         Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD

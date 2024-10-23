@@ -66,7 +66,7 @@
                         <span class="btn btn-dark fs-5 py-2 px-3" wire:click="send_message">Отправить</span>
                     </div>
                 </div>
-                <div @if($send == false) style="display: none" @endif class="feedback-send">
+                <div @if(!$send) style="display: none" @endif class="feedback-send">
                     <div>
                         Ваше сообщение отправлено!<br>
                         Менеджер свяжется с Вами в ближайшее время!

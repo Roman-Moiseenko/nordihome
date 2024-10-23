@@ -11,17 +11,30 @@
                         ->label('Сокращенное название')->show() }}
                 </div>
                 <div class="col-span-12 lg:col-span-6">
-                    <div class="grid grid-cols-2  gap-x-6">
-                        {{ \App\Forms\Input::create('inn', ['placeholder' => 'ИНН', 'class' => '',
-'value' => !is_null($company) ? $company->inn : ''])
+                    <div class="grid grid-cols-2 gap-x-6">
+                        {{ \App\Forms\Input::create('inn', ['placeholder' => 'ИНН', 'class' => '','value' => !is_null($company) ? $company->inn : ''])
                            ->label('ИНН')->show() }}
-                        {{ \App\Forms\Input::create('kpp', ['placeholder' => 'КПП', 'class' => '',
-'value' => !is_null($company) ? $company->kpp : ''])
+                        {{ \App\Forms\Input::create('kpp', ['placeholder' => 'КПП', 'class' => '','value' => !is_null($company) ? $company->kpp : ''])
                             ->label('КПП')->show() }}
                     </div>
-                    {{ \App\Forms\Input::create('ogrn', ['placeholder' => 'ОГРН', 'class' => 'mt-3',
-'value' => !is_null($company) ? $company->ogrn : ''])
-                        ->label('ОГРН')->show() }}
+                    <div class="grid grid-cols-2 gap-x-6">
+                        {{ \App\Forms\Input::create('ogrn', ['placeholder' => 'ОГРН', 'class' => 'mt-3','value' => !is_null($company) ? $company->ogrn : ''])
+                            ->label('ОГРН')->show() }}
+
+                        <div>
+                            <x-base.form-label for="select-holding" class="mt-3">Холдинг</x-base.form-label>
+                            <x-base.tom-select id="select-holding" name="holding_id" class="" data-placeholder="Создайте или выберите (один)" multiple>
+                                <option value="0"></option>
+                                @foreach($holdings as $holding)
+                                    <option value="{{ $holding->id }}"
+                                    @if(isset($company))
+                                        {{ $holding->id == $company->holding_id ? 'selected' : ''}}
+                                        @endif
+                                    >{{ $holding->name }}</option>
+                                @endforeach
+                            </x-base.tom-select>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Service;
 
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\OrganizationContact;
+use App\Modules\Accounting\Entity\OrganizationHolding;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use Illuminate\Http\Request;
@@ -49,6 +50,17 @@ class OrganizationService
             params: $request->input('chief')
         );
 
+        if (!empty($holding = $request['holding_id'])) {
+            if (is_array($holding)) $holding = $holding[0]; //Если массив, берем первый элемент
+            if (is_numeric($holding)) {
+                $organization->holding_id = (int)$holding;
+            } else {
+                $holding = $this->createHolding($holding); //Создаем Холдинг
+                $organization->holding_id = $holding->id;
+            }
+        } else {
+            $organization->holding_id = null;
+        }
         /*
                 if (isset($request['default'])) {
 
@@ -102,4 +114,13 @@ class OrganizationService
         $contact->post = $request->string('post')->value();
         $contact->save();
     }
+
+    private function createHolding(string $name): OrganizationHolding
+    {
+        $holding = OrganizationHolding::where('name', $name)->first();
+        if (is_null($holding)) $holding = OrganizationHolding::register($name);
+        return $holding;
+    }
+
+
 }

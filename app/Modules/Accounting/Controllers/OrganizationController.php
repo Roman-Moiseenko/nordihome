@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Controllers;
 
-
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\OrganizationContact;
+use App\Modules\Accounting\Entity\OrganizationHolding;
 use App\Modules\Accounting\Service\OrganizationService;
 use Illuminate\Http\Request;
 
@@ -61,6 +61,12 @@ class OrganizationController extends Controller
     {
         $this->service->delete($organization);
         return redirect()->route('admin.accounting.organization.index');
+    }
+
+    public function holdings()
+    {
+        $holdings = OrganizationHolding::orderBy('name')->get();
+        return view('admin.accounting.organization.holdings', compact('holdings'));
     }
 
     public function add_contact(Request $request, Organization $organization)

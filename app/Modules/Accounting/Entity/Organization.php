@@ -7,9 +7,12 @@ use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
+use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -34,11 +37,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $post //Должность
  * @property FullName $chief
  * @property bool $active
+ * @property int $holding_id
  * @property bool $default ///Удалить
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Organization[] $holding
-
+ * @property OrganizationHolding $holding
+ * @property Trader $trader
+ * @property Distributor $distributor
+ * @property User $shopper
  */
 class Organization extends Model
 {
@@ -90,5 +96,58 @@ class Organization extends Model
         }
 
         return false;
+    }
+
+    public function isHolding(): bool
+    {
+        if (is_null($this->holding)) return false;
+        return true;
+    }
+
+    public function isTrader(): bool
+    {
+        if (is_null($this->trader)) return false;
+        return true;
+    }
+
+    public function isDistributor(): bool
+    {
+        if (is_null($this->distributor)) return false;
+        return true;
+    }
+
+    public function isShopper(): bool
+    {
+        if (is_null($this->shopper)) return false;
+        return true;
+    }
+
+    public function holding(): BelongsTo
+    {
+        return$this->belongsTo(OrganizationHolding::class, 'holding_id', 'id');
+    }
+
+    public function trader(): HasOne
+    {
+        return $this->hasOne(Trader::class, 'organization_id', 'id');
+    }
+
+    public function distributor(): HasOne
+    {
+        return $this->hasOne(Distributor::class, 'organization_id', 'id');
+    }
+
+    public function shopper(): HasOne
+    {
+        return $this->hasOne(User::class, 'organization_id', 'id');
+    }
+
+    public function types(): string
+    {
+        $types = [];
+        if ($this->isTrader()) $types[] = 'Продавец';
+        if ($this->isShopper()) $types[] = 'Покупатель';
+        if ($this->isDistributor()) $types[] = 'Поставщик';
+        return implode(' | ', $types);
     }
 }

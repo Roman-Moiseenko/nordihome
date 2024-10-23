@@ -69,7 +69,7 @@ class ProductController extends Controller
         return redirect()->route('admin.product.edit', compact('product'));
     }
 
-    public function fast_create(Request $request)
+    public function fast_create(Request $request): \Illuminate\Http\JsonResponse
     {
         $product = $this->service->create($request);
         $product->pricesRetail()->create([
@@ -88,7 +88,7 @@ class ProductController extends Controller
         return view('admin.product.product.show', compact('product'));
     }
 
-    public function edit(Product $product)
+    public function edit(Product $product): \Illuminate\Contracts\View\View
     {
         $categories = Category::defaultOrder()->withDepth()->get();
         $menus = ProductHelper::menuUpdateProduct();

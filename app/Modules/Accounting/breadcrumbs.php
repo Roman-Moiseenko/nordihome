@@ -184,3 +184,7 @@ Breadcrumbs::for('admin.accounting.organization.edit', function (BreadcrumbTrail
     $trail->parent('admin.accounting.organization.show', $organization);
     $trail->push('Редактировать', route('admin.accounting.organization.edit', $organization));
 });
+Breadcrumbs::for('admin.accounting.organization.holdings', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.organization.index');
+    $trail->push('Холдинги', route('admin.accounting.organization.holdings'));
+});

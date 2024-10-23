@@ -67,7 +67,7 @@
                                     </x-base.tom-select>
                                 </div>
                                 <div class="col-span-12 lg:col-span-6">
-                                    <!-- Выбрать бренд -->
+                                    <!-- Выбрать Серия -->
                                     <x-base.form-label for="select-series" class="mt-3">Серия</x-base.form-label>
                                     <x-base.tom-select id="select-series" name="series_id" class="" data-placeholder="Создайте или выберите серию (одну)" multiple>
                                         <option value="0"></option>

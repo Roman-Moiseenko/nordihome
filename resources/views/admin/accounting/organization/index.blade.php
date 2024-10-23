@@ -12,6 +12,9 @@
             <a href="{{ route('admin.accounting.organization.create') }}" class="btn btn-primary shadow-md mr-2"
                     type="button">Добавить Организацию
             </a>
+            <a href="{{ route('admin.accounting.organization.holdings') }}" class="btn btn-outline-primary shadow-md mr-2"
+               type="button">Холдинги
+            </a>
             {{ $organizations->links('admin.components.count-paginator') }}
         </div>
 

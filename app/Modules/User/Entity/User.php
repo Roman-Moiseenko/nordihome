@@ -3,6 +3,7 @@
 namespace App\Modules\User\Entity;
 
 
+use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FullName;
@@ -12,6 +13,7 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Product\Entity\Review;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -32,13 +34,14 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Wish[] $wishes
  * @property int $delivery
  * @property int $storage
+ * @property int $organization_id
  * @property UserPayment $payment
  * @property Subscription[] $subscriptions
  * @property FullName $fullname
  * @property GeoAddress $address
  * @property Review[] $reviews
  * @property Order[] $orders
- *
+ * @property Organization $organization
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -303,5 +306,9 @@ class User extends Authenticatable
         return null;
     }
 
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
 
 }

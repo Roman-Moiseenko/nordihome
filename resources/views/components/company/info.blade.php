@@ -43,6 +43,18 @@
                         <span class="font-medium">{{ $company->chief->getFullName() }}</span>
                     </div>
                 </div>
+                <div>
+                    @if($company->isHolding())
+                        <h2 class="font-medium">Холдинг "{{ $company->holding->name  }}"</h2>
+                    <ul>
+                        @foreach($company->holding->organizations as $organization)
+                            <li>
+                                {{ $organization->short_name . ' (' . $organization->inn . ')' }}
+                            </li>
+                        @endforeach
+                    </ul>
+                    @endif
+                </div>
             </div>
         </div>
         <div class="">
