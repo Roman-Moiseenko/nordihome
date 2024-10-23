@@ -3,7 +3,7 @@
 @section('subcontent')
     <div class="flex items-center mt-5">
         <h1 class="text-xl font-medium mr-auto">
-            {{ $user->email }} еще данные?
+            {{ $user->email }}
         </h1>
     </div>
     <div class="box px-5 pt-5 mt-5">
@@ -24,6 +24,9 @@
                 </div>
                 <div class="truncate sm:whitespace-normal flex mt-3">
                     <livewire:admin.user.edit.delivery :user="$user"/>
+                </div>
+                <div class="truncate sm:whitespace-normal flex mt-3">
+                    <livewire:admin.user.edit.organization :user="$user"/>
                 </div>
             </div>
             <div
@@ -79,7 +82,7 @@
         </div>
         <table class="table table-report -mt-2 dropdown-table">
             @foreach ($user->orders as $j => $order)
-                <tr class="zoom-in tr-dropdown" target="show-{{$j}}" show="hide">
+                <tr class="cursor-pointer tr-dropdown" target="show-{{$j}}" show="hide">
                     <td class=""><a href="{{ route('admin.order.show', $order) }}" class="font-medium text-success">{{ $order->htmlNumDate() }}</a></td>
                     <td class="">Товаров: {{ $order->getQuantity() }}</td>
                     <td class="">Сумма к оплате: {{ $order->getTotalAmount() }}</td>

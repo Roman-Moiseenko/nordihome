@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "892a72df66b5d2d2d86646bce20aa092",
+    "content-hash": "b194ee2bea8d93146fde8d1a4c722101",
     "packages": [
         {
             "name": "brick/math",
@@ -1176,16 +1176,16 @@
         },
         {
             "name": "hflabs/dadata",
-            "version": "22.3.0",
+            "version": "24.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hflabs/dadata-php.git",
-                "reference": "cc85a59487d1391fa78369d0d3913da0f97b720b"
+                "reference": "b73e6dc334dbf2f4170d5b6d760d722eda5b57f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hflabs/dadata-php/zipball/cc85a59487d1391fa78369d0d3913da0f97b720b",
-                "reference": "cc85a59487d1391fa78369d0d3913da0f97b720b",
+                "url": "https://api.github.com/repos/hflabs/dadata-php/zipball/b73e6dc334dbf2f4170d5b6d760d722eda5b57f2",
+                "reference": "b73e6dc334dbf2f4170d5b6d760d722eda5b57f2",
                 "shasum": ""
             },
             "require": {
@@ -1220,10 +1220,9 @@
                 "suggestions"
             ],
             "support": {
-                "issues": "https://github.com/hflabs/dadata-php/issues",
-                "source": "https://github.com/hflabs/dadata-php/tree/22.3.0"
+                "source": "https://github.com/hflabs/dadata-php/tree/24.4.0"
             },
-            "time": "2022-03-23T10:50:26+00:00"
+            "time": "2024-04-11T06:57:31+00:00"
         },
         {
             "name": "intervention/image",

@@ -217,9 +217,8 @@ class User extends Authenticatable
 
     public function getPublicName(): string
     {
-        //TODO Если Юр.лицо выводим ИНН, Название
-
-        return $this->fullname->getFullName();
+        if (is_null($this->organization)) return $this->fullname->getFullName();
+        return $this->organization->short_name . ' (' . $this->organization->inn . ')';
     }
     //RELATIONS
 

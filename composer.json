@@ -9,7 +9,7 @@
         "ext-curl": "*",
         "diglactic/laravel-breadcrumbs": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
-        "hflabs/dadata": "^22.3",
+        "hflabs/dadata": "^24.4",
         "intervention/image": "^2.7",
         "kalnoy/nestedset": "^6.0",
         "laracasts/flash": "^3.2",

@@ -22,6 +22,53 @@ class OrganizationService
         return $this->update($organization, $request);
     }
 
+    public function create_find(string $inn, string $bik, string $pay_account): Organization
+    {
+        $token = env('DADATA_TOKEN');
+        $secret = env('DADATA_KEY');
+        $dadata = new \Dadata\DadataClient($token, $secret);
+
+        //Компания
+        $response = $dadata->findById("party", $inn);
+        $data = $response[0]['data'];
+
+        $organization = Organization::register(
+            $data['name']['full_with_opf'],
+            $data['name']['short_with_opf'],
+            $inn);
+
+        $organization->kpp = $data['kpp'] ?? '';
+        $organization->ogrn = $data['ogrn'];
+        $address = $data['address']['data'];
+        $organization->legal_address = GeoAddress::create(
+            address: $address['source'],
+            post: $address['postal_code'],
+            region: $address['region_with_type']
+        );
+        $organization->actual_address = GeoAddress::create(
+            address: $address['source'],
+            post: $address['postal_code'],
+            region: $address['region_with_type']
+        );
+
+        $organization->post = $data['management']['post'];
+
+        list($f1, $f2, $f3) = explode(' ', $data['management']['name']);
+        $organization->chief = new FullName($f1, $f2, $f3);
+
+        //Банк
+        $response = $dadata->findById("bank", $bik);
+        $data = $response[0]['data'];
+
+        $organization->bik = $bik;
+        $organization->bank_name = $data['name']['payment'];
+        $organization->corr_account = $data['correspondent_account'];
+        $organization->pay_account = $pay_account;
+
+        $organization->save();
+        return $organization;
+    }
+
     public function update(Organization $organization, Request $request): Organization
     {
 
@@ -61,16 +108,7 @@ class OrganizationService
         } else {
             $organization->holding_id = null;
         }
-        /*
-                if (isset($request['default'])) {
 
-                    foreach (Organization::get() as $item) {
-                        $item->default = false;
-                        $item->save();
-                    }
-                    $organization->default = true;
-                }
-        */
         $organization->save();
         return $organization;
     }
@@ -84,7 +122,7 @@ class OrganizationService
     public function add_contact(Organization $organization, Request $request)
     {
         $contact = OrganizationContact::new(FullName::create(
-           params: $request->input('fullname')
+            params: $request->input('fullname')
         ));
 
         $contact->phone = preg_replace(
