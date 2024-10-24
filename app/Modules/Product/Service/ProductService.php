@@ -482,7 +482,7 @@ class ProductService
      * вызывать при изменении одно параметра: цена в Икеа, коэф.наценки, коэф-ты для товаров (хруп., санкцц.)
      */
 
-    public function setCostProductIkea(int $product_id, string $founded, bool $event = true)
+    public function setCostProductIkea(int $product_id, string $founded, bool $event = true): void
     {
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -493,6 +493,7 @@ class ProductService
         $bulk = ($product->parser->price * $this->parser_set->parser_coefficient +
                 $product->weight() * ($product->parser->isFragile() ? $this->parser_set->cost_weight_fragile : $this->parser_set->cost_weight)) *
             ($product->parser->isSanctioned() ? (1 + $this->parser_set->cost_sanctioned / 100) : 1);
+
         $retail = ceil($bulk * (1 + $this->parser_set->cost_retail / 100));
         $retail = (int)ceil($retail / 100) * 100 - 10;
 

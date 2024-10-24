@@ -1,7 +1,7 @@
 <tr>
     <td><a href="{{ route('admin.accounting.currency.show', $currency) }}" class="font-medium">{{ $currency->name }}</a></td>
     <td class="text-center whitespace-nowrap">{{ $currency->sign }}</td>
-    <td class="text-center whitespace-nowrap">{{ $currency->exchange }}</td>
+    <td class="text-center whitespace-nowrap">{{ $currency->getExchange() }}</td>
     <td class="table-report__action w-72">
         <div class="flex justify-center items-center">
             <a class="flex items-center mr-3" href="{{ route('admin.accounting.currency.edit', $currency) }}" title="Edit">

@@ -54,7 +54,7 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $this->service->update($request);
-        flash('Сохранение прошло успешно');
-        return redirect()->back()->with('success', 'Сохранение прошло успешно');
+        flash('Сохранение прошло успешно', 'success');
+        return redirect()->back();
     }
 }

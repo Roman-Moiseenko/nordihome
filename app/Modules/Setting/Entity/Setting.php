@@ -39,7 +39,7 @@ class Setting extends Model
 
     public function setData($object): void
     {
-        $this->data = json_encode($object);
+        $this->data = $object;
         $this->save();
     }
 

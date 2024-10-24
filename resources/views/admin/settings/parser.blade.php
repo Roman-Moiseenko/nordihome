@@ -11,7 +11,7 @@
                 <!-- 1 столбец -->
                 <div class="p-4 border-b">
                     {{ \App\Forms\Input::create('parser_coefficient',
-                        ['placeholder' => '', 'class' => 'w-full lg:w-100', 'value' => $parser->parser_coefficient])->
+                        ['placeholder' => '', 'class' => 'w-full lg:w-100', 'value' => $parser->parser_coefficient, 'step' => 'any'])->
                         label('Внутренний курс злота - коэффициент наценки на стоимость')->type('number')->show() }}
                 </div>
                 <div class="p-4 border-b">

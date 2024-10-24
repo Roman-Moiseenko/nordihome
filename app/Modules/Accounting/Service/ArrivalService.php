@@ -70,9 +70,9 @@ class ArrivalService
             $currency = $distributor->currency;
             if ($currency->id != $arrival->currency_id) {
                 $arrival->currency_id = $currency->id;
-                $arrival->setExchange($currency->exchange);
-            } elseif ($currency->exchange != $arrival->exchange_fix) {
-                $arrival->setExchange($currency->exchange);
+                $arrival->setExchange($currency->getExchange());
+            } elseif ($currency->getExchange() != $arrival->exchange_fix) {
+                $arrival->setExchange($currency->getExchange());
             }
         });
         return $arrival;

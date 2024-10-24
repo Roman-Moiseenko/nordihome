@@ -12,10 +12,18 @@ abstract class AbstractSetting
                 $this->$field = true;
             } elseif (gettype($this->$field) == 'integer') {
                 $this->$field = (int)($value);
+            } elseif (gettype($this->$field) == 'double') {
+                $this->$field = (float)($value);
             } else {
                 $this->$field = $value;
             }
         }
     }
+
+    public function save()
+    {
+
+    }
+
     abstract public function view();
 }

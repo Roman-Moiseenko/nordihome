@@ -13,7 +13,7 @@
         <!-- Управление -->
         <div class="my-2">
             <h2>Установленный курс</h2>
-            <h3 class="mt-2">{{ '1 ' . $currency->sign . ' = ' . $currency->exchange . ' ₽'}}</h3>
+            <h3 class="mt-2">{{ '1 ' . $currency->sign . ' = ' . $currency->getExchange() . ' ₽'}}</h3>
         </div>
             <button class="btn btn-primary shadow-md mr-2"
                     onclick="window.location.href='{{ route('admin.accounting.currency.edit', $currency) }}'">Редактировать

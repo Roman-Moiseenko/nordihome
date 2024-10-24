@@ -67,7 +67,7 @@ class ArrivalDocument extends Model implements AccountingDocument
             'distributor_id' => $distributor_id,
             'storage_id' => $storage_id,
             'currency_id' => $currency->id,
-            'exchange_fix' => $currency->exchange, //Запоминаем текущий курс
+            'exchange_fix' => $currency->getExchange(), //Запоминаем текущий курс
             'completed' => false,
             'comment' => $comment,
             'staff_id' => $staff_id,

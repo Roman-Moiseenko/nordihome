@@ -15,6 +15,7 @@ class Input extends BaseForm
     public bool $required = false;
     public ?int $min = null;
     public ?int $max = null;
+    public ?string $step = null;
 
     public static function create($name, array $attr = []): self
     {
@@ -23,7 +24,7 @@ class Input extends BaseForm
         if (isset($attr['class_input'])) {
             $form->class_input = $attr['class_input'];
         }
-
+        if (isset($attr['step'])) $form->step = $attr['step'];
         return $form;
     }
 
@@ -88,6 +89,7 @@ class Input extends BaseForm
             'min' => $this->min,
             'max' => $this->max,
             'class_input' => $this->class_input,
+            'step' => $this->step,
         ]);
         return view('forms.input', $params);
     }

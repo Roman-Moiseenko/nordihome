@@ -4,12 +4,15 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $sign
  * @property float $exchange
+ * @property string $cbr_code
+ * @property int $extra // + %
  * @property ArrivalDocument[] $arrivals
  */
 class Currency extends Model
@@ -19,25 +22,49 @@ class Currency extends Model
     protected $fillable = [
         'sign',
         'name',
-        'exchange'
+        'exchange',
+        'cbr_code',
+        'extra'
     ];
 
-    public static function register(string $name, string $sign, float $exchange): self
+    public static function register(
+        string $name,
+        string $sign,
+        float $exchange,
+        string $cbr_code = '',
+        int $extra = 0,
+    ): self
     {
         return self::create([
             'name' => $name,
             'sign' => $sign,
             'exchange' => $exchange,
+            'cbr_code' => $cbr_code,
+            'extra' => $extra,
         ]);
     }
 
-    public function setExchange(float $exchange): void
+    public function setExchange(float $exchange): bool
     {
-        $this->exchange = $exchange;
-        $this->save();
+        if ($this->exchange !== $exchange) {
+            $this->exchange = $exchange;
+            $this->save();
+            return true;
+        }
+        return false;
     }
 
-    public function arrivals()
+    public function getExchange(): float
+    {
+        return (int)ceil(($this->exchange + $this->exchange * $this->extra / 100) * 100) / 100;
+    }
+
+    public function valueRub(int $rub): int
+    {
+        return (int)ceil($rub * $this->getExchange());
+    }
+
+    public function arrivals(): HasMany
     {
         return $this->hasMany(ArrivalDocument::class, 'currency_id', 'id');
     }
