@@ -15,13 +15,16 @@ use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Product\Entity\Product;
 use Faker\Provider\ar_EG\Company;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  * @property int $currency_id
  * @property int $organization_id
  * @property string $name
- *
+ * @property bool $default
  * @property ArrivalDocument[] $arrivals
  * @property Product[] $products
  * @property Currency $currency
@@ -44,12 +47,12 @@ class Distributor extends Model
             ]);
     }
 
-    public function arrivals()
+    public function arrivals(): HasMany
     {
         return $this->hasMany(ArrivalDocument::class, 'distributor_id', 'id');
     }
 
-    public function products()
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'distributors_products',
             'distributor_id', 'product_id')->withPivot('cost');
@@ -63,7 +66,7 @@ class Distributor extends Model
         return 0.0;
     }
 
-    public function currency()
+    public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'currency_id', 'id');
     }
@@ -78,15 +81,19 @@ class Distributor extends Model
 
     public function addProduct(Product $product, float $cost): void
     {
-        $this->products()->attach($product->id, ['cost' => $cost]);
+        if ($this->isProduct($product)) {
+            $this->updateProduct($product, $cost);
+        } else {
+            $this->products()->attach($product->id, ['cost' => $cost]);
+        }
     }
 
-    public function updateProduct(Product $product, float $cost)
+    public function updateProduct(Product $product, float $cost): void
     {
         $this->products()->updateExistingPivot($product->id, ['cost' => $cost]);
     }
 
-    public function organization()
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }

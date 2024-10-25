@@ -62,6 +62,30 @@
     </div>
     <div class="grid grid-cols-12 gap-x-6 my-5">
         <div class="col-span-12 lg:col-span-4 lg:mr-20">
+            <h3 class="font-medium">Баланс</h3>
+        </div>
+        <div class="col-span-12 lg:col-span-8">
+            <div class="flex">
+                <div class="input-form ml-0 w-full lg:w-40 ">
+                    <input id="input-balance_min" type="text" class="form-control" placeholder="Цена" autocomplete="off"
+                           wire:model="balance_min" wire:change="save" wire:loading.attr="disabled">
+                    <div class="form-help text-right">Мин.кол-во (шт)</div>
+                </div>
+                <div class="input-form ml-0 w-full lg:ml-4 lg:w-40 ">
+                    <input id="input-balance_max" type="text" class="form-control" autocomplete="off"
+                           placeholder="Кол-во" wire:model="balance_max" wire:change="save" wire:loading.attr="disabled">
+                    <div class="form-help text-right">Макс.кол-во (шт)</div>
+                </div>
+                <div class="form-check form-switch lg:ml-4">
+                    <input id="checkbox-balance_buy" class="form-check-input" type="checkbox"
+                           wire:model="balance_buy" wire:change="save" wire:loading.attr="disabled">
+                    <label class="form-check-label" for="checkbox-balance_buy">Закупать</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-12 gap-x-6 my-5">
+        <div class="col-span-12 lg:col-span-4 lg:mr-20">
             <h3 class="font-medium">Продажа</h3>
         </div>
         <div class="col-span-12 lg:col-span-8">

@@ -8,6 +8,7 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Service\Report\Trade12Report;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ExpenseController extends Controller
 {
@@ -53,9 +54,17 @@ class ExpenseController extends Controller
     public function issue_shop(Request $request)
     {
         $data = json_decode($request['data'], true);
-        $expense = $this->service->issue_shop($data);
-        flash('Товар выдан', 'info');
-        return response()->json(route('admin.order.order.show', $expense->order));
+
+        try {
+            DB::beginTransaction();
+            $expense = $this->service->issue_shop($data);
+            flash('Товар выдан', 'info');
+            DB::commit();
+            return response()->json(route('admin.order.show', $expense->order));
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()]);
+        }
     }
 
     public function issue_warehouse(Request $request)

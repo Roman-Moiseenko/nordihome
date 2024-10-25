@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
+use App\Modules\Accounting\Entity\BalanceProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Base\Casts\DimensionsCast;
@@ -21,6 +22,9 @@ use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -94,6 +98,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Review[] $reviewsAll
  * @property ProductParser $parser
  * @property Product[] $composites
+ * @property BalanceProduct $balance
  */
 class Product extends Model
 {
@@ -296,6 +301,11 @@ class Product extends Model
         return false;
     }
 
+    public function isBalance(): bool
+    {
+        return $this->getQuantity() < $this->balance->min;
+    }
+
     //*** SET-....
     //SET и GET
     /**
@@ -359,6 +369,7 @@ class Product extends Model
         $this->published = false;
         $this->save();
     }
+
     /*
             public function setModeration()
             {
@@ -672,22 +683,27 @@ class Product extends Model
 
     //*** RELATIONS
 
-    public function parser()
+    public function balance(): HasOne
+    {
+        return $this->hasOne(BalanceProduct::class)->withDefault(['min' => 1, 'buy' => true]);
+    }
+
+    public function parser(): HasOne
     {
         return $this->hasOne(ProductParser::class, 'product_id', 'id');
     }
 
-    public function reviews()
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, 'product_id', 'id')->where('status', Review::STATUS_PUBLISHED)->orderByDesc('created_at');
     }
 
-    public function reviewsAll()
+    public function reviewsAll(): HasMany
     {
         return $this->hasMany(Review::class, 'product_id', 'id');
     }
 
-    public function composites()
+    public function composites(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'composites', 'parent_id', 'child_id')->withPivot('quantity');
     }
@@ -710,7 +726,7 @@ class Product extends Model
             'product_id', 'promotion_id')->withPivot('price');
     }
 
-    public function cartStorages()
+    public function cartStorages(): HasMany
     {
         return $this->hasMany(CartStorage::class, 'product_id', 'id');
     }
@@ -858,21 +874,6 @@ class Product extends Model
     }
 
 
-
-    /*
-        public static function boot()
-        {
-            parent::boot();
-            self::saving(function (Product $product) {
-               // $product->dimensions_json = $product->dimensions->toSave();
-               // if ($product->getCountSell() < 0) throw new \DomainException('Кол-во товаров должно быть >= 0');
-            });
-
-            self::retrieved(function (Product $product) {
-               // $product->dimensions = \App\Modules\Base\Entity\Dimensions::load($product->dimensions_json);
-            });
-        }
-    */
     /**
      * Имеется действующая акция
      * @return bool

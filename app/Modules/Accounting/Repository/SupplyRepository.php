@@ -63,9 +63,9 @@ class SupplyRepository
 
                     'comment' => $document->comment,
                     'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
-
-                    'url' => route('admin.accounting.supply.show', $document),
-                    'destroy' => route('admin.accounting.supply.destroy', $document),
+                    'is_delete' => $document->isCreated(),
+                   // 'url' => route('admin.accounting.supply.show', $document),
+                   // 'destroy' => route('admin.accounting.supply.destroy', $document),
                 ];
             });
     }

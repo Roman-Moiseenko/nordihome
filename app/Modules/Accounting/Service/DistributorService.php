@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Service;
 
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Base\Entity\BankDetail;
 use App\Modules\Base\Entity\CompanyContact;
 use App\Modules\Base\Entity\CompanyDetail;
@@ -11,15 +12,18 @@ use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Product\Entity\Product;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DistributorService
 {
 
     private OrganizationService $service;
+    private SupplyService $supplyService;
 
-    public function __construct(OrganizationService $service)
+    public function __construct(OrganizationService $service, SupplyService $supplyService)
     {
         $this->service = $service;
+        $this->supplyService = $supplyService;
     }
 
     public function create(Request $request): Distributor
@@ -48,6 +52,28 @@ class DistributorService
         return $distributor;
     }
 
+    public function create_supply(Distributor $distributor, string $balance): SupplyDocument
+    {
+        DB::transaction(function () use ($distributor, $balance, &$supply) {
+            //Создаем заказ со стеком
+            $supply = $this->supplyService->create_stack($distributor);
+            //Добавляем список товаров
+            foreach ($distributor->products as $product) {
+                if (
+                    ($balance == 'all') ||
+                    ($balance == 'empty' && $product->getQuantity() == 0) ||
+                    ($balance == 'min' && $product->isBalance())
+                ) {
+                    $count = ($product->balance->max) ?? $product->balance->min;
+                    if ($count > $product->getQuantity()) $count -= $product->getQuantity();
+
+                    $supply->addProduct($product, $count);
+                }
+            }
+        });
+        return $supply;
+    }
+
     private function save_fields(Request $request, Distributor $distributor)
     {
         $distributor->saveCompany($request);
@@ -55,17 +81,16 @@ class DistributorService
     }
 
 
-
-
-    public function destroy(Distributor $distributor)
+    public function destroy(Distributor $distributor): void
     {
         if ($distributor->arrivals()->count() > 0) throw new \DomainException('Имеются документы, удалить нельзя');
         $distributor->delete();
     }
 
-    public function arrival(Distributor $distributor, int $product_id, float $cost)
+    /*
+    public function arrival(Distributor $distributor, int $product_id, float $cost): void
     {
-        /** @var Product $_product */
+
         $_product = Product::find($product_id);
         foreach ($distributor->products as $product) {
             if ($product->id == $_product->id) {
@@ -74,5 +99,5 @@ class DistributorService
             }
         }
         $distributor->addProduct($_product, $cost);
-    }
+    }*/
 }

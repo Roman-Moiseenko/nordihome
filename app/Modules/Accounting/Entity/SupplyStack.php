@@ -58,6 +58,12 @@ class SupplyStack extends Model
         ]);
     }
 
+    public function setSupply(int $supply_id): void
+    {
+        $this->supply_id = $supply_id;
+        $this->save();
+    }
+
     public function supply()
     {
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');

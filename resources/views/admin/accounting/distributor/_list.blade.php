@@ -1,10 +1,8 @@
 <tr>
-    <td class="w-20">-</td>
     <td><a href="{{ route('admin.accounting.distributor.show', $distributor) }}" class="font-medium">{{ $distributor->name }}</a></td>
+    <td class="text-center whitespace-nowrap">{{ $distributor->organization->short_name }} ({{ $distributor->organization->inn }})</td>
     <td> - </td>
     <td> - </td>
-    <td> - </td>
-    <td class="text-center"> - </td>
     <td class="table-report__action w-72">
         <div class="flex justify-center items-center">
 

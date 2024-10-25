@@ -236,8 +236,9 @@
             window.notification('Ошибка при создании распоряжения',data.error ,'danger');
             return;
         }
-
+        //if ()
         window.location.href = data; //data - содержит УРЛ
+        console.log(data);
     }
 </script>
 

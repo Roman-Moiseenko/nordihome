@@ -86,6 +86,12 @@ class SupplyController extends Controller
         return redirect()->back();
     }
 
+    public function copy(SupplyDocument $supply): RedirectResponse
+    {
+        $supply = $this->service->copy($supply);
+        return redirect()->route('admin.accounting.supply.show', $supply);
+    }
+
     public function sent(SupplyDocument $supply): RedirectResponse
     {
         $this->service->sent($supply);
@@ -94,8 +100,8 @@ class SupplyController extends Controller
 
     public function completed(SupplyDocument $supply): RedirectResponse
     {
-        $this->service->completed($supply);
-        return redirect()->back();
+        $arrival = $this->service->completed($supply);
+        return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 
     public function stack(Request $request)

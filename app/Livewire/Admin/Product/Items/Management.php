@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Admin\Product\Items;
 
+use App\Modules\Accounting\Service\BalanceProductService;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Repository\SettingRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Livewire\Component;
 
 class Management extends Component
@@ -25,6 +27,10 @@ class Management extends Component
     public bool $only_offline;
     public bool $accounting;
 
+    public int $balance_min;
+    public ?int $balance_max;
+    public bool $balance_buy;
+
     public function boot()
     {
 
@@ -36,13 +42,13 @@ class Management extends Component
         $this->only_offline = $common->only_offline;
     }
 
-    public function mount(Product $product)
+    public function mount(Product $product): void
     {
         $this->product = $product;
         $this->refresh_fields();
     }
 
-    public function refresh_fields()
+    public function refresh_fields(): void
     {
         $this->published = $this->product->published;
         $this->price = $this->product->getPriceRetail();
@@ -56,11 +62,17 @@ class Management extends Component
 
         $this->frequency = $this->product->frequency;
 
+        $this->balance_min = $this->product->balance->min;
+        $this->balance_max = $this->product->balance->max;
+        $this->balance_buy = $this->product->balance->buy ?? true;
 
     }
 
 
-    public function save()
+    /**
+     * @throws BindingResolutionException
+     */
+    public function save(): void
     {
         //$this->product->published = $this->published;
         if (!$this->accounting) {
@@ -86,6 +98,13 @@ class Management extends Component
             $this->product->save();
         }
 
+        $serviceBalance = app()->make(BalanceProductService::class);
+        $serviceBalance->setBalance(
+            $this->product,
+            $this->balance_min,
+            empty($this->balance_max) ? null : $this->balance_max,
+            $this->balance_buy
+        );
     }
 
     public function render()

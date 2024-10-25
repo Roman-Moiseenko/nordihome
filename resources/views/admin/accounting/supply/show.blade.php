@@ -3,8 +3,19 @@
 @section('subcontent')
     <div>
         <div class="flex items-center mt-5">
-            <h1 class="text-lg font-medium mr-auto">
-                {{ $supply->htmlNum() . ' от ' . $supply->htmlDate() }} @if($supply->isCompleted()) - Завершен @endif
+            <h1 class="text-lg font-medium mr-auto flex ">
+                {{ $supply->htmlNum() . ' от ' . $supply->htmlDate() }}
+                @if($supply->isCompleted())
+                    - Завершен
+                    <button class="btn btn-sm btn-outline-warning ml-3"
+                            onclick="event.preventDefault(); document.getElementById('copy-supply').submit();">
+                        <x-base.lucide icon="copy" class="w-4 h-4"/>Copy
+                    </button>
+
+                    <form id="copy-supply" method="post" action="{{ route('admin.accounting.supply.copy', $supply) }}">
+                        @csrf
+                    </form>
+                @endif
             </h1>
         </div>
     </div>

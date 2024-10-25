@@ -47,6 +47,13 @@ Route::group(
                 Route::delete('/remove-item/{item}', 'DepartureController@remove_item')->name('remove-item');
             });
         Route::group([
+            'prefix' => 'distributor',
+            'as' => 'distributor.',
+        ],
+            function () {
+                Route::post('/supply/{distributor}', 'DistributorController@supply')->name('supply');
+            });
+        Route::group([
             'prefix' => 'supply',
             'as' => 'supply.',
         ],
@@ -59,6 +66,7 @@ Route::group(
                 Route::post('/set-product/{product}', 'SupplyController@set_product')->name('set-product');
                 Route::delete('/del-product/{product}', 'SupplyController@del_product')->name('del-product');
                 Route::post('/sent/{supply}', 'SupplyController@sent')->name('sent');
+                Route::post('/copy/{supply}', 'SupplyController@copy')->name('copy');
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
 
             });

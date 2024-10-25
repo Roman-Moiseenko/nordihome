@@ -23,19 +23,16 @@ use JetBrains\PhpStorm\ArrayShape;
 class ArrivalService
 {
     private StorageService $storages;
-    private DistributorService $distributors;
     private OrderReserveService $reserveService;
     private MovementService $movementService;
 
     public function __construct(
         StorageService $storages,
-        DistributorService $distributors,
         OrderReserveService $reserveService,
         MovementService $movementService
     )
     {
         $this->storages = $storages;
-        $this->distributors = $distributors;
         $this->reserveService = $reserveService;
         $this->movementService = $movementService;
     }
@@ -175,7 +172,8 @@ class ArrivalService
             $this->storages->arrival($arrival->storage, $arrival->arrivalProducts()->getModels());
             //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
             foreach ($arrival->arrivalProducts as $item) {
-                $this->distributors->arrival($arrival->distributor, $item->product_id, $item->cost_currency);
+                $arrival->distributor->addProduct($item->product, $item->cost_currency);
+               // $this->distributors->arrival($arrival->distributor, $item->product_id, $item->cost_currency);
             }
             $arrival->completed();
 

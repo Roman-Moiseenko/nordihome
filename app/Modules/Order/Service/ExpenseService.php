@@ -146,12 +146,12 @@ class ExpenseService
      */
     public function issue_shop(array $request): OrderExpense
     {
-        DB::transaction(function () use ($request, &$expense) {
+       // DB::transaction(function () use ($request, &$expense) {
             $expense = $this->issue($request);
             $this->completed($expense);
             $expense->refresh();
             $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
-        });
+        //});
         return $expense;
     }
 

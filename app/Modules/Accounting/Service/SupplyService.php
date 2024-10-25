@@ -5,12 +5,15 @@ namespace App\Modules\Accounting\Service;
 
 use App\Events\SupplyHasCompleted;
 use App\Events\SupplyHasSent;
+use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Accounting\Repository\StackRepository;
+use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
@@ -22,10 +25,12 @@ class SupplyService
 {
 
     private ArrivalService $arrivalService;
+    private StackRepository $stack;
 
-    public function __construct(ArrivalService $arrivalService)
+    public function __construct(ArrivalService $arrivalService, StackRepository $stack)
     {
         $this->arrivalService = $arrivalService;
+        $this->stack = $stack;
     }
 
     public function add_stack(OrderItem $item, int $storage_id): SupplyStack
@@ -63,15 +68,13 @@ class SupplyService
     public function create(int $distributor_id, array $data): SupplyDocument
     {
         DB::transaction(function () use ($distributor_id, $data, &$supply) {
-
             $distributor = Distributor::find($distributor_id);
             $supply = $this->create_empty($distributor);
 
             foreach ($data as $stack_id) {
                 /** @var SupplyStack $stack */
                 $stack = SupplyStack::find((int)$stack_id); //В стеке указываем Документ на заказ
-                $stack->supply_id = $supply->id;
-                $stack->save();
+                $stack->setSupply($supply->id);
                 $supply->addProduct($stack->product, $stack->quantity);
                 $supply->refresh();
             }
@@ -79,8 +82,25 @@ class SupplyService
         return $supply;
     }
 
+    public function create_stack(Distributor $distributor): SupplyDocument
+    {
+        $stacks = $this->stack->getByDistributor($distributor);
+        $supply = $this->create_empty($distributor);
+        foreach ($stacks as $stack) {
+            $stack->setSupply($supply->id);
+            $supply->addProduct($stack->product, $stack->quantity);
+        }
+        return $supply;
+    }
 
-    public function add_product(SupplyDocument $supply, int $product_id, int $quantity)
+    /**
+     * Добавить товар в заявку Поставщику
+     * @param SupplyDocument $supply
+     * @param int $product_id
+     * @param int $quantity
+     * @return void
+     */
+    public function add_product(SupplyDocument $supply, int $product_id, int $quantity): void
     {
         $distributor = $supply->distributor;
         /** @var Product $product */
@@ -139,7 +159,7 @@ class SupplyService
         event(new SupplyHasSent($supply));
     }
 
-    public function completed(SupplyDocument $supply)
+    public function completed(SupplyDocument $supply): ArrivalDocument
     {
         //Проходим по стеку и вытаскиваем товары
         $distributor = $supply->distributor;
@@ -153,72 +173,82 @@ class SupplyService
             //Добавляем товар в поступление
             $this->arrivalService->add($arrival, $supplyProduct->product_id, $supplyProduct->quantity);
         }
-/*
-        //Хранилища из стека по текущему заказу
-        $storages_in_stack = SupplyStack::select('storage_id')->where('supply_id', $supply->id)->groupby('storage_id')->pluck('storage_id')->toArray();
-        //Убираем базовый склад
-        foreach ($storages_in_stack as $i => $storage_id) {
-            if ($storage_id == $storage_base) unset($storages_in_stack[$i]);
-        }
-        $supply_products = []; //Все товары и кол-во в заказе
-        foreach ($supply->products as $product) {
-            $supply_products[$product->product_id] = $product->quantity;
-        }
+        /*
+                //Хранилища из стека по текущему заказу
+                $storages_in_stack = SupplyStack::select('storage_id')->where('supply_id', $supply->id)->groupby('storage_id')->pluck('storage_id')->toArray();
+                //Убираем базовый склад
+                foreach ($storages_in_stack as $i => $storage_id) {
+                    if ($storage_id == $storage_base) unset($storages_in_stack[$i]);
+                }
+                $supply_products = []; //Все товары и кол-во в заказе
+                foreach ($supply->products as $product) {
+                    $supply_products[$product->product_id] = $product->quantity;
+                }
 
-        foreach ($storages_in_stack as $storage_id) {
-            //Получаем список товаров по хранилищу из стека, просуммировано
-            $stack_products = DB::table('supply_stack')
-                ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))->
-                where('supply_id', $supply->id)->where('storage_id', $storage_id)->
-                groupBy('product_id')->get();
+                foreach ($storages_in_stack as $storage_id) {
+                    //Получаем список товаров по хранилищу из стека, просуммировано
+                    $stack_products = DB::table('supply_stack')
+                        ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))->
+                        where('supply_id', $supply->id)->where('storage_id', $storage_id)->
+                        groupBy('product_id')->get();
 
-            //Создаем Поступление
-            $arrival = $this->arrivalService->create([
-                'number' => 'Из заказа ' . $supply->htmlNum(),
-                'distributor' => $distributor->id,
-                'storage' => $storage_id,
-            ]);
-            $arrival->supply_id = $supply->id;
-            $arrival->save();
+                    //Создаем Поступление
+                    $arrival = $this->arrivalService->create([
+                        'number' => 'Из заказа ' . $supply->htmlNum(),
+                        'distributor' => $distributor->id,
+                        'storage' => $storage_id,
+                    ]);
+                    $arrival->supply_id = $supply->id;
+                    $arrival->save();
 
-            foreach ($stack_products as $item) {
-                //Добавляем товар в поступление
-                $this->arrivalService->add($arrival, [
-                        'product_id' => $item->product_id,
-                        'quantity' => (int)$item->total_quantity
-                    ]
-                );
-                //Уменьшаем кол-во товара из списка
-                $supply_products[$item->product_id] -= (int)$item->total_quantity;
-            }
-        }
-        */
+                    foreach ($stack_products as $item) {
+                        //Добавляем товар в поступление
+                        $this->arrivalService->add($arrival, [
+                                'product_id' => $item->product_id,
+                                'quantity' => (int)$item->total_quantity
+                            ]
+                        );
+                        //Уменьшаем кол-во товара из списка
+                        $supply_products[$item->product_id] -= (int)$item->total_quantity;
+                    }
+                }
+                */
         /*****/
         //Создаем Поступление на базовый склад
-      /*  $arrival = $this->arrivalService->create([
-            'number' => 'Из заказа ' . $supply->htmlNum(),
-            'distributor' => $distributor->id,
-            'storage' => $storage_base,
-        ]);
-        $arrival->supply_id = $supply->id;
-        $arrival->save();
-        foreach ($supply_products as $product_id => $quantity) {
-            //Добавляем товар в поступление
-            $this->arrivalService->add($arrival, [
-                    'product_id' => $product_id,
-                    'quantity' => (int)$quantity
-                ]
-            );
-        }*/
+        /*  $arrival = $this->arrivalService->create([
+              'number' => 'Из заказа ' . $supply->htmlNum(),
+              'distributor' => $distributor->id,
+              'storage' => $storage_base,
+          ]);
+          $arrival->supply_id = $supply->id;
+          $arrival->save();
+          foreach ($supply_products as $product_id => $quantity) {
+              //Добавляем товар в поступление
+              $this->arrivalService->add($arrival, [
+                      'product_id' => $product_id,
+                      'quantity' => (int)$quantity
+                  ]
+              );
+          }*/
         $supply->status = SupplyDocument::COMPLETED;
         $supply->save();
         event(new SupplyHasCompleted($supply));
+        return $arrival;
     }
 
     public function destroy(SupplyDocument $supply)
     {
         $supply->delete();
 
+    }
+
+    public function copy(SupplyDocument $old_supply): SupplyDocument
+    {
+        $supply = $this->create_empty($old_supply->distributor);
+        foreach ($old_supply->products as $product) {
+            $supply->addProduct($product->product, $product->quantity);
+        }
+        return $supply;
     }
 
 

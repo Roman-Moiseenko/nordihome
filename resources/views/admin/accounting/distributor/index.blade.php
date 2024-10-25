@@ -19,13 +19,11 @@
             <table class="table table-report -mt-2">
                 <thead>
                 <tr>
-                    <th class="whitespace-nowrap">-</th>
                     <th class="whitespace-nowrap">НАЗВАНИЕ</th>
+                    <th class="text-center whitespace-nowrap">ОРГАНИЗАЦИЯ</th>
                     <th class="text-center whitespace-nowrap">-</th>
                     <th class="text-center whitespace-nowrap">-</th>
-                    <th class="text-center whitespace-nowrap">-</th>
-                    <th class="text-center whitespace-nowrap">-</th>
-                    <th class="text-center whitespace-nowrap">-</th>
+                    <th class="text-center whitespace-nowrap">ДЕЙСТВИЯ</th>
                 </tr>
                 </thead>
                 <tbody>
