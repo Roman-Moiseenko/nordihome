@@ -36,8 +36,7 @@
         <div class="w-1/4">Товар</div>
         <div class="w-40 text-center">Закупочная цена</div>
         <div class="w-40 text-center">Кол-во</div>
-        <div class="w-40 input-group">Закупочная цена</div>
-        <div class="w-40 input-group">Цена продажи</div>
+        <div class="w-40 input-group">Закупочная цена ₽</div>
     </div>
     @foreach($arrival->arrivalProducts as $i => $item)
         <div class="box flex items-center px-2" data-id="{{ $item->id }}"
@@ -62,11 +61,7 @@
                        value="{{ $item->cost_ru }}" aria-describedby="input-cost_ru" readonly autocomplete="off">
                 <div id="input-cost_ru" class="input-group-text">₽</div>
             </div>
-            <div class="w-40 input-group">
-                <input id="sell-{{ $item->id }}" type="number" class="form-control text-right arrival-input-listen"
-                       value="{{ $item->price_sell }}" aria-describedby="input-sell" min="0" readonly autocomplete="off">
-                <div id="input-sell" class="input-group-text">₽</div>
-            </div>
+
             @if(!$arrival->isCompleted())
                 <button class="btn btn-outline-danger ml-6" type="button" onclick="document.getElementById('form-delete-item-{{ $item->id }}').submit();">
                     <x-base.lucide icon="trash-2" class="w-4 h-4"/>
@@ -97,11 +92,6 @@
             <input id="cost_ru-amount" type="number" class="form-control text-right"
                    value="{{ $info['cost_ru'] }}" aria-describedby="input-cost_ru" readonly autocomplete="off">
             <div id="input-cost_ru" class="input-group-text">₽</div>
-        </div>
-        <div class="w-40 input-group">
-            <input id="sell-amount" type="number" class="form-control text-right arrival-input-listen"
-                   value="{{ $info['price_sell'] }}" aria-describedby="input-sell" min="0" readonly autocomplete="off">
-            <div id="input-sell" class="input-group-text">₽</div>
         </div>
     </div>
 
