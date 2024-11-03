@@ -67,12 +67,16 @@ class UserInfo extends Component
     {
         //dd($this->user_id);
         if (is_null($this->user_id)) {
-            $user = User::make([
+            if (empty($this->email) || empty($this->phone)) throw new \DomainException('Не заполнены основные поля');
+            $user = User::new($this->email, preg_replace('#\D#', '', $this->phone));
+
+                /*
+                User::make([
                 'phone' => preg_replace('#\D#', '', $this->phone),
                 'email' => $this->email,
                 'password' => Str::random(24),
                 'status' => User::STATUS_ACTIVE,
-            ]);
+            ]); */
             $user->fullname->firstname = $this->name;
             $user->save();
             $user->refresh();
@@ -88,12 +92,12 @@ class UserInfo extends Component
         $this->close_fields();
     }
 
-    public function toggle_fields()
+    public function toggle_fields(): void
     {
         $this->show = !$this->show;
     }
 
-    public function close_fields()
+    public function close_fields(): void
     {
         $this->show = false;
         $this->phone = '';
@@ -105,5 +109,14 @@ class UserInfo extends Component
     public function render()
     {
         return view('livewire.admin.order.user-info');
+    }
+
+    public function exception($e, $stopPropagation): void
+    {
+        if($e instanceof \DomainException) {
+            $this->dispatch('window-notify', title: 'Ошибка', message: $e->getMessage());
+            $stopPropagation();
+           // $this->refresh_fields();
+        }
     }
 }
