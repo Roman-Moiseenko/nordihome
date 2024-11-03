@@ -318,8 +318,8 @@ class ParserService
                 }
         }
         ////Описание и перевод
-        $description = $_data['pipPriceModule']['productDescription'] .
-            (empty($_data['pipPriceModule']['measurementText']) ? '' : ', ' . $_data['pipPriceModule']['measurementText']);
+        $description = $_data['pipPricePackage']['productDescription'] .
+            (empty($_data['pipPricePackage']['measurementText']) ? '' : ', ' . $_data['pipPricePackage']['measurementText']);
 
         $tr = new GoogleTranslateForFree();
         $description = $tr->translate('pl', 'ru', $description, 5);

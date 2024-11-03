@@ -115,7 +115,7 @@ class Storage extends Model
     public function getItem(Product $product):? StorageItem
     {
         foreach ($this->items as $item) {
-            if ($item->product->id == $product->id) {
+            if ($item->product_id == $product->id) {
                 return $item;
             }
         }
@@ -173,7 +173,7 @@ class Storage extends Model
     public function add(Product $product, int $quantity): StorageItem
     {
         foreach ($this->items as $item) {
-            if ($item->product->id == $product->id) {
+            if ($item->product_id == $product->id) {
                 $item->quantity += $quantity;
                 $item->save();
                 return $item;
@@ -188,7 +188,7 @@ class Storage extends Model
     public function sub(Product $product, int $quantity)
     {
         foreach ($this->items as $item) {
-            if ($item->product->id == $product->id) {
+            if ($item->product_id == $product->id) {
                 $item->quantity -= $quantity;
                 $item->save();
                 return;

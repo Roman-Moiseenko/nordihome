@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
                     flash($e->getMessage(), 'danger');
                     return redirect()->back();
                 } else { //Клиентская часть
-                    return redirect()->route('shop.home')->with('danger', $e->getMessage());
+                    return redirect()->back()->with('danger', $e->getMessage()); //route('shop.home')
                 }
             }
         }
