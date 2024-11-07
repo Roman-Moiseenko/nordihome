@@ -24,6 +24,7 @@ Route::group([
     );
     Route::post('/{user}/verify', 'UsersController@verify')->name('verify');
     Route::get('/{user}', 'UsersController@show')->name('show');
+    Route::post('/create', 'UsersController@create')->name('create');
 
 
     Route::get('/', 'UsersController@index')->name('index');

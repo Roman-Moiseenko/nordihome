@@ -28,6 +28,8 @@
             .then(result => {
                 let data = JSON.parse(result).suggestions[0].data;
                 let address = data.address.data
+                //console.log(data)
+                //console.log(address)
                 //Адрес
                 $("#input-legal_address\\[post\\]").val(address.postal_code)
                 $("#input-legal_address\\[region\\]").val(address.region_with_type)

@@ -66,15 +66,14 @@ class DistributorService
                 ) {
                     $count = ($product->balance->max) ?? $product->balance->min;
                     if ($count > $product->getQuantity()) $count -= $product->getQuantity();
-
-                    $supply->addProduct($product, $count);
+                    $supply->addProduct($product, $count, $product->pivot->cost);
                 }
             }
         });
         return $supply;
     }
 
-    private function save_fields(Request $request, Distributor $distributor)
+    private function save_fields(Request $request, Distributor $distributor): void
     {
         $distributor->saveCompany($request);
         $distributor->save();
@@ -86,18 +85,4 @@ class DistributorService
         if ($distributor->arrivals()->count() > 0) throw new \DomainException('Имеются документы, удалить нельзя');
         $distributor->delete();
     }
-
-    /*
-    public function arrival(Distributor $distributor, int $product_id, float $cost): void
-    {
-
-        $_product = Product::find($product_id);
-        foreach ($distributor->products as $product) {
-            if ($product->id == $_product->id) {
-                $distributor->updateProduct($product, $cost);
-                return;
-            }
-        }
-        $distributor->addProduct($_product, $cost);
-    }*/
 }

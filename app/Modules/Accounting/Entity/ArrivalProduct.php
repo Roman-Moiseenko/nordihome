@@ -5,15 +5,15 @@ namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
  * @property int $arrival_id
  * @property int $product_id
  * @property int $quantity
+ * @property int $remains //Остаток для фильтрации
  * @property float $cost_currency //В валюте документа
- * @property float $cost_ru //В рублях
- * @property int $price_sell //В рублях
  * @property Product $product
  * @property ArrivalDocument $document
  */
@@ -26,21 +26,30 @@ class ArrivalProduct extends Model implements MovementItemInterface
         'product_id',
         'quantity',
         'cost_currency',
-        'cost_ru',
-        'price_sell'
+        'remains',
     ];
 
-    public static function new(int $product_id, int $quantity, float $distributor_cost, float $cost_ru, float $product_sell): self
+    //TODO $distributor_cost на $cost и cost_currency на cost (в рублях)!!!!
+    public static function new(int $product_id, int $quantity, float $distributor_cost): self
     {
         return self::make([
             'product_id' => $product_id,
             'quantity' => $quantity,
             'cost_currency' => $distributor_cost,
-            'cost_ru' => $cost_ru,
-            'price_sell' => $product_sell,
+            'remains' => $quantity,
         ]);
     }
 
+    public function setQuantity(int $quantity): void
+    {
+        $this->quantity = $quantity;
+        $this->remains = $quantity;
+    }
+
+    public function setCost(float $cost_currency): void
+    {
+        $this->cost_currency = $cost_currency;
+    }
 
     public function getProduct(): Product
     {
@@ -52,15 +61,18 @@ class ArrivalProduct extends Model implements MovementItemInterface
         return $this->quantity;
     }
 
-
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function document()
+    public function document(): BelongsTo
     {
         return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
+    }
 
+    public function getCostRu(): int
+    {
+        return (int)(ceil($this->cost_currency * $this->document->exchange_fix));
     }
 }

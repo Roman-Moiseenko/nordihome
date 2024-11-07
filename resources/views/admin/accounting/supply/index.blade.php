@@ -80,19 +80,8 @@
                             </option>
                         @endforeach
                     </x-base.tom-select>
-                    <x-base.tom-select class="w-full bg-white mt-1" name="status"
-                                       data-placeholder="Статус документа">
-                        <option value="" disabled selected>Статус документа</option>
-                        @foreach($statuses as $value => $name)
-                            <option value="{{ $value }}"
-                            @if(isset($filters['status'])) {{ $value == $filters['status'] ? 'selected' : ''}} @endif
-                            >{{ $name }}</option>
-                        @endforeach
-                    </x-base.tom-select>
                     <input class="form-control mt-1" name="comment" placeholder="Комментарий"
                            value="{{ $filters['comment'] ?? '' }}" autocomplete="off">
-
-
                 </x-tableFilter>
             </div>
 
@@ -105,7 +94,7 @@
                         <x-base.table.th class="w-32 whitespace-nowrap text-center">ДАТА</x-base.table.th>
                         <x-base.table.th class="w-32 whitespace-nowrap">№ ДОКУМЕНТА</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">ПОСТАВЩИК</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap text-center">СТАТУС</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap text-center">ПРОВЕДЕН</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap text-center">КОЛ-ВО</x-base.table.th>
 
                         <x-base.table.th class="whitespace-nowrap text-center">КОММЕНТАРИЙ</x-base.table.th>

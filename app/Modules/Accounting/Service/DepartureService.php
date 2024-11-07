@@ -63,7 +63,7 @@ class DepartureService
         $departure->departureProducts()->create([
             'product_id' => $product->id,
             'quantity' => $quantity,
-            'cost' => $product->getLastPrice()
+            'cost' => $product->getPrice()
         ]);
         $departure->refresh();
         return $departure;

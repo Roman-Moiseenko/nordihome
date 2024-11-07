@@ -12,26 +12,27 @@ use App\Modules\Accounting\Service\PricingService;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class PricingController extends Controller
 {
 
     private PricingService $service;
-    private ProductRepository $products;
+    //private ProductRepository $products;
     private PricingRepository $repository;
     private StaffRepository $staffs;
 
     public function __construct(
         PricingService $service,
-        ProductRepository $products,
+    //    ProductRepository $products,
         PricingRepository $repository,
         StaffRepository $staffs,
     )
     {
         $this->middleware(['auth:admin', 'can:pricing']);
         $this->service = $service;
-        $this->products = $products;
+       // $this->products = $products;
         $this->repository = $repository;
         $this->staffs = $staffs;
     }
@@ -50,7 +51,7 @@ class PricingController extends Controller
         return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
     }
 
-    public function create_arrival(ArrivalDocument $arrival)
+    public function create_arrival(ArrivalDocument $arrival): RedirectResponse
     {
         $pricing = $this->service->create_arrival($arrival);
         return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
@@ -97,4 +98,9 @@ class PricingController extends Controller
         return response()->json(true);
     }
 
+    public function copy(PricingDocument $pricing)
+    {
+        $pricing = $this->service->copy($pricing);
+        return redirect()->route('admin.accounting.pricing.show', $pricing);
+    }
 }

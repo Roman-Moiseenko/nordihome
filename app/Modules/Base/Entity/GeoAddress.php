@@ -5,19 +5,29 @@ namespace App\Modules\Base\Entity;
 
 class GeoAddress
 {
-    public string $address;
-    public string $region;
+    public string $address; //Одной строкой
+    public string $post; //Индекс
+    public string $region; //Регион
+    public string $district; //Район
+    public string $city; //*
+    public string $street; //*
+    public string $house; //*
+    public string $room; //*
     public string $latitude;
     public string $longitude;
-    public string $post;
 
     public function __construct()
     {
         $this->address = '';
+        $this->post = '';
         $this->region = '';
+        $this->district = '';
+        $this->city = '';
+        $this->street = '';
+        $this->house = '';
+        $this->room = '';
         $this->latitude = '';
         $this->longitude = '';
-        $this->post = '';
     }
 
     public static function create(
@@ -26,6 +36,11 @@ class GeoAddress
         string $longitude = '',
         string $post = '',
         string $region = '',
+        string $district ='',
+        string $city = '',
+        string $street = '',
+        string $house = '',
+        string $room = '',
         array $params = []): self
     {
         $geo = new static();
@@ -35,9 +50,14 @@ class GeoAddress
                     $geo->$key = $value ?? '';
             }
         } else {
-            $geo->post = $post;
             $geo->address = $address;
+            $geo->post = $post;
             $geo->region = $region;
+            $geo->district = $district;
+            $geo->city = $city;
+            $geo->street = $street;
+            $geo->house = $house;
+            $geo->room = $room;
             $geo->latitude = $latitude;
             $geo->longitude = $longitude;
         }
@@ -65,5 +85,22 @@ class GeoAddress
             'longitude' => $this->longitude,
             'post' => $this->post,
         ]; */
+    }
+
+    public function address(): string
+    {
+        if (!empty($this->address)) {
+            return $this->address;
+        } else {
+
+            return implode(', ', [
+                $this->region,
+                $this->district,
+                $this->city,
+                $this->street,
+                $this->house,
+                $this->room
+            ]);
+        }
     }
 }

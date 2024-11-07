@@ -33,7 +33,7 @@ class Bonus extends Component
         if (!is_null($bonus)) throw new \DomainException('Товар уже назначен бонусным у товара ' . $bonus->product->name);
 
         $bonus_add = Product::find($product_id);
-        $this->product->bonus()->attach($product_id, ['discount' => $bonus_add->getLastPrice()]);
+        $this->product->bonus()->attach($product_id, ['discount' => $bonus_add->getPrice()]);
 
         $this->refresh_fields();
         $this->dispatch('clear-search-product');

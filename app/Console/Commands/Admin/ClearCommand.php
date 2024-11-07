@@ -162,8 +162,6 @@ class ClearCommand extends Command
                 $product->id,
                 10,
                 100,
-                $arrival->exchange_fix * 100,
-                $product->getLastPrice()
             );
 
             $arrival->arrivalProducts()->save($item);

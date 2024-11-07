@@ -12,7 +12,7 @@
     <x-base.table.td class="text-center">
         {{ $item['distributor'] }}
     </x-base.table.td>
-    <x-base.table.td class="text-center">{!! $item['status_html'] !!}</x-base.table.td>
+    <x-base.table.td class="text-center"><x-yes-no :status="$item['completed']" /></x-base.table.td>
     <x-base.table.td class="text-center">{{ $item['quantity'] }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $item['comment'] }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $item['staff'] }}</x-base.table.td>

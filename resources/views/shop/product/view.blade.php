@@ -42,48 +42,50 @@
                         <div class="view-price">
                             @if($product->isSale())
                                 @if(!$product->hasPromotion())
-                                    @if($product->getPreviousPrice() > $product->getLastPrice())
+                                    @if($product->getPrice(true) > $product->getPrice())
                                         <div class="comment">* Цена на товар снижена</div>
-                                        <span class="discount-price">{{ price($product->getLastPrice()) }}</span>
-                                        <span class="base-price">{{ price($product->getPreviousPrice()) }}</span>
+                                        <span class="discount-price">{{ price($product->getPrice()) }}</span>
+                                        <span class="base-price">{{ price($product->getPrice(true)) }}</span>
                                     @else
-                                        {{ price($product->getLastPrice()) }}
+                                        {{ price($product->getPrice()) }}
                                     @endif
                                 @else
                                     <div class="comment">* Цена по акции {{ $product->promotion()->title }}</div>
                                     <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span>
-                                    <span class="base-price">{{ price($product->getLastPrice()) }}</span>
+                                    <span class="base-price">{{ price($product->getPrice()) }}</span>
                                 @endif
                             @else
-                                {{ price($product->getLastPrice()) }}
+                                {{ price($product->getPrice()) }}
                             @endif
-                        <div class="count-product">
-                            @if($product->isSale())
-                                @if($product->getCountSell() > 0)
-                                    Товар в наличии
-                                @else
-                                    Только под заказ
+                            <div class="count-product">
+                                @if($product->isSale())
+                                    @if($product->getCountSell() > 0)
+                                        Товар в наличии
+                                    @else
+                                        Только под заказ
+                                    @endif
                                 @endif
-                            @endif
+                            </div>
                         </div>
-                    </div>
                         <div class="view-brand">
                             @if(empty($product->brand->photo))
                                 <span>{{ $product->brand->name }}</span>
                             @else
-                                <img src="{{ $product->brand->photo->getUploadUrl() }}" alt="{{ $product->brand->name }}" title="{{ $product->brand->name }}">
+                                <img src="{{ $product->brand->photo->getUploadUrl() }}"
+                                     alt="{{ $product->brand->name }}" title="{{ $product->brand->name }}">
                             @endif
 
                         </div>
                     </div>
                     <div class="product-card-to-cart">
                         @if($product->isSale())
-                        <button class="to-cart btn btn-dark" data-product="{{ $product->id }}">В Корзину</button>
-                        <button class="one-click btn btn-outline-dark"
-                                data-product="{{ $product->id }}" type="button" data-bs-toggle="modal" data-bs-target="#buy-click"
-                                onclick="document.getElementById('one-click-product-id').value={{$product->id}};"
-                        >В 1 Клик!
-                        </button>
+                            <button class="to-cart btn btn-dark" data-product="{{ $product->id }}">В Корзину</button>
+                            <button class="one-click btn btn-outline-dark"
+                                    data-product="{{ $product->id }}" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#buy-click"
+                                    onclick="document.getElementById('one-click-product-id').value={{$product->id}};"
+                            >В 1 Клик!
+                            </button>
                         @else
                             <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
                         @endif
@@ -102,7 +104,7 @@
                 <div class="anchor-menu"><a href="#specifications">Характеристики</a></div>
             @endif
             <div class="anchor-menu"><a href="#description">Описание товара</a></div>
-                <div class="product-code">Артикул <span>{{ $product->code }}</span></div>
+            <div class="product-code">Артикул <span>{{ $product->code }}</span></div>
 
         </div>
     </div>

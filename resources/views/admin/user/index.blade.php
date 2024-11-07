@@ -5,7 +5,16 @@
     <div class="grid grid-cols-12 gap-4">
         <!-- Управление -->
         <div class="col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-4">
-            <a class="btn btn-primary" href="{{ route('admin.home') }}">Добавить клиента ? </a>
+            <x-base.button
+                data-tw-toggle="modal"
+                data-tw-target="#modal-create-user"
+                href="#"
+                as="a"
+                variant="primary"
+            >
+                Добавить клиента
+            </x-base.button>
+
             {{ $users->links('admin.components.count-paginator') }}
             <!-- Фильтр -->
             <div class="ml-auto">
@@ -51,4 +60,43 @@
     </div>
 
     {{ $users->links('admin.components.paginator') }}
+
+
+
+
+    <x-base.dialog id="modal-create-user" staticBackdrop>
+        <x-base.dialog.panel>
+            <form id="modal-destroy-form" action="{{ route('admin.user.create') }}" method="POST">
+                @csrf
+                <x-base.dialog.title>
+                    <h2 class="mr-auto text-base font-medium">Новый клиент</h2>
+                </x-base.dialog.title>
+
+                <x-base.dialog.description class="grid grid-cols-12 gap-4 gap-y-3">
+                    <x-base.form-input id="input-id" type="hidden" name="user_id"/>
+                    <div class="col-span-12">
+                        <x-base.form-label for="input-phone">Телефон</x-base.form-label>
+                        <x-base.form-input id="input-phone" class="input-search-user mask-phone" type="text" name="phone" placeholder="8 (___) ___-__-__" required />
+                    </div>
+                    <div class="col-span-12">
+                        <x-base.form-label for="input-email">Почта</x-base.form-label>
+                        <x-base.form-input id="input-email" class="input-search-user mask-email" type="text" name="email" placeholder="example@gmail.com" required />
+                    </div>
+                    <div class="col-span-12">
+                        <x-base.form-label for="input-name">Клиент</x-base.form-label>
+                        <div class="flex">
+                            <x-base.form-input type="text" name="surname" placeholder="Фамилия"/>
+                            <x-base.form-input type="text" name="firstname" placeholder="Имя"/>
+                            <x-base.form-input type="text" name="secondname" placeholder="Отчество"/>
+                        </div>
+                    </div>
+                </x-base.dialog.description>
+
+                <x-base.dialog.footer>
+                    <x-base.button id="modal-cancel" class="mr-1 w-24" data-tw-dismiss="modal" type="button" variant="outline-secondary">Отмена</x-base.button>
+                    <x-base.button class="w-24" type="submit" variant="primary">Создать</x-base.button>
+                </x-base.dialog.footer>
+            </form>
+        </x-base.dialog.panel>
+    </x-base.dialog>
 @endsection

@@ -23,7 +23,6 @@ class RegisterService
     {
         $user = User::register(
             $request['email'],
-           // $request['phone'],
             $request['password']
         );
         event(new UserHasCreated($user));
@@ -36,13 +35,16 @@ class RegisterService
         event(new UserHasRegistered($user));
     }
 
-    public function newUser($email, $password)
+    public function create(Request $request): User
     {
-        //$user = User::where($email)->first();
-        $user = User::register(
-            $email,
-            // $request['phone'],
-            $password
+        $user = User::new(
+            $request->string('email')->value(),
+            preg_replace("/[^0-9]/", "", $request->string('phone')->value())
+        );
+        $user->setNameField(
+            $request->string('surname')->value(),
+            $request->string('firstname')->value(),
+            $request->string('secondname')->value(),
         );
         return $user;
     }

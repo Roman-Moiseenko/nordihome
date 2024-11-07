@@ -12,7 +12,8 @@ class Common extends AbstractSetting
     public bool $only_offline = false;
     public bool $delivery_local = false;
     public bool $delivery_all = false;
-    public bool $accounting = false;
+    //TODO Удалить, товарный учет всегда для СРМ
+    public bool $accounting = true;
     public int $group_last_id = -1;
 
     public function view()

@@ -54,9 +54,10 @@ class PricingRepository
                     'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
                     'comment' => $document->comment,
                     'arrival' => !is_null($document->arrival_id) ? $document->arrival->htmlNumDate(): '-',
-
+/*
                     'url' => route('admin.accounting.pricing.show', $document),
                     'destroy' => route('admin.accounting.pricing.destroy', $document),
+                    'copy' => route('admin.accounting.pricing.copy', $document),*/
                 ];
             });
     }

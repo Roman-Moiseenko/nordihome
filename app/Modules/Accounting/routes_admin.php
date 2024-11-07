@@ -19,6 +19,7 @@ Route::group(
 
                 Route::post('/completed/{arrival}', 'ArrivalController@completed')->name('completed');
                 Route::post('/set/{item}', 'ArrivalController@set')->name('set');
+                Route::post('/set-currency/{arrival}', 'ArrivalController@set_currency')->name('set-currency');
                 Route::delete('/remove-item/{item}', 'ArrivalController@remove_item')->name('remove-item');
             });
         Route::group([
@@ -76,6 +77,7 @@ Route::group(
         ],
             function () {
                 Route::post('/add/{pricing}', 'PricingController@add')->name('add');
+                Route::post('/copy/{pricing}', 'PricingController@copy')->name('copy');
                 Route::post('/add-products/{pricing}', 'PricingController@add_products')->name('add-products');
                 Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
                 Route::post('/create-arrival/{arrival}', 'PricingController@create_arrival')->name('create-arrival');

@@ -47,13 +47,13 @@
             <div class="flex">
                 <div class="input-group ml-0 w-full lg:w-40 ">
                     <input id="input-last-price" type="text" class="form-control" placeholder="Цена"
-                           @if($accounting) disabled @endif autocomplete="off"
+                           disabled autocomplete="off"
                            wire:model="price" wire:change="save" wire:loading.attr="disabled">
                     <div class="input-group-text">₽</div>
                 </div>
                 <div class="input-group ml-0 w-full lg:ml-4 lg:w-40 ">
                     <input id="input-count-for-sell" type="text" class="form-control"
-                           @if($accounting) disabled @endif autocomplete="off"
+                           disabled autocomplete="off"
                     placeholder="Кол-во" wire:model="count" wire:change="save" wire:loading.attr="disabled">
                     <div class="input-group-text">шт</div>
                 </div>

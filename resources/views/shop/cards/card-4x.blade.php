@@ -3,8 +3,8 @@
         <div class="product-card-image">
             <a href="{{ route('shop.product.view', $product->slug) }}">
                 <img class="product-card-image-main"
-                    src="{{ (is_null($product->photo)) ? '/images/no-image.jpg' : $product->photo->getThumbUrl('catalog-watermark') }}"
-                    alt="{{ empty($product->photo->alt) ? $product->name : $product->photo->alt }}">
+                     src="{{ (is_null($product->photo)) ? '/images/no-image.jpg' : $product->photo->getThumbUrl('catalog-watermark') }}"
+                     alt="{{ empty($product->photo->alt) ? $product->name : $product->photo->alt }}">
                 <img class="product-card-image-hover"
                      src="{{ (is_null($product->photo_next())) ? '/images/no-image.jpg' : $product->photo_next()->getThumbUrl('catalog-watermark') }}"
                      alt="{{ empty($product->photo_next()->alt) ? $product->name : $product->photo_next()->alt }}">
@@ -16,9 +16,10 @@
         </div>
         <div class="product-card-review">
             <div>
-                <a href="{{ route('shop.product.view', $product->slug) }}/#review" title="Отзывы реальных покупателей на {{ $product->name }}">
+                <a href="{{ route('shop.product.view', $product->slug) }}/#review"
+                   title="Отзывы реальных покупателей на {{ $product->name }}">
                     <i class="fa-solid fa-star"></i>{{ $product->current_rating }} <span
-                        class="">{{ $product->countReviews() }}</span>
+                            class="">{{ $product->countReviews() }}</span>
                 </a>
             </div>
             <div>
@@ -31,9 +32,10 @@
         </div>
         <div class="product-card-info">
             @if(!$product->hasPromotion())
-                {{ price($product->getLastPrice()) }}
+                {{ price($product->getPrice()) }}
             @else
-                <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span><span class="base-price">{{ price($product->getLastPrice()) }}</span>
+                <span class="discount-price">{{ price($product->promotion()->pivot->price) }}</span><span
+                        class="base-price">{{ price($product->getPrice()) }}</span>
             @endif
         </div>
         <div class="product-card-to-cart">
@@ -41,7 +43,8 @@
             <button class="one-click btn btn-outline-dark"
                     data-product="{{ $product->id }}" type="button" data-bs-toggle="modal" data-bs-target="#buy-click"
                     onclick="document.getElementById('one-click-product-id').value={{$product->id}};"
-            >В 1 Клик!</button>
+            >В 1 Клик!
+            </button>
         </div>
     </div>
 </div>

@@ -15,18 +15,30 @@
                 @csrf
             </form>
         </div>
+    @else
+        <div class="box flex p-5 items-center">
+            <button class="btn btn-warning"
+               onclick="event.preventDefault(); document.getElementById('copy-pricing').submit();"
+            >
+                <x-base.lucide icon="copy" class="w-4 h-4"/>
+                Скопировать
+            </button>
+            <form id="copy-pricing" method="post" action="{{ route('admin.accounting.pricing.copy', $pricing)  }}">
+                @csrf
+            </form>
+        </div>
     @endif
 
     <div class="box flex items-center font-semibold p-2 mt-3">
         <div class="w-20 text-center">№ п/п</div>
         <div class="w-32">Артикул</div>
         <div class="w-56 text-center">Товар</div>
-        <div class="w-40 text-center">Себестоимость (₽)</div>
         <div class="w-40 text-center">Розн. цена (₽)</div>
         <div class="w-40 text-center">Опт. цена (₽)</div>
         <div class="w-40 text-center">Спец. цена (₽)</div>
         <div class="w-40 text-center">Мин. цена (₽)</div>
         <div class="w-40 text-center">Заказ. цена (₽)</div>
+        <div class="w-40 text-center">Себестоимость (₽)</div>
     </div>
 
 
@@ -38,42 +50,42 @@
             <div class="w-56 ">{{ $item->product->name }}</div>
 
             <div class="w-40 input-group">
-                <input type="number" class="form-control text-right" value="{{ $item->product->getPriceCost($pricing->isCompleted()) }}" readonly>
-                <input id="price_cost-{{ $item->id }}" type="number" name="price_cost"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_cost }}"
+                <input class="form-control text-right" value="{{ $item->product->getPriceRetail($pricing->isCompleted()) }}" readonly>
+                <input id="price_retail-{{ $item->id }}" name="price_retail"
+                       class="form-control text-right pricing-input-listen mask-integer" value="{{ $item->price_retail }}"
                        @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
             <div class="w-40 input-group">
-                <input type="number" class="form-control text-right" value="{{ $item->product->getPriceRetail($pricing->isCompleted()) }}" readonly>
-                <input id="price_retail-{{ $item->id }}" type="number" name="price_retail"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_retail }}"
+                <input class="form-control text-right" value="{{ $item->product->getPriceBulk($pricing->isCompleted()) }}" readonly>
+                <input id="price_bulk-{{ $item->id }}" name="price_bulk"
+                       class="form-control text-right pricing-input-listen mask-integer" value="{{ $item->price_bulk }}"
                        @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
             <div class="w-40 input-group">
-                <input type="number" class="form-control text-right" value="{{ $item->product->getPriceBulk($pricing->isCompleted()) }}" readonly>
-                <input id="price_bulk-{{ $item->id }}" type="number" name="price_bulk"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_bulk }}"
+                <input class="form-control text-right" value="{{ $item->product->getPriceSpecial($pricing->isCompleted()) }}" readonly>
+                <input id="price_special-{{ $item->id }}" name="price_special"
+                       class="form-control text-right pricing-input-listen mask-integer" value="{{ $item->price_special }}"
                        @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
             <div class="w-40 input-group">
-                <input type="number" class="form-control text-right" value="{{ $item->product->getPriceSpecial($pricing->isCompleted()) }}" readonly>
-                <input id="price_special-{{ $item->id }}" type="number"  name="price_special"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_special }}"
-                       @if($pricing->isCompleted()) readonly @endif autocomplete="off">
-            </div>
-            <div class="w-40 input-group">
-                <input type="number" class="form-control text-right" value="{{ $item->product->getPriceMin($pricing->isCompleted()) }}" readonly>
-                <input id="price_min-{{ $item->id }}" type="number"  name="price_min"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_min }}"
+                <input class="form-control text-right" value="{{ $item->product->getPriceMin($pricing->isCompleted()) }}" readonly>
+                <input id="price_min-{{ $item->id }}" name="price_min"
+                       class="form-control text-right pricing-input-listen mask-integer" value="{{ $item->price_min }}"
                        @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
             <div class="w-40 input-group">
                 <input type="number" class="form-control text-right" value="{{ $item->product->getPricePre($pricing->isCompleted()) }}" readonly>
-                <input id="price_pre-{{ $item->id }}" type="number"  name="price_pre"
-                       class="form-control text-right pricing-input-listen" value="{{ $item->price_pre }}"
+                <input id="price_pre-{{ $item->id }}" name="price_pre"
+                       class="form-control text-right pricing-input-listen mask-integer" value="{{ $item->price_pre }}"
                        @if($pricing->isCompleted()) readonly @endif autocomplete="off">
             </div>
-
+            <!--Себестоимость-->
+            <div class="w-40 input-group">
+                <input class="form-control text-right" value="{{ $item->product->getPriceCost($pricing->isCompleted()) }}" readonly>
+                <input id="price_cost-{{ $item->id }}" name="price_cost"
+                       class="form-control text-right pricing-input-listen mask-integer" value="{{ $item->price_cost }}"
+                       @if($pricing->isCompleted()) readonly @endif autocomplete="off">
+            </div>
             @if(!$pricing->isCompleted())
                 <button class="btn btn-outline-danger ml-6" type="button" onclick="document.getElementById('form-delete-item-{{ $item->id }}').submit();">
                     <x-base.lucide icon="trash-2" class="w-4 h-4"/>

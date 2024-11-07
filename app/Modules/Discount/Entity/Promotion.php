@@ -250,8 +250,8 @@ class Promotion extends Model implements DataWidgetInterface
                 'image' => $product->photo,
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
-                'price' => $product->getLastPrice(),
-                'discount' => ceil($product->getLastPrice() * ((100 - $this->getDiscount($product->id)) / 100)),
+                'price' => $product->getPrice(),
+                'discount' => ceil($product->getPrice() * ((100 - $this->getDiscount($product->id)) / 100)),
                 'count' => $product->getCountSell(),
             ];
         }, $this->products()->getModels());

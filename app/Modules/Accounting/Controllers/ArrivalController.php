@@ -17,6 +17,8 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ArrivalController extends Controller
@@ -50,7 +52,7 @@ class ArrivalController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'distributor' => 'required',
@@ -63,16 +65,17 @@ class ArrivalController extends Controller
     public function show(ArrivalDocument $arrival)
     {
         $info = $arrival->getInfoData();
-        return view('admin.accounting.arrival.show', compact('arrival', 'info'));
+        $products = $arrival->arrivalProducts()->paginate(20);
+        return view('admin.accounting.arrival.show', compact('arrival', 'info', 'products'));
     }
 
-    public function destroy(ArrivalDocument $arrival)
+    public function destroy(ArrivalDocument $arrival): RedirectResponse
     {
         $this->service->destroy($arrival);
         return redirect()->back();
     }
 
-    public function add(Request $request, ArrivalDocument $arrival)
+    public function add(Request $request, ArrivalDocument $arrival): RedirectResponse
     {
         $this->service->add(
             $arrival,
@@ -82,7 +85,7 @@ class ArrivalController extends Controller
         return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 
-    public function add_products(Request $request, ArrivalDocument $arrival)
+    public function add_products(Request $request, ArrivalDocument $arrival): RedirectResponse
     {
         $request->validate([
             'products' => 'required',
@@ -91,26 +94,32 @@ class ArrivalController extends Controller
         return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 
-    public function remove_item(ArrivalProduct $item)
+    public function remove_item(ArrivalProduct $item): RedirectResponse
     {
         $arrival = $item->document;
         $item->delete();
         return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 
-    public function completed(ArrivalDocument $arrival)
+    public function completed(ArrivalDocument $arrival): RedirectResponse
     {
         $this->service->completed($arrival);
-        return redirect()->route('admin.accounting.arrival.index');
+        return redirect()->back();//route('admin.accounting.arrival.index');
     }
 
     //AJAX
-    public function set(Request $request, ArrivalProduct $item)
+    public function set(Request $request, ArrivalProduct $item): JsonResponse
     {
         $cost_ru = $this->service->set($request, $item);
         return response()->json([
             'cost_ru' => $cost_ru,
             'info' => $item->document->getInfoData(),
         ]);
+    }
+
+    public function set_currency(Request $request, ArrivalDocument $arrival): RedirectResponse
+    {
+        $this->service->set_currency($request, $arrival);
+        return redirect()->route('admin.accounting.arrival.show', $arrival);
     }
 }

@@ -7,6 +7,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -75,6 +76,10 @@ class ArrivalDocument extends Model implements AccountingDocument
     }
 
     //*** IS-...
+
+    /**
+     * Документ проведен
+     */
     public function isCompleted(): bool
     {
         return $this->completed == true;
@@ -89,7 +94,7 @@ class ArrivalDocument extends Model implements AccountingDocument
     }
 
     //*** SET-...
-    public function completed()
+    public function completed(): void
     {
         $this->completed = true;
         $this->save();
@@ -111,25 +116,23 @@ class ArrivalDocument extends Model implements AccountingDocument
         'quantity' => 'int',
         'cost_currency' => 'float',
         'price_sell' => 'float',
-        'cost_ru' => 'float',
+        'cost_ru' => 'integer',
         'currency_sign' => 'string',
     ])]
     public function getInfoData(): array
     {
         $quantity = 0;
         $cost_currency = 0;
-        $price_sell = 0;
+        $cost_ru = 0;
         foreach ($this->arrivalProducts as $item) {
             $quantity += $item->quantity;
             $cost_currency += $item->quantity * $item->cost_currency;
-            $price_sell += $item->quantity * $item->price_sell;
+            $cost_ru += $item->quantity * $item->getCostRu();
         }
-        $cost_ru = ceil($cost_currency * $this->exchange_fix * 100) / 100;
-        //dd($this->currency_id);
         return [
             'quantity' => $quantity,
             'cost_currency' => $cost_currency,
-            'price_sell' => $price_sell,
+            'price_sell' => 'Не используется',
             'cost_ru' => $cost_ru,
             'currency_sign' => $this->currency->sign,
         ];
@@ -147,7 +150,7 @@ class ArrivalDocument extends Model implements AccountingDocument
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }
 
-    public function supply()
+    public function supply(): BelongsTo
     {
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
     }

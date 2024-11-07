@@ -8,6 +8,8 @@ use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -82,15 +84,15 @@ class SupplyStack extends Model
     public function status(): string
     {
         if (is_null($this->supply)) return 'В обработке';
-        return 'Заказ поставщику: ' . $this->supply->statusHTML();
+        return 'Заказ поставщику: ' . ($this->supply->isCompleted() ? 'Проведен' : 'В работе');
     }
 
-    public function orderItem()
+    public function orderItem(): HasOne
     {
         return $this->hasOne(OrderItem::class, 'supply_stack_id', 'id');
     }
 
-    public function staff()
+    public function staff(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }

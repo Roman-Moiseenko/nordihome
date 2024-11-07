@@ -66,11 +66,11 @@ class CatalogController extends Controller
         /** @var Product $product */
         foreach ($products as $i => $product) {
             if ($i == 0) {
-                $minPrice = $product->getLastPrice();
-                $maxPrice = $product->getLastPrice();
+                $minPrice = $product->getPrice();
+                $maxPrice = $product->getPrice();
             } else {
-                if ($product->getLastPrice() < $minPrice) $minPrice = $product->getLastPrice();
-                if ($product->getLastPrice() > $maxPrice) $maxPrice = $product->getLastPrice();
+                if ($product->getPrice() < $minPrice) $minPrice = $product->getPrice();
+                if ($product->getPrice() > $maxPrice) $maxPrice = $product->getPrice();
             }
 
             if ($request->has('in_stock')) {

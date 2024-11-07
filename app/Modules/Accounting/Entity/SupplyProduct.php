@@ -5,13 +5,15 @@ namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
  * @property int $supply_id
  * @property int $product_id
+ * @property float $cost_currency
  * @property int $quantity
- * @property SupplyDocument $supply
+ * @property SupplyDocument $document
  * @property Product $product
  */
 class SupplyProduct extends Model
@@ -21,25 +23,32 @@ class SupplyProduct extends Model
     protected $fillable = [
         'supply_id',
         'product_id',
-        'quantity'
+        'quantity',
+        'cost_currency',
     ];
 
-    public static function new(int $product_id, int $quantity): self
+    public static function new(int $product_id, int $quantity, float $distributor_cost): self
     {
         return self::make([
             'product_id' => $product_id,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+            'cost_currency' => $distributor_cost
         ]);
     }
 
-    public function supply()
+    public function document(): BelongsTo
     {
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
     }
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function getCostRu(): int
+    {
+        return (int)(ceil($this->cost_currency * $this->document->exchange_fix));
     }
 
 }

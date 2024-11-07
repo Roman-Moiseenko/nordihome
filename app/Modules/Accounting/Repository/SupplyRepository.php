@@ -23,9 +23,10 @@ class SupplyRepository
             $query->where('created_at', '<=', $end);
         }
 
-        if (($status = $request->integer('status')) > 0) {
-            $filters['status'] = $status;
-            $query->where('status', $status);
+        //TODO Заменить
+        if (($completed = $request->integer('completed')) > 0) {
+            $filters['completed'] = $completed;
+            $query->where('completed', true);
         }
 
         if ($request->integer('distributor') > 0) {
@@ -53,17 +54,14 @@ class SupplyRepository
                     'id' => $document->id,
                     'date' => $document->htmlDate(),
                     'number' => $document->htmlNum(),
-
-                    'status' => $document->status,
-                    //TODO Helper ??
-                    'status_html' => $document->statusHTML(),
+                    'completed' => $document->isCompleted(),
 
                     'distributor' => $document->distributor->name,
                     'quantity' => $document->getQuantity(),
 
                     'comment' => $document->comment,
                     'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
-                    'is_delete' => $document->isCreated(),
+                    'is_delete' => !$document->isCompleted(),
                    // 'url' => route('admin.accounting.supply.show', $document),
                    // 'destroy' => route('admin.accounting.supply.destroy', $document),
                 ];

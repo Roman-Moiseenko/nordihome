@@ -7,15 +7,30 @@
         </h2>
     </div>
     <div class="box flex p-5 mt-3 items-center">
-        <h3>Установка цен</h3>
-    @if(empty($arrival->pricing))
-        <button class="btn btn-success ml-5" onclick="document.getElementById('create-pricing-arrival').submit();">Создать</button>
-        <form id="create-pricing-arrival" method="post" action="{{ route('admin.accounting.pricing.create-arrival', $arrival) }}">
-            @csrf
-        </form>
-    @else
-        <a class="ml-5 text-success font-medium" href="{{ route('admin.accounting.pricing.show', $arrival->pricing) }}" target="_blank">{{ $arrival->pricing->htmlNum() . ' от ' . $arrival->pricing->htmlDate() }}</a>
-    @endif
+        @if($arrival->isCompleted())
+            <h3>Установка цен</h3>
+            @if(empty($arrival->pricing))
+                <button class="btn btn-success ml-5" onclick="document.getElementById('create-pricing-arrival').submit();">Создать</button>
+                <form id="create-pricing-arrival" method="post" action="{{ route('admin.accounting.pricing.create-arrival', $arrival) }}">
+                    @csrf
+                </form>
+            @else
+                <a class="ml-5 text-success font-medium" href="{{ route('admin.accounting.pricing.show', $arrival->pricing) }}" target="_blank">{{ $arrival->pricing->htmlNum() . ' от ' . $arrival->pricing->htmlDate() }}</a>
+            @endif
+        @else
+            <span>Курс валюты документа 1 {{ $arrival->currency->sign }} = </span>
+            <form id="set-currency-arrival" method="post" action="{{ route('admin.accounting.arrival.set-currency', $arrival) }}" class="flex">
+                @csrf
+                <div class="input-group">
+                    <input class="form-control w-20 ml-2" name="currency" type="number" step="any"
+                           value="{{ $arrival->exchange_fix }}" min="0" autocomplete="off" aria-describedby="input-cost_ru">
+                    <div id="input-cost_ru" class="input-group-text">₽</div>
+                </div>
+
+                <button class="btn btn-outline-success ml-2" type="submit">Установить</button>
+            </form>
+        @endif
+
     </div>
     @if(!$arrival->isCompleted())
         <div class="box flex p-5 mt-3 items-center">
@@ -30,6 +45,8 @@
     <form id="form-completed" method="post" action="{{ route('admin.accounting.arrival.completed', $arrival) }}">
         @csrf
     </form>
+
+    {{ $products->links('admin.components.paginator') }}
     <div class="box flex items-center font-semibold p-2 mt-3">
         <div class="w-20">№ п/п</div>
         <div class="w-32">Артикул</div>
@@ -38,7 +55,7 @@
         <div class="w-40 text-center">Кол-во</div>
         <div class="w-40 input-group">Закупочная цена ₽</div>
     </div>
-    @foreach($arrival->arrivalProducts as $i => $item)
+    @foreach($products as $i => $item)
         <div class="box flex items-center px-2" data-id="{{ $item->id }}"
              data-route="{{ route('admin.accounting.arrival.set', $item->id) }}">
             <div class="w-20">{{ ($i + 1) }}</div>
@@ -58,7 +75,7 @@
             </div>
             <div class="w-40 input-group">
                 <input id="cost_ru-{{ $item->id }}" type="number" class="form-control text-right"
-                       value="{{ $item->cost_ru }}" aria-describedby="input-cost_ru" readonly autocomplete="off">
+                       value="{{ $item->getCostRu() }}" aria-describedby="input-cost_ru" readonly autocomplete="off">
                 <div id="input-cost_ru" class="input-group-text">₽</div>
             </div>
 
@@ -99,8 +116,6 @@
         <livewire:admin.accounting.edit-comment :document="$arrival" />
     </div>
 
-
-
     {{ \App\Forms\ModalDelete::create('Вы уверены?',
      'Вы действительно хотите удалить товар из списка?<br>Этот процесс не может быть отменен.')->show() }}
 
@@ -111,21 +126,22 @@
             element.addEventListener('change', function (item) {
                 let route = element.parentElement.parentElement.getAttribute('data-route');
                 let id = element.parentElement.parentElement.getAttribute('data-id');
+               // console.log(route, id)
                 let data = {
                     currency: document.getElementById('currency-' + id).value,
                     quantity: document.getElementById('quantity-' + id).value,
-                    sell: document.getElementById('sell-' + id).value,
+                    //sell: document.getElementById('sell-' + id).value,
                 };
 
-                console.log(route, element.value);
-                let result = document.getElementById('cost_ru-' + id);
-                setArrivalPoduct(route, data, result);
+               // console.log(route, element.value);
+              //  let result = document.getElementById('cost_ru-' + id);
+                setArrivalProduct(route, data);
             })
         });
 
-        function setArrivalPoduct(route, data, result) {
+        function setArrivalProduct(route, data) {
             //AJAX
-            let _params = '_token=' + '{{ csrf_token() }}' + '&quantity=' + data.quantity + '&cost=' + data.currency + '&price=' + data.sell;
+            let _params = '_token=' + '{{ csrf_token() }}' + '&quantity=' + data.quantity + '&cost=' + data.currency;// + '&price=' + data.sell;
             let request = new XMLHttpRequest();
             request.open('POST', route);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -133,11 +149,12 @@
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     let data = JSON.parse(request.responseText)
-                    result.value = data.cost_ru;
+               //     console.log(data)
+                    //result.value = data.cost_ru;
                     document.getElementById('currency-amount').value = data.info.cost_currency;
                     document.getElementById('quantity-amount').value = data.info.quantity;
                     document.getElementById('cost_ru-amount').value = data.info.cost_ru;
-                    document.getElementById('sell-amount').value = data.info.price_sell;
+                  //  document.getElementById('sell-amount').value = data.info.price_sell;
 
                 } else {
                     //console.log(request.responseText);

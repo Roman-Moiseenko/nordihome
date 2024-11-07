@@ -297,7 +297,7 @@ class OrderService
             /** @var Product $product */
             $product = Product::find($product_id);
             if (is_null($product)) throw new \DomainException('Данный товар не найден');
-            if ($product->getLastPrice($user->id) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
+            if ($product->getPrice($user->id) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
             $order = Order::register($user->id, Order::ONLINE);
 
             $order = $this->add_product($order, $product->id, 1);
@@ -460,7 +460,7 @@ class OrderService
             $quantity = $product->getCountSell(); //в наличии
         }
 
-        $last_price = $product->getLastPrice($order->user_id);
+        $last_price = $product->getPrice($order->user_id);
         if ($quantity > 0) {
             $orderItem = OrderItem::new($product, $quantity, false);
             if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);

@@ -7,6 +7,7 @@ use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
 use App\Modules\Shop\Parser\HttpPage;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use SimpleXMLElement;
 use Tests\CreatesApplication;
 
@@ -24,11 +25,15 @@ class CurrencyCommand extends Command
     /**
      * @throws \Exception
      */
-    public function handle(HttpPage $httpPage)
+    public function handle(): void
     {
         $currencies = Currency::orderBy('name')->where('cbr_code', '<>', '')->get();
-        $data = $httpPage->getPage(self::CBR);
-        $xml = simplexml_load_string($data);
+        $response = Http::get(self::CBR);
+        if (!$response->ok()) {
+            //TODO Создать сообщение, что нет ответа от ЦБ
+            return;
+        }
+        $xml = simplexml_load_string($response->body());
         $array = json_decode(json_encode($xml),true);
         $this->valute = $array['Valute'];
 

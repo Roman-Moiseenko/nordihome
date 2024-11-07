@@ -71,7 +71,7 @@ class ProductRepository
             'code' => $product->code,
             'code_search' => $product->code_search,
             'image' => $product->getImage(),
-            'price' => $product->getLastPrice(),
+            'price' => $product->getPrice(),
             'url' => route('admin.product.edit', $product),
             'count' => $product->getCountSell(),
             'stock' => $product->getCountSell() > 0,

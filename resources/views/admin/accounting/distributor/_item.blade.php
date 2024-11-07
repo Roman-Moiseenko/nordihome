@@ -9,7 +9,8 @@
     <x-base.table.td class="w-32">{{ $item->product->code }}</x-base.table.td>
     <x-base.table.td class=""><a href="{{ route('admin.product.edit', $item->product) }}"
                                      class="font-medium">{{ $item->product->name }}</a></x-base.table.td>
-    <x-base.table.td class="text-center">{{ $item->cost . ' ' . $item->distributor->currency->sign }}</x-base.table.td>
+    <x-base.table.td class="text-center">{{ price($item->product->getPriceCost()) . ' / ' . price($item->product->getPriceCost(true)) }}</x-base.table.td>
+    <!--$item->cost . ' ' . $item->distributor->currency->sign-->
     <x-base.table.td class="text-center">
         {{ $item->product->getQuantity() }}
         @if($item->product->getQuantityReserve() > 0)

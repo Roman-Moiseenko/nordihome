@@ -75,7 +75,7 @@ class ArrivalService
         return $arrival;
     }
 
-    public function destroy(ArrivalDocument $arrival)
+    public function destroy(ArrivalDocument $arrival): void
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Удалять нельзя');
         $arrival->delete();
@@ -97,21 +97,15 @@ class ArrivalService
             flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
             return null;
         }
-
         $distributor_cost = is_null($arrival->distributor) ? 0 : $arrival->distributor->getCostItem($product->id); //Ищем у поставщика товар, если есть, берем закупочную цену
-        $product_sell = $product->getLastPrice();
 
         //Добавляем в документ
         $item = ArrivalProduct::new(
             $product->id,
             $quantity,
             $distributor_cost,
-            $arrival->exchange_fix * $distributor_cost,
-            $product_sell
         );
-        //$product->refresh();
         $arrival->arrivalProducts()->save($item);
-        //$arrival->refresh();
 
         return $item;
     }
@@ -133,14 +127,20 @@ class ArrivalService
     public function set(Request $request, ArrivalProduct $item): float|int
     {
         if ($item->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
-
         //Меняем данные
-        $item->quantity = $request->integer('quantity');
-        $item->cost_currency = $request->float('cost');
-        $item->cost_ru = ceil($item->document->exchange_fix * $item->cost_currency * 100) / 100;
-        $item->price_sell = $request->integer('price');
+        $item->setQuantity($request->integer('quantity'));
+        $item->setCost($request->float('cost'));
         $item->save();
-        return $item->cost_ru;
+        return $item->getCostRu();
+    }
+
+    /**
+     * Меняем курс валюты для документа в ручную
+     */
+    public function set_currency(Request $request, ArrivalDocument $arrival): void
+    {
+        $arrival->exchange_fix = $request->float('currency');
+        $arrival->save();
     }
 
     #[ArrayShape(['cost_currency' => "float|int", 'quantity' => "int", 'cost_ru' => "float|int"])]
@@ -151,13 +151,11 @@ class ArrivalService
             'quantity' => 0,
             'cost_ru' => 0,
         ];
-
         foreach ($arrival->arrivalProducts as $item) {
             $result['quantity'] += $item->quantity;
             $result['cost_currency'] += $item->quantity * $item->cost_currency;
+            $result['cost_ru'] += $item->quantity * $item->getCostRu();
         }
-        $result['cost_ru'] = ceil($result['cost_currency'] * $arrival->exchange_fix * 100) / 100;
-
         return $result;
     }
 
@@ -166,7 +164,7 @@ class ArrivalService
      * @param ArrivalDocument $arrival
      * @return void
      */
-    public function completed(ArrivalDocument $arrival)
+    public function completed(ArrivalDocument $arrival): void
     {
         DB::transaction(function () use ($arrival) {
             $this->storages->arrival($arrival->storage, $arrival->arrivalProducts()->getModels());

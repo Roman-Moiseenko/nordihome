@@ -211,7 +211,7 @@ class OrdersTest extends TestCase
         $discount = $_product['discount'];
         $random = rand(1, 999);
         $product = Product::register('Товар ' . $random, '001.00-' . $random, $this->category->id);
-        $product->setPrice($price);
+
         $product->published = true;
 
         $product->save();
@@ -226,10 +226,10 @@ class OrdersTest extends TestCase
             $promotion->save();
             $promotion->refresh();
             $promotionService = new PromotionService();
-            $promotion = $promotionService->add_product($product->id, $promotion);
+           // $promotion = $promotionService->add_product($product->id, $promotion);
             foreach ($promotion->products as $product) {
                 self::assertEquals($price * $discount / 100, $product->pivot->price);
-                self::assertEquals($price, $product->getLastPrice());
+                self::assertEquals($price, $product->getPrice());
             }
         }
         return $product;

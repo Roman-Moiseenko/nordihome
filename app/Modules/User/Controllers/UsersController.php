@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\RegisterService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use function redirect;
 use function view;
@@ -34,6 +35,12 @@ class UsersController extends Controller
         return view('admin.user.index', compact('users' ,'filters', 'statuses'));
     }
 
+    public function create(Request $request): RedirectResponse
+    {
+        $user = $this->service->create($request);
+        return redirect()->route('admin.user.show', $user);
+    }
+
     public function show(User $user)
     {
         $all = 0;
@@ -51,8 +58,7 @@ class UsersController extends Controller
         return view('admin.user.show', compact('user', 'all', 'completed', 'amount_all', 'amount_completed'));
     }
 
-
-    public function verify(User $user)
+    public function verify(User $user): RedirectResponse
     {
         $this->service->verify($user->id);
         return redirect()->route('admin.user.show', $user);

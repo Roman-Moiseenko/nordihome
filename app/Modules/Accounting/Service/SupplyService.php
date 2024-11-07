@@ -62,7 +62,7 @@ class SupplyService
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
-        return SupplyDocument::register($distributor->id, '', $manager->id);
+        return SupplyDocument::register($distributor->id, '', $manager->id, $distributor->currency->getExchange());
     }
 
     public function create(int $distributor_id, array $data): SupplyDocument
@@ -75,7 +75,8 @@ class SupplyService
                 /** @var SupplyStack $stack */
                 $stack = SupplyStack::find((int)$stack_id); //В стеке указываем Документ на заказ
                 $stack->setSupply($supply->id);
-                $supply->addProduct($stack->product, $stack->quantity);
+                $d_product = $distributor->getProduct($stack->product_id);
+                $supply->addProduct($stack->product, $stack->quantity, $d_product->pivot->cost);
                 $supply->refresh();
             }
         });
@@ -88,7 +89,8 @@ class SupplyService
         $supply = $this->create_empty($distributor);
         foreach ($stacks as $stack) {
             $stack->setSupply($supply->id);
-            $supply->addProduct($stack->product, $stack->quantity);
+            $d_product = $distributor->getProduct($stack->product_id);
+            $supply->addProduct($stack->product, $stack->quantity, $d_product->pivot->cost);
         }
         return $supply;
     }
@@ -108,7 +110,8 @@ class SupplyService
         if (!$distributor->isProduct($product)) { //Если товара нет у поставщика $supply->distributor, то
             $distributor->addProduct($product, 0); // добавляем с ценой закупа = 0
         }
-        $supply->addProduct($product, $quantity);//Добавляем товар в Заказ
+        $d_product = $distributor->getProduct($product_id);
+        $supply->addProduct($product, $quantity, $d_product->pivot->cost);//Добавляем товар в Заказ
     }
 
     public function add_products(SupplyDocument $supply, string $textarea): void
@@ -124,10 +127,9 @@ class SupplyService
         }
     }
 
-
-    public function del_product(SupplyProduct $supplyProduct)
+    public function del_product(SupplyProduct $supplyProduct): void
     {
-        $supply = $supplyProduct->supply;
+        $supply = $supplyProduct->document;
         //Проверка на стек, если есть в стеке удалить нельзя
         foreach ($supply->stacks as $stack) {
             if ($stack->product_id == $supplyProduct->product_id) {
@@ -137,20 +139,21 @@ class SupplyService
         $supplyProduct->delete();
     }
 
-    public function set_product(SupplyProduct $supplyProduct, int $quantity)
+    public function set_product(SupplyProduct $supplyProduct, int $quantity, float $cost_currency): bool
     {
-        $supply = $supplyProduct->supply;
+        $supply = $supplyProduct->document;
         //Проверка на стек, если кол-во меньше чем в стеке, то изменить нельзя
         ///Доп.защита!!
         $quantity_stack = $supply->getQuantityStack($supplyProduct->product);
         if ($quantity < $quantity_stack) throw new \DomainException('Кол-во товара по стеку ' . $quantity_stack . '. Нельзя ставить меньше.');
         $supplyProduct->quantity = $quantity;
+        $supplyProduct->cost_currency = $cost_currency;
         $supplyProduct->save();
         return true;
     }
 
 
-    public function sent(SupplyDocument $supply)
+    public function sent(SupplyDocument $supply): void
     {
         $supply->status = SupplyDocument::SENT;
         $supply->setNumber();
@@ -230,7 +233,7 @@ class SupplyService
                   ]
               );
           }*/
-        $supply->status = SupplyDocument::COMPLETED;
+        $supply->completed = true;
         $supply->save();
         event(new SupplyHasCompleted($supply));
         return $arrival;
@@ -246,7 +249,8 @@ class SupplyService
     {
         $supply = $this->create_empty($old_supply->distributor);
         foreach ($old_supply->products as $product) {
-            $supply->addProduct($product->product, $product->quantity);
+            $d_product = $old_supply->distributor->getProduct($product->id);
+            $supply->addProduct($product->product, $product->quantity, $d_product->pivot->cost);
         }
         return $supply;
     }

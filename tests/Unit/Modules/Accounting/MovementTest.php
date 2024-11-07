@@ -127,7 +127,7 @@ class MovementTest extends TestCase
     {
         $random = rand(1, 999);
         $product = Product::register('Товар ' . $random, '001.00-' . $random, $this->category->id);
-        $product->setPrice(rand(1, 99) * 100);
+
         $product->published = true;
         //$product->setCountSell(0);
         $product->save();

@@ -50,11 +50,10 @@ class SupplyController extends Controller
         $distributors = Distributor::orderBy('name')->get();
         $stack_count = SupplyStack::where('supply_id', null)->count();
         $supplies = $this->repository->getIndex($request, $filters);
-        $statuses = SupplyDocument::STATUSES;
         $staffs = $this->staffs->getStaffsChiefs();
 
         return view('admin.accounting.supply.index',
-            compact('supplies', 'filters', 'distributors', 'stack_count', 'statuses', 'staffs'));
+            compact('supplies', 'filters', 'distributors', 'stack_count', 'staffs'));
     }
 
     public function create(Request $request)
@@ -148,7 +147,7 @@ class SupplyController extends Controller
     //AJAX
     public function set_product(SupplyProduct $product, Request $request)
     {
-        $this->service->set_product($product, $request->integer('quantity'));
+        $this->service->set_product($product, $request->integer('quantity'), $request->float('cost'));
         return response()->json(true);
     }
 }

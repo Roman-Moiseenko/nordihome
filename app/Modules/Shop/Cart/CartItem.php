@@ -28,7 +28,7 @@ class CartItem implements CartItemInterface
         $item->product = $product;
         $item->quantity = $quantity;
         $item->options = $options;
-        $item->base_cost = $product->getLastPrice();
+        $item->base_cost = $product->getPrice();
         $item->check = true;
         $item->discount_name = '';
         $item->discount_cost = 0;
@@ -43,7 +43,7 @@ class CartItem implements CartItemInterface
         $item->quantity = $quantity;
         $item->options = $options;
         $item->check = $check;
-        $item->base_cost = $product->getLastPrice();
+        $item->base_cost = $product->getPrice();
         $item->discount_name = '';
         $item->discount_cost = 0;
         return $item;

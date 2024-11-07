@@ -31,20 +31,21 @@ class PricingService
 
     public function create_arrival(ArrivalDocument $arrival):? PricingDocument
     {
+        if (!$arrival->isCompleted()) throw new \DomainException('Поступление не проведено. Создать установку цен невозможно!');
         $pricing = $this->create($arrival->id);
         foreach ($arrival->arrivalProducts as $arrivalProduct) {
-            $this->add($pricing, $arrivalProduct->product_id);
+            $this->add($pricing, $arrivalProduct->product_id, $arrivalProduct->getCostRu());
         }
         return $pricing;
     }
 
-    public function destroy(PricingDocument $pricing)
+    public function destroy(PricingDocument $pricing): void
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, удалить нельзя');
         $pricing->delete();
     }
 
-    public function add(PricingDocument $pricing, int $product_id): PricingDocument
+    public function add(PricingDocument $pricing, int $product_id, int $cost = null): PricingDocument
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, менять данные нельзя');
 
@@ -57,7 +58,7 @@ class PricingService
 
         $pricingProduct = PricingProduct::new(
             $product->id,
-            $product->getPriceCost(),
+            $cost ?? $product->getPriceCost(), //Если передана закупочная цена $cost
             $product->getPriceRetail(),
             $product->getPriceBulk(),
             $product->getPriceSpecial(),
@@ -83,7 +84,7 @@ class PricingService
         return $pricing;
     }
 
-    public function set(PricingProduct $product, array $request)
+    public function set(PricingProduct $product, array $request): void
     {
 
         if (!empty($request['price_cost'])) $product->price_cost = (float)$request['price_cost'];
@@ -96,12 +97,12 @@ class PricingService
         $product->save();
     }
 
-    public function remove_item(PricingProduct $item)
+    public function remove_item(PricingProduct $item): void
     {
         $item->delete();
     }
 
-    public function completed(PricingDocument $pricing)
+    public function completed(PricingDocument $pricing): void
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ уже проведен');
         DB::transaction(function () use ($pricing) {
@@ -112,34 +113,52 @@ class PricingService
             foreach ($pricing->pricingProducts as $pricingProduct) {
                 $product = $pricingProduct->product;
                 $founded = 'Установка цен № ' . $pricing->htmlNum() . ' от ' . $pricing->htmlDate();
-                $product->pricesCost()->create([
-                    'value' => $pricingProduct->price_cost,
-                    'founded' => $founded,
-                ]);
-                $product->pricesRetail()->create([
-                    'value' => $pricingProduct->price_retail,
-                    'founded' => $founded,
-                ]);
-                $product->pricesBulk()->create([
-                    'value' => $pricingProduct->price_bulk,
-                    'founded' => $founded,
-                ]);
-                $product->pricesSpecial()->create([
-                    'value' => $pricingProduct->price_special,
-                    'founded' => $founded,
-                ]);
-                $product->pricesMin()->create([
-                    'value' => $pricingProduct->price_min,
-                    'founded' => $founded,
-                ]);
-                $product->pricesPre()->create([
-                    'value' => $pricingProduct->price_pre,
-                    'founded' => $founded,
-                ]);
+                //TODO Сохранять, Если значения отличаются
+                if ($product->getPriceCost() != $pricingProduct->price_cost)
+                    $product->pricesCost()->create([
+                        'value' => $pricingProduct->price_cost,
+                        'founded' => $founded,
+                    ]);
+                if ($product->getPriceRetail() != $pricingProduct->price_retail)
+                    $product->pricesRetail()->create([
+                        'value' => $pricingProduct->price_retail,
+                        'founded' => $founded,
+                    ]);
+                if ($product->getPriceBulk() != $pricingProduct->price_bulk)
+                    $product->pricesBulk()->create([
+                        'value' => $pricingProduct->price_bulk,
+                        'founded' => $founded,
+                    ]);
+                if ($product->getPriceSpecial() != $pricingProduct->price_special)
+                    $product->pricesSpecial()->create([
+                        'value' => $pricingProduct->price_special,
+                        'founded' => $founded,
+                    ]);
+                if ($product->getPriceMin() != $pricingProduct->price_min)
+                    $product->pricesMin()->create([
+                        'value' => $pricingProduct->price_min,
+                        'founded' => $founded,
+                    ]);
+                if ($product->getPricePre() != $pricingProduct->price_pre)
+                    $product->pricesPre()->create([
+                        'value' => $pricingProduct->price_pre,
+                        'founded' => $founded,
+                    ]);
             }
 
             event(new PricingHasCompleted($pricing));
         });
+    }
+
+    public function copy(PricingDocument $pricing)
+    {
+        $copy = $this->create();
+
+        foreach ($pricing->pricingProducts as $pricingProduct) {
+            $this->add($copy, $pricingProduct->product_id);
+        }
+        
+        return $copy;
     }
 
 }

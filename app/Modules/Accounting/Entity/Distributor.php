@@ -55,7 +55,7 @@ class Distributor extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'distributors_products',
-            'distributor_id', 'product_id')->withPivot('cost');
+            'distributor_id', 'product_id')->withPivot(['cost', 'pre_cost']);
     }
 
     public function getCostItem(int $product_id): float
@@ -96,5 +96,13 @@ class Distributor extends Model
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function getProduct(int $product_id)
+    {
+        foreach ($this->products as $_product) {
+            if ($_product->id == $product_id) return $_product;
+        }
+        return null;
     }
 }

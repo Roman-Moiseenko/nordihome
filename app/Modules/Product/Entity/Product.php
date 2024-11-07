@@ -22,9 +22,13 @@ use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -184,12 +188,6 @@ class Product extends Model
     /**
      * Регистрация товара, с учетом дублей по имени - добавляем номер
      * Для дублирования артикула - вызываем исключение
-     * @param string $name
-     * @param string $code
-     * @param int $main_category_id
-     * @param string $slug
-     * @param array $arguments
-     * @return static
      */
     public static function register(string $name, string $code, int $main_category_id, string $slug = '', array $arguments = []): self
     {
@@ -342,21 +340,6 @@ class Product extends Model
         $this->save();
     }
 
-    #[Deprecated]
-    public function setPrice(float $price): void
-    {
-        if ($this->getPriceRetail() === $price) return;
-        $this->current_price = $price;
-        $this->save();
-        $this->prices()->create(
-            [
-                'value' => $price,
-                'founded' => 'In Shop',
-            ]
-        );
-        $this->refresh();
-    }
-
     public function setPublished(): void
     {
         $this->published = true;
@@ -416,20 +399,22 @@ class Product extends Model
     //*** ЦЕНЫ
 
     /**
-     * @return float Последняя назначенная цена с учетом если цены не назначены
+     * Текущая (Предыдущая $previous = true) цена для клиента (с учетом цен клиента, Розничная, или Оптовые)
+     * Показывать на сайте (Фронтенд)
      */
-    public function getLastPrice(): float
+    public function getPrice(bool $previous = false): float
     {
         if (!$this->isSale()) return 0;
         //TODO Привязка к Аутентификации!!!
         if (!is_null($user = Auth::guard('user')->user())) {
             /** @var User $user */
-            if ($user->isBulk() && $this->getPriceBulk() != 0) return $this->getPriceBulk(); //Оптовый клиент
-            if ($user->isSpecial() && $this->getPriceSpecial() != 0) return $this->getPriceSpecial(); //Спец Клиент
+            if ($user->isBulk() && $this->getPriceBulk($previous) != 0) return $this->getPriceBulk($previous); //Оптовый клиент
+            if ($user->isSpecial() && $this->getPriceSpecial($previous) != 0) return $this->getPriceSpecial($previous); //Спец Клиент
         }
-        return $this->getPriceRetail();
+        return $this->getPriceRetail($previous);
     }
 
+    //ЦЕНЫ ДЛЯ АДМИНКИ
     /**
      * Последняя закупочная цена, через Поставщиков
      * @return float
@@ -437,7 +422,7 @@ class Product extends Model
     public function getPriceCost(bool $previous = false): float
     {
         if ($this->pricesCost()->count() == 0) return 0;
-        if ($previous == true) {
+        if ($previous) {
             /** @var ProductPriceCost $model */
             $model = $this->pricesCost()->skip(1)->first();
             if (empty($model)) return 0;
@@ -450,7 +435,7 @@ class Product extends Model
     public function getPriceRetail(bool $previous = false): float
     {
         if ($this->pricesRetail()->count() == 0) return 0;
-        if ($previous == true) {
+        if ($previous) {
             /** @var ProductPriceRetail $model */
             $model = $this->pricesRetail()->skip(1)->first();
             if (empty($model)) return 0;
@@ -463,7 +448,7 @@ class Product extends Model
     public function getPriceBulk(bool $previous = false): float
     {
         if ($this->pricesBulk()->count() == 0) return 0;
-        if ($previous == true) {
+        if ($previous) {
             /** @var ProductPriceBulk $model */
             $model = $this->pricesBulk()->skip(1)->first();
             if (empty($model)) return 0;
@@ -476,7 +461,7 @@ class Product extends Model
     public function getPriceSpecial(bool $previous = false): float
     {
         if ($this->pricesSpecial()->count() == 0) return 0;
-        if ($previous == true) {
+        if ($previous) {
             /** @var ProductPriceSpecial $model */
             $model = $this->pricesSpecial()->skip(1)->first();
             if (empty($model)) return 0;
@@ -489,7 +474,7 @@ class Product extends Model
     public function getPriceMin(bool $previous = false): float
     {
         if ($this->pricesMin()->count() == 0) return 0;
-        if ($previous == true) {
+        if ($previous) {
             /** @var ProductPriceMin $model */
             $model = $this->pricesMin()->skip(1)->first();
             if (empty($model)) return 0;
@@ -507,7 +492,7 @@ class Product extends Model
     public function getPricePre(bool $previous = false): float
     {
         if ($this->pricesPre()->count() == 0) return 0;
-        if ($previous == true) {
+        if ($previous) {
             /** @var ProductPriceMin $model */
             $model = $this->pricesPre()->skip(1)->first();
             if (empty($model)) return 0;
@@ -537,7 +522,6 @@ class Product extends Model
 
     /**
      * Кол-во доступное для продажи по всем точкам, за минусом резерва
-     * @return int
      */
     #[Pure]
     public function getCountSell(): int
@@ -548,8 +532,6 @@ class Product extends Model
 
     /**
      * Кол-во товара на складах
-     * @param int|null $storage_id
-     * @return int
      */
     public function getQuantity(int $storage_id = null): int
     {
@@ -574,19 +556,7 @@ class Product extends Model
         return $quantity;
     }
 
-    /**
-     * Предыдущая цена товара (учитывается случаи когда всего цен менее 2
-     * @return float
-     */
-    public function getPreviousPrice(): float
-    {
-        $count = $this->prices()->count();
-        if ($count == 0) return 0;
-        if ($count == 1) return $this->getLastPrice();
-        /** @var ProductPriceRetail $model */
-        $model = $this->prices()->skip(1)->first();
-        return $model->value;
-    }
+
 
     public function getName(): string
     {
@@ -710,17 +680,17 @@ class Product extends Model
 
     //ТОВАРНЫЙ УЧЕТ
 
-    public function storageItems()
+    public function storageItems(): HasMany
     {
         return $this->hasMany(StorageItem::class, 'product_id', 'id');
     }
 
-    public function orderItems()
+    public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class, 'product_id', 'id');
     }
 
-    public function promotions()
+    public function promotions(): BelongsToMany
     {
         return $this->belongsToMany(Promotion::class, 'promotions_products',
             'product_id', 'promotion_id')->withPivot('price');
@@ -731,91 +701,86 @@ class Product extends Model
         return $this->hasMany(CartStorage::class, 'product_id', 'id');
     }
 
-    public function cartCookies()
+    public function cartCookies(): HasMany
     {
         return $this->hasMany(CartCookie::class, 'product_id', 'id');
     }
 
-    public function prices()
-    {
-        return $this->hasMany(ProductPriceRetail::class, 'product_id', 'id')->orderByDesc('id');
-    }
-
     //ЦЕНЫ ****************
-    public function pricesCost()
+    public function pricesCost(): HasMany
     {
         return $this->hasMany(ProductPriceCost::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function pricesRetail()
+    public function pricesRetail(): HasMany
     {
         return $this->hasMany(ProductPriceRetail::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function pricesBulk()
+    public function pricesBulk(): HasMany
     {
         return $this->hasMany(ProductPriceBulk::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function pricesSpecial()
+    public function pricesSpecial(): HasMany
     {
         return $this->hasMany(ProductPriceSpecial::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function pricesMin()
+    public function pricesMin(): HasMany
     {
         return $this->hasMany(ProductPriceMin::class, 'product_id', 'id')->orderByDesc('id');
     }
 
-    public function pricesPre()
+    public function pricesPre(): HasMany
     {
         return $this->hasMany(ProductPricePre::class, 'product_id', 'id')->orderByDesc('id');
     }
 
     //ХАРАКТЕРИСТИКИ ТОВАРА
-    public function brand()
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'main_category_id', 'id');
     }
 
-    public function related()
+    public function related(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'related_products', 'product_id', 'related_id');
     }
 
-    public function bonus() //Для attach и detach
+    public function bonus(): BelongsToMany //Для attach и detach
     {
         return $this->belongsToMany(Product::class, 'bonus_products', 'product_id', 'bonus_id')->withPivot('discount');
     }
 
-    public function categories()
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'categories_products', 'product_id', 'category_id');
     }
 
-    public function tags()
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, 'tags_products', 'product_id', 'tag_id');
     }
 
-    public function prod_attributes()
+    public function prod_attributes(): BelongsToMany
     {
         return $this->belongsToMany(
             Attribute::class, 'attributes_products',
             'product_id', 'attribute_id')->withPivot('value');
     }
 
-    public function photo()
+    public function photo(): MorphOne
     {
         return $this->morphOne(Photo::class, 'imageable')->where('sort', '=', 0);
     }
 
-    public function photos()
+    public function photos(): MorphMany
     {
         return $this->morphMany(Photo::class, 'imageable')->orderBy('sort')->orderBy('id');//->where('sort', '>',0);
     }
@@ -825,22 +790,22 @@ class Product extends Model
         return $this->photos()->where('sort', '>', 0)->first();
     }
 
-    public function videos()
+    public function videos(): MorphMany
     {
         return $this->morphMany(Video::class, 'videoable');
     }
 
-    public function series()
+    public function series(): BelongsTo
     {
         return $this->belongsTo(Series::class, 'series_id', 'id');
     }
 
-    public function modification_product()
+    public function modification_product(): HasOne
     {
         return $this->hasOne(ModificationProduct::class, 'product_id', 'id');
     }
 
-    public function modification()
+    public function modification(): HasOneThrough
     {
         return $this->hasOneThrough(
             Modification::class,
@@ -853,22 +818,22 @@ class Product extends Model
         // return $this->belongsTo(Modification::class, 'product_id', 'id');
     }
 
-    public function groups()
+    public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'groups_products', 'product_id', 'group_id');
     }
 
-    public function equivalent_product()
+    public function equivalent_product(): HasOne
     {
         return $this->hasOne(EquivalentProduct::class, 'product_id', 'id');
     }
 
-    public function equivalent()
+    public function equivalent(): BelongsTo
     {
         return $this->belongsTo(Equivalent::class, 'product_id', 'id');
     }
 
-    public function wishes()
+    public function wishes(): HasMany
     {
         return $this->hasMany(Wish::class, 'product_id', 'id');
     }
@@ -903,7 +868,7 @@ class Product extends Model
         return '0 отзывов';
     }
 
-    public function updateReview()
+    public function updateReview(): void
     {
         $this->current_rating = 0;
         if ($this->reviews()->count() == 0) {

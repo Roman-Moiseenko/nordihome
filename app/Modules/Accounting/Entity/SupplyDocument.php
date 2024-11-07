@@ -12,12 +12,18 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Поставка товар - заказ для поставщика, формируется автоматически из стека заказов, также можно добавить вручную
  * @property int $id
- * @property int $number
+ * @property string $number
  * @property int $distributor_id
- * @property int $status
+ * @property bool $completed
+ * @property string $incoming_number
+ * @property Carbon $incoming_at
+ *
  * @property string $comment
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property float $exchange_fix
+ *
  * @property int $staff_id - автор документа
  * @property ArrivalDocument[] $arrivals  - документ, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
@@ -32,6 +38,7 @@ class SupplyDocument extends Model implements AccountingDocument
     const CREATED = 1201;
     const SENT = 1202;
     const COMPLETED = 1205;
+
     const STATUSES = [
         self::CREATED => 'Создан',
         self::SENT => 'Отправлен',
@@ -42,7 +49,7 @@ class SupplyDocument extends Model implements AccountingDocument
     protected $table = 'supply_documents';
     protected $fillable = [
         'distributor_id',
-        'status',
+        'exchange_fix',
         'comment',
         'staff_id',
     ];
@@ -52,30 +59,20 @@ class SupplyDocument extends Model implements AccountingDocument
         'updated_at' => 'datetime',
     ];
 
-    public static function register(int $distributor_id, string $comment, int $staff_id): self
+    public static function register(int $distributor_id, string $comment, int $staff_id, float $exchange_fix): self
     {
         return  self::create([
             'distributor_id' => $distributor_id,
-            'status' => self::CREATED,
             'comment' => $comment,
             'staff_id' => $staff_id,
+            'exchange_fix' => $exchange_fix,
         ]);
     }
     //** IS ... */
 
-    public function isCreated(): bool
-    {
-        return $this->status == self::CREATED;
-    }
-
-    public function isSent(): bool
-    {
-        return $this->status == self::SENT;
-    }
-
     public function isCompleted(): bool
     {
-        return $this->status == self::COMPLETED;
+        return $this->completed == true;
     }
 
     public function isProduct(Product $product): bool
@@ -136,18 +133,21 @@ class SupplyDocument extends Model implements AccountingDocument
         return $this->hasMany(ArrivalDocument::class, 'supply_id', 'id');
     }
 
-    public function distributor()
+    public function distributor(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
     }
 
-    public function addProduct(Product $product, int $quantity)
+    /**
+     * Добавляем товар в заказ
+     */
+    public function addProduct(Product $product, int $quantity, float $cost): void
     {
-        if (!empty($supplyItem = $this->getProduct($product))) {
+        if (!empty($supplyItem = $this->getProduct($product))) { //Если уже есть, увеличиваем кол-во
             $supplyItem->quantity += $quantity;
             $supplyItem->save();
         } else {
-            $supplyItem = SupplyProduct::new($product->id, $quantity); //В документ заносим данные из стека
+            $supplyItem = SupplyProduct::new($product->id, $quantity, $cost); //Если нет, то создаем запись
             $this->products()->save($supplyItem);
         }
     }
@@ -156,17 +156,18 @@ class SupplyDocument extends Model implements AccountingDocument
 
     public function statusHTML(): string
     {
+        //TODO
         return self::STATUSES[$this->status];
     }
 
-    public function setNumber()
+    public function setNumber(): void
     {
         $this->number = SupplyDocument::where('number', '<>', null)->count() + 1;
         $this->save();
     }
 
 
-    public function staff()
+    public function staff(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }

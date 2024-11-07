@@ -37,8 +37,8 @@ class OrganizationController extends Controller
         $request->validate([
             'inn' => 'required'
         ]);
-        $this->service->create($request);
-        return redirect()->route('admin.accounting.organization.index');
+        $organization = $this->service->create($request);
+        return redirect()->route('admin.accounting.organization.show', $organization);
     }
 
     public function show(Organization $organization)
@@ -54,7 +54,7 @@ class OrganizationController extends Controller
     public function update(Request $request, Organization $organization)
     {
         $organization = $this->service->update($organization, $request);
-        return redirect()->route('admin.accounting.organization.edit', $organization);
+        return redirect()->route('admin.accounting.organization.show', $organization);
     }
 
     public function destroy(Organization $organization)

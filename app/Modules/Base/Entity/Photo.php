@@ -8,6 +8,7 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Shop\Parser\HttpPage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use function class_basename;
@@ -95,8 +96,14 @@ class Photo extends Model
     {
         $storage = public_path() . '/temp/';
         $upload_file_name = basename($url);
-        $http = new HttpPage();
-        $content = $http->getPage($url);// dlFile($url);
+
+        //Старая версия
+        //$http = new HttpPage();
+        //$content = $http->getPage($url);// dlFile($url);
+
+        //TODO Протестировать !!!
+        $content = Http::get($url)->body();
+
         $fp = fopen($storage . $upload_file_name,'x');
         fwrite($fp, $content);
         fclose($fp);

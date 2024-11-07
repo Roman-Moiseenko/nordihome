@@ -25,19 +25,15 @@ class Management extends Component
 
     public bool $shop_pre_order;
     public bool $only_offline;
-    public bool $accounting;
 
     public int $balance_min;
     public ?int $balance_max;
     public bool $balance_buy;
 
-    public function boot()
+    public function boot(): void
     {
-
         $settings = new SettingRepository();
         $common = $settings->getCommon();
-        $this->accounting = $common->accounting;
-
         $this->shop_pre_order = $common->pre_order;
         $this->only_offline = $common->only_offline;
     }
@@ -74,12 +70,6 @@ class Management extends Component
      */
     public function save(): void
     {
-        //$this->product->published = $this->published;
-        if (!$this->accounting) {
-            $this->product->setPrice($this->price);
-            $this->product->setCountSell($this->count);
-        }
-
         if ($this->shop_pre_order) $this->product->pre_order = $this->pre_order;
         if (!$this->only_offline) $this->product->only_offline = $this->offline;
 
@@ -88,7 +78,6 @@ class Management extends Component
         $this->product->not_sale = $this->not_sale;
         $this->product->save();
 
-        //dd([!$this->product->isPublished() , $this->published]);
         if (!$this->product->isPublished() && $this->published) {
 
             $service = app()->make('\App\Modules\Product\Service\ProductService');
