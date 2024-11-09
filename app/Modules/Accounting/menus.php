@@ -26,6 +26,8 @@ return [
                 'icon' => 'folder-pen',
                 'title' => 'Заказы поставщикам',
                 'route_name' => 'admin.accounting.supply.index',
+                'vue' => true,
+                'font_awesome' => 'fa-sharp fa-light fa-money-check-pen',
             ],
             'pricing' => [
                 'icon' => 'badge-russian-ruble',

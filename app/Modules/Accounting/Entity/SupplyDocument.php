@@ -52,6 +52,7 @@ class SupplyDocument extends Model implements AccountingDocument
         'exchange_fix',
         'comment',
         'staff_id',
+        'number',
     ];
 
     protected $casts = [
@@ -61,11 +62,12 @@ class SupplyDocument extends Model implements AccountingDocument
 
     public static function register(int $distributor_id, string $comment, int $staff_id, float $exchange_fix): self
     {
-        return  self::create([
+        return self::create([
             'distributor_id' => $distributor_id,
             'comment' => $comment,
             'staff_id' => $staff_id,
             'exchange_fix' => $exchange_fix,
+            'number' => self::count(),
         ]);
     }
     //** IS ... */

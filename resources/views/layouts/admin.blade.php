@@ -30,13 +30,11 @@
 <body class="@yield('body')">
 @yield('content')
 @include('flash::message')
-
 @include('layouts.partials.notification')
 
 <!-- BEGIN: Vendor JS Assets-->
 @stack('vendors')
 <!-- END: Vendor JS Assets-->
-
 <!-- BEGIN: Pages, layouts, components JS Assets-->
 @stack('scripts')
 <!-- END: Pages, layouts, components JS Assets-->
@@ -47,8 +45,6 @@
             if(event.icon === undefined) event.icon = 'danger';
             window.notification(event.title, event.message, event.icon);
         });
-
-
         Livewire.on('tom-select-sync', (elem) => {
             let _sel = document.getElementById(elem.id);
             let values = JSON.parse(elem.value);

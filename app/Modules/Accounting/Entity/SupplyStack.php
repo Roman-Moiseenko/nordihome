@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property OrderItem $orderItem
  * @property SupplyDocument $supply - поставка по текущему запросу
  * @property Product $product
- * @property \App\Modules\Admin\Entity\Admin $staff
+ * @property Admin $staff
  * @property Storage $storage
  */
 class SupplyStack extends Model

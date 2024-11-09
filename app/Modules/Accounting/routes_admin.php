@@ -69,6 +69,7 @@ Route::group(
                 Route::post('/sent/{supply}', 'SupplyController@sent')->name('sent');
                 Route::post('/copy/{supply}', 'SupplyController@copy')->name('copy');
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
+                Route::post('/set-info/{supply}', 'SupplyController@set_info')->name('set-info');
 
             });
         Route::group([

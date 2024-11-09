@@ -402,12 +402,15 @@ class Product extends Model
      * Текущая (Предыдущая $previous = true) цена для клиента (с учетом цен клиента, Розничная, или Оптовые)
      * Показывать на сайте (Фронтенд)
      */
-    public function getPrice(bool $previous = false): float
+    //TODO Переделать, везде запрашивать $user
+    public function getPrice(bool $previous = false, User $user = null): float
     {
         if (!$this->isSale()) return 0;
-        //TODO Привязка к Аутентификации!!!
-        if (!is_null($user = Auth::guard('user')->user())) {
-            /** @var User $user */
+        if (is_null($user)) {
+            $user = Auth::guard('user')->user();
+        }
+        if (!is_null($user)) {
+
             if ($user->isBulk() && $this->getPriceBulk($previous) != 0) return $this->getPriceBulk($previous); //Оптовый клиент
             if ($user->isSpecial() && $this->getPriceSpecial($previous) != 0) return $this->getPriceSpecial($previous); //Спец Клиент
         }

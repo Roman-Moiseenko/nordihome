@@ -21,6 +21,17 @@ class StackRepository
                 if (!$distributor->isProduct($stack->product))
                     unset($stacks[$i]);
         }
-        return $stacks;
+
+        return array_map(function (SupplyStack $stack) {
+            return [
+                'id' => $stack->id,
+                'code' => $stack->product->code,
+                'name' => $stack->product->name,
+                'staff' => !is_null($stack->staff) ? $stack->staff->fullname->getFullName() : '-',
+                'quantity' => $stack->quantity,
+                'founded' => $stack->comment,
+                'order_id' => !is_null($stack->orderItem) ? $stack->orderItem->order_id : null,
+            ];
+        },$stacks);
     }
 }

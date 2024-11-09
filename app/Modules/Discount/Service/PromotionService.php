@@ -201,7 +201,7 @@ class PromotionService
         $promotion->products()->updateExistingPivot($product->id, ['price' => $new_price]);
     }
 
-    private function setPriceProduct(Promotion $promotion, Product $product)
+    private function setPriceProduct(Promotion $promotion, Product $product): void
     {
         $new_price = (int)ceil($product->getPrice() * (1 - $promotion->discount / 100));
         $promotion->products()->updateExistingPivot($product->id, ['price' => $new_price]);

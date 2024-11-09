@@ -1,3 +1,12 @@
+export default {
+    plugins: {
+        'postcss-import': {},
+        'tailwindcss/nesting': {},
+        tailwindcss: {},
+        autoprefixer: {},
+    },
+}
+/*
 module.exports = {
     plugins: [
         require("postcss-import"),
@@ -7,3 +16,4 @@ module.exports = {
         require("autoprefixer"),
     ],
 };
+*/

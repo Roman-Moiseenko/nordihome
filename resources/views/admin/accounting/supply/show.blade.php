@@ -23,7 +23,6 @@
     Шапка Заказа
 
     <div class="grid grid-cols-12 gap-4 mt-5">
-
         <div class="col-span-12">
             <!-- Управление -->
             @if(!$supply->isCompleted())

@@ -20,6 +20,7 @@ use App\Modules\Product\Entity\Product;
 use App\Notifications\StaffMessage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\Deprecated;
 
 class SupplyService
 {
@@ -31,30 +32,6 @@ class SupplyService
     {
         $this->arrivalService = $arrivalService;
         $this->stack = $stack;
-    }
-
-    public function add_stack(OrderItem $item, int $storage_id): SupplyStack
-    {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
-        $stack = SupplyStack::register($item->product_id, $item->quantity, $staff->id, $storage_id, 'Заказ # ' . $item->order->htmlNum());
-        $item->supply_stack_id = $stack->id;
-        $item->save();
-        return $stack;
-    }
-
-    public function del_stack(SupplyStack $stack)
-    {
-        if (!is_null($stack->orderItem)) throw new \DomainException('Нельзя удалить товар из стека под Заказ клиенту!');
-        $staff = $stack->staff;
-        //Оповещение Менеджера
-        $staff->notify(new StaffMessage(
-            'Из стека поставщику удален товар',
-            $stack->product->name,
-            '',
-            'folder-pen'
-        ));
-        $stack->delete();
     }
 
     //Создание пустого заказа
@@ -95,6 +72,72 @@ class SupplyService
         return $supply;
     }
 
+    ////Фун-ции работы с Заказом =======>
+    public function completed(SupplyDocument $supply): void
+    {
+        $supply->completed = true;
+        $supply->save();
+        event(new SupplyHasCompleted($supply));
+    }
+
+    //TODO На будущее
+    public function canceled(SupplyDocument $supply): void
+    {
+        $supply->completed = false;
+        $supply->save();
+        //TODO
+        // Отмена всех связанных документов Поступление, Накладные, Установки Цен и др.
+        // Делать только после тестирования отмены связанных документов
+    }
+
+    /**
+     * Создаем Поступление на базовый склад
+     */
+    public function arrival(SupplyDocument $supply): ArrivalDocument
+    {
+        $arrival = $this->arrivalService->create($supply->distributor->id);
+        $arrival->supply_id = $supply->id;
+        $arrival->save();
+        foreach ($supply->products as $supplyProduct) {
+            $this->arrivalService->add($arrival, $supplyProduct->product_id, $supplyProduct->quantity);
+        }
+        return $arrival;
+    }
+
+    public function destroy(SupplyDocument $supply): void
+    {
+        $supply->delete();
+    }
+
+    /**
+     * Скопировать Заказ поставщику
+     */
+    public function copy(SupplyDocument $old_supply): SupplyDocument
+    {
+        $supply = $this->create_empty($old_supply->distributor);
+        foreach ($old_supply->products as $product) {
+            $this->add_product($supply, $product->product_id, $product->quantity);
+        }
+        return $supply;
+    }
+
+    /**
+     * Сохранить новые данные о заказе (без списка вложенных товаров)
+     */
+    public function set_info(SupplyDocument $supply, \Illuminate\Http\Request $request): void
+    {
+        $supply->number = $request->string('number')->value();
+        $supply->created_at = $request->date('created_at');
+        $supply->incoming_number = $request->string('incoming_number')->value();
+        $supply->incoming_at = $request->date('incoming_at');
+        $supply->exchange_fix = $request->input('exchange_fix');
+        $supply->comment = $request->string('comment')->value();
+        $supply->save();
+    }
+    ///<===============
+
+
+    ////Фун-ции работы с товарами в Заказе =======>
     /**
      * Добавить товар в заявку Поставщику
      * @param SupplyDocument $supply
@@ -109,22 +152,26 @@ class SupplyService
         $product = Product::find($product_id);
         if (!$distributor->isProduct($product)) { //Если товара нет у поставщика $supply->distributor, то
             $distributor->addProduct($product, 0); // добавляем с ценой закупа = 0
+            $distributor->refresh();
         }
+
         $d_product = $distributor->getProduct($product_id);
         $supply->addProduct($product, $quantity, $d_product->pivot->cost);//Добавляем товар в Заказ
     }
 
-    public function add_products(SupplyDocument $supply, string $textarea): void
+    public function add_products(SupplyDocument $supply, mixed $products): void
     {
-        $list = explode("\r\n", $textarea);
-        foreach ($list as $item) {
-            $product = Product::whereCode($item)->first();
+        $errors = [];
+        foreach ($products as $product) {
+            $product_id = Product::whereCode($product['code'])->first()->id;
             if (!is_null($product)) {
-                $this->add_product($supply, $product->id, 1);
+                $this->add_product($supply, $product_id, (int)$product['quantity']);
             } else {
-                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+                $errors[] = $product['code'];
             }
         }
+
+        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
     public function del_product(SupplyProduct $supplyProduct): void
@@ -151,109 +198,43 @@ class SupplyService
         $supplyProduct->save();
         return true;
     }
+    ////<===============
 
+    ////Фун-ции работы с товарами в Стеке =======>
+    public function add_stack(OrderItem $item, int $storage_id): SupplyStack
+    {
+        /** @var Admin $staff */
+        $staff = Auth::guard('admin')->user();
+        $stack = SupplyStack::register($item->product_id, $item->quantity, $staff->id, $storage_id, 'Заказ # ' . $item->order->htmlNum());
+        $item->supply_stack_id = $stack->id;
+        $item->save();
+        return $stack;
+    }
 
+    public function del_stack(SupplyStack $stack)
+    {
+        if (!is_null($stack->orderItem)) throw new \DomainException('Нельзя удалить товар из стека под Заказ клиенту!');
+        $staff = $stack->staff;
+        //Оповещение Менеджера
+        $staff->notify(new StaffMessage(
+            'Из стека поставщику удален товар',
+            $stack->product->name,
+            '',
+            'folder-pen'
+        ));
+        $stack->delete();
+    }
+    ////<==========
+
+    #[Deprecated]
     public function sent(SupplyDocument $supply): void
     {
         $supply->status = SupplyDocument::SENT;
         $supply->setNumber();
         $supply->save();
-
         event(new SupplyHasSent($supply));
     }
 
-    public function completed(SupplyDocument $supply): ArrivalDocument
-    {
-        //Проходим по стеку и вытаскиваем товары
-        $distributor = $supply->distributor;
-        $storage_base = Storage::where('default', true)->first()->id;
-
-        //Создаем Поступление на базовый склад
-        $arrival = $this->arrivalService->create($distributor->id);
-        $arrival->supply_id = $supply->id;
-        $arrival->save();
-        foreach ($supply->products as $supplyProduct) {
-            //Добавляем товар в поступление
-            $this->arrivalService->add($arrival, $supplyProduct->product_id, $supplyProduct->quantity);
-        }
-        /*
-                //Хранилища из стека по текущему заказу
-                $storages_in_stack = SupplyStack::select('storage_id')->where('supply_id', $supply->id)->groupby('storage_id')->pluck('storage_id')->toArray();
-                //Убираем базовый склад
-                foreach ($storages_in_stack as $i => $storage_id) {
-                    if ($storage_id == $storage_base) unset($storages_in_stack[$i]);
-                }
-                $supply_products = []; //Все товары и кол-во в заказе
-                foreach ($supply->products as $product) {
-                    $supply_products[$product->product_id] = $product->quantity;
-                }
-
-                foreach ($storages_in_stack as $storage_id) {
-                    //Получаем список товаров по хранилищу из стека, просуммировано
-                    $stack_products = DB::table('supply_stack')
-                        ->select('product_id', DB::raw('SUM(quantity) as total_quantity'))->
-                        where('supply_id', $supply->id)->where('storage_id', $storage_id)->
-                        groupBy('product_id')->get();
-
-                    //Создаем Поступление
-                    $arrival = $this->arrivalService->create([
-                        'number' => 'Из заказа ' . $supply->htmlNum(),
-                        'distributor' => $distributor->id,
-                        'storage' => $storage_id,
-                    ]);
-                    $arrival->supply_id = $supply->id;
-                    $arrival->save();
-
-                    foreach ($stack_products as $item) {
-                        //Добавляем товар в поступление
-                        $this->arrivalService->add($arrival, [
-                                'product_id' => $item->product_id,
-                                'quantity' => (int)$item->total_quantity
-                            ]
-                        );
-                        //Уменьшаем кол-во товара из списка
-                        $supply_products[$item->product_id] -= (int)$item->total_quantity;
-                    }
-                }
-                */
-        /*****/
-        //Создаем Поступление на базовый склад
-        /*  $arrival = $this->arrivalService->create([
-              'number' => 'Из заказа ' . $supply->htmlNum(),
-              'distributor' => $distributor->id,
-              'storage' => $storage_base,
-          ]);
-          $arrival->supply_id = $supply->id;
-          $arrival->save();
-          foreach ($supply_products as $product_id => $quantity) {
-              //Добавляем товар в поступление
-              $this->arrivalService->add($arrival, [
-                      'product_id' => $product_id,
-                      'quantity' => (int)$quantity
-                  ]
-              );
-          }*/
-        $supply->completed = true;
-        $supply->save();
-        event(new SupplyHasCompleted($supply));
-        return $arrival;
-    }
-
-    public function destroy(SupplyDocument $supply)
-    {
-        $supply->delete();
-
-    }
-
-    public function copy(SupplyDocument $old_supply): SupplyDocument
-    {
-        $supply = $this->create_empty($old_supply->distributor);
-        foreach ($old_supply->products as $product) {
-            $d_product = $old_supply->distributor->getProduct($product->id);
-            $supply->addProduct($product->product, $product->quantity, $d_product->pivot->cost);
-        }
-        return $supply;
-    }
 
 
 }

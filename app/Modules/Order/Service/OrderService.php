@@ -460,7 +460,7 @@ class OrderService
             $quantity = $product->getCountSell(); //в наличии
         }
 
-        $last_price = $product->getPrice($order->user_id);
+        $last_price = $product->getPrice(false, $order->user_id);
         if ($quantity > 0) {
             $orderItem = OrderItem::new($product, $quantity, false);
             if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);

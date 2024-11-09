@@ -1,7 +1,14 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import inject from '@rollup/plugin-inject';
+import vue from '@vitejs/plugin-vue';
 import path from "path";
+
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
     build: {
@@ -14,6 +21,14 @@ export default defineConfig({
         include: ["tailwind-config"],
     },
     plugins: [
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
+        }),
         laravel({
             input: [
                 'resources/sass/shop.scss',
@@ -124,18 +139,51 @@ export default defineConfig({
                 'resources/js/components/table-filter.js',
                 'resources/js/components/company/fields.js',
                 'resources/js/components/company/info.js',
+
+                //Vue
+                'resources/sass/app.scss',
+                'resources/js/app.js',
+
             ],
             refresh: true,
         }),
+
         inject({
             $: 'jquery',
             jQuery: 'jquery',
             'window.jQuery': 'jquery',
+
+        }),
+        AutoImport({
+            resolvers: [
+                ElementPlusResolver(),
+                IconsResolver({
+                    prefix: 'Icon',
+                }),
+            ],
+        }),
+        Components({
+            resolvers: [
+                ElementPlusResolver(),
+                IconsResolver({
+                    enabledCollections: ['ep'],
+                }),
+            ],
+
+        }),
+        Icons({
+            autoInstall: true,
         }),
     ],
     resolve: {
         alias: {
             "tailwind-config.js": path.resolve(__dirname, "./tailwind.config.js"),
+            '@': '/resources/js',
+            '@Page': '/resources/js/Pages',
+            '@Comp': '/resources/js/VueComponents',
+            '@Res': '/resources/js/Resources',
+            'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
         }
     },
+    publicDir: 'public',
 });
