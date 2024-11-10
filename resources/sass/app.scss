@@ -59,8 +59,23 @@
 .warning-row {
     --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }
-a {
+a[type="primary"] {
     @apply text-sky-600;
     @apply hover:text-sky-400;
+    @apply font-medium;
+}
+a[type="success"] {
+    @apply text-lime-600;
+    @apply hover:text-lime-400;
+    @apply font-medium;
+}
+a[type="warning"] {
+    @apply text-amber-600;
+    @apply hover:text-amber-400;
+    @apply font-medium;
+}
+a[type="info"] {
+    @apply text-slate-600;
+    @apply hover:text-slate-400;
     @apply font-medium;
 }

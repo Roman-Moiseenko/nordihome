@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Service;
 use App\Events\SupplyHasCompleted;
 use App\Events\SupplyHasSent;
 use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
@@ -92,12 +93,15 @@ class SupplyService
         event(new SupplyHasCompleted($supply));
     }
 
-    //TODO На будущее
     public function canceled(SupplyDocument $supply): void
     {
         $supply->completed = false;
         $supply->save();
-        //TODO
+        foreach ($supply->payments as $payment) {
+            //????
+            $payment->work();
+        }
+        //TODO На будущее
         // Отмена всех связанных документов Поступление, Накладные, Установки Цен и др.
         // Делать только после тестирования отмены связанных документов
     }
@@ -111,7 +115,13 @@ class SupplyService
         $arrival->supply_id = $supply->id;
         $arrival->save();
         foreach ($supply->products as $supplyProduct) {
-            $this->arrivalService->add($arrival, $supplyProduct->product_id, $supplyProduct->quantity);
+            $item = ArrivalProduct::new(
+                $supplyProduct->product_id,
+                $supplyProduct->getQuantityUnallocated(),//Высчитываем свободное кол-во
+                $supplyProduct->cost_currency,
+                $supplyProduct->id,
+            );
+            $arrival->arrivalProducts()->save($item);
         }
         return $arrival;
     }

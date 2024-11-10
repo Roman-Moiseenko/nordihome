@@ -50,24 +50,19 @@ class ArrivalRepository
 
         return $query->paginate($request->input('p', 20))
             ->withQueryString()
-            ->through(function(ArrivalDocument $document) {
-                $infoData = $document->getInfoData();
-                return [
+            ->through(fn(ArrivalDocument $document) => $this->ArrivalToArray($document));
+    }
 
-                    'id' => $document->id,
-                    'date' => $document->htmlDate(),
-                    'number' => $document->htmlNum(),
-
-                    'completed' => $document->completed,
-                    'distributor' => $document->distributor->name,
-                    'quantity' => $infoData['quantity'],
-                    'amount' => $infoData['cost_currency'] . ' ' . $infoData['currency_sign'],
-                    'comment' => $document->comment,
-                    'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
-
-                    'url' => route('admin.accounting.arrival.show', $document),
-                    'destroy' => route('admin.accounting.arrival.destroy', $document),
-                ];
-            });
+    public function ArrivalToArray(ArrivalDocument $document): array
+    {
+        $infoData = $document->getInfoData();
+        return array_merge($document->toArray(), [
+            'date' => $document->htmlDate(),
+            'number' => $document->htmlNum(),
+            'distributor' => $document->distributor->name,
+            'quantity' => $infoData['quantity'],
+            'amount' => $infoData['cost_currency'] . ' ' . $infoData['currency_sign'],
+            'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
+        ]);
     }
 }

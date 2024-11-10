@@ -7,10 +7,26 @@ return [
         'title' => 'Товарный учет',
         'can' => 'accounting',
         'sub_menu' => [
+            'supply' => [
+                'icon' => 'folder-pen',
+                'title' => 'Заказы поставщикам',
+                'route_name' => 'admin.accounting.supply.index',
+                'vue' => true,
+                'font_awesome' => 'fa-sharp fa-light fa-money-check-pen',
+            ],
             'arrival' => [
                 'icon' => 'folder-input',
                 'title' => 'Поступление',
                 'route_name' => 'admin.accounting.arrival.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-folder-arrow-down',
+            ],
+            'payment-order' => [
+                'icon' => 'folder-pen',
+                'title' => 'Платежные поручения',
+                'route_name' => 'admin.accounting.payment.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-file-invoice',
             ],
             'movement' => [
                 'icon' => 'folder-sync',
@@ -22,20 +38,8 @@ return [
                 'title' => 'Списание товара',
                 'route_name' => 'admin.accounting.departure.index',
             ],
-            'supply' => [
-                'icon' => 'folder-pen',
-                'title' => 'Заказы поставщикам',
-                'route_name' => 'admin.accounting.supply.index',
-                'vue' => true,
-                'font_awesome' => 'fa-sharp fa-light fa-money-check-pen',
-            ],
-            'payment-order' => [
-                'icon' => 'folder-pen',
-                'title' => 'Платежные поручения',
-                'route_name' => 'admin.accounting.payment.index',
-                'vue' => true,
-                'font_awesome' => 'fa-light fa-file-invoice',
-            ],
+
+
             'pricing' => [
                 'icon' => 'badge-russian-ruble',
                 'title' => 'Ценообразование',

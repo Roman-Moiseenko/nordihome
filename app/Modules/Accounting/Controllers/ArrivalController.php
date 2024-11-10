@@ -20,6 +20,7 @@ use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ArrivalController extends Controller
 {
@@ -48,7 +49,13 @@ class ArrivalController extends Controller
         $staffs = $this->staffs->getStaffsChiefs();
         $arrivals = $this->repository->getIndex($request, $filters);
 
-        return view('admin.accounting.arrival.index', compact('arrivals', 'filters', 'distributors', 'staffs'));
+        //return view('admin.accounting.arrival.index', compact('arrivals', 'filters', 'distributors', 'staffs'));
+        return Inertia::render('Accounting/Arrival/Index', [
+            'arrivals' => $arrivals,
+            'filters' => $filters,
+            'distributors' => $distributors,
+            'staffs' => $staffs
+        ]);
     }
 
 

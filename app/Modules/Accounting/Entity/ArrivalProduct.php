@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $quantity
  * @property int $remains //Остаток для фильтрации
  * @property float $cost_currency //В валюте документа
+ * @property int $supply_product_id //На основе Заказа
+ * @property SupplyProduct $supplyProduct
  * @property Product $product
  * @property ArrivalDocument $document
  */
@@ -27,16 +29,17 @@ class ArrivalProduct extends Model implements MovementItemInterface
         'quantity',
         'cost_currency',
         'remains',
+        'supply_product_id',
     ];
 
-    //TODO $distributor_cost на $cost и cost_currency на cost (в рублях)!!!!
-    public static function new(int $product_id, int $quantity, float $distributor_cost): self
+    public static function new(int $product_id, int $quantity, float $distributor_cost, int $supply_product_id = null): self
     {
         return self::make([
             'product_id' => $product_id,
             'quantity' => $quantity,
             'cost_currency' => $distributor_cost,
             'remains' => $quantity,
+            'supply_product_id' => $supply_product_id,
         ]);
     }
 

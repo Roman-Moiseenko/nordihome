@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Entity;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $quantity
  * @property SupplyDocument $document
  * @property Product $product
+ * @property ArrivalProduct[] $arrivalProducts
  */
 class SupplyProduct extends Model
 {
@@ -36,6 +38,22 @@ class SupplyProduct extends Model
         ]);
     }
 
+    /**
+     * Кол-во текущего товара не распределенное по документам на основании (Поступление, Возврат)
+     */
+    public function getQuantityUnallocated(): int
+    {
+        $quantity = $this->quantity;
+        foreach ($this->arrivalProducts as $arrivalProduct) {
+            $quantity -= $arrivalProduct->quantity;
+        }
+        //TODO Возврат На будущее
+        /*foreach ($this->refundProducts as $refundProduct) {
+            $quantity -= $refundProduct->quantity;
+        } */
+        return $quantity;
+    }
+
     public function document(): BelongsTo
     {
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
@@ -51,4 +69,8 @@ class SupplyProduct extends Model
         return (int)(ceil($this->cost_currency * $this->document->exchange_fix));
     }
 
+    public function arrivalProducts(): HasMany
+    {
+        return $this->hasMany(ArrivalProduct::class, 'supply_product_id', 'id');
+    }
 }

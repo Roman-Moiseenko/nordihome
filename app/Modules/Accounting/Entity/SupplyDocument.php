@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $currency_id
  *
  * @property int $staff_id - автор документа
- * @property ArrivalDocument[] $arrivals  - документ, который создастся после исполнения заказа
+ * @property ArrivalDocument[] $arrivals  - документы, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
  * @property SupplyStack[] $stacks
  * @property Distributor $distributor
@@ -157,10 +157,10 @@ class SupplyDocument extends Model implements AccountingDocument
         return $this->hasMany(SupplyStack::class, 'supply_id', 'id');
     }
 
-    public function getProduct(Product $product):? SupplyProduct
+    public function getProduct(int $product_id):? SupplyProduct
     {
         foreach ($this->products as $item) {
-            if ($item->product_id == $product->id) return $item;
+            if ($item->product_id == $product_id) return $item;
         }
         return null;
     }
@@ -185,7 +185,7 @@ class SupplyDocument extends Model implements AccountingDocument
      */
     public function addProduct(Product $product, int $quantity, float $cost): void
     {
-        if (!empty($supplyItem = $this->getProduct($product))) { //Если уже есть, увеличиваем кол-во
+        if (!empty($supplyItem = $this->getProduct($product->id))) { //Если уже есть, увеличиваем кол-во
             $supplyItem->quantity += $quantity;
             $supplyItem->save();
         } else {

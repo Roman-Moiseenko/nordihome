@@ -25,6 +25,9 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property float $exchange_fix //Курс на момент создания документа
  * @property string $comment Комментарий к документу, пока отключена, на будущее
  * @property int $staff_id - автор документа
+ * @property string $incoming_number
+ * @property Carbon $incoming_at
+ *
  * @property Storage $storage
  * @property Currency $currency
  * @property ArrivalProduct[] $arrivalProducts
@@ -35,7 +38,6 @@ use JetBrains\PhpStorm\ArrayShape;
  */
 class ArrivalDocument extends Model implements AccountingDocument
 {
-
     use HtmlInfoData, CompletedFieldModel;
 
     protected $table = 'arrival_documents';
@@ -57,7 +59,7 @@ class ArrivalDocument extends Model implements AccountingDocument
     ];
 
     public static function register(string $number, int $distributor_id,
-                                    int $storage_id, Currency $currency,
+                                    int    $storage_id, Currency $currency,
                                     string $comment, ?int $staff_id): self
     {
 
@@ -140,6 +142,14 @@ class ArrivalDocument extends Model implements AccountingDocument
         return $this->staff->fullname->getFullName();
     }
 
+    public function getProduct(int $product_id): ?ArrivalProduct
+    {
+        foreach ($this->products as $item) {
+            if ($item->product_id == $product_id) return $item;
+        }
+        return null;
+    }
+
     //*** RELATION
     public function staff()
     {
@@ -187,4 +197,5 @@ class ArrivalDocument extends Model implements AccountingDocument
     {
         return $this->comment;
     }
+
 }

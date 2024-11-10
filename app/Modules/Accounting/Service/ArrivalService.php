@@ -82,24 +82,33 @@ class ArrivalService
     }
 
     /**
-     * @param ArrivalDocument $arrival
-     * @param int $product_id
-     * @param int $quantity
-     * @return ArrivalProduct|null
+     * Добавляем товар в поступление. Учет основания По заказу или Свободное добавление
      */
     public function add(ArrivalDocument $arrival, int $product_id, int $quantity):? ArrivalProduct
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
+        $distributor_cost = 0;
         /** @var Product $product */
         $product = Product::find($product_id);
+        if (!is_null($arrival->supply_id)) {
+            $supplyProduct = $arrival->supply->getProduct($product->id);
+            if (is_null($supplyProduct)) throw new \DomainException('Товар ' . $product->name . ' отсутствует в связанном документе.');
+            $quantity = min($quantity, $supplyProduct->getQuantityUnallocated());
+            if ($quantity <= 0)  throw new \DomainException('Недостаточное кол-во товара ' . $product->name . ' в связанном документе.');
 
+            $distributor_cost = $supplyProduct->cost_currency;
+        }
+
+        //Если товар уже есть в Поступлении
         if ($arrival->isProduct($product_id)) {
-            flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
+            $arrivalProduct = $arrival->getProduct($product_id);
+            $arrivalProduct->quantity += $quantity;
+            $arrivalProduct->save();
             return null;
         }
-        $distributor_cost = is_null($arrival->distributor) ? 0 : $arrival->distributor->getCostItem($product->id); //Ищем у поставщика товар, если есть, берем закупочную цену
-
-        //Добавляем в документ
+        if ($distributor_cost == 0 && !is_null($arrival->distributor))
+            $distributor_cost = $arrival->distributor->getCostItem($product->id); //Ищем у поставщика товар и берем закупочную цену
+        //Добавляем в документ если его нет
         $item = ArrivalProduct::new(
             $product->id,
             $quantity,
@@ -110,6 +119,7 @@ class ArrivalService
         return $item;
     }
 
+    //TODO Переделать на Vue Component
     public function add_products(ArrivalDocument $arrival, string $textarea): void
     {
         $list = explode("\r\n", $textarea);
