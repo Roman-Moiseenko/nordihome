@@ -20,8 +20,14 @@ const props = defineProps({
         default: null,
         type: String,
     },
-    title: String,
-    font_awesome: String,
+    title: {
+        default: null,
+        type: String
+    },
+    font_awesome: {
+        default: null,
+        type: String
+    },
     vue: {
         default: false,
         type: Boolean,

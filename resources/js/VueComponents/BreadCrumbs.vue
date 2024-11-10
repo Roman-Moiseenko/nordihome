@@ -14,7 +14,6 @@
 <script lang="ts" setup>
 import { ArrowRight } from '@element-plus/icons-vue'
 import { Link } from '@inertiajs/vue3'
-
 </script>
 
 

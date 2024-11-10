@@ -1,6 +1,7 @@
 <template>
-    <i :class="font_awesome"></i>
-    <span class="ml-1">{{ title }}</span>
+    <i v-if="font_awesome" :class="font_awesome"></i>
+    <span v-if="title" class="ml-1">{{ title }}</span>
+    <span v-else>Нет Title</span>
 
 </template>
 

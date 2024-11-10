@@ -21,7 +21,8 @@ class Trader extends Model
 
     protected $fillable = [
         'name',
-        'organization_id'
+        'organization_id',
+        'active'
     ];
 
     public static function register(string $name): self
@@ -29,8 +30,14 @@ class Trader extends Model
         return self::create(['name' => $name]);
     }
 
+    public static function default(): self
+    {
+        return self::where('default', true)->first();
+    }
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
+
 }

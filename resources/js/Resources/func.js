@@ -6,6 +6,7 @@ export const func = {
      * @constructor
      */
     MaskPhone: (val) => {
+        if (val === undefined || val === null) return '';
         if (val.length === 1) {
             if (val === '+') val = '8';
             if (val !== '8') val = '';
@@ -18,6 +19,8 @@ export const func = {
         return val;
     },
     MaskEmail: (val) => {
+        if (val === undefined || val === null) return '';
+
         let last = val.slice(-1);
         /* if (last.match(/\d+/g) === null && last.match(/[a-z\-_]/g) === null) {
              val = val.substring(0, val.length - 1);
@@ -31,6 +34,8 @@ export const func = {
      * @constructor
      */
     MaskLogin: (val) => {
+        if (val === undefined || val === null) return '';
+
         let last = val.slice(-1);
         if (last.match(/\d+/g) === null && last.match(/[a-z]/i) === null) {
             val = val.substring(0, val.length - 1);
@@ -38,6 +43,8 @@ export const func = {
         return val;
     },
     MaskSlug: (val) => {
+        if (val === undefined || val === null) return '';
+
         let last = val.slice(-1);
         if (last.match(/\d+/g) === null && last.match(/[a-z\-_]/g) === null) {
             val = val.substring(0, val.length - 1);
@@ -45,6 +52,8 @@ export const func = {
         return val;
     },
     MaskInteger: (val, max = 999) => {
+        if (val === undefined || val === null) return 0;
+
         let last = val.slice(-1);
         if (last.match(/\d+/g) === null || val.length > max) {
             val = val.substring(0, val.length - 1);
@@ -52,6 +61,8 @@ export const func = {
         return val;
     },
     MaskCount: (val, min = 1, max = null) => {
+        if (val === undefined || val === null) return 0;
+
         let last = val.slice(-1);
         if (last.match(/\d+/g) === null) {
             val = val.substring(0, val.length - 1);
@@ -61,6 +72,8 @@ export const func = {
         return val;
     },
     MaskFloat: (val) => {
+        if (val === undefined || val === null) return 0;
+
         let last = val.slice(-1);
         if (last.match(/\d+/g) === null && last.match(/\./g) === null) {
             val = val.substring(0, val.length - 1);
@@ -68,10 +81,11 @@ export const func = {
         return val;
     },
     fullName: (val) => {
+        if (val === undefined || val === null) return '';
         return val.surname + ' ' + val.firstname + ' ' + val.secondname;
     },
     price: (val, currency = '₽') => {
-        if (val === null || val === '' || val === 0) return '';
+        if (val === null || val === '' || val === 0 || val === undefined) return '';
         val = Math.round(Math.round(val * 100)) / 100;
         return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ' + currency;
     },
@@ -83,7 +97,7 @@ export const func = {
         //return mb_substr($value, 0, 1) . ' ' . mb_substr($value, 1, 3) . '-' . mb_substr($value, 6, 3) . '-' . mb_substr($value, 7, 4);
     },
     experience: (val) => {
-        if (val === null || val === 0) return '';
+        if (val === null || val === 0 || val === undefined) return '';
         let year = new Date().getFullYear() - val;
         let div = year % 10;
         if (year === 0) return 'менее 1 года';

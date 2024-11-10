@@ -21,7 +21,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
-                <!-- Повторить -->
+
                 <el-table-column label="Действия">
                     <template #default="scope">
                         <el-checkbox v-model="form.stacks" label="В заказ"
@@ -39,7 +39,7 @@
 <script setup>
 import Layout from "@Comp/Layout.vue";
 import {Head, router} from "@inertiajs/vue3";
-import {ref, reactive, inject} from "vue";
+import {ref, reactive} from "vue";
 
 const props = defineProps({
     distributor: Number,

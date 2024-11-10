@@ -75,7 +75,7 @@
                         <el-table-column prop="quantity" label="Кол-во" width="100"/>
                         <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
                         <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
-                        <!-- Повторить -->
+                        <
                         <el-table-column label="Действия" align="right">
                             <template #default="scope">
                                 <el-button
@@ -101,12 +101,14 @@
                     :per_page="supplies.per_page"
                     :total="supplies.total"
                 />
+
             </el-config-provider>
             <DeleteEntityModal name_entity="Заказ поставщику" />
         </template>
     </Layout>
 </template>
 <script lang="ts" setup>
+import Layout from "@Comp/Layout.vue";
 import {inject, reactive, ref, defineProps} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
@@ -114,7 +116,7 @@ import {useStore} from "@Res/store.js"
 import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
-import Layout from "@Comp/Layout.vue";
+
 import Active from '@Comp/Elements/Active.vue'
 
 const props = defineProps({
@@ -147,7 +149,7 @@ interface IRow {
     active: number
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.active === 0) {
+    if (row.completed === 0) {
         return 'warning-row'
     }
     return ''
@@ -160,6 +162,8 @@ function createButton() {
     router.get(route('admin.accounting.supply.create', {distributor: create_id.value}))
 }
 function stackButton() {
+    console.log('Нажата кнопка стек')
+    console.log('route = ', route('admin.accounting.supply.stack'))
     router.get(route('admin.accounting.supply.stack'))
 }
 function routeClick(row) {
@@ -168,6 +172,8 @@ function routeClick(row) {
 function handleCopy(row) {
     router.post(route('admin.accounting.supply.copy', {supply: row.id}))
 }
+
+
 </script>
 <style scoped>
 

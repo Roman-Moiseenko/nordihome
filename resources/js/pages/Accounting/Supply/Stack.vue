@@ -73,7 +73,6 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Layout from "@Comp/Layout.vue";
 import Active from '@Comp/Elements/Active.vue'
 
-
 const props = defineProps({
     stacks: Object,
     title: {
@@ -92,7 +91,7 @@ const filter = reactive({
     founded: props.filters.founded,
     staff_id: props.filters.staff_id,
     brand: props.filters.brand,
-    //distributor: props.filters.distributor,
+
 })
 
 function handleDeleteEntity(row) {

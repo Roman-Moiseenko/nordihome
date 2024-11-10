@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Base\Traits\CompletedFieldModel;
 use App\Modules\Product\Entity\Product;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Поставка товар - заказ для поставщика, формируется автоматически из стека заказов, также можно добавить вручную
@@ -23,17 +26,20 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $updated_at
  *
  * @property float $exchange_fix
+ * @property int $currency_id
  *
  * @property int $staff_id - автор документа
  * @property ArrivalDocument[] $arrivals  - документ, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
  * @property SupplyStack[] $stacks
  * @property Distributor $distributor
+ * @property Currency $currency
+ * @property PaymentDocument[] $payments
  * @property Admin $staff
  */
 class SupplyDocument extends Model implements AccountingDocument
 {
-    use HtmlInfoData;
+    use HtmlInfoData, CompletedFieldModel;
 
     const CREATED = 1201;
     const SENT = 1202;
@@ -53,6 +59,7 @@ class SupplyDocument extends Model implements AccountingDocument
         'comment',
         'staff_id',
         'number',
+        'currency_id',
     ];
 
     protected $casts = [
@@ -60,22 +67,22 @@ class SupplyDocument extends Model implements AccountingDocument
         'updated_at' => 'datetime',
     ];
 
-    public static function register(int $distributor_id, string $comment, int $staff_id, float $exchange_fix): self
+    public static function register(
+        int $distributor_id, string $comment,
+        int $staff_id, float $exchange_fix,
+        int $currency_id,
+    ): self
     {
         return self::create([
             'distributor_id' => $distributor_id,
             'comment' => $comment,
             'staff_id' => $staff_id,
             'exchange_fix' => $exchange_fix,
-            'number' => self::count(),
+            'number' => self::count() + 1,
+            'currency_id' => $currency_id,
         ]);
     }
     //** IS ... */
-
-    public function isCompleted(): bool
-    {
-        return $this->completed == true;
-    }
 
     public function isProduct(Product $product): bool
     {
@@ -97,6 +104,20 @@ class SupplyDocument extends Model implements AccountingDocument
         return $quantity;
     }
 
+    /**
+     * Сумма заказа в валюте поставщика
+     */
+    public function getAmount(): float
+    {
+        $amount = 0;
+        foreach ($this->products as $product) {
+            $amount += $product->quantity * $product->cost_currency;
+        }
+
+        //TODO Добавить доп.расходы
+        return $amount;
+    }
+
     public function getQuantityStack(Product $product): int
     {
         $quantity = 0;
@@ -111,13 +132,27 @@ class SupplyDocument extends Model implements AccountingDocument
         return $quantity;
     }
 
+    public function getPayments(): float
+    {
+        $amount = 0;
+        foreach ($this->payments as $paymentOrder) {
+            $amount += $paymentOrder->amount;
+        }
+        return $amount;
+    }
+
     //** RELATIONS */
-    public function products()
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
+    }
+
+    public function products(): HasMany
     {
         return $this->hasMany(SupplyProduct::class, 'supply_id', 'id');
     }
 
-    public function stacks()
+    public function stacks(): HasMany
     {
         return $this->hasMany(SupplyStack::class, 'supply_id', 'id');
     }
@@ -130,14 +165,19 @@ class SupplyDocument extends Model implements AccountingDocument
         return null;
     }
 
-    public function arrivals()
+    public function arrivals(): HasMany
     {
         return $this->hasMany(ArrivalDocument::class, 'supply_id', 'id');
     }
 
-    public function distributor(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function distributor(): BelongsTo
     {
         return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(PaymentDocument::class, 'supply_id', 'id');
     }
 
     /**
@@ -169,7 +209,7 @@ class SupplyDocument extends Model implements AccountingDocument
     }
 
 
-    public function staff(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function staff(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }

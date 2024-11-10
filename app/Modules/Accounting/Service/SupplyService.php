@@ -27,11 +27,17 @@ class SupplyService
 
     private ArrivalService $arrivalService;
     private StackRepository $stack;
+    private PaymentDocumentService $paymentOrderService;
 
-    public function __construct(ArrivalService $arrivalService, StackRepository $stack)
+    public function __construct(
+        ArrivalService         $arrivalService,
+        StackRepository        $stack,
+        PaymentDocumentService $paymentOrderService,
+    )
     {
         $this->arrivalService = $arrivalService;
         $this->stack = $stack;
+        $this->paymentOrderService = $paymentOrderService;
     }
 
     //Создание пустого заказа
@@ -39,7 +45,13 @@ class SupplyService
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
-        return SupplyDocument::register($distributor->id, '', $manager->id, $distributor->currency->getExchange());
+        return SupplyDocument::register(
+            $distributor->id,
+            '',
+            $manager->id,
+            $distributor->currency->getExchange(),
+            $distributor->currency_id
+        );
     }
 
     public function create(int $distributor_id, array $data): SupplyDocument
@@ -103,6 +115,34 @@ class SupplyService
         }
         return $arrival;
     }
+
+    /**
+     * Создаем Платежное поручение
+     */
+    public function payment(SupplyDocument $supply)
+    {
+        $distributor = $supply->distributor;
+        //Долг по всем заказам по поставщику
+
+        $debit_distributor = $distributor->debit() - $distributor->credit();
+        if ($debit_distributor <= 0)
+            throw new \DomainException('Долг не обнаружен. Переплата = ' . abs($debit_distributor) . ' ' . $distributor->currency->sign);
+        //Долг по текущему заказу
+        $debit_supply = $supply->getAmount() - $supply->getPayments();
+        if ($debit_supply <= 0) {
+            return $this->paymentOrderService->create($supply->distributor_id, $debit_distributor);
+        }
+
+        $debit_supply = min($debit_supply, $debit_distributor); //Если вдруг долг общий меньше долга по заказу
+        return $this->paymentOrderService->create($supply->distributor_id, $debit_supply, $supply->id);
+    }
+
+    public function refund(SupplyDocument $supply)
+    {
+        //TODO Переносим весь товар с кол-вом в возврат
+
+    }
+
 
     public function destroy(SupplyDocument $supply): void
     {

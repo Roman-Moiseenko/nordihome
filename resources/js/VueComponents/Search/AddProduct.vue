@@ -112,6 +112,8 @@ function onQuantity() {
     document.getElementById('button').focus()
 }
 function onAdd() {
+    if (form.product_id === null) return;
+
     router.visit(props.route, {
         method: "post",
         data: form,

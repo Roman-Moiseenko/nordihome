@@ -1,6 +1,6 @@
 <template>
     <el-row :gutter="10">
-        <el-col :span="8">
+        <el-col :span="12">
             <el-form-item label="№ документа">
                 <el-input v-model="info.number" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit" style="width: 160px"/>
                 <span class="text-gray-500 px-4">от</span>
@@ -62,5 +62,4 @@ function setInfo() {
         }
     })
 }
-
 </script>

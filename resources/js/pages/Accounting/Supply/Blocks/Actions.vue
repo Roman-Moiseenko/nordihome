@@ -52,13 +52,19 @@ function onCompleted() {
     })
 }
 function onPayment() {
-    router.post(route('admin.accounting.supply.payment', {supply: props.supply.id}))
+    router.visit(route('admin.accounting.supply.payment', {supply: props.supply.id}), {
+        method: "post",
+    })
 }
 function onArrival() {
-    router.post(route('admin.accounting.supply.arrival', {supply: props.supply.id}))
+    router.visit(route('admin.accounting.supply.arrival', {supply: props.supply.id}), {
+        method: "post",
+    })
 }
 function onRefund() {
-    router.post(route('admin.accounting.supply.refund', {supply: props.supply.id}))
+    router.visit(route('admin.accounting.supply.refund', {supply: props.supply.id}), {
+        method: "post",
+    })
 }
 
 </script>

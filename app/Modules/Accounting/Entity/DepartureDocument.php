@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Base\Traits\CompletedFieldModel;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use JetBrains\PhpStorm\ArrayShape;
 
 /**
@@ -25,7 +27,7 @@ use JetBrains\PhpStorm\ArrayShape;
  */
 class DepartureDocument extends Model implements AccountingDocument
 {
-    use HtmlInfoData;
+    use HtmlInfoData, CompletedFieldModel;
 
     protected $table = 'departure_documents';
 
@@ -51,23 +53,12 @@ class DepartureDocument extends Model implements AccountingDocument
         ]);
     }
 
-    public function isCompleted(): bool
-    {
-        return $this->completed == true;
-    }
-
     public function isProduct(int $product_id): bool
     {
         foreach ($this->departureProducts as $item) {
             if ($item->product_id == $product_id) return true;
         }
         return false;
-    }
-
-    public function completed()
-    {
-        $this->completed = true;
-        $this->save();
     }
 
     public function departureProducts()
@@ -99,7 +90,7 @@ class DepartureDocument extends Model implements AccountingDocument
     }
 
 
-    public function staff()
+    public function staff(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }

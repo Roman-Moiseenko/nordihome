@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Base\Traits\CompletedFieldModel;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +36,7 @@ use JetBrains\PhpStorm\ArrayShape;
 class ArrivalDocument extends Model implements AccountingDocument
 {
 
-    use HtmlInfoData;
+    use HtmlInfoData, CompletedFieldModel;
 
     protected $table = 'arrival_documents';
 
@@ -94,15 +95,10 @@ class ArrivalDocument extends Model implements AccountingDocument
     }
 
     //*** SET-...
-    public function completed(): void
-    {
-        $this->completed = true;
-        $this->save();
-    }
 
-    public function setExchange(float $exchange_fix)
+    public function setExchange(float $exchange_fix): void
     {
-        if ($this->completed == true) throw new \DomainException('Нельзя менять проведенный документ');
+        if ($this->isCompleted()) throw new \DomainException('Нельзя менять проведенный документ');
         $this->exchange_fix = $exchange_fix;
         $this->save();
         foreach ($this->arrivalProducts as $item) {

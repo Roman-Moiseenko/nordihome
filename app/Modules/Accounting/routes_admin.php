@@ -70,6 +70,7 @@ Route::group(
                 Route::post('/copy/{supply}', 'SupplyController@copy')->name('copy');
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
                 Route::post('/set-info/{supply}', 'SupplyController@set_info')->name('set-info');
+                Route::post('/payment/{supply}', 'SupplyController@payment')->name('payment');
 
             });
         Route::group([
@@ -98,6 +99,18 @@ Route::group(
                 Route::post('/holding-detach/{organization}', 'OrganizationController@holding_detach')->name('holding-detach');
             });
 
+        Route::group([
+            'prefix' => 'payment',
+            'as' => 'payment.'
+        ],
+            function () {
+                Route::post('/create', 'PaymentController@create')->name('create');
+                Route::post('/completed/{payment}', 'PaymentController@completed')->name('completed');
+                Route::post('/work/{payment}', 'PaymentController@work')->name('work');
+
+                Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
+            });
+
         Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
         Route::resource('distributor', 'DistributorController'); //CRUD
         Route::resource('currency', 'CurrencyController'); //CRUD
@@ -108,5 +121,6 @@ Route::group(
         Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
         Route::resource('organization', 'OrganizationController'); //CRUD
         Route::resource('trader', 'TraderController'); //CRUD
+        Route::resource('payment', 'PaymentController')->except(['create', 'store']); //CRUD
     }
 );

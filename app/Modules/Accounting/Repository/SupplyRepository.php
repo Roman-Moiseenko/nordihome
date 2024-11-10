@@ -42,7 +42,7 @@ class SupplyRepository
 
         if (count($filters) > 0) $filters['count'] = count($filters);
 
-        return $query->paginate($request->input('p', 20))
+        return $query->paginate($request->input('size', 20))
             ->withQueryString()
             ->through(function(SupplyDocument $document) {
                 return $this->SupplyToArray($document);
@@ -53,13 +53,6 @@ class SupplyRepository
     {
         $query = SupplyStack::where('supply_id', null);
         $filters = [];
-        /*
-        if (($founded = $request->string('draft')) != '') {
-            $filters['founded'] = $founded;
-            if ($founded == 'order') $query->where('completed', false);
-            if ($founded == 'staff') $query->where('completed', false);
-        }*/
-
         if (($brand = $request->integer('brand')) > 0) {
             $filters['brand'] = $brand;
             $query->whereHas('product', function ($query) use($brand) {
@@ -72,7 +65,7 @@ class SupplyRepository
         }
         if (count($filters) > 0) $filters['count'] = count($filters);
 
-        return $query->paginate($request->input('p', 20))
+        return $query->paginate($request->input('size', 20))
             ->withQueryString()
             ->through(function(SupplyStack $stack) {
                 return [
@@ -91,23 +84,23 @@ class SupplyRepository
 
     public function SupplyToArray(SupplyDocument $document): array
     {
-        return [
-            'id' => $document->id,
+        return  array_merge($document->toArray(),[
+/*            'id' => $document->id,
             'created_at' => $document->created_at,
-            'date' => $document->htmlDate(),
             'number' => $document->number,
-            'completed' => $document->isCompleted(),
+            'completed' => $document->completed,
             'distributor_id' => $document->distributor_id,
-            'distributor' => $document->distributor->name,
-            'quantity' => $document->getQuantity(),
             'comment' => $document->comment,
-            'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
-            //'is_delete' => !$document->isCompleted(),
             'exchange_fix' => $document->exchange_fix,
-            'currency' => $document->distributor->currency->sign,
             'incoming_number' => $document->incoming_number,
             'incoming_at' => $document->incoming_at,
-        ];
+*/
+            'quantity' => $document->getQuantity(),
+            'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
+            'currency' => $document->distributor->currency->sign,
+            'distributor' => $document->distributor->name,
+            'date' => $document->htmlDate(),
+        ]);
     }
 
     public function SupplyWithToArray(SupplyDocument $document): array

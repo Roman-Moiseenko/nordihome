@@ -56,3 +56,11 @@
 [type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
     box-shadow: none;
 }
+.warning-row {
+    --el-table-tr-bg-color: var(--el-color-warning-light-9);
+}
+a {
+    @apply text-sky-600;
+    @apply hover:text-sky-400;
+    @apply font-medium;
+}

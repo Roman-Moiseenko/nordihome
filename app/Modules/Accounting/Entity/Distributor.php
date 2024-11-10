@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Product[] $products
  * @property Currency $currency
  * @property Organization $organization
+ * @property SupplyDocument[] $supplies
+ * @property PaymentDocument[] $orders
  */
 class Distributor extends Model
 {
@@ -47,9 +49,47 @@ class Distributor extends Model
             ]);
     }
 
+    /**
+     * Долг перед поставщиком по оплате товаров
+     */
+    public function debit(): float
+    {
+        $amount = 0;
+        /** @var SupplyDocument[] $supplies */
+        $supplies = $this->supplies()->where('completed', true)->get(); //Проведенные заказы
+        foreach ($supplies as $item) {
+            $amount += $item->getAmount();
+        }
+        return $amount;
+    }
+
+    /**
+     * ДОплачено всего за товары
+     */
+    public function credit(): float
+    {
+        $amount = 0;
+        /** @var PaymentDocument[] $orders */
+        $orders = $this->orders()->where('completed', true)->get();
+        foreach ($orders as $item) {
+            $amount += $item->getAmount();
+        }
+        return $amount;
+
+    }
     public function arrivals(): HasMany
     {
         return $this->hasMany(ArrivalDocument::class, 'distributor_id', 'id');
+    }
+
+    public function supplies(): HasMany
+    {
+        return $this->hasMany(SupplyDocument::class, 'distributor_id', 'id');
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(PaymentDocument::class, 'distributor_id', 'id');
     }
 
     public function products(): BelongsToMany

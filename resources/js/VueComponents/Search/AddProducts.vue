@@ -35,9 +35,9 @@ function onAdd() {
                 code:item[0],
                 quantity: (item[1] === undefined) ? 1 : Number(item[1]),
             })
-
         }
     }
+    if (products.length === 0) return;
     router.visit(props.route, {
         method: "post",
         data: {products: products},
@@ -55,7 +55,6 @@ function outFocus() {
     focus.class = 'out-focus'
 }
 </script>
-
 <style lang="scss">
 .in-focus {
     position: absolute;

@@ -20,7 +20,7 @@
                             </template>
                             <template #dropdown>
                                 <div class="mt-2 px-8 py-4 bg-teal-950rounded shadow-lg">
-                                    <main-menu :menus="usePage().props.menus"/>
+                                    <!--main-menu :menus="usePage().props.menus"/-->
                                 </div>
                             </template>
                         </dropdown>
@@ -88,7 +88,6 @@ import Dropdown from '@Comp/Dropdown.vue'
 import MainMenu from '@Comp/Menu/MainMenu.vue'
 import FlashMessages from '@Comp/FlashMessages.vue'
 import BreadCrumbs from '@Comp/BreadCrumbs.vue';
-
 </script>
 <style>
 .bottom-fix {

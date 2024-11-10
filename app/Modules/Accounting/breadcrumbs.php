@@ -7,6 +7,7 @@ use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
@@ -139,6 +140,28 @@ Breadcrumbs::for('admin.accounting.supply.stack', function (BreadcrumbTrail $tra
     $trail->parent('admin.accounting.supply.index');
     $trail->push('Стек заказов', route('admin.accounting.supply.stack'));
 });
+//PAYMENT DOCUMENT
+Breadcrumbs::for('admin.accounting.payment.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Платежные поручения', route('admin.accounting.payment.index'));
+});
+/*
+Breadcrumbs::for('admin.accounting.payment.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.accounting.payment.index');
+    $trail->push('Создать', route('admin.accounting.payment.create'));
+});
+*/
+Breadcrumbs::for('admin.accounting.payment.show', function (BreadcrumbTrail $trail, PaymentDocument $payment) {
+    $trail->parent('admin.accounting.payment.index');
+    $trail->push($payment->number . ' от ' . $payment->created_at->format('d-m-Y'), route('admin.accounting.payment.show', $payment));
+});
+Breadcrumbs::for('admin.accounting.payment.edit', function (BreadcrumbTrail $trail, PaymentDocument $payment) {
+    $trail->parent('admin.accounting.payment.show', $payment);
+    $trail->push('Редактировать', route('admin.accounting.payment.edit', $payment));
+});
+
+
+
 //PRICING
 Breadcrumbs::for('admin.accounting.pricing.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');

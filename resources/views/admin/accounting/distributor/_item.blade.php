@@ -20,5 +20,5 @@
     <x-base.table.td class="text-center">
         <livewire:admin.accounting.edit-balance :product="$item->product" />
     </x-base.table.td>
-    <x-base.table.td class="text-center">{{ price($item->product->getLastPrice()) }}</x-base.table.td>
+    <x-base.table.td class="text-center">{{ price($item->product->getPrice()) }}</x-base.table.td>
 </x-base.table.tr>

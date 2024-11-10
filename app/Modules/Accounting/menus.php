@@ -29,6 +29,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-sharp fa-light fa-money-check-pen',
             ],
+            'payment-order' => [
+                'icon' => 'folder-pen',
+                'title' => 'Платежные поручения',
+                'route_name' => 'admin.accounting.payment.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-file-invoice',
+            ],
             'pricing' => [
                 'icon' => 'badge-russian-ruble',
                 'title' => 'Ценообразование',

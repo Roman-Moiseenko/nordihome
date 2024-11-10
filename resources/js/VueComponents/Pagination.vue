@@ -48,7 +48,6 @@ export default {
                     },
                 }
             );
-
         },
         handleCurrentChange(val) {
             this.$data.CurrentPage = val;

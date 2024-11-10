@@ -36,7 +36,7 @@ export default defineConfig({
                 'resources/js/shop.js',
                 'resources/js/admin.js',
                 'resources/css/admin.css',
-
+                'resources/images/logo.svg',
                 'resources/css/livewire/notification.css',
                 // Vendor
                 "resources/js/vendor/accordion/index.js",
@@ -185,5 +185,5 @@ export default defineConfig({
             'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
         }
     },
-    publicDir: 'public',
+   publicDir: 'public/build',
 });

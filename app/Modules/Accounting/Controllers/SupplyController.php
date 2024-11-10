@@ -22,6 +22,8 @@ use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
+use JetBrains\PhpStorm\Deprecated;
 
 class SupplyController extends Controller
 {
@@ -94,8 +96,7 @@ class SupplyController extends Controller
         }
     }
 
-    //TODO Vue3
-    public function show(SupplyDocument $supply)
+    public function show(SupplyDocument $supply): Response
     {
         //return view('admin.accounting.supply.show', compact('supply'));
         return Inertia::render('Accounting/Supply/Show', [
@@ -103,16 +104,15 @@ class SupplyController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $supply = $this->service->create($request->integer('distributor'), $request['stacks']);
         return redirect()->route('admin.accounting.supply.show', $supply);
     }
 
-    public function destroy(SupplyDocument $supply)
+    public function destroy(SupplyDocument $supply): RedirectResponse
     {
         $this->service->destroy($supply);
-        flash('Заказ удален', 'success');
         return redirect()->back()->with('success', 'Заказ удален успешно');
     }
 
@@ -122,6 +122,29 @@ class SupplyController extends Controller
         return redirect()->route('admin.accounting.supply.show', $supply);
     }
 
+    public function payment(SupplyDocument $supply): RedirectResponse
+    {
+        try {
+            $paymentOrder = $this->service->payment($supply);
+            return redirect()->route('admin.accounting.payment.show', $paymentOrder);
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function arrival(SupplyDocument $supply): RedirectResponse
+    {
+        $arrival = $this->service->arrival($supply);
+        return redirect()->route('admin.accounting.arrival.show', $arrival);
+    }
+
+    public function refund(SupplyDocument $supply): RedirectResponse
+    {
+        $arrival = $this->service->refund($supply);
+        return redirect()->route('admin.accounting.arrival.show', $arrival);
+    }
+
+    #[Deprecated]
     public function sent(SupplyDocument $supply): RedirectResponse
     {
         $this->service->sent($supply);
@@ -175,7 +198,7 @@ class SupplyController extends Controller
         }
     }
 
-    public function del_product(SupplyProduct $product)
+    public function del_product(SupplyProduct $product): RedirectResponse
     {
         try {
             $this->service->del_product($product);

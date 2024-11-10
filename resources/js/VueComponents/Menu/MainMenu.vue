@@ -3,7 +3,6 @@
              active-text-color="rgb(217 119 6)" text-color="rgb(19 78 74)"
                  background-color="rgb(226 232 240)"
     >
-
         <template v-for="(item, index) in menus">
             <template v-if="item.sub_menu">
                 <el-sub-menu :index="index">

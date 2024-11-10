@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Base\Traits\CompletedFieldModel;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PricingDocument extends Model implements AccountingDocument
 {
-    use HtmlInfoData;
+    use HtmlInfoData, CompletedFieldModel;
 
     protected $table = 'pricing_documents';
     protected $fillable = [
@@ -48,11 +49,6 @@ class PricingDocument extends Model implements AccountingDocument
             'completed' => false,
             'staff_id' => $staff_id,
         ]);
-    }
-
-    public function isCompleted()
-    {
-        return $this->completed == true;
     }
 
     public function isProduct(int $product_id): bool

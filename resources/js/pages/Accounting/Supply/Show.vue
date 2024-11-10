@@ -5,6 +5,7 @@
             <h1 class="font-medium text-xl">
                 Заказ поставщику {{ supply.number }} <span v-if="supply.incoming_number">({{ supply.incoming_number }})</span> от {{ func.date(supply.created_at) }}
             </h1>
+
             <div class="mt-3 p-3 bg-white rounded-lg ">
                 <SupplyInfo :supply="supply" />
             </div>
@@ -61,13 +62,15 @@
                 </el-table-column>
 
             </el-table>
+
         </el-config-provider>
         <DeleteEntityModal name_entity="Товар из заказа" />
+
     </Layout>
 </template>
 
 <script lang="ts" setup>
-import {inject, reactive, ref, defineProps, computed} from "vue";
+import {inject, ref, defineProps, computed} from "vue";
 import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
@@ -80,7 +83,7 @@ const props = defineProps({
     supply: Object,
     title: {
         type: String,
-        default: 'Заказы поставщикам',
+        default: 'Заказ поставщику',
     },
 })
 
