@@ -6,6 +6,8 @@ namespace App\Modules\Accounting\Entity;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
@@ -20,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class StorageItem extends Model
 {
+    use SoftDeletes;
     protected $table = 'storage_items';
     public $timestamps = false;
 
@@ -28,7 +31,7 @@ class StorageItem extends Model
         'quantity'
     ];
 
-    public function product()
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
@@ -93,7 +96,7 @@ class StorageItem extends Model
     }
 
 
-    public function orderReserves()
+    public function orderReserves(): HasMany
     {
         return $this->hasMany(OrderReserve::class, 'storage_item_id', 'id');
     }

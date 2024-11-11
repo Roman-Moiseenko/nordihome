@@ -42,7 +42,7 @@ class SupplyService
     }
 
     //Создание пустого заказа
-    public function create_empty(Distributor $distributor): SupplyDocument
+    public function createEmpty(Distributor $distributor): SupplyDocument
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
@@ -59,7 +59,7 @@ class SupplyService
     {
         DB::transaction(function () use ($distributor_id, $data, &$supply) {
             $distributor = Distributor::find($distributor_id);
-            $supply = $this->create_empty($distributor);
+            $supply = $this->createEmpty($distributor);
 
             foreach ($data as $stack_id) {
                 /** @var SupplyStack $stack */
@@ -73,10 +73,10 @@ class SupplyService
         return $supply;
     }
 
-    public function create_stack(Distributor $distributor): SupplyDocument
+    public function createStack(Distributor $distributor): SupplyDocument
     {
         $stacks = $this->stack->getByDistributor($distributor);
-        $supply = $this->create_empty($distributor);
+        $supply = $this->createEmpty($distributor);
         foreach ($stacks as $stack) {
             $stack->setSupply($supply->id);
             $d_product = $distributor->getProduct($stack->product_id);
@@ -88,6 +88,11 @@ class SupplyService
     ////Фун-ции работы с Заказом =======>
     public function completed(SupplyDocument $supply): void
     {
+        foreach ($supply->products as $product) {
+            if ($product->cost_currency == 0) throw new \DomainException('У товара не установлена цена поставщика');
+            $supply->distributor->addProduct($product->product, $product->cost_currency);
+        }
+
         $supply->completed = true;
         $supply->save();
         event(new SupplyHasCompleted($supply));
@@ -115,13 +120,21 @@ class SupplyService
         $arrival->supply_id = $supply->id;
         $arrival->save();
         foreach ($supply->products as $supplyProduct) {
-            $item = ArrivalProduct::new(
-                $supplyProduct->product_id,
-                $supplyProduct->getQuantityUnallocated(),//Высчитываем свободное кол-во
-                $supplyProduct->cost_currency,
-                $supplyProduct->id,
-            );
-            $arrival->arrivalProducts()->save($item);
+            $quantity = $supplyProduct->getQuantityUnallocated();
+            if ($quantity > 0) {
+                $item = ArrivalProduct::new(
+                    $supplyProduct->product_id,
+                    $quantity,//Высчитываем свободное кол-во
+                    $supplyProduct->cost_currency,
+                    $supplyProduct->id,
+                );
+                $arrival->arrivalProducts()->save($item);
+            }
+        }
+        $arrival->refresh();
+        if ($arrival->arrivalProducts()->count() == 0) {
+            $arrival->delete();
+            throw new \DomainException('Все позиции получены. Приходная накладная недоступна');
         }
         return $arrival;
     }
@@ -150,7 +163,7 @@ class SupplyService
     public function refund(SupplyDocument $supply)
     {
         //TODO Переносим весь товар с кол-вом в возврат
-
+        throw new \DomainException('В разработке');
     }
 
 
@@ -164,9 +177,9 @@ class SupplyService
      */
     public function copy(SupplyDocument $old_supply): SupplyDocument
     {
-        $supply = $this->create_empty($old_supply->distributor);
+        $supply = $this->createEmpty($old_supply->distributor);
         foreach ($old_supply->products as $product) {
-            $this->add_product($supply, $product->product_id, $product->quantity);
+            $this->addProduct($supply, $product->product_id, $product->quantity);
         }
         return $supply;
     }
@@ -174,7 +187,7 @@ class SupplyService
     /**
      * Сохранить новые данные о заказе (без списка вложенных товаров)
      */
-    public function set_info(SupplyDocument $supply, \Illuminate\Http\Request $request): void
+    public function setInfo(SupplyDocument $supply, \Illuminate\Http\Request $request): void
     {
         $supply->number = $request->string('number')->value();
         $supply->created_at = $request->date('created_at');
@@ -195,7 +208,7 @@ class SupplyService
      * @param int $quantity
      * @return void
      */
-    public function add_product(SupplyDocument $supply, int $product_id, int $quantity): void
+    public function addProduct(SupplyDocument $supply, int $product_id, int $quantity): void
     {
         $distributor = $supply->distributor;
         /** @var Product $product */
@@ -209,13 +222,13 @@ class SupplyService
         $supply->addProduct($product, $quantity, $d_product->pivot->cost);//Добавляем товар в Заказ
     }
 
-    public function add_products(SupplyDocument $supply, mixed $products): void
+    public function addProducts(SupplyDocument $supply, mixed $products): void
     {
         $errors = [];
         foreach ($products as $product) {
             $product_id = Product::whereCode($product['code'])->first()->id;
             if (!is_null($product)) {
-                $this->add_product($supply, $product_id, (int)$product['quantity']);
+                $this->addProduct($supply, $product_id, (int)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }
@@ -224,7 +237,7 @@ class SupplyService
         if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    public function del_product(SupplyProduct $supplyProduct): void
+    public function delProduct(SupplyProduct $supplyProduct): void
     {
         $supply = $supplyProduct->document;
         //Проверка на стек, если есть в стеке удалить нельзя
@@ -236,7 +249,7 @@ class SupplyService
         $supplyProduct->delete();
     }
 
-    public function set_product(SupplyProduct $supplyProduct, int $quantity, float $cost_currency): bool
+    public function setProduct(SupplyProduct $supplyProduct, int $quantity, float $cost_currency): bool
     {
         $supply = $supplyProduct->document;
         //Проверка на стек, если кол-во меньше чем в стеке, то изменить нельзя
@@ -251,7 +264,7 @@ class SupplyService
     ////<===============
 
     ////Фун-ции работы с товарами в Стеке =======>
-    public function add_stack(OrderItem $item, int $storage_id): SupplyStack
+    public function addStack(OrderItem $item, int $storage_id): SupplyStack
     {
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
@@ -261,7 +274,7 @@ class SupplyService
         return $stack;
     }
 
-    public function del_stack(SupplyStack $stack)
+    public function delStack(SupplyStack $stack): void
     {
         if (!is_null($stack->orderItem)) throw new \DomainException('Нельзя удалить товар из стека под Заказ клиенту!');
         $staff = $stack->staff;
@@ -284,7 +297,6 @@ class SupplyService
         $supply->save();
         event(new SupplyHasSent($supply));
     }
-
 
 
 }

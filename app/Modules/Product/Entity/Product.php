@@ -268,7 +268,7 @@ class Product extends Model
         return false;
     }
 
-    public function isWish(int $user_id)
+    public function isWish(int $user_id): bool
     {
         $wish = $this->wishes()->where('user_id', $user_id)->first();
         return !empty($wish);

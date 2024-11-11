@@ -125,17 +125,14 @@ class ProductController extends Controller
 
     public function restore(int $id): RedirectResponse
     {
-
-        $product = Product::onlyTrashed()->where('id', $id)->first();
-        $product->restore();
+        $this->service->restore($id);
         flash('Товар восстановлен', 'success');
         return redirect()->back();//route('admin.product.index');
     }
 
     public function full_delete(int $id): RedirectResponse
     {
-        $product = Product::onlyTrashed()->where('id', $id)->first();
-        $product->forceDelete();
+        $this->service->full_delete($id);
         flash('Товар удален полностью', 'success');
         return redirect()->back();//route('admin.product.index');
     }

@@ -78,3 +78,21 @@ if (!function_exists('fullname')) {
             (!empty($value['secondname']) ? ' ' . $value['secondname'] : '') ;
     }
 }
+if (!function_exists('array_select')) {
+    /**
+     * Приведение ассоциативного массива для фильтра в Vue
+     * @param array $array
+     * @return array
+     */
+    function array_select(array $array): array
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            $result[] = [
+                'value' => $key,
+                'label' => $value,
+            ];
+        }
+        return $result;
+    }
+}

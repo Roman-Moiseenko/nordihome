@@ -3,21 +3,20 @@
         <el-config-provider :locale="ru">
             <Head><title>{{ title }}</title></Head>
             <h1 class="font-medium text-xl">
-                Заказ поставщику {{ supply.number }} <span v-if="supply.incoming_number">({{ supply.incoming_number }})</span> от {{ func.date(supply.created_at) }}
+                Приходная накладная {{ arrival.number }} <span v-if="arrival.incoming_number">({{ arrival.incoming_number }})</span> от {{ func.date(arrival.created_at) }}
             </h1>
             <div class="mt-3 p-3 bg-white rounded-lg ">
-                <SupplyInfo :supply="supply" />
+                <ArrivalInfo :arrival="arrival" :storages="storages" :operations="operations" />
             </div>
             <el-affix target=".affix-container" :offset="64">
                 <div class="bg-white rounded-lg my-2 p-1 shadow flex">
-                    <SupplyActions :supply="supply" />
+                    <ArrivalActions :arrival="arrival" />
                 </div>
             </el-affix>
-            <el-table :data="[...supply.products.data]"
+            <el-table :data="[...arrival.products.data]"
                       header-cell-class-name="nordihome-header"
-                      style="width: 100%;"
                       :row-class-name="tableRowClassName"
-            >
+                      style="width: 100%;">
                 <el-table-column prop="product.code" label="Артикул" width="160" />
                 <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
                 <el-table-column prop="cost_currency" label="Закупочная" width="180">
@@ -28,7 +27,7 @@
                                   :disabled="iSaving"
                                   :readonly="!isEdit"
                         >
-                            <template #append>{{ supply.currency }}</template>
+                            <template #append>{{ arrival.currency }}</template>
                         </el-input>
                     </template>
                 </el-table-column>
@@ -46,12 +45,12 @@
                 </el-table-column>
                 <el-table-column prop="quantity" label="Сумма в валюте" width="180">
                     <template #default="scope">
-                        {{ func.price(scope.row.quantity * scope.row.cost_currency, supply.currency) }}
+                        {{ func.price(scope.row.quantity * scope.row.cost_currency, arrival.currency) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="Сумма в рублях" width="180">
                     <template #default="scope">
-                        {{ func.price(scope.row.quantity * scope.row.cost_currency * supply.exchange_fix) }}
+                        {{ func.price(scope.row.quantity * scope.row.cost_currency * arrival.exchange_fix) }}
                     </template>
                 </el-table-column>
                 <el-table-column label="Действия" align="right" width="180">
@@ -61,12 +60,12 @@
                 </el-table-column>
             </el-table>
             <pagination
-                :current_page="supply.products.current_page"
-                :per_page="supply.products.per_page"
-                :total="supply.products.total"
+                :current_page="arrival.products.current_page"
+                :per_page="arrival.products.per_page"
+                :total="arrival.products.total"
             />
         </el-config-provider>
-        <DeleteEntityModal name_entity="Товар из заказа" />
+        <DeleteEntityModal name_entity="Товар из поступления" />
     </Layout>
 </template>
 
@@ -76,16 +75,18 @@ import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
-import SupplyInfo from './Blocks/Info.vue'
-import SupplyActions from './Blocks/Actions.vue'
 import Pagination from '@Comp/Pagination.vue'
+import ArrivalInfo from './Blocks/Info.vue'
+import ArrivalActions from './Blocks/Actions.vue'
 
 const props = defineProps({
-    supply: Object,
+    arrival: Object,
     title: {
         type: String,
-        default: 'Заказ поставщику',
+        default: 'Поступление товаров (приходная накладная)',
     },
+    storages: Array,
+    operations: Array,
 })
 interface IRow {
     cost_currency: number,
@@ -98,12 +99,12 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     return ''
 }
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.supply.completed);
+const isEdit = computed<Boolean>(() => !props.arrival.completed);
 const $delete_entity = inject("$delete_entity")
 
 function setItem(row) {
     iSaving.value = true;
-    router.visit(route('admin.accounting.supply.set-product', {product: row.id}), {
+    router.visit(route('admin.accounting.arrival.set-product', {product: row.id}), {
         method: "post",
         data: {
             quantity: row.quantity,
@@ -116,7 +117,8 @@ function setItem(row) {
         }
     })
 }
+
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.supply.del-product', {product: row.id}));
+    $delete_entity.show(route('admin.accounting.arrival.del-product', {product: row.id}));
 }
 </script>

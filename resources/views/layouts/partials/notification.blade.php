@@ -25,9 +25,10 @@
         @vite('resources/js/vendor/toastify/index.js')
     @endpush
 @endonce
-
-@once
-    @push('scripts')
-        @vite('resources/js/pages/notification/index.js')
-    @endpush
-@endonce
+<!--
+@ once
+    @ push('scripts')
+        @ vite('resources/js/pages/notification/index.js')
+    @ endpush
+@ endonce
+-->

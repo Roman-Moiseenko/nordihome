@@ -79,7 +79,7 @@ class StorageService
      * @param MovementItemInterface[] $items
      * @return void
      */
-    public function departure(Storage $storage, array $items)
+    public function departure(Storage $storage, array $items): void
     {
         DB::transaction(function () use ($storage, $items) {
             foreach ($items as $item) {

@@ -151,7 +151,7 @@ const filter = reactive({
 const create_id = ref<Number>(null)
 
 interface IRow {
-    active: number
+    completed: number
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.completed === 0) {

@@ -55,6 +55,7 @@ class MovementDocument extends Model implements AccountingDocument
         'comment',
         'expense_id',
         'staff_id',
+        'arrival_id'
     ];
 
     protected $casts = [
@@ -62,13 +63,14 @@ class MovementDocument extends Model implements AccountingDocument
         'updated_at' => 'datetime',
     ];
 
-    public static function register(int $storage_out, int $storage_in, int $staff_id): self
+    public static function register(int $storage_out, int $storage_in, int $staff_id, int $arrival_id): self
     {
         return self::create([
             'storage_out' => $storage_out,
             'storage_in' => $storage_in,
             'status' => self::STATUS_DRAFT,
             'staff_id' => $staff_id,
+            'arrival_id' => $arrival_id,
         ]);
     }
 

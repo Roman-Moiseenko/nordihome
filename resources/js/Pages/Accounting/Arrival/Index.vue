@@ -81,12 +81,12 @@
                         <
                         <el-table-column label="Действия" align="right">
                             <template #default="scope">
-                                <el-button
+                                <!--el-button
                                     size="small"
                                     type="warning"
                                     @click.stop="handleCopy(scope.row)">
                                     Copy
-                                </el-button>
+                                </el-button-->
                                 <el-button v-if="!scope.row.completed"
                                     size="small"
                                     type="danger"
@@ -162,7 +162,7 @@ function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.arrival.destroy', {arrival: row.id}));
 }
 function createButton() {
-    router.get(route('admin.accounting.arrival.create', {distributor: create_id.value}))
+    router.post(route('admin.accounting.arrival.store', {distributor: create_id.value}))
 }
 function routeClick(row) {
     router.get(route('admin.accounting.arrival.show', {arrival: row.id}))

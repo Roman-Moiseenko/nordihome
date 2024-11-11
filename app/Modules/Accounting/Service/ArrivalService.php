@@ -8,6 +8,7 @@ use App\Events\MovementHasCreated;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Admin\Entity\Admin;
@@ -19,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 class ArrivalService
 {
@@ -84,13 +86,13 @@ class ArrivalService
     /**
      * Добавляем товар в поступление. Учет основания По заказу или Свободное добавление
      */
-    public function add(ArrivalDocument $arrival, int $product_id, int $quantity):? ArrivalProduct
+    public function addProduct(ArrivalDocument $arrival, int $product_id, int $quantity):? ArrivalProduct
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         $distributor_cost = 0;
         /** @var Product $product */
         $product = Product::find($product_id);
-        if (!is_null($arrival->supply_id)) {
+        if ($arrival->isSupply()) {
             $supplyProduct = $arrival->supply->getProduct($product->id);
             if (is_null($supplyProduct)) throw new \DomainException('Товар ' . $product->name . ' отсутствует в связанном документе.');
             $quantity = min($quantity, $supplyProduct->getQuantityUnallocated());
@@ -98,7 +100,6 @@ class ArrivalService
 
             $distributor_cost = $supplyProduct->cost_currency;
         }
-
         //Если товар уже есть в Поступлении
         if ($arrival->isProduct($product_id)) {
             $arrivalProduct = $arrival->getProduct($product_id);
@@ -119,60 +120,43 @@ class ArrivalService
         return $item;
     }
 
-    //TODO Переделать на Vue Component
-    public function add_products(ArrivalDocument $arrival, string $textarea): void
+    public function addProducts(ArrivalDocument $arrival, mixed $products): void
     {
-        $list = explode("\r\n", $textarea);
-        foreach ($list as $item) {
-            $product = Product::whereCode($item)->first();
+        $errors = [];
+        foreach ($products as $product) {
+            $product_id = Product::whereCode($product['code'])->first()->id;
             if (!is_null($product)) {
-                $this->add($arrival, $product->id, 1);
+                $this->addProduct($arrival, $product_id, (int)$product['quantity']);
             } else {
-                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+                $errors[] = $product['code'];
             }
         }
+        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    //Для AJAX
-    public function set(Request $request, ArrivalProduct $item): float|int
+    public function setProduct(ArrivalProduct $arrivalProduct, int $quantity, float $cost): void
     {
-        if ($item->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
+        $arrival = $arrivalProduct->document;
+        if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
+        if ($arrival->isSupply()) { //Есть связанный документ
+            //Нельзя менять валюту
+            if ($arrivalProduct->cost_currency != $cost) throw new \DomainException('Стоимость установлена в связанном документа!');
+
+            $unallocated = $arrivalProduct->supplyProduct->getQuantityUnallocated();
+            $delta = min($quantity - $arrivalProduct->quantity, $unallocated);
+            if ($delta == 0) throw new \DomainException('Недостаточное кол-во товара ' . $arrivalProduct->product->name . ' в связанном документе.');
+            $arrivalProduct->quantity += $delta;
+            $arrivalProduct->save();
+            return;
+        };
         //Меняем данные
-        $item->setQuantity($request->integer('quantity'));
-        $item->setCost($request->float('cost'));
-        $item->save();
-        return $item->getCostRu();
-    }
-
-    /**
-     * Меняем курс валюты для документа в ручную
-     */
-    public function set_currency(Request $request, ArrivalDocument $arrival): void
-    {
-        $arrival->exchange_fix = $request->float('currency');
-        $arrival->save();
-    }
-
-    #[ArrayShape(['cost_currency' => "float|int", 'quantity' => "int", 'cost_ru' => "float|int"])]
-    public function getInfoData(ArrivalDocument $arrival): array
-    {
-        $result = [
-            'cost_currency' => 0,
-            'quantity' => 0,
-            'cost_ru' => 0,
-        ];
-        foreach ($arrival->arrivalProducts as $item) {
-            $result['quantity'] += $item->quantity;
-            $result['cost_currency'] += $item->quantity * $item->cost_currency;
-            $result['cost_ru'] += $item->quantity * $item->getCostRu();
-        }
-        return $result;
+        $arrivalProduct->setQuantity($quantity);
+        $arrivalProduct->setCost($cost);
+        $arrivalProduct->save();
     }
 
     /**
      * Проведение документа, с установкой новой цены продажи и закупа у поставщика
-     * @param ArrivalDocument $arrival
-     * @return void
      */
     public function completed(ArrivalDocument $arrival): void
     {
@@ -181,16 +165,15 @@ class ArrivalService
             //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
             foreach ($arrival->arrivalProducts as $item) {
                 $arrival->distributor->addProduct($item->product, $item->cost_currency);
-               // $this->distributors->arrival($arrival->distributor, $item->product_id, $item->cost_currency);
             }
             $arrival->completed();
-
+            //TODO Проверить и ?Переработать механизм
             //У поступления есть заказ поставщику
             if (!is_null($arrival->supply)) {
                 //Создаем перемещения под все заказы со статусом на отбытие
                 $orders_movement = [];
                 $storages_movement = [];
-                $orders = [];
+                $orders = []; //TODO Не используется ????!!!!!
                 foreach ($arrival->supply->stacks as $stack) {
                     //Поступления, для которых есть стек из заказа, ставим в резерв
                     if (!is_null($stack->orderItem)) {
@@ -200,7 +183,6 @@ class ArrivalService
                         //сохраняем список $orders для оповещения
                         $orders[$stack->orderItem->order_id] = $stack->orderItem->order;
                     }
-
                     if ($stack->storage_id != $arrival->storage_id) { //Хранилище отличается, требуется Перемещение
 
                         if (!is_null($stack->orderItem)) { //Из заказа
@@ -213,13 +195,15 @@ class ArrivalService
                 }
 
                 //Создаем перемещения для заказов
+                //TODO В перемещение привязать основание - Документ Arrival
                 /** @var SupplyStack $stack */
                 foreach ($orders_movement as $order_id => $stacks) {
                     /** @var Order $order */
                     $order = Order::find($order_id);
                     $movement = $this->movementService->create(
                         $arrival->storage_id,
-                        $stacks[0]->storage_id //По первому элементу определяем хранилище
+                        $stacks[0]->storage_id, //По первому элементу определяем хранилище
+                        $arrival->id,
                     );
 
                     $order->movements()->attach($movement->id);
@@ -243,9 +227,74 @@ class ArrivalService
                     event(new MovementHasCreated($movement));
                 }
             }
-
             event(new ArrivalHasCompleted($arrival));
         });
     }
+
+    public function work(ArrivalDocument $arrival): void
+    {
+        DB::transaction(function () use ($arrival) {
+            $this->storages->departure($arrival->storage, $arrival->arrivalProducts()->getModels());
+            foreach ($arrival->arrivalProducts()->getModels() as $item) {//Проверка на отрицательное кол-во
+                if ($arrival->storage->getQuantity($item->product) < 0)
+                    throw new \DomainException('Нельзя отменить проведение. Остаток ' . $item->product->name . ' < 0');
+            }
+            if (!is_null($arrival->supply)) {
+                foreach ($arrival->supply->stacks as $stack) {
+                    //Поступления, для которых есть стек из заказа, удаляем из резерва
+                    if (!is_null($stack->orderItem)) {
+                        $this->reserveService->deleteReserveStorage($stack->orderItem, $arrival->storage, $stack->quantity);
+                        $stack->orderItem->preorder = true;
+                        $stack->orderItem->save();
+                    }
+                }
+                //TODO Удалить перемещения
+                /* Подготовленный код:
+                $movements = MovementDocument::where('arrival_id', $arrival->id)->get();
+                foreach ($movements as $movement) {
+                    $movement->delete();
+                }
+    */
+            }
+        });
+    }
+
+    public function setInfo(ArrivalDocument $arrival, Request $request): void
+    {
+        $arrival->number = $request->string('number')->value();
+        $arrival->created_at = $request->date('created_at');
+        $arrival->incoming_number = $request->string('incoming_number')->value();
+        $arrival->incoming_at = $request->date('incoming_at');
+        $arrival->exchange_fix = $request->input('exchange_fix');
+        $arrival->comment = $request->string('comment')->value();
+        $arrival->storage_id = $request->integer('storage_id');
+        $arrival->operation = $request->input('operation') ?? ArrivalDocument::OPERATION_SUPPLY;
+        $arrival->save();
+    }
+
+    //На основании
+    public function expenses(ArrivalDocument $arrival)
+    {
+        //TODO В разработке
+        throw new \DomainException('В разработке');
+    }
+
+    public function movement(ArrivalDocument $arrival)
+    {
+        //TODO В разработке
+        throw new \DomainException('В разработке');
+    }
+
+    public function invoice(ArrivalDocument $arrival)
+    {
+        //TODO В разработке
+        throw new \DomainException('В разработке');
+    }
+    public function refund(ArrivalDocument $arrival)
+    {
+        //TODO В разработке
+        throw new \DomainException('В разработке');
+    }
+
 
 }

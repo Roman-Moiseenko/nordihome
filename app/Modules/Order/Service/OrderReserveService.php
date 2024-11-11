@@ -27,11 +27,8 @@ class OrderReserveService
 
     /**
      * Добавить в резерв при наличии свободных товаров по всем складам, начиная с Основного
-     * @param OrderItem $orderItem
-     * @param int $quantity
-     * @return void
      */
-    public function toReserve(OrderItem $orderItem, int $quantity)
+    public function toReserve(OrderItem $orderItem, int $quantity): void
     {
         DB::transaction(function () use ($orderItem, $quantity) {
             if ($orderItem->product->getCountSell() < $quantity)
@@ -60,24 +57,32 @@ class OrderReserveService
 
     /**
      * Добавить в резерв в указанное хранилище (при поступлении)
-     * @param OrderItem $orderItem
-     * @param Storage $storage
-     * @param int $quantity
-     * @return void
      */
-    public function toReserveStorage(OrderItem $orderItem, Storage $storage, int $quantity)
+    public function toReserveStorage(OrderItem $orderItem, Storage $storage, int $quantity): void
     {
         $storageItem = $storage->getItem($orderItem->product);
         OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
     }
 
     /**
-     * Увеличение резерва при увеличении товара в заказе
-     * @param OrderItem $orderItem
-     * @param int $delta
-     * @return void
+     * Удалить из резерва при отмене поступления
      */
-    public function upReserve(OrderItem $orderItem, int $delta)
+    public function deleteReserveStorage(OrderItem $orderItem, Storage $storage, int $quantity): void
+    {
+        $storageItem = $storage->getItem($orderItem->product);
+        $orderReserve = OrderReserve::where('order_item_id', $orderItem->id)->where('storage_item_id', $storageItem->id)->first();
+        if ($orderReserve->quantity == $quantity) {
+            $orderReserve->delete();
+        } else {
+            $orderReserve->quantity -= $quantity;
+            $orderReserve->save();
+        }
+    }
+
+    /**
+     * Увеличение резерва при увеличении товара в заказе
+     */
+    public function upReserve(OrderItem $orderItem, int $delta): void
     {
         DB::transaction(function () use ($orderItem, $delta) {
             foreach ($orderItem->product->storageItems as $storageItem) {
@@ -97,11 +102,8 @@ class OrderReserveService
 
     /**
      * Уменьшение резерва при уменьшении товара в заказе
-     * @param OrderItem $orderItem
-     * @param int $delta
-     * @return void
      */
-    public function downReserve(OrderItem $orderItem, int $delta)
+    public function downReserve(OrderItem $orderItem, int $delta): void
     {
         DB::transaction(function () use ($orderItem, $delta) {
             foreach ($orderItem->reserves as $reserve) {
@@ -122,7 +124,7 @@ class OrderReserveService
         $reserve->delete();
     }
 
-    private function AddReserveOrderItem(OrderItem $orderItem, StorageItem $storageItem, $add_quantity)
+    private function AddReserveOrderItem(OrderItem $orderItem, StorageItem $storageItem, $add_quantity): void
     {
         $reserve = $orderItem->getReserveByStorageItem($storageItem->id);
         if ($reserve != null) {
@@ -135,13 +137,8 @@ class OrderReserveService
 
     /**
      * Перенос резерва при проведении перемещения
-     * @param Storage $storageOut
-     * @param Storage $storageIn
-     * @param OrderItem $orderItem
-     * @param int $quantity
-     * @return void
      */
-    public function ReserveWithMovement(Storage $storageOut, Storage $storageIn, OrderItem $orderItem, int $quantity)
+    public function ReserveWithMovement(Storage $storageOut, Storage $storageIn, OrderItem $orderItem, int $quantity): void
     {
         $reserveOut = $orderItem->getReserveByStorage($storageOut->id);
 
@@ -156,15 +153,10 @@ class OrderReserveService
         $this->AddReserveOrderItem($orderItem, $storageItemIn, $quantity);
     }
 
-
     /**
      * Собрать резерв для элемента заказа на одном складе
-     * @param OrderItem $orderItem
-     * @param int $storage_id
-     * @param int $quantity
-     * @return void
      */
-    public function CollectReserve(OrderItem $orderItem, int $storage_id, int $quantity = 1)
+    public function CollectReserve(OrderItem $orderItem, int $storage_id, int $quantity = 1): void
     {
         /** @var Storage $storageIn */
         $storageIn = Storage::find($storage_id);

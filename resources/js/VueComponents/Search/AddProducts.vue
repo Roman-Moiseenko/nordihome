@@ -1,7 +1,10 @@
 <template>
     <div class="flex relative">
         <div class="relative" style="width: 180px;">
-            <el-input v-model="data" type="textarea" :rows="focus.rows" @focusin="inFocus" style="width: 180px" @focusout="outFocus" :class="focus.class"/>
+            <el-input v-model="data" :class="focus.class" style="width: 180px"
+                      type="textarea" :rows="focus.rows" resize="none"
+                      @focusin="inFocus" @focusout="outFocus"
+            />
         </div>
         <el-button type="primary" plain @click="onAdd" class="ml-1">{{ caption }}</el-button>
     </div>
@@ -47,7 +50,7 @@ function onAdd() {
     })
 }
 function inFocus() {
-    focus.rows = 10
+    focus.rows = 12
     focus.class = 'in-focus'
 }
 function outFocus() {

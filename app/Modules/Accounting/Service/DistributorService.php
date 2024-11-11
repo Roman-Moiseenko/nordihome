@@ -56,7 +56,7 @@ class DistributorService
     {
         DB::transaction(function () use ($distributor, $balance, &$supply) {
             //Создаем заказ со стеком
-            $supply = $this->supplyService->create_stack($distributor);
+            $supply = $this->supplyService->createStack($distributor);
             //Добавляем список товаров
             foreach ($distributor->products as $product) {
                 if (

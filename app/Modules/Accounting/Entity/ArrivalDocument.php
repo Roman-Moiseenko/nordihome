@@ -27,6 +27,7 @@ use JetBrains\PhpStorm\ArrayShape;
  * @property int $staff_id - автор документа
  * @property string $incoming_number
  * @property Carbon $incoming_at
+ * @property int $operation
  *
  * @property Storage $storage
  * @property Currency $currency
@@ -40,8 +41,16 @@ class ArrivalDocument extends Model implements AccountingDocument
 {
     use HtmlInfoData, CompletedFieldModel;
 
-    protected $table = 'arrival_documents';
+    const OPERATION_SUPPLY = 101;
+    const OPERATION_REMAINS = 102;
+    const OPERATION_OTHER = 110;
+    const OPERATIONS = [
+        self::OPERATION_SUPPLY => 'Поступление от поставщика',
+        self::OPERATION_REMAINS => 'Поступление остатков',
+        self::OPERATION_OTHER => 'Другое',
+    ];
 
+    protected $table = 'arrival_documents';
     protected $fillable = [
         'number',
         'distributor_id',
@@ -75,6 +84,7 @@ class ArrivalDocument extends Model implements AccountingDocument
             'completed' => false,
             'comment' => $comment,
             'staff_id' => $staff_id,
+            'operation' => self::OPERATION_SUPPLY,
         ]);
     }
 
@@ -96,6 +106,10 @@ class ArrivalDocument extends Model implements AccountingDocument
         return false;
     }
 
+    public function isSupply(): bool
+    {
+        return !is_null($this->supply_id);
+    }
     //*** SET-...
 
     public function setExchange(float $exchange_fix): void
@@ -112,23 +126,18 @@ class ArrivalDocument extends Model implements AccountingDocument
     //*** GET-...
     public function getAmount(): float
     {
-       /* $mode = false;
-        if ($mode) {
-            $amount = 0;
-            foreach ($this->arrivalProducts as $item) {
-                $amount += $item->quantity * $item->cost_currency;
-            }
-            return $amount;
-        } */
-        $amount = ArrivalProduct::selectRaw('SUM(quantity * cost_currency) AS total')->where('arrival_id', $this->id)->first();
+        $amount = ArrivalProduct::selectRaw('SUM(quantity * cost_currency) AS total')
+            ->where('arrival_id', $this->id)
+            ->first();
         return $amount->total ?? 0.0;
 
     }
 
     public function getQuantity(): int
     {
-        $quantity = ArrivalProduct::selectRaw('SUM(quantity * 1) AS total')->where('arrival_id', $this->id)->first();
-        //dd($quantity);
+        $quantity = ArrivalProduct::selectRaw('SUM(quantity * 1) AS total')
+            ->where('arrival_id', $this->id)
+            ->first();
         return (int)($quantity->total ?? 0);
     }
 
@@ -220,6 +229,10 @@ class ArrivalDocument extends Model implements AccountingDocument
         return $this->comment;
     }
 
+    public function operationText(): string
+    {
+        return self::OPERATIONS[$this->operation];
+    }
 
 
 }

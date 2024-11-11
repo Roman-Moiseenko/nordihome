@@ -51,4 +51,10 @@ class PaymentDocumentService
         $payment->work();
         //TODO Возможные перерасчеты или отмена документов
     }
+
+    public function delete(PaymentDocument $payment): void
+    {
+        $this->work($payment);
+        $payment->delete();
+    }
 }

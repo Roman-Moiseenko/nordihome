@@ -14,13 +14,18 @@ Route::group(
             'as' => 'arrival.',
         ],
             function () {
-                Route::post('/add-products/{arrival}', 'ArrivalController@add_products')->name('add-products');
-                Route::post('/add/{arrival}', 'ArrivalController@add')->name('add');
+                Route::post('/set-product/{product}', 'ArrivalController@set_product')->name('set-product');
+                Route::delete('/del-product/{product}', 'ArrivalController@del_product')->name('del-product');
 
+                Route::post('/add-products/{arrival}', 'ArrivalController@add_products')->name('add-products');
+                Route::post('/add-product/{arrival}', 'ArrivalController@add_product')->name('add-product');
                 Route::post('/completed/{arrival}', 'ArrivalController@completed')->name('completed');
-                Route::post('/set/{item}', 'ArrivalController@set')->name('set');
-                Route::post('/set-currency/{arrival}', 'ArrivalController@set_currency')->name('set-currency');
-                Route::delete('/remove-item/{item}', 'ArrivalController@remove_item')->name('remove-item');
+                Route::post('/set-info/{arrival}', 'ArrivalController@set_info')->name('set-info');
+                //На основании:
+                Route::post('/expenses/{arrival}', 'ArrivalController@expenses')->name('expenses'); //Доп.расходы
+                Route::post('/movement/{arrival}', 'ArrivalController@movement')->name('movement'); //Перемещение
+                Route::post('/invoice/{arrival}', 'ArrivalController@invoice')->name('invoice'); //Расх.накладная
+                Route::post('/refund/{arrival}', 'ArrivalController@refund')->name('refund'); //Возврат
             });
         Route::group([
             'prefix' => 'movement',
@@ -59,6 +64,11 @@ Route::group(
             'as' => 'supply.',
         ],
             function () {
+                //На основании:
+                Route::post('/arrival/{supply}', 'SupplyController@arrival')->name('arrival');
+                Route::post('/payment/{supply}', 'SupplyController@payment')->name('payment');
+                Route::post('/refund/{supply}', 'SupplyController@refund')->name('refund');
+
                 Route::get('/stack', 'SupplyController@stack')->name('stack');
                 Route::delete('/del-stack/{stack}', 'SupplyController@del_stack')->name('del-stack');
                 Route::post('/add-stack/{item}', 'SupplyController@add_stack')->name('add-stack');
@@ -66,11 +76,11 @@ Route::group(
                 Route::post('/add-products/{supply}', 'SupplyController@add_products')->name('add-products');
                 Route::post('/set-product/{product}', 'SupplyController@set_product')->name('set-product');
                 Route::delete('/del-product/{product}', 'SupplyController@del_product')->name('del-product');
-                Route::post('/sent/{supply}', 'SupplyController@sent')->name('sent');
+               // Route::post('/sent/{supply}', 'SupplyController@sent')->name('sent');
                 Route::post('/copy/{supply}', 'SupplyController@copy')->name('copy');
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
                 Route::post('/set-info/{supply}', 'SupplyController@set_info')->name('set-info');
-                Route::post('/payment/{supply}', 'SupplyController@payment')->name('payment');
+
 
             });
         Route::group([

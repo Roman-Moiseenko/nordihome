@@ -1,13 +1,14 @@
 <template>
-    <template v-if="supply.completed">
+    <template v-if="arrival.completed">
         <el-dropdown>
             <el-button type="primary">
                 Создать на основании<el-icon class="el-icon--right"><arrow-down /></el-icon>
             </el-button>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item @click="onPayment">Платежное поручение</el-dropdown-item>
-                    <el-dropdown-item @click="onArrival">Приходная накладная</el-dropdown-item>
+                    <el-dropdown-item @click="onExpenses">Дополнительные расходы</el-dropdown-item>
+                    <el-dropdown-item @click="onMovement">Перемещение запасов</el-dropdown-item>
+                    <el-dropdown-item @click="onInvoice">Расходная накладная</el-dropdown-item>
                     <el-dropdown-item @click="onRefund">Возврат поставщику</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
@@ -25,10 +26,10 @@
     </template>
     <template v-else>
         <SearchAddProduct
-            :route="route('admin.accounting.supply.add-product', {supply: supply.id})"
+            :route="route('admin.accounting.arrival.add-product', {arrival: arrival.id})"
             :quantity="true"
         />
-        <SearchAddProducts :route="route('admin.accounting.supply.add-products', {supply: supply.id})" class="ml-3"/>
+        <SearchAddProducts :route="route('admin.accounting.arrival.add-products', {arrival: arrival.id})" class="ml-3"/>
         <el-button type="danger" class="ml-auto" @click="onCompleted">Провести</el-button>
     </template>
 </template>
@@ -40,26 +41,31 @@ import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
-    supply: Object,
+    arrival: Object,
 })
 
 function onCompleted() {
-    router.visit(route('admin.accounting.supply.completed', {supply: props.supply.id}), {
+    router.visit(route('admin.accounting.arrival.completed', {arrival: props.arrival.id}), {
         method: "post",
     })
 }
-function onPayment() {
-    router.visit(route('admin.accounting.supply.payment', {supply: props.supply.id}), {
+function onExpenses() {
+    router.visit(route('admin.accounting.arrival.expenses', {arrival: props.arrival.id}), {
         method: "post",
     })
 }
-function onArrival() {
-    router.visit(route('admin.accounting.supply.arrival', {supply: props.supply.id}), {
+function onMovement() {
+    router.visit(route('admin.accounting.arrival.movement', {arrival: props.arrival.id}), {
+        method: "post",
+    })
+}
+function onInvoice() {
+    router.visit(route('admin.accounting.arrival.invoice', {arrival: props.arrival.id}), {
         method: "post",
     })
 }
 function onRefund() {
-    router.visit(route('admin.accounting.supply.refund', {supply: props.supply.id}), {
+    router.visit(route('admin.accounting.arrival.refund', {arrival: props.arrival.id}), {
         method: "post",
     })
 }

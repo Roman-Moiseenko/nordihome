@@ -49,7 +49,7 @@ class SupplyController extends Controller
         $this->staffs = $staffs;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $distributors = Distributor::orderBy('name')->getModels();
         $stack_count = SupplyStack::where('supply_id', null)->count();
@@ -65,7 +65,7 @@ class SupplyController extends Controller
         ]);
     }
 
-    public function stack(Request $request)
+    public function stack(Request $request): Response
     {
         $brands = Brand::orderBy('name')->getModels();
         $stacks = $this->repository->getStacks($request, $filters);
@@ -80,7 +80,7 @@ class SupplyController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): Response|RedirectResponse
     {
         $distributor = Distributor::find($request->integer('distributor'));
         $stacks = $this->stacks->getByDistributor($distributor);
@@ -91,7 +91,7 @@ class SupplyController extends Controller
                 'distributor' => $distributor,
             ]);
         } else { //Иначе создаем пустой заказ
-            $supply = $this->service->create_empty($distributor);
+            $supply = $this->service->createEmpty($distributor);
             return redirect()->route('admin.accounting.supply.show', $supply);
         }
     }
@@ -134,14 +134,22 @@ class SupplyController extends Controller
 
     public function arrival(SupplyDocument $supply): RedirectResponse
     {
-        $arrival = $this->service->arrival($supply);
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $arrival = $this->service->arrival($supply);
+            return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Документ создан');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function refund(SupplyDocument $supply): RedirectResponse
     {
-        $arrival = $this->service->refund($supply);
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $refund = $this->service->refund($supply);
+            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ сохранен');
+        }  catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     #[Deprecated]
@@ -153,8 +161,12 @@ class SupplyController extends Controller
 
     public function completed(SupplyDocument $supply): RedirectResponse
     {
-        $this->service->completed($supply);
-        return redirect()->back()->with('success', 'Документ проведен');
+        try {
+            $this->service->completed($supply);
+            return redirect()->back()->with('success', 'Документ проведен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function add_stack(Request $request, OrderItem $item): RedirectResponse
@@ -163,7 +175,7 @@ class SupplyController extends Controller
             'storage' => 'required|numeric|min:0|not_in:0',
         ]);
         try {
-            $stack = $this->service->add_stack($item, $request->integer('storage'));
+            $stack = $this->service->addStack($item, $request->integer('storage'));
             if (!empty($stack)) flash('Товар ' . $stack->product->name . ' помещен в стек заказа', 'info');
             return redirect()->back()->with('success', 'Товар ' . $stack->product->name . ' помещен в стек заказа');
         } catch (\DomainException $e) {
@@ -174,14 +186,14 @@ class SupplyController extends Controller
 
     public function del_stack(SupplyStack $stack): RedirectResponse
     {
-        $this->service->del_stack($stack);
+        $this->service->delStack($stack);
         return redirect()->back();
     }
 
     public function add_product(SupplyDocument $supply, Request $request): RedirectResponse
     {
         try {
-            $this->service->add_product($supply, $request->integer('product_id'), $request->integer('quantity'));
+            $this->service->addProduct($supply, $request->integer('product_id'), $request->integer('quantity'));
             return redirect()->back()->with('success', 'Товары добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -191,7 +203,7 @@ class SupplyController extends Controller
     public function add_products(SupplyDocument $supply, Request $request): RedirectResponse
     {
         try {
-            $this->service->add_products($supply, $request->input('products'));
+            $this->service->addProducts($supply, $request->input('products'));
             return redirect()->back()->with('success', 'Товары добавлены');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -201,7 +213,7 @@ class SupplyController extends Controller
     public function del_product(SupplyProduct $product): RedirectResponse
     {
         try {
-            $this->service->del_product($product);
+            $this->service->delProduct($product);
             return redirect()->back()->with('success', 'Удалено');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -209,20 +221,20 @@ class SupplyController extends Controller
     }
 
 
-    public function set_product(SupplyProduct $product, Request $request)
+    public function set_product(SupplyProduct $product, Request $request): RedirectResponse
     {
         try {
-            $this->service->set_product($product, $request->integer('quantity'), $request->float('cost'));
+            $this->service->setProduct($product, $request->integer('quantity'), $request->float('cost'));
             return redirect()->back()->with('success', 'Сохранено');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    public function set_info(SupplyDocument $supply, Request $request)
+    public function set_info(SupplyDocument $supply, Request $request): RedirectResponse
     {
         try {
-            $this->service->set_info($supply, $request);
+            $this->service->setInfo($supply, $request);
             return redirect()->back()->with('success', 'Сохранено');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

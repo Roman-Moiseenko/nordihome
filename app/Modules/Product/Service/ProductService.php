@@ -6,6 +6,7 @@ namespace App\Modules\Product\Service;
 use App\Events\ParserPriceHasChange;
 use App\Events\ProductHasBlocked;
 use App\Events\ProductHasFastCreate;
+use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Photo;
@@ -293,16 +294,35 @@ class ProductService
         //$product->setApproved();
     }
 
-    public function destroy(Product $product)
+    //УДАЛЕНИЕ ВОССТАНОВЛЕНИ
+    public function destroy(Product $product): void
     {
         if ($product->orderItems()->count()) {
             $product->setDraft(); throw new \DomainException('Товар в заказах. Удалить нельзя, перемещен в черновик');
 
         } else {
+            foreach ($product->storageItems as $storageItem) {
+                //Удаляем ячейки из Хранилищ
+                $storageItem->delete();
+            }
             $product->delete();
             flash('Товар удален. Возможно восстановление', 'success');
         }
         //TODO При удалении, удалять все связанные файлы Фото и Видео
+    }
+
+    public function full_delete(int $id): void
+    {
+        $product = Product::onlyTrashed()->where('id', $id)->first();
+        $product->forceDelete();
+        StorageItem::onlyTrashed()->where('product_id', $id)->forceDelete();
+    }
+
+    public function restore(int $id): void
+    {
+        $product = Product::onlyTrashed()->where('id', $id)->first();
+        $product->restore();
+        StorageItem::onlyTrashed()->where('product_id', $id)->restore();
     }
 
     public function notSale(Product $product)
@@ -327,8 +347,7 @@ class ProductService
 
     }
 
-
-    private function tags(Request $request, Product &$product)
+    private function tags(Request $request, Product &$product): void
     {
         if (empty($request['tags'])) return;
         foreach ($request->get('tags') as $tag_id) {
@@ -341,7 +360,7 @@ class ProductService
         }
     }
 
-    private function series(Request $request, Product &$product)
+    private function series(Request $request, Product &$product): void
     {
         if (empty($_series = $request['series_id'])) return;
         if (is_array($_series)) $_series = $_series[0]; //Если массив, берем первый элемент
@@ -354,14 +373,14 @@ class ProductService
     }
 
     ///Работа с Фото Продукта
-    public function addPhoto(Request $request, Product $product)
+    public function addPhoto(Request $request, Product $product): void
     {
         if (empty($file = $request->file('file'))) throw new \DomainException('Нет файла');
         $sort = count($product->photos);
         $product->photo()->save(Photo::upload($file, '', $sort));
     }
 
-    public function delPhoto(Request $request, Product $product)
+    public function delPhoto(Request $request, Product $product): void
     {
         $photo = Photo::find($request['photo_id']);
         $photo->delete();
@@ -423,7 +442,7 @@ class ProductService
     }
 
 
-    public function altPhoto(Request $request, Product $product)
+    public function altPhoto(Request $request, Product $product): void
     {
         $id = $request->integer('photo_id');
         $alt = $request->string('alt')->trim()->value();
@@ -450,7 +469,7 @@ class ProductService
         $product->setDraft();
     }
 
-    public function action(string $action, array $ids)
+    public function action(string $action, array $ids): void
     {
         foreach ($ids as $product_id) {
             /** @var Product $product */
@@ -463,13 +482,13 @@ class ProductService
     }
 
     //Приоритетные товары
-    public function setPriorityProduct(int $product_id)
+    public function setPriorityProduct(int $product_id): void
     {
         $product = Product::find($product_id);
         $product->setPriority(true);
     }
 
-    public function setPriorityProducts(array $codes)
+    public function setPriorityProducts(array $codes): void
     {
         foreach ($codes as $code) {
             $product = Product::where('code', trim($code))->first();
@@ -513,7 +532,7 @@ class ProductService
         if ($event) event(new ParserPriceHasChange($product->parser));
     }
 
-    public function updateCostAllProductsIkea()
+    public function updateCostAllProductsIkea(): void
     {
         $products = Product::where('published', true)->where('not_sale', false)->pluck('id')->toArray();
         foreach ($products as $product_id) {

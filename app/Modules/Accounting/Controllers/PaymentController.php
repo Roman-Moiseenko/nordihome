@@ -61,17 +61,29 @@ class PaymentController extends Controller
         ]);
     }
 
+    public function destroy(PaymentDocument $payment): RedirectResponse
+    {
+        try {
+            $this->service->delete($payment);
+            return redirect()->back()->with('success', 'Платежный документ удален');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
     public function completed(PaymentDocument $payment): RedirectResponse
     {
         $this->service->completed($payment);
         return redirect()->back()->with('success', 'Документ проведен');
     }
+
     public function work(PaymentDocument $payment): RedirectResponse
     {
         $this->service->work($payment);
         return redirect()->back()->with('success', 'Документ возвращен в работу');
     }
-    public function set_info(PaymentDocument $payment, Request $request)
+
+    public function set_info(PaymentDocument $payment, Request $request): RedirectResponse
     {
         try {
             $this->service->set_info($payment, $request);

@@ -74,6 +74,11 @@ class ArrivalProduct extends Model implements MovementItemInterface
         return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
     }
 
+    public function supplyProduct(): BelongsTo
+    {
+        return $this->belongsTo(SupplyProduct::class, 'supply_product_id', 'id');
+    }
+
     public function getCostRu(): int
     {
         return (int)(ceil($this->cost_currency * $this->document->exchange_fix));

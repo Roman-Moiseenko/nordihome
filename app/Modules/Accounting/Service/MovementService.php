@@ -34,7 +34,7 @@ class MovementService
         $this->reserveService = $reserveService;
     }
 
-    public function create(int $storage_out, int $storage_in): MovementDocument
+    public function create(int $storage_out, int $storage_in, int $arrival_id = null): MovementDocument
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
@@ -42,11 +42,12 @@ class MovementService
         return MovementDocument::register(
             $storage_out,
             $storage_in,
-            $manager->id
+            $manager->id,
+            $arrival_id
         );
     }
 
-    public function activate(MovementDocument $document)
+    public function activate(MovementDocument $document): void
     {
         DB::transaction(function () use ($document) {
             $storageOut = $document->storageOut;

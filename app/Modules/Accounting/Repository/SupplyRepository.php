@@ -49,7 +49,7 @@ class SupplyRepository
             });
     }
 
-    public function getStacks(Request $request, &$filters)
+    public function getStacks(Request $request, &$filters): Arrayable
     {
         $query = SupplyStack::where('supply_id', null);
         $filters = [];
@@ -85,21 +85,12 @@ class SupplyRepository
     public function SupplyToArray(SupplyDocument $document): array
     {
         return  array_merge($document->toArray(),[
-/*            'id' => $document->id,
-            'created_at' => $document->created_at,
-            'number' => $document->number,
-            'completed' => $document->completed,
-            'distributor_id' => $document->distributor_id,
-            'comment' => $document->comment,
-            'exchange_fix' => $document->exchange_fix,
-            'incoming_number' => $document->incoming_number,
-            'incoming_at' => $document->incoming_at,
-*/
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'currency' => $document->distributor->currency->sign,
             'distributor' => $document->distributor->name,
+            'distributor_org' => $document->distributor->organization->short_name,
             'date' => $document->htmlDate(),
         ]);
     }
@@ -107,7 +98,7 @@ class SupplyRepository
     public function SupplyWithToArray(SupplyDocument $document): array
     {
         $withData = [
-            'products' => $document->products()->with('product')->get()->toArray(),
+            'products' => $document->products()->with('product')->paginate(20)->toArray(),
         ];
 
         return array_merge($this->SupplyToArray($document), $withData);

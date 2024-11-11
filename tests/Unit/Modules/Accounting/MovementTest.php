@@ -48,11 +48,11 @@ class MovementTest extends TestCase
         $arrival_01 = $this->arrivalService->create($this->distributor->id);
         $arrival_02 = $this->arrivalService->create($this->distributor->id);
 
-        $arrival_01_product_01 = $this->arrivalService->add($arrival_01, $product_01->id, 10);
-        $arrival_01_product_02 = $this->arrivalService->add($arrival_01, $product_02->id, 5);
+        $arrival_01_product_01 = $this->arrivalService->addProduct($arrival_01, $product_01->id, 10);
+        $arrival_01_product_02 = $this->arrivalService->addProduct($arrival_01, $product_02->id, 5);
 
-        $arrival_02_product_01 = $this->arrivalService->add($arrival_02, $product_02->id,  5);
-        $arrival_02_product_02 = $this->arrivalService->add($arrival_02, $product_03->id,  10);
+        $arrival_02_product_01 = $this->arrivalService->addProduct($arrival_02, $product_02->id,  5);
+        $arrival_02_product_02 = $this->arrivalService->addProduct($arrival_02, $product_03->id,  10);
 
 
         $this->arrivalService->completed($arrival_01);

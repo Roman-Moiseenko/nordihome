@@ -155,6 +155,8 @@ class ClearCommand extends Command
             null
         );
 
+        $arrival->operation = ArrivalDocument::OPERATION_REMAINS;
+        $arrival->save();
         $products = Product::where('published', true)->get();
         foreach ($products as $product) {
             //Добавляем в документ

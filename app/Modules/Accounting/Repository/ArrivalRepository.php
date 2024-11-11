@@ -55,15 +55,31 @@ class ArrivalRepository
 
     public function ArrivalToArray(ArrivalDocument $document): array
     {
-        //$infoData = $document->getInfoData();
         return array_merge($document->toArray(), [
             'currency' => $document->currency->sign,
             'date' => $document->htmlDate(),
-            'number' => $document->htmlNum(),
             'distributor' => $document->distributor->name,
-            'quantity' => $document->getQuantity(), //$infoData['quantity'],
-            'amount' => $document->getAmount(), //$infoData['cost_currency'] . ' ' . $infoData['currency_sign'],
+            'distributor_org' => $document->distributor->organization->short_name,
+            'quantity' => $document->getQuantity(),
+            'amount' => $document->getAmount(),
+            'operation_text' => $document->operationText(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
+            'supply' => $document->isSupply() ? 'Заказ № ' . $document->supply->number . ' от ' . $document->supply->htmlDate() : null,
         ]);
+    }
+
+    public function ArrivalWithToArray(ArrivalDocument $arrival): array
+    {
+        $withData = [
+            'products' => $arrival->arrivalProducts()->with('product')->paginate(20)->toArray(),
+        ];
+
+        return array_merge($this->ArrivalToArray($arrival), $withData);
+    }
+
+    public function getOperations()
+    {
+
+        return array_select(ArrivalDocument::OPERATIONS);
     }
 }

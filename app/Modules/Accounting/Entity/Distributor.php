@@ -130,7 +130,9 @@ class Distributor extends Model
 
     public function updateProduct(Product $product, float $cost): void
     {
-        $this->products()->updateExistingPivot($product->id, ['cost' => $cost]);
+        $d_product = $this->getProduct($product->id);
+        if ($d_product->pivot->cost !== $cost) //Если закуп.изменилась, то текущая => предыдуща, новая => текущая
+            $this->products()->updateExistingPivot($product->id, ['cost' => $cost, 'pre_cost' => $d_product->pivot->cost]);
     }
 
     public function organization(): BelongsTo

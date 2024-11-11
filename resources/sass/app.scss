@@ -59,6 +59,9 @@
 .warning-row {
     --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }
+.error-row {
+    --el-table-tr-bg-color: var(--el-color-error-light-9);
+}
 a[type="primary"] {
     @apply text-sky-600;
     @apply hover:text-sky-400;
@@ -78,4 +81,7 @@ a[type="info"] {
     @apply text-slate-600;
     @apply hover:text-slate-400;
     @apply font-medium;
+}
+.el-form-item {
+    margin-bottom: 10px !important;
 }

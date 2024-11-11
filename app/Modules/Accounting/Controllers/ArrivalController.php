@@ -21,6 +21,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
+use JetBrains\PhpStorm\Deprecated;
 
 class ArrivalController extends Controller
 {
@@ -30,10 +32,10 @@ class ArrivalController extends Controller
     private StaffRepository $staffs;
 
     public function __construct(
-        ArrivalService $service,
+        ArrivalService    $service,
         ProductRepository $products,
         ArrivalRepository $repository,
-        StaffRepository $staffs,
+        StaffRepository   $staffs,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
@@ -43,7 +45,7 @@ class ArrivalController extends Controller
         $this->staffs = $staffs;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $distributors = Distributor::orderBy('name')->get();
         $staffs = $this->staffs->getStaffsChiefs();
@@ -58,38 +60,89 @@ class ArrivalController extends Controller
         ]);
     }
 
-
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'distributor' => 'required',
         ]);
-
-        $arrival = $this->service->create((int)$request['distributor']);
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $arrival = $this->service->create($request->integer('distributor'));
+            return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Приходная накладная создана');
+        } catch (\DomainException $e) {
+            return redirect()->with('error', $e->getMessage());
+        }
     }
 
-    public function show(ArrivalDocument $arrival)
+    public function show(ArrivalDocument $arrival): Response
     {
-        $info = $arrival->getInfoData();
-        $products = $arrival->arrivalProducts()->paginate(20);
-        return view('admin.accounting.arrival.show', compact('arrival', 'info', 'products'));
+        $storages = Storage::orderBy('name')->getModels();
+        return Inertia::render('Accounting/Arrival/Show', [
+            'arrival' => $this->repository->ArrivalWithToArray($arrival),
+            'storages' => $storages,
+            'operations' => $this->repository->getOperations(),
+        ]);
+    }
+
+    //На основании:
+
+    public function expenses(ArrivalDocument $arrival): RedirectResponse
+    {
+        try {
+            $expenses = $this->service->expenses($arrival);
+            return redirect()->route('admin.accounting.expenses.show', $expenses)->with('success', 'Документ сохранен');
+        }  catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function movement(ArrivalDocument $arrival): RedirectResponse
+    {
+        try {
+            $movement = $this->service->movement($arrival);
+            return redirect()->route('admin.accounting.movement.show', $movement)->with('success', 'Документ сохранен');
+        }  catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function invoice(ArrivalDocument $arrival): RedirectResponse
+    {
+        try {
+            $invoice = $this->service->expenses($arrival);
+            return redirect()->route('admin.accounting.invoice.show', $invoice)->with('success', 'Документ сохранен');
+        }  catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function refund(ArrivalDocument $arrival): RedirectResponse
+    {
+        try {
+            $refund = $this->service->expenses($arrival);
+            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ сохранен');
+        }  catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function destroy(ArrivalDocument $arrival): RedirectResponse
     {
-        $this->service->destroy($arrival);
-        return redirect()->back();
+        try {
+            $this->service->destroy($arrival);
+            return redirect()->back()->with('success', 'Удалено');
+        } catch (\DomainException $e) {
+            return redirect()->with('error', $e->getMessage());
+        }
     }
 
-    public function add(Request $request, ArrivalDocument $arrival): RedirectResponse
+    public function add_product(Request $request, ArrivalDocument $arrival): RedirectResponse
     {
-        $this->service->add(
-            $arrival,
-            $request->integer('product_id'),
-            $request->integer('quantity')
-        );
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $this->service->addProduct($arrival, $request->integer('product_id'), $request->integer('quantity'));
+            return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Товар добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function add_products(Request $request, ArrivalDocument $arrival): RedirectResponse
@@ -97,36 +150,48 @@ class ArrivalController extends Controller
         $request->validate([
             'products' => 'required',
         ]);
-        $this->service->add_products($arrival, $request['products']);
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
-    }
-
-    public function remove_item(ArrivalProduct $item): RedirectResponse
-    {
-        $arrival = $item->document;
-        $item->delete();
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $this->service->addProducts($arrival, $request->input('products'));
+            return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Товары добавлены');
+        } catch (\DomainException $e) {
+            return redirect()->with('error', $e->getMessage());
+        }
     }
 
     public function completed(ArrivalDocument $arrival): RedirectResponse
     {
-        $this->service->completed($arrival);
-        return redirect()->back();//route('admin.accounting.arrival.index');
+        try {
+            $this->service->completed($arrival);
+            return redirect()->back()->with('success', 'Документ проведен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
-    //AJAX
-    public function set(Request $request, ArrivalProduct $item): JsonResponse
+    public function set_info(ArrivalDocument $arrival, Request $request): RedirectResponse
     {
-        $cost_ru = $this->service->set($request, $item);
-        return response()->json([
-            'cost_ru' => $cost_ru,
-            'info' => $item->document->getInfoData(),
-        ]);
+        try {
+            $this->service->setInfo($arrival, $request);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function set_currency(Request $request, ArrivalDocument $arrival): RedirectResponse
+    public function set_product(ArrivalProduct $product, Request $request): RedirectResponse
     {
-        $this->service->set_currency($request, $arrival);
-        return redirect()->route('admin.accounting.arrival.show', $arrival);
+        try {
+            $this->service->setProduct($product, $request->integer('quantity'), $request->float('cost'));
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function del_product(ArrivalProduct $product): RedirectResponse
+    {
+        $product->delete();
+        return redirect()->back()->with('success', 'Удалено');
     }
 }

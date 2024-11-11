@@ -44,7 +44,7 @@ class StorageCommand extends Command
             $this->info('Создали поступление');
 
             foreach ($products as $product) {
-                $this->arrivalService->add($arrival, $product->id,  $count);
+                $this->arrivalService->addProduct($arrival, $product->id,  $count);
                 $this->info('Товар ' . $product->name . ' Добавлен');
             }
             $this->arrivalService->completed($arrival);

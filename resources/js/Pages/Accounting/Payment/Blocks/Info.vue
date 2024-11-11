@@ -11,7 +11,7 @@
                 />
             </el-form-item>
             <el-form-item label="Плательщик">
-                <el-select v-model="info.trader_id" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit" style="width: 260px">
+                <el-select v-model="info.trader_id" @change="setInfo" :disabled="iSavingInfo || notEdit" style="width: 260px">
                     <el-option v-for="item in traders" :key="item.id" :value="item.id" :label="item.shot_name" :readonly="notEdit">{{ item.full_name }}</el-option>
                 </el-select>
                 <span class="ml-2 mr-1">Счет</span>
