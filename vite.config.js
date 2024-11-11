@@ -179,7 +179,7 @@ export default defineConfig({
         alias: {
             "tailwind-config.js": path.resolve(__dirname, "./tailwind.config.js"),
             '@': '/resources/js',
-            '@Page': '/resources/js/Pages',
+            '@Page': '/resources/js/VuePages',
             '@Comp': '/resources/js/VueComponents',
             '@Res': '/resources/js/Resources',
             'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
