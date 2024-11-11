@@ -72,7 +72,11 @@
                                 <Active :active="scope.row.completed"/>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="quantity" label="Кол-во" width="100"/>
+                        <el-table-column prop="amount" label="Сумма" width="120">
+                            <template #default="scope">
+                                {{ func.price(scope.row.amount, scope.row.currency) }}
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
                         <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
                         <

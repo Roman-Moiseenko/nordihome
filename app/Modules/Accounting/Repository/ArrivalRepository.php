@@ -57,11 +57,12 @@ class ArrivalRepository
     {
         //$infoData = $document->getInfoData();
         return array_merge($document->toArray(), [
+            'currency' => $document->currency->sign,
             'date' => $document->htmlDate(),
             'number' => $document->htmlNum(),
             'distributor' => $document->distributor->name,
             'quantity' => 0, //$infoData['quantity'],
-            'amount' => 0, //$infoData['cost_currency'] . ' ' . $infoData['currency_sign'],
+            'amount' => $document->getAmount(), //$infoData['cost_currency'] . ' ' . $infoData['currency_sign'],
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
         ]);
     }
