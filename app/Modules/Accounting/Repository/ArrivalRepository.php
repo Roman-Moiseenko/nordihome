@@ -61,7 +61,7 @@ class ArrivalRepository
             'date' => $document->htmlDate(),
             'number' => $document->htmlNum(),
             'distributor' => $document->distributor->name,
-            'quantity' => 0, //$infoData['quantity'],
+            'quantity' => $document->getQuantity(), //$infoData['quantity'],
             'amount' => $document->getAmount(), //$infoData['cost_currency'] . ' ' . $infoData['currency_sign'],
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
         ]);

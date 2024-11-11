@@ -110,19 +110,26 @@ class ArrivalDocument extends Model implements AccountingDocument
     }
 
     //*** GET-...
-    public function getAmount(): float|int
+    public function getAmount(): float
     {
-        $mode = true;
+       /* $mode = false;
         if ($mode) {
             $amount = 0;
             foreach ($this->arrivalProducts as $item) {
                 $amount += $item->quantity * $item->cost_currency;
             }
             return $amount;
-        }
+        } */
         $amount = ArrivalProduct::selectRaw('SUM(quantity * cost_currency) AS total')->where('arrival_id', $this->id)->first();
-        return $amount->total;
+        return $amount->total ?? 0.0;
 
+    }
+
+    public function getQuantity(): int
+    {
+        $quantity = ArrivalProduct::selectRaw('SUM(quantity * 1) AS total')->where('arrival_id', $this->id)->first();
+        //dd($quantity);
+        return (int)($quantity->total ?? 0);
     }
 
     #[ArrayShape([
