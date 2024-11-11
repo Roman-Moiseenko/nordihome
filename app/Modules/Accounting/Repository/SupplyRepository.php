@@ -96,6 +96,7 @@ class SupplyRepository
             'incoming_at' => $document->incoming_at,
 */
             'quantity' => $document->getQuantity(),
+            'amount' => $document->getAmount(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'currency' => $document->distributor->currency->sign,
             'distributor' => $document->distributor->name,

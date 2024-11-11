@@ -55,13 +55,13 @@ class ArrivalRepository
 
     public function ArrivalToArray(ArrivalDocument $document): array
     {
-        $infoData = $document->getInfoData();
+        //$infoData = $document->getInfoData();
         return array_merge($document->toArray(), [
             'date' => $document->htmlDate(),
             'number' => $document->htmlNum(),
             'distributor' => $document->distributor->name,
-            'quantity' => $infoData['quantity'],
-            'amount' => $infoData['cost_currency'] . ' ' . $infoData['currency_sign'],
+            'quantity' => 0, //$infoData['quantity'],
+            'amount' => 0, //$infoData['cost_currency'] . ' ' . $infoData['currency_sign'],
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
         ]);
     }
