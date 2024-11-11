@@ -76,13 +76,13 @@ export default defineConfig({
                 "resources/js/vendor/xlsx/index.js",
 
                 // Pages
-                "resources/js/pages/chat/index.js",
+           /*     "resources/js/pages/chat/index.js",
                 "resources/js/pages/login/index.js",
                 "resources/js/pages/modal/index.js",
                 "resources/js/pages/notification/index.js",
                 "resources/js/pages/slideover/index.js",
                 "resources/js/pages/tabulator/index.js",
-                "resources/js/pages/validation/index.js",
+                "resources/js/pages/validation/index.js",*/
 
                 // Layouts
                 "resources/js/layouts/side-menu/index.js",
