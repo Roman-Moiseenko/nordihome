@@ -19,8 +19,9 @@ Route::group(
 
                 Route::post('/add-products/{arrival}', 'ArrivalController@add_products')->name('add-products');
                 Route::post('/add-product/{arrival}', 'ArrivalController@add_product')->name('add-product');
-                Route::post('/completed/{arrival}', 'ArrivalController@completed')->name('completed');
                 Route::post('/set-info/{arrival}', 'ArrivalController@set_info')->name('set-info');
+                Route::post('/completed/{arrival}', 'ArrivalController@completed')->name('completed');
+                Route::post('/work/{arrival}', 'ArrivalController@work')->name('work');
                 //На основании:
                 Route::post('/expenses/{arrival}', 'ArrivalController@expenses')->name('expenses'); //Доп.расходы
                 Route::post('/movement/{arrival}', 'ArrivalController@movement')->name('movement'); //Перемещение
@@ -76,9 +77,10 @@ Route::group(
                 Route::post('/add-products/{supply}', 'SupplyController@add_products')->name('add-products');
                 Route::post('/set-product/{product}', 'SupplyController@set_product')->name('set-product');
                 Route::delete('/del-product/{product}', 'SupplyController@del_product')->name('del-product');
-               // Route::post('/sent/{supply}', 'SupplyController@sent')->name('sent');
+
                 Route::post('/copy/{supply}', 'SupplyController@copy')->name('copy');
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
+                Route::post('/work/{supply}', 'SupplyController@work')->name('work');
                 Route::post('/set-info/{supply}', 'SupplyController@set_info')->name('set-info');
 
 

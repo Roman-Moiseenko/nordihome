@@ -23,6 +23,7 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
+        <el-button type="danger" plain class="ml-auto" @click="onWork">Отмена</el-button>
     </template>
     <template v-else>
         <SearchAddProduct
@@ -49,6 +50,12 @@ function onCompleted() {
         method: "post",
     })
 }
+function onWork() {
+    router.visit(route('admin.accounting.arrival.work', {arrival: props.arrival.id}), {
+        method: "post",
+    })
+}
+
 function onExpenses() {
     router.visit(route('admin.accounting.arrival.expenses', {arrival: props.arrival.id}), {
         method: "post",

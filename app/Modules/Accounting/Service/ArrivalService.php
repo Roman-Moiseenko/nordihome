@@ -234,6 +234,7 @@ class ArrivalService
     public function work(ArrivalDocument $arrival): void
     {
         DB::transaction(function () use ($arrival) {
+            $arrival->work();
             $this->storages->departure($arrival->storage, $arrival->arrivalProducts()->getModels());
             foreach ($arrival->arrivalProducts()->getModels() as $item) {//Проверка на отрицательное кол-во
                 if ($arrival->storage->getQuantity($item->product) < 0)
@@ -256,7 +257,7 @@ class ArrivalService
                 }
     */
             }
-        });
+       });
     }
 
     public function setInfo(ArrivalDocument $arrival, Request $request): void

@@ -28,17 +28,17 @@ class SupplyService
 
     private ArrivalService $arrivalService;
     private StackRepository $stack;
-    private PaymentDocumentService $paymentOrderService;
+    private PaymentDocumentService $paymentService;
 
     public function __construct(
         ArrivalService         $arrivalService,
         StackRepository        $stack,
-        PaymentDocumentService $paymentOrderService,
+        PaymentDocumentService $paymentService,
     )
     {
         $this->arrivalService = $arrivalService;
         $this->stack = $stack;
-        $this->paymentOrderService = $paymentOrderService;
+        $this->paymentService = $paymentService;
     }
 
     //Создание пустого заказа
@@ -98,16 +98,18 @@ class SupplyService
         event(new SupplyHasCompleted($supply));
     }
 
-    public function canceled(SupplyDocument $supply): void
+    public function work(SupplyDocument $supply): void
     {
-        $supply->completed = false;
-        $supply->save();
+        $supply->work();
+
         foreach ($supply->payments as $payment) {
-            //????
-            $payment->work();
+            if ($payment->isCompleted()) $this->paymentService->work($payment);
+        }
+        foreach ($supply->arrivals as $arrival) {
+            if ($arrival->isCompleted()) $this->arrivalService->work($arrival);
         }
         //TODO На будущее
-        // Отмена всех связанных документов Поступление, Накладные, Установки Цен и др.
+        // Отмена всех связанных документов Возвраты и др.
         // Делать только после тестирования отмены связанных документов
     }
 
@@ -153,11 +155,11 @@ class SupplyService
         //Долг по текущему заказу
         $debit_supply = $supply->getAmount() - $supply->getPayments();
         if ($debit_supply <= 0) {
-            return $this->paymentOrderService->create($supply->distributor_id, $debit_distributor);
+            return $this->paymentService->create($supply->distributor_id, $debit_distributor);
         }
 
         $debit_supply = min($debit_supply, $debit_distributor); //Если вдруг долг общий меньше долга по заказу
-        return $this->paymentOrderService->create($supply->distributor_id, $debit_supply, $supply->id);
+        return $this->paymentService->create($supply->distributor_id, $debit_supply, $supply->id);
     }
 
     public function refund(SupplyDocument $supply)
@@ -297,6 +299,5 @@ class SupplyService
         $supply->save();
         event(new SupplyHasSent($supply));
     }
-
 
 }

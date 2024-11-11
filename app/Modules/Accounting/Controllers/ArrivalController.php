@@ -39,6 +39,7 @@ class ArrivalController extends Controller
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work']);
         $this->service = $service;
         $this->products = $products;
         $this->repository = $repository;
@@ -83,8 +84,7 @@ class ArrivalController extends Controller
         ]);
     }
 
-    //На основании:
-
+    //На основании: ====>
     public function expenses(ArrivalDocument $arrival): RedirectResponse
     {
         try {
@@ -124,6 +124,7 @@ class ArrivalController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+    //<====
 
     public function destroy(ArrivalDocument $arrival): RedirectResponse
     {
@@ -166,7 +167,15 @@ class ArrivalController extends Controller
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
-
+    }
+    public function work(ArrivalDocument $arrival): RedirectResponse
+    {
+        try {
+            $this->service->work($arrival);
+            return redirect()->back()->with('success', 'Документ в работе');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function set_info(ArrivalDocument $arrival, Request $request): RedirectResponse

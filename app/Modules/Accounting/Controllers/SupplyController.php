@@ -42,6 +42,7 @@ class SupplyController extends Controller
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work']);
         $this->service = $service;
         $this->products = $products;
         $this->stacks = $stacks;
@@ -164,6 +165,16 @@ class SupplyController extends Controller
         try {
             $this->service->completed($supply);
             return redirect()->back()->with('success', 'Документ проведен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function work(SupplyDocument $supply): RedirectResponse
+    {
+        try {
+            $this->service->work($supply);
+            return redirect()->back()->with('success', 'Документ в работе. Все связанные документы возвращены в работу!');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
