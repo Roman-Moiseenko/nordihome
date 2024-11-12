@@ -4,11 +4,18 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\Distributor;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
 class ArrivalRepository extends AccountingRepository
 {
+    private DistributorRepository $distributors;
+
+    public function __construct(DistributorRepository $distributors)
+    {
+        $this->distributors = $distributors;
+    }
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
@@ -26,8 +33,8 @@ class ArrivalRepository extends AccountingRepository
         return array_merge($document->toArray(), [
             'currency' => $document->currency->sign,
             'date' => $document->htmlDate(),
-            'distributor' => $document->distributor->name,
-            'distributor_org' => $document->distributor->organization->short_name,
+            'distributor_name' => $document->distributor->name,
+            //'distributor_org' => $document->distributor->organization->short_name,
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),
             'operation_text' => $document->operationText(),
@@ -40,6 +47,7 @@ class ArrivalRepository extends AccountingRepository
     {
         $withData = [
             'products' => $arrival->products()->with('product')->paginate(20)->toArray(),
+            'distributor' => $this->distributors->DistributorForAccounting($arrival->distributor),
         ];
 
         return array_merge($this->ArrivalToArray($arrival), $withData);

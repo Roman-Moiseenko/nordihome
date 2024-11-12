@@ -10,6 +10,13 @@ use Illuminate\Http\Request;
 
 class SupplyRepository extends AccountingRepository
 {
+    private DistributorRepository $distributors;
+
+    public function __construct(DistributorRepository $distributors)
+    {
+        $this->distributors = $distributors;
+    }
+
     public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = SupplyDocument::orderByDesc('created_at');
@@ -63,8 +70,7 @@ class SupplyRepository extends AccountingRepository
             'amount' => $document->getAmount(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'currency' => $document->distributor->currency->sign,
-            'distributor' => $document->distributor->name,
-            'distributor_org' => $document->distributor->organization->short_name,
+            'distributor_name' => $document->distributor->name,
             'date' => $document->htmlDate(),
         ]);
     }
@@ -73,6 +79,7 @@ class SupplyRepository extends AccountingRepository
     {
         $withData = [
             'products' => $document->products()->with('product')->paginate(20)->toArray(),
+            'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
         ];
 
         return array_merge($this->SupplyToArray($document), $withData);

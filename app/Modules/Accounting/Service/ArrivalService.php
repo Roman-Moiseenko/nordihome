@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
@@ -28,16 +29,19 @@ class ArrivalService
     private StorageService $storages;
     private OrderReserveService $reserveService;
     private MovementService $movementService;
+    private RefundService $refundService;
 
     public function __construct(
-        StorageService $storages,
+        StorageService      $storages,
         OrderReserveService $reserveService,
-        MovementService $movementService
+        MovementService     $movementService,
+        RefundService       $refundService,
     )
     {
         $this->storages = $storages;
         $this->reserveService = $reserveService;
         $this->movementService = $movementService;
+        $this->refundService = $refundService;
     }
 
     public function create(int $distributor_id, bool $is_manager = true): ArrivalDocument
@@ -85,7 +89,7 @@ class ArrivalService
     /**
      * Добавляем товар в поступление. Учет основания По заказу или Свободное добавление
      */
-    public function addProduct(ArrivalDocument $arrival, int $product_id, int $quantity):? ArrivalProduct
+    public function addProduct(ArrivalDocument $arrival, int $product_id, int $quantity): ?ArrivalProduct
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         $distributor_cost = 0;
@@ -96,7 +100,7 @@ class ArrivalService
             $supplyProduct = $arrival->supply->getProduct($product->id);
             if (is_null($supplyProduct)) throw new \DomainException('Товар ' . $product->name . ' отсутствует в связанном документе.');
             $quantity = min($quantity, $supplyProduct->getQuantityUnallocated());
-            if ($quantity <= 0)  throw new \DomainException('Недостаточное кол-во товара ' . $product->name . ' в связанном документе.');
+            if ($quantity <= 0) throw new \DomainException('Недостаточное кол-во товара ' . $product->name . ' в связанном документе.');
 
             $distributor_cost = $supplyProduct->cost_currency;
         }
@@ -143,8 +147,7 @@ class ArrivalService
             $unallocated = $arrivalProduct->getSupplyProduct()->getQuantityUnallocated();//Доступное кол-во
             $delta = min($quantity - $arrivalProduct->quantity, $unallocated);
             if ($delta == 0) throw new \DomainException('Недостаточное кол-во товара ' . $arrivalProduct->product->name . ' в связанном документе.');
-            $arrivalProduct->quantity += $delta;
-            $arrivalProduct->save();
+            $arrivalProduct->addQuantity($delta);
             return;
         };
         //Меняем данные
@@ -255,17 +258,13 @@ class ArrivalService
                 }
     */
             }
-       });
+        });
     }
 
     public function setInfo(ArrivalDocument $arrival, Request $request): void
     {
-        $arrival->number = $request->string('number')->value();
-        $arrival->created_at = $request->date('created_at');
-        $arrival->incoming_number = $request->string('incoming_number')->value();
-        $arrival->incoming_at = $request->date('incoming_at');
+        $arrival->baseSave($request->input('document'));
         $arrival->exchange_fix = $request->input('exchange_fix');
-        $arrival->comment = $request->string('comment')->value();
         $arrival->storage_id = $request->integer('storage_id');
         $arrival->operation = $request->input('operation') ?? ArrivalDocument::OPERATION_SUPPLY;
         $arrival->save();
@@ -289,10 +288,31 @@ class ArrivalService
         //TODO В разработке
         throw new \DomainException('В разработке');
     }
+
     public function refund(ArrivalDocument $arrival)
     {
-        //TODO В разработке
-        throw new \DomainException('В разработке');
+        $refund = $this->refundService->create($arrival->distributor_id);
+        $refund->arrival_id = $arrival->id;
+        $refund->storage_id = $arrival->storage_id;
+        $refund->save();
+        //Переносим весь не выданный товар в возврат
+        foreach ($arrival->products as $product) {
+            $quantity = $product->getQuantityUnallocated();
+            if ($quantity > 0) {
+                $item = RefundProduct::new(
+                    $product->product_id,
+                    $quantity,//Высчитываем свободное кол-во
+                    $product->cost_currency,
+                );
+                $refund->products()->save($item);
+            }
+        }
+        $refund->refresh();
+        if ($refund->products()->count() == 0) {
+            $refund->delete();
+            throw new \DomainException('Все позиции возвращены. Возврат не доступен');
+        }
+        return $refund;
     }
 
 

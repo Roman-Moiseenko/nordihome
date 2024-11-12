@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property float $cost_currency
  * @property int $refund_id
- * @property RefundDocument $refund
+ * @property RefundDocument $document
  */
 class RefundProduct extends AccountingProduct
 {
@@ -34,5 +34,21 @@ class RefundProduct extends AccountingProduct
     public function document(): BelongsTo
     {
         return $this->belongsTo(RefundDocument::class, 'refund_id', 'id');
+    }
+
+    /**
+     * @return SupplyProduct
+     */
+    public function getSupplyProduct(): AccountingProduct
+    {
+        return $this->document->supply->getProduct($this->product_id);
+    }
+
+    /**
+     * @return ArrivalProduct
+     */
+    public function getArrivalProduct(): AccountingProduct
+    {
+        return $this->document->arrival->getProduct($this->product_id);
     }
 }

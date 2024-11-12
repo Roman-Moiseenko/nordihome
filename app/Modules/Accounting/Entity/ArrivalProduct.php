@@ -64,4 +64,20 @@ class ArrivalProduct extends AccountingProduct implements MovementItemInterface
     {
         return $this->document->supply->getProduct($this->product_id);
     }
+
+
+    /**
+     * Кол-во текущего товара оставшегося после возвратов
+     */
+    public function getQuantityUnallocated(): int
+    {
+        $quantity = $this->quantity;
+
+        //Возврат
+        foreach ($this->document->refunds as $refund) {
+            $refundProduct = $refund->getProduct($this->product_id);
+            if (!is_null($refundProduct)) $quantity -= $refundProduct->getQuantity();
+        }
+        return $quantity;
+    }
 }

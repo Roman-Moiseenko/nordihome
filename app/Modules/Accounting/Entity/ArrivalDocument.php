@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
@@ -29,6 +30,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property Distributor $distributor
  * @property SupplyDocument $supply
  * @property PricingDocument $pricing
+ * @property RefundDocument[] $refunds
  */
 class ArrivalDocument extends AccountingDocument implements AccountingDocumentInterface
 {
@@ -122,6 +124,11 @@ class ArrivalDocument extends AccountingDocument implements AccountingDocumentIn
         return $this->hasMany(ArrivalProduct::class, 'arrival_id', 'id');
     }
 
+    public function refunds(): HasMany
+    {
+        return $this->hasMany(RefundDocument::class, 'arrival_id', 'id');
+    }
+
     public function distributor(): BelongsTo
     {
         return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
@@ -137,7 +144,7 @@ class ArrivalDocument extends AccountingDocument implements AccountingDocumentIn
         return $this->belongsTo(Storage::class, 'storage_id', 'id');
     }
 
-    public function pricing(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function pricing(): HasOne
     {
         return $this->hasOne(PricingDocument::class, 'arrival_id', 'id');
     }

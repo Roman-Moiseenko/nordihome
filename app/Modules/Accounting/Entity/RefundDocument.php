@@ -42,11 +42,10 @@ class RefundDocument extends AccountingDocument
 
     //*** GET-...
 
-    #[Deprecated]
     public function getFounded(): string
     {
-        if ($this->isSupply()) return 'Заказ поставщика ' . $this->supply->number . ' от ' . $this->supply->htmlDate();
-        if ($this->isArrival()) return 'Приходная накладная ' . $this->arrival->number . ' от ' . $this->arrival->htmlDate();
+        if ($this->isSupply()) return $this->supply->number . ' от ' . $this->supply->htmlDate();
+        if ($this->isArrival()) return $this->arrival->number . ' от ' . $this->arrival->htmlDate();
         return 'Нет основания';
     }
 

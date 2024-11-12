@@ -66,7 +66,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="number" label="№ Документа" width="160"/>
-                        <el-table-column prop="distributor" label="Поставщик" width="260" show-overflow-tooltip/>
+                        <el-table-column prop="distributor_name" label="Поставщик" width="260" show-overflow-tooltip/>
                         <el-table-column prop="completed" label="Проведен" width="120">
                             <template #default="scope">
                                 <Active :active="scope.row.completed"/>

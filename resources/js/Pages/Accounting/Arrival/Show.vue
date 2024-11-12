@@ -25,7 +25,7 @@
                                   :formatter="(value) => func.MaskFloat(value)"
                                   @change="setItem(scope.row)"
                                   :disabled="iSaving"
-                                  :readonly="!isEdit"
+                                  :readonly="!isEdit || arrival.supply_id"
                         >
                             <template #append>{{ arrival.currency }}</template>
                         </el-input>

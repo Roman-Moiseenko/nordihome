@@ -5,7 +5,7 @@
             <el-config-provider :locale="ru">
                 <h1 class="font-medium text-xl">Возвраты поставщикам</h1>
                 <div class="flex">
-                    <el-popover :visible="visible_create" placement="bottom-start" :width="246">
+                    <!--el-popover :visible="visible_create" placement="bottom-start" :width="246">
                         <template #reference>
                             <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
                                 Создать документ
@@ -18,7 +18,7 @@
                         <div class="mt-2">
                             <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
                         </div>
-                    </el-popover>
+                    </el-popover-->
 
                     <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                         <el-date-picker
@@ -64,7 +64,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="number" label="№ Документа" width="160"/>
-                        <el-table-column prop="distributor" label="Поставщик" width="260" show-overflow-tooltip/>
+                        <el-table-column prop="distributor_name" label="Поставщик" width="260" show-overflow-tooltip/>
                         <el-table-column prop="completed" label="Проведен" width="120">
                             <template #default="scope">
                                 <Active :active="scope.row.completed"/>

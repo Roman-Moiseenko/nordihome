@@ -1,24 +1,9 @@
 <template>
     <template v-if="payment.completed">
-
-        <el-button type="danger" @click="onWork">
-            Отменить проведение
-        </el-button>
-
-
-        <el-dropdown class="ml-3">
-            <el-button type="success" plain>
-                Связанные документы<el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </el-button>
-            <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item>Сделать дерево всех документов</el-dropdown-item>
-                </el-dropdown-menu>
-            </template>
-        </el-dropdown>
+        <el-button type="danger" @click="onWork">Отменить проведение</el-button>
     </template>
     <template v-else>
-        <el-button type="danger" class="ml-auto" @click="onCompleted">Провести</el-button>
+        <el-button type="danger" plain class="" @click="onCompleted">Провести документ</el-button>
     </template>
 </template>
 

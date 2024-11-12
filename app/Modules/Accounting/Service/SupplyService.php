@@ -111,9 +111,9 @@ class SupplyService
         foreach ($supply->arrivals as $arrival) {
             if ($arrival->isCompleted()) $this->arrivalService->work($arrival);
         }
-        //TODO На будущее
-        // Отмена всех связанных документов Возвраты и др.
-        // Делать только после тестирования отмены связанных документов
+        foreach ($supply->refunds as $refund) {
+            if ($refund->isCompleted()) $this->refundService->work($refund);
+        }
     }
 
     /**
@@ -187,9 +187,7 @@ class SupplyService
             throw new \DomainException('Все позиции получены. Возврат не доступен');
         }
         return $refund;
-        //throw new \DomainException('В разработке');
     }
-
 
     public function destroy(SupplyDocument $supply): void
     {
@@ -213,12 +211,8 @@ class SupplyService
      */
     public function setInfo(SupplyDocument $supply, \Illuminate\Http\Request $request): void
     {
-        $supply->number = $request->string('number')->value();
-        $supply->created_at = $request->date('created_at');
-        $supply->incoming_number = $request->string('incoming_number')->value();
-        $supply->incoming_at = $request->date('incoming_at');
+        $supply->baseSave($request->input('document'));
         $supply->exchange_fix = $request->input('exchange_fix');
-        $supply->comment = $request->string('comment')->value();
         $supply->save();
     }
     ///<===============

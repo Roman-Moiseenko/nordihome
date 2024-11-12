@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Http\Request;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -163,6 +164,15 @@ abstract class AccountingDocument extends Model
     }
 
     abstract public function products(): HasMany;
+
+    final public function baseSave(array $document): void
+    {
+        $this->number = $document['number'] ?? '';
+        $this->created_at = $document['created_at'];
+        $this->incoming_number = $document['incoming_number'] ?? '';
+        $this->incoming_at = $document['incoming_at'];
+        $this->comment = $document['comment'] ?? '';
+    }
 
     //Для создания таблиц
     final public static function columns(Blueprint $table): void

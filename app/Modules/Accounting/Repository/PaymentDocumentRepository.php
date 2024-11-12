@@ -2,12 +2,19 @@
 
 namespace App\Modules\Accounting\Repository;
 
+use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
 class PaymentDocumentRepository extends AccountingRepository
 {
+    private DistributorRepository $distributors;
+
+    public function __construct(DistributorRepository $distributors)
+    {
+        $this->distributors = $distributors;
+    }
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
@@ -24,7 +31,7 @@ class PaymentDocumentRepository extends AccountingRepository
     {
         return array_merge($payment->toArray(),
             [
-                'distributor' => $payment->distributor->name,
+                'distributor_name' => $payment->distributor->name,
                 'distributor_org' => $payment->distributor->organization->short_name,
                 'trader' => $payment->trader->organization->full_name,
                 'organization_id' => $payment->trader->organization_id,
@@ -39,7 +46,8 @@ class PaymentDocumentRepository extends AccountingRepository
     public function PaymentWithToArray(PaymentDocument $payment): array
     {
         return array_merge([
-
+            'distributor' => $payment->distributor()->get()
+                ->map(fn(Distributor $distributor) => $this->distributors->DistributorForAccounting($distributor)),
         ], $this->PaymentToArray($payment));
     }
 }

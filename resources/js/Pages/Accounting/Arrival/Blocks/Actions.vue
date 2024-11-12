@@ -23,7 +23,7 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-        <el-button type="danger" plain class="ml-auto" @click="onWork">Отмена</el-button>
+        <el-button type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
     </template>
     <template v-else>
         <SearchAddProduct
@@ -31,8 +31,12 @@
             :quantity="true"
         />
         <SearchAddProducts :route="route('admin.accounting.arrival.add-products', {arrival: arrival.id})" class="ml-3"/>
-        <el-button type="danger" class="ml-auto" @click="onCompleted">Провести</el-button>
+        <el-button type="danger" plain class="ml-5" @click="onCompleted">Провести документ</el-button>
     </template>
+    <span class="ml-auto">
+        Сумма <el-tag type="danger" size="large">{{ func.price(arrival.amount, arrival.currency) }}</el-tag>
+    </span>
+
 </template>
 
 <script setup>
@@ -40,6 +44,7 @@ import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
+import {func} from '@Res/func.js'
 
 const props = defineProps({
     arrival: Object,

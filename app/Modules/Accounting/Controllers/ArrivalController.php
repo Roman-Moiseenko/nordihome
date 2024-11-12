@@ -117,7 +117,7 @@ class ArrivalController extends Controller
     public function refund(ArrivalDocument $arrival): RedirectResponse
     {
         try {
-            $refund = $this->service->expenses($arrival);
+            $refund = $this->service->refund($arrival);
             return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ сохранен');
         }  catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

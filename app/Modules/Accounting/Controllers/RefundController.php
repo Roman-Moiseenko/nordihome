@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\RefundDocument;
+use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Repository\RefundRepository;
 use App\Modules\Accounting\Service\RefundService;
@@ -117,6 +118,22 @@ class RefundController extends Controller
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function set_product(RefundProduct $product, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->setProduct($product, $request->integer('quantity'));
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function del_product(RefundProduct $product): RedirectResponse
+    {
+        $product->delete();
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function destroy(RefundDocument $refund): RedirectResponse
