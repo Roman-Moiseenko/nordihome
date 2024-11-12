@@ -10,6 +10,7 @@ use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
@@ -47,11 +48,9 @@ class ArrivalService
         $distributor = Distributor::find($distributor_id);
         $storage = Storage::where('default', true)->first();
         return ArrivalDocument::register(
-            '',
             $distributor->id,
             $storage->id,
             $distributor->currency,
-            '',
             $is_manager ? $manager->id : null
         );
     }
@@ -93,6 +92,7 @@ class ArrivalService
         /** @var Product $product */
         $product = Product::find($product_id);
         if ($arrival->isSupply()) {
+            /** @var SupplyProduct $supplyProduct */
             $supplyProduct = $arrival->supply->getProduct($product->id);
             if (is_null($supplyProduct)) throw new \DomainException('Товар ' . $product->name . ' отсутствует в связанном документе.');
             $quantity = min($quantity, $supplyProduct->getQuantityUnallocated());
@@ -103,8 +103,7 @@ class ArrivalService
         //Если товар уже есть в Поступлении
         if ($arrival->isProduct($product_id)) {
             $arrivalProduct = $arrival->getProduct($product_id);
-            $arrivalProduct->quantity += $quantity;
-            $arrivalProduct->save();
+            $arrivalProduct->addQuantity($quantity);
             return null;
         }
         if ($distributor_cost == 0 && !is_null($arrival->distributor))
@@ -115,7 +114,7 @@ class ArrivalService
             $quantity,
             $distributor_cost,
         );
-        $arrival->arrivalProducts()->save($item);
+        $arrival->products()->save($item);
 
         return $item;
     }
@@ -141,8 +140,7 @@ class ArrivalService
         if ($arrival->isSupply()) { //Есть связанный документ
             //Нельзя менять валюту
             if ($arrivalProduct->cost_currency != $cost) throw new \DomainException('Стоимость установлена в связанном документа!');
-
-            $unallocated = $arrivalProduct->supplyProduct->getQuantityUnallocated();
+            $unallocated = $arrivalProduct->getSupplyProduct()->getQuantityUnallocated();//Доступное кол-во
             $delta = min($quantity - $arrivalProduct->quantity, $unallocated);
             if ($delta == 0) throw new \DomainException('Недостаточное кол-во товара ' . $arrivalProduct->product->name . ' в связанном документе.');
             $arrivalProduct->quantity += $delta;
@@ -161,9 +159,9 @@ class ArrivalService
     public function completed(ArrivalDocument $arrival): void
     {
         DB::transaction(function () use ($arrival) {
-            $this->storages->arrival($arrival->storage, $arrival->arrivalProducts()->getModels());
+            $this->storages->arrival($arrival->storage, $arrival->products);
             //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
-            foreach ($arrival->arrivalProducts as $item) {
+            foreach ($arrival->products as $item) {
                 $arrival->distributor->addProduct($item->product, $item->cost_currency);
             }
             $arrival->completed();
@@ -235,8 +233,8 @@ class ArrivalService
     {
         DB::transaction(function () use ($arrival) {
             $arrival->work();
-            $this->storages->departure($arrival->storage, $arrival->arrivalProducts()->getModels());
-            foreach ($arrival->arrivalProducts()->getModels() as $item) {//Проверка на отрицательное кол-во
+            $this->storages->departure($arrival->storage, $arrival->products);
+            foreach ($arrival->products as $item) {//Проверка на отрицательное кол-во
                 if ($arrival->storage->getQuantity($item->product) < 0)
                     throw new \DomainException('Нельзя отменить проведение. Остаток ' . $item->product->name . ' < 0');
             }

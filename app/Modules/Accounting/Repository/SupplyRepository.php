@@ -8,39 +8,13 @@ use App\Modules\Accounting\Entity\SupplyStack;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
-class SupplyRepository
+class SupplyRepository extends AccountingRepository
 {
     public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = SupplyDocument::orderByDesc('created_at');
-        $filters = [];
 
-        if (!is_null($begin = $request->date('date_from'))) {
-            $filters['date_from'] = $begin->format('Y-m-d');
-            $query->where('created_at', '>', $begin);
-        }
-        if (!is_null($end = $request->date('date_to'))) {
-            $filters['date_to'] = $end->format('Y-m-d');
-            $query->where('created_at', '<=', $end);
-        }
-        if (($request->has('draft')) > 0) {
-            $filters['draft'] = true;
-            $query->where('completed', false);
-        }
-        if (($distributor = $request->integer('distributor')) > 0) {
-            $filters['distributor'] = $distributor;
-            $query->where('distributor_id', $distributor);
-        }
-        if (($comment = $request->string('comment')->trim()->value()) != '') {
-            $filters['comment'] = $comment;
-            $query->where('comment', 'like', "%$comment%");
-        }
-        if (($staff_id = $request->integer('staff_id')) > 0) {
-            $filters['staff_id'] = $staff_id;
-            $query->where('staff_id', $staff_id);
-        }
-
-        if (count($filters) > 0) $filters['count'] = count($filters);
+        $this->filters($query, $filters, $request);
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()

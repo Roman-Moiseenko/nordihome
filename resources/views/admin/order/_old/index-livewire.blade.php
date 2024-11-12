@@ -213,7 +213,6 @@
 
     <script>
         /* Filters */
-        //TODO Фильтр по дате
         const urlParams = new URLSearchParams(window.location.search);
 
         let selectStaff = document.getElementById('select-staff');

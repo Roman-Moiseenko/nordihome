@@ -7,41 +7,14 @@ use App\Modules\Accounting\Entity\PricingDocument;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
-class PricingRepository
+class PricingRepository extends AccountingRepository
 {
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = PricingDocument::orderByDesc('created_at');
-        $filters = [];
 
-        if (!is_null($begin = $request->date('date_begin'))) {
-            $filters['date_begin'] = $begin->format('Y-m-d');
-            $query->where('created_at', '>', $begin);
-        }
-        if (!is_null($end = $request->date('date_end'))) {
-            $filters['date_end'] = $end->format('Y-m-d');
-            $query->where('created_at', '<=', $end);
-        }
-
-        if ($request->has('draft')) {
-            $draft = $request->string('draft');
-            $filters['draft'] = $draft;
-            $query->where('completed', false);
-        }
-
-        if ($request->string('comment') != '') {
-            $comment = $request->string('comment')->trim()->value();
-            $filters['comment'] = $comment;
-            $query->where('comment', 'like', "%$comment%");
-        }
-        if ($request->integer('staff_id') > 0) {
-            $staff_id = $request->integer('staff_id');
-            $filters['staff_id'] = $staff_id;
-            $query->where('staff_id', $staff_id);
-        }
-
-        if (count($filters) > 0) $filters['count'] = count($filters);
+        $this->filters($query, $filters, $request);
 
         return $query->paginate($request->input('p', 20))
             ->withQueryString()

@@ -123,6 +123,24 @@ Route::group(
                 Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
             });
 
+        Route::group([
+            'prefix' => 'refund',
+            'as' => 'refund.',
+        ],
+            function () {
+                Route::post('/set-product/{product}', 'RefundController@set_product')->name('set-product');
+                Route::delete('/del-product/{product}', 'RefundController@del_product')->name('del-product');
+
+                Route::post('/add-products/{refund}', 'RefundController@add_products')->name('add-products');
+                Route::post('/add-product/{refund}', 'RefundController@add_product')->name('add-product');
+                Route::post('/set-info/{refund}', 'RefundController@set_info')->name('set-info');
+                Route::post('/completed/{refund}', 'RefundController@completed')->name('completed');
+                Route::post('/work/{refund}', 'RefundController@work')->name('work');
+                //На основании:
+
+            });
+
+        Route::resource('refund', 'RefundController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
         Route::resource('distributor', 'DistributorController'); //CRUD
         Route::resource('currency', 'CurrencyController'); //CRUD

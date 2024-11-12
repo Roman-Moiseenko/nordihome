@@ -55,8 +55,8 @@ class MovementService
                 $departureItem = StorageDepartureItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
                 $storageOut->departureItems()->save($departureItem);
             }
-            $document->departure();
-            $document->setNumber();
+            $document->statusDeparture();
+           // $document->setNumber();
         });
     }
 
@@ -75,7 +75,7 @@ class MovementService
                 $arrivalItem = StorageArrivalItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
                 $storageIn->arrivalItems()->save($arrivalItem);
             }
-            $document->arrival();
+            $document->statusArrival();
         });
 
     }
@@ -96,7 +96,7 @@ class MovementService
                         $movementProduct->orderItem,
                         $movementProduct->quantity);
             }
-            $document->completed();
+            $document->statusCompleted();
             if (!empty($document->order())) { //Уведомляем менеджера, что товар поступил
                 $document->order()->manager->notify(new StaffMessage('Перемещение товара по заказу', $document->order()->htmlNum()));
             }

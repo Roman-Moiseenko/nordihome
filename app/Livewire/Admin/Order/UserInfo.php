@@ -14,7 +14,7 @@ use Livewire\Component;
 class UserInfo extends Component
 {
 
-    //TODO Добавить в компонент установка адреса и способа платежа(?)
+
     public Order $order;
     public bool $edit = true;
 

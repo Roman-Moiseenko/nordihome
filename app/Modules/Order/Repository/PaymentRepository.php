@@ -37,8 +37,6 @@ class PaymentRepository
             });
         }
 
-
-
         if ($request->string('comment') != '') {
             $comment = $request->string('comment')->trim()->value();
             $filters['comment'] = $comment;

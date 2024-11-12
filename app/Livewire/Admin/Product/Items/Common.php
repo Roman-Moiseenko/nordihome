@@ -109,7 +109,7 @@ class Common extends Component
     //Сохраняем гл.категорию
     public function change_category()
     {
-        //TODO Проверка на модификации ???
+
 
         //$old_attr = array_map(function ($attribute) {return $attribute->id;}, $this->product->category->all_attributes());
        // $new_attr = array_map(function ($attribute) {return $attribute->id;}, Category::find($this->category_id)->all_attributes());

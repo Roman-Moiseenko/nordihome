@@ -3,7 +3,7 @@
         <template #default>
             <Head><title>{{ title }}</title></Head>
             <el-config-provider :locale="ru">
-                <h1 class="font-medium text-xl">Приходные накладные</h1>
+                <h1 class="font-medium text-xl">Возвраты поставщикам</h1>
                 <div class="flex">
                     <el-popover :visible="visible_create" placement="bottom-start" :width="246">
                         <template #reference>
@@ -76,6 +76,12 @@
                                 {{ func.price(scope.row.amount, scope.row.currency) }}
                             </template>
                         </el-table-column>
+                        <el-table-column label="Основание">
+                            <template #default="scope">
+                                <span v-if="scope.row.supply_id">Заказ поставщика</span>
+                                <span v-if="scope.row.arrival_id">Приходная накладная</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
                         <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
                         <el-table-column label="Действия" align="right">
@@ -99,9 +105,9 @@
                 </div>
 
                 <pagination
-                    :current_page="arrivals.current_page"
-                    :per_page="arrivals.per_page"
-                    :total="arrivals.total"
+                    :current_page="refunds.current_page"
+                    :per_page="refunds.per_page"
+                    :total="refunds.total"
                 />
 
             </el-config-provider>
@@ -122,21 +128,20 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 
 const props = defineProps({
-    arrivals: Object,
+    refunds: Object,
     title: {
         type: String,
-        default: 'Приходные накладные',
+        default: 'Возвраты поставщикам',
     },
     filters: Array,
     distributors: Array,
-    stack_count: Number,
     staffs: Array,
 })
 const store = useStore();
 
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.arrivals.data])
+const tableData = ref([...props.refunds.data])
 const filter = reactive({
     draft: props.filters.draft,
     staff_id: props.filters.staff_id,
@@ -158,18 +163,14 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.arrival.destroy', {arrival: row.id}));
+    $delete_entity.show(route('admin.accounting.refund.destroy', {refund: row.id}));
 }
 function createButton() {
-    router.post(route('admin.accounting.arrival.store', {distributor: create_id.value}))
+    router.post(route('admin.accounting.refund.store', {distributor: create_id.value}))
 }
 function routeClick(row) {
-    router.get(route('admin.accounting.arrival.show', {arrival: row.id}))
+    router.get(route('admin.accounting.refund.show', {refund: row.id}))
 }
-function handleCopy(row) {
-    router.post(route('admin.accounting.arrival.copy', {arrival: row.id}))
-}
-
 
 </script>
 <style scoped>

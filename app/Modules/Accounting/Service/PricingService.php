@@ -113,7 +113,7 @@ class PricingService
             foreach ($pricing->pricingProducts as $pricingProduct) {
                 $product = $pricingProduct->product;
                 $founded = 'Установка цен № ' . $pricing->htmlNum() . ' от ' . $pricing->htmlDate();
-                //TODO Сохранять, Если значения отличаются
+                //Сохранять, Если значения отличаются
                 if ($product->getPriceCost() != $pricingProduct->price_cost)
                     $product->pricesCost()->create([
                         'value' => $pricingProduct->price_cost,
@@ -157,7 +157,7 @@ class PricingService
         foreach ($pricing->pricingProducts as $pricingProduct) {
             $this->add($copy, $pricingProduct->product_id);
         }
-        
+
         return $copy;
     }
 

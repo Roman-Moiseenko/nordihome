@@ -48,8 +48,9 @@ import ItemMenu from "@Comp/Menu/ItemMenu.vue";
 const menus = usePage().props.menus
 
 function getUrl(url) {
-    let tt = url.match(/^(.+?)\/[0-9]/, 'gm');
-    if (tt === null) return url;
+    let t = url.split('?')[0]
+    let tt = t.match(/^(.+?)\/[0-9]/, 'gm');
+    if (tt === null) return t;
     return tt[1];
 }
 </script>

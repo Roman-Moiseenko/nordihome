@@ -147,14 +147,11 @@ class ClearCommand extends Command
         $this->info('*******');
         $distributor = Distributor::first();
         $arrival = ArrivalDocument::register(
-            'Базовое поступление',
             $distributor->id,
             Storage::first()->id,
             $distributor->currency,
-            '',
-            null
         );
-
+        $arrival->number = 'Базовое поступление';
         $arrival->operation = ArrivalDocument::OPERATION_REMAINS;
         $arrival->save();
         $products = Product::where('published', true)->get();

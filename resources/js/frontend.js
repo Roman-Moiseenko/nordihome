@@ -16,59 +16,8 @@ window.$ = jQuery;
         }
     });
 
-    let CartData; //Корзина
     let main = $('main');
 
-    //Проверяем корзину виджета при загрузке
-//TODO Удалить и вынести
-    /*
-      if ($('#cart-header').length) {
-       /*
-          setTimeout(function () {
-              $.post('/cart_post/cart', {tz: -(new Date().getTimezoneOffset())}, function (data) {
-                  _error(data);
-                  widget_cart(data);
-                  CartData = data;
-              });
-          }, 250);
-
-          $('#clear-cart').on('click', function () {
-              let route = $(this).data('route');
-              $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
-                  _error(data);
-                  widget_cart(data);
-              })
-          });
-
-    }
-    */
-
-    //Проверяем избранное виджет при загрузке
-    /*
-    if ($('#wish-header').length) {
-        setTimeout(function () {
-            $.post('/cabinet/wish/get', {tz: -(new Date().getTimezoneOffset())}, function (data) {
-                _error(data);
-                widget_wish(data.items);
-            });
-        }, 250);
-        $('#clear-wish').on('click', function () {
-            let route = $(this).data('route');
-            $.post(route, {tz: -(new Date().getTimezoneOffset())}, function (data) {
-                _error(data);
-                if ($('body').hasClass('wish')) {
-                    location.reload();
-                } else {
-                    widget_wish([]);
-                }
-                $('.product-wish-toggle').each(function (item) {
-                    $(this).removeClass('btn-warning');
-                    $(this).addClass('btn-light');
-                });
-            })
-        });
-    }
-*/
 
     /**  ПОИСК в ТОП-МЕНЮ    ***/
         //INPUT поиска

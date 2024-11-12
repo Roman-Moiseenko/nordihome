@@ -52,7 +52,7 @@
         </form>
     @endif
 
-    @if($movement->isCompleted())
+    @if($movement->isFinished())
         <div class="box flex p-3 items-center">
             <div class="mx-3 flex w-full">
                 <div class="text-lg font-medium">СТАТУС: {{ $movement->statusHTML() }}</div>

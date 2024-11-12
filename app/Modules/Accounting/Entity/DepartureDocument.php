@@ -9,31 +9,23 @@ use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Списание товаров
- * @property int $id
- * @property string $number
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property bool $completed
  * @property int $storage_id
- * @property string $comment Комментарий к документу, пока отключена, на будущее
- * @property int $staff_id - автор документа
  * @property Storage $storage
  * @property DepartureProduct[] $departureProducts
  * @property Admin $staff
  */
-class DepartureDocument extends Model implements AccountingDocument
+class DepartureDocument extends AccountingDocument implements AccountingDocumentInterface
 {
-    use HtmlInfoData, CompletedFieldModel;
-
     protected $table = 'departure_documents';
 
     protected $fillable = [
         'storage_id',
-        'number',
         'comment',
         'staff_id',
     ];
@@ -45,28 +37,26 @@ class DepartureDocument extends Model implements AccountingDocument
 
     public static function register(int $storage_id, int $staff_id): self
     {
-        return self::create([
-            'number' => self::count() + 1,
-            'storage_id' => $storage_id,
-            'completed' => false,
-            'staff_id' => $staff_id,
-        ]);
+        $departure = parent::baseNew($staff_id);
+        $departure->storage_id = $storage_id;
+        $departure->save();
+        return $departure;
     }
 
-    public function isProduct(int $product_id): bool
-    {
-        foreach ($this->departureProducts as $item) {
-            if ($item->product_id == $product_id) return true;
-        }
-        return false;
-    }
 
-    public function departureProducts()
+    #[Deprecated]
+    public function departureProducts(): HasMany
     {
         return $this->hasMany(DepartureProduct::class, 'departure_id', 'id');
     }
 
-    public function storage()
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(DepartureProduct::class, 'departure_id', 'id');
+    }
+
+    public function storage(): BelongsTo
     {
         return $this->belongsTo(Storage::class, 'storage_id', 'id');
     }
@@ -90,25 +80,10 @@ class DepartureDocument extends Model implements AccountingDocument
     }
 
 
-    public function staff(): BelongsTo
-    {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
-    }
-
     public function getManager(): string
     {
         if ($this->staff_id == null) return 'Не установлен';
         return $this->staff->fullname->getFullName();
     }
 
-    public function setComment(string $comment): void
-    {
-        $this->comment = $comment;
-        $this->save();
-    }
-
-    public function getComment(): string
-    {
-        return $this->comment;
-    }
 }

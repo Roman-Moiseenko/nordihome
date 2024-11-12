@@ -9,23 +9,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
  * @property int $supply_id
- * @property int $product_id
  * @property float $cost_currency
- * @property int $quantity
  * @property SupplyDocument $document
- * @property Product $product
  * @property ArrivalProduct[] $arrivalProducts
+ * @property
  */
-class SupplyProduct extends Model
+class SupplyProduct extends AccountingProduct
 {
     protected $table = 'supply_products';
-    public $timestamps = false;
     protected $fillable = [
         'supply_id',
-        'product_id',
-        'quantity',
         'cost_currency',
     ];
 
@@ -44,24 +38,23 @@ class SupplyProduct extends Model
     public function getQuantityUnallocated(): int
     {
         $quantity = $this->quantity;
-        foreach ($this->arrivalProducts as $arrivalProduct) {
-            $quantity -= $arrivalProduct->quantity;
+
+        //Поступило
+        foreach ($this->document->arrivals as $arrival) {
+            $arrivalProduct = $arrival->getProduct($this->product_id);
+            if (!is_null($arrivalProduct)) $quantity -= $arrivalProduct->getQuantity();
         }
-        //TODO Возврат На будущее
-        /*foreach ($this->refundProducts as $refundProduct) {
-            $quantity -= $refundProduct->quantity;
-        } */
+        //Возврат
+        foreach ($this->document->refunds as $refund) {
+            $refundProduct = $refund->getProduct($this->product_id);
+            if (!is_null($refundProduct)) $quantity -= $refundProduct->getQuantity();
+        }
         return $quantity;
     }
 
     public function document(): BelongsTo
     {
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
-    }
-
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     public function getCostRu(): int

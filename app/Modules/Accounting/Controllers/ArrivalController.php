@@ -52,7 +52,6 @@ class ArrivalController extends Controller
         $staffs = $this->staffs->getStaffsChiefs();
         $arrivals = $this->repository->getIndex($request, $filters);
 
-        //return view('admin.accounting.arrival.index', compact('arrivals', 'filters', 'distributors', 'staffs'));
         return Inertia::render('Accounting/Arrival/Index', [
             'arrivals' => $arrivals,
             'filters' => $filters,
@@ -155,7 +154,7 @@ class ArrivalController extends Controller
             $this->service->addProducts($arrival, $request->input('products'));
             return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Товары добавлены');
         } catch (\DomainException $e) {
-            return redirect()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

@@ -10,7 +10,7 @@ use Livewire\Component;
 class Search extends Component
 {
 
-    //TODO Разработать Компонент
+
     public string $search = '';
     public array $products = [];
     private ProductRepository $repository;

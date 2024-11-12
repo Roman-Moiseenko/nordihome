@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Organization $organization
  * @property SupplyDocument[] $supplies
  * @property PaymentDocument[] $orders
+ * @property RefundDocument[] $refunds
  */
 class Distributor extends Model
 {
@@ -55,16 +56,22 @@ class Distributor extends Model
     public function debit(): float
     {
         $amount = 0;
-        /** @var SupplyDocument[] $supplies */
+        /** @var SupplyDocument[] $supplies */ //Увеличиваем долг проведенными заказами
         $supplies = $this->supplies()->where('completed', true)->get(); //Проведенные заказы
-        foreach ($supplies as $item) {
-            $amount += $item->getAmount();
+        foreach ($supplies as $supply) {
+            $amount += $supply->getAmount();
         }
+        /** @var RefundDocument $refunds */ //Уменьшаем долг проведенными возвратами
+        $refunds = $this->refunds()->where('completed', true)->get();
+        foreach ($refunds as $refund) {
+            $amount -= $refund->getAmount();
+        }
+
         return $amount;
     }
 
     /**
-     * ДОплачено всего за товары
+     * Оплачено всего за товары
      */
     public function credit(): float
     {
@@ -75,8 +82,8 @@ class Distributor extends Model
             $amount += $item->getAmount();
         }
         return $amount;
-
     }
+
     public function arrivals(): HasMany
     {
         return $this->hasMany(ArrivalDocument::class, 'distributor_id', 'id');
@@ -90,6 +97,11 @@ class Distributor extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(PaymentDocument::class, 'distributor_id', 'id');
+    }
+
+    public function refunds(): HasMany
+    {
+        return $this->hasMany(RefundDocument::class, 'distributor_id', 'id');
     }
 
     public function products(): BelongsToMany

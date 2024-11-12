@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
@@ -29,16 +30,19 @@ class SupplyService
     private ArrivalService $arrivalService;
     private StackRepository $stack;
     private PaymentDocumentService $paymentService;
+    private RefundService $refundService;
 
     public function __construct(
         ArrivalService         $arrivalService,
         StackRepository        $stack,
         PaymentDocumentService $paymentService,
+        RefundService          $refundService,
     )
     {
         $this->arrivalService = $arrivalService;
         $this->stack = $stack;
         $this->paymentService = $paymentService;
+        $this->refundService = $refundService;
     }
 
     //Создание пустого заказа
@@ -48,7 +52,6 @@ class SupplyService
         $manager = Auth::guard('admin')->user();
         return SupplyDocument::register(
             $distributor->id,
-            '',
             $manager->id,
             $distributor->currency->getExchange(),
             $distributor->currency_id
@@ -128,13 +131,12 @@ class SupplyService
                     $supplyProduct->product_id,
                     $quantity,//Высчитываем свободное кол-во
                     $supplyProduct->cost_currency,
-                    $supplyProduct->id,
                 );
-                $arrival->arrivalProducts()->save($item);
+                $arrival->products()->save($item);
             }
         }
         $arrival->refresh();
-        if ($arrival->arrivalProducts()->count() == 0) {
+        if ($arrival->products()->count() == 0) {
             $arrival->delete();
             throw new \DomainException('Все позиции получены. Приходная накладная недоступна');
         }
@@ -164,8 +166,28 @@ class SupplyService
 
     public function refund(SupplyDocument $supply)
     {
-        //TODO Переносим весь товар с кол-вом в возврат
-        throw new \DomainException('В разработке');
+        $refund = $this->refundService->create($supply->distributor_id);
+        $refund->supply_id = $supply->id;
+        $refund->save();
+        //Переносим весь не выданный товар в возврат
+        foreach ($supply->products as $supplyProduct) {
+            $quantity = $supplyProduct->getQuantityUnallocated();
+            if ($quantity > 0) {
+                $item = RefundProduct::new(
+                    $supplyProduct->product_id,
+                    $quantity,//Высчитываем свободное кол-во
+                    $supplyProduct->cost_currency,
+                );
+                $refund->products()->save($item);
+            }
+        }
+        $refund->refresh();
+        if ($refund->products()->count() == 0) {
+            $refund->delete();
+            throw new \DomainException('Все позиции получены. Возврат не доступен');
+        }
+        return $refund;
+        //throw new \DomainException('В разработке');
     }
 
 

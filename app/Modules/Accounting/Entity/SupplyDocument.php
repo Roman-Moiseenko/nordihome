@@ -14,37 +14,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Поставка товар - заказ для поставщика, формируется автоматически из стека заказов, также можно добавить вручную
- * @property int $id
- * @property string $number
  * @property int $distributor_id
- * @property bool $completed
- * @property string $incoming_number
- * @property Carbon $incoming_at
- *
- * @property string $comment
- * @property Carbon $created_at
- * @property Carbon $updated_at
- *
  * @property float $exchange_fix
  * @property int $currency_id
  *
- * @property int $staff_id - автор документа
  * @property ArrivalDocument[] $arrivals  - документы, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
  * @property SupplyStack[] $stacks
  * @property Distributor $distributor
  * @property Currency $currency
  * @property PaymentDocument[] $payments
- * @property Admin $staff
+ * @property RefundDocument[] $refunds
  */
-class SupplyDocument extends Model implements AccountingDocument
+class SupplyDocument extends AccountingDocument implements AccountingDocumentInterface
 {
-    use HtmlInfoData, CompletedFieldModel;
-
     const CREATED = 1201;
     const SENT = 1202;
     const COMPLETED = 1205;
-
     const STATUSES = [
         self::CREATED => 'Создан',
         self::SENT => 'Отправлен',
@@ -56,41 +42,20 @@ class SupplyDocument extends Model implements AccountingDocument
     protected $fillable = [
         'distributor_id',
         'exchange_fix',
-        'comment',
-        'staff_id',
-        'number',
         'currency_id',
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
-    public static function register(
-        int $distributor_id, string $comment,
-        int $staff_id, float $exchange_fix,
-        int $currency_id,
-    ): self
+    public static function register(int $distributor_id, int $staff_id, float $exchange_fix, int $currency_id): self
     {
-        return self::create([
-            'distributor_id' => $distributor_id,
-            'comment' => $comment,
-            'staff_id' => $staff_id,
-            'exchange_fix' => $exchange_fix,
-            'number' => self::count() + 1,
-            'currency_id' => $currency_id,
-        ]);
+        $supply = parent::baseNew($staff_id);
+        $supply->distributor_id = $distributor_id;
+        $supply->exchange_fix = $exchange_fix;
+        $supply->currency_id = $currency_id;
+        $supply->save();
+        return $supply;
     }
     //** IS ... */
 
-    public function isProduct(Product $product): bool
-    {
-        foreach ($this->products as $item) {
-            if ($item->product_id == $product->id) return true;
-        }
-        return false;
-    }
     //** SET'S */
 
     //** GET'S */
@@ -157,12 +122,9 @@ class SupplyDocument extends Model implements AccountingDocument
         return $this->hasMany(SupplyStack::class, 'supply_id', 'id');
     }
 
-    public function getProduct(int $product_id):? SupplyProduct
+    public function refunds(): HasMany
     {
-        foreach ($this->products as $item) {
-            if ($item->product_id == $product_id) return $item;
-        }
-        return null;
+        return $this->hasMany(RefundDocument::class, 'supply_id', 'id');
     }
 
     public function arrivals(): HasMany
@@ -208,27 +170,10 @@ class SupplyDocument extends Model implements AccountingDocument
         $this->save();
     }
 
-
-    public function staff(): BelongsTo
-    {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
-    }
-
     public function getManager(): string
     {
         if ($this->staff_id == null) return 'Не установлен';
         return $this->staff->fullname->getFullName();
-    }
-
-    public function setComment(string $comment): void
-    {
-        $this->comment = $comment;
-        $this->save();
-    }
-
-    public function getComment(): string
-    {
-        return $this->comment;
     }
 
 }

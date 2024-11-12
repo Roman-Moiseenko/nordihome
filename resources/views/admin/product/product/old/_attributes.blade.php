@@ -1,5 +1,4 @@
 <script>
-    //TODO select для атрибутов сделать Tom-Select с группами и протестировать повторный запуск window._updateTomSelect(id_tom_select)
 
     let _selMainCat = document.getElementById('select-category-component');
     let _selCats = document.getElementById('select-categories-component');

@@ -12,7 +12,7 @@ class Payment extends Component
     public string $payment;
 
     public bool $change = false;
-    //TODO Сделать, после ТЗ по Оплате
+
 
     public string $html_payment;
 

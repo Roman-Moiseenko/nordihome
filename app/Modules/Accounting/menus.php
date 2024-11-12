@@ -16,7 +16,7 @@ return [
             ],
             'arrival' => [
                 'icon' => 'folder-input',
-                'title' => 'Поступление',
+                'title' => 'Приходные накладные',
                 'route_name' => 'admin.accounting.arrival.index',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-folder-arrow-down',
@@ -28,6 +28,14 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-file-invoice',
             ],
+            'refund' => [
+                'icon' => 'folder-input',
+                'title' => 'Возвраты поставщикам',
+                'route_name' => 'admin.accounting.refund.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-folder-arrow-up',
+            ],
+
             'movement' => [
                 'icon' => 'folder-sync',
                 'title' => 'Перемещение товара',

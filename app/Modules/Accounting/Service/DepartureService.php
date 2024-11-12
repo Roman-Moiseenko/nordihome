@@ -96,7 +96,7 @@ class DepartureService
     {
         //Проведение документа
         DB::transaction(function () use ($departure) {
-            $this->storages->departure($departure->storage, $departure->departureProducts()->getModels());
+            $this->storages->departure($departure->storage, $departure->products);
             $departure->completed();
             event(new DepartureHasCompleted($departure));
         });

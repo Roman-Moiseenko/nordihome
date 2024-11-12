@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('storage_items', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::table('departure_documents', function (Blueprint $table) {
+            $table->string('incoming_number')->default('');
+            $table->timestamp('incoming_at')->nullable();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('storage_items', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        Schema::table('departure_documents', function (Blueprint $table) {
+            $table->dropColumn('incoming_number');
+            $table->dropColumn('incoming_at');
         });
     }
 };

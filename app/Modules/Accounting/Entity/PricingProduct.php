@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property int $pricing_id
- * @property int $product_id
  * @property float $price_cost - себестоимость
  * @property float $price_retail
  * @property float $price_bulk
@@ -17,10 +16,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $price_min
  * @property float $price_pre
  *
- * @property Product $product
  * @property PricingDocument $document
  */
-class PricingProduct extends Model
+class PricingProduct extends AccountingProduct
 {
     public $timestamps = false;
 
@@ -51,13 +49,19 @@ class PricingProduct extends Model
         ]);
     }
 
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
-    }
 
-    public function document()
+    public function document(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(PricingDocument::class, 'pricing_id', 'id');
+    }
+
+    public function setQuantity(int $quantity): void
+    {
+        throw new \DomainException('Установка цен не содержит поле quantity');
+    }
+
+    public function getQuantity(): int
+    {
+        throw new \DomainException('Установка цен не содержит поле quantity');
     }
 }

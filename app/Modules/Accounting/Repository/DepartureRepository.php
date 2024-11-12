@@ -4,48 +4,23 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\DepartureDocument;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
-class DepartureRepository
+class DepartureRepository extends AccountingRepository
 {
-
-    public function getIndex(Request $request, &$filters)
+//TODO
+    public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = DepartureDocument::orderByDesc('created_at');
-        $filters = [];
 
-        if (!is_null($begin = $request->date('date_begin'))) {
-            $filters['date_begin'] = $begin->format('Y-m-d');
-            $query->where('created_at', '>', $begin);
-        }
-        if (!is_null($end = $request->date('date_end'))) {
-            $filters['date_end'] = $end->format('Y-m-d');
-            $query->where('created_at', '<=', $end);
-        }
-
-        if ($request->has('draft')) {
-            $draft = $request->string('draft');
-            $filters['draft'] = $draft;
-            $query->where('completed', false);
-        }
-
-        if ($request->integer('storage') > 0) {
-            $storage= $request->integer('storage');
-            $filters['storage'] = $storage;
-            $query->where('storage_id', $storage);
-        }
-        if ($request->string('comment') != '') {
-            $comment = $request->string('comment')->trim()->value();
-            $filters['comment'] = $comment;
-            $query->where('comment', 'like', "%$comment%");
-        }
-        if ($request->integer('staff_id') > 0) {
-            $staff_id = $request->integer('staff_id');
-            $filters['staff_id'] = $staff_id;
-            $query->where('staff_id', $staff_id);
-        }
-
-        if (count($filters) > 0) $filters['count'] = count($filters);
+        $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
+            if ($request->integer('storage') > 0) {
+                $storage= $request->integer('storage');
+                $filters['storage'] = $storage;
+                $query->where('storage_id', $storage);
+            }
+        });
 
         return $query->paginate($request->input('p', 20))
             ->withQueryString()

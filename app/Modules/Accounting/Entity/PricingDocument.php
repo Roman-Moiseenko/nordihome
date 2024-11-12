@@ -8,31 +8,19 @@ use App\Modules\Base\Traits\CompletedFieldModel;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
- * @property int $id
- * @property int $number
- * @property boolean $completed
- * @property string $comment Комментарий к документу
  * @property int $arrival_id  - Основание
- * @property int $staff_id - автор документа
- * @property Carbon $created_at
- * @property Carbon $updated_at
  * @property ArrivalDocument $arrival
  * @property PricingProduct[] $pricingProducts
- * @property Admin $staff
  */
-class PricingDocument extends Model implements AccountingDocument
+class PricingDocument extends AccountingDocument implements AccountingDocumentInterface
 {
-    use HtmlInfoData, CompletedFieldModel;
-
     protected $table = 'pricing_documents';
     protected $fillable = [
-        'number',
-        'completed',
-        'comment',
         'arrival_id',
-        'staff_id',
     ];
 
     protected $casts = [
@@ -42,27 +30,10 @@ class PricingDocument extends Model implements AccountingDocument
 
     public static function register(int $staff_id, int $arrival_id = null):self
     {
-        return self::create([
-            'number' => null,
-            'comment' => '',
-            'arrival_id' => $arrival_id,
-            'completed' => false,
-            'staff_id' => $staff_id,
-        ]);
-    }
-
-    public function isProduct(int $product_id): bool
-    {
-        foreach ($this->pricingProducts as $item) {
-            if ($item->product_id == $product_id) return true;
-        }
-        return false;
-    }
-
-    public function setNumber()
-    {
-        $this->number = PricingDocument::where('number', '<>', null)->count() + 1;
-        $this->save();
+        $pricing = parent::baseNew($staff_id);
+        $pricing->arrival = $arrival_id;
+        $pricing->save();
+        return $pricing;
     }
 
     public function getManager(): string
@@ -71,31 +42,19 @@ class PricingDocument extends Model implements AccountingDocument
         return $this->staff->fullname->getFullName();
     }
 
-    //***
-    public function arrival()
+    public function arrival(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
     }
 
-    public function pricingProducts()
+    #[Deprecated]
+    public function pricingProducts(): HasMany
     {
         return $this->hasMany(PricingProduct::class, 'pricing_id', 'id');
     }
 
-    public function staff()
+    public function products(): HasMany
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
-    }
-
-
-    public function setComment(string $comment): void
-    {
-        $this->comment = $comment;
-        $this->save();
-    }
-
-    public function getComment(): string
-    {
-        return $this->comment;
+        return $this->hasMany(PricingProduct::class, 'pricing_id', 'id');
     }
 }

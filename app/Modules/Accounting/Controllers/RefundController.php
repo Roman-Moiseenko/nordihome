@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Modules\Accounting\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\RefundDocument;
+use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Repository\RefundRepository;
+use App\Modules\Accounting\Service\RefundService;
+use App\Modules\Admin\Repository\StaffRepository;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class RefundController extends Controller
+{
+    private RefundService $service;
+    private RefundRepository $repository;
+    private StaffRepository $staffs;
+
+    public function __construct(
+        RefundService    $service,
+        RefundRepository $repository,
+        StaffRepository  $staffs,
+    )
+    {
+        $this->middleware(['auth:admin', 'can:accounting']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work']);
+        $this->service = $service;
+        $this->repository = $repository;
+        $this->staffs = $staffs;
+    }
+
+    public function index(Request $request): \Inertia\Response
+    {
+        $distributors = Distributor::orderBy('name')->get();
+        $staffs = $this->staffs->getStaffsChiefs();
+        $refunds = $this->repository->getIndex($request, $filters);
+        return Inertia::render('Accounting/Refund/Index', [
+            'refunds' => $refunds,
+            'filters' => $filters,
+            'distributors' => $distributors,
+            'staffs' => $staffs
+        ]);
+    }
+
+    public function show(RefundDocument $refund): Response
+    {
+        $storages = Storage::orderBy('name')->getModels();
+        return Inertia::render('Accounting/Refund/Show', [
+            'refund' => $this->repository->RefundWithToArray($refund),
+            'storages' => $storages,
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate(['distributor' => 'required',]);
+        try {
+            $refund = $this->service->create($request->integer('distributor_id'));
+            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ создан');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function completed(RefundDocument $refund): RedirectResponse
+    {
+        try {
+            $this->service->completed($refund);
+            return redirect()->back()->with('success', 'Документ проведен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function work(RefundDocument $refund): RedirectResponse
+    {
+        try {
+            $this->service->work($refund);
+            return redirect()->back()->with('success', 'Документ возвращен в работу');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function set_info(RefundDocument $refund, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->setInfo($refund, $request);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function add_product(RefundDocument $refund, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->addProduct($refund, $request->integer('product_id'), $request->integer('quantity'));
+            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Товар добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function add_products(RefundDocument $refund, Request $request): RedirectResponse
+    {
+        $request->validate([
+            'products' => 'required',
+        ]);
+        try {
+            $this->service->addProducts($refund, $request->input('products'));
+            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Товары добавлены');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function destroy(RefundDocument $refund): RedirectResponse
+    {
+        try {
+            $this->service->delete($refund);
+            return redirect()->back()->with('success', 'Документ удален');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+}

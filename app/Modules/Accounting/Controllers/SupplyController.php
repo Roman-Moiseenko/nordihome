@@ -153,13 +153,6 @@ class SupplyController extends Controller
         }
     }
 
-    #[Deprecated]
-    public function sent(SupplyDocument $supply): RedirectResponse
-    {
-        $this->service->sent($supply);
-        return redirect()->back();
-    }
-
     public function completed(SupplyDocument $supply): RedirectResponse
     {
         try {

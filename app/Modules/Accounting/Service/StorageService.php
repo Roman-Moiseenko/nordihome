@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Service;
 
+use App\Modules\Accounting\Entity\AccountingProduct;
 use App\Modules\Accounting\Entity\MovementItemInterface;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Base\Entity\Photo;
@@ -61,10 +62,11 @@ class StorageService
 
     /**
      * Поступление товара списком
-     * @param MovementItemInterface[] $items
+     * @param Storage $storage
+     * @param AccountingProduct[] $items
      * @return void
      */
-    public function arrival(Storage $storage, array $items)
+    public function arrival(Storage $storage, mixed $items): void
     {
         DB::transaction(function () use ($storage, $items) {
             foreach ($items as $item) {
@@ -76,10 +78,10 @@ class StorageService
 
     /**
      * Списание товара списком
-     * @param MovementItemInterface[] $items
+     * @param AccountingProduct[] $items
      * @return void
      */
-    public function departure(Storage $storage, array $items): void
+    public function departure(Storage $storage, mixed $items): void
     {
         DB::transaction(function () use ($storage, $items) {
             foreach ($items as $item) {

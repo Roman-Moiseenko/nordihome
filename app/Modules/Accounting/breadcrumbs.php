@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Accounting\Entity\PricingDocument;
+use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\Trader;
@@ -68,23 +69,26 @@ Breadcrumbs::for('admin.accounting.currency.edit', function (BreadcrumbTrail $tr
     $trail->parent('admin.accounting.currency.show', $currency);
     $trail->push('Редактировать', route('admin.accounting.currency.edit', $currency));
 });
+
 //ARRIVAL
 Breadcrumbs::for('admin.accounting.arrival.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Поступление товаров', route('admin.accounting.arrival.index'));
 });
+/*
 Breadcrumbs::for('admin.accounting.arrival.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.arrival.index');
     $trail->push('Добавить', route('admin.accounting.arrival.create'));
-});
+});*/
 Breadcrumbs::for('admin.accounting.arrival.show', function (BreadcrumbTrail $trail, ArrivalDocument $arrival) {
     $trail->parent('admin.accounting.arrival.index');
     $trail->push($arrival->number . ' от ' . $arrival->created_at->format('d-m-Y'), route('admin.accounting.arrival.show', $arrival));
 });
+/*
 Breadcrumbs::for('admin.accounting.arrival.edit', function (BreadcrumbTrail $trail, ArrivalDocument $arrival) {
     $trail->parent('admin.accounting.arrival.show', $arrival);
     $trail->push('Редактировать', route('admin.accounting.arrival.edit', $arrival));
-});
+});*/
 //MOVEMENT
 Breadcrumbs::for('admin.accounting.movement.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
@@ -124,18 +128,21 @@ Breadcrumbs::for('admin.accounting.supply.index', function (BreadcrumbTrail $tra
     $trail->parent('admin.home');
     $trail->push('Заказы товаров', route('admin.accounting.supply.index'));
 });
+/*
 Breadcrumbs::for('admin.accounting.supply.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.supply.index');
     $trail->push('Добавить', route('admin.accounting.supply.create'));
-});
+});*/
 Breadcrumbs::for('admin.accounting.supply.show', function (BreadcrumbTrail $trail, SupplyDocument $supply) {
     $trail->parent('admin.accounting.supply.index');
     $trail->push($supply->number . ' от ' . $supply->created_at->format('d-m-Y'), route('admin.accounting.supply.show', $supply));
 });
+/*
 Breadcrumbs::for('admin.accounting.supply.edit', function (BreadcrumbTrail $trail, SupplyDocument $supply) {
     $trail->parent('admin.accounting.supply.show', $supply);
     $trail->push('Редактировать', route('admin.accounting.supply.edit', $supply));
 });
+*/
 Breadcrumbs::for('admin.accounting.supply.stack', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.supply.index');
     $trail->push('Стек заказов', route('admin.accounting.supply.stack'));
@@ -210,4 +217,15 @@ Breadcrumbs::for('admin.accounting.organization.edit', function (BreadcrumbTrail
 Breadcrumbs::for('admin.accounting.organization.holdings', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.organization.index');
     $trail->push('Холдинги', route('admin.accounting.organization.holdings'));
+});
+
+//REFUND
+Breadcrumbs::for('admin.accounting.refund.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Возвраты поставщикам', route('admin.accounting.refund.index'));
+});
+
+Breadcrumbs::for('admin.accounting.refund.show', function (BreadcrumbTrail $trail, RefundDocument $refund) {
+    $trail->parent('admin.accounting.refund.index');
+    $trail->push($refund->number . ' от ' . $refund->created_at->format('d-m-Y'), route('admin.accounting.refund.show', $refund));
 });
