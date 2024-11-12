@@ -46,8 +46,7 @@ class PaymentDocumentRepository extends AccountingRepository
     public function PaymentWithToArray(PaymentDocument $payment): array
     {
         return array_merge([
-            'distributor' => $payment->distributor()->get()
-                ->map(fn(Distributor $distributor) => $this->distributors->DistributorForAccounting($distributor)),
+            'distributor' => $this->distributors->DistributorForAccounting($payment->distributor),
         ], $this->PaymentToArray($payment));
     }
 }

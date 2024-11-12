@@ -1,8 +1,8 @@
 <template>
     <Layout>
-        <Head><title>{{ title }} - {{ payment.distributor}}</title></Head>
+        <Head><title>{{ title }} - {{ payment.distributor.name}}</title></Head>
         <h1 class="font-medium text-xl">
-            Платежное поручение {{ payment.number }} от {{ func.date(payment.created_at) }} - {{ payment.distributor}}
+            Платежное поручение {{ payment.number }} от {{ func.date(payment.created_at) }} - {{ payment.distributor.name}} ({{ payment.distributor.short_name}})
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <PaymentInfo :payment="payment" :traders="traders" />
