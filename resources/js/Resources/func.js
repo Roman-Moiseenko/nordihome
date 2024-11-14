@@ -109,7 +109,7 @@ export const func = {
         return year + ' лет';
     },
     date: (val) => {
-        if (val === undefined || val === null) return null;
+        if (val === undefined || val === null) return '';
         const _date_ = new Date(val);
         let month = _date_.getMonth() + 1;
         if (month < 10) month = '0' + month;

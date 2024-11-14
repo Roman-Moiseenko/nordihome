@@ -128,11 +128,11 @@ Breadcrumbs::for('admin.accounting.supply.index', function (BreadcrumbTrail $tra
     $trail->parent('admin.home');
     $trail->push('Заказы товаров', route('admin.accounting.supply.index'));
 });
-/*
+
 Breadcrumbs::for('admin.accounting.supply.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.supply.index');
     $trail->push('Добавить', route('admin.accounting.supply.create'));
-});*/
+});
 Breadcrumbs::for('admin.accounting.supply.show', function (BreadcrumbTrail $trail, SupplyDocument $supply) {
     $trail->parent('admin.accounting.supply.index');
     $trail->push($supply->number . ' от ' . $supply->created_at->format('d-m-Y'), route('admin.accounting.supply.show', $supply));

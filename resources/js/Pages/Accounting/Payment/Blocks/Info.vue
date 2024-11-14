@@ -39,7 +39,7 @@
                 <el-input :model-value="payment.bank_purpose" :readonly="true"/>
             </el-form-item>
             <el-form-item label="Платежное поручение">
-                <el-input :model-value="'№' + payment.bank_number + ' от ' + func.date(payment.bank_number)" :readonly="true" style="width: 300px"/>
+                <el-input v-if="payment.bank_number" :model-value="'№' + payment.bank_number + ' от ' + func.date(payment.bank_number)" :readonly="true" style="width: 300px"/>
             </el-form-item>
         </el-col>
     </el-row>
