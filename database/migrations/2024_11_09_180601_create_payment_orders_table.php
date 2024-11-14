@@ -12,13 +12,18 @@ return new class extends Migration {
             $table->string('number')->default('');
             $table->boolean('completed')->default(false);
             $table->float('amount', 10,2, true);
-            $table->foreignId('supply_id')->nullable()->constrained('supply_documents')->onDelete('set null');
-            $table->foreignId('distributor_id')->constrained('distributors')->onDelete('restrict');
-            $table->foreignId('trader_id')->nullable()->constrained('traders')->onDelete('restrict');
             $table->foreignId('staff_id')->constrained('admins')->onDelete('restrict');
             $table->text('comment');
-            $table->string('account')->nullable();
             $table->timestamps();
+            $table->boolean('manual')->default(false);
+            $table->string('bank_purpose')->default('');
+            $table->string('bank_number')->default('');
+            $table->timestamp('bank_date')->nullable();
+
+            $table->foreignId('recipient_id')->constrained('organizations')->onDelete('restrict');
+            $table->foreignId('payer_id')->constrained('organizations')->onDelete('restrict');
+            $table->string('recipient_account');
+            $table->string('payer_account');
         });
     }
 
