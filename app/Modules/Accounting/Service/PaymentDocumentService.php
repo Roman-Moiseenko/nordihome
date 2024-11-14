@@ -2,59 +2,73 @@
 
 namespace App\Modules\Accounting\Service;
 
+use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Accounting\Entity\Trader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\Deprecated;
 
 class PaymentDocumentService
 {
-    public function create(int $distributor_id, float $amount, int $supply_id = null): PaymentDocument
+    public function create(int $recipient_id, string $recipient_account, int $payer_id, string $payer_account, float $amount): PaymentDocument
     {
         $staff = Auth::guard('admin')->user();
-        $paymentOrder = PaymentDocument::register($distributor_id, $amount, $staff->id);
-        if (!is_null($supply_id)) {
-            $paymentOrder->supply_id = $supply_id;
-            $paymentOrder->save();
-        }
-        $this->setTrader($paymentOrder, Trader::default());
 
-        return $paymentOrder;
-    }
-
-    private function setTrader(PaymentDocument $paymentOrder, Trader $trader): void
-    {
-        $paymentOrder->trader_id = $trader->id;
-        $paymentOrder->account = $trader->organization->pay_account;
-        $paymentOrder->save();
+        return PaymentDocument::register(
+            $recipient_id, $recipient_account, //Получатель
+            $payer_id, $payer_account, //Плательщик
+            $amount, $staff->id
+        );
     }
 
     public function completed(PaymentDocument $payment): void
     {
+        //Проверка совпадения суммы
+        $amount = 0.0;
+        foreach ($payment->decryptions as $decryption) {
+            $amount += $decryption->amount;
+        }
+        if ($payment->amount != $amount) throw new \DomainException('Нельзя провести документ. Не совпадают суммы');
+
+        foreach ($payment->decryptions as $decryption) {
+            if ($decryption->amount == 0) $decryption->delete();
+        }
         $payment->completed();
         //TODO Возможные расчеты или создание документов
     }
 
-    public function set_info(PaymentDocument $payment, Request $request): void
+    public function setInfo(PaymentDocument $payment, Request $request): void
     {
         $payment->number = $request->string('number')->value();
         $payment->created_at = $request->date('created_at');
         $payment->amount = $request->input('amount');
         $payment->comment = $request->string('comment')->value();
+
+        $payer = Organization::find($request->integer('payer_id'));
+        if ($payment->payer_id != $payer->id) {
+            $payment->payer_id = $payer->id;
+            $payment->payer_account = $payer->pay_account;
+        }
         $payment->save();
-        //dd($request->all());
-        if ($payment->trader_id != $request->integer('trader_id')) $this->setTrader(Trader::find($request->integer('trader_id')));
     }
 
     public function work(PaymentDocument $payment): void
     {
         $payment->work();
-        //TODO Возможные перерасчеты или отмена документов
     }
 
     public function delete(PaymentDocument $payment): void
     {
-        $this->work($payment);
-        $payment->delete();
+        if (!$payment->isCompleted()) $payment->delete();
     }
+
+    public function setAmount(PaymentDecryption $decryption, Request $request): void
+    {
+        $decryption->amount = $request->float('amount');
+        $decryption->save();
+    }
+
+
 }

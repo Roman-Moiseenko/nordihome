@@ -39,66 +39,85 @@ class DepartureService
         return $departure;
     }
 
-    public function destroy(DepartureDocument $departure)
+    public function destroy(DepartureDocument $departure): void
     {
         if ($departure->isCompleted()) throw new \DomainException('Документ проведен. Удалять нельзя');
         $departure->delete();
     }
 
-    public function add(DepartureDocument $departure, int $product_id, int $quantity): ?DepartureDocument
+    public function addProduct(DepartureDocument $departure, int $product_id, int $quantity): ?DepartureDocument
     {
         if ($departure->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
 
         /** @var Product $product */
         $product = Product::find($product_id);
+
+        $free_quantity = $departure->storage->getAvailable($product);
+        if ($free_quantity <= 0) throw new \DomainException('Недостаточное кол-во товара ' . $product->name . ' на складе.');
+        $quantity = min($quantity, $free_quantity);
+
         if ($departure->isProduct($product_id)) {
-            flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
+            $departureProduct = $departure->getProduct($product_id);
+            $departureProduct->addQuantity($quantity);
             return null;
         }
 
-        $free_quantity = $departure->storage->getAvailable($product);
-        $quantity = min($quantity, $free_quantity);
-
         //Добавляем в документ
-        $departure->departureProducts()->create([
+        $departure->products()->create([
             'product_id' => $product->id,
             'quantity' => $quantity,
-            'cost' => $product->getPrice()
+            'cost' => $product->getPriceCost()
         ]);
         $departure->refresh();
         return $departure;
     }
 
-    public function add_products(DepartureDocument $departure, string $textarea): void
+    public function addProducts(DepartureDocument $departure, mixed $products): void
     {
-        $list = explode("\r\n", $textarea);
-        foreach ($list as $item) {
-            $product = Product::whereCode($item)->first();
+        $errors = [];
+        foreach ($products as $product) {
+            $product_id = Product::whereCode($product['code'])->first()->id;
             if (!is_null($product)) {
-                $this->add($departure, $product->id, 1);
+                $this->addProduct($departure, $product_id, (int)$product['quantity']);
             } else {
-                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+                $errors[] = $product['code'];
             }
         }
+        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    //Для AJAX
-    public function set(Request $request, DepartureProduct $item): array
+    public function setProduct(Request $request, DepartureProduct $item): void
     {
         if ($item->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         //Меняем данные
         $item->quantity = $request->integer('quantity');
         $item->save();
-        return $item->document->getInfoData();
     }
 
-    public function completed(DepartureDocument $departure)
+    public function completed(DepartureDocument $departure): void
     {
         //Проведение документа
         DB::transaction(function () use ($departure) {
+            //TODO Проверка на кол-во!
             $this->storages->departure($departure->storage, $departure->products);
             $departure->completed();
             event(new DepartureHasCompleted($departure));
         });
+    }
+
+    public function work(DepartureDocument $departure): void
+    {
+        $this->storages->arrival($departure->storage, $departure->products);
+        $departure->work();
+    }
+
+    public function setInfo(DepartureDocument $departure, Request $request): void
+    {
+        $departure->baseSave($request->input('document'));
+        if ($departure->storage_id !== $request->integer('storage_id')) {
+            //TODO Проверка на кол-во!
+            $departure->storage_id = $request->integer('storage_id');
+        }
+        $departure->save();
     }
 }

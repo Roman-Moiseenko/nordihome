@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Repository;
 
+use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyStack;
 use Illuminate\Contracts\Support\Arrayable;
@@ -80,6 +81,14 @@ class SupplyRepository extends AccountingRepository
         $withData = [
             'products' => $document->products()->with('product')->paginate(20)->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
+            'arrivals' => $document->arrivals()->get()->map(function (ArrivalDocument $document) {
+                return array_merge($document->toArray(),[
+                    'storage_name' => $document->storage->name,
+                    'amount' => $document->getAmount(),
+                    'quantity' => $document->getQuantity(),
+                    'currency' => $document->currency->sign,
+                    ]);
+            }),
         ];
 
         return array_merge($this->SupplyToArray($document), $withData);

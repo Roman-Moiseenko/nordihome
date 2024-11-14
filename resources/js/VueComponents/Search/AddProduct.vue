@@ -1,6 +1,7 @@
 <template>
     <div class="flex">
         <el-select
+            id="select"
             v-model="form.product_id"
             filterable
             remote
@@ -121,6 +122,7 @@ function onAdd() {
             form.product_id = null
             form.quantity = 1
             form.preorder = null
+            document.getElementById('select').focus()
         }
     })
 }

@@ -14,6 +14,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/file-upload',
         '/admin/staff/photo/*',
+        '/admin/accounting/bank/upload'
         /*'/catalog/search',
         '/cart_post/cart',
         '/cabinet/wish/get'*/

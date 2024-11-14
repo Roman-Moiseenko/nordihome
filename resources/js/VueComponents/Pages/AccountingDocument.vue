@@ -1,11 +1,11 @@
 <template>
     <el-form label-width="auto">
-        <el-form-item label="Поставщик">
+        <el-form-item v-if="distributor" label="Поставщик">
             <el-input :model-value="distributor.name + ' (' + distributor.short_name + ')'" :readonly="true"
                       style="width: 400px"/>
             <el-tag type="primary" class="ml-3">Долг</el-tag>
-            <span :class="'ml-2 font-medium ' + (distributor.debit > 0 ? 'text-red-600' : 'text-green-600')  ">
-                {{ func.price(distributor.debit, distributor.currency) }}
+            <span :class="'ml-2 font-medium ' + ((distributor.debit - distributor.credit) > 0 ? 'text-red-600' : 'text-green-600')  ">
+                {{ func.price(distributor.debit - distributor.credit, distributor.currency) }}
             </span>
         </el-form-item>
         <el-form-item label="№ документа">
@@ -40,7 +40,10 @@ import {func} from '@Res/func.js'
 import {defineEmits, defineProps} from "vue";
 
 const props = defineProps({
-    distributor: Object,
+    distributor: {
+        type: Object,
+        default: null,
+    },
     modelValue: {
         number: String,
         created_at: Date,

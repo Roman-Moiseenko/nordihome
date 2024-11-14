@@ -2,10 +2,10 @@
 
 namespace App\Modules\Accounting\Service;
 
+use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\RefundProduct;
-use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 
@@ -18,18 +18,16 @@ class RefundService
         $this->storageService = $storageService;
     }
 
-    public function create(int $distributor_id): RefundDocument
+    public function create(int $arrival_id): RefundDocument
     {
         $staff = \Auth::guard('admin')->user();
-        return RefundDocument::register($staff->id, $distributor_id);
+        $arrival = ArrivalDocument::find($arrival_id);
+
+        return RefundDocument::register($staff->id, $arrival->id, $arrival->distributor_id, $arrival->storage_id);
     }
 
     public function completed(RefundDocument $refund): void
     {
-        if ($refund->isSupply()) {
-            $refund->completed();
-            return;
-        }
         if (!is_null($refund->storage_id)) {
             $this->storageService->departure($refund->storage, $refund->products);// Списываем из склада
             $refund->completed();
@@ -64,22 +62,13 @@ class RefundService
         $distributor_cost = 0;
         /** @var Product $product */
         $product = Product::find($product_id);
-        if ($refund->isSupply()) {
-            /** @var SupplyProduct $supplyProduct */
-            $supplyProduct = $refund->supply->getProduct($product->id);
-            if (is_null($supplyProduct)) throw new \DomainException('Товар ' . $product->name . ' отсутствует в связанном документе.');
-            $quantity = min($quantity, $supplyProduct->getQuantityUnallocated());
-            if ($quantity <= 0)  throw new \DomainException('Недостаточное кол-во товара ' . $product->name . ' в связанном документе.');
-            $distributor_cost = $supplyProduct->cost_currency;
-        }
-        if ($refund->isArrival()) {
-            /** @var ArrivalProduct $arrivalProduct */
-            $arrivalProduct = $refund->arrival->getProduct($product->id);
-            if (is_null($arrivalProduct)) throw new \DomainException('Товар ' . $product->name . ' отсутствует в связанном документе.');
-            $quantity = min($quantity, $arrivalProduct->getQuantityUnallocated());
-            if ($quantity <= 0)  throw new \DomainException('Недостаточное кол-во товара ' . $product->name . ' в связанном документе.');
-            $distributor_cost = $arrivalProduct->cost_currency;
-        }
+        /** @var ArrivalProduct $arrivalProduct */
+        $arrivalProduct = $refund->arrival->getProduct($product->id);
+        if (is_null($arrivalProduct)) throw new \DomainException('Товар ' . $product->name . ' отсутствует в связанном документе.');
+        $quantity = min($quantity, $arrivalProduct->getQuantityUnallocated());
+        if ($quantity <= 0)  throw new \DomainException('Недостаточное кол-во товара ' . $product->name . ' в связанном документе.');
+        $distributor_cost = $arrivalProduct->cost_currency;
+
         //Если товар уже есть в Документе
         if ($refund->isProduct($product_id)) {
             $refund->getProduct($product_id)->addQuantity($quantity);
@@ -112,14 +101,10 @@ class RefundService
     public function setProduct(RefundProduct $refundProduct, int $quantity): void
     {
         $refund = $refundProduct->document;
-        $unallocated = 0;
         if ($refund->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
-        if ($refund->isSupply()) {
-            $unallocated = $refundProduct->getSupplyProduct()->getQuantityUnallocated();//Доступное кол-во
-        }
-        if ($refund->isArrival()) {
-            $unallocated = $refundProduct->getArrivalProduct()->getQuantityUnallocated();
-        }
+
+        $unallocated = $refundProduct->getArrivalProduct()->getQuantityUnallocated();
+
         $delta = min($quantity - $refundProduct->quantity, $unallocated);
         if ($delta == 0) throw new \DomainException('Недостаточное кол-во товара ' . $refundProduct->product->name . ' в связанном документе.');
         $refundProduct->addQuantity($delta);

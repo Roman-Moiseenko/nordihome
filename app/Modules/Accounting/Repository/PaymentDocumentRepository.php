@@ -20,7 +20,18 @@ class PaymentDocumentRepository extends AccountingRepository
     {
         $query = PaymentDocument::orderByDesc('created_at');
 
-        $this->filters($query, $filters, $request);
+        $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
+            if ($request->integer('distributor') > 0) {
+                $distributor= $request->integer('distributor');
+                $filters['distributor'] = $distributor;
+                $query->whereHas('recipient', function($query) use($distributor) {
+                    $query->whereHas('distributor', function($query) use($distributor) {
+                        $query->where('id', $distributor);
+                    });
+                });
+            }
+        },
+        false);
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
@@ -29,15 +40,14 @@ class PaymentDocumentRepository extends AccountingRepository
 
     public function PaymentToArray(PaymentDocument $payment): array
     {
-        return array_merge($payment->toArray(),
-            [
-                'distributor_name' => $payment->distributor->name,
-                'distributor_org' => $payment->distributor->organization->short_name,
-                'trader' => $payment->trader->organization->full_name,
-                'organization_id' => $payment->trader->organization_id,
-                'supply' => is_null($payment->supply_id) ? '' : $payment->supply->htmlNumDate(),
-                'debit' => $payment->distributor->debit() - $payment->distributor->credit(),
-                'currency' => $payment->distributor->currency->sign,
+        return array_merge($payment->toArray(), [
+                'distributor_name' => $payment->recipient->distributor->name,
+                //'distributor_org' => $payment->distributor->organization->short_name,
+                'trader' => $payment->payer->full_name,
+                'organization_id' => $payment->payer->organization_id,
+                //'supply' => is_null($payment->supply_id) ? '' : $payment->supply->htmlNumDate(),
+                'debit' => $payment->recipient->distributor->debit() - $payment->recipient->distributor->credit(),
+                'currency' => $payment->recipient->distributor->currency->sign,
                 'staff' => $payment->staff->fullname->getFullName(),
             ]
         );
@@ -45,8 +55,9 @@ class PaymentDocumentRepository extends AccountingRepository
 
     public function PaymentWithToArray(PaymentDocument $payment): array
     {
-        return array_merge([
-            'distributor' => $this->distributors->DistributorForAccounting($payment->distributor),
-        ], $this->PaymentToArray($payment));
+        return array_merge($this->PaymentToArray($payment), [
+            'distributor' => $this->distributors->DistributorForAccounting($payment->recipient->distributor),
+            'decryptions' => $payment->decryptions()->with('supply')->get()->toArray(),
+        ]);
     }
 }

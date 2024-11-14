@@ -9,11 +9,13 @@ use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Admin\Entity\Admin;
@@ -103,17 +105,16 @@ class SupplyService
 
     public function work(SupplyDocument $supply): void
     {
-        $supply->work();
+        $payments = PaymentDecryption::where('supply_id', $supply->id)->whereHas('payment', function ($query) {
+           $query->where('completed', true);
+        })->getModels();
+        if (!empty($payments))
+            throw new \DomainException('Нельзя отменить проведение! Имеются проведенные платежные документы');
 
-        foreach ($supply->payments as $payment) {
-            if ($payment->isCompleted()) $this->paymentService->work($payment);
-        }
         foreach ($supply->arrivals as $arrival) {
             if ($arrival->isCompleted()) $this->arrivalService->work($arrival);
         }
-        foreach ($supply->refunds as $refund) {
-            if ($refund->isCompleted()) $this->refundService->work($refund);
-        }
+        $supply->work();
     }
 
     /**
@@ -148,46 +149,17 @@ class SupplyService
      */
     public function payment(SupplyDocument $supply)
     {
-        $distributor = $supply->distributor;
-        //Долг по всем заказам по поставщику
+        if (($debit = $supply->debit()) <= 0) throw new \DomainException('Долг по текущему заказу не обнаружен');
 
-        $debit_distributor = $distributor->debit() - $distributor->credit();
-        if ($debit_distributor <= 0)
-            throw new \DomainException('Долг не обнаружен. Переплата = ' . abs($debit_distributor) . ' ' . $distributor->currency->sign);
-        //Долг по текущему заказу
-        $debit_supply = $supply->getAmount() - $supply->getPayments();
-        if ($debit_supply <= 0) {
-            return $this->paymentService->create($supply->distributor_id, $debit_distributor);
-        }
+        $payer = Trader::default()->organization;
+        $recipient = $supply->distributor->organization;
 
-        $debit_supply = min($debit_supply, $debit_distributor); //Если вдруг долг общий меньше долга по заказу
-        return $this->paymentService->create($supply->distributor_id, $debit_supply, $supply->id);
+        $payment = $this->paymentService->create($recipient->id, $recipient->pay_account, $payer->id, $payer->pay_account, $debit);
+        $payment->manual();
+        $payment->addDecryption($debit, $supply->id);
+        return $payment;
     }
 
-    public function refund(SupplyDocument $supply)
-    {
-        $refund = $this->refundService->create($supply->distributor_id);
-        $refund->supply_id = $supply->id;
-        $refund->save();
-        //Переносим весь не выданный товар в возврат
-        foreach ($supply->products as $supplyProduct) {
-            $quantity = $supplyProduct->getQuantityUnallocated();
-            if ($quantity > 0) {
-                $item = RefundProduct::new(
-                    $supplyProduct->product_id,
-                    $quantity,//Высчитываем свободное кол-во
-                    $supplyProduct->cost_currency,
-                );
-                $refund->products()->save($item);
-            }
-        }
-        $refund->refresh();
-        if ($refund->products()->count() == 0) {
-            $refund->delete();
-            throw new \DomainException('Все позиции получены. Возврат не доступен');
-        }
-        return $refund;
-    }
 
     public function destroy(SupplyDocument $supply): void
     {
@@ -217,14 +189,9 @@ class SupplyService
     }
     ///<===============
 
-
     ////Фун-ции работы с товарами в Заказе =======>
     /**
      * Добавить товар в заявку Поставщику
-     * @param SupplyDocument $supply
-     * @param int $product_id
-     * @param int $quantity
-     * @return void
      */
     public function addProduct(SupplyDocument $supply, int $product_id, int $quantity): void
     {
@@ -259,6 +226,19 @@ class SupplyService
     {
         $supply = $supplyProduct->document;
         //Проверка на стек, если есть в стеке удалить нельзя
+        if ($supply->isCompleted()) {
+            //Проверка на поступления
+
+            foreach ($supply->arrivals as $arrival) {
+                if (!is_null($arrival->getProduct($supplyProduct->product_id))) {
+                    throw new \DomainException('Невозможно удаление. Товар получен');
+                }
+            }
+            $supplyProduct->delete();
+            return;
+        }
+
+
         foreach ($supply->stacks as $stack) {
             if ($stack->product_id == $supplyProduct->product_id) {
                 throw new \DomainException('Нельзя удалить товар, который добавлен через стек заказов');
@@ -267,17 +247,29 @@ class SupplyService
         $supplyProduct->delete();
     }
 
-    public function setProduct(SupplyProduct $supplyProduct, int $quantity, float $cost_currency): bool
+    public function setProduct(SupplyProduct $supplyProduct, int $quantity, float $cost_currency): void
     {
         $supply = $supplyProduct->document;
-        //Проверка на стек, если кол-во меньше чем в стеке, то изменить нельзя
-        ///Доп.защита!!
-        $quantity_stack = $supply->getQuantityStack($supplyProduct->product);
-        if ($quantity < $quantity_stack) throw new \DomainException('Кол-во товара по стеку ' . $quantity_stack . '. Нельзя ставить меньше.');
-        $supplyProduct->quantity = $quantity;
-        $supplyProduct->cost_currency = $cost_currency;
-        $supplyProduct->save();
-        return true;
+
+        if ($supply->isCompleted()) {
+            //Проверка на поступления
+            $arrival_quantity = 0;
+            foreach ($supply->arrivals as $arrival) {
+                $arrivalProduct = $arrival->getProduct($supplyProduct->product_id);
+                if (!is_null($arrivalProduct)) $arrival_quantity += $arrivalProduct->getQuantity();
+            }
+            if ($quantity < $arrival_quantity) throw new \DomainException('Невозможно уменьшение. Товара получено - ' . $arrival_quantity);
+            $supplyProduct->setQuantity($quantity);
+
+        } else {
+            //Проверка на стек, если кол-во меньше чем в стеке, то изменить нельзя
+            ///Доп.защита!!
+            $quantity_stack = $supply->getQuantityStack($supplyProduct->product);
+            if ($quantity < $quantity_stack) throw new \DomainException('Кол-во товара по стеку ' . $quantity_stack . '. Нельзя ставить меньше.');
+            $supplyProduct->quantity = $quantity;
+            $supplyProduct->cost_currency = $cost_currency;
+            $supplyProduct->save();
+        }
     }
     ////<===============
 
@@ -306,14 +298,4 @@ class SupplyService
         $stack->delete();
     }
     ////<==========
-
-    #[Deprecated]
-    public function sent(SupplyDocument $supply): void
-    {
-        $supply->status = SupplyDocument::SENT;
-        $supply->setNumber();
-        $supply->save();
-        event(new SupplyHasSent($supply));
-    }
-
 }

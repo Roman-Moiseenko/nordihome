@@ -40,6 +40,7 @@ class ArrivalProduct extends AccountingProduct implements MovementItemInterface
     {
         $this->quantity = $quantity;
         $this->remains = $quantity;
+        $this->save();
     }
 
     public function setCost(float $cost_currency): void

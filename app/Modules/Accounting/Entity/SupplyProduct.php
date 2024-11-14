@@ -38,16 +38,10 @@ class SupplyProduct extends AccountingProduct
     public function getQuantityUnallocated(): int
     {
         $quantity = $this->quantity;
-
         //Поступило
         foreach ($this->document->arrivals as $arrival) {
             $arrivalProduct = $arrival->getProduct($this->product_id);
             if (!is_null($arrivalProduct)) $quantity -= $arrivalProduct->getQuantity();
-        }
-        //Возврат
-        foreach ($this->document->refunds as $refund) {
-            $refundProduct = $refund->getProduct($this->product_id);
-            if (!is_null($refundProduct)) $quantity -= $refundProduct->getQuantity();
         }
         return $quantity;
     }

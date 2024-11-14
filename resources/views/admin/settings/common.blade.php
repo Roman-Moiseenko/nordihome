@@ -52,7 +52,11 @@
             </div>
             <div class="p-2">
                 <!-- 2 столбец -->
-
+                <div class="p-4 border-b">
+                    {{ \App\Forms\Input::create('date_bank',
+                        ['placeholder' => '', 'class' => 'w-full lg:w-100', 'value' => $common->date_bank])->
+                        label('Дата последней загрузки из банка')->show() }}
+                </div>
             </div>
             <div class="p-2">
                 <!-- 3 столбец -->

@@ -146,8 +146,11 @@ class ArrivalService
             if ($arrivalProduct->cost_currency != $cost) throw new \DomainException('Стоимость установлена в связанном документа!');
             $unallocated = $arrivalProduct->getSupplyProduct()->getQuantityUnallocated();//Доступное кол-во
             $delta = min($quantity - $arrivalProduct->quantity, $unallocated);
+            //dd([$unallocated, $delta, $arrivalProduct->quantity]);
             if ($delta == 0) throw new \DomainException('Недостаточное кол-во товара ' . $arrivalProduct->product->name . ' в связанном документе.');
             $arrivalProduct->addQuantity($delta);
+            $arrivalProduct->refresh();
+           // dd([$unallocated, $delta, $arrivalProduct->quantity]);
             return;
         };
         //Меняем данные
@@ -291,10 +294,11 @@ class ArrivalService
 
     public function refund(ArrivalDocument $arrival)
     {
-        $refund = $this->refundService->create($arrival->distributor_id);
-        $refund->arrival_id = $arrival->id;
-        $refund->storage_id = $arrival->storage_id;
-        $refund->save();
+
+        $refund = $this->refundService->create($arrival->id);
+        //$refund->arrival_id = $arrival->id;
+        //$refund->storage_id = $arrival->storage_id;
+        //$refund->save();
         //Переносим весь не выданный товар в возврат
         foreach ($arrival->products as $product) {
             $quantity = $product->getQuantityUnallocated();

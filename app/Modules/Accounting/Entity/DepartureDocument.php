@@ -79,6 +79,21 @@ class DepartureDocument extends AccountingDocument implements AccountingDocument
         ];
     }
 
+    public function getAmount(): float
+    {
+        $amount = DepartureProduct::selectRaw('SUM(quantity * cost) AS total')
+            ->where('departure_id', $this->id)
+            ->first();
+        return $amount->total ?? 0.0;
+    }
+
+    public function getQuantity(): int
+    {
+        $quantity = DepartureProduct::selectRaw('SUM(quantity * 1) AS total')
+            ->where('departure_id', $this->id)
+            ->first();
+        return (int)($quantity->total ?? 0);
+    }
 
     public function getManager(): string
     {

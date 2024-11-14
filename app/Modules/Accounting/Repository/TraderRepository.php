@@ -12,6 +12,8 @@ class TraderRepository
         return Trader::active()->get()->map(function (Trader $item) {
             return [
                 'id' => $item->id,
+                'name' => $item->name,
+                'organization_id' => $item->organization->id,
                 'full_name' => $item->organization->full_name,
                 'shot_name' => $item->organization->short_name,
                 'account' => $item->organization->pay_account,

@@ -125,7 +125,9 @@ class Storage extends Model
     public function getDeparture(Product $product): int
     {
         //Более быстрый вариант
-        return StorageDepartureItem::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
+        return StorageDepartureItem::where('storage_id', $this->id)
+            ->where('product_id', $product->id)
+            ->pluck('quantity')->sum();
         /*
         $result = 0;
         foreach ($this->departureItems as $departureItem) {

@@ -39,7 +39,7 @@ class ArrivalController extends Controller
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
-        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->products = $products;
         $this->repository = $repository;
@@ -139,7 +139,7 @@ class ArrivalController extends Controller
     {
         try {
             $this->service->addProduct($arrival, $request->integer('product_id'), $request->integer('quantity'));
-            return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Товар добавлен');
+            return redirect()->back()->with('success', 'Товар добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -152,7 +152,7 @@ class ArrivalController extends Controller
         ]);
         try {
             $this->service->addProducts($arrival, $request->input('products'));
-            return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Товары добавлены');
+            return redirect()->back()->with('success', 'Товары добавлены');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -167,6 +167,7 @@ class ArrivalController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
     public function work(ArrivalDocument $arrival): RedirectResponse
     {
         try {

@@ -31,6 +31,7 @@ class PricingController extends Controller
     )
     {
         $this->middleware(['auth:admin', 'can:pricing']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
        // $this->products = $products;
         $this->repository = $repository;

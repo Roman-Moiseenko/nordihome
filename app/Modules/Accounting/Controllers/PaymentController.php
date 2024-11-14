@@ -4,12 +4,14 @@ namespace App\Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\PaymentDocumentRepository;
 use App\Modules\Accounting\Repository\TraderRepository;
 use App\Modules\Accounting\Service\PaymentDocumentService;
 use App\Modules\Admin\Repository\StaffRepository;
+use DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,13 +25,14 @@ class PaymentController extends Controller
     private StaffRepository $staffs;
 
     public function __construct(
-        PaymentDocumentService $service,
+        PaymentDocumentService    $service,
         PaymentDocumentRepository $repository,
-        TraderRepository $traders,
-        StaffRepository $staffs,
+        TraderRepository          $traders,
+        StaffRepository           $staffs,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->repository = $repository;
         $this->traders = $traders;
@@ -54,10 +57,9 @@ class PaymentController extends Controller
     public function show(PaymentDocument $payment): Response
     {
         $traders = $this->traders->getTraders();
-
         return Inertia::render('Accounting/Payment/Show', [
             'payment' => $this->repository->PaymentWithToArray($payment),
-            'traders' => $traders,
+            'payers' => $traders,
         ]);
     }
 
@@ -73,20 +75,44 @@ class PaymentController extends Controller
 
     public function completed(PaymentDocument $payment): RedirectResponse
     {
-        $this->service->completed($payment);
-        return redirect()->back()->with('success', 'Документ проведен');
+        try {
+            DB::beginTransaction();
+            $this->service->completed($payment);
+            DB::commit();
+            return redirect()->back()->with('success', 'Документ проведен');
+        } catch (\DomainException $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function work(PaymentDocument $payment): RedirectResponse
     {
-        $this->service->work($payment);
-        return redirect()->back()->with('success', 'Документ возвращен в работу');
+        try {
+            DB::beginTransaction();
+            $this->service->work($payment);
+            DB::commit();
+            return redirect()->back()->with('success', 'Документ возвращен в работу');
+        } catch (\DomainException $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function set_info(PaymentDocument $payment, Request $request): RedirectResponse
     {
         try {
-            $this->service->set_info($payment, $request);
+            $this->service->setInfo($payment, $request);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function set_amount(PaymentDecryption $decryption, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->setAmount($decryption, $request);
             return redirect()->back()->with('success', 'Сохранено');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

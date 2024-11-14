@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $departure_id
- * @property float $cost
+ * @property float $cost - в рублях
  * @property DepartureDocument $document
  */
 class DepartureProduct extends AccountingProduct implements MovementItemInterface

@@ -22,20 +22,25 @@ class DepartureRepository extends AccountingRepository
             }
         });
 
-        return $query->paginate($request->input('p', 20))
+        return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(function(DepartureDocument $document) {
-                return [
-                    'id' => $document->id,
-                    'date' => $document->htmlDate(),
-                    'number' => $document->htmlNum(),
-                    'completed' => $document->completed,
-                    'storage' => $document->storage->name,
-                    'comment' => $document->comment,
-                    'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
-                    'url' => route('admin.accounting.departure.show', $document),
-                    'destroy' => route('admin.accounting.departure.destroy', $document),
-                ];
-            });
+            ->through(fn(DepartureDocument $document) => $this->DepartureToArray($document));
+    }
+
+    public function DepartureToArray(DepartureDocument $document): array
+    {
+        return array_merge($document->toArray(), [
+            'date' => $document->htmlDate(),
+            'quantity' => $document->getQuantity(),
+            'amount' => $document->getAmount(),
+            'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
+        ]);
+    }
+
+    public function DepartureWithToArray(DepartureDocument $document): array
+    {
+        return array_merge($this->DepartureToArray($document), [
+            'products' => $document->products()->with('product')->paginate(20)->toArray(),
+        ]);
     }
 }

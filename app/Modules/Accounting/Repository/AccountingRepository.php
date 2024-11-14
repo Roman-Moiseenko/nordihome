@@ -9,7 +9,7 @@ abstract class AccountingRepository
 {
     abstract public function getIndex(Request $request, &$filters): Arrayable;
 
-    final protected function filters(&$query, &$filters, $request, callable $func = null): void
+    final protected function filters(&$query, &$filters, $request, callable $func = null, bool $has_distributor = true): void
     {
         $filters = [];
         if (!is_null($begin = $request->date('date_from'))) {
@@ -27,7 +27,7 @@ abstract class AccountingRepository
             $query->where('completed', false);
         }
 
-        if ($request->integer('distributor') > 0) {
+        if ($has_distributor && $request->integer('distributor') > 0) {
             $distributor= $request->integer('distributor');
             $filters['distributor'] = $distributor;
             $query->where('distributor_id', $distributor);

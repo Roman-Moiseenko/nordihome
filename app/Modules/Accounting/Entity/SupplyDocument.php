@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Distributor $distributor
  * @property Currency $currency
  * @property PaymentDocument[] $payments
- * @property RefundDocument[] $refunds
  */
 class SupplyDocument extends AccountingDocument implements AccountingDocumentInterface
 {
@@ -79,7 +78,14 @@ class SupplyDocument extends AccountingDocument implements AccountingDocumentInt
             $amount += $product->quantity * $product->cost_currency;
         }
 
-        //TODO Добавить доп.расходы
+
+        //TODO Добавить доп.расходы Отнять возвраты
+
+        foreach ($this->arrivals as $arrival) {
+            foreach ($arrival->refunds as $refund) {
+                $amount -= $refund->getAmount();
+            }
+        }
         return $amount;
     }
 
@@ -97,13 +103,19 @@ class SupplyDocument extends AccountingDocument implements AccountingDocumentInt
         return $quantity;
     }
 
-    public function getPayments(): float
+    /**
+     * Оплачено по текущему заказу
+     */
+    public function getPayment(): float
     {
-        $amount = 0;
-        foreach ($this->payments as $paymentOrder) {
-            $amount += $paymentOrder->amount;
-        }
-        return $amount;
+        return PaymentDecryption::where('supply_id', $this->id)->whereHas('payment', function ($query) {
+            $query->where('completed', true);
+        })->sum('amount');
+    }
+
+    public function debit(): float
+    {
+        return $this->getAmount() - $this->getPayment();
     }
 
     //** RELATIONS */
@@ -120,11 +132,6 @@ class SupplyDocument extends AccountingDocument implements AccountingDocumentInt
     public function stacks(): HasMany
     {
         return $this->hasMany(SupplyStack::class, 'supply_id', 'id');
-    }
-
-    public function refunds(): HasMany
-    {
-        return $this->hasMany(RefundDocument::class, 'supply_id', 'id');
     }
 
     public function arrivals(): HasMany

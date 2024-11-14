@@ -43,7 +43,7 @@ class Setting extends Model
         $this->save();
     }
 
-    public function getData(): mixed
+    public function getData(): array
     {
         return $this->data;
     }

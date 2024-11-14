@@ -4,11 +4,9 @@ declare(strict_types=1);
 namespace App\View;
 
 use App\Modules\Base\Helpers\AdminMenu;
-use App\Menu\AdminProfileMenu;
+use App\Modules\Base\Helpers\AdminProfileMenu;
 use App\Modules\Product\Repository\CategoryRepository;
-use App\Modules\Shop\MenuHelper;
 use App\Modules\Shop\Schema;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;

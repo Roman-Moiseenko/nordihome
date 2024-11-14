@@ -27,17 +27,11 @@ class RefundRepository extends AccountingRepository
 
     private function RefundToArray(RefundDocument $document): array
     {
-        $exchange_fix = $document->distributor->currency->getExchange();
-        if ($document->isSupply()) {
-            $exchange_fix = $document->supply->exchange_fix;
-        }
-        if ($document->isArrival()) {
-            $exchange_fix = $document->arrival->exchange_fix;
-        }
+
         return array_merge($document->toArray(), [
             'founded' => $document->getFounded(),
             'currency' => $document->distributor->currency->sign,
-            'exchange_fix' => $exchange_fix,
+            'exchange_fix' => $document->arrival->exchange_fix,
             'distributor_name' => $document->distributor->name,
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),

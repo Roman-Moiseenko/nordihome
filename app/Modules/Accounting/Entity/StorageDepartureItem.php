@@ -46,17 +46,17 @@ class StorageDepartureItem extends Model
         ]);
     }
 
-    public function product()
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function storage()
+    public function storage(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Storage::class, 'storage_id', 'id');
     }
 
-    public function movement_product()
+    public function movement_product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(MovementProduct::class, 'movement_product_id', 'id');
     }

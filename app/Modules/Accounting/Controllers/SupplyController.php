@@ -19,6 +19,8 @@ use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
+use DB;
+use Illuminate\Database\Events\TransactionBeginning;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -28,23 +30,20 @@ use JetBrains\PhpStorm\Deprecated;
 class SupplyController extends Controller
 {
     private SupplyService $service;
-    private ProductRepository $products;
     private StackRepository $stacks;
     private SupplyRepository $repository;
     private StaffRepository $staffs;
 
     public function __construct(
         SupplyService $service,
-        ProductRepository $products,
         StackRepository $stacks,
         SupplyRepository $repository,
         StaffRepository $staffs,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
-        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
-        $this->products = $products;
         $this->stacks = $stacks;
         $this->repository = $repository;
         $this->staffs = $staffs;
@@ -143,16 +142,6 @@ class SupplyController extends Controller
         }
     }
 
-    public function refund(SupplyDocument $supply): RedirectResponse
-    {
-        try {
-            $refund = $this->service->refund($supply);
-            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ сохранен');
-        }  catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
     public function completed(SupplyDocument $supply): RedirectResponse
     {
         try {
@@ -166,9 +155,12 @@ class SupplyController extends Controller
     public function work(SupplyDocument $supply): RedirectResponse
     {
         try {
+            DB::beginTransaction();
             $this->service->work($supply);
+            DB::commit();
             return redirect()->back()->with('success', 'Документ в работе. Все связанные документы возвращены в работу!');
         } catch (\DomainException $e) {
+            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -223,7 +215,6 @@ class SupplyController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-
 
     public function set_product(SupplyProduct $product, Request $request): RedirectResponse
     {

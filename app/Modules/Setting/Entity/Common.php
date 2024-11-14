@@ -15,6 +15,7 @@ class Common extends AbstractSetting
     //TODO Удалить, товарный учет всегда для СРМ
     public bool $accounting = true;
     public int $group_last_id = -1;
+    public string $date_bank = '01.01.1900';
 
     public function view()
     {

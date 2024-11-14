@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Menu;
+namespace App\Modules\Base\Helpers;
 
 class AdminProfileMenu
 {

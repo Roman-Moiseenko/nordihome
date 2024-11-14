@@ -62,11 +62,10 @@ class Distributor extends Model
             $amount += $supply->getAmount();
         }
         /** @var RefundDocument $refunds */ //Уменьшаем долг проведенными возвратами
-        $refunds = $this->refunds()->where('completed', true)->get();
+     /*   $refunds = $this->refunds()->where('completed', true)->get();
         foreach ($refunds as $refund) {
             $amount -= $refund->getAmount();
-        }
-
+        }*/
         return $amount;
     }
 
@@ -75,13 +74,11 @@ class Distributor extends Model
      */
     public function credit(): float
     {
-        $amount = 0;
-        /** @var PaymentDocument[] $orders */
-        $orders = $this->orders()->where('completed', true)->get();
-        foreach ($orders as $item) {
-            $amount += $item->getAmount();
-        }
-        return $amount;
+        $amount = PaymentDocument::selectRaw('SUM(amount * 1) AS total')
+            ->where('recipient_id', $this->organization_id)->where('completed', true)
+            ->first();
+        return (float)($amount->total ?? 0);
+
     }
 
     public function arrivals(): HasMany

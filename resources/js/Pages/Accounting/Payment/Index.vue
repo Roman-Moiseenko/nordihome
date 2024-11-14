@@ -4,20 +4,14 @@
         <el-config-provider :locale="ru">
             <h1 class="font-medium text-xl">Платежные поручения</h1>
             <div class="flex">
-                <el-popover :visible="visible_create" placement="bottom-start" :width="246">
-                    <template #reference>
-                        <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
-                            Создать документ
-                            <el-icon class="ml-1"><ArrowDown /></el-icon>
-                        </el-button>
-                    </template>
-                    <el-select v-model="create_id" placeholder="Поставщики" class="mt-1">
-                        <el-option v-for="item in $props.distributors" :key="item.id" :label="item.name" :value="item.id"/>
-                    </el-select>
-                    <div class="mt-2">
-                        <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
-                    </div>
-                </el-popover>
+                <el-upload
+                    class="upload-demo"
+                    :action="route('admin.accounting.bank.upload')"
+                    :on-success="handleSuccess"
+                    :on-error="handleError"
+                >
+                    <el-button type="primary">Загрузить из банка</el-button>
+                </el-upload>
                 <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                     <el-date-picker
                         v-model="filter.date_from"
@@ -45,7 +39,6 @@
                     <el-checkbox v-model="filter.draft" label="Не проведенные" :checked="filter.draft"/>
                 </TableFilter>
             </div>
-
             <div class="mt-2 p-5 bg-white rounded-md">
                 <el-table
                     :data="tableData"
@@ -73,10 +66,10 @@
                             {{ func.price(scope.row.amount, scope.row.currency) }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
+                    <el-table-column prop="bank_purpose" label="Назначение" show-overflow-tooltip/>
                     <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
 
-                    <el-table-column label="Действия" align="right">
+                    <el-table-column label="Действия" align="right" width="200">
                         <template #default="scope">
                             <el-button v-if="!scope.row.completed"
                                        size="small"
@@ -89,13 +82,11 @@
                     </el-table-column>
                 </el-table>
             </div>
-
             <pagination
                 :current_page="payments.current_page"
                 :per_page="payments.per_page"
                 :total="payments.total"
             />
-
         </el-config-provider>
         <DeleteEntityModal name_entity="Заказ поставщику" />
     </Layout>
@@ -109,7 +100,7 @@ import {useStore} from "@Res/store.js"
 import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
-
+import type { UploadProps, UploadUserFile } from 'element-plus'
 import Active from '@Comp/Elements/Active.vue'
 
 const props = defineProps({
@@ -146,7 +137,6 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     }
     return ''
 }
-
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.payment.destroy', {payment: row.id}));
 }
@@ -160,7 +150,14 @@ function handleCopy(row) {
     router.post(route('admin.accounting.supply.copy', {supply: row.id}))
 }
 
+const handleSuccess: UploadProps['onError'] = (response, uploadFile, uploadFiles) => {
 
+    router.get(route('admin.accounting.payment.index'));
+}
+const handleError: UploadProps['onError'] = (error, uploadFile, uploadFiles) => {
+    console.log(error, uploadFile)
+}
+//(error: Error, uploadFile: UploadFile, uploadFiles: UploadFiles) => void
 </script>
 <style scoped>
 

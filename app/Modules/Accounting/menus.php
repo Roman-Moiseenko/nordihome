@@ -45,6 +45,8 @@ return [
                 'icon' => 'folder-output',
                 'title' => 'Списание товара',
                 'route_name' => 'admin.accounting.departure.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-folder-xmark',
             ],
 
 

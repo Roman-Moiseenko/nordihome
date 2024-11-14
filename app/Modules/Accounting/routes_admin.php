@@ -47,11 +47,13 @@ Route::group(
             'as' => 'departure.',
         ],
             function () {
-                Route::post('/add/{departure}', 'DepartureController@add')->name('add');
+                Route::post('/add-product/{departure}', 'DepartureController@add_product')->name('add-product');
                 Route::post('/add-products/{departure}', 'DepartureController@add_products')->name('add-products');
                 Route::post('/completed/{departure}', 'DepartureController@completed')->name('completed');
-                Route::post('/set/{item}', 'DepartureController@set')->name('set');
-                Route::delete('/remove-item/{item}', 'DepartureController@remove_item')->name('remove-item');
+                Route::post('/set-product/{product}', 'DepartureController@set_product')->name('set-product');
+                Route::delete('/del-product/{product}', 'DepartureController@del_product')->name('del-product');
+                Route::post('/set-info/{departure}', 'DepartureController@set_info')->name('set-info');
+
             });
         Route::group([
             'prefix' => 'distributor',
@@ -68,7 +70,7 @@ Route::group(
                 //На основании:
                 Route::post('/arrival/{supply}', 'SupplyController@arrival')->name('arrival');
                 Route::post('/payment/{supply}', 'SupplyController@payment')->name('payment');
-                Route::post('/refund/{supply}', 'SupplyController@refund')->name('refund');
+                //Route::post('/refund/{supply}', 'SupplyController@refund')->name('refund');
 
                 Route::get('/stack', 'SupplyController@stack')->name('stack');
                 Route::delete('/del-stack/{stack}', 'SupplyController@del_stack')->name('del-stack');
@@ -119,8 +121,19 @@ Route::group(
                 Route::post('/create', 'PaymentController@create')->name('create');
                 Route::post('/completed/{payment}', 'PaymentController@completed')->name('completed');
                 Route::post('/work/{payment}', 'PaymentController@work')->name('work');
+                Route::post('/upload', 'PaymentController@upload')->name('upload');
 
                 Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
+                Route::post('/set-amount/{decryption}', 'PaymentController@set_amount')->name('set-amount');
+            });
+
+        Route::group([
+            'prefix' => 'bank',
+            'as' => 'bank.'
+        ],
+            function () {
+                Route::post('/upload', 'BankController@upload')->name('upload');
+
             });
 
         Route::group([
