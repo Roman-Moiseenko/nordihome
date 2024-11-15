@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -48,6 +49,9 @@ class ArrivalRepository extends AccountingRepository
         $withData = [
             'products' => $arrival->products()->with('product')->paginate(20)->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($arrival->distributor),
+            'expense' => is_null($arrival->expense) ? null : array_merge($arrival->expense()->first()->toArray(),[
+                'amount' => $arrival->expense->getAmount(),
+            ]),
         ];
 
         return array_merge($this->ArrivalToArray($arrival), $withData);
@@ -57,5 +61,16 @@ class ArrivalRepository extends AccountingRepository
     {
 
         return array_select(ArrivalDocument::OPERATIONS);
+    }
+
+    public function ExpenseWithToArray(ArrivalExpenseDocument $expense): array
+    {
+        return array_merge($expense->toArray(),[
+            'currency_sign' => ($expense->currency) ? $expense->arrival->currency->sign : '₽',
+            'items' => $expense->items()->get()->toArray(),
+            'distributor' => $this->distributors->DistributorForAccounting($expense->arrival->distributor),
+            'amount' => $expense->getAmount(),
+            'arrival' => $expense->arrival()->first()->toArray(),
+        ]);
     }
 }

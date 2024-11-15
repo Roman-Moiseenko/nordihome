@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
@@ -84,6 +85,12 @@ Breadcrumbs::for('admin.accounting.arrival.show', function (BreadcrumbTrail $tra
     $trail->parent('admin.accounting.arrival.index');
     $trail->push($arrival->number . ' от ' . $arrival->created_at->format('d-m-Y'), route('admin.accounting.arrival.show', $arrival));
 });
+
+Breadcrumbs::for('admin.accounting.arrival.expense.show', function (BreadcrumbTrail $trail, ArrivalExpenseDocument $expense) {
+    $trail->parent('admin.accounting.arrival.show', $expense->arrival);
+    $trail->push($expense->number . ' от ' . $expense->created_at->format('d-m-Y'), route('admin.accounting.arrival.expense.show', $expense));
+});
+
 /*
 Breadcrumbs::for('admin.accounting.arrival.edit', function (BreadcrumbTrail $trail, ArrivalDocument $arrival) {
     $trail->parent('admin.accounting.arrival.show', $arrival);

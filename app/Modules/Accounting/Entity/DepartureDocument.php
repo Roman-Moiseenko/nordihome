@@ -20,7 +20,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property DepartureProduct[] $departureProducts
  * @property Admin $staff
  */
-class DepartureDocument extends AccountingDocument implements AccountingDocumentInterface
+class DepartureDocument extends AccountingDocument
 {
     protected $table = 'departure_documents';
 

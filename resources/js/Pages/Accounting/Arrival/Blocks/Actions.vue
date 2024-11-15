@@ -6,7 +6,6 @@
             </el-button>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item @click="onExpenses">Дополнительные расходы</el-dropdown-item>
                     <el-dropdown-item @click="onMovement">Перемещение запасов</el-dropdown-item>
                     <el-dropdown-item @click="onInvoice">Расходная накладная</el-dropdown-item>
                     <el-dropdown-item @click="onRefund">Возврат поставщику</el-dropdown-item>
@@ -31,10 +30,14 @@
             :quantity="true"
         />
         <SearchAddProducts :route="route('admin.accounting.arrival.add-products', {arrival: arrival.id})" class="ml-3"/>
+        <el-button type="warning"  class="ml-3" @click="onExpenses">Дополнительные расходы</el-button>
         <el-button type="danger" plain class="ml-5" @click="onCompleted">Провести документ</el-button>
     </template>
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(arrival.amount, arrival.currency) }}</el-tag>
+        <span v-if="arrival.expense" class="ml-2">
+            Доп.расходы <el-tag type="warning" size="large">{{ func.price(arrival.expense.amount) }}</el-tag>
+        </span>
     </span>
 
 </template>
@@ -62,7 +65,7 @@ function onWork() {
 }
 
 function onExpenses() {
-    router.visit(route('admin.accounting.arrival.expenses', {arrival: props.arrival.id}), {
+    router.visit(route('admin.accounting.arrival.expense', {arrival: props.arrival.id}), {
         method: "post",
     })
 }

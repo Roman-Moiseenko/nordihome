@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Currency $currency
  * @property PaymentDocument[] $payments
  */
-class SupplyDocument extends AccountingDocument implements AccountingDocumentInterface
+class SupplyDocument extends AccountingDocument
 {
     const CREATED = 1201;
     const SENT = 1202;

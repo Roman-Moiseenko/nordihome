@@ -30,18 +30,21 @@ class ArrivalService
     private OrderReserveService $reserveService;
     private MovementService $movementService;
     private RefundService $refundService;
+    private ArrivalExpenseService $expenseService;
 
     public function __construct(
         StorageService      $storages,
         OrderReserveService $reserveService,
         MovementService     $movementService,
         RefundService       $refundService,
+        ArrivalExpenseService $expenseService,
     )
     {
         $this->storages = $storages;
         $this->reserveService = $reserveService;
         $this->movementService = $movementService;
         $this->refundService = $refundService;
+        $this->expenseService = $expenseService;
     }
 
     public function create(int $distributor_id, bool $is_manager = true): ArrivalDocument
@@ -59,6 +62,7 @@ class ArrivalService
         );
     }
 
+    #[Deprecated]
     public function update(Request $request, ArrivalDocument $arrival): ArrivalDocument
     {
         DB::transaction(function () use ($request, $arrival) {
@@ -83,6 +87,7 @@ class ArrivalService
     public function destroy(ArrivalDocument $arrival): void
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Удалять нельзя');
+        $arrival->expense()->delete();
         $arrival->delete();
     }
 
@@ -165,7 +170,8 @@ class ArrivalService
     public function completed(ArrivalDocument $arrival): void
     {
         DB::transaction(function () use ($arrival) {
-            $this->storages->arrival($arrival->storage, $arrival->products);
+            if (!is_null($arrival->expense)) $this->expenseService->completed($arrival->expense); //Провести доп.расходы
+            $this->storages->arrival($arrival->storage, $arrival->products); //Поступление на склад
             //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
             foreach ($arrival->products as $item) {
                 $arrival->distributor->addProduct($item->product, $item->cost_currency);
@@ -261,6 +267,7 @@ class ArrivalService
                 }
     */
             }
+            $arrival->expense->work();
         });
     }
 
@@ -275,10 +282,12 @@ class ArrivalService
     }
 
     //На основании
-    public function expenses(ArrivalDocument $arrival)
+    public function expense(ArrivalDocument $arrival)
     {
-        //TODO В разработке
-        throw new \DomainException('В разработке');
+        if (!is_null($arrival->expense)) return $arrival->expense;
+        if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Вносить изменения нельзя');
+
+        return $this->expenseService->create($arrival);
     }
 
     public function movement(ArrivalDocument $arrival)

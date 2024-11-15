@@ -16,7 +16,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property ArrivalDocument $arrival
  * @property PricingProduct[] $pricingProducts
  */
-class PricingDocument extends AccountingDocument implements AccountingDocumentInterface
+class PricingDocument extends AccountingDocument
 {
     protected $table = 'pricing_documents';
     protected $fillable = [

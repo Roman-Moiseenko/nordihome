@@ -2,16 +2,15 @@
 
 namespace App\Livewire\Admin\Accounting;
 
-use App\Modules\Accounting\Entity\AccountingDocumentInterface;
 use Livewire\Component;
 
 class EditComment extends Component
 {
 
-    public AccountingDocumentInterface $document;
+    public mixed $document;
     public string $comment;
 
-    public function mount(AccountingDocumentInterface $document)
+    public function mount($document)
     {
         $this->document = $document;
         $this->comment = $document->getComment();

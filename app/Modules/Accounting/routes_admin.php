@@ -23,10 +23,17 @@ Route::group(
                 Route::post('/completed/{arrival}', 'ArrivalController@completed')->name('completed');
                 Route::post('/work/{arrival}', 'ArrivalController@work')->name('work');
                 //На основании:
-                Route::post('/expenses/{arrival}', 'ArrivalController@expenses')->name('expenses'); //Доп.расходы
+                Route::post('/expense/{arrival}', 'ArrivalController@expense')->name('expense'); //Доп.расходы
                 Route::post('/movement/{arrival}', 'ArrivalController@movement')->name('movement'); //Перемещение
                 Route::post('/invoice/{arrival}', 'ArrivalController@invoice')->name('invoice'); //Расх.накладная
                 Route::post('/refund/{arrival}', 'ArrivalController@refund')->name('refund'); //Возврат
+
+                //Доп.расходы
+                Route::get('/expense/view/{expense}', 'ArrivalController@expense_show')->name('expense.show'); //Доп.расходы
+                Route::post('/expense/set-info/{expense}', 'ArrivalController@expense_set_info')->name('expense.set-info'); //Доп.расходы
+                Route::post('/expense/add-item/{expense}', 'ArrivalController@expense_add_item')->name('expense.add-item'); //Доп.расходы
+                Route::post('/expense/set-item/{item}', 'ArrivalController@expense_set_item')->name('expense.set-item'); //Доп.расходы
+                Route::delete('/expense/del-item/{item}', 'ArrivalController@expense_del_item')->name('expense.del-item'); //Доп.расходы
             });
         Route::group([
             'prefix' => 'movement',

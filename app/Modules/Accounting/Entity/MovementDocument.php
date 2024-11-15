@@ -26,7 +26,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property ArrivalDocument $arrival
  * @property MovementProduct[] $movementProducts
  */
-class MovementDocument extends AccountingDocument implements AccountingDocumentInterface
+class MovementDocument extends AccountingDocument
 {
     use HtmlInfoData;
 

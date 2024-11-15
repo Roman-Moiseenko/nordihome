@@ -31,8 +31,9 @@ use JetBrains\PhpStorm\Deprecated;
  * @property SupplyDocument $supply
  * @property PricingDocument $pricing
  * @property RefundDocument[] $refunds
+ * @property ArrivalExpenseDocument $expense
  */
-class ArrivalDocument extends AccountingDocument implements AccountingDocumentInterface
+class ArrivalDocument extends AccountingDocument
 {
     const OPERATION_SUPPLY = 101;
     const OPERATION_REMAINS = 102;
@@ -108,6 +109,11 @@ class ArrivalDocument extends AccountingDocument implements AccountingDocumentIn
     }
 
     //*** RELATION
+    public function expense(): HasOne
+    {
+        return $this->hasOne(ArrivalExpenseDocument::class, 'arrival_id', 'id');
+    }
+
     public function supply(): BelongsTo
     {
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');

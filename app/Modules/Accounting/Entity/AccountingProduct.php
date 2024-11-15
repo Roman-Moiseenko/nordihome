@@ -11,6 +11,7 @@ use Illuminate\Database\Schema\Blueprint;
  * @property int $id
  * @property int $product_id
  * @property int $quantity - не используется в PricingDocument
+ * @property int $service_id - для услуг
  *
  * @property Product $product
  */
