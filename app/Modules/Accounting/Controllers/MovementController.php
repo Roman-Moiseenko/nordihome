@@ -14,8 +14,11 @@ use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use App\UseCase\PaginationService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Inertia\Inertia;
+use Inertia\Response;
 use JetBrains\PhpStorm\Deprecated;
 
 class MovementController extends Controller
@@ -40,13 +43,20 @@ class MovementController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $storages = Storage::orderBy('name')->get();
+        $storages = Storage::orderBy('name')->get()->toArray();
         $staffs = $this->staffs->getStaffsChiefs();
         $movements = $this->repository->getIndex($request, $filters);
         $statuses = MovementDocument::STATUSES;
-        return view('admin.accounting.movement.index', compact('movements', 'filters', 'staffs', 'storages', 'statuses'));
+
+        return Inertia::render('Accounting/Movement/Index', [
+            'movements' => $movements,
+            'filters' => $filters,
+            'storages' => $storages,
+            'staffs' => $staffs,
+            'statuses' => $statuses,
+        ]);
     }
 
     public function store(Request $request)
@@ -64,34 +74,73 @@ class MovementController extends Controller
 
     public function show(MovementDocument $movement)
     {
-        $info = $movement->getInfoData();
-        return view('admin.accounting.movement.show', compact('movement', 'info'));
+        $storages = Storage::orderBy('name')->get()->toArray();
+        //$info = $movement->getInfoData();
+       // return view('admin.accounting.movement.show', compact('movement', 'info'));
+        return Inertia::render('Accounting/Movement/Show', [
+            'movement' => $this->repository->MovementWithToArray($movement),
+            'storages' => $storages,
+        ]);
     }
 
-    public function destroy(MovementDocument $movement)
+    public function set_info(MovementDocument $movement, Request $request): RedirectResponse
     {
-        $this->service->destroy($movement);
-        return redirect()->back();
+        try {
+            $this->service->setInfo($movement, $request);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function add(Request $request, MovementDocument $movement)
+    public function completed(MovementDocument $movement): RedirectResponse
     {
-        $this->service->add($movement, (int)$request['product_id'], (int)$request['quantity']);
+        try {
+            $this->service->completed($movement);
+            return redirect()->back()->with('success', 'Документ проведен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function work(MovementDocument $movement): RedirectResponse
+    {
+        try {
+            $this->service->work($movement);
+            return redirect()->back()->with('success', 'Документ в работе');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function destroy(MovementDocument $movement): RedirectResponse
+    {
+        try {
+            $this->service->destroy($movement);
+            return redirect()->back()->with('success', 'Документ удален');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
+    }
+
+    public function add_product(Request $request, MovementDocument $movement)
+    {
+        $this->service->addProduct($movement, (int)$request['product_id'], (int)$request['quantity']);
         return redirect()->route('admin.accounting.movement.show', $movement);
     }
 
     public function add_products(Request $request, MovementDocument $movement)
     {
-        $this->service->add_products($movement, $request['products']);
+        $this->service->addProducts($movement, $request['products']);
         return redirect()->route('admin.accounting.movement.show', $movement);
     }
 
 
-    public function remove_item(MovementProduct $item)
+    public function del_product(MovementProduct $product)
     {
-        $movement = $item->document;
-        $item->delete();
-        return redirect()->route('admin.accounting.movement.show', $movement);
+        $product->delete();
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function activate(MovementDocument $movement)
@@ -112,11 +161,10 @@ class MovementController extends Controller
         return redirect()->route('admin.accounting.movement.index');
     }
 
-    //AJAX
-    public function set(Request $request, MovementProduct $item)
+    public function set_product(Request $request, MovementProduct $product)
     {
-        $result = $this->service->set($request, $item);
-        return response()->json($result);
+        $this->service->setProduct($request, $product);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
 }

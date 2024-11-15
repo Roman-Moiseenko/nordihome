@@ -148,6 +148,13 @@ class MovementDocument extends AccountingDocument
         return $this->status == self::STATUS_FINISHED;
     }
 
+    public function getQuantity(): int
+    {
+        $quantity = MovementProduct::selectRaw('SUM(quantity * 1) AS total')
+            ->where('movement_id', $this->id)
+            ->first();
+        return $quantity->total ?? 0;
+    }
 
     #[ArrayShape([
         'quantity' => 'int',
@@ -166,15 +173,13 @@ class MovementDocument extends AccountingDocument
             'cost' => $cost,
         ];
     }
+
     //** HELPERS */
-
-
     public function statusHTML(): string
     {
         if ($this->status == 0) return self::STATUSES[self::STATUS_FINISHED];
         return self::STATUSES[$this->status];
     }
-
 
     public function getManager(): string
     {
@@ -187,4 +192,5 @@ class MovementDocument extends AccountingDocument
         return $this->hasMany(MovementProduct::class, 'movement_id', 'id');
 
     }
+
 }

@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Service;
 
 use App\Events\MovementHasCompleted;
 use App\Events\ThrowableHasAppeared;
+use App\Modules\Accounting\Entity\AccountingDocument;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 
-class MovementService
+class MovementService // extends AccountingService
 {
 
     private StorageService $storages;
@@ -103,13 +104,13 @@ class MovementService
         });
     }
 
-    public function destroy(MovementDocument $movement)
+    public function destroy(MovementDocument $movement): void
     {
         if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Удалять нельзя');
         $movement->delete();
     }
 
-    public function add(MovementDocument $movement, int $product_id, int $quantity):? MovementDocument
+    public function addProduct(MovementDocument $movement, int $product_id, int $quantity = null): void
     {
         if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
 
@@ -117,7 +118,7 @@ class MovementService
         $product = Product::find($product_id);
         if ($movement->isProduct($product_id)) {
             flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
-            return null;
+
         }
         $free_quantity = $movement->storageOut->getAvailable($product);
         $quantity = min($quantity, $free_quantity);
@@ -125,29 +126,43 @@ class MovementService
         //Добавляем в документ
         $movement->addProduct($product, $quantity);
         $movement->refresh();
-        return $movement;
+
     }
 
-    public function add_products(MovementDocument $movement, string $textarea): void
+    public function addProducts(MovementDocument $movement, array $products): void
     {
-        $list = explode("\r\n", $textarea);
-        foreach ($list as $item) {
-            $product = Product::whereCode($item)->first();
-            if (!is_null($product)) {
-                $this->add($movement, $product->id, 1);
+        foreach ($products as $product) {
+            $_product = Product::whereCode($product['code'])->first();
+            if (!is_null($_product)) {
+                $this->addProduct($movement, $_product->id, (int)$product['quantity']);
             } else {
-                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+                $errors[] = $product['code'];
             }
         }
+        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    //Для AJAX
-    public function set(Request $request, MovementProduct $item)
+    public function setProduct(Request $request, MovementProduct $product): void
     {
-        if (!$item->document->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
+        if ($product->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         //Меняем данные
-        $item->quantity = $request->integer('quantity');
-        $item->save();
-        return $item->document->getInfoData();
+        //TODO Проверка на наличие на складе
+        $product->quantity = $request->integer('quantity');
+        $product->save();
+    }
+
+    public function setInfo(MovementDocument $movement, Request $request)
+    {
+        throw new \DomainException('В разработке');
+    }
+
+    public function completed(MovementDocument $movement)
+    {
+        throw new \DomainException('В разработке');
+    }
+
+    public function work(MovementDocument $movement)
+    {
+        throw new \DomainException('В разработке');
     }
 }

@@ -39,6 +39,8 @@ return [
                 'icon' => 'folder-sync',
                 'title' => 'Перемещение товара',
                 'route_name' => 'admin.accounting.movement.index',
+                'vue' => true,
+                'font_awesome' => 'fa-sharp fa-light fa-arrows-rotate',
             ],
             'departure' => [
                 'icon' => 'folder-output',

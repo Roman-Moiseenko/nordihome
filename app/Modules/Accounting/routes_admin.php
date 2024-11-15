@@ -36,19 +36,29 @@ Route::group(
                 Route::post('/expense/set-item/{item}', 'ArrivalController@expense_set_item')->name('expense.set-item'); //Доп.расходы
                 Route::delete('/expense/del-item/{item}', 'ArrivalController@expense_del_item')->name('expense.del-item'); //Доп.расходы
             });
+        //MOVEMENT
         Route::group([
             'prefix' => 'movement',
             'as' => 'movement.',
         ],
             function () {
-                Route::post('/add/{movement}', 'MovementController@add')->name('add');
+                Route::post('/set-product/{product}', 'MovementController@set_product')->name('set-product');
+                Route::delete('/del-product/{product}', 'MovementController@del_product')->name('del-product');
+
                 Route::post('/add-products/{movement}', 'MovementController@add_products')->name('add-products');
+                Route::post('/add-product/{movement}', 'MovementController@add_product')->name('add-product');
+                Route::post('/set-info/{movement}', 'MovementController@set_info')->name('set-info');
+                Route::post('/completed/{movement}', 'MovementController@completed')->name('completed');
+                Route::post('/work/{movement}', 'MovementController@work')->name('work');
+
+               // Route::post('/add/{movement}', 'MovementController@add')->name('add');
+               // Route::post('/add-products/{movement}', 'MovementController@add_products')->name('add-products');
 
                 Route::post('/activate/{movement}', 'MovementController@activate')->name('activate');
                 Route::post('/departure/{movement}', 'MovementController@departure')->name('departure');
                 Route::post('/arrival/{movement}', 'MovementController@arrival')->name('arrival');
-                Route::post('/set/{item}', 'MovementController@set')->name('set');
-                Route::delete('/remove-item/{item}', 'MovementController@remove_item')->name('remove-item');
+               // Route::post('/set/{item}', 'MovementController@set')->name('set');
+                //Route::delete('/remove-item/{item}', 'MovementController@remove_item')->name('remove-item');
             });
         Route::group([
             'prefix' => 'departure',
@@ -108,13 +118,6 @@ Route::group(
                 Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
                 Route::post('/work/{pricing}', 'PricingController@work')->name('work');
                 Route::post('/copy/{pricing}', 'PricingController@copy')->name('copy');
-
-                // Route::post('/add/{pricing}', 'PricingController@add')->name('add');
-                //Route::post('/add-products/{pricing}', 'PricingController@add_products')->name('add-products');
-                //Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
-               // Route::post('/create-arrival/{arrival}', 'PricingController@create_arrival')->name('create-arrival');
-               // Route::post('/set/{item}', 'PricingController@set')->name('set');
-               // Route::delete('/remove-item/{item}', 'PricingController@remove_item')->name('remove-item');
             });
 
         Route::group([

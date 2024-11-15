@@ -150,8 +150,12 @@ class PricingService
 
     public function work(PricingDocument $pricing): void
     {
-        DB::transaction(function () use ($pricing) {
+        if (!is_null(PricingDocument::where('created_at', '>', $pricing->created_at)
+            ->completed()
+            ->get()))
+            throw new \DomainException('Существуют более поздние проведенные документы');
 
+        DB::transaction(function () use ($pricing) {
             foreach ($pricing->products as $product) {
                 $bulk = $product->product->pricesBulk()->skip(0)->first();
                 if (!is_null($bulk)) $bulk->delete();

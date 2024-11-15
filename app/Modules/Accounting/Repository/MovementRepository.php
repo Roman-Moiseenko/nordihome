@@ -27,26 +27,30 @@ class MovementRepository extends AccountingRepository
                 $filters['status'] = $status;
                 $query->where('status', $status);
             }
-        });
+        }, false);
 
         return $query->paginate($request->input('p', 20))
             ->withQueryString()
-            ->through(function(MovementDocument $document) {
-                return [
-                    'id' => $document->id,
-                    'date' => $document->htmlDate(),
-                    'number' => $document->htmlNum(),
-                    //'completed' => $document->completed,
-                    'status' => $document->status,
-                    'status_html' => $document->statusHTML(),
-                    'storage_in' => $document->storageIn->name,
-                    'storage_out' => $document->storageOut->name,
-                    'quantity' => $document->getInfoData()['quantity'],
-                    'comment' => $document->comment,
-                    'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
-                    'url' => route('admin.accounting.departure.show', $document),
-                    'destroy' => route('admin.accounting.departure.destroy', $document),
-                ];
-            });
+            ->through(fn(MovementDocument $document) => $this->MovementToArray($document));
+    }
+
+    public function MovementToArray(MovementDocument $document): array
+    {
+        return array_merge($document->toArray(), [
+            'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
+            'status_html' => $document->statusHTML(),
+            'storage_in' => $document->storageIn->toArray(),
+            'storage_out' => $document->storageOut->toArray(),
+            'quantity' => $document->getQuantity(),
+        ]);
+    }
+    public function MovementWithToArray(MovementDocument $document): array
+    {
+        return array_merge($this->MovementToArray($document), [
+            'is_active' => $document->isFinished(),
+            'is_departure' => $document->isDeparture(),
+            'is_arrival' => $document->isArrival(),
+            'products' => $document->products()->with('product')->paginate(20)->toArray(),
+        ]);
     }
 }
