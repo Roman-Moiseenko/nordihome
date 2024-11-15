@@ -9,6 +9,7 @@ Route::group(
         //'namespace' => 'Accounting',
     ],
     function () {
+        //ARRIVAL
         Route::group([
             'prefix' => 'arrival',
             'as' => 'arrival.',
@@ -69,6 +70,7 @@ Route::group(
             function () {
                 Route::post('/supply/{distributor}', 'DistributorController@supply')->name('supply');
             });
+        //SUPPLY
         Route::group([
             'prefix' => 'supply',
             'as' => 'supply.',
@@ -77,7 +79,6 @@ Route::group(
                 //На основании:
                 Route::post('/arrival/{supply}', 'SupplyController@arrival')->name('arrival');
                 Route::post('/payment/{supply}', 'SupplyController@payment')->name('payment');
-                //Route::post('/refund/{supply}', 'SupplyController@refund')->name('refund');
 
                 Route::get('/stack', 'SupplyController@stack')->name('stack');
                 Route::delete('/del-stack/{stack}', 'SupplyController@del_stack')->name('del-stack');
@@ -91,21 +92,29 @@ Route::group(
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
                 Route::post('/work/{supply}', 'SupplyController@work')->name('work');
                 Route::post('/set-info/{supply}', 'SupplyController@set_info')->name('set-info');
-
-
             });
+        //PRICING
         Route::group([
             'prefix' => 'pricing',
             'as' => 'pricing.',
         ],
             function () {
-                Route::post('/add/{pricing}', 'PricingController@add')->name('add');
-                Route::post('/copy/{pricing}', 'PricingController@copy')->name('copy');
+                Route::post('/set-product/{product}', 'PricingController@set_product')->name('set-product');
+                Route::delete('/del-product/{product}', 'PricingController@del_product')->name('del-product');
+
                 Route::post('/add-products/{pricing}', 'PricingController@add_products')->name('add-products');
+                Route::post('/add-product/{pricing}', 'PricingController@add_product')->name('add-product');
+                Route::post('/set-info/{pricing}', 'PricingController@set_info')->name('set-info');
                 Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
-                Route::post('/create-arrival/{arrival}', 'PricingController@create_arrival')->name('create-arrival');
-                Route::post('/set/{item}', 'PricingController@set')->name('set');
-                Route::delete('/remove-item/{item}', 'PricingController@remove_item')->name('remove-item');
+                Route::post('/work/{pricing}', 'PricingController@work')->name('work');
+                Route::post('/copy/{pricing}', 'PricingController@copy')->name('copy');
+
+                // Route::post('/add/{pricing}', 'PricingController@add')->name('add');
+                //Route::post('/add-products/{pricing}', 'PricingController@add_products')->name('add-products');
+                //Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
+               // Route::post('/create-arrival/{arrival}', 'PricingController@create_arrival')->name('create-arrival');
+               // Route::post('/set/{item}', 'PricingController@set')->name('set');
+               // Route::delete('/remove-item/{item}', 'PricingController@remove_item')->name('remove-item');
             });
 
         Route::group([
@@ -119,7 +128,7 @@ Route::group(
                 Route::get('/holdings', 'OrganizationController@holdings')->name('holdings');
                 Route::post('/holding-detach/{organization}', 'OrganizationController@holding_detach')->name('holding-detach');
             });
-
+        //PAYMENT
         Route::group([
             'prefix' => 'payment',
             'as' => 'payment.'
@@ -133,7 +142,7 @@ Route::group(
                 Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
                 Route::post('/set-amount/{decryption}', 'PaymentController@set_amount')->name('set-amount');
             });
-
+        //BANK
         Route::group([
             'prefix' => 'bank',
             'as' => 'bank.'
@@ -142,7 +151,7 @@ Route::group(
                 Route::post('/upload', 'BankController@upload')->name('upload');
 
             });
-
+        //REFUND
         Route::group([
             'prefix' => 'refund',
             'as' => 'refund.',

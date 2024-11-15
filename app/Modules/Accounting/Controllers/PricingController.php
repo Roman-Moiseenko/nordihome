@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Repository\PricingRepository;
@@ -14,94 +15,130 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PricingController extends Controller
 {
 
     private PricingService $service;
-    //private ProductRepository $products;
     private PricingRepository $repository;
     private StaffRepository $staffs;
 
     public function __construct(
-        PricingService $service,
-    //    ProductRepository $products,
+        PricingService    $service,
         PricingRepository $repository,
-        StaffRepository $staffs,
+        StaffRepository   $staffs,
     )
     {
         $this->middleware(['auth:admin', 'can:pricing']);
         $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
-       // $this->products = $products;
         $this->repository = $repository;
         $this->staffs = $staffs;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
         $pricings = $this->repository->getIndex($request, $filters);
         $staffs = $this->staffs->getStaffsChiefs();
-
-        return view('admin.accounting.pricing.index', compact('pricings', 'filters', 'staffs'));
+        $distributors = Distributor::orderBy('name')->get();
+        return Inertia::render('Accounting/Pricing/Index', [
+            'pricings' => $pricings,
+            'filters' => $filters,
+            'distributors' => $distributors,
+            'staffs' => $staffs,
+        ]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): RedirectResponse
     {
         $pricing = $this->service->create();
         return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
     }
 
-    public function create_arrival(ArrivalDocument $arrival): RedirectResponse
+    public function show(PricingDocument $pricing, Request $request)
     {
-        $pricing = $this->service->create_arrival($arrival);
-        return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
+        //return view('admin.accounting.pricing.show', compact('pricing'));
+        return Inertia::render('Accounting/Pricing/Show', [
+            'pricing' => $this->repository->PricingWithToArray($pricing, $request),
+        ]);
     }
 
-    public function show(PricingDocument $pricing)
-    {
-        return view('admin.accounting.pricing.show', compact('pricing'));
-    }
-
-    public function destroy(PricingDocument $pricing)
+    public function destroy(PricingDocument $pricing): RedirectResponse
     {
         $this->service->destroy($pricing);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Удалено');
     }
 
-    public function completed(PricingDocument $pricing)
+    public function completed(PricingDocument $pricing): RedirectResponse
     {
-        $this->service->completed($pricing);
-        return redirect()->route('admin.accounting.pricing.index');
+        try {
+            $this->service->completed($pricing);
+            return redirect()->back()->with('success', 'Документ проведен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function remove_item(PricingProduct $item)
+    public function work(PricingDocument $pricing): RedirectResponse
     {
-        $this->service->remove_item($item);
-        return redirect()->back();
+        try {
+            $this->service->work($pricing);
+            return redirect()->back()->with('success', 'Документ в работе');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function add(Request $request, PricingDocument $pricing)
+    public function set_info(PricingDocument $pricing, Request $request): RedirectResponse
     {
-        $this->service->add($pricing, (int)$request['product_id']);
-        return redirect()->route('admin.accounting.pricing.show', $pricing);
+        try {
+            $this->service->setInfo($pricing, $request);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function add_products(Request $request, PricingDocument $pricing)
+    public function del_product(PricingProduct $product)
     {
-        $this->service->add_products($pricing, $request['products']);
-        return redirect()->route('admin.accounting.pricing.show', $pricing);
+        $this->service->delProduct($product);
+        return redirect()->back()->with('success', 'Удалено');;
     }
 
-    public function set(PricingProduct $item, Request $request)
+    public function add_product(Request $request, PricingDocument $pricing): RedirectResponse
     {
-        $this->service->set($item, $request->all());
-        return response()->json(true);
+        try {
+            $this->service->addProduct($pricing, (int)$request['product_id']);
+            return redirect()->back()->with('success', 'Товар добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function copy(PricingDocument $pricing)
+    public function add_products(Request $request, PricingDocument $pricing): RedirectResponse
+    {
+        try {
+            $this->service->addProducts($pricing, $request['products']);
+            return redirect()->back()->with('success', 'Товары добавлены');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function set_product(PricingProduct $product, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->setProduct($product, $request->all());
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function copy(PricingDocument $pricing): RedirectResponse
     {
         $pricing = $this->service->copy($pricing);
-        return redirect()->route('admin.accounting.pricing.show', $pricing);
+        return redirect()->route('admin.accounting.pricing.show', $pricing)->with('success', 'Документ скопирован');
     }
 }

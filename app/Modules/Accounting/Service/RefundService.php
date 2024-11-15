@@ -88,9 +88,9 @@ class RefundService
     {
         $errors = [];
         foreach ($products as $product) {
-            $product_id = Product::whereCode($product['code'])->first()->id;
-            if (!is_null($product)) {
-                $this->addProduct($refund, $product_id, (int)$product['quantity']);
+            $_product = Product::whereCode($product['code'])->first();
+            if (!is_null($_product)) {
+                $this->addProduct($refund, $_product->id, (int)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }

@@ -3,23 +3,9 @@
         <template #default>
             <Head><title>{{ title }}</title></Head>
             <el-config-provider :locale="ru">
-                <h1 class="font-medium text-xl">Приходные накладные</h1>
+                <h1 class="font-medium text-xl">Установка цен</h1>
                 <div class="flex">
-                    <el-popover :visible="visible_create" placement="bottom-start" :width="246">
-                        <template #reference>
-                            <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
-                                Создать документ
-                                <el-icon class="ml-1"><ArrowDown /></el-icon>
-                            </el-button>
-                        </template>
-                        <el-select v-model="create_id" placeholder="Поставщики" class="mt-1">
-                            <el-option v-for="item in $props.distributors" :key="item.id" :label="item.name" :value="item.id"/>
-                        </el-select>
-                        <div class="mt-2">
-                            <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
-                        </div>
-                    </el-popover>
-
+                    <el-button type="primary" class="p-4 my-3" @click="createButton">Создать документ</el-button>
                     <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                         <el-date-picker
                             v-model="filter.date_from"
@@ -47,7 +33,6 @@
                         <el-checkbox v-model="filter.draft" label="Не проведенные" :checked="filter.draft"/>
                     </TableFilter>
                 </div>
-
                 <div class="mt-2 p-5 bg-white rounded-md">
                     <el-table
                         :data="tableData"
@@ -60,36 +45,38 @@
 
                         <el-table-column label="Дата" width="120">
                             <template #default="scope">
-                                {{ func.date(scope.row.created_at)}}
+                                {{ func.date(scope.row.created_at) }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="number" label="№ Документа" width="160"/>
-                        <el-table-column prop="distributor_name" label="Поставщик" width="260" show-overflow-tooltip/>
                         <el-table-column prop="completed" label="Проведен" width="120">
                             <template #default="scope">
                                 <Active :active="scope.row.completed"/>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="quantity" label="Кол-во" width="100"/>
-                        <el-table-column prop="amount" label="Сумма" width="120">
+                        <el-table-column label="Основание">
                             <template #default="scope">
-                                {{ func.price(scope.row.amount, scope.row.currency) }}
+                                <span v-if="scope.row.arrival">
+                                    Приходная накладная № {{
+                                        scope.row.arrival.number
+                                    }} от {{ func.date(scope.row.arrival.created_at) }}
+                                </span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
                         <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
                         <el-table-column label="Действия" align="right">
                             <template #default="scope">
-                                <!--el-button
+                                <el-button
                                     size="small"
                                     type="warning"
                                     @click.stop="handleCopy(scope.row)">
                                     Copy
-                                </el-button-->
+                                </el-button>
                                 <el-button v-if="!scope.row.completed"
-                                    size="small"
-                                    type="danger"
-                                    @click.stop="handleDeleteEntity(scope.row)"
+                                           size="small"
+                                           type="danger"
+                                           @click.stop="handleDeleteEntity(scope.row)"
                                 >
                                     Delete
                                 </el-button>
@@ -97,15 +84,13 @@
                         </el-table-column>
                     </el-table>
                 </div>
-
                 <pagination
-                    :current_page="arrivals.current_page"
-                    :per_page="arrivals.per_page"
-                    :total="arrivals.total"
+                    :current_page="pricings.current_page"
+                    :per_page="pricings.per_page"
+                    :total="pricings.total"
                 />
-
             </el-config-provider>
-            <DeleteEntityModal name_entity="Заказ поставщику" />
+            <DeleteEntityModal name_entity="Установку цен"/>
         </template>
     </Layout>
 </template>
@@ -118,25 +103,21 @@ import {useStore} from "@Res/store.js"
 import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
-
 import Active from '@Comp/Elements/Active.vue'
 
 const props = defineProps({
-    arrivals: Object,
+    pricings: Object,
     title: {
         type: String,
-        default: 'Приходные накладные',
+        default: 'Ценообразование',
     },
     filters: Array,
     distributors: Array,
-    stack_count: Number,
     staffs: Array,
 })
 const store = useStore();
-
-const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.arrivals.data])
+const tableData = ref([...props.pricings.data])
 const filter = reactive({
     draft: props.filters.draft,
     staff_id: props.filters.staff_id,
@@ -145,8 +126,6 @@ const filter = reactive({
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
 })
-const create_id = ref<Number>(null)
-
 interface IRow {
     completed: number
 }
@@ -158,20 +137,15 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.arrival.destroy', {arrival: row.id}));
+    $delete_entity.show(route('admin.accounting.pricing.destroy', {pricing: row.id}));
 }
 function createButton() {
-    router.post(route('admin.accounting.arrival.store', {distributor: create_id.value}))
+    router.post(route('admin.accounting.pricing.store'))
 }
 function routeClick(row) {
-    router.get(route('admin.accounting.arrival.show', {arrival: row.id}))
+    router.get(route('admin.accounting.pricing.show', {pricing: row.id}))
 }
 function handleCopy(row) {
-    router.post(route('admin.accounting.arrival.copy', {arrival: row.id}))
+    router.post(route('admin.accounting.pricing.copy', {pricing: row.id}))
 }
-
-
 </script>
-<style scoped>
-
-</style>

@@ -132,13 +132,13 @@ class ArrivalService
         return $item;
     }
 
-    public function addProducts(ArrivalDocument $arrival, mixed $products): void
+    public function addProducts(ArrivalDocument $arrival, array $products): void
     {
         $errors = [];
         foreach ($products as $product) {
-            $product_id = Product::whereCode($product['code'])->first()->id;
-            if (!is_null($product)) {
-                $this->addProduct($arrival, $product_id, (int)$product['quantity']);
+            $_product = Product::whereCode($product['code'])->first();
+            if (!is_null($_product)) {
+                $this->addProduct($arrival, $_product->id, (int)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }

@@ -32,29 +32,23 @@ use JetBrains\PhpStorm\Deprecated;
 class ArrivalController extends Controller
 {
     private ArrivalService $service;
-    private ProductRepository $products;
     private ArrivalRepository $repository;
     private StaffRepository $staffs;
     private ArrivalExpenseService $expenseService;
-   // private PricingService $pricingService;
 
     public function __construct(
         ArrivalService        $service,
         ArrivalExpenseService $expenseService,
-        ProductRepository     $products,
         ArrivalRepository     $repository,
         StaffRepository       $staffs,
-//        PricingService        $pricingService,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
-        $this->products = $products;
         $this->repository = $repository;
         $this->staffs = $staffs;
         $this->expenseService = $expenseService;
-  //      $this->pricingService = $pricingService;
     }
 
     public function index(Request $request): Response
@@ -67,7 +61,7 @@ class ArrivalController extends Controller
             'arrivals' => $arrivals,
             'filters' => $filters,
             'distributors' => $distributors,
-            'staffs' => $staffs
+            'staffs' => $staffs,
         ]);
     }
 

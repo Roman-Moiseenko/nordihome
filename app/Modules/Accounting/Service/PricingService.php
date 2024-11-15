@@ -10,6 +10,7 @@ use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Admin\Entity\Admin;
 
 use App\Modules\Product\Entity\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -29,15 +30,7 @@ class PricingService
         return $pricing;
     }
 
-    public function create_arrival(ArrivalDocument $arrival):? PricingDocument
-    {
-        if (!$arrival->isCompleted()) throw new \DomainException('Поступление не проведено. Создать установку цен невозможно!');
-        $pricing = $this->create($arrival->id);
-        foreach ($arrival->arrivalProducts as $arrivalProduct) {
-            $this->add($pricing, $arrivalProduct->product_id, $arrivalProduct->getCostRu());
-        }
-        return $pricing;
-    }
+
 
     public function destroy(PricingDocument $pricing): void
     {
@@ -45,48 +38,36 @@ class PricingService
         $pricing->delete();
     }
 
-    public function add(PricingDocument $pricing, int $product_id, int $cost = null): PricingDocument
+    public function addProduct(PricingDocument $pricing, int $product_id): void
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, менять данные нельзя');
 
         /** @var Product $product */
         $product = Product::find($product_id);
-        if ($pricing->isProduct($product_id)) {
-            flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
-            return $pricing;
-        }
+        if ($pricing->isProduct($product_id))
+            throw new \DomainException('Товар ' . $product->name . ' уже добавлен в документ');
 
-        $pricingProduct = PricingProduct::new(
-            $product->id,
-            $cost ?? $product->getPriceCost(), //Если передана закупочная цена $cost
-            $product->getPriceRetail(),
-            $product->getPriceBulk(),
-            $product->getPriceSpecial(),
-            $product->getPriceMin(),
-            $product->getPricePre()
-        );
+        $pricingProduct = PricingProduct::new(product_id: $product->id);
         $pricing->products()->save($pricingProduct);
         $pricing->refresh();
-        return $pricing;
     }
 
-    public function add_products(PricingDocument $pricing, string $textarea): PricingDocument
+    public function addProducts(PricingDocument $pricing, array $products): void
     {
-        $list = explode("\r\n", $textarea);
-        foreach ($list as $item) {
-            $product = Product::whereCode($item)->first();
-            if (!is_null($product)) {
-                $this->add($pricing, $product->id);
+        $errors = [];
+        foreach ($products as $product) {
+            $_product = Product::whereCode($product['code'])->first();
+            if (!is_null($_product)) {
+                $this->addProduct($pricing, $_product->id);
             } else {
-                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+                $errors[] = $product['code'];
             }
         }
-        return $pricing;
+        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    public function set(PricingProduct $product, array $request): void
+    public function setProduct(PricingProduct $product, array $request): void
     {
-
         if (!empty($request['price_cost'])) $product->price_cost = (float)$request['price_cost'];
         if (!empty($request['price_retail'])) $product->price_retail = (float)$request['price_retail'];
         if (!empty($request['price_bulk'])) $product->price_bulk = (float)$request['price_bulk'];
@@ -97,7 +78,7 @@ class PricingService
         $product->save();
     }
 
-    public function remove_item(PricingProduct $item): void
+    public function delProduct(PricingProduct $item): void
     {
         $item->delete();
     }
@@ -111,6 +92,14 @@ class PricingService
             $pricing->save();
             $pricing->refresh();
             foreach ($pricing->pricingProducts as $pricingProduct) {
+                if ($pricingProduct->price_cost == 0 ||
+                    $pricingProduct->price_retail == 0 ||
+                    $pricingProduct->price_bulk == 0 ||
+                    $pricingProduct->price_special == 0 ||
+                    $pricingProduct->price_min == 0 ||
+                    $pricingProduct->price_pre == 0
+                ) throw new \DomainException('Не все заполнены цены');
+
                 $product = $pricingProduct->product;
                 $founded = 'Установка цен № ' . $pricing->htmlNum() . ' от ' . $pricing->htmlDate();
                 //Сохранять, Если значения отличаются
@@ -153,12 +142,43 @@ class PricingService
     public function copy(PricingDocument $pricing)
     {
         $copy = $this->create();
-
         foreach ($pricing->pricingProducts as $pricingProduct) {
-            $this->add($copy, $pricingProduct->product_id);
+            $this->addProduct($copy, $pricingProduct->product_id);
         }
-
         return $copy;
+    }
+
+    public function work(PricingDocument $pricing): void
+    {
+        DB::transaction(function () use ($pricing) {
+
+            foreach ($pricing->products as $product) {
+                $bulk = $product->product->pricesBulk()->skip(0)->first();
+                if (!is_null($bulk)) $bulk->delete();
+
+                $cost = $product->product->pricesCost()->skip(0)->first();
+                if (!is_null($cost)) $cost->delete();
+
+                $min = $product->product->pricesMin()->skip(0)->first();
+                if (!is_null($min)) $min->delete();
+
+                $pre = $product->product->pricesPre()->skip(0)->first();
+                if (!is_null($pre)) $pre->delete();
+
+                $retail = $product->product->pricesRetail()->skip(0)->first();
+                if (!is_null($retail)) $retail->delete();
+
+                $special = $product->product->pricesSpecial()->skip(0)->first();
+                if (!is_null($special)) $special->delete();
+            }
+            $pricing->work();
+        });
+    }
+
+    public function setInfo(PricingDocument $pricing, Request $request): void
+    {
+        $pricing->baseSave($request->input('document'));
+        $pricing->save();
     }
 
 }

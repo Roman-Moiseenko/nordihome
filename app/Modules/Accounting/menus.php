@@ -35,7 +35,6 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-folder-arrow-up',
             ],
-
             'movement' => [
                 'icon' => 'folder-sync',
                 'title' => 'Перемещение товара',
@@ -48,12 +47,12 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-folder-xmark',
             ],
-
-
             'pricing' => [
                 'icon' => 'badge-russian-ruble',
                 'title' => 'Ценообразование',
                 'route_name' => 'admin.accounting.pricing.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-circle-dollar',
             ],
             'distributors' => [
                 'icon' => 'factory',
