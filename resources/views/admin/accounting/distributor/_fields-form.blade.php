@@ -9,6 +9,12 @@
                             ->label('Название в CRM')->show() }}
                     </div>
                     <div class="">
+                        {{ \App\Forms\CheckSwitch::create('foreign', [
+                             'placeholder' => 'Иностранный поставщик',
+                             'value' => (!is_null($distributor) ? $distributor->foreign : true),
+                             'class' => 'mt-3'
+                             ])->show() }}
+
                         <label for="select-currency" class="inline-block mb-2">Валюта</label>
                         <x-base.tom-select id="select-currency" name="currency_id" class="w-full" data-placeholder="Выберите валюту документа">
                             <option value="0"></option>

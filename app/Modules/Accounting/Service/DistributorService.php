@@ -39,6 +39,7 @@ class DistributorService
             $organization = $this->service->create($request);
             $distributor->organization_id = $organization->id;
         }
+        $distributor->foreign = $request->boolean('foreign');
         $distributor->save();
         return $distributor;
     }
@@ -48,6 +49,7 @@ class DistributorService
         $distributor->name = $request->string('name')->trim()->value();
         $distributor->currency_id = $request->integer('currency_id');
         $distributor->organization_id = $request->integer('organization_id');
+        $distributor->foreign = $request->boolean('foreign');
         $distributor->save();
         return $distributor;
     }

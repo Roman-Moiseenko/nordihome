@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $currency_id
  * @property int $organization_id
  * @property string $name
- * @property bool $default
+ * @property bool $foreign
  * @property ArrivalDocument[] $arrivals
  * @property Product[] $products
  * @property Currency $currency
@@ -40,6 +40,7 @@ class Distributor extends Model
     public $fillable =[
         'name',
         'currency_id',
+        'foreign',
     ];
 
     public static function register(string $name, int $currency_id): self
@@ -47,6 +48,7 @@ class Distributor extends Model
         return self::create([
             'name' => $name,
             'currency_id' => $currency_id,
+            'foreign' => false,
             ]);
     }
 

@@ -270,6 +270,7 @@ class ArrivalService
         $arrival->exchange_fix = $request->input('exchange_fix');
         $arrival->storage_id = $request->integer('storage_id');
         $arrival->operation = $request->input('operation') ?? ArrivalDocument::OPERATION_SUPPLY;
+        if ($request->input('gtd')) $arrival->gtd = $request->string('gtd')->value();
         $arrival->save();
     }
 

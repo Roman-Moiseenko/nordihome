@@ -29,18 +29,20 @@
             </el-form>
         </el-col>
         <el-col :span="12">
-            <el-form-item label="Получатель">
-                <el-input :model-value="payment.distributor.short_name" :readonly="true" style="width: 300px"/>
-            </el-form-item>
-            <el-form-item label="Комментарий">
-                <el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit" type="textarea" style="width: 300px" :rows="3"/>
-            </el-form-item>
-            <el-form-item label="Назначение">
-                <el-input :model-value="payment.bank_purpose" :readonly="true"/>
-            </el-form-item>
-            <el-form-item label="Платежное поручение">
-                <el-input v-if="payment.bank_number" :model-value="'№' + payment.bank_number + ' от ' + func.date(payment.bank_number)" :readonly="true" style="width: 300px"/>
-            </el-form-item>
+            <el-form label-width="auto">
+                <el-form-item label="Получатель">
+                    <el-input :model-value="payment.distributor.short_name" :readonly="true" style="width: 300px"/>
+                </el-form-item>
+                <el-form-item label="Комментарий">
+                    <el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit" type="textarea" style="width: 300px" :rows="3"/>
+                </el-form-item>
+                <el-form-item label="Назначение">
+                    <el-input :model-value="payment.bank_purpose" :readonly="true"/>
+                </el-form-item>
+                <el-form-item label="Платежное поручение">
+                    <el-input v-if="payment.bank_number" :model-value="'№' + payment.bank_number + ' от ' + func.date(payment.bank_number)" :readonly="true" style="width: 300px"/>
+                </el-form-item>
+            </el-form>
         </el-col>
     </el-row>
 </template>

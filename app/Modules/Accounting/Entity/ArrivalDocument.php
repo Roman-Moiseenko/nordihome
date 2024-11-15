@@ -22,7 +22,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property int $supply_id
  * @property float $exchange_fix //Курс на момент создания документа
  * @property int $operation
- *
+ * @property string $gtd
  * @property Storage $storage
  * @property Currency $currency
  * @property ArrivalProduct[] $arrivalProducts //Заменить на products

@@ -16,6 +16,7 @@ class DistributorRepository
             'debit' => $distributor->debit(),
             'credit' => $distributor->credit(),
             'currency' => $distributor->currency->sign,
+            'foreign' => $distributor->foreign,
         ];
     }
 }

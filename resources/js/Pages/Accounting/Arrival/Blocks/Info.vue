@@ -28,6 +28,10 @@
                         {{ arrival.supply }}
                     </Link>
                 </el-form-item>
+                <el-form-item label="ГТД" v-if="arrival.distributor.foreign">
+                    <el-input v-model="info.gtd" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit"
+                              style="width: 260px"/>
+                </el-form-item>
             </el-form>
         </el-col>
     </el-row>
@@ -57,6 +61,7 @@ const info = reactive({
     storage_id: props.arrival.storage_id,
     exchange_fix: props.arrival.exchange_fix,
     operation: props.arrival.operation,
+    gtd: props.arrival.gtd,
 })
 const notEdit = computed(() => props.arrival.completed);
 
