@@ -31,7 +31,7 @@ class PricingDocument extends AccountingDocument
     public static function register(int $staff_id, int $arrival_id = null):self
     {
         $pricing = parent::baseNew($staff_id);
-        $pricing->arrival = $arrival_id;
+        $pricing->arrival_id = $arrival_id;
         $pricing->save();
         return $pricing;
     }
@@ -57,4 +57,5 @@ class PricingDocument extends AccountingDocument
     {
         return $this->hasMany(PricingProduct::class, 'pricing_id', 'id');
     }
+
 }

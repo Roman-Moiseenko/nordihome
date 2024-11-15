@@ -6,6 +6,7 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Accounting\Entity\Trader;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\Deprecated;
@@ -26,16 +27,19 @@ class PaymentDocumentService
     public function completed(PaymentDocument $payment): void
     {
         //Проверка совпадения суммы
-        $amount = 0.0;
-        foreach ($payment->decryptions as $decryption) {
-            $amount += $decryption->amount;
-        }
-        if ($payment->amount != $amount) throw new \DomainException('Нельзя провести документ. Не совпадают суммы');
+        DB::transaction(function () use($payment) {
+            $amount = 0.0;
+            foreach ($payment->decryptions as $decryption) {
+                $amount += $decryption->amount;
+            }
+            if ($payment->amount != $amount) throw new \DomainException('Нельзя провести документ. Не совпадают суммы');
 
-        foreach ($payment->decryptions as $decryption) {
-            if ($decryption->amount == 0) $decryption->delete();
-        }
-        $payment->completed();
+            foreach ($payment->decryptions as $decryption) {
+                if ($decryption->amount == 0) $decryption->delete();
+            }
+            $payment->completed();
+        });
+
         //TODO Возможные расчеты или создание документов
     }
 
@@ -56,7 +60,9 @@ class PaymentDocumentService
 
     public function work(PaymentDocument $payment): void
     {
-        $payment->work();
+        DB::transaction(function () use($payment) {
+            $payment->work();
+        });
     }
 
     public function delete(PaymentDocument $payment): void

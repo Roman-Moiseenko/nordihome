@@ -34,19 +34,21 @@ class PricingProduct extends AccountingProduct
     ];
 
     public static function new(int $product_id,
-                               float $price_cost, float $price_retail,
-                               float $price_bulk, float $price_special,
-                               float $price_min, float $price_pre): self
+                               float $price_cost = null, float $price_retail = null,
+                               float $price_bulk = null, float $price_special = null,
+                               float $price_min = null, float $price_pre = null): self
     {
-        return self::make([
+        $item = self::make([
             'product_id' => $product_id,
-            'price_cost' => $price_cost,
-            'price_retail' => $price_retail,
-            'price_bulk' => $price_bulk,
-            'price_special' => $price_special,
-            'price_min' => $price_min,
-            'price_pre' => $price_pre,
         ]);
+        $item->price_cost = $price_cost ?? $item->product->getPriceCost();
+        $item->price_retail = $price_retail ?? $item->product->getPriceRetail();
+        $item->price_bulk = $price_bulk ?? $item->product->getPriceBulk();
+        $item->price_special = $price_special ?? $item->product->getPriceSpecial();
+        $item->price_min = $price_min ?? $item->product->getPriceMin();
+        $item->price_pre = $price_pre ?? $item->product->getPricePre();
+
+        return $item;
     }
 
 

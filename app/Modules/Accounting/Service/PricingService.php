@@ -65,7 +65,7 @@ class PricingService
             $product->getPriceMin(),
             $product->getPricePre()
         );
-        $pricing->pricingProducts()->save($pricingProduct);
+        $pricing->products()->save($pricingProduct);
         $pricing->refresh();
         return $pricing;
     }

@@ -3,16 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Base\Traits\CompletedFieldModel;
-use App\Traits\HtmlInfoData;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\Auth;
-use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
@@ -31,6 +24,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property SupplyDocument $supply
  * @property PricingDocument $pricing
  * @property RefundDocument[] $refunds
+ * @property MovementDocument[] $movements
  * @property ArrivalExpenseDocument $expense
  */
 class ArrivalDocument extends AccountingDocument
@@ -109,6 +103,11 @@ class ArrivalDocument extends AccountingDocument
     }
 
     //*** RELATION
+    public function movements(): HasMany
+    {
+        return $this->hasMany(MovementDocument::class, 'arrival_id', 'id');
+    }
+
     public function expense(): HasOne
     {
         return $this->hasOne(ArrivalExpenseDocument::class, 'arrival_id', 'id');

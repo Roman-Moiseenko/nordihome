@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyProduct;
@@ -31,6 +32,7 @@ class ArrivalService
     private MovementService $movementService;
     private RefundService $refundService;
     private ArrivalExpenseService $expenseService;
+    private PricingService $pricingService;
 
     public function __construct(
         StorageService      $storages,
@@ -38,6 +40,7 @@ class ArrivalService
         MovementService     $movementService,
         RefundService       $refundService,
         ArrivalExpenseService $expenseService,
+        PricingService        $pricingService,
     )
     {
         $this->storages = $storages;
@@ -45,6 +48,7 @@ class ArrivalService
         $this->movementService = $movementService;
         $this->refundService = $refundService;
         $this->expenseService = $expenseService;
+        $this->pricingService = $pricingService;
     }
 
     public function create(int $distributor_id, bool $is_manager = true): ArrivalDocument
@@ -244,6 +248,14 @@ class ArrivalService
     public function work(ArrivalDocument $arrival): void
     {
         DB::transaction(function () use ($arrival) {
+            if (!is_null($arrival->pricing)) {
+                if ($arrival->pricing->isCompleted()) {
+                    throw new \DomainException('Проведен связанный документ Установка цен.');
+                } else {
+                    $arrival->pricing->delete();
+                }
+            }
+
             $arrival->work();
             $this->storages->departure($arrival->storage, $arrival->products);
             foreach ($arrival->products as $item) {//Проверка на отрицательное кол-во
@@ -259,15 +271,14 @@ class ArrivalService
                         $stack->orderItem->save();
                     }
                 }
-                //TODO Удалить перемещения
-                /* Подготовленный код:
-                $movements = MovementDocument::where('arrival_id', $arrival->id)->get();
-                foreach ($movements as $movement) {
+
+                foreach ($arrival->movements as $movement) {
+                    if ($movement->isCompleted())
+                        throw new \DomainException('Проведен связанный документ Перемещение.');
                     $movement->delete();
                 }
-    */
             }
-            $arrival->expense->work();
+            if (!is_null($arrival->expense)) $arrival->expense->work();
         });
     }
 
@@ -296,19 +307,30 @@ class ArrivalService
         throw new \DomainException('В разработке');
     }
 
-    public function invoice(ArrivalDocument $arrival)
+    public function pricing(ArrivalDocument $arrival)
     {
-        //TODO В разработке
-        throw new \DomainException('В разработке');
+        if (!$arrival->isCompleted()) throw new \DomainException('Документ не проведен. Создать документ цен нельзя');
+
+        if (!is_null($arrival->pricing)) return $arrival->pricing;
+        $coeff = 1;
+        if (!is_null($arrival->expense)) $coeff += $arrival->expense->getAmount() / ($arrival->getAmount() * $arrival->exchange_fix);
+        $pricing = $this->pricingService->create($arrival->id);
+        foreach ($arrival->products as $product) {
+            $cost_ru = $product->cost_currency * $arrival->exchange_fix;
+            $item = PricingProduct::new(
+                product_id: $product->product_id,
+                price_cost: (int)ceil($cost_ru * $coeff),
+                price_min:  (int)ceil($cost_ru),
+            );
+            $pricing->products()->save($item);
+        }
+        return $pricing;
+
     }
 
     public function refund(ArrivalDocument $arrival)
     {
-
         $refund = $this->refundService->create($arrival->id);
-        //$refund->arrival_id = $arrival->id;
-        //$refund->storage_id = $arrival->storage_id;
-        //$refund->save();
         //Переносим весь не выданный товар в возврат
         foreach ($arrival->products as $product) {
             $quantity = $product->getQuantityUnallocated();

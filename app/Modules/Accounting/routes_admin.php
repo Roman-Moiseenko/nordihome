@@ -25,7 +25,7 @@ Route::group(
                 //На основании:
                 Route::post('/expense/{arrival}', 'ArrivalController@expense')->name('expense'); //Доп.расходы
                 Route::post('/movement/{arrival}', 'ArrivalController@movement')->name('movement'); //Перемещение
-                Route::post('/invoice/{arrival}', 'ArrivalController@invoice')->name('invoice'); //Расх.накладная
+                Route::post('/pricing/{arrival}', 'ArrivalController@pricing')->name('pricing'); //Установка цен
                 Route::post('/refund/{arrival}', 'ArrivalController@refund')->name('refund'); //Возврат
 
                 //Доп.расходы

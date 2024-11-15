@@ -155,12 +155,9 @@ class SupplyController extends Controller
     public function work(SupplyDocument $supply): RedirectResponse
     {
         try {
-            DB::beginTransaction();
             $this->service->work($supply);
-            DB::commit();
             return redirect()->back()->with('success', 'Документ в работе. Все связанные документы возвращены в работу!');
         } catch (\DomainException $e) {
-            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }

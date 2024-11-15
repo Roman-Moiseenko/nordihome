@@ -7,7 +7,7 @@
             <template #dropdown>
                 <el-dropdown-menu>
                     <el-dropdown-item @click="onMovement">Перемещение запасов</el-dropdown-item>
-                    <el-dropdown-item @click="onInvoice">Расходная накладная</el-dropdown-item>
+                    <el-dropdown-item @click="onPricing">Установка цен</el-dropdown-item>
                     <el-dropdown-item @click="onRefund">Возврат поставщику</el-dropdown-item>
                 </el-dropdown-menu>
             </template>
@@ -74,8 +74,8 @@ function onMovement() {
         method: "post",
     })
 }
-function onInvoice() {
-    router.visit(route('admin.accounting.arrival.invoice', {arrival: props.arrival.id}), {
+function onPricing() {
+    router.visit(route('admin.accounting.arrival.pricing', {arrival: props.arrival.id}), {
         method: "post",
     })
 }

@@ -16,10 +16,12 @@ use App\Modules\Accounting\Repository\ArrivalRepository;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Service\ArrivalExpenseService;
 use App\Modules\Accounting\Service\ArrivalService;
+use App\Modules\Accounting\Service\PricingService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
+use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,13 +36,15 @@ class ArrivalController extends Controller
     private ArrivalRepository $repository;
     private StaffRepository $staffs;
     private ArrivalExpenseService $expenseService;
+   // private PricingService $pricingService;
 
     public function __construct(
-        ArrivalService    $service,
+        ArrivalService        $service,
         ArrivalExpenseService $expenseService,
-        ProductRepository $products,
-        ArrivalRepository $repository,
-        StaffRepository   $staffs,
+        ProductRepository     $products,
+        ArrivalRepository     $repository,
+        StaffRepository       $staffs,
+//        PricingService        $pricingService,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
@@ -50,6 +54,7 @@ class ArrivalController extends Controller
         $this->repository = $repository;
         $this->staffs = $staffs;
         $this->expenseService = $expenseService;
+  //      $this->pricingService = $pricingService;
     }
 
     public function index(Request $request): Response
@@ -135,7 +140,7 @@ class ArrivalController extends Controller
         try {
             $expense = $this->service->expense($arrival);
             return redirect()->route('admin.accounting.arrival.expense.show', $expense);
-        }  catch (\DomainException $e) {
+        } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -145,17 +150,17 @@ class ArrivalController extends Controller
         try {
             $movement = $this->service->movement($arrival);
             return redirect()->route('admin.accounting.movement.show', $movement)->with('success', 'Документ сохранен');
-        }  catch (\DomainException $e) {
+        } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    public function invoice(ArrivalDocument $arrival): RedirectResponse
+    public function pricing(ArrivalDocument $arrival): RedirectResponse
     {
         try {
-            $invoice = $this->service->expense($arrival);
-            return redirect()->route('admin.accounting.invoice.show', $invoice)->with('success', 'Документ сохранен');
-        }  catch (\DomainException $e) {
+            $pricing = $this->service->pricing($arrival);
+            return redirect()->route('admin.accounting.pricing.show', $pricing)->with('success', 'Документ сохранен');
+        } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -165,10 +170,11 @@ class ArrivalController extends Controller
         try {
             $refund = $this->service->refund($arrival);
             return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ сохранен');
-        }  catch (\DomainException $e) {
+        } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
     //<====
 
     public function add_product(Request $request, ArrivalDocument $arrival): RedirectResponse
@@ -213,7 +219,7 @@ class ArrivalController extends Controller
     //Доп.Расходы
     public function expense_show(ArrivalExpenseDocument $expense): Response
     {
-        return  Inertia::render('Accounting/Arrival/Expense/Show', [
+        return Inertia::render('Accounting/Arrival/Expense/Show', [
             'expense' => $this->repository->ExpenseWithToArray($expense),
         ]);
     }

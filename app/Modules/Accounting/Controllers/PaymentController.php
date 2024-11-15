@@ -76,12 +76,9 @@ class PaymentController extends Controller
     public function completed(PaymentDocument $payment): RedirectResponse
     {
         try {
-            DB::beginTransaction();
             $this->service->completed($payment);
-            DB::commit();
             return redirect()->back()->with('success', 'Документ проведен');
         } catch (\DomainException $e) {
-            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -89,12 +86,9 @@ class PaymentController extends Controller
     public function work(PaymentDocument $payment): RedirectResponse
     {
         try {
-            DB::beginTransaction();
             $this->service->work($payment);
-            DB::commit();
             return redirect()->back()->with('success', 'Документ возвращен в работу');
         } catch (\DomainException $e) {
-            DB::rollBack();
             return redirect()->back()->with('error', $e->getMessage());
         }
     }

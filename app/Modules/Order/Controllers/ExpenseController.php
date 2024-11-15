@@ -56,13 +56,10 @@ class ExpenseController extends Controller
         $data = json_decode($request['data'], true);
 
         try {
-            DB::beginTransaction();
             $expense = $this->service->issue_shop($data);
             flash('Товар выдан', 'info');
-            DB::commit();
             return response()->json(route('admin.order.show', $expense->order));
         } catch (\Throwable $e) {
-            DB::rollBack();
             return response()->json(['error' => $e->getMessage()]);
         }
     }

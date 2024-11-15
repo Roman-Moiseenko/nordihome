@@ -93,28 +93,33 @@ class SupplyService
     ////Фун-ции работы с Заказом =======>
     public function completed(SupplyDocument $supply): void
     {
-        foreach ($supply->products as $product) {
-            if ($product->cost_currency == 0) throw new \DomainException('У товара не установлена цена поставщика');
-            $supply->distributor->addProduct($product->product, $product->cost_currency);
-        }
+        DB::transaction(function () use($supply) {
+            foreach ($supply->products as $product) {
+                if ($product->cost_currency == 0) throw new \DomainException('У товара не установлена цена поставщика');
+                $supply->distributor->addProduct($product->product, $product->cost_currency);
+            }
 
-        $supply->completed = true;
-        $supply->save();
-        event(new SupplyHasCompleted($supply));
+            $supply->completed = true;
+            $supply->save();
+            event(new SupplyHasCompleted($supply));
+        });
+
     }
 
     public function work(SupplyDocument $supply): void
     {
-        $payments = PaymentDecryption::where('supply_id', $supply->id)->whereHas('payment', function ($query) {
-           $query->where('completed', true);
-        })->getModels();
-        if (!empty($payments))
-            throw new \DomainException('Нельзя отменить проведение! Имеются проведенные платежные документы');
+        DB::transaction(function () use($supply) {
+            $payments = PaymentDecryption::where('supply_id', $supply->id)->whereHas('payment', function ($query) {
+                $query->where('completed', true);
+            })->getModels();
+            if (!empty($payments))
+                throw new \DomainException('Нельзя отменить проведение! Имеются проведенные платежные документы');
 
-        foreach ($supply->arrivals as $arrival) {
-            if ($arrival->isCompleted()) $this->arrivalService->work($arrival);
-        }
-        $supply->work();
+            foreach ($supply->arrivals as $arrival) {
+                if ($arrival->isCompleted()) $this->arrivalService->work($arrival);
+            }
+            $supply->work();
+        });
     }
 
     /**
