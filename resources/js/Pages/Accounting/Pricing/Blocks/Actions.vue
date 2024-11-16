@@ -1,7 +1,7 @@
 <template>
     <template v-if="pricing.completed">
-        <AccountingOnBased :based="pricing.based" />
-        <AccountingPrint :print="pricing.print" />
+        <AccountingOnBased :based="pricing.based" :founded="pricing.founded"/>
+        <AccountingPrint :print="print" />
         <el-button type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
     </template>
     <template v-else>
@@ -20,12 +20,14 @@ import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
-import AccountingOnBase from "@Comp/Pages/AccountingOnBased.vue";
+import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
 import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 
 const props = defineProps({
     pricing: Object,
+    print: Array,
 })
+
 
 function onCompleted() {
     router.visit(route('admin.accounting.pricing.completed', {pricing: props.pricing.id}), {

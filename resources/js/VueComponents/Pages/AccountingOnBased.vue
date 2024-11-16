@@ -1,22 +1,66 @@
 <template>
     <el-dropdown class="ml-3">
         <el-button type="success" plain>
-            Связанные документы<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            Связанные документы
+            <el-icon class="el-icon--right">
+                <arrow-down/>
+            </el-icon>
         </el-button>
-        <template #dropdown>
-            <el-dropdown-menu>
-                <el-dropdown-item>Сделать дерево всех документов</el-dropdown-item>
-            </el-dropdown-menu>
+        <template #dropdown class="m-2 accounting-based">
+            <div class="m-2 accounting-based">
+                <div v-if="founded">
+                    <el-tag>Основание</el-tag>
+                    <div v-for="item in founded">
+                        <Link class="ml-6" type="primary" :href="item.url">{{ item.label }}</Link>
+                    </div>
+                </div>
+                <div v-if="based">
+                    <el-tag type="success">Дочерние</el-tag>
+                    <el-tree
+                        :data="dataSource"
+                        default-expand-all
+                    >
+                        <template #default="{ node, data }">
+                            <Link type="success" :href="data.url">{{ data.label }}</Link>
+                        </template>
+                    </el-tree>
+                </div>
+            </div>
         </template>
     </el-dropdown>
+
 </template>
 
 <script lang="ts" setup>
-import {defineProps} from "vue";
-import {router} from "@inertiajs/vue3";
+import {defineProps, ref} from "vue";
+import {router, Link} from "@inertiajs/vue3";
+
 
 const props = defineProps({
-    based: Array,
+    based: {
+        type: Array,
+        default: [],
+    },
+    founded: Array,
 })
+
+interface Tree {
+    url: string
+    label: string
+    children?: Tree[]
+}
+
 console.log('onBase', props.based)
+console.log('onFounded', props.founded)
+
+const dataSource = ref<Tree[]>([])
+
+if (props.based) dataSource.value = [...props.based]
 </script>
+<style lang="scss">
+.accounting-based {
+    a {
+        font-size: 13px !important;
+    }
+}
+</style>

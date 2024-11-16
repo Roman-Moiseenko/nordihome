@@ -22,16 +22,16 @@ class PaymentDocumentRepository extends AccountingRepository
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if ($request->integer('distributor') > 0) {
-                $distributor= $request->integer('distributor');
+                $distributor = $request->integer('distributor');
                 $filters['distributor'] = $distributor;
-                $query->whereHas('recipient', function($query) use($distributor) {
-                    $query->whereHas('distributor', function($query) use($distributor) {
+                $query->whereHas('recipient', function ($query) use ($distributor) {
+                    $query->whereHas('distributor', function ($query) use ($distributor) {
                         $query->where('id', $distributor);
                     });
                 });
             }
         },
-        false);
+            false);
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
@@ -44,7 +44,7 @@ class PaymentDocumentRepository extends AccountingRepository
                 'distributor_name' => $payment->recipient->distributor->name,
                 //'distributor_org' => $payment->distributor->organization->short_name,
                 'trader' => $payment->payer->full_name,
-                'organization_id' => $payment->payer->organization_id,
+                'organization_id' => $payment->payer->id,
                 //'supply' => is_null($payment->supply_id) ? '' : $payment->supply->htmlNumDate(),
                 'debit' => $payment->recipient->distributor->debit() - $payment->recipient->distributor->credit(),
                 'currency' => $payment->recipient->distributor->currency->sign,
@@ -53,12 +53,15 @@ class PaymentDocumentRepository extends AccountingRepository
         );
     }
 
-    public function PaymentWithToArray(PaymentDocument $payment): array
+    public function PaymentWithToArray(PaymentDocument $document): array
     {
-        return array_merge($this->PaymentToArray($payment), [
-            'distributor' => $this->distributors->DistributorForAccounting($payment->recipient->distributor),
-            'decryptions' => $payment->decryptions()->with('supply')->get()->toArray(),
-            'based' => $payment->onBased(),
-        ]);
+        return array_merge(
+            $this->commonItems($document),
+            $this->PaymentToArray($document),
+            [
+                'distributor' => $this->distributors->DistributorForAccounting($document->recipient->distributor),
+                'decryptions' => $document->decryptions()->with('supply')->get()->toArray(),
+            ],
+        );
     }
 }

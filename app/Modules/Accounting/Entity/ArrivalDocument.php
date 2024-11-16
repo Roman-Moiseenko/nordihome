@@ -175,9 +175,14 @@ class ArrivalDocument extends AccountingDocument
         foreach ($this->movements as $movement) {
             $array[] = $this->basedItem($movement);
         }
-        $array[] = $this->basedItem($this->pricing);
-        $array[] = $this->basedItem($this->expense);
+        if (!is_null($this->pricing)) $array[] = $this->basedItem($this->pricing);
+        if (!is_null($this->expense)) $array[] = $this->basedItem($this->expense);
 
-        return $this->basedGenerate($array, $this->supply);
+        return array_filter($array);
+    }
+
+    public function onFounded(): ?array
+    {
+        return $this->foundedGenerate($this->supply);
     }
 }

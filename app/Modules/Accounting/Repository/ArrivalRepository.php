@@ -35,7 +35,6 @@ class ArrivalRepository extends AccountingRepository
             'currency' => $document->currency->sign,
             'date' => $document->htmlDate(),
             'distributor_name' => $document->distributor->name,
-            //'distributor_org' => $document->distributor->organization->short_name,
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),
             'operation_text' => $document->operationText(),
@@ -44,18 +43,21 @@ class ArrivalRepository extends AccountingRepository
         ]);
     }
 
-    public function ArrivalWithToArray(ArrivalDocument $arrival): array
+    public function ArrivalWithToArray(ArrivalDocument $document): array
     {
         $withData = [
-            'products' => $arrival->products()->with('product')->paginate(20)->toArray(),
-            'distributor' => $this->distributors->DistributorForAccounting($arrival->distributor),
-            'expense' => is_null($arrival->expense) ? null : array_merge($arrival->expense()->first()->toArray(),[
-                'amount' => $arrival->expense->getAmount(),
+            'products' => $document->products()->with('product')->paginate(20)->toArray(),
+            'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
+            'expense' => is_null($document->expense) ? null : array_merge($document->expense()->first()->toArray(),[
+                'amount' => $document->expense->getAmount(),
             ]),
-            'based' => $arrival->onBased(),
         ];
 
-        return array_merge($this->ArrivalToArray($arrival), $withData);
+        return array_merge(
+            $this->commonItems($document),
+            $this->ArrivalToArray($document),
+            $withData,
+        );
     }
 
     public function getOperations(): array
@@ -64,15 +66,18 @@ class ArrivalRepository extends AccountingRepository
         return array_select(ArrivalDocument::OPERATIONS);
     }
 
-    public function ExpenseWithToArray(ArrivalExpenseDocument $expense): array
+    public function ExpenseWithToArray(ArrivalExpenseDocument $document): array
     {
-        return array_merge($expense->toArray(),[
-            'currency_sign' => ($expense->currency) ? $expense->arrival->currency->sign : '₽',
-            'items' => $expense->items()->get()->toArray(),
-            'distributor' => $this->distributors->DistributorForAccounting($expense->arrival->distributor),
-            'amount' => $expense->getAmount(),
-            'arrival' => $expense->arrival()->first()->toArray(),
-            'based' => $expense->onBased(),
+        return array_merge(
+            $this->commonItems($document),
+            $document->toArray(),
+            [
+            'currency_sign' => ($document->currency) ? $document->arrival->currency->sign : '₽',
+            'items' => $document->items()->get()->toArray(),
+            'distributor' => $this->distributors->DistributorForAccounting($document->arrival->distributor),
+            'amount' => $document->getAmount(),
+            'arrival' => $document->arrival()->first()->toArray(),
+
         ]);
     }
 }

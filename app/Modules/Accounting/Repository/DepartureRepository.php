@@ -16,7 +16,7 @@ class DepartureRepository extends AccountingRepository
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if ($request->integer('storage') > 0) {
-                $storage= $request->integer('storage');
+                $storage = $request->integer('storage');
                 $filters['storage'] = $storage;
                 $query->where('storage_id', $storage);
             }
@@ -39,9 +39,12 @@ class DepartureRepository extends AccountingRepository
 
     public function DepartureWithToArray(DepartureDocument $document): array
     {
-        return array_merge($this->DepartureToArray($document), [
-            'products' => $document->products()->with('product')->paginate(20)->toArray(),
-            'based' => $document->onBased(),
-        ]);
+        return array_merge(
+            $this->commonItems($document),
+            $this->DepartureToArray($document),
+            [
+                'products' => $document->products()->with('product')->paginate(20)->toArray(),
+            ],
+        );
     }
 }

@@ -31,6 +31,7 @@ abstract class AccountingDocument extends Model
 
     protected string $prefix = '';
     protected string $blank = 'Документ';
+
     /**
      * Объединяем базовые параметры
      * @param array $attributes
@@ -75,6 +76,7 @@ abstract class AccountingDocument extends Model
     }
 
     //IS...
+
     /**
      * Документ проведен
      */
@@ -123,6 +125,7 @@ abstract class AccountingDocument extends Model
     {
         return $this->blank . ' ' . $this->number . ' от ' . $this->created_at->translatedFormat('d-m-Y');
     }
+
     abstract function documentUrl(): string;
 
     public function getComment(): string
@@ -205,30 +208,47 @@ abstract class AccountingDocument extends Model
         $table->dropColumn('staff_id');
     }
 
-    abstract public function onBased():? array;
+    /**
+     * Список всех дочерних документов (дерево)
+     */
+    abstract public function onBased(): ?array;
+
+    /**
+     * Список документов базовых (default = 1)
+     */
+    abstract public function onFounded(): ?array;
 
     final protected function basedItem(?AccountingDocument $document): array
     {
         if (is_null($document)) return [];
-        return [
-            'name' => $document->documentName(),
+        $result = [
+            'label' => $document->documentName(),
             'url' => $document->documentUrl(),
-            'children' => $document->onBased()
         ];
+        if (!empty($document->onBased())) $result['children'] = $document->onBased();
+        return $result;
     }
 
-    final protected function basedGenerate(array $children, ?AccountingDocument $founded): array
+    final protected function foundedGenerate(mixed $document):? array
     {
-        if (is_null($founded)) return [
-            'founded' => null,
-            'children' => array_filter($children),
-        ];
-        return [
-            'founded' => [
-                'name' => $founded->documentName(),
-                'url' => $founded->documentUrl(),
-            ],
-            'children' => array_filter($children),
-        ];
+        if (is_null($document)) return null;
+        if (is_array($document)) {
+            $result = [];
+            foreach ($document as $item) {
+                $result[] = [
+                    'label' => $item->documentName(),
+                    'url' => $item->documentUrl(),
+                ];
+            }
+            return $result;
+
+        } else {
+            return [
+                [
+                    'label' => $document->documentName(),
+                    'url' => $document->documentUrl(),
+                ]
+            ];
+        }
     }
 }

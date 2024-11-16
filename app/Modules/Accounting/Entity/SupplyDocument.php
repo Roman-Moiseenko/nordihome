@@ -202,12 +202,16 @@ class SupplyDocument extends AccountingDocument
         foreach ($this->payments() as $payment) {
             $array[] = $this->basedItem($payment);
         }
-
-        return $this->basedGenerate($array, null);
+        return array_filter($array);
     }
 
     function documentUrl(): string
     {
         return route('admin.accounting.supply.show', ['supply' => $this->id], false);
+    }
+
+    public function onFounded(): ?array
+    {
+        return null;
     }
 }

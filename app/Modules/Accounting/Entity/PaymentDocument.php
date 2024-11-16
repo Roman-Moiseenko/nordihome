@@ -115,17 +115,16 @@ class PaymentDocument extends AccountingDocument
 
     public function onBased(): ?array
     {
+        return null;
+    }
+
+    public function onFounded(): ?array
+    {
         $founded = [];
         foreach ($this->decryptions as $decryption) {
             $supply = $decryption->supply;
-            $founded[] = [
-                'name' => $supply->documentName(),
-                'url' => $supply->documentUrl(),
-            ];
+            $founded[] = $supply;
         }
-        return [
-            'founded' => $founded,
-            'children' => [],
-        ];
+        return $this->foundedGenerate($founded);
     }
 }

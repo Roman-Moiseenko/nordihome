@@ -16,7 +16,7 @@ class MovementRepository extends AccountingRepository
         $query = MovementDocument::orderByDesc('created_at');
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
-            if ( ($storage_out = $request->integer('storage_out'))> 0) {
+            if (($storage_out = $request->integer('storage_out')) > 0) {
                 $filters['storage_out'] = $storage_out;
                 $query->where('storage_out', $storage_out);
             }
@@ -46,21 +46,24 @@ class MovementRepository extends AccountingRepository
             'arrival_text' => !is_null($document->arrival) ? ($document->arrival->number . ' от ' . $document->arrival->htmlDate()) : '',
         ]);
     }
+
     public function MovementWithToArray(MovementDocument $document): array
     {
-        return array_merge($this->MovementToArray($document), [
-            'is_active' => $document->isFinished(),
-            'is_departure' => $document->isDeparture(),
-            'is_arrival' => $document->isArrival(),
-            'products' => $document->products()
-                ->with('product')
-                ->paginate(20)
-                ->withQueryString()
-                ->through(fn(MovementProduct $movementProduct) => array_merge($movementProduct->toArray(), [
-                    'quantity_out' => $document->storageOut->getAvailable($movementProduct->product),
-                    'quantity_in' => $document->storageIn->getAvailable($movementProduct->product),
-                ])),
-            'based' => $document->onBased(),
-        ]);
+        return array_merge(
+            $this->commonItems($document),
+            $this->MovementToArray($document),
+            [
+                'is_active' => $document->isFinished(),
+                'is_departure' => $document->isDeparture(),
+                'is_arrival' => $document->isArrival(),
+                'products' => $document->products()
+                    ->with('product')
+                    ->paginate(20)
+                    ->withQueryString()
+                    ->through(fn(MovementProduct $movementProduct) => array_merge($movementProduct->toArray(), [
+                        'quantity_out' => $document->storageOut->getAvailable($movementProduct->product),
+                        'quantity_in' => $document->storageIn->getAvailable($movementProduct->product),
+                    ])),
+            ]);
     }
 }

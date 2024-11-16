@@ -14,6 +14,7 @@ class RefundRepository extends AccountingRepository
     {
         $this->distributors = $distributors;
     }
+
     public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = RefundDocument::orderByDesc('created_at');
@@ -41,10 +42,13 @@ class RefundRepository extends AccountingRepository
 
     public function RefundWithToArray(RefundDocument $document): array
     {
-        return array_merge($this->RefundToArray($document), [
-            'products' => $document->products()->with('product')->paginate(20)->toArray(),
-            'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
-            'based' => $document->onBased(),
-        ]);
+        return array_merge(
+            $this->commonItems($document),
+            $this->RefundToArray($document),
+            [
+                'products' => $document->products()->with('product')->paginate(20)->toArray(),
+                'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
+            ],
+        );
     }
 }

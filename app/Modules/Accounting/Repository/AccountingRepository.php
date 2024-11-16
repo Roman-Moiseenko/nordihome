@@ -2,6 +2,7 @@
 
 namespace App\Modules\Accounting\Repository;
 
+use App\Modules\Accounting\Entity\AccountingDocument;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -45,5 +46,13 @@ abstract class AccountingRepository
 
         if (!is_null($func)) $func($query, $filters, $request); ///, function (&$query, &$filters, $request) {}
         if (count($filters) > 0) $filters['count'] = count($filters);
+    }
+
+    protected function commonItems(AccountingDocument $document): array
+    {
+        return [
+            'based' => $document->onBased(),
+            'founded' => $document->onFounded(),
+        ];
     }
 }

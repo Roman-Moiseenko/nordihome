@@ -89,9 +89,12 @@ class SupplyRepository extends AccountingRepository
                     'currency' => $document->currency->sign,
                 ]);
             }),
-            'based' => $document->onBased(),
         ];
 
-        return array_merge($this->SupplyToArray($document), $withData);
+        return array_merge(
+            $this->commonItems($document),
+            $this->SupplyToArray($document),
+            $withData,
+        );
     }
 }

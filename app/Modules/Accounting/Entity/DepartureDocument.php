@@ -110,8 +110,13 @@ class DepartureDocument extends AccountingDocument
 
     public function onBased(): ?array
     {
+        return null;
+    }
+
+    public function onFounded(): ?array
+    {
         //TODO Добавить Инвентаризация
         // $this->inventarization
-        return $this->basedGenerate([], null);
+        return $this->foundedGenerate(null);
     }
 }

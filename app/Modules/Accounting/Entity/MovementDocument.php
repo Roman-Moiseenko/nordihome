@@ -206,6 +206,11 @@ class MovementDocument extends AccountingDocument
 
     public function onBased(): ?array
     {
-        return $this->basedGenerate([], $this->arrival);
+        return null;
+    }
+
+    public function onFounded(): ?array
+    {
+        return $this->foundedGenerate($this->arrival);
     }
 }

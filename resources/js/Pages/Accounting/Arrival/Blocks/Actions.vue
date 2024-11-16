@@ -12,8 +12,8 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-        <AccountingOnBased :based="arrival.based" />
-        <AccountingPrint :print="arrival.print" />
+        <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>
+        <AccountingPrint :print="print" />
         <el-button type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
     </template>
     <template v-else>
@@ -45,6 +45,7 @@ import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 
 const props = defineProps({
     arrival: Object,
+    print: Array,
 })
 
 function onCompleted() {

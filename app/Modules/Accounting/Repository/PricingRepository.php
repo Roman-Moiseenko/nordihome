@@ -43,7 +43,10 @@ class PricingRepository extends AccountingRepository
     public function PricingWithToArray(PricingDocument $document, Request $request): array
     {
 
-        return array_merge($this->PricingToArray($document), [
+        return array_merge(
+            $this->commonItems($document),
+            $this->PricingToArray($document),
+            [
             'products' => $document->products()->paginate($request->input('size', 20))
                 ->withQueryString()
                 ->through(fn(PricingProduct $product) => array_merge($product->toArray(), [
@@ -56,7 +59,6 @@ class PricingRepository extends AccountingRepository
                     'price_min_old' => $product->product->getPriceMin($document->isCompleted()),
                     'price_pre_old' => $product->product->getPricePre($document->isCompleted()),
                 ])),
-            'based' => $document->onBased(),
         ]);
     }
 }

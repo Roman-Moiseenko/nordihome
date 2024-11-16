@@ -1,7 +1,7 @@
 <template>
     <template v-if="payment.completed">
-        <AccountingOnBased :based="payment.based" />
-        <AccountingPrint :print="payment.print" />
+        <AccountingOnBased :based="payment.based" :founded="payment.founded"/>
+        <AccountingPrint :print="print" />
         <el-button type="danger" @click="onWork" class="ml-5">Отменить проведение</el-button>
     </template>
     <template v-else>
@@ -17,6 +17,7 @@ import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 
 const props = defineProps({
     payment: Object,
+    print: Array,
 })
 
 function onCompleted() {
