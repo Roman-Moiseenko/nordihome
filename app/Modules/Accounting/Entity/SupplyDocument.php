@@ -37,6 +37,7 @@ class SupplyDocument extends AccountingDocument
 
     ];
 
+    protected string $blank = 'Заказ поставщику';
     protected $table = 'supply_documents';
     protected $fillable = [
         'distributor_id',
@@ -183,4 +184,21 @@ class SupplyDocument extends AccountingDocument
         return $this->staff->fullname->getFullName();
     }
 
+    public function onBased(): ?array
+    {
+        $array = [];
+        foreach ($this->arrivals as $arrival) {
+            $array[] = $this->basedItem($arrival);
+        }
+       /* foreach ($this->payments as $payment) {
+            $array[] = $this->basedItem($payment);
+        }*/
+
+        return $array;
+    }
+
+    function documentUrl(): string
+    {
+        return route('admin.accounting.supply.show', ['supply' => $this->id]);
+    }
 }

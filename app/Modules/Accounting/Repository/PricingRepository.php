@@ -56,6 +56,7 @@ class PricingRepository extends AccountingRepository
                     'price_min_old' => $product->product->getPriceMin($document->isCompleted()),
                     'price_pre_old' => $product->product->getPricePre($document->isCompleted()),
                 ])),
+            'based' => $document->onBased(),
         ]);
     }
 }

@@ -52,6 +52,7 @@ class ArrivalRepository extends AccountingRepository
             'expense' => is_null($arrival->expense) ? null : array_merge($arrival->expense()->first()->toArray(),[
                 'amount' => $arrival->expense->getAmount(),
             ]),
+            'based' => $arrival->onBased(),
         ];
 
         return array_merge($this->ArrivalToArray($arrival), $withData);
@@ -71,6 +72,7 @@ class ArrivalRepository extends AccountingRepository
             'distributor' => $this->distributors->DistributorForAccounting($expense->arrival->distributor),
             'amount' => $expense->getAmount(),
             'arrival' => $expense->arrival()->first()->toArray(),
+            'based' => $expense->onBased(),
         ]);
     }
 }

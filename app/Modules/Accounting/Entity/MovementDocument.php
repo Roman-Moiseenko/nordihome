@@ -41,6 +41,7 @@ class MovementDocument extends AccountingDocument
         self::STATUS_FINISHED => 'Завершен',
     ];
 
+    protected string $blank = 'Перемещение запасов';
     protected $table = 'movement_documents';
 
     protected $fillable = [
@@ -198,4 +199,13 @@ class MovementDocument extends AccountingDocument
 
     }
 
+    function documentUrl(): string
+    {
+        return route('admin.accounting.movement.show', ['movement' => $this->id]);
+    }
+
+    public function onBased(): ?array
+    {
+        return [];
+    }
 }

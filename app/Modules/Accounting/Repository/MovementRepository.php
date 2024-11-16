@@ -60,6 +60,7 @@ class MovementRepository extends AccountingRepository
                     'quantity_out' => $document->storageOut->getAvailable($movementProduct->product),
                     'quantity_in' => $document->storageIn->getAvailable($movementProduct->product),
                 ])),
+            'based' => $document->onBased(),
         ]);
     }
 }

@@ -26,7 +26,7 @@ class SupplyRepository extends AccountingRepository
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(function(SupplyDocument $document) {
+            ->through(function (SupplyDocument $document) {
                 return $this->SupplyToArray($document);
             });
     }
@@ -37,7 +37,7 @@ class SupplyRepository extends AccountingRepository
         $filters = [];
         if (($brand = $request->integer('brand')) > 0) {
             $filters['brand'] = $brand;
-            $query->whereHas('product', function ($query) use($brand) {
+            $query->whereHas('product', function ($query) use ($brand) {
                 $query->where('brand_id', $brand);
             });
         }
@@ -49,7 +49,7 @@ class SupplyRepository extends AccountingRepository
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(function(SupplyStack $stack) {
+            ->through(function (SupplyStack $stack) {
                 return [
                     'id' => $stack->id,
                     'name' => $stack->product->name,
@@ -66,7 +66,7 @@ class SupplyRepository extends AccountingRepository
 
     public function SupplyToArray(SupplyDocument $document): array
     {
-        return  array_merge($document->toArray(),[
+        return array_merge($document->toArray(), [
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
@@ -82,13 +82,14 @@ class SupplyRepository extends AccountingRepository
             'products' => $document->products()->with('product')->paginate(20)->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'arrivals' => $document->arrivals()->get()->map(function (ArrivalDocument $document) {
-                return array_merge($document->toArray(),[
+                return array_merge($document->toArray(), [
                     'storage_name' => $document->storage->name,
                     'amount' => $document->getAmount(),
                     'quantity' => $document->getQuantity(),
                     'currency' => $document->currency->sign,
-                    ]);
+                ]);
             }),
+            'based' => $document->onBased(),
         ];
 
         return array_merge($this->SupplyToArray($document), $withData);

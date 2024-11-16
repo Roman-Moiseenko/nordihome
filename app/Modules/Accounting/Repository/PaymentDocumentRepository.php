@@ -58,6 +58,7 @@ class PaymentDocumentRepository extends AccountingRepository
         return array_merge($this->PaymentToArray($payment), [
             'distributor' => $this->distributors->DistributorForAccounting($payment->recipient->distributor),
             'decryptions' => $payment->decryptions()->with('supply')->get()->toArray(),
+            'based' => $payment->onBased(),
         ]);
     }
 }

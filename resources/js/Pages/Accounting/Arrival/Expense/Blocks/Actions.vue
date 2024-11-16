@@ -1,6 +1,7 @@
 <template>
     <template v-if="expense.completed">
-
+        <AccountingOnBased :based="expense.based" />
+        <AccountingPrint :print="expense.print" />
     </template>
     <template v-else>
         <el-form class="flex">
@@ -25,6 +26,8 @@
 import {defineProps, reactive} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
+import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
+import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 
 const props = defineProps({
     expense: Object,

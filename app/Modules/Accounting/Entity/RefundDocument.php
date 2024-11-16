@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class RefundDocument extends AccountingDocument
 {
+    protected string $blank = 'Возврат поставщику';
     public static function register(int $staff_id, int $arrival_id, int $distributor_id, int $storage_id): self
     {
         $refund = parent::baseNew($staff_id);
@@ -51,7 +52,7 @@ class RefundDocument extends AccountingDocument
         return (int)($quantity->total ?? 0);
     }
 
-    public function getStorage()
+    public function getStorage(): ?Storage
     {
         return $this->storage;
     }
@@ -83,5 +84,13 @@ class RefundDocument extends AccountingDocument
     }
 
 
+    function documentUrl(): string
+    {
+        return route('admin.accounting.refund.show', ['refund' => $this->id]);
+    }
 
+    public function onBased(): ?array
+    {
+        return [];
+    }
 }

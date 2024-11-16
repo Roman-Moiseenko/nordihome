@@ -22,6 +22,7 @@ use JetBrains\PhpStorm\Deprecated;
  */
 class DepartureDocument extends AccountingDocument
 {
+    protected string $blank = 'Списание остатков';
     protected $table = 'departure_documents';
 
     protected $fillable = [
@@ -101,4 +102,14 @@ class DepartureDocument extends AccountingDocument
         return $this->staff->fullname->getFullName();
     }
 
+    function documentUrl(): string
+    {
+        return route('admin.accounting.departure.show', ['departure' => $this->id]);
+
+    }
+
+    public function onBased(): ?array
+    {
+        return [];
+    }
 }

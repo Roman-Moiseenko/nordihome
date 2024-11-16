@@ -30,6 +30,7 @@ abstract class AccountingDocument extends Model
     use HtmlInfoData;
 
     protected string $prefix = '';
+    protected string $blank = 'Документ';
     /**
      * Объединяем базовые параметры
      * @param array $attributes
@@ -118,6 +119,11 @@ abstract class AccountingDocument extends Model
     }
 
     //GET...
+    public function documentName(): string
+    {
+        return $this->blank . ' ' . $this->number . ' от ' . $this->created_at->translatedFormat('d-m-Y');
+    }
+    abstract function documentUrl(): string;
 
     public function getComment(): string
     {
@@ -197,5 +203,17 @@ abstract class AccountingDocument extends Model
 
         $table->dropForeign(['staff_id']);
         $table->dropColumn('staff_id');
+    }
+
+    abstract public function onBased():? array;
+
+    final protected function basedItem(mixed $document): array
+    {
+        if (is_null($document)) return [];
+        return [
+            'name' => $document->documentName(),
+            'url' => $document->documentUrl(),
+            'children' => $document->onBased()
+        ];
     }
 }

@@ -45,11 +45,13 @@ class PaymentDocumentService
 
     public function setInfo(PaymentDocument $payment, Request $request): void
     {
-        $payment->number = $request->string('number')->value();
-        $payment->created_at = $request->date('created_at');
-        $payment->amount = $request->input('amount');
-        $payment->comment = $request->string('comment')->value();
+        $payment->baseSave($request->input('document'));
+        //$payment->number = $request->string('number')->value();
+        //$payment->created_at = $request->date('created_at');
 
+        //$payment->comment = $request->string('comment')->value();
+
+        $payment->amount = $request->input('amount');
         $payer = Organization::find($request->integer('payer_id'));
         if ($payment->payer_id != $payer->id) {
             $payment->payer_id = $payer->id;

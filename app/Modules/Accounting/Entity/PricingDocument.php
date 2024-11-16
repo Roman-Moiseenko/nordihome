@@ -18,6 +18,7 @@ use JetBrains\PhpStorm\Deprecated;
  */
 class PricingDocument extends AccountingDocument
 {
+    protected string $blank = 'Установка цен';
     protected $table = 'pricing_documents';
     protected $fillable = [
         'arrival_id',
@@ -58,4 +59,13 @@ class PricingDocument extends AccountingDocument
         return $this->hasMany(PricingProduct::class, 'pricing_id', 'id');
     }
 
+    function documentUrl(): string
+    {
+        return route('admin.accounting.pricing.show', ['pricing' => $this->id]);
+    }
+
+    public function onBased(): ?array
+    {
+        return [];
+    }
 }

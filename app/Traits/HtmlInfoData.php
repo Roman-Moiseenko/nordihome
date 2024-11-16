@@ -23,7 +23,7 @@ trait HtmlInfoData
 
     public function htmlNumDate(string $field = 'created_at'):string
     {
-        return $this->htmlNum() . ' от ' . $this->htmlDate();
+        return $this->number . ' от ' . $this->htmlDate($field);
     }
 
     /*

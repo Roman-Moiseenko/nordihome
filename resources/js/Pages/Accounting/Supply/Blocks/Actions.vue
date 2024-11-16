@@ -12,16 +12,8 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-        <el-dropdown class="ml-3">
-            <el-button type="success" plain>
-                Связанные документы<el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </el-button>
-            <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item>Сделать дерево всех документов</el-dropdown-item>
-                </el-dropdown-menu>
-            </template>
-        </el-dropdown>
+        <AccountingOnBased :based="supply.based" />
+        <AccountingPrint :print="supply.print" />
         <el-button type="danger" class="ml-5" @click="onWork">Отмена проведения</el-button>
     </template>
     <template v-else>
@@ -61,6 +53,8 @@ import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import {defineProps, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
+import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
+import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 
 const props = defineProps({
     supply: Object,

@@ -38,6 +38,7 @@ class ArrivalDocument extends AccountingDocument
         self::OPERATION_OTHER => 'Другое',
     ];
 
+    protected string $blank = 'Приходная накладная';
     protected $table = 'arrival_documents';
     protected $fillable = [
         'distributor_id',
@@ -160,4 +161,24 @@ class ArrivalDocument extends AccountingDocument
     }
 
 
+    function documentUrl(): string
+    {
+        return route('admin.accounting.arrival.show', ['arrival' => $this->id]);
+    }
+
+    public function onBased(): ?array
+    {
+        $array = [];
+        foreach ($this->refunds as $refund) {
+            $array[] = $this->basedItem($refund);
+        }
+        foreach ($this->movements as $movement) {
+            $array[] = $this->basedItem($movement);
+        }
+
+        $array[] = $this->basedItem($this->pricing);
+        $array[] = $this->basedItem($this->expense);
+
+        return $array;
+    }
 }

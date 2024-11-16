@@ -41,6 +41,7 @@ class DepartureRepository extends AccountingRepository
     {
         return array_merge($this->DepartureToArray($document), [
             'products' => $document->products()->with('product')->paginate(20)->toArray(),
+            'based' => $document->onBased(),
         ]);
     }
 }

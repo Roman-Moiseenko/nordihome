@@ -2,14 +2,15 @@
     <el-row :gutter="10">
         <el-col :span="12">
             <el-form label-width="auto">
-                <el-form-item label="№ документа">
-                    <el-input v-model="info.number" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit" style="width: 160px"/>
-                    <span class="text-gray-500 px-4">от</span>
-                    <el-date-picker v-model="info.created_at" type="datetime"
-                                    @change="setInfo" :disabled="iSavingInfo"
-                                    style="width: 200px"
-                                    :readonly="notEdit"
-                    />
+                <AccountingDocument v-model="info.document" :distributor="payment.distributor"
+                                    @update:modelValue="setInfo" v-model:saving="iSavingInfo" :edit="notEdit"/>
+
+            </el-form>
+        </el-col>
+        <el-col :span="12">
+            <el-form label-width="auto">
+                <el-form-item label="Получатель">
+                    <el-input :model-value="payment.distributor.short_name" :readonly="true" style="width: 300px"/>
                 </el-form-item>
                 <el-form-item label="Плательщик">
                     <el-select v-model="info.payer_id" @change="setInfo" :disabled="iSavingInfo || notEdit" style="width: 260px">
@@ -20,22 +21,11 @@
                 </el-form-item>
                 <el-form-item label="Сумма оплаты">
                     <el-input v-model="info.amount" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit || !payment.manual" style="width: 160px"/>
-                    <span class="ml-2 mr-1">Долг</span>
-                    <span class="text-blue-900">{{ func.price(payment.debit, payment.currency) }}</span>
                 </el-form-item>
                 <el-form-item label="Документ к зачету">
                     <el-input v-model="payment.order_bank" :readonly="true" style="width: 300px"/>
                 </el-form-item>
-            </el-form>
-        </el-col>
-        <el-col :span="12">
-            <el-form label-width="auto">
-                <el-form-item label="Получатель">
-                    <el-input :model-value="payment.distributor.short_name" :readonly="true" style="width: 300px"/>
-                </el-form-item>
-                <el-form-item label="Комментарий">
-                    <el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit" type="textarea" style="width: 300px" :rows="3"/>
-                </el-form-item>
+
                 <el-form-item label="Назначение">
                     <el-input :model-value="payment.bank_purpose" :readonly="true"/>
                 </el-form-item>
@@ -51,6 +41,7 @@
 import {func} from '@Res/func.js'
 import {computed, reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
+import AccountingDocument from "@Comp/Pages/AccountingDocument.vue";
 
 const props = defineProps({
     payment: Object,
@@ -59,12 +50,18 @@ const props = defineProps({
 console.log(props.payers, props.payment.payer_id)
 const iSavingInfo = ref(false)
 const info = reactive({
-    number: props.payment.number,
-    created_at: props.payment.created_at,
+    document: {
+        number: props.payment.number,
+        created_at: props.payment.created_at,
+        incoming_number: props.payment.incoming_number,
+        incoming_at: props.payment.incoming_at,
+        comment: props.payment.comment,
+    },
+    //number: props.payment.number,
+   // created_at: props.payment.created_at,
     amount: props.payment.amount,
-
     payer_id: props.payment.payer_id,
-    comment:  props.payment.comment,
+    //comment:  props.payment.comment,
 })
 const notEdit = computed(() => props.payment.completed);
 

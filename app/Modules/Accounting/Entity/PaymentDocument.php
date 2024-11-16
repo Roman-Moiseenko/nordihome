@@ -10,44 +10,31 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
- * @property string $number
  * @property float $amount
- * @property string $comment
- * @property int $staff_id
- * @property bool $completed
  * @property bool $manual
  * @property int $recipient_id
  * @property int $payer_id
  * @property string $recipient_account
  * @property string $payer_account
  *
- *
- *
  * @property string $bank_purpose Назначение платежа Банковские данные
  * @property string $bank_number Банковские данные
  * @property Carbon $bank_date Банковские данные
- * @property Carbon $created_at
- * @property Carbon $updated_at
+
  * @property Organization $recipient Получатель платежа
  * @property Organization $payer Плательщик платежа
- * @property Admin $staff
  * @property PaymentDecryption[] $decryptions
  */
-class PaymentDocument extends Model
+class PaymentDocument extends AccountingDocument
 {
-    use CompletedFieldModel;
-
+    protected string $blank = 'Платежное поручение';
     protected $attributes = [
         'comment' => '',
     ];
     protected $fillable = [
-        'number',
         'amount',
         'recipient_id',
         'payer_id',
-        'completed',
-        'staff_id',
         'manual',
         'recipient_account',
         'payer_account'
@@ -55,17 +42,16 @@ class PaymentDocument extends Model
 
     public static function register(int $recipient_id, string $recipient_account, int $payer_id, string $payer_account, float $amount, int $staff_id): self
     {
-        return self::create([
-            'number' => self::count() + 1,
-            'amount' => $amount,
-            'recipient_id' => $recipient_id,
-            'payer_id' => $payer_id,
-            'completed' => false,
-            'staff_id' => $staff_id,
-            'manual' => false,
-            'recipient_account' => $recipient_account,
-            'payer_account' => $payer_account
-        ]);
+        $document = parent::baseNew($staff_id);
+        $document->recipient_id = $recipient_id;
+        $document->recipient_account = $recipient_account;
+        $document->payer_id = $payer_id;
+        $document->payer_account = $payer_account;
+        $document->amount = $amount;
+        $document->manual = false;
+        $document->save();
+
+        return $document;
     }
 
     public function manual(): void
@@ -101,10 +87,6 @@ class PaymentDocument extends Model
         return $this->hasMany(PaymentDecryption::class, 'payment_id', 'id');
     }
 
-    public function staff(): BelongsTo
-    {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
-    }
 
     //TODO Сделать рефакторинг ???
     public function fillDecryptions(): void
@@ -121,4 +103,18 @@ class PaymentDocument extends Model
         }
     }
 
+    function documentUrl(): string
+    {
+        return route('admin.accounting.payment.show', ['payment' => $this->id]);
+    }
+
+    public function products(): HasMany
+    {
+        throw new \DomainException('Неверный вызов');
+    }
+
+    public function onBased(): ?array
+    {
+        return [];
+    }
 }

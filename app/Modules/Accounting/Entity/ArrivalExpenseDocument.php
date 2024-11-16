@@ -19,6 +19,8 @@ class ArrivalExpenseDocument extends AccountingDocument
         'currency',
     ];
 
+    protected string $blank = 'Дополнительные расходы';
+
     public static function register(int $staff_id): ArrivalExpenseDocument
     {
         $expense = parent::baseNew($staff_id);
@@ -50,5 +52,15 @@ class ArrivalExpenseDocument extends AccountingDocument
     public function items(): HasMany
     {
         return $this->hasMany(ArrivalExpenseItem::class, 'expense_id', 'id');
+    }
+
+    function documentUrl(): string
+    {
+        return route('admin.accounting.arrival.expense.show', ['expense' => $this->id]);
+    }
+
+    public function onBased(): ?array
+    {
+        return [];
     }
 }

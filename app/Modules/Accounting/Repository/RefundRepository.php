@@ -44,6 +44,7 @@ class RefundRepository extends AccountingRepository
         return array_merge($this->RefundToArray($document), [
             'products' => $document->products()->with('product')->paginate(20)->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
+            'based' => $document->onBased(),
         ]);
     }
 }

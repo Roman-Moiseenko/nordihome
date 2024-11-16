@@ -3,7 +3,8 @@
         <el-button v-if="movement.is_departure" type="warning" class="ml-5" @click="onDeparture">Товар убыл</el-button>
         <el-button v-if="movement.is_arrival" type="success" class="ml-5" @click="onArrival">Товар прибыл</el-button>
 
-
+        <AccountingOnBased :based="movement.based" />
+        <AccountingPrint :print="movement.print" />
         <el-button v-if="movement.is_departure" type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
     </template>
     <template v-else>
@@ -23,6 +24,8 @@ import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
+import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
+import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 
 const props = defineProps({
     movement: Object,
