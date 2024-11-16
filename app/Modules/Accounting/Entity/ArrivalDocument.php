@@ -163,7 +163,7 @@ class ArrivalDocument extends AccountingDocument
 
     function documentUrl(): string
     {
-        return route('admin.accounting.arrival.show', ['arrival' => $this->id]);
+        return route('admin.accounting.arrival.show', ['arrival' => $this->id], false);
     }
 
     public function onBased(): ?array
@@ -175,10 +175,9 @@ class ArrivalDocument extends AccountingDocument
         foreach ($this->movements as $movement) {
             $array[] = $this->basedItem($movement);
         }
-
         $array[] = $this->basedItem($this->pricing);
         $array[] = $this->basedItem($this->expense);
 
-        return $array;
+        return $this->basedGenerate($array, $this->supply);
     }
 }

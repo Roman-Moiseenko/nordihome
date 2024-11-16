@@ -86,11 +86,11 @@ class RefundDocument extends AccountingDocument
 
     function documentUrl(): string
     {
-        return route('admin.accounting.refund.show', ['refund' => $this->id]);
+        return route('admin.accounting.refund.show', ['refund' => $this->id], true);
     }
 
     public function onBased(): ?array
     {
-        return [];
+        return $this->basedGenerate([], $this->arrival);
     }
 }

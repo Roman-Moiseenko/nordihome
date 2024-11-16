@@ -145,9 +145,18 @@ class SupplyDocument extends AccountingDocument
         return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
     }
 
-    public function payments(): HasMany
+    /**
+     * @return PaymentDocument[]
+     */
+    public function payments(): array
     {
-        return $this->hasMany(PaymentDocument::class, 'supply_id', 'id');
+        $decryptions = PaymentDecryption::where('supply_id', $this->id)->getModels();
+        if (is_null($decryptions)) return [];
+        $payments = [];
+        foreach ($decryptions as $decryption) {
+            $payments[] = $decryption->payment()->first();
+        }
+        return $payments; //$this->hasMany(PaymentDocument::class, 'supply_id', 'id');
     }
 
     /**
@@ -190,15 +199,15 @@ class SupplyDocument extends AccountingDocument
         foreach ($this->arrivals as $arrival) {
             $array[] = $this->basedItem($arrival);
         }
-       /* foreach ($this->payments as $payment) {
+        foreach ($this->payments() as $payment) {
             $array[] = $this->basedItem($payment);
-        }*/
+        }
 
-        return $array;
+        return $this->basedGenerate($array, null);
     }
 
     function documentUrl(): string
     {
-        return route('admin.accounting.supply.show', ['supply' => $this->id]);
+        return route('admin.accounting.supply.show', ['supply' => $this->id], false);
     }
 }

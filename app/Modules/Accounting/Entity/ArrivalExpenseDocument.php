@@ -56,11 +56,11 @@ class ArrivalExpenseDocument extends AccountingDocument
 
     function documentUrl(): string
     {
-        return route('admin.accounting.arrival.expense.show', ['expense' => $this->id]);
+        return route('admin.accounting.arrival.expense.show', ['expense' => $this->id], false);
     }
 
     public function onBased(): ?array
     {
-        return [];
+        return $this->basedGenerate([], $this->arrival);
     }
 }

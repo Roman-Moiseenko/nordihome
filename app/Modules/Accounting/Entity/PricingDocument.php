@@ -61,11 +61,11 @@ class PricingDocument extends AccountingDocument
 
     function documentUrl(): string
     {
-        return route('admin.accounting.pricing.show', ['pricing' => $this->id]);
+        return route('admin.accounting.pricing.show', ['pricing' => $this->id], false);
     }
 
     public function onBased(): ?array
     {
-        return [];
+        return $this->basedGenerate([], $this->arrival);
     }
 }

@@ -207,13 +207,28 @@ abstract class AccountingDocument extends Model
 
     abstract public function onBased():? array;
 
-    final protected function basedItem(mixed $document): array
+    final protected function basedItem(?AccountingDocument $document): array
     {
         if (is_null($document)) return [];
         return [
             'name' => $document->documentName(),
             'url' => $document->documentUrl(),
             'children' => $document->onBased()
+        ];
+    }
+
+    final protected function basedGenerate(array $children, ?AccountingDocument $founded): array
+    {
+        if (is_null($founded)) return [
+            'founded' => null,
+            'children' => array_filter($children),
+        ];
+        return [
+            'founded' => [
+                'name' => $founded->documentName(),
+                'url' => $founded->documentUrl(),
+            ],
+            'children' => array_filter($children),
         ];
     }
 }

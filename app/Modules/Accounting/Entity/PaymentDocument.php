@@ -105,7 +105,7 @@ class PaymentDocument extends AccountingDocument
 
     function documentUrl(): string
     {
-        return route('admin.accounting.payment.show', ['payment' => $this->id]);
+        return route('admin.accounting.payment.show', ['payment' => $this->id], false);
     }
 
     public function products(): HasMany
@@ -115,6 +115,17 @@ class PaymentDocument extends AccountingDocument
 
     public function onBased(): ?array
     {
-        return [];
+        $founded = [];
+        foreach ($this->decryptions as $decryption) {
+            $supply = $decryption->supply;
+            $founded[] = [
+                'name' => $supply->documentName(),
+                'url' => $supply->documentUrl(),
+            ];
+        }
+        return [
+            'founded' => $founded,
+            'children' => [],
+        ];
     }
 }

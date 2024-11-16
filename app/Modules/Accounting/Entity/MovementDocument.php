@@ -201,11 +201,11 @@ class MovementDocument extends AccountingDocument
 
     function documentUrl(): string
     {
-        return route('admin.accounting.movement.show', ['movement' => $this->id]);
+        return route('admin.accounting.movement.show', ['movement' => $this->id], false);
     }
 
     public function onBased(): ?array
     {
-        return [];
+        return $this->basedGenerate([], $this->arrival);
     }
 }

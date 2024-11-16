@@ -104,12 +104,14 @@ class DepartureDocument extends AccountingDocument
 
     function documentUrl(): string
     {
-        return route('admin.accounting.departure.show', ['departure' => $this->id]);
+        return route('admin.accounting.departure.show', ['departure' => $this->id], false);
 
     }
 
     public function onBased(): ?array
     {
-        return [];
+        //TODO Добавить Инвентаризация
+        // $this->inventarization
+        return $this->basedGenerate([], null);
     }
 }
