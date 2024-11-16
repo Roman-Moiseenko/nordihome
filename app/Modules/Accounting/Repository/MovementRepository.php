@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\MovementProduct;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,7 @@ class MovementRepository extends AccountingRepository
             }
         }, false);
 
-        return $query->paginate($request->input('p', 20))
+        return $query->paginate($request->input('size', 20))
             ->withQueryString()
             ->through(fn(MovementDocument $document) => $this->MovementToArray($document));
     }
@@ -42,6 +43,7 @@ class MovementRepository extends AccountingRepository
             'storage_in' => $document->storageIn->toArray(),
             'storage_out' => $document->storageOut->toArray(),
             'quantity' => $document->getQuantity(),
+            'arrival_text' => !is_null($document->arrival) ? ($document->arrival->number . ' от ' . $document->arrival->htmlDate()) : '',
         ]);
     }
     public function MovementWithToArray(MovementDocument $document): array
@@ -50,7 +52,14 @@ class MovementRepository extends AccountingRepository
             'is_active' => $document->isFinished(),
             'is_departure' => $document->isDeparture(),
             'is_arrival' => $document->isArrival(),
-            'products' => $document->products()->with('product')->paginate(20)->toArray(),
+            'products' => $document->products()
+                ->with('product')
+                ->paginate(20)
+                ->withQueryString()
+                ->through(fn(MovementProduct $movementProduct) => array_merge($movementProduct->toArray(), [
+                    'quantity_out' => $document->storageOut->getAvailable($movementProduct->product),
+                    'quantity_in' => $document->storageIn->getAvailable($movementProduct->product),
+                ])),
         ]);
     }
 }

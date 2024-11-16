@@ -16,7 +16,7 @@
             <el-table :data="[...pricing.products.data]"
                       header-cell-class-name="nordihome-header"
                       :row-class-name="tableRowClassName"
-                      style="width: 100%;">
+                      style="width: 100%;" :class="'pricing-table'">
                 <el-table-column prop="code" label="Артикул" width="160" />
                 <el-table-column prop="name" label="Товар" show-overflow-tooltip/>
                 <!-- ЦЕНЫ -->
@@ -92,11 +92,6 @@
                         </el-input>
                     </template>
                 </el-table-column>
-
-
-
-
-
                 <el-table-column label="Действия" align="right" width="180">
                     <template #default="scope">
                         <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
@@ -176,8 +171,11 @@ function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.pricing.del-product', {product: row.id}));
 }
 </script>
-<style>
-.el-input-group__prepend {
-    width: 100%;
+<style lang="scss">
+.pricing-table {
+
+    .el-input-group__prepend {
+        width: 100%;
+    }
 }
 </style>

@@ -75,10 +75,10 @@ class MovementDocument extends AccountingDocument
         $this->save();
     }
 
-    public function addProduct(Product $product, int $quantity, int $order_item_id = null): void
+    public function addProduct(int $product_id, int $quantity, int $order_item_id = null): void
     {
         $this->products()->create([
-            'product_id' => $product->id,
+            'product_id' => $product_id,
             'quantity' => $quantity,
             'order_item_id' => $order_item_id,
         ]);
@@ -100,6 +100,11 @@ class MovementDocument extends AccountingDocument
     {
         $this->status = self::STATUS_FINISHED;
         $this->save();
+    }
+
+    public function arrival(): BelongsTo
+    {
+        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
     }
 
     public function order():? Order
@@ -153,7 +158,7 @@ class MovementDocument extends AccountingDocument
         $quantity = MovementProduct::selectRaw('SUM(quantity * 1) AS total')
             ->where('movement_id', $this->id)
             ->first();
-        return $quantity->total ?? 0;
+        return (int)$quantity->total ?? 0;
     }
 
     #[ArrayShape([

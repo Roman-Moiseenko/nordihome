@@ -66,28 +66,6 @@ class ArrivalService
         );
     }
 
-    #[Deprecated]
-    public function update(Request $request, ArrivalDocument $arrival): ArrivalDocument
-    {
-        DB::transaction(function () use ($request, $arrival) {
-            if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
-            $arrival->number = $request->string('number')->trim()->value();
-            $arrival->distributor_id = $request->integer('distributor');
-            $arrival->storage_id = $request->integer('storage');
-            $arrival->save();
-            /** @var Distributor $distributor */
-            $distributor = Distributor::find($arrival->distributor_id);
-            $currency = $distributor->currency;
-            if ($currency->id != $arrival->currency_id) {
-                $arrival->currency_id = $currency->id;
-                $arrival->setExchange($currency->getExchange());
-            } elseif ($currency->getExchange() != $arrival->exchange_fix) {
-                $arrival->setExchange($currency->getExchange());
-            }
-        });
-        return $arrival;
-    }
-
     public function destroy(ArrivalDocument $arrival): void
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Удалять нельзя');
@@ -223,10 +201,10 @@ class ArrivalService
                     $order->movements()->attach($movement->id);
 
                     foreach ($stacks as $stack) {
-                        $movement->addProduct($stack->product, $stack->quantity, $stack->orderItem->id);
+                        $movement->addProduct($stack->product_id, $stack->quantity, $stack->orderItem->id);
                     }
                     $movement->refresh();
-                    $this->movementService->activate($movement);
+                    $this->movementService->completed($movement);
                     event(new MovementHasCreated($movement));
                 }
                 //Создаем перемещения от менеджеров
@@ -234,10 +212,10 @@ class ArrivalService
                 foreach ($storages_movement as $storageIn_id => $stacks) {
                     $movement = $this->movementService->create($arrival->storage_id, $storageIn_id);
                     foreach ($stacks as $stack) {
-                        $movement->addProduct($stack->product, $stack->quantity);
+                        $movement->addProduct($stack->product_id, $stack->quantity);
                     }
                     $movement->refresh();
-                    $this->movementService->activate($movement);
+                    $this->movementService->completed($movement);
                     event(new MovementHasCreated($movement));
                 }
             }
@@ -303,46 +281,59 @@ class ArrivalService
 
     public function movement(ArrivalDocument $arrival)
     {
-        //TODO В разработке
-        throw new \DomainException('В разработке');
+        DB::transaction(function () use($arrival, &$movement) {
+            $storageIn = Storage::where('id', '<>', $arrival->storage_id)->first();
+            if (is_null($storageIn)) throw new \DomainException('Отсутствуют склады для перемещения');
+            $movement = $this->movementService->create($arrival->storage_id, $storageIn->id, $arrival->id);
+            foreach ($arrival->products as $product) {
+                //Переместить можно кроме возвращенного товара за минусом уже перемещенного
+                $quantity = $product->getQuantityUnallocated() - $product->getQuantityMoved();
+                $movement->addProduct($product->product_id, $quantity);
+            }
+        });
+        return $movement;
     }
 
     public function pricing(ArrivalDocument $arrival)
     {
-        if (!$arrival->isCompleted()) throw new \DomainException('Документ не проведен. Создать документ цен нельзя');
+        DB::transaction(function () use($arrival, &$pricing) {
+            if (!$arrival->isCompleted()) throw new \DomainException('Документ не проведен. Создать документ цен нельзя');
 
-        if (!is_null($arrival->pricing)) return $arrival->pricing;
-        $coeff = 1;
-        if (!is_null($arrival->expense)) $coeff += $arrival->expense->getAmount() / ($arrival->getAmount() * $arrival->exchange_fix);
-        $pricing = $this->pricingService->create($arrival->id);
-        foreach ($arrival->products as $product) {
-            $cost_ru = $product->cost_currency * $arrival->exchange_fix;
-            $item = PricingProduct::new(
-                product_id: $product->product_id,
-                price_cost: (int)ceil($cost_ru * $coeff),
-                price_min:  (int)ceil($cost_ru),
-            );
-            $pricing->products()->save($item);
-        }
+            if (!is_null($arrival->pricing)) return $arrival->pricing;
+            $coeff = 1;
+            if (!is_null($arrival->expense)) $coeff += $arrival->expense->getAmount() / ($arrival->getAmount() * $arrival->exchange_fix);
+            $pricing = $this->pricingService->create($arrival->id);
+            foreach ($arrival->products as $product) {
+                $cost_ru = $product->cost_currency * $arrival->exchange_fix;
+                $item = PricingProduct::new(
+                    product_id: $product->product_id,
+                    price_cost: (int)ceil($cost_ru * $coeff),
+                    price_min:  (int)ceil($cost_ru),
+                );
+                $pricing->products()->save($item);
+            }
+        });
         return $pricing;
-
     }
 
     public function refund(ArrivalDocument $arrival)
     {
-        $refund = $this->refundService->create($arrival->id);
-        //Переносим весь не выданный товар в возврат
-        foreach ($arrival->products as $product) {
-            $quantity = $product->getQuantityUnallocated();
-            if ($quantity > 0) {
-                $item = RefundProduct::new(
-                    $product->product_id,
-                    $quantity,//Высчитываем свободное кол-во
-                    $product->cost_currency,
-                );
-                $refund->products()->save($item);
+        DB::transaction(function () use($arrival, &$refund) {
+            $refund = $this->refundService->create($arrival->id);
+            //Переносим весь не выданный товар в возврат
+            foreach ($arrival->products as $product) {
+                $quantity = $product->getQuantityUnallocated();
+                if ($quantity > 0) {
+                    $item = RefundProduct::new(
+                        $product->product_id,
+                        $quantity,//Высчитываем свободное кол-во
+                        $product->cost_currency,
+                    );
+                    $refund->products()->save($item);
+                }
             }
-        }
+        });
+
         $refund->refresh();
         if ($refund->products()->count() == 0) {
             $refund->delete();

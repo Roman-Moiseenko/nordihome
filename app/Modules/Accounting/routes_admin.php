@@ -54,7 +54,7 @@ Route::group(
                // Route::post('/add/{movement}', 'MovementController@add')->name('add');
                // Route::post('/add-products/{movement}', 'MovementController@add_products')->name('add-products');
 
-                Route::post('/activate/{movement}', 'MovementController@activate')->name('activate');
+                //Route::post('/activate/{movement}', 'MovementController@activate')->name('activate');
                 Route::post('/departure/{movement}', 'MovementController@departure')->name('departure');
                 Route::post('/arrival/{movement}', 'MovementController@arrival')->name('arrival');
                // Route::post('/set/{item}', 'MovementController@set')->name('set');

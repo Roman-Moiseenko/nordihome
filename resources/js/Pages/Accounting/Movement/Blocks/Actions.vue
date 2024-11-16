@@ -1,7 +1,7 @@
 <template>
     <template v-if="movement.completed">
         <el-button v-if="movement.is_departure" type="warning" class="ml-5" @click="onDeparture">Товар убыл</el-button>
-        <el-button v-if="movement.is_arrival" type="warning" class="ml-5" @click="onArrival">Товар прибыл</el-button>
+        <el-button v-if="movement.is_arrival" type="success" class="ml-5" @click="onArrival">Товар прибыл</el-button>
 
 
         <el-button v-if="movement.is_departure" type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>

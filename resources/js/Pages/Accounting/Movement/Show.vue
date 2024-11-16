@@ -15,11 +15,11 @@
             </el-affix>
             <el-table :data="[...movement.products.data]"
                       header-cell-class-name="nordihome-header"
-                      :row-class-name="tableRowClassName"
+                      :row-class-name="tableRowClassName" class="movement-table"
                       style="width: 100%;">
                 <el-table-column prop="product.code" label="Артикул" width="160" />
                 <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
-                <el-table-column prop="quantity" label="Кол-во" width="180">
+                <el-table-column prop="quantity" label="Кол-во" width="300">
                     <template #default="scope">
                         <el-input v-model="scope.row.quantity"
                                   :formatter="(value) => func.MaskInteger(value)"
@@ -27,12 +27,12 @@
                                   :disabled="iSaving"
                                   :readonly="!isEdit"
                         >
-                            <template #prepend> ххх =></template>
-                            <template #append> => xxx</template>
+                            <template #prepend>{{ scope.row.quantity_out }} <i class="fa-light fa-arrow-right-to-bracket ml-1"></i></template>
+                            <template #append><i class="fa-light fa-arrow-right-from-bracket mr-1"></i> {{ scope.row.quantity_in }}</template>
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="Действия" align="right" width="180">
+                <el-table-column label="Действия" align="right" width="250">
                     <template #default="scope">
                         <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
                     </template>
@@ -68,9 +68,10 @@ const props = defineProps({
 })
 interface IRow {
     quantity: number,
+    quantity_out: number
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.quantity === 0) {
+    if (row.quantity === 0 || row.quantity > row.quantity_out) {
         return 'error-row'
     }
     return ''
@@ -85,7 +86,6 @@ function setItem(row) {
         method: "post",
         data: {
             quantity: row.quantity,
-            cost: row.cost_currency
         },
         preserveScroll: true,
         //preserveState: true,
@@ -99,3 +99,10 @@ function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.movement.del-product', {product: row.id}));
 }
 </script>
+<style lang="scss">
+.movement-table {
+    .el-input-group__prepend, .el-input-group__append {
+        width: 90px;
+    }
+}
+</style>

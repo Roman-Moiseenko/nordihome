@@ -168,7 +168,6 @@ class ArrivalController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-
     //<====
 
     public function add_product(Request $request, ArrivalDocument $arrival): RedirectResponse

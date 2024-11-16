@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Entity;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $arrival_id
@@ -66,7 +67,6 @@ class ArrivalProduct extends AccountingProduct implements MovementItemInterface
         return $this->document->supply->getProduct($this->product_id);
     }
 
-
     /**
      * Кол-во текущего товара оставшегося после возвратов
      */
@@ -78,6 +78,19 @@ class ArrivalProduct extends AccountingProduct implements MovementItemInterface
         foreach ($this->document->refunds as $refund) {
             $refundProduct = $refund->getProduct($this->product_id);
             if (!is_null($refundProduct)) $quantity -= $refundProduct->getQuantity();
+        }
+        return $quantity;
+    }
+
+    /**
+     * Кол-во текущего товара в перемещениях
+     */
+    public function getQuantityMoved(): int
+    {
+        $quantity = 0;
+        foreach ($this->document->movements as $movement) {
+            $movementProduct = $movement->getProduct($this->product_id);
+            if (!is_null($movementProduct)) $quantity += $movementProduct->getQuantity();
         }
         return $quantity;
     }

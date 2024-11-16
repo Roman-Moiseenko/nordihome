@@ -37,6 +37,8 @@ class MovementService // extends AccountingService
 
     public function create(int $storage_out, int $storage_in, int $arrival_id = null): MovementDocument
     {
+        if ($storage_out == $storage_in) throw new \DomainException('Склады совпадают');
+
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
 
@@ -117,16 +119,10 @@ class MovementService // extends AccountingService
         /** @var Product $product */
         $product = Product::find($product_id);
         if ($movement->isProduct($product_id)) {
-            flash('Товар ' . $product->name . ' уже добавлен в документ', 'warning');
+            throw new \DomainException('Товар ' . $product->name . ' уже добавлен в документ');
 
         }
-        $free_quantity = $movement->storageOut->getAvailable($product);
-        $quantity = min($quantity, $free_quantity);
-
-        //Добавляем в документ
-        $movement->addProduct($product, $quantity);
-        $movement->refresh();
-
+        $movement->addProduct($product->id, $quantity);
     }
 
     public function addProducts(MovementDocument $movement, array $products): void
@@ -146,23 +142,51 @@ class MovementService // extends AccountingService
     {
         if ($product->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         //Меняем данные
-        //TODO Проверка на наличие на складе
         $product->quantity = $request->integer('quantity');
         $product->save();
     }
 
-    public function setInfo(MovementDocument $movement, Request $request)
+    public function setInfo(MovementDocument $movement, Request $request): void
     {
-        throw new \DomainException('В разработке');
+        $movement->baseSave($request->input('document'));
+        $movement->storage_out = $request->integer('storage_out');
+        $movement->storage_in = $request->integer('storage_in');
+        if ($movement->storage_out == $movement->storage_in) throw new \DomainException('Склады совпадают');
+        $movement->save();
     }
 
-    public function completed(MovementDocument $movement)
+    public function completed(MovementDocument $movement): void
     {
-        throw new \DomainException('В разработке');
+        if ($movement->storage_out == $movement->storage_in) throw new \DomainException('Склады совпадают');
+
+        foreach ($movement->products as $product) {
+            if ($movement->storageOut->getAvailable($product->product) < $product->quantity) throw new \DomainException('Недостаточно товара на складе убытия!');
+        }
+        DB::transaction(function () use ($movement) {
+            $storageOut = $movement->storageOut;
+            foreach ($movement->products as $movementProduct) {
+                $departureItem = StorageDepartureItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
+                $storageOut->departureItems()->save($departureItem);
+
+            }
+            $movement->statusDeparture();
+            $movement->completed();
+        });
     }
 
-    public function work(MovementDocument $movement)
+    public function work(MovementDocument $movement): void
     {
-        throw new \DomainException('В разработке');
+        if ($movement->isDeparture()) {
+            DB::transaction(function () use ($movement) {
+                foreach ($movement->products as $movementProduct) {
+
+                    $movementProduct->departureItem->delete();
+                }
+                $movement->status == MovementDocument::STATUS_DRAFT;
+                $movement->work();
+            });
+        } else {
+            throw new \DomainException('Перемещение в пути, отменить нельзя');
+        }
     }
 }

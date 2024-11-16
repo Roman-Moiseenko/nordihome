@@ -12,6 +12,11 @@
                         <el-option v-for="item in storages" :key="item.id" :value="item.id" :label="item.name"
                                    :readonly="notEdit"/>
                     </el-select>
+                    <el-tooltip effect="dark" placement="top-start" content="Поменять местами">
+                        <el-button @click="onReplace" plain type="primary" class="ml-1" :disabled="notEdit">
+                            <i class="fa-sharp fa-light fa-arrow-up-arrow-down"></i>
+                        </el-button>
+                    </el-tooltip>
                 </el-form-item>
                 <el-form-item label="Назначение">
                     <el-select v-model="info.storage_in" @change="setInfo" :disabled="iSavingInfo || notEdit"
@@ -23,7 +28,7 @@
                 <el-form-item label="Основание">
                     <Link v-if="movement.arrival_id" type="primary"
                           :href="route('admin.accounting.arrival.show', {arrival: movement.arrival_id})" class="ml-2">
-                        Приходная накладная
+                        Приходная накладная {{ movement.arrival_text }}
                     </Link>
                 </el-form-item>
             </el-form>
@@ -42,7 +47,6 @@ const props = defineProps({
     storages: Array,
 })
 const iSavingInfo = ref(false)
-
 const info = reactive({
     document: {
         number: props.movement.number,
@@ -57,6 +61,13 @@ const info = reactive({
 })
 const notEdit = computed(() => props.movement.completed);
 
+console.log(props.movement)
+function onReplace() {
+    let buffer = info.storage_out
+    info.storage_out = info.storage_in
+    info.storage_in = buffer
+    setInfo();
+}
 function setInfo() {
     iSavingInfo.value = true
     router.visit(route('admin.accounting.movement.set-info', {movement: props.movement.id}), {

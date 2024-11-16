@@ -59,7 +59,7 @@ class MovementController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'storage_out' => 'required',
@@ -69,14 +69,12 @@ class MovementController extends Controller
             $request->integer('storage_out'),
             $request->integer('storage_in')
         );
-        return redirect()->route('admin.accounting.movement.show', $movement);
+        return redirect()->route('admin.accounting.movement.show', $movement)->with('success', 'Документ сохранен');;
     }
 
-    public function show(MovementDocument $movement)
+    public function show(MovementDocument $movement): Response
     {
         $storages = Storage::orderBy('name')->get()->toArray();
-        //$info = $movement->getInfoData();
-       // return view('admin.accounting.movement.show', compact('movement', 'info'));
         return Inertia::render('Accounting/Movement/Show', [
             'movement' => $this->repository->MovementWithToArray($movement),
             'storages' => $storages,
@@ -124,47 +122,61 @@ class MovementController extends Controller
 
     }
 
-    public function add_product(Request $request, MovementDocument $movement)
+    public function add_product(Request $request, MovementDocument $movement): RedirectResponse
     {
-        $this->service->addProduct($movement, (int)$request['product_id'], (int)$request['quantity']);
-        return redirect()->route('admin.accounting.movement.show', $movement);
+        try {
+            $this->service->addProduct($movement, (int)$request['product_id'], (int)$request['quantity']);
+            return redirect()->back()->with('success', 'Товар добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
-    public function add_products(Request $request, MovementDocument $movement)
+    public function add_products(Request $request, MovementDocument $movement): RedirectResponse
     {
-        $this->service->addProducts($movement, $request['products']);
-        return redirect()->route('admin.accounting.movement.show', $movement);
+        try {
+            $this->service->addProducts($movement, $request['products']);
+            return redirect()->back()->with('success', 'Товар добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-
-    public function del_product(MovementProduct $product)
+    public function del_product(MovementProduct $product): RedirectResponse
     {
         $product->delete();
         return redirect()->back()->with('success', 'Удалено');
     }
 
-    public function activate(MovementDocument $movement)
+    public function departure(MovementDocument $movement): RedirectResponse
     {
-        $this->service->activate($movement);
-        return redirect()->route('admin.accounting.movement.show', $movement);
+        try {
+            $this->service->departure($movement);
+            return redirect()->back()->with('success', 'Товар отмечен как в пути');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function departure(MovementDocument $movement)
+    public function arrival(MovementDocument $movement): RedirectResponse
     {
-        $this->service->departure($movement);
-        return redirect()->route('admin.accounting.movement.show', $movement);
+        try {
+            $this->service->arrival($movement);
+            return redirect()->back()->with('success', 'Товар поступил на склад');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function arrival(MovementDocument $movement)
+    public function set_product(Request $request, MovementProduct $product): RedirectResponse
     {
-        $this->service->arrival($movement);
-        return redirect()->route('admin.accounting.movement.index');
-    }
-
-    public function set_product(Request $request, MovementProduct $product)
-    {
-        $this->service->setProduct($request, $product);
-        return redirect()->back()->with('success', 'Сохранено');
+        try {
+            $this->service->setProduct($request, $product);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
 }

@@ -760,7 +760,7 @@ class OrderService
             foreach ($order->items as $item) {
                 if (!is_null($reserve = $item->getReserveByStorage($storage_out))) {
                     if ($reserve->quantity > 0) {
-                        $movement->addProduct($item->product, $reserve->quantity, $item->id);
+                        $movement->addProduct($item->product_id, $reserve->quantity, $item->id);
                     }
                 }
             }
