@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Service;
 
 use App\Modules\Accounting\Entity\AccountingProduct;
-use App\Modules\Accounting\Entity\MovementItemInterface;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
@@ -113,7 +112,7 @@ class StorageService
         /** @var Storage[] $storages */
         $storages = Storage::get();
         foreach ($storages as $storage) {
-            if (is_null($storage->getItem($product))) {
+            if (is_null($storage->getItem($product->id))) {
                 $storage->add($product, 0);
             }
         }

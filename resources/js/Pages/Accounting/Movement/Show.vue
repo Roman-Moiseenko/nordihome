@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref, defineProps, computed} from "vue";
+import {inject, ref, defineProps, computed, provide} from "vue";
 import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
@@ -65,7 +65,9 @@ const props = defineProps({
         default: 'Перемещение товаров',
     },
     storages: Array,
+    printed: Object,
 })
+provide('$printed', props.printed)
 interface IRow {
     quantity: number,
     quantity_out: number

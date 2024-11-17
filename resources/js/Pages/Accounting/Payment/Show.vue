@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, defineProps, computed, reactive} from "vue";
+import {ref, defineProps, computed, reactive, provide} from "vue";
 import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
@@ -55,10 +55,11 @@ const props = defineProps({
         default: 'Платежное поручение',
     },
     payers: Array,
+    printed: Object,
 })
+provide('$printed', props.printed)
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.payment.completed);
-console.log(props.payment.decryptions)
 const form = reactive({
     number: props.payment.number,
     payer_id: props.payment.payer_id,

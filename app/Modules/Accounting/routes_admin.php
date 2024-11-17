@@ -60,6 +60,26 @@ Route::group(
                // Route::post('/set/{item}', 'MovementController@set')->name('set');
                 //Route::delete('/remove-item/{item}', 'MovementController@remove_item')->name('remove-item');
             });
+        //INVENTORY
+        Route::group([
+            'prefix' => 'inventory',
+            'as' => 'inventory.',
+        ],
+            function () {
+                Route::post('/set-product/{product}', 'InventoryController@set_product')->name('set-product');
+                Route::delete('/del-product/{product}', 'InventoryController@del_product')->name('del-product');
+
+                Route::post('/add-products/{inventory}', 'InventoryController@add_products')->name('add-products');
+                Route::post('/add-product/{inventory}', 'InventoryController@add_product')->name('add-product');
+                Route::post('/set-info/{inventory}', 'InventoryController@set_info')->name('set-info');
+                Route::post('/completed/{inventory}', 'InventoryController@completed')->name('completed');
+                Route::post('/work/{inventory}', 'InventoryController@work')->name('work');
+
+             //   Route::post('/departure/{inventory}', 'InventoryController@departure')->name('departure');
+//                Route::post('/arrival/{inventory}', 'InventoryController@arrival')->name('arrival');
+            });
+
+
         Route::group([
             'prefix' => 'departure',
             'as' => 'departure.',
@@ -171,7 +191,7 @@ Route::group(
                 //На основании:
 
             });
-
+        Route::resource('inventory', 'InventoryController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('refund', 'RefundController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
         Route::resource('distributor', 'DistributorController'); //CRUD

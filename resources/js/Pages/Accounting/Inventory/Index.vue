@@ -3,7 +3,7 @@
         <template #default>
             <Head><title>{{ title }}</title></Head>
             <el-config-provider :locale="ru">
-                <h1 class="font-medium text-xl">Списание товара</h1>
+                <h1 class="font-medium text-xl">Инвентаризация</h1>
                 <div class="flex">
                     <el-popover :visible="visible_create" placement="bottom-start" :width="246">
                         <template #reference>
@@ -35,7 +35,7 @@
                             placeholder="Выберите дату по"
                             value-format="YYYY-MM-DD"
                         />
-                        <el-select v-model="filter.storage" placeholder="Склад" class="mt-1">
+                        <el-select v-model="filter.storage_id" placeholder="Склад" class="mt-1">
                             <el-option v-for="item in storages" :key="item.id" :label="item.name"
                                        :value="item.id"/>
                         </el-select>
@@ -64,7 +64,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="number" label="№ Документа" width="160"/>
-                        <el-table-column prop="distributor_name" label="Поставщик" width="260" show-overflow-tooltip/>
+                        <el-table-column prop="storage.name" label="Склад" width="260" show-overflow-tooltip/>
                         <el-table-column prop="completed" label="Проведен" width="120">
                             <template #default="scope">
                                 <Active :active="scope.row.completed"/>
@@ -73,7 +73,7 @@
                         <el-table-column prop="quantity" label="Кол-во" width="100"/>
                         <el-table-column prop="amount" label="Сумма" width="120">
                             <template #default="scope">
-                                {{ func.price(scope.row.amount, scope.row.currency) }}
+                                {{ func.price(scope.row.amount) }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
@@ -99,9 +99,9 @@
                 </div>
 
                 <pagination
-                    :current_page="departures.current_page"
-                    :per_page="departures.per_page"
-                    :total="departures.total"
+                    :current_page="inventories.current_page"
+                    :per_page="inventories.per_page"
+                    :total="inventories.total"
                 />
 
             </el-config-provider>
@@ -122,10 +122,10 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 
 const props = defineProps({
-    departures: Object,
+    inventories: Object,
     title: {
         type: String,
-        default: 'Расходные накладные',
+        default: 'Инвентаризация',
     },
     filters: Array,
     storages: Array,
@@ -135,19 +135,19 @@ const store = useStore();
 
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.departures.data])
+const tableData = ref([...props.inventories.data])
 const filter = reactive({
     draft: props.filters.draft,
     staff_id: props.filters.staff_id,
     comment: props.filters.comment,
-    storage: props.filters.storage,
+    storage_id: props.filters.storage_id,
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
 })
 const create_id = ref<Number>(null)
 
 interface IRow {
-    active: number
+    completed: number
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.completed === 0) {
@@ -157,17 +157,15 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.departure.destroy', {departure: row.id}));
+    $delete_entity.show(route('admin.accounting.inventory.destroy', {inventories: row.id}));
 }
 function createButton() {
-    router.post(route('admin.accounting.departure.store', {storage: create_id.value}))
+    router.post(route('admin.accounting.inventory.store', {storage_id: create_id.value}))
 }
 function routeClick(row) {
-    router.get(route('admin.accounting.departure.show', {departure: row.id}))
+    router.get(route('admin.accounting.inventory.show', {inventories: row.id}))
 }
-function handleCopy(row) {
-    router.post(route('admin.accounting.departure.copy', {departure: row.id}))
-}
+
 
 
 </script>

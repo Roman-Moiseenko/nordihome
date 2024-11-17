@@ -3,12 +3,13 @@
 </template>
 
 <script setup>
+import {inject, defineProps} from 'vue'
 const props = defineProps({
-    print: {
-        default: [],
-        type: Array,
-    }
+
 })
+//Список для печати/генерации
+//{label, url}
+const $printed = inject('$printed', [])
 </script>
 
 <style scoped>

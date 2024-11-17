@@ -26,6 +26,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property RefundDocument[] $refunds
  * @property MovementDocument[] $movements
  * @property ArrivalExpenseDocument $expense
+ * @property InventoryDocument $inventory
  */
 class ArrivalDocument extends AccountingDocument
 {
@@ -49,7 +50,7 @@ class ArrivalDocument extends AccountingDocument
     ];
 
 
-    public static function register(int $distributor_id, int $storage_id, Currency $currency, int $staff_id = null): self
+    public static function register(?int $distributor_id, int $storage_id, Currency $currency, int $staff_id = null): self
     {
         $arrival = parent::baseNew($staff_id);
         $arrival->distributor_id = $distributor_id;
@@ -69,16 +70,6 @@ class ArrivalDocument extends AccountingDocument
 
     //*** SET-...
 
-    public function setExchange(float $exchange_fix): void
-    {
-        if ($this->isCompleted()) throw new \DomainException('Нельзя менять проведенный документ');
-        $this->exchange_fix = $exchange_fix;
-        $this->save();
-        foreach ($this->arrivalProducts as $item) {
-            $item->cost_ru = $item->cost_currency * $this->exchange_fix;
-            $item->save();
-        }
-    }
 
     //*** GET-...
     public function getAmount(): float
@@ -104,6 +95,11 @@ class ArrivalDocument extends AccountingDocument
     }
 
     //*** RELATION
+    public function inventory(): HasOne
+    {
+        return $this->hasOne(InventoryDocument::class, 'arrival_id', 'id');
+    }
+
     public function movements(): HasMany
     {
         return $this->hasMany(MovementDocument::class, 'arrival_id', 'id');
@@ -160,7 +156,6 @@ class ArrivalDocument extends AccountingDocument
         return self::OPERATIONS[$this->operation];
     }
 
-
     function documentUrl(): string
     {
         return route('admin.accounting.arrival.show', ['arrival' => $this->id], false);
@@ -168,6 +163,8 @@ class ArrivalDocument extends AccountingDocument
 
     public function onBased(): ?array
     {
+        if (!is_null($this->inventory)) return null; //Поступление по инвентаризации
+
         $array = [];
         foreach ($this->refunds as $refund) {
             $array[] = $this->basedItem($refund);
@@ -183,6 +180,7 @@ class ArrivalDocument extends AccountingDocument
 
     public function onFounded(): ?array
     {
+        if (!is_null($this->inventory)) return $this->foundedGenerate($this->inventory);
         return $this->foundedGenerate($this->supply);
     }
 }

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -19,6 +20,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property Storage $storage
  * @property DepartureProduct[] $departureProducts
  * @property Admin $staff
+ * @property InventoryDocument $inventory
  */
 class DepartureDocument extends AccountingDocument
 {
@@ -51,6 +53,10 @@ class DepartureDocument extends AccountingDocument
         return $this->hasMany(DepartureProduct::class, 'departure_id', 'id');
     }
 
+    public function inventory(): HasOne
+    {
+        return $this->hasOne(InventoryDocument::class, 'departure_id', 'id');
+    }
 
     public function products(): HasMany
     {
@@ -115,8 +121,6 @@ class DepartureDocument extends AccountingDocument
 
     public function onFounded(): ?array
     {
-        //TODO Добавить Инвентаризация
-        // $this->inventarization
-        return $this->foundedGenerate(null);
+        return $this->foundedGenerate($this->inventory);
     }
 }

@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::table('order_expenses', function (Blueprint $table) {
-            $table->unsignedBigInteger('storage_id')->change();
-            $table->foreign('storage_id')->nullable()->references('id')->on('storages')->onDelete('set null');
+            $table->unsignedBigInteger('storage_id')->nullable()->change();
+            $table->foreign('storage_id')->references('id')->on('storages')->onDelete('set null');
         });
     }
 

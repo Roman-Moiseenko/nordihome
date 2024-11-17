@@ -44,6 +44,7 @@ class DepartureRepository extends AccountingRepository
             $this->DepartureToArray($document),
             [
                 'products' => $document->products()->with('product')->paginate(20)->toArray(),
+                'inventory' => !is_null($document->inventory),
             ],
         );
     }

@@ -13,6 +13,6 @@
 
     <x-base.table.td class="text-center">{{ $item->quantity }}</x-base.table.td>
     <x-base.table.td
-        class="text-center">{{ $expense->storage->getItem($item->orderItem->product)->cell ?? '-' }}</x-base.table.td>
+        class="text-center">{{ $expense->storage->getItem($item->orderItem->product_id)->cell ?? '-' }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $item->comment }}</x-base.table.td>
 </x-base.table.tr>

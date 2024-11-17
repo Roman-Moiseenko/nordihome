@@ -7,6 +7,7 @@ use App\Events\ArrivalHasCompleted;
 use App\Events\MovementHasCreated;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
+use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
@@ -54,7 +55,7 @@ class ArrivalService
     public function create(int $distributor_id, bool $is_manager = true): ArrivalDocument
     {
         /** @var Admin $manager */
-        $manager = Auth::guard('admin')->user();
+        $staff = Auth::guard('admin')->user();
         /** @var Distributor $distributor */
         $distributor = Distributor::find($distributor_id);
         $storage = Storage::where('default', true)->first();
@@ -62,7 +63,20 @@ class ArrivalService
             $distributor->id,
             $storage->id,
             $distributor->currency,
-            $is_manager ? $manager->id : null
+            $is_manager ? $staff->id : null
+        );
+    }
+
+    public function create_storage(int $storage_id): ArrivalDocument
+    {
+        /** @var Admin $manager */
+        $staff = Auth::guard('admin')->user();
+        $currency = Currency::where('name', 'Рубль')->first();
+        return ArrivalDocument::register(
+            null,
+            $storage_id,
+            $currency,
+            $staff->id
         );
     }
 
@@ -237,7 +251,7 @@ class ArrivalService
             $arrival->work();
             $this->storages->departure($arrival->storage, $arrival->products);
             foreach ($arrival->products as $item) {//Проверка на отрицательное кол-во
-                if ($arrival->storage->getQuantity($item->product) < 0)
+                if ($arrival->storage->getQuantity($item->product_id) < 0)
                     throw new \DomainException('Нельзя отменить проведение. Остаток ' . $item->product->name . ' < 0');
             }
             if (!is_null($arrival->supply)) {

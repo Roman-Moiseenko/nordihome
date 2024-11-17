@@ -3,35 +3,27 @@
         <el-config-provider :locale="ru">
             <Head><title>{{ title }}</title></Head>
             <h1 class="font-medium text-xl">
-                Приходная накладная {{ arrival.number }} <span v-if="arrival.incoming_number">({{ arrival.incoming_number }})</span> от {{ func.date(arrival.created_at) }}
+                Инвентаризация {{ inventory.number }} <span v-if="inventory.incoming_number">({{ inventory.incoming_number }})</span> от {{ func.date(inventory.created_at) }}
             </h1>
             <div class="mt-3 p-3 bg-white rounded-lg ">
-                <ArrivalInfo :arrival="arrival" :storages="storages" :operations="operations" />
+                <InventoryInfo :inventory="inventory" />
             </div>
             <el-affix target=".affix-container" :offset="64">
                 <div class="bg-white rounded-lg my-2 p-1 shadow flex">
-                    <ArrivalActions :arrival="arrival" />
+                    <InventoryActions :inventory="inventory" />
                 </div>
             </el-affix>
-            <el-table :data="[...arrival.products.data]"
+            <el-table :data="[...inventory.products.data]"
                       header-cell-class-name="nordihome-header"
-                      :row-class-name="tableRowClassName"
                       style="width: 100%;">
                 <el-table-column prop="product.code" label="Артикул" width="160" />
                 <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
-                <el-table-column prop="cost_currency" label="Цена" width="180">
+                <el-table-column prop="formal" label="По учету" width="160" >
                     <template #default="scope">
-                        <el-input v-model="scope.row.cost_currency"
-                                  :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
-                                  :readonly="!isEdit || arrival.supply_id"
-                        >
-                            <template #append>{{ arrival.currency }}</template>
-                        </el-input>
+                        {{ scope.row.formal }} шт.
                     </template>
                 </el-table-column>
-                <el-table-column prop="quantity" label="Кол-во" width="180">
+                <el-table-column prop="quantity" label="Наличие" width="180">
                     <template #default="scope">
                         <el-input v-model="scope.row.quantity"
                                   :formatter="(value) => func.MaskInteger(value)"
@@ -43,14 +35,14 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column prop="quantity" label="Сумма в валюте" width="180">
+                <el-table-column prop="cost" label="Цена" width="180">
                     <template #default="scope">
-                        {{ func.price(scope.row.quantity * scope.row.cost_currency, arrival.currency) }}
+                        {{ func.price(scope.row.cost) }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="quantity" label="Сумма в рублях" width="180">
+                <el-table-column prop="cost" label="Сумма" width="180">
                     <template #default="scope">
-                        {{ func.price(scope.row.quantity * scope.row.cost_currency * arrival.exchange_fix) }}
+                        {{ func.price((scope.row.quantity - scope.row.formal) * scope.row.cost) }}
                     </template>
                 </el-table-column>
                 <el-table-column label="Действия" align="right" width="180">
@@ -60,9 +52,9 @@
                 </el-table-column>
             </el-table>
             <pagination
-                :current_page="arrival.products.current_page"
-                :per_page="arrival.products.per_page"
-                :total="arrival.products.total"
+                :current_page="inventory.products.current_page"
+                :per_page="inventory.products.per_page"
+                :total="inventory.products.total"
             />
         </el-config-provider>
         <DeleteEntityModal name_entity="Товар из поступления" />
@@ -76,41 +68,29 @@ import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Pagination from '@Comp/Pagination.vue'
-import ArrivalInfo from './Blocks/Info.vue'
-import ArrivalActions from './Blocks/Actions.vue'
+import InventoryInfo from './Blocks/Info.vue'
+import InventoryActions from './Blocks/Actions.vue'
 
 const props = defineProps({
-    arrival: Object,
+    inventory: Object,
     title: {
         type: String,
-        default: 'Поступление товаров (приходная накладная)',
+        default: 'Инвентаризация',
     },
-    storages: Array,
-    operations: Array,
     printed: Object,
 })
 provide('$printed', props.printed)
-interface IRow {
-    cost_currency: number,
-    quantity: number,
-}
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.cost_currency === 0 || row.quantity === 0) {
-        return 'error-row'
-    }
-    return ''
-}
+
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.arrival.completed);
+const isEdit = computed<Boolean>(() => !props.inventory.completed);
 const $delete_entity = inject("$delete_entity")
 
 function setItem(row) {
     iSaving.value = true;
-    router.visit(route('admin.accounting.arrival.set-product', {product: row.id}), {
+    router.visit(route('admin.accounting.inventory.set-product', {product: row.id}), {
         method: "post",
         data: {
             quantity: row.quantity,
-            cost: row.cost_currency
         },
         preserveScroll: true,
         //preserveState: true,
@@ -121,6 +101,6 @@ function setItem(row) {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.arrival.del-product', {product: row.id}));
+    $delete_entity.show(route('admin.accounting.inventory.del-product', {product: row.id}));
 }
 </script>

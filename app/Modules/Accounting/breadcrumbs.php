@@ -6,6 +6,7 @@ use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\PaymentDocument;
@@ -101,18 +102,18 @@ Breadcrumbs::for('admin.accounting.movement.index', function (BreadcrumbTrail $t
     $trail->parent('admin.home');
     $trail->push('Перемещение товаров', route('admin.accounting.movement.index'));
 });
-Breadcrumbs::for('admin.accounting.movement.create', function (BreadcrumbTrail $trail) {
+/*Breadcrumbs::for('admin.accounting.movement.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.movement.index');
     $trail->push('Добавить', route('admin.accounting.movement.create'));
-});
+});*/
 Breadcrumbs::for('admin.accounting.movement.show', function (BreadcrumbTrail $trail, MovementDocument $movement) {
     $trail->parent('admin.accounting.movement.index');
     $trail->push($movement->number . ' от ' . $movement->created_at->format('d-m-Y'), route('admin.accounting.movement.show', $movement));
 });
-Breadcrumbs::for('admin.accounting.movement.edit', function (BreadcrumbTrail $trail, MovementDocument $movement) {
+/*Breadcrumbs::for('admin.accounting.movement.edit', function (BreadcrumbTrail $trail, MovementDocument $movement) {
     $trail->parent('admin.accounting.movement.show', $movement);
     $trail->push('Редактировать', route('admin.accounting.movement.edit', $movement));
-});
+});*/
 //DEPARTURE
 Breadcrumbs::for('admin.accounting.departure.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
@@ -135,7 +136,6 @@ Breadcrumbs::for('admin.accounting.supply.index', function (BreadcrumbTrail $tra
     $trail->parent('admin.home');
     $trail->push('Заказы товаров', route('admin.accounting.supply.index'));
 });
-
 Breadcrumbs::for('admin.accounting.supply.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.supply.index');
     $trail->push('Добавить', route('admin.accounting.supply.create'));
@@ -159,21 +159,17 @@ Breadcrumbs::for('admin.accounting.payment.index', function (BreadcrumbTrail $tr
     $trail->parent('admin.home');
     $trail->push('Платежные поручения', route('admin.accounting.payment.index'));
 });
-/*
-Breadcrumbs::for('admin.accounting.payment.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.accounting.payment.index');
-    $trail->push('Создать', route('admin.accounting.payment.create'));
-});
-*/
+
 Breadcrumbs::for('admin.accounting.payment.show', function (BreadcrumbTrail $trail, PaymentDocument $payment) {
     $trail->parent('admin.accounting.payment.index');
     $trail->push($payment->number . ' от ' . $payment->created_at->format('d-m-Y'), route('admin.accounting.payment.show', $payment));
 });
+/*
 Breadcrumbs::for('admin.accounting.payment.edit', function (BreadcrumbTrail $trail, PaymentDocument $payment) {
     $trail->parent('admin.accounting.payment.show', $payment);
     $trail->push('Редактировать', route('admin.accounting.payment.edit', $payment));
 });
-
+*/
 
 
 //PRICING
@@ -185,6 +181,16 @@ Breadcrumbs::for('admin.accounting.pricing.show', function (BreadcrumbTrail $tra
     $trail->parent('admin.accounting.pricing.index');
     $trail->push($pricing->number . ' от ' . $pricing->created_at->format('d-m-Y'), route('admin.accounting.pricing.show', $pricing));
 });
+//INVENTORY
+Breadcrumbs::for('admin.accounting.inventory.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Инвентаризация', route('admin.accounting.inventory.index'));
+});
+Breadcrumbs::for('admin.accounting.inventory.show', function (BreadcrumbTrail $trail, InventoryDocument $inventory) {
+    $trail->parent('admin.accounting.inventory.index');
+    $trail->push($inventory->number . ' от ' . $inventory->created_at->format('d-m-Y'), route('admin.accounting.inventory.show', $inventory));
+});
+
 
 //DISTRIBUTOR
 Breadcrumbs::for('admin.accounting.trader.index', function (BreadcrumbTrail $trail) {

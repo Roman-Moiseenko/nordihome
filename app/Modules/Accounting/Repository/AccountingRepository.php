@@ -53,6 +53,7 @@ abstract class AccountingRepository
         return [
             'based' => $document->onBased(),
             'founded' => $document->onFounded(),
+            'document_name' => $document->documentName(),
         ];
     }
 }

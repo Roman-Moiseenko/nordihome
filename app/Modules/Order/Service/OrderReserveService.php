@@ -34,7 +34,7 @@ class OrderReserveService
             if ($orderItem->product->getCountSell() < $quantity)
                 throw new \DomainException('Нельзя поставить товар ' . $orderItem->product->name .
                     ' в резерв, в наличии ' . $orderItem->product->getCountSell());
-            $storageItem = $this->storage->getItem($orderItem->product);
+            $storageItem = $this->storage->getItem($orderItem->product_id);
             if ($storageItem->getFreeToSell() >= $quantity) {
                 OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
             } else {
@@ -60,7 +60,7 @@ class OrderReserveService
      */
     public function toReserveStorage(OrderItem $orderItem, Storage $storage, int $quantity): void
     {
-        $storageItem = $storage->getItem($orderItem->product);
+        $storageItem = $storage->getItem($orderItem->product_id);
         OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
     }
 
@@ -69,7 +69,7 @@ class OrderReserveService
      */
     public function deleteReserveStorage(OrderItem $orderItem, Storage $storage, int $quantity): void
     {
-        $storageItem = $storage->getItem($orderItem->product);
+        $storageItem = $storage->getItem($orderItem->product_id);
         $orderReserve = OrderReserve::where('order_item_id', $orderItem->id)->where('storage_item_id', $storageItem->id)->first();
         if ($orderReserve->quantity == $quantity) {
             $orderReserve->delete();
@@ -149,7 +149,7 @@ class OrderReserveService
             $reserveOut->save();
         }
 
-        $storageItemIn = $storageIn->getItem($orderItem->product);
+        $storageItemIn = $storageIn->getItem($orderItem->product_id);
         $this->AddReserveOrderItem($orderItem, $storageItemIn, $quantity);
     }
 
@@ -160,7 +160,7 @@ class OrderReserveService
     {
         /** @var Storage $storageIn */
         $storageIn = Storage::find($storage_id);
-        $storageItem = $storageIn->getItem($orderItem->product);
+        $storageItem = $storageIn->getItem($orderItem->product_id);
         $storageItems = StorageItem::where('product_id', $orderItem->product_id)->where('id', '<>', $storageItem->id)->get(); //Остальные ячейки хранилища
         $quantity = min($quantity, $storageItem->getFreeToSell());
         if ($quantity == 0) throw new \DomainException('На складе получателя отсутствует товар для переноса резерва');

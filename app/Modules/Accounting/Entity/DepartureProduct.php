@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $cost - в рублях
  * @property DepartureDocument $document
  */
-class DepartureProduct extends AccountingProduct implements MovementItemInterface
+class DepartureProduct extends AccountingProduct
 {
     protected $table = 'departure_products';
     public $timestamps = false;
@@ -20,6 +20,15 @@ class DepartureProduct extends AccountingProduct implements MovementItemInterfac
         'departure_id',
         'cost',
     ];
+
+    public static function new(int $product_id, int $quantity, float $cost): self
+    {
+        return self::make([
+            'product_id' => $product_id,
+            'quantity' => $quantity,
+            'cost' => $cost,
+        ]);
+    }
 
     public function document(): BelongsTo
     {

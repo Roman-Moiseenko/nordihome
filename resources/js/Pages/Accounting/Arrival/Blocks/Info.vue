@@ -17,7 +17,7 @@
                     <el-input v-model="info.exchange_fix" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit"
                               style="width: 160px"/>
                 </el-form-item>
-                <el-form-item label="Операция">
+                <el-form-item label="Операция" v-if="arrival.distributor">
                     <el-select v-model="info.operation" @change="setInfo"
                                :disabled="arrival.supply_id || iSavingInfo || notEdit" style="width: 260px">
                         <el-option v-for="item in operations" :key="item.value" :value="item.value"
@@ -28,7 +28,7 @@
                         {{ arrival.supply }}
                     </Link>
                 </el-form-item>
-                <el-form-item label="ГТД" v-if="arrival.distributor.foreign">
+                <el-form-item label="ГТД" v-if="arrival.distributor && arrival.distributor.foreign">
                     <el-input v-model="info.gtd" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit"
                               style="width: 260px"/>
                 </el-form-item>
@@ -49,7 +49,6 @@ const props = defineProps({
     operations: Array,
 })
 const iSavingInfo = ref(false)
-
 const info = reactive({
     document: {
         number: props.arrival.number,

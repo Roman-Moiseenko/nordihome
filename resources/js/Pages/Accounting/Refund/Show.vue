@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref, defineProps, computed} from "vue";
+import {inject, ref, defineProps, computed, provide} from "vue";
 import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
@@ -83,7 +83,9 @@ const props = defineProps({
     },
     storages: Array,
     operations: Array,
+    printed: Object,
 })
+provide('$printed', props.printed)
 interface IRow {
     cost_currency: number,
     quantity: number,

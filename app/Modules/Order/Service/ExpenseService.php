@@ -57,7 +57,7 @@ class ExpenseService
                     if (is_null($reserve) || $reserve->quantity < $quantity)
                         throw new \DomainException('Товара нет в резерве на складе отгрузки, дождитесь исполнения поступления или перемещения!');
                     $this->reserveService->downReserve($orderItem, $quantity); //Убираем из резерва
-                    $storageItem = $storage->getItem($orderItem->product);
+                    $storageItem = $storage->getItem($orderItem->product_id);
                     $storageItem->sub($quantity); //Списываем со склада
 
                     $storageItem->refresh();

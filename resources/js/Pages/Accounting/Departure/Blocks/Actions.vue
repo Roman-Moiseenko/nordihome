@@ -2,7 +2,7 @@
     <template v-if="departure.completed">
         <AccountingOnBased :based="departure.based" :founded="departure.founded"/>
         <AccountingPrint :print="print" />
-        <el-button type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
+        <el-button v-if="!departure.inventory" type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
     </template>
     <template v-else>
         <SearchAddProduct

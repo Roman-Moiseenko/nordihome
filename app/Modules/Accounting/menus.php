@@ -56,6 +56,14 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-circle-dollar',
             ],
+            'inventory' => [
+                'icon' => 'badge-russian-ruble',
+                'title' => 'Инвентаризация',
+                'route_name' => 'admin.accounting.inventory.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-scanner-keyboard',
+            ],
+
             'distributors' => [
                 'icon' => 'factory',
                 'title' => 'Поставщики',

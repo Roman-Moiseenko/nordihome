@@ -89,11 +89,11 @@ class Storage extends Model
     }
 
     #[Pure]
-    public function getQuantity(Product $product): int
+    public function getQuantity(int $product_id): int
     {
         //Более быстрый вариант
         //return StorageItem::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
-        $storageItem = $this->getItem($product);
+        $storageItem = $this->getItem($product_id);
         if (is_null($storageItem)) return 0;
         return $storageItem->quantity;
     }
@@ -101,7 +101,7 @@ class Storage extends Model
     #[Pure]
     public function getReserve(Product $product): int
     {
-        $storageItem = $this->getItem($product);
+        $storageItem = $this->getItem($product->id);
         if (is_null($storageItem)) return 0;
 
         return $storageItem->getQuantityReserve();
@@ -109,13 +109,13 @@ class Storage extends Model
 
     public function getAvailable(Product $product): int
     {
-        return $this->getQuantity($product) - $this->getReserve($product) - $this->getDeparture($product);
+        return $this->getQuantity($product->id) - $this->getReserve($product) - $this->getDeparture($product);
     }
 
-    public function getItem(Product $product):? StorageItem
+    public function getItem(int $product_id):? StorageItem
     {
         foreach ($this->items as $item) {
-            if ($item->product_id == $product->id) {
+            if ($item->product_id == $product_id) {
                 return $item;
             }
         }

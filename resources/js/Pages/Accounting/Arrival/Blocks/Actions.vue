@@ -1,6 +1,6 @@
 <template>
     <template v-if="arrival.completed">
-        <el-dropdown>
+        <el-dropdown v-if="arrival.distributor_id">
             <el-button type="primary">
                 Создать на основании<el-icon class="el-icon--right"><arrow-down /></el-icon>
             </el-button>
@@ -14,7 +14,7 @@
         </el-dropdown>
         <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>
         <AccountingPrint :print="print" />
-        <el-button type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
+        <el-button type="danger" class="ml-5" @click="onWork" v-if="arrival.distributor_id">Отменить проведение</el-button>
     </template>
     <template v-else>
         <SearchAddProduct
@@ -47,7 +47,6 @@ const props = defineProps({
     arrival: Object,
     print: Array,
 })
-
 function onCompleted() {
     router.visit(route('admin.accounting.arrival.completed', {arrival: props.arrival.id}), {
         method: "post",

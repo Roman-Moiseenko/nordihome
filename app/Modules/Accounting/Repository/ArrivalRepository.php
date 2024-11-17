@@ -34,7 +34,7 @@ class ArrivalRepository extends AccountingRepository
         return array_merge($document->toArray(), [
             'currency' => $document->currency->sign,
             'date' => $document->htmlDate(),
-            'distributor_name' => $document->distributor->name,
+            'distributor_name' => is_null($document->distributor_id) ? '<Инвентаризация>' : $document->distributor->name,
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),
             'operation_text' => $document->operationText(),
@@ -62,7 +62,6 @@ class ArrivalRepository extends AccountingRepository
 
     public function getOperations(): array
     {
-
         return array_select(ArrivalDocument::OPERATIONS);
     }
 

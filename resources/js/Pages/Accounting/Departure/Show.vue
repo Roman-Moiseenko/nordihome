@@ -19,7 +19,7 @@
                       style="width: 100%;">
                 <el-table-column prop="product.code" label="Артикул" width="160" />
                 <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
-                <el-table-column prop="cost" label="Себестоимость" width="180">
+                <el-table-column prop="cost" label="Цена" width="180">
                     <template #default="scope">{{ func.price(scope.row.cost) }}</template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="Кол-во" width="180">
@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref, defineProps, computed} from "vue";
+import {inject, ref, defineProps, computed, provide} from "vue";
 import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
@@ -72,7 +72,9 @@ const props = defineProps({
         default: 'Списание товаров',
     },
     storages: Array,
+    printed: Object,
 })
+provide('$printed', props.printed)
 interface IRow {
     cost_currency: number,
     quantity: number,
