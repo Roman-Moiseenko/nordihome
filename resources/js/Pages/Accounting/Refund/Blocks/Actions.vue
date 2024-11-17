@@ -1,8 +1,8 @@
 <template>
     <template v-if="refund.completed">
         <AccountingOnBased :based="refund.based" :founded="refund.founded"/>
-        <AccountingPrint :print="print" />
-        <el-button type="danger" class="ml-5" @click="onWork">Отмена проведения</el-button>
+        <AccountingPrint />
+        <AccountingWork :route="route('admin.accounting.refund.work', {refund: props.refund.id})" />
     </template>
     <template v-else>
         <SearchAddProduct
@@ -10,7 +10,7 @@
             :quantity="true"
         />
         <SearchAddProducts :route="route('admin.accounting.refund.add-products', {refund: refund.id})" class="ml-3"/>
-        <el-button type="danger" class="ml-5" @click="onCompleted" plain>Провести документ</el-button>
+        <AccountingCompleted :route="route('admin.accounting.refund.completed', {refund: props.refund.id})" />
     </template>
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(refund.amount, refund.currency) }}</el-tag>
@@ -23,23 +23,14 @@ import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
-import AccountingOnBase from "@Comp/Pages/AccountingOnBased.vue";
+import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
 import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
+import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
+import AccountingWork from "@Comp/Pages/AccountingWork.vue";
 
 const props = defineProps({
     refund: Object,
-    print: Array,
 })
 
-function onCompleted() {
-    router.visit(route('admin.accounting.refund.completed', {refund: props.refund.id}), {
-        method: "post",
-    })
-}
-function onWork() {
-    router.visit(route('admin.accounting.refund.work', {refund: props.refund.id}), {
-        method: "post",
-    })
-}
 
 </script>

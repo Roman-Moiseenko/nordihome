@@ -6,6 +6,8 @@ namespace App\Modules\Accounting\Entity;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Pure;
 
@@ -63,7 +65,7 @@ class Storage extends Model
 
     }
 
-    public function setCoordinate(float $latitude, float $longitude)
+    public function setCoordinate(float $latitude, float $longitude): void
     {
         $this->update([
             'latitude' => $latitude,
@@ -152,22 +154,22 @@ class Storage extends Model
     }
 
     //*** RELATIONS
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(StorageItem::class, 'storage_id', 'id');
     }
 
-    public function departureItems()
+    public function departureItems(): HasMany
     {
         return $this->hasMany(StorageDepartureItem::class, 'storage_id', 'id');
     }
 
-    public function arrivalItems()
+    public function arrivalItems(): HasMany
     {
         return $this->hasMany(StorageArrivalItem::class, 'storage_id', 'id');
     }
 
-    public function photo()
+    public function photo(): MorphOne
     {
         return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
@@ -187,7 +189,7 @@ class Storage extends Model
         ]);
     }
 
-    public function sub(Product $product, int $quantity)
+    public function sub(Product $product, int $quantity): void
     {
         foreach ($this->items as $item) {
             if ($item->product_id == $product->id) {

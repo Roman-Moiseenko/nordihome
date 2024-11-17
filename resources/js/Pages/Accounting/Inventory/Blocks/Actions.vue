@@ -2,7 +2,7 @@
     <template v-if="inventory.completed">
         <AccountingOnBased :based="inventory.based" :founded="inventory.founded"/>
         <AccountingPrint />
-        <el-button type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
+        <AccountingWork :route="route('admin.accounting.inventory.work', {inventory: props.inventory.id})" />
     </template>
     <template v-else>
         <SearchAddProduct
@@ -10,7 +10,7 @@
             :quantity="true"
         />
         <SearchAddProducts :route="route('admin.accounting.inventory.add-products', {inventory: inventory.id})" class="ml-3"/>
-        <el-button type="danger" plain class="ml-5" @click="onCompleted">Провести документ</el-button>
+        <AccountingCompleted :route="route('admin.accounting.inventory.completed', {inventory: props.inventory.id})" />
     </template>
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(inventory.amount_formal ) }}</el-tag>
@@ -28,20 +28,11 @@ import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
 import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
+import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
+import AccountingWork from "@Comp/Pages/AccountingWork.vue";
 
 const props = defineProps({
     inventory: Object,
 })
-
-function onCompleted() {
-    router.visit(route('admin.accounting.inventory.completed', {inventory: props.inventory.id}), {
-        method: "post",
-    })
-}
-function onWork() {
-    router.visit(route('admin.accounting.inventory.work', {inventory: props.inventory.id}), {
-        method: "post",
-    })
-}
 
 </script>

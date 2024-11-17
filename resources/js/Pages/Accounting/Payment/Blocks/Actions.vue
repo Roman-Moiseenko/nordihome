@@ -1,11 +1,11 @@
 <template>
     <template v-if="payment.completed">
         <AccountingOnBased :based="payment.based" :founded="payment.founded"/>
-        <AccountingPrint :print="print" />
-        <el-button type="danger" @click="onWork" class="ml-5">Отменить проведение</el-button>
+        <AccountingPrint />
+        <AccountingWork :route="route('admin.accounting.payment.work', {payment: props.payment.id})" />
     </template>
     <template v-else>
-        <el-button type="danger" plain class="" @click="onCompleted">Провести документ</el-button>
+        <AccountingCompleted :route="route('admin.accounting.payment.completed', {payment: props.payment.id})" />
     </template>
 </template>
 
@@ -17,19 +17,6 @@ import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 
 const props = defineProps({
     payment: Object,
-    print: Array,
 })
-
-function onCompleted() {
-    router.visit(route('admin.accounting.payment.completed', {payment: props.payment.id}), {
-        method: "post",
-    })
-}
-
-function onWork() {
-    router.visit(route('admin.accounting.payment.work', {payment: props.payment.id}), {
-        method: "post",
-    })
-}
 
 </script>

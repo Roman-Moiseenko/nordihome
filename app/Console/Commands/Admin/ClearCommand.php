@@ -4,12 +4,20 @@ declare(strict_types=1);
 namespace App\Console\Commands\Admin;
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
+use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\DistributorProduct;
+use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\PaymentDocument;
+use App\Modules\Accounting\Entity\PricingDocument;
+use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Entity\SupplyDocument;
+use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Accounting\Service\StorageService;
@@ -45,16 +53,6 @@ class ClearCommand extends Command
             return false;
         }
 
-        $orders = Order::get();
-        foreach ($orders as $order) {
-            $order->delete();
-        }
-        $this->info('Заказы удалены');
-        $reserves = OrderReserve::get();
-        foreach ($reserves as $reserve) {
-            $reserve->delete();
-        }
-        $this->info('Резерв очищен');
 
         $storage_items = StorageItem::get();
         foreach ($storage_items as $item) {
@@ -68,65 +66,37 @@ class ClearCommand extends Command
         }
         $this->info('Кол-во товаров обнулено');
 
-        $products = Product::where('published', false)->get();
-        foreach ($products as $item) {
-            $item->delete();
-        }
-        $this->info('Товары черновики удалены');
+        $this->clearDocument(Order::get(), 'Заказы удалены');
+        $this->clearDocument(OrderReserve::get(), 'Резерв очищен');
 
-        $documents = ArrivalDocument::get();
-        foreach ($documents as $item) {
-            $item->delete();
-        }
-        $this->info('Поступления обнулены');
+        $this->clearDocument(RefundDocument::get(), 'Возврату удалены');
+        $this->clearDocument(ArrivalExpenseDocument::get(), 'Доп.расходы удалены');
+        $this->clearDocument(MovementDocument::get(),'Перемещения обнулены');
+        $this->clearDocument(InventoryDocument::get(),'Инвентаризация очищена');
+        $this->clearDocument(DepartureDocument::get(),'Списания обнулены');
 
-        $documents = MovementDocument::get();
-        foreach ($documents as $item) {
-            $item->delete();
-        }
-        $this->info('Перемещения обнулены');
+        $this->clearDocument(PricingDocument::get(),'Цены обнулены');
+        $this->clearDocument(ArrivalDocument::get(),'Поступления обнулены');
 
-        $documents = SupplyDocument::get();
-        foreach ($documents as $item) {
-            $item->delete();
-        }
-        $this->info('Заказы товаров обнулены');
+        $this->clearDocument(PaymentDocument::get(),'Платежки обнулены');
 
-        $documents = SupplyStack::get();
-        foreach ($documents as $item) {
-            $item->delete();
-        }
-        $this->info('Стек заказов очищен');
+        $this->clearDocument(SupplyStack::get(),'Стек заказов очищен');
+        $this->clearDocument(SupplyDocument::get(),'Заказы товаров обнулены');
 
-        $calendars = Calendar::get();
-        foreach ($calendars as $item) {
-            $item->delete();
-        }
-        $this->info('Календарь очищен');
+        $this->clearDocument(Calendar::get(),'Календарь очищены');
+        $this->clearDocument(CartStorage::get(),'Корзина очищена');
+        $this->clearDocument(CartCookie::get(),'Куки очищены');
+        $this->clearDocument(ParserStorage::get(),'Корзина парсера очищена');
+        $this->clearDocument(Wish::get(),'Избранное очищено');
 
-        $cart = CartStorage::get();
-        foreach ($cart as $item) {
-            $item->delete();
-        }
-        $this->info('Корзина очищена');
-
-        $cart2 = CartCookie::get();
-        foreach ($cart2 as $item) {
-            $item->delete();
-        }
-        $this->info('Куки очищены');
-
-        $cart3 = ParserStorage::get();
-        foreach ($cart3 as $item) {
-            $item->delete();
-        }
-        $this->info('Корзина парсера очищена');
-
-        $wish = Wish::get();
-        foreach ($wish as $item) {
-            $item->delete();
-        }
-        $this->info('Избранное очищено');
+/*
+        $items = DistributorProduct::get();
+        foreach ($items as $item) {
+            $item->update([
+                'cost' => null,
+                'pre_cost' => null,
+            ]);
+        }*/
 
         /** @var Admin[] $staffs */
         $staffs = Admin::get();
@@ -145,32 +115,45 @@ class ClearCommand extends Command
         $this->info('Отчеты удалены');
 
         $this->info('*******');
-        $distributor = Distributor::first();
-        $arrival = ArrivalDocument::register(
-            $distributor->id,
-            Storage::first()->id,
-            $distributor->currency,
-        );
-        $arrival->number = 'Базовое поступление';
-        $arrival->operation = ArrivalDocument::OPERATION_REMAINS;
-        $arrival->save();
-        $products = Product::where('published', true)->get();
-        foreach ($products as $product) {
-            //Добавляем в документ
-            $item = ArrivalProduct::new(
-                $product->id,
-                10,
-                100,
-            );
 
-            $arrival->arrivalProducts()->save($item);
+
+        $distributors = Distributor::get();
+
+        $staff = Admin::where('role', Admin::ROLE_ADMIN)->first();
+
+        foreach ($distributors as $distributor) {
+
+            $supply = SupplyDocument::register(
+                $distributor->id,
+                $staff->id,
+                $distributor->currency->exchange,
+                $distributor->currency_id,
+            );
+            $this->warn('Загрузка товаров ' . $distributor->products()->count() . ' В Заказ');
+            foreach ($distributor->products as $product) {
+                $distributor->products()->updateExistingPivot($product->id, ['cost' => 0, 'pre_cost' => null]);
+                $item = SupplyProduct::new(
+                    $product->id,
+                    10,
+                    1
+                );
+                $supply->products()->save($item);
+            }
+            $supply->number .= ' БП';
+            $supply->comment = 'Базовое поступление';
+            $supply->save();
+            $this->info('Загрузка завершена');
+            //$supply->completed();
         }
 
-        $storagesService = new StorageService();
-        $storagesService->arrival($arrival->storage, $arrival->arrivalProducts()->getModels());
 
-        $arrival->completed();
 
         return true;
+    }
+
+    private function clearDocument($documents, $caption): void
+    {
+        foreach ($documents as $item) $item->delete();
+        $this->info($caption);
     }
 }

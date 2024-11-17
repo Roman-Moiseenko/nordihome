@@ -13,8 +13,8 @@
             </template>
         </el-dropdown>
         <AccountingOnBased :based="supply.based" :founded="supply.founded" />
-        <AccountingPrint :print="print" />
-        <el-button type="danger" class="ml-5" @click="onWork">Отмена проведения</el-button>
+        <AccountingPrint />
+        <AccountingWork :route="route('admin.accounting.supply.work', {supply: props.supply.id})" />
     </template>
     <template v-else>
         <SearchAddProduct
@@ -22,7 +22,7 @@
             :quantity="true"
         />
         <SearchAddProducts :route="route('admin.accounting.supply.add-products', {supply: supply.id})" class="ml-3"/>
-        <el-button type="danger" plain class="ml-5" @click="onCompleted">Провести документ</el-button>
+        <AccountingCompleted :route="route('admin.accounting.supply.completed', {supply: props.supply.id})" />
     </template>
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(supply.amount, supply.currency) }}</el-tag>
@@ -55,6 +55,9 @@ import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
 import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
+import { ElLoading } from 'element-plus'
+import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
+import AccountingWork from "@Comp/Pages/AccountingWork.vue";
 
 const props = defineProps({
     supply: Object,
@@ -62,28 +65,26 @@ const props = defineProps({
 })
 const refundVisible = ref(false)
 
-function onCompleted() {
-    router.visit(route('admin.accounting.supply.completed', {supply: props.supply.id}), {
-        method: "post",
-    })
-}
-function onWork() {
-    router.visit(route('admin.accounting.supply.work', {supply: props.supply.id}), {
-        method: "post",
-    })
-}
 function onPayment() {
     router.visit(route('admin.accounting.supply.payment', {supply: props.supply.id}), {
         method: "post",
     })
 }
 function onArrival() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Создание документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+
     router.visit(route('admin.accounting.supply.arrival', {supply: props.supply.id}), {
         method: "post",
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 function onRefund(id) {
-    console.log(id);
     if (id === null) {
         refundVisible.value = true
     } else {

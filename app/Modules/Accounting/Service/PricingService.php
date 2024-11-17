@@ -98,7 +98,7 @@ class PricingService
                     $pricingProduct->price_special == 0 ||
                     $pricingProduct->price_min == 0 ||
                     $pricingProduct->price_pre == 0
-                ) throw new \DomainException('Не все заполнены цены');
+                ) throw new \DomainException('Не все цены заполнены');
 
                 $product = $pricingProduct->product;
                 $founded = 'Установка цен № ' . $pricing->htmlNum() . ' от ' . $pricing->htmlDate();

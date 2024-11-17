@@ -1,7 +1,7 @@
 <template>
     <template v-if="expense.completed">
         <AccountingOnBased :based="expense.based" :founded="expense.founded" />
-        <AccountingPrint :print="print" />
+        <AccountingPrint />
     </template>
     <template v-else>
         <el-form class="flex">
@@ -31,7 +31,6 @@ import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 
 const props = defineProps({
     expense: Object,
-    print: Array,
 })
 
 const form = reactive({

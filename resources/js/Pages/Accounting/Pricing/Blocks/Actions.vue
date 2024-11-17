@@ -1,8 +1,8 @@
 <template>
     <template v-if="pricing.completed">
         <AccountingOnBased :based="pricing.based" :founded="pricing.founded"/>
-        <AccountingPrint :print="print" />
-        <el-button type="danger" class="ml-5" @click="onWork">Отменить проведение</el-button>
+        <AccountingPrint />
+        <AccountingWork :route="route('admin.accounting.pricing.work', {pricing: props.pricing.id})" />
     </template>
     <template v-else>
         <SearchAddProduct
@@ -10,7 +10,7 @@
             :quantity="false"
         />
         <SearchAddProducts :route="route('admin.accounting.pricing.add-products', {pricing: pricing.id})" class="ml-3"/>
-        <el-button type="danger" plain class="ml-5" @click="onCompleted">Провести документ</el-button>
+        <AccountingCompleted :route="route('admin.accounting.pricing.completed', {pricing: props.pricing.id})" />
     </template>
 </template>
 
@@ -22,22 +22,11 @@ import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
 import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
+import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
+import AccountingWork from "@Comp/Pages/AccountingWork.vue";
 
 const props = defineProps({
     pricing: Object,
-    print: Array,
 })
-
-
-function onCompleted() {
-    router.visit(route('admin.accounting.pricing.completed', {pricing: props.pricing.id}), {
-        method: "post",
-    })
-}
-function onWork() {
-    router.visit(route('admin.accounting.pricing.work', {pricing: props.pricing.id}), {
-        method: "post",
-    })
-}
 
 </script>

@@ -14,7 +14,7 @@
         </el-dropdown>
         <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>
         <AccountingPrint :print="print" />
-        <el-button type="danger" class="ml-5" @click="onWork" v-if="arrival.distributor_id">Отменить проведение</el-button>
+        <AccountingWork v-if="arrival.distributor_id" :route="route('admin.accounting.arrival.work', {arrival: props.arrival.id})" />
     </template>
     <template v-else>
         <SearchAddProduct
@@ -23,7 +23,7 @@
         />
         <SearchAddProducts :route="route('admin.accounting.arrival.add-products', {arrival: arrival.id})" class="ml-3"/>
         <el-button type="warning"  class="ml-3" @click="onExpenses">Дополнительные расходы</el-button>
-        <el-button type="danger" plain class="ml-5" @click="onCompleted">Провести документ</el-button>
+        <AccountingCompleted :route="route('admin.accounting.arrival.completed', {arrival: props.arrival.id})" />
     </template>
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(arrival.amount, arrival.currency) }}</el-tag>
@@ -42,21 +42,13 @@ import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
 import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
+import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
+import AccountingWork from "@Comp/Pages/AccountingWork.vue";
 
 const props = defineProps({
     arrival: Object,
     print: Array,
 })
-function onCompleted() {
-    router.visit(route('admin.accounting.arrival.completed', {arrival: props.arrival.id}), {
-        method: "post",
-    })
-}
-function onWork() {
-    router.visit(route('admin.accounting.arrival.work', {arrival: props.arrival.id}), {
-        method: "post",
-    })
-}
 
 function onExpenses() {
     router.visit(route('admin.accounting.arrival.expense', {arrival: props.arrival.id}), {
