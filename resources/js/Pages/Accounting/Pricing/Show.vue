@@ -24,8 +24,8 @@
                     <template #default="scope">
                         <el-input v-model="scope.row.price_retail" class="text-center"
                                   :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
+                                  @change="changeItem(scope.row)"
+                                  :disabled="isBlocked(scope.row)"
                                   :readonly="!isEdit"
                         >
                             <template #prepend>{{ scope.row.price_retail_old }}</template>
@@ -36,8 +36,8 @@
                     <template #default="scope">
                         <el-input v-model="scope.row.price_bulk" class="text-center"
                                   :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
+                                  @change="changeItem(scope.row)"
+                                  :disabled="isBlocked(scope.row)"
                                   :readonly="!isEdit"
                         >
                             <template #prepend>{{ scope.row.price_bulk_old }}</template>
@@ -48,8 +48,8 @@
                     <template #default="scope">
                         <el-input v-model="scope.row.price_special"
                                   :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
+                                  @change="changeItem(scope.row)"
+                                  :disabled="isBlocked(scope.row)"
                                   :readonly="!isEdit"
                         >
                             <template #prepend>{{ scope.row.price_special_old }}</template>
@@ -60,8 +60,8 @@
                     <template #default="scope">
                         <el-input v-model="scope.row.price_pre" class="text-center"
                                   :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
+                                  @change="changeItem(scope.row)"
+                                  :disabled="isBlocked(scope.row)"
                                   :readonly="!isEdit"
                         >
                             <template #prepend>{{ scope.row.price_pre_old }}</template>
@@ -72,8 +72,8 @@
                     <template #default="scope">
                         <el-input v-model="scope.row.price_min"
                                   :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
+                                  @change="changeItem(scope.row)"
+                                  :disabled="isBlocked(scope.row)"
                                   :readonly="!isEdit"
                         >
                             <template #prepend>{{ scope.row.price_min_old }}</template>
@@ -84,8 +84,8 @@
                     <template #default="scope">
                         <el-input v-model="scope.row.price_cost"
                                   :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
+                                  @change="changeItem(scope.row)"
+                                  :disabled="isBlocked(scope.row)"
                                   :readonly="!isEdit"
                         >
                             <template #prepend>{{ scope.row.price_cost_old }}</template>
@@ -94,7 +94,9 @@
                 </el-table-column>
                 <el-table-column label="Действия" align="right" width="180">
                     <template #default="scope">
-                        <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
+                        <el-button v-if="scope.row.id === change_id" type="success" @click="setItem(scope.row)" plain><i class="fa-light fa-floppy-disk"></i></el-button>
+                        <!--el-button v-if="scope.row.id === change_id" type="info" @click="clearItem" plain><i class="fa-light fa-xmark"></i></el-button-->
+                        <el-button v-if="isEdit && !Blocked" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -117,6 +119,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Pagination from '@Comp/Pagination.vue'
 import PricingInfo from './Blocks/Info.vue'
 import PricingActions from './Blocks/Actions.vue'
+import {Blocks} from "lucide";
 
 const props = defineProps({
     pricing: Object,
@@ -147,6 +150,25 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.pricing.completed);
 const $delete_entity = inject("$delete_entity")
+const change_id = ref(null)
+const Blocked = ref(false)
+
+function changeItem(row) {
+    change_id.value = row.id
+    Blocked.value = true
+}
+
+function isBlocked(row) {
+    if (Blocked.value === false) return false;
+    if (change_id.value === null) return false;
+    if (Blocked.value === true && row.id === change_id.value) return false;
+    return true;
+
+}
+function clearItem() {
+    change_id.value = null
+    Blocked.value = false
+}
 
 function setItem(row) {
     iSaving.value = true;
@@ -163,7 +185,8 @@ function setItem(row) {
         preserveScroll: true,
         //preserveState: true,
         onSuccess: page => {
-            iSaving.value = false;
+            iSaving.value = false
+            clearItem()
         }
     })
 }

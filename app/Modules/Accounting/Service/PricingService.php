@@ -150,9 +150,10 @@ class PricingService
 
     public function work(PricingDocument $pricing): void
     {
-        if (!is_null(PricingDocument::where('created_at', '>', $pricing->created_at)
-            ->completed()
-            ->get()))
+        $new_pricings = PricingDocument::where('created_at', '>', $pricing->created_at)
+            ->where('completed', true)
+            ->getModels();
+        if (!empty($new_pricings))
             throw new \DomainException('Существуют более поздние проведенные документы');
 
         DB::transaction(function () use ($pricing) {
