@@ -30,11 +30,6 @@ class RefundDocument extends AccountingDocument
     }
     //*** GET-...
 
-    public function getFounded(): string
-    {
-        return $this->arrival->number . ' от ' . $this->arrival->htmlDate();
-    }
-
     public function getAmount(): float
     {
         $amount = RefundProduct::selectRaw('SUM(quantity * cost_currency) AS total')

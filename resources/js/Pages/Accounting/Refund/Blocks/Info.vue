@@ -9,20 +9,13 @@
             <el-form-item label="Курс валюты">
                 <el-tag type="primary">{{ refund.exchange_fix }}</el-tag>
             </el-form-item>
-            <el-form-item label="Основание">
-                <template v-if="refund.supply_id">
-                    <el-input value="Заказ поставщику" readonly style="width: 160px"/>
-                    <Link type="primary" :href="route('admin.accounting.supply.show', refund.supply_id)" class="ml-2">{{ refund.founded }}</Link>
-                </template>
-                <template v-if="refund.arrival_id">
-                    <el-input value="Приходная накладная" readonly style="width: 160px"/>
-                    <Link type="primary" :href="route('admin.accounting.arrival.show', refund.arrival_id)" class="ml-2">{{ refund.founded }}</Link>
-                </template>
-            </el-form-item>
             <el-form-item label="Хранилище">
                 <el-select v-model="info.storage_id" @change="setInfo" :disabled="iSavingInfo || notEdit || refund.supply_id" style="width: 260px">
                     <el-option v-for="item in storages" :key="item.id" :value="item.id" :label="item.name"  :readonly="notEdit"/>
                 </el-select>
+            </el-form-item>
+            <el-form-item v-for="item in refund.founded" label="Основание">
+                <Link type="primary" :href="item.url" class="ml-2">{{ item.label }}</Link>
             </el-form-item>
         </el-col>
     </el-row>

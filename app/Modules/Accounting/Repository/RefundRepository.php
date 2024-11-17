@@ -30,7 +30,6 @@ class RefundRepository extends AccountingRepository
     {
 
         return array_merge($document->toArray(), [
-            'founded' => $document->getFounded(),
             'currency' => $document->distributor->currency->sign,
             'exchange_fix' => $document->arrival->exchange_fix,
             'distributor_name' => $document->distributor->name,

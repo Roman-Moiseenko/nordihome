@@ -174,8 +174,8 @@ class ArrivalDocument extends AccountingDocument
         }
         if (!is_null($this->pricing)) $array[] = $this->basedItem($this->pricing);
         if (!is_null($this->expense)) $array[] = $this->basedItem($this->expense);
-
-        return array_filter($array);
+        $array = array_filter($array);
+        return empty($array) ? null : $array;
     }
 
     public function onFounded(): ?array
