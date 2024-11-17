@@ -76,7 +76,6 @@ function onArrival() {
         text: 'Создание документа',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-
     router.visit(route('admin.accounting.supply.arrival', {supply: props.supply.id}), {
         method: "post",
         onSuccess: page => {
@@ -88,11 +87,17 @@ function onRefund(id) {
     if (id === null) {
         refundVisible.value = true
     } else {
+        const loading = ElLoading.service({
+            lock: false,
+            text: 'Создание документа',
+            background: 'rgba(0, 0, 0, 0.7)',
+        })
         router.visit(route('admin.accounting.arrival.refund', {arrival: id}), {
             method: "post",
+            onSuccess: page => {
+                loading.close()
+            }
         })
     }
 }
-
-
 </script>

@@ -41,7 +41,7 @@ const form = reactive({
 
 function onSubmit() {
     if (form.name === null || form.quantity === null || form.cost === null) return;
-    console.log(form)
+
     router.visit(route('admin.accounting.arrival.expense.add-item', {expense: props.expense.id}), {
         method: "post",
         onPreserveState: true,

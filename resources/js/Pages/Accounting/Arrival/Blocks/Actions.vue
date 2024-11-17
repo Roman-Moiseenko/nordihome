@@ -44,6 +44,7 @@ import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
 import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
 import AccountingWork from "@Comp/Pages/AccountingWork.vue";
+import {ElLoading} from "element-plus";
 
 const props = defineProps({
     arrival: Object,
@@ -51,23 +52,55 @@ const props = defineProps({
 })
 
 function onExpenses() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Создание документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     router.visit(route('admin.accounting.arrival.expense', {arrival: props.arrival.id}), {
         method: "post",
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 function onMovement() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Создание документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     router.visit(route('admin.accounting.arrival.movement', {arrival: props.arrival.id}), {
         method: "post",
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 function onPricing() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Создание документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     router.visit(route('admin.accounting.arrival.pricing', {arrival: props.arrival.id}), {
         method: "post",
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 function onRefund() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Создание документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     router.visit(route('admin.accounting.arrival.refund', {arrival: props.arrival.id}), {
         method: "post",
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 

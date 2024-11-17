@@ -27,6 +27,7 @@ import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
 import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
 import AccountingWork from "@Comp/Pages/AccountingWork.vue";
+import {ElLoading} from "element-plus";
 
 const props = defineProps({
     movement: Object,
@@ -35,13 +36,29 @@ const props = defineProps({
 
 //+ 2 режима. Убыл, Прибыл
 function onDeparture() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Создание документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     router.visit(route('admin.accounting.movement.departure', {movement: props.movement.id}), {
         method: "post",
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 function onArrival() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Создание документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     router.visit(route('admin.accounting.movement.arrival', {movement: props.movement.id}), {
         method: "post",
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 
