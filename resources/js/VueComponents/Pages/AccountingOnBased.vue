@@ -35,7 +35,6 @@
 import {defineProps, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 
-
 const props = defineProps({
     based: {
         type: Array,
@@ -43,16 +42,11 @@ const props = defineProps({
     },
     founded: Array,
 })
-
 interface Tree {
     url: string
     label: string
     children?: Tree[]
 }
-
-console.log('onBase', props.based)
-console.log('onFounded', props.founded)
-
 const dataSource = ref<Tree[]>([])
 
 if (props.based) dataSource.value = [...props.based]

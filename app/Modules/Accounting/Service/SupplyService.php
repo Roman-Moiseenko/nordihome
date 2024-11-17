@@ -127,25 +127,29 @@ class SupplyService
      */
     public function arrival(SupplyDocument $supply): ArrivalDocument
     {
-        $arrival = $this->arrivalService->create($supply->distributor->id);
-        $arrival->supply_id = $supply->id;
-        $arrival->save();
-        foreach ($supply->products as $supplyProduct) {
-            $quantity = $supplyProduct->getQuantityUnallocated();
-            if ($quantity > 0) {
-                $item = ArrivalProduct::new(
-                    $supplyProduct->product_id,
-                    $quantity,//Высчитываем свободное кол-во
-                    $supplyProduct->cost_currency,
-                );
-                $arrival->products()->save($item);
+        DB::transaction(function () use($supply, &$arrival) {
+            set_time_limit(600);
+            $arrival = $this->arrivalService->create($supply->distributor->id);
+            $arrival->supply_id = $supply->id;
+            $arrival->save();
+            foreach ($supply->products as $supplyProduct) {
+                $quantity = $supplyProduct->getQuantityUnallocated(); //$supplyProduct->quantity;
+                if ($quantity > 0) {
+                    $item = ArrivalProduct::new(
+                        $supplyProduct->product_id,
+                        $quantity,//Высчитываем свободное кол-во
+                        $supplyProduct->cost_currency,
+                    );
+                    $arrival->products()->save($item);
+                }
             }
-        }
-        $arrival->refresh();
-        if ($arrival->products()->count() == 0) {
-            $arrival->delete();
-            throw new \DomainException('Все позиции получены. Приходная накладная недоступна');
-        }
+            $arrival->refresh();
+            if ($arrival->products()->count() == 0) {
+                $arrival->delete();
+                throw new \DomainException('Все позиции получены. Приходная накладная недоступна');
+            }
+            set_time_limit(30);
+        });
         return $arrival;
     }
 

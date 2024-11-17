@@ -149,6 +149,8 @@ class SupplyController extends Controller
             return redirect()->back()->with('success', 'Документ проведен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));
         }
     }
 

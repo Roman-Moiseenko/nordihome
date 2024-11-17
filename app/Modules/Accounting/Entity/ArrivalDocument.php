@@ -77,7 +77,7 @@ class ArrivalDocument extends AccountingDocument
         $amount = ArrivalProduct::selectRaw('SUM(quantity * cost_currency) AS total')
             ->where('arrival_id', $this->id)
             ->first();
-        return $amount->total ?? 0.0;
+        return (int)$amount->total ?? 0.0;
     }
 
     public function getQuantity(): int
