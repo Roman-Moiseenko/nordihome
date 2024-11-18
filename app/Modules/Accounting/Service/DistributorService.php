@@ -36,7 +36,12 @@ class DistributorService
             $distributor->organization_id = $organization_id;
         } else {
             if (empty($request->input('inn'))) throw new \DomainException('Не выбрана организация, необходимо привязать компанию к поставщику');
-            $organization = $this->service->create($request);
+
+            $organization = $this->service->create_find(
+                $request->string('inn')->value(),
+                $request->string('bik')->value(),
+                $request->string('account')->value()
+            );
             $distributor->organization_id = $organization->id;
         }
         $distributor->foreign = $request->boolean('foreign');

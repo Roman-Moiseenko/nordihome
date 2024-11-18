@@ -84,11 +84,6 @@ class Organization extends Model
         return $this->hasMany(OrganizationContact::class, 'organization_id', 'id');
     }
 
-    public function isDefault(): bool
-    {
-        return $this->default == true;
-    }
-
     public function isContact(int $id): bool
     {
         foreach ($this->contacts as $contact) {
@@ -149,5 +144,13 @@ class Organization extends Model
         if ($this->isShopper()) $types[] = 'Покупатель';
         if ($this->isDistributor()) $types[] = 'Поставщик';
         return implode(' | ', $types);
+    }
+
+    public function getContactById(int $id):? OrganizationContact
+    {
+        foreach ($this->contacts as $contact) {
+            if ($contact->id == $id) return $contact;
+        }
+        return null;
     }
 }

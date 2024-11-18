@@ -46,16 +46,18 @@ class OrganizationRepository
         return array_merge($organization->toArray(), [
             'types' => $organization->types(),
             'holding' => $organization->holding,
+            'contacts' => $organization->contacts,
         ]);
     }
 
     public function OrganizationWithToArray(Organization $organization): array
     {
-
         return array_merge(
             $this->OrganizationToArray($organization),
             [
-
+                'trader' => $organization->trader,
+                'shopper' => $organization->shopper,
+                'distributor' => $organization->distributor
             ],
         );
     }

@@ -145,11 +145,10 @@ Route::group(
             'as' => 'organization.',
         ],
             function () {
-                Route::post('/add-contact/{organization}', 'OrganizationController@add_contact')->name('add-contact');
-                Route::post('/del-contact/{contact}', 'OrganizationController@del_contact')->name('del-contact');
-                Route::post('/set-contact/{contact}', 'OrganizationController@set_contact')->name('set-contact');
-                Route::get('/holdings', 'OrganizationController@holdings')->name('holdings');
-                Route::post('/holding-detach/{organization}', 'OrganizationController@holding_detach')->name('holding-detach');
+                Route::delete('/del-contact/{contact}', 'OrganizationController@del_contact')->name('del-contact');
+                Route::post('/set-contact/{organization}', 'OrganizationController@set_contact')->name('set-contact');
+                Route::post('/update/{organization}', 'OrganizationController@update')->name('update');
+                Route::post('/set-info/{organization}', 'OrganizationController@set_info')->name('set-info');
             });
         //PAYMENT
         Route::group([
@@ -201,7 +200,7 @@ Route::group(
         Route::resource('departure', 'DepartureController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('supply', 'SupplyController')->except(['edit', 'update']); //CRUD
         Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
-        Route::resource('organization', 'OrganizationController'); //CRUD
+        Route::resource('organization', 'OrganizationController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('trader', 'TraderController'); //CRUD
         Route::resource('payment', 'PaymentController')->except(['create', 'store']); //CRUD
     }

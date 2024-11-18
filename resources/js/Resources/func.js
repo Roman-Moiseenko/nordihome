@@ -1,12 +1,12 @@
 export const func = {
     /**
-     * Формат телефона 80000000000
+     * Формат телефона 8 (000)-000-0000
      * @param val
      * @returns {string}
      * @constructor
      */
     MaskPhone: (val) => {
-        if (val === undefined || val === null) return '';
+       /* if (val === undefined || val === null) return '';
         if (val.length === 1) {
             if (val === '+') val = '8';
             if (val !== '8') val = '';
@@ -17,6 +17,11 @@ export const func = {
         }
         if (val.length >= 12) val = val.substring(0, val.length - 1);
         return val;
+        */
+        if (val.length === 1 && (val === '+' || val === '8')) return '8 ('
+        val = val.replace(/^8|\D/g, ''). //val.replace(/^\+7|\D/g, '').
+            replace(/^(\d{1,3})(\d{1,3})?(\d{1,2})?(\d{1,2})?.*/, (m, g1, g2, g3, g4) => `8 (${g1}` + (g2 ? `)-${g2}` : '') + (g3 ? `-${g3}` : '') + (g4 ? `-${g4}` : ''))
+        return val
     },
     MaskEmail: (val) => {
         if (val === undefined || val === null) return '';

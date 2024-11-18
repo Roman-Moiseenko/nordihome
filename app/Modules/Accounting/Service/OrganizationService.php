@@ -8,26 +8,14 @@ use App\Modules\Accounting\Entity\OrganizationContact;
 use App\Modules\Accounting\Entity\OrganizationHolding;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
+use Dadata\DadataClient;
 use Illuminate\Http\Request;
 
 class OrganizationService
 {
-
-    public function create(Request $request): Organization
-    {
-        $organization = Organization::register(
-            $request->string('full_name')->value(),
-            $request->string('short_name')->value(),
-            $request->string('inn')->value());
-        return $this->update($organization, $request);
-    }
-
     public function create_find(string $inn, string $bik, string $pay_account): Organization
     {
-        $token = env('DADATA_TOKEN');
-        $secret = env('DADATA_KEY');
-        $dadata = new \Dadata\DadataClient($token, $secret);
-
+        $dadata = $this->dadata();
         //Компания
         $response = $dadata->findById("party", $inn);
         $data = $response[0]['data'];
@@ -37,120 +25,49 @@ class OrganizationService
             $data['name']['short_with_opf'],
             $inn);
 
-        $organization->kpp = $data['kpp'] ?? '';
-        $organization->ogrn = $data['ogrn'];
-        $address = $data['address']['data'];
-        $organization->legal_address = GeoAddress::create(
-            address: $address['source'],
-            post: $address['postal_code'],
-            region: $address['region_with_type']
-        );
-        $organization->actual_address = GeoAddress::create(
-            address: $address['source'],
-            post: $address['postal_code'],
-            region: $address['region_with_type']
-        );
-
-        $organization->post = $data['management']['post'];
-
-        list($f1, $f2, $f3) = explode(' ', $data['management']['name']);
-        $organization->chief = new FullName($f1, $f2, $f3);
+        $this->setDataInn($organization, $data);
 
         //Банк
         $response = $dadata->findById("bank", $bik);
         $data = $response[0]['data'];
+        $this->setDataBank($organization, $data);
 
-        $organization->bik = $bik;
-        $organization->bank_name = $data['name']['payment'];
-        $organization->corr_account = $data['correspondent_account'];
         $organization->pay_account = $pay_account;
-
         $organization->save();
         return $organization;
     }
 
-    public function update(Organization $organization, Request $request): Organization
+    public function update_find(Organization $organization): void
     {
+        $dadata = $this->dadata();
+        //Компания
+        $response = $dadata->findById("party", $organization->inn);
+        $data = $response[0]['data'];
+        $this->setDataInn($organization, $data);
 
-        $organization->full_name = $request['full_name'];
-        $organization->short_name = $request['short_name'] ?? '';
-        $organization->inn = $request['inn'] ?? '';
+        //Банк
+  /*      $response = $dadata->findById("bank", $organization->bik);
+        $data = $response[0]['data'];
+        $this->setDataBank($organization, $data);*/
+    }
 
-        $organization->kpp = $request['kpp'] ?? '';
-        $organization->ogrn = $request['ogrn'] ?? '';
-        $organization->legal_address = GeoAddress::create(
-            params: $request->input('legal_address')
-        );
-        $organization->actual_address = GeoAddress::create(
-            params: $request->input('actual_address')
-        );
+    public function setContact(Organization $organization, Request $request): void
+    {
+        if (($id = $request->integer('id')) > 0) {
+            $contact = $organization->getContactById($id);
+            $contact->fullname = FullName::create(params: $request->input('fullname'));
+            $contact->phone = preg_replace("/[^0-9]/", "", $request->string('phone')->value());
+            $contact->email = $request->string('email')->value();
+            $contact->post = $request->string('post')->value();
+            $contact->save();
 
-        $organization->bik = $request['bik'] ?? '';
-        $organization->bank_name = $request['bank_name'] ?? '';
-        $organization->corr_account = $request['corr_account'] ?? '';
-        $organization->pay_account = $request['pay_account'] ?? '';
-
-        $organization->email = $request['email'] ?? '';
-        $organization->phone = $request['phone'] ?? '';
-        $organization->post = $request['post'] ?? '';
-        $organization->chief = FullName::create(
-            params: $request->input('chief')
-        );
-
-        if (!empty($holding = $request['holding_id'])) {
-            if (is_array($holding)) $holding = $holding[0]; //Если массив, берем первый элемент
-            if (is_numeric($holding)) {
-                $organization->holding_id = (int)$holding;
-            } else {
-                $holding = $this->createHolding($holding); //Создаем Холдинг
-                $organization->holding_id = $holding->id;
-            }
         } else {
-            $organization->holding_id = null;
+            $contact = OrganizationContact::new(FullName::create(params: $request->input('fullname')));
+            $contact->phone = preg_replace("/[^0-9]/", "", $request->string('phone')->value());
+            $contact->email = $request->string('email')->value();
+            $contact->post = $request->string('post')->value();
+            $organization->contacts()->save($contact);
         }
-
-        $organization->save();
-        return $organization;
-    }
-
-    public function delete(Organization $organization)
-    {
-        if ($organization->isDefault()) throw new \DomainException('Нельзя удалить организацию по умолчанию');
-        $organization->delete();
-    }
-
-    public function add_contact(Organization $organization, Request $request)
-    {
-        $contact = OrganizationContact::new(FullName::create(
-            params: $request->input('fullname')
-        ));
-
-        $contact->phone = preg_replace(
-            "/[^0-9]/", "",
-            $request->string('phone')->value());
-        $contact->email = $request->string('email')->value();
-        $contact->post = $request->string('post')->value();
-        $organization->contacts()->save($contact);
-
-    }
-
-    public function del_contact(OrganizationContact $contact)
-    {
-        $contact->delete();
-    }
-
-    public function set_contact(OrganizationContact $contact, Request $request)
-    {
-
-
-        //$contact = OrganizationContact::find($request->integer('contact_id'));
-        $contact->fullname = FullName::create(
-            params: $request->input('fullname')
-        );
-        $contact->phone = preg_replace("/[^0-9]/", "", $request->string('phone')->value());
-        $contact->email = $request->string('email')->value();
-        $contact->post = $request->string('post')->value();
-        $contact->save();
     }
 
     private function createHolding(string $name): OrganizationHolding
@@ -160,5 +77,92 @@ class OrganizationService
         return $holding;
     }
 
+    private function setDataInn(Organization $organization, array $data): void
+    {
+        $organization->kpp = $data['kpp'] ?? '';
+        $organization->ogrn = $data['ogrn'];
+        $address = $data['address']['data'];
+        $organization->legal_address = GeoAddress::create(
+            address: $address['source'],
+            post: $address['postal_code'],
+            region: $address['region_with_type']
+        );
+        if ($organization->actual_address->address == '')
+            $organization->actual_address = GeoAddress::create(
+                address: $address['source'],
+                post: $address['postal_code'],
+                region: $address['region_with_type']
+            );
+
+        //if ($organization->post == '' || $organization->chief->surname == '') {
+            if ($data['type'] == "INDIVIDUAL") {
+                $organization->post = 'Индивидуальный предприниматель';
+                $organization->chief = new FullName(
+                    $data['fio']['surname'],
+                    $data['fio']['name'],
+                    $data['fio']['patronymic']
+                );
+            } else {
+                $organization->post = $data['management']['post'];
+                list($f1, $f2, $f3) = explode(' ', $data['management']['name']);
+                $organization->chief = new FullName($f1, $f2, $f3);
+            }
+        //}
+        $organization->save();
+    }
+
+    private function setDataBank(Organization $organization, array $data): void
+    {
+        $organization->bik = $data['bic'];
+        $organization->bank_name = $data['name']['payment'];
+        $organization->corr_account = $data['correspondent_account'];
+        $organization->save();
+    }
+
+    public function setInfo(Organization $organization, Request $request): void
+    {
+        //dd($request->all());
+        if ($request->has('pay_account')) $organization->pay_account = $request->string('pay_account')->value();
+        if ($request->has('bik')) {
+            $dadata = $this->dadata();
+            $response = $dadata->findById("bank", $request->string('bik')->trim()->value());
+            $data = $response[0]['data'];
+            $this->setDataBank($organization, $data);
+        }
+        if ($request->has('address')) {
+            $address = $request->input('address');
+            $organization->actual_address = GeoAddress::create(
+                address: $address['address'],
+                post: $address['post'],
+                region: $address['region']
+            );
+        }
+
+        if ($request->has('post')) $organization->post = $request->string('post')->value();
+        if ($request->has('email')) $organization->email = $request->string('email')->value();
+        if ($request->has('phone')) $organization->phone = $request->string('phone')->value();
+        if ($request->has('chief')) $organization->chief = FullName::create(
+            params: $request->input('chief')
+        );
+
+        if ($request->has('holding_id')) {
+            $holding_id = $request->input('holding_id');
+            if ($holding_id == null || is_numeric($holding_id)) $organization->holding_id = $holding_id;
+            if (is_string($holding_id)) {
+                $holding = $this->createHolding($holding_id);
+                $organization->holding_id = $holding->id;
+            }
+        }
+
+        $organization->save();
+    }
+
+    private function dadata(): DadataClient
+    {
+        $token = env('DADATA_TOKEN', '');
+        $secret = env('DADATA_KEY', '');
+
+        return new DadataClient($token, $secret);
+    }
 
 }

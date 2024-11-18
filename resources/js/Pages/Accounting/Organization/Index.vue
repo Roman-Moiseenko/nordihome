@@ -17,7 +17,7 @@
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
-            <el-button type="primary" plain >Холдинги</el-button>
+            <!--el-button type="primary" plain >Холдинги</el-button-->
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-select v-model="filter.holding" placeholder="Холдинг" class="mt-1">
                     <el-option v-for="item in holdings" :key="item.id" :label="item.name"
