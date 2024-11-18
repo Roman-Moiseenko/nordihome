@@ -37,13 +37,13 @@ class DepartureRepository extends AccountingRepository
         ]);
     }
 
-    public function DepartureWithToArray(DepartureDocument $document): array
+    public function DepartureWithToArray(DepartureDocument $document, Request $request): array
     {
         return array_merge(
             $this->commonItems($document),
             $this->DepartureToArray($document),
             [
-                'products' => $document->products()->with('product')->paginate(20)->toArray(),
+                'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
                 'inventory' => !is_null($document->inventory),
             ],
         );

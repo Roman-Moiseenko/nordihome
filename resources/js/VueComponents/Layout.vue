@@ -66,10 +66,6 @@
                     <div class="px-4 py-8 md:flex-1 md:p-4 md:overflow-y-auto bg-slate-50 affix-container" scroll-region>
                         <flash-messages :errors="usePage().props.errors" :flash="usePage().props.flash"/>
                         <slot/>
-                        <!-- Футер с кнопками команды -->
-                        <el-affix position="bottom" :offset="20">
-                            <slot name="footer"/>
-                        </el-affix>
                         <el-backtop target=".affix-container" :visibility-height="100" :right="30" :bottom="20" />
                     </div>
                 </div>

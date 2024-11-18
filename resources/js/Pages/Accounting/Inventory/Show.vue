@@ -1,69 +1,66 @@
 <template>
-    <Layout>
-        <el-config-provider :locale="ru">
-            <Head><title>{{ title }}</title></Head>
-            <h1 class="font-medium text-xl">
-                Инвентаризация {{ inventory.number }} <span v-if="inventory.incoming_number">({{ inventory.incoming_number }})</span> от {{ func.date(inventory.created_at) }}
-            </h1>
-            <div class="mt-3 p-3 bg-white rounded-lg ">
-                <InventoryInfo :inventory="inventory" />
+    <el-config-provider :locale="ru">
+        <Head><title>{{ title }}</title></Head>
+        <h1 class="font-medium text-xl">
+            Инвентаризация {{ inventory.number }} <span v-if="inventory.incoming_number">({{ inventory.incoming_number }})</span> от {{ func.date(inventory.created_at) }}
+        </h1>
+        <div class="mt-3 p-3 bg-white rounded-lg ">
+            <InventoryInfo :inventory="inventory" />
+        </div>
+        <el-affix target=".affix-container" :offset="64">
+            <div class="bg-white rounded-lg my-2 p-1 shadow flex">
+                <InventoryActions :inventory="inventory" />
             </div>
-            <el-affix target=".affix-container" :offset="64">
-                <div class="bg-white rounded-lg my-2 p-1 shadow flex">
-                    <InventoryActions :inventory="inventory" />
-                </div>
-            </el-affix>
-            <el-table :data="[...inventory.products.data]"
-                      header-cell-class-name="nordihome-header"
-                      style="width: 100%;">
-                <el-table-column prop="product.code" label="Артикул" width="160" />
-                <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
-                <el-table-column prop="formal" label="По учету" width="160" >
-                    <template #default="scope">
-                        {{ scope.row.formal }} шт.
-                    </template>
-                </el-table-column>
-                <el-table-column prop="quantity" label="Наличие" width="180">
-                    <template #default="scope">
-                        <el-input v-model="scope.row.quantity"
-                                  :formatter="(value) => func.MaskInteger(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
-                                  :readonly="!isEdit"
-                        >
-                            <template #append>шт</template>
-                        </el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="cost" label="Цена" width="180">
-                    <template #default="scope">
-                        {{ func.price(scope.row.cost) }}
-                    </template>
-                </el-table-column>
-                <el-table-column prop="cost" label="Сумма" width="180">
-                    <template #default="scope">
-                        {{ func.price((scope.row.quantity - scope.row.formal) * scope.row.cost) }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="Действия" align="right" width="180">
-                    <template #default="scope">
-                        <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <pagination
-                :current_page="inventory.products.current_page"
-                :per_page="inventory.products.per_page"
-                :total="inventory.products.total"
-            />
-        </el-config-provider>
-        <DeleteEntityModal name_entity="Товар из поступления" />
-    </Layout>
+        </el-affix>
+        <el-table :data="[...inventory.products.data]"
+                  header-cell-class-name="nordihome-header"
+                  style="width: 100%;">
+            <el-table-column prop="product.code" label="Артикул" width="160" />
+            <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
+            <el-table-column prop="formal" label="По учету" width="160" >
+                <template #default="scope">
+                    {{ scope.row.formal }} шт.
+                </template>
+            </el-table-column>
+            <el-table-column prop="quantity" label="Наличие" width="180">
+                <template #default="scope">
+                    <el-input v-model="scope.row.quantity"
+                              :formatter="(value) => func.MaskInteger(value)"
+                              @change="setItem(scope.row)"
+                              :disabled="iSaving"
+                              :readonly="!isEdit"
+                    >
+                        <template #append>шт</template>
+                    </el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="cost" label="Цена" width="180">
+                <template #default="scope">
+                    {{ func.price(scope.row.cost) }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="cost" label="Сумма" width="180">
+                <template #default="scope">
+                    {{ func.price((scope.row.quantity - scope.row.formal) * scope.row.cost) }}
+                </template>
+            </el-table-column>
+            <el-table-column label="Действия" align="right" width="180">
+                <template #default="scope">
+                    <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <pagination
+            :current_page="inventory.products.current_page"
+            :per_page="inventory.products.per_page"
+            :total="inventory.products.total"
+        />
+    </el-config-provider>
+    <DeleteEntityModal name_entity="Товар из поступления" />
 </template>
 
 <script lang="ts" setup>
 import {inject, ref, defineProps, computed, provide} from "vue";
-import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
@@ -80,7 +77,6 @@ const props = defineProps({
     printed: Object,
 })
 provide('$printed', props.printed)
-
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.inventory.completed);
 const $delete_entity = inject("$delete_entity")
@@ -93,13 +89,12 @@ function setItem(row) {
             quantity: row.quantity,
         },
         preserveScroll: true,
-        //preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             iSaving.value = false;
         }
     })
 }
-
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.inventory.del-product', {product: row.id}));
 }

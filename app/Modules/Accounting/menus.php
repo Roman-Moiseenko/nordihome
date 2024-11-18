@@ -90,6 +90,8 @@ return [
                 'title' => 'Организации',
                 'route_name' => 'admin.accounting.organization.index',
                 'can' => '',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-building-columns',
             ],
         ],
     ],

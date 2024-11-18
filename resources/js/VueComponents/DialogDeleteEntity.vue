@@ -31,7 +31,9 @@ const showDialog= reactive({value: props.show});
 function removeItem() {
     if (props.route !== null) {
         router.visit(props.route, {
-            method: 'delete'
+            method: 'delete',
+            preserveScroll: true,
+            preserveState: false,
         });
         showDialog.value = false;
     }

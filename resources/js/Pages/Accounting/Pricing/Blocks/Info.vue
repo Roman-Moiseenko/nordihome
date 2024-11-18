@@ -44,6 +44,8 @@ function setInfo() {
     router.visit(route('admin.accounting.pricing.set-info', {pricing: props.pricing.id}), {
         method: "post",
         data: info,
+        preserveScroll: true,
+        preserveState: false,
         onSuccess: page => {
             iSavingInfo.value = false;
         }

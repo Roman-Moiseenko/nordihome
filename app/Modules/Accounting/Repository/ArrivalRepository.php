@@ -43,10 +43,10 @@ class ArrivalRepository extends AccountingRepository
         ]);
     }
 
-    public function ArrivalWithToArray(ArrivalDocument $document): array
+    public function ArrivalWithToArray(ArrivalDocument $document, Request $request): array
     {
         $withData = [
-            'products' => $document->products()->with('product')->paginate(20)->toArray(),
+            'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'expense' => is_null($document->expense) ? null : array_merge($document->expense()->first()->toArray(),[
                 'amount' => $document->expense->getAmount(),

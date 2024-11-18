@@ -48,6 +48,8 @@ function setInfo() {
     router.visit(route('admin.accounting.arrival.expense.set-info', {expense: props.expense.id}), {
         method: "post",
         data: info,
+        preserveScroll: true,
+        preserveState: false,
         onSuccess: page => {
             iSavingInfo.value = false;
         }

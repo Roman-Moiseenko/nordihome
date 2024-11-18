@@ -47,7 +47,7 @@ class MovementRepository extends AccountingRepository
         ]);
     }
 
-    public function MovementWithToArray(MovementDocument $document): array
+    public function MovementWithToArray(MovementDocument $document, Request $request): array
     {
         return array_merge(
             $this->commonItems($document),
@@ -58,7 +58,7 @@ class MovementRepository extends AccountingRepository
                 'is_arrival' => $document->isArrival(),
                 'products' => $document->products()
                     ->with('product')
-                    ->paginate(20)
+                    ->paginate($request->input('size', 20))
                     ->withQueryString()
                     ->through(fn(MovementProduct $movementProduct) => array_merge($movementProduct->toArray(), [
                         'quantity_out' => $document->storageOut->getAvailable($movementProduct->product),

@@ -1,101 +1,96 @@
 <template>
-    <Layout>
-        <template #default>
-            <Head><title>{{ title }}</title></Head>
-            <el-config-provider :locale="ru">
-                <h1 class="font-medium text-xl">Установка цен</h1>
-                <div class="flex">
-                    <el-button type="primary" class="p-4 my-3" @click="createButton">Создать документ</el-button>
-                    <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
-                        <el-date-picker
-                            v-model="filter.date_from"
-                            type="date"
-                            class="mt-1"
-                            placeholder="Выберите дату с"
-                            value-format="YYYY-MM-DD"
-                        />
-                        <el-date-picker
-                            v-model="filter.date_to"
-                            type="date"
-                            class="mt-1"
-                            placeholder="Выберите дату по"
-                            value-format="YYYY-MM-DD"
-                        />
-                        <el-select v-model="filter.distributor" placeholder="Поставщики" class="mt-1">
-                            <el-option v-for="item in distributors" :key="item.id" :label="item.name"
-                                       :value="item.id"/>
-                        </el-select>
-                        <el-select v-model="filter.staff_id" placeholder="Ответственный" class="mt-1">
-                            <el-option v-for="item in staffs" :key="item.id" :label="func.fullName(item.fullname)"
-                                       :value="item.id"/>
-                        </el-select>
-                        <el-input v-model="filter.comment" placeholder="Комментарий" class="mt-1"/>
-                        <el-checkbox v-model="filter.draft" label="Не проведенные" :checked="filter.draft"/>
-                    </TableFilter>
-                </div>
-                <div class="mt-2 p-5 bg-white rounded-md">
-                    <el-table
-                        :data="tableData"
-                        header-cell-class-name="nordihome-header"
-                        style="width: 100%; cursor: pointer;"
-                        :row-class-name="tableRowClassName"
-                        @row-click="routeClick"
-                        v-loading="store.getLoading"
-                    >
-
-                        <el-table-column label="Дата" width="120">
-                            <template #default="scope">
-                                {{ func.date(scope.row.created_at) }}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="number" label="№ Документа" width="160"/>
-                        <el-table-column prop="completed" label="Проведен" width="120">
-                            <template #default="scope">
-                                <Active :active="scope.row.completed"/>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="Основание">
-                            <template #default="scope">
-                                <span v-if="scope.row.arrival">
-                                    Приходная накладная № {{
-                                        scope.row.arrival.number
-                                    }} от {{ func.date(scope.row.arrival.created_at) }}
-                                </span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
-                        <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
-                        <el-table-column label="Действия" align="right">
-                            <template #default="scope">
-                                <el-button
-                                    size="small"
-                                    type="warning"
-                                    @click.stop="handleCopy(scope.row)">
-                                    Copy
-                                </el-button>
-                                <el-button v-if="!scope.row.completed"
-                                           size="small"
-                                           type="danger"
-                                           @click.stop="handleDeleteEntity(scope.row)"
-                                >
-                                    Delete
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-                <pagination
-                    :current_page="pricings.current_page"
-                    :per_page="pricings.per_page"
-                    :total="pricings.total"
+    <Head><title>{{ title }}</title></Head>
+    <el-config-provider :locale="ru">
+        <h1 class="font-medium text-xl">Установка цен</h1>
+        <div class="flex">
+            <el-button type="primary" class="p-4 my-3" @click="createButton">Создать документ</el-button>
+            <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
+                <el-date-picker
+                    v-model="filter.date_from"
+                    type="date"
+                    class="mt-1"
+                    placeholder="Выберите дату с"
+                    value-format="YYYY-MM-DD"
                 />
-            </el-config-provider>
-            <DeleteEntityModal name_entity="Установку цен"/>
-        </template>
-    </Layout>
+                <el-date-picker
+                    v-model="filter.date_to"
+                    type="date"
+                    class="mt-1"
+                    placeholder="Выберите дату по"
+                    value-format="YYYY-MM-DD"
+                />
+                <el-select v-model="filter.distributor" placeholder="Поставщики" class="mt-1">
+                    <el-option v-for="item in distributors" :key="item.id" :label="item.name"
+                               :value="item.id"/>
+                </el-select>
+                <el-select v-model="filter.staff_id" placeholder="Ответственный" class="mt-1">
+                    <el-option v-for="item in staffs" :key="item.id" :label="func.fullName(item.fullname)"
+                               :value="item.id"/>
+                </el-select>
+                <el-input v-model="filter.comment" placeholder="Комментарий" class="mt-1"/>
+                <el-checkbox v-model="filter.draft" label="Не проведенные" :checked="filter.draft"/>
+            </TableFilter>
+        </div>
+        <div class="mt-2 p-5 bg-white rounded-md">
+            <el-table
+                :data="tableData"
+                header-cell-class-name="nordihome-header"
+                style="width: 100%; cursor: pointer;"
+                :row-class-name="tableRowClassName"
+                @row-click="routeClick"
+                v-loading="store.getLoading"
+            >
+
+                <el-table-column label="Дата" width="120">
+                    <template #default="scope">
+                        {{ func.date(scope.row.created_at) }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="number" label="№ Документа" width="160"/>
+                <el-table-column prop="completed" label="Проведен" width="120">
+                    <template #default="scope">
+                        <Active :active="scope.row.completed"/>
+                    </template>
+                </el-table-column>
+                <el-table-column label="Основание">
+                    <template #default="scope">
+                        <span v-if="scope.row.arrival">
+                            Приходная накладная № {{
+                                scope.row.arrival.number
+                            }} от {{ func.date(scope.row.arrival.created_at) }}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
+                <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
+                <el-table-column label="Действия" align="right">
+                    <template #default="scope">
+                        <el-button
+                            size="small"
+                            type="warning"
+                            @click.stop="handleCopy(scope.row)">
+                            Copy
+                        </el-button>
+                        <el-button v-if="!scope.row.completed"
+                                   size="small"
+                                   type="danger"
+                                   @click.stop="handleDeleteEntity(scope.row)"
+                        >
+                            Delete
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <pagination
+            :current_page="pricings.current_page"
+            :per_page="pricings.per_page"
+            :total="pricings.total"
+        />
+    </el-config-provider>
+    <DeleteEntityModal name_entity="Установку цен"/>
 </template>
 <script lang="ts" setup>
-import Layout from "@Comp/Layout.vue";
 import {inject, reactive, ref, defineProps} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'

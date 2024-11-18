@@ -78,11 +78,11 @@ class ArrivalController extends Controller
         }
     }
 
-    public function show(ArrivalDocument $arrival): Response
+    public function show(ArrivalDocument $arrival, Request $request): Response
     {
         $storages = Storage::orderBy('name')->getModels();
         return Inertia::render('Accounting/Arrival/Show', [
-            'arrival' => $this->repository->ArrivalWithToArray($arrival),
+            'arrival' => $this->repository->ArrivalWithToArray($arrival, $request),
             'storages' => $storages,
             'operations' => $this->repository->getOperations(),
         ]);

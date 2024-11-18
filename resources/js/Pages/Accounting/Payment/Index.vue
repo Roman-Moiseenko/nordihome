@@ -1,98 +1,95 @@
 <template>
-    <Layout>
-        <Head><title>{{ title }}</title></Head>
-        <el-config-provider :locale="ru">
-            <h1 class="font-medium text-xl">Платежные поручения</h1>
-            <div class="flex">
-                <el-upload
-                    class="upload-demo"
-                    :action="route('admin.accounting.bank.upload')"
-                    :on-success="handleSuccess"
-                    :on-error="handleError"
-                >
-                    <el-button type="primary">Загрузить из банка</el-button>
-                </el-upload>
-                <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
-                    <el-date-picker
-                        v-model="filter.date_from"
-                        type="date"
-                        class="mt-1"
-                        placeholder="Выберите дату с"
-                        value-format="YYYY-MM-DD"
-                    />
-                    <el-date-picker
-                        v-model="filter.date_to"
-                        type="date"
-                        class="mt-1"
-                        placeholder="Выберите дату по"
-                        value-format="YYYY-MM-DD"
-                    />
-                    <el-select v-model="filter.distributor" placeholder="Поставщики" class="mt-1">
-                        <el-option v-for="item in distributors" :key="item.id" :label="item.name"
-                                   :value="item.id"/>
-                    </el-select>
-                    <el-select v-model="filter.staff_id" placeholder="Ответственный" class="mt-1">
-                        <el-option v-for="item in staffs" :key="item.id" :label="func.fullName(item.fullname)"
-                                   :value="item.id"/>
-                    </el-select>
-                    <el-input v-model="filter.comment" placeholder="Комментарий" class="mt-1"/>
-                    <el-checkbox v-model="filter.draft" label="Не проведенные" :checked="filter.draft"/>
-                </TableFilter>
-            </div>
-            <div class="mt-2 p-5 bg-white rounded-md">
-                <el-table
-                    :data="tableData"
-                    header-cell-class-name="nordihome-header"
-                    style="width: 100%; cursor: pointer;"
-                    :row-class-name="tableRowClassName"
-                    @row-click="routeClick"
-                    v-loading="store.getLoading"
-                >
+    <Head><title>{{ title }}</title></Head>
+    <el-config-provider :locale="ru">
+        <h1 class="font-medium text-xl">Платежные поручения</h1>
+        <div class="flex">
+            <el-upload
+                class="upload-demo"
+                :action="route('admin.accounting.bank.upload')"
+                :on-success="handleSuccess"
+                :on-error="handleError"
+            >
+                <el-button type="primary">Загрузить из банка</el-button>
+            </el-upload>
+            <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
+                <el-date-picker
+                    v-model="filter.date_from"
+                    type="date"
+                    class="mt-1"
+                    placeholder="Выберите дату с"
+                    value-format="YYYY-MM-DD"
+                />
+                <el-date-picker
+                    v-model="filter.date_to"
+                    type="date"
+                    class="mt-1"
+                    placeholder="Выберите дату по"
+                    value-format="YYYY-MM-DD"
+                />
+                <el-select v-model="filter.distributor" placeholder="Поставщики" class="mt-1">
+                    <el-option v-for="item in distributors" :key="item.id" :label="item.name"
+                               :value="item.id"/>
+                </el-select>
+                <el-select v-model="filter.staff_id" placeholder="Ответственный" class="mt-1">
+                    <el-option v-for="item in staffs" :key="item.id" :label="func.fullName(item.fullname)"
+                               :value="item.id"/>
+                </el-select>
+                <el-input v-model="filter.comment" placeholder="Комментарий" class="mt-1"/>
+                <el-checkbox v-model="filter.draft" label="Не проведенные" :checked="filter.draft"/>
+            </TableFilter>
+        </div>
+        <div class="mt-2 p-5 bg-white rounded-md">
+            <el-table
+                :data="tableData"
+                header-cell-class-name="nordihome-header"
+                style="width: 100%; cursor: pointer;"
+                :row-class-name="tableRowClassName"
+                @row-click="routeClick"
+                v-loading="store.getLoading"
+            >
 
-                    <el-table-column label="Дата" width="120">
-                        <template #default="scope">
-                            {{ func.date(scope.row.created_at)}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="number" label="№ Документа" width="160"/>
-                    <el-table-column prop="distributor_name" label="Поставщик" width="260" show-overflow-tooltip/>
-                    <el-table-column prop="completed" label="Проведен" width="120">
-                        <template #default="scope">
-                            <Active :active="scope.row.completed"/>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="amount" label="Сумма" width="100">
-                        <template #default="scope">
-                            {{ func.price(scope.row.amount, scope.row.currency) }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="bank_purpose" label="Назначение" show-overflow-tooltip/>
-                    <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
+                <el-table-column label="Дата" width="120">
+                    <template #default="scope">
+                        {{ func.date(scope.row.created_at)}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="number" label="№ Документа" width="160"/>
+                <el-table-column prop="distributor_name" label="Поставщик" width="260" show-overflow-tooltip/>
+                <el-table-column prop="completed" label="Проведен" width="120">
+                    <template #default="scope">
+                        <Active :active="scope.row.completed"/>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="amount" label="Сумма" width="100">
+                    <template #default="scope">
+                        {{ func.price(scope.row.amount, scope.row.currency) }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="bank_purpose" label="Назначение" show-overflow-tooltip/>
+                <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
 
-                    <el-table-column label="Действия" align="right" width="200">
-                        <template #default="scope">
-                            <el-button v-if="!scope.row.completed"
-                                       size="small"
-                                       type="danger"
-                                       @click.stop="handleDeleteEntity(scope.row)"
-                            >
-                                Delete
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-            <pagination
-                :current_page="payments.current_page"
-                :per_page="payments.per_page"
-                :total="payments.total"
-            />
-        </el-config-provider>
-        <DeleteEntityModal name_entity="Заказ поставщику" />
-    </Layout>
+                <el-table-column label="Действия" align="right" width="200">
+                    <template #default="scope">
+                        <el-button v-if="!scope.row.completed"
+                                   size="small"
+                                   type="danger"
+                                   @click.stop="handleDeleteEntity(scope.row)"
+                        >
+                            Delete
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <pagination
+            :current_page="payments.current_page"
+            :per_page="payments.per_page"
+            :total="payments.total"
+        />
+    </el-config-provider>
+    <DeleteEntityModal name_entity="Заказ поставщику" />
 </template>
 <script lang="ts" setup>
-import Layout from "@Comp/Layout.vue";
 import {inject, reactive, ref, defineProps} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
@@ -114,8 +111,6 @@ const props = defineProps({
     staffs: Array,
 })
 const store = useStore();
-
-const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.payments.data])
 const filter = reactive({
@@ -127,7 +122,6 @@ const filter = reactive({
     date_to: props.filters.date_to,
 })
 const create_id = ref<Number>(null)
-
 interface IRow {
     active: number
 }
@@ -140,14 +134,8 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.payment.destroy', {payment: row.id}));
 }
-function createButton() {
-    router.get(route('admin.accounting.payment.create', {distributor: create_id.value}))
-}
 function routeClick(row) {
     router.get(route('admin.accounting.payment.show', {payment: row.id}))
-}
-function handleCopy(row) {
-    router.post(route('admin.accounting.supply.copy', {supply: row.id}))
 }
 
 const handleSuccess: UploadProps['onError'] = (response, uploadFile, uploadFiles) => {
@@ -157,7 +145,6 @@ const handleSuccess: UploadProps['onError'] = (response, uploadFile, uploadFiles
 const handleError: UploadProps['onError'] = (error, uploadFile, uploadFiles) => {
     console.log(error, uploadFile)
 }
-//(error: Error, uploadFile: UploadFile, uploadFiles: UploadFiles) => void
 </script>
 <style scoped>
 

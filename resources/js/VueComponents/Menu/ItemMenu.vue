@@ -13,6 +13,7 @@
 </template>
 
 <script setup>
+import {defineProps} from 'vue'
 import {Link} from "@inertiajs/vue3";
 import ItemText from "@Comp/Menu/ItemText.vue";
 const props = defineProps({

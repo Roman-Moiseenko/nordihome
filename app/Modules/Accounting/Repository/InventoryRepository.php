@@ -34,13 +34,13 @@ class InventoryRepository extends AccountingRepository
 
     }
 
-    public function InventoryWithToArray(InventoryDocument $document): array
+    public function InventoryWithToArray(InventoryDocument $document, Request $request): array
     {
         return array_merge(
             $this->commonItems($document),
             $this->InventoryToArray($document),
             [
-                'products' => $document->products()->with('product')->paginate(20),
+                'products' => $document->products()->with('product')->paginate($request->input('size', 20)),
                 'amount_formal' => $document->getFormalAmount(),
                 'amount_actually' => $document->getActuallyAmount(),
             ],

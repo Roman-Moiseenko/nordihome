@@ -118,6 +118,8 @@ function onAdd() {
     router.visit(props.route, {
         method: "post",
         data: form,
+        preserveScroll: true,
+        preserveState: false,
         onSuccess: page => {
             form.product_id = null
             form.quantity = 1

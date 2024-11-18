@@ -13,7 +13,8 @@ const props = defineProps({
 )
 
 watch(() => props.flash, (newValues, oldValues) => {
-    console.log('Prop values changed:', newValues, oldValues);
+    message();
+    //console.log('Prop values changed:', newValues, oldValues);
 });
 
 

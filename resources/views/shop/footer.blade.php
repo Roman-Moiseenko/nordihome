@@ -3,6 +3,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="heading">NORDI HOME</div>
+                <div style="color: #ff5555">САЙТ В РАЗРАБОТКЕ! Оригинальный сайт по адресу <a href="https://nordihome.ru/" style="color: #5555ff">https://nordihome.ru/</a></div>
                 <div class="description">
                     <div>
                         <p>Магазин NORDI HOME занимается продажей и доставкой мебели ИКЕА из Европы под ключ для вашего

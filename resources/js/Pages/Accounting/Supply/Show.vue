@@ -1,5 +1,5 @@
 <template>
-    <Layout>
+
         <el-config-provider :locale="ru">
             <Head><title>{{ title }}</title></Head>
             <h1 class="font-medium text-xl">
@@ -67,18 +67,19 @@
             />
         </el-config-provider>
         <DeleteEntityModal name_entity="Товар из заказа" />
-    </Layout>
+
 </template>
 
 <script lang="ts" setup>
 import {inject, ref, defineProps, computed, provide} from "vue";
-import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import SupplyInfo from './Blocks/Info.vue'
 import SupplyActions from './Blocks/Actions.vue'
 import Pagination from '@Comp/Pagination.vue'
+
+
 
 const props = defineProps({
     supply: Object,
@@ -112,7 +113,7 @@ function setItem(row) {
             cost: row.cost_currency
         },
         preserveScroll: true,
-        //preserveState: true,
+        preserveState: true,
         onSuccess: page => {
             iSaving.value = false;
         }

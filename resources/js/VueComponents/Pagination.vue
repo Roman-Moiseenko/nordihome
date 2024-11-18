@@ -40,6 +40,8 @@ export default {
                 {
                     method: 'get',
                     data: {page: this.$data.CurrentPage, size: val},
+                    preserveScroll: true,
+                    preserveState: false,
                     onBefore: visit => {
                         useStore().beforeLoad();
                     },
@@ -55,6 +57,8 @@ export default {
                 {
                     method: 'get',
                     data: {page: val, size: this.$data.PageSize},
+                    preserveScroll: true,
+                    preserveState: false,
                     onBefore: visit => {
                         useStore().beforeLoad();
                     },

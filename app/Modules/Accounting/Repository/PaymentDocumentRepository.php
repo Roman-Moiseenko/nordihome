@@ -42,10 +42,8 @@ class PaymentDocumentRepository extends AccountingRepository
     {
         return array_merge($payment->toArray(), [
                 'distributor_name' => $payment->recipient->distributor->name,
-                //'distributor_org' => $payment->distributor->organization->short_name,
                 'trader' => $payment->payer->full_name,
                 'organization_id' => $payment->payer->id,
-                //'supply' => is_null($payment->supply_id) ? '' : $payment->supply->htmlNumDate(),
                 'debit' => $payment->recipient->distributor->debit() - $payment->recipient->distributor->credit(),
                 'currency' => $payment->recipient->distributor->currency->sign,
                 'staff' => $payment->staff->fullname->getFullName(),

@@ -23,14 +23,12 @@ use function Symfony\Component\Translation\t;
 class DepartureController extends Controller
 {
     private DepartureService $service;
-    private ProductRepository $products;
     private DepartureRepository $repository;
     private StaffRepository $staffs;
 
 
     public function __construct(
         DepartureService    $service,
-        ProductRepository   $products,
         DepartureRepository $repository,
         StaffRepository     $staffs,
     )
@@ -38,7 +36,6 @@ class DepartureController extends Controller
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
-        $this->products = $products;
         $this->repository = $repository;
         $this->staffs = $staffs;
     }
@@ -48,7 +45,6 @@ class DepartureController extends Controller
         $storages = Storage::orderBy('name')->get();
         $departures = $this->repository->getIndex($request, $filters);
         $staffs = $this->staffs->getStaffsChiefs();
-        //return view('admin.accounting.departure.index', compact('departures', 'filters', 'staffs', 'storages'));
 
         return Inertia::render('Accounting/Departure/Index', [
             'departures' => $departures,
@@ -71,18 +67,13 @@ class DepartureController extends Controller
         }
     }
 
-    public function show(DepartureDocument $departure): \Inertia\Response
+    public function show(DepartureDocument $departure, Request $request): \Inertia\Response
     {
-        //$info = $departure->getInfoData();
-        //return view('admin.accounting.departure.show', compact('departure', 'info'));
-
         $storages = Storage::orderBy('name')->getModels();
         return Inertia::render('Accounting/Departure/Show', [
-            'departure' => $this->repository->DepartureWithToArray($departure),
+            'departure' => $this->repository->DepartureWithToArray($departure, $request),
             'storages' => $storages,
-            //'operations' => $this->repository->getOperations(),
         ]);
-
     }
 
     public function destroy(DepartureDocument $departure): RedirectResponse
@@ -117,9 +108,12 @@ class DepartureController extends Controller
 
     public function del_product(DepartureProduct $product): RedirectResponse
     {
-        //$movement = $item->document;
-        $product->delete();
-        return redirect()->back()->with('success', 'Удалено');
+        try {
+            $product->delete();
+            return redirect()->back()->with('success', 'Удалено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function completed(DepartureDocument $departure): RedirectResponse

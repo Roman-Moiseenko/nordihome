@@ -96,11 +96,11 @@ class SupplyController extends Controller
         }
     }
 
-    public function show(SupplyDocument $supply): Response
+    public function show(SupplyDocument $supply, Request $request): Response
     {
         //return view('admin.accounting.supply.show', compact('supply'));
         return Inertia::render('Accounting/Supply/Show', [
-            'supply' => $this->repository->SupplyWithToArray($supply),
+            'supply' => $this->repository->SupplyWithToArray($supply, $request),
         ]);
     }
 

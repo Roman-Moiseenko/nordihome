@@ -24,13 +24,11 @@ use JetBrains\PhpStorm\Deprecated;
 class MovementController extends Controller
 {
     private MovementService $service;
-    private ProductRepository $products;
     private StaffRepository $staffs;
     private MovementRepository $repository;
 
     public function __construct(
         MovementService    $service,
-        ProductRepository  $products,
         StaffRepository    $staffs,
         MovementRepository $repository,
     )
@@ -38,7 +36,6 @@ class MovementController extends Controller
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
-        $this->products = $products;
         $this->staffs = $staffs;
         $this->repository = $repository;
     }
@@ -72,11 +69,11 @@ class MovementController extends Controller
         return redirect()->route('admin.accounting.movement.show', $movement)->with('success', 'Документ сохранен');;
     }
 
-    public function show(MovementDocument $movement): Response
+    public function show(MovementDocument $movement, Request $request): Response
     {
         $storages = Storage::orderBy('name')->get()->toArray();
         return Inertia::render('Accounting/Movement/Show', [
-            'movement' => $this->repository->MovementWithToArray($movement),
+            'movement' => $this->repository->MovementWithToArray($movement, $request),
             'storages' => $storages,
         ]);
     }

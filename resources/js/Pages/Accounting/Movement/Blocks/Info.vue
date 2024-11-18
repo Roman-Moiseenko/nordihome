@@ -73,6 +73,8 @@ function setInfo() {
     router.visit(route('admin.accounting.movement.set-info', {movement: props.movement.id}), {
         method: "post",
         data: info,
+        preserveScroll: true,
+        preserveState: false,
         onSuccess: page => {
             iSavingInfo.value = false;
         }

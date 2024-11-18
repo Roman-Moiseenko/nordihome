@@ -47,11 +47,11 @@ class RefundController extends Controller
         ]);
     }
 
-    public function show(RefundDocument $refund): Response
+    public function show(RefundDocument $refund, Request $request): Response
     {
         $storages = Storage::orderBy('name')->getModels();
         return Inertia::render('Accounting/Refund/Show', [
-            'refund' => $this->repository->RefundWithToArray($refund),
+            'refund' => $this->repository->RefundWithToArray($refund, $request),
             'storages' => $storages,
         ]);
     }

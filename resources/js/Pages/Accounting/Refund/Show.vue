@@ -1,73 +1,70 @@
 <template>
-    <Layout>
-        <el-config-provider :locale="ru">
-            <Head><title>{{ title }}</title></Head>
-            <h1 class="font-medium text-xl">
-                Возврат поставщику {{ refund.number }} <span v-if="refund.incoming_number">({{ refund.incoming_number }})</span> от {{ func.date(refund.created_at) }}
-            </h1>
-            <div class="mt-3 p-3 bg-white rounded-lg ">
-                <RefundInfo :refund="refund" :storages="storages" />
+    <el-config-provider :locale="ru">
+        <Head><title>{{ title }}</title></Head>
+        <h1 class="font-medium text-xl">
+            Возврат поставщику {{ refund.number }} <span v-if="refund.incoming_number">({{ refund.incoming_number }})</span> от {{ func.date(refund.created_at) }}
+        </h1>
+        <div class="mt-3 p-3 bg-white rounded-lg ">
+            <RefundInfo :refund="refund" :storages="storages" />
+        </div>
+        <el-affix target=".affix-container" :offset="64">
+            <div class="bg-white rounded-lg my-2 p-1 shadow flex">
+                <RefundActions :refund="refund" />
             </div>
-            <el-affix target=".affix-container" :offset="64">
-                <div class="bg-white rounded-lg my-2 p-1 shadow flex">
-                    <RefundActions :refund="refund" />
-                </div>
-            </el-affix>
-            <el-table :data="[...refund.products.data]"
-                      header-cell-class-name="nordihome-header"
-                      :row-class-name="tableRowClassName"
-                      style="width: 100%;">
-                <el-table-column prop="product.code" label="Артикул" width="160" />
-                <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
-                <el-table-column prop="cost_currency" label="Закупочная" width="180">
-                    <template #default="scope">
-                        <el-input v-model="scope.row.cost_currency"
-                                  :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
-                                  :readonly="true"
-                        >
-                            <template #append>{{ refund.currency }}</template>
-                        </el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="quantity" label="Кол-во" width="180">
-                    <template #default="scope">
-                        <el-input v-model="scope.row.quantity"
-                                  :formatter="(value) => func.MaskInteger(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
-                                  :readonly="!isEdit"
-                        >
-                            <template #append>шт</template>
-                        </el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="quantity" label="Сумма в валюте" width="180">
-                    <template #default="scope">
-                        {{ func.price(scope.row.quantity * scope.row.cost_currency, refund.currency) }}
-                    </template>
-                </el-table-column>
+        </el-affix>
+        <el-table :data="[...refund.products.data]"
+                  header-cell-class-name="nordihome-header"
+                  :row-class-name="tableRowClassName"
+                  style="width: 100%;">
+            <el-table-column prop="product.code" label="Артикул" width="160" />
+            <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
+            <el-table-column prop="cost_currency" label="Закупочная" width="180">
+                <template #default="scope">
+                    <el-input v-model="scope.row.cost_currency"
+                              :formatter="(value) => func.MaskFloat(value)"
+                              @change="setItem(scope.row)"
+                              :disabled="iSaving"
+                              :readonly="true"
+                    >
+                        <template #append>{{ refund.currency }}</template>
+                    </el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="quantity" label="Кол-во" width="180">
+                <template #default="scope">
+                    <el-input v-model="scope.row.quantity"
+                              :formatter="(value) => func.MaskInteger(value)"
+                              @change="setItem(scope.row)"
+                              :disabled="iSaving"
+                              :readonly="!isEdit"
+                    >
+                        <template #append>шт</template>
+                    </el-input>
+                </template>
+            </el-table-column>
+            <el-table-column prop="quantity" label="Сумма в валюте" width="180">
+                <template #default="scope">
+                    {{ func.price(scope.row.quantity * scope.row.cost_currency, refund.currency) }}
+                </template>
+            </el-table-column>
 
-                <el-table-column label="Действия" align="right" width="180">
-                    <template #default="scope">
-                        <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <pagination
-                :current_page="refund.products.current_page"
-                :per_page="refund.products.per_page"
-                :total="refund.products.total"
-            />
-        </el-config-provider>
-        <DeleteEntityModal name_entity="Товар из поступления" />
-    </Layout>
+            <el-table-column label="Действия" align="right" width="180">
+                <template #default="scope">
+                    <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <pagination
+            :current_page="refund.products.current_page"
+            :per_page="refund.products.per_page"
+            :total="refund.products.total"
+        />
+    </el-config-provider>
+    <DeleteEntityModal name_entity="Товар из поступления" />
 </template>
 
 <script lang="ts" setup>
 import {inject, ref, defineProps, computed, provide} from "vue";
-import Layout from "@Comp/Layout.vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
@@ -109,7 +106,7 @@ function setItem(row) {
             cost: row.cost_currency
         },
         preserveScroll: true,
-        //preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             iSaving.value = false;
         }

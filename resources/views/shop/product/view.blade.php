@@ -65,6 +65,7 @@
                                         Только под заказ
                                     @endif
                                 @endif
+                                <span class="" style="color: red; font-weight: bold;">Товар не продается! Цена вымышленная!</span>
                             </div>
                         </div>
                         <div class="view-brand">
@@ -96,6 +97,7 @@
                     <div class="view-specifications">
                         @include('shop.widgets.dimensions', ['dimensions' => $product->dimensions, 'local' => !$product->not_local, 'region' => !$product->not_delivery])
                     </div>
+                    <div style="color: #ff5555">САЙТ В РАЗРАБОТКЕ! Оригинальный сайт по адресу <a href="https://nordihome.ru/" style="color: #5555ff">https://nordihome.ru/</a></div>
                 </div>
             </div>
         </div>

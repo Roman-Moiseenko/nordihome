@@ -76,10 +76,10 @@ class SupplyRepository extends AccountingRepository
         ]);
     }
 
-    public function SupplyWithToArray(SupplyDocument $document): array
+    public function SupplyWithToArray(SupplyDocument $document, Request $request): array
     {
         $withData = [
-            'products' => $document->products()->with('product')->paginate(20)->toArray(),
+            'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'arrivals' => $document->arrivals()->get()->map(function (ArrivalDocument $document) {
                 return array_merge($document->toArray(), [

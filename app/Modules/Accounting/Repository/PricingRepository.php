@@ -42,7 +42,6 @@ class PricingRepository extends AccountingRepository
 
     public function PricingWithToArray(PricingDocument $document, Request $request): array
     {
-
         return array_merge(
             $this->commonItems($document),
             $this->PricingToArray($document),

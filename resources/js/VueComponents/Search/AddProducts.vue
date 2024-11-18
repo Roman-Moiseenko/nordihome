@@ -44,6 +44,8 @@ function onAdd() {
     router.visit(props.route, {
         method: "post",
         data: {products: products},
+        preserveScroll: true,
+        preserveState: false,
         onSuccess: page => {
             data.value = null
         }

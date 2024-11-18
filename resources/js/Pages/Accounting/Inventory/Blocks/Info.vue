@@ -48,6 +48,8 @@ function setInfo() {
     router.visit(route('admin.accounting.inventory.set-info', {inventory: props.inventory.id}), {
         method: "post",
         data: info,
+        preserveScroll: true,
+        preserveState: false,
         onSuccess: page => {
             iSavingInfo.value = false;
         }
