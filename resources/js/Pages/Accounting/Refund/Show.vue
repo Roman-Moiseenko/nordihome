@@ -114,6 +114,7 @@ function setItem(row) {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.refund.del-product', {product: row.id}));
+    router.delete(route('admin.accounting.refund.del-product', {product: row.id}))
+    //$delete_entity.show(route('admin.accounting.refund.del-product', {product: row.id}));
 }
 </script>

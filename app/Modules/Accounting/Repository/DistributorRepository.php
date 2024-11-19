@@ -67,7 +67,7 @@ class DistributorRepository
             $this->DistributorToArray($distributor),
             [
                 'organizations' => $distributor->organizations,
-                'contacts' => $distributor->organization->contacts,
+                'contacts' => is_null($distributor->organization) ? [] : $distributor->organization->contacts,
                 /*'products' => $distributor->products()
                     ->paginate($request->input('size', 20))
                     ->withQueryString()

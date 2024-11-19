@@ -162,4 +162,8 @@ class Organization extends Model
         }
         return null;
     }
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
 }

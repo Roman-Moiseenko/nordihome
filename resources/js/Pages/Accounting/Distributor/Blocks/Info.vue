@@ -47,22 +47,22 @@
                     <i class="fa-light fa-right"></i>
                 </Link>
             </div>
-
-            <div v-show="!showEdit">
-                <el-button class="ml-2" type="warning" size="small" @click="showEdit = true">Добавить</el-button>
-            </div>
-            <div v-show="showEdit" class="flex items-center">
-                <el-select v-model="organization">
-                    <el-option v-for="item in organizations" :key="item.id" :value="item.id" :label="item.short_name">
-                        {{ item.full_name }}
-                    </el-option>
-                </el-select>
-                <el-button type="success" size="small" @click="attachOrganization" class="ml-3">
-                    <i class="fa-light fa-floppy-disk"></i>
-                </el-button>
-                <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
-                    <i class="fa-light fa-xmark"></i>
-                </el-button>
+            <div class="mt-3">
+                <div v-show="!showEdit">
+                    <el-button type="warning" size="small" @click="showEdit = true">Добавить</el-button>
+                </div>
+                <div v-show="showEdit" class="flex items-center">
+                    <el-select v-model="organization" style="width: 260px;">
+                        <el-option v-for="item in organizations" :key="item.id" :value="item.id" :label="item.short_name">
+                        </el-option>
+                    </el-select>
+                    <el-button type="success" size="small" @click="attachOrganization" class="ml-3">
+                        <i class="fa-light fa-floppy-disk"></i>
+                    </el-button>
+                    <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
+                        <i class="fa-light fa-xmark"></i>
+                    </el-button>
+                </div>
             </div>
         </el-col>
     </el-row>

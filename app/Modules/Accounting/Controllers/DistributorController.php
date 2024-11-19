@@ -43,40 +43,41 @@ class DistributorController extends Controller
             'currencies' => $currencies,
         ]);
     }
-/*
-    public function create(Request $request)
-    {
-        $currencies = Currency::get();
-        $organizations = Organization::orderBy('short_name')->where('active', true)->getModels();
-        return view('admin.accounting.distributor.create', compact('currencies', 'organizations'));
-    }
-*/
-    public function store(Request $request)
+
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string',
             'currency' => 'required',
             'inn' => 'required',
         ]);
-        $distributor = $this->service->create($request);
-        return redirect()->route('admin.accounting.distributor.show', $distributor);
-
+        try {
+            $distributor = $this->service->create($request);
+            return redirect()->route('admin.accounting.distributor.show', $distributor)->with('success', 'Поставщик добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function show(Distributor $distributor, Request $request): \Inertia\Response
     {
         $query = DistributorProduct::where('distributor_id', $distributor->id);
-        $d_products = DistributorProduct::where('distributor_id', $distributor->id)->getModels();
+       // $d_products = DistributorProduct::where('distributor_id', $distributor->id)->getModels();
 
         $min_ids = [];
         $empty_ids = [];
         $no_buy_ids = [];
 
-        foreach ($d_products as $d_product) {
-            $sell = $d_product->product->getQuantity();
-            if ($sell == 0) $empty_ids[] = $d_product->product_id;
-            if ($d_product->product->isBalance()) $min_ids[] = $d_product->product_id;
-            if (!$d_product->product->balance->buy) $no_buy_ids[] = $d_product->product_id;
+        $array_products = DistributorProduct::where('distributor_id', $distributor->id)
+            ->with(['product' => function ($query) {
+                $query->with('balance')
+                    ->withSum('storageItems as storage_quantity', 'quantity');
+            }])->get(['product_id'])->toArray();
+
+        foreach ($array_products as $item) {
+            if ((int)$item['product']['storage_quantity'] == 0) $empty_ids[] = $item['product_id'];
+            if ((int)$item['product']['storage_quantity'] < (int)$item['product']['balance']['min']) $min_ids[] = $item['product_id'];
+            if (!$item['product']['balance']['buy']) $no_buy_ids[] = $item['product_id'];
         }
 
         if (!empty($balance = $request->string('balance')->value())) {
@@ -92,14 +93,14 @@ class DistributorController extends Controller
             ->through(fn(DistributorProduct $product) => $this->repository->ProductToArray($product));
 
         $count = [
-            'all' => count($d_products), //DistributorProduct::where('distributor_id', $distributor->id)->count(),
+            'all' => count($array_products),
             'min' => count($min_ids),
             'empty' => count($empty_ids),
             'no_buy' => count($no_buy_ids),
         ];
         //return view('admin.accounting.distributor.show', compact('distributor', 'items', 'pagination', 'count'));
         //Для Organization сделать поле Ликвидирован!!! И ставить в фильтр scopedActual()
-        $organizations = Organization::orderBy('short_name')->getModels();
+        $organizations = Organization::orderBy('short_name')->active()->getModels();
 
         return Inertia::render('Accounting/Distributor/Show', [
             'distributor' => $this->repository->DistributorWithToArray($distributor, $request),
@@ -110,35 +111,17 @@ class DistributorController extends Controller
 
     }
 
-    public function edit(Distributor $distributor): View
-    {
-        $currencies = Currency::get();
-        $organizations = Organization::orderBy('short_name')->where('active', true)->getModels();
-        return view('admin.accounting.distributor.edit', compact('distributor', 'currencies', 'organizations'));
-    }
-
-    public function update(Request $request, Distributor $distributor): RedirectResponse
-    {
-        $request->validate([
-            'name' => 'required',
-        ]);
-        $distributor = $this->service->update($request, $distributor);
-        return redirect()->route('admin.accounting.distributor.show', $distributor);
-    }
-
-    public function destroy(Distributor $distributor): RedirectResponse
-    {
-        $this->service->destroy($distributor);
-        return redirect()->back();
-    }
-
     public function supply(Request $request, Distributor $distributor): RedirectResponse
     {
-        $supply = $this->service->create_supply(
-            $distributor,
-            $request->string('balance')->value()
-        );
-        return redirect()->route('admin.accounting.supply.show', $supply);
+        try {
+            $supply = $this->service->create_supply(
+                $distributor,
+                $request->string('balance')->value()
+            );
+            return redirect()->route('admin.accounting.supply.show', $supply)->with('error', 'Заказ создан');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function attach(Request $request, Distributor $distributor): RedirectResponse
@@ -170,6 +153,5 @@ class DistributorController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-
 
 }

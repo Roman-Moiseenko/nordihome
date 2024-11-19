@@ -2,7 +2,6 @@
 
 namespace App\Modules\Accounting\Repository;
 
-use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -40,7 +39,8 @@ class PaymentDocumentRepository extends AccountingRepository
 
     public function PaymentToArray(PaymentDocument $payment): array
     {
-        return array_merge($payment->toArray(), [
+        $array = $payment->toArray();
+        return array_merge($array, [
                 'distributor_name' => $payment->recipient->distributor->name,
                 'trader' => $payment->payer->full_name,
                 'organization_id' => $payment->payer->id,
