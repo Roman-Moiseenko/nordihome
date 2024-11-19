@@ -68,6 +68,8 @@ return [
                 'icon' => 'factory',
                 'title' => 'Поставщики',
                 'route_name' => 'admin.accounting.distributor.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-industry-windows',
             ],
             'storages' => [
                 'icon' => 'warehouse',

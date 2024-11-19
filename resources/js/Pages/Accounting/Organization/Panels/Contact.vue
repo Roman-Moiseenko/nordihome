@@ -19,7 +19,7 @@
                         <EditField :field="organization.email" @update:field="saveEmail"/>
                     </el-descriptions-item>
                     <el-descriptions-item label="Телефон">
-                        <EditField :field="organization.phone" @update:field="savePhone"/>
+                        <EditField :field="func.phone(organization.phone)" @update:field="savePhone" :formatter="val => func.MaskPhone(val)"/>
                     </el-descriptions-item>
                 </el-descriptions>
             </div>
@@ -34,7 +34,7 @@
                         {{ func.fullName(contact.fullname) }}
                         <i class="fa-light fa-circle-envelope text-sky-700 ml-2"></i>
                         {{ contact.email }}
-                        <i class="fa-light fa-circle-phone text-sky-700 ml-2"></i> {{ contact.phone }}
+                        <i class="fa-light fa-circle-phone text-sky-700 ml-2"></i> {{ func.phone(contact.phone) }}
                         <el-button class="ml-2" type="warning" size="small" @click="editContact(contact)">
                             <i class="fa-light fa-pen-to-square"></i>
                         </el-button>

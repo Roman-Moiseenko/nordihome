@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $sign
  * @property float $exchange
  * @property string $cbr_code
+ * @property boolean $default - по-умолчанию Рубль
  * @property int $extra // + %
  * @property ArrivalDocument[] $arrivals
  */
@@ -24,7 +25,8 @@ class Currency extends Model
         'name',
         'exchange',
         'cbr_code',
-        'extra'
+        'extra',
+        'default',
     ];
 
     public static function register(
@@ -41,6 +43,7 @@ class Currency extends Model
             'exchange' => $exchange,
             'cbr_code' => $cbr_code,
             'extra' => $extra,
+            'default' => false
         ]);
     }
 

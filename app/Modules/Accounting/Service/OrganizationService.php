@@ -13,11 +13,13 @@ use Illuminate\Http\Request;
 
 class OrganizationService
 {
-    public function create_find(string $inn, string $bik, string $pay_account): Organization
+    public function create_find(string $inn, string $bik, string $pay_account):? Organization
     {
+        if (!is_null($organization = Organization::where('inn', $inn)->first())) return $organization;
         $dadata = $this->dadata();
         //Компания
         $response = $dadata->findById("party", $inn);
+        if (empty($response)) throw new \DomainException('Неверный ИНН. Организация не найдена');
         $data = $response[0]['data'];
 
         $organization = Organization::register(
@@ -29,9 +31,10 @@ class OrganizationService
 
         //Банк
         $response = $dadata->findById("bank", $bik);
-        $data = $response[0]['data'];
-        $this->setDataBank($organization, $data);
-
+        if (!empty($response)) {
+            $data = $response[0]['data'];
+            $this->setDataBank($organization, $data);
+        }
         $organization->pay_account = $pay_account;
         $organization->save();
         return $organization;
@@ -121,11 +124,11 @@ class OrganizationService
 
     public function setInfo(Organization $organization, Request $request): void
     {
-        //dd($request->all());
         if ($request->has('pay_account')) $organization->pay_account = $request->string('pay_account')->value();
         if ($request->has('bik')) {
             $dadata = $this->dadata();
             $response = $dadata->findById("bank", $request->string('bik')->trim()->value());
+            if (empty($response)) throw new \DomainException('Неверный БИК');
             $data = $response[0]['data'];
             $this->setDataBank($organization, $data);
         }

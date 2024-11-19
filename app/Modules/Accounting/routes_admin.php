@@ -99,6 +99,10 @@ Route::group(
         ],
             function () {
                 Route::post('/supply/{distributor}', 'DistributorController@supply')->name('supply');
+                Route::post('/attach/{distributor}', 'DistributorController@attach')->name('attach');
+                Route::post('/detach/{distributor}', 'DistributorController@detach')->name('detach');
+                Route::post('/default/{distributor}', 'DistributorController@default')->name('default');
+
             });
         //SUPPLY
         Route::group([

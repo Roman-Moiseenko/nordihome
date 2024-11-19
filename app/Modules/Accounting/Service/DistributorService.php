@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Service;
 
+use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Base\Entity\BankDetail;
@@ -28,10 +29,28 @@ class DistributorService
 
     public function create(Request $request): Distributor
     {
-        $distributor = Distributor::register(
-            $request->string('name')->trim()->value(),
-            $request->integer('currency_id'));
+        DB::transaction(function () use ($request, &$distributor) {
+            $distributor = Distributor::register(
+                $request->string('name')->trim()->value(),
+                $request->integer('currency'));
 
+            $currency = Currency::find($request->integer('currency'));
+            if (!$currency->default) {
+                $distributor->foreign = true;
+                $distributor->save();
+            }
+
+            $organization = $this->service->create_find(
+                $request->string('inn')->trim()->value(),
+                $request->string('bik')->trim()->value(),
+                $request->string('account')->trim()->value()
+            );
+            $this->attach($distributor, $organization->id);
+        });
+
+        return $distributor;
+
+        /*
         if (($organization_id = $request->integer('organization_id')) > 0) {
             $distributor->organization_id = $organization_id;
         } else {
@@ -47,6 +66,7 @@ class DistributorService
         $distributor->foreign = $request->boolean('foreign');
         $distributor->save();
         return $distributor;
+        */
     }
 
     public function update(Request $request, Distributor $distributor): Distributor
@@ -79,6 +99,31 @@ class DistributorService
         });
         return $supply;
     }
+
+    public function attach(Distributor $distributor, int $organization_id): void
+    {
+        foreach ($distributor->organizations as $organization) {
+            if ($organization->id == $organization_id) throw new \DomainException('Организация уже назначена!');
+        }
+        $default = is_null($distributor->organization);
+        $distributor->organizations()->attach($organization_id, ['default' => $default]);
+
+    }
+
+    public function detach(Distributor $distributor, int $organization_id): void
+    {
+        $distributor->organizations()->detach($organization_id);
+    }
+
+    public function default(Distributor $distributor, int $organization_id): void
+    {
+        foreach ($distributor->organizations as $organization) {
+            $distributor->organizations()->updateExistingPivot($organization->id, ['default' => false]);
+        }
+
+        $distributor->organizations()->updateExistingPivot($organization_id, ['default' => true]);
+    }
+
 
     private function save_fields(Request $request, Distributor $distributor): void
     {

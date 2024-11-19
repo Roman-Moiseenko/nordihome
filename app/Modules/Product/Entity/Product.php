@@ -489,8 +489,6 @@ class Product extends Model
 
     /**
      * Цена на предзаказ, если цена не определена, возвращаем текущую
-     * @param bool $previous
-     * @return float
      */
     public function getPricePre(bool $previous = false): float
     {
@@ -538,6 +536,13 @@ class Product extends Model
      */
     public function getQuantity(int $storage_id = null): int
     {
+        $query = StorageItem::selectRaw('SUM(quantity * 1) AS total')->where('product_id', $this->id);
+
+        if (!is_null($storage_id)) $query->where('storage_id', $storage_id);
+        $quantity = $query->first();
+        return (int)$quantity->total ?? 0;
+
+        /*
         $quantity = 0;
         foreach ($this->storageItems as $storageItem) {
             if (is_null($storage_id)) {
@@ -546,7 +551,7 @@ class Product extends Model
                 if ($storageItem->storage_id == $storage_id) return $storageItem->quantity;
             }
         }
-        return $quantity;
+        return $quantity; */
     }
 
     //TODO Переименовать

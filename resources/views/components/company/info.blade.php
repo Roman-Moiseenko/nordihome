@@ -86,7 +86,7 @@
             <button id="add-modal-contact" type="button"
                     class="btn btn-sm btn-outline-primary"
                     data-tw-toggle="modal" data-tw-target="#modal-create-contact"
-                    data-route="{{ route('admin.accounting.organization.add-contact', ['organization' => $company]) }}">
+                    data-route="">
                 Добавить
             </button>
         </div>
@@ -94,7 +94,7 @@
 
     <x-base.dialog id="modal-create-contact" staticBackdrop>
         <x-base.dialog.panel>
-            <form id="modal-contact" action="{{ route('admin.accounting.organization.add-contact', ['organization' => $company]) }}" method="POST">
+            <form id="modal-contact" action="/" method="POST">
                 @csrf
                 <x-base.dialog.title>
                     <h2 id="title-modal" class="mr-auto text-base font-medium">Добавить контакт</h2>

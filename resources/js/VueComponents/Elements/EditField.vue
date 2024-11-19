@@ -18,7 +18,7 @@
             <el-input v-model="field_fio.secondname" style="width: 120px;" class="mr-2"/>
         </template>
         <template v-else>
-            <el-input v-model="field_new" style="width: 220px;" class="mr-2"/>
+            <el-input v-model="field_new" style="width: 220px;" class="mr-2" :formatter="formatter"/>
         </template>
 
         <el-button type="success" size="small" @click="saveField">
@@ -35,11 +35,13 @@ import {func} from '@Res/func.js'
 
 const props = defineProps({
     field: Object,
+    formatter: Function,
     isFIO: {
         default: false,
         type: Boolean,
     },
 })
+console.log(props)
 const showEdit = ref(false)
 const field_new = ref(props.field)
 const field_fio = reactive({

@@ -11,7 +11,7 @@ use Illuminate\View\Component;
 class Info extends Component
 {
     public Organization $company;
-    public string $route;
+    public string $route = '';
     public string $title;
 
     public function __construct(

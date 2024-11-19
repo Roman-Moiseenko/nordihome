@@ -6,11 +6,11 @@
 
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
     @apply bg-slate-200;
 }
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
+    border-radius: 8px;
     @apply bg-slate-400;
 }
 
@@ -56,12 +56,17 @@
 [type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
     box-shadow: none;
 }
+//Цвета строк таблицы
 .warning-row {
     --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }
 .error-row {
     --el-table-tr-bg-color: var(--el-color-error-light-9);
 }
+.gray-row {
+    --el-table-tr-bg-color: var(--el-color-info-light-9);
+}
+
 a[type="primary"] {
     @apply text-sky-600;
     @apply hover:text-sky-400;

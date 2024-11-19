@@ -5,7 +5,7 @@
     <x-company.info
         :title="$distributor->name"
         :company="$distributor->organization"
-        route="{{ route('admin.accounting.organization.edit', $distributor->organization) }}"
+        route="{{ route('admin.accounting.organization.show', $distributor->organization) }}"
         :show="false"
     />
     <div class="flex items-center mt-3">

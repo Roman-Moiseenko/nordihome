@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * @property int $id
@@ -127,10 +128,18 @@ class Organization extends Model
         return $this->hasOne(Trader::class, 'organization_id', 'id');
     }
 
-    public function distributor(): HasOne
+    public function distributor(): HasOneThrough
     {
-        return $this->hasOne(Distributor::class, 'organization_id', 'id');
+        return $this->hasOneThrough(
+            Distributor::class,
+            DistributorOrganization::class,
+            'organization_id', 'id', 'id',
+            'distributor_id');
+
+        //return $this->hasOne(Distributor::class, 'organization_id', 'id');
+
     }
+
 
     public function shopper(): HasOne
     {

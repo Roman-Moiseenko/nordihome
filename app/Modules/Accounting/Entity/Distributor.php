@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * @property int $id
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Product[] $products
  * @property Currency $currency
  * @property Organization $organization
+ * @property Organization[] $organizations
  * @property SupplyDocument[] $supplies
  * @property PaymentDocument[] $orders
  * @property RefundDocument[] $refunds
@@ -146,9 +148,23 @@ class Distributor extends Model
             $this->products()->updateExistingPivot($product->id, ['cost' => $cost, 'pre_cost' => $d_product->pivot->cost]);
     }
 
-    public function organization(): BelongsTo
+    public function organization(): HasOneThrough
     {
-        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+        return $this->hasOneThrough(Organization::class, DistributorOrganization::class, 'distributor_id', 'id', 'id', 'organization_id')
+            ->where('distributor_organizations.default', true);
+
+
+        //return $this->belongsTo(Organization::class, 'organization_id', 'id');
+       /* return $this->
+        belongsToMany(Organization::class, 'distributor_organizations', 'distributor_id', 'organization_id', 'id', 'id')
+            ->wherePivot('default', true)->latest();*/
+    }
+
+    public function organizations(): BelongsToMany
+    {
+        return $this->
+        belongsToMany(Organization::class, 'distributor_organizations', 'distributor_id', 'organization_id', 'id', 'id')
+            ->withPivot(['default']);
     }
 
     public function getProduct(int $product_id)
