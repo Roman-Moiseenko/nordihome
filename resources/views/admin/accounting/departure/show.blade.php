@@ -102,7 +102,7 @@
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     let data = JSON.parse(request.responseText);
-                    console.log(data);
+
                     if (data.quantity !== undefined) {
                         document.getElementById('quantity-amount').value = data.quantity;
                         document.getElementById('cost-amount').value = data.cost;

@@ -81,7 +81,6 @@
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
             success: function (data) {
-                console.log(data);
                 if (Array.isArray(data)) {
                     _listBox.html('');
                     if (data.length === 0) {

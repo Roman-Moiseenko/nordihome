@@ -6,7 +6,6 @@ Route::group(
     [
         'prefix' => 'accounting',
         'as' => 'accounting.',
-        //'namespace' => 'Accounting',
     ],
     function () {
         //ARRIVAL
@@ -51,14 +50,8 @@ Route::group(
                 Route::post('/completed/{movement}', 'MovementController@completed')->name('completed');
                 Route::post('/work/{movement}', 'MovementController@work')->name('work');
 
-               // Route::post('/add/{movement}', 'MovementController@add')->name('add');
-               // Route::post('/add-products/{movement}', 'MovementController@add_products')->name('add-products');
-
-                //Route::post('/activate/{movement}', 'MovementController@activate')->name('activate');
                 Route::post('/departure/{movement}', 'MovementController@departure')->name('departure');
                 Route::post('/arrival/{movement}', 'MovementController@arrival')->name('arrival');
-               // Route::post('/set/{item}', 'MovementController@set')->name('set');
-                //Route::delete('/remove-item/{item}', 'MovementController@remove_item')->name('remove-item');
             });
         //INVENTORY
         Route::group([
@@ -74,12 +67,8 @@ Route::group(
                 Route::post('/set-info/{inventory}', 'InventoryController@set_info')->name('set-info');
                 Route::post('/completed/{inventory}', 'InventoryController@completed')->name('completed');
                 Route::post('/work/{inventory}', 'InventoryController@work')->name('work');
-
-             //   Route::post('/departure/{inventory}', 'InventoryController@departure')->name('departure');
-//                Route::post('/arrival/{inventory}', 'InventoryController@arrival')->name('arrival');
             });
-
-
+        //DEPARTURE
         Route::group([
             'prefix' => 'departure',
             'as' => 'departure.',
@@ -91,8 +80,8 @@ Route::group(
                 Route::post('/set-product/{product}', 'DepartureController@set_product')->name('set-product');
                 Route::delete('/del-product/{product}', 'DepartureController@del_product')->name('del-product');
                 Route::post('/set-info/{departure}', 'DepartureController@set_info')->name('set-info');
-
             });
+        //DISTRIBUTION
         Route::group([
             'prefix' => 'distributor',
             'as' => 'distributor.',
@@ -143,7 +132,7 @@ Route::group(
                 Route::post('/work/{pricing}', 'PricingController@work')->name('work');
                 Route::post('/copy/{pricing}', 'PricingController@copy')->name('copy');
             });
-
+        //ORGANIZATION
         Route::group([
             'prefix' => 'organization',
             'as' => 'organization.',
@@ -194,11 +183,12 @@ Route::group(
                 //На основании:
 
             });
+
         Route::resource('inventory', 'InventoryController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('refund', 'RefundController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
         Route::resource('distributor', 'DistributorController'); //CRUD
-        Route::resource('currency', 'CurrencyController'); //CRUD
+        Route::resource('currency', 'CurrencyController')->except(['create', 'edit']); //CRUD
         Route::resource('arrival', 'ArrivalController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('movement', 'MovementController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('departure', 'DepartureController')->except(['create', 'edit', 'update']); //CRUD

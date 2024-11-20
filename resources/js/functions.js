@@ -100,7 +100,7 @@ const mask_phone = (input) => {
 
 const mask_integer = (input) => {
     input.addEventListener("keydown", function (event) {
-        console.log(event.keyCode)
+
         if (event.keyCode >= 48 && event.keyCode <= 57) return;
         if (event.keyCode >= 96 && event.keyCode <= 105) return;
         if (event.keyCode === 8 || event.keyCode === 46 || event.keyCode === 37 || event.keyCode === 39) return;

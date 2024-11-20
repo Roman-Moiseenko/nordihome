@@ -77,8 +77,6 @@ const props = defineProps({
     count: Array,
 })
 
-console.log(props.count)
-
 interface IRow {
     balance: number,
     quantity: number,

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property boolean $default - по-умолчанию Рубль
  * @property int $extra // + %
  * @property ArrivalDocument[] $arrivals
+ * @property SupplyDocument[] $supplies
  */
 class Currency extends Model
 {
@@ -82,5 +83,10 @@ class Currency extends Model
     public function arrivals(): HasMany
     {
         return $this->hasMany(ArrivalDocument::class, 'currency_id', 'id');
+    }
+
+    public function supplies(): HasMany
+    {
+        return $this->hasMany(SupplyDocument::class, 'currency_id', 'id');
     }
 }

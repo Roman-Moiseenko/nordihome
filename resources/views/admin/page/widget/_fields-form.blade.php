@@ -19,7 +19,7 @@
         request.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 let ids = JSON.parse(request.responseText);
-                console.log(ids);
+
                 //Очистка selectId
                 selectId.options.length = 0; //Очищаем и заполняем SELECT атрибутами
                 selectId.appendChild(new Option('', '0'));

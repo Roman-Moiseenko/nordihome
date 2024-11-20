@@ -24,8 +24,13 @@ class CurrencyService
         return $currency;
     }
 
-    public function update(Request $request, Currency $currency): Currency
+    public function update(Request $request, Currency $currency): void
     {
+
+        if ($request->float('default') && !$currency->default) {
+            Currency::where('default', true)->update(['default' => false]);
+            $currency->default = true;
+        }
         $currency->name = $request->string('name')->trim()->value();
         $currency->sign = $request->string('sign')->trim()->value();
         $currency->exchange = $request->float('exchange');
@@ -33,12 +38,12 @@ class CurrencyService
         $currency->extra = $request->integer('extra');
         $currency->save();
         $this->update_parser_currency($currency);
-        return $currency;
     }
 
     public function destroy(Currency $currency): void
     {
-        if (!empty($currency->arrivals)) throw new \DomainException('Имеются документы, удалить нельзя');
+
+        if ($currency->arrivals()->count() > 0 || $currency->supplies()->count() > 0) throw new \DomainException('Имеются документы, удалить нельзя');
         $currency->delete();
     }
 

@@ -61,7 +61,6 @@ const info = reactive({
 })
 const notEdit = computed(() => props.movement.completed);
 
-console.log(props.movement)
 function onReplace() {
     let buffer = info.storage_out
     info.storage_out = info.storage_in

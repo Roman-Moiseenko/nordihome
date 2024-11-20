@@ -80,6 +80,8 @@ return [
                 'icon' => 'candlestick-chart',
                 'title' => 'Курс валют',
                 'route_name' => 'admin.accounting.currency.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-chart-candlestick',
             ],
             'trader' => [
                 'icon' => 'building-2',

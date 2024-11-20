@@ -136,7 +136,7 @@
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     let data = JSON.parse(request.responseText);
-                    console.log(data);
+
                     if (data !== false) {
                         document.getElementById('input-id').value = data.id;
                         document.getElementById('input-phone').value = data.phone;

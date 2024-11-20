@@ -1,7 +1,5 @@
 (function () {
     "use strict";
-    console.log('Start Widget Component');
-
     let inputNumeric = $('.input-numeric');
 
     inputNumeric.each(function () {

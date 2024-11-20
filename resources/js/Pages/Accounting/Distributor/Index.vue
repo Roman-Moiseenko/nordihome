@@ -95,7 +95,7 @@ const props = defineProps({
     filters: Array,
     currencies: Object,
 })
-console.log(props.distributors)
+
 const store = useStore();
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")

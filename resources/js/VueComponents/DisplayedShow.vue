@@ -38,7 +38,6 @@ function setPhoto(val) {
     if (props === null) return;
     axios.post(urlPhoto, {photo_id: val})
         .then(response => {
-            console.log(response.data);
             if (response.data === false) {
                 selectedPhoto.value = null;
             } else {

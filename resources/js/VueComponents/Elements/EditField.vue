@@ -41,7 +41,7 @@ const props = defineProps({
         type: Boolean,
     },
 })
-console.log(props)
+
 const showEdit = ref(false)
 const field_new = ref(props.field)
 const field_fio = reactive({

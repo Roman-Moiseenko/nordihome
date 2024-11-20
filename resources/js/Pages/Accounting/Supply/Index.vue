@@ -161,8 +161,6 @@ function createButton() {
     router.get(route('admin.accounting.supply.create', {distributor: create_id.value}))
 }
 function stackButton() {
-    console.log('Нажата кнопка стек')
-    console.log('route = ', route('admin.accounting.supply.stack'))
     router.get(route('admin.accounting.supply.stack'))
 }
 function routeClick(row) {

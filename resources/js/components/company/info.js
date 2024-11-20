@@ -16,7 +16,6 @@
         let button = $(this);
         button.on('click', function () {
             let contact = button.data('contact');
-            console.log(contact);
             titleModal.html('Редактировать')
             formModal.attr('action', button.data('route'))
             inputPhone.val(contact.phone);

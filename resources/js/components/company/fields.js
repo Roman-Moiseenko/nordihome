@@ -70,7 +70,6 @@
 
         fetch(bank, options).then(response => response.text()).then(result => {
             let data = JSON.parse(result).suggestions[0].data
-            console.log('ИНН банка', data.inn);
             $('#input-bank_name').val(data.name.payment)
             $('#input-corr_account').val(data.correspondent_account)
 

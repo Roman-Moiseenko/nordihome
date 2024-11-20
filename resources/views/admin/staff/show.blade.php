@@ -94,7 +94,7 @@
             request.onreadystatechange = function () {
                 if (this.readyState === 4 && this.status === 200) {
                     let _data = JSON.parse(request.responseText);
-                    console.log(_data);
+
                 }
             };
         }

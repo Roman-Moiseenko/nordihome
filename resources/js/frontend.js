@@ -845,7 +845,7 @@ window.$ = jQuery;
             let new_value = fullnameInput.val();
             fullnameData.text(new_value);
             $.post(fullnameSave.data('route'), {fullname: new_value}, function (data) {
-                console.log(data);
+
             })
         });
 
@@ -868,7 +868,7 @@ window.$ = jQuery;
             let new_value = phoneInput.val();
             phoneData.text(new_value);
             $.post(phoneSave.data('route'), {phone: new_value}, function (data) {
-                console.log(data);
+
             })
         });
 
@@ -912,10 +912,7 @@ window.$ = jQuery;
             passwordGroup.hide();
             let new_value = passwordInput.val();
             $.post(passwordSave.data('route'), {password: new_value}, function (data) {
-                console.log(data);
                 if (data === true) {
-                    console.log('******');
-
                     $('#new-password').show();
                 }
             })
@@ -925,7 +922,6 @@ window.$ = jQuery;
         let subscriptionCheck = $('.subscription-check');
         subscriptionCheck.on('change', function(element) {
             $.post(element.target.dataset.route, {}, function (data) {
-                console.log(data);
                 _error(data);
             })
         });

@@ -13,7 +13,6 @@
         let settings = {
             onChange:function (value) {
                 //Выбор элемента
-                console.log(value);
             },
             onType:function (str) {
                 //Ввод с клавиатуры

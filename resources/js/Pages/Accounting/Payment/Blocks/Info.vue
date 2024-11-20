@@ -47,7 +47,7 @@ const props = defineProps({
     payment: Object,
     payers: Array,
 })
-console.log(props.payers, props.payment.payer_id)
+
 const iSavingInfo = ref(false)
 const info = reactive({
     document: {

@@ -70,9 +70,8 @@
 
 <script setup>
 import {func} from '@Res/func.js'
-import {computed, reactive, ref} from "vue";
+import {ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
-import AccountingDocument from "@Comp/Pages/AccountingDocument.vue";
 import Active from "@Comp/Elements/Active.vue";
 
 const props = defineProps({
@@ -80,7 +79,6 @@ const props = defineProps({
     organizations: Array,
 
 })
-console.log(props.distributor.contacts)
 
 const showEdit = ref(false)
 const organization = ref(null)
