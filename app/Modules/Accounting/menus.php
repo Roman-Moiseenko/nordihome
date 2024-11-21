@@ -89,7 +89,7 @@ return [
                 'route_name' => 'admin.accounting.trader.index',
                 'can' => '',
                 'vue' => true,
-                'font_awesome' => 'fa-light fa-building-user',
+                'font_awesome' => 'fa-light fa-building',
             ],
             'organization' => [
                 'icon' => 'landmark',
