@@ -44,7 +44,7 @@ class Storage extends Model
         'default',
     ];
 
-    public static function register(string $name, bool $point_of_sale, bool $point_of_delivery, string $slug = ''): self
+    public static function register(string $name, bool $point_of_sale = true, bool $point_of_delivery = true, string $slug = ''): self
     {
         return self::create([
             'name' => $name,
@@ -81,23 +81,31 @@ class Storage extends Model
 
     //*** GET-...
 
-    public function getImage(): string
+    public function getImage()
     {
         if (empty($this->photo->file)) {
-            return '/images/no-image.jpg';
+            return null;
         } else {
             return $this->photo->getUploadUrl();
         }
     }
 
-    #[Pure]
-    public function getQuantity(int $product_id): int
+    /**
+     * Кол-во единиц товара на складе, если не указан id, то всего товара
+     */
+    public function getQuantity(int $product_id = null): int
     {
         //Более быстрый вариант
-        //return StorageItem::where('storage_id', $this->id)->where('product_id', $product->id)->pluck('quantity')->sum();
+        if (is_null($product_id)) {
+            $quantity = StorageItem::selectRaw('SUM(quantity) AS total')->where('storage_id', $this->id)->first();
+            return (int)$quantity->total ?? 0;
+        } else {
+            return StorageItem::where('storage_id', $this->id)->where('product_id', $product_id)->pluck('quantity')->sum();
+        }
+/*
         $storageItem = $this->getItem($product_id);
         if (is_null($storageItem)) return 0;
-        return $storageItem->quantity;
+        return $storageItem->quantity;*/
     }
 
     #[Pure]

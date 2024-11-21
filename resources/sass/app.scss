@@ -90,3 +90,6 @@ a[type="info"] {
 .el-form-item {
     margin-bottom: 10px !important;
 }
+.file-uploader-one > ul > li + div {
+    display: none;
+}

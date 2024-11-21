@@ -30,19 +30,18 @@ class TraderController extends Controller
     public function index(Request $request): Response
     {
         $traders = Trader::orderBy('name')->with('organization')->get();
-
         return Inertia::render('Accounting/Trader/Index', [
             'traders' => $traders,
         ]);
     }
-
+/*
     public function create(Request $request)
     {
 
         $organizations = Organization::orderBy('short_name')->where('active', true)->getModels();
         return view('admin.accounting.trader.create', compact( 'organizations'));
     }
-
+*/
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -67,22 +66,7 @@ class TraderController extends Controller
         ]);
     }
 
-    public function edit(Trader $trader)
-    {
-        $organizations = Organization::orderBy('short_name')->where('active', true)->getModels();
-        return view('admin.accounting.trader.edit', compact('trader', 'organizations'));
-    }
-
-    public function update(Request $request,  Trader $trader)
-    {
-        $request->validate([
-            'name' => 'required',
-        ]);
-        $this->service->update($request, $trader);
-        return redirect()->route('admin.accounting.trader.show', $trader);
-    }
-
-    public function destroy(Trader $trader)
+    public function destroy(Trader $trader): RedirectResponse
     {
         $this->service->destroy($trader);
         return redirect()->back();

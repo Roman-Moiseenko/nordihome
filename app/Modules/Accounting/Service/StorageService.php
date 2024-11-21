@@ -14,36 +14,22 @@ use Illuminate\Support\Str;
 class StorageService
 {
 
-    public function create(Request $request)
+    public function create(Request $request): Storage
     {
-        $storage = Storage::register(
-            //$request->integer('organization_id'),
+        return Storage::register(
             $request->string('name')->trim()->value(),
-            $request->has('sale'),
-            $request->has('delivery')
         );
-        $this->save_fields($request, $storage);
-        return $storage;
     }
 
-    public function update(Request $request, Storage $storage)
+    public function setInfo(Request $request, Storage $storage): void
     {
-       // $storage->organization_id = $request['organization_id'];
+
         $storage->name = $request->string('name')->trim()->value();
         $storage->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
-        $storage->point_of_sale = $request->has('sale');
-        $storage->point_of_delivery = $request->has('delivery');
+        $storage->point_of_sale = $request->boolean('point_of_sale');
+        $storage->point_of_delivery = $request->boolean('point_of_delivery');
         $storage->save();
 
-        $this->save_fields($request, $storage);
-
-        if (empty($request['default']) && $storage->default == true) {
-            flash('Склад по умолчанию должен быть назначен! Выберите нужный склад, и сделайте его по умолчанию.', 'warning');
-        }
-    }
-
-    private function save_fields(Request $request, Storage $storage)
-    {
         if ($request->has('address'))
             $storage->setAddress(
                 $request->string('post')->trim()->value(),
@@ -51,12 +37,13 @@ class StorageService
                 $request->string('address')->trim()->value()
             );
         if ($request->has('latitude') && $request->has('longitude'))
-            $storage->setCoordinate($request['latitude'], $request['longitude']);
-        $this->photo($storage, $request->file('file'));
+            $storage->setCoordinate($request->float('latitude'), $request->float('longitude'));
+        $this->photo($storage, $request->file('file'), $request->boolean('clear_file'));
         if ($request->has('default')) {
             Storage::where('default', true)->update(['default' => false]);
             $storage->setDefault();
         }
+
     }
 
     /**
@@ -91,10 +78,14 @@ class StorageService
 
     }
 
-    public function photo(Storage $storage, $file): void
+    public function photo(Storage $storage, $file, bool $clear_current): void
     {
+        if ($clear_current && (!is_null($storage->photo) || !is_null($storage->photo->file)))
+            $storage->photo->delete();
+
         if (empty($file)) return;
-        if (!empty($brand->photo)) {
+
+        if (!empty($storage->photo)) {
             $storage->photo->newUploadFile($file);
         } else {
             $storage->photo()->save(Photo::upload($file));

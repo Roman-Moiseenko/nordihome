@@ -6,6 +6,8 @@ return [
         'icon' => 'database',
         'title' => 'Товарный учет',
         'can' => 'accounting',
+        'vue' => true,
+        'font_awesome' => 'fa-light fa-abacus',
         'sub_menu' => [
             'supply' => [
                 'icon' => 'folder-pen',
@@ -75,6 +77,8 @@ return [
                 'icon' => 'warehouse',
                 'title' => 'Хранилища',
                 'route_name' => 'admin.accounting.storage.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-warehouse',
             ],
             'currency' => [
                 'icon' => 'candlestick-chart',

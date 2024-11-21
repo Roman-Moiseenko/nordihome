@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $storage_id
  * @property int $product_id
  * @property int $quantity
- *
+ * @property string $cell
  * @property Product $product
  * @property MovementProduct $movementReserve
  * @property OrderReserve[] $orderReserves

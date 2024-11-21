@@ -176,6 +176,14 @@ Route::group(
                 Route::post('/upload', 'BankController@upload')->name('upload');
 
             });
+        //STORAGE
+        Route::group([
+            'prefix' => 'storage',
+            'as' => 'storage.'
+        ],
+            function () {
+                Route::post('/set-info/{storage}', 'StorageController@set_info')->name('set-info');
+            });
         //REFUND
         Route::group([
             'prefix' => 'refund',
@@ -196,8 +204,8 @@ Route::group(
 
         Route::resource('inventory', 'InventoryController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('refund', 'RefundController')->except(['create', 'edit', 'update']); //CRUD
-        Route::resource('storage', 'StorageController')->except(['destroy']); //CRUD
-        Route::resource('distributor', 'DistributorController'); //CRUD
+        Route::resource('storage', 'StorageController')->except(['create', 'edit', 'update', 'destroy']); //CRUD
+        Route::resource('distributor', 'DistributorController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('currency', 'CurrencyController')->except(['create', 'edit']); //CRUD
         Route::resource('arrival', 'ArrivalController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('movement', 'MovementController')->except(['create', 'edit', 'update']); //CRUD
@@ -205,7 +213,7 @@ Route::group(
         Route::resource('supply', 'SupplyController')->except(['edit', 'update']); //CRUD
         Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
         Route::resource('organization', 'OrganizationController')->except(['create', 'edit', 'update']); //CRUD
-        Route::resource('trader', 'TraderController'); //CRUD
+        Route::resource('trader', 'TraderController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('payment', 'PaymentController')->except(['create', 'store']); //CRUD
     }
 );
