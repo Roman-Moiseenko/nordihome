@@ -20,6 +20,7 @@
         <SearchAddProduct
             :route="route('admin.accounting.supply.add-product', {supply: supply.id})"
             :quantity="true"
+            :create="true"
         />
         <SearchAddProducts :route="route('admin.accounting.supply.add-products', {supply: supply.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.supply.completed', {supply: props.supply.id})" />

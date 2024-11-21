@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Service\CategoryService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -84,6 +85,26 @@ class CategoryController extends Controller
     {
         $this->service->delete($category);
         return redirect()->back();
+    }
+
+
+    public function list(): JsonResponse
+    {
+        $categories = array_map(function (Category $category){
+
+            $depth = str_repeat('-', $category->depth);
+            return [
+                'id' => $category->id,
+                'name' => $depth . $category->name,
+            ];
+        }, $this->repository->withDepth());
+      /*  $list = Brand::orderBy('name')->get()->map(function (Brand $brand) {
+            return [
+                'id' => $brand->id,
+                'name' => $brand->name,
+            ];
+        });*/
+        return response()->json($categories);
     }
 
 }

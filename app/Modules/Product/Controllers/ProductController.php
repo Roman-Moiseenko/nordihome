@@ -72,14 +72,16 @@ class ProductController extends Controller
     public function fast_create(Request $request): \Illuminate\Http\JsonResponse
     {
         $product = $this->service->create($request);
-        $product->pricesRetail()->create([
-            'value' => $request->integer('price'),
-            'founded' => 'Создано из заказа',
-        ]);
-        $product->pricesPre()->create([
-            'value' => $request->integer('price'),
-            'founded' => 'Создано из заказа',
-        ]);
+        if ($request->integer('price') > 0) {
+            $product->pricesRetail()->create([
+                'value' => $request->integer('price'),
+                'founded' => 'Создано из заказа',
+            ]);
+            $product->pricesPre()->create([
+                'value' => $request->integer('price'),
+                'founded' => 'Создано из заказа',
+            ]);
+        }
         return response()->json($product->id);
     }
 

@@ -28,12 +28,26 @@ Route::group(
             Route::post('/group-up/{group}', 'AttributeController@group_up')->name('group-up');
             Route::post('/group-down/{group}', 'AttributeController@group_down')->name('group-down');
         });
+        //BRAND
+        Route::group([
+            'prefix' => 'brand',
+            'as' => 'brand.',
+        ], function () {
+            Route::post('/list', 'BrandController@list')->name('list');
+
+        });
+        //CATEGORY
+        Route::group([
+            'prefix' => 'category',
+            'as' => 'category.',
+        ], function () {
+            Route::post('/{category}/up', 'CategoryController@up')->name('up');
+            Route::post('/{category}/down', 'CategoryController@down')->name('down');
+            Route::get('/{category}/child', 'CategoryController@child')->name('child');
+            Route::post('/list', 'CategoryController@list')->name('list');
+        });
 
 
-        Route::post('/category/{category}/up', 'CategoryController@up')->name('category.up');
-        Route::post('/category/{category}/down', 'CategoryController@down')->name('category.down');
-        Route::get('/category/{category}/child', 'CategoryController@child')->name('category.child');
-        //Route::post('/category/json_attributes', 'CategoryController@json_attributes')->name('attribute.json-attributes');
 
         Route::get('/tags', 'TagController@index')->name('tag.index');
         Route::post('/tag/create', 'TagController@create')->name('tag.create');

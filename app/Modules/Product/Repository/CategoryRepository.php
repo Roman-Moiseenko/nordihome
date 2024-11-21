@@ -96,7 +96,7 @@ class CategoryRepository
      */
     public function withDepth()
     {
-        return Category::defaultOrder()->withDepth()->get();
+        return Category::defaultOrder()->withDepth()->getModels();
     }
 
     public function search(string $search, int $take = 10)

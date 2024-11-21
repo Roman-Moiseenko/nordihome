@@ -9,6 +9,7 @@ use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Repository\BrandRepository;
 use App\Modules\Product\Service\BrandService;
 use App\UseCase\PaginationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 
@@ -66,5 +67,16 @@ class BrandController extends Controller
     {
         $this->service->delete($brand);
         return redirect()->route('admin.product.brand.index');
+    }
+
+    public function list(): JsonResponse
+    {
+        $list = Brand::orderBy('name')->get()->map(function (Brand $brand) {
+            return [
+                'id' => $brand->id,
+                'name' => $brand->name,
+            ];
+        });
+        return response()->json($list);
     }
 }
