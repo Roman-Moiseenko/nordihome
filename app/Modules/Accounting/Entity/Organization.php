@@ -145,9 +145,15 @@ class Organization extends Model
     }
 
 
-    public function shopper(): HasOne
+    public function shopper(): HasOneThrough
     {
-        return $this->hasOne(User::class, 'organization_id', 'id');
+        return $this->hasOneThrough(
+            User::class,
+            ShopperOrganization::class,
+            'organization_id', 'id', 'id',
+            'user_id');
+
+        //return $this->hasOne(User::class, 'organization_id', 'id');
     }
 
     public function types(): string

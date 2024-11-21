@@ -4,6 +4,7 @@ namespace App\Modules\User\Entity;
 
 
 use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Entity\ShopperOrganization;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FullName;
@@ -14,6 +15,8 @@ use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Product\Entity\Review;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -42,6 +45,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Review[] $reviews
  * @property Order[] $orders
  * @property Organization $organization
+ * @property Organization[] $organizations
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -305,9 +309,20 @@ class User extends Authenticatable
         return null;
     }
 
-    public function organization(): BelongsTo
+    public function organization(): HasOneThrough
     {
-        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+        return $this->hasOneThrough(Organization::class, ShopperOrganization::class,
+            'user_id', 'id',
+            'id', 'organization_id')
+            ->where('shopper_organizations.default', true);
+
+       // return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
+    public function organizations(): BelongsToMany
+    {
+        return $this->
+        belongsToMany(Organization::class, 'shopper_organizations', 'user_id', 'organization_id', 'id', 'id')
+            ->withPivot(['default']);
+    }
 }

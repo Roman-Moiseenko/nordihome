@@ -30,6 +30,7 @@ class Organization extends Component
     private function refresh_fields(): void
     {
         $user = $this->user;
+        /*
         if (!is_null($user->organization_id)) {
             $this->organization_id = $user->organization_id;
             $this->name = $user->organization->short_name;
@@ -38,6 +39,7 @@ class Organization extends Component
             $this->pay_account = $user->organization->pay_account;
             $this->route = route('admin.accounting.organization.show', $user->organization);
         }
+        */
     }
 
     public function open_change(): void

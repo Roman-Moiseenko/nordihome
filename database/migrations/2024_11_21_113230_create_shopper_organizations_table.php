@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('trader_organizations', function (Blueprint $table) {
+        Schema::create('shopper_organizations', function (Blueprint $table) {
             $table->boolean('default')->default(false);
-            $table->foreignId('trader_id')->constrained('traders')->onDelete('restrict');
+            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');;
             $table->foreignId('organization_id')->constrained('organizations')->onDelete('restrict');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('trader_organizations');
+        Schema::dropIfExists('shopper_organizations');
     }
 };
