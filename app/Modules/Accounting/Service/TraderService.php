@@ -26,7 +26,6 @@ class TraderService
 
     public function create(Request $request): Trader
     {
-
         DB::transaction(function () use ($request, &$trader) {
             $trader = Trader::register(
                 $request->string('name')->trim()->value()
@@ -81,7 +80,29 @@ class TraderService
 
     public function destroy(Trader $trader)
     {
-        //if ($trader->----ПРОДАЖИ > 0) throw new \DomainException('Имеются документы, удалить нельзя');
-        $trader->delete();
+        throw new \DomainException('Удалять программно нельзя!');
+       // $trader->delete();
+    }
+
+    public function attach(Trader $trader, int $organization_id): void
+    {
+        foreach ($trader->organizations as $organization) {
+            if ($organization->id == $organization_id) throw new \DomainException('Организация уже назначена!');
+        }
+        $default = is_null($trader->organization);
+        $trader->organizations()->attach($organization_id, ['default' => $default]);
+    }
+
+    public function detach(Trader $trader, int $organization_id): void
+    {
+        $trader->organizations()->detach($organization_id);
+    }
+
+    public function default(Trader $trader, int $organization_id): void
+    {
+        foreach ($trader->organizations as $organization) {
+            $trader->organizations()->updateExistingPivot($organization->id, ['default' => false]);
+        }
+        $trader->organizations()->updateExistingPivot($organization_id, ['default' => true]);
     }
 }

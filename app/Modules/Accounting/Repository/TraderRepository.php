@@ -21,4 +21,18 @@ class TraderRepository
             ];
         });
     }
+
+    public function TraderToArray(Trader $trader): array
+    {
+        return array_merge($trader->toArray(), [
+            'organization' => is_null($trader->organization) ? null : $trader->organization()->get()->toArray(),
+        ]);
+    }
+
+    public function TraderWithToArray(Trader $trader): array
+    {
+        return array_merge($this->TraderToArray($trader), [
+            'organizations' => $trader->organizations,
+        ]);
+    }
 }

@@ -123,9 +123,15 @@ class Organization extends Model
         return$this->belongsTo(OrganizationHolding::class, 'holding_id', 'id');
     }
 
-    public function trader(): HasOne
+    public function trader(): HasOneThrough
     {
-        return $this->hasOne(Trader::class, 'organization_id', 'id');
+        return $this->hasOneThrough(
+            Trader::class,
+            TraderOrganization::class,
+            'organization_id', 'id', 'id',
+            'trader_id');
+
+        //return $this->hasOne(Trader::class, 'organization_id', 'id');
     }
 
     public function distributor(): HasOneThrough
@@ -135,9 +141,7 @@ class Organization extends Model
             DistributorOrganization::class,
             'organization_id', 'id', 'id',
             'distributor_id');
-
         //return $this->hasOne(Distributor::class, 'organization_id', 'id');
-
     }
 
 

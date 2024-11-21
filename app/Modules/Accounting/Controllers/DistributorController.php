@@ -62,7 +62,6 @@ class DistributorController extends Controller
     public function show(Distributor $distributor, Request $request): \Inertia\Response
     {
         $query = DistributorProduct::where('distributor_id', $distributor->id);
-       // $d_products = DistributorProduct::where('distributor_id', $distributor->id)->getModels();
 
         $min_ids = [];
         $empty_ids = [];

@@ -7,6 +7,7 @@ namespace App\Modules\Accounting\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Repository\TraderRepository;
 use App\Modules\Accounting\Service\TraderService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,11 +18,13 @@ use Inertia\Response;
 class TraderController extends Controller
 {
     private TraderService $service;
+    private TraderRepository $repository;
 
-    public function __construct(TraderService $service)
+    public function __construct(TraderService $service, TraderRepository $repository)
     {
         $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
+        $this->repository = $repository;
     }
 
     public function index(Request $request): Response
@@ -57,8 +60,10 @@ class TraderController extends Controller
     public function show(Trader $trader, Request $request): Response
     {
         //return view('admin.accounting.trader.show', compact('trader'));
+        $organizations = Organization::orderBy('short_name')->active()->getModels();
         return Inertia::render('Accounting/Trader/Show', [
-            'trader' => $trader,
+            'trader' => $this->repository->TraderWithToArray($trader),
+            'organizations' => $organizations,
         ]);
     }
 
@@ -81,5 +86,35 @@ class TraderController extends Controller
     {
         $this->service->destroy($trader);
         return redirect()->back();
+    }
+
+    public function attach(Request $request, Trader $trader): RedirectResponse
+    {
+        try {
+            $this->service->attach($trader, $request->integer('organization'));
+            return redirect()->back()->with('success', 'Организация добавлена к продавцу');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function detach(Request $request, Trader $trader): RedirectResponse
+    {
+        try {
+            $this->service->detach($trader, $request->integer('organization'));
+            return redirect()->back()->with('success', 'Организация отсоединена от продавца');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function default(Request $request, Trader $trader): RedirectResponse
+    {
+        try {
+            $this->service->default($trader, $request->integer('organization'));
+            return redirect()->back()->with('success', 'Организация выбрана по умолчанию');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
