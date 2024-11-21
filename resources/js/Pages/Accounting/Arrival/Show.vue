@@ -30,6 +30,11 @@
                     </el-input>
                 </template>
             </el-table-column>
+            <el-table-column prop="product.pre_cost" label="Предыдущая" width="120" align="center">
+                <template #default="scope">
+                        {{ func.price(scope.row.pre_cost, arrival.currency) }}
+                </template>
+            </el-table-column>
             <el-table-column prop="quantity" label="Кол-во" width="180">
                 <template #default="scope">
                     <el-input v-model="scope.row.quantity"

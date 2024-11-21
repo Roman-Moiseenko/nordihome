@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
+use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Distributor;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -46,7 +47,13 @@ class ArrivalRepository extends AccountingRepository
     public function ArrivalWithToArray(ArrivalDocument $document, Request $request): array
     {
         $withData = [
-            'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
+            'products' => $document->products()
+                ->with('product')
+                ->paginate($request->input('size', 20))
+                ->withQueryString()
+                ->through(fn(ArrivalProduct $arrivalProduct) => array_merge($arrivalProduct->toArray(), [
+                    'pre_cost' => $document->distributor->getProduct($arrivalProduct->product_id)->pivot->pre_cost,
+                ])),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'expense' => is_null($document->expense) ? null : array_merge($document->expense()->first()->toArray(),[
                 'amount' => $document->expense->getAmount(),
