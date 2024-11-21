@@ -103,7 +103,7 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Заказ поставщику" />
+    <DeleteEntityModal name_entity="Инвентаризацию" />
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps} from "vue";
@@ -150,13 +150,13 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.inventory.destroy', {inventories: row.id}));
+    $delete_entity.show(route('admin.accounting.inventory.destroy', {inventory: row.id}));
 }
 function createButton() {
     router.post(route('admin.accounting.inventory.store', {storage_id: create_id.value}))
 }
 function routeClick(row) {
-    router.get(route('admin.accounting.inventory.show', {inventories: row.id}))
+    router.get(route('admin.accounting.inventory.show', {inventory: row.id}))
 }
 </script>
 

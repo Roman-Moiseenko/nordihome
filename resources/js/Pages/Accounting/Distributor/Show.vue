@@ -17,6 +17,7 @@
                   header-cell-class-name="nordihome-header"
                   :row-class-name="tableRowClassName"
                   style="width: 100%;">
+            <el-table-column type="index" :index="throughIndex" width="40" />
             <el-table-column prop="code" label="Артикул" width="160" />
             <el-table-column prop="name" label="Товар" show-overflow-toolti>
                 <template #default="scope">
@@ -93,5 +94,7 @@ function classCostColor(row) {
     if (row.cost < row.pre_cost) return 'text-green-600'
     return ''
 }
-
+function throughIndex(index) {
+    return index + (props.products.current_page - 1) * props.products.per_page + 1
+}
 </script>

@@ -142,7 +142,13 @@ abstract class AccountingDocument extends Model
 
     protected function generateNumber(): void
     {
-        $this->number = $this->prefix . (self::count() + 1);
+        $year = now()->year;
+        $begin = Carbon::parse('01/01/' . $year);
+        $end = Carbon::parse('01/01/' . ($year + 1));
+        //Нумерация только по текущему году
+        $count = self::where('created_at', '>=', $begin)->where('created_at', '<', $end)->count();
+
+        $this->number = $this->prefix . ($count + 1);
     }
 
     final public function scopeCompleted($query)

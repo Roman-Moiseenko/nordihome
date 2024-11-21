@@ -52,7 +52,8 @@ class ArrivalRepository extends AccountingRepository
                 ->paginate($request->input('size', 20))
                 ->withQueryString()
                 ->through(fn(ArrivalProduct $arrivalProduct) => array_merge($arrivalProduct->toArray(), [
-                    'pre_cost' => $document->distributor->getProduct($arrivalProduct->product_id)->pivot->pre_cost,
+
+                    'pre_cost' => is_null($document->distributor) ? null : $document->distributor->getProduct($arrivalProduct->product_id)->pivot->pre_cost,
                 ])),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'expense' => is_null($document->expense) ? null : array_merge($document->expense()->first()->toArray(),[

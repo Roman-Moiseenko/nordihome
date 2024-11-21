@@ -27,11 +27,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('arrival_documents', function (Blueprint $table) {
-            $table->dropForeign(['distributor_id']);
+          $table->dropForeign(['distributor_id']);
         });
 
         Schema::table('arrival_documents', function (Blueprint $table) {
-            $table->unsignedBigInteger('distributor_id')->nullable(false)->change();
+           // $table->unsignedBigInteger('distributor_id')->nullable(false)->change();
             $table->foreign('distributor_id')->references('id')->on('distributors')->onDelete('restrict');
         });
     }

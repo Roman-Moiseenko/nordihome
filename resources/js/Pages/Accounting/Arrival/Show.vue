@@ -106,7 +106,7 @@ const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.arrival.completed);
 const $delete_entity = inject("$delete_entity")
 
-function setItem(row) {
+function setItem(row: any) {
     iSaving.value = true;
     router.visit(route('admin.accounting.arrival.set-product', {product: row.id}), {
         method: "post",

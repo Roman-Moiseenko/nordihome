@@ -36,7 +36,14 @@
             </el-table-column>
             <el-table-column prop="cost" label="Цена" width="180">
                 <template #default="scope">
-                    {{ func.price(scope.row.cost) }}
+                <el-input v-model="scope.row.cost"
+                          :formatter="(value) => func.MaskInteger(value)"
+                          @change="setItem(scope.row)"
+                          :disabled="iSaving"
+                          :readonly="!isEdit"
+                >
+                    <template #append>₽</template>
+                </el-input>
                 </template>
             </el-table-column>
             <el-table-column prop="cost" label="Сумма" width="180">
@@ -87,6 +94,7 @@ function setItem(row) {
         method: "post",
         data: {
             quantity: row.quantity,
+            cost: row.cost,
         },
         preserveScroll: true,
         preserveState: false,

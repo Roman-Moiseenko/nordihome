@@ -34,13 +34,13 @@ class InventoryService
     public function completed(InventoryDocument $inventory): void
     {
         DB::transaction(function () use($inventory) {
-            if (!is_null($inventory->surpluses)) { //Излишки
+            if ($inventory->surpluses()->count() > 0) { //Излишки
                 $arrival = $this->arrivalService->create_storage($inventory->storage_id);
                 foreach ($inventory->surpluses as $product) {
                     $item = ArrivalProduct::new(
                         $product->id,
                         $product->quantity - $product->formal,
-                        $product->product->getPriceRetail(),
+                        $product->cost,
                     );
                     $arrival->products()->save($item);
                 }
@@ -48,13 +48,13 @@ class InventoryService
                 $inventory->arrival_id = $arrival->id;
             }
 
-            if (!is_null($inventory->shortages)) { //Недостача
+            if ($inventory->shortages()->count() > 0) { //Недостача
                 $departure = $this->departureService->create($inventory->storage_id);
                 foreach ($inventory->shortages as $product) {
                     $item = DepartureProduct::new(
                         $product->id,
                         $product->formal - $product->quantity,
-                        $product->product->getPriceRetail(),
+                        $product->cost,
                     );
                     $departure->products()->save($item);
                 }
@@ -115,9 +115,13 @@ class InventoryService
         if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    public function setProduct(InventoryProduct $product, int $quantity): void
+    public function setProduct(InventoryProduct $product, int $quantity, int $cost): void
     {
         $product->setQuantity($quantity);
+        if ($product->cost != $cost) {
+            $product->cost = $cost;
+            $product->save();
+        }
     }
 
 

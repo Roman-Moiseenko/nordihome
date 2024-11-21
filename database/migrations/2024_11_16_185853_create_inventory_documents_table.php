@@ -12,8 +12,8 @@ return new class extends Migration {
             $table->id();
             AccountingDocument::columns($table);
             $table->foreignId('storage_id')->constrained('storages')->onDelete('restrict');
-            $table->foreignId('arrival_id')->nullable()->constrained('arrival_documents')->onDelete('restrict');
-            $table->foreignId('departure_id')->nullable()->constrained('departure_documents')->onDelete('restrict');
+            $table->foreignId('arrival_id')->nullable()->constrained('arrival_documents')->onDelete('set null');
+            $table->foreignId('departure_id')->nullable()->constrained('departure_documents')->onDelete('set null');
         });
     }
 
