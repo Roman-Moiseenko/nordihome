@@ -93,6 +93,16 @@ Route::group(
                 Route::post('/default/{distributor}', 'DistributorController@default')->name('default');
 
             });
+        //TRADER
+        Route::group([
+            'prefix' => 'trader',
+            'as' => 'trader.',
+        ],
+            function () {
+                Route::post('/attach/{trader}', 'TraderController@attach')->name('attach');
+                Route::post('/detach/{trader}', 'TraderController@detach')->name('detach');
+                Route::post('/default/{trader}', 'TraderController@default')->name('default');
+            });
         //SUPPLY
         Route::group([
             'prefix' => 'supply',

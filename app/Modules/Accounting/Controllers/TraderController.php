@@ -8,7 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\TraderService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 
 class TraderController extends Controller
@@ -21,11 +24,13 @@ class TraderController extends Controller
         $this->service = $service;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $query = Trader::orderBy('name');
-        $traders = $this->pagination($query, $request, $pagination);
-        return view('admin.accounting.trader.index', compact('traders', 'pagination'));
+        $traders = Trader::orderBy('name')->with('organization')->get();
+
+        return Inertia::render('Accounting/Trader/Index', [
+            'traders' => $traders,
+        ]);
     }
 
     public function create(Request $request)
@@ -35,21 +40,26 @@ class TraderController extends Controller
         return view('admin.accounting.trader.create', compact( 'organizations'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string',
-            'organization_id' => 'required_without:inn',
-            'inn' => 'required_without:organization_id',
+            'inn' => 'required|string|min:10|max:12',
         ]);
-        $trader = $this->service->create($request);
-        return redirect()->route('admin.accounting.trader.show', $trader);
-
+        try {
+            $trader = $this->service->create($request);
+            return redirect()->route('admin.accounting.trader.show', $trader)->with('success', 'Продавец добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function show(Trader $trader, Request $request)
+    public function show(Trader $trader, Request $request): Response
     {
-        return view('admin.accounting.trader.show', compact('trader'));
+        //return view('admin.accounting.trader.show', compact('trader'));
+        return Inertia::render('Accounting/Trader/Show', [
+            'trader' => $trader,
+        ]);
     }
 
     public function edit(Trader $trader)

@@ -12,6 +12,7 @@ use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Product\Entity\Product;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TraderService
 {
@@ -25,23 +26,33 @@ class TraderService
 
     public function create(Request $request): Trader
     {
-        $trader = Trader::register(
-            $request->string('name')->trim()->value()
-            );
 
-        if (($organization_id = $request->integer('organization_id')) > 0) {
-            $trader->organization_id = $organization_id;
-        } else {
-            if (empty($request->input('inn'))) throw new \DomainException('Не выбрана организация, необходимо привязать компанию к поставщику');
+        DB::transaction(function () use ($request, &$trader) {
+            $trader = Trader::register(
+                $request->string('name')->trim()->value()
+                );
+
             $organization = $this->service->create_find(
-                $request->string('inn')->value(),
-                $request->string('bik')->value(),
-                $request->string('account')->value()
+                $request->string('inn')->trim()->value(),
+                $request->string('bik')->trim()->value(),
+                $request->string('account')->trim()->value()
             );
             $trader->organization_id = $organization->id;
-        }
-        $trader->save();
-        $this->save_fields($request, $trader);
+            /*
+            if (($organization_id = $request->integer('organization_id')) > 0) {
+                $trader->organization_id = $organization_id;
+            } else {
+                if (empty($request->input('inn'))) throw new \DomainException('Не выбрана организация, необходимо привязать компанию к поставщику');
+                $organization = $this->service->create_find(
+                    $request->string('inn')->value(),
+                    $request->string('bik')->value(),
+                    $request->string('account')->value()
+                );
+                $trader->organization_id = $organization->id;
+            }*/
+            $trader->save();
+            //$this->save_fields($request, $trader);
+        });
         return $trader;
     }
 

@@ -88,6 +88,8 @@ return [
                 'title' => 'Продавцы',
                 'route_name' => 'admin.accounting.trader.index',
                 'can' => '',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-building-user',
             ],
             'organization' => [
                 'icon' => 'landmark',

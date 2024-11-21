@@ -5,7 +5,7 @@
     <x-company.info
         :title="$trader->name"
         :company="$trader->organization"
-        route="{{ route('admin.accounting.organization.edit', $trader->organization) }}"
+        route="{{ route('admin.accounting.organization.show', $trader->organization) }}"
     />
 
 
