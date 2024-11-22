@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 
 class TraderService
 {
-
     private OrganizationService $service;
 
     public function __construct(OrganizationService $service)
@@ -36,46 +35,9 @@ class TraderService
                 $request->string('bik')->trim()->value(),
                 $request->string('account')->trim()->value()
             );
-            $trader->organization_id = $organization->id;
-            /*
-            if (($organization_id = $request->integer('organization_id')) > 0) {
-                $trader->organization_id = $organization_id;
-            } else {
-                if (empty($request->input('inn'))) throw new \DomainException('Не выбрана организация, необходимо привязать компанию к поставщику');
-                $organization = $this->service->create_find(
-                    $request->string('inn')->value(),
-                    $request->string('bik')->value(),
-                    $request->string('account')->value()
-                );
-                $trader->organization_id = $organization->id;
-            }*/
-            $trader->save();
-            //$this->save_fields($request, $trader);
+            $this->attach($trader, $organization->id);
         });
         return $trader;
-    }
-
-    public function update(Request $request, Trader $trader): Trader
-    {
-        $trader->name = $request->string('name')->trim()->value();
-        $trader->organization_id = $request->integer('organization_id');
-        $trader->save();
-
-        $this->save_fields($request, $trader);
-        return $trader;
-    }
-
-    public function save_fields(Request $request, Trader $trader)
-    {
-        if (isset($request['default'])) {
-            foreach (Trader::get() as $item) {
-                $item->default = false;
-                $item->save();
-            }
-            $trader->default = true;
-        }
-        $trader->active = $request->boolean('active');
-        $trader->save();
     }
 
     public function destroy(Trader $trader)
@@ -104,5 +66,16 @@ class TraderService
             $trader->organizations()->updateExistingPivot($organization->id, ['default' => false]);
         }
         $trader->organizations()->updateExistingPivot($organization_id, ['default' => true]);
+    }
+
+    public function setInfo(Trader $trader, Request $request): void
+    {
+        $trader->name = $request->string('name')->value();
+        if (!$trader->default && $request->boolean('default')) {
+            Trader::where('default', true)->update(['default' => true]);
+            $trader->default = true;
+        }
+        $trader->save();
+        if ($trader->default && !$request->boolean('default')) throw new \DomainException('Нельзя отменить по-умолчанию');
     }
 }

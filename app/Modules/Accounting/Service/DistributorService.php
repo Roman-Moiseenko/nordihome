@@ -49,24 +49,6 @@ class DistributorService
         });
 
         return $distributor;
-
-        /*
-        if (($organization_id = $request->integer('organization_id')) > 0) {
-            $distributor->organization_id = $organization_id;
-        } else {
-            if (empty($request->input('inn'))) throw new \DomainException('Не выбрана организация, необходимо привязать компанию к поставщику');
-
-            $organization = $this->service->create_find(
-                $request->string('inn')->value(),
-                $request->string('bik')->value(),
-                $request->string('account')->value()
-            );
-            $distributor->organization_id = $organization->id;
-        }
-        $distributor->foreign = $request->boolean('foreign');
-        $distributor->save();
-        return $distributor;
-        */
     }
 
     public function update(Request $request, Distributor $distributor): Distributor
@@ -124,13 +106,11 @@ class DistributorService
         $distributor->organizations()->updateExistingPivot($organization_id, ['default' => true]);
     }
 
-
-    private function save_fields(Request $request, Distributor $distributor): void
+    public function setInfo(Distributor $distributor, Request $request): void
     {
-        $distributor->saveCompany($request);
+        $distributor->name = $request->string('name')->trim();
         $distributor->save();
     }
-
 
     public function destroy(Distributor $distributor): void
     {

@@ -101,4 +101,14 @@ class TraderController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function set_info(Request $request, Trader $trader): RedirectResponse
+    {
+        try {
+            $this->service->setInfo($trader, $request);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }

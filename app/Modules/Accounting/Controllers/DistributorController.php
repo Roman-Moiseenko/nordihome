@@ -153,4 +153,13 @@ class DistributorController extends Controller
         }
     }
 
+    public function set_info(Request $request, Distributor $distributor): RedirectResponse
+    {
+        try {
+            $this->service->setInfo($distributor, $request);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }

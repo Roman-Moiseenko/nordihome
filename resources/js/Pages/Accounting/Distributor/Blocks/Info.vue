@@ -3,7 +3,9 @@
         <el-col :span="8">
             <el-descriptions :column="2" border class="mb-5">
                 <el-descriptions-item label="Поставщик">
-                    {{ distributor.name }}
+                    <EditField :field="distributor.name" @update:field="setInfo"/>
+
+
                 </el-descriptions-item>
                 <el-descriptions-item label="Текущий долг">
                     <el-tag :type="distributor.debit > 0 ? 'danger' : 'success'" size="large">
@@ -36,9 +38,11 @@
                 </template>
                 <template v-else>
                     {{ item.short_name }}
-                    <el-button type="success" size="small" @click="defaultOrganization(item.id)" style="margin-left: 4px">
-                        <i class="fa-light fa-check"></i>
-                    </el-button>
+                    <el-tooltip effect="dark" content="Назначить по-умолчанию" placement="top-start">
+                        <el-button type="success" size="small" @click="defaultOrganization(item.id)" style="margin-left: 4px">
+                            <i class="fa-light fa-check"></i>
+                        </el-button>
+                    </el-tooltip>
                     <el-button type="danger" size="small" @click="detachOrganization(item.id)" style="margin-left: 4px">
                         <i class="fa-light fa-trash"></i>
                     </el-button>
@@ -70,17 +74,18 @@
 
 <script setup>
 import {func} from '@Res/func.js'
-import {ref} from "vue";
+import {ref, reactive} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
+import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
     distributor: Object,
     organizations: Array,
-
 })
 
 const showEdit = ref(false)
+const editDistr = ref(false)
 const organization = ref(null)
 
 function onSupply(balance) {
@@ -101,30 +106,21 @@ function defaultOrganization(id) {
 }
 /*
 const info = reactive({
-    document: {
-        number: props.arrival.number,
-        created_at: props.arrival.created_at,
-        incoming_number: props.arrival.incoming_number,
-        incoming_at: props.arrival.incoming_at,
-        comment: props.arrival.comment,
-    },
-    storage_id: props.arrival.storage_id,
-    exchange_fix: props.arrival.exchange_fix,
-    operation: props.arrival.operation,
-    gtd: props.arrival.gtd,
-})
-const notEdit = computed(() => props.arrival.completed);
-*/
-function setInfo() {
-   /* iSavingInfo.value = true
-    router.visit(route('admin.accounting.arrival.set-info', {arrival: props.arrival.id}), {
+    name: props.distributor.name,
+    currency_id: props.distributor.currency_id,
+})*/
+
+function setInfo(val) {
+    router.visit(route('admin.accounting.distributor.set-info', {distributor: props.distributor.id}), {
         method: "post",
-        data: info,
+        data: {
+            name: val,
+        },
         preserveScroll: true,
         preserveState: false,
         onSuccess: page => {
-            iSavingInfo.value = false;
+            editDistr.value = false;
         }
-    })*/
+    })
 }
 </script>

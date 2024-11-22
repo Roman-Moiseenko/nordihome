@@ -91,7 +91,7 @@ Route::group(
                 Route::post('/attach/{distributor}', 'DistributorController@attach')->name('attach');
                 Route::post('/detach/{distributor}', 'DistributorController@detach')->name('detach');
                 Route::post('/default/{distributor}', 'DistributorController@default')->name('default');
-
+                Route::post('/set-info/{distributor}', 'DistributorController@set_info')->name('set-info');
             });
         //TRADER
         Route::group([
@@ -102,6 +102,7 @@ Route::group(
                 Route::post('/attach/{trader}', 'TraderController@attach')->name('attach');
                 Route::post('/detach/{trader}', 'TraderController@detach')->name('detach');
                 Route::post('/default/{trader}', 'TraderController@default')->name('default');
+                Route::post('/set-info/{trader}', 'TraderController@set_info')->name('set-info');
             });
         //SUPPLY
         Route::group([
