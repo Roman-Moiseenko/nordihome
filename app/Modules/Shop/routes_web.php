@@ -12,6 +12,9 @@ Route::group(
     ],
     function () {
 
+        Route::get('/test', function () {
+            return phpinfo();
+        });
         Route::get('/', 'HomeController@index')->name('home');
         Route::post('/', function () {
             return abort(404);

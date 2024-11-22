@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('movement_documents', function (Blueprint $table) {
             $table->string('incoming_number')->default('');
             $table->timestamp('incoming_at')->nullable();
-            $table->string('number')->default('')->change();
+            $table->string('number')->nullable()->default('')->change();
             $table->boolean('completed')->default(false);
             $table->foreignId('arrival_id')->nullable()->constrained('arrival_documents')->onDelete('restrict');
         });
@@ -28,7 +28,7 @@ return new class extends Migration
         Schema::table('movement_documents', function (Blueprint $table) {
             $table->dropColumn('incoming_number');
             $table->dropColumn('incoming_at');
-            $table->integer('number')->default(0)->change();
+            $table->integer('number')->change();
             $table->dropColumn('completed');
             $table->dropForeign(['arrival_id']);
         });
