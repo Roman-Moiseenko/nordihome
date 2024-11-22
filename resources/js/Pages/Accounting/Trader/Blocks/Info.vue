@@ -2,7 +2,7 @@
     <el-row :gutter="10">
         <el-col :span="8">
             <el-descriptions :column="2" border class="mb-5">
-                <el-descriptions-item label="Поставщик">
+                <el-descriptions-item label="Продавец">
                     {{ trader.name }}
                 </el-descriptions-item>
                 <el-descriptions-item label="По умолчанию">
