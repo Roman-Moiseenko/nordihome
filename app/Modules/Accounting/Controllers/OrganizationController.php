@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\OrganizationContact;
 use App\Modules\Accounting\Entity\OrganizationHolding;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Service\OrganizationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -104,5 +105,27 @@ class OrganizationController extends Controller
         }
     }
 
+    public function search_add(Request $request): JsonResponse
+    {
+        $result = $this->repository->search($request->string('search')->trim()->value());
+        return response()->json($result);
+    }
+
+    public function find(Request $request)
+    {
+        try {
+            $organization = $this->service->create_find(
+                $request->string('inn')->value(),
+                $request->string('bik')->value(),
+                $request->string('account')->value(),
+            );
+            return response()->json($organization->id);
+        } catch (\DomainException $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+
+    }
 
 }

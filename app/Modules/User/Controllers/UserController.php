@@ -54,10 +54,10 @@ class UserController extends Controller
     public function show(Request $request, User $user): Response
     {
         $type_pricing = array_select(User::TYPE_PRICING);
-        $organizations = Organization::orderBy('short_name')->active()->getModels();
+       // $organizations = Organization::orderBy('short_name')->active()->getModels();
         return Inertia::render('User/User/Show', [
             'user' => $this->repository->UserWithToArray($user, $request),
-            'organizations' => $organizations,
+            //'organizations' => $organizations,
             'deliveries' => array_select(OrderExpense::DELIVERIES),
             'type_pricing' => $type_pricing,
         ]);

@@ -153,6 +153,8 @@ Route::group(
                 Route::post('/set-contact/{organization}', 'OrganizationController@set_contact')->name('set-contact');
                 Route::post('/update/{organization}', 'OrganizationController@update')->name('update');
                 Route::post('/set-info/{organization}', 'OrganizationController@set_info')->name('set-info');
+                Route::post('/search-add', 'OrganizationController@search_add')->name('search-add');
+                Route::post('/find', 'OrganizationController@find')->name('find');
             });
         //PAYMENT
         Route::group([

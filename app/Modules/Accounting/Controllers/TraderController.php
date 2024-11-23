@@ -34,14 +34,7 @@ class TraderController extends Controller
             'traders' => $traders,
         ]);
     }
-/*
-    public function create(Request $request)
-    {
 
-        $organizations = Organization::orderBy('short_name')->where('active', true)->getModels();
-        return view('admin.accounting.trader.create', compact( 'organizations'));
-    }
-*/
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -58,11 +51,10 @@ class TraderController extends Controller
 
     public function show(Trader $trader, Request $request): Response
     {
-        //return view('admin.accounting.trader.show', compact('trader'));
-        $organizations = Organization::orderBy('short_name')->active()->getModels();
+       // $organizations = Organization::orderBy('short_name')->active()->getModels();
         return Inertia::render('Accounting/Trader/Show', [
             'trader' => $this->repository->TraderWithToArray($trader),
-            'organizations' => $organizations,
+           // 'organizations' => $organizations,
         ]);
     }
 

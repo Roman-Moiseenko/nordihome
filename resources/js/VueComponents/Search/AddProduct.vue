@@ -126,7 +126,6 @@ const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
         axios.post(search, {search: query}).then(response => {
-           // console.log(response.data);
             options.value = response.data
             loading.value = false
         });

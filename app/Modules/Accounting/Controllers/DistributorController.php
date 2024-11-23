@@ -99,11 +99,11 @@ class DistributorController extends Controller
         ];
         //return view('admin.accounting.distributor.show', compact('distributor', 'items', 'pagination', 'count'));
         //Для Organization сделать поле Ликвидирован!!! И ставить в фильтр scopedActual()
-        $organizations = Organization::orderBy('short_name')->active()->getModels();
+      //  $organizations = Organization::orderBy('short_name')->active()->getModels();
 
         return Inertia::render('Accounting/Distributor/Show', [
             'distributor' => $this->repository->DistributorWithToArray($distributor, $request),
-            'organizations' => $organizations,
+           // 'organizations' => $organizations,
             'products' => $items,
             'count' => $count,
         ]);

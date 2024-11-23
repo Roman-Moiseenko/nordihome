@@ -61,4 +61,19 @@ class OrganizationRepository
             ],
         );
     }
+
+    public function search(string $value)
+    {
+        return Organization::active()
+            ->whereRaw("LOWER(short_name) like LOWER('%$value%')")
+            ->orWhere('inn', 'like', "%$value%")
+            ->get()->map(function (Organization $organization) {
+                return [
+                    'id' => $organization->id,
+                    'short_name' => $organization->short_name,
+                    'inn' => $organization->inn,
+                ];
+            });
+
+    }
 }

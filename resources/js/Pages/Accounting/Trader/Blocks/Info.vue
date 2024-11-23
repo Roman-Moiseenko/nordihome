@@ -59,22 +59,8 @@
                 </Link>
             </div>
             <div class="mt-3">
-                <div v-show="!showEdit">
-                    <el-button type="warning" size="small" @click="showEdit = true">Добавить</el-button>
-                </div>
-                <div v-show="showEdit" class="flex items-center">
-                    <el-select v-model="organization" style="width: 260px;">
-                        <el-option v-for="item in organizations" :key="item.id" :value="item.id"
-                                   :label="item.short_name">
-                        </el-option>
-                    </el-select>
-                    <el-button type="success" size="small" @click="attachOrganization" class="ml-3">
-                        <i class="fa-light fa-floppy-disk"></i>
-                    </el-button>
-                    <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
-                        <i class="fa-light fa-xmark"></i>
-                    </el-button>
-                </div>
+                <SearchAttachOrganization
+                    :route="route('admin.accounting.trader.attach', {trader: props.trader.id})" />
             </div>
         </el-col>
     </el-row>
@@ -85,22 +71,14 @@ import {func} from '@Res/func.js'
 import {ref, reactive} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
+import SearchAttachOrganization from "@Comp/Search/AttachOrganization.vue";
 
 const props = defineProps({
     trader: Object,
-    organizations: Array,
-
 })
 
 const showEdit = ref(false)
 const editTrader = ref(false)
-const organization = ref(null)
-
-
-function attachOrganization() {
-    showEdit.value = false;
-    router.post(route('admin.accounting.trader.attach', {trader: props.trader.id}), {organization: organization.value})
-}
 
 function detachOrganization(id) {
     showEdit.value = false;

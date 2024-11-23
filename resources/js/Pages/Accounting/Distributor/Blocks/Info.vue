@@ -52,21 +52,8 @@
                 </Link>
             </div>
             <div class="mt-3">
-                <div v-show="!showEdit">
-                    <el-button type="warning" size="small" @click="showEdit = true">Добавить</el-button>
-                </div>
-                <div v-show="showEdit" class="flex items-center">
-                    <el-select v-model="organization" style="width: 260px;">
-                        <el-option v-for="item in organizations" :key="item.id" :value="item.id" :label="item.short_name">
-                        </el-option>
-                    </el-select>
-                    <el-button type="success" size="small" @click="attachOrganization" class="ml-3">
-                        <i class="fa-light fa-floppy-disk"></i>
-                    </el-button>
-                    <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
-                        <i class="fa-light fa-xmark"></i>
-                    </el-button>
-                </div>
+                <SearchAttachOrganization
+                    :route="route('admin.accounting.distributor.attach', {distributor: props.distributor.id})" />
             </div>
         </el-col>
     </el-row>
@@ -78,24 +65,19 @@ import {ref, reactive} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
 import EditField from "@Comp/Elements/EditField.vue";
+import SearchAttachOrganization from "@Comp/Search/AttachOrganization.vue";
 
 const props = defineProps({
     distributor: Object,
-    organizations: Array,
 })
 
 const showEdit = ref(false)
 const editDistr = ref(false)
-const organization = ref(null)
 
 function onSupply(balance) {
     router.post(route('admin.accounting.distributor.supply', {distributor: props.distributor.id, balance: balance}))
 }
 
-function attachOrganization() {
-    showEdit.value = false;
-    router.post(route('admin.accounting.distributor.attach', {distributor: props.distributor.id}), {organization: organization.value})
-}
 function detachOrganization(id) {
     showEdit.value = false;
     router.post(route('admin.accounting.distributor.detach', {distributor: props.distributor.id, organization: id}))
@@ -104,11 +86,6 @@ function defaultOrganization(id) {
     showEdit.value = false;
     router.post(route('admin.accounting.distributor.default', {distributor: props.distributor.id, organization: id}))
 }
-/*
-const info = reactive({
-    name: props.distributor.name,
-    currency_id: props.distributor.currency_id,
-})*/
 
 function setInfo(val) {
     router.visit(route('admin.accounting.distributor.set-info', {distributor: props.distributor.id}), {
