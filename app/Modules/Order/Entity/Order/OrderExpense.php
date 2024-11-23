@@ -64,6 +64,11 @@ class OrderExpense extends Model
         self::DELIVERY_LOCAL => 'Доставка по региону',
         self::DELIVERY_REGION => 'Доставка ТК по России',
     ];
+    const DELIVERIES = [
+        self::DELIVERY_STORAGE => 'Самовывоз из магазина',
+        self::DELIVERY_LOCAL => 'Доставка по региону',
+        self::DELIVERY_REGION => 'Доставка ТК по России',
+    ];
 
     const STATUSES = [
         self::STATUS_NEW => 'Новое',

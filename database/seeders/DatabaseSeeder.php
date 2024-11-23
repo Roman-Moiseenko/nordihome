@@ -463,7 +463,7 @@ class DatabaseSeeder extends Seeder
 
     private function coupons()
     {
-        $users = User::where('status', User::STATUS_ACTIVE)->get();
+        $users = User::where('active', true)->get();
         foreach ($users as $user) {
             Coupon::register($user->id, rand(1, 10) * 500 + 2000, now()->addMinutes(rand(1, 100)), now()->addHours(rand(5, 100)));
             Coupon::register($user->id, rand(1, 10) * 500 + 2000, now()->addMinutes(rand(1, 100)), now()->addHours(rand(5, 100)));

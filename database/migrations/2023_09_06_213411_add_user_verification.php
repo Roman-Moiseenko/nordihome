@@ -20,7 +20,7 @@ return new class extends Migration
         });
 
         DB::table('users')->update([
-            'status' => User::STATUS_ACTIVE,
+            'status' => 'active',
         ]);
     }
 

@@ -75,7 +75,7 @@ Breadcrumbs::for('admin.user.index', function (BreadcrumbTrail $trail) {
 });
 Breadcrumbs::for('admin.user.show', function (BreadcrumbTrail $trail, User $user) {
     $trail->parent('admin.user.index');
-    $trail->push($user->email, route('admin.user.show', $user));
+    $trail->push($user->getPublicName(), route('admin.user.show', $user));
 });
 
 

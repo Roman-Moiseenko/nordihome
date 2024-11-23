@@ -15,6 +15,7 @@ use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 
 use App\Modules\Analytics\LoggerService;
+use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
@@ -129,6 +130,7 @@ class OrderService
         }
         if (isset($data['fullname'])) {
             list ($surname, $firstname, $secondname) = explode(" ", $data['fullname']);
+            //$user->fullname = FullName::create(params: $data['fullname']);
             $user->setNameField($surname, $firstname, $secondname);
         }
 
@@ -271,7 +273,7 @@ class OrderService
                 if (empty($user)) {
                     $password = Str::random(8);
                     $user = User::register($email, $password);
-                    $user->setPhone($request->string('phone')->trim()->value());
+                    $user->setPhone(phoneToDB($request->string('phone')));
                     //event(new UserHasCreated($user));
                 }
             }
@@ -312,31 +314,10 @@ class OrderService
      * @param array $request
      * @return void
      */
-    public function create_sales(array $request): Order
+    public function create_sales(int $user_id = null): Order
     {
-        DB::transaction(function () use ($request, &$order) {
-
-            //TODO Найти или создать клиента по phone и/или email
-            /*
-            if (empty($request['user_id'])) {//1. Пользователь новый.
-                $password = Str::random(8); /// регистрируем его и отправляем ему письмо, со ссылкой верификации
-                $user = User::register($request['email'], $password);
-                $user->setPhone($request['phone']);
-                $user->setNameField(firstname: $request['name']);
-                event(new UserHasCreated($user));
-            } else {//2. Пользователь старый.
-                $user = User::find((int)$request['user_id']);
-                //Обновить Имя
-                $user->setNameField(firstname: $request['name']);
-            }*/
-           /*
-            if (isset($request['parser'])) {
-                $order = Order::register($user->id, Order::PARSER); //Создаем пустой заказ
-            } else {
-                $order = Order::register($user->id, Order::MANUAL); //Создаем пустой заказ
-            }
-            */
-            $order = Order::register(null, Order::MANUAL); //Создаем пустой заказ
+        DB::transaction(function () use ($user_id, &$order) {
+            $order = Order::register($user_id, Order::MANUAL); //Создаем пустой заказ
 
             /** @var Admin $staff */
             $staff = Auth::guard('admin')->user();
@@ -345,7 +326,6 @@ class OrderService
             $order->refresh();
             $this->logger->logOrder($order, 'Заказ создан менеджером', '', '');
         });
-
         return $order;
     }
 
@@ -460,7 +440,7 @@ class OrderService
             $quantity = $product->getCountSell(); //в наличии
         }
 
-        $last_price = $product->getPrice(false, $order->user_id);
+        $last_price = $product->getPrice(false, $order->user);
         if ($quantity > 0) {
             $orderItem = OrderItem::new($product, $quantity, false);
             if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);

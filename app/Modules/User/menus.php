@@ -6,11 +6,14 @@ return [
         'icon' => 'users',
         'title' => 'Клиенты',
         'can' => 'user',
+        'font_awesome' => 'fa-light fa-user',
         'sub_menu' => [
             'users' => [
                 'icon' => 'user-search',
                 'title' => 'Список',
                 'route_name' => 'admin.user.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-users',
             ],
             'subscriptions' => [
                 'icon' => 'bell-ring',

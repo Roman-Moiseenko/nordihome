@@ -133,7 +133,7 @@ class LoginController extends Controller
             /** @var User $user */
             $user = Auth::user(); //Auth::guard('user')->user();
 
-            if ($user->status != User::STATUS_ACTIVE) {
+            if ($user->isWait()) {
                 Auth::logout();
                 return \response()->json(['verification' => true]);
             }
@@ -236,7 +236,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if (!$user->status != User::STATUS_ACTIVE) {
+        if ($user->isWait()) {
             $this->guard()->logout();
             flash('Вы не подтвердили свой аккаунт', 'danger');
             return back();

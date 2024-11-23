@@ -57,6 +57,14 @@ if (!function_exists('phone')) {
     }
 }
 
+if (!function_exists('phoneToDB')) {
+    function phoneToDB(Stringable|string $phone): string
+    {
+        if ($phone instanceof Stringable) $phone = $phone->trim()->value();
+        return preg_replace("/[^0-9]/", "", $phone);
+    }
+}
+
 if (!function_exists('shortname')) {
     function shortname($value): string
     {

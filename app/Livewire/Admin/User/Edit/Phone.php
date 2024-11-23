@@ -28,7 +28,7 @@ class Phone extends Component
 
     public function save_change()
     {
-        $this->user->setPhone($this->phone);
+        $this->user->setPhone(phoneToDB($this->phone));
         $this->user->save();
         $this->user->refresh();
         $this->change = false;

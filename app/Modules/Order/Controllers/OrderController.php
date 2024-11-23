@@ -23,6 +23,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\User\Entity\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -118,12 +119,15 @@ class OrderController extends Controller
         abort(404, 'Неверный статус заказа');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
+        try {
+            $order = $this->orderService->create_sales($request->input('user_id'));
+            return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
-        //$order = $this->orderService->create_sales($request->only(['user_id', 'email', 'phone', 'name', 'parser']));
-        $order = $this->orderService->create_sales([]);
-        return redirect()->route('admin.order.show', $order);
     }
 
     public function movement(Request $request, Order $order)

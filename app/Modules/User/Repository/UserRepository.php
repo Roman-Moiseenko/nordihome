@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Repository;
 
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -22,29 +25,66 @@ class UserRepository
             $filters['name'] = $name;
             $query->where('phone', 'LIKE', "%$name%")
                 ->orWhere('email', 'like', "%$name%")
-                ->orWhereRaw("LOWER(fullname) like LOWER('%$name%')");
-
+                ->orWhereRaw("LOWER(fullname) like LOWER('%$name%')")
+                ->orWhereHas('organizations', function ($query) use($name) {
+                    $query->where('inn', $name)->orWhereRaw("LOWER(short_name) like LOWER('%$name%')");
+                });
         }
         if (($address = $request->string('address')) != '') {
             $filters['address'] = $address;
             $query->whereRaw("LOWER(address) like LOWER('%$address%')");
         }
+        if (($client = $request->integer('client')) > 0) {
+            $filters['client'] = $client;
+            $query->where('client', $client);
+        }
+        if ($request->has('wait')) {
+            $wait = $request->string('wait');
+            $filters['wait'] = $wait;
+            $query->where('active', false);
+        }
 
         if (count($filters) > 0) $filters['count'] = count($filters);
 
-        return $query->paginate($request->input('p', 20))
+        return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(fn(User $user) => [
-                'id' => $user->id,
-                'name' => $user->getPublicName(),
-                'email' => $user->email,
-                'phone' => phone($user->phone),
-                'address' => $user->address->address,
-                'data' => $this->getOrderData($user->id),
+            ->through(fn(User $user) => $this->UserToArray($user));
 
-                'url' => route('admin.user.show', $user),
-            ]);
+    }
 
+    private function UserToArray(User $user): array
+    {
+        return array_merge($user->toArray(), [
+            'name' => $user->getPublicName(),
+            'data' => $this->getOrderData($user->id),
+            'last_order' => is_null($user->getLastOrder()) ? null : $this->dataLastOrder($user->getLastOrder()->created_at),
+            'pricing' => $user->pricingText(),
+            'quantity' => $user->orders()->count(),
+            'amount' => $user->getAmountOrders(),
+        ]);
+    }
+
+    public function UserWithToArray(User $user, Request $request): array
+    {
+        return array_merge($this->UserToArray($user), [
+            'organizations' => $user->organizations,
+            'orders' => $user->orders()->paginate($request->input('size', 20))
+                ->withQueryString()
+                ->through(fn(Order $order) => [
+                    'id' => $order->id,
+                    'created_at' => $order->created_at,
+                    'quantity' => $order->getQuantity(),
+                    'amount' => $order->getTotalAmount(),
+                    'payment' => $order->getPaymentAmount(),
+                    'status' => $order->statusHtml(),
+                    'items' => $order->items()->with('product')->get()->toArray(),
+                    'additions' => $order->additions()->get()->map(function (OrderAddition $addition) {
+                        return array_merge($addition->toArray(), [
+                            'purposeText' => $addition->purposeHTML(),
+                        ]);
+                    }),
+                ]),
+        ]);
     }
 
     public function getWish(User $user): array
@@ -61,11 +101,11 @@ class UserRepository
         }, $user->wishes()->getModels());
     }
 
-    public function getUsersBySubscription(string $class)
+    public function getUsersBySubscription(string $class): array
     {
         $subscription = Subscription::where('listener', $class)->first();
 
-        return User::where('status', User::STATUS_ACTIVE)->whereHas('subscriptions', function ($query) use ($subscription) {
+        return User::where('active', true)->whereHas('subscriptions', function ($query) use ($subscription) {
             $query->where('subscription_id', $subscription->id);
         })->getModels();
     }
@@ -123,6 +163,29 @@ class UserRepository
         }
 
         throw new \DomainException('Что-то пошло не так');
+
+    }
+
+
+    private function dataLastOrder(Carbon $date): array
+    {
+        $diff = $date->diff(now());
+        $days = $date->diff(now())->dayz;
+
+      //  if ($diff->da == false) $days = 0;//dd([$date->diff(now())->minutes, $days]);
+        if ($diff->years > 0)
+            return [
+                'type' => 'danger',
+                'text' => $diff->years . ' л.',
+            ];
+        if ($diff->months > 0) return [
+            'type' => 'warning',
+            'text' => $diff->months . ' м.',
+        ];
+       return [
+            'type' => 'primary',
+            'text' => $days . ' д.',
+        ];
 
     }
 }

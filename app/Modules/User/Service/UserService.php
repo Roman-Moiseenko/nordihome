@@ -23,7 +23,7 @@ class UserService
 
     public function setPhone(User $user, Request $request): bool
     {
-        $user->setPhone($request->string('phone')->trim()->value());
+        $user->setPhone(phoneToDB($request->string('phone')));
         return true;
     }
 
@@ -36,6 +36,9 @@ class UserService
         return true;
     }
 
+    /**
+     * Изменение почты с проверкой и верификацией, для изменения клиентом
+     */
     public function setEmail(User $user, Request $request): bool
     {
         $email = $request->string('email')->trim()->value();
@@ -43,7 +46,7 @@ class UserService
         if (!empty(User::where('email', $email)->first()))
             throw new \DomainException('Пользователь с таким email уже существует!');
         $user->email = $email;
-        $user->status = User::STATUS_WAIT;
+        $user->active = false;
         $user->save();
 
         Mail::to($user->email)->send(new VerifyMail($user));

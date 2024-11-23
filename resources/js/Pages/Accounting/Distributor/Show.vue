@@ -4,7 +4,7 @@
         <h1 class="font-medium text-xl">
             Поставщик {{ distributor.name }}
         </h1>
-        <div class="mt-3 p-3 bg-white rounded-lg ">
+        <div class="mt-3 p-3 bg-white rounded-lg">
             <DistributorInfo :distributor="distributor" :organizations="organizations"  />
         </div>
         <div class="mt-3">
