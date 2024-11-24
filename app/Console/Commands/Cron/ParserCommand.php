@@ -26,7 +26,7 @@ class ParserCommand extends Command
     protected $description = 'Парсим цены товаров';
     protected $app;
 
-    public function handle()
+    public function handle(): void
     {
         $logger = LoggerCron::new($this->description);
         $this->info('Парсим цены товаров');
