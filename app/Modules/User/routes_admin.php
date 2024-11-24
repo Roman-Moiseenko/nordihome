@@ -16,7 +16,7 @@ Route::group([
 
     Route::get('/cart', 'CartController@index')->name('cart.index');
     Route::get('/wish', 'WishController@index')->name('wish.index');
-
+    Route::resource('subscription', 'SubscriptionController')->only(['index', 'show']); //CRUD
     //Subscription
     Route::group(
         [
@@ -25,16 +25,15 @@ Route::group([
             //'namespace' => '',
         ],
         function () {
-            Route::post('/published/{subscription}', 'SubscriptionController@published')->name('published');
+            Route::post('/activated/{subscription}', 'SubscriptionController@activated')->name('activated');
             Route::post('/draft/{subscription}', 'SubscriptionController@draft')->name('draft');
+            Route::post('/set-info/{subscription}', 'SubscriptionController@set_info')->name('set-info');
         }
     );
-
 
     Route::get('/{user}', 'UserController@show')->name('show');
     Route::post('/create', 'UserController@create')->name('create');
     Route::get('/', 'UserController@index')->name('index');
 
-    Route::resource('subscription', 'SubscriptionController')->except(['create', 'store', 'destroy']); //CRUD
 });
 

@@ -93,7 +93,7 @@ Breadcrumbs::for('admin.user.subscription.index', function (BreadcrumbTrail $tra
     $trail->parent('admin.user.index');
     $trail->push('Рассылки/Уведомления', route('admin.user.subscription.index'));
 });
-Breadcrumbs::for('admin.user.subscription.edit', function (BreadcrumbTrail $trail, Subscription $subscription) {
+Breadcrumbs::for('admin.user.subscription.show', function (BreadcrumbTrail $trail, Subscription $subscription) {
     $trail->parent('admin.user.subscription.index');
-    $trail->push($subscription->name .' - Редактировать', route('admin.user.subscription.edit', $subscription));
+    $trail->push($subscription->name, route('admin.user.subscription.show', $subscription));
 });

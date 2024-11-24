@@ -49,31 +49,24 @@
                             </el-table-column>
                             <el-table-column prop="comment" label="Комментарий" align="center"/>
                         </el-table>
-
                     </template>
-
                 </el-table-column>
-
                 <el-table-column prop="created_at" label="Дата">
                     <template #default="scope">
                         {{ func.date(scope.row.created_at) }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="quantity" label="Товаров" width="100" align="center">
-                </el-table-column>
-
+                <el-table-column prop="quantity" label="Товаров" width="100" align="center" />
                 <el-table-column label="Сумма по заказу" align="center">
                     <template #default="scope">
                         {{ func.price(scope.row.amount) }}
                     </template>
                 </el-table-column>
-
                 <el-table-column label="Оплачено" align="center">
                     <template #default="scope">
                         {{ func.price(scope.row.payment) }}
                     </template>
                 </el-table-column>
-
                 <el-table-column prop="status" label="Статус" width="260" align="center"/>
                 <el-table-column label="" width="160" align="right">
                     <template #default="scope">
@@ -82,16 +75,12 @@
                 </el-table-column>
             </el-table>
         </div>
-
         <pagination
             :current_page="user.orders.current_page"
             :per_page="user.orders.per_page"
             :total="user.orders.total"
         />
-
     </el-config-provider>
-
-
 </template>
 
 <script lang="ts" setup>
@@ -117,20 +106,12 @@ const props = defineProps({
     type_pricing: Array,
 })
 const store = useStore();
-
 interface IRow {
     amount: number,
     payment: number,
 }
-
 const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.amount > row.payment) {
-        return 'warning-row'
-    }
+    if (row.amount > row.payment) return 'warning-row'
     return ''
-}
-
-function routeClick() {
-
 }
 </script>

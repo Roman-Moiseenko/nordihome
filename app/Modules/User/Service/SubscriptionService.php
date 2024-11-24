@@ -23,17 +23,6 @@ class SubscriptionService
         return true;
     }
 
-    public function update(Subscription $subscription, Request $request): Subscription
-    {
-        $subscription->update([
-            'name' => $request->string('name')->trim()->value(),
-            'title' => $request->string('title')->trim()->value(),
-            'description' => $request->string('description')->trim()->value(),
-        ]);
-        $subscription->refresh();
-        return $subscription;
-    }
-
     public function toggle(User $user, Subscription $subscription)
     {
         if ($user->isSubscription($subscription)) {
@@ -41,5 +30,14 @@ class SubscriptionService
         } else {
             $user->subscriptions()->attach($subscription->id);
         }
+    }
+
+    public function setInfo(Subscription $subscription, Request $request): void
+    {
+        $subscription->update([
+            'name' => $request->string('name')->trim()->value(),
+            'title' => $request->string('title')->trim()->value(),
+            'description' => $request->string('description')->trim()->value(),
+        ]);
     }
 }

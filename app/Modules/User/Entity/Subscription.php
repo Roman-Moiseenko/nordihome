@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace App\Modules\User\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $title - Заголовок для клиентов
  * @property string $description - Описание для клиентов
- * @property bool $published -
+ * @property bool $active -
  * @property string $listener - Класс слушатель, который осуществляет рассылку - уникальное поле
  * @property User[] $users
  */
@@ -22,7 +23,7 @@ class Subscription extends Model
         'title',
         'description',
         'listener',
-        'published',
+        'active',
     ];
 
     public static function register(string $name, string $title, string $description, string $listener): self
@@ -32,33 +33,33 @@ class Subscription extends Model
             'title' => $title,
             'description' => $description,
             'listener' => $listener,
-            'published' => false,
+            'active' => false,
         ]);
     }
 
-    public function isPublished(): bool
+    public function isActive(): bool
     {
-        return $this->published == true;
+        return $this->active == true;
     }
 
     public function isDraft(): bool
     {
-        return $this->published == false;
+        return $this->active == false;
     }
 
     public function setDraft(): void
     {
-        $this->published = false;
+        $this->active = false;
         $this->save();
     }
 
-    public function setPublished(): void
+    public function setActivated(): void
     {
-        $this->published = true;
+        $this->active = true;
         $this->save();
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'users_subscriptions', 'subscription_id', 'user_id');
     }
