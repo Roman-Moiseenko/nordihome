@@ -1,5 +1,7 @@
 <template>
-    <el-button type="primary" plain @click="onUpload" class="ml-1"><i class="fa-light fa-upload"></i></el-button>
+    <el-tooltip content="Загрузить товары из файла" effect="dark" placement="top-start">
+        <el-button type="primary" plain @click="onUpload" class="ml-1"><i class="fa-light fa-upload"></i></el-button>
+    </el-tooltip>
     <div v-if="false" class="flex relative">
         <div class="relative" style="width: 180px;">
             <el-input v-model="data" :class="focus.class" style="width: 180px"

@@ -22,7 +22,7 @@
             :quantity="true"
         />
         <SearchAddProducts :route="route('admin.accounting.arrival.add-products', {arrival: arrival.id})" class="ml-3"/>
-        <el-button type="warning"  class="ml-3" @click="onExpenses">Дополнительные расходы</el-button>
+        <el-button type="warning"  class="ml-3" @click="onExpenses">Доп. расходы</el-button>
         <AccountingCompleted :route="route('admin.accounting.arrival.completed', {arrival: props.arrival.id})" />
     </template>
     <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>

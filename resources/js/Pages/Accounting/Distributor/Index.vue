@@ -3,22 +3,37 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Поставщики</h1>
         <div class="flex my-3">
-            <el-popover :visible="visible_create" placement="bottom-start" :width="246">
+            <el-popover :visible="visible_create" placement="bottom-start" :width="400">
                 <template #reference>
                     <el-button type="primary" class="p-4" @click="visible_create = !visible_create" ref="buttonRef">
                         Добавить поставщика
-                        <el-icon class="ml-1"><ArrowDown /></el-icon>
+                        <el-icon class="ml-1">
+                            <ArrowDown/>
+                        </el-icon>
                     </el-button>
                 </template>
-                <el-input v-model="create.name" placeholder="Название в CRM" class="mt-1"/>
-                <el-select v-model="create.currency" placeholder="Валюта" class="mt-1" >
-                    <el-option v-for="item in currencies" :key="item.id" :value="item.id" :label="item.name"/>
-                </el-select>
-                <el-input v-model="create.inn" placeholder="ИНН" class="mt-1"/>
-                <el-input v-model="create.bik" placeholder="БИК" class="mt-1"/>
-                <el-input v-model="create.account" placeholder="Расчетный счет" class="mt-1"/>
+                <el-form label-width="auto">
+                    <el-form-item label="Название в CRM">
+                        <el-input v-model="create.name" placeholder="Название в CRM" class="mt-1"/>
+                    </el-form-item>
+                    <el-form-item label="Валюта">
+                        <el-select v-model="create.currency" placeholder="Валюта" class="mt-1">
+                            <el-option v-for="item in currencies" :key="item.id" :value="item.id" :label="item.name"/>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="ИНН">
+                        <el-input v-model="create.inn" placeholder="ИНН" class="mt-1"/>
+                    </el-form-item>
+                    <el-form-item label="БИК">
+                        <el-input v-model="create.bik" placeholder="БИК" class="mt-1"/>
+                    </el-form-item>
+                    <el-form-item label="Расчетный счет">
+                        <el-input v-model="create.account" placeholder="Расчетный счет" class="mt-1"/>
+                    </el-form-item>
+                </el-form>
                 <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
+                    <el-button @click="visible_create = false">Отмена</el-button>
+                    <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
             <!--el-button type="primary" plain >Холдинги</el-button-->
@@ -38,7 +53,7 @@
                 <el-table-column prop="name" label="Название"/>
                 <el-table-column prop="name" label="Иностранный" width="160">
                     <template #default="scope">
-                        <Active :active="scope.row.foreign" />
+                        <Active :active="scope.row.foreign"/>
                     </template>
                 </el-table-column>
 
@@ -48,7 +63,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="debit" label="Долг"  width="160">
+                <el-table-column prop="debit" label="Долг" width="160">
                     <template #default="scope">
                         {{ func.price(scope.row.debit, scope.row.currency.sign) }}
                     </template>
@@ -74,7 +89,7 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Контрагента" />
+    <DeleteEntityModal name_entity="Контрагента"/>
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps} from "vue";
@@ -116,6 +131,7 @@ const create = reactive({
 function createButton() {
     router.post(route('admin.accounting.distributor.store', create))
 }
+
 function routeClick(row) {
     router.get(route('admin.accounting.distributor.show', {distributor: row.id}))
 }

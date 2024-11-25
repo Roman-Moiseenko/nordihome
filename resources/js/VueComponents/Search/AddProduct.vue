@@ -30,7 +30,10 @@
         </el-select>
         <el-input-number id="quantity" v-if="props.quantity" v-model="form.quantity" @keyup.enter="onQuantity" class="ml-1"/>
         <el-checkbox id="preorder" v-if="props.preorder" v-model="form.product_id" label="Под заказ" @change="onPreorder" class="ml-1"/>
-        <el-button id="button" type="primary" @click="onAdd" class="ml-1">{{ props.caption }}</el-button>
+        <el-button id="button" type="primary" @click="onAdd" class="ml-1">
+            <i class="fa-light fa-box mr-2"></i>
+            {{ props.caption }}
+        </el-button>
     </div>
     <el-dialog v-model="dialogCreate" title="Новый товар" width="400">
         <el-form label-width="auto">
@@ -100,7 +103,7 @@ const props = defineProps({
         type: Boolean
     },
     caption: {  //Подпись для кнопки
-        default: 'Добавить товар',
+        default: 'Добавить',
         type: String
     },
     column: {  //Вертикальное расположение элементов
