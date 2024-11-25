@@ -21,9 +21,7 @@
                               @change="setItem(scope.row)"
                               :disabled="iSaving"
                               :readonly="!isEdit"
-                    >
-                        <template #append>ед.</template>
-                    </el-input>
+                    />
                 </template>
             </el-table-column>
             <el-table-column prop="quantity" label="Кол-во" width="180">

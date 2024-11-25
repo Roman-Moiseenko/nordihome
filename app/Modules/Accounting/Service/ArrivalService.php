@@ -140,12 +140,14 @@ class ArrivalService
 
     public function setProduct(ArrivalProduct $arrivalProduct, int $quantity, float $cost): void
     {
+
         $arrival = $arrivalProduct->document;
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         if ($arrival->isSupply()) { //Есть связанный документ
             //Нельзя менять валюту
             if ($arrivalProduct->cost_currency != $cost) throw new \DomainException('Стоимость установлена в связанном документа!');
             $unallocated = $arrivalProduct->getSupplyProduct()->getQuantityUnallocated();//Доступное кол-во
+           // dd($unallocated);
             $delta = min($quantity - $arrivalProduct->quantity, $unallocated);
             //dd([$unallocated, $delta, $arrivalProduct->quantity]);
             if ($delta == 0) throw new \DomainException('Недостаточное кол-во товара ' . $arrivalProduct->product->name . ' в связанном документе.');

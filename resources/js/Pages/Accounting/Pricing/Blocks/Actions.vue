@@ -1,6 +1,6 @@
 <template>
     <template v-if="pricing.completed">
-        <AccountingOnBased :based="pricing.based" :founded="pricing.founded"/>
+
         <AccountingPrint />
         <AccountingWork :route="route('admin.accounting.pricing.work', {pricing: props.pricing.id})" />
     </template>
@@ -12,6 +12,7 @@
         <SearchAddProducts :route="route('admin.accounting.pricing.add-products', {pricing: pricing.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.pricing.completed', {pricing: props.pricing.id})" />
     </template>
+    <AccountingOnBased :based="pricing.based" :founded="pricing.founded"/>
 </template>
 
 <script setup>

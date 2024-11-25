@@ -1,6 +1,6 @@
 <template>
     <template v-if="departure.completed">
-        <AccountingOnBased :based="departure.based" :founded="departure.founded"/>
+
         <AccountingPrint />
         <AccountingWork v-if="!departure.inventory"  :route="route('admin.accounting.departure.work', {departure: props.departure.id})" />
     </template>
@@ -12,6 +12,7 @@
         <SearchAddProducts :route="route('admin.accounting.departure.add-products', {departure: departure.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.departure.completed', {departure: props.departure.id})" />
     </template>
+    <AccountingOnBased :based="departure.based" :founded="departure.founded"/>
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(departure.amount) }}</el-tag>
     </span>

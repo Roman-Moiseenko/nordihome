@@ -12,7 +12,7 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-        <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>
+
         <AccountingPrint :print="print" />
         <AccountingWork v-if="arrival.distributor_id" :route="route('admin.accounting.arrival.work', {arrival: props.arrival.id})" />
     </template>
@@ -25,6 +25,7 @@
         <el-button type="warning"  class="ml-3" @click="onExpenses">Дополнительные расходы</el-button>
         <AccountingCompleted :route="route('admin.accounting.arrival.completed', {arrival: props.arrival.id})" />
     </template>
+    <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(arrival.amount, arrival.currency) }}</el-tag>
         <span v-if="arrival.expense" class="ml-2">

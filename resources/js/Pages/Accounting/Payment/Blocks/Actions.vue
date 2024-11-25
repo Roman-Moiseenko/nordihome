@@ -1,12 +1,13 @@
 <template>
     <template v-if="payment.completed">
-        <AccountingOnBased :based="payment.based" :founded="payment.founded"/>
+
         <AccountingPrint />
         <AccountingWork :route="route('admin.accounting.payment.work', {payment: props.payment.id})" />
     </template>
     <template v-else>
         <AccountingCompleted :route="route('admin.accounting.payment.completed', {payment: props.payment.id})" />
     </template>
+    <AccountingOnBased :based="payment.based" :founded="payment.founded"/>
 </template>
 
 <script setup>

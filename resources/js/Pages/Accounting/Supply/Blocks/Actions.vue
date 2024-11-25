@@ -12,7 +12,7 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-        <AccountingOnBased :based="supply.based" :founded="supply.founded" />
+
         <AccountingPrint />
         <AccountingWork :route="route('admin.accounting.supply.work', {supply: props.supply.id})" />
     </template>
@@ -25,6 +25,7 @@
         <SearchAddProducts :route="route('admin.accounting.supply.add-products', {supply: supply.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.supply.completed', {supply: props.supply.id})" />
     </template>
+    <AccountingOnBased :based="supply.based" :founded="supply.founded" />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(supply.amount, supply.currency) }}</el-tag>
     </span>

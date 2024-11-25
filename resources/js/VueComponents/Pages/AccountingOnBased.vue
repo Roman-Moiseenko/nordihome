@@ -1,7 +1,7 @@
 <template>
     <el-dropdown class="ml-3">
         <el-button type="success" plain>
-            Связанные документы
+            <i class="fa-light fa-file-code mr-2"></i> Документы
             <el-icon class="el-icon--right">
                 <arrow-down/>
             </el-icon>

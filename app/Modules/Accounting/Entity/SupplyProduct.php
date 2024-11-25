@@ -40,11 +40,13 @@ class SupplyProduct extends AccountingProduct
         $quantity = $this->quantity;
         //Поступило
         $arrival_ids = ArrivalDocument::where('supply_id', $this->supply_id)->pluck('id')->toArray();
-        $quantity_arrival = ArrivalProduct::selectRaw('SUM(quantity * cost_currency) AS total')
+
+        $quantity_arrival = ArrivalProduct::selectRaw('SUM(quantity) AS total')
             ->whereIn('arrival_id', $arrival_ids)
             ->where('product_id', $this->product_id)
             ->first();
 
+       // dd([$quantity, $arrival_ids, $quantity_arrival]);
         return $quantity - ((int)$quantity_arrival->total ?? 0);
         /*foreach ($this->document->arrivals as $arrival) {
             $arrivalProduct = $arrival->getProduct($this->product_id);

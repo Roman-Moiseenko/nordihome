@@ -1,6 +1,6 @@
 <template>
     <template v-if="expense.completed">
-        <AccountingOnBased :based="expense.based" :founded="expense.founded" />
+
         <AccountingPrint />
     </template>
     <template v-else>
@@ -16,6 +16,7 @@
         </el-form>
 
     </template>
+    <AccountingOnBased :based="expense.based" :founded="expense.founded" />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(expense.amount) }}</el-tag>
     </span>
