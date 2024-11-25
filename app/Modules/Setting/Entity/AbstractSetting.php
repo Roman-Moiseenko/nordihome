@@ -9,7 +9,7 @@ abstract class AbstractSetting
     {
         foreach ($data as $field => $value) {
             if (gettype($this->$field) == 'boolean') {
-                $this->$field = true;
+                $this->$field = (bool)$value;
             } elseif (gettype($this->$field) == 'integer') {
                 $this->$field = (int)($value);
             } elseif (gettype($this->$field) == 'double') {

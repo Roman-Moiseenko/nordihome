@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Modules\Analytics\Entity\LoggerCron;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 
 class CronController extends Controller
@@ -17,15 +19,25 @@ class CronController extends Controller
         $this->middleware(['auth:admin', 'can:admin-panel']);
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $query = LoggerCron::orderByDesc('created_at');
-        $crons = $this->pagination($query, $request, $pagination);
-        return view('admin.analytics.cron.index', compact('crons', 'pagination'));
+        $crons = LoggerCron::orderByDesc('created_at')->paginate($request->input('size', 20))
+            ->withQueryString()
+            ->through(fn(LoggerCron $cron) => $cron->toArray());
+
+        return Inertia::render('Analytics/Cron/Index', [
+            'crons' => $crons,
+        ]);
     }
 
-    public function show(LoggerCron $cron)
+    public function show(LoggerCron $cron): Response
     {
-        return view('admin.analytics.cron.show', compact('cron'));
+        //return view('admin.analytics.cron.show', compact('cron'));
+
+        return Inertia::render('Analytics/Cron/Show', [
+            'cron' => array_merge($cron->toArray(), [
+                'items' => $cron->items()->get()->toArray(),
+            ]),
+        ]);
     }
 }

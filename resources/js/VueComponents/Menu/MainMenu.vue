@@ -1,5 +1,5 @@
 <template>
-    <el-menu :default-active="getUrl($page.url)" class=""
+    <el-menu :default-active="getUrl($page.url)" class="pb-6"
              active-text-color="rgb(217 119 6)" text-color="rgb(19 78 74)"
                  background-color="rgb(226 232 240)"
     >

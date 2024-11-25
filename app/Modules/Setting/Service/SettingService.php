@@ -16,11 +16,11 @@ class SettingService
         $this->productService = $productService;
     }
 
-    public function update(Request $request)
+    public function update(Request $request): void
     {
-        /** @var Setting $setting */
         $setting = Setting::where('slug', $request->string('slug')->value())->first();
         $data = $request->except(['slug','_method', '_token']);
+
         $setting->data = $data;
         $setting->save();
         if ($request->string('slug')->value() == 'parser') $this->productService->updateCostAllProductsIkea();

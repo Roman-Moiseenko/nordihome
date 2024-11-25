@@ -11,13 +11,23 @@ use App\Modules\Setting\Entity\Setting;
 
 use App\Modules\Setting\Entity\Web;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 
 class SettingRepository
 {
 
-    public function getIndex()
+    public function getIndex(Request $request): Arrayable
     {
-        return Setting::orderBy('name')->getModels();
+        return Setting::orderBy('name')
+            ->paginate($request->input('size', 20))
+            ->withQueryString()
+            ->through(fn(Setting $setting) => [
+                'id' => $setting->id,
+                'name' => $setting->name,
+                'slug' => $setting->slug,
+                'class' => $setting->class,
+                'description' => $setting->description,
+            ]);
     }
 
     public function getCommon(): Common
