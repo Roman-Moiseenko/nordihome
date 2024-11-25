@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property string $inn
  * @property string $kpp
  * @property string $ogrn
+ * @property bool $foreign
  *
  * @property string $bik
  * @property string $bank_name
@@ -54,6 +55,7 @@ class Organization extends Model
         'short_name',
         'inn',
         'active',
+        'foreign',
     ];
 
     protected $attributes = [
@@ -77,6 +79,7 @@ class Organization extends Model
             'short_name' => $short_name,
             'inn' => $inn,
             'active' => true,
+            'foreign' => false,
         ]);
     }
 
@@ -98,6 +101,11 @@ class Organization extends Model
     {
         if (is_null($this->holding)) return false;
         return true;
+    }
+
+    public function isForeign(): bool
+    {
+        return $this->foreign == true;
     }
 
     public function isTrader(): bool
@@ -176,4 +184,5 @@ class Organization extends Model
     {
         return $query->where('active', true);
     }
+
 }

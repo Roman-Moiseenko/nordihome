@@ -23,7 +23,7 @@
             </template>
             <template #empty>
                 Не найдено
-                <el-button size="small" @click="dialogCreate = true">Создать?</el-button>
+                <el-button size="small" @click="showCreate = true">Создать?</el-button>
             </template>
         </el-select>
         <el-button id="button" type="success" size="small" @click="attachOrganization" class="ml-3">
@@ -34,27 +34,7 @@
         </el-button>
     </div>
 
-    <el-dialog v-model="dialogCreate" title="Добавить контрагента" width="400">
-        <el-form label-width="auto">
-            <el-form-item label="ИНН">
-                <el-input v-model="formCreate.inn" />
-            </el-form-item>
-            <el-form-item label="БИК">
-                <el-input v-model="formCreate.bik" />
-            </el-form-item>
-
-            <el-form-item label="Р/счет">
-                <el-input v-model="formCreate.account" />
-            </el-form-item>
-            <el-button type="info" class="" @click="dialogCreate = false">
-                Отмена
-            </el-button>
-            <el-button type="primary" class="" @click="addOrganization">
-                Создать
-            </el-button>
-        </el-form>
-    </el-dialog>
-
+    <CreateOrganization :show="showCreate" @create:id="onCreate" @create:cancel="showCreate = value" />
 </template>
 
 <script lang="ts" setup>
@@ -62,12 +42,14 @@ import {ref, onMounted, reactive} from "vue";
 import axios from "axios";
 import {router} from "@inertiajs/vue3";
 import {ElMessage} from "element-plus";
+import CreateOrganization from "@Comp/Search/CreateOrganization.vue";
 
 const props = defineProps({
     route: String,
 })
 const loading = ref(false)
-const dialogCreate = ref(false)
+//const dialogCreate = ref(false)
+const showCreate = ref(false)
 interface IFirm {
     id: Number,
     short_name: String,
@@ -77,12 +59,12 @@ interface IFirm {
 const search = route('admin.accounting.organization.search-add')
 const organization = ref(null)
 const organizations = ref<IFirm[]>([])
-const formCreate =reactive({
+/*const formCreate =reactive({
     inn: null,
     bik: null,
     account: null,
 })
-
+*/
 
 const showEdit = ref(false)
 
@@ -111,6 +93,13 @@ function attachOrganization() {
 function onSelect() {
     document.getElementById('button').focus()
 }
+
+function onCreate(val) {
+    showCreate.value = false
+    organization.value = val
+    attachOrganization()
+}
+/*
 function addOrganization() {
     axios.post(route('admin.accounting.organization.find'), formCreate).then(response => {
         if (response.data.error === undefined) {
@@ -128,10 +117,9 @@ function addOrganization() {
                 center: true,
             });
         }
-
-
     });
 }
+*/
 </script>
 
 <style scoped>

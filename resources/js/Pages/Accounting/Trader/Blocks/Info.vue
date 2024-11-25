@@ -37,6 +37,7 @@
             </div>
         </el-col>
         <el-col :span="8">
+            <h2 class="font-medium">Организация</h2>
             <div v-for="item in trader.organizations">
                 <template v-if="item.pivot.default">
                     <el-tag type="success">{{ item.short_name }}</el-tag>

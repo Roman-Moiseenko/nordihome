@@ -114,11 +114,15 @@ class OrganizationController extends Controller
     public function find(Request $request)
     {
         try {
-            $organization = $this->service->create_find(
-                $request->string('inn')->value(),
-                $request->string('bik')->value(),
-                $request->string('account')->value(),
-            );
+            if ($request->boolean('foreign')) {
+                $organization = $this->service->create_foreign($request);
+            } else {
+                $organization = $this->service->create_find(
+                    $request->string('inn')->value(),
+                    $request->string('bik')->value(),
+                    $request->string('account')->value(),
+                );
+            }
             return response()->json($organization->id);
         } catch (\DomainException $e) {
             return response()->json(['error' => $e->getMessage()]);

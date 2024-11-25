@@ -13,7 +13,12 @@
                         <EditField :field="organization.bik" @update:field="setBik" />
                     </el-descriptions-item>
                     <el-descriptions-item label="Название банка">
+                        <template v-if="organization.foreign">
+                            <EditField :field="organization.bank_name" @update:field="setBank" />
+                        </template>
+                        <template v-else>
                         {{ organization.bank_name }}
+                        </template>
                     </el-descriptions-item>
                     <el-descriptions-item label="Корр./счет">
                         {{ organization.corr_account }}
@@ -43,5 +48,8 @@ function saveAccount(val) {
 }
 function setBik(val) {
     router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {bik: val})
+}
+function setBank(val) {
+    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {bank: val})
 }
 </script>

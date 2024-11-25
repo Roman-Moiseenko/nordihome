@@ -21,6 +21,7 @@
                             <el-option v-for="item in currencies" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                     </el-form-item>
+                    <!--
                     <el-form-item label="ИНН">
                         <el-input v-model="create.inn" placeholder="ИНН" class="mt-1"/>
                     </el-form-item>
@@ -30,6 +31,7 @@
                     <el-form-item label="Расчетный счет">
                         <el-input v-model="create.account" placeholder="Расчетный счет" class="mt-1"/>
                     </el-form-item>
+                    -->
                 </el-form>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button>

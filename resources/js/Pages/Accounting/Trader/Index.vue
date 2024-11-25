@@ -3,19 +3,32 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Продавцы</h1>
         <div class="flex my-3">
-            <el-popover :visible="visible_create" placement="bottom-start" :width="246">
+            <el-popover :visible="visible_create" placement="bottom-start" :width="360">
                 <template #reference>
                     <el-button type="primary" class="p-4" @click="visible_create = !visible_create" ref="buttonRef">
                         Добавить продавца
-                        <el-icon class="ml-1"><ArrowDown /></el-icon>
+                        <el-icon class="ml-1">
+                            <ArrowDown/>
+                        </el-icon>
                     </el-button>
                 </template>
-                <el-input v-model="create.name" placeholder="Название в CRM" class="mt-1"/>
-                <el-input v-model="create.inn" placeholder="ИНН" class="mt-1"/>
-                <el-input v-model="create.bik" placeholder="БИК" class="mt-1"/>
-                <el-input v-model="create.account" placeholder="Расчетный счет" class="mt-1"/>
+                <el-form label-width="auto">
+                    <el-form-item label="Название в CRM">
+                        <el-input v-model="create.name" placeholder="Название в CRM" class="mt-1"/>
+                    </el-form-item>
+                    <el-form-item label="ИНН">
+                        <el-input v-model="create.inn" placeholder="ИНН" class="mt-1"/>
+                    </el-form-item>
+                    <el-form-item label="БИК">
+                        <el-input v-model="create.bik" placeholder="БИК" class="mt-1"/>
+                    </el-form-item>
+                    <el-form-item label="Расчетный счет">
+                        <el-input v-model="create.account" placeholder="Расчетный счет" class="mt-1"/>
+                    </el-form-item>
+                </el-form>
                 <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
+                    <el-button @click="visible_create = false">Отмена</el-button>
+                    <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
 
@@ -79,6 +92,7 @@ const create = reactive({
 function createButton() {
     router.post(route('admin.accounting.trader.store', create))
 }
+
 function routeClick(row) {
     router.get(route('admin.accounting.trader.show', {trader: row.id}))
 }

@@ -3,20 +3,10 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Организации (контрагенты)</h1>
         <div class="flex my-3">
-            <el-popover :visible="visible_create" placement="bottom-start" :width="246">
-                <template #reference>
-                    <el-button type="primary" class="p-4" @click="visible_create = !visible_create" ref="buttonRef">
-                        Создать контрагента
-                        <el-icon class="ml-1"><ArrowDown /></el-icon>
-                    </el-button>
-                </template>
-                <el-input v-model="create.inn" placeholder="ИНН" class="mt-1"/>
-                <el-input v-model="create.bik" placeholder="БИК" class="mt-1"/>
-                <el-input v-model="create.account" placeholder="Расчетный счет" class="mt-1"/>
-                <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
-                </div>
-            </el-popover>
+            <el-button type="primary" class="p-4" @click="showCreate = true" ref="buttonRef">
+                Создать контрагента
+            </el-button>
+            <CreateOrganization  :show="showCreate" @create:id="onCreate" @create:cancel="showCreate = value" />
             <!--el-button type="primary" plain >Холдинги</el-button-->
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-select v-model="filter.holding" placeholder="Холдинг" class="mt-1">
@@ -80,6 +70,7 @@ import {useStore} from "@Res/store.js"
 import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
+import CreateOrganization from "@Comp/Search/CreateOrganization.vue";
 
 const props = defineProps({
     organizations: Object,
@@ -90,6 +81,8 @@ const props = defineProps({
     filters: Array,
     holdings: Array,
 })
+
+const showCreate = ref(null)
 const store = useStore();
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
@@ -104,6 +97,10 @@ const create = reactive({
     bik: null,
     account: null,
 })
+
+function onCreate(id) {
+    router.get(route('admin.accounting.organization.show', {organization: id}))
+}
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.organization.destroy', {organization: row.id}));
 }

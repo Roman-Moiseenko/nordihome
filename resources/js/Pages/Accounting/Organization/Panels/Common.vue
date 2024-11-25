@@ -10,10 +10,20 @@
             <div class="p-4 col-span-6">
                 <el-descriptions :column="2" border>
                     <el-descriptions-item label="Сокращенное имя">
-                        {{ organization.short_name }}
+                        <template v-if="organization.foreign">
+                            <EditField :field="organization.short_name" @update:field="setShort" />
+                        </template>
+                        <template v-else>
+                            {{ organization.short_name }}
+                        </template>
                     </el-descriptions-item>
                     <el-descriptions-item label="Полное имя">
-                        {{ organization.full_name }}
+                        <template v-if="organization.foreign">
+                            <EditField :field="organization.full_name" @update:field="setFull" />
+                        </template>
+                        <template v-else>
+                            {{ organization.full_name }}
+                        </template>
                     </el-descriptions-item>
                     <el-descriptions-item label="ИНН">
                         {{ organization.inn }}
@@ -65,6 +75,7 @@
 <script setup>
 import {defineProps, ref} from "vue";
 import {router} from "@inertiajs/vue3";
+import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
     organization: Array,
@@ -84,5 +95,11 @@ function onUpdate(){
         preserveScroll: true,
         preserveState: false,
     })
+}
+function setShort(val) {
+    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {short_name: val})
+}
+function setFull(val) {
+    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {full_name: val})
 }
 </script>

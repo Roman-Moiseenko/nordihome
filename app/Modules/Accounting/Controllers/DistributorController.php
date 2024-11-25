@@ -49,7 +49,7 @@ class DistributorController extends Controller
         $request->validate([
             'name' => 'required|string',
             'currency' => 'required',
-            'inn' => 'required',
+            //'inn' => 'required',
         ]);
         try {
             $distributor = $this->service->create($request);

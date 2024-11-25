@@ -4,8 +4,6 @@
             <el-descriptions :column="2" border class="mb-5">
                 <el-descriptions-item label="Поставщик">
                     <EditField :field="distributor.name" @update:field="setInfo"/>
-
-
                 </el-descriptions-item>
                 <el-descriptions-item label="Текущий долг">
                     <el-tag :type="distributor.debit > 0 ? 'danger' : 'success'" size="large">
@@ -32,6 +30,7 @@
             </div>
         </el-col>
         <el-col :span="8">
+            <h2 class="font-medium">Организация</h2>
             <div v-for="item in distributor.organizations">
                 <template v-if="item.pivot.default">
                     <el-tag  type="success">{{ item.short_name }}</el-tag>

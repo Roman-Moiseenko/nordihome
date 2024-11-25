@@ -13,9 +13,27 @@ use Illuminate\Http\Request;
 
 class OrganizationService
 {
+    public function create_foreign(Request $request): Organization
+    {
+        if (!is_null($organization = Organization::where('inn', $request->string('inn')->value())->first())) return $organization;
+
+        $organization = Organization::register(
+            $request->string('name')->value(),
+            $request->string('name')->value(),
+            $request->string('inn')->value(),
+            );
+        $organization->bik = $request->string('bik')->value();
+        $organization->bank_name = $request->string('bank')->value();
+        $organization->pay_account = $request->string('account')->value();
+        $organization->foreign = true;
+        $organization->save();
+        return $organization;
+    }
+
     public function create_find(string $inn, string $bik, string $pay_account):? Organization
     {
         if (!is_null($organization = Organization::where('inn', $inn)->first())) return $organization;
+
         $dadata = $this->dadata();
         //Компания
         $response = $dadata->findById("party", $inn);
@@ -42,16 +60,12 @@ class OrganizationService
 
     public function update_find(Organization $organization): void
     {
+        if ($organization->isForeign()) throw new \DomainException('Для иностранной компании данные не обновляются!');
         $dadata = $this->dadata();
         //Компания
         $response = $dadata->findById("party", $organization->inn);
         $data = $response[0]['data'];
         $this->setDataInn($organization, $data);
-
-        //Банк
-  /*      $response = $dadata->findById("bank", $organization->bik);
-        $data = $response[0]['data'];
-        $this->setDataBank($organization, $data);*/
     }
 
     public function setContact(Organization $organization, Request $request): void
@@ -126,12 +140,17 @@ class OrganizationService
     {
         if ($request->has('pay_account')) $organization->pay_account = $request->string('pay_account')->value();
         if ($request->has('bik')) {
-            $dadata = $this->dadata();
-            $response = $dadata->findById("bank", $request->string('bik')->trim()->value());
-            if (empty($response)) throw new \DomainException('Неверный БИК');
-            $data = $response[0]['data'];
-            $this->setDataBank($organization, $data);
+            if ($organization->isForeign()) {
+                $organization->bik = $request->string('bik')->value();
+            } else {
+                $dadata = $this->dadata();
+                $response = $dadata->findById("bank", $request->string('bik')->trim()->value());
+                if (empty($response)) throw new \DomainException('Неверный БИК');
+                $data = $response[0]['data'];
+                $this->setDataBank($organization, $data);
+            }
         }
+        if ($request->has('bank')) $organization->bank_name = $request->string('bank')->value();
         if ($request->has('address')) {
             $address = $request->input('address');
             $organization->actual_address = GeoAddress::create(
@@ -147,6 +166,9 @@ class OrganizationService
         if ($request->has('chief')) $organization->chief = FullName::create(
             params: $request->input('chief')
         );
+
+        if ($request->has('short_name')) $organization->short_name = $request->string('short_name')->value();
+        if ($request->has('full_name')) $organization->full_name = $request->string('full_name')->value();
 
         if ($request->has('holding_id')) {
             $holding_id = $request->input('holding_id');

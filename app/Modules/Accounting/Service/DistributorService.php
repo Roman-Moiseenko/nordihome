@@ -39,13 +39,14 @@ class DistributorService
                 $distributor->foreign = true;
                 $distributor->save();
             }
-
+            /*
             $organization = $this->service->create_find(
                 $request->string('inn')->trim()->value(),
                 $request->string('bik')->trim()->value(),
                 $request->string('account')->trim()->value()
             );
             $this->attach($distributor, $organization->id);
+            */
         });
 
         return $distributor;
