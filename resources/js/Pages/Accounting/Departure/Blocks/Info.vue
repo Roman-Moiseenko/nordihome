@@ -29,7 +29,6 @@
                     class="lg:w-80"
                     :on-remove="handleRemove"
                     :auto-upload="false"
-
                     @input="upload"
                 >
                     <!-- form.attachments = $event.target.files  multiple -->
