@@ -28,8 +28,8 @@
     <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(arrival.amount, arrival.currency) }}</el-tag>
-        <span v-if="arrival.expense" class="ml-2">
-            Доп.расходы <el-tag type="warning" size="large">{{ func.price(arrival.expense.amount) }}</el-tag>
+        <span v-if="arrival.expense_amount" class="ml-2">
+            Доп.расходы <el-tag type="warning" size="large">{{ func.price(arrival.expense_amount) }}</el-tag>
         </span>
     </span>
 

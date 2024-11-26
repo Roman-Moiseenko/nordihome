@@ -34,16 +34,9 @@
                     </el-input>
                 </template>
             </el-table-column>
-            <el-table-column prop="cost" label="Цена" width="180">
+            <el-table-column prop="cost" label="Себестоимость" width="180">
                 <template #default="scope">
-                <el-input v-model="scope.row.cost"
-                          :formatter="(value) => func.MaskInteger(value)"
-                          @change="setItem(scope.row)"
-                          :disabled="iSaving"
-                          :readonly="!isEdit"
-                >
-                    <template #append>₽</template>
-                </el-input>
+                    {{ func.price(scope.row.cost) }}
                 </template>
             </el-table-column>
             <el-table-column prop="cost" label="Сумма" width="180">
@@ -51,11 +44,11 @@
                     {{ func.price((scope.row.quantity - scope.row.formal) * scope.row.cost) }}
                 </template>
             </el-table-column>
-            <el-table-column label="Действия" align="right" width="180">
+            <!--el-table-column label="Действия" align="right" width="180">
                 <template #default="scope">
                     <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
                 </template>
-            </el-table-column>
+            </el-table-column-->
         </el-table>
         <pagination
             :current_page="inventory.products.current_page"
@@ -94,7 +87,6 @@ function setItem(row) {
         method: "post",
         data: {
             quantity: row.quantity,
-            cost: row.cost,
         },
         preserveScroll: true,
         preserveState: false,

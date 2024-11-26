@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Service;
 use App\Events\ArrivalHasCompleted;
 use App\Events\MovementHasCreated;
 use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
@@ -23,8 +24,7 @@ use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Deprecated;
+
 
 class ArrivalService
 {
@@ -69,7 +69,7 @@ class ArrivalService
 
     public function create_storage(int $storage_id): ArrivalDocument
     {
-        /** @var Admin $manager */
+        /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $currency = Currency::where('name', 'Рубль')->first();
         return ArrivalDocument::register(
@@ -287,9 +287,9 @@ class ArrivalService
     }
 
     //На основании
-    public function expense(ArrivalDocument $arrival)
+    public function expense(ArrivalDocument $arrival): ArrivalExpenseDocument
     {
-        if (!is_null($arrival->expense)) return $arrival->expense;
+        //if (!is_null($arrival->expense)) return $arrival->expense;
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Вносить изменения нельзя');
 
         return $this->expenseService->create($arrival);

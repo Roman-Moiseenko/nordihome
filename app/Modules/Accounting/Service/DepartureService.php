@@ -7,6 +7,7 @@ use App\Events\DepartureHasCompleted;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,7 +99,6 @@ class DepartureService
     {
         //Проведение документа
         DB::transaction(function () use ($departure) {
-            //TODO Проверка на кол-во!
             $this->storages->departure($departure->storage, $departure->products);
             $departure->completed();
             event(new DepartureHasCompleted($departure));
@@ -107,8 +107,10 @@ class DepartureService
 
     public function work(DepartureDocument $departure): void
     {
-        $this->storages->arrival($departure->storage, $departure->products);
-        $departure->work();
+        DB::transaction(function () use ($departure) {
+            $this->storages->arrival($departure->storage, $departure->products);
+            $departure->work();
+        });
     }
 
     public function setInfo(DepartureDocument $departure, Request $request): void
@@ -119,5 +121,19 @@ class DepartureService
             $departure->storage_id = $request->integer('storage_id');
         }
         $departure->save();
+    }
+
+    public function upload(DepartureDocument $departure, Request $request): void
+    {
+        $files = $request->file('files') ?? [];
+        foreach ($files as $file) {
+            $departure->photos()->save(Photo::upload(file: $file, thumb: false));
+        }
+    }
+
+    public function deletePhoto(DepartureDocument $departure, Request $request)
+    {
+        $photo = Photo::find($request->integer('id'));
+        $photo->delete();
     }
 }

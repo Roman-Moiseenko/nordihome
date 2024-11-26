@@ -26,7 +26,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property RefundDocument[] $refunds
  * @property MovementDocument[] $movements
  * @property ArrivalExpenseDocument $expense
- * @property InventoryDocument $inventory
+ * @property ArrivalExpenseDocument[] $expenses
  */
 class ArrivalDocument extends AccountingDocument
 {
@@ -70,7 +70,6 @@ class ArrivalDocument extends AccountingDocument
 
     //*** SET-...
 
-
     //*** GET-...
     public function getAmount(): float
     {
@@ -95,19 +94,20 @@ class ArrivalDocument extends AccountingDocument
     }
 
     //*** RELATION
-    public function inventory(): HasOne
-    {
-        return $this->hasOne(InventoryDocument::class, 'arrival_id', 'id');
-    }
-
     public function movements(): HasMany
     {
         return $this->hasMany(MovementDocument::class, 'arrival_id', 'id');
     }
 
+    #[Deprecated]
     public function expense(): HasOne
     {
         return $this->hasOne(ArrivalExpenseDocument::class, 'arrival_id', 'id');
+    }
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(ArrivalExpenseDocument::class, 'arrival_id', 'id');
     }
 
     public function supply(): BelongsTo
@@ -163,8 +163,6 @@ class ArrivalDocument extends AccountingDocument
 
     public function onBased(): ?array
     {
-        if (!is_null($this->inventory)) return null; //Поступление по инвентаризации
-
         $array = [];
         foreach ($this->refunds as $refund) {
             $array[] = $this->basedItem($refund);
@@ -173,14 +171,27 @@ class ArrivalDocument extends AccountingDocument
             $array[] = $this->basedItem($movement);
         }
         if (!is_null($this->pricing)) $array[] = $this->basedItem($this->pricing);
-        if (!is_null($this->expense)) $array[] = $this->basedItem($this->expense);
+        foreach ($this->expenses as $expense) {
+            $array[] = $this->basedItem($expense);
+        }
+
+        //if (!is_null($this->expense)) $array[] = $this->basedItem($this->expense);
         $array = array_filter($array);
         return empty($array) ? null : $array;
     }
 
     public function onFounded(): ?array
     {
-        if (!is_null($this->inventory)) return $this->foundedGenerate($this->inventory);
         return $this->foundedGenerate($this->supply);
+    }
+
+    public function getExpenseAmount(): float|int|null
+    {
+        if ($this->expenses()->count() == 0) return null;
+        $amount = 0;
+        foreach ($this->expenses as $expense) {
+            $amount += $expense->getAmount();
+        }
+        return $amount;
     }
 }

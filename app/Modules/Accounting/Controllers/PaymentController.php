@@ -103,6 +103,16 @@ class PaymentController extends Controller
         }
     }
 
+    public function not_paid(PaymentDocument $payment, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->notPaid($payment);
+            return redirect()->back()->with('success', 'Добавлено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
     public function set_amount(PaymentDecryption $decryption, Request $request): RedirectResponse
     {
         try {
@@ -112,4 +122,6 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+
 }

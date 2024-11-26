@@ -57,7 +57,16 @@
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
-
+                <el-table-column label="ОПЛ" width="40" class-name="no-space-cell" align="center">
+                    <template #default="scope">
+                        <StatusGraph :value="scope.row.status_pay" />
+                    </template>
+                </el-table-column>
+                <el-table-column label="ОТГ" width="40" class-name="no-space-cell" align="center">
+                    <template #default="scope">
+                        <StatusGraph :value="scope.row.status_out" />
+                    </template>
+                </el-table-column>
                 <el-table-column label="Дата" width="120">
                     <template #default="scope">
                         {{ func.date(scope.row.created_at)}}
@@ -117,6 +126,7 @@ import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
+import StatusGraph from "@Comp/Elements/StatusGraph.vue";
 
 const props = defineProps({
     supplies: Object,

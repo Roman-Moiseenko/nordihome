@@ -2,26 +2,35 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Расходная накладная {{ departure.number }} <span
-            v-if="departure.incoming_number">({{ departure.incoming_number }})</span> от
-            {{ func.date(departure.created_at) }}
+            Оприходование {{ surplus.number }} <span
+            v-if="surplus.incoming_number">({{ surplus.incoming_number }})</span> от
+            {{ func.date(surplus.created_at) }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <DepartureInfo :departure="departure" :storages="storages"/>
+            <SurplusInfo :surplus="surplus" :storages="storages"/>
         </div>
         <el-affix target=".affix-container" :offset="64">
             <div class="bg-white rounded-lg my-2 p-1 shadow flex">
-                <DepartureActions :departure="departure"/>
+                <SurplusActions :surplus="surplus"/>
             </div>
         </el-affix>
-        <el-table :data="[...departure.products.data]"
+        <el-table :data="[...surplus.products.data]"
                   header-cell-class-name="nordihome-header"
                   :row-class-name="tableRowClassName"
                   style="width: 100%;">
             <el-table-column prop="product.code" label="Артикул" width="160"/>
             <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
             <el-table-column prop="cost" label="Цена" width="180">
-                <template #default="scope">{{ func.price(scope.row.cost) }}</template>
+              <template #default="scope">
+                <el-input v-model="scope.row.cost"
+                          :formatter="(value) => func.MaskInteger(value)"
+                          @change="setItem(scope.row)"
+                          :disabled="iSaving"
+                          :readonly="!isEdit"
+                >
+                  <template #append>₽</template>
+                </el-input>
+              </template>
             </el-table-column>
             <el-table-column prop="quantity" label="Кол-во" width="180">
                 <template #default="scope">
@@ -51,12 +60,12 @@
             </el-table-column>
         </el-table>
         <pagination
-            :current_page="departure.products.current_page"
-            :per_page="departure.products.per_page"
-            :total="departure.products.total"
+            :current_page="surplus.products.current_page"
+            :per_page="surplus.products.per_page"
+            :total="surplus.products.total"
         />
     </el-config-provider>
-    <DeleteEntityModal name_entity="Товар из списания"/>
+    <DeleteEntityModal name_entity="Товар из оприходования"/>
 </template>
 
 <script lang="ts" setup>
@@ -65,14 +74,14 @@ import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Pagination from '@Comp/Pagination.vue'
-import DepartureInfo from './Blocks/Info.vue'
-import DepartureActions from './Blocks/Actions.vue'
+import SurplusInfo from './Blocks/Info.vue'
+import SurplusActions from './Blocks/Actions.vue'
 
 const props = defineProps({
-    departure: Object,
+    surplus: Object,
     title: {
         type: String,
-        default: 'Списание товаров',
+        default: 'Оприходование товаров',
     },
     storages: Array,
     printed: Object,
@@ -89,16 +98,16 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     return ''
 }
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.departure.completed);
+const isEdit = computed<Boolean>(() => !props.surplus.completed);
 const $delete_entity = inject("$delete_entity")
 
 function setItem(row) {
     iSaving.value = true;
-    router.visit(route('admin.accounting.departure.set-product', {product: row.id}), {
+    router.visit(route('admin.accounting.surplus.set-product', {product: row.id}), {
         method: "post",
         data: {
             quantity: row.quantity,
-            cost: row.cost_currency
+            cost: row.cost
         },
         preserveScroll: true,
         preserveState: false,
@@ -108,6 +117,6 @@ function setItem(row) {
     })
 }
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.departure.del-product', {product: row.id}));
+    $delete_entity.show(route('admin.accounting.surplus.del-product', {product: row.id}));
 }
 </script>

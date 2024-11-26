@@ -78,5 +78,10 @@ class PaymentDocumentService
         $decryption->save();
     }
 
+    public function notPaid(PaymentDocument $payment): void
+    {
+        $payment->fillDecryptions();
+    }
+
 
 }

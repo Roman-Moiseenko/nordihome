@@ -12,6 +12,7 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\RefundDocument;
+use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\Trader;
@@ -42,18 +43,21 @@ Breadcrumbs::for('admin.accounting.distributor.index', function (BreadcrumbTrail
     $trail->parent('admin.home');
     $trail->push('Поставщики', route('admin.accounting.distributor.index'));
 });
+/*
 Breadcrumbs::for('admin.accounting.distributor.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.distributor.index');
     $trail->push('Добавить', route('admin.accounting.distributor.create'));
 });
+*/
 Breadcrumbs::for('admin.accounting.distributor.show', function (BreadcrumbTrail $trail, Distributor $distributor) {
     $trail->parent('admin.accounting.distributor.index');
     $trail->push($distributor->name, route('admin.accounting.distributor.show', $distributor));
 });
+/*
 Breadcrumbs::for('admin.accounting.distributor.edit', function (BreadcrumbTrail $trail, Distributor $distributor) {
     $trail->parent('admin.accounting.distributor.show', $distributor);
     $trail->push('Редактировать', route('admin.accounting.distributor.edit', $distributor));
-});
+});*/
 //CURRENCY
 Breadcrumbs::for('admin.accounting.currency.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
@@ -119,27 +123,31 @@ Breadcrumbs::for('admin.accounting.departure.index', function (BreadcrumbTrail $
     $trail->parent('admin.home');
     $trail->push('Списание товаров', route('admin.accounting.departure.index'));
 });
+/*
 Breadcrumbs::for('admin.accounting.departure.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.departure.index');
     $trail->push('Добавить', route('admin.accounting.departure.create'));
-});
+});*/
 Breadcrumbs::for('admin.accounting.departure.show', function (BreadcrumbTrail $trail, DepartureDocument $departure) {
     $trail->parent('admin.accounting.departure.index');
     $trail->push($departure->number . ' от ' . $departure->created_at->format('d-m-Y'), route('admin.accounting.departure.show', $departure));
 });
+/*
 Breadcrumbs::for('admin.accounting.departure.edit', function (BreadcrumbTrail $trail, DepartureDocument $departure) {
     $trail->parent('admin.accounting.departure.show', $departure);
     $trail->push('Редактировать', route('admin.accounting.departure.edit', $departure));
-});
+});*/
 //SUPPLY
 Breadcrumbs::for('admin.accounting.supply.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Заказы товаров', route('admin.accounting.supply.index'));
 });
+/*
 Breadcrumbs::for('admin.accounting.supply.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.supply.index');
     $trail->push('Добавить', route('admin.accounting.supply.create'));
 });
+*/
 Breadcrumbs::for('admin.accounting.supply.show', function (BreadcrumbTrail $trail, SupplyDocument $supply) {
     $trail->parent('admin.accounting.supply.index');
     $trail->push($supply->number . ' от ' . $supply->created_at->format('d-m-Y'), route('admin.accounting.supply.show', $supply));
@@ -170,7 +178,16 @@ Breadcrumbs::for('admin.accounting.payment.edit', function (BreadcrumbTrail $tra
     $trail->push('Редактировать', route('admin.accounting.payment.edit', $payment));
 });
 */
+//SURPLUS DOCUMENT
+Breadcrumbs::for('admin.accounting.surplus.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Оприходование излишков', route('admin.accounting.surplus.index'));
+});
 
+Breadcrumbs::for('admin.accounting.surplus.show', function (BreadcrumbTrail $trail, SurplusDocument $surplus) {
+    $trail->parent('admin.accounting.surplus.index');
+    $trail->push($surplus->number . ' от ' . $surplus->created_at->format('d-m-Y'), route('admin.accounting.surplus.show', $surplus));
+});
 
 //PRICING
 Breadcrumbs::for('admin.accounting.pricing.index', function (BreadcrumbTrail $trail) {

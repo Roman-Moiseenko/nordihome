@@ -3,21 +3,20 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Product\Entity\Product;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $departure_id
- * @property float $cost - в рублях
- * @property DepartureDocument $document
+ * @property int $surplus_id
+ *
+ * @property int $cost
+ * @property SurplusDocument $document
  */
-class DepartureProduct extends AccountingProduct
+class SurplusProduct extends AccountingProduct
 {
-    protected $table = 'departure_products';
+    protected $table = 'surplus_products';
     public $timestamps = false;
     protected $fillable = [
-        'departure_id',
+        'surplus_id',
         'cost',
     ];
 
@@ -30,7 +29,6 @@ class DepartureProduct extends AccountingProduct
 
     public function document(): BelongsTo
     {
-        return $this->belongsTo(DepartureDocument::class, 'departure_id', 'id');
+        return $this->belongsTo(SurplusDocument::class, 'surplus_id', 'id');
     }
-
 }

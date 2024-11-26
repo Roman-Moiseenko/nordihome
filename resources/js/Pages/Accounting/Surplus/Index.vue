@@ -1,7 +1,7 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Списание товара</h1>
+        <h1 class="font-medium text-xl">Оприходование излишков</h1>
         <div class="flex">
             <el-popover :visible="visible_create" placement="bottom-start" :width="246">
                 <template #reference>
@@ -70,7 +70,7 @@
                 <el-table-column prop="quantity" label="Кол-во" width="100"/>
                 <el-table-column prop="amount" label="Сумма" width="120">
                     <template #default="scope">
-                        {{ func.price(scope.row.amount, scope.row.currency) }}
+                        {{ func.price(scope.row.amount) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
@@ -90,9 +90,9 @@
         </div>
 
         <pagination
-            :current_page="departures.current_page"
-            :per_page="departures.per_page"
-            :total="departures.total"
+            :current_page="surpluses.current_page"
+            :per_page="surpluses.per_page"
+            :total="surpluses.total"
         />
 
     </el-config-provider>
@@ -110,10 +110,10 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 
 const props = defineProps({
-    departures: Object,
+    surpluses: Object,
     title: {
         type: String,
-        default: 'Расходные накладные',
+        default: 'Оприходование излишков',
     },
     filters: Array,
     storages: Array,
@@ -122,7 +122,7 @@ const props = defineProps({
 const store = useStore();
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.departures.data])
+const tableData = ref([...props.surpluses.data])
 const filter = reactive({
     draft: props.filters.draft,
     staff_id: props.filters.staff_id,
@@ -143,13 +143,13 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.departure.destroy', {departure: row.id}));
+    $delete_entity.show(route('admin.accounting.surplus.destroy', {surplus: row.id}));
 }
 function createButton() {
-    router.post(route('admin.accounting.departure.store', {storage: create_id.value}))
+    router.post(route('admin.accounting.surplus.store', {storage: create_id.value}))
 }
 function routeClick(row) {
-    router.get(route('admin.accounting.departure.show', {departure: row.id}))
+    router.get(route('admin.accounting.surplus.show', {surplus: row.id}))
 }
 </script>
 <style scoped>

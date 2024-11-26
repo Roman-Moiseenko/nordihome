@@ -2,32 +2,46 @@
 
 namespace App\Modules\Accounting\Service;
 
-use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\InventoryProduct;
+use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Product;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\Deprecated;
 
 class InventoryService
 {
-    private ArrivalService $arrivalService;
     private DepartureService $departureService;
+    private SurplusService $surplusService;
 
-    public function __construct(ArrivalService $arrivalService, DepartureService $departureService)
+    public function __construct(DepartureService $departureService, SurplusService $surplusService)
     {
-        $this->arrivalService = $arrivalService;
         $this->departureService = $departureService;
+        $this->surplusService = $surplusService;
     }
 
     public function create(int $storage_id): InventoryDocument
     {
-        /** @var Admin $manager */
+        /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
-        return InventoryDocument::register($storage_id, $staff->id);
+        $storage = Storage::find($storage_id);
+        $inventory = InventoryDocument::register($storage_id, $staff->id);
+
+        foreach ($storage->items as $item) {
+            $inventory_product = InventoryProduct::new(
+                $item->product->id,
+                0,
+                $item->product->getPriceCost(),
+                $item->quantity
+            );
+            $inventory->products()->save($inventory_product);
+        }
+        return $inventory;
     }
 
 
@@ -35,30 +49,32 @@ class InventoryService
     {
         DB::transaction(function () use($inventory) {
             if ($inventory->surpluses()->count() > 0) { //Излишки
-                $arrival = $this->arrivalService->create_storage($inventory->storage_id);
+                $surplus = $this->surplusService->create_storage($inventory->storage_id);
+
                 foreach ($inventory->surpluses as $product) {
-                    $item = ArrivalProduct::new(
-                        $product->id,
+                    $item = SurplusProduct::new(
+                        $product->product_id,
                         $product->quantity - $product->formal,
                         $product->cost,
                     );
-                    $arrival->products()->save($item);
+                    $surplus->products()->save($item);
                 }
-                $arrival->completed();
-                $inventory->arrival_id = $arrival->id;
+                $this->surplusService->completed($surplus);
+
+                $inventory->surplus_id = $surplus->id;
             }
 
             if ($inventory->shortages()->count() > 0) { //Недостача
                 $departure = $this->departureService->create($inventory->storage_id);
                 foreach ($inventory->shortages as $product) {
                     $item = DepartureProduct::new(
-                        $product->id,
+                        $product->product_id,
                         $product->formal - $product->quantity,
                         $product->cost,
                     );
                     $departure->products()->save($item);
                 }
-                $departure->completed();
+                $this->departureService->completed($departure);
                 $inventory->departure_id = $departure->id;
             }
 
@@ -82,9 +98,9 @@ class InventoryService
     {
         DB::transaction(function () use($inventory) {
 
-            if (!is_null($inventory->arrival)) {
-                $this->arrivalService->work($inventory->arrival);
-                $this->arrivalService->destroy($inventory->arrival);
+            if (!is_null($inventory->surplus)) {
+                $this->surplusService->work($inventory->surplus);
+                $this->surplusService->destroy($inventory->surplus);
             }
             if (!is_null($inventory->departure)) {
                 $this->departureService->work($inventory->departure);
@@ -93,6 +109,8 @@ class InventoryService
             $inventory->work();
         });
     }
+
+    #[Deprecated]
     public function addProduct(InventoryDocument $inventory, int $product_id, int $quantity): void
     {
         $formal = $inventory->storage->getQuantity($product_id);
@@ -101,6 +119,7 @@ class InventoryService
         $inventory->products()->save($inventory_product);
     }
 
+    #[Deprecated]
     public function addProducts(InventoryDocument $inventory, array $products): void
     {
         $errors = [];
@@ -115,13 +134,10 @@ class InventoryService
         if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    public function setProduct(InventoryProduct $product, int $quantity, int $cost): void
+    public function setProduct(InventoryProduct $product, int $quantity): void
     {
         $product->setQuantity($quantity);
-        if ($product->cost != $cost) {
-            $product->cost = $cost;
-            $product->save();
-        }
+
     }
 
 

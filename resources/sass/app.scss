@@ -93,3 +93,8 @@ a[type="info"] {
 .file-uploader-one > ul > li + div {
     display: none;
 }
+.no-space-cell {
+    .cell {
+        padding: 0 2px !important;
+    }
+}

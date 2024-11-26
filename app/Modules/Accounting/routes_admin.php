@@ -34,6 +34,8 @@ Route::group(
                 Route::post('/expense/add-item/{expense}', 'ArrivalController@expense_add_item')->name('expense.add-item'); //Доп.расходы
                 Route::post('/expense/set-item/{item}', 'ArrivalController@expense_set_item')->name('expense.set-item'); //Доп.расходы
                 Route::delete('/expense/del-item/{item}', 'ArrivalController@expense_del_item')->name('expense.del-item'); //Доп.расходы
+                Route::delete('/expense/destroy/{expense}', 'ArrivalController@expense_destroy')->name('expense.destroy'); //Доп.расходы
+
             });
         //MOVEMENT
         Route::group([
@@ -68,6 +70,26 @@ Route::group(
                 Route::post('/completed/{inventory}', 'InventoryController@completed')->name('completed');
                 Route::post('/work/{inventory}', 'InventoryController@work')->name('work');
             });
+        //SURPLUS
+        Route::group([
+            'prefix' => 'surplus',
+            'as' => 'surplus.',
+        ],
+            function () {
+                Route::post('/add-product/{surplus}', 'SurplusController@add_product')->name('add-product');
+                Route::post('/add-products/{surplus}', 'SurplusController@add_products')->name('add-products');
+                Route::post('/completed/{surplus}', 'SurplusController@completed')->name('completed');
+                Route::post('/work/{surplus}', 'SurplusController@work')->name('work');
+
+                Route::post('/set-product/{product}', 'SurplusController@set_product')->name('set-product');
+                Route::delete('/del-product/{product}', 'SurplusController@del_product')->name('del-product');
+                Route::post('/set-info/{surplus}', 'SurplusController@set_info')->name('set-info');
+                Route::get('/', 'SurplusController@index')->name('index');
+                Route::post('/', 'SurplusController@store')->name('store');
+                Route::get('/{surplus}', 'SurplusController@show')->name('show');
+                Route::delete('/destroy/{surplus}', 'SurplusController@destroy')->name('destroy');
+
+            });
         //DEPARTURE
         Route::group([
             'prefix' => 'departure',
@@ -77,9 +99,12 @@ Route::group(
                 Route::post('/add-product/{departure}', 'DepartureController@add_product')->name('add-product');
                 Route::post('/add-products/{departure}', 'DepartureController@add_products')->name('add-products');
                 Route::post('/completed/{departure}', 'DepartureController@completed')->name('completed');
+                Route::post('/work/{departure}', 'DepartureController@work')->name('work');
                 Route::post('/set-product/{product}', 'DepartureController@set_product')->name('set-product');
                 Route::delete('/del-product/{product}', 'DepartureController@del_product')->name('del-product');
                 Route::post('/set-info/{departure}', 'DepartureController@set_info')->name('set-info');
+                Route::post('/upload/{departure}', 'DepartureController@upload')->name('upload');
+                Route::post('/delete-photo/{departure}', 'DepartureController@delete_photo')->name('delete-photo');
             });
         //DISTRIBUTION
         Route::group([
@@ -126,6 +151,7 @@ Route::group(
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
                 Route::post('/work/{supply}', 'SupplyController@work')->name('work');
                 Route::post('/set-info/{supply}', 'SupplyController@set_info')->name('set-info');
+
             });
         //PRICING
         Route::group([
@@ -168,6 +194,7 @@ Route::group(
                 Route::post('/upload', 'PaymentController@upload')->name('upload');
 
                 Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
+                Route::post('/not-paid/{payment}', 'PaymentController@not_paid')->name('not-paid');
                 Route::post('/set-amount/{decryption}', 'PaymentController@set_amount')->name('set-amount');
             });
         //BANK

@@ -256,4 +256,15 @@ class ArrivalController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function expense_destroy(ArrivalExpenseDocument $expense): RedirectResponse
+    {
+        try {
+            $arrival = $expense->arrival;
+            $expense->delete();
+            return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Удалено');
+        } catch (\DomainException $e) {
+            return redirect()->with('error', $e->getMessage());
+        }
+    }
 }

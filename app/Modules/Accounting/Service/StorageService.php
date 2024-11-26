@@ -73,6 +73,7 @@ class StorageService
             foreach ($items as $item) {
                 $product = $item->getProduct();
                 $storage->sub($product, $item->getQuantity());
+                if ($storage->getQuantity($product->id) < 0) throw new \DomainException('Остатки меньше нуля, списание не возможно');
             }
         });
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\CompletedFieldModel;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -21,6 +23,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property DepartureProduct[] $departureProducts
  * @property Admin $staff
  * @property InventoryDocument $inventory
+ * @property Photo[] $photos
  */
 class DepartureDocument extends AccountingDocument
 {
@@ -29,13 +32,6 @@ class DepartureDocument extends AccountingDocument
 
     protected $fillable = [
         'storage_id',
-        'comment',
-        'staff_id',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
     ];
 
     public static function register(int $storage_id, int $staff_id): self
@@ -68,22 +64,9 @@ class DepartureDocument extends AccountingDocument
         return $this->belongsTo(Storage::class, 'storage_id', 'id');
     }
 
-    #[ArrayShape([
-        'quantity' => 'int',
-        'cost' => 'float',
-    ])]
-    public function getInfoData(): array
+    public function photos(): MorphMany
     {
-        $quantity = 0;
-        $cost = 0;
-        foreach ($this->departureProducts as $item) {
-            $quantity += $item->quantity;
-            $cost += $item->quantity * ($item->cost ?? 0);
-        }
-        return [
-            'quantity' => $quantity,
-            'cost' => $cost,
-        ];
+        return $this->morphMany(Photo::class, 'imageable');
     }
 
     public function getAmount(): float
@@ -111,7 +94,6 @@ class DepartureDocument extends AccountingDocument
     function documentUrl(): string
     {
         return route('admin.accounting.departure.show', ['departure' => $this->id], false);
-
     }
 
     public function onBased(): ?array
@@ -123,4 +105,5 @@ class DepartureDocument extends AccountingDocument
     {
         return $this->foundedGenerate($this->inventory);
     }
+
 }

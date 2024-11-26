@@ -542,16 +542,6 @@ class Product extends Model
         $quantity = $query->first();
         return (int)$quantity->total ?? 0;
 
-        /*
-        $quantity = 0;
-        foreach ($this->storageItems as $storageItem) {
-            if (is_null($storage_id)) {
-                $quantity += $storageItem->quantity;
-            } else {
-                if ($storageItem->storage_id == $storage_id) return $storageItem->quantity;
-            }
-        }
-        return $quantity; */
     }
 
     //TODO Переименовать
@@ -563,7 +553,6 @@ class Product extends Model
         }
         return $quantity;
     }
-
 
 
     public function getName(): string
@@ -581,7 +570,6 @@ class Product extends Model
 
     public function getProdAttribute(int $id_attr): ?Attribute
     {
-        //if (empty())
         foreach ($this->prod_attributes as $attribute) {
             if ($attribute->id === $id_attr) return $attribute;
         }
@@ -622,7 +610,6 @@ class Product extends Model
         return Storage::whereHas('items', function ($q) {
             $q->where('product_id', $this->id);
         })->getModels();
-        //return $this->hasMany(StorageItem::class, 'product_id', 'id')-;
     }
 
     /**

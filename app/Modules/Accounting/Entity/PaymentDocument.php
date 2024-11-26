@@ -95,12 +95,21 @@ class PaymentDocument extends AccountingDocument
         if (!is_null($distributor)) {
             foreach ($distributor->supplies as $supply) {
                 $debit = $supply->debit();
-                if ($debit != 0) {
+                //Если задолженность > 0 и  по данному заказу еще нет записи
+                if ($debit != 0 && is_null($this->getDecryption($supply->id))) {
                     $decryption = PaymentDecryption::register($debit, $supply->id, $this->bank_purpose);
                     $this->decryptions()->save($decryption);
                 }
             }
         }
+    }
+
+    public function getDecryption(int $supply_id): ?PaymentDecryption
+    {
+        foreach ($this->decryptions as $decryption) {
+            if ($decryption->supply_id == $supply_id) return $decryption;
+        }
+        return null;
     }
 
     function documentUrl(): string

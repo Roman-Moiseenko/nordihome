@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $arrival_id
+ * @property int $surplus_id
  * @property int $departure_id
  * @property int $storage_id
  *
- * @property ArrivalDocument $arrival
+ * @property SurplusDocument $surplus
  * @property DepartureDocument $departure
  * @property Storage $storage
  *
@@ -63,7 +63,6 @@ class InventoryDocument extends AccountingDocument
     public function getSurplusAmount(): float|int
     {
         $amount = 0;
-        /** @var InventoryProduct $product */
         foreach ($this->surpluses as $product) {
             $amount += $product->cost * ($product->formal - $product->quantity);
         }
@@ -73,7 +72,6 @@ class InventoryDocument extends AccountingDocument
     public function getShortagesAmount(): float|int
     {
         $amount = 0;
-        /** @var InventoryProduct $product */
         foreach ($this->shortages as $product) {
             $amount += $product->cost * ($product->formal - $product->quantity);
         }
@@ -85,9 +83,9 @@ class InventoryDocument extends AccountingDocument
         return $this->belongsTo(Storage::class, 'storage_id', 'id');
     }
 
-    public function arrival(): BelongsTo
+    public function surplus(): BelongsTo
     {
-        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
+        return $this->belongsTo(SurplusDocument::class, 'surplus_id', 'id');
     }
 
     public function departure(): BelongsTo
@@ -120,7 +118,7 @@ class InventoryDocument extends AccountingDocument
     public function onBased(): ?array
     {
         $array = [];
-        if (!is_null($this->arrival)) $array[] = $this->basedItem($this->arrival);
+        if (!is_null($this->surplus())) $array[] = $this->basedItem($this->surplus);
         if (!is_null($this->departure)) $array[] = $this->basedItem($this->departure);
         return $array;
     }

@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Repository;
 
-use App\Modules\Accounting\Entity\DepartureDocument;
-use App\Modules\Base\Entity\Photo;
+use App\Modules\Accounting\Entity\SurplusDocument;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
-class DepartureRepository extends AccountingRepository
+class SurplusRepository extends AccountingRepository
 {
-//TODO
+
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = DepartureDocument::orderByDesc('created_at');
+        $query = SurplusDocument::orderByDesc('created_at');
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if ($request->integer('storage') > 0) {
@@ -25,34 +24,26 @@ class DepartureRepository extends AccountingRepository
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(fn(DepartureDocument $document) => $this->DepartureToArray($document));
+            ->through(fn(SurplusDocument $document) => $this->SurplusToArray($document));
     }
 
-    public function DepartureToArray(DepartureDocument $document): array
+    private function SurplusToArray(SurplusDocument $document): array
     {
         return array_merge($document->toArray(), [
-            'date' => $document->htmlDate(),
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
         ]);
     }
 
-    public function DepartureWithToArray(DepartureDocument $document, Request $request): array
+    public function SurplusWithToArray(SurplusDocument $document, Request $request): array
     {
         return array_merge(
             $this->commonItems($document),
-            $this->DepartureToArray($document),
+            $this->SurplusToArray($document),
             [
                 'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
                 'inventory' => !is_null($document->inventory),
-                'photos' => $document->photos()->get()->map(function (Photo $photo) {
-                    return [
-                        'id' => $photo->id,
-                        'url' => $photo->getUploadUrl(),
-                        'name' => $photo->file,
-                    ];
-                }),
             ],
         );
     }

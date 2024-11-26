@@ -54,7 +54,7 @@ class DepartureController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'storage' => 'required',
@@ -157,4 +157,27 @@ class DepartureController extends Controller
         }
     }
 
+    public function upload(DepartureDocument $departure, Request $request)
+    {
+        try {
+            $this->service->upload($departure, $request);
+            return redirect()->back()->with('success', 'Загружено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function delete_photo(DepartureDocument $departure, Request $request)
+    {
+        try {
+            $this->service->deletePhoto($departure, $request);
+            return redirect()->back()->with('success', 'Удалено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }

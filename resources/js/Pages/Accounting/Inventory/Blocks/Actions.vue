@@ -5,11 +5,7 @@
         <AccountingWork :route="route('admin.accounting.inventory.work', {inventory: props.inventory.id})" />
     </template>
     <template v-else>
-        <SearchAddProduct
-            :route="route('admin.accounting.inventory.add-product', {inventory: inventory.id})"
-            :quantity="true"
-        />
-        <SearchAddProducts :route="route('admin.accounting.inventory.add-products', {inventory: inventory.id})" class="ml-3"/>
+
         <AccountingCompleted :route="route('admin.accounting.inventory.completed', {inventory: props.inventory.id})" />
     </template>
     <AccountingOnBased :based="inventory.based" :founded="inventory.founded"/>

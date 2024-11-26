@@ -12,7 +12,8 @@
             <el-input v-model="form.cost" style="width: 160px" class="ml-2">
                 <template #append>{{ expense.currency_sign }}</template>
             </el-input>
-            <el-button type="success" plain class="ml-5" @click="onSubmit">Добавить</el-button>
+            <el-button type="primary" class="ml-5" @click="onSubmit">Добавить</el-button>
+            <el-button type="danger" class="ml-auto" @click="onDelete">Удалить документ</el-button>
         </el-form>
 
     </template>
@@ -20,11 +21,11 @@
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(expense.amount) }}</el-tag>
     </span>
-
+    <DeleteEntityModal name_entity="Доп.расходы" name="expense" />
 </template>
 
 <script setup>
-import {defineProps, reactive} from "vue";
+import {inject, defineProps, reactive} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
@@ -33,12 +34,12 @@ import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
 const props = defineProps({
     expense: Object,
 })
-
 const form = reactive({
     name: null,
     quantity: 1,
     cost: null,
 })
+const $delete_entity = inject("$delete_entity")
 
 function onSubmit() {
     if (form.name === null || form.quantity === null || form.cost === null) return;
@@ -55,6 +56,9 @@ function onSubmit() {
             form.cost = null
         }
     })
+}
+function onDelete() {
+    $delete_entity.show(route('admin.accounting.arrival.expense.destroy', {expense: props.expense.id}), "expense");
 }
 
 </script>

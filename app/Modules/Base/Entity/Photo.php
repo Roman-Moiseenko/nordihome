@@ -23,6 +23,7 @@ use function public_path;
  * @property string $alt
  * @property int $sort
  * @property string $type
+ * @property bool $thumb
  */
 class Photo extends Model
 {
@@ -36,11 +37,15 @@ class Photo extends Model
     private string $catalogThumb;
     private string $urlThumb;
 
+    protected $attributes = [
+        'thumb' => true,
+    ];
     protected $fillable = [
         'file',
         'sort',
         'alt',
         'type',
+        'thumb',
     ];
 
     private string $urlUpload;
@@ -80,13 +85,14 @@ class Photo extends Model
         $this->urlThumb = $options->image->path['cache'];
     }
 
-    public static function upload(UploadedFile $file, string $type = '', int $sort = 0, string $alt = ''): self
+    public static function upload(UploadedFile $file, string $type = '', int $sort = 0, string $alt = '', bool $thumb = true): self
     {
         $photo = self::make([
             'file' => $file->getClientOriginalName(),
             'sort' => $sort,
             'type' => $type,
             'alt' => $alt,
+            'thumb' => $thumb,
         ]);
         $photo->fileForUpload = $file;
         return $photo;
@@ -272,4 +278,12 @@ class Photo extends Model
         return pathinfo($this->file, PATHINFO_EXTENSION);
     }
 
+    public function delete(): void
+    {
+        $this->clearThumbs();
+        if (is_file($this->file)) {
+            unlink($this->file);
+        }
+        parent::delete();
+    }
 }

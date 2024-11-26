@@ -44,13 +44,7 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-sharp fa-light fa-arrows-rotate',
             ],
-            'departure' => [
-                'icon' => 'folder-output',
-                'title' => 'Списание товара',
-                'route_name' => 'admin.accounting.departure.index',
-                'vue' => true,
-                'font_awesome' => 'fa-light fa-folder-xmark',
-            ],
+
             'pricing' => [
                 'icon' => 'badge-russian-ruble',
                 'title' => 'Ценообразование',
@@ -65,7 +59,20 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-scanner-keyboard',
             ],
-
+            'departure' => [
+                'icon' => 'folder-output',
+                'title' => 'Списание товара',
+                'route_name' => 'admin.accounting.departure.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-folder-xmark',
+            ],
+            'surplus' => [
+                'icon' => 'folder-output',
+                'title' => 'Оприходование',
+                'route_name' => 'admin.accounting.surplus.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-folder-plus',
+            ],
             'distributors' => [
                 'icon' => 'factory',
                 'title' => 'Поставщики',

@@ -16,7 +16,8 @@ class ArrivalExpenseService
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $expense = ArrivalExpenseDocument::register($staff->id);
-        $arrival->expense()->save($expense);
+       // $arrival->expenses()
+        $arrival->expenses()->save($expense);
         return $expense;
     }
 

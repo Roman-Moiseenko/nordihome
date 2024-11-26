@@ -73,6 +73,8 @@ class SupplyRepository extends AccountingRepository
             'currency' => $document->distributor->currency->sign,
             'distributor_name' => $document->distributor->name,
             'date' => $document->htmlDate(),
+            'status_pay' => round($document->getPayment() / $document->getAmount(), 1),
+            'status_out' => round($document->getOutQuantity() / $document->getQuantity(), 1)
         ]);
     }
 

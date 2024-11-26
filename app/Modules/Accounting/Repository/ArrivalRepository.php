@@ -56,11 +56,11 @@ class ArrivalRepository extends AccountingRepository
                     'pre_cost' => is_null($document->distributor) ? null : $document->distributor->getProduct($arrivalProduct->product_id)->pivot->pre_cost,
                 ])),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
-            'expense' => is_null($document->expense) ? null : array_merge($document->expense()->first()->toArray(),[
+            'expense_amount' => $document->getExpenseAmount(),
+           /* 'expense' => is_null($document->expense) ? null : array_merge($document->expense()->first()->toArray(),[
                 'amount' => $document->expense->getAmount(),
-            ]),
+            ]),*/
         ];
-
         return array_merge(
             $this->commonItems($document),
             $this->ArrivalToArray($document),

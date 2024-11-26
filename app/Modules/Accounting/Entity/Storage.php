@@ -164,7 +164,9 @@ class Storage extends Model
     //*** RELATIONS
     public function items(): HasMany
     {
-        return $this->hasMany(StorageItem::class, 'storage_id', 'id');
+        return $this->hasMany(StorageItem::class, 'storage_id', 'id')->whereHas('product', function ($query) {
+            $query->where('deleted_at', null);
+        });
     }
 
     public function departureItems(): HasMany

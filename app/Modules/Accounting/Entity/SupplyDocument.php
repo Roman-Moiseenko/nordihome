@@ -69,6 +69,16 @@ class SupplyDocument extends AccountingDocument
         return $quantity;
     }
 
+
+    public function getOutQuantity(): int
+    {
+        $quantity = 0;
+        foreach ($this->arrivals as $arrival) {
+            $quantity += $arrival->getQuantity();
+        }
+        return $quantity;
+    }
+
     /**
      * Сумма заказа в валюте поставщика
      */
@@ -214,4 +224,5 @@ class SupplyDocument extends AccountingDocument
     {
         return null;
     }
+
 }
