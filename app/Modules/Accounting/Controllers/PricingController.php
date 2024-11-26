@@ -50,10 +50,14 @@ class PricingController extends Controller
         ]);
     }
 
-    public function create(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $pricing = $this->service->create();
-        return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
+        try {
+            $pricing = $this->service->create();
+            return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function show(PricingDocument $pricing, Request $request)
@@ -66,8 +70,12 @@ class PricingController extends Controller
 
     public function destroy(PricingDocument $pricing): RedirectResponse
     {
-        $this->service->destroy($pricing);
-        return redirect()->back()->with('success', 'Удалено');
+        try {
+            $this->service->destroy($pricing);
+            return redirect()->back()->with('success', 'Удалено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function completed(PricingDocument $pricing): RedirectResponse

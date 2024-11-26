@@ -214,7 +214,7 @@ Route::group(
         Route::resource('movement', 'MovementController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('departure', 'DepartureController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('supply', 'SupplyController')->except(['edit', 'update']); //CRUD
-        Route::resource('pricing', 'PricingController')->except(['store', 'edit', 'update']); //CRUD
+        Route::resource('pricing', 'PricingController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('organization', 'OrganizationController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('trader', 'TraderController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('payment', 'PaymentController')->except(['create', 'store']); //CRUD
