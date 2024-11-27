@@ -11,12 +11,11 @@
                 <h2 class="font-medium">Договора</h2>
                 <el-upload
                     v-model:file-list="contractList"
-
                     action="#"
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
                     :auto-upload="false"
-                    @input="upload"
+                    @input="upload($event.target.files[0], 'contract')"
                     :on-error="handleError"
                 >
                     <template #trigger>
@@ -30,11 +29,29 @@
 
                     </template>
                 </el-upload>
-
             </el-col>
             <el-col :span="8">
                 <h2 class="font-medium">Файлы</h2>
+                <el-upload
+                    v-model:file-list="documentList"
+                    action="#"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :auto-upload="false"
+                    @input="upload($event.target.files[0], '')"
+                    :on-error="handleError"
+                >
+                    <template #trigger>
+                        <el-button type="info" circle>
+                            <el-icon>
+                                <Paperclip/>
+                            </el-icon>
+                        </el-button>
+                    </template>
+                    <template #file="scope">
 
+                    </template>
+                </el-upload>
 
             </el-col>
         </el-row>
@@ -53,31 +70,43 @@ const props = defineProps({
 })
 
 const contractList = ref<UploadUserFile[]>([]);
+const documentList = ref<UploadUserFile[]>([]);
+
 for (let key in props.organization.contracts) {
     contractList.value.push({
-        file: props.organization.contracts[key].file,
+//        file: props.organization.contracts[key].file,
         url: props.organization.contracts[key].url,
         id: props.organization.contracts[key].id,
         name: props.organization.contracts[key].title,
     });
 }
-console.log(contractList)
+for (let key in props.organization.documents) {
+    documentList.value.push({
+//        file: props.organization.contracts[key].file,
+        url: props.organization.documents[key].url,
+        id: props.organization.documents[key].id,
+        name: props.organization.documents[key].title,
+    });
+}
+
+
+//console.log(contractList)
 const form = reactive({
     attachments: [],
 })
 
-function upload(val) {
+function upload(file, type) {
 
     //router.post(route('admin.accounting.organization.upload', {organization: props.organization.id}), {id: val})
 
     router.visit(route('admin.accounting.organization.upload', {organization: props.organization.id}), {
         method: "post",
         data: {
-            file: val.target.files[0],
-            type: 'contract',
+            file: file,
+            type: type,
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
 
     })
 }
@@ -105,14 +134,14 @@ const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
         link._target = 'blank'
         link.click();
     }).catch(res => {
-        console.log(res)
+       // console.log(res)
     })
 
 
 
 }
 const handleError: UploadProps['onError'] = (error: Error, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
-    console.log(error, uploadFiles)
+    console.log(error)
     //   router.post(route('admin.file.remove-file'), {id: val})
 }
 

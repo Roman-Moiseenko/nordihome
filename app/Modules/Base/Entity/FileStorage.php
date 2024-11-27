@@ -44,8 +44,9 @@ class FileStorage extends Model
     }
     public static function upload(UploadedFile $file, string $type = '', string $title = ''): self
     {
+        $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
         $photo = self::make([
-            'file' => $file->getClientOriginalName(),
+            'file' => Str::random(8) . '.' . $ext, //$file->getClientOriginalName(),
             'type' => $type,
             'title' => empty($title) ? $file->getClientOriginalName() : $title,
         ]);
@@ -59,27 +60,14 @@ class FileStorage extends Model
         $old_file = $this->getUploadFile();
         if (is_file($old_file)) unlink($old_file);
 
-        //$this->file = $this->fileForUpload->getClientOriginalName();
-
-        $ext = pathinfo( $this->fileForUpload->getClientOriginalName(), PATHINFO_EXTENSION);
-
-        $this->file = Str::random(8) . '.' . $ext;
-        $this->save();
-
-        //TODO Если меняем имя
-        // $this->file = new_name
         //Создаем каталог
         $path = $this->catalogUpload . $this->patternGeneratePath();
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-
         $this->fileForUpload->move($path, $this->file);
-        //$this->fileForUpload->move($path, $this->fileForUpload->getClientOriginalName());
-
-        //copy($this->fileForUpload->getPath() . '/' . $this->fileForUpload->getFilename(),$path . $this->fileForUpload->getClientOriginalName());
         //Очищаем все thumbs
-        //unset($this->fileForUpload);
+        unset($this->fileForUpload);
     }
 
     final public function getUploadFile(): string
