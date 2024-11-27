@@ -73,7 +73,7 @@ function setAmount(row) {
             amount: row.amount,
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSaving.value = false;
         }

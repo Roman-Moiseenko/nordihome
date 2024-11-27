@@ -49,7 +49,7 @@ function onSubmit() {
         onPreserveState: true,
         data: form,
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             form.name = null
             form.quantity = 1

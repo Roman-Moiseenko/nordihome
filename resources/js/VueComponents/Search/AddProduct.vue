@@ -159,7 +159,7 @@ function onAdd() {
         method: "post",
         data: form,
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             form.product_id = null
             form.quantity = 1

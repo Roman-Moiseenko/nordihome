@@ -115,6 +115,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 import Active from '@Comp/Elements/Active.vue'
+import {ElLoading} from "element-plus";
 
 const props = defineProps({
     inventories: Object,
@@ -153,7 +154,21 @@ function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.inventory.destroy', {inventory: row.id}));
 }
 function createButton() {
-    router.post(route('admin.accounting.inventory.store', {storage_id: create_id.value}))
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Формирование документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+
+    router.visit(route('admin.accounting.inventory.store', {storage_id: create_id.value}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+            loading.close()
+        }
+    })
+
 }
 function routeClick(row) {
     router.get(route('admin.accounting.inventory.show', {inventory: row.id}))

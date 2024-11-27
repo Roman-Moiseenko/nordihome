@@ -52,7 +52,7 @@ function onAdd() {
         method: "post",
         data: {products: products},
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             data.value = null
         }

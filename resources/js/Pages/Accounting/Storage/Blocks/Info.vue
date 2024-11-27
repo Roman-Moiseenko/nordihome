@@ -170,7 +170,7 @@ function setInfo() {
         method: "post",
         data: info,
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSavingInfo.value = false;
         }

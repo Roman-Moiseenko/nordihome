@@ -84,7 +84,7 @@ function attachOrganization() {
         method: "post",
         data: {organization: organization.value},
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             showEdit.value = false;
         }

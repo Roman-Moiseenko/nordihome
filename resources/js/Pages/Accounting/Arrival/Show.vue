@@ -115,7 +115,7 @@ function setItem(row: any) {
             cost: row.cost_currency
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSaving.value = false;
         }

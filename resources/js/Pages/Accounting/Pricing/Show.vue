@@ -177,7 +177,7 @@ function setItem(row) {
             price_pre: row.price_pre,
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSaving.value = false
             clearItem()

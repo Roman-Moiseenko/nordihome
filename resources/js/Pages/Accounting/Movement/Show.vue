@@ -87,7 +87,7 @@ function setItem(row) {
             quantity: row.quantity,
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSaving.value = false;
         }

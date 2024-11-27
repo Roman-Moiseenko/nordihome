@@ -33,7 +33,7 @@ function removeItem() {
         router.visit(props.route, {
             method: 'delete',
             preserveScroll: true,
-            preserveState: false,
+            preserveState: true,
         });
         showDialog.value = false;
     }

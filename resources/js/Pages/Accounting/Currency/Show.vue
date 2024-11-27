@@ -88,7 +88,7 @@ function setItem() {
         method: "put",
         data: form,
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSaving.value = false;
         }

@@ -93,7 +93,7 @@ function onUpdate(){
     router.visit(route('admin.accounting.organization.update', {organization: props.organization.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
     })
 }
 function setShort(val) {

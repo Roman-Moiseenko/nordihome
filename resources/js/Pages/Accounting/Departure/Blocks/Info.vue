@@ -78,7 +78,7 @@ function setInfo() {
         method: "post",
         data: info,
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSavingInfo.value = false;
         }
@@ -114,7 +114,7 @@ function upload(val) {
         method: "post",
         data: {files: val.target.files,},
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
 
     })
     //console.log(val.target.files)

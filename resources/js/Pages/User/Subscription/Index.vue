@@ -81,14 +81,14 @@ function onActivated(row) {
     router.visit(route('admin.user.subscription.activated', {subscription: row.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
     })
 }
 function onDraft(row) {
     router.visit(route('admin.user.subscription.draft', {subscription: row.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
     })
 }
 function routeClick(row) {

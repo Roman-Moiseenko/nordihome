@@ -189,7 +189,7 @@ function setInfo() {
         method: "post",
         data: form,
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             editUser.value = false;
         }

@@ -93,7 +93,7 @@ function setItem(row) {
             name: row.name,
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSaving.value = false;
         }

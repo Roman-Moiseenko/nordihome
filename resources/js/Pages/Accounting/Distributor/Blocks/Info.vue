@@ -93,7 +93,7 @@ function setInfo(val) {
             name: val,
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             editDistr.value = false;
         }

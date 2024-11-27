@@ -182,7 +182,7 @@ function onActive(row) {
     router.visit(route('admin.user.verify', {user: row.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
     })
 }
 

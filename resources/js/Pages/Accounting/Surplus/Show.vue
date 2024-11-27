@@ -110,7 +110,7 @@ function setItem(row) {
             cost: row.cost
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             iSaving.value = false;
         }
