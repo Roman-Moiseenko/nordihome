@@ -46,6 +46,7 @@ class AuthServiceProvider extends ServiceProvider
         */
 
         Gate::before(function (Admin $user) {
+           // dd($user->responsibilities);
             return $user->isAdmin() || $user->isChief();
         });
 

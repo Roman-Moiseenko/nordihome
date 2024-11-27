@@ -29,7 +29,7 @@ class PaymentController extends Controller
         StaffRepository   $staffs,
     )
     {
-        $this->middleware(['auth:admin', 'can:payment']);
+       // $this->middleware(['auth:admin', 'can:payment']);
         $this->service = $service;
         $this->repository = $repository;
         $this->orders = $orders;

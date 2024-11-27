@@ -18,7 +18,7 @@ class CurrencyController extends Controller
 
     public function __construct(CurrencyService $service)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
+        //$this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
     }
 

@@ -20,7 +20,7 @@ class ModificationController extends Controller
 
     public function __construct(ModificationService $service, ProductRepository $products, ModificationRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:product']);
+        //$this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->products = $products;
         $this->repository = $repository;

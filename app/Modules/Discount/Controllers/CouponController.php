@@ -11,7 +11,7 @@ class CouponController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:admin', 'can:discount']);
+        //$this->middleware(['auth:admin', 'can:discount']);
     }
 
 }

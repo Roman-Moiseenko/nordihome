@@ -20,7 +20,7 @@ class CategoryController extends Controller
 
     public function __construct(CategoryService $service, CategoryRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:product']);
+       // $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->repository = $repository;
     }

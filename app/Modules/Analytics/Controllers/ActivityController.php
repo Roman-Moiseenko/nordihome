@@ -19,7 +19,7 @@ class ActivityController extends Controller
 
     public function __construct(ActivityRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
+        //$this->middleware(['auth:admin', 'can:accounting']);
         $this->repository = $repository;
     }
 

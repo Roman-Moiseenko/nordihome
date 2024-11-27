@@ -23,7 +23,7 @@ class OrganizationController extends Controller
 
     public function __construct(OrganizationService $service, OrganizationRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
+        //$this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->repository = $repository;
     }

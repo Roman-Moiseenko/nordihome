@@ -28,7 +28,7 @@ class DistributorController extends Controller
 
     public function __construct(DistributorService $service, DistributorRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
+        //$this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->repository = $repository;
     }

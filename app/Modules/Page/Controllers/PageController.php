@@ -15,7 +15,7 @@ class PageController extends Controller
 
     public function __construct(PageService $service)
     {
-        $this->middleware(['auth:admin', 'can:options']);
+        //$this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
     }
 
