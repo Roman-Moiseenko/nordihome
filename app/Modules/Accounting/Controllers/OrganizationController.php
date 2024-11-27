@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class OrganizationController extends Controller
 {
@@ -111,7 +112,7 @@ class OrganizationController extends Controller
         return response()->json($result);
     }
 
-    public function find(Request $request)
+    public function find(Request $request): JsonResponse
     {
         try {
             if ($request->boolean('foreign')) {
@@ -129,7 +130,17 @@ class OrganizationController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
-
     }
+
+    public function upload(Organization $organization, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->upload($organization, $request);
+            return redirect()->back()->with('success', 'Файл загружен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
 
 }

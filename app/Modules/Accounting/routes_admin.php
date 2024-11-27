@@ -181,6 +181,7 @@ Route::group(
                 Route::post('/set-info/{organization}', 'OrganizationController@set_info')->name('set-info');
                 Route::post('/search-add', 'OrganizationController@search_add')->name('search-add');
                 Route::post('/find', 'OrganizationController@find')->name('find');
+                Route::post('/upload/{organization}', 'OrganizationController@upload')->name('upload');
             });
         //PAYMENT
         Route::group([

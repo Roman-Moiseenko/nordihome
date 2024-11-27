@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Service;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\OrganizationContact;
 use App\Modules\Accounting\Entity\OrganizationHolding;
+use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use Dadata\DadataClient;
@@ -188,6 +189,17 @@ class OrganizationService
         $secret = env('DADATA_KEY', '');
 
         return new DadataClient($token, $secret);
+    }
+
+    public function upload(Organization $organization, Request $request): void
+    {
+        $file = FileStorage::upload(
+            $request->file('file'),
+            $request->string('type')->value(),
+            $request->string('title')->value(),
+        );
+
+        $organization->files()->save($file);
     }
 
 }

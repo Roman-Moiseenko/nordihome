@@ -85,7 +85,6 @@ function setInfo() {
     })
 }
 
-console.log(props.departure.photos)
 //Файлы
 const fileList = ref<UploadUserFile[]>([]);
 for (let key in props.departure.photos) {

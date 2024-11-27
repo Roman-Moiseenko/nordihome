@@ -50,8 +50,7 @@ class Photo extends Model
 
     private string $urlUpload;
 
-    /** @var UploadedFile $fileForUpload */
-    private  $fileForUpload;
+    public UploadedFile $fileForUpload;
 
     public function imageable()
     {
@@ -180,7 +179,7 @@ class Photo extends Model
         return $this->catalogThumb . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
     }
 
-    public function newUploadFile(UploadedFile $file, string $type = null)
+    public function newUploadFile(UploadedFile $file, string $type = null): void
     {
         if ($type) $this->type = $type;
         $this->fileForUpload = $file;
@@ -231,7 +230,7 @@ class Photo extends Model
         }
     }
 
-    private function uploadFile()
+    private function uploadFile(): void
     {
         //Удаляем файл, если есть
         $old_file = $this->getUploadFile();

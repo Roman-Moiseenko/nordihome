@@ -3,6 +3,7 @@
 namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Base\Entity\FileStorage;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -57,7 +58,29 @@ class OrganizationRepository
             [
                 'trader' => $organization->trader,
                 'shopper' => $organization->shopper,
-                'distributor' => $organization->distributor
+                'distributor' => $organization->distributor,
+                'contracts' => ($organization->contracts()->count() == 0)
+                    ? []
+                    : $organization->contracts()->get()->map(function (FileStorage $file) {
+                        return [
+                            'id' => $file->id,
+                            'url' => $file->getUploadFile(),
+                            'title' => $file->title,
+                            'type' => $file->type,
+                            'file' => $file->file,
+                        ];
+                    }),
+                'documents' => ($organization->documents()->count() == 0)
+                    ? []
+                    : $organization->documents()->get()->map(function (FileStorage $file) {
+                        return [
+                            'id' => $file->id,
+                            'url' => $file->getUploadFile(),
+                            'title' => $file->title,
+                            'type' => $file->type,
+                            'file' => $file->file,
+                        ];
+                    }),
             ],
         );
     }

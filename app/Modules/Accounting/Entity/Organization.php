@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
+use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\User\Entity\User;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int $id
@@ -47,6 +49,9 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property Trader $trader
  * @property Distributor $distributor
  * @property User $shopper
+ * @property FileStorage[] $files
+ * @property FileStorage[] $contracts
+ * @property FileStorage[] $documents
  */
 class Organization extends Model
 {
@@ -126,6 +131,39 @@ class Organization extends Model
         return true;
     }
 
+    public function getContactById(int $id):? OrganizationContact
+    {
+        foreach ($this->contacts as $contact) {
+            if ($contact->id == $id) return $contact;
+        }
+        return null;
+    }
+
+    public function types(): string
+    {
+        $types = [];
+        if ($this->isTrader()) $types[] = 'Продавец';
+        if ($this->isShopper()) $types[] = 'Покупатель';
+        if ($this->isDistributor()) $types[] = 'Поставщик';
+        return implode(' | ', $types);
+    }
+
+    //RELATIONS
+    public function files(): MorphMany
+    {
+        return $this->morphMany(FileStorage::class, 'fileable');
+    }
+
+    public function contracts(): MorphMany
+    {
+        return $this->morphMany(FileStorage::class, 'fileable')->where('type', 'contract');
+    }
+
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(FileStorage::class, 'fileable')->where('type', '<>', 'contract');
+    }
+
     public function holding(): BelongsTo
     {
         return$this->belongsTo(OrganizationHolding::class, 'holding_id', 'id');
@@ -152,7 +190,6 @@ class Organization extends Model
         //return $this->hasOne(Distributor::class, 'organization_id', 'id');
     }
 
-
     public function shopper(): HasOneThrough
     {
         return $this->hasOneThrough(
@@ -164,22 +201,10 @@ class Organization extends Model
         //return $this->hasOne(User::class, 'organization_id', 'id');
     }
 
-    public function types(): string
-    {
-        $types = [];
-        if ($this->isTrader()) $types[] = 'Продавец';
-        if ($this->isShopper()) $types[] = 'Покупатель';
-        if ($this->isDistributor()) $types[] = 'Поставщик';
-        return implode(' | ', $types);
-    }
 
-    public function getContactById(int $id):? OrganizationContact
-    {
-        foreach ($this->contacts as $contact) {
-            if ($contact->id == $id) return $contact;
-        }
-        return null;
-    }
+
+
+
     public function scopeActive($query)
     {
         return $query->where('active', true);

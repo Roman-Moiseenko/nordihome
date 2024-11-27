@@ -9,6 +9,7 @@
             <AddressPanel :organization="organization"/>
             <BankPanel :organization="organization"/>
             <ContactPanel :organization="organization"/>
+            <FilePanel :organization="organization"/>
         </el-tabs>
 
     </div>
@@ -37,6 +38,7 @@ import CommonPanel from './Panels/Common.vue'
 import AddressPanel from './Panels/Address.vue'
 import BankPanel from './Panels/Bank.vue'
 import ContactPanel from './Panels/Contact.vue'
+import FilePanel from './Panels/File.vue'
 
 
 
