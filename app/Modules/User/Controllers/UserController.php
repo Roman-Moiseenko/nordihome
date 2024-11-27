@@ -112,4 +112,14 @@ class UserController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function upload(User $user, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->upload($user, $request);
+            return redirect()->back()->with('success', 'Файл загружен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
 }

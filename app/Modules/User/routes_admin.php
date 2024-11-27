@@ -13,6 +13,7 @@ Route::group([
     Route::post('/default/{user}', 'UserController@default')->name('default');
     Route::post('/set-info/{user}', 'UserController@set_info')->name('set-info');
     Route::post('/verify/{user}', 'UserController@verify')->name('verify');
+    Route::post('/upload/{user}', 'UserController@upload')->name('upload');
 
     Route::get('/cart', 'CartController@index')->name('cart.index');
     Route::get('/wish', 'WishController@index')->name('wish.index');

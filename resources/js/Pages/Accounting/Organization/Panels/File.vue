@@ -74,7 +74,6 @@ const documentList = ref<UploadUserFile[]>([]);
 
 for (let key in props.organization.contracts) {
     contractList.value.push({
-//        file: props.organization.contracts[key].file,
         url: props.organization.contracts[key].url,
         id: props.organization.contracts[key].id,
         name: props.organization.contracts[key].title,
@@ -82,23 +81,13 @@ for (let key in props.organization.contracts) {
 }
 for (let key in props.organization.documents) {
     documentList.value.push({
-//        file: props.organization.contracts[key].file,
         url: props.organization.documents[key].url,
         id: props.organization.documents[key].id,
         name: props.organization.documents[key].title,
     });
 }
 
-
-//console.log(contractList)
-const form = reactive({
-    attachments: [],
-})
-
 function upload(file, type) {
-
-    //router.post(route('admin.accounting.organization.upload', {organization: props.organization.id}), {id: val})
-
     router.visit(route('admin.accounting.organization.upload', {organization: props.organization.id}), {
         method: "post",
         data: {
@@ -107,42 +96,32 @@ function upload(file, type) {
         },
         preserveScroll: true,
         preserveState: true,
-
     })
 }
 
-
-
 const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
- //   console.log(file, uploadFiles)
     router.post(route('admin.file.remove-file'), {id: file.id})
 }
-
 const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
-
-    console.log(uploadFile.id)
-   // router.post(route('admin.file.download'), {id: uploadFile.id})
-
-   // return;
-    axios.get(route('admin.file.download'),
-        {responseType: 'arraybuffer', params: {id: uploadFile.id}}
+    axios.post(route('admin.file.download'),null,
+        {
+            responseType: 'arraybuffer',
+            params: {id: uploadFile.id},
+        }
     ).then(res=>{
-        let blob = new Blob([res.data], {type:'application/*'})
+        let blob = new Blob([res.data], {type: 'application/*'})
         let link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
         link.download = uploadFile.name
         link._target = 'blank'
+        document.body.appendChild(link);
         link.click();
-    }).catch(res => {
-       // console.log(res)
+        URL.revokeObjectURL(link.href)
     })
-
-
-
 }
+
 const handleError: UploadProps['onError'] = (error: Error, uploadFile: UploadFile, uploadFiles: UploadFiles) => {
     console.log(error)
-    //   router.post(route('admin.file.remove-file'), {id: val})
 }
 
 </script>

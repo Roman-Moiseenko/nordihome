@@ -7,6 +7,7 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\ShopperOrganization;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
+use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Order\Entity\Order\Order;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -48,6 +50,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Order[] $orders
  * @property Organization $organization Если не null, то Юридическое лицо
  * @property Organization[] $organizations
+ * @property FileStorage[] $files
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -283,6 +286,10 @@ class User extends Authenticatable
     }
 
     //RELATIONS
+    public function files(): MorphMany
+    {
+        return $this->morphMany(FileStorage::class, 'fileable')->orderByDesc('created_at');
+    }
 
     public function orders(): HasMany
     {

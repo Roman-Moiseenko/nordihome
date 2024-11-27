@@ -19,6 +19,7 @@ class FileController extends Controller
             /** @var FileStorage $file */
             $file = FileStorage::find($request->integer('id'));
             $path = $file->getUploadFile();
+            ob_get_clean();
             return response()->download($path);
         } catch (\Throwable $e) {
             return response()->json($e->getMessage());

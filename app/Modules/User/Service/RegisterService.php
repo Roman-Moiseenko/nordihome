@@ -10,6 +10,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\UserRegister;
 use App\Mail\VerifyMail;
 use App\Modules\Accounting\Service\OrganizationService;
+use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Discount\Entity\Coupon;
@@ -106,5 +107,16 @@ class RegisterService
         $user->delivery = $request->input('delivery');
         $user->client = $request->integer('client');
         $user->save();
+    }
+
+    public function upload(User $user, Request $request)
+    {
+        $file = FileStorage::upload(
+            $request->file('file'),
+            $request->string('type')->value(),
+            $request->string('title')->value(),
+        );
+
+        $user->files()->save($file);
     }
 }

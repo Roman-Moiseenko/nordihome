@@ -81,7 +81,6 @@
                     {{ user.pricing }}
                 </el-descriptions-item>
             </el-descriptions>
-
             <el-button type="success" @click="createOrder">Сделать заказ</el-button>
         </el-col>
         <el-col :span="8">
@@ -109,15 +108,38 @@
                 <SearchAttachOrganization
                     :route="route('admin.user.attach', {user: props.user.id})"/>
             </div>
+            <h2>Файлы физ.лица</h2>
+            <el-upload
+                v-model:file-list="fileList"
+                action="#"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :auto-upload="false"
+                @input="upload($event.target.files[0])"
+                :on-error="handleError"
+            >
+                <template #trigger>
+                    <el-button type="info" circle>
+                        <el-icon>
+                            <Paperclip/>
+                        </el-icon>
+                    </el-button>
+                </template>
+                <template #file="scope">
+
+                </template>
+            </el-upload>
         </el-col>
     </el-row>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {func} from '@Res/func.js'
-import {ref, reactive} from "vue";
+import {ref, reactive, handleError} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import SearchAttachOrganization from "@Comp/Search/AttachOrganization.vue";
+import {UploadUserFile} from "element-plus";
+import axios from "axios";
 
 const props = defineProps({
     user: Object,
@@ -179,4 +201,47 @@ function deliveryText() {
         if (item.value === props.user.delivery) return item.label
     }
 }
+
+///Файлы ===>
+const fileList = ref<UploadUserFile[]>([]);
+
+for (let key in props.user.files) {
+    fileList.value.push({
+        id: props.user.files[key].id,
+        name: props.user.files[key].title,
+    });
+}
+function upload(file) {
+    router.visit(route('admin.user.upload', {user: props.user.id}), {
+        method: "post",
+        data: {
+            file: file,
+        },
+        preserveScroll: true,
+        preserveState: true,
+    })
+}
+
+const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
+    router.post(route('admin.file.remove-file'), {id: file.id})
+}
+const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
+    axios.post(route('admin.file.download'),null,
+        {
+            responseType: 'arraybuffer',
+            params: {id: uploadFile.id},
+        }
+    ).then(res=>{
+        let blob = new Blob([res.data], {type: 'application/*'})
+        let link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = uploadFile.name
+        link._target = 'blank'
+        document.body.appendChild(link);
+        link.click();
+        URL.revokeObjectURL(link.href)
+    })
+}
+
+//<=== Файлы
 </script>

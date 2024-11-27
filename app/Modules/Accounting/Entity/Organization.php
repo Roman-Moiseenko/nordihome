@@ -151,17 +151,17 @@ class Organization extends Model
     //RELATIONS
     public function files(): MorphMany
     {
-        return $this->morphMany(FileStorage::class, 'fileable');
+        return $this->morphMany(FileStorage::class, 'fileable')->orderByDesc('created_at');;
     }
 
     public function contracts(): MorphMany
     {
-        return $this->morphMany(FileStorage::class, 'fileable')->where('type', 'contract');
+        return $this->morphMany(FileStorage::class, 'fileable')->where('type', 'contract')->orderByDesc('created_at');;
     }
 
     public function documents(): MorphMany
     {
-        return $this->morphMany(FileStorage::class, 'fileable')->where('type', '<>', 'contract');
+        return $this->morphMany(FileStorage::class, 'fileable')->where('type', '<>', 'contract')->orderByDesc('created_at');
     }
 
     public function holding(): BelongsTo
