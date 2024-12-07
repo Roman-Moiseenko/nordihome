@@ -15,8 +15,11 @@ use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Service\AttributeGroupService;
 use App\Modules\Product\Service\AttributeService;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AttributeController extends Controller
 {
@@ -36,7 +39,7 @@ class AttributeController extends Controller
         AttributeGroupRepository $groupRepository,
     )
     {
-        //$this->middleware(['auth:admin', 'can:product']);
+        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->groupService = $groupService;
         $this->categories = $categories;
@@ -44,29 +47,21 @@ class AttributeController extends Controller
         $this->groupRepository = $groupRepository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $category_id = $request->get('category_id');
-        $group_id = $request->get('group_id');
-
-        $categories = $this->categories->withDepth();
+        $categories = $this->categories->forFilters();
         $groups = $this->groupRepository->get(order_by: 'name');
-        $query = $this->repository->getIndex($category_id, $group_id);
-        $prod_attributes = $this->pagination($query, $request, $pagination);
-
-        return view('admin.product.attribute.index',
-            compact('prod_attributes',
-                'categories', 'groups', 'pagination', 'category_id', 'group_id'));
+        $attributes = $this->repository->getIndex($request, $filters);
+        return Inertia::render('Product/Attribute/Index', [
+            'attributes' => $attributes,
+            'filters' => $filters,
+            'categories' => $categories,
+            'groups' => $groups,
+            'types' => array_select(Attribute::ATTRIBUTES),
+        ]);
     }
 
-    public function create()
-    {
-        $categories = $this->categories->withDepth();
-        $groups = $this->groupRepository->get(order_by: 'name');
-        return view('admin.product.attribute.create', compact('categories', 'groups'));
-    }
-
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'categories' => 'required|array',
@@ -74,78 +69,111 @@ class AttributeController extends Controller
             'name' => 'required|string',
             'type' => 'required|integer',
         ]);
-        $attribute = $this->service->create($request);
-        return redirect()->route('admin.product.attribute.show', compact('attribute'));
+        try {
+            $attribute = $this->service->create($request);
+            return redirect()->route('admin.product.attribute.show', $attribute)->with('success', 'Атрибут создан');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function show(Attribute $attribute)
+    public function show(Attribute $attribute): Response
     {
-        return view('admin.product.attribute.show', compact('attribute'));
-    }
-
-    public function edit(Attribute $attribute)
-    {
-        $categories = $this->categories->withDepth();
+        $categories = $this->categories->forFilters();
         $groups = $this->groupRepository->get(order_by: 'name');
-        return view('admin.product.attribute.edit', compact('attribute', 'categories', 'groups'));
+        return Inertia::render('Product/Attribute/Show', [
+            'attribute' => $this->repository->AttributeWithToArray($attribute),
+            'categories' => $categories,
+            'groups' => $groups,
+            'types' => array_select(Attribute::ATTRIBUTES),
+            'variant' => Attribute::TYPE_VARIANT,
+        ]);
     }
 
-    public function update(Request $request, Attribute $attribute)
+    public function set_info(Request $request, Attribute $attribute): RedirectResponse
     {
-        $this->service->update($request, $attribute);
-        return view('admin.product.attribute.show', compact('attribute'));
+        try {
+            $this->service->setInfo($request, $attribute);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function destroy(Attribute $attribute)
+    public function destroy(Attribute $attribute): RedirectResponse
     {
-        $this->service->delete($attribute);
-        return redirect()->route('admin.product.attribute.index');
+        try {
+            $this->service->delete($attribute);
+            return redirect()->back()->with('success', 'Атрибут удален');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     //ГРУППЫ АТРИБУТОВ
-    public function group_add(Request $request)
+    public function group_add(Request $request): RedirectResponse
     {
-        $this->groupService->create($request);
-        return redirect()->back();
+        try {
+            $this->groupService->create($request);
+            return redirect()->back()->with('success', 'Группа добавлена');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function groups(Request $request)
+    public function groups(Request $request): Response
     {
         $groups = $this->groupRepository->get(order_by: 'sort');
-        return view('admin.product.attribute.groups', compact('groups'));
+        return Inertia::render('Product/Attribute/Groups', [
+            'groups' => $groups,
+        ]);
     }
 
-    public function group_up(AttributeGroup $group)
+    public function group_up(AttributeGroup $group): RedirectResponse
     {
-        $this->groupService->up($group);
-        $groups = $this->groupRepository->get(order_by: 'sort');
-        return redirect(route('admin.product.attribute.groups', compact('groups')));
+        try {
+            $this->groupService->up($group);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function group_down(AttributeGroup $group)
+    public function group_down(AttributeGroup $group): RedirectResponse
     {
-        $this->groupService->down($group);
-        $groups = $this->groupRepository->get(order_by: 'sort');
-        return redirect(route('admin.product.attribute.groups', compact('groups')));
+        try {
+            $this->groupService->down($group);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function group_rename(Request $request, AttributeGroup $group)
+    public function group_rename(Request $request, AttributeGroup $group): RedirectResponse
     {
-        $this->groupService->update($request, $group);
-        return redirect()->back();
+        try {
+            $this->groupService->update($request, $group);
+            return redirect()->back()->with('success', 'Группа переименована');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function group_destroy(AttributeGroup $group)
+    public function group_destroy(AttributeGroup $group): RedirectResponse
     {
-        $this->groupService->delete($group);
-        return redirect()->back();
+        try {
+            $this->groupService->delete($group);
+            return redirect()->back()->with('success', 'Группа удалена');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
+    /*
     //Варианты
     public function variant_image(Request $request, AttributeVariant $variant)
     {
         $this->service->image_variant($variant, $request);
         return redirect()->back();
-    }
-
+    }*/
 }

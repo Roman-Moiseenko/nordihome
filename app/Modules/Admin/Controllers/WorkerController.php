@@ -17,7 +17,7 @@ class WorkerController extends Controller
 
     public function __construct(WorkerService $service, WorkerRepository $repository)
     {
-        //$this->middleware(['auth:admin', 'can:staff']);
+        $this->middleware(['auth:admin', 'can:staff']);
         $this->service = $service;
         $this->repository = $repository;
     }

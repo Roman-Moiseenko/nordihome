@@ -23,7 +23,6 @@ class StorageService
 
     public function setInfo(Request $request, Storage $storage): void
     {
-
         $storage->name = $request->string('name')->trim()->value();
         $storage->slug = empty($request['slug']) ? Str::slug($request['name']) : $request['slug'];
         $storage->point_of_sale = $request->boolean('point_of_sale');
@@ -38,12 +37,13 @@ class StorageService
             );
         if ($request->has('latitude') && $request->has('longitude'))
             $storage->setCoordinate($request->float('latitude'), $request->float('longitude'));
-        $this->photo($storage, $request->file('file'), $request->boolean('clear_file'));
+
+        $storage->saveImage($request->file('file'), $request->boolean('clear_file'));
+
         if ($request->has('default')) {
             Storage::where('default', true)->update(['default' => false]);
             $storage->setDefault();
         }
-
     }
 
     /**
@@ -76,22 +76,6 @@ class StorageService
                 if ($storage->getQuantity($product->id) < 0) throw new \DomainException('Остатки меньше нуля, списание не возможно');
             }
         });
-
-    }
-
-    public function photo(Storage $storage, $file, bool $clear_current): void
-    {
-        if ($clear_current && (!is_null($storage->photo) || !is_null($storage->photo->file)))
-            $storage->photo->delete();
-
-        if (empty($file)) return;
-
-        if (!empty($storage->photo)) {
-            $storage->photo->newUploadFile($file);
-        } else {
-            $storage->photo()->save(Photo::upload($file));
-        }
-        $storage->refresh();
     }
 
     /**
@@ -99,7 +83,7 @@ class StorageService
      * @param Product $product
      * @return void
      */
-    public function add_product(Product $product)
+    public function add_product(Product $product): void
     {
         /** @var Storage[] $storages */
         $storages = Storage::get();

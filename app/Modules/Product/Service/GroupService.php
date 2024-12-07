@@ -8,29 +8,24 @@ use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Deprecated;
 
 class GroupService
 {
     public function create(Request $request): Group
     {
-        $group = Group::register(
-            $request->string('name')->trim()->value(),
-            $request->string('description')->trim()->value(),
-            $request->string('slug')->trim()->value(),
-            $request->has('published')
+        return Group::register(
+            name: $request->string('name')->trim()->value()
         );
-
-        $this->photo($group, $request->file('file'));
-        return $group;
     }
 
-    public function add_product(Group $group, int $product_id)
+    public function add_product(Group $group, int $product_id): void
     {
-        if (!$group->isProduct($product_id))
+        if ($group->isProduct($product_id)) throw new \DomainException('Товар уже добавлен в группу');
             $group->products()->attach($product_id);
     }
 
-    public function add_products(Group $group, string $textarea)
+    public function add_products(Group $group, string $textarea): void
     {
         $list = explode("\r\n", $textarea);
         foreach ($list as $item) {
@@ -38,47 +33,21 @@ class GroupService
             if (!is_null($product)) {
                 $this->add_product($group, $product->id);
             } else {
-                flash('Товар с артикулом ' . $item . ' не найден', 'danger');
+                throw new \DomainException('Товар с артикулом ' . $item . ' не найден');
             }
         }
     }
 
-    public function del_product(Request $request, Group $group)
+    public function del_product(Request $request, Group $group): void
     {
         $group->products()->detach($request->integer('product_id'));
     }
 
-    public function update(Request $request, Group $group): Group
-    {
-        $slug = $request->string('slug')->trim()->value();
-        $name = $request->string('name')->trim()->value();
 
-        $group->update([
-            'name' => $name,
-            'description' => $request->string('description')->trim()->value(),
-            'slug' => empty($slug) ? Str::slug($name) : $slug,
-            'published' => $request->has('published')
-        ]);
-
-        $this->photo($group, $request->file('file'));
-        return $group;
-    }
-
-    public function delete(Group $group)
+    public function delete(Group $group): void
     {
         $group->products()->detach();
         Group::destroy($group->id);
-    }
-
-    public function photo(Group $group, $file): void
-    {
-        if (empty($file)) return;
-        if (!empty($group->photo)) {
-            $group->photo->newUploadFile($file);
-        } else {
-            $group->photo()->save(Photo::upload($file));
-        }
-        $group->refresh();
     }
 
     public function publishedById(int $data_id): void
@@ -87,6 +56,21 @@ class GroupService
         $group = Group::find($data_id);
         $group->published = true;
         $group->save();
+    }
+
+    public function setInfo(Group $group, Request $request): Group
+    {
+        $slug = $request->string('slug')->trim()->value();
+        $name = $request->string('name')->trim()->value();
+
+        $group->update([
+            'name' => $name,
+            'description' => $request->string('description')->trim()->value(),
+            'slug' => empty($slug) ? Str::slug($name) : $slug,
+            'published' => $request->boolean('published')
+        ]);
+        $group->saveImage($request->file('file'), $request->boolean('clear_file'));
+        return $group;
     }
 
 }

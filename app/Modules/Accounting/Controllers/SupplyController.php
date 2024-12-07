@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Controllers;
 
+
 use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
 use App\Modules\Accounting\Entity\Distributor;
-use App\Modules\Accounting\Entity\DistributorProduct;
-use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
@@ -17,15 +18,12 @@ use App\Modules\Accounting\Service\SupplyService;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Brand;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\ProductRepository;
-use DB;
-use Illuminate\Database\Events\TransactionBeginning;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+
 use Inertia\Inertia;
 use Inertia\Response;
-use JetBrains\PhpStorm\Deprecated;
+
 
 class SupplyController extends Controller
 {
@@ -34,6 +32,7 @@ class SupplyController extends Controller
     private SupplyRepository $repository;
     private StaffRepository $staffs;
 
+
     public function __construct(
         SupplyService $service,
         StackRepository $stacks,
@@ -41,8 +40,8 @@ class SupplyController extends Controller
         StaffRepository $staffs,
     )
     {
-        //$this->middleware(['auth:admin', 'can:accounting']);
-        //$this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
+        $this->middleware(['auth:admin', 'can:accounting'])->except(['work', 'destroy']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->stacks = $stacks;
         $this->repository = $repository;

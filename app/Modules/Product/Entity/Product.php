@@ -823,9 +823,16 @@ class Product extends Model
         return $this->hasOne(EquivalentProduct::class, 'product_id', 'id');
     }
 
-    public function equivalent(): BelongsTo
+    public function equivalent()
     {
-        return $this->belongsTo(Equivalent::class, 'product_id', 'id');
+        return $this->hasOneThrough(
+            Equivalent::class,
+            EquivalentProduct::class,
+            'product_id', 'id', 'id',
+            'equivalent_id');
+
+
+        //return $this->belongsTo(Equivalent::class, 'product_id', 'id');
     }
 
     public function wishes(): HasMany
@@ -900,4 +907,21 @@ class Product extends Model
         return false;
     }
 
+    /**
+     * Массив данных для поиска ajax
+     */
+    public function toArrayForSearch(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'code' => $this->code,
+            'code_search' => $this->code_search,
+            'image' => $this->getImage(),
+            'price' => $this->getPrice(),
+            'url' => route('admin.product.edit', $this),
+            'count' => $this->getCountSell(),
+            'stock' => $this->getCountSell() > 0,
+        ];
+    }
 }

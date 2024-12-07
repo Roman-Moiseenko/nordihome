@@ -6,6 +6,7 @@ namespace App\Http\Middleware;
 use App\Modules\Analytics\Entity\LoggerActivity;
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminActivityLoggerMiddleware
 {
@@ -13,7 +14,7 @@ class AdminActivityLoggerMiddleware
      * Handle an incoming request.
      *
      */
-    public function handle(Request $request, Closure $next): mixed
+    public function handle(Request $request, Closure $next): Response
     {
         $user_id = $request->user()->id;
         $action = $request->route()->getName();
@@ -25,6 +26,7 @@ class AdminActivityLoggerMiddleware
                 $request->all()
             );
         }
+        //dd($request);
         return $next($request);
     }
 }

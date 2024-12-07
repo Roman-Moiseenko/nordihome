@@ -29,7 +29,7 @@ class ProductController extends Controller
 
     public function __construct(ProductService $service, Options $options, ProductRepository $repository)
     {
-        //$this->middleware(['auth:admin', 'can:product']);
+        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->options = $options;
         $this->repository = $repository;
@@ -182,7 +182,7 @@ class ProductController extends Controller
         $products = $this->repository->search($request['search']);
         /** @var Product $product */
         foreach ($products as $product) {
-            $result[] = $this->repository->toArrayForSearch($product);
+            $result[] = $product->toArrayForSearch();
         }
         return \response()->json($result);
     }

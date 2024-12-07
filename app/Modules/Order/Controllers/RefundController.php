@@ -15,7 +15,7 @@ class RefundController extends Controller
 
     public function __construct(RefundService $service)
     {
-        //$this->middleware(['auth:admin', 'can:refund']);
+        $this->middleware(['auth:admin', 'can:refund']);
         $this->service = $service;
     }
 

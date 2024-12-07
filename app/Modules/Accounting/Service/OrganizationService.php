@@ -16,16 +16,16 @@ class OrganizationService
 {
     public function create_foreign(Request $request): Organization
     {
-        if (!is_null($organization = Organization::where('inn', $request->string('inn')->value())->first())) return $organization;
+        if (!is_null($organization = Organization::where('inn', $request->string('inn')->trim()->value())->first())) return $organization;
 
         $organization = Organization::register(
-            $request->string('name')->value(),
-            $request->string('name')->value(),
-            $request->string('inn')->value(),
+            $request->string('name')->trim()->value(),
+            $request->string('name')->trim()->value(),
+            $request->string('inn')->trim()->value(),
             );
-        $organization->bik = $request->string('bik')->value();
-        $organization->bank_name = $request->string('bank')->value();
-        $organization->pay_account = $request->string('account')->value();
+        $organization->bik = $request->string('bik')->trim()->value();
+        $organization->bank_name = $request->string('bank')->trim()->value();
+        $organization->pay_account = $request->string('account')->trim()->value();
         $organization->foreign = true;
         $organization->save();
         return $organization;

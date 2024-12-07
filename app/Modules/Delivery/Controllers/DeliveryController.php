@@ -18,7 +18,7 @@ class DeliveryController extends Controller
 
     public function __construct(ExpenseService $expenseService, DeliveryRepository $repository)
     {
-        //$this->middleware(['auth:admin', 'can:delivery', 'can:order']);
+        $this->middleware(['auth:admin', 'can:delivery', 'can:order']);
         $this->expenseService = $expenseService;
         $this->repository = $repository;
     }

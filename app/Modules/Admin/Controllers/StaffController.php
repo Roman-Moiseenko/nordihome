@@ -24,8 +24,8 @@ class StaffController extends Controller
 
     public function __construct(StaffService $service, StaffRepository $repository)
     {
-        //$this->middleware(['auth:admin', 'can:staff']);
-        //$this->middleware(['auth:admin', 'can:staff'])->except(['notification', 'notification_read']);
+        $this->middleware(['auth:admin', 'can:staff']);
+        $this->middleware(['auth:admin', 'can:staff'])->except(['notification', 'notification_read']);
         $this->service = $service;
         $this->repository = $repository;
     }

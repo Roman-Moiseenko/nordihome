@@ -3,22 +3,28 @@
 namespace App\Modules\Accounting\Service;
 
 
+use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
 use App\Modules\Setting\Repository\SettingRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class BankService
 {
+
+    const CBR = 'https://www.cbr.ru/scripts/XML_daily.asp';
 
     private PaymentDocumentService $paymentDocumentService;
     private mixed $date_bank;
     private OrganizationService $organizationService;
     private Organization $payer;
+    private array $valute = [];
 
     public function __construct(
         PaymentDocumentService $paymentDocumentService,
@@ -124,5 +130,52 @@ class BankService
     private function createPaymentOrder(mixed $payment)
     {
         //TODO Загрузка платежей клиентов
+    }
+
+    /**
+     * Обновление валюты
+     */
+    public function currency(Request $request)
+    {
+        $currency_id = $request->input('currency_id');
+        $query = Currency::orderBy('name')->where('cbr_code', '<>', '');
+        if (!is_null($currency_id)) $query->where('id', $currency_id);
+        $currencies = $query->getModels();
+        if (empty($currencies)) throw new \DomainException('Нет валют для обновления');
+
+        $response = Http::get(self::CBR);
+
+        if (!$response->ok()) throw new \DomainException('Нет ответа ЦБ');
+        $xml = simplexml_load_string($response->body());
+        $array = json_decode(json_encode($xml),true);
+        $this->valute = $array['Valute'];
+
+        foreach ($currencies as $currency) {
+            $exchange = $this->getRate($currency->cbr_code);
+            if ($currency->setExchange($exchange)) {
+                $logger = LoggerCron::new('Курс валют по ЦБ России');
+                $logger->items()->create([
+                    'object' => $currency->name,
+                    'action' => 'Новый курс',
+                    'value' => $exchange,
+                ]);
+                //Если злоты, меняем в Настройках Парсера
+                if ($currency->cbr_code == 'PLN') {
+                    $setting = Setting::where('slug', 'parser')->first();
+                    $parser = new Parser($setting->getData());
+                    $parser->parser_coefficient = $currency->getExchange();
+                    $setting->setData($parser);
+                }
+            }
+        }
+
+    }
+
+    private function getRate(string $cbr_code): float
+    {
+        foreach ($this->valute as $item) {
+            if ($item['CharCode'] == $cbr_code) return (float)str_replace(',', '.', $item['VunitRate']);
+        }
+        return 0;
     }
 }

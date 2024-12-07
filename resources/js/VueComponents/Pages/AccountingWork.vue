@@ -24,7 +24,19 @@ function onWork() {
         preserveState: true,
         onSuccess: page => {
             loading.close()
-        }
+        },
+        onError: page => {
+            console.log(2, page)
+            loading.close()
+        },
+        onCancel: page => {
+            console.log(1, page)
+            loading.close()
+        },
+        onFinish: page => {
+            console.log(3, page)
+            loading.close()
+        },
     })
 }
 </script>

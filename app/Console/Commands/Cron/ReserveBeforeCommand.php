@@ -20,6 +20,7 @@ class ReserveBeforeCommand extends Command
     public function handle()
     {
         $this->info('Резерв - проверка');
+        //LoggerCron::new('Старт ' . $this->description);
         /** @var Order[] $orders */
         $orders = [];
         try {

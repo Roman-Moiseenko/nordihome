@@ -86,8 +86,24 @@ class CategoryRepository
 
     public function getTree(int $parent_id = null)
     {
-        if (is_null($parent_id)) return Category::defaultOrder()->withDepth()->get()->toTree();
-        return Category::defaultOrder()->withDepth()->descendantsOf($parent_id)->toTree();
+        $query = Category::defaultOrder()->withDepth();
+        if (is_null($parent_id)) {
+            $categories = $query->get();
+        } else {
+            $categories = $query->descendantsOf($parent_id);
+        }
+        return $categories->map(function (Category $category) {
+            $category->image_url = $category->getImage();
+            $category->icon_url = $category->getIcon();
+            return $category;
+        })->toTree();
+        /*
+        if (is_null($parent_id)) {
+            $categories = Category::defaultOrder()->withDepth()->get()->toTree();
+        } else {
+            $categories = Category::defaultOrder()->withDepth()->descendantsOf($parent_id)->toTree();
+        } */
+        // $categories;
     }
 
     /**
@@ -105,5 +121,48 @@ class CategoryRepository
             $query->where('name', 'LIKE', "%{$search}%");
         });
         return $query->take($take)->get();
+    }
+
+    public function forFilters(): array
+    {
+        return array_map(function (Category $category) {
+            $_depth = str_repeat('-', $category->depth);
+            return [
+                'id' => $category->id,
+                'name' => trim($_depth . ' ' . $category->name),
+            ];
+        }, $this->withDepth());
+    }
+
+    public function CategoryWith(Category $category): array
+    {
+        return array_merge($category->toArray(), [
+            'image' => $category->getImage(),
+            'icon' => $category->getIcon(),
+            'children' => $this->getTree($category->id),
+            'attributes' => [
+                'parent' => $this->attributeForCategory($category->parent_attributes()),
+                'self' => $this->attributeForCategory($category->prod_attributes()->getModels()),
+            ],
+            'products' => $category->products()->get()->map(function (Product $product) {
+                return array_merge($product->toArray(), [
+                    'image' => $product->getImage(),
+                ]);
+            }),
+        ]);
+    }
+
+    private function attributeForCategory(array $attributes): array
+    {
+        return array_map(function (Attribute $attribute) {
+            return [
+                'id' => $attribute->id,
+                'name' => $attribute->name,
+                'group' => $attribute->group->name,
+                'filter' => $attribute->filter,
+                'type_text' => $attribute->typeText(),
+                'image' => $attribute->getImage(),
+            ];
+        }, $attributes);
     }
 }

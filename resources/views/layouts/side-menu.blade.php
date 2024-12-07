@@ -16,7 +16,7 @@
                         @if (strpos($menuKey, 'divider') != false)
                             <li class="side-nav__divider my-6"></li>
                         @else
-                            @canany($menu['can'] ?? '')
+
                                 <li>
                                     <a href="{{ isset($menu['route_name']) ? route($menu['route_name']) : 'javascript:;' }}"
                                        class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
@@ -36,7 +36,7 @@
                                     @if (isset($menu['sub_menu']))
                                         <ul class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu__sub-open' : '' }}">
                                             @foreach ($menu['sub_menu'] as $subMenuKey => $subMenu)
-                                                @canany($subMenu['can'] ?? '')
+
                                                 <li>
                                                     <a href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name']) : 'javascript:;' }}"
                                                        class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
@@ -57,7 +57,7 @@
                                                         <ul
                                                             class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu__sub-open' : '' }}">
                                                             @foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu)
-                                                                @canany($lastSubMenu['can'] ?? '')
+
                                                                 <li>
                                                                     <a href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name']) : 'javascript:;' }}"
                                                                        class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
@@ -69,17 +69,17 @@
                                                                         </div>
                                                                     </a>
                                                                 </li>
-                                                                @endcanany
+
                                                             @endforeach
                                                         </ul>
                                                     @endif
                                                 </li>
-                                                @endcanany
+
                                             @endforeach
                                         </ul>
                                     @endif
                                 </li>
-                            @endcanany
+
                         @endif
                     @endforeach
                 </ul>

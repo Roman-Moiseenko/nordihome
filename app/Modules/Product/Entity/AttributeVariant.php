@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 /**
@@ -12,17 +14,18 @@ use Illuminate\Support\Str;
  * @property Attribute $attribute
  * @property string $name
  * @property string $slug
- * @property \App\Modules\Base\Entity\Photo $image
  */
 class AttributeVariant extends Model
 {
+    use ImageField;
+
     public $timestamps = false;
     public $thumbs = false;
     protected $fillable = [
         'name', 'slug', 'attribute_id'
     ];
 
-    public function attribute()
+    public function attribute(): BelongsTo
     {
         return $this->belongsTo(Attribute::class, 'attribute_id', 'id');
     }
@@ -35,17 +38,4 @@ class AttributeVariant extends Model
         ]);
     }
 
-    public function image()
-    {
-        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->withDefault();
-    }
-
-    public function getImage(): string
-    {
-        if (empty($this->image->file)) {
-            return '/images/no-image.jpg';
-        } else {
-            return $this->image->getUploadUrl();
-        }
-    }
 }

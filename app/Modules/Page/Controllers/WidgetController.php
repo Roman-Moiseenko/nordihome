@@ -17,7 +17,7 @@ class WidgetController extends Controller
 
     public function __construct(WidgetService $service)
     {
-        //$this->middleware(['auth:admin', 'can:options']);
+        $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
     }
 

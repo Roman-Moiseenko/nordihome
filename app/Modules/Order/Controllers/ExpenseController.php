@@ -17,7 +17,7 @@ class ExpenseController extends Controller
 
     public function __construct(ExpenseService $service, Trade12Report $report)
     {
-        //$this->middleware(['auth:admin', 'can:order']);
+        $this->middleware(['auth:admin', 'can:order']);
         $this->service = $service;
         $this->report = $report;
     }

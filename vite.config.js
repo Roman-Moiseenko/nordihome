@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from "url";
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import inject from '@rollup/plugin-inject';
@@ -176,14 +177,22 @@ export default defineConfig({
         }),
     ],
     resolve: {
-        alias: {
-            "tailwind-config.js": path.resolve(__dirname, "./tailwind.config.js"),
+        alias: [
+            {find: '@', replacement: path.resolve('resources/js') },
+            {find: '@Page', replacement: path.resolve('resources/js/Pages') },
+            {find: '@Comp', replacement: path.resolve('resources/js/VueComponents') },
+            {find: '@Res', replacement: path.resolve('resources/js/Resources') },
+            {find: 'tailwind-config.js', replacement: path.resolve(__dirname, "./tailwind.config.js") },
+            {find: 'ziggy-js', replacement: path.resolve('vendor/tightenco/ziggy'), },
+
+        ], /*{
+
             '@': '/resources/js',
             '@Page': '/resources/js/Pages',
             '@Comp': '/resources/js/VueComponents',
             '@Res': '/resources/js/Resources',
             'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
-        }
+        }*/
     },
    publicDir: 'public/build',
 });

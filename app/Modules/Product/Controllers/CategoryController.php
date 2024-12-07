@@ -9,7 +9,9 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Service\CategoryService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use JetBrains\PhpStorm\Deprecated;
 
 class CategoryController extends Controller
@@ -20,27 +22,49 @@ class CategoryController extends Controller
 
     public function __construct(CategoryService $service, CategoryRepository $repository)
     {
-       // $this->middleware(['auth:admin', 'can:product']);
+        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->repository = $repository;
     }
 
-    public function index()
+    public function index(): \Inertia\Response
     {
         $categories = $this->repository->getTree();
-        return view('admin.product.category.index', compact('categories'));
+        return Inertia::render('Product/Category/Index', [
+            'categories' => $categories,
+        ]);
     }
 
-    public function up(Category $category)
+    public function show(Category $category): \Inertia\Response
+    {
+        $categories = $this->repository->forFilters();
+        return Inertia::render('Product/Category/Show', [
+            'category' => $this->repository->CategoryWith($category),
+            'categories' => $categories,
+        ]);
+       // return view('admin.product.category.show', compact('category'));
+    }
+
+    public function set_info(Category $category, Request $request): RedirectResponse
+    {
+        try {
+            $this->service->setInfo($request, $category);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function up(Category $category): RedirectResponse
     {
         $category->up();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function down(Category $category)
+    public function down(Category $category): RedirectResponse
     {
         $category->down();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function create(Request $request)
@@ -58,16 +82,16 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'parent' => 'nullable|integer|exists:categories,id',
+            'parent_id' => 'nullable|integer|exists:categories,id',
         ]);
-        $category = $this->service->register($request);
-        return redirect()->route('admin.product.category.show', compact('category'));
+        try {
+            $category = $this->service->register($request);
+            return redirect()->route('admin.product.category.show', $category)->with('success', 'Категория создана');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function show(Category $category)
-    {
-        return view('admin.product.category.show', compact('category'));
-    }
 
     public function edit(Category $category)
     {

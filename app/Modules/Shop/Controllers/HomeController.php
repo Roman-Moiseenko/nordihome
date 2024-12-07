@@ -21,8 +21,8 @@ class HomeController extends Controller
 
     public function __construct(Options $options)
     {
-        //$this->middleware(['guest', 'guest:user']);
-        //$this->middleware('auth:user');
+        $this->middleware(['guest', 'guest:user']);
+        $this->middleware('auth:user');
         if (Auth::guard('admin')->check()) {
             Auth::logout();
             //throw new \DomainException('^^^^');

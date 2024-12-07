@@ -26,27 +26,14 @@ class AttributeService
     {
         DB::transaction(function () use ($request, &$attribute) {
             $attribute = Attribute::register(
-                $request->get('name'),
-                (int)$request->get('group_id'),
-                (int)$request->get('type')
+                $request->string('name')->trim()->value(),
+                $request->integer('group_id'),
+                $request->integer('type')
             );
 
-            foreach ($request->get('categories') as $category_id) {
+            foreach ($request->input('categories') as $category_id) {
                 if ($this->categories->exists((int)$category_id))
                     $attribute->categories()->attach((int)$category_id);
-            }
-
-            $attribute->multiple = $request->has('multiple');
-            $attribute->show_in = $request->has('show-in');
-            $attribute->filter = $request->has('filter');
-
-            $attribute->sameAs = $request->string('sameAs')->trim()->value();
-            $this->image($attribute, $request);
-
-            if ($attribute->isVariant()) {
-                foreach ($request['variants_value'] as $variant) {
-                    if (!empty($variant)) $attribute->addVariant($variant);
-                }
             }
             $attribute->push();
         });
@@ -54,17 +41,18 @@ class AttributeService
         return $attribute;
     }
 
-    public function update(Request $request, Attribute $attribute)
+    public function setInfo(Request $request, Attribute $attribute): void
     {
         DB::transaction(function () use ($request, $attribute) {
-            $attribute->name = $request->get('name');
+            $attribute->name = $request->string('name')->trim()->value();
             $attribute->group_id = $request->integer('group_id');
-            $attribute->multiple = $request->has('multiple');
-            $attribute->filter = $request->has('filter');
-            $attribute->show_in = $request->has('show-in');
+            $attribute->multiple = $request->boolean('multiple');
+            $attribute->filter = $request->boolean('filter');
+            $attribute->show_in = $request->boolean('show-in');
             $attribute->type = $request->integer('type');
             $attribute->sameAs = $request->string('sameAs')->trim()->value();
-            $this->image($attribute, $request);
+            $attribute->save();
+            $attribute->saveImage($request->file('file'), $request->boolean('clear_file'));
 
             //Работа с категориями
             $array_old = [];
@@ -86,22 +74,35 @@ class AttributeService
                 }
             }
             //Варианты
+            $variants = $request->input('variants');
+            if (is_null($variants)) return;
+
+            //1. Удаляем отмененные
+            $_ids = array_filter(array_map(function ($item) {
+                if (!is_null($item['id'])) return (int)$item['id'];
+                return false;
+            }, $variants));
             foreach ($attribute->variants as $variant) {
-                if (!in_array((string)$variant->id, $request['variants_id']))
+                if (!in_array($variant->id, $_ids))
                     AttributeVariant::destroy($variant->id);
             }
-            if (!empty($request['variants_id']))
-                foreach ($request['variants_id'] as $key => $item) {
-                    if (empty($item) && !empty($request['variants_value'][$key])) {
-                        $attribute->addVariant($request['variants_value'][$key]);
-                    }
+            //2. Изменяем значения старых и добавляем новые
+            foreach ($variants as $i => $item) {
+                $file = $request->file('variants.'. $i.'.file');
+                if (!is_null($item['id'])) { //2.1 Изменяем старые значения
+                    $variant = AttributeVariant::find($item['id']);
+                    $variant->name = $item['name'];
+                    $variant->save();
+                    $variant->saveImage($file, (bool)$item['clear_file']);
+                } else { //2.2 Добавляем новые
+                    $attribute->addVariant($item['name'], $file);
                 }
+            }
             $attribute->push();
-            $attribute->refresh();
         });
     }
 
-    public function delete(Attribute $attribute)
+    public function delete(Attribute $attribute): void
     {
         $attribute->categories()->detach();
         $attribute->delete();
@@ -118,6 +119,7 @@ class AttributeService
         $attribute->refresh();
     }
 
+    /*
     public function image_variant(AttributeVariant $variant, Request $request)
     {
         if (!empty($variant->image)) {
@@ -126,5 +128,5 @@ class AttributeService
             $variant->image()->save(Photo::upload($request->file('file')));
         }
         $variant->refresh();
-    }
+    } */
 }

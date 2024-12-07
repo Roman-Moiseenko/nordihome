@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Events\ThrowableHasAppeared;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
+use Illuminate\Http\Request;
 
-class Controller extends BaseController
+class Controller  extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
@@ -34,3 +34,4 @@ class Controller extends BaseController
         return $result;
     }
 }
+

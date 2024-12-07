@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,11 +19,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $multiple
  * @property bool $filter
  * @property bool $show_in
- * @property Photo $image
  * @property string $sameAs
  */
 class Attribute extends Model
 {
+    use ImageField;
+
     const TYPE_STRING = 101;
     const TYPE_INTEGER = 103;
     const TYPE_BOOL = 102;
@@ -61,7 +63,7 @@ class Attribute extends Model
 
     }
 
-    public function group()
+    public function group(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(AttributeGroup::class, 'group_id', 'id');
     }
@@ -76,33 +78,21 @@ class Attribute extends Model
         return $this->hasMany(AttributeVariant::class, 'attribute_id', 'id');
     }
 
-    public function image()
-    {
-        return $this->morphOne(Photo::class, 'imageable');
-    }
-
-    public function getImage()
-    {
-        if (empty($this->image->file)) {
-            return '/images/no-image.jpg';
-        } else {
-            return $this->image->getUploadUrl();
-        }
-    }
-
-    public function addVariant(string $name, $file = null)
+    public function addVariant(string $name, $file = null): AttributeVariant
     {
         $variant = AttributeVariant::register($name);
-        if (!empty($file)) $variant->image->newUploadFile($file);
-        return $this->variants()->save($variant);
+        $this->variants()->save($variant);
+        $variant->refresh();
+        if (!is_null($file)) $variant->saveImage($file);
+        return $variant;
     }
 
-    public function categories()
+    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'attributes_categories', 'attribute_id', 'category_id');
     }
 
-    public function products()
+    public function products(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'attributes_products',
             'attribute_id', 'product_id')->withPivot('value');
@@ -162,5 +152,9 @@ class Attribute extends Model
             if ($variant->id == $id) return $variant;
         }
         throw new \DomainException('Не найдет вариант id = ' . $id . ' атрибута ' . $this->name);
+    }
+    public function typeText(): string
+    {
+        return self::ATTRIBUTES[$this->type];
     }
 }

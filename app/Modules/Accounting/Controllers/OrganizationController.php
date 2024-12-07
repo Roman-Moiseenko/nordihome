@@ -23,7 +23,7 @@ class OrganizationController extends Controller
 
     public function __construct(OrganizationService $service, OrganizationRepository $repository)
     {
-        //$this->middleware(['auth:admin', 'can:accounting']);
+        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->repository = $repository;
     }
@@ -46,9 +46,9 @@ class OrganizationController extends Controller
         ]);
         try {
             $organization = $this->service->create_find(
-                $request->string('inn')->value(),
-                $request->string('bik')->value(),
-                $request->string('account')->value(),
+                $request->string('inn')->trim()->value(),
+                $request->string('bik')->trim()->value(),
+                $request->string('account')->trim()->value(),
             );
             return redirect()->route('admin.accounting.organization.show', $organization)->with('success', 'Организация добавлена');
         } catch (\DomainException $e) {
@@ -119,9 +119,9 @@ class OrganizationController extends Controller
                 $organization = $this->service->create_foreign($request);
             } else {
                 $organization = $this->service->create_find(
-                    $request->string('inn')->value(),
-                    $request->string('bik')->value(),
-                    $request->string('account')->value(),
+                    $request->string('inn')->trim()->value(),
+                    $request->string('bik')->trim()->value(),
+                    $request->string('account')->trim()->value(),
                 );
             }
             return response()->json($organization->id);

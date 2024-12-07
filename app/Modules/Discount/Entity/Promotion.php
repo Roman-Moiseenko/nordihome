@@ -10,6 +10,7 @@ use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -169,15 +170,6 @@ class Promotion extends Model implements DataWidgetInterface
         return false;
     }
 
-    #[Deprecated]
-    public function isGroup(int $id): bool
-    {
-        foreach ($this->groups as $group) {
-            if ($group->id == $id) return true;
-        }
-        return false;
-    }
-
     public function isPublished(): bool
     {
         return $this->published == true;
@@ -195,20 +187,12 @@ class Promotion extends Model implements DataWidgetInterface
             'promotion_id', 'product_id')->withPivot('price');
     }
 
-    #[Deprecated]
-    public function groups()
-    {
-        return $this->belongsToMany(
-            Group::class, 'promotions_groups',
-            'promotion_id', 'group_id')->withPivot('discount');
-    }
-
-    public function image()
+    public function image(): MorphOne
     {
         return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'image')->withDefault();
     }
 
-    public function icon()
+    public function icon(): MorphOne
     {
         return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
     }
@@ -231,14 +215,6 @@ class Promotion extends Model implements DataWidgetInterface
         }
     }
 
-    public function getDiscount(int $product_id)
-    {
-        foreach ($this->groups as $group) {
-            if ($group->isProduct($product_id)) return $group->pivot->discount;
-        }
-        return null;
-    }
-
     public function getDataWidget(array $params = []): DataWidget
     {
         $data = new DataWidget();
@@ -251,7 +227,7 @@ class Promotion extends Model implements DataWidgetInterface
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
                 'price' => $product->getPrice(),
-                'discount' => ceil($product->getPrice() * ((100 - $this->getDiscount($product->id)) / 100)),
+                'discount' => $product->pivot->price,
                 'count' => $product->getCountSell(),
             ];
         }, $this->products()->getModels());

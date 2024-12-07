@@ -41,7 +41,7 @@ class AttributeGroup extends Model
     {
         return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
-    public function attributes()
+    public function attributes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Attribute::class, 'group_id', 'id');
     }

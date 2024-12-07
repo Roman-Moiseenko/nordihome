@@ -53,9 +53,12 @@
                                     <Link class="block px-6 py-2 hover:text-white hover:bg-indigo-500" href="/users">
                                         Manage Users
                                     </Link>
-                                    <Link class="block px-6 py-2 w-full text-left hover:text-white hover:bg-indigo-500"
-                                          href="/logout" method="delete" as="button">Logout
-                                    </Link>
+                                    <el-link class="block px-6 py-2 w-full text-left hover:text-white hover:bg-indigo-500"
+                                          href="/admin/logout" method="delete" as="button">Logout
+                                    </el-link>
+                                    <!-- TODO Вернуть Link class="block px-6 py-2 w-full text-left hover:text-white hover:bg-indigo-500"
+                                          href="/admin/logout" method="delete" as="button">Logout
+                                    </Link-->
                                 </div>
                             </template>
                         </dropdown>

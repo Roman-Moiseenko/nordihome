@@ -23,9 +23,10 @@ Route::group(
             Route::post('/group-add', 'AttributeController@group_add')->name('group-add');
             Route::post('/group-rename/{group}', 'AttributeController@group_rename')->name('group-rename');
             Route::post('/variant-image/{variant}', 'AttributeController@variant_image')->name('variant-image');
-            //Route::post('/get_by_categories', 'AttributeController@get_by_categories')->name('get-by-categories');
 
             Route::post('/group-up/{group}', 'AttributeController@group_up')->name('group-up');
+            Route::post('/set-info/{attribute}', 'AttributeController@set_info')->name('set-info');
+
             Route::post('/group-down/{group}', 'AttributeController@group_down')->name('group-down');
         });
         //BRAND
@@ -34,6 +35,7 @@ Route::group(
             'as' => 'brand.',
         ], function () {
             Route::post('/list', 'BrandController@list')->name('list');
+            Route::post('/set-info/{brand}', 'BrandController@set_info')->name('set-info');
 
         });
         //CATEGORY
@@ -41,28 +43,35 @@ Route::group(
             'prefix' => 'category',
             'as' => 'category.',
         ], function () {
-            Route::post('/{category}/up', 'CategoryController@up')->name('up');
-            Route::post('/{category}/down', 'CategoryController@down')->name('down');
-            Route::get('/{category}/child', 'CategoryController@child')->name('child');
+            Route::post('/up/{category}', 'CategoryController@up')->name('up');
+            Route::post('/down/{category}', 'CategoryController@down')->name('down');
+            Route::get('/child/{category}', 'CategoryController@child')->name('child');
             Route::post('/list', 'CategoryController@list')->name('list');
+            Route::post('/set-info/{category}', 'CategoryController@set_info')->name('set-info');
         });
 
+        //TAG
+        Route::group([
+            'prefix' => 'tag',
+            'as' => 'tag.',
+        ], function () {
+            Route::get('/', 'TagController@index')->name('index');
+            Route::post('/store', 'TagController@store')->name('store');
+            Route::post('/rename/{tag}', 'TagController@rename')->name('rename');
+            Route::delete('/destroy/{tag}', 'TagController@destroy')->name('destroy');
+        });
 
-
-        Route::get('/tags', 'TagController@index')->name('tag.index');
-        Route::post('/tag/create', 'TagController@create')->name('tag.create');
-        Route::post('/tag/{tag}/rename', 'TagController@rename')->name('tag.rename');
-        Route::delete('/tag/{tag}/destroy', 'TagController@destroy')->name('tag.destroy');
-
-        // Route::get('/equivalent', 'EquivalentController@index')->name('equivalent.index');
-        //Route::get('/equivalent/show', 'EquivalentController@show')->name('equivalent.show');
-        //Route::post('/equivalent/store', 'EquivalentController@create')->name('equivalent.store');
-        Route::post('/equivalent/{equivalent}/rename', 'EquivalentController@rename')->name('equivalent.rename');
-        Route::post('/equivalent/{equivalent}/add-product', 'EquivalentController@add_product')->name('equivalent.add-product');
-        Route::delete('/equivalent/{equivalent}/del-product/{product}', 'EquivalentController@del_product')->name('equivalent.del-product');
-        //Route::delete('/equivalent/{equivalent}/destroy', 'EquivalentController@destroy')->name('equivalent.destroy');
-        Route::post('/equivalent/{equivalent}/json-products', 'EquivalentController@json_products')->name('equivalent.json-products');
-
+        //EQUIVALENT
+        Route::group([
+            'prefix' => 'equivalent',
+            'as' => 'equivalent.',
+        ], function () {
+            Route::post('/rename/{equivalent}', 'EquivalentController@rename')->name('rename');
+            Route::post('/add-product/{equivalent}', 'EquivalentController@add_product')->name('add-product');
+            Route::delete('/del-product/{equivalent}', 'EquivalentController@del_product')->name('del-product');
+            Route::post('/json-products/{equivalent}', 'EquivalentController@json_products')->name('json-products');
+            Route::post('/search/{equivalent}', 'EquivalentController@search')->name('search');
+        });
         //Группа товаров
         Route::group([
             'prefix' => 'group',
@@ -70,6 +79,7 @@ Route::group(
         ], function() {
             Route::post('/add-products/{group}', 'GroupController@add_products')->name('add-products');
             Route::post('/add-product/{group}', 'GroupController@add_product')->name('add-product');
+            Route::post('/set-info/{group}', 'GroupController@set_info')->name('set-info');
             Route::delete('/del-product/{group}', 'GroupController@del_product')->name('del-product');
         });
         //Серия товаров
@@ -93,24 +103,38 @@ Route::group(
             Route::delete('/del-product/{product}', 'PriorityController@del_product')->name('del-product');
         });
 
+        //MODIFICATION
+        Route::group([
+            'prefix' => 'modification',
+            'as' => 'modification.',
+        ], function () {
+            Route::post('/set-modifications/{modification}', 'ModificationController@set_modifications')->name('set-modifications');
+            Route::post('/search', 'ModificationController@search')->name('search');
+            Route::post('/add-product/{modification}', 'ModificationController@add_product')->name('add-product');
+            Route::delete('/del-product/{modification}', 'ModificationController@del_product')->name('del-product');
+        });
 
 
-        Route::post('/modification/{modification}/set-modifications', 'ModificationController@set_modifications')->name('modification.set-modifications');
-        Route::post('/modification/search', 'ModificationController@search')->name('modification.search');
-        Route::post('/modification/{modification}/add-product', 'ModificationController@add_product')->name('modification.add-product');
-        Route::delete('/modification/{modification}/del-product', 'ModificationController@del_product')->name('modification.del-product');
 
-        Route::get('/parser', 'ParserController@index')->name('parser.index');
-        Route::get('/parser/{parser}/show', 'ParserController@show')->name('parser.show');
-        Route::post('/parser/{parser}/block', 'ParserController@block')->name('parser.block');
-        Route::post('/parser/{parser}/fragile', 'ParserController@fragile')->name('parser.fragile');
-        Route::post('/parser/{parser}/sanctioned', 'ParserController@sanctioned')->name('parser.sanctioned');
+        //PARSER
+        Route::group([
+            'prefix' => 'parser',
+            'as' => 'parser.',
+        ], function (){
+            Route::get('/', 'ParserController@index')->name('index');
+            Route::get('/show/{parser}', 'ParserController@show')->name('show');
+            Route::post('/block/{parser}', 'ParserController@block')->name('block');
+            Route::post('/fragile/{parser}', 'ParserController@fragile')->name('fragile');
+            Route::post('/sanctioned/{parser}', 'ParserController@sanctioned')->name('sanctioned');
+        });
+
+
 
         Route::resource('brand', 'BrandController'); //CRUD
         Route::resource('category', 'CategoryController'); //CRUD
         Route::resource('attribute', 'AttributeController'); //CRUD
         Route::resource('equivalent', 'EquivalentController'); //CRUD
-        Route::resource('group', 'GroupController'); //CRUD
+        Route::resource('group', 'GroupController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('modification', 'ModificationController'); //CRUD
         Route::resource('series', 'SeriesController')->except(['create', 'edit']); //CRUD
 

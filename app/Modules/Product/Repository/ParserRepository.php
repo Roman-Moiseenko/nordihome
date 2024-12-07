@@ -6,57 +6,76 @@ namespace App\Modules\Product\Repository;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Parser\ProductParser;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
 class ParserRepository
 {
-    public function getFilter(Request $request, &$filters)
+    public function getFilter(Request $request, &$filters): Arrayable
     {
-        //Формируем массив фильтр
-        $filters = [
-            'product' => $request['product'] ?? null,
-            'category' => $request['category_id'] ?? null,
-            'published' => $request['published'] ?? null,
-            'not_sale' => $request['not_sale'] ?? null,
-        ];
-        $_filter_count = 0;
-        $_filter_text = '';
-        foreach ($filters as $key => $item) {
-            if (!is_null($item)) {
-                $_filter_count++;
-                if ($key == 'product') $_filter_text .= $item . ', ';
-                if ($key == 'category') $_filter_text .= Category::find($item)->name . ', ';
-                if ($key == 'published') $_filter_text .= $item;
-                if ($key == 'not_sale') $_filter_text .= $item;
-            }
-        }
-        $filters['count'] = $_filter_count;
-        $filters['text'] = $_filter_text;
-
-        //Формируем запрос по фильтру
-
-        $query = ProductParser::orderBy('created_at');
-        $product = $filters['product'];
-
-        if (!empty($filters['product'])) $query->whereHas('product', function ($q) use ($product) {
-            $q->where('name', 'like', "%$product%")
-                ->orWhere('code', 'like', "%$product%")
-                ->orWhere('code_search', 'like', "%$product%")
-                ->orWhereHas('series', function ($series) use ($product){
-                    $series->where('name', 'like', "%$product%");
-                });
+        $query = ProductParser::orderBy('created_at')->whereHas('product', function ($query) {
+            $query->where('deleted_at', null);
         });
+        //Формируем массив фильтр
+        $filters = [];
 
-        if (!empty($filters['category'])) {
-            $query->whereHas('product', function ($qq) use ($filters) {
-                $qq->whereHas('categories', function ($q) use ($filters) {
-                    $q->where('id', $filters['category']);
-                })->orWhere('main_category_id', $filters['category']);
+        if (($product = $request->string('product')->value()) != '' ) {
+            $filters['product'] = $product;
+            $query->whereHas('product', function ($q) use ($product) {
+                $q->whereRaw("LOWER(name) like LOWER('%$product%')")
+                    ->orWhere('code', 'like', "%$product%")
+                    ->orWhere('code_search', 'like', "%$product%")
+                    ->orWhereHas('series', function ($series) use ($product) {
+                        $series->whereRaw("LOWER(name) like LOWER('%$product%')");
+                    });
             });
         }
-        if ($filters['published'] == 'active') $query->whereHas('product', function ($q) {$q->where('published', true);});
-        if ($filters['published'] == 'draft') $query->whereHas('product', function ($q) {$q->where('published', false);});
-        if ($filters['not_sale'] != null) $query->whereHas('product', function ($q) {$q->where('not_sale', true);});
-        return $query;
+
+        if (($category = $request->integer('category')) > 0) {
+            $filters['category'] = $category;
+            $query->whereHas('product', function ($qq) use ($category) {
+                $qq->whereHas('categories', function ($q) use ($category) {
+                    $q->where('id', $category);
+                })->orWhere('main_category_id', $category);
+            });
+        }
+        /*
+        if ($filters['published'] == 'active') $query->whereHas('product', function ($q) {
+            $q->where('published', true);
+        });
+        */
+
+        if ($request->boolean('published')) {
+            $filters['published'] = true;
+            $query->whereHas('product', function ($query) {
+                $query->where('published', false);
+            });
+        }
+        if ($request->boolean('not_sale')) {
+            $filters['not_sale'] = true;
+            $query->whereHas('product', function ($query) {
+                $query->where('not_sale', true);
+            });
+        }
+
+
+
+        if (count($filters) > 0) $filters['count'] = count($filters);
+        return $query->paginate($request->input('size', 20))
+            ->withQueryString()
+            ->through(fn(ProductParser $parser) => $this->ProductParserToArray($parser));
+    }
+
+    private function ProductParserToArray(ProductParser $parser): array
+    {
+        return array_merge($parser->toArray(), [
+            'product' => [
+                'id' => $parser->product_id,
+                'code' => $parser->product->code,
+                'name' => $parser->product->name,
+                'category' => $parser->product->category->getParentNames(),
+                'image' => $parser->product->getImage('mini'),
+            ],
+        ]);
     }
 }

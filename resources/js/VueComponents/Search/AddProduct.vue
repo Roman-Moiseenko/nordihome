@@ -74,6 +74,10 @@ import {ElLoading} from "element-plus";
 const search = route('admin.product.search-add')
 const props = defineProps({
     route: String, //Ссылка на добавление товара в документ. Метод POST.
+    search: {
+        type: String,
+        default: route('admin.product.search-add'),
+    },
     quantity: {  //Поле quantity
         default: false,
         type: Boolean
@@ -128,7 +132,8 @@ const loading = ref(false)
 const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
-        axios.post(search, {search: query}).then(response => {
+        axios.post(props.search, {search: query}).then(response => {
+            if (response.data.error !== undefined) console.log(response.data.error)
             options.value = response.data
             loading.value = false
         });
@@ -145,6 +150,7 @@ const form = reactive({
 function onSelect() {
     if (props.quantity) {
         document.getElementById('quantity').focus()
+        document.getElementById('quantity').select()
     } else {
         document.getElementById('button').focus()
     }
@@ -159,7 +165,7 @@ function onAdd() {
         method: "post",
         data: form,
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             form.product_id = null
             form.quantity = 1

@@ -6,7 +6,7 @@
                :auto-upload="false"
                v-model:fileList="Images"
                @input="onSelectFile($event.target.files[0])" :on-remove="handleRemoveImages"
-               class="file-uploader-one"
+               :class="'file-uploader-one' + ((mini) ? ' mini' : '')"
                ref="template"
     >
         <el-icon>
@@ -48,7 +48,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
-
+    mini: {
+        type: Boolean,
+        default: false,
+    }
 });
 const Images = ref<UploadFile>([]);
 if (props.image !== null) Images.value.push({name: 'default', url: props.image,});
@@ -73,3 +76,14 @@ const handlePictureCardPreview = (file: UploadFile) => {
 }
 </script>
 
+<style lang="scss">
+//
+.mini {
+    .el-upload--picture-card {
+        --el-upload-picture-card-size: 48px;
+    }
+    .el-upload-list__item{
+        --el-upload-list-picture-card-size: 48px;
+    }
+}
+</style>

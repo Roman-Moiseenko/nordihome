@@ -19,15 +19,14 @@ class CategoryService
             $request->string('title')->trim()->value(),
             $request->string('description')->trim()->value()
         );
-
-        $this->image($category, $request->file('image'));
-        $this->icon($category, $request->file('icon'));
+        $category->saveImage($request->file('image'));
+        $category->saveIcon($request->file('icon'));
 
         $category->save();
         return $category;
     }
 
-    public function update(Request $request, Category $category): Category
+    public function setInfo(Request $request, Category $category): Category
     {
         $category->name = $request->string('name')->trim()->value();
         if ($request->has('parent_id')) {
@@ -39,6 +38,12 @@ class CategoryService
         if ($category->slug != $new_slug) {
             $category->slug = empty($new_slug) ? Str::slug($category->name) : $new_slug;
         }
+        $category->save();
+
+        $category->saveImage($request->file('image'), $request->boolean('image_clear'));
+        $category->saveIcon($request->file('icon'), $request->boolean('icon_clear'));
+        /*
+
 
         if ($request['image-clear'] == 'delete') {
             $category->image->delete();
@@ -51,8 +56,8 @@ class CategoryService
 
         $this->image($category, $request->file('image'));
         $this->icon($category, $request->file('icon'));
+*/
 
-        $category->save();
         return $category;
     }
 
@@ -89,4 +94,5 @@ class CategoryService
         $category->icon->newUploadFile($file, 'icon');
         $category->refresh();
     }
+
 }

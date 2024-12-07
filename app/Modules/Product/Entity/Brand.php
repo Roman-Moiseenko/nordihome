@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,10 +14,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $description
  * @property string $url
  * @property string $sameas_json
- * @property Photo $photo
+ * @property Product[] $products
  */
 class Brand extends Model
 {
+    use ImageField;
+
     const DEFAULT = 1;
     const IKEA = 'Икеа';
 
@@ -51,24 +54,10 @@ class Brand extends Model
         return $this->sameAs;
     }
 
-    public function photo()
+    public function products(): HasMany
     {
-        return $this->morphOne(Photo::class, 'imageable')->withDefault();
-    }
-
-    public function getImage(): string
-    {
-        if (empty($this->photo->file)) {
-            return '/images/default-brand.png';
-        } else {
-            return $this->photo->getUploadUrl();
-        }
-    }
-
-    public function products(): ?HasMany
-    {
-        return null;
-       // return $this->hasMany(Product::class, 'brand_id', 'id');
+       // return null;
+       return $this->hasMany(Product::class, 'brand_id', 'id');
     }
 
     public static function boot()

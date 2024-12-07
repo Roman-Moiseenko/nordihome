@@ -163,7 +163,9 @@ class Photo extends Model
 
     final public function getThumbUrl(string $thumb): string
     {
+
         if ($this->createThumbsOnRequest) $this->createThumbs();
+
         return $this->urlThumb . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
     }
 
@@ -205,7 +207,9 @@ class Photo extends Model
 
     private function createThumbs(): void
     {
-        if (isset($this->imageable->thumbs) && !$this->imageable->thumbs) return;//В связном объекте запрет на кешированные изображения
+        if (!$this->thumb) return;
+        //if (isset($this->imageable->thumbs) && !$this->imageable->thumbs) return;//В связном объекте запрет на кешированные изображения
+
         foreach ($this->thumbs as $thumb => $params) {
             $thumb_file = $this->getThumbFile($thumb);
             if (is_file($this->getUploadFile()) &&

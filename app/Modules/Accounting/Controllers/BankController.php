@@ -4,6 +4,8 @@ namespace App\Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Service\BankService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class BankController extends Controller
@@ -21,7 +23,7 @@ class BankController extends Controller
     }
 
 
-    public function upload(Request $request)
+    public function upload(Request $request): JsonResponse
     {
         try {
             $result = $this->service->upload($request);
@@ -30,6 +32,16 @@ class BankController extends Controller
         } catch (\Throwable $e) {
             return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
             // return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function currency(Request $request): RedirectResponse
+    {
+        try {
+            $this->service->currency($request);
+            return redirect()->back()->with('success', 'Курс валют(ы) обновлен');
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

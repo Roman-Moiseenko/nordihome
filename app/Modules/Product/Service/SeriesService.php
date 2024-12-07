@@ -56,7 +56,7 @@ class SeriesService
         $product->save();
     }
 
-    public function remove(Series $series)
+    public function remove(Series $series): void
     {
         foreach ($series->products as $product) {
             $product->series_id = null;

@@ -6,6 +6,7 @@ use App\Events\ThrowableHasAppeared;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
+use Inertia\Inertia;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,16 +47,30 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if ($this->isHttpException($e)) {
-            //TODO Добавить все ошибки http
-            if (request()->is('admin/*')) {
-                if ($e->getStatusCode() == 404)
-                    return response()->view('errors.' . 'admin_404', [], 404);
-            } else {
-                if ($e->getStatusCode() == 404)
-                    return response()->view('errors.' . '404', [], 404);
+
+        $response = parent::render($request, $e);
+        if (request()->is('admin/*')) {
+            if (/*!app()->environment('local') && */ in_array($response->status(), [500, 503, 404, 403, 419])) {
+                if ($response->status() == 403) return redirect()->back()->with('error', 'Отказано в доступе');
+                if ($response->status() > 500) {
+                    if (config('app.debug')) {
+                        return $response;
+                    } else {
+                        event(new ThrowableHasAppeared($e));
+                        return redirect()->back()->with('error', 'Непредвиденная ошибка');
+                    }
+                }
+
+                if ($response->status() == 404) return Inertia::render('Error', ['status' => 404])
+                    ->toResponse($request)
+                    ->setStatusCode($response->status());
+                if ($response->status() == 419 )return redirect()->back()->with('warning', 'Срок действия страницы истек, попробуйте еще раз.');
             }
+        } else {
+            if ($response->status() == 404) return response()->view('errors.' . '404', [], 404);
+            //TODO Добавить все ошибки http
         }
+
 
         //Исключение CRM
         if ($e instanceof \DomainException) {
@@ -65,24 +80,12 @@ class Handler extends ExceptionHandler
 
                 if (request()->is('admin/*')) { //Админ панель
                     flash($e->getMessage(), 'danger');
-                    return redirect()->back();
+                    return redirect()->back()->with('error', $e->getMessage());
                 } else { //Клиентская часть
                     return redirect()->back()->with('danger', $e->getMessage()); //route('shop.home')
                 }
             }
         }
-        if (!($e instanceof TokenMismatchException) && !($e instanceof AuthenticationException)) {
-            if (config('app.debug')) {
-                if ($request->ajax())
-                    return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
-            } else {
-                //Если режим не Debug отправляем сообщения
-
-                    event(new ThrowableHasAppeared($e));
-                flash('Непредвиденная ошибка. Мы уже работаем над ее исправлением', 'danger');
-                return redirect()->back();
-            }
-        }
-        return parent::render($request, $e);
+        return $response;
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
@@ -21,7 +23,6 @@ class Equivalent extends Model
         'name'
     ];
 
-
     public static function register(string $name, int $category_id): self
     {
         return self::create([
@@ -30,12 +31,12 @@ class Equivalent extends Model
         ]);
     }
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
-    public function products()
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'equivalents_products', 'equivalent_id', 'product_id');
     }

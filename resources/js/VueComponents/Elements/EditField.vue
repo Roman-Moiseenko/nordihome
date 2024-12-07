@@ -7,24 +7,24 @@
             {{ field }}
         </template>
 
-        <el-button class="ml-2" type="warning" size="small" @click="showEdit = true">
+        <el-button class="ml-2" type="warning" size="small" @click.stop="showEdit = true">
             <i class="fa-light fa-pen-to-square"></i>
         </el-button>
     </div>
     <div v-show="showEdit">
         <template v-if="isFIO">
-            <el-input v-model="field_fio.surname" style="width: 120px;" />
-            <el-input v-model="field_fio.firstname" style="width: 100px;"/>
-            <el-input v-model="field_fio.secondname" style="width: 120px;" class="mr-2"/>
+            <el-input v-model="field_fio.surname" style="width: 120px;" @click.stop=""/>
+            <el-input v-model="field_fio.firstname" style="width: 100px;" @click.stop=""/>
+            <el-input v-model="field_fio.secondname" style="width: 120px;" class="mr-2" @click.stop=""/>
         </template>
         <template v-else>
-            <el-input v-model="field_new" style="width: 220px;" class="mr-2" :formatter="formatter"/>
+            <el-input v-model="field_new" style="width: 220px;" class="mr-2" :formatter="formatter" @click.stop=""/>
         </template>
 
-        <el-button type="success" size="small" @click="saveField">
+        <el-button type="success" size="small" @click.stop="saveField">
             <i class="fa-light fa-floppy-disk"></i>
         </el-button>
-        <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
+        <el-button type="info" size="small" @click.stop="showEdit = false" style="margin-left: 4px">
             <i class="fa-light fa-xmark"></i>
         </el-button>
     </div>

@@ -481,21 +481,6 @@ class ProductService
 
     }
 
-    //Приоритетные товары
-    public function setPriorityProduct(int $product_id): void
-    {
-        $product = Product::find($product_id);
-        $product->setPriority(true);
-    }
-
-    public function setPriorityProducts(array $codes): void
-    {
-        foreach ($codes as $code) {
-            $product = Product::where('code', trim($code))->first();
-            $product->setPriority(true);
-        }
-    }
-
     /**
      * Расчет цены для товаров Икеа (через Парсинг)
      * вызывать при изменении одно параметра: цена в Икеа, коэф.наценки, коэф-ты для товаров (хруп., санкцц.)

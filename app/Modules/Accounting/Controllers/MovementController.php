@@ -33,8 +33,8 @@ class MovementController extends Controller
         MovementRepository $repository,
     )
     {
-        //$this->middleware(['auth:admin', 'can:accounting']);
-        //$this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
+        $this->middleware(['auth:admin', 'can:accounting']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->staffs = $staffs;
         $this->repository = $repository;

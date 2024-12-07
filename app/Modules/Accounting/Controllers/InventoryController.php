@@ -26,8 +26,8 @@ class InventoryController extends Controller
         StaffRepository       $staffs,
     )
     {
-        //$this->middleware(['auth:admin', 'can:accounting']);
-        //$this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
+        $this->middleware(['auth:admin', 'can:accounting']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->repository = $repository;
 

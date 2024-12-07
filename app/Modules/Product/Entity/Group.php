@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Traits\ImageField;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\DataWidget;
 use App\Modules\Page\Entity\DataWidgetInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -17,12 +20,13 @@ use JetBrains\PhpStorm\Deprecated;
  * @property string $slug
  * @property bool $published
  * @property string $description
- * @property Photo $photo
  * @property Product[] $products
 // * @property Promotion[] $promotions
  */
 class Group extends Model implements DataWidgetInterface
 {
+    use ImageField;
+
     public $timestamps = false;
 
     protected $attributes = [
@@ -48,33 +52,11 @@ class Group extends Model implements DataWidgetInterface
     {
     }
 
-    public function photo()
-    {
-        return $this->morphOne(Photo::class, 'imageable')->withDefault();
-    }
-
-    #[Deprecated]
-    public function promotions()
-    {
-        return $this->belongsToMany(
-            Promotion::class, 'promotions_groups',
-            'group_id', 'promotion_id')->withPivot('discount');
-    }
-
-    public function products()
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'groups_products', 'group_id', 'product_id');
     }
 
-
-    public function getImage()
-    {
-        if (empty($this->photo->file)) {
-            return '/images/no-image.jpg';
-        } else {
-            return $this->photo->getUploadUrl();
-        }
-    }
 
     public function isProduct(int $id): bool
     {
@@ -88,11 +70,11 @@ class Group extends Model implements DataWidgetInterface
     {
         $data = new DataWidget();
         if (!empty($this->slug)) $data->url = route('shop.group.view', $this->slug);
-        $data->image = $this->photo;
+        $data->image = $this->getImage();
         $data->title = $this->name;
         $data->items = array_map(function (Product $product) {
             return [
-                'image' => $product->photo,
+                'image' => $product->getImage(),
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
                 'price' => $product->getPrice(),

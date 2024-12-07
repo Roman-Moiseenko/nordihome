@@ -51,7 +51,7 @@ class OrderController extends Controller
         InvoiceReport     $report,
     )
     {
-        //$this->middleware(['auth:admin', 'can:order']);
+        $this->middleware(['auth:admin', 'can:order']);
         $this->staffs = $staffs;
         $this->repository = $repository;
         $this->products = $products;

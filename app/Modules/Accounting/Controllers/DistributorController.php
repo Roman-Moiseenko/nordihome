@@ -28,7 +28,7 @@ class DistributorController extends Controller
 
     public function __construct(DistributorService $service, DistributorRepository $repository)
     {
-        //$this->middleware(['auth:admin', 'can:accounting']);
+        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->repository = $repository;
     }
@@ -117,7 +117,7 @@ class DistributorController extends Controller
                 $distributor,
                 $request->string('balance')->value()
             );
-            return redirect()->route('admin.accounting.supply.show', $supply)->with('error', 'Заказ создан');
+            return redirect()->route('admin.accounting.supply.show', $supply)->with('success', 'Заказ создан');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

@@ -205,7 +205,7 @@ Route::group(
         ],
             function () {
                 Route::post('/upload', 'BankController@upload')->name('upload');
-
+                Route::post('/currency', 'BankController@currency')->name('currency');
             });
         //STORAGE
         Route::group([

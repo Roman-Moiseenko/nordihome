@@ -79,6 +79,8 @@ class DistributorService
                     $supply->addProduct($product, $count, $product->pivot->cost);
                 }
             }
+            $supply->refresh();
+            if ($supply->products()->count() == 0) throw new \DomainException('Нет товара для добавления в заказ!');
         });
         return $supply;
     }

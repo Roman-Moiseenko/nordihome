@@ -8,36 +8,30 @@ use Illuminate\Http\Request;
 
 class AttributeGroupService
 {
-    public function create(Request $request)
+    public function create(Request $request): void
     {
-        if (empty($request['name'])) {
-            flash('Незаполненно название группы', 'danger');
-        } else {
-            AttributeGroup::register($request['name']);
-        }
+        if (empty($request['name']))
+            throw new \DomainException('Незаполненно название группы',);
+        AttributeGroup::register($request['name']);
     }
 
-    public function update(Request $request, AttributeGroup $group)
+    public function update(Request $request, AttributeGroup $group): void
     {
-        if (empty($request['name'])) {
-            flash('Название группы не должно быть пустым', 'danger');
-        } else {
-            $group->update([
-                'name' => $request['name']
-            ]);
-        }
+        if (empty($request['name']))
+            throw new \DomainException('Название группы не должно быть пустым');
+        $group->update([
+            'name' => $request['name']
+        ]);
     }
 
-    public function delete(AttributeGroup $group)
+    public function delete(AttributeGroup $group): void
     {
-        if (count($group->attributes) > 0) {
-            flash('Нельзя удалить группу с атрибутами', 'danger');
-        } else {
-            AttributeGroup::destroy($group->id);
-        }
+        if ($group->attributes()->count() > 0)
+            throw new \DomainException('Нельзя удалить группу с атрибутами');
+        AttributeGroup::destroy($group->id);
     }
 
-    public function up(AttributeGroup $group)
+    public function up(AttributeGroup $group): void
     {
         $groups = AttributeGroup::orderBy('sort')->get();
         $count = count($groups);
@@ -51,7 +45,7 @@ class AttributeGroupService
         }
     }
 
-    public function down(AttributeGroup $group)
+    public function down(AttributeGroup $group): void
     {
         $groups = AttributeGroup::orderBy('sort')->get();
         $count = count($groups);

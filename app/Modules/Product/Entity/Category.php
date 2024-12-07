@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Traits\IconField;
+use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -16,8 +19,6 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property string $slug
  * @property string $title
  * @property string $description
- * @property Photo $image
- * @property Photo $icon
  * @property Category $parent
  * @property Category[] $children
  * @property Attribute[] $prod_attributes
@@ -28,7 +29,7 @@ use Kalnoy\Nestedset\NodeTrait;
  */
 class Category extends Model
 {
-    use NodeTrait, HasFactory;
+    use NodeTrait, HasFactory, ImageField, IconField;
 
     protected $fillable = [
       'name', 'parent_id', 'slug', 'title', 'description',
@@ -64,34 +65,6 @@ class Category extends Model
         return $this->parent_id == $category->id;
     }
 
-    public function image()
-    {
-        return $this->morphOne(Photo::class, 'imageable')->where('type', '=','image')->withDefault();
-    }
-
-    public function icon()
-    {
-        return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
-    }
-
-    public function getImage(): string
-    {
-        if (empty($this->image->file)) {
-            return '/images/default-catalog.jpg';
-        } else {
-            return $this->image->getUploadUrl();
-        }
-    }
-
-
-    public function getIcon(): string
-    {
-        if (empty($this->icon->file)) {
-            return '/images/default-catalog.png';
-        } else {
-            return $this->icon->getUploadUrl();
-        }
-    }
 
     public function getParentIdAll(): array
     {
@@ -114,12 +87,12 @@ class Category extends Model
         return $this->parent ? $this->parent->all_attributes() : [];
     }
 
-    public function prod_attributes()
+    public function prod_attributes(): BelongsToMany
     {
         return $this->belongsToMany(Attribute::class, 'attributes_categories', 'category_id', 'attribute_id');
     }
 
-    public function products()
+    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Product::class, 'main_category_id', 'id');
     }
@@ -171,5 +144,15 @@ class Category extends Model
             $slug = '/categories';
         }
         return $slug . '/' . $this->slug;*/
+    }
+
+    public function getParentNames(): string
+    {
+        $categories = $this->getParentAll();
+        $name = '';
+        foreach ($categories as $category) {
+            $name .= $category->name . "\\";
+        }
+        return $name;// .= $this->name;
     }
 }

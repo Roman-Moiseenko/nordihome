@@ -21,6 +21,7 @@ class ReserveCommand extends Command
     public function handle()
     {
         $this->info('Резерв - проверка');
+        //LoggerCron::new('Старт ' . $this->description);
 
         try {
             //$reserveService = new OrderReserveService();
