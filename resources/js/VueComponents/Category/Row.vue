@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import {router, Link} from "@inertiajs/vue3";
 import {computed, inject, reactive, ref} from "vue";
-import CategoryChildren from "./CategoryChildren.vue";
+import CategoryChildren from "@Comp/Category/Children.vue";
 
 const props = defineProps({
     category: Object,

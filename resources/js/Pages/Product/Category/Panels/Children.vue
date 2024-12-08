@@ -18,7 +18,8 @@
                 <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
             </div>
         </el-popover>
-        <CategoryRow v-for="item in category.children" :category="item" @delete:category="handleDeleteEntity" />
+        <CategoryChildren :category="category" @delete:category="handleDeleteEntity" />
+        <!--CategoryRow v-for="item in category.children" :category="item" @delete:category="handleDeleteEntity" /-->
     </el-tab-pane>
     <DeleteEntityModal name_entity="Категорию" />
 </template>
@@ -26,6 +27,7 @@
 import CategoryRow from "@Page/Product/Category/CategoryRow.vue";
 import {inject, reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
+import CategoryChildren from "@Page/Product/Category/CategoryChildren.vue";
 
 const props = defineProps({
     category: Object,

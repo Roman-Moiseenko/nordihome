@@ -15,10 +15,10 @@
 <script setup>
 import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
-import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
-import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
-import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
-import AccountingWork from "@Comp/Pages/AccountingWork.vue";
+import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
+import AccountingPrint from "@Comp/Accounting/Print.vue";
+import AccountingCompleted from "@Comp/Accounting/Completed.vue";
+import AccountingWork from "@Comp/Accounting/Work.vue";
 
 const props = defineProps({
     payment: Object,

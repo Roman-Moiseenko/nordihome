@@ -19,8 +19,8 @@
                 </div>
             </el-popover>
         </div>
-        <CategoryRow v-for="item in categories" :category="item" @delete:category="handleDeleteEntity" />
-
+        <CategoryChildren :categories="categories" @delete:category="handleDeleteEntity" />
+        <!--CategoryRow v-for="item in categories" :category="item" @delete:category="handleDeleteEntity" /-->
         <DeleteEntityModal name_entity="Категорию" />
     </el-config-provider>
 </template>
@@ -29,7 +29,8 @@
 import {Head, router} from "@inertiajs/vue3";
 import {inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
-import CategoryRow from "@Page/Product/Category/CategoryRow.vue";
+import CategoryRow from "./CategoryRow.vue";
+import CategoryChildren from "./CategoryChildren.vue";
 
 const props = defineProps({
     categories: Object,

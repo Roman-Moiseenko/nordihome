@@ -41,10 +41,10 @@ import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
-import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
-import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
-import AccountingCompleted from "@Comp/Pages/AccountingCompleted.vue";
-import AccountingWork from "@Comp/Pages/AccountingWork.vue";
+import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
+import AccountingPrint from "@Comp/Accounting/Print.vue";
+import AccountingCompleted from "@Comp/Accounting/Completed.vue";
+import AccountingWork from "@Comp/Accounting/Work.vue";
 import {ElLoading} from "element-plus";
 
 const props = defineProps({
