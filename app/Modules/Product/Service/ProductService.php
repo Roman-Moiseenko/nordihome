@@ -471,11 +471,17 @@ class ProductService
 
     public function action(string $action, array $ids): void
     {
+        if (empty($ids)) throw new \DomainException('Не выбраны товары');
+        if (empty($action)) throw new \DomainException('Не выбрано действие');
         foreach ($ids as $product_id) {
             /** @var Product $product */
             $product = Product::find($product_id);
             if ($action == 'draft' && $product->isPublished()) $product->setDraft();
             if ($action == 'published' && !$product->isPublished()) $product->setPublished();
+
+            if ($action == 'not_sale' && $product->isSale()) $product->setNotSale();
+            if ($action == 'to_sale' && !$product->isSale()) $product->setForSale();
+
             if ($action == 'remove') $this->destroy($product);
         }
 

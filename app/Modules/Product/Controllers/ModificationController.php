@@ -123,14 +123,14 @@ class ModificationController extends Controller
         /** @var Product $product */
         foreach ($products as $product) {
             if (is_null($product->modification)) {
-                $result[] = $this->products->toArrayForSearch($product);
+                $result[] = $product->toArrayForSearch();
             } else {
                 if ($request['action'] == 'index') {
                     $other = route('admin.product.modification.show', $product->modification);
                 } else {
                     $other = $product->modification->id;
                 }
-                $result[] = array_merge($this->products->toArrayForSearch($product), ['other' => $other]);
+                $result[] = array_merge($product->toArrayForSearch(), ['other' => $other]);
             }
         }
         return \response()->json($result);

@@ -18,29 +18,59 @@ class ProductRepository
      * в QueryProduct setCountForSell(%id, %count) и если нет ТУ то setPriceForSell($id, $price)
      */
 
-    public function existAndGet(int $id): ?Product
+
+    public function getIndex($request, &$filters)
     {
-        try {
-            return Product::findOrFail($id);
-        } catch (\Throwable $e) {
-            return null;
+        $query = Product::orderBy('name');
+        $filters = [];
+        if (($category_id = $request->integer('category')) > 0) {
+            $filters['category'] = $category_id;
+            $query->whereHas('categories', function ($query) use ($category_id) {
+                $query->where('id', $category_id);
+            })->orWhere('main_category_id', $category_id);
         }
+
+        if (!empty($name = $request->string('name')->trim()->value())) {
+            $filters['name'] = $name;
+            $query->whereRaw("LOWER(name) like LOWER('%$name%')")
+                ->orWhere('code', 'like', "%$name%")
+                ->orWhere('code_search', 'like', "%$name%");
+        }
+        if (!is_null($show = $request->input('show'))) {
+            $filters['show'] = $show;
+            if ($show == 'active') $query->where('published', true);
+            if ($show == 'draft') $query->where('published', false);
+            if ($show == 'delete') $query->onlyTrashed();
+            if ($show == 'not_sale') $query->where('not_sale', true);
+        }
+
+
+
+        if (count($filters) > 0) $filters['count'] = count($filters);
+        return $query->paginate($request->input('size', 20))
+            ->withQueryString()
+            ->through(fn(Product $product) => $this->ProductToArray($product));
     }
 
-    public function getProductJSON(int $id): string
+    private function ProductToArray(Product $product): array
     {
-        return json_encode([]);
+        return array_merge($product->toArray(), [
+            'image' => $product->getImage('mini'),
+            'category_name' => $product->category->getParentNames(),
+            'price' => $product->getPriceRetail(),
+            'quantity' => $product->getQuantity(),
+            'reserve' => $product->getReserveCount(),
+            'trashed' => $product->trashed(),
+        ]);
     }
 
-    public function forCommodity(int $id): string
+    public function ProductWithToArray(Product $product): array
     {
-        /** @var Product $product */
-        $product = Product::find($id);
-        if (!empty($product)) {
-            return json_encode(['code' => $product->code, 'name' => $product->name]);
-        }
-        return json_encode([]);
+        return array_merge($this->ProductToArray($product), [
+
+        ]);
     }
+
 
     public function search(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true): array
     {
@@ -57,22 +87,6 @@ class ProductRepository
             }
         }
         return $query->take($take)->getModels();
-    }
-
-
-    public function toArrayForSearch(Product $product): array
-    {
-        return [
-            'id' => $product->id,
-            'name' => $product->name,
-            'code' => $product->code,
-            'code_search' => $product->code_search,
-            'image' => $product->getImage(),
-            'price' => $product->getPrice(),
-            'url' => route('admin.product.edit', $product),
-            'count' => $product->getCountSell(),
-            'stock' => $product->getCountSell() > 0,
-        ];
     }
 
 
@@ -107,16 +121,16 @@ class ProductRepository
             $q->where('name', 'like', "%$product%")
                 ->orWhere('code', 'like', "%$product%")
                 ->orWhere('code_search', 'like', "%$product%")
-                ->orWhereHas('series', function ($series) use ($product){
+                ->orWhereHas('series', function ($series) use ($product) {
                     $series->where('name', 'like', "%$product%");
                 });
         });
 
         if (!empty($filters['category'])) {
             $query->where(function ($qq) use ($filters) {
-               $qq->whereHas('categories', function ($q) use ($filters) {
-                   $q->where('id', $filters['category']);
-               })->orWhere('main_category_id', $filters['category']);
+                $qq->whereHas('categories', function ($q) use ($filters) {
+                    $q->where('id', $filters['category']);
+                })->orWhere('main_category_id', $filters['category']);
             });
         }
         if ($filters['published'] == 'active') $query->where('published', true);

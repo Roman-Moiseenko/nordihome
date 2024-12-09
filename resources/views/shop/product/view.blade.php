@@ -15,7 +15,9 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="view-image-product">
-                    <img id="main-image-product" src="{{ $product->photo->getThumbUrl('card') }}" style="width: 100%;">
+                    @if(!is_null($product->photo))
+                        <img id="main-image-product" src="{{ $product->photo->getThumbUrl('card') }}" style="width: 100%;">
+                    @endif
                 </div>
 
                 <div class="slider-images-product owl-carousel owl-theme mt-3 p-3" data-responsive="[3,6,9]">

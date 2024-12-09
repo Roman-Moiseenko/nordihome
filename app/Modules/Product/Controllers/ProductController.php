@@ -14,11 +14,14 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Series;
 use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Helper\ProductHelper;
+use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\ProductService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Inertia\Inertia;
 use JetBrains\PhpStorm\Deprecated;
 
 class ProductController extends Controller
@@ -26,20 +29,27 @@ class ProductController extends Controller
     private ProductService $service;
     private Options $options;
     private ProductRepository $repository;
+    private CategoryRepository $categories;
 
-    public function __construct(ProductService $service, Options $options, ProductRepository $repository)
+    public function __construct(
+        ProductService $service,
+                                Options $options,
+        ProductRepository $repository,
+        CategoryRepository $categories,
+    )
     {
         $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->options = $options;
         $this->repository = $repository;
+        $this->categories = $categories;
     }
 
     public function index(Request $request)
     {
-        $categories = Category::defaultOrder()->withDepth()->get();
+        $categories = $this->categories->forFilters();
         $query = $this->repository->getFilter($request, $filters);
-        $products = $this->pagination($query, $request, $pagination);
+        //$products = $this->pagination($query, $request, $pagination);
         //$query = Product::orderBy('id');
         $count = [
             'all' => Product::count(),
@@ -48,8 +58,17 @@ class ProductController extends Controller
             'not_sale' => Product::where('not_sale', true)->count(),
             'delete' => Product::onlyTrashed()->count(),
         ];
-        return view('admin.product.product.index', compact('products', 'pagination',
+      /*  return view('admin.product.product.index', compact('products', 'pagination',
             'categories', 'filters', 'count'));
+*/
+        $products = $this->repository->getIndex($request, $filters);
+        return Inertia::render('Product/Product/Index', [
+            'products' => $products,
+            'filters' => $filters,
+            'categories' => $categories,
+            'count' => $count,
+        ]);
+
     }
 
     public function create(Request $request)
@@ -69,7 +88,7 @@ class ProductController extends Controller
         return redirect()->route('admin.product.edit', compact('product'));
     }
 
-    public function fast_create(Request $request): \Illuminate\Http\JsonResponse
+    public function fast_create(Request $request): JsonResponse
     {
         $product = $this->service->create($request);
         if ($request->integer('price') > 0) {
@@ -134,9 +153,12 @@ class ProductController extends Controller
 
     public function full_delete(int $id): RedirectResponse
     {
-        $this->service->full_delete($id);
-        flash('Товар удален полностью', 'success');
-        return redirect()->back();//route('admin.product.index');
+        try {
+            $this->service->full_delete($id);
+            return redirect()->back()->with('success', 'Товар удален полностью');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function sale(Product $product): RedirectResponse
@@ -144,39 +166,36 @@ class ProductController extends Controller
         $product->not_sale = !$product->not_sale;
         $product->save();
         if ($product->isSale()) {
-            flash('Товар возвращен в продажу', 'success');
+            $message = 'Товар возвращен в продажу';
         } else {
-            flash('Товар убран из продажи', 'warning');
+            $message = 'Товар убран из продажи';
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', $message);
     }
 
-    public function toggle(Product $product) //Переключение между Опубликовано и Черновик
+    public function toggle(Product $product): RedirectResponse //Переключение между Опубликовано и Черновик
     {
         if ($product->isPublished()) {
             $this->service->draft($product);
+            $message = 'Товар отправлен в черновики';
         } else {
             $this->service->published($product);
+            $message = 'Товар опубликован';
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', $message);;
     }
 
-    //AJAX
-
-    public function action(Request $request)
+    public function action(Request $request): RedirectResponse
     {
-        //return \response()->json(['error' => $request['data']]);
         try {
-            $data = json_decode($request['data'], true);
-            $this->service->action($data['action'], $data['ids']);
-            return \response()->json(true);
+            $this->service->action($request->string('action')->value(), $request->input('ids'));
+            return redirect()->back()->with('success', 'Сохранено');
         } catch (\Throwable $e) {
-            return \response()->json(['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', $e->getMessage());
         }
-
     }
 
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $result = [];
         $products = $this->repository->search($request['search']);
@@ -196,7 +215,7 @@ class ProductController extends Controller
         /** @var Product $product */
         foreach ($products as $product) {
             if (!$request->has('published') || ($request->has('published') && $product->isPublished()))
-                $result[] = $this->repository->toArrayForSearch($product);
+                $result[] = $product->toArrayForSearch();
         }
 
         return \response()->json($result);
@@ -210,7 +229,7 @@ class ProductController extends Controller
         $products = $this->repository->search($request['search'], 10, $bonus_ids, false);
         /** @var Product $product */
         foreach ($products as $product) {
-            $result[] = $this->repository->toArrayForSearch($product);
+            $result[] = $product->toArrayForSearch();
         }
         return \response()->json($result);
     }

@@ -6,6 +6,8 @@ return [
         'icon' => 'store',
         'title' => 'Магазин',
         'can' => 'product',
+        //'vue' => true,
+        //'font_awesome' => 'fa-light shop',
         'sub_menu' => [
             'product' => [
                 'icon' => 'package-open',
@@ -25,6 +27,8 @@ return [
                 'icon' => 'file-cog',
                 'title' => 'Модификации',
                 'route_name' => 'admin.product.modification.index', // 'admin.product.tag.index'
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-folder-gear',
             ],
            /* 'option' => [
                 'icon' => 'package-plus',
