@@ -42,11 +42,11 @@ class ProductRepository
         return json_encode([]);
     }
 
-    public function search(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true)
+    public function search(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true): array
     {
         $query = Product::orderBy('name')->where(function ($query) use ($search) {
-            $query->where('code_search', 'LIKE', "%{$search}%")->orWhere('code', 'LIKE', "%{$search}%")
-                ->orWhere('name', 'LIKE', "%{$search}%");
+            $query->where('code_search', 'LIKE', "%$search%")->orWhere('code', 'LIKE', "%$search%")
+                ->orWhereRaw("LOWER(name) like LOWER('%$search%')");
         });
 
         if (!empty($include_ids)) {
@@ -56,10 +56,7 @@ class ProductRepository
                 $query = $query->whereNotIn('id', $include_ids);
             }
         }
-
-        $query = $query->take($take);
-
-        return $query->get();
+        return $query->take($take)->getModels();
     }
 
 

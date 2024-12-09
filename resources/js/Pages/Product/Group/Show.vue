@@ -47,7 +47,7 @@ import {useStore} from "@Res/store.js"
 import ru from 'element-plus/dist/locale/ru.mjs'
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
-import  GroupInfo from  './Block/Info.vue'
+import GroupInfo from  './Block/Info.vue'
 
 const props = defineProps({
     group: Object,

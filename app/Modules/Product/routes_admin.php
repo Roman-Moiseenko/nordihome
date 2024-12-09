@@ -110,6 +110,7 @@ Route::group(
         ], function () {
             Route::post('/set-modifications/{modification}', 'ModificationController@set_modifications')->name('set-modifications');
             Route::post('/search', 'ModificationController@search')->name('search');
+            Route::post('/rename/{modification}', 'ModificationController@rename')->name('rename');
             Route::post('/add-product/{modification}', 'ModificationController@add_product')->name('add-product');
             Route::delete('/del-product/{modification}', 'ModificationController@del_product')->name('del-product');
         });

@@ -24,7 +24,7 @@ class Modification extends Model
         'attributes_json',
     ];
 
-    public static function register(string $name, int $base_product_id, array $attributes): self
+    public static function register(string $name, int $base_product_id, array $attributes = []): self
     {
         if (empty($attributes)) throw new \DomainException('Не заданы атрибуты');
         /** @var Attribute $attribute */

@@ -1,7 +1,6 @@
 import.meta.glob([
     '../images/**',
 ]);
-
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { createPinia } from 'pinia'

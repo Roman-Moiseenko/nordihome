@@ -562,8 +562,11 @@ class Product extends Model
 
     public function Value(int $attribute_id)
     {
+
         foreach ($this->prod_attributes as $attribute) {
-            if ($attribute->id === $attribute_id) return $attribute->Value();
+            if ($attribute->id === $attribute_id) {
+                return $attribute->Value();
+            }
         }
         return null;
     }

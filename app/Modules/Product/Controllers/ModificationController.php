@@ -9,8 +9,12 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ModificationRepository;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\ModificationService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ModificationController extends Controller
 {
@@ -26,66 +30,75 @@ class ModificationController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $query = $this->repository->getIndex($request->string('name')->trim()->value());
-        $modifications = $this->pagination($query, $request, $pagination);
-        return view('admin.product.modification.index', compact('modifications', 'pagination'));
+        $modifications = $this->repository->getIndex($request, $filters);
+        return Inertia::render('Product/Modification/Index', [
+            'modifications' => $modifications,
+            'filters' => $filters,
+        ]);
     }
-
+/*
     public function create(Request $request)
     {
         $product_id = $request['product_id'] ?? null;
         return view('admin.product.modification.create', compact('product_id'));
-    }
+    }*/
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string',
             'product_id' => 'required',
-            'attribute_id' => 'required|array',
+            'attributes' => 'required|array',
         ]);
-        $modification = $this->service->create($request);
-        return redirect()->route('admin.product.modification.show', compact('modification'));
+        try {
+            $modification = $this->service->create($request);
+            return redirect()->route('admin.product.modification.show', $modification)->with('success', 'Модификация создана');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function show(Modification $modification)
+    public function show(Modification $modification): Response
     {
-        return view('admin.product.modification.show', compact('modification'));
+        return Inertia::render('Product/Modification/Show', [
+            'modification' => $this->repository->ModificationWithToArray($modification),
+        ]);
     }
 
-    public function edit(Modification $modification)
-    {
-        return view('admin.product.modification.edit', compact('modification'));
-    }
-
-
-    public function update(Request $request, Modification $modification)
+    public function rename(Request $request, Modification $modification): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string',
-            'product_id' => 'integer|required',
         ]);
-        $modification = $this->service->update($request, $modification);
-        return redirect()->route('admin.product.modification.show', compact('modification'));
+        $this->service->rename($request, $modification);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(Modification $modification)
+    public function destroy(Modification $modification): RedirectResponse
     {
-        $this->service->delete($modification);
-        return redirect()->route('admin.product.modification.index');
+        try {
+            $this->service->delete($modification);
+            return redirect()->back()->with('success', 'Модификация удалена');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function del_product(Request $request, Modification $modification)
+    public function del_product(Request $request, Modification $modification): RedirectResponse
     {
-        $this->service->del_product($request, $modification);
-        return redirect()->route('admin.product.modification.show', compact('modification'));
+        try {
+            $this->service->delProduct($request, $modification);
+            return redirect()->back()->with('success', 'Товар убран из модификации');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
 //AJAX
 //TODO Переделать
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
         $result = [];
         $products = [];
@@ -123,11 +136,14 @@ class ModificationController extends Controller
         return \response()->json($result);
     }
 
-    public function add_product(Request $request, Modification $modification)
+    public function add_product(Request $request, Modification $modification): RedirectResponse
     {
-        $this->service->add_product($request, $modification);
-        return \response()->json(true);
+        try {
+            $this->service->addProduct($request, $modification);
+            return redirect()->back()->with('success', 'Товар добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
-
 
 }

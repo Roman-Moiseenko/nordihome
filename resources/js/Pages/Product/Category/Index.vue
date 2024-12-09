@@ -26,11 +26,12 @@
 </template>
 
 <script setup lang="ts">
+
 import {Head, router} from "@inertiajs/vue3";
 import {inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import CategoryRow from "./CategoryRow.vue";
-import CategoryChildren from "./CategoryChildren.vue";
+import CategoryChildren from "@Comp/Category/Children.vue";
 
 const props = defineProps({
     categories: Object,
