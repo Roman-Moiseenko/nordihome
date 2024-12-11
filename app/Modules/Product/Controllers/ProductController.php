@@ -120,26 +120,42 @@ class ProductController extends Controller
         return view('admin.product.product.show', compact('product'));
     }
 
-    public function edit(Product $product): View
+    public function edit(Product $product)
     {
-        $categories = Category::defaultOrder()->withDepth()->get();
-        $menus = ProductHelper::menuUpdateProduct();
+    /*    $categories = Category::defaultOrder()->withDepth()->get();
+       // $menus = ProductHelper::menuUpdateProduct();
         $brands = Brand::orderBy('name')->get();
         $tags = Tag::orderBy('name')->get();
         $series = Series::orderBy('name')->get();
         $groups = AttributeGroup::orderBy('name')->get();
-        $options = $this->options;
+        //$options = $this->options;
         $equivalents = Equivalent::orderBy('name')
             ->whereHas('category', function ($query) use ($product) {
                 $query->where('_lft', '<=', $product->category->_lft)
                     ->where('_rgt', '>=', $product->category->_rgt);
             })
             ->get();
-
+        */
         //$equivalents = Equivalent::orderBy('name')->where('category_id', $product->main_category_id)->get();
 
-        return view('admin.product.product.edit', compact('product', 'categories',
-            'menus', 'brands', 'tags', 'groups', 'options', 'equivalents', 'series'));
+       /* return view('admin.product.product.edit', compact('product', 'categories',
+            'menus', 'brands', 'tags', 'groups', 'options', 'equivalents', 'series'));*/
+
+        return Inertia::render('Product/Product/Edit', [
+            'product' => $this->repository->ProductWithToArray($product),
+            'categories' => $this->categories->forFilters(),
+            'brands' => Brand::orderBy('name')->getModels(),
+            'tags' => Tag::orderBy('name')->getModels(),
+            'series' => Series::orderBy('name')->getModels(),
+            'groups' => AttributeGroup::orderBy('name')->get(),
+          //  'equivalents' => $equivalents,
+            'country' => Country::orderBy('name')->getModels(),
+            'vat' => VAT::orderBy('value')->getModels(),
+            'measuring' => Measuring::orderBy('name')->getModels(),
+            'markingType' => MarkingType::orderBy('name')->getModels(),
+            'distributors' => Distributor::orderBy('name')->getModels(),
+        ]);
+
     }
 
     #[Deprecated]
@@ -314,4 +330,14 @@ class ProductController extends Controller
         return \response()->json(true);
     }
 
+
+    //Vue3 Edit
+
+    public function edit_common(ProductCreateRequest $request, Product $product)
+    {
+        $this->service->editCommon($product, $request);
+        //return redirect()->back()->with('success', 'Сохранено');
+        $product->refresh();
+        return redirect()->route('admin.product.edit', $product)->with('success', 'Сохранено');
+    }
 }

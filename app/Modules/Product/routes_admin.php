@@ -10,7 +10,6 @@ Route::group(
     function () {
 
         Route::post('/action', 'ProductController@action')->name('action');
-
         //Атрибуты
         Route::group([
             'prefix' => 'attribute',
@@ -49,7 +48,6 @@ Route::group(
             Route::post('/list', 'CategoryController@list')->name('list');
             Route::post('/set-info/{category}', 'CategoryController@set_info')->name('set-info');
         });
-
         //TAG
         Route::group([
             'prefix' => 'tag',
@@ -60,7 +58,6 @@ Route::group(
             Route::post('/rename/{tag}', 'TagController@rename')->name('rename');
             Route::delete('/destroy/{tag}', 'TagController@destroy')->name('destroy');
         });
-
         //EQUIVALENT
         Route::group([
             'prefix' => 'equivalent',
@@ -91,7 +88,6 @@ Route::group(
             Route::post('/add-products/{series}', 'SeriesController@add_products')->name('add-products');
             Route::delete('/del-product/{series}', 'SeriesController@del_product')->name('del-product');
         });
-
         //Приоритеты
         Route::group([
             'prefix' => 'priority',
@@ -102,7 +98,6 @@ Route::group(
             Route::post('/add-products', 'PriorityController@add_products')->name('add-products');
             Route::delete('/del-product/{product}', 'PriorityController@del_product')->name('del-product');
         });
-
         //MODIFICATION
         Route::group([
             'prefix' => 'modification',
@@ -114,9 +109,6 @@ Route::group(
             Route::post('/add-product/{modification}', 'ModificationController@add_product')->name('add-product');
             Route::delete('/del-product/{modification}', 'ModificationController@del_product')->name('del-product');
         });
-
-
-
         //PARSER
         Route::group([
             'prefix' => 'parser',
@@ -156,6 +148,7 @@ Route::group(
         Route::post('/restore/{id}', 'ProductController@restore')->name('restore');
         Route::delete('/full-delete/{id}', 'ProductController@full_delete')->name('full-delete');
         Route::post('/fast-create', 'ProductController@fast_create')->name('fast-create');
+        Route::post('/edit/common/{product}', 'ProductController@edit_common')->name('edit.common');
     }
 );
 

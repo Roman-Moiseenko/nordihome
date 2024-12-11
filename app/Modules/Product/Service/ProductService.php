@@ -21,6 +21,7 @@ use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
 
 class ProductService
@@ -340,7 +341,8 @@ class ProductService
     public function destroy(Product $product): void
     {
         if ($product->orderItems()->count()) {
-            $product->setDraft(); throw new \DomainException('Товар в заказах. Удалить нельзя, перемещен в черновик');
+            $product->setDraft();
+            throw new \DomainException('Товар в заказах. Удалить нельзя, перемещен в черновик');
 
         } else {
             foreach ($product->storageItems as $storageItem) {
@@ -387,6 +389,48 @@ class ProductService
             $this->groupService->add_product($group, $product->id);
         }
 
+    }
+
+    public function editCommon(Product $product, Request $request): void
+    {
+
+        $product->name = $request->string('name')->trim()->value();
+        $product->code = $request->string('code')->trim()->value();
+        $product->main_category_id = $request->integer('category_id');
+        $product->slug = empty($request->string('slug')->value()) ? Str::slug($product->name) : $request->string('slug')->value();
+
+        $product->brand_id = $request->integer('brand_id');
+        //Проверить изменения в списке категорий
+        $array_old = [];
+        $array_new = $request['categories'] ?? null;
+
+        foreach ($product->categories as $category) $array_old[] = $category->id;
+        foreach ($array_old as $key => $item) {
+            if (!is_null($array_new) && in_array($item, $array_new)) {
+                $key_new = array_search($item, $array_new);
+                unset($array_old[$key]);
+                unset($array_new[$key_new]);
+            }
+        }
+        foreach ($array_old as $item) {
+            $product->categories()->detach((int)$item);
+        }
+        if (!is_null($array_new)) {
+            foreach ($array_new as $item) {
+                if ($this->categories->exists((int)$item)) {
+                    $product->categories()->attach((int)$item);
+                }
+            }
+        }
+
+        $product->name_print = $request->string('name_print')->trim()->value();
+        $product->comment = $request->string('comment')->trim()->value();
+        $product->country_id = $request->input('country_id');
+        $product->vat_id = $request->integer('vat_id');
+        $product->measuring_id = $request->integer('measuring_id');
+        $product->fractional = $request->boolean('fractional');
+        $product->marking_type_id = $request->input('marking_type_id');
+        $product->save();
     }
 
     private function tags(Request $request, Product &$product): void

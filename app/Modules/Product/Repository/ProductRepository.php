@@ -5,6 +5,7 @@ namespace App\Modules\Product\Repository;
 
 
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,6 @@ class ProductRepository
         }
 
 
-
         if (count($filters) > 0) $filters['count'] = count($filters);
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
@@ -68,6 +68,18 @@ class ProductRepository
     {
         return array_merge($this->ProductToArray($product), [
 
+            'equivalents' => Equivalent::orderBy('name')
+                ->whereHas('category', function ($query) use ($product) {
+                    $query->where('_lft', '<=', $product->category->_lft)
+                        ->where('_rgt', '>=', $product->category->_rgt);
+                })
+                ->get(),
+            'categories' => $product->categories()->get()->map(function (Category $category) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                ];
+            }),
         ]);
     }
 
