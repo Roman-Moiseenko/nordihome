@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property string $user_ui
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -35,7 +35,7 @@ class ParserStorage extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function registerForGuest(string $user_ui, int $product_id, int $quantity): self
+    public static function registerForGuest(string $user_ui, int $product_id, float $quantity): self
     {
         return self::create([
            'user_id' => null,
@@ -45,7 +45,7 @@ class ParserStorage extends Model
         ]);
     }
 
-    public static function registerForUser(int $user_id, int $product_id, int $quantity): self
+    public static function registerForUser(int $user_id, int $product_id, float $quantity): self
     {
         return self::create([
             'user_id' => $user_id,

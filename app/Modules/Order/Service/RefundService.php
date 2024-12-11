@@ -41,11 +41,11 @@ class RefundService
             foreach ($items as $id => $quantity) {
                 $refund->items()->create([
                     'order_item_id' => $id,
-                    'quantity' => (int)$quantity,
+                    'quantity' => (float)$quantity,
                 ]);
                 /** @var OrderItem $itemOrder */
                 $itemOrder = OrderItem::find($id);
-                $amount_items += $itemOrder->sell_cost * (int)$quantity;
+                $amount_items += $itemOrder->sell_cost * (float)$quantity;
             }
 
             foreach ($additions as $id => $amount) {

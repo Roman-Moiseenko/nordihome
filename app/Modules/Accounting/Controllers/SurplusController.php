@@ -54,7 +54,7 @@ class SurplusController extends Controller
             'storage' => 'required',
         ]);
         try {
-            $departure = $this->service->create_storage((int)$request['storage']);
+            $departure = $this->service->create_storage($request->integer('storage'));
             return redirect()->route('admin.accounting.surplus.show', $departure)->with('success', 'Документ создан');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

@@ -17,7 +17,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $id
  * @property int $order_id
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property bool $preorder //на предзаказ
  * @property int $supply_stack_id - данная позиция в стеке заказов
  * @property int $base_cost - базовая цена, не меняется
@@ -65,13 +65,14 @@ class OrderItem extends Model implements CartItemInterface
         'base_cost' => 'float',
         'sell_cost' => 'float',
         'preorder' => 'bool',
-        'fix_manual' => 'bool'
+        'fix_manual' => 'bool',
+        'quantity' => 'float',
     ];
     protected $touches = [
         'order',
         ];
 
-    public static function new(Product $product, int $quantity, bool $preorder/*, int $user_id*/): self
+    public static function new(Product $product, float $quantity, bool $preorder/*, int $user_id*/): self
     {
         return self::make([
             'quantity' => $quantity,
@@ -83,7 +84,7 @@ class OrderItem extends Model implements CartItemInterface
         ]);
     }
 
-    public function changeQuantity(int $new_quantity)
+    public function changeQuantity(float $new_quantity)
     {
         $this->quantity = $new_quantity;
         $this->save();
@@ -108,23 +109,23 @@ class OrderItem extends Model implements CartItemInterface
     }
 
     //RELATIONS
-    public function reserves()
+    public function reserves(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(OrderReserve::class, 'order_item_id', 'id');
     }
 
-    public function supplyStack()
+    public function supplyStack(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        if ($this->preorder == false) throw new \DomainException('Данная функция должна вызываться для preorder == true');
+        if (!$this->preorder) throw new \DomainException('Данная функция должна вызываться для preorder == true');
         return $this->belongsTo(SupplyStack::class, 'supply_stack_id', 'id');
     }
 
-    public function expenseItems()
+    public function expenseItems(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(OrderExpenseItem::class, 'order_item_id', 'id');
     }
 
-    public function order()
+    public function order(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
@@ -134,32 +135,32 @@ class OrderItem extends Model implements CartItemInterface
         return $this->belongsTo(Reserve::class, 'reserve_id', 'id');
     }
 */
-    public function product()
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function discount()
+    public function discount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Discount::class, 'discount_id', 'id');
     }
 
 
-    public function clearReserves()
+    public function clearReserves(): void
     {
         foreach ($this->reserves as $reserve) {
             $reserve->delete();
         }
     }
 
-    public function updateReserves(Carbon $addDays)
+    public function updateReserves(Carbon $addDays): void
     {
         foreach ($this->reserves as $reserve) {
             $reserve->update(['reserve_at' => $addDays]);
         }
     }
 
-    public function discountName()
+    public function discountName(): string
     {
         if (empty($this->discount_id)) return '';
         $discount = $this->discount_type::find($this->discount_id);
@@ -170,7 +171,7 @@ class OrderItem extends Model implements CartItemInterface
      * Сколько выдано данного товара
      * @return int
      */
-    public function getExpenseAmount(): int
+    public function getExpenseAmount(): float
     {
         $result = 0;
         foreach ($this->expenseItems as $expenseItem) {
@@ -183,14 +184,14 @@ class OrderItem extends Model implements CartItemInterface
      * Не выданный остаток
      * @return int
      */
-    #[Pure] public function getRemains(): int
+    #[Pure] public function getRemains(): float
     {
         return $this->quantity - $this->getExpenseAmount();
     }
 
     public function getAssemblage(int $percent = 15): float
     {
-        if ($this->assemblage == true) {
+        if ($this->assemblage) {
             if (is_null($this->product->assemblage)) {
                 return (int)ceil($this->sell_cost * $this->quantity * $percent / 100);
             } else {
@@ -216,7 +217,7 @@ class OrderItem extends Model implements CartItemInterface
         return $this->product;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         return $this->quantity;
     }

@@ -112,7 +112,7 @@ class MovementService // extends AccountingService
         $movement->delete();
     }
 
-    public function addProduct(MovementDocument $movement, int $product_id, int $quantity = null): void
+    public function addProduct(MovementDocument $movement, int $product_id, float $quantity = null): void
     {
         if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Менять данные нельзя');
 
@@ -130,7 +130,7 @@ class MovementService // extends AccountingService
         foreach ($products as $product) {
             $_product = Product::whereCode($product['code'])->first();
             if (!is_null($_product)) {
-                $this->addProduct($movement, $_product->id, (int)$product['quantity']);
+                $this->addProduct($movement, $_product->id, (float)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }

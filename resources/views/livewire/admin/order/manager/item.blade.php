@@ -24,17 +24,17 @@
         </div>
 
         <div class="w-20 px-1 text-center">
-            <div>{{  $edit ? (($item->product->getCountSell() + $item->quantity) . ' шт.') : '-' }} </div>
+            <div>{{  $edit ? (($item->product->getQuantitySell() + $item->quantity) . ' шт.') : '-' }} </div>
 
             <input type="number" class="form-control text-center" autocomplete="off"
                    wire:change="set_quantity" wire:model="quantity" wire:loading.attr="disabled"
-                   min="1" @if(!$item->preorder) max="{{ $item->product->getCountSell() + $item->quantity }}"
+                   min="1" @if(!$item->preorder) max="{{ $item->product->getQuantitySell() + $item->quantity }}"
                    @endif @if(!$edit) readonly @endif
             >
 
         </div>
         <div class="w-20 text-center">
-            {{ $item->product->getCountSell() }}
+            {{ $item->product->getQuantitySell() }}
         </div>
         <div class="w-20 text-center">
             <div class="form-check form-switch justify-center mt-3">

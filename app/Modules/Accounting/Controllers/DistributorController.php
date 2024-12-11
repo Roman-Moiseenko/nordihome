@@ -74,8 +74,8 @@ class DistributorController extends Controller
             }])->get(['product_id'])->toArray();
 
         foreach ($array_products as $item) {
-            if ((int)$item['product']['storage_quantity'] == 0) $empty_ids[] = $item['product_id'];
-            if ((int)$item['product']['storage_quantity'] < (int)$item['product']['balance']['min']) $min_ids[] = $item['product_id'];
+            if ((float)$item['product']['storage_quantity'] == 0) $empty_ids[] = $item['product_id'];
+            if ((float)$item['product']['storage_quantity'] < (float)$item['product']['balance']['min']) $min_ids[] = $item['product_id'];
             if (!$item['product']['balance']['buy']) $no_buy_ids[] = $item['product_id'];
         }
 

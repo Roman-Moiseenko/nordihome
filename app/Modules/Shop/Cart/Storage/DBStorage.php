@@ -47,13 +47,13 @@ class DBStorage implements StorageInterface
             $item->options);
     }
 
-    public function sub(CartItem $item, int $quantity): void
+    public function sub(CartItem $item, float $quantity): void
     {
         $new_quantity = $item->quantity - $quantity;
         $this->updateQuantity($item->id, $new_quantity);
     }
 
-    public function plus(CartItem $item, int $quantity): void
+    public function plus(CartItem $item, float $quantity): void
     {
         $new_quantity = $item->quantity + $quantity;
         $this->updateQuantity($item->id, $new_quantity);
@@ -80,7 +80,7 @@ class DBStorage implements StorageInterface
         CartStorage::where('user_id', $id)->delete();
     }
 
-    private function toStorage(int $user_id, Product $product, int $quantity, array $options = [])
+    private function toStorage(int $user_id, Product $product, float $quantity, array $options = [])
     {
         CartStorage::register(
             $user_id,
@@ -90,7 +90,7 @@ class DBStorage implements StorageInterface
         );
     }
 
-    private function updateQuantity(int $id, int $new_quantity)
+    private function updateQuantity(int $id, float $new_quantity)
     {
         $storage = CartStorage::find($id);
         if ($storage == null) return;

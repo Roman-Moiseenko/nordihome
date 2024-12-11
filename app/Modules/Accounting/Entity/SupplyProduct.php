@@ -23,19 +23,17 @@ class SupplyProduct extends AccountingProduct
         'cost_currency',
     ];
 
-    public static function new(int $product_id, int $quantity, float $distributor_cost): self
+    public static function new(int $product_id, float $quantity, float $distributor_cost): self
     {
-        return self::make([
-            'product_id' => $product_id,
-            'quantity' => $quantity,
-            'cost_currency' => $distributor_cost
-        ]);
+        $product = self::baseNew($product_id, $quantity);
+        $product->cost_currency = $distributor_cost;
+        return $product;
     }
 
     /**
      * Кол-во текущего товара не распределенное по документам на основании (Поступление, Возврат)
      */
-    public function getQuantityUnallocated(): int
+    public function getQuantityUnallocated(): float
     {
         $quantity = $this->quantity;
         //Поступило
@@ -46,13 +44,7 @@ class SupplyProduct extends AccountingProduct
             ->where('product_id', $this->product_id)
             ->first();
 
-       // dd([$quantity, $arrival_ids, $quantity_arrival]);
-        return $quantity - ((int)$quantity_arrival->total ?? 0);
-        /*foreach ($this->document->arrivals as $arrival) {
-            $arrivalProduct = $arrival->getProduct($this->product_id);
-            if (!is_null($arrivalProduct)) $quantity -= $arrivalProduct->getQuantity();
-        }
-        return $quantity; */
+        return $quantity - ((float)$quantity_arrival->total ?? 0);
     }
 
     public function document(): BelongsTo

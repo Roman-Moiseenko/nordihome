@@ -73,7 +73,7 @@ class DeliveryController extends Controller
 
     public function assembling(Request $request, OrderExpense $expense)
     {
-        $this->expenseService->assembling($expense, (int)$request['worker_id']);
+        $this->expenseService->assembling($expense, $request->integer('worker_id'));
         return redirect()->back();
     }
 

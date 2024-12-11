@@ -107,7 +107,7 @@ class SalesService
 
         foreach ($data['items'] as $item) { //Суммируем по товарам
             $id_item = (int)$item['id'];
-            $amount += $order->getItemById($id_item)->sell_cost * (int)$item['value'];
+            $amount += $order->getItemById($id_item)->sell_cost * (float)$item['value'];
         }
 
         foreach ($data['additions'] as $addition) { //Суммируем по услугам

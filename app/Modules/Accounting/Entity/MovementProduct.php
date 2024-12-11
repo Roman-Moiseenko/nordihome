@@ -27,6 +27,7 @@ class MovementProduct extends AccountingProduct
         'quantity',
     ];
 
+
     public function document(): BelongsTo
     {
         return $this->belongsTo(MovementDocument::class, 'movement_id', 'id');

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $expense_id
  * @property int $order_item_id
- * @property int $quantity
+ * @property float $quantity
  * @property OrderItem $orderItem
  * @property OrderExpense $expense
  */
@@ -23,7 +23,7 @@ class OrderExpenseItem extends Model
         'quantity'
     ];
 
-    public static function new(int $order_item_id, int $quantity): self
+    public static function new(int $order_item_id, float $quantity): self
     {
         return self::make([
             'order_item_id' => $order_item_id,

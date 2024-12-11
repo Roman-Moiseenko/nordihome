@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $user_ui
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $options_json //Опции товара [id1, id2, ...]
@@ -29,7 +29,7 @@ class CartCookie extends Model
         'options_json',
         'check',
     ];
-    public static function register(string $user_ui, int $product_id, int $quantity, array $options_json = []): self
+    public static function register(string $user_ui, int $product_id, float $quantity, array $options_json = []): self
     {
         return self::create([
             'user_ui' => $user_ui,

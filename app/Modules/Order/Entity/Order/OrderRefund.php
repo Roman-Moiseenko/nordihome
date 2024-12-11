@@ -88,7 +88,7 @@ class OrderRefund extends Model
         return $amount;
     }
 */
-    public function  getQuantity(): int
+    public function  getQuantity(): float
     {
         $quantity = 0;
         foreach ($this->items as $item) {

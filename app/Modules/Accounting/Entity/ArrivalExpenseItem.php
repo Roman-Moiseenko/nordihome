@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
- * @property int $quantity
+ * @property float $quantity
  * @property float $cost
  * @property string $name
  * @property int $expense_id
@@ -22,7 +22,7 @@ class ArrivalExpenseItem extends Model
         'name'
     ];
 
-    public static function new(string $name, int $quantity, float $cost)
+    public static function new(string $name, float $quantity, float $cost)
     {
         return self::make([
             'quantity' => $quantity,

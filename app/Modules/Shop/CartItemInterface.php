@@ -9,7 +9,7 @@ use App\Modules\Product\Entity\Product;
 interface CartItemInterface
 {
     public function getProduct(): Product;
-    public function getQuantity(): int;
+    public function getQuantity(): float;
 
     public function getBaseCost(): float;
     public function getSellCost(): float;

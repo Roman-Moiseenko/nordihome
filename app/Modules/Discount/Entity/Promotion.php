@@ -228,7 +228,7 @@ class Promotion extends Model implements DataWidgetInterface
                 'title' => $product->getName(),
                 'price' => $product->getPrice(),
                 'discount' => $product->pivot->price,
-                'count' => $product->getCountSell(),
+                'count' => $product->getQuantitySell(),
             ];
         }, $this->products()->getModels());
         return $data;

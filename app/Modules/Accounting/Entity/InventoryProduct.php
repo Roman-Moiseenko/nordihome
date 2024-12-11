@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $formal - формальное наличие товара
+ * @property float $formal - формальное наличие товара
  * @property int $cost
  * @property int $inventory_id
  *
@@ -21,7 +21,7 @@ class InventoryProduct extends AccountingProduct
         'formal',
     ];
 
-    public static function new(int $product_id, int $quantity, float $cost, int $formal = null): self
+    public static function new(int $product_id, float $quantity, float $cost, int $formal = null): self
     {
         $inventory = parent::baseNew($product_id, $quantity);
         $inventory->cost = $cost;

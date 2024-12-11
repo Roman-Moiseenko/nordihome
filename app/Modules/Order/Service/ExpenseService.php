@@ -49,7 +49,7 @@ class ExpenseService
             foreach ($items as $item) {
                 /** @var OrderItem $orderItem */
                 $orderItem = OrderItem::find($item['id']);
-                $quantity = (int)$item['value']; //Сколько выдать товара
+                $quantity = (float)$item['value']; //Сколько выдать товара
                 if ($quantity > 0) {
                     $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
                     //Проверка на наличие на складе выдачи

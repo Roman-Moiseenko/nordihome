@@ -4,7 +4,12 @@ declare(strict_types=1);
 namespace App\Modules\Product\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Guide\Entity\Country;
+use App\Modules\Guide\Entity\MarkingType;
+use App\Modules\Guide\Entity\Measuring;
+use App\Modules\Guide\Entity\VAT;
 use App\Modules\Product\Entity\AttributeGroup;
 use App\Modules\Product\Entity\Bonus;
 use App\Modules\Product\Entity\Brand;
@@ -16,12 +21,15 @@ use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Helper\ProductHelper;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Product\Request\ProductCreateRequest;
 use App\Modules\Product\Service\ProductService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
+use Inertia\Response;
 use JetBrains\PhpStorm\Deprecated;
 
 class ProductController extends Controller
@@ -45,12 +53,9 @@ class ProductController extends Controller
         $this->categories = $categories;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $categories = $this->categories->forFilters();
-        $query = $this->repository->getFilter($request, $filters);
-        //$products = $this->pagination($query, $request, $pagination);
-        //$query = Product::orderBy('id');
+        $categories = $this->categories->forFilters();;
         $count = [
             'all' => Product::count(),
             'active' => Product::where('published', true)->count(),
@@ -58,9 +63,7 @@ class ProductController extends Controller
             'not_sale' => Product::where('not_sale', true)->count(),
             'delete' => Product::onlyTrashed()->count(),
         ];
-      /*  return view('admin.product.product.index', compact('products', 'pagination',
-            'categories', 'filters', 'count'));
-*/
+
         $products = $this->repository->getIndex($request, $filters);
         return Inertia::render('Product/Product/Index', [
             'products' => $products,
@@ -73,19 +76,27 @@ class ProductController extends Controller
 
     public function create(Request $request)
     {
-        $categories = Category::defaultOrder()->withDepth()->get();
-        $menus = ProductHelper::menuAddProduct();
-        $brands = Brand::orderBy('name')->get();
-        $tags = Tag::orderBy('name')->get();
-        $series = Series::orderBy('name')->get();
-        return view('admin.product.product.create', compact('categories', 'menus', 'brands',
-            'tags', 'series'));
+        return Inertia::render('Product/Product/Create', [
+            'categories' => $this->categories->forFilters(),
+            'brands' => Brand::orderBy('name')->getModels(),
+            'tags' => Tag::orderBy('name')->getModels(),
+            'series' => Series::orderBy('name')->getModels(),
+            'country' => Country::orderBy('name')->getModels(),
+            'vat' => VAT::orderBy('value')->getModels(),
+            'measuring' => Measuring::orderBy('name')->getModels(),
+            'markingType' => MarkingType::orderBy('name')->getModels(),
+            'distributors' => Distributor::orderBy('name')->getModels(),
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(ProductCreateRequest $request): RedirectResponse
     {
-        $product = $this->service->create($request);
-        return redirect()->route('admin.product.edit', compact('product'));
+        try {
+            $product = $this->service->createFull($request);
+            return redirect()->route('admin.product.edit', $product)->with('success', 'Товар создан');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function fast_create(Request $request): JsonResponse
@@ -109,7 +120,7 @@ class ProductController extends Controller
         return view('admin.product.product.show', compact('product'));
     }
 
-    public function edit(Product $product): \Illuminate\Contracts\View\View
+    public function edit(Product $product): View
     {
         $categories = Category::defaultOrder()->withDepth()->get();
         $menus = ProductHelper::menuUpdateProduct();

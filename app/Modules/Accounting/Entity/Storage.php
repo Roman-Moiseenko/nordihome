@@ -86,12 +86,12 @@ class Storage extends Model
     /**
      * Кол-во единиц товара на складе, если не указан id, то всего товара
      */
-    public function getQuantity(int $product_id = null): int
+    public function getQuantity(int $product_id = null): float
     {
         //Более быстрый вариант
         if (is_null($product_id)) {
             $quantity = StorageItem::selectRaw('SUM(quantity) AS total')->where('storage_id', $this->id)->first();
-            return (int)$quantity->total ?? 0;
+            return (float)$quantity->total ?? 0;
         } else {
             return StorageItem::where('storage_id', $this->id)->where('product_id', $product_id)->pluck('quantity')->sum();
         }
@@ -172,7 +172,7 @@ class Storage extends Model
         return $this->hasMany(StorageArrivalItem::class, 'storage_id', 'id');
     }
 
-    public function add(Product $product, int $quantity): StorageItem
+    public function add(Product $product, float $quantity): StorageItem
     {
         foreach ($this->items as $item) {
             if ($item->product_id == $product->id) {
@@ -187,7 +187,7 @@ class Storage extends Model
         ]);
     }
 
-    public function sub(Product $product, int $quantity): void
+    public function sub(Product $product, float $quantity): void
     {
         foreach ($this->items as $item) {
             if ($item->product_id == $product->id) {

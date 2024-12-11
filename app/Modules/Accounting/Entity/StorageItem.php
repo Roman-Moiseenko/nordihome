@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  * @property int $storage_id
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property string $cell
  * @property Product $product
  * @property MovementProduct $movementReserve
@@ -78,13 +78,13 @@ class StorageItem extends Model
         return $result;
     }
 
-    public function sub(int $quantity)
+    public function sub(float $quantity): void
     {
         $this->quantity -= $quantity;
         $this->save();
     }
 
-    public function add(int $quantity)
+    public function add(float $quantity): void
     {
         $this->quantity += $quantity;
         $this->save();
@@ -126,7 +126,7 @@ class StorageItem extends Model
      * @param int|null $order_id
      * @return int
      */
-    public function getQuantityReserve(int $order_id = null): int
+    public function getQuantityReserve(int $order_id = null): float
     {
         $quantity = 0;
         foreach ($this->orderReserves  as $orderReserve) {

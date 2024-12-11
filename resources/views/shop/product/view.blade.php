@@ -61,7 +61,7 @@
                             @endif
                             <div class="count-product">
                                 @if($product->isSale())
-                                    @if($product->getCountSell() > 0)
+                                    @if($product->getQuantitySell() > 0)
                                         Товар в наличии
                                     @else
                                         Только под заказ

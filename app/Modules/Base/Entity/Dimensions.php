@@ -14,12 +14,12 @@ class Dimensions
 
     public int $type;
 
-   /* public float $weight;
+    public float $weight;
     public string $measure;
 
     const MEASURE_G = 'г';
     const MEASURE_KG = 'кг';
-*/
+
     const TYPE_DEPTH = 1;
     const TYPE_LENGTH = 2;
     const TYPE_DIAMETER = 3;
@@ -35,45 +35,57 @@ class Dimensions
         self::TYPE_LENGTH => 'Длина',
         self::TYPE_DIAMETER => 'Диаметр',
     ];
-/*
+
+
     const MEASURES = [
         self::MEASURE_G,
         self::MEASURE_KG
     ];
-*/
+
     public function __construct()
     {
-       // $this->measure = self::MEASURE_G;
+        $this->measure = self::MEASURE_G;
         $this->width = 0.0;
         $this->height = 0.0;
         $this->depth = 0.0;
-      //  $this->weight = 0.0;
+        $this->weight = 0.0;
         $this->type = self::TYPE_DEPTH;
     }
 
-    public static function create($width, $height, $depth,/* $weight, $measure = self::MEASURE_G,*/ int $type = self::TYPE_DEPTH): self
+    public static function create($width = 0, $height = 0, $depth = 0,
+        $weight = 0, $measure = self::MEASURE_G,
+                                  int $type = self::TYPE_DEPTH,
+                                  array $params = []
+
+    ): self
     {
-        $dimension = new static();
-        $dimension->width = $width;
-        $dimension->height = $height;
-        $dimension->depth = $depth;
-      //  $dimension->weight = $weight;
-       // $dimension->measure = $measure;
-        $dimension->type = $type;
+
+        if (!empty($params)) {
+            $dimension = self::fromArray($params);
+
+        } else {
+            $dimension = new static();
+            $dimension->width = $width;
+            $dimension->height = $height;
+            $dimension->depth = $depth;
+            $dimension->weight = $weight;
+            $dimension->measure = $measure;
+            $dimension->type = $type;
+        }
 
         return $dimension;
     }
 
     #[Pure]
-    public static function fromArray(?array $params)
+    public static function fromArray(?array $params): self
     {
         $dimension = new static();
         if (!empty($params)) {
-            $dimension->width = $params['width'];
-            $dimension->height = $params['height'];
-            $dimension->depth = $params['depth'];
-         //   $dimension->weight = $params['weight'];
-         //  $dimension->measure = $params['measure'];
+            $dimension->width = $params['width'] ?? 0;
+            $dimension->height = $params['height'] ?? 0;
+            $dimension->depth = $params['depth'] ?? 0;
+            $dimension->weight = $params['weight'] ?? 0;
+            $dimension->measure = $params['measure'] ?? self::MEASURE_G;
             $dimension->type = $params['type'] ?? self::TYPE_DEPTH;
         }
         return $dimension;
@@ -85,26 +97,27 @@ class Dimensions
             'width' => $this->width,
             'height' => $this->height,
             'depth' => $this->depth,
-           // 'weight' => $this->weight,
-          //  'measure' => $this->measure ?? self::MEASURE_G,
+            'weight' => $this->weight,
+            'measure' => $this->measure ?? self::MEASURE_G,
             'type' => $this->type ?? self::TYPE_DEPTH,
         ];
     }
-/*
+
     public function weight(): float
     {
         if ($this->measure === self::MEASURE_G) return $this->weight / 1000;
         return $this->weight;
     }
-*/
+
     public function toSave(): string
     {
         return json_encode([
             'width' => $this->width,
             'height' => $this->height,
             'depth' => $this->depth,
-          //  'weight' => $this->weight,
-          //  'measure' => $this->measure,
+            'weight' => $this->weight,
+            'measure' => $this->measure,
+            'type' => $this->type,
         ]);
     }
 
@@ -112,10 +125,10 @@ class Dimensions
     public function volume(): float
     {
         $volume = (int)(($this->height * $this->width * $this->depth) * 100) / 100;
-        return  $volume / 1000000;
+        return $volume / 1000000;
     }
 
-    public function typeHtml():string
+    public function typeHtml(): string
     {
         return self::TYPES[$this->type];
     }
@@ -135,7 +148,7 @@ class Dimensions
         return self::CAPTION_TYPES[$this->type][0];
     }
 
-    public function notDiameter():bool
+    public function notDiameter(): bool
     {
         return $this->type != self::TYPE_DIAMETER;
     }

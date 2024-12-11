@@ -57,12 +57,12 @@ class PricingProduct extends AccountingProduct
         return $this->belongsTo(PricingDocument::class, 'pricing_id', 'id');
     }
 
-    public function setQuantity(int $quantity): void
+    public function setQuantity(float $quantity): void
     {
         throw new \DomainException('Установка цен не содержит поле quantity');
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         throw new \DomainException('Установка цен не содержит поле quantity');
     }

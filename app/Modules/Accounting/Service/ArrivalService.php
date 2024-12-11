@@ -90,7 +90,7 @@ class ArrivalService
     /**
      * Добавляем товар в поступление. Учет основания По заказу или Свободное добавление
      */
-    public function addProduct(ArrivalDocument $arrival, int $product_id, int $quantity): ?ArrivalProduct
+    public function addProduct(ArrivalDocument $arrival, int $product_id, float $quantity): ?ArrivalProduct
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         $distributor_cost = 0;
@@ -114,6 +114,7 @@ class ArrivalService
         if ($distributor_cost == 0 && !is_null($arrival->distributor))
             $distributor_cost = $arrival->distributor->getCostItem($product->id); //Ищем у поставщика товар и берем закупочную цену
         //Добавляем в документ если его нет
+
         $item = ArrivalProduct::new(
             $product->id,
             $quantity,
@@ -130,7 +131,7 @@ class ArrivalService
         foreach ($products as $product) {
             $_product = Product::whereCode($product['code'])->first();
             if (!is_null($_product)) {
-                $this->addProduct($arrival, $_product->id, (int)$product['quantity']);
+                $this->addProduct($arrival, $_product->id, (float)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }
@@ -138,7 +139,7 @@ class ArrivalService
         if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    public function setProduct(ArrivalProduct $arrivalProduct, int $quantity, float $cost): void
+    public function setProduct(ArrivalProduct $arrivalProduct, float $quantity, float $cost): void
     {
 
         $arrival = $arrivalProduct->document;
@@ -147,13 +148,10 @@ class ArrivalService
             //Нельзя менять валюту
             if ($arrivalProduct->cost_currency != $cost) throw new \DomainException('Стоимость установлена в связанном документа!');
             $unallocated = $arrivalProduct->getSupplyProduct()->getQuantityUnallocated();//Доступное кол-во
-           // dd($unallocated);
             $delta = min($quantity - $arrivalProduct->quantity, $unallocated);
-            //dd([$unallocated, $delta, $arrivalProduct->quantity]);
             if ($delta == 0) throw new \DomainException('Недостаточное кол-во товара ' . $arrivalProduct->product->name . ' в связанном документе.');
             $arrivalProduct->addQuantity($delta);
             $arrivalProduct->refresh();
-           // dd([$unallocated, $delta, $arrivalProduct->quantity]);
             return;
         };
         //Меняем данные

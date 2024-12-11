@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property int $discount
  */
 class BonusQuantity extends Model

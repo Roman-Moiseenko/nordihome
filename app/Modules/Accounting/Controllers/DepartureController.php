@@ -60,7 +60,7 @@ class DepartureController extends Controller
             'storage' => 'required',
         ]);
         try {
-            $departure = $this->service->create((int)$request['storage']);
+            $departure = $this->service->create($request->integer('storage'));
             return redirect()->route('admin.accounting.departure.show', $departure)->with('success', 'Документ создан');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

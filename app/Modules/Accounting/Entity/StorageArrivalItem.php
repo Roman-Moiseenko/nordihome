@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $storage_id
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property int $movement_product_id
  * @property Carbon $created_at
  * @property Storage $storage
@@ -35,7 +35,7 @@ class StorageArrivalItem extends Model
         'created_at' => 'datetime',
     ];
 
-    public static function new(int $product_id, int $quantity, int $movement_product_id): self
+    public static function new(int $product_id, float $quantity, int $movement_product_id): self
     {
         return self::make([
             'product_id' => $product_id,

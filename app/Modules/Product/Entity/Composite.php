@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $parent_id
  * @property int $child_id
- * @property int $quantity
+ * @property float $quantity
  * @property Product $parent
  * @property Product $child
  */

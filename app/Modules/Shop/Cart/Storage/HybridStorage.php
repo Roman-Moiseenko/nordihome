@@ -59,12 +59,12 @@ class HybridStorage implements StorageInterface
         $this->getStorage()->add($item);
     }
 
-    public function sub(CartItem $item, int $quantity): void
+    public function sub(CartItem $item, float $quantity): void
     {
         $this->getStorage()->sub($item, $quantity);
     }
 
-    public function plus(CartItem $item, int $quantity): void
+    public function plus(CartItem $item, float $quantity): void
     {
         $this->getStorage()->plus($item, $quantity);
     }

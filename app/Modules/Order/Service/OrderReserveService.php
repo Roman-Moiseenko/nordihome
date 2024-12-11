@@ -28,12 +28,12 @@ class OrderReserveService
     /**
      * Добавить в резерв при наличии свободных товаров по всем складам, начиная с Основного
      */
-    public function toReserve(OrderItem $orderItem, int $quantity): void
+    public function toReserve(OrderItem $orderItem, float $quantity): void
     {
         DB::transaction(function () use ($orderItem, $quantity) {
-            if ($orderItem->product->getCountSell() < $quantity)
+            if ($orderItem->product->getQuantitySell() < $quantity)
                 throw new \DomainException('Нельзя поставить товар ' . $orderItem->product->name .
-                    ' в резерв, в наличии ' . $orderItem->product->getCountSell());
+                    ' в резерв, в наличии ' . $orderItem->product->getQuantitySell());
             $storageItem = $this->storage->getItem($orderItem->product_id);
             if ($storageItem->getFreeToSell() >= $quantity) {
                 OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
@@ -58,7 +58,7 @@ class OrderReserveService
     /**
      * Добавить в резерв в указанное хранилище (при поступлении)
      */
-    public function toReserveStorage(OrderItem $orderItem, Storage $storage, int $quantity): void
+    public function toReserveStorage(OrderItem $orderItem, Storage $storage, float $quantity): void
     {
         $storageItem = $storage->getItem($orderItem->product_id);
         OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
@@ -67,7 +67,7 @@ class OrderReserveService
     /**
      * Удалить из резерва при отмене поступления
      */
-    public function deleteReserveStorage(OrderItem $orderItem, Storage $storage, int $quantity): void
+    public function deleteReserveStorage(OrderItem $orderItem, Storage $storage, float $quantity): void
     {
         $storageItem = $storage->getItem($orderItem->product_id);
         $orderReserve = OrderReserve::where('order_item_id', $orderItem->id)->where('storage_item_id', $storageItem->id)->first();
@@ -82,7 +82,7 @@ class OrderReserveService
     /**
      * Увеличение резерва при увеличении товара в заказе
      */
-    public function upReserve(OrderItem $orderItem, int $delta): void
+    public function upReserve(OrderItem $orderItem, float $delta): void
     {
         DB::transaction(function () use ($orderItem, $delta) {
             foreach ($orderItem->product->storageItems as $storageItem) {
@@ -103,7 +103,7 @@ class OrderReserveService
     /**
      * Уменьшение резерва при уменьшении товара в заказе
      */
-    public function downReserve(OrderItem $orderItem, int $delta): void
+    public function downReserve(OrderItem $orderItem, float $delta): void
     {
         DB::transaction(function () use ($orderItem, $delta) {
             foreach ($orderItem->reserves as $reserve) {
@@ -138,7 +138,7 @@ class OrderReserveService
     /**
      * Перенос резерва при проведении перемещения
      */
-    public function ReserveWithMovement(Storage $storageOut, Storage $storageIn, OrderItem $orderItem, int $quantity): void
+    public function ReserveWithMovement(Storage $storageOut, Storage $storageIn, OrderItem $orderItem, float $quantity): void
     {
         $reserveOut = $orderItem->getReserveByStorage($storageOut->id);
 
@@ -156,7 +156,7 @@ class OrderReserveService
     /**
      * Собрать резерв для элемента заказа на одном складе
      */
-    public function CollectReserve(OrderItem $orderItem, int $storage_id, int $quantity = 1): void
+    public function CollectReserve(OrderItem $orderItem, int $storage_id, float $quantity = 1): void
     {
         /** @var Storage $storageIn */
         $storageIn = Storage::find($storage_id);

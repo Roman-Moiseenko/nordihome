@@ -100,7 +100,7 @@ class RefundController extends Controller
     public function add_product(RefundDocument $refund, Request $request): RedirectResponse
     {
         try {
-            $this->service->addProduct($refund, $request->integer('product_id'), $request->integer('quantity'));
+            $this->service->addProduct($refund, $request->integer('product_id'), $request->float('quantity'));
             return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Товар добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

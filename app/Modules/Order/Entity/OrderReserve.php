@@ -13,7 +13,7 @@ use function now;
  * @property int $id
  * @property int $order_item_id
  * @property int $storage_item_id
- * @property int $quantity
+ * @property float $quantity
  * @property Carbon $created_at
  * @property Carbon $reserve_at
  * @property OrderItem $orderItem
@@ -36,7 +36,7 @@ class OrderReserve extends Model
         'reserve_at' => 'datetime',
     ];
 
-    public static function register(int $order_item_id, int $storage_item_id, int $quantity, int $minutes): self
+    public static function register(int $order_item_id, int $storage_item_id, float $quantity, int $minutes): self
     {
         return self::create([
             'order_item_id' => $order_item_id,
@@ -47,12 +47,12 @@ class OrderReserve extends Model
         ]);
     }
 
-    public function orderItem()
+    public function orderItem(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(OrderItem::class, 'order_item_id', 'id');
     }
 
-    public function storageItem()
+    public function storageItem(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(StorageItem::class, 'storage_item_id', 'id');
     }

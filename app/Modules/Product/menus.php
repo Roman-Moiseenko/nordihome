@@ -13,8 +13,8 @@ return [
                 'icon' => 'package-open',
                 'title' => 'Все Товары',
                 'route_name' => 'admin.product.index',
-                //'vue' => true,
-                //'font_awesome' => 'fa-light fa-box-open',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-box-open',
             ],
             'category' => [
                 'icon' => 'file-box',

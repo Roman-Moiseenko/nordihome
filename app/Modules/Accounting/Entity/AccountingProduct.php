@@ -10,7 +10,7 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * @property int $id
  * @property int $product_id
- * @property int $quantity - не используется в PricingDocument
+ * @property float $quantity - не используется в PricingDocument
  * @property int $service_id - для услуг
  *
  * @property Product $product
@@ -42,16 +42,23 @@ abstract class AccountingProduct extends Model
         $this->attributes = array_merge($this->attributes, $attributes);
     }
 
-    public static function baseNew(int $product_id, int $quantity): static
+    public static function baseNew(int $product_id, float $quantity): static
     {
+        $product = Product::find($product_id);
+        if (!$product->isFractional()) $quantity = ceil($quantity);
+
         return self::make([
             'product_id' => $product_id,
             'quantity' => $quantity,
         ]);
     }
 
-    public function setQuantity(int $quantity): void
+    /**
+     * Проверка на дробное, если только целое, то округляем в большую сторону
+     */
+    public function setQuantity(float $quantity): void
     {
+        if (!$this->product->isFractional()) $quantity = ceil($quantity);
         $this->quantity = $quantity;
         $this->save();
     }
@@ -61,12 +68,12 @@ abstract class AccountingProduct extends Model
         return $this->product;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         return $this->quantity;
     }
 
-    public function addQuantity(int $delta): void
+    public function addQuantity(float $delta): void
     {
         $this->setQuantity($delta + $this->quantity);
     }
@@ -79,7 +86,7 @@ abstract class AccountingProduct extends Model
     //Для создания таблиц
     final public static function columns(Blueprint $table): void
     {
-        $table->integer('quantity')->default(0);
+        $table->decimal('quantity', 10, 3)->default(0.0);
         $table->foreignId('product_id')->constrained('products')->onDelete('restrict');
     }
 

@@ -187,7 +187,7 @@ class SupplyController extends Controller
     public function add_product(SupplyDocument $supply, Request $request): RedirectResponse
     {
         try {
-            $this->service->addProduct($supply, $request->integer('product_id'), $request->integer('quantity'));
+            $this->service->addProduct($supply, $request->integer('product_id'), $request->float('quantity'));
             return redirect()->back()->with('success', 'Товары добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

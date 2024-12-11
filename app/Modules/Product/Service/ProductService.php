@@ -6,6 +6,7 @@ namespace App\Modules\Product\Service;
 use App\Events\ParserPriceHasChange;
 use App\Events\ProductHasBlocked;
 use App\Events\ProductHasFastCreate;
+use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Options;
@@ -67,7 +68,6 @@ class ProductService
         DB::transaction(function () use ($request, &$product) {
             $arguments = [
                 'pre_order' => $this->common_set->pre_order,
-                'only_offline' => $this->common_set->only_offline,
                 'not_local' => !$this->common_set->delivery_local,
                 'not_delivery' => !$this->common_set->delivery_all,
             ];
@@ -87,6 +87,48 @@ class ProductService
             $this->series($request, $product);
             $product->push();
             $this->storageService->add_product($product);
+        });
+
+        return $product;
+    }
+
+    public function createFull(Request $request): Product
+    {
+        DB::transaction(function () use ($request, &$product) {
+            $arguments = [
+                'pre_order' => $this->common_set->pre_order,
+                'not_local' => !$this->common_set->delivery_local,
+                'not_delivery' => !$this->common_set->delivery_all,
+            ];
+            $product = Product::register(
+                $request->string('name')->trim()->value(),
+                $request->string('code')->trim()->value(),
+                $request->integer('category_id'),
+                $request->string('slug')->trim()->value(),
+                $arguments);
+            $product->brand_id = $request->integer('brand_id');
+            if (!empty($request['categories'])) {
+                foreach ($request['categories'] as $category_id) {
+                    if ($this->categories->exists((int)$category_id))
+                        $product->categories()->attach((int)$category_id);
+                }
+            }
+            $product->push();
+            $product->name_print = $request->string('name_print')->trim()->value();
+            $product->comment = $request->string('comment')->trim()->value();
+            $product->country_id = $request->integer('country_id');
+            $product->vat_id = $request->integer('vat_id');
+            $product->measuring_id = $request->integer('measuring_id');
+            $product->fractional = $request->boolean('fractional');
+            $product->marking_type_id = $request->input('marking_type_id');
+            if (($distributor_id = $request->integer('distributor_id')) > 0) {
+                $distributor = Distributor::find($distributor_id);
+                $distributor->addProduct($product, 0);
+            }
+            $product->save();
+
+            $this->storageService->add_product($product);
+
         });
 
         return $product;

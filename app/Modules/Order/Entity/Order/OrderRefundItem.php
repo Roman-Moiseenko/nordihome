@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $refund_id
  * @property int $order_item_id
- * @property int $quantity
+ * @property float $quantity
  * @property OrderItem $orderItem
  */
 class OrderRefundItem extends Model

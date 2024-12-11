@@ -48,7 +48,7 @@ class Management extends Component
     {
         $this->published = $this->product->published;
         $this->price = $this->product->getPriceRetail();
-        $this->count = $this->product->getCountSell();
+        $this->count = $this->product->getQuantitySell();
 
         $this->pre_order = $this->shop_pre_order && $this->product->pre_order;
         $this->offline = $this->only_offline || $this->product->only_offline;

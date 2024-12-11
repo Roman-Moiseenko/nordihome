@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $user_id
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $options_json //Опции товара [id1, id2, ...]
@@ -33,7 +33,7 @@ class CartStorage extends Model
 
     protected $casts = ['check' => 'bool'];
 
-    public static function register(int $user_id, int $product_id, int $quantity, array $options_json = []): self
+    public static function register(int $user_id, int $product_id, float $quantity, array $options_json = []): self
     {
         return self::create([
             'user_id' => $user_id,

@@ -112,7 +112,7 @@ class InventoryController extends Controller
     public function add_product(Request $request, InventoryDocument $inventory): RedirectResponse
     {
         try {
-            $this->service->addProduct($inventory, $request->integer('product_id'), $request->integer('quantity'));
+            $this->service->addProduct($inventory, $request->integer('product_id'), $request->float('quantity'));
             return redirect()->back()->with('success', 'Товар добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

@@ -20,7 +20,7 @@ class SurplusProduct extends AccountingProduct
         'cost',
     ];
 
-    public static function new(int $product_id, int $quantity, float $cost): self
+    public static function new(int $product_id, float $quantity, float $cost): self
     {
         $product = self::baseNew($product_id, $quantity);
         $product->cost = $cost;

@@ -111,7 +111,7 @@ class InventoryService
     }
 
     #[Deprecated]
-    public function addProduct(InventoryDocument $inventory, int $product_id, int $quantity): void
+    public function addProduct(InventoryDocument $inventory, int $product_id, float $quantity): void
     {
         $formal = $inventory->storage->getQuantity($product_id);
         $product = Product::find($product_id);
@@ -126,7 +126,7 @@ class InventoryService
         foreach ($products as $product) {
             $_product = Product::whereCode($product['code'])->first();
             if (!is_null($_product)) {
-                $this->addProduct($inventory, $_product->id, (int)$product['quantity']);
+                $this->addProduct($inventory, $_product->id, (float)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }
@@ -134,7 +134,7 @@ class InventoryService
         if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    public function setProduct(InventoryProduct $product, int $quantity): void
+    public function setProduct(InventoryProduct $product, float $quantity): void
     {
         $product->setQuantity($quantity);
 

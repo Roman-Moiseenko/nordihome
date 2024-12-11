@@ -13,6 +13,10 @@ use App\Modules\Base\Entity\Packages;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Guide\Entity\Country;
+use App\Modules\Guide\Entity\MarkingType;
+use App\Modules\Guide\Entity\Measuring;
+use App\Modules\Guide\Entity\VAT;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Shop\Parser\ProductParser;
@@ -60,10 +64,24 @@ use JetBrains\PhpStorm\Pure;
  * @property Carbon $updated_at
  * @property Carbon $published_at
  * @property int $series_id
- * @property Dimensions $dimensions //Без веса,
- * @property Packages $packages //Упаковка + вес
- * @property bool $priority
- * @property bool $not_sale
+ * @property Dimensions $dimensions Габариты товара (Без веса),
+ * @property Packages $packages Упаковки + вес + кол-во пачек
+ * @property bool $priority Приоритетный показ
+ * @property bool $not_sale Снят с продажи
+ *
+ * @property bool $fractional  Дробное кол-во при учете
+ * @property int $vat_id
+ * @property int $country_id
+ * @property int $measuring_id
+ * @property int $marking_type_id
+ * @property bool $hide_price Не указывать в прайс листах
+ * @property string $comment Комментарий
+ * @property string $name_print Название для печати
+ *
+ * @property VAT $VAT НДС
+ * @property Country $country Страна
+ * @property Measuring $measuring Ед.измерения
+ * @property MarkingType $markingType Вид продукции
  *
  * @property Tag[] $tags
  * @property Category $category
@@ -122,7 +140,6 @@ class Product extends Model
         self::FREQUENCY_NOT => 'Нет',
     ];
 
-    //public \App\Modules\Base\Entity\Dimensions $dimensions;
 
     protected $casts = [
         'created_at' => 'datetime',
@@ -146,6 +163,8 @@ class Product extends Model
         'published_at' => null,
         'priority' => false,
         'not_sale' => false,
+        'fractional' => false,
+        'only_offline' => false,
     ];
 
     protected $fillable = [
@@ -172,6 +191,7 @@ class Product extends Model
         'priority',
         // 'description',
         'packages',
+        'fractional',
     ];
 
     protected $hidden = [
@@ -213,15 +233,26 @@ class Product extends Model
 
     //ФУНЦИИ СОСТОЯНИЯ
 
+    /**
+     * Доступен для покупки
+     */
     public function isSale(): bool
     {
         return $this->not_sale == false;
     }
 
+    /**
+     * Дробное кол-во товара
+     */
+    public function isFractional(): bool
+    {
+        return $this->fractional == true;
+    }
+
     public function isNew(): bool
     {
         if ($this->published_at == null) return false;
-        if ($this->published_at->gte(now()->subMonth())) return true;
+        if ($this->published_at->gte(now()->subMonths(2))) return true;
         return false;
     }
 
@@ -289,7 +320,6 @@ class Product extends Model
         }
         return false;
     }
-
 
     public function isRelated(int $product_id): bool
     {
@@ -504,7 +534,7 @@ class Product extends Model
     }
 
     //*** КОЛ_ВО
-    public function getReserveCount(): int
+    public function getReserveCount(): float
     {
         $result = 0;
         foreach ($this->storageItems as $storageItem) {
@@ -525,7 +555,7 @@ class Product extends Model
      * Кол-во доступное для продажи по всем точкам, за минусом резерва
      */
     #[Pure]
-    public function getCountSell(): int
+    public function getQuantitySell(): float
     {
         //return $this->count_for_sell;
         return $this->getQuantity() - $this->getQuantityReserve();
@@ -534,18 +564,17 @@ class Product extends Model
     /**
      * Кол-во товара на складах
      */
-    public function getQuantity(int $storage_id = null): int
+    public function getQuantity(int $storage_id = null): float
     {
         $query = StorageItem::selectRaw('SUM(quantity * 1) AS total')->where('product_id', $this->id);
 
         if (!is_null($storage_id)) $query->where('storage_id', $storage_id);
         $quantity = $query->first();
-        return (int)$quantity->total ?? 0;
+        return (float)$quantity->total ?? 0;
 
     }
 
-    //TODO Переименовать
-    #[Pure] public function getQuantityReserve(): int
+    #[Pure] public function getQuantityReserve(): float
     {
         $quantity = 0;
         foreach ($this->storageItems as $storageItem) {
@@ -560,6 +589,9 @@ class Product extends Model
         return $this->name;
     }
 
+    /**
+     * Значение атрибута по его Id
+     */
     public function Value(int $attribute_id)
     {
 
@@ -651,32 +683,7 @@ class Product extends Model
 
     //*** RELATIONS
 
-    public function balance(): HasOne
-    {
-        return $this->hasOne(BalanceProduct::class)->withDefault(['min' => 1, 'buy' => true]);
-    }
-
-    public function parser(): HasOne
-    {
-        return $this->hasOne(ProductParser::class, 'product_id', 'id');
-    }
-
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class, 'product_id', 'id')->where('status', Review::STATUS_PUBLISHED)->orderByDesc('created_at');
-    }
-
-    public function reviewsAll(): HasMany
-    {
-        return $this->hasMany(Review::class, 'product_id', 'id');
-    }
-
-    public function composites(): BelongsToMany
-    {
-        return $this->belongsToMany(Product::class, 'composites', 'parent_id', 'child_id')->withPivot('quantity');
-    }
-
-    //ТОВАРНЫЙ УЧЕТ
+    //ТОВАРНЫЙ УЧЕТ, ПРОДАЖИ
 
     public function storageItems(): HasMany
     {
@@ -694,6 +701,12 @@ class Product extends Model
             'product_id', 'promotion_id')->withPivot('price');
     }
 
+    public function balance(): HasOne
+    {
+        return $this->hasOne(BalanceProduct::class)->withDefault(['min' => 1, 'buy' => true]);
+    }
+
+    //Клиентские связи - корзина, избранное
     public function cartStorages(): HasMany
     {
         return $this->hasMany(CartStorage::class, 'product_id', 'id');
@@ -702,6 +715,21 @@ class Product extends Model
     public function cartCookies(): HasMany
     {
         return $this->hasMany(CartCookie::class, 'product_id', 'id');
+    }
+
+    public function wishes(): HasMany
+    {
+        return $this->hasMany(Wish::class, 'product_id', 'id');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'product_id', 'id')->where('status', Review::STATUS_PUBLISHED)->orderByDesc('created_at');
+    }
+
+    public function reviewsAll(): HasMany
+    {
+        return $this->hasMany(Review::class, 'product_id', 'id');
     }
 
     //ЦЕНЫ ****************
@@ -736,6 +764,16 @@ class Product extends Model
     }
 
     //ХАРАКТЕРИСТИКИ ТОВАРА
+    public function parser(): HasOne
+    {
+        return $this->hasOne(ProductParser::class, 'product_id', 'id');
+    }
+
+    public function composites(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'composites', 'parent_id', 'child_id')->withPivot('quantity');
+    }
+
     public function brand(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id', 'id');
@@ -826,21 +864,34 @@ class Product extends Model
         return $this->hasOne(EquivalentProduct::class, 'product_id', 'id');
     }
 
-    public function equivalent()
+    public function equivalent(): HasOneThrough
     {
         return $this->hasOneThrough(
             Equivalent::class,
             EquivalentProduct::class,
             'product_id', 'id', 'id',
             'equivalent_id');
-
-
-        //return $this->belongsTo(Equivalent::class, 'product_id', 'id');
     }
 
-    public function wishes(): HasMany
+    //СПРАВОЧНИКИ GUIDE
+    public function VAT(): BelongsTo
     {
-        return $this->hasMany(Wish::class, 'product_id', 'id');
+        return $this->belongsTo(VAT::class, 'vat_id', 'id');
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
+
+    public function measuring(): BelongsTo
+    {
+        return $this->belongsTo(Measuring::class, 'measuring_id', 'id');
+    }
+
+    public function markingType(): BelongsTo
+    {
+        return $this->belongsTo(MarkingType::class, 'marking_type_id', 'id');
     }
 
 
@@ -896,8 +947,6 @@ class Product extends Model
 
     /**
      * Проверяет участвует ли данный атрибут в Модификации
-     * @param int $attribute_id
-     * @return bool
      */
     public function AttributeIsModification(int $attribute_id): bool
     {
@@ -923,8 +972,8 @@ class Product extends Model
             'image' => $this->getImage(),
             'price' => $this->getPrice(),
             'url' => route('admin.product.edit', $this),
-            'count' => $this->getCountSell(),
-            'stock' => $this->getCountSell() > 0,
+            'count' => $this->getQuantitySell(),
+            'stock' => $this->getQuantitySell() > 0,
         ];
     }
 }

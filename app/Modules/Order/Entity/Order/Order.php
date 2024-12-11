@@ -245,7 +245,7 @@ class Order extends Model
         return $result;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         $quantity = 0;
         foreach ($this->items as $item) {
@@ -255,7 +255,7 @@ class Order extends Model
     }
 
     #[Pure]
-    public function getQuantityExpense(): int
+    public function getQuantityExpense(): float
     {
         $quantity = 0;
         foreach ($this->items as $item) {

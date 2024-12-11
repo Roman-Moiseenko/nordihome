@@ -82,7 +82,7 @@
     </x-base.table.td>
     <x-base.table.td class="text-right">
         <span class="font-medium">{{ $product->getQuantity() }}</span> /
-        <span class="text-success">{{ $product->getCountSell() }}</span> /
+        <span class="text-success">{{ $product->getQuantitySell() }}</span> /
         <span class="text-danger">{{ $product->getReserveCount() }}</span>
     </x-base.table.td>
 </x-base.table.tr>

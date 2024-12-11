@@ -51,7 +51,7 @@ class SurplusService
         });
     }
 
-    public function addProduct(SurplusDocument $surplus, int $product_id, int $quantity): ?SurplusDocument
+    public function addProduct(SurplusDocument $surplus, int $product_id, float $quantity): ?SurplusDocument
     {
         if ($surplus->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         /** @var Product $product */
@@ -79,7 +79,7 @@ class SurplusService
         foreach ($products as $product) {
             $_product = Product::whereCode($product['code'])->first();
             if (!is_null($_product)) {
-                $this->addProduct($surplus, $_product->id, (int)$product['quantity']);
+                $this->addProduct($surplus, $_product->id, (float)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }

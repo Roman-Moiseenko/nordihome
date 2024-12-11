@@ -3,7 +3,7 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Товары</h1>
         <div class="flex">
-            <el-button type="primary" class="p-4 my-3" @click="onOpenDialog" ref="buttonRef">
+            <el-button type="primary" class="p-4 my-3" @click="onCreateProduct" ref="buttonRef">
                 Создать товар
             </el-button>
             <div class="ml-3 my-auto">
@@ -121,23 +121,6 @@
             :total="products.total"
         />
         <DeleteEntityModal name_entity="Товар"/>
-
-
-        <el-dialog v-model="dialogCreate" title="Новая модификация">
-            <el-form label-width="auto">
-                <el-form-item label="Название товара" label-position="top" class="mt-3">
-                    <el-input v-model="form.name"/>
-                </el-form-item>
-
-            </el-form>
-            <template #footer>
-                <div class="dialog-footer">
-                    <el-button @click="dialogCreate = false">Отмена</el-button>
-                    <el-button type="primary" @click="saveProduct">Сохранить</el-button>
-                </div>
-            </template>
-        </el-dialog>
-
     </el-config-provider>
 
 </template>
@@ -151,9 +134,7 @@ import TableFilter from "@Comp/TableFilter.vue";
 import {Head, Link, router} from "@inertiajs/vue3";
 import {defineProps, inject, reactive, ref} from "vue";
 import {route} from "ziggy-js";
-import axios from "axios";
-import SelectActions from "@Page/Product/Product/SelectActions.vue";
-
+import SelectActions from "./SelectActions.vue";
 
 const props = defineProps({
     products: Object,
@@ -167,7 +148,6 @@ const props = defineProps({
 })
 
 const store = useStore();
-const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.products.data])
 const filter = reactive({
@@ -176,11 +156,7 @@ const filter = reactive({
     show: props.filters.show,
 })
 
-const form = reactive({
-    product_id: null,
-    name: null,
-    attributes: [],
-})
+
 const formMass = reactive({
     action: null,
     ids: [],
@@ -202,9 +178,9 @@ function onAnalitics(row) {
     router.get(route('admin.product.show', {product: row.id}))
 }
 
-function onOpenDialog() {
-    //Загружаем категории, бренды, теги и серии ??
-    dialogCreate.value = true
+function onCreateProduct() {
+    router.get(route('admin.product.create'))
+
 }
 
 function onSaleToggle(row) {
@@ -223,9 +199,6 @@ function onPublishedToggle(row) {
     })
 }
 
-function saveProduct() {
-    router.post(route('admin.product.store', form))
-}
 
 function routeClick(row) {
     router.get(route('admin.product.show', {product: row.id}))

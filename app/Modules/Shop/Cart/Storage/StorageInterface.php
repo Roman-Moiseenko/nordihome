@@ -10,8 +10,8 @@ interface StorageInterface
     public function load(): array;
 
     public function add(CartItem $item): void;
-    public function sub(CartItem $item, int $quantity): void;
-    public function plus(CartItem $item, int $quantity): void;
+    public function sub(CartItem $item, float $quantity): void;
+    public function plus(CartItem $item, float $quantity): void;
 
     public function remove(CartItem $item): void;
 

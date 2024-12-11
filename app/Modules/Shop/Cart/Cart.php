@@ -63,7 +63,7 @@ class Cart
                 return;
             }
         }
-        if (!$this->pre_order && $product->getCountSell() < $quantity) {
+        if (!$this->pre_order && $product->getQuantitySell() < $quantity) {
             throw new \DomainException('Превышение остатка');
         }
         $this->storage->add(CartItem::create($product, $quantity, $options));
@@ -216,7 +216,6 @@ class Cart
 
     public function ItemsData(array $items): array
     {
-        //$timeZone = timezone_name_from_abbr("", (int)$tz * 60, 0);
         $result = [];
         /** @var CartItem $item */
         foreach ($items as $item) {

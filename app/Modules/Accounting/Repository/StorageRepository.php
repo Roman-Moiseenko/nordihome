@@ -63,7 +63,7 @@ class StorageRepository extends AccountingRepository
                         'name' => $item->product->name,
                         'code' => $item->product->code,
                         'category' => $item->product->category->name,
-                        'for_sell' => $item->product->getCountSell(),
+                        'for_sell' => $item->product->getQuantitySell(),
                     ],
                 ]),
         ]);

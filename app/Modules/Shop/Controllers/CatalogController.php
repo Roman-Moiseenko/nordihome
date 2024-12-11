@@ -74,10 +74,10 @@ class CatalogController extends Controller
             }
 
             if ($request->has('in_stock')) {
-                if ($product->getCountSell() > 0)
+                if ($product->getQuantitySell() > 0)
                     $product_ids[] = $product->id;
             } else {
-                if ($this->common->pre_order || $product->pre_order || $product->getCountSell() > 0)
+                if ($this->common->pre_order || $product->pre_order || $product->getQuantitySell() > 0)
                     $product_ids[] = $product->id;
             }
 

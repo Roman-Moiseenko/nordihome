@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $staff_id
  * @property int $storage_id
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property int $order_item_id - возможно перенести связь через OrderItem, тогда в стек можно заносить разные заявки
  * @property int $supply_id - null по-умолчанию
  * @property string $comment
@@ -47,7 +47,7 @@ class SupplyStack extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function register(int $product_id, int $quantity, int $staff_id, int $storage_id, string $comment): self
+    public static function register(int $product_id, float $quantity, int $staff_id, int $storage_id, string $comment): self
     {
         return self::create([
             'product_id' => $product_id,

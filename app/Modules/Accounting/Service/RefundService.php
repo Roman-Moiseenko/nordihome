@@ -56,7 +56,7 @@ class RefundService
         if (!$refund->isCompleted()) $refund->delete();
     }
 
-    public function addProduct(RefundDocument $refund, int $product_id, int $quantity): ?RefundProduct
+    public function addProduct(RefundDocument $refund, int $product_id, float $quantity): ?RefundProduct
     {
         if ($refund->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         $distributor_cost = 0;
@@ -90,7 +90,7 @@ class RefundService
         foreach ($products as $product) {
             $_product = Product::whereCode($product['code'])->first();
             if (!is_null($_product)) {
-                $this->addProduct($refund, $_product->id, (int)$product['quantity']);
+                $this->addProduct($refund, $_product->id, (float)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }
@@ -98,7 +98,7 @@ class RefundService
         if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
-    public function setProduct(RefundProduct $refundProduct, int $quantity): void
+    public function setProduct(RefundProduct $refundProduct, float $quantity): void
     {
         $refund = $refundProduct->document;
         if ($refund->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');

@@ -299,7 +299,7 @@ class OrderService
             /** @var Product $product */
             $product = Product::find($product_id);
             if (is_null($product)) throw new \DomainException('Данный товар не найден');
-            if ($product->getPrice($user->id) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
+            if ($product->getPrice(false, $user) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
             $order = Order::register($user->id, Order::ONLINE);
 
             $order = $this->add_product($order, $product->id, 1);
@@ -418,12 +418,8 @@ class OrderService
     //** ФУНКЦИИ РАБОТЫ С ЭЛЕМЕНТАМИ ЗАКАЗА
     /**
      * Добавить в заказ товар. НОВАЯ ВЕРСИЯ
-     * @param Order $order
-     * @param int $product_id
-     * @param int $quantity
-     * @return Order
      */
-    public function add_product(Order $order, int $product_id, int $quantity, bool $preorder = false): Order
+    public function add_product(Order $order, int $product_id, float $quantity, bool $preorder = false): Order
     {
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -435,9 +431,9 @@ class OrderService
         }
 
 
-        if ($quantity > 0 && $product->getCountSell() <= $quantity) {
-            $quantity_preorder = $quantity - $product->getCountSell(); //По предзаказу
-            $quantity = $product->getCountSell(); //в наличии
+        if ($quantity > 0 && $product->getQuantitySell() <= $quantity) {
+            $quantity_preorder = $quantity - $product->getQuantitySell(); //По предзаказу
+            $quantity = $product->getQuantitySell(); //в наличии
         }
 
         $last_price = $product->getPrice(false, $order->user);
@@ -467,11 +463,8 @@ class OrderService
 
     /**
      * Изменения кол-ва товара, с учетом "в наличии" и перерасчетом всего заказа. НОВАЯ ВЕРСИЯ.
-     * @param OrderItem $item - изменяемая позиция
-     * @param int $quantity - новое значение кол-ва
-     * @return Order
      */
-    public function update_quantity(OrderItem $item, int $quantity): Order
+    public function update_quantity(OrderItem $item, float $quantity): Order
     {
         $delta = $quantity - $item->quantity;
         if ($delta == 0) return $item->order;
@@ -479,7 +472,7 @@ class OrderService
         DB::transaction(function () use ($item, $delta, $quantity, &$order) {
             if (!$item->preorder) {
                 if ($delta > 0) {
-                    $delta = min($item->product->getCountSell(), $delta);
+                    $delta = min($item->product->getQuantitySell(), $delta);
                     $this->reserveService->upReserve($item, abs($delta));
                 } else {
                     $this->reserveService->downReserve($item, abs($delta));
@@ -860,7 +853,7 @@ class OrderService
         $amount = 0;
         foreach ($data['items'] as $item) { //Суммируем по товарам
             $id_item = (int)$item['id'];
-            $amount += $order->getItemById($id_item)->sell_cost * (int)$item['value'];
+            $amount += $order->getItemById($id_item)->sell_cost * (float)$item['value'];
         }
         foreach ($data['additions'] as $addition) { //Суммируем по услугам
             $amount += (float)$addition['value'];
@@ -876,13 +869,9 @@ class OrderService
 
     /**
      * Добавление товара в заказ, через Парсер
-     * @param Order $order
-     * @param $search
-     * @param int $quantity
-     * @return void
      */
     //TODO Переделать на получение полных данных из базы
-    public function add_parser(Order $order, $search, int $quantity)
+    public function add_parser(Order $order, $search, float $quantity)
     {
         if (!$order->isParser()) throw new \DomainException('Заказ не под Парсер');
         $product = $this->parserService->findProduct($search);

@@ -117,7 +117,7 @@ class PricingController extends Controller
     public function add_product(Request $request, PricingDocument $pricing): RedirectResponse
     {
         try {
-            $this->service->addProduct($pricing, (int)$request['product_id']);
+            $this->service->addProduct($pricing, $request->integer('product_id'));
             return redirect()->back()->with('success', 'Товар добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -127,7 +127,7 @@ class PricingController extends Controller
     public function add_products(Request $request, PricingDocument $pricing): RedirectResponse
     {
         try {
-            $this->service->addProducts($pricing, $request['products']);
+            $this->service->addProducts($pricing, $request->input('products'));
             return redirect()->back()->with('success', 'Товары добавлены');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

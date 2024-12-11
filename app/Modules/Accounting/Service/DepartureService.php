@@ -46,7 +46,7 @@ class DepartureService
         $departure->delete();
     }
 
-    public function addProduct(DepartureDocument $departure, int $product_id, int $quantity): ?DepartureDocument
+    public function addProduct(DepartureDocument $departure, int $product_id, float $quantity): ?DepartureDocument
     {
         if ($departure->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
 
@@ -79,7 +79,7 @@ class DepartureService
         foreach ($products as $product) {
             $_product = Product::whereCode($product['code'])->first();
             if (!is_null($_product)) {
-                $this->addProduct($departure, $_product->id, (int)$product['quantity']);
+                $this->addProduct($departure, $_product->id, (float)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }

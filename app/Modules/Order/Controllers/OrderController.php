@@ -145,7 +145,7 @@ class OrderController extends Controller
 
     public function canceled(Request $request, Order $order)
     {
-        $this->orderService->canceled($order, (int)$request['comment']);
+        $this->orderService->canceled($order, $request['comment']);
         return redirect()->back();
     }
 

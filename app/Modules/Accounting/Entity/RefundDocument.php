@@ -39,12 +39,12 @@ class RefundDocument extends AccountingDocument
 
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         $quantity = RefundProduct::selectRaw('SUM(quantity * 1) AS total')
             ->where('refund_id', $this->id)
             ->first();
-        return (int)($quantity->total ?? 0);
+        return (float)($quantity->total ?? 0);
     }
 
     public function getStorage(): ?Storage

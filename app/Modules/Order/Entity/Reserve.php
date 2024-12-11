@@ -16,7 +16,7 @@ use function now;
  * @property int $id
  * @property int $user_id
  * @property int $product_id
- * @property int $quantity
+ * @property float $quantity
  * @property int $storage_id
  *
  * @property Carbon $created_at

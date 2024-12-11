@@ -3,12 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Base\Traits\CompletedFieldModel;
 use App\Modules\Product\Entity\Product;
-use App\Traits\HtmlInfoData;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -60,7 +55,7 @@ class SupplyDocument extends AccountingDocument
 
     //** GET'S */
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         $quantity = 0;
         foreach ($this->products as $product) {
@@ -70,7 +65,7 @@ class SupplyDocument extends AccountingDocument
     }
 
 
-    public function getOutQuantity(): int
+    public function getOutQuantity(): float
     {
         $quantity = 0;
         foreach ($this->arrivals as $arrival) {
@@ -100,7 +95,7 @@ class SupplyDocument extends AccountingDocument
         return $amount;
     }
 
-    public function getQuantityStack(Product $product): int
+    public function getQuantityStack(Product $product): float
     {
         $quantity = 0;
 
@@ -172,11 +167,10 @@ class SupplyDocument extends AccountingDocument
     /**
      * Добавляем товар в заказ
      */
-    public function addProduct(Product $product, int $quantity, float $cost): void
+    public function addProduct(Product $product, float $quantity, float $cost): void
     {
         if (!empty($supplyItem = $this->getProduct($product->id))) { //Если уже есть, увеличиваем кол-во
-            $supplyItem->quantity += $quantity;
-            $supplyItem->save();
+            $supplyItem->addQuantity($quantity);
         } else {
             $supplyItem = SupplyProduct::new($product->id, $quantity, $cost); //Если нет, то создаем запись
             $this->products()->save($supplyItem);

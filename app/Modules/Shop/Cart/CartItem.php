@@ -11,7 +11,7 @@ class CartItem implements CartItemInterface
 {
     public Product $product;
     public int $id;
-    public int $quantity;
+    public float $quantity;
     public float $base_cost; //Базовая цена  - используется для удобства = $product->getLastPrice()
     public float $discount_cost; //Цена со скидкой
     public string $discount_name; //Название акции
@@ -21,7 +21,7 @@ class CartItem implements CartItemInterface
 //    public bool $pre_order;
     public bool $check;
 
-    public static function create(Product $product, int $quantity, array $options): self
+    public static function create(Product $product, float $quantity, array $options): self
     {
         $item = new static();
 
@@ -59,7 +59,7 @@ class CartItem implements CartItemInterface
         return $this->product;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         return $this->quantity;
     }
@@ -74,12 +74,12 @@ class CartItem implements CartItemInterface
         return $this->quantity > $this->availability();
     }
 
-    public function availability(): int
+    public function availability(): float
     {
-        return $this->product->getCountSell();
+        return $this->product->getQuantitySell();
     }
 
-    public function withQuantity(int $quantity): self
+    public function withQuantity(float $quantity): self
     {
         $item = clone $this;
         $item->quantity = $quantity;

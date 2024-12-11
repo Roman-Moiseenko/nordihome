@@ -18,7 +18,7 @@ class RefundProduct extends AccountingProduct
         'cost_currency',
     ];
 
-    public static function new(int $product_id, int $quantity, float $cost_currency): self
+    public static function new(int $product_id, float $quantity, float $cost_currency): self
     {
         $product = parent::baseNew($product_id, $quantity);
         $product->cost_currency = $cost_currency;

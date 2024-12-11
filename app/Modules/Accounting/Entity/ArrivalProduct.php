@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $supply_product_id //На основе Заказа
  * @property ArrivalDocument $document
  */
-class ArrivalProduct extends AccountingProduct implements MovementItemInterface
+class ArrivalProduct extends AccountingProduct
 {
     protected $table = 'arrival_products';
     protected $fillable = [
@@ -27,20 +27,20 @@ class ArrivalProduct extends AccountingProduct implements MovementItemInterface
         'supply_product_id',
     ];
 
-    public static function new(int $product_id, int $quantity, float $distributor_cost): self
+    public static function new(int $product_id, float $quantity, float $distributor_cost): self
     {
-        return self::make([
-            'product_id' => $product_id,
-            'quantity' => $quantity,
-            'cost_currency' => $distributor_cost,
-            'remains' => $quantity,
-        ]);
+        $product = self::baseNew($product_id, $quantity);
+        $product->cost_currency = $distributor_cost;
+        $product->remains = $product->quantity;
+        return $product;
     }
 
-    public function setQuantity(int $quantity): void
+    public function setQuantity(float $quantity): void
     {
-        $this->quantity = $quantity;
-        $this->remains = $quantity;
+        parent::setQuantity($quantity);
+        $this->refresh();
+
+        $this->remains = $this->quantity;
         $this->save();
     }
 
@@ -70,7 +70,7 @@ class ArrivalProduct extends AccountingProduct implements MovementItemInterface
     /**
      * Кол-во текущего товара оставшегося после возвратов
      */
-    public function getQuantityUnallocated(): int
+    public function getQuantityUnallocated(): float
     {
         $quantity = $this->quantity;
 
@@ -85,7 +85,7 @@ class ArrivalProduct extends AccountingProduct implements MovementItemInterface
     /**
      * Кол-во текущего товара в перемещениях
      */
-    public function getQuantityMoved(): int
+    public function getQuantityMoved(): float
     {
         $quantity = 0;
         foreach ($this->document->movements as $movement) {

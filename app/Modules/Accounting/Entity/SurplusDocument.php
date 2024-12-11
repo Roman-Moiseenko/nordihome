@@ -37,12 +37,12 @@ class SurplusDocument extends AccountingDocument
         return (int)$amount->total ?? 0.0;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         $quantity = SurplusProduct::selectRaw('SUM(quantity * 1) AS total')
             ->where('surplus_id', $this->id)
             ->first();
-        return (int)($quantity->total ?? 0);
+        return (float)($quantity->total ?? 0);
     }
 
     public function getManager(): string

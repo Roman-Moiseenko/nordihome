@@ -187,7 +187,7 @@ class Schema
             "inventoryLevel" => [
                 "@type" => "QuantitativeValue",
                 "unitCode" => "NMP",
-                "value" => $product->getCountSell(),
+                "value" => $product->getQuantitySell(),
             ],
             "hasMerchantReturnPolicy" => [
                 "@type" => "MerchantReturnPolicy",
@@ -213,7 +213,7 @@ class Schema
 
             "price" => $product->getPrice(),
             "priceCurrency" => "RUB",
-            "availability" => 'https://schema.org/' . ($product->getCountSell() == 0 ? 'InStock' : 'PreOrder'),
+            "availability" => 'https://schema.org/' . ($product->getQuantitySell() == 0 ? 'InStock' : 'PreOrder'),
             "seller" => [
                 "@type" => "Organization",
                 "name" => "ООО «Негоциант»",
@@ -379,7 +379,7 @@ class Schema
                     "@type" => "Offer",
                     "price" => $product->getPrice(),
                     "priceCurrency" => "RUB",
-                    "availability" => "https://schema.org/" . ($product->getCountSell() == 0 ? 'InStock' : 'PreOrder'),
+                    "availability" => "https://schema.org/" . ($product->getQuantitySell() == 0 ? 'InStock' : 'PreOrder'),
                 ],
             ];
         },

@@ -42,13 +42,13 @@ class CookieDBStorage implements StorageInterface
         $this->toStorage($this->user_ui, $item->getProduct(), $item->getQuantity(), $item->options);
     }
 
-    public function sub(CartItem $item, int $quantity): void
+    public function sub(CartItem $item, float $quantity): void
     {
         $new_quantity = $item->quantity - $quantity;
         $this->updateQuantity($item->id, $new_quantity);
     }
 
-    public function plus(CartItem $item, int $quantity): void
+    public function plus(CartItem $item, float $quantity): void
     {
         $new_quantity = $item->quantity + $quantity;
         $this->updateQuantity($item->id, $new_quantity);
@@ -69,12 +69,12 @@ class CookieDBStorage implements StorageInterface
         $this->updateCheck($item->id, $item->check);
     }
 
-    private function clearByUser(string $ui)
+    private function clearByUser(string $ui): void
     {
         CartCookie::where('user_ui', $ui)->delete();
     }
 
-    private function toStorage(string $user_ui, Product $product, int $quantity, array $options = [])
+    private function toStorage(string $user_ui, Product $product, float $quantity, array $options = []): void
     {
         CartCookie::register(
             $user_ui,
@@ -84,7 +84,7 @@ class CookieDBStorage implements StorageInterface
         );
     }
 
-    private function updateQuantity(int $id, int $new_quantity)
+    private function updateQuantity(int $id, float $new_quantity): void
     {
         $cookie = CartCookie::find($id);
         if ($new_quantity == 0) {
@@ -95,14 +95,14 @@ class CookieDBStorage implements StorageInterface
             ]);
         }
     }
-    private function updateCheck(int $id, bool $check)
+    private function updateCheck(int $id, bool $check): void
     {
         $cookie = CartCookie::find($id);
         $cookie->update([
             'check' => $check,
         ]);
     }
-    private function fromStorage(int $id)
+    private function fromStorage(int $id): void
     {
         CartCookie::destroy($id);
     }

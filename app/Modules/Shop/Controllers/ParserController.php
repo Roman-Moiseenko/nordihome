@@ -83,7 +83,7 @@ class ParserController extends Controller
     public function set(Request $request, Product $product) //Product $product
     {
         $this->cart->load();
-        $this->cart->set($product, (int)$request['quantity']);
+        $this->cart->set($product, $request->float('quantity'));
         $this->cart->reload();
         return \response()->json($this->cart);
     }

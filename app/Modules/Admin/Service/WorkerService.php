@@ -19,8 +19,8 @@ class WorkerService
             $request->integer('post'),
         );
         $worker->setPhone($request->string('phone')->trim()->value());
-        if (!is_null($request['telegram_user_id'])) $worker->setTelegram((int)$request->integer('telegram_user_id'));
-        if (!is_null($request['storage_id']) && (int)$request['storage_id'] != 0) $worker->setStorage((int)$request['storage_id']);
+        if (!is_null($request['telegram_user_id'])) $worker->setTelegram($request->integer('telegram_user_id'));
+        if ($request->integer('storage_id') != 0) $worker->setStorage($request->integer('storage_id'));
         return $worker;
     }
 
@@ -45,8 +45,8 @@ class WorkerService
         ]);
         $worker->setPhone($request->string('phone')->trim()->value());
 
-        if (!is_null($request['telegram_user_id'])) $worker->setTelegram((int)$request['telegram_user_id']);
-        if (!is_null($request['storage_id']) && (int)$request['storage_id'] != 0) $worker->setStorage((int)$request['storage_id']);
+        if (!is_null($request['telegram_user_id'])) $worker->setTelegram($request->integer('telegram_user_id'));
+        if ($request->integer('storage_id') != 0) $worker->setStorage($request->integer('storage_id'));
         $worker->refresh();
         return $worker;
     }

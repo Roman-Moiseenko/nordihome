@@ -121,7 +121,7 @@ class StaffController extends Controller
     //AJAX
     public function response(Request $request, Admin $staff)
     {
-        $this->service->responsibility((int)$request['code'], $staff);
+        $this->service->responsibility($request->integer('code'), $staff);
         return response()->json(true);
     }
 }

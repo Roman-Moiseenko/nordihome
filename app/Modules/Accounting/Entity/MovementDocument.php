@@ -76,7 +76,7 @@ class MovementDocument extends AccountingDocument
         $this->save();
     }
 
-    public function addProduct(int $product_id, int $quantity, int $order_item_id = null): void
+    public function addProduct(int $product_id, float $quantity, int $order_item_id = null): void
     {
         $this->products()->create([
             'product_id' => $product_id,
@@ -154,16 +154,16 @@ class MovementDocument extends AccountingDocument
         return $this->status == self::STATUS_FINISHED;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         $quantity = MovementProduct::selectRaw('SUM(quantity * 1) AS total')
             ->where('movement_id', $this->id)
             ->first();
-        return (int)$quantity->total ?? 0;
+        return (float)$quantity->total ?? 0;
     }
 
     #[ArrayShape([
-        'quantity' => 'int',
+        'quantity' => 'float',
         'cost' => 'float',
     ])]
     public function getInfoData(): array

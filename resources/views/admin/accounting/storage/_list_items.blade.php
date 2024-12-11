@@ -12,6 +12,6 @@
     <x-base.table.td class="text-center">{{ $item->quantity }}</x-base.table.td>
     <x-base.table.td class="text-center">{{ $item->inMovementHTML() }}</x-base.table.td>
     <x-base.table.td class="text-center"> {{ $item->getQuantityReserve() }} </x-base.table.td>
-    <x-base.table.td class="text-center">{{ $item->product->getCountSell() }}</x-base.table.td>
+    <x-base.table.td class="text-center">{{ $item->product->getQuantitySell() }}</x-base.table.td>
 
 </x-base.table.tr>

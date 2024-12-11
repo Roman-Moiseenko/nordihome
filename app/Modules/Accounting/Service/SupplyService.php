@@ -202,7 +202,7 @@ class SupplyService
     /**
      * Добавить товар в заявку Поставщику
      */
-    public function addProduct(SupplyDocument $supply, int $product_id, int $quantity): void
+    public function addProduct(SupplyDocument $supply, int $product_id, float $quantity): void
     {
         $distributor = $supply->distributor;
         /** @var Product $product */
@@ -222,7 +222,7 @@ class SupplyService
         foreach ($products as $product) {
             $_product = Product::whereCode($product['code'])->first();
             if (!is_null($_product)) {
-                $this->addProduct($supply, $_product->id, (int)$product['quantity']);
+                $this->addProduct($supply, $_product->id, (float)$product['quantity']);
             } else {
                 $errors[] = $product['code'];
             }
@@ -256,7 +256,7 @@ class SupplyService
         $supplyProduct->delete();
     }
 
-    public function setProduct(SupplyProduct $supplyProduct, int $quantity, float $cost_currency): void
+    public function setProduct(SupplyProduct $supplyProduct, float $quantity, float $cost_currency): void
     {
         $supply = $supplyProduct->document;
 

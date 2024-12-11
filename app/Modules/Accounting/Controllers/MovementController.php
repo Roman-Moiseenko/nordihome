@@ -122,7 +122,7 @@ class MovementController extends Controller
     public function add_product(Request $request, MovementDocument $movement): RedirectResponse
     {
         try {
-            $this->service->addProduct($movement, (int)$request['product_id'], (int)$request['quantity']);
+            $this->service->addProduct($movement, $request->integer('product_id'), $request->float('quantity'));
             return redirect()->back()->with('success', 'Товар добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
