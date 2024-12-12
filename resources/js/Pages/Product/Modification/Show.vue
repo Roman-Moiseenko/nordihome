@@ -17,7 +17,7 @@
                 {{ product.code }}
             </div>
             <div class="ml-4" style="width: 350px;">
-                <Link type="primary" :href="route('admin.product.show', {product: product.id})">{{ product.name }}</Link>
+                <Link type="primary" :href="route('admin.product.edit', {product: product.id})">{{ product.name }}</Link>
             </div>
             <div>
                 <el-tag v-for="(variant, index) in product.variants" :type="getType(index)" class="ml-1">{{ variant }}</el-tag>

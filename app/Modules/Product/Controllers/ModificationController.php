@@ -38,12 +38,6 @@ class ModificationController extends Controller
             'filters' => $filters,
         ]);
     }
-/*
-    public function create(Request $request)
-    {
-        $product_id = $request['product_id'] ?? null;
-        return view('admin.product.modification.create', compact('product_id'));
-    }*/
 
     public function store(Request $request): RedirectResponse
     {

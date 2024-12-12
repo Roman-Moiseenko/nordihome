@@ -109,7 +109,7 @@ const props = defineProps({
     measuring: Array,
     markingType: Array,
 })
-console.log('Common', props.product.slug)
+
 const autoSave = ref(true)
 const isSaving = ref(false)
 const form = reactive({
@@ -123,7 +123,6 @@ const form = reactive({
     categories: [...props.product.categories.map(item => item.id)],
     brand_id: props.product.brand_id,
     country_id: props.product.country_id,
-    //distributor_id: null,
     vat_id: props.product.vat_id,
     marking_type_id: props.product.marking_type_id,
     measuring_id: props.product.measuring_id,

@@ -27,14 +27,22 @@ class Package
     }
 
     #[Pure]
-    public static function create($height, $width, $length, $weight, int $quantity = 1): self
+    public static function create($height = 0, $width = 0, $length = 0, $weight = 0, int $quantity = 1, array $params = []): self
     {
         $package = new static();
-        $package->width = $width;
-        $package->height = $height;
-        $package->length = $length;
-        $package->weight = $weight;
-        $package->quantity = $quantity;
+        if (!empty($params)) {
+            $package->width = (float)$params['width'];
+            $package->height = (float)$params['height'];
+            $package->length = (float)$params['length'];
+            $package->weight = (float)$params['weight'];
+            $package->quantity = (int)$params['quantity'];
+        } else {
+            $package->width = $width;
+            $package->height = $height;
+            $package->length = $length;
+            $package->weight = $weight;
+            $package->quantity = $quantity;
+        }
         return $package;
     }
 

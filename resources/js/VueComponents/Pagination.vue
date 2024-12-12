@@ -58,7 +58,7 @@ export default {
                     method: 'get',
                     data: {page: val, size: this.$data.PageSize},
                     preserveScroll: true,
-                    preserveState: true,
+                    preserveState: false,
                     onBefore: visit => {
                         useStore().beforeLoad();
                     },

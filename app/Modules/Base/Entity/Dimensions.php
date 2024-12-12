@@ -52,8 +52,8 @@ class Dimensions
         $this->type = self::TYPE_DEPTH;
     }
 
-    public static function create($width = 0, $height = 0, $depth = 0,
-        $weight = 0, $measure = self::MEASURE_G,
+    public static function create(float $width = 0, float $height = 0, float $depth = 0,
+                                  float $weight = 0, $measure = self::MEASURE_G,
                                   int $type = self::TYPE_DEPTH,
                                   array $params = []
 
@@ -72,7 +72,6 @@ class Dimensions
             $dimension->measure = $measure;
             $dimension->type = $type;
         }
-
         return $dimension;
     }
 
@@ -81,12 +80,12 @@ class Dimensions
     {
         $dimension = new static();
         if (!empty($params)) {
-            $dimension->width = $params['width'] ?? 0;
-            $dimension->height = $params['height'] ?? 0;
-            $dimension->depth = $params['depth'] ?? 0;
-            $dimension->weight = $params['weight'] ?? 0;
+            $dimension->width = (float)($params['width'] ?? 0);
+            $dimension->height = (float)($params['height'] ?? 0);
+            $dimension->depth = (float)($params['depth'] ?? 0);
+            $dimension->weight = (float)($params['weight'] ?? 0);
             $dimension->measure = $params['measure'] ?? self::MEASURE_G;
-            $dimension->type = $params['type'] ?? self::TYPE_DEPTH;
+            $dimension->type = (int)($params['type'] ?? self::TYPE_DEPTH);
         }
         return $dimension;
     }

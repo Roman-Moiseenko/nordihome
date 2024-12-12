@@ -67,7 +67,7 @@ class Dimensions extends Component
         $this->product->dimensions->depth = $this->depth;
         $this->product->dimensions->type = $this->type;
 
-        $this->product->packages->cleare();
+        $this->product->packages->clear();
 
         foreach ($this->packages as $package) {
             $this->product->packages->create(

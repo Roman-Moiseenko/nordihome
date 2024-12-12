@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Product\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
@@ -43,12 +45,12 @@ class Modification extends Model
         return $modification;
     }
 
-    public function base_product()
+    public function base_product(): BelongsTo
     {
        return $this->belongsTo(Product::class, 'base_product_id', 'id');
     }
 
-    public function products()
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'modifications_products', 'modification_id', 'product_id', 'id', 'id')
             ->withPivot('values_json');
@@ -56,7 +58,6 @@ class Modification extends Model
 
     public function productByVariant(array $var): ?Product
     {
-        /** @var Product $product */
         foreach ($this->products as $product) {
             $_vars = json_decode($product->pivot->values_json, true);
             if (empty(array_diff($_vars, $var))) return $product;
@@ -64,7 +65,7 @@ class Modification extends Model
         return null;
     }
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
         self::saving(function (Modification $modification) {

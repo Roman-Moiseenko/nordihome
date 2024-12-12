@@ -27,7 +27,7 @@ class Packages
         return $weight;
     }
 
-    public function create($height = 0, $width = 0, $length = 0, $weight = 0, int $quantity = 1, array $params = [])
+    public function create($height = 0, $width = 0, $length = 0, $weight = 0, int $quantity = 1, array $params = []): void
     {
         if (!empty($params)) {
             $height = (int)$params['height'];
@@ -45,7 +45,7 @@ class Packages
         $this->packages[] = $package;
     }
 
-    public function cleare()
+    public function clear(): void
     {
         $this->packages = [];
     }

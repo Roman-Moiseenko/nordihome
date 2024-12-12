@@ -49,17 +49,16 @@ use JetBrains\PhpStorm\Pure;
  * @property string $description
  * @property string $short
  * @property int $main_category_id
- * // * @property string $dimensions_json
  * @property int $frequency
  * @property int $brand_id
  * @property float $current_rating
  * @property int $count_for_sell
- * @property float $current_price //Для быстрой сортировки
- * @property bool $published //Опубликован
- * @property bool $only_offline //Только в магазине
- * @property bool $pre_order //Установка для всего магазина из опций, после каждый отдельно можно менять
- * @property bool $not_delivery
- * @property bool $not_local
+ * @property float $current_price Для быстрой сортировки ??
+ * @property bool $published    Опубликован
+ * @property bool $only_offline Только в магазине
+ * @property bool $pre_order Установка для всего магазина из опций, после каждый отдельно можно менять
+ * @property bool $delivery Доставка ТК
+ * @property bool $local Доставка по региону
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $published_at
@@ -121,6 +120,7 @@ use JetBrains\PhpStorm\Pure;
  * @property ProductParser $parser
  * @property Product[] $composites
  * @property BalanceProduct $balance
+
  */
 class Product extends Model
 {
@@ -182,14 +182,12 @@ class Product extends Model
         'published',
         'only_offline ',
         'pre_order',
-        'not_delivery',
-        'not_local',
+        'delivery',
+        'local',
         'code_search',
         'series_id',
         'not_sale',
-        //'published_at',
         'priority',
-        // 'description',
         'packages',
         'fractional',
     ];
@@ -270,12 +268,12 @@ class Product extends Model
 
     public function isLocal(): bool
     {
-        return !$this->not_local;
+        return $this->local == true;
     }
 
     public function isDelivery(): bool
     {
-        return !$this->not_delivery;
+        return $this->delivery == true;
     }
 
     public function isCategories($category_id): bool

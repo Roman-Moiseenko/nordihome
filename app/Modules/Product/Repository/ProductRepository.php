@@ -4,21 +4,15 @@
 namespace App\Modules\Product\Repository;
 
 
+use App\Modules\Accounting\Entity\StorageItem;
+use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Product;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Modules\Product\Entity\Tag;
 
 class ProductRepository
 {
-    /**
-     * Репозиторий для передачи данных в другие модули (шлюз)
-     * Либо сделать Шлюз get + query
-     * \Bus\FletchProduct и \Bus\QueryProduct
-     * в QueryProduct setCountForSell(%id, %count) и если нет ТУ то setPriceForSell($id, $price)
-     */
-
 
     public function getIndex($request, &$filters)
     {
@@ -67,7 +61,6 @@ class ProductRepository
     public function ProductWithToArray(Product $product): array
     {
         return array_merge($this->ProductToArray($product), [
-
             'equivalents' => Equivalent::orderBy('name')
                 ->whereHas('category', function ($query) use ($product) {
                     $query->where('_lft', '<=', $product->category->_lft)
@@ -80,6 +73,67 @@ class ProductRepository
                     'name' => $category->name,
                 ];
             }),
+            'tags' => $product->tags()->get()->map(function (Tag $tag) {
+                return [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                ];
+            }),
+            'videos' => $product->videos,
+            'possible_attributes' => array_filter(array_map(function (Attribute $attribute) use($product) {
+                if (!is_null($product->Value($attribute->id))) return false;
+                return [
+                    'id' => $attribute->id,
+                    'name' => $attribute->name,
+                ];
+            }, $product->getPossibleAttribute())),
+            'attributes' => $product->prod_attributes()->get()->map(function (Attribute $attribute) use ($product) {
+                return [
+                    'id' => $attribute->id,
+                    'name' => $attribute->name,
+                    'group' => $attribute->group->name,
+                    'value' => $attribute->Value(),
+                    'variants' => $attribute->variants,
+                    'is_variant' => $attribute->isVariant(),
+                    'is_bool' => $attribute->isBool(),
+                    'is_numeric' => $attribute->isNumeric(),
+                    'is_date' => $attribute->isDate(),
+                    'is_string' => $attribute->isString(),
+                    'multiple' => $attribute->multiple,
+                    'is_modification' => $product->AttributeIsModification($attribute->id),
+                ];
+            }),
+            'storages' => $product->storageItems()->get()->map(function (StorageItem $item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->storage->name,
+                    'cell' => $item->cell,
+                ];
+            }),
+            'balance' => $product->balance,
+            'modification' => is_null($product->modification) ? null : [
+                'id' => $product->modification->id,
+                'name' => $product->modification->name,
+                'attributes' => array_map(function (Attribute $attribute){
+                    return [
+                        'name' => $attribute->name,
+                        'image' => $attribute->getImage(),
+                    ];
+                }, $product->modification->prod_attributes),
+                'products' => $product->modification->products()->get()->map(function (Product $product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'code' => $product->code,
+                        'image' => $product->getImage('mini'),
+                        'attributes' => array_map(function (Attribute $attribute) use ($product){
+                            return [
+                                'name' => $attribute->getVariant($product->Value($attribute->id))->name,
+                            ];
+                        }, $product->modification->prod_attributes)
+                    ];
+                }),
+            ],
         ]);
     }
 

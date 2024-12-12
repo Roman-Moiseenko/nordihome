@@ -137,6 +137,15 @@ class Attribute extends Model
     {
         return $this->type == self::TYPE_INTEGER || $this->type == self::TYPE_FLOAT;
     }
+    public function isString(): bool
+    {
+        return $this->type == self::TYPE_STRING;
+    }
+
+    public function isDate(): bool
+    {
+        return $this->type == self::TYPE_DATE;
+    }
 
     public function getUploadUrl(): string
     {
@@ -157,4 +166,5 @@ class Attribute extends Model
     {
         return self::ATTRIBUTES[$this->type];
     }
+
 }

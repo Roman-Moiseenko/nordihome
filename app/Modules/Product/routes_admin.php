@@ -148,7 +148,23 @@ Route::group(
         Route::post('/restore/{id}', 'ProductController@restore')->name('restore');
         Route::delete('/full-delete/{id}', 'ProductController@full_delete')->name('full-delete');
         Route::post('/fast-create', 'ProductController@fast_create')->name('fast-create');
-        Route::post('/edit/common/{product}', 'ProductController@edit_common')->name('edit.common');
+
+        Route::group([
+            'prefix' => 'edit',
+            'as' => 'edit.'
+        ], function () {
+            Route::post('/common/{product}', 'ProductController@edit_common')->name('common');
+            Route::post('/description/{product}', 'ProductController@edit_description')->name('description');
+            Route::post('/dimensions/{product}', 'ProductController@edit_dimensions')->name('dimensions');
+            Route::post('/video/{product}', 'ProductController@edit_video')->name('video');
+            Route::post('/attribute/{product}', 'ProductController@edit_attribute')->name('attribute');
+            Route::post('/management/{product}', 'ProductController@edit_management')->name('management');
+            Route::post('/equivalent/{product}', 'ProductController@edit_equivalent')->name('equivalent');
+            Route::post('/related/{product}', 'ProductController@edit_related')->name('related');
+            Route::post('/bonus/{product}', 'ProductController@edit_bonus')->name('bonus');
+            Route::post('/composite/{product}', 'ProductController@edit_composite')->name('composite');
+        });
+
     }
 );
 
