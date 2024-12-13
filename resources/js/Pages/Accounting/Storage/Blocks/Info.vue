@@ -82,21 +82,13 @@
 
         </el-col>
         <el-col :span="8">
-            <div class="bg-warning/20 border border-warning rounded-md relative p-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" icon-name="lightbulb" data-lucide="lightbulb" class="lucide lucide-lightbulb w-12 h-12 text-warning/80 absolute top-0 right-0 mt-5 mr-3"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"></path></svg>
-                <h2 class="text-lg font-medium">
-                    Информация
-                </h2>
-                <div class="mt-5 font-medium"></div>
-                <div class="leading-relaxed mt-2 text-slate-600">
-                    <div><b>Название Хранилища</b> является обязательным полем.</div>
-                    <div class="mt-2">Поле <b>Slug</b> (ссылка на категорию) можно не заполнять, тогда оно заполнится автоматически. При заполнении использовать латинский алфавит.</div>
-                    <div class="mt-2">Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</div>
-                    <div class="mt-2"><b>latitude</b> и <b>longitude</b> используются для виджета карты.</div>
-                    <div class="mt-2">Поле <b>Адрес</b> используется также для отображения на карте виджета.</div>
-                </div>
-            </div>
-
+            <HelpBlock>
+                <p><b>Название Хранилища</b> является обязательным полем.</p>
+                <p class="mt-2">Поле <b>Slug</b> (ссылка на категорию) можно не заполнять, тогда оно заполнится автоматически. При заполнении использовать латинский алфавит.</p>
+                <p class="mt-2">Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</p>
+                <p class="mt-2"><b>latitude</b> и <b>longitude</b> используются для виджета карты.</p>
+                <p class="mt-2">Поле <b>Адрес</b> используется также для отображения на карте виджета.</p>
+            </HelpBlock>
         </el-col>
     </el-row>
 </template>
@@ -107,6 +99,7 @@ import {ref, reactive, defineProps} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
 import UploadImageFile from '@Comp/UploadImageFile.vue'
+import HelpBlock from "@Comp/HelpBlock.vue";
 
 const props = defineProps({
     storage: Object,

@@ -115,39 +115,20 @@
             />
         </el-col>
         <el-col :span="8">
-            <div class="bg-warning/20 border border-warning rounded-md relative p-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     icon-name="lightbulb" data-lucide="lightbulb"
-                     class="lucide lucide-lightbulb w-12 h-12 text-warning/80 absolute top-0 right-0 mt-5 mr-3">
-                    <line x1="9" y1="18" x2="15" y2="18"></line>
-                    <line x1="10" y1="22" x2="14" y2="22"></line>
-                    <path
-                        d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"></path>
-                </svg>
-                <h2 class="text-lg font-medium">
-                    Информация
-                </h2>
-                <div class="mt-5 font-medium"></div>
-                <div class="leading-relaxed mt-2 text-slate-600">
-                    <div><b>Название атрибута</b> не является уникальным полем, для несмежных категорий оно может
-                        совпадать.
-                    </div>
-                    <div>Поле <b>категория</b> привязывает атрибут к категории и его дочерним категориям.</div>
-                    <div class="mt-2">Поле <b>группа</b> позволяет сгруппировать характеристики на странице товара.
-                    </div>
-                    <div class="mt-2">Для <b>картинок</b> используйте форматы с прозрачным фоном и размером не более
-                        200х200.
-                        Рекомендуем использовать SVG-файлы
-                    </div>
+            <HelpBlock>
+                <p><b>Название атрибута</b> не является уникальным полем, для несмежных категорий оно может
+                    совпадать.</p>
+                <p>Поле <b>категория</b> привязывает атрибут к категории и его дочерним категориям.</p>
+                <p class="mt-2">Поле <b>группа</b> позволяет сгруппировать характеристики на странице товара.</p>
+                <p class="mt-2">Для <b>картинок</b> используйте форматы с прозрачным фоном и размером не более
+                    200х200. Рекомендуем использовать SVG-файлы</p>
 
-                    <div>Для типа <b>варианты</b> к каждому значению варианта атрибута предусмотрена возможность
-                        установления
-                        изображения, например для цвета. Привязать изображение к варианту можно после сохранения
-                        атрибута в режиме просмотра.
-                    </div>
-                </div>
-            </div>
+                <p>Для типа <b>варианты</b> к каждому значению варианта атрибута предусмотрена возможность
+                    установления
+                    изображения, например для цвета. Привязать изображение к варианту можно после сохранения
+                    атрибута в режиме просмотра.
+                </p>
+            </HelpBlock>
         </el-col>
     </el-row>
 </template>
@@ -159,6 +140,7 @@ import {router} from "@inertiajs/vue3";
 import UploadImageFile from '@Comp/UploadImageFile.vue'
 import Active from "@Comp/Elements/Active.vue";
 import VarianField from "@Page/Product/Attribute/Block/VarianField.vue";
+import HelpBlock from "@Comp/HelpBlock.vue";
 
 const props = defineProps({
     attribute: Object,
