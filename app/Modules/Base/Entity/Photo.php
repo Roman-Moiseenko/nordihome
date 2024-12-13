@@ -21,6 +21,8 @@ use function public_path;
  * @property string $imageable_type
  * @property string $file
  * @property string $alt
+ * @property string $title
+ * @property string $description
  * @property int $sort
  * @property string $type
  * @property bool $thumb
@@ -46,6 +48,8 @@ class Photo extends Model
         'alt',
         'type',
         'thumb',
+        'title',
+        'description',
     ];
 
     private string $urlUpload;

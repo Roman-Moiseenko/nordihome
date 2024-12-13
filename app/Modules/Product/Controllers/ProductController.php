@@ -222,47 +222,8 @@ class ProductController extends Controller
         return \response()->json($result);
     }
 
-    public function search_add(Request $request)
-    {
-        $result = [];
-        $products = $this->repository->search($request['search']);
-
-        //Применить map()
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$request->has('published') || ($request->has('published') && $product->isPublished()))
-                $result[] = $product->toArrayForSearch();
-        }
-
-        return \response()->json($result);
-    }
 
 
-    public function search_bonus(Request $request)
-    {
-        $result = [];
-        $bonus_ids = Bonus::orderBy('bonus_id')->pluck('bonus_id')->toArray();
-        $products = $this->repository->search($request['search'], 10, $bonus_ids, false);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            $result[] = $product->toArrayForSearch();
-        }
-        return \response()->json($result);
-    }
-
-    public function attr_modification(Product $product)
-    {
-        $result = [];
-        foreach ($product->prod_attributes as $attribute) {
-            if ($attribute->isVariant() && !$attribute->multiple) {
-                $result[] = [
-                    'id' => $attribute->id,
-                    'name' => $attribute->name,
-                ];
-            }
-        }
-        return \response()->json($result);
-    }
 
     public function get_images(Product $product)
     {
@@ -281,42 +242,49 @@ class ProductController extends Controller
     public function del_image(Request $request, Product $product)
     {
         $this->service->delPhoto($request, $product);
-        return \response()->json(true);
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function up_image(Request $request, Product $product)
     {
         $this->service->upPhoto($request->integer('photo_id'), $product);
-        return \response()->json(true);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function down_image(Request $request, Product $product)
     {
         $this->service->downPhoto($request->integer('photo_id'), $product);
-        return \response()->json(true);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function alt_image(Request $request, Product $product)
+    public function set_image(Request $request, Product $product)
     {
-        $this->service->altPhoto($request, $product);
-        return \response()->json(true);
+        $this->service->setPhoto($request, $product);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function move_image(Request $request, Product $product)
     {
         try {
             $this->service->movePhoto($request, $product);
-            return \response()->json(true);
+            return redirect()->back()->with('success', 'Сохранено');
         } catch (\Throwable $e) {
-            return \response()->json($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
     }
 
-    public function file_upload(Request $request, Product $product)
+    public function add_image(Request $request, Product $product)
     {
-        $this->service->addPhoto($request, $product);
-        return \response()->json(true);
+        try {
+            $photo = $this->service->addPhoto($request, $product);
+            return \response()->json([
+                'id' => $photo->id,
+                'url' => $photo->getUploadUrl(),
+            ]);
+        } catch (\Throwable $e) {
+            return \response()->json($e->getMessage());
+        }
     }
 
 

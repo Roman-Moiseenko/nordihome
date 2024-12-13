@@ -131,14 +131,19 @@ Route::group(
         Route::resource('modification', 'ModificationController'); //CRUD
         Route::resource('series', 'SeriesController')->except(['create', 'edit']); //CRUD
 
+        Route::group([
+            'prefix' => 'image',
+            'as' => 'image.',
+        ], function (){
+            Route::post('/add/{product}', 'ProductController@add_image')->name('add');
+            Route::post('/get/{product}', 'ProductController@get_images')->name('get');
+            Route::delete('/del/{product}', 'ProductController@del_image')->name('del');
+            Route::post('/up/{product}', 'ProductController@up_image')->name('up');
+            Route::post('/down/{product}', 'ProductController@down_image')->name('down');
+            Route::post('/set/{product}', 'ProductController@set_image')->name('set');
+            Route::post('/move/{product}', 'ProductController@move_image')->name('move');
+        });
 
-        Route::post('/{product}/file-upload', 'ProductController@file_upload')->name('file-upload');
-        Route::post('/{product}/get-images', 'ProductController@get_images')->name('get-images');
-        Route::post('/{product}/del-image', 'ProductController@del_image')->name('del-image');
-        Route::post('/{product}/up-image', 'ProductController@up_image')->name('up-image');
-        Route::post('/{product}/down-image', 'ProductController@down_image')->name('down-image');
-        Route::post('/{product}/alt-image', 'ProductController@alt_image')->name('alt-image');
-        Route::post('/{product}/move-image', 'ProductController@move_image')->name('move-image');
         Route::post('/search', 'ProductController@search')->name('search');
         Route::post('/search-add', 'ProductController@search_add')->name('search-add');
         Route::post('/search_bonus', 'ProductController@search_bonus')->name('search-bonus');

@@ -9,7 +9,9 @@
     <link rel="icon" href="  Vite::asset('resources/images/admin/192x192.png')}}" size="192x192">
     <link rel="apple-touch-icon" href="  Vite::asset('resources/images/admin/180x180.png')}}" size="180x180"-->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.2/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/4.0.0/vuedraggable.umd.min.js"></script>
     <!--script src="//cdn.jsdelivr.net/npm/@element-plus/icons-vue"></script-->
     <title inertia>{{ 'NORDI HOME - CRM' }}</title>
     @routes

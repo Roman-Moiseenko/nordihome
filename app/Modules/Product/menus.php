@@ -6,8 +6,8 @@ return [
         'icon' => 'store',
         'title' => 'Магазин',
         'can' => 'product',
-        //'vue' => true,
-        //'font_awesome' => 'fa-light shop',
+        'vue' => true,
+        'font_awesome' => 'fa-light shop',
         'sub_menu' => [
             'product' => [
                 'icon' => 'package-open',

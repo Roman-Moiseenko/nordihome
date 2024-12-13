@@ -651,16 +651,20 @@ class ProductService
     }
 
     ///Работа с Фото Продукта
-    public function addPhoto(Request $request, Product $product): void
+    public function addPhoto(Request $request, Product $product): Photo
     {
         if (empty($file = $request->file('file'))) throw new \DomainException('Нет файла');
         $sort = count($product->photos);
-        $product->photo()->save(Photo::upload($file, '', $sort));
+        $photo = Photo::upload($file, '', $sort);
+        $product->photo()->save($photo);
+        $photo->refresh();
+        return $photo;
     }
 
     public function delPhoto(Request $request, Product $product): void
     {
-        $photo = Photo::find($request['photo_id']);
+        //return;
+        $photo = Photo::find($request->integer('photo_id'));
         $photo->delete();
         foreach ($product->photos as $i => $photo) {
             $photo->update(['sort' => $i]);
@@ -684,7 +688,6 @@ class ProductService
         }
     }
 
-
     public function downPhoto(int $photo_id, Product $product): void
     {
         /** @var Photo[] $photos */
@@ -706,27 +709,24 @@ class ProductService
     public function movePhoto(Request $request, Product $product): void
     {
         $new_sort = $request->input('new_sort');
-        /** @var Photo[] $photos */
-        $photos = $product->photos()->getModels();
-        foreach ($new_sort as $new => $old) {
-            if ($new != (int)$old) {
-                foreach ($photos as $photo) {
-                    if ($photo->sort == (int)$old) {
-                        Photo::where('id', $photo->id)->update(['sort' => $new]);
-                    }
-                }
-            }
+
+        foreach ($new_sort as $i => $id) {
+            $photo = Photo::find($id);
+            $photo->sort = $i;
+            $photo->save();
         }
     }
 
-
-    public function altPhoto(Request $request, Product $product): void
+    public function setPhoto(Request $request, Product $product): void
     {
         $id = $request->integer('photo_id');
-        $alt = $request->string('alt')->trim()->value();
         foreach ($product->photos as $photo) {
             if ($photo->id === $id) {
-                $photo->update(['alt' => $alt]);
+                $photo->update([
+                    'alt' => $request->string('alt')->trim()->value(),
+                    'title' => $request->string('title')->trim()->value(),
+                    'description' => $request->string('description')->trim()->value(),
+                ]);
             }
         }
     }

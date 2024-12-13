@@ -5,6 +5,7 @@ namespace App\Modules\Product\Repository;
 
 
 use App\Modules\Accounting\Entity\StorageItem;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
@@ -171,6 +172,16 @@ class ProductRepository
                     'code' => $product->code,
                     'image' => $product->getImage('mini'),
                     'quantity' => $product->pivot->quantity,
+                ];
+            }),
+            'photos' => $product->photos()->get()->map(function (Photo $photo) {
+                return [
+                    'id' => $photo->id,
+                    'name' => $photo->file,
+                    'url' => $photo->getThumbUrl('original'),
+                    'alt' => $photo->alt,
+                    'title' => $photo->title,
+                    'description' => $photo->description,
                 ];
             }),
         ]);
