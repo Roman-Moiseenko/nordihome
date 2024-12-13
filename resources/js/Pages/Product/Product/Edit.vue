@@ -48,6 +48,7 @@
                 />
                 <PanelEquivalent :product="product"
                                  :errors="errors"
+                                 :equivalents="equivalents"
                 />
                 <PanelRelated :product="product"
                               :errors="errors"
@@ -97,6 +98,7 @@ const props = defineProps({
     distributors: Array,
     dimensions: Array,
     frequencies: Array,
+    equivalents: Array,
     title: {
         type: String,
         default: 'Редактирование товара',

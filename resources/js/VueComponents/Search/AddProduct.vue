@@ -118,6 +118,10 @@ const props = defineProps({
         default: false,
         type: Boolean
     },
+    preserveState: {
+        default: false,
+        type: Boolean
+    }
 })
 const width = computed<String>( () => 'width: ' + props.width + 'px;')
 interface ListItem {
@@ -165,7 +169,7 @@ function onAdd() {
         method: "post",
         data: form,
         preserveScroll: true,
-        preserveState: false,
+        preserveState: props.preserveState,
         onSuccess: page => {
             form.product_id = null
             form.quantity = 1

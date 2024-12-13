@@ -14,6 +14,8 @@ use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Product\Entity\Attribute;
+use App\Modules\Product\Entity\Bonus;
+use App\Modules\Product\Entity\Composite;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
@@ -494,18 +496,18 @@ class ProductService
 
     public function editAttribute(Product $product, Request $request): void
     {
-        DB::transaction(function () use ($product, $request){
+        DB::transaction(function () use ($product, $request) {
             $product->prod_attributes()->detach();
             foreach ($request->input('attributes') as $item) {
                 $attribute = Attribute::find($item['id']);
 
                 $value = null;
                 if (!isset($item['value'])) {
-                    if($attribute->isBool()) $value = false;
-                    if($attribute->isNumeric()) $value = 0;
+                    if ($attribute->isBool()) $value = false;
+                    if ($attribute->isNumeric()) $value = 0;
                     if ($attribute->isString()) $value = '';
                 } else {
-                    if($attribute->isNumeric()) {
+                    if ($attribute->isNumeric()) {
                         $value = (float)$item['value'];
                     } else {
                         $value = $item['value'];
@@ -546,43 +548,84 @@ class ProductService
         }
     }
 
-    public
-    function editModification(Product $product, Request $request): void
+    public function editEquivalent(Product $product, Request $request): void
     {
+        $equivalent_id = $request->integer('equivalent_id');
 
+        if ($equivalent_id == 0 && !is_null($product->equivalent)) {
+            $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+        }
+        if ($equivalent_id != 0) {
+            if (is_null($product->equivalent)) {
+                $this->equivalentService->addProductByIds($equivalent_id, $product->id);
+            } elseif ($equivalent_id !== $product->equivalent->id) {
+                $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+                $this->equivalentService->addProductByIds($equivalent_id, $product->id);
+            }
+        }
         $product->save();
     }
 
-    public
-    function editEquivalent(Product $product, Request $request): void
+    public function editRelated(Product $product, Request $request): void
     {
-
+        $product_id = $request->integer('product_id');
+        if ($request->string('action')->value() == 'remove') {
+            $product->related()->detach($product_id);
+        } else {
+            if ($product->isRelated($product_id)) throw new \DomainException('Товар уже добавлен в Аксессуары');
+            $product->related()->attach($product_id);
+        }
         $product->save();
     }
 
-    public
-    function editRelated(Product $product, Request $request): void
+    public function editBonus(Product $product, Request $request): void
     {
-
-        $product->save();
+        $product_id = $request->integer('product_id');
+        $action = $request->string('action')->value();
+        if (empty($action)) {
+            if ($product->id === $product_id) throw new \DomainException('Товар совпадает с текущим');
+            if ($product->isBonus($product_id)) throw new \DomainException('Товар уже добавлен в Бонусные');
+            $bonus = Bonus::where('bonus_id', $product_id)->first();
+            if (!is_null($bonus)) throw new \DomainException('Товар уже назначен бонусным у товара ' . $bonus->product->name);
+            $bonus_add = Product::find($product_id);
+            $product->bonus()->attach($product_id, ['discount' => $bonus_add->getPriceRetail()]);
+        }
+        if ($action == 'remove') {
+            $product->bonus()->detach($product_id);
+        }
+        if ($action == 'edit') {
+            foreach ($request->input('bonus') as $item) {
+                $product->bonus()->updateExistingPivot($item['id'], ['discount' => (int)$item['discount']]);
+            }
+        }
     }
 
-    public
-    function editBonus(Product $product, Request $request): void
+    public function editComposite(Product $product, Request $request): void
     {
+        $product_id = $request->integer('product_id');
+        $action = $request->string('action')->value();
 
-        $product->save();
+
+        if (empty($action)) {
+            if ($product->id == $product_id) throw new \DomainException('Товар совпадает с текущим');
+            if ($product->isComposite($product_id)) throw new \DomainException('Товар уже добавлен в Составной');
+
+            if (!is_null(Composite::where('child_id', $product->id)->first()))
+                throw new \DomainException('Текущий товар уже является составным');
+            $quantity = $request->integer('quantity');
+            $product->composites()->attach($product_id, ['quantity' => $quantity]);
+        }
+        if ($action == 'remove') {
+            $product->composites()->detach($product_id);
+        }
+        if ($action == 'edit') {
+            foreach ($request->input('composite') as $item) {
+                $product->composites()->updateExistingPivot($item['id'], ['quantity' => $item['quantity']]);
+            }
+        }
     }
 
-    public
-    function editComposite(Product $product, Request $request): void
-    {
-
-        $product->save();
-    }
-
-    private
-    function tags($tags, Product &$product): void
+    private function tags($tags, Product &$product): void
     {
         if (empty($tags)) return;
         foreach ($tags as $index => $tag_id) {
@@ -595,8 +638,7 @@ class ProductService
         }
     }
 
-    private
-    function series(Request $request, Product &$product): void
+    private function series(Request $request, Product &$product): void
     {
         if (empty($_series = $request['series_id'])) return;
         if (is_array($_series)) $_series = $_series[0]; //Если массив, берем первый элемент
@@ -609,16 +651,14 @@ class ProductService
     }
 
     ///Работа с Фото Продукта
-    public
-    function addPhoto(Request $request, Product $product): void
+    public function addPhoto(Request $request, Product $product): void
     {
         if (empty($file = $request->file('file'))) throw new \DomainException('Нет файла');
         $sort = count($product->photos);
         $product->photo()->save(Photo::upload($file, '', $sort));
     }
 
-    public
-    function delPhoto(Request $request, Product $product): void
+    public function delPhoto(Request $request, Product $product): void
     {
         $photo = Photo::find($request['photo_id']);
         $photo->delete();
@@ -627,8 +667,7 @@ class ProductService
         }
     }
 
-    public
-    function upPhoto(int $photo_id, Product $product): void
+    public function upPhoto(int $photo_id, Product $product): void
     {
         $photos = [];
         foreach ($product->photos as $i => $photo) {
@@ -646,8 +685,7 @@ class ProductService
     }
 
 
-    public
-    function downPhoto(int $photo_id, Product $product): void
+    public function downPhoto(int $photo_id, Product $product): void
     {
         /** @var Photo[] $photos */
         $photos = [];
@@ -665,8 +703,7 @@ class ProductService
         }
     }
 
-    public
-    function movePhoto(Request $request, Product $product): void
+    public function movePhoto(Request $request, Product $product): void
     {
         $new_sort = $request->input('new_sort');
         /** @var Photo[] $photos */
@@ -683,8 +720,7 @@ class ProductService
     }
 
 
-    public
-    function altPhoto(Request $request, Product $product): void
+    public function altPhoto(Request $request, Product $product): void
     {
         $id = $request->integer('photo_id');
         $alt = $request->string('alt')->trim()->value();
@@ -695,8 +731,7 @@ class ProductService
         }
     }
 
-    public
-    function published(Product $product): void
+    public function published(Product $product): void
     {
         //TODO Проверка на заполнение и на модерацию - добавить другие проверки
         if ($product->getPriceRetail() == 0) throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
@@ -707,14 +742,12 @@ class ProductService
         $product->setPublished();
     }
 
-    public
-    function draft(Product $product): void
+    public function draft(Product $product): void
     {
         $product->setDraft();
     }
 
-    public
-    function action(string $action, array $ids): void
+    public function action(string $action, array $ids): void
     {
         if (empty($ids)) throw new \DomainException('Не выбраны товары');
         if (empty($action)) throw new \DomainException('Не выбрано действие');
@@ -729,7 +762,6 @@ class ProductService
 
             if ($action == 'remove') $this->destroy($product);
         }
-
     }
 
     /**
@@ -737,8 +769,7 @@ class ProductService
      * вызывать при изменении одно параметра: цена в Икеа, коэф.наценки, коэф-ты для товаров (хруп., санкцц.)
      */
 
-    public
-    function setCostProductIkea(int $product_id, string $founded, bool $event = true): void
+    public function setCostProductIkea(int $product_id, string $founded, bool $event = true): void
     {
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -769,14 +800,12 @@ class ProductService
         if ($event) event(new ParserPriceHasChange($product->parser));
     }
 
-    public
-    function updateCostAllProductsIkea(): void
+    public function updateCostAllProductsIkea(): void
     {
         $products = Product::where('published', true)->where('not_sale', false)->pluck('id')->toArray();
         foreach ($products as $product_id) {
             $this->setCostProductIkea($product_id, 'Изменение коэффициентов наценки', false);
         }
     }
-
 
 }

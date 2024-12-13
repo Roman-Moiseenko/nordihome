@@ -39,7 +39,6 @@ class ProductRepository
             if ($show == 'not_sale') $query->where('not_sale', true);
         }
 
-
         if (count($filters) > 0) $filters['count'] = count($filters);
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
@@ -134,13 +133,53 @@ class ProductRepository
                     ];
                 }),
             ],
+            'equivalent' => is_null($product->equivalent_product) ? null : [
+                'id' => $product->equivalent_product->equivalent_id,
+                'name' => $product->equivalent->name,
+                'products' => $product->equivalent->products()->get()->map(function (Product $product) {
+                    return [
+                        'id' => $product->id,
+                        'code' => $product->code,
+                        'name' => $product->name,
+                        'image' => $product->getImage('mini'),
+                    ];
+                }),
+            ],
+            'related' => $product->related()->get()->map(function (Product $product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'code' => $product->code,
+                    'image' => $product->getImage('mini'),
+                ];
+            }),
+
+            'bonus' => is_null($product->bonus) ? null : $product->bonus()->get()->map(function (Product $product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'code' => $product->code,
+                    'image' => $product->getImage('mini'),
+                    'price' => $product->getPriceRetail(),
+                    'discount' => $product->pivot->discount,
+                ];
+            }),
+            'composite' => is_null($product->composites) ? null : $product->composites()->get()->map(function (Product $product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'code' => $product->code,
+                    'image' => $product->getImage('mini'),
+                    'quantity' => $product->pivot->quantity,
+                ];
+            }),
         ]);
     }
 
 
     public function search(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true): array
     {
-        $query = Product::orderBy('name')->where(function ($query) use ($search) {
+        $query = Product::orderBy('name')->where('deleted_at', null)->where(function ($query) use ($search) {
             $query->where('code_search', 'LIKE', "%$search%")->orWhere('code', 'LIKE', "%$search%")
                 ->orWhereRaw("LOWER(name) like LOWER('%$search%')");
         });

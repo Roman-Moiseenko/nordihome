@@ -6,7 +6,6 @@
                 <span> Модификации</span>
             </span>
         </template>
-        <!-- el-checkbox v-model="autoSave" :checked="autoSave">Автосохранение</el-checkbox -->
         <el-row :gutter="10" class="mt-2">
             <!-- Колонка 1 -->
             <el-col :span="6">
@@ -39,50 +38,17 @@
                     </div>
                 </div>
             </el-col>
-
         </el-row>
-        <el-button v-if="!autoSave" type="primary" @click="onSave" class="mt-3">Сохранить</el-button>
-
     </el-tab-pane>
 </template>
 
 <script setup lang="ts">
-import {reactive, ref, defineProps } from "vue"
-import {router, Link} from "@inertiajs/vue3"
+import { defineProps } from "vue"
+import {Link} from "@inertiajs/vue3"
 
 const props = defineProps({
     product: Object,
     errors: Object,
 })
-const autoSave = ref(true)
-const isSaving = ref(false)
-const form = reactive({
-    field: props.product.field
-})
-console.log(props.product)
-function onAutoSave() {
-    if (autoSave.value === false) return;
-    onSave()
-}
-function onSave() {
-    isSaving.value = true;
-    router.visit(route('admin.product.edit.modification', {product: props.product.id}), {
-        method: "post",
-        data: form,
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: page => {
-            isSaving.value = false
-        },
-        onError: page => {
-            isSaving.value = false
-
-        },
-    })
-}
 
 </script>
-
-<style scoped>
-
-</style>
