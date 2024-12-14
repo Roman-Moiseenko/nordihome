@@ -213,16 +213,35 @@ class ProductController extends Controller
 
     public function search(Request $request): JsonResponse
     {
+       //return \response()->json(true);
         $result = [];
-        $products = $this->repository->search($request['search']);
-        /** @var Product $product */
-        foreach ($products as $product) {
-            $result[] = $product->toArrayForSearch();
+
+        try {
+            $products = $this->repository->search($request['search']);
+            /** @var Product $product */
+            foreach ($products as $product) {
+                $result[] = $product->toArrayForSearch();
+            }
+            return \response()->json($result);
+        } catch (\Throwable $e) {
+            return \response()->json(['error' => $e->getMessage(),]);
         }
-        return \response()->json($result);
     }
 
+    public function search_add(Request $request)
+    {
+        $result = [];
+        $products = $this->repository->search($request['search']);
 
+        //Применить map()
+        /** @var Product $product */
+        foreach ($products as $product) {
+            if (!$request->has('published') || ($request->has('published') && $product->isPublished()))
+                $result[] = $product->toArrayForSearch();
+        }
+
+        return \response()->json($result);
+    }
 
 
     public function get_images(Product $product)

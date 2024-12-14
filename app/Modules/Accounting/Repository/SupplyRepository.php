@@ -68,6 +68,7 @@ class SupplyRepository extends AccountingRepository
     {
         return array_merge($document->toArray(), [
             'quantity' => $document->getQuantity(),
+            'positions' => $document->products()->count(),
             'amount' => $document->getAmount(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'currency' => $document->distributor->currency->sign,

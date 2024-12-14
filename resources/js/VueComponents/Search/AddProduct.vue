@@ -137,9 +137,13 @@ const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
         axios.post(props.search, {search: query}).then(response => {
+            console.log('responser', response)
             if (response.data.error !== undefined) console.log(response.data.error)
+
             options.value = response.data
             loading.value = false
+        }).catch(reason => {
+            console.log('reason', reason)
         });
     } else {
         options.value = []

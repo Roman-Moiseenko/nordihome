@@ -27,7 +27,9 @@
     </template>
     <AccountingOnBased :based="supply.based" :founded="supply.founded" />
     <span class="ml-auto">
-        Сумма <el-tag type="danger" size="large">{{ func.price(supply.amount, supply.currency) }}</el-tag>
+        Позиций <el-tag type="primary" effect="dark" size="large">{{ supply.positions }}</el-tag>
+        Товаров <el-tag type="warning" effect="dark" size="large">{{ supply.quantity }} шт</el-tag>
+        Сумма <el-tag type="danger" effect="dark" size="large">{{ func.price(supply.amount, supply.currency) }}</el-tag>
     </span>
 
     <!--Возврат-->
