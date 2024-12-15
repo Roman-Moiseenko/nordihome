@@ -184,7 +184,7 @@ abstract class AccountingDocument extends Model
         $this->number = $document['number'] ?? '';
         $this->created_at = $document['created_at'];
         $this->incoming_number = $document['incoming_number'] ?? '';
-        $this->incoming_at = $document['incoming_at'];
+        $this->incoming_at = $document['incoming_at'] ?? null;
         $this->comment = $document['comment'] ?? '';
     }
 

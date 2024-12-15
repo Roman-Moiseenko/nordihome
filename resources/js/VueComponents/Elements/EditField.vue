@@ -1,5 +1,5 @@
 <template>
-    <div v-show="!showEdit">
+    <div v-show="!showEdit" class="flex">
         <template v-if="isFIO">
             {{ func.fullName(field) }}
         </template>
@@ -7,24 +7,21 @@
             {{ field }}
         </template>
 
-        <el-button class="ml-2" type="warning" size="small" @click.stop="showEdit = true">
+        <el-button class="ml-auto" type="warning" plain size="small" @click.stop="showEdit = true">
             <i class="fa-light fa-pen-to-square"></i>
         </el-button>
     </div>
-    <div v-show="showEdit">
-        <template v-if="isFIO">
-            <el-input v-model="field_fio.surname" style="width: 120px;" @click.stop=""/>
-            <el-input v-model="field_fio.firstname" style="width: 100px;" @click.stop=""/>
-            <el-input v-model="field_fio.secondname" style="width: 120px;" class="mr-2" @click.stop=""/>
-        </template>
-        <template v-else>
-            <el-input v-model="field_new" style="width: 220px;" class="mr-2" :formatter="formatter" @click.stop=""/>
-        </template>
+    <div v-show="showEdit" class="flex">
+            <el-input v-if="isFIO" v-model="field_fio.surname"  @click.stop=""/>
+            <el-input v-if="isFIO" v-model="field_fio.firstname"  @click.stop=""/>
+            <el-input v-if="isFIO" v-model="field_fio.secondname"  class="mr-2" @click.stop=""/>
 
-        <el-button type="success" size="small" @click.stop="saveField">
+            <el-input v-if="!isFIO" v-model="field_new" class="mr-2" :formatter="formatter" @click.stop=""/>   <!--  style="width: 220px;"-->
+
+        <el-button type="success" size="small" @click.stop="saveField" class="my-auto">
             <i class="fa-light fa-floppy-disk"></i>
         </el-button>
-        <el-button type="info" size="small" @click.stop="showEdit = false" style="margin-left: 4px">
+        <el-button type="info" size="small" @click.stop="showEdit = false" style="margin-left: 4px" class="my-auto">
             <i class="fa-light fa-xmark"></i>
         </el-button>
     </div>
@@ -57,7 +54,6 @@ function saveField(){
     } else {
         $emit('update:field', field_new.value)
     }
-
 
 }
 </script>

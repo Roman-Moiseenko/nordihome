@@ -4,6 +4,7 @@ namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\DistributorProduct;
+use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -64,10 +65,25 @@ class DistributorRepository
     public function DistributorWithToArray(Distributor $distributor, Request $request): array
     {
         return array_merge(
+
             $this->DistributorToArray($distributor),
             [
                 'organizations' => $distributor->organizations,
                 'contacts' => is_null($distributor->organization) ? [] : $distributor->organization->contacts,
+                'supplies' => array_filter(array_map(
+                    function (SupplyDocument $supply) {
+                        if ($supply->getAmount() == $supply->getPayment()) return false;
+                        return [
+                            'id' => $supply->id,
+                            'debt' => $supply->getAmount() - $supply->getPayment(),
+                            'created_at' => $supply->created_at,
+                            'number' => $supply->number,
+                        ];
+                    },
+                    $distributor->supplies()->where('completed', true)->getModels()
+                )),
+
+
                 /*'products' => $distributor->products()
                     ->paginate($request->input('size', 20))
                     ->withQueryString()
@@ -87,13 +103,13 @@ class DistributorRepository
 
     public function ProductToArray(DistributorProduct $product): array
     {
-        return  [
+        return [
             'id' => $product->product_id,
             'name' => $product->product->name,
             'code' => $product->product->code,
             'quantity' => $product->product->getQuantity(),
             'reserve' => $product->product->getQuantityReserve(),
-            'balance' =>$product->product->balance,
+            'balance' => $product->product->balance,
             'price_retail' => $product->product->getPriceRetail(),
             'cost' => $product->cost,
             'pre_cost' => $product->pre_cost,

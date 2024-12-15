@@ -192,8 +192,13 @@ class SupplyService
      */
     public function setInfo(SupplyDocument $supply, \Illuminate\Http\Request $request): void
     {
+        //dd($request->all());
         $supply->baseSave($request->input('document'));
-        $supply->exchange_fix = $request->input('exchange_fix');
+        if ($request->boolean('currency')) {
+            $supply->exchange_fix = $supply->currency->exchange;
+        } else {
+            $supply->exchange_fix = $request->input('exchange_fix');
+        }
         $supply->save();
     }
     ///<===============

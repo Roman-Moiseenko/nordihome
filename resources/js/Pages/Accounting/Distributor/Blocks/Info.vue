@@ -5,14 +5,20 @@
                 <el-descriptions-item label="Поставщик">
                     <EditField :field="distributor.name" @update:field="setInfo"/>
                 </el-descriptions-item>
+                <el-descriptions-item label="Иностранный">
+                    <Active :active="distributor.foreign" /> {{ distributor.currency.name }}
+                </el-descriptions-item>
                 <el-descriptions-item label="Текущий долг">
                     <el-tag :type="distributor.debit > 0 ? 'danger' : 'success'" size="large">
                     {{ func.price(distributor.debit, distributor.currency.sign) }}
                     </el-tag>
+                    <div v-for="supply in distributor.supplies" class="mt-1">
+                        <Link type="primary" :href="route('admin.accounting.supply.show', {supply: supply.id})">
+                            Заказ №{{ supply.number }} от {{ func.date(supply.created_at)}}
+                        </Link> <el-tag :type="supply.debt > 0 ? 'danger' : 'success'">{{ func.price(supply.debt, distributor.currency.sign) }}</el-tag>
+                    </div>
                 </el-descriptions-item>
-                <el-descriptions-item label="Иностранный">
-                    <Active :active="distributor.foreign" /> {{ distributor.currency.name }}
-                </el-descriptions-item>
+
             </el-descriptions>
             <!-- //TODO Кол-во заказов, Сумма по всем заказам, Сумма всех платежей ??? Переходы на документы с фильтром по поставщику (Заказы, Платежи) -->
             <div class="mt-auto">

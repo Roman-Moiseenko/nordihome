@@ -17,7 +17,11 @@
                   :row-class-name="tableRowClassName"
                   style="width: 100%;">
             <el-table-column prop="product.code" label="Артикул" width="160" />
-            <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
+            <el-table-column prop="product.name" label="Товар" show-overflow-tooltip>
+                <template #default="scope">
+                    <ProductRename :product="scope.row.product" />
+                </template>
+            </el-table-column>
             <el-table-column prop="cost_currency" label="Цена" width="180">
                 <template #default="scope">
                     <el-input v-model="scope.row.cost_currency"
@@ -80,6 +84,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Pagination from '@Comp/Pagination.vue'
 import ArrivalInfo from './Blocks/Info.vue'
 import ArrivalActions from './Blocks/Actions.vue'
+import ProductRename from "@Comp/Product/Rename.vue"
 
 const props = defineProps({
     arrival: Object,
@@ -123,5 +128,8 @@ function setItem(row: any) {
 }
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.arrival.del-product', {product: row.id}));
+}
+function saveNameProduct(val) {
+    router
 }
 </script>

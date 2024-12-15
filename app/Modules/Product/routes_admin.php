@@ -122,7 +122,7 @@ Route::group(
         });
 
 
-
+        //resource
         Route::resource('brand', 'BrandController'); //CRUD
         Route::resource('category', 'CategoryController'); //CRUD
         Route::resource('attribute', 'AttributeController'); //CRUD
@@ -131,6 +131,7 @@ Route::group(
         Route::resource('modification', 'ModificationController'); //CRUD
         Route::resource('series', 'SeriesController')->except(['create', 'edit']); //CRUD
 
+        //PRODUCT
         Route::group([
             'prefix' => 'image',
             'as' => 'image.',
@@ -143,17 +144,6 @@ Route::group(
             Route::post('/set/{product}', 'ProductController@set_image')->name('set');
             Route::post('/move/{product}', 'ProductController@move_image')->name('move');
         });
-
-        Route::post('/search', 'ProductController@search')->name('search');
-        Route::post('/search-add', 'ProductController@search_add')->name('search-add');
-        Route::post('/search_bonus', 'ProductController@search_bonus')->name('search-bonus');
-        Route::post('/{product}/attr-modification', 'ProductController@attr_modification')->name('attr-modification');
-        Route::post('/toggle/{product}', 'ProductController@toggle')->name('toggle');
-        Route::post('/sale/{product}', 'ProductController@sale')->name('sale');
-        Route::post('/restore/{id}', 'ProductController@restore')->name('restore');
-        Route::delete('/full-delete/{id}', 'ProductController@full_delete')->name('full-delete');
-        Route::post('/fast-create', 'ProductController@fast_create')->name('fast-create');
-
         Route::group([
             'prefix' => 'edit',
             'as' => 'edit.'
@@ -169,6 +159,17 @@ Route::group(
             Route::post('/bonus/{product}', 'ProductController@edit_bonus')->name('bonus');
             Route::post('/composite/{product}', 'ProductController@edit_composite')->name('composite');
         });
+
+        Route::post('/rename/{product}', 'ProductController@rename')->name('rename');
+        Route::post('/search', 'ProductController@search')->name('search');
+        Route::post('/search-add', 'ProductController@search_add')->name('search-add');
+        Route::post('/search_bonus', 'ProductController@search_bonus')->name('search-bonus');
+        Route::post('/attr-modification/{product}', 'ProductController@attr_modification')->name('attr-modification');
+        Route::post('/toggle/{product}', 'ProductController@toggle')->name('toggle');
+        Route::post('/sale/{product}', 'ProductController@sale')->name('sale');
+        Route::post('/restore/{id}', 'ProductController@restore')->name('restore');
+        Route::delete('/full-delete/{id}', 'ProductController@full_delete')->name('full-delete');
+        Route::post('/fast-create', 'ProductController@fast_create')->name('fast-create');
 
     }
 );

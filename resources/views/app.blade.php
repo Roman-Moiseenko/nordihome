@@ -11,7 +11,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.2/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/4.0.0/vuedraggable.umd.min.js"></script>
     <!--script src="//cdn.jsdelivr.net/npm/@element-plus/icons-vue"></script-->
     <title inertia>{{ 'NORDI HOME - CRM' }}</title>
     @routes

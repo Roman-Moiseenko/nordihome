@@ -98,3 +98,34 @@ a[type="info"] {
         padding: 0 2px !important;
     }
 }
+.circle {
+    position: relative;
+    margin-right: 16px;
+    &:before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    &.red:before {
+        background: var(--el-color-danger-dark-2);
+    }
+    &.green:before {
+        background: var(--el-color-success-dark-2);
+    }
+    &.empty:before {
+        border: 1px solid rgb(var(--color-slate-400));
+        background: #fff;
+    }
+    &.warning:before {
+        background: var(--el-color-warning-dark-2);
+    }
+}
+
+
+

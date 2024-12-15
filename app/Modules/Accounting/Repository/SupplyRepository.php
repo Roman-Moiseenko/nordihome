@@ -72,6 +72,7 @@ class SupplyRepository extends AccountingRepository
             'amount' => $document->getAmount(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'currency' => $document->distributor->currency->sign,
+
             'distributor_name' => $document->distributor->name,
             'date' => $document->htmlDate(),
             'status_pay' => ($document->getAmount() == 0) ? 0 : round($document->getPayment() / $document->getAmount(), 1),
@@ -82,6 +83,7 @@ class SupplyRepository extends AccountingRepository
     public function SupplyWithToArray(SupplyDocument $document, Request $request): array
     {
         $withData = [
+            'currency_exchange' => $document->distributor->currency->exchange,
             'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'arrivals' => $document->arrivals()->get()->map(function (ArrivalDocument $document) {

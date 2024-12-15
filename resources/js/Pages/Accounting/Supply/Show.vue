@@ -19,17 +19,9 @@
                       :row-class-name="tableRowClassName"
             >
                 <el-table-column prop="product.code" label="Артикул" width="160" />
-                <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
-                <el-table-column prop="cost_currency" label="Закупочная" width="180">
+                <el-table-column prop="product.name" label="Товар" >
                     <template #default="scope">
-                        <el-input v-model="scope.row.cost_currency"
-                                  :formatter="(value) => func.MaskFloat(value)"
-                                  @change="setItem(scope.row)"
-                                  :disabled="iSaving"
-                                  :readonly="!isEdit"
-                        >
-                            <template #append>{{ supply.currency }}</template>
-                        </el-input>
+                        <ProductRename :product="scope.row.product" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="quantity" label="Кол-во" width="180">
@@ -41,6 +33,18 @@
 
                         >
                             <template #append>шт</template>
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="cost_currency" label="Закупочная" width="180">
+                    <template #default="scope">
+                        <el-input v-model="scope.row.cost_currency"
+                                  :formatter="(value) => func.MaskFloat(value)"
+                                  @change="setItem(scope.row)"
+                                  :disabled="iSaving"
+                                  :readonly="!isEdit"
+                        >
+                            <template #append>{{ supply.currency }}</template>
                         </el-input>
                     </template>
                 </el-table-column>
@@ -78,6 +82,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import SupplyInfo from './Blocks/Info.vue'
 import SupplyActions from './Blocks/Actions.vue'
 import Pagination from '@Comp/Pagination.vue'
+import ProductRename from "@Comp/Product/Rename.vue";
 
 
 

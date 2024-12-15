@@ -84,6 +84,7 @@ function setItem() {
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
+            isEdit.value = false
             iSaving.value = false;
         }
     })

@@ -47,7 +47,8 @@ class ProductController extends Controller
         CategoryRepository $categories,
     )
     {
-        $this->middleware(['auth:admin', 'can:product']);
+        $this->middleware(['auth:admin']);
+        $this->middleware(['can:product'])->except(['rename']);
         $this->service = $service;
         $this->options = $options;
         $this->repository = $repository;
@@ -75,7 +76,7 @@ class ProductController extends Controller
 
     }
 
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         return Inertia::render('Product/Product/Create', [
             'categories' => $this->categories->forFilters(),
@@ -116,12 +117,14 @@ class ProductController extends Controller
         return response()->json($product->id);
     }
 
-    public function show(Product $product)
+    public function show(Product $product): Response
     {
-        return view('admin.product.product.show', compact('product'));
+        return Inertia::render('Product/Product/Show', [
+            'product' => $product
+        ]);
     }
 
-    public function edit(Product $product)
+    public function edit(Product $product): Response
     {
         return Inertia::render('Product/Product/Edit', [
             'product' => $this->repository->ProductWithToArray($product),
@@ -145,6 +148,13 @@ class ProductController extends Controller
                 ->getModels(),
         ]);
 
+    }
+
+    public function rename(Product $product, Request $request): RedirectResponse
+    {
+        //Переименование товара для всех
+        $product->update(['name' => $request->string('name')->trim()->value()]);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     #[Deprecated]
