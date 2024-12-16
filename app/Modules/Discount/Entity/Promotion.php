@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Entity;
 
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Traits\IconField;
+use App\Modules\Base\Traits\ImageField;
 use App\Modules\Page\Entity\DataWidget;
 use App\Modules\Page\Entity\DataWidgetInterface;
 use App\Modules\Product\Entity\Group;
@@ -21,8 +23,6 @@ use JetBrains\PhpStorm\Deprecated;
  * @property string $condition_url //Ссылка на страницу с условиями и правилами
  * @property Carbon $start_at
  * @property Carbon $finish_at
- * @property Photo $image
- * @property \App\Modules\Base\Entity\Photo $icon
  * @property bool $menu
  * @property bool $show_title //Показывать заголовок акции на карточках
  * @property string $title
@@ -34,37 +34,21 @@ use JetBrains\PhpStorm\Deprecated;
  */
 class Promotion extends Model implements DataWidgetInterface
 {
+    use ImageField, IconField;
 
     const STATUS_DRAFT = 101;
     const STATUS_WAITING = 102;
     const STATUS_STARTED = 103;
     const STATUS_FINISHED = 104;
+    const STATUSES = [
+        self::STATUS_DRAFT => 'Черновик',
+        self::STATUS_WAITING => 'В ожидании',
+        self::STATUS_STARTED => 'Запущена',
+        self::STATUS_FINISHED => 'Завершена',
+    ];
 
     const TYPE = 'Акция';
 
-  /*  private array $observers = [];
-
-
-    public function attach(Observer $observer)
-    {
-        $this->observers[] = $observer;
-    }
-
-    public function detach(Observer $observer)
-    {
-        $key = array_search($observer, $this->observers, true);
-        if ($key !== false) {
-            unset($this->observers[$key]);
-        }
-    }
-
-    public function notify()
-    {
-        foreach ($this->observers as $observer) {
-            $observer->update($this);
-        }
-    }
-*/
     //////////////////////////////////////////////
     protected $casts = [
         'start_at' => 'datetime',
@@ -73,11 +57,6 @@ class Promotion extends Model implements DataWidgetInterface
 
 
     public $timestamps = false;
-    protected $attributes = [
-        'published' => false,
-        'active' => false,
-        'description' => '',
-    ];
 
     protected $fillable = [
         'name',
@@ -90,26 +69,27 @@ class Promotion extends Model implements DataWidgetInterface
         'menu',
         'condition_url',
         'discount',
-        //'published', 'active',
+        'published',
+        'active',
     ];
 
-    public static function register(string $name, string $title, $finish_at, bool $menu = false, $start_at = null, string $slug = null): self
+    public static function register(string $name): self
     {
         return self::create([
             'name' => $name,
-            'title' => $title,
-            'slug' => empty($slug) ? Str::slug($title) : $slug,
-            'finish_at' => $finish_at,
-            'menu' => $menu,
-            'start_at' => $start_at,
+            'slug' => Str::slug($name),
+            'active' => false,
+            'published' => false,
+            'description' => '',
+            'title' => '',
         ]);
     }
 
-    public function status()
+    public function status(): int
     {
         if ($this->active) return self::STATUS_STARTED; //'Активна';
         if (!$this->published) return self::STATUS_DRAFT;
-        if ($this->finish_at->lt(now())) return self::STATUS_FINISHED;
+        if (!is_null($this->finish_at) && $this->finish_at->lt(now())) return self::STATUS_FINISHED;
         if (empty($this->start_at) || $this->start_at->gte(now())) return self::STATUS_WAITING;
 
         return self::STATUS_WAITING;
@@ -124,7 +104,7 @@ class Promotion extends Model implements DataWidgetInterface
 
     public function isFinished(): bool
     {
-        if ($this->finish_at->lt(now()) && !$this->active) return true;
+        if (!is_null($this->finish_at) && $this->finish_at->lt(now()) && !$this->active) return true;
         return false;
     }
 
@@ -187,33 +167,6 @@ class Promotion extends Model implements DataWidgetInterface
             'promotion_id', 'product_id')->withPivot('price');
     }
 
-    public function image(): MorphOne
-    {
-        return $this->morphOne(Photo::class, 'imageable')->where('type', '=', 'image')->withDefault();
-    }
-
-    public function icon(): MorphOne
-    {
-        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->where('type', '=', 'icon')->withDefault();
-    }
-
-    public function getImage(): string
-    {
-        if (empty($this->image->file)) {
-            return '/images/default-catalog.jpg';
-        } else {
-            return $this->image->getUploadUrl();
-        }
-    }
-
-    public function getIcon(): string
-    {
-        if (empty($this->icon->file)) {
-            return '/images/default-catalog.png';
-        } else {
-            return $this->icon->getUploadUrl();
-        }
-    }
 
     public function getDataWidget(array $params = []): DataWidget
     {

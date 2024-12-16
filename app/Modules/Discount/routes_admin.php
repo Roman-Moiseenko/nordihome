@@ -16,12 +16,12 @@ Route::group(
             //Route::post('/{promotion}/add-group', 'PromotionController@add_group')->name('add-group');
             Route::post('/add-product/{promotion}', 'PromotionController@add_product')->name('add-product');
             Route::post('/add-products/{promotion}', 'PromotionController@add_products')->name('add-products');
-            Route::post('/{promotion}/set-product/{product}', 'PromotionController@set_product')->name('set-product');
-            Route::delete('/{promotion}/del-product/{product}', 'PromotionController@del_product')->name('del-product');
+            Route::post('/set-product/{promotion}', 'PromotionController@set_product')->name('set-product');
+            Route::delete('/del-product/{promotion}', 'PromotionController@del_product')->name('del-product');
+            Route::post('/set-info/{promotion}', 'PromotionController@set_info')->name('set-info');
 
-            Route::delete('/{promotion}/del-group/{group}', 'PromotionController@del_group')->name('del-group');
-            Route::post('/published/{promotion}', 'PromotionController@published')->name('published');
-            Route::post('/draft/{promotion}', 'PromotionController@draft')->name('draft');
+            //Route::delete('/{promotion}/del-group/{group}', 'PromotionController@del_group')->name('del-group');
+            Route::post('/toggle/{promotion}', 'PromotionController@toggle')->name('toggle');
             Route::post('/stop/{promotion}', 'PromotionController@stop')->name('stop');
             Route::post('/start/{promotion}', 'PromotionController@start')->name('start');
         });

@@ -12,40 +12,36 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\GroupRepository;
 use App\Modules\Product\Repository\ProductRepository;
 use App\UseCase\PaginationService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Inertia\Inertia;
 use JetBrains\PhpStorm\Deprecated;
 
 class PromotionController extends Controller
 {
     private PromotionService $service;
     private PromotionRepository $repository;
-    private GroupRepository $groups;
-    private ProductRepository $products;
+
 
     public function __construct(
         PromotionService    $service,
         PromotionRepository $repository,
-        GroupRepository     $groups,
-        ProductRepository   $products)
+    )
     {
         $this->middleware(['auth:admin', 'can:discount']);
         $this->service = $service;
         $this->repository = $repository;
-        $this->groups = $groups;
-        $this->products = $products;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
-        $query = $this->repository->getIndex();
-        $promotions = $this->pagination($query, $request, $pagination);
-        return view('admin.discount.promotion.index', compact('promotions', 'pagination'));
-    }
-
-    public function create()
-    {
-        return view('admin.discount.promotion.create');
+        $promotions = $this->repository->getIndex($request, $filters);
+        return Inertia::render('Discount/Promotion/Index', [
+            'promotions' => $promotions,
+            'filters' => $filters,
+            'statuses' => array_select(Promotion::STATUSES),
+        ]);
     }
 
     public function store(Request $request)
@@ -59,77 +55,112 @@ class PromotionController extends Controller
 
     public function show(Promotion $promotion)
     {
-        $groups = $this->groups->getNotInPromotions($promotion);
-        return view('admin.discount.promotion.show', compact('promotion', 'groups'));
+        return Inertia::render('Discount/Promotion/Show', [
+            'promotion' => $this->repository->PromotionWithToArray($promotion),
+            'statuses' => array_select(Promotion::STATUSES),
+        ]);
     }
 
-    public function edit(Promotion $promotion)
+    public function set_info(Request $request, Promotion $promotion): RedirectResponse
     {
-        return view('admin.discount.promotion.edit', compact('promotion'));
+        try {
+            $this->service->setInfo($request, $promotion);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function update(Request $request, Promotion $promotion)
-    {
-        $this->service->update($request, $promotion);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-    }
-
-    public function add_product(Request $request, Promotion $promotion)
+    public function add_product(Request $request, Promotion $promotion): RedirectResponse
     {
         $request->validate([
             'product_id' => 'required|integer|gt:0',
         ]);
-        $this->service->add_product($promotion, (int)$request['product_id']);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        try {
+            $this->service->addProduct($promotion, (int)$request['product_id']);
+            return redirect()->back()->with('success', 'Товар добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
     }
 
-    public function add_products(Request $request, Promotion $promotion)
+    public function add_products(Request $request, Promotion $promotion): RedirectResponse
     {
-        $this->service->add_products($promotion, $request['products']);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        try {
+            $this->service->addProducts($promotion, $request['products']);
+            return redirect()->back()->with('success', 'Товары добавлены');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function del_product(Promotion $promotion, Product $product)
+    public function del_product(Promotion $promotion, Request $request): RedirectResponse
     {
-        $this->service->del_product($product, $promotion);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        try {
+            $this->service->delProduct($request, $promotion);
+            return redirect()->back()->with('success', 'Товар удален');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function set_product(Request $request, Promotion $promotion, Product $product)
+    public function set_product(Request $request, Promotion $promotion): RedirectResponse
     {
-        $this->service->set_product($request, $promotion, $product);
-        return response()->json(true);
+        try {
+            $this->service->setProduct($request, $promotion);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function destroy(Promotion $promotion)
+    public function destroy(Promotion $promotion): RedirectResponse
     {
-        $this->service->delete($promotion);
-        return redirect()->route('admin.discount.promotion.index');
+        try {
+            $this->service->delete($promotion);
+            return redirect()->back()->with('success', 'Акция удалена');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     //Команды
-    public function draft(Promotion $promotion)
+
+    public function toggle(Promotion $promotion)
     {
-        $this->service->draft($promotion);
-        return redirect()->back();
+        try {
+            if ($promotion->isPublished()) {
+                $this->service->draft($promotion);
+                $success = 'Акция отключена';
+            } else {
+                $this->service->published($promotion);
+                $success = 'Акция добавлена в очередь';
+            }
+            return redirect()->back()->with('success', $success);
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function published(Promotion $promotion)
+    public function stop(Promotion $promotion): RedirectResponse
     {
-        $this->service->published($promotion);
-        return redirect()->back();
+        try {
+            $this->service->stop($promotion);
+            return redirect()->back()->with('success', 'Акция остановлена в ручную');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function stop(Promotion $promotion)
+    public function start(Promotion $promotion): RedirectResponse
     {
-        $this->service->stop($promotion);
-        return redirect()->back();
-    }
-
-    public function start(Promotion $promotion)
-    {
-        $this->service->start($promotion);
-        return redirect()->back();
+        try {
+            $this->service->start($promotion);
+            return redirect()->back()->with('success', 'Акция запущена в ручную');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
 }

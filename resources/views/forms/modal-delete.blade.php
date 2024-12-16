@@ -1,7 +1,7 @@
 <x-base.dialog id="{{ $id }}">
     <x-base.dialog.panel>
         <div class="p-5 text-center">
-            <x-base.lucide class="mx-auto mt-3 h-16 w-16 text-danger" icon="XCircle"/>
+
             <div class="mt-5 text-3xl">{{ $caption }}</div>
             <div class="mt-2 text-slate-500">
                 {!! $text !!}
