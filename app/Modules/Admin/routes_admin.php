@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => 'staff',
     'as' => 'staff.',
-], function() {
+], function () {
     Route::get('/notification', 'StaffController@notification')->name('notification');
     Route::post('/notification-read/{notification}', 'StaffController@notification_read')->name('notification-read');
 
@@ -20,12 +20,13 @@ Route::group([
 Route::group([
     'prefix' => 'worker',
     'as' => 'worker.',
-], function() {
+], function () {
     Route::post('/toggle/{worker}', 'WorkerController@toggle')->name('toggle');
+    Route::post('/update/{worker}', 'WorkerController@update')->name('update');
 });
 
 Route::resource('staff', 'StaffController'); //CRUD
-Route::resource('worker', 'WorkerController'); //CRUD
+Route::resource('worker', 'WorkerController')->except(['create', 'edit', 'update']); //CRUD
 
 //Настройки
 Route::group(

@@ -9,6 +9,7 @@ use App\Modules\Admin\Entity\Worker;
 use App\Modules\Admin\Repository\WorkerRepository;
 use App\Modules\Admin\Service\WorkerService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class WorkerController extends Controller
 {
@@ -22,56 +23,54 @@ class WorkerController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
-        $selected = $request['post'] ?? '';
-        $posts = Worker::POSTS;
-        $query = $this->repository->getIndex($request);
-        $workers = $this->pagination($query, $request, $pagination);
-
-        return view('admin.worker.index', compact('workers', 'posts', 'selected', 'pagination'));
+        $workers = $this->repository->getIndex($request, $filters);
+        return Inertia::render('Admin/Worker/Index', [
+            'workers' => $workers,
+            'filters' => $filters,
+            'storages' => Storage::orderBy('name')->getModels(),
+        ]);
     }
 
-    public function create()
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
-        $posts = Worker::POSTS;
-        $storages = Storage::orderBy('name')->get();
-        return view('admin.worker.create', compact('posts', 'storages'));
-    }
-
-    public function store(Request $request)
-    {
-        $worker = $this->service->register($request);
-        return redirect()->route('admin.worker.show', compact('worker'));
+        try {
+            $worker = $this->service->register($request);
+            return redirect()->route('admin.worker.show', $worker)->with('success', 'Рабочий добавлен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     public function show(Worker $worker)
     {
-        return view('admin.worker.show', compact('worker'));
+        return Inertia::render('Admin/Worker/Show', [
+            'worker' => $this->repository->WorkerWithToArray($worker),
+            'storages' => Storage::orderBy('name')->getModels(),
+        ]);
     }
 
-    public function edit(Worker $worker)
-    {
-        $posts = Worker::POSTS;
-        $storages = Storage::orderBy('name')->get();
-        return view('admin.worker.edit', compact('worker', 'posts', 'storages'));
-    }
 
     public function update(Request $request, Worker $worker)
     {
-        $worker = $this->service->update($request, $worker);
-        return redirect()->route('admin.worker.show', compact('worker'));
+        try {
+            $this->service->update($request, $worker);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function destroy(Worker $worker)
+    public function destroy(Worker $worker): \Illuminate\Http\RedirectResponse
     {
         $this->service->destroy($worker);
-        return redirect()->route('admin.worker.index');
+        return redirect()->back()->with('success', 'Удалено');
     }
 
-    public function toggle(Worker $worker)
+    public function toggle(Worker $worker): \Illuminate\Http\RedirectResponse
     {
         $this->service->toggle($worker);
-        return redirect()->route('admin.worker.index');
+        return redirect()->back()->with('success', 'Сохранено');
     }
 }

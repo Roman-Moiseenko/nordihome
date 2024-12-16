@@ -12,32 +12,23 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property FullName $fullname
  * @property string $phone
- * @property int $post
  * @property bool $active
  * @property int $telegram_user_id
  * @property int $storage_id
+ * @property bool $driver
+ * @property bool $loader
+ * @property bool $assemble
+ * @property bool $logistic
  * @property Storage $storage
  */
 class Worker extends Model
 {
-
-    public const DRIVER = 9701;
-    public const LOADER = 9702;
-    public const ASSEMBLE = 9703;
-
-    public const POSTS = [
-        self::DRIVER => 'Водитель',
-        self::LOADER => 'Грузчик',
-        self::ASSEMBLE => 'Сборщик',
-    ];
-
     protected $attributes = [
         'fullname' => '{}',
         'storage_id' => null,
     ];
     protected $fillable = [
         'phone',
-        'post',
         'active',
         'fullname',
     ];
@@ -46,11 +37,10 @@ class Worker extends Model
         'fullname' => FullNameCast::class
     ];
 
-    public static function register(string $surname, string $firstname, string $secondname, int $post): self
+    public static function register(string $surname, string $firstname, string $secondname): self
     {
         /** @var Worker $worker */
         $worker = self::make([
-            'post' => $post,
             'active' => true,
         ]);
         $worker->fullname->surname = $surname;
@@ -73,15 +63,20 @@ class Worker extends Model
 
     public function isDriver(): bool
     {
-        return $this->post == self::DRIVER;
+        return $this->driver == true;
     }
     public function isLoader(): bool
     {
-        return $this->post == self::LOADER;
+        return $this->loader == true;
     }
     public function isAssemble(): bool
     {
-        return $this->post == self::ASSEMBLE;
+        return $this->assemble == true;
+    }
+
+    public function isLogistic(): bool
+    {
+        return $this->logistic == true;
     }
 
     //*** SET-....
@@ -116,12 +111,7 @@ class Worker extends Model
         return $this->belongsTo(Storage::class, 'storage_id', 'id')->withDefault(['name' => '-']);
     }
 
-    public function postHtml(): string
-    {
-        return self::POSTS[$this->post];
-    }
-
-    public function setPhone(string $value)
+    public function setPhone(string $value): void
     {
         $this->phone = preg_replace("/[^0-9]/", "", $value);
         $this->save();

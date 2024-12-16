@@ -6,6 +6,7 @@ namespace App\Modules\Admin\Repository;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Entity\Worker;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ExpectedValues;
 
@@ -18,12 +19,30 @@ class WorkerRepository
         })->get();
     }*/
 
-    public function getIndex(Request $request)
+    public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = Worker::orderByDesc('id');
-        if (!empty($value = $request->get('post'))) {
-            $query->where('post', $value);
+        $filters = [];
+        if (($post = $request->integer('post')) > 0) {
+            $filters['post'] = $post;
+            $query->where('post', $post);
         }
-        return $query;
+        return $query->paginate($request->input('size', 20))
+            ->withQueryString()
+            ->through(fn(Worker $worker) => $this->WorkerToArray($worker));
+    }
+
+    private function WorkerToArray(Worker $worker): array
+    {
+        return array_merge($worker->toArray(), [
+            'storage_name' => $worker->storage->name,
+        ]);
+    }
+
+    public function WorkerWithToArray(Worker $worker): array
+    {
+        return array_merge($this->WorkerToArray($worker), [
+
+        ]);
     }
 }
