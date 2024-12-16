@@ -13,40 +13,31 @@ class DiscountService
     {
         return Discount::register(
             $request->string('name')->trim()->value(),
-            $request->string('title')->trim()->value(),
-            $request->integer('discount'),
-
             $request->string('class')->trim()->value(),
-            $request->string('_from')->trim()->value(),
-            $request->string('_to')->trim()->value(),
         );
     }
 
-    public function update(Request $request, Discount $discount)
+    public function setInfo(Request $request, Discount $discount): void
     {
-        $discount->update([
-            'name' => $request->string('name')->trim()->value(),
-            'title' => $request->string('title')->trim()->value(),
-            'discount' => $request->integer('discount'),
-            'class' => $request->string('class')->trim()->value(),
-            $request->string('_from')->trim()->value(),
-            $request->string('_to')->trim()->value(),
-        ]);
+        $discount->name = $request->string('name')->trim()->value();
+        $discount->title = $request->string('title')->trim()->value();
+        $discount->discount = $request->integer('discount');
+        $discount->_from = $request->string('_from')->trim()->value();
+        $discount->_to = $request->string('_to')->trim()->value();
         $discount->active = false;
         $discount->save();
-        return $discount;
     }
 
     public function delete(Discount $discount)
     {
-        if ($discount->active()) throw new \DomainException('Нельзя удалить активную скидку');
+        if ($discount->isActive()) throw new \DomainException('Нельзя удалить активную скидку');
         //TODO проверять на использование в продажах и корзине $cartItem->discount_id
         Discount::destroy($discount->id);
     }
 
     public function draft(Discount $discount)
     {
-        if (!$discount->active()) throw new \DomainException('Скидка уже отключена');
+        if (!$discount->isActive()) throw new \DomainException('Скидка уже отключена');
         $discount->active = false;
         $discount->save();
     }

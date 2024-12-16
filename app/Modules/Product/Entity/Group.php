@@ -70,7 +70,7 @@ class Group extends Model implements DataWidgetInterface
     {
         $data = new DataWidget();
         if (!empty($this->slug)) $data->url = route('shop.group.view', $this->slug);
-        $data->image = $this->getImage();
+        $data->image = $this->image;
         $data->title = $this->name;
         $data->items = array_map(function (Product $product) {
             return [

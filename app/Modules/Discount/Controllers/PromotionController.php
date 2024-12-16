@@ -3,26 +3,19 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
 use App\Modules\Discount\Service\PromotionService;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\GroupRepository;
-use App\Modules\Product\Repository\ProductRepository;
-use App\UseCase\PaginationService;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
-use JetBrains\PhpStorm\Deprecated;
 
 class PromotionController extends Controller
 {
     private PromotionService $service;
     private PromotionRepository $repository;
-
 
     public function __construct(
         PromotionService    $service,
@@ -126,7 +119,6 @@ class PromotionController extends Controller
     }
 
     //Команды
-
     public function toggle(Promotion $promotion)
     {
         try {

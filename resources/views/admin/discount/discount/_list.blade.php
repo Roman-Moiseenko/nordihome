@@ -4,7 +4,7 @@
     <td class="w-20">{{ $discount->discount }} %</td>
     <td class="text-center">{{ $discount->caption() }}</td>
     <td class="text-center">{{ $discount->nameType() }}</td>
-    <td class="text-center"><x-yesNo status="{{ $discount->active() }}" lucide="" class="justify-center"/></td>
+    <td class="text-center"><x-yesNo status="{{ $discount->isActive() }}" lucide="" class="justify-center"/></td>
 
     <td class="table-report__action w-56">
         <div class="flex justify-center items-center">

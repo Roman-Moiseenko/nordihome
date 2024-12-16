@@ -113,14 +113,15 @@ export const func = {
 
         return year + ' лет';
     },
-    date: (val) => {
+    date: (val, year = true) => {
         if (val === undefined || val === null) return '';
         const _date_ = new Date(val);
         let month = _date_.getMonth() + 1;
         if (month < 10) month = '0' + month;
         let day = _date_.getDate();
         if (day < 10) day = '0' + day;
-        return  _date_.getFullYear() + '-' + month + '-' + day;
+        if (year) return  _date_.getFullYear() + '-' + month + '-' + day;
+        return  month + '-' + day;
     },
     datetime: (val) => {
         if (val === undefined || val === null) return null;

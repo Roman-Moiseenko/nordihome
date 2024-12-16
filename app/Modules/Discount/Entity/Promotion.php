@@ -12,6 +12,7 @@ use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
@@ -160,11 +161,11 @@ class Promotion extends Model implements DataWidgetInterface
         return $this->products()->count();
     }
 
-    public function products()//: array
+    public function products(): BelongsToMany//: array
     {
         return $this->belongsToMany(
             Product::class, 'promotions_products',
-            'promotion_id', 'product_id')->withPivot('price');
+            'promotion_id', 'product_id')->withPivot(['price']);
     }
 
 
@@ -174,16 +175,20 @@ class Promotion extends Model implements DataWidgetInterface
         $data->image = $this->image;
         $data->title = $this->title;
         $data->url = route('shop.promotion.view', $this->slug);
-        $data->items = array_map(function (Product $product) {
+        $data->items = $this->products()->get()->map(function (Product $product) {
             return [
-                'image' => $product->photo,
+                'image' => $product->getImage(),
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
                 'price' => $product->getPrice(),
                 'discount' => $product->pivot->price,
                 'count' => $product->getQuantitySell(),
             ];
-        }, $this->products()->getModels());
+        })->toArray();
+
+
+
+
         return $data;
     }
 

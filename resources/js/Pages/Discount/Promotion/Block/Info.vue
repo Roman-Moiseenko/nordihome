@@ -152,7 +152,7 @@ import {func} from "@Res/func.js"
 const props = defineProps({
     promotion: Object,
 })
-console.log(props.promotion)
+
 const iSavingInfo = ref(false)
 const info = reactive({
     name: props.promotion.name,

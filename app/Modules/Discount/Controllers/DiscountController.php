@@ -6,24 +6,32 @@ namespace App\Modules\Discount\Controllers;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Discount\Entity\Discount;
+use App\Modules\Discount\Helpers\DiscountHelper;
+use App\Modules\Discount\Repository\DiscountRepository;
 use App\Modules\Discount\Service\DiscountService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DiscountController extends Controller
 {
 
     private DiscountService $service;
+    private DiscountRepository $repository;
 
-    public function __construct(DiscountService $service)
+    public function __construct(DiscountService $service, DiscountRepository $repository)
     {
         $this->middleware(['auth:admin', 'can:discount']);
         $this->service = $service;
+        $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
-        $discounts = Discount::orderBy('name')->get();
-        return view('admin.discount.discount.index', compact('discounts'));
+        $discounts = $this->repository->getIndex($request);
+        return Inertia::render('Discount/Discount/Index', [
+            'discounts' => $discounts,
+            'types' => array_select(DiscountHelper::discounts()),
+        ]);
     }
 
     public function create()
@@ -35,18 +43,18 @@ class DiscountController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'discount' => 'required|int',
             'class' => 'required|string',
-            '_from' => 'required',
         ]);
 
         $discount = $this->service->create($request);
         return redirect()->route('admin.discount.discount.show', compact('discount'));
     }
 
-    public function show(Discount $discount)
+    public function show(Discount $discount): \Inertia\Response
     {
-        return view('admin.discount.discount.show', compact('discount'));
+        return Inertia::render('Discount/Discount/Show', [
+            'discount' => $this->repository->DiscountWithToArray($discount),
+        ]);
     }
 
     public function edit(Discount $discount)
@@ -54,10 +62,10 @@ class DiscountController extends Controller
         return view('admin.discount.discount.edit', compact('discount'));
     }
 
-    public function update(Request $request, Discount $discount)
+    public function set_info(Request $request, Discount $discount)
     {
-        $discount = $this->service->update($request, $discount);
-        return redirect()->route('admin.discount.discount.show', compact('discount'));
+        $this->service->setInfo($request, $discount);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function destroy(Discount $discount)
@@ -67,17 +75,18 @@ class DiscountController extends Controller
     }
 
     //Команды
-    public function draft(Discount $discount)
+    public function toggle(Discount $discount)
     {
-        $this->service->draft($discount);
-        return back();
+        if ($discount->isActive()){
+            $this->service->draft($discount);
+            $message = 'Скидка отключена';
+        } else {
+            $this->service->published($discount);
+            $message = 'Скидка активирована';
+        }
+        return redirect()->back()->with('success', $message);
     }
 
-    public function published(Discount $discount)
-    {
-        $this->service->published($discount);
-        return back();
-    }
 
     //AJAX
     public function widget(Request $request)

@@ -30,7 +30,7 @@ class Discount extends Model
         'discount',
         'name',
         'title',
-        //'active',
+        'active',
         'class',
         '_from',
         '_to'
@@ -41,16 +41,16 @@ class Discount extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function register(string $name, string $title, int $discount, string $class, string $_from, string $_to): self
+    public static function register(string $name, string $class,): self
     {
         return self::create([
-            'discount' => $discount,
+            'discount' => 0,
             'name' => $name,
-            'title' => $title,
+            'title' => '',
             'active' => false,
             'class' => $class,
-            '_from' => $_from,
-            '_to' => $_to,
+            '_from' => '',
+            '_to' => '',
         ]);
     }
 
@@ -93,7 +93,7 @@ class Discount extends Model
         return $class::isEnabled($this, $cost);
     }
 
-    public function active(): bool
+    public function isActive(): bool
     {
         return $this->active == true;
     }

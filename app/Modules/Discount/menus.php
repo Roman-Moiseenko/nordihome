@@ -16,13 +16,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-percent'
             ],
-            'coupon' => [
+       /*     'coupon' => [
                 'icon' => 'piggy-bank',
                 'title' => 'Купоны скидочные',
                 'route_name' => 'admin.home',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-piggy-bank',
-            ],
+            ],*/
             'discount' => [
                 'icon' => 'percent-diamond',
                 'title' => 'Скидки',
