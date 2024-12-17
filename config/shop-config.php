@@ -87,4 +87,5 @@ return [
         'logo-nav' => '/images/logo-nordi-home-2.svg',
         'brand-alt' => 'NORDI Home',
     ],
+    'tinymce' => env('TINYMCE', ''),
 ];

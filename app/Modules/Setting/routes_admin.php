@@ -9,6 +9,7 @@ Route::get('/setting/parser', 'SettingController@parser')->name('setting.parser'
 Route::get('/setting/common', 'SettingController@common')->name('setting.common');
 Route::get('/setting/coupon', 'SettingController@coupon')->name('setting.coupon');
 Route::get('/setting/web', 'SettingController@web')->name('setting.web');
+Route::get('/setting/mail', 'SettingController@mail')->name('setting.mail');
 
 Route::put('/setting', 'SettingController@update')->name('setting.update');
 

@@ -20,7 +20,7 @@ class Setting extends Model
 {
     use HasFactory;
 
-    protected $table = 'settings_';
+    protected $table = 'settings';
 
     protected $attributes = [
         'data' => '{}',

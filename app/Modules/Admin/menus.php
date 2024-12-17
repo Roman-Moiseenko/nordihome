@@ -31,11 +31,6 @@ return [
                 'route_name' => 'admin.staff.notification',
                 'action' => true,
             ],
-            'mail' => [
-                'icon' => 'mail',
-                'title' => 'Почта',
-                'route_name' => 'admin.home',
-            ],
         ],
     ],
 ];

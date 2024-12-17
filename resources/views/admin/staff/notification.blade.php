@@ -105,7 +105,4 @@
         }
     </script>
 
-    <div class="mt-3">
-        <livewire:admin.notification-table />
-    </div>
 @endsection

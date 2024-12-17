@@ -25,5 +25,5 @@ abstract class AbstractSetting
 
     }
 
-    abstract public function view();
+   // abstract public function view();
 }

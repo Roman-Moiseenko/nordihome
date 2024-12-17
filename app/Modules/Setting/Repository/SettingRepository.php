@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Setting\Repository;
 
-
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Coupon;
+use App\Modules\Setting\Entity\Mail;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
 
@@ -52,5 +52,11 @@ class SettingRepository
     {
         $setting = Setting::where('slug', 'web')->first();
         return new Web($setting->getData());
+    }
+
+    public function getMail(): Mail
+    {
+        $setting = Setting::where('slug', 'mail')->first();
+        return new Mail($setting->getData());
     }
 }

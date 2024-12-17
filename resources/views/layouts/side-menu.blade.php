@@ -21,7 +21,7 @@
                                     <a href="{{ isset($menu['route_name']) ? route($menu['route_name']) : 'javascript:;' }}"
                                        class="{{ $firstLevelActiveIndex == $menuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                         <div class="side-menu__icon">
-                                            <x-base.lucide icon="{{ $menu['icon'] }}" />
+                                            <x-base.lucide icon="{{ $menu['icon'] ?? '' }}" />
                                         </div>
                                         <div class="side-menu__title">
                                             {{ $menu['title'] }}
@@ -41,7 +41,7 @@
                                                     <a href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name']) : 'javascript:;' }}"
                                                        class="{{ $secondLevelActiveIndex == $subMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                                         <div class="side-menu__icon">
-                                                            <x-base.lucide icon="{{ $subMenu['icon'] }}" />
+                                                            <x-base.lucide icon="{{ $subMenu['icon'] ?? '' }}" />
                                                         </div>
                                                         <div class="side-menu__title">
                                                             {{ $subMenu['title'] }}
@@ -62,7 +62,7 @@
                                                                     <a href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name']) : 'javascript:;' }}"
                                                                        class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'side-menu side-menu--active' : 'side-menu' }}">
                                                                         <div class="side-menu__icon">
-                                                                            <x-base.lucide icon="{{ $lastSubMenu['icon'] }}" />
+                                                                            <x-base.lucide icon="{{ $lastSubMenu['icon'] ?? '' }}" />
                                                                         </div>
                                                                         <div class="side-menu__title">
                                                                             {{ $lastSubMenu['title'] }}

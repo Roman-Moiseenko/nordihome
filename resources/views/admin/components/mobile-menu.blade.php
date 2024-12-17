@@ -41,7 +41,7 @@
                             href="{{ isset($menu['route_name']) ? route($menu['route_name']) : 'javascript:;' }}"
                         >
                             <div class="menu__icon">
-                                <i data-lucide="{{ $menu['icon'] }}" width="24" height="24"></i>
+                                <i data-lucide="{{ $menu['icon'] ?? '' }}" width="24" height="24"></i>
                             </div>
                             <div class="menu__title">
                                 {{ $menu['title'] }}
@@ -60,7 +60,7 @@
                                         <a class="{{ $secondLevelActiveIndex == $subMenuKey ? 'menu menu--active' : 'menu' }}"
                                             href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name']) : 'javascript:;' }}">
                                             <div class="menu__icon">
-                                                <i data-lucide="{{ $subMenu['icon'] }}" width="24" height="24"></i>
+                                                <i data-lucide="{{ $subMenu['icon'] ?? '' }}" width="24" height="24"></i>
                                             </div>
                                             <div class="menu__title">
                                                 {{ $subMenu['title'] }}
@@ -80,7 +80,7 @@
                                                         <a class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'menu menu--active' : 'menu' }}"
                                                             href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name']) : 'javascript:;' }}">
                                                             <div class="menu__icon">
-                                                                <i data-lucide="{{ $lastSubMenu['icon'] }}" width="24" height="24"></i>
+                                                                <i data-lucide="{{ $lastSubMenu['icon'] ?? '' }}" width="24" height="24"></i>
                                                             </div>
                                                             <div class="menu__title">{{ $lastSubMenu['title'] }}</div>
                                                         </a>

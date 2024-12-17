@@ -70,6 +70,16 @@ class SettingController extends Controller
         );
     }
 
+    //Настройки почты
+    public function mail(): Response
+    {
+        $mail = $this->repository->getMail();
+        return Inertia::render('Setting/Mail', [
+                'mail' => $mail,
+            ]
+        );
+    }
+
     public function update(Request $request): RedirectResponse
     {
         try {

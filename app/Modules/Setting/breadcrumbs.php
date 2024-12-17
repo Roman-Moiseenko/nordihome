@@ -33,4 +33,7 @@ Breadcrumbs::for('admin.setting.web', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.setting.index');
     $trail->push('Сайт', route('admin.setting.web'));
 });
-
+Breadcrumbs::for('admin.setting.mail', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.setting.index');
+    $trail->push('Почта', route('admin.setting.mail'));
+});

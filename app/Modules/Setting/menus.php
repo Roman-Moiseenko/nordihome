@@ -40,6 +40,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-table-layout',
             ],
+            'mail' => [
+                'title' => 'Почта',
+                'action' => true,
+                'vue' => true,
+                'route_name' => 'admin.setting.mail',
+                'font_awesome' => 'fa-light fa-envelope',
+            ],
         ],
     ],
 ];
