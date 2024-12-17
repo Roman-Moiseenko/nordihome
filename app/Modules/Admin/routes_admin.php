@@ -15,7 +15,7 @@ Route::group([
     Route::post('/password/{staff}', 'StaffController@password')->name('password');
     Route::post('/activate/{staff}', 'StaffController@activate')->name('activate');
     Route::post('/photo/{staff}', 'StaffController@setPhoto')->name('photo');
-    Route::post('/response/{staff}', 'StaffController@response')->name('response');
+    Route::post('/responsibility/{staff}', 'StaffController@responsibility')->name('responsibility');
 });
 Route::group([
     'prefix' => 'worker',

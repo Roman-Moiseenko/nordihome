@@ -8,6 +8,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Admin\Repository\WorkerRepository;
 use App\Modules\Admin\Service\WorkerService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -33,7 +34,7 @@ class WorkerController extends Controller
         ]);
     }
 
-    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         try {
             $worker = $this->service->register($request);
@@ -51,7 +52,6 @@ class WorkerController extends Controller
         ]);
     }
 
-
     public function update(Request $request, Worker $worker)
     {
         try {
@@ -62,13 +62,17 @@ class WorkerController extends Controller
         }
     }
 
-    public function destroy(Worker $worker): \Illuminate\Http\RedirectResponse
+    public function destroy(Worker $worker): RedirectResponse
     {
-        $this->service->destroy($worker);
-        return redirect()->back()->with('success', 'Удалено');
+        try {
+            $this->service->destroy($worker);
+            return redirect()->back()->with('success', 'Удалено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function toggle(Worker $worker): \Illuminate\Http\RedirectResponse
+    public function toggle(Worker $worker): RedirectResponse
     {
         $this->service->toggle($worker);
         return redirect()->back()->with('success', 'Сохранено');

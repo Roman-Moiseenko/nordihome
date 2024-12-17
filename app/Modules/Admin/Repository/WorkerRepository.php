@@ -27,6 +27,8 @@ class WorkerRepository
             $filters['post'] = $post;
             $query->where('post', $post);
         }
+        if (count($filters) > 0) $filters['count'] = count($filters);
+
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
             ->through(fn(Worker $worker) => $this->WorkerToArray($worker));

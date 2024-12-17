@@ -11,7 +11,7 @@ trait PhotoField
 {
     public function photo()
     {
-        return $this->morphOne(Photo::class, 'imageable')->where('type', 'photo')->withDefault();
+        return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }
 
     public function savePhoto($file, bool $clear_current = false): void
@@ -23,7 +23,7 @@ trait PhotoField
         $this->photo->newUploadFile($file, 'photo');
     }
 
-    public function getIcon(string $thumb = ''): ?string
+    public function getPhoto(string $thumb = ''): ?string
     {
         if (is_null($this->photo) || is_null($this->photo->file)) return null;
         if (empty($thumb)) return $this->photo->getUploadUrl();

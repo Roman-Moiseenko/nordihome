@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Requests\Admin;
+namespace App\Modules\Admin\Request;
 
 
 use App\Modules\Admin\Entity\Admin;
@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 /**
  * @property \App\Modules\Admin\Entity\Admin $staff
  */
-class UpdateRequest extends FormRequest
+class StaffUpdateRequest extends FormRequest
 {
 
     public function authorize(): bool

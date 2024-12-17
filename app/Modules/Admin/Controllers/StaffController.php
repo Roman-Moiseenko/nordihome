@@ -3,15 +3,20 @@
 namespace App\Modules\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\RegisterRequest;
 use App\Http\Requests\Admin\UpdateRequest;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Admin\Request\PasswordRequest;
+use App\Modules\Admin\Request\StaffCreateRequest;
+use App\Modules\Admin\Request\StaffUpdateRequest;
 use App\Modules\Admin\Service\StaffService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
-
+use Inertia\Inertia;
+use Inertia\Response;
 
 class StaffController extends Controller
 {
@@ -32,11 +37,12 @@ class StaffController extends Controller
 
     public function index(Request $request)
     {
-        $selected = $request['role'] ?? '';
-        $roles = Admin::ROLES;
-        $query = $this->repository->getIndex($request);
-        $admins = $this->pagination($query, $request, $pagination);
-        return view('admin.staff.index', compact('admins', 'roles', 'selected', 'pagination'));
+        $admins = $this->repository->getIndex($request, $filters);
+        return Inertia::render('Admin/Staff/Index', [
+            'staffs' => $admins,
+            'filters' => $filters,
+            'roles' => array_select(Admin::ROLES),
+        ]);
     }
 
     public function create()
@@ -45,15 +51,19 @@ class StaffController extends Controller
         return view('admin.staff.create', compact('roles'));
     }
 
-    public function store(RegisterRequest $request)
+    public function store(StaffCreateRequest $request)
     {
         $staff = $this->service->register($request);
         return redirect()->route('admin.staff.show', compact('staff'));
     }
 
-    public function show(Admin $staff)
+    public function show(Admin $staff): Response
     {
-        return view('admin.staff.show', compact('staff'));
+        return Inertia::render('Admin/Staff/Show', [
+            'staff' => $this->repository->StaffWithToArray($staff),
+            'roles' => array_select(Admin::ROLES),
+            'responsibilities' => array_select(Responsibility::RESPONSE),
+        ]);
     }
 
     public function edit(Admin $staff)
@@ -67,32 +77,36 @@ class StaffController extends Controller
         return view('admin.staff.security', compact('staff'));
     }
 
-    public function password(Request $request, Admin $staff)
+    public function password(PasswordRequest $request, Admin $staff): RedirectResponse
     {
-        $request->validate([
-            'password' => 'required|string|min:6',
-        ]);
-        $this->service->setPassword($request['password'], $staff);
-        flash('Пароль успешно изменен', 'success');
-        return redirect()->back();
+        try {
+            $this->service->setPassword($request['password'], $staff);
+            return redirect()->back()->with('success', 'Пароль успешно изменен');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function update(UpdateRequest $request, Admin $staff)
+    public function update(StaffUpdateRequest $request, Admin $staff)
     {
-        $this->service->update($request, $staff);
-        return redirect()->route('admin.staff.show', $staff);
+        try {
+            $this->service->update($request, $staff);
+            return redirect()->back()->with('success', 'Сохранено');
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
-    public function destroy(Admin $staff)
+    public function destroy(Admin $staff): RedirectResponse
     {
         $this->service->blocking($staff);
-        return redirect()->route('admin.staff.index');
+        return redirect()->back()->with('success', 'Заблокировано');
     }
 
-    public function activate(Admin $staff)
+    public function activate(Admin $staff): RedirectResponse
     {
         $this->service->activate($staff);
-        return redirect()->route('admin.staff.index');
+        return redirect()->back()->with('success', 'Активирован');
     }
 
     public function notification(Request $request)
@@ -118,10 +132,10 @@ class StaffController extends Controller
         ]);
     }
 
-    //AJAX
-    public function response(Request $request, Admin $staff)
+    public function responsibility(Request $request, Admin $staff): RedirectResponse
     {
         $this->service->responsibility($request->integer('code'), $staff);
-        return response()->json(true);
+        return redirect()->back()->with('success', 'Сохранено');
     }
+
 }

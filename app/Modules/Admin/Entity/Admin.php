@@ -6,6 +6,7 @@ namespace App\Modules\Admin\Entity;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Traits\PhotoField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,14 +27,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property int $telegram_user_id
  * @property FullName $fullname
  * @property Responsibility[] $responsibilities
- * @property \App\Modules\Base\Entity\Photo $photo
  */
 class Admin extends Authenticatable
 {
 
-    use HasApiTokens, HasFactory, Notifiable;//, FullNameTrait;
+    use HasApiTokens, HasFactory, Notifiable, PhotoField;//, FullNameTrait;
 
-    //public const ROLE_WORKER = 'worker'; //Все сотрудники
     public const ROLE_STAFF = 'staff'; //Все сотрудники
     public const ROLE_CHIEF = 'chief'; //Руководитель - назначение сотрудников, смена обязанностей
     public const ROLE_ADMIN = 'admin'; //Администратор - учет, логи и др.
@@ -43,7 +42,6 @@ class Admin extends Authenticatable
         self::ROLE_ADMIN => 'Администратор',
         self::ROLE_CHIEF => 'Руководитель',
         self::ROLE_STAFF => 'Сотрудник',
-        //self::ROLE_WORKER => 'Рабочий',
     ];
 
     public const ROLE_COLORS = [
@@ -128,13 +126,12 @@ class Admin extends Authenticatable
         return $this->role == self::ROLE_CHIEF;
     }
 
-
     public function isStaff(): bool
     {
         return $this->role == self::ROLE_STAFF;
     }
 
-    public function setPhone(string $phone)
+    public function setPhone(string $phone): void
     {
         $this->phone = preg_replace("/[^0-9]/", "", $phone);
         $this->save();
@@ -171,26 +168,6 @@ class Admin extends Authenticatable
         return Auth::guard($this->guard)->user()->id == $this->id;
     }
 
-    public function photo()
-    {
-        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable')->withDefault();
-    }
-
-
-    public function getPhoto(): string
-    {
-        if (empty($this->photo->file)) {
-            return '/images/default-user.png';
-        } else {
-            return $this->photo->getUploadUrl();
-        }
-    }
-/*
-    public function setPhoto(string $file): void
-    {
-        $this->photo = $file;
-    }
-*/
     public function routeNotificationForTelegram(): int
     {
         if (is_null($this->telegram_user_id)) return 0;
@@ -222,7 +199,7 @@ class Admin extends Authenticatable
         //Иначе добавляем Обязанность
         $this->responsibilities()->save(Responsibility::new($code));
     }
-    public function roleHTML(): string
+    public function roleText(): string
     {
         return self::ROLES[$this->role];
     }
