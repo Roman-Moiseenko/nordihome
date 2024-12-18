@@ -16,6 +16,7 @@
                   header-cell-class-name="nordihome-header"
                   :row-class-name="tableRowClassName"
                   style="width: 100%;">
+            <el-table-column type="index" :index="indexMethod" label="п/п"/>
             <el-table-column prop="product.code" label="Артикул" width="160" />
             <el-table-column prop="product.name" label="Товар" show-overflow-tooltip>
                 <template #default="scope">
@@ -110,7 +111,6 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.arrival.completed);
 const $delete_entity = inject("$delete_entity")
-
 function setItem(row: any) {
     iSaving.value = true;
     router.visit(route('admin.accounting.arrival.set-product', {product: row.id}), {
@@ -129,7 +129,8 @@ function setItem(row: any) {
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.arrival.del-product', {product: row.id}));
 }
-function saveNameProduct(val) {
-    router
+
+const indexMethod = (index: number) => {
+    return index + (props.arrival.products.current_page - 1) * props.arrival.products.per_page + 1
 }
 </script>

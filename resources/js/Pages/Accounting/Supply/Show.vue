@@ -20,6 +20,7 @@
                   style="width: 100%;"
                   :row-class-name="tableRowClassName"
         >
+            <el-table-column type="index" :index="indexMethod" label="п/п"/>
             <el-table-column prop="product.code" label="Артикул" width="160"/>
             <el-table-column prop="product.name" label="Товар">
                 <template #default="scope">
@@ -147,5 +148,8 @@ function classCost(row) {
     if (row.pre_cost > row.cost_currency) return 'success'
     if (row.pre_cost < row.cost_currency) return 'danger'
     return 'info';
+}
+const indexMethod = (index: number) => {
+    return index + (props.supply.products.current_page - 1) * props.supply.products.per_page + 1
 }
 </script>

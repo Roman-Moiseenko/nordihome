@@ -15,6 +15,7 @@
         <el-table :data="[...inventory.products.data]"
                   header-cell-class-name="nordihome-header"
                   style="width: 100%;">
+            <el-table-column type="index" :index="indexMethod" label="п/п"/>
             <el-table-column prop="product.code" label="Артикул" width="160" />
             <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
             <el-table-column prop="formal" label="По учету" width="160" >
@@ -97,5 +98,8 @@ function setItem(row) {
 }
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.inventory.del-product', {product: row.id}));
+}
+const indexMethod = (index: number) => {
+    return index + (props.inventory.products.current_page - 1) * props.inventory.products.per_page + 1
 }
 </script>

@@ -18,6 +18,7 @@
                   header-cell-class-name="nordihome-header"
                   :row-class-name="tableRowClassName"
                   style="width: 100%;">
+            <el-table-column type="index" :index="indexMethod" label="п/п"/>
             <el-table-column prop="product.code" label="Артикул" width="160"/>
             <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
             <el-table-column prop="cost" label="Цена" width="180">
@@ -109,5 +110,8 @@ function setItem(row) {
 }
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.departure.del-product', {product: row.id}));
+}
+const indexMethod = (index: number) => {
+    return index + (props.departure.products.current_page - 1) * props.departure.products.per_page + 1
 }
 </script>

@@ -16,6 +16,7 @@
                   header-cell-class-name="nordihome-header"
                   :row-class-name="tableRowClassName" class="movement-table"
                   style="width: 100%;">
+            <el-table-column type="index" :index="indexMethod" label="п/п"/>
             <el-table-column prop="product.code" label="Артикул" width="160" />
             <el-table-column prop="product.name" label="Товар" show-overflow-tooltip/>
             <el-table-column prop="quantity" label="Кол-во" width="300">
@@ -95,6 +96,9 @@ function setItem(row) {
 }
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.movement.del-product', {product: row.id}));
+}
+const indexMethod = (index: number) => {
+    return index + (props.movement.products.current_page - 1) * props.movement.products.per_page + 1
 }
 </script>
 <style lang="scss">
