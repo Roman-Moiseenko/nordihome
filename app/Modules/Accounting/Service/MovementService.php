@@ -142,7 +142,7 @@ class MovementService // extends AccountingService
     {
         if ($product->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         //Меняем данные
-        $product->quantity = $request->integer('quantity');
+        $product->setQuantity($request->float('quantity'));
         $product->save();
     }
 

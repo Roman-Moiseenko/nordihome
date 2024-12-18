@@ -5,9 +5,6 @@ namespace App\Modules\Accounting\Controllers;
 
 
 use App\Http\Controllers\Controller;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
-
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
@@ -32,7 +29,6 @@ class SupplyController extends Controller
     private SupplyRepository $repository;
     private StaffRepository $staffs;
 
-
     public function __construct(
         SupplyService $service,
         StackRepository $stacks,
@@ -54,7 +50,6 @@ class SupplyController extends Controller
         $stack_count = SupplyStack::where('supply_id', null)->count();
         $supplies = $this->repository->getIndex($request, $filters);
         $staffs = $this->staffs->getStaffsChiefs();
-        /*return view('admin.accounting.supply.index', compact('supplies', 'filters', 'distributors', 'stack_count', 'staffs'));*/
         return Inertia::render('Accounting/Supply/Index', [
             'supplies' => $supplies,
             'filters' => $filters,
@@ -69,8 +64,6 @@ class SupplyController extends Controller
         $brands = Brand::orderBy('name')->getModels();
         $stacks = $this->repository->getStacks($request, $filters);
         $staffs = $this->staffs->getStaffsChiefs();
-        //return view('admin.accounting.supply.stack', compact('stacks', 'distributors'));
-
         return Inertia::render('Accounting/Supply/Stack', [
             'stacks' => $stacks,
             'filters' => $filters,
@@ -84,7 +77,6 @@ class SupplyController extends Controller
         $distributor = Distributor::find($request->integer('distributor'));
         $stacks = $this->stacks->getByDistributor($distributor);
         if (!empty($stacks)) { //Если стек не пуст, то показываем
-            //return view('admin.accounting.supply.create', compact('stacks', 'distributor'));
             return Inertia::render('Accounting/Supply/Create', [
                 'stacks' => $stacks,
                 'distributor' => $distributor,
@@ -97,7 +89,6 @@ class SupplyController extends Controller
 
     public function show(SupplyDocument $supply, Request $request): Response
     {
-        //return view('admin.accounting.supply.show', compact('supply'));
         return Inertia::render('Accounting/Supply/Show', [
             'supply' => $this->repository->SupplyWithToArray($supply, $request),
         ]);
@@ -217,7 +208,7 @@ class SupplyController extends Controller
     public function set_product(SupplyProduct $product, Request $request): RedirectResponse
     {
         try {
-            $this->service->setProduct($product, $request->integer('quantity'), $request->float('cost'));
+            $this->service->setProduct($product, $request->float('quantity'), $request->float('cost'));
             return redirect()->back()->with('success', 'Сохранено');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

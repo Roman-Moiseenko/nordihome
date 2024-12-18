@@ -51,4 +51,12 @@ class RefundProduct extends AccountingProduct
     {
         return $this->document->arrival->getProduct($this->product_id);
     }
+
+    public function toArray(): array
+    {
+        $array = parent::toArray();
+        return array_merge($array, [
+            'cost_currency' => (float)$this->cost_currency,
+        ]);
+    }
 }

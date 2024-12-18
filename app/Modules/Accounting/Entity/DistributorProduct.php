@@ -31,4 +31,12 @@ class DistributorProduct extends Model
         return $this->belongsTo(Distributor::class, 'distributor_id', 'id');
     }
 
+    public function toArray(): array
+    {
+        $array = parent::toArray();
+        return array_merge($array, [
+            'cost' => (float)$this->cost,
+            'pre_cost' => (float)$this->pre_cost,
+        ]);
+    }
 }

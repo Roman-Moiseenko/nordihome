@@ -80,19 +80,30 @@ export const func = {
         if (val === undefined || val === null) return 0;
 
         let last = val.slice(-1);
+        let pre_val = val.substring(0, val.length - 1);
+        if (last === ',') last = '.'
+        //Если тек.символ разделитель и он уже есть, то отмена
+        if (last === '.' && pre_val.includes('.')) return pre_val;
+
+        //Если символ не число и не точка, то отмена
         if (last.match(/\d+/g) === null && last.match(/\./g) === null) {
-            val = val.substring(0, val.length - 1);
+            return pre_val;
+            //val = val.substring(0, val.length - 1);
         }
-        return val;
+        //console.log(val)
+        let new_val = pre_val + last
+
+
+        return new_val
     },
     fullName: (val) => {
         if (val === undefined || val === null) return '';
         return val.surname + ' ' + val.firstname + ' ' + val.secondname;
     },
     price: (val, currency = '₽') => {
-        if (val === null || val === '' || val === 0 || val === undefined) return '';
+        if (val === null || val === '' || val === 0 || val === undefined) return '0 ' + currency;
         val = Math.round(Math.round(val * 100)) / 100;
-        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ' + currency;
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + ' ' + currency;
     },
     phone: (val) => {
         if (val === null || val === '' || val === 0 || val === undefined) return '';

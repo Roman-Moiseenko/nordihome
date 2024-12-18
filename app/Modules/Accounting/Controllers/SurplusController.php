@@ -83,7 +83,7 @@ class SurplusController extends Controller
     public function add_product(Request $request, SurplusDocument $surplus): RedirectResponse
     {
         try {
-            $this->service->addProduct($surplus, $request->integer('product_id'), $request->integer('quantity'));
+            $this->service->addProduct($surplus, $request->integer('product_id'), $request->float('quantity'));
             return redirect()->back()->with('success', 'Товар добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

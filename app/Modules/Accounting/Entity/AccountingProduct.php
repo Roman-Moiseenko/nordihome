@@ -58,7 +58,11 @@ abstract class AccountingProduct extends Model
      */
     public function setQuantity(float $quantity): void
     {
-        if (!$this->product->isFractional()) $quantity = ceil($quantity);
+
+        if (!$this->product->isFractional())
+            if ($quantity != (float)(int)$quantity) throw new \DomainException('Для данного товара не предусмотренно дробление');
+
+            //$quantity = ceil($quantity);
         $this->quantity = $quantity;
         $this->save();
     }
@@ -96,5 +100,13 @@ abstract class AccountingProduct extends Model
 
         $table->dropForeign(['product_id']);
         $table->dropColumn('product_id');
+    }
+
+    public function toArray(): array
+    {
+        $array = parent::toArray();
+        return array_merge($array, [
+            'quantity' => (float)$this->quantity,
+        ]);
     }
 }

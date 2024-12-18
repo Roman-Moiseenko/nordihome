@@ -94,4 +94,12 @@ class ArrivalProduct extends AccountingProduct
         }
         return $quantity;
     }
+
+    public function toArray(): array
+    {
+        $array = parent::toArray();
+        return array_merge($array, [
+            'cost_currency' => (float)$this->cost_currency,
+        ]);
+    }
 }

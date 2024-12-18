@@ -35,7 +35,7 @@
             <el-table-column prop="quantity" label="Кол-во" width="180">
                 <template #default="scope">
                     <el-input v-model="scope.row.quantity"
-                              :formatter="(value) => func.MaskInteger(value)"
+                              :formatter="(value) => func.MaskFloat(value)"
                               @change="setItem(scope.row)"
                               :disabled="iSaving"
                               :readonly="!isEdit"

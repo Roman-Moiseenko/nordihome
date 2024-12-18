@@ -58,7 +58,7 @@ class MovementDocument extends AccountingDocument
         'updated_at' => 'datetime',
     ];
 
-    public static function register(int $storage_out, int $storage_in, int $staff_id, int $arrival_id): self
+    public static function register(int $storage_out, int $storage_in, int $staff_id, ?int $arrival_id): self
     {
         $movement = parent::baseNew($staff_id);
         $movement->storage_out = $storage_out;

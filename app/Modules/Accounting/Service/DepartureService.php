@@ -91,7 +91,7 @@ class DepartureService
     {
         if ($item->document->isCompleted()) throw new \DomainException('Документ проведен. Менять данные нельзя');
         //Меняем данные
-        $item->quantity = $request->integer('quantity');
+        $item->setQuantity($request->float('quantity'));
         $item->save();
     }
 

@@ -25,7 +25,7 @@
             <el-table-column prop="quantity" label="Наличие" width="180">
                 <template #default="scope">
                     <el-input v-model="scope.row.quantity"
-                              :formatter="(value) => func.MaskInteger(value)"
+                              :formatter="(value) => func.MaskFloat(value)"
                               @change="setItem(scope.row)"
                               :disabled="iSaving"
                               :readonly="!isEdit"
@@ -44,11 +44,11 @@
                     {{ func.price((scope.row.quantity - scope.row.formal) * scope.row.cost) }}
                 </template>
             </el-table-column>
-            <!--el-table-column label="Действия" align="right" width="180">
+            <el-table-column label="Действия" align="right" width="180">
                 <template #default="scope">
                     <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
                 </template>
-            </el-table-column-->
+            </el-table-column>
         </el-table>
         <pagination
             :current_page="inventory.products.current_page"
@@ -56,7 +56,7 @@
             :total="inventory.products.total"
         />
     </el-config-provider>
-    <DeleteEntityModal name_entity="Товар из поступления" />
+    <DeleteEntityModal name_entity="Товар из инвентаризации" />
 </template>
 
 <script lang="ts" setup>

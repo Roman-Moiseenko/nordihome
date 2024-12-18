@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\SupplyDocument;
+use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -84,7 +85,12 @@ class SupplyRepository extends AccountingRepository
     {
         $withData = [
             'currency_exchange' => $document->distributor->currency->exchange,
-            'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
+            'products' => $document->products()
+                ->with('product')
+                ->paginate($request->input('size', 20))
+                //->withQueryString()
+                //->through(fn (SupplyProduct $product) => $product->toArray()),
+                ->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'arrivals' => $document->arrivals()->get()->map(function (ArrivalDocument $document) {
                 return array_merge($document->toArray(), [

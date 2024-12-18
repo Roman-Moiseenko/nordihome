@@ -218,7 +218,7 @@ class SupplyService
         }
 
         $d_product = $distributor->getProduct($product_id);
-        $supply->addProduct($product, $quantity, $d_product->pivot->cost);//Добавляем товар в Заказ
+        $supply->addProduct($product, $quantity, (float)$d_product->pivot->cost);//Добавляем товар в Заказ
     }
 
     public function addProducts(SupplyDocument $supply, mixed $products): void
@@ -280,7 +280,7 @@ class SupplyService
             ///Доп.защита!!
             $quantity_stack = $supply->getQuantityStack($supplyProduct->product);
             if ($quantity < $quantity_stack) throw new \DomainException('Кол-во товара по стеку ' . $quantity_stack . '. Нельзя ставить меньше.');
-            $supplyProduct->quantity = $quantity;
+            $supplyProduct->setQuantity($quantity);
             $supplyProduct->cost_currency = $cost_currency;
             $supplyProduct->save();
         }

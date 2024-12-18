@@ -89,7 +89,7 @@ class DepartureController extends Controller
     public function add_product(Request $request, DepartureDocument $departure): RedirectResponse
     {
         try {
-            $this->service->addProduct($departure, $request->integer('product_id'), $request->integer('quantity'));
+            $this->service->addProduct($departure, $request->integer('product_id'), $request->float('quantity'));
             return redirect()->back()->with('success', 'Товар добавлен');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

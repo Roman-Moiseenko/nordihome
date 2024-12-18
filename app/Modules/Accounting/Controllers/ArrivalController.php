@@ -196,7 +196,7 @@ class ArrivalController extends Controller
     public function set_product(ArrivalProduct $product, Request $request): RedirectResponse
     {
         try {
-            $this->service->setProduct($product, $request->integer('quantity'), $request->float('cost'));
+            $this->service->setProduct($product, $request->float('quantity'), $request->float('cost'));
             return redirect()->back()->with('success', 'Сохранено');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

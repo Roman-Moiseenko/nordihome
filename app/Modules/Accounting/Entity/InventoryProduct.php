@@ -33,4 +33,15 @@ class InventoryProduct extends AccountingProduct
     {
         return $this->belongsTo(InventoryDocument::class, 'inventory_id', 'id');
     }
+
+    public function toArray(): array
+    {
+        $array = parent::toArray();
+        return array_merge($array, [
+            'formal' => (float)$this->formal,
+            'cost' => (float)$this->cost,
+        ]);
+    }
+
+
 }

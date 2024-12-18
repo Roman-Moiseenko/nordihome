@@ -114,7 +114,7 @@ class Distributor extends Model
     public function getCostItem(int $product_id): float
     {
         foreach ($this->products as $product) {
-            if ($product->id == $product_id) return $product->pivot->cost;
+            if ($product->id == $product_id) return (float)$product->pivot->cost;
         }
         return 0.0;
     }
