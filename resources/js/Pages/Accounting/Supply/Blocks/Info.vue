@@ -5,18 +5,22 @@
                                 @update:modelValue="setInfo" v-model:saving="iSavingInfo" :edit="notEdit"/>
         </el-col>
         <el-col :span="12">
-            <el-form-item label="Курс валюты">
-                <el-input v-model="info.exchange_fix" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit"
-                          style="width: 160px"/>
-                <el-tooltip effect="dark" placement="top-start" content="Курс изменился. Обновить?">
-                    <el-button type="warning" class="ml-1"
-                               v-if="!notEdit && (info.exchange_fix !== supply.currency_exchange)"
-                               @click="setInfo(true)">
-                        <i class="fa-light fa-arrows-rotate"></i>
-                    </el-button>
-                </el-tooltip>
-            </el-form-item>
-
+            <el-form label-width="auto">
+                <el-form-item label="Курс валюты">
+                    <el-input v-model="info.exchange_fix" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit"
+                              style="width: 160px"/>
+                    <el-tooltip effect="dark" placement="top-start" content="Курс изменился. Обновить?">
+                        <el-button type="warning" class="ml-1"
+                                   v-if="!notEdit && (info.exchange_fix !== supply.currency_exchange)"
+                                   @click="setInfo(true)">
+                            <i class="fa-light fa-arrows-rotate"></i>
+                        </el-button>
+                    </el-tooltip>
+                </el-form-item>
+                <el-form-item label="Плановая дата поступления">
+                    <el-date-picker v-model="info.supply_at" type="date" clearable  @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit"/>
+                </el-form-item>
+            </el-form>
         </el-col>
     </el-row>
 </template>
@@ -40,11 +44,13 @@ const info = reactive({
         comment: props.supply.comment,
     },
     exchange_fix: props.supply.exchange_fix,
+    supply_at: props.supply.supply_at,
 })
 const notEdit = computed(() => props.supply.completed);
 
 function setInfo(currency = null) {
     if (currency === true) info.currency = true
+    if (info.supply_at !== null) info.supply_at = func.date(info.supply_at)
     iSavingInfo.value = true
     router.visit(route('admin.accounting.supply.set-info', {supply: props.supply.id}), {
         method: "post",

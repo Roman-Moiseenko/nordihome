@@ -10,6 +10,7 @@ use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\PaymentDecryption;
+use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
@@ -156,7 +157,7 @@ class SupplyService
     /**
      * Создаем Платежное поручение
      */
-    public function payment(SupplyDocument $supply)
+    public function payment(SupplyDocument $supply): PaymentDocument
     {
         if (($debit = $supply->debit()) <= 0) throw new \DomainException('Долг по текущему заказу не обнаружен');
 
@@ -168,7 +169,6 @@ class SupplyService
         $payment->addDecryption($debit, $supply->id);
         return $payment;
     }
-
 
     public function destroy(SupplyDocument $supply): void
     {
@@ -199,6 +199,8 @@ class SupplyService
         } else {
             $supply->exchange_fix = $request->input('exchange_fix');
         }
+        $supply->supply_at = $request->input('supply_at');
+
         $supply->save();
     }
     ///<===============

@@ -6,12 +6,14 @@ namespace App\Modules\Accounting\Entity;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * Поставка товар - заказ для поставщика, формируется автоматически из стека заказов, также можно добавить вручную
  * @property int $distributor_id
  * @property float $exchange_fix
  * @property int $currency_id
+ * @property Carbon $supply_at
  *
  * @property ArrivalDocument[] $arrivals  - документы, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
