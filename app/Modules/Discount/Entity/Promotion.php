@@ -177,7 +177,7 @@ class Promotion extends Model implements DataWidgetInterface
         $data->url = route('shop.promotion.view', $this->slug);
         $data->items = $this->products()->get()->map(function (Product $product) {
             return [
-                'image' => $product->getImage(),
+                'image' => $product->photo,
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
                 'price' => $product->getPrice(),

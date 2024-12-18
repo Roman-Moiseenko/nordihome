@@ -139,6 +139,7 @@ function handleGetProduct(val) {
     const getAttributes = route('admin.product.attr-modification', {product: form.product_id});
 
     axios.post(getAttributes).then(response => {
+        console.log(response.data)
         if (response.data.error !== undefined) console.log(response.data.error)
         attributes.value = response.data
         placeholder_name.value = 'Введите название'

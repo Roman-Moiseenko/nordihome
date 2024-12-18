@@ -337,7 +337,11 @@ class ShopRepository
 
         $variant_ids = [];
         foreach ($values as $item) {
-            $variant_ids = array_merge($variant_ids, $item);
+            if (is_array($item)) {
+                $variant_ids = array_merge($variant_ids, $item);
+            } else {
+                $variant_ids[] = $item;
+            }
         }
         $variant_ids = array_unique($variant_ids);
 

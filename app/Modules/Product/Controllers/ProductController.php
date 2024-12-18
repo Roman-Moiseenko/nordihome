@@ -253,7 +253,6 @@ class ProductController extends Controller
         return \response()->json($result);
     }
 
-
     public function get_images(Product $product)
     {
         $result = [];
@@ -316,6 +315,22 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Список атрибутов товара для Модификации
+     */
+    public function attr_modification(Product $product): JsonResponse
+    {
+        $result = [];
+        foreach ($product->prod_attributes as $attribute) {
+            if ($attribute->isVariant() && !$attribute->multiple) {
+                $result[] = [
+                    'id' => $attribute->id,
+                    'name' => $attribute->name,
+                ];
+            }
+        }
+        return \response()->json($result);
+    }
 
     //Vue3 Edit
 
@@ -329,7 +344,6 @@ class ProductController extends Controller
         }
 
     }
-
 
     public function edit_description(Request $request, Product $product): RedirectResponse
     {
@@ -380,6 +394,7 @@ class ProductController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
     public function edit_equivalent(Request $request, Product $product): RedirectResponse
     {
         try {
@@ -389,6 +404,7 @@ class ProductController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
     public function edit_related(Request $request, Product $product): RedirectResponse
     {
         try {
@@ -398,6 +414,7 @@ class ProductController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
     public function edit_bonus(Request $request, Product $product): RedirectResponse
     {
         try {
@@ -407,6 +424,7 @@ class ProductController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
     public function edit_composite(Request $request, Product $product): RedirectResponse
     {
         try {
