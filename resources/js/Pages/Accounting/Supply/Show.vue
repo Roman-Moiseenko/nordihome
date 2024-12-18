@@ -15,7 +15,7 @@
                 <SupplyActions :supply="supply"/>
             </div>
         </el-affix>
-        <el-table :data="[...supply.products.data]"
+        <el-table :data="tableDate"
                   header-cell-class-name="nordihome-header"
                   style="width: 100%;"
                   :row-class-name="tableRowClassName"
@@ -59,7 +59,13 @@
             </el-table-column>
             <el-table-column label="Сумма в валюте" width="180">
                 <template #default="scope">
-                    {{ func.price(scope.row.quantity * scope.row.cost_currency, supply.currency) }}
+                    <el-input v-model="scope.row.amount" :formatter="val => func.MaskFloat(val, 2)"
+                              @change="setAmount(scope.row)"
+                              :disabled="iSaving"
+                              :readonly="!isEdit"
+                    >
+                        <template #append>{{ supply.currency }}</template>
+                    </el-input>
                 </template>
             </el-table-column>
             <el-table-column label="Сумма в рублях" width="180">
@@ -106,7 +112,11 @@ const props = defineProps({
     },
     printed: Object,
 })
-console.log(props.supply)
+const tableDate = [...props.supply.products.data.map(item => {
+    item.amount = (item.quantity * item.cost_currency).toFixed(2)
+    return item
+})]
+
 provide('$printed', props.printed)
 
 interface IRow {
@@ -133,11 +143,15 @@ function setItem(row) {
             cost: row.cost_currency
         },
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             iSaving.value = false;
         }
     })
+}
+function setAmount(row) {
+    row.cost_currency = row.amount / row.quantity
+    setItem(row)
 }
 
 function handleDeleteEntity(row) {

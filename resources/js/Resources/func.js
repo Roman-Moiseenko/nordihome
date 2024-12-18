@@ -76,9 +76,8 @@ export const func = {
         if (max !== null && val > max) val = max;
         return val;
     },
-    MaskFloat: (val) => {
+    MaskFloat: (val, rounded = 4) => {
         if (val === undefined || val === null) return 0;
-
         let last = val.slice(-1);
         let pre_val = val.substring(0, val.length - 1);
         if (last === ',') last = '.'
@@ -90,11 +89,7 @@ export const func = {
             return pre_val;
             //val = val.substring(0, val.length - 1);
         }
-        //console.log(val)
-        let new_val = pre_val + last
-
-
-        return new_val
+        return pre_val + last
     },
     fullName: (val) => {
         if (val === undefined || val === null) return '';
