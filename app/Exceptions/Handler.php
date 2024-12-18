@@ -49,8 +49,9 @@ class Handler extends ExceptionHandler
     {
 
         $response = parent::render($request, $e);
-        if (request()->is('admin/*')) {
-            if (/*!app()->environment('local') && */ in_array($response->status(), [500, 503, 404, 403, 419])) {
+
+        if (request()->is('admin/*')) {//Админ панель
+            if (in_array($response->status(), [500, 503, 404, 403, 419])) {
                 if ($response->status() == 403) return redirect()->back()->with('error', 'Отказано в доступе');
                 if ($response->status() > 500) {
                     if (config('app.debug')) {
@@ -66,7 +67,17 @@ class Handler extends ExceptionHandler
                     ->setStatusCode($response->status());
                 if ($response->status() == 419 )return redirect()->back()->with('warning', 'Срок действия страницы истек, попробуйте еще раз.');
             }
+            //Ошибки при работе с базой данный
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                if ($e->errorInfo[1] == 1062) {
+                    return redirect()->back()->with('error', 'Дубликат записи');
+                } else {
+
+                }
+
+            }
         } else {
+            //Клиентская часть
             if ($response->status() == 404) return response()->view('errors.' . '404', [], 404);
             //TODO Добавить все ошибки http
         }
@@ -74,16 +85,14 @@ class Handler extends ExceptionHandler
 
         //Исключение CRM
         if ($e instanceof \DomainException) {
-            if ($request->ajax()) {
-                return \response()->json(['error' => $e->getMessage()]);
-            } else {
+            if ($request->inertia()) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
 
-                if (request()->is('admin/*')) { //Админ панель
-                    flash($e->getMessage(), 'danger');
-                    return redirect()->back()->with('error', $e->getMessage());
-                } else { //Клиентская часть
-                    return redirect()->back()->with('danger', $e->getMessage()); //route('shop.home')
-                }
+            if ($request->ajax()) {
+                return \response()->json(['error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()]);
+            } else {
+                return redirect()->back()->with('error', $e->getMessage());
             }
         }
         return $response;

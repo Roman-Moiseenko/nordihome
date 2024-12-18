@@ -146,9 +146,9 @@ abstract class AccountingDocument extends Model
         $begin = Carbon::parse('01/01/' . $year);
         $end = Carbon::parse('01/01/' . ($year + 1));
         //Нумерация только по текущему году
-        $count = self::where('created_at', '>=', $begin)->where('created_at', '<', $end)->count();
-
-        $this->number = $this->prefix . ($count + 1);
+        //$count = self::where('created_at', '>=', $begin)->where('created_at', '<', $end)->count();
+        $max = (int)self::where('created_at', '>=', $begin)->where('created_at', '<', $end)->max('number');
+        $this->number = $this->prefix . ($max + 1);
     }
 
     final public function scopeCompleted($query)
@@ -181,7 +181,20 @@ abstract class AccountingDocument extends Model
 
     final public function baseSave(array $document): void
     {
-        $this->number = $document['number'] ?? '';
+        $year = $this->created_at->year;
+        $begin = Carbon::parse('01/01/' . $year);
+        $end = Carbon::parse('01/01/' . ($year + 1));
+        $number = trim($document['number'] ?? '');
+
+        if (
+            !is_null(self::where('id', '<>', $this->id)
+                ->where('number', $number)
+                ->where('created_at', '>=', $begin)->where('created_at', '<', $end)
+                ->first())
+        )
+            throw new \DomainException('Документ с таким номером уже существует');
+
+        $this->number = $number;
         $this->created_at = $document['created_at'];
         $this->incoming_number = $document['incoming_number'] ?? '';
         $this->incoming_at = $document['incoming_at'] ?? null;
@@ -234,7 +247,7 @@ abstract class AccountingDocument extends Model
         return $result;
     }
 
-    final protected function foundedGenerate(mixed $document):? array
+    final protected function foundedGenerate(mixed $document): ?array
     {
         if (is_null($document)) return null;
         if (is_array($document)) {
