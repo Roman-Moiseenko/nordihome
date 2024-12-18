@@ -60,6 +60,18 @@ Route::group(
                 Route::get('/', 'RefundController@index')->name('index');
             }
         );
+        //Распоряжения
+        Route::group(
+            [
+                'prefix' => 'product',
+                'as' => 'product.',
+            ],
+            function () {
+                Route::get('/', 'ProductController@index')->name('index');
+                Route::post('/show/{product}', 'ProductController@show')->name('show');
+
+            }
+        );
         //Платежи
         Route::resource('payment', 'PaymentController');
 

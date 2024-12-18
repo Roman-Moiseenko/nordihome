@@ -57,7 +57,7 @@ class ProductController extends Controller
 
     public function index(Request $request): Response
     {
-        $categories = $this->categories->forFilters();;
+        $categories = $this->categories->forFilters();
         $count = [
             'all' => Product::count(),
             'active' => Product::where('published', true)->count(),

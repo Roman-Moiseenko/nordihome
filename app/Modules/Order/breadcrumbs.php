@@ -82,3 +82,13 @@ Breadcrumbs::for('admin.order.refund.show', function (BreadcrumbTrail $trail, Or
     $trail->parent('admin.order.refund.index');
     $trail->push('Возврат по заказу ' . $refund->order->htmlNum() . ' от ' . $refund->order->htmlDate(), route('admin.order.refund.show', $refund));
 });
+//PRODUCT
+Breadcrumbs::for('admin.order.product.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.order.index');
+    $trail->push('Все товары', route('admin.order.product.index'));
+});
+
+Breadcrumbs::for('admin.order.product.show', function (BreadcrumbTrail $trail, \App\Modules\Product\Entity\Product $product) {
+    $trail->parent('admin.order.product.index');
+    $trail->push($product->name, route('admin.order.product.show', $product));
+});
