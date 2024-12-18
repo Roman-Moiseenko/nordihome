@@ -65,6 +65,11 @@ class Category extends Model
         return $this->parent_id == $category->id;
     }
 
+    public function getChildrenIdAll(): array
+    {
+        return Category::orderBy('id')->where('_lft', '>=', $this->_lft)->where('_rgt', '<=', $this->_rgt)->pluck('id')->toArray();
+
+    }
 
     public function getParentIdAll(): array
     {

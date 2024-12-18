@@ -21,9 +21,12 @@ class ProductRepository
         $filters = [];
         if (($category_id = $request->integer('category')) > 0) {
             $filters['category'] = $category_id;
-            $query->whereHas('categories', function ($query) use ($category_id) {
-                $query->where('id', $category_id);
-            })->orWhere('main_category_id', $category_id);
+            //Получить все дочерние категории
+            $categories = Category::find($category_id)->getChildrenIdAll();
+
+            $query->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('id', $categories);
+            })->orWhereIn('main_category_id', $categories);
         }
 
         if (!empty($name = $request->string('name')->trim()->value())) {
