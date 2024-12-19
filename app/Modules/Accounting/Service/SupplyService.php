@@ -97,7 +97,7 @@ class SupplyService
         DB::transaction(function () use($supply) {
             foreach ($supply->products as $product) {
                 if ($product->cost_currency == 0) throw new \DomainException('У товара не установлена цена поставщика');
-                $supply->distributor->addProduct($product->product, $product->cost_currency);
+                $supply->distributor->addProduct($product->product, (float)$product->cost_currency);
             }
 
             $supply->completed = true;

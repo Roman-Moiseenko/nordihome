@@ -91,94 +91,58 @@ class ArrivalController extends Controller
 
     public function completed(ArrivalDocument $arrival): RedirectResponse
     {
-        try {
-            $this->service->completed($arrival);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->completed($arrival);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function work(ArrivalDocument $arrival): RedirectResponse
     {
-        try {
-            $this->service->work($arrival);
-            return redirect()->back()->with('success', 'Документ в работе');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->work($arrival);
+        return redirect()->back()->with('success', 'Документ в работе');
     }
 
     public function set_info(ArrivalDocument $arrival, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($arrival, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($arrival, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function destroy(ArrivalDocument $arrival): RedirectResponse
     {
-        try {
-            $this->service->destroy($arrival);
-            return redirect()->back()->with('success', 'Удалено');
-        } catch (\DomainException $e) {
-            return redirect()->with('error', $e->getMessage());
-        }
+        $this->service->destroy($arrival);
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     //На основании: ====>
     public function expense(ArrivalDocument $arrival): RedirectResponse
     {
-        try {
-            $expense = $this->service->expense($arrival);
-            return redirect()->route('admin.accounting.arrival.expense.show', $expense);
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $expense = $this->service->expense($arrival);
+        return redirect()->route('admin.accounting.arrival.expense.show', $expense);
     }
 
     public function movement(ArrivalDocument $arrival): RedirectResponse
     {
-        try {
-            $movement = $this->service->movement($arrival);
-            return redirect()->route('admin.accounting.movement.show', $movement)->with('success', 'Документ сохранен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $movement = $this->service->movement($arrival);
+        return redirect()->route('admin.accounting.movement.show', $movement)->with('success', 'Документ сохранен');
     }
 
     public function pricing(ArrivalDocument $arrival): RedirectResponse
     {
-        try {
-            $pricing = $this->service->pricing($arrival);
-            return redirect()->route('admin.accounting.pricing.show', $pricing)->with('success', 'Документ сохранен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $pricing = $this->service->pricing($arrival);
+        return redirect()->route('admin.accounting.pricing.show', $pricing)->with('success', 'Документ сохранен');
     }
 
     public function refund(ArrivalDocument $arrival): RedirectResponse
     {
-        try {
-            $refund = $this->service->refund($arrival);
-            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ сохранен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $refund = $this->service->refund($arrival);
+        return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ сохранен');
     }
-    //<====
 
+    //<====
     public function add_product(Request $request, ArrivalDocument $arrival): RedirectResponse
     {
-        try {
-            $this->service->addProduct($arrival, $request->integer('product_id'), $request->float('quantity'));
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($arrival, $request->integer('product_id'), $request->float('quantity'));
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function add_products(Request $request, ArrivalDocument $arrival): RedirectResponse
@@ -186,22 +150,14 @@ class ArrivalController extends Controller
         $request->validate([
             'products' => 'required',
         ]);
-        try {
-            $this->service->addProducts($arrival, $request->input('products'));
-            return redirect()->back()->with('success', 'Товары добавлены');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($arrival, $request->input('products'));
+        return redirect()->back()->with('success', 'Товары добавлены');
     }
 
     public function set_product(ArrivalProduct $product, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setProduct($product, $request->float('quantity'), $request->float('cost'));
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setProduct($product, $request->float('quantity'), $request->float('cost'));
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function del_product(ArrivalProduct $product): RedirectResponse
@@ -220,52 +176,32 @@ class ArrivalController extends Controller
 
     public function expense_set_info(ArrivalExpenseDocument $expense, Request $request): RedirectResponse
     {
-        try {
-            $this->expenseService->setInfo($expense, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->expenseService->setInfo($expense, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function expense_add_item(Request $request, ArrivalExpenseDocument $expense): RedirectResponse
     {
-        try {
-            $this->expenseService->addItem($expense, $request);
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->expenseService->addItem($expense, $request);
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function expense_set_item(ArrivalExpenseItem $item, Request $request): RedirectResponse
     {
-        try {
-            $this->expenseService->setItem($item, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->expenseService->setItem($item, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function expense_del_item(ArrivalExpenseItem $item): RedirectResponse
     {
-        try {
-            $this->expenseService->delItem($item);
-            return redirect()->back()->with('success', 'Удалено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->expenseService->delItem($item);
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function expense_destroy(ArrivalExpenseDocument $expense): RedirectResponse
     {
-        try {
-            $arrival = $expense->arrival;
-            $expense->delete();
-            return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Удалено');
-        } catch (\DomainException $e) {
-            return redirect()->with('error', $e->getMessage());
-        }
+        $arrival = $expense->arrival;
+        $expense->delete();
+        return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Удалено');
     }
 }

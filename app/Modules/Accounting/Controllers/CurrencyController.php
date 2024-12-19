@@ -35,12 +35,8 @@ class CurrencyController extends Controller
         $request->validate([
             'name' => 'required|string',
         ]);
-        try {
-            $currency = $this->service->create($request);
-            return redirect()->route('admin.accounting.currency.show', $currency)->with('success', 'Валюта добавлена');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $currency = $this->service->create($request);
+        return redirect()->route('admin.accounting.currency.show', $currency)->with('success', 'Валюта добавлена');
     }
 
     public function show(Currency $currency): Response
@@ -56,21 +52,13 @@ class CurrencyController extends Controller
             'name' => 'required',
             'exchange' => 'required|numeric'
         ]);
-        try {
-            $this->service->update($request, $currency);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->update($request, $currency);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function destroy(Currency $currency): RedirectResponse
     {
-        try {
-            $this->service->destroy($currency);
-            return redirect()->back()->with('success', 'Валюта удалена');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->destroy($currency);
+        return redirect()->back()->with('success', 'Валюта удалена');
     }
 }

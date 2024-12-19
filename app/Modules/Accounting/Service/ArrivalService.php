@@ -170,7 +170,9 @@ class ArrivalService
             $this->storages->arrival($arrival->storage, $arrival->products); //Поступление на склад
             //Проходим все товары и добавляем Поставщику с новой ценой, если она изменилась или товара нет
             foreach ($arrival->products as $item) {
-                $arrival->distributor->addProduct($item->product, $item->cost_currency);
+                $arrival->distributor->addProduct($item->product, (float)$item->cost_currency);
+                if ($item->quantity == 0) throw new \DomainException('Некоторые позиции имеют нулевое кол-во');
+                if ($item->cost_currency == 0) throw new \DomainException('Некоторые позиции имеют нулевую цену');
             }
             $arrival->completed();
             //TODO Проверить и ?Переработать механизм

@@ -165,7 +165,7 @@ class MovementService // extends AccountingService
         DB::transaction(function () use ($movement) {
             $storageOut = $movement->storageOut;
             foreach ($movement->products as $movementProduct) {
-                $departureItem = StorageDepartureItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
+                $departureItem = StorageDepartureItem::new($movementProduct->product_id, (float)$movementProduct->quantity, $movementProduct->id);
                 $storageOut->departureItems()->save($departureItem);
 
             }
