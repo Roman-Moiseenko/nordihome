@@ -88,8 +88,9 @@ const props = defineProps({
     printed: Object,
     filters: Array,
 })
-provide('$filters', props.filters)
-provide('$printed', props.printed)
+provide('$filters', props.filters) //Фильтр товаров в списке документа
+provide('$printed', props.printed) //Для печати
+provide('$accounting', props.surplus) //Для общих действий
 interface IRow {
     cost_currency: number,
     quantity: number,

@@ -9,7 +9,7 @@
 
 
     </template>
-    <AccountingOnBased :based="payment.based" :founded="payment.founded"/>
+    <AccountingOnBased />
 </template>
 
 <script setup>

@@ -23,7 +23,7 @@
 <script setup>
 import {computed, reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
-import AccountingDocument from "@Comp/Pages/AccountingDocument.vue";
+import AccountingDocument from "@Comp/Accounting/Document.vue";
 import {func} from '@Res/func.js'
 
 const props = defineProps({

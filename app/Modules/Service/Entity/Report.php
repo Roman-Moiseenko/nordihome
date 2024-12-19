@@ -53,9 +53,6 @@ class Report extends Model
             if (empty($report->name)) {
                 $report->name = basename($report->file);
             }
-
-            //if (!empty($photo->fileForUpload)) $photo->uploadFile();
-            //if ($photo->createThumbsOnSave) $photo->createThumbs();
         });
         self::deleting(function (Report $report) {
 

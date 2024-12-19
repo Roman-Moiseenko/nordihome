@@ -32,24 +32,20 @@
 </template>
 
 <script lang="ts" setup>
-import {defineProps, ref} from "vue";
-import {router, Link} from "@inertiajs/vue3";
+import {inject, ref} from "vue";
+import {Link} from "@inertiajs/vue3";
 
-const props = defineProps({
-    based: {
-        type: Array,
-        default: [],
-    },
-    founded: Array,
-})
 interface Tree {
     url: string
     label: string
     children?: Tree[]
 }
 const dataSource = ref<Tree[]>([])
+const $accounting = inject('$accounting')
+const based = $accounting.based
+const founded = $accounting.founded
+if (based) dataSource.value = [...based]
 
-if (props.based) dataSource.value = [...props.based]
 </script>
 <style lang="scss">
 .accounting-based {

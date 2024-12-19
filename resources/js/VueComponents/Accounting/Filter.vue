@@ -9,7 +9,6 @@ import TableFilter from "@Comp/TableFilter.vue";
 import {inject, reactive} from "vue";
 
 const $filters = inject('$filters', [])
-console.log($filters)
 const filter = reactive({
     product: $filters.product,
 })

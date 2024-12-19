@@ -114,13 +114,15 @@ const props = defineProps({
     filters: Array,
 })
 provide('$filters', props.filters) //Фильтр товаров в списке документа
+provide('$printed', props.printed) //Для печати
+provide('$accounting', props.supply) //Для общих действий
 
 const tableDate = [...props.supply.products.data.map(item => {
     item.amount = (item.quantity * item.cost_currency).toFixed(2)
     return item
 })]
 
-provide('$printed', props.printed)
+
 
 interface IRow {
     cost_currency: number,

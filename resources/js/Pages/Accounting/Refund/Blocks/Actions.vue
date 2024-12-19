@@ -12,7 +12,7 @@
         <SearchAddProducts :route="route('admin.accounting.refund.add-products', {refund: refund.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.refund.completed', {refund: props.refund.id})" />
     </template>
-    <AccountingOnBased :based="refund.based" :founded="refund.founded"/>
+    <AccountingOnBased />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(refund.amount, refund.currency) }}</el-tag>

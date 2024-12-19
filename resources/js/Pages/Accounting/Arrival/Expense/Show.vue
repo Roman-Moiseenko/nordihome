@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref, defineProps, computed} from "vue";
+import {inject, ref, defineProps, computed, provide} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
@@ -78,7 +78,10 @@ const props = defineProps({
         type: String,
         default: 'Дополнительные расходы',
     },
+    printed: Object,
 })
+provide('$printed', props.printed) //Для печати
+provide('$accounting', props.expense) //Для общих действий
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.expense.completed);
 const $delete_entity = inject("$delete_entity")

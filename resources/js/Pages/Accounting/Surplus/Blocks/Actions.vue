@@ -12,7 +12,7 @@
         <SearchAddProducts :route="route('admin.accounting.surplus.add-products', {surplus: surplus.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.surplus.completed', {surplus: props.surplus.id})" />
     </template>
-    <AccountingOnBased :based="surplus.based" :founded="surplus.founded"/>
+    <AccountingOnBased />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(surplus.amount) }}</el-tag>

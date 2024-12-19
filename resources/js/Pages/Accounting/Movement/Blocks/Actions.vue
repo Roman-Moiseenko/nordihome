@@ -14,7 +14,7 @@
         <SearchAddProducts :route="route('admin.accounting.movement.add-products', {movement: movement.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.movement.completed', {movement: props.movement.id})" />
     </template>
-    <AccountingOnBased :based="movement.based" :founded="movement.founded"/>
+    <AccountingOnBased />
     <AccountingFilter />
 </template>
 

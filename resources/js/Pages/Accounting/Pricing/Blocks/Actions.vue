@@ -12,7 +12,7 @@
         <SearchAddProducts :route="route('admin.accounting.pricing.add-products', {pricing: pricing.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.pricing.completed', {pricing: props.pricing.id})" />
     </template>
-    <AccountingOnBased :based="pricing.based" :founded="pricing.founded"/>
+    <AccountingOnBased />
     <AccountingFilter />
 </template>
 

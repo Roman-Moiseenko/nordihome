@@ -12,7 +12,7 @@
         <SearchAddProducts :route="route('admin.accounting.departure.add-products', {departure: departure.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.departure.completed', {departure: props.departure.id})" />
     </template>
-    <AccountingOnBased :based="departure.based" :founded="departure.founded"/>
+    <AccountingOnBased />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(departure.amount) }}</el-tag>

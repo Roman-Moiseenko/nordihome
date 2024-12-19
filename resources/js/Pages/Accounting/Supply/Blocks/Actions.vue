@@ -12,8 +12,6 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-
-        <AccountingPrint />
         <AccountingWork :route="route('admin.accounting.supply.work', {supply: props.supply.id})" />
     </template>
     <template v-else>
@@ -25,7 +23,8 @@
         <SearchAddProducts :route="route('admin.accounting.supply.add-products', {supply: supply.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.supply.completed', {supply: props.supply.id})" />
     </template>
-    <AccountingOnBased :based="supply.based" :founded="supply.founded" />
+    <AccountingOnBased />
+    <AccountingPrint />
     <AccountingFilter />
     <span class="ml-auto">
         Позиций <el-tag type="primary" effect="dark" size="large">{{ supply.positions }}</el-tag>

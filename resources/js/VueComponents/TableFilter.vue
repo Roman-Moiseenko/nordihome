@@ -29,7 +29,6 @@ import { ref } from 'vue'
 import { router, usePage } from "@inertiajs/vue3";
 
 const send_filter = ref()
-
 const props = defineProps({
     filter: Object,
     count: Number,
@@ -42,12 +41,9 @@ const visible = ref(false)
 const filter = ref(props.filter)
 
 function selectSend() {
-    console.log(send_filter.value)
     send_filter.value.ref.focus()
 }
 function cancelFilter() {
-    console.log(999)
-
     router.get(window.location.href.split("?")[0])
 }
 function onClickOutside() {
@@ -57,7 +53,6 @@ function sendFilter() {
     router.get(usePage().url, filter.value)
 }
 </script>
-
 
 <style lang="scss">
 .item {

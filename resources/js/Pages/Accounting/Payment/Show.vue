@@ -55,7 +55,9 @@ const props = defineProps({
     payers: Array,
     printed: Object,
 })
-provide('$printed', props.printed)
+//provide('$filters', props.filters) //Фильтр товаров в списке документа
+provide('$printed', props.printed) //Для печати
+provide('$accounting', props.payment) //Для общих действий
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.payment.completed);
 const form = reactive({

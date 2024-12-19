@@ -8,7 +8,7 @@
 
         <AccountingCompleted :route="route('admin.accounting.inventory.completed', {inventory: props.inventory.id})" />
     </template>
-    <AccountingOnBased :based="inventory.based" :founded="inventory.founded"/>
+    <AccountingOnBased />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(inventory.amount_formal ) }}</el-tag>

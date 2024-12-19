@@ -1,6 +1,5 @@
 <template>
     <template v-if="expense.completed">
-
         <AccountingPrint />
     </template>
     <template v-else>
@@ -15,9 +14,8 @@
             <el-button type="primary" class="ml-5" @click="onSubmit">Добавить</el-button>
             <el-button type="danger" class="ml-auto" @click="onDelete">Удалить документ</el-button>
         </el-form>
-
     </template>
-    <AccountingOnBased :based="expense.based" :founded="expense.founded" />
+    <AccountingOnBased />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(expense.amount) }}</el-tag>
     </span>
@@ -28,8 +26,8 @@
 import {inject, defineProps, reactive} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
-import AccountingOnBased from "@Comp/Pages/AccountingOnBased.vue";
-import AccountingPrint from "@Comp/Pages/AccountingPrint.vue";
+import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
+import AccountingPrint from "@Comp/Accounting/Print.vue";
 
 const props = defineProps({
     expense: Object,

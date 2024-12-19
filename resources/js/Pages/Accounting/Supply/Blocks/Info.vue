@@ -29,7 +29,7 @@
 import {func} from '@Res/func.js'
 import {computed, reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
-import AccountingDocument from "@Comp/Pages/AccountingDocument.vue";
+import AccountingDocument from "@Comp/Accounting/Document.vue";
 
 const props = defineProps({
     supply: Object,

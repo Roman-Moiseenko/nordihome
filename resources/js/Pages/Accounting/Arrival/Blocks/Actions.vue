@@ -13,7 +13,7 @@
             </template>
         </el-dropdown>
 
-        <AccountingPrint :print="print" />
+
         <AccountingWork v-if="arrival.distributor_id" :route="route('admin.accounting.arrival.work', {arrival: props.arrival.id})" />
     </template>
     <template v-else>
@@ -25,7 +25,8 @@
         <el-button type="warning"  class="ml-3" @click="onExpenses">Доп. расходы</el-button>
         <AccountingCompleted :route="route('admin.accounting.arrival.completed', {arrival: props.arrival.id})" />
     </template>
-    <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>
+    <AccountingOnBased />
+    <AccountingPrint />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(arrival.amount, arrival.currency) }}</el-tag>
@@ -51,7 +52,6 @@ import AccountingFilter from "@Comp/Accounting/Filter.vue";
 
 const props = defineProps({
     arrival: Object,
-    print: Array,
 })
 
 function onExpenses() {

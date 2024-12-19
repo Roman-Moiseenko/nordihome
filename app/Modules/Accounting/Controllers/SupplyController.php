@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Accounting\Report\SupplyReport;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Accounting\Service\SupplyService;
@@ -28,12 +29,14 @@ class SupplyController extends Controller
     private StackRepository $stacks;
     private SupplyRepository $repository;
     private StaffRepository $staffs;
+    private SupplyReport $report;
 
     public function __construct(
         SupplyService    $service,
         StackRepository  $stacks,
         SupplyRepository $repository,
         StaffRepository  $staffs,
+        SupplyReport     $report,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting'])->except(['work', 'destroy']);
@@ -42,6 +45,7 @@ class SupplyController extends Controller
         $this->stacks = $stacks;
         $this->repository = $repository;
         $this->staffs = $staffs;
+        $this->report = $report;
     }
 
     public function index(Request $request): Response
@@ -89,10 +93,10 @@ class SupplyController extends Controller
 
     public function show(SupplyDocument $supply, Request $request): Response
     {
-
         return Inertia::render('Accounting/Supply/Show', [
             'supply' => $this->repository->SupplyWithToArray($supply, $request, $filters),
             'filters' => $filters,
+            'printed' => $this->report->index(),
         ]);
     }
 
