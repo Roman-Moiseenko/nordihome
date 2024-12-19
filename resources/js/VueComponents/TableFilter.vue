@@ -26,9 +26,20 @@
 <script lang="ts" setup>
 import { ClickOutside as vClickOutside } from 'element-plus'
 import { ref } from 'vue'
-import { router } from "@inertiajs/vue3";
+import { router, usePage } from "@inertiajs/vue3";
 
 const send_filter = ref()
+
+const props = defineProps({
+    filter: Object,
+    count: Number,
+    show_close: {
+        type: Boolean,
+        default: true,
+    },
+})
+const visible = ref(false)
+const filter = ref(props.filter)
 
 function selectSend() {
     console.log(send_filter.value)
@@ -39,40 +50,17 @@ function cancelFilter() {
 
     router.get(window.location.href.split("?")[0])
 }
-</script>
-
-<script lang="ts">
-import {router} from "@inertiajs/vue3";
-
-export default {
-    props: {
-        filter: Object,
-        count: Number,
-        show_close: {
-            type: Boolean,
-            default: true,
-        },
-    },
-    data() {
-        return {
-            visible: false,
-            filter: this.$props.filter,
-        }
-    },
-    methods: {
-        sendFilter() {
-            router.get(this.$page.url, this.$data.filter)
-        },
-        onClickOutside() {
-            this.$data.visible = false
-        },
-    }
+function onClickOutside() {
+    visible.value = false
+}
+function sendFilter() {
+    router.get(usePage().url, filter.value)
 }
 </script>
 
+
 <style lang="scss">
 .item {
- //   margin-top: 10px;
     margin-right: 30px;
 }
 </style>
