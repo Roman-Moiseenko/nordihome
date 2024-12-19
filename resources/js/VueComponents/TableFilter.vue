@@ -5,10 +5,11 @@
                 <el-icon><Close /></el-icon>
             </el-button>
 
-            <el-form :model="filter">
+            <el-form @keyup.esc="cancelFilter" @submit.prevent @keyup.enter="selectSend">
                 <slot />
                 <div class="mt-2">
-                    <el-button @click="cancelFilter">Сбросить</el-button><el-button @click="sendFilter" type="primary">Фильтр</el-button>
+                    <el-button @click="cancelFilter" native-type="button">Сбросить</el-button>
+                    <el-button ref="send_filter" @click="sendFilter" native-type="button" type="primary">Фильтр</el-button>
                 </div>
             </el-form>
             <template #reference>
@@ -24,7 +25,20 @@
 
 <script lang="ts" setup>
 import { ClickOutside as vClickOutside } from 'element-plus'
+import { ref } from 'vue'
+import { router } from "@inertiajs/vue3";
 
+const send_filter = ref()
+
+function selectSend() {
+    console.log(send_filter.value)
+    send_filter.value.ref.focus()
+}
+function cancelFilter() {
+    console.log(999)
+
+    router.get(window.location.href.split("?")[0])
+}
 </script>
 
 <script lang="ts">
@@ -48,9 +62,6 @@ export default {
     methods: {
         sendFilter() {
             router.get(this.$page.url, this.$data.filter)
-        },
-        cancelFilter() {
-            router.get(window.location.href.split("?")[0])
         },
         onClickOutside() {
             this.$data.visible = false
