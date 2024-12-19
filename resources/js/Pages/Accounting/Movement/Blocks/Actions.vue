@@ -15,6 +15,7 @@
         <AccountingCompleted :route="route('admin.accounting.movement.completed', {movement: props.movement.id})" />
     </template>
     <AccountingOnBased :based="movement.based" :founded="movement.founded"/>
+    <AccountingFilter />
 </template>
 
 <script setup>
@@ -28,6 +29,7 @@ import AccountingPrint from "@Comp/Accounting/Print.vue";
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import {ElLoading} from "element-plus";
+import AccountingFilter from "@Comp/Accounting/Filter.vue";
 
 const props = defineProps({
     movement: Object,

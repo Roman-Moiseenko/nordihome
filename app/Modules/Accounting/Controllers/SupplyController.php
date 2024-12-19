@@ -89,8 +89,10 @@ class SupplyController extends Controller
 
     public function show(SupplyDocument $supply, Request $request): Response
     {
+
         return Inertia::render('Accounting/Supply/Show', [
-            'supply' => $this->repository->SupplyWithToArray($supply, $request),
+            'supply' => $this->repository->SupplyWithToArray($supply, $request, $filters),
+            'filters' => $filters,
         ]);
     }
 

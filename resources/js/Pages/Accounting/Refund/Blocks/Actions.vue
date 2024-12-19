@@ -13,6 +13,7 @@
         <AccountingCompleted :route="route('admin.accounting.refund.completed', {refund: props.refund.id})" />
     </template>
     <AccountingOnBased :based="refund.based" :founded="refund.founded"/>
+    <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(refund.amount, refund.currency) }}</el-tag>
     </span>
@@ -28,6 +29,7 @@ import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
 import AccountingPrint from "@Comp/Accounting/Print.vue";
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
+import AccountingFilter from "@Comp/Accounting/Filter.vue";
 
 const props = defineProps({
     refund: Object,

@@ -81,15 +81,15 @@ class SupplyRepository extends AccountingRepository
         ]);
     }
 
-    public function SupplyWithToArray(SupplyDocument $document, Request $request): array
+    public function SupplyWithToArray(SupplyDocument $document, Request $request, &$filters): array
     {
+        $query = $this->productFilters($document, $request, $filters);
+
         $withData = [
             'currency_exchange' => $document->distributor->currency->exchange,
-            'products' => $document->products()
+            'products' => $query
                 ->with('product')
                 ->paginate($request->input('size', 20))
-                //->withQueryString()
-                //->through(fn (SupplyProduct $product) => $product->toArray()),
                 ->toArray(),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'arrivals' => $document->arrivals()->get()->map(function (ArrivalDocument $document) {

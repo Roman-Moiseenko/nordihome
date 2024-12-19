@@ -65,8 +65,9 @@ class SurplusController extends Controller
     {
         $storages = Storage::orderBy('name')->getModels();
         return Inertia::render('Accounting/Surplus/Show', [
-            'surplus' => $this->repository->SurplusWithToArray($surplus, $request),
+            'surplus' => $this->repository->SurplusWithToArray($surplus, $request, $filters),
             'storages' => $storages,
+            'filters' => $filters,
         ]);
     }
 

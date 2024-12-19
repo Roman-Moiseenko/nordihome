@@ -64,8 +64,9 @@ class InventoryController extends Controller
     public function show(InventoryDocument $inventory, Request $request): Response
     {
         return Inertia::render('Accounting/Inventory/Show', [
-            'inventory' => $this->repository->InventoryWithToArray($inventory, $request),
-           // 'printed' => $this->printed->getPrinted(),
+            'inventory' => $this->repository->InventoryWithToArray($inventory, $request, $filters),
+            'filters' => $filters,
+            // 'printed' => $this->printed->getPrinted(),
         ]);
     }
 

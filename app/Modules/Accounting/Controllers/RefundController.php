@@ -51,8 +51,9 @@ class RefundController extends Controller
     {
         $storages = Storage::orderBy('name')->getModels();
         return Inertia::render('Accounting/Refund/Show', [
-            'refund' => $this->repository->RefundWithToArray($refund, $request),
+            'refund' => $this->repository->RefundWithToArray($refund, $request, $filters),
             'storages' => $storages,
+            'filters' => $filters,
         ]);
     }
 

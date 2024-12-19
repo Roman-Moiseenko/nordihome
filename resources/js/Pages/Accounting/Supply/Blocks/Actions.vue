@@ -26,6 +26,7 @@
         <AccountingCompleted :route="route('admin.accounting.supply.completed', {supply: props.supply.id})" />
     </template>
     <AccountingOnBased :based="supply.based" :founded="supply.founded" />
+    <AccountingFilter />
     <span class="ml-auto">
         Позиций <el-tag type="primary" effect="dark" size="large">{{ supply.positions }}</el-tag>
         Товаров <el-tag type="warning" effect="dark" size="large">{{ supply.quantity }} шт</el-tag>
@@ -62,6 +63,7 @@ import AccountingPrint from "@Comp/Accounting/Print.vue";
 import { ElLoading } from 'element-plus'
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
+import AccountingFilter from "@Comp/Accounting/Filter.vue"
 
 const props = defineProps({
     supply: Object,

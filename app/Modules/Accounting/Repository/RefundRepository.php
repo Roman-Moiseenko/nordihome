@@ -39,13 +39,18 @@ class RefundRepository extends AccountingRepository
         ]);
     }
 
-    public function RefundWithToArray(RefundDocument $document, Request $request): array
+    public function RefundWithToArray(RefundDocument $document, Request $request, &$filters): array
     {
+        $query = $this->productFilters($document, $request, $filters);
+
         return array_merge(
             $this->commonItems($document),
             $this->RefundToArray($document),
             [
-                'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
+                'products' => $query
+                    ->with('product')
+                    ->paginate($request->input('size', 20))
+                    ->toArray(),
                 'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             ],
         );

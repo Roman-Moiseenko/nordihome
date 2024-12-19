@@ -36,13 +36,15 @@ class SurplusRepository extends AccountingRepository
         ]);
     }
 
-    public function SurplusWithToArray(SurplusDocument $document, Request $request): array
+    public function SurplusWithToArray(SurplusDocument $document, Request $request, &$filters): array
     {
+        $query = $this->productFilters($document, $request, $filters);
         return array_merge(
             $this->commonItems($document),
             $this->SurplusToArray($document),
             [
-                'products' => $document->products()->with('product')->paginate($request->input('size', 20))->toArray(),
+                'products' => $query
+                    ->with('product')->paginate($request->input('size', 20))->toArray(),
                 'inventory' => !is_null($document->inventory),
             ],
         );

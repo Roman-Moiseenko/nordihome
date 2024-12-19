@@ -111,7 +111,10 @@ const props = defineProps({
         default: 'Заказ поставщику',
     },
     printed: Object,
+    filters: Array,
 })
+provide('$filters', props.filters) //Фильтр товаров в списке документа
+
 const tableDate = [...props.supply.products.data.map(item => {
     item.amount = (item.quantity * item.cost_currency).toFixed(2)
     return item

@@ -26,6 +26,7 @@
         <AccountingCompleted :route="route('admin.accounting.arrival.completed', {arrival: props.arrival.id})" />
     </template>
     <AccountingOnBased :based="arrival.based" :founded="arrival.founded"/>
+    <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(arrival.amount, arrival.currency) }}</el-tag>
         <span v-if="arrival.expense_amount" class="ml-2">
@@ -46,6 +47,7 @@ import AccountingPrint from "@Comp/Accounting/Print.vue";
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import {ElLoading} from "element-plus";
+import AccountingFilter from "@Comp/Accounting/Filter.vue";
 
 const props = defineProps({
     arrival: Object,

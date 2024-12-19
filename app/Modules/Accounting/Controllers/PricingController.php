@@ -64,7 +64,8 @@ class PricingController extends Controller
     {
         //return view('admin.accounting.pricing.show', compact('pricing'));
         return Inertia::render('Accounting/Pricing/Show', [
-            'pricing' => $this->repository->PricingWithToArray($pricing, $request),
+            'pricing' => $this->repository->PricingWithToArray($pricing, $request, $filters),
+            'filters' => $filters,
         ]);
     }
 

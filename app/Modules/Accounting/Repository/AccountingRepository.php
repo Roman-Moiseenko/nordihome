@@ -4,6 +4,7 @@ namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\AccountingDocument;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 
 abstract class AccountingRepository
@@ -55,5 +56,22 @@ abstract class AccountingRepository
             'founded' => $document->onFounded(),
             'document_name' => $document->documentName(),
         ];
+    }
+
+    protected function productFilters(AccountingDocument $document, Request $request, &$filters): HasMany
+    {
+        $query = $document->products();
+        if ($request->has('product')) {
+            $product = $request->string('product')->trim()->value();
+            $filters['product'] = $product;
+            $query->whereHas('product', function ($query) use ($product) {
+                $query->whereRaw("LOWER(name) LIKE LOWER('%$product%')")
+                    ->orWhere('code', 'like', "%$product%")
+                    ->orWhere('code_search', 'like', "%$product%");
+            });
+        } else {
+            $filters = [];
+        }
+        return $query;
     }
 }

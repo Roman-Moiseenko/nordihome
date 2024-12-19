@@ -1,7 +1,7 @@
 <template>
-    <div class="elements">
+    <div class="elements my-auto">
         <el-popover :visible="visible" placement="bottom-start" :width="246" v-click-outside="onClickOutside">
-            <el-button @click="visible = false" type="info" class="mb-2" circle>
+            <el-button v-if="show_close" @click="visible = false" type="info" class="mb-2" circle>
                 <el-icon><Close /></el-icon>
             </el-button>
 
@@ -13,7 +13,7 @@
             </el-form>
             <template #reference>
                 <el-badge :value="count" class="item" color="green">
-                    <el-button @click="visible = true"  ref="buttonRef" type="primary">
+                    <el-button @click="visible = !visible"  ref="buttonRef" type="primary">
                         <el-icon><Filter /></el-icon>
                     </el-button>
                 </el-badge>
@@ -34,6 +34,10 @@ export default {
     props: {
         filter: Object,
         count: Number,
+        show_close: {
+            type: Boolean,
+            default: true,
+        },
     },
     data() {
         return {
@@ -55,9 +59,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .item {
-    margin-top: 10px;
+ //   margin-top: 10px;
     margin-right: 30px;
 }
 </style>

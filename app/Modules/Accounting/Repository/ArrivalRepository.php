@@ -44,10 +44,12 @@ class ArrivalRepository extends AccountingRepository
         ]);
     }
 
-    public function ArrivalWithToArray(ArrivalDocument $document, Request $request): array
+    public function ArrivalWithToArray(ArrivalDocument $document, Request $request, &$filters): array
     {
+        $query = $this->productFilters($document, $request, $filters);
+
         $withData = [
-            'products' => $document->products()
+            'products' => $query
                 ->with('product')
                 ->paginate($request->input('size', 20))
                 ->withQueryString()
@@ -56,9 +58,6 @@ class ArrivalRepository extends AccountingRepository
                 ])),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'expense_amount' => $document->getExpenseAmount(),
-           /* 'expense' => is_null($document->expense) ? null : array_merge($document->expense()->first()->toArray(),[
-                'amount' => $document->expense->getAmount(),
-            ]),*/
         ];
         return array_merge(
             $this->commonItems($document),

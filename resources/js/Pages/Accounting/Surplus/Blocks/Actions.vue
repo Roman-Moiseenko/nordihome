@@ -13,6 +13,7 @@
         <AccountingCompleted :route="route('admin.accounting.surplus.completed', {surplus: props.surplus.id})" />
     </template>
     <AccountingOnBased :based="surplus.based" :founded="surplus.founded"/>
+    <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(surplus.amount) }}</el-tag>
     </span>
@@ -29,6 +30,7 @@ import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
 import AccountingPrint from "@Comp/Accounting/Print.vue";
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
+import AccountingFilter from "@Comp/Accounting/Filter.vue";
 
 const props = defineProps({
     surplus: Object,

@@ -40,13 +40,15 @@ class PricingRepository extends AccountingRepository
         ]);
     }
 
-    public function PricingWithToArray(PricingDocument $document, Request $request): array
+    public function PricingWithToArray(PricingDocument $document, Request $request, &$filters): array
     {
+        $query = $this->productFilters($document, $request, $filters);
         return array_merge(
             $this->commonItems($document),
             $this->PricingToArray($document),
             [
-            'products' => $document->products()->paginate($request->input('size', 20))
+            'products' => $query
+                ->paginate($request->input('size', 20))
                 ->withQueryString()
                 ->through(fn(PricingProduct $product) => array_merge($product->toArray(), [
                     'name' => $product->product->name,

@@ -76,7 +76,9 @@ const props = defineProps({
         default: 'Инвентаризация',
     },
     printed: Object,
+    filters: Array,
 })
+provide('$filters', props.filters)
 provide('$printed', props.printed)
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.inventory.completed);

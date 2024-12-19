@@ -71,8 +71,9 @@ class DepartureController extends Controller
     {
         $storages = Storage::orderBy('name')->getModels();
         return Inertia::render('Accounting/Departure/Show', [
-            'departure' => $this->repository->DepartureWithToArray($departure, $request),
+            'departure' => $this->repository->DepartureWithToArray($departure, $request,$filters),
             'storages' => $storages,
+            'filters' => $filters,
         ]);
     }
 

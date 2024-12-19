@@ -13,6 +13,7 @@
         <AccountingCompleted :route="route('admin.accounting.pricing.completed', {pricing: props.pricing.id})" />
     </template>
     <AccountingOnBased :based="pricing.based" :founded="pricing.founded"/>
+    <AccountingFilter />
 </template>
 
 <script setup>
@@ -25,6 +26,7 @@ import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
 import AccountingPrint from "@Comp/Accounting/Print.vue";
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
+import AccountingFilter from "@Comp/Accounting/Filter.vue";
 
 const props = defineProps({
     pricing: Object,

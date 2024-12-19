@@ -77,7 +77,9 @@ const props = defineProps({
     },
     storages: Array,
     printed: Object,
+    filters: Array,
 })
+provide('$filters', props.filters)
 provide('$printed', props.printed)
 interface IRow {
     cost_currency: number,

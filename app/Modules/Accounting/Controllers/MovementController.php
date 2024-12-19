@@ -73,8 +73,9 @@ class MovementController extends Controller
     {
         $storages = Storage::orderBy('name')->get()->toArray();
         return Inertia::render('Accounting/Movement/Show', [
-            'movement' => $this->repository->MovementWithToArray($movement, $request),
+            'movement' => $this->repository->MovementWithToArray($movement, $request, $filters),
             'storages' => $storages,
+            'filters' => $filters,
         ]);
     }
 
