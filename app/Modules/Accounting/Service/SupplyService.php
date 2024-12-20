@@ -53,12 +53,16 @@ class SupplyService
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
-        return SupplyDocument::register(
+        $supply = SupplyDocument::register(
             $distributor->id,
             $manager->id,
             $distributor->currency->getExchange(),
             $distributor->currency_id
         );
+        if (is_null($distributor->organization)) throw new \DomainException('У поставщика не назначена организация по умолчанию');
+        $supply->organization_id = $distributor->organization->id;
+        $supply->save();
+        return $supply;
     }
 
     public function create(int $distributor_id, array $data): SupplyDocument
@@ -94,6 +98,7 @@ class SupplyService
     ////Фун-ции работы с Заказом =======>
     public function completed(SupplyDocument $supply): void
     {
+        if ($supply->products()->count() == 0) throw new \DomainException('В заказе нет позиций');
         DB::transaction(function () use($supply) {
             foreach ($supply->products as $product) {
                 if ($product->cost_currency == 0) throw new \DomainException('У товара не установлена цена поставщика');
@@ -200,7 +205,7 @@ class SupplyService
             $supply->exchange_fix = $request->input('exchange_fix');
         }
         $supply->supply_at = $request->input('supply_at');
-
+        $supply->organization_id = $request->input('organization_id');
         $supply->save();
     }
     ///<===============

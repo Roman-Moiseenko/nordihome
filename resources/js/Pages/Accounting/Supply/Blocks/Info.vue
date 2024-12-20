@@ -20,6 +20,11 @@
                 <el-form-item label="Плановая дата поступления">
                     <el-date-picker v-model="info.supply_at" type="date" clearable  @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit"/>
                 </el-form-item>
+                <el-form-item label="Организация исполнитель">
+                    <el-select v-model="info.organization_id"  @change="setInfo" :disabled="iSavingInfo || notEdit" >
+                        <el-option v-for="item in supply.distributor.organizations" :key="item.id" :value="item.id" :label="item.short_name"/>
+                    </el-select>
+                </el-form-item>
             </el-form>
         </el-col>
     </el-row>
@@ -45,6 +50,7 @@ const info = reactive({
     },
     exchange_fix: props.supply.exchange_fix,
     supply_at: props.supply.supply_at,
+    organization_id: props.supply.organization_id,
 })
 const notEdit = computed(() => props.supply.completed);
 

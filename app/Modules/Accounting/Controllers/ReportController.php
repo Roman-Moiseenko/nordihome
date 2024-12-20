@@ -11,7 +11,7 @@ class ReportController extends Controller
 {
     public function report(Request $request): BinaryFileResponse
     {
-        dd($request->all());
+        //dd($request->all());
         $class = $request->get('class');
         $id = $request->integer('id');
         $file = $class($id);

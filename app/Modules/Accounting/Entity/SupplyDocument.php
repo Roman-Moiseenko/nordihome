@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property float $exchange_fix
  * @property int $currency_id
  * @property Carbon $supply_at
+ * @property int $organization_id
  *
  * @property ArrivalDocument[] $arrivals  - документы, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
@@ -21,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property Distributor $distributor
  * @property Currency $currency
  * @property PaymentDocument[] $payments
+ * @property Organization $organization
  */
 class SupplyDocument extends AccountingDocument
 {

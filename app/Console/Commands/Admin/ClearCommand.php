@@ -129,6 +129,8 @@ class ClearCommand extends Command
                 $distributor->currency->exchange,
                 $distributor->currency_id,
             );
+            $supply->organization_id = $distributor->organization->id;
+            $supply->save();
             $this->warn('Загрузка товаров ' . $distributor->products()->count() . ' В Заказ');
             foreach ($distributor->products as $product) {
                 $distributor->products()->updateExistingPivot($product->id, ['cost' => 0, 'pre_cost' => null]);

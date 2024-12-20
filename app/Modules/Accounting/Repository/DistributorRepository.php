@@ -23,6 +23,8 @@ class DistributorRepository
             'credit' => $distributor->credit(),
             'currency' => $distributor->currency->sign,
             'foreign' => $distributor->foreign,
+            'organization_id' => $distributor->organization_id,
+            'organizations' => $distributor->organizations,
         ];
     }
 
