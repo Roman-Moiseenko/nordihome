@@ -1,16 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Service\Report;
+namespace App\Modules\Base\Service;
 
-use JetBrains\PhpStorm\Deprecated;
+use App\Modules\Admin\Entity\Options;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-#[Deprecated]
 class ReportService
 {
-    public function PriceToText(float $price): string
+    public function template(string $name): string
+    {
+        $config = (new Options())->report[$name];
+        return resource_path() . $config['template'];
+    }
+
+    public function PriceToText(float $price, string $currency = null): string
     {
         $nul = 'ноль';
         $ten = [
@@ -41,7 +46,7 @@ class ReportService
                 $uk = sizeof($unit) - $uk - 1; // unit key
                 $gender = $unit[$uk][3];
 
-                list($i1, $i2, $i3) = array_pad(array_map('intval', str_split($v, 1)),3, 0);
+                list($i1, $i2, $i3) = array_pad(array_map('intval', str_split($v, 1)), 3, 0);
                 // mega-logic
                 $out[] = $hundred[$i1]; # 1xx-9xx
                 if ($i2 > 1) $out[] = $tens[$i2] . ' ' . $ten[$gender][$i3]; # 20-99
@@ -50,8 +55,12 @@ class ReportService
                 if ($uk > 1) $out[] = $this->morph($v, $unit[$uk][0], $unit[$uk][1], $unit[$uk][2]);
             } //foreach
         } else $out[] = $nul;
-        $out[] = $this->morph(intval($rub), $unit[1][0], $unit[1][1], $unit[1][2]); // rub
-        $out[] = $kop . ' ' . $this->morph($kop, $unit[0][0], $unit[0][1], $unit[0][2]); // kop
+        if (is_null($currency)) {
+            $out[] = $this->morph(intval($rub), $unit[1][0], $unit[1][1], $unit[1][2]); // rub
+            $out[] = $kop . ' ' . $this->morph($kop, $unit[0][0], $unit[0][1], $unit[0][2]); // kop
+        } else {
+            $out[] = $currency;
+        }
         $string = trim(preg_replace('/ {2,}/', ' ', join(' ', $out)));
 
         return $this->firstUp($string);//mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string));
@@ -180,4 +189,35 @@ class ReportService
         $string = trim($string);
         return mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string));
     }
+
+    public function findReplace(Worksheet &$activeWorksheet, string $key, mixed $value, int $rows = 50, int $cols = 50): void
+    {
+        for ($row = 1; $rows < 50; $row++) {
+            for ($col = 1; $cols < 50; ++$col) {
+                $cell_data = $activeWorksheet->getCell([$col, $row])->getValue();
+
+                if (!is_null($cell_data)) {
+                    $cell_data = str_replace($key, (string)$value, (string)$cell_data);//Номер и дата
+                    $activeWorksheet->setCellValue([$col, $row], $cell_data);
+                }
+
+            }
+        }
+    }
+
+    public function findReplaceArray(Worksheet &$activeWorksheet, array $items, int $rows = 50, int $cols = 50): void
+    {
+        for ($row = 1; $row < $rows; $row++) {
+            for ($col = 1; $col < $cols; ++$col) {
+                $cell_data = $activeWorksheet->getCell([$col, $row])->getValue();
+
+                if (!is_null($cell_data)) {
+                    foreach ($items as $key => $value)
+                        $cell_data = str_replace($key, (string)$value, (string)$cell_data);
+                    $activeWorksheet->setCellValue([$col, $row], $cell_data);
+                }
+            }
+        }
+    }
+
 }

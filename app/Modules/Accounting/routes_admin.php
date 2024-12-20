@@ -233,7 +233,7 @@ Route::group(
 
             });
 
-        Route::post('/report', 'ReportController@report')->name('report');
+
 
         Route::resource('inventory', 'InventoryController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('refund', 'RefundController')->except(['create', 'edit', 'update']); //CRUD

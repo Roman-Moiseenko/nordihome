@@ -63,7 +63,7 @@ class Distributor extends Model
         /** @var SupplyDocument[] $supplies */ //Увеличиваем долг проведенными заказами
         $supplies = $this->supplies()->where('completed', true)->get(); //Проведенные заказы
         foreach ($supplies as $supply) {
-            $amount += $supply->getAmount();
+            $amount += $supply->getAmountRefunds();
         }
         /** @var RefundDocument $refunds */ //Уменьшаем долг проведенными возвратами
      /*   $refunds = $this->refunds()->where('completed', true)->get();

@@ -8,18 +8,17 @@ use App\Modules\Order\Entity\Order\Order;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf;
+use App\Modules\Base\Service\ReportService;
 
 class InvoiceReport
 {
     private string $template;
-    private array $invoice;
     private ReportService $service;
 
     public function __construct(ReportService $service)
     {
-        $this->invoice = (new Options())->report['invoice'];
-        $this->template = storage_path() . $this->invoice['template'];
         $this->service = $service;
+        $this->template = $this->service->template('invoice');
     }
 
     private function create_xls(Order $order): Spreadsheet
@@ -30,23 +29,35 @@ class InvoiceReport
 
         //TODO Данные об организации - в счет
 
+        $replaceItems = [
+            '{num-date}' => $order->htmlNumDate(),
+            '{client}' => $order->userFullName(),
+            '{quantity}' => (string)($order->getQuantity() + $order->additions()->count()),
+            '{amount}' => price($order->getTotalAmount()),
+            '{amount_text}' => $this->service->PriceToText($order->getTotalAmount()),
+        ];
+        $this->service->findReplaceArray($activeWorksheet, $replaceItems);
+
+
+
         //Данные о клиенте и Данные отчета
-        for ($row = 1; $row < 50; $row++) {
-            for ($col = 1; $col < 50; ++$col) {
-                $value = $activeWorksheet->getCell([$col, $row])->getValue();
+        /*
+         for ($row = 1; $row < 50; $row++) {
+             for ($col = 1; $col < 50; ++$col) {
+                 $value = $activeWorksheet->getCell([$col, $row])->getValue();
 
-                if (!is_null($value)) {
-                    $value = str_replace('{num-date}', (string)$order->htmlNumDate(), (string)$value);//Номер и дата
-                    $value = str_replace('{client}', (string)$order->userFullName(), (string)$value);//Клиент
-                    $value = str_replace('{quantity}', (string)($order->getQuantity() + $order->additions()->count()), (string)$value);//Кол-во товаров
-                    $value = str_replace('{amount}', price($order->getTotalAmount()), (string)$value);//Сумма по заказу
-                    $value = str_replace('{amount_text}', $this->service->PriceToText($order->getTotalAmount()), (string)$value);//Сумма по заказу
+                 if (!is_null($value)) {
+                     $value = str_replace('{num-date}', (string)$order->htmlNumDate(), (string)$value);//Номер и дата
+                     $value = str_replace('{client}', (string)$order->userFullName(), (string)$value);//Клиент
+                     $value = str_replace('{quantity}', (string)($order->getQuantity() + $order->additions()->count()), (string)$value);//Кол-во товаров
+                     $value = str_replace('{amount}', price($order->getTotalAmount()), (string)$value);//Сумма по заказу
+                     $value = str_replace('{amount_text}', $this->service->PriceToText($order->getTotalAmount()), (string)$value);//Сумма по заказу
 
-                    $activeWorksheet->setCellValue([$col, $row], $value);
-                }
-            }
-        }
-
+                     $activeWorksheet->setCellValue([$col, $row], $value);
+                 }
+             }
+         }
+ */
         //Список товара
         $begin_row_products = 15; //TODO Перенести в настройки отчетов
         $_from = $begin_row_products;

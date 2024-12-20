@@ -79,16 +79,11 @@ class SupplyDocument extends AccountingDocument
     }
 
     /**
-     * Сумма заказа в валюте поставщика
+     * Сумма заказа в валюте поставщика с учетом возврата
      */
-    public function getAmount(): float
+    public function getAmountRefunds(): float
     {
-        $amount = 0;
-        foreach ($this->products as $product) {
-            $amount += $product->quantity * $product->cost_currency;
-        }
-
-
+        $amount = $this->getAmount();
         //TODO Добавить доп.расходы Отнять возвраты
 
         foreach ($this->arrivals as $arrival) {
@@ -96,8 +91,28 @@ class SupplyDocument extends AccountingDocument
                 $amount -= $refund->getAmount();
             }
         }
-        return $amount;
+        return ceil($amount * 100) / 100;
     }
+
+    public function getAmount(): float
+    {
+        $amount = 0;
+        foreach ($this->products as $product) {
+            $amount += $product->quantity * $product->cost_currency;
+        }
+        return ceil($amount * 100) / 100;
+    }
+
+    public function getAmountVAT(): float
+    {
+        $amount = 0;
+        foreach ($this->products as $product) {
+            if (!is_null($product->product->VAT) && !is_null($product->product->VAT->value))
+                $amount += $product->quantity * $product->cost_currency * ($product->product->VAT->value / 100);
+        }
+        return ceil($amount * 100) / 100;
+    }
+
 
     public function getQuantityStack(Product $product): float
     {
@@ -125,10 +140,15 @@ class SupplyDocument extends AccountingDocument
 
     public function debit(): float
     {
-        return $this->getAmount() - $this->getPayment();
+        return $this->getAmountRefunds() - $this->getPayment();
     }
 
     //** RELATIONS */
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'currency_id', 'id');

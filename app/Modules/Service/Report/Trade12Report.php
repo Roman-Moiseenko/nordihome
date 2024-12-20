@@ -13,11 +13,11 @@ use JetBrains\PhpStorm\ArrayShape;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use App\Modules\Base\Service\ReportService;
 
 class Trade12Report
 {
     private string $template;
-    private array $invoice;
     private ReportService $service;
 
     const FIRST_START = 10;
@@ -30,9 +30,8 @@ class Trade12Report
 
     public function __construct(ReportService $service)
     {
-        $this->invoice = (new Options())->report['trade12'];
-        $this->template = storage_path() . $this->invoice['template'];
         $this->service = $service;
+        $this->template = $this->service->template('trade12');
     }
 
     public function xlsx(OrderExpense $expense): string

@@ -54,6 +54,11 @@ return [
     ],
     //TODO Перенести в DB
     'report' => [
+        'supply' => [
+            'template' => '/template/accounting/_supply.xlsx',
+        ],
+
+
         'base_path' => '',
         'invoice' => [
             'template' => '/template/_invoice.xlsx',

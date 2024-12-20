@@ -74,10 +74,10 @@ class DistributorRepository
                 'contacts' => is_null($distributor->organization) ? [] : $distributor->organization->contacts,
                 'supplies' => array_filter(array_map(
                     function (SupplyDocument $supply) {
-                        if ($supply->getAmount() == $supply->getPayment()) return false;
+                        if ($supply->getAmountRefunds() == $supply->getPayment()) return false;
                         return [
                             'id' => $supply->id,
-                            'debt' => $supply->getAmount() - $supply->getPayment(),
+                            'debt' => $supply->getAmountRefunds() - $supply->getPayment(),
                             'created_at' => $supply->created_at,
                             'number' => $supply->number,
                         ];

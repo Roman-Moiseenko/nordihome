@@ -12,3 +12,5 @@ Route::group(
         Route::post('/remove-file', 'FileController@remove_file')->name('remove-file');
     }
 );
+
+Route::post('/report', 'ReportController@report')->name('report');

@@ -70,13 +70,13 @@ class SupplyRepository extends AccountingRepository
         return array_merge($document->toArray(), [
             'quantity' => $document->getQuantity(),
             'positions' => $document->products()->count(),
-            'amount' => $document->getAmount(),
+            'amount' => $document->getAmountRefunds(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'currency' => $document->distributor->currency->sign,
 
             'distributor_name' => $document->distributor->name,
             'date' => $document->htmlDate(),
-            'status_pay' => ($document->getAmount() == 0) ? 0 : round($document->getPayment() / $document->getAmount(), 1),
+            'status_pay' => ($document->getAmountRefunds() == 0) ? 0 : round($document->getPayment() / $document->getAmountRefunds(), 1),
             'status_out' => ($document->getQuantity() == 0) ? 0 : round($document->getOutQuantity() / $document->getQuantity(), 1)
         ]);
     }

@@ -9,13 +9,16 @@ abstract class AccountingReport
 
     final public function renderArray(array $items): array
     {
-        $array = array_select($items);
-
-        return array_map(function ($item) {
-            return [
-                'label' => $item['label'],
-                'value' => static::class . '::' . $item['label'],
+        $result = [];
+        foreach ($items as $key => $value) {
+            $result[] = [
+                'method' => $key,
+                'class' => static::class,
+                'label' => $value,
             ];
-        }, $array);
+        }
+        return $result;
     }
+
+
 }
