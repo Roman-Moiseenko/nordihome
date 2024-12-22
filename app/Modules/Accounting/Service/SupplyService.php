@@ -146,7 +146,7 @@ class SupplyService
                     $item = ArrivalProduct::new(
                         $supplyProduct->product_id,
                         $quantity,//Высчитываем свободное кол-во
-                        $supplyProduct->cost_currency,
+                        (float)$supplyProduct->cost_currency,
                     );
                     $arrival->products()->save($item);
                 }

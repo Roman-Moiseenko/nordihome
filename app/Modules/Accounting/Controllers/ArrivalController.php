@@ -12,6 +12,7 @@ use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Report\ArrivalReport;
 use App\Modules\Accounting\Repository\ArrivalRepository;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Service\ArrivalExpenseService;
@@ -35,12 +36,14 @@ class ArrivalController extends Controller
     private ArrivalRepository $repository;
     private StaffRepository $staffs;
     private ArrivalExpenseService $expenseService;
+    private ArrivalReport $report;
 
     public function __construct(
         ArrivalService        $service,
         ArrivalExpenseService $expenseService,
         ArrivalRepository     $repository,
         StaffRepository       $staffs,
+        ArrivalReport         $report,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
@@ -49,6 +52,7 @@ class ArrivalController extends Controller
         $this->repository = $repository;
         $this->staffs = $staffs;
         $this->expenseService = $expenseService;
+        $this->report = $report;
     }
 
     public function index(Request $request): Response
@@ -86,6 +90,7 @@ class ArrivalController extends Controller
             'filters' => $filters,
             'storages' => $storages,
             'operations' => $this->repository->getOperations(),
+            'printed' => $this->report->index(),
         ]);
     }
 

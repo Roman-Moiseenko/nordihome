@@ -79,6 +79,16 @@ class ArrivalDocument extends AccountingDocument
         return (float)$amount->total ?? 0.0;
     }
 
+    public function getAmountVAT(): float
+    {
+        $amount = 0;
+        foreach ($this->products as $product) {
+            if (!is_null($product->product->VAT) && !is_null($product->product->VAT->value))
+                $amount += $product->quantity * $product->cost_currency * ($product->product->VAT->value / 100);
+        }
+        return ceil($amount * 100) / 100;
+    }
+
     public function getQuantity(): float
     {
         $quantity = ArrivalProduct::selectRaw('SUM(quantity * 1) AS total')

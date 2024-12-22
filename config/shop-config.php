@@ -57,7 +57,9 @@ return [
         'supply' => [
             'template' => '/template/accounting/_supply.xlsx',
         ],
-
+        'arrival' => [
+            'template' => '/template/accounting/_arrival.xlsx',
+        ],
 
         'base_path' => '',
         'invoice' => [
