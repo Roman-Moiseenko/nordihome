@@ -6,9 +6,11 @@ namespace App\Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Report\SupplyReport;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Repository\SupplyRepository;
@@ -93,10 +95,20 @@ class SupplyController extends Controller
 
     public function show(SupplyDocument $supply, Request $request): Response
     {
+
+        $customers = Organization::has('trader')->get()->map(function (Organization $organization) {
+            return [
+                'id' => $organization->id,
+                'short_name' => $organization->short_name,
+                'inn' => $organization->inn,
+            ];
+        });
+
         return Inertia::render('Accounting/Supply/Show', [
             'supply' => $this->repository->SupplyWithToArray($supply, $request, $filters),
             'filters' => $filters,
             'printed' => $this->report->index(),
+            'customers' => $customers,
         ]);
     }
 

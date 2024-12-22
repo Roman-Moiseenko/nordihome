@@ -884,7 +884,7 @@ class Product extends Model
 
     public function measuring(): BelongsTo
     {
-        return $this->belongsTo(Measuring::class, 'measuring_id', 'id');
+        return $this->belongsTo(Measuring::class, 'measuring_id', 'id')->withDefault(['name' => 'шт.']);
     }
 
     public function markingType(): BelongsTo

@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property int $currency_id
  * @property Carbon $supply_at
  * @property int $organization_id
+ * @property int $customer_id
  *
  * @property ArrivalDocument[] $arrivals  - документы, который создастся после исполнения заказа
  * @property SupplyProduct[] $products
@@ -22,7 +23,8 @@ use Illuminate\Support\Carbon;
  * @property Distributor $distributor
  * @property Currency $currency
  * @property PaymentDocument[] $payments
- * @property Organization $organization
+ * @property Organization $organization Организация поставщика
+ * @property Organization $customer Заказчик
  */
 class SupplyDocument extends AccountingDocument
 {
@@ -144,6 +146,11 @@ class SupplyDocument extends AccountingDocument
     }
 
     //** RELATIONS */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'customer_id', 'id');
+    }
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');

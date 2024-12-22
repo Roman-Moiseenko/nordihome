@@ -20,7 +20,8 @@
         <div class="text-center">
             @foreach($storages as $storage)
                 @php
-                    $storageItem = $storage->getItem($item->product);
+                    $storageItem = $storage->getItem($item->product_id);
+                    if (is_null($storageItem)) dd($item->product_id);
                     $orderReserve = $item->getReserveByStorageItem($storageItem->id);
                 @endphp
                 <div class="flex items-center">

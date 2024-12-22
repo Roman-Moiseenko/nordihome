@@ -39,26 +39,8 @@ class DistributorService
                 $distributor->foreign = true;
                 $distributor->save();
             }
-            /*
-            $organization = $this->service->create_find(
-                $request->string('inn')->trim()->value(),
-                $request->string('bik')->trim()->value(),
-                $request->string('account')->trim()->value()
-            );
-            $this->attach($distributor, $organization->id);
-            */
         });
 
-        return $distributor;
-    }
-
-    public function update(Request $request, Distributor $distributor): Distributor
-    {
-        $distributor->name = $request->string('name')->trim()->value();
-        $distributor->currency_id = $request->integer('currency_id');
-        $distributor->organization_id = $request->integer('organization_id');
-        $distributor->foreign = $request->boolean('foreign');
-        $distributor->save();
         return $distributor;
     }
 
@@ -76,7 +58,7 @@ class DistributorService
                 ) {
                     $count = ($product->balance->max) ?? $product->balance->min;
                     if ($count > $product->getQuantity()) $count -= $product->getQuantity();
-                    $supply->addProduct($product, $count, $product->pivot->cost);
+                    $supply->addProduct($product, $count, (float)$product->pivot->cost);
                 }
             }
             $supply->refresh();

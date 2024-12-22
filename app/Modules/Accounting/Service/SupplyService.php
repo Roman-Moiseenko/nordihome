@@ -61,6 +61,8 @@ class SupplyService
         );
         if (is_null($distributor->organization)) throw new \DomainException('У поставщика не назначена организация по умолчанию');
         $supply->organization_id = $distributor->organization->id;
+        $trader = Trader::default();
+        $supply->customer_id = $trader->organization->id;
         $supply->save();
         return $supply;
     }
@@ -206,6 +208,7 @@ class SupplyService
         }
         $supply->supply_at = $request->input('supply_at');
         $supply->organization_id = $request->input('organization_id');
+        $supply->customer_id = $request->input('customer_id');
         $supply->save();
     }
     ///<===============

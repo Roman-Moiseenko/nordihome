@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 /**
  * @property int $id
  * @property int $currency_id
- * @property int $organization_id
  * @property string $name
  * @property bool $foreign
  * @property ArrivalDocument[] $arrivals
@@ -150,7 +149,11 @@ class Distributor extends Model
 
     public function organization(): HasOneThrough
     {
-        return $this->hasOneThrough(Organization::class, DistributorOrganization::class, 'distributor_id', 'id', 'id', 'organization_id')
+        return $this->hasOneThrough(
+            Organization::class,
+            DistributorOrganization::class,
+            'distributor_id', 'id',
+            'id', 'organization_id')
             ->where('distributor_organizations.default', true);
 
 
@@ -167,7 +170,7 @@ class Distributor extends Model
             ->withPivot(['default']);
     }
 
-    public function getProduct(int $product_id)
+    public function getProduct(int $product_id): ?Product
     {
         foreach ($this->products as $_product) {
             if ($_product->id == $product_id) return $_product;

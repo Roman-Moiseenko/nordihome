@@ -71,6 +71,7 @@ class Trade12Report
             $amount_page = $this->emptyAmount(); //Обнуляем данные Итого по странице
             for ($i = $start; $i < $start + $page; $i++) {
                 if ($i != count($list_items) - 1) $this->_row_insert($i + $n * 4);
+
                 $this->_row($i + $n * 4, $list_items[$i], $amount_page);
             }
             //Суммируем итого по страницам
@@ -85,7 +86,7 @@ class Trade12Report
                 $start += $page;
             } else { //Для последней строки без вставки разделения
                 $this->_row_amount($i + $n * 4, $amount_page);
-                $this->_row_amount($i + +$n * 4 + 1, $amount);//Добавляем ВСЕГО
+                $this->_row_amount($i + $n * 4 + 1, $amount);//Добавляем ВСЕГО
             }
         }
         $spreadsheet->getActiveSheet()->getPageSetup()->setFitToWidth(1);
@@ -143,7 +144,7 @@ class Trade12Report
     {
         $row = self::BEGIN_ROW + $i;
         $this->activeWorksheet->insertNewRowBefore($row, 1);
-        $this->service->copyRows($this->activeWorksheet, 'A' . ($row + 1) . ':AO' . ($row + 1), 'A' . $row);
+        $this->service->copyRowsRange($this->activeWorksheet, 'A' . ($row + 1) . ':AO' . ($row + 1), 'A' . $row);
     }
 
     private function _divide_insert(int $i, string $name_page)
@@ -151,16 +152,16 @@ class Trade12Report
         $row = self::BEGIN_ROW + $i;
         //Итого на страницу
         $this->activeWorksheet->insertNewRowBefore($row, 2);
-        $this->service->copyRows($this->activeWorksheet, 'A' . ($row + 3) . ':AN' . ($row + 3), 'A' . $row);
+        $this->service->copyRowsRange($this->activeWorksheet, 'A' . ($row + 3) . ':AN' . ($row + 3), 'A' . $row);
         //Разрыв печати
         $this->activeWorksheet->setBreak('A' . $row, \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::BREAK_ROW);
         //Разделитель
-        $this->service->copyRows($this->activeWorksheet, 'A19:AO19', 'A' . $row + 1);
+        $this->service->copyRowsRange($this->activeWorksheet, 'A19:AO19', 'A' . $row + 1);
         $this->activeWorksheet->setCellValue([40, self::BEGIN_ROW + $i + 1], $name_page);
         //Шапка
         $row += 2;
         $this->activeWorksheet->insertNewRowBefore($row, 2);
-        $this->service->copyRows($this->activeWorksheet, 'A20:AO21', 'A' . $row);
+        $this->service->copyRowsRange($this->activeWorksheet, 'A20:AO21', 'A' . $row);
     }
 
     private function _row(int $i, OrderExpenseItem|OrderExpenseAddition $element, array &$amount)

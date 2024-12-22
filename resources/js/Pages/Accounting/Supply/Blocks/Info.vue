@@ -25,6 +25,12 @@
                         <el-option v-for="item in supply.distributor.organizations" :key="item.id" :value="item.id" :label="item.short_name"/>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="Организация заказчик">
+                    <el-select v-model="info.customer_id"  @change="setInfo" :disabled="iSavingInfo || notEdit" filterable>
+                        <el-option v-for="item in customers" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
+                    </el-select>
+                </el-form-item>
+
             </el-form>
         </el-col>
     </el-row>
@@ -38,6 +44,7 @@ import AccountingDocument from "@Comp/Accounting/Document.vue";
 
 const props = defineProps({
     supply: Object,
+    customers: Array,
 })
 const iSavingInfo = ref(false)
 const info = reactive({
@@ -51,6 +58,7 @@ const info = reactive({
     exchange_fix: props.supply.exchange_fix,
     supply_at: props.supply.supply_at,
     organization_id: props.supply.organization_id,
+    customer_id: props.supply.customer_id,
 })
 const notEdit = computed(() => props.supply.completed);
 

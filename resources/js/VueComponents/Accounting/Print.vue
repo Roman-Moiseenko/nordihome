@@ -17,6 +17,7 @@
 
 <script setup>
 import {inject, defineProps} from 'vue'
+import {ElLoading} from "element-plus";
 import {Link, router} from "@inertiajs/vue3";
 import axios from "axios";
 
@@ -26,6 +27,11 @@ const $printed = inject('$printed', [])
 const $accounting = inject('$accounting')
 
 function getReport(val) {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Идет формирование отчета',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     console.log(val)
     axios.post(route('admin.report'),null,
         {
@@ -44,8 +50,10 @@ function getReport(val) {
         link._target = 'blank'
         document.body.appendChild(link);
         link.click();
+        loading.close()
         URL.revokeObjectURL(link.href)
     }).catch(reason => {
+        loading.close()
         console.log('reason', reason)
     })
 }

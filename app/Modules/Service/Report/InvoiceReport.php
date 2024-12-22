@@ -69,7 +69,7 @@ class InvoiceReport
 
             if ($count_additions != 0 || $i != $count_items - 1) {
                 $activeWorksheet->insertNewRowBefore($_from, 1);
-                $this->service->copyRows($activeWorksheet, 'A' . $_to . ':J' . $_to, 'A' . $_from);
+                $this->service->copyRowsRange($activeWorksheet, 'A' . $_to . ':J' . $_to, 'A' . $_from);
             }
 
             $activeWorksheet->setCellValue([1, $begin_row_products + $i], ($i + 1));
@@ -89,7 +89,7 @@ class InvoiceReport
 
             if ($j < $count_additions - 1) {
                 $activeWorksheet->insertNewRowBefore($_from, 1);
-                $this->service->copyRows($activeWorksheet, 'A' . $_to . ':J' . $_to, 'A' . $_from);
+                $this->service->copyRowsRange($activeWorksheet, 'A' . $_to . ':J' . $_to, 'A' . $_from);
             }
 
             $activeWorksheet->setCellValue([1, $begin_row_products + $count_items + $j], ($j + 1 + $count_items));

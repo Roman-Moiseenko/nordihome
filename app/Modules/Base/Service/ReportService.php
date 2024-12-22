@@ -5,6 +5,9 @@ namespace App\Modules\Base\Service;
 
 use App\Modules\Admin\Entity\Options;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ReportService
@@ -103,35 +106,17 @@ class ReportService
         return $this->firstUp($hundred[$_h] . ' ' . $ten[$gender][$_hd]);
     }
 
-    public function copyRows(Worksheet $sheet, $srcRange, $dstCell, Worksheet $destSheet = null)
+    public function copyRows(Worksheet &$sheet, array $cellsStart, array $cellsEnd, array $dstCell): void
     {
+        $destSheet = $sheet;
 
-        if (!isset($destSheet)) {
-            $destSheet = $sheet;
-        }
+        $srcColumnStart = $cellsStart[0];
+        $srcRowStart = $cellsStart[1];
+        $srcColumnEnd = $cellsEnd[0];
+        $srcRowEnd = $cellsEnd[1];
 
-        if (!preg_match('/^([A-Z]+)(\d+):([A-Z]+)(\d+)$/', $srcRange, $srcRangeMatch)) {
-            // Invalid src range
-            return;
-        }
-
-        if (!preg_match('/^([A-Z]+)(\d+)$/', $dstCell, $destCellMatch)) {
-            // Invalid dest cell
-            return;
-        }
-
-        $srcColumnStart = $srcRangeMatch[1];
-        $srcRowStart = (int)$srcRangeMatch[2];
-        $srcColumnEnd = $srcRangeMatch[3];
-        $srcRowEnd = (int)$srcRangeMatch[4];
-
-
-        $destColumnStart = $destCellMatch[1];
-        $destRowStart = (int)$destCellMatch[2];
-
-        $srcColumnStart = Coordinate::columnIndexFromString($srcColumnStart);
-        $srcColumnEnd = Coordinate::columnIndexFromString($srcColumnEnd);
-        $destColumnStart = Coordinate::columnIndexFromString($destColumnStart);
+        $destColumnStart = $dstCell[0];
+        $destRowStart = $dstCell[1];
 
         $rowCount = 0;
         for ($row = $srcRowStart; $row <= $srcRowEnd; $row++) {
@@ -184,6 +169,27 @@ class ReportService
         }
     }
 
+    public function copyRowsRange(Worksheet $sheet, $srcRange, $dstCell, Worksheet $destSheet = null): void
+    {
+        if (!isset($destSheet)) $destSheet = $sheet;
+        if (!preg_match('/^([A-Z]+)(\d+):([A-Z]+)(\d+)$/', $srcRange, $srcRangeMatch)) return;
+        if (!preg_match('/^([A-Z]+)(\d+)$/', $dstCell, $destCellMatch)) return;
+
+        $srcColumnStart = $srcRangeMatch[1];
+        $srcRowStart = (int)$srcRangeMatch[2];
+        $srcColumnEnd = $srcRangeMatch[3];
+        $srcRowEnd = (int)$srcRangeMatch[4];
+
+        $destColumnStart = $destCellMatch[1];
+        $destRowStart = (int)$destCellMatch[2];
+
+        $srcColumnStart = Coordinate::columnIndexFromString($srcColumnStart);
+        $srcColumnEnd = Coordinate::columnIndexFromString($srcColumnEnd);
+        $destColumnStart = Coordinate::columnIndexFromString($destColumnStart);
+
+        $this->copyRows($sheet, [$srcColumnStart, $srcRowStart], [$srcColumnEnd, $srcRowEnd], [$destColumnStart, $destRowStart]);
+    }
+
     private function firstUp(string $string): string
     {
         $string = trim($string);
@@ -220,4 +226,150 @@ class ReportService
         }
     }
 
+    /**
+     * Разбивка по странично
+     */
+    public function getList(int $count, ReportParams $params): array
+    {
+        $result = [];
+        while ($count > 0) {
+            if (count($result) == 0) { //Первый лист
+                if ($count > $params->FIRST_FINISH) {
+                    $result[] = $params->FIRST_FINISH;
+                    $count -= $params->FIRST_FINISH;
+                } elseif ($count > $params->FIRST_START) {
+                    $result[] = $params->FIRST_START;
+                    $count -= $params->FIRST_START;
+                } else {
+                    $result[] = $count;
+                    $count = 0;
+                }
+            } else { //Последующие листы
+                if ($count > $params->NEXT_FINISH) {
+                    $result[] = $params->NEXT_FINISH;
+                    $count -= $params->NEXT_FINISH;
+                }
+                if ($count > $params->NEXT_START && $count <= $params->NEXT_FINISH) {
+                    $result[] = $params->NEXT_START;
+                    $count -= $params->NEXT_START;
+                }
+                if ($count <= $params->NEXT_START) {
+                    $result[] = $count;
+                    $count = 0;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Вставка копии строки
+     */
+    private function rowInsert(Worksheet &$activeWorksheet, int $row, ReportParams $params): void
+    {
+        $row++;
+        $activeWorksheet->insertNewRowBefore($row, 1);
+        $this->copyRows(
+            $activeWorksheet,
+            [$params->LEFT_COL, $params->BEGIN_ROW],
+            [$params->RIGHT_COL, $params->BEGIN_ROW],
+            [$params->LEFT_COL, $row]);
+    }
+
+    public function rowInsertEmpty(Worksheet &$activeWorksheet, int $row, ReportParams $params, $count = 1): void
+    {
+        $styleBackground = [
+            'fill' => [
+                'type' => Fill::FILL_SOLID,
+                'color' => ['rgb' => 'FFFFFF'],
+
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_NONE,
+                ],
+            ],
+        ];
+        $activeWorksheet
+            ->insertNewRowBefore($row + $count - 1, $count)
+            ->getStyle([$params->LEFT_COL, $row, $params->RIGHT_COL, $row + $count - 1])
+            ->applyFromArray($styleBackground);
+    }
+
+    /**
+     * Вставка разделителя страниц
+     */
+    private function rowPage(Worksheet &$activeWorksheet, int $row, $number_page, ReportParams $params): void
+    {
+        //Разрыв печати с предыдущей строки
+        $activeWorksheet->setBreak('A' . ($row - 1), \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet::BREAK_ROW);
+        //Разделитель
+        $this->rowInsertEmpty($activeWorksheet, $row, $params);
+        $activeWorksheet->setCellValue([$params->LEFT_COL, $row], $params->document);
+        $activeWorksheet->getStyle([$params->LEFT_COL, $row])
+            ->getAlignment()
+            ->setHorizontal(Alignment::HORIZONTAL_LEFT);
+        $activeWorksheet->getStyle([$params->LEFT_COL, $row])->getFont()->setItalic(true);
+        $activeWorksheet->setCellValue([$params->RIGHT_COL, $row], 'Страница ' . $number_page);
+        $activeWorksheet->getStyle([$params->RIGHT_COL, $row])->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        $activeWorksheet->getStyle([$params->RIGHT_COL, $row])->getFont()->setItalic(true);
+        /*  //Шапка*/
+        $count_header = ($params->HEADER_FINISH - $params->HEADER_START) + 1;
+        //$row += $count_header;
+        $this->rowInsertEmpty($activeWorksheet, $row, $params, $count_header);
+        $this->copyRows(
+            $activeWorksheet,
+            [$params->LEFT_COL, $params->HEADER_START],
+            [$params->RIGHT_COL, $params->HEADER_FINISH],
+            [$params->LEFT_COL, $row + 1]);
+    }
+
+    public function createPages(
+        Worksheet    &$activeWorksheet,
+        array        $list_items,
+        ReportParams $params,
+        callable     $rowData,
+        callable     $emptyAmount,
+        callable     $rowInterim,
+        callable     $rowAmount,
+    ): void
+    {
+        //Рассчитываем кол-во листов документа
+        $pages = $this->getList(count($list_items), $params);
+        $coef = 2; //Кол-во строк добавляемых для каждой страницы 1 - итоги промежуточные, 1 - номер страницы, х - шапка
+
+        if ($params->HEADER_START != 0)
+           $coef += ($params->HEADER_FINISH - $params->HEADER_START) + 1;
+
+        $amountDocument = $emptyAmount();
+        $start = 0;
+        $row = $params->BEGIN_ROW;
+        foreach ($pages as $n => $page) { //Разбиваем на страницы
+            $amountPage = $emptyAmount(); //Обнуляем данные Итого по странице
+            for ($position = $start; $position < $start + $page; $position++) {
+                $row = $params->BEGIN_ROW + $position + $n * $coef;
+                if ($position != count($list_items) - 1) $this->rowInsert($activeWorksheet, $row, $params);
+                $rowData($activeWorksheet, $row, $position, $list_items[$position], $amountPage);
+            }
+            //Суммируем итого по страницам
+            foreach ($amountPage as $key => $value) $amountDocument[$key] += $value;
+
+            if ($n != count($pages) - 1) {//Промежуточная вставка с указанием номера страницы
+                $row++;
+                $this->rowInsertEmpty($activeWorksheet, $row, $params);
+                $rowInterim($activeWorksheet, $row, $amountPage);//Итоги страницы
+                $row++;
+                $this->rowPage($activeWorksheet, $row, $n + 2, $params); //Новая страница
+                $start += $page;
+            } else { //Итоговая вставка данных
+                $row++;
+                $this->rowInsertEmpty($activeWorksheet, $row, $params);
+                $rowInterim($activeWorksheet, $row, $amountPage);
+                $row++;
+                $this->rowInsertEmpty($activeWorksheet, $row, $params);
+                $rowAmount($activeWorksheet, $row, $amountDocument);
+            }
+        }
+    }
 }
