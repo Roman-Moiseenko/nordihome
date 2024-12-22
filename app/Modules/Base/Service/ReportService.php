@@ -18,6 +18,9 @@ class ReportService
         return resource_path() . $config['template'];
     }
 
+    /**
+     * Сумма прописью
+     */
     public function PriceToText(float $price, string $currency = null): string
     {
         $nul = 'ноль';
@@ -82,6 +85,9 @@ class ReportService
         return $f5;
     }
 
+    /**
+     * Кол-во прописью
+     */
     public function CountToText(int $number, bool $ne = false): string
     {
         $hundred = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
@@ -106,6 +112,9 @@ class ReportService
         return $this->firstUp($hundred[$_h] . ' ' . $ten[$gender][$_hd]);
     }
 
+    /**
+     * Скопировать строку в Excel по номерам строк и столбцов
+     */
     public function copyRows(Worksheet &$sheet, array $cellsStart, array $cellsEnd, array $dstCell): void
     {
         $destSheet = $sheet;
@@ -169,6 +178,9 @@ class ReportService
         }
     }
 
+    /**
+     * Скопировать строку в Excel по диапозону
+     */
     public function copyRowsRange(Worksheet $sheet, $srcRange, $dstCell, Worksheet $destSheet = null): void
     {
         if (!isset($destSheet)) $destSheet = $sheet;
@@ -196,6 +208,7 @@ class ReportService
         return mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string));
     }
 
+
     public function findReplace(Worksheet &$activeWorksheet, string $key, mixed $value, int $rows = 50, int $cols = 50): void
     {
         for ($row = 1; $rows < 50; $row++) {
@@ -211,6 +224,9 @@ class ReportService
         }
     }
 
+    /**
+     * Замена данных в ячейках Excel из массива ["{key}" => "value"]
+     */
     public function findReplaceArray(Worksheet &$activeWorksheet, array $items, int $rows = 50, int $cols = 50): void
     {
         for ($row = 1; $row < $rows; $row++) {
@@ -277,6 +293,9 @@ class ReportService
             [$params->LEFT_COL, $row]);
     }
 
+    /**
+     * Вставить пустую строку, со сбросом форматирования
+     */
     public function rowInsertEmpty(Worksheet &$activeWorksheet, int $row, ReportParams $params, $count = 1): void
     {
         $styleBackground = [
@@ -311,6 +330,9 @@ class ReportService
             ->getAlignment()
             ->setHorizontal(Alignment::HORIZONTAL_LEFT);
         $activeWorksheet->getStyle([$params->LEFT_COL, $row])->getFont()->setItalic(true);
+        //Если есть свободная ячейка справа, то  объединяем со следующей для названия документа
+        if ($params->RIGHT_COL - $params->LEFT_COL > 1)
+            $activeWorksheet->mergeCells([$params->LEFT_COL, $row, $params->LEFT_COL + 1, $row]); //Проверить на всех шаблонах
         $activeWorksheet->setCellValue([$params->RIGHT_COL, $row], 'Страница ' . $number_page);
         $activeWorksheet->getStyle([$params->RIGHT_COL, $row])->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
         $activeWorksheet->getStyle([$params->RIGHT_COL, $row])->getFont()->setItalic(true);

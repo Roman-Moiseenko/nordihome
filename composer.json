@@ -22,8 +22,9 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
         "livewire/livewire": "^3.5",
-        "mpdf/mpdf": "^8.2",
-        "phpoffice/phpspreadsheet": "^3.5.0",
+        "mpdf/mpdf": "^v8.2.5",
+        "nesbot/carbon": "^3.8",
+        "phpoffice/phpspreadsheet": "^3.6.0",
         "tightenco/ziggy": "^v2.4.1"
     },
     "require-dev": {

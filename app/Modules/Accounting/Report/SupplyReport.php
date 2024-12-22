@@ -5,7 +5,6 @@ namespace App\Modules\Accounting\Report;
 
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Service\ReportInterface;
 use App\Modules\Base\Service\ReportParams;
 use App\Modules\Base\Service\ReportService;
@@ -13,8 +12,8 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Borders;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf;
 
 class SupplyReport extends AccountingReport implements ReportInterface
 {
@@ -30,10 +29,10 @@ class SupplyReport extends AccountingReport implements ReportInterface
         //Параметры шаблона
         $this->paramsNF62 = new ReportParams();
         $this->paramsNF62->BEGIN_ROW = 11;
-        $this->paramsNF62->FIRST_START = 8;  //28
-        $this->paramsNF62->FIRST_FINISH = 10; //35
-        $this->paramsNF62->NEXT_START = 10; //33
-        $this->paramsNF62->NEXT_FINISH = 12; //40
+        $this->paramsNF62->FIRST_START = 28;  //28
+        $this->paramsNF62->FIRST_FINISH = 35; //35
+        $this->paramsNF62->NEXT_START = 33; //33
+        $this->paramsNF62->NEXT_FINISH = 40; //40
         $this->paramsNF62->LEFT_COL = 2;
         $this->paramsNF62->RIGHT_COL = 8;
         $this->paramsNF62->HEADER_START = 9;
@@ -45,7 +44,7 @@ class SupplyReport extends AccountingReport implements ReportInterface
         $items = [
             'reportNF62' => 'Заказ поставщику НФ-62 (xls)',
             'reportNF62PDF' => 'Заказ поставщику НФ-62 (pdf)',
-            'reportNF62PDFSend' => 'Отправить поставщику НФ-62 (pdf)',
+        //    'reportNF62PDFSend' => 'Отправить поставщику НФ-62 (pdf)',
         ];
         return $this->renderArray($items);
     }
@@ -53,7 +52,6 @@ class SupplyReport extends AccountingReport implements ReportInterface
     public function reportNF62(int $supply_id): string
     {
         $spreadsheet = $this->xlsNF62($supply_id);
-
         $file = storage_path() . '/report/accounting/supply/' . $supply_id . '/nf62.xlsx';
 
         $path = pathinfo($file, PATHINFO_DIRNAME);
@@ -66,9 +64,18 @@ class SupplyReport extends AccountingReport implements ReportInterface
         return $file;
     }
 
-    public function reportNF62PDF(int $supply_id)
+    public function reportNF62PDF(int $supply_id): string
     {
+        $spreadsheet = $this->xlsNF62($supply_id);
+        $file = storage_path() . '/report/accounting/supply/' . $supply_id . '/nf62.pdf';
+        $path = pathinfo($file, PATHINFO_DIRNAME);
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
 
+        $writer = new Mpdf($spreadsheet);
+        $writer->save($file);
+        return $file;
     }
 
     public function reportNF62PDFSend(int $supply_id)
