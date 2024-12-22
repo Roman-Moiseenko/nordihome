@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Report;
 
-use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
+use App\Modules\Accounting\Entity\SurplusDocument;
+use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Base\Service\ReportParams;
 use App\Modules\Base\Service\ReportService;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -13,11 +14,12 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class SupplyReport extends AccountingReport
+class SurplusReport extends AccountingReport
 {
+
     protected ReportService $service;
     protected ReportParams $params;
-    protected string $class = 'supply';
+    protected string $class = 'surplus';
 
     public function __construct(ReportService $service)
     {
@@ -25,71 +27,54 @@ class SupplyReport extends AccountingReport
 
         //Параметры шаблона
         $this->params = new ReportParams();
-        $this->params->BEGIN_ROW = 11;
-        $this->params->FIRST_START = 28;  //28
-        $this->params->FIRST_FINISH = 35; //35
-        $this->params->NEXT_START = 33; //33
-        $this->params->NEXT_FINISH = 40; //40
+        $this->params->BEGIN_ROW = 8;
+        $this->params->FIRST_START = 28;
+        $this->params->FIRST_FINISH = 35;
+        $this->params->NEXT_START = 33;
+        $this->params->NEXT_FINISH = 40;
         $this->params->LEFT_COL = 2;
         $this->params->RIGHT_COL = 8;
-        $this->params->HEADER_START = 9;
-        $this->params->HEADER_FINISH = 10;
+        $this->params->HEADER_START = 6;
+        $this->params->HEADER_FINISH = 7;
     }
 
     public function index(): array
     {
         $items = [
-            'reportXLSX' => 'Заказ поставщику (xls)',
-            'reportPDF' => 'Заказ поставщику (pdf)',
-        //    'reportPDFSend' => 'Отправить поставщику (pdf)',
+            'reportXLSX' => 'Акт об оприходовании запасов (xls)',
+            'reportPDF' => 'Акт об оприходовании запасов (pdf)',
         ];
         return $this->renderArray($items);
-    }
-
-    public function reportPDFSend(int $supply_id)
-    {
-        //TODO Отправка системных писем
     }
 
     protected function createSpreadSheet(int $document_id): Spreadsheet
     {
         //Создаем из шаблона пустой документ
-        $supply = SupplyDocument::find($document_id);
-        $template = $this->service->template('supply');
+        /** @var SurplusDocument $surplus */
+        $surplus = SurplusDocument::find($document_id);
+        $template = $this->service->template('surplus');
 
         $spreadsheet = IOFactory::load($template);
         $activeWorksheet = $spreadsheet->getActiveSheet();
 
         //Заполняем общие статичные данные
-        $amount_total = $supply->getAmount();
-        $amount_vat = $supply->getAmountVAT();
-        $trader = [
-            $supply->customer->full_name,
-            'ИНН ' . $supply->customer->inn,
-            'КПП ' . $supply->customer->kpp,
-            $supply->customer->legal_address->post . ', ' . $supply->customer->legal_address->address,
-            phone($supply->customer->phone)
-        ];
+        $amount = $surplus->getAmount();
 
         $replaceItems = [
-            '{number}' => $supply->number,
-            '{date}' => $supply->created_at->translatedFormat('d.m.Y'),
-            '{amount}' => $amount_total - $amount_vat,
-            '{amount_vat}' => $amount_vat,
-            '{amount_total}' => $amount_total,
-            '{amount_text}' => $this->service->PriceToText($amount_total, $supply->currency->sign),
-            '{staff}' => $supply->staff->fullname->getShortname(),
-            '{trader}' => implode(', ', $trader),
-            '{distributor}' => $supply->organization->short_name,
-            '{currency}' => $supply->currency->cbr_code,
-            '{count}' => $supply->products()->count(),
+            '{number}' => $surplus->number,
+            '{date}' => $surplus->created_at->translatedFormat('d.m.Y'),
+            '{amount}' => $amount,
+            '{amount_text}' => $this->service->PriceToText($amount),
+            '{staff}' => $surplus->staff->fullname->getShortname(),
+            '{storage}' => $surplus->storage->name,
+            '{count}' => $surplus->products()->count(),
         ];
         $this->service->findReplaceArray($activeWorksheet, $replaceItems);
 
-        $this->params->document = 'Заказ поставщику № ' . $supply->number . ' от ' . $supply->created_at->translatedFormat('d.m.Y');
+        $this->params->document = 'Акт об оприходовании запасов № ' . $surplus->number . ' от ' . $surplus->created_at->translatedFormat('d.m.Y');
         $this->service->createPages(
             $activeWorksheet, //&Страница
-            $supply->products()->getModels(), //Массив данных
+            $surplus->products()->getModels(), //Массив данных
             $this->params, //Параметры шаблона
             //Кэллбеки
             [$this, 'rowData'],
@@ -102,14 +87,14 @@ class SupplyReport extends AccountingReport
 
     public function rowData(Worksheet &$activeWorksheet, int $row, int $position, mixed $item, array &$amount_page): void
     {
-        /** @var SupplyProduct $item */
-        $amount = $item->quantity * $item->cost_currency;
+        /** @var SurplusProduct $item */
+        $amount = $item->quantity * $item->cost;
         $activeWorksheet->setCellValue([2, $row], ($position + 1));
-        $activeWorksheet->setCellValue([3, $row], $item->product->name);
-        $activeWorksheet->setCellValue([4, $row], $item->product->code);
+        $activeWorksheet->setCellValue([3, $row], $item->product->code);
+        $activeWorksheet->setCellValue([4, $row], $item->product->name);
         $activeWorksheet->setCellValue([5, $row], $item->quantity);
         $activeWorksheet->setCellValue([6, $row], $item->product->measuring->name);
-        $activeWorksheet->setCellValue([7, $row], $item->cost_currency);
+        $activeWorksheet->setCellValue([7, $row], $item->cost);
         $activeWorksheet->setCellValue([8, $row], $amount);
 
         $amount_page['quantity'] += $item->quantity;

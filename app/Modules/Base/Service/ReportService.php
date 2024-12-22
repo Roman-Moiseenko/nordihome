@@ -208,22 +208,6 @@ class ReportService
         return mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string));
     }
 
-
-    public function findReplace(Worksheet &$activeWorksheet, string $key, mixed $value, int $rows = 50, int $cols = 50): void
-    {
-        for ($row = 1; $rows < 50; $row++) {
-            for ($col = 1; $cols < 50; ++$col) {
-                $cell_data = $activeWorksheet->getCell([$col, $row])->getValue();
-
-                if (!is_null($cell_data)) {
-                    $cell_data = str_replace($key, (string)$value, (string)$cell_data);//Номер и дата
-                    $activeWorksheet->setCellValue([$col, $row], $cell_data);
-                }
-
-            }
-        }
-    }
-
     /**
      * Замена данных в ячейках Excel из массива ["{key}" => "value"]
      */

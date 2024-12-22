@@ -18,7 +18,6 @@
 <script setup>
 import {inject, defineProps} from 'vue'
 import {ElLoading} from "element-plus";
-import {Link, router} from "@inertiajs/vue3";
 import axios from "axios";
 
 const props = defineProps({})
@@ -39,12 +38,10 @@ function getReport(val) {
             params: {class: val.class, method: val.method, id: $accounting.id},
         }
     ).then(response => {
-       console.log('response', response)
-
         let blob = new Blob([response.data], {type: 'application/*'})
         let link = document.createElement('a')
         let headers = response.headers
-        //console.log('headers = ', headers)
+
         link.href = window.URL.createObjectURL(blob)
         link.download = headers['filename']
         link._target = 'blank'
@@ -54,11 +51,8 @@ function getReport(val) {
         URL.revokeObjectURL(link.href)
     }).catch(reason => {
         loading.close()
-        console.log('reason', reason)
     })
 }
-
-
 </script>
 
 <style lang="scss">

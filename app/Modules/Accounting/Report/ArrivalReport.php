@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Report;
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
-use App\Modules\Accounting\Entity\SupplyProduct;
-use App\Modules\Base\Service\ReportInterface;
+use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Base\Service\ReportParams;
 use App\Modules\Base\Service\ReportService;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -99,7 +98,7 @@ class ArrivalReport extends AccountingReport
 
     public function rowData(Worksheet &$activeWorksheet, int $row, int $position, mixed $item, array &$amount_page): void
     {
-        /** @var SupplyProduct $item */
+        /** @var ArrivalProduct $item */
         $amount = $item->quantity * $item->cost_currency;
         $activeWorksheet->setCellValue([2, $row], ($position + 1));
         $activeWorksheet->setCellValue([3, $row], $item->product->code);

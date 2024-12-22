@@ -60,6 +60,9 @@ return [
         'arrival' => [
             'template' => '/template/accounting/_arrival.xlsx',
         ],
+        'surplus' => [
+            'template' => '/template/accounting/_surplus.xlsx',
+        ],
 
         'base_path' => '',
         'invoice' => [

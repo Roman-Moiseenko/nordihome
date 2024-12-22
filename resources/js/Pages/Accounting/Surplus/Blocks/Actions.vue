@@ -13,6 +13,7 @@
         <AccountingCompleted :route="route('admin.accounting.surplus.completed', {surplus: props.surplus.id})" />
     </template>
     <AccountingOnBased />
+    <AccountingPrint />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(surplus.amount) }}</el-tag>
