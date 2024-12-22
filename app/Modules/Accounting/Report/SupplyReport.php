@@ -88,6 +88,14 @@ class SupplyReport extends AccountingReport implements ReportInterface
         //Заполняем общие статичные данные
         $amount_total = $supply->getAmount();
         $amount_vat = $supply->getAmountVAT();
+        $trader = [
+            $supply->customer->full_name,
+            'ИНН ' . $supply->customer->inn,
+            'КПП ' . $supply->customer->kpp,
+            $supply->customer->legal_address->post . ', ' . $supply->customer->legal_address->address,
+            phone($supply->customer->phone)
+        ];
+
         $replaceItems = [
             '{number}' => $supply->number,
             '{date}' => $supply->created_at->translatedFormat('d.m.Y'),
@@ -96,7 +104,7 @@ class SupplyReport extends AccountingReport implements ReportInterface
             '{amount_total}' => $amount_total,
             '{amount_text}' => $this->service->PriceToText($amount_total, $supply->currency->sign),
             '{staff}' => $supply->staff->fullname->getShortname(),
-            '{trader}' => '',
+            '{trader}' => implode(', ', $trader),
             '{distributor}' => $supply->organization->short_name,
             '{currency}' => $supply->currency->cbr_code,
             '{count}' => $supply->products()->count(),
