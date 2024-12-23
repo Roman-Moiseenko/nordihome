@@ -63,6 +63,9 @@ return [
         'surplus' => [
             'template' => '/template/accounting/_surplus.xlsx',
         ],
+        'movement' => [
+            'template' => '/template/accounting/_movement.xlsx',
+        ],
 
         'base_path' => '',
         'invoice' => [

@@ -18,6 +18,7 @@ class ArrivalReport extends AccountingReport
 
     protected ReportService $service;
     protected ReportParams $params;
+    protected string $class = 'arrival';
 
     public function __construct(ReportService $service)
     {
@@ -26,10 +27,10 @@ class ArrivalReport extends AccountingReport
         //Параметры шаблона
         $this->params = new ReportParams();
         $this->params->BEGIN_ROW = 11;
-        $this->params->FIRST_START = 28;  //28
-        $this->params->FIRST_FINISH = 35; //35
-        $this->params->NEXT_START = 33; //33
-        $this->params->NEXT_FINISH = 40; //40
+        $this->params->FIRST_START = 28;
+        $this->params->FIRST_FINISH = 35;
+        $this->params->NEXT_START = 33;
+        $this->params->NEXT_FINISH = 40;
         $this->params->LEFT_COL = 2;
         $this->params->RIGHT_COL = 8;
         $this->params->HEADER_START = 9;

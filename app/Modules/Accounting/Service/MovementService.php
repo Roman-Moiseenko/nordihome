@@ -72,10 +72,10 @@ class MovementService // extends AccountingService
             foreach ($document->movementProducts as $movementProduct) {
                 //удаляем из Storage и StorageDepartureItem
                 $departureItem = $movementProduct->departureItem;
-                $storageOut->sub($departureItem->product, $departureItem->quantity);
+                $storageOut->sub($departureItem->product, (float)$departureItem->quantity);
                 $departureItem->delete();
                 //создаем StorageArrivalItem
-                $arrivalItem = StorageArrivalItem::new($movementProduct->product_id, $movementProduct->quantity, $movementProduct->id);
+                $arrivalItem = StorageArrivalItem::new($movementProduct->product_id, (float)$movementProduct->quantity, $movementProduct->id);
                 $storageIn->arrivalItems()->save($arrivalItem);
             }
             $document->statusArrival();
@@ -89,7 +89,7 @@ class MovementService // extends AccountingService
             $storageIn = $document->storageIn;
             foreach ($document->movementProducts as $movementProduct) {
                 $arrivalItem = $movementProduct->arrivalItem;
-                $storageIn->add($arrivalItem->product, $arrivalItem->quantity);
+                $storageIn->add($arrivalItem->product, (float)$arrivalItem->quantity);
                 $arrivalItem->delete();//удаляем StorageArrivalItem
 
                 //Если перемещение под заказ, то резервируем
@@ -97,7 +97,7 @@ class MovementService // extends AccountingService
                     $this->reserveService->ReserveWithMovement(
                         $document->storageOut, $document->storageIn,
                         $movementProduct->orderItem,
-                        $movementProduct->quantity);
+                        (float)$movementProduct->quantity);
             }
             $document->statusCompleted();
             if (!empty($document->order())) { //Уведомляем менеджера, что товар поступил

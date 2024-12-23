@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Report\MovementReport;
 use App\Modules\Accounting\Repository\MovementRepository;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Repository\StaffRepository;
@@ -26,11 +27,13 @@ class MovementController extends Controller
     private MovementService $service;
     private StaffRepository $staffs;
     private MovementRepository $repository;
+    private MovementReport $report;
 
     public function __construct(
         MovementService    $service,
         StaffRepository    $staffs,
         MovementRepository $repository,
+        MovementReport     $report,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
@@ -38,6 +41,7 @@ class MovementController extends Controller
         $this->service = $service;
         $this->staffs = $staffs;
         $this->repository = $repository;
+        $this->report = $report;
     }
 
     public function index(Request $request): Response
@@ -76,6 +80,7 @@ class MovementController extends Controller
             'movement' => $this->repository->MovementWithToArray($movement, $request, $filters),
             'storages' => $storages,
             'filters' => $filters,
+            'printed' => $this->report->index(),
         ]);
     }
 

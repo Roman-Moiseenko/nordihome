@@ -1,9 +1,7 @@
 <template>
     <template v-if="movement.completed">
-        <el-button v-if="movement.is_departure" type="warning" class="ml-5" @click="onDeparture">Товар убыл</el-button>
-        <el-button v-if="movement.is_arrival" type="success" class="ml-5" @click="onArrival">Товар прибыл</el-button>
-
-        <AccountingPrint />
+        <el-button v-if="movement.is_departure" type="warning" class="" @click="onDeparture">Товар убыл</el-button>
+        <el-button v-if="movement.is_arrival" type="success" class="" @click="onArrival">Товар прибыл</el-button>
         <AccountingWork v-if="movement.is_departure" :route="route('admin.accounting.movement.work', {movement: props.movement.id})" />
     </template>
     <template v-else>
@@ -15,6 +13,7 @@
         <AccountingCompleted :route="route('admin.accounting.movement.completed', {movement: props.movement.id})" />
     </template>
     <AccountingOnBased />
+    <AccountingPrint />
     <AccountingFilter />
 </template>
 

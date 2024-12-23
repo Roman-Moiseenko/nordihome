@@ -55,12 +55,12 @@ class StorageItem extends Model
         return $quantity;
     }*/
 
-    public function getDeparture(): int
+    public function getDeparture(): float
     {
         return StorageDepartureItem::where('storage_id', $this->storage_id)->where('product_id', $this->product_id)->pluck('quantity')->sum();
     }
 
-    public function getArrival(): int
+    public function getArrival(): float
     {
         return StorageArrivalItem::where('storage_id', $this->storage_id)->where('product_id', $this->product_id)->pluck('quantity')->sum();
     }
