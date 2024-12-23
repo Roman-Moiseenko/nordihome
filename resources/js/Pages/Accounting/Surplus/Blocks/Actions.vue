@@ -1,7 +1,5 @@
 <template>
     <template v-if="surplus.completed">
-
-        <AccountingPrint />
         <AccountingWork v-if="!surplus.inventory"  :route="route('admin.accounting.surplus.work', {surplus: props.surplus.id})" />
     </template>
     <template v-else>

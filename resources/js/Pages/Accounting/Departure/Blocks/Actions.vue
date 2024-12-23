@@ -13,6 +13,7 @@
         <AccountingCompleted :route="route('admin.accounting.departure.completed', {departure: props.departure.id})" />
     </template>
     <AccountingOnBased />
+    <AccountingPrint />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(departure.amount) }}</el-tag>

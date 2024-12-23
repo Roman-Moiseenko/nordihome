@@ -21,7 +21,7 @@ function onCompleted() {
     router.visit(props.route, {
         method: "post",
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             loading.close()
         }

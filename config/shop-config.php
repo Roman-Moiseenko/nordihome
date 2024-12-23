@@ -66,6 +66,12 @@ return [
         'movement' => [
             'template' => '/template/accounting/_movement.xlsx',
         ],
+        'departure' => [
+            'template' => '/template/accounting/_departure.xlsx',
+        ],
+        'inventory' => [
+            'template' => '/template/accounting/_inventory.xlsx',
+        ],
 
         'base_path' => '',
         'invoice' => [

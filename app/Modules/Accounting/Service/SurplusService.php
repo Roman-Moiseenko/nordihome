@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Service;
 
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\SurplusProduct;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Product;
 use DB;
@@ -20,11 +21,18 @@ class SurplusService
         $this->storages = $storages;
     }
 
-    public function create_storage(int $storage_id): SurplusDocument
+    public function create_storage(int $storage_id, int $customer_id = null): SurplusDocument
     {
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
-        return SurplusDocument::register($storage_id, $staff->id);
+        $surplus = SurplusDocument::register($storage_id, $staff->id);
+        if (is_null($customer_id)) {
+            $trader = Trader::default();
+            $customer_id = $trader->organization->id;
+        }
+        $surplus->customer_id = $customer_id;
+        $surplus->save();
+        return $surplus;
     }
 
     public function destroy(SurplusDocument $surplus): void
@@ -103,6 +111,8 @@ class SurplusService
             //TODO Проверка на кол-во!
             $surplus->storage_id = $request->integer('storage_id');
         }
+        $surplus->customer_id = $request->input('customer_id');
+
         $surplus->save();
     }
 }

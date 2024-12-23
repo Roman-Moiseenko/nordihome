@@ -7,6 +7,7 @@ use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\InventoryProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SurplusProduct;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Product;
 use DB;
@@ -41,6 +42,9 @@ class InventoryService
             );
             $inventory->products()->save($inventory_product);
         }
+        $trader = Trader::default();
+        $inventory->customer_id = $trader->organization->id;
+        $inventory->save();
         return $inventory;
     }
 
@@ -49,7 +53,7 @@ class InventoryService
     {
         DB::transaction(function () use($inventory) {
             if ($inventory->surpluses()->count() > 0) { //Излишки
-                $surplus = $this->surplusService->create_storage($inventory->storage_id);
+                $surplus = $this->surplusService->create_storage($inventory->storage_id, $inventory->customer_id);
 
                 foreach ($inventory->surpluses as $product) {
                     $item = SurplusProduct::new(
@@ -65,7 +69,7 @@ class InventoryService
             }
 
             if ($inventory->shortages()->count() > 0) { //Недостача
-                $departure = $this->departureService->create($inventory->storage_id);
+                $departure = $this->departureService->create($inventory->storage_id, $inventory->customer_id);
                 foreach ($inventory->shortages as $product) {
                     $item = DepartureProduct::new(
                         $product->product_id,
@@ -85,6 +89,7 @@ class InventoryService
     public function setInfo(InventoryDocument $inventory, Request $request): void
     {
         $inventory->baseSave($request->input('document'));
+        $inventory->customer_id = $request->input('customer_id');
         $inventory->save();
     }
 

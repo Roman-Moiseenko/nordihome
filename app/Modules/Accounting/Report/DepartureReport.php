@@ -3,85 +3,65 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Report;
 
-use App\Modules\Accounting\Entity\SupplyDocument;
-use App\Modules\Accounting\Entity\SupplyProduct;
+use App\Modules\Accounting\Entity\DepartureDocument;
+use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Base\Service\ReportParams;
-use App\Modules\Base\Service\ReportService;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class SupplyReport extends AccountingReport
+class DepartureReport extends AccountingReport
 {
-    protected string $class = 'supply';
+    protected string $class = 'departure';
 
     public function index(): array
     {
         $items = [
-            'reportXLSX' => 'Заказ поставщику (xls)',
-            'reportPDF' => 'Заказ поставщику (pdf)',
-        //    'reportPDFSend' => 'Отправить поставщику (pdf)',
+            'reportXLSX' => 'Списание запасов (xls)',
+            'reportPDF' => 'Списание запасов (pdf)',
         ];
         return $this->renderArray($items);
     }
 
-    public function reportPDFSend(int $supply_id)
-    {
-        //TODO Отправка системных писем
-    }
-
     protected function createSpreadSheet(int $document_id): Spreadsheet
     {
-        $supply = SupplyDocument::find($document_id);
-        $params = new ReportParams(11, 28, 35, 33, 40,
-            2, 8, 9, 10,
-            'Заказ поставщику № ' . $supply->number . ' от ' . $supply->created_at->translatedFormat('d.m.Y')
+        $departure = DepartureDocument::find($document_id);
+        $params = new ReportParams(12, 28, 35, 33, 40,
+            2, 8, 10, 11,
+            'Списание запасов № ' . $departure->number . ' от ' . $departure->created_at->translatedFormat('d.m.Y')
         );
 
         //Заполняем общие статичные данные
-        $amount_total = $supply->getAmount();
-        $amount_vat = $supply->getAmountVAT();
-        $trader = [
-            $supply->customer->full_name,
-            'ИНН ' . $supply->customer->inn,
-            'КПП ' . $supply->customer->kpp,
-            $supply->customer->legal_address->post . ', ' . $supply->customer->legal_address->address,
-            phone($supply->customer->phone)
-        ];
+        $amount = $departure->getAmount();
 
         $replaceItems = [
-            '{number}' => $supply->number,
-            '{date}' => $supply->created_at->translatedFormat('d.m.Y'),
-            '{amount}' => $amount_total - $amount_vat,
-            '{amount_vat}' => $amount_vat,
-            '{amount_total}' => $amount_total,
-            '{amount_text}' => $this->service->PriceToText($amount_total, $supply->currency->sign),
-            '{staff}' => $supply->staff->fullname->getShortname(),
-            '{trader}' => implode(', ', $trader),
-            '{distributor}' => $supply->organization->short_name,
-            '{currency}' => $supply->currency->cbr_code,
-            '{count}' => $supply->products()->count(),
+            '{number}' => $departure->number,
+            '{date}' => $departure->created_at->translatedFormat('d.m.Y'),
+            '{customer}' => $departure->customer->short_name,
+            '{reason}' => is_null($departure->inventory)
+                ? $departure->comment
+                : 'Инвентаризация № ' . $departure->inventory->number . ' от ' . $departure->inventory->created_at->translatedFormat('d-m-Y'),
+            '{storage}' => $departure->storage->address,
+            '{staff}' => $departure->staff->fullname->getShortname(),
+            '{count}' => $departure->products()->count(),
+            '{amount}' => $amount,
+            '{amount_text}' => $this->service->PriceToText($amount),
         ];
 
-        return $this->SpreadSheet('supply', $replaceItems, $params, $supply->products()->getModels());
+        return $this->SpreadSheet('departure', $replaceItems, $params, $departure->products()->getModels());
     }
 
     public function rowData(Worksheet &$activeWorksheet, int $row, int $position, mixed $item, array &$amount_page): void
     {
-        /** @var SupplyProduct $item */
-        $amount = $item->quantity * $item->cost_currency;
+        /** @var DepartureProduct $item */
         $activeWorksheet->setCellValue([2, $row], ($position + 1));
         $activeWorksheet->setCellValue([3, $row], $item->product->code);
         $activeWorksheet->setCellValue([4, $row], $item->product->name);
         $activeWorksheet->setCellValue([5, $row], $item->quantity);
         $activeWorksheet->setCellValue([6, $row], $item->product->measuring->name);
-        $activeWorksheet->setCellValue([7, $row], $item->cost_currency);
-        $activeWorksheet->setCellValue([8, $row], $amount);
-
-        $amount_page['quantity'] += $item->quantity;
-        $amount_page['amount'] += $amount;
+        $activeWorksheet->setCellValue([7, $row], $item->cost);
+        $activeWorksheet->setCellValue([8, $row], $item->quantity * $item->cost);
     }
 
     public function emptyAmount(): array

@@ -10,9 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * Оприходование излишков
  * @property int $storage_id
+ * @property int $customer_id
+ *
  * @property Storage $storage
  * @property SurplusProduct[] $products
  * @property InventoryDocument $inventory
+ * @property Organization $customer Заказчик
  */
 class SurplusDocument extends AccountingDocument
 {
@@ -49,6 +52,12 @@ class SurplusDocument extends AccountingDocument
     {
         if ($this->staff_id == null) return 'Не установлен';
         return $this->staff->fullname->getFullName();
+    }
+
+    //** RELATIONS */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'customer_id', 'id');
     }
 
     public function storage(): BelongsTo

@@ -99,4 +99,15 @@ class OrganizationRepository
             });
 
     }
+
+    public function getCustomers(): Arrayable
+    {
+        return Organization::has('trader')->get()->map(function (Organization $organization) {
+            return [
+                'id' => $organization->id,
+                'short_name' => $organization->short_name,
+                'inn' => $organization->inn,
+            ];
+        });
+    }
 }

@@ -1,14 +1,12 @@
 <template>
     <template v-if="inventory.completed">
-
-        <AccountingPrint />
         <AccountingWork :route="route('admin.accounting.inventory.work', {inventory: props.inventory.id})" />
     </template>
     <template v-else>
-
         <AccountingCompleted :route="route('admin.accounting.inventory.completed', {inventory: props.inventory.id})" />
     </template>
     <AccountingOnBased />
+    <AccountingPrint />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(inventory.amount_formal ) }}</el-tag>

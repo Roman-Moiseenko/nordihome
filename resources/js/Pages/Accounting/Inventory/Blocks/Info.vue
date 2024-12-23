@@ -12,7 +12,11 @@
                     </el-input>
                 </el-form-item>
 
-
+                <el-form-item label="Организация заказчик">
+                    <el-select v-model="info.customer_id"  @change="setInfo" :disabled="iSavingInfo || notEdit" filterable>
+                        <el-option v-for="item in customers" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
+                    </el-select>
+                </el-form-item>
             </el-form>
         </el-col>
     </el-row>
@@ -27,10 +31,9 @@ import AccountingDocument from "@Comp/Accounting/Document.vue";
 const props = defineProps({
     inventory: Object,
     storages: Array,
-
+    customers: Array,
 })
 const iSavingInfo = ref(false)
-
 const info = reactive({
     document: {
         number: props.inventory.number,
@@ -40,6 +43,7 @@ const info = reactive({
         comment: props.inventory.comment,
     },
     storage_id: props.inventory.storage_id,
+    customer_id: props.inventory.customer_id,
 })
 const notEdit = computed(() => props.inventory.completed);
 

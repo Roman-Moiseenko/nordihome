@@ -16,9 +16,17 @@ abstract class AccountingReport
     protected string $file = 'report';
     protected string $class = 'class';
     protected ReportService $service;
-    protected ReportParams $params;
 
+    //protected ReportParams $params;
 
+    final public function __construct(ReportService $service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * Преобразование списка документов для frontend-компонента Accounting/Print.vue
+     */
     final public function renderArray(array $items): array
     {
         $result = [];
@@ -32,7 +40,8 @@ abstract class AccountingReport
         return $result;
     }
 
-    public function reportXLSX(int $document_id): string
+    /** Отчет в Excel */
+    final public function reportXLSX(int $document_id): string
     {
         $spreadsheet = $this->createSpreadSheet($document_id);
         $file = $this->generatePath($document_id, 'xlsx');
@@ -45,7 +54,8 @@ abstract class AccountingReport
         return $file;
     }
 
-    public function reportPDF(int $document_id): string
+    /** Отчет в PDF */
+    final public function reportPDF(int $document_id): string
     {
         $spreadsheet = $this->createSpreadSheet($document_id);
         $file = $this->generatePath($document_id, 'pdf');
@@ -58,13 +68,33 @@ abstract class AccountingReport
         return $file;
     }
 
+    /** Полное имя файла отчета */
     final protected function generatePath(int $id, string $ext): string
     {
-        return storage_path() . $this->path . '/' . $this->class . '/' . $id . '/'. $this->file . '.' . $ext;
+        return storage_path() . $this->path . '/' . $this->class . '/' . $id . '/' . $this->file . '.' . $ext;
     }
 
-    abstract public function __construct(ReportService $service);
+    /** Формирование документа отчета */
+    final protected function SpreadSheet(string $template, array $replaceItems, ReportParams $params, $items): Spreadsheet
+    {
+        $template = $this->service->template($template); //Шаблон из файла, пути в config\shop-config.php
 
+        $spreadsheet = IOFactory::load($template);
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $this->service->findReplaceArray($activeWorksheet, $replaceItems); //Замена статичных данных
+
+        $this->service->createPages(
+            $activeWorksheet, //&Страница
+            $items, //Массив данных
+            $params, //Параметры шаблона
+            //Кэллбеки
+            [$this, 'rowData'],
+            [$this, 'emptyAmount'],
+            [$this, 'rowInterim'],
+            [$this, 'rowAmount'],
+        );
+        return $spreadsheet;
+    }
 
     /**
      * Список выходных документов ['Метод класса' => 'Название документа']

@@ -16,27 +16,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class SurplusReport extends AccountingReport
 {
-
-    protected ReportService $service;
-    protected ReportParams $params;
     protected string $class = 'surplus';
-
-    public function __construct(ReportService $service)
-    {
-        $this->service = $service;
-
-        //Параметры шаблона
-        $this->params = new ReportParams();
-        $this->params->BEGIN_ROW = 8;
-        $this->params->FIRST_START = 28;
-        $this->params->FIRST_FINISH = 35;
-        $this->params->NEXT_START = 33;
-        $this->params->NEXT_FINISH = 40;
-        $this->params->LEFT_COL = 2;
-        $this->params->RIGHT_COL = 8;
-        $this->params->HEADER_START = 6;
-        $this->params->HEADER_FINISH = 7;
-    }
 
     public function index(): array
     {
@@ -49,13 +29,12 @@ class SurplusReport extends AccountingReport
 
     protected function createSpreadSheet(int $document_id): Spreadsheet
     {
-        //Создаем из шаблона пустой документ
         /** @var SurplusDocument $surplus */
         $surplus = SurplusDocument::find($document_id);
-        $template = $this->service->template('surplus');
-
-        $spreadsheet = IOFactory::load($template);
-        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $params = new ReportParams(8, 28, 35, 33, 40,
+            2, 8, 6, 7,
+            'Акт об оприходовании запасов № ' . $surplus->number . ' от ' . $surplus->created_at->translatedFormat('d.m.Y')
+        );
 
         //Заполняем общие статичные данные
         $amount = $surplus->getAmount();
@@ -69,20 +48,8 @@ class SurplusReport extends AccountingReport
             '{storage}' => $surplus->storage->name,
             '{count}' => $surplus->products()->count(),
         ];
-        $this->service->findReplaceArray($activeWorksheet, $replaceItems);
 
-        $this->params->document = 'Акт об оприходовании запасов № ' . $surplus->number . ' от ' . $surplus->created_at->translatedFormat('d.m.Y');
-        $this->service->createPages(
-            $activeWorksheet, //&Страница
-            $surplus->products()->getModels(), //Массив данных
-            $this->params, //Параметры шаблона
-            //Кэллбеки
-            [$this, 'rowData'],
-            [$this, 'emptyAmount'],
-            [$this, 'rowInterim'],
-            [$this, 'rowAmount'],
-        );
-        return $spreadsheet;
+        return $this->SpreadSheet('surplus', $replaceItems, $params, $surplus->products()->getModels());
     }
 
     public function rowData(Worksheet &$activeWorksheet, int $row, int $position, mixed $item, array &$amount_page): void
@@ -114,17 +81,19 @@ class SurplusReport extends AccountingReport
         $activeWorksheet->mergeCells([6, $row, 7, $row]);
         $activeWorksheet->getStyle([4, $row, 8, $row])->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
         $activeWorksheet->getStyle([4, $row, 8, $row])->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        $activeWorksheet->getStyle([4, $row, 8, $row])->getFont()->setBold(true);
         $activeWorksheet->setCellValue([4, $row], 'На странице');
         $activeWorksheet->setCellValue([5, $row], $amount_page['quantity']);
-        $activeWorksheet->setCellValue([8, $row], $amount_page['amount']);
+        $activeWorksheet->setCellValue([8, $row], price($amount_page['amount']));
     }
 
     public function rowAmount(Worksheet &$activeWorksheet, int $row, array $amount_document): void
     {
         $activeWorksheet->mergeCells([6, $row, 7, $row]);
         $activeWorksheet->getStyle([4, $row, 8, $row])->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+        $activeWorksheet->getStyle([4, $row, 8, $row])->getFont()->setBold(true);
         $activeWorksheet->setCellValue([4, $row], 'Всего');
         $activeWorksheet->setCellValue([5, $row], $amount_document['quantity']);
-        $activeWorksheet->setCellValue([8, $row], $amount_document['amount']);
+        $activeWorksheet->setCellValue([8, $row], price($amount_document['amount']));
     }
 }

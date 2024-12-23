@@ -6,33 +6,12 @@ namespace App\Modules\Accounting\Report;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Base\Service\ReportParams;
-use App\Modules\Base\Service\ReportService;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class MovementReport extends AccountingReport
 {
-    protected ReportService $service;
-    protected ReportParams $params;
     protected string $class = 'movement';
-
-    public function __construct(ReportService $service)
-    {
-        $this->service = $service;
-
-        //Параметры шаблона
-        $this->params = new ReportParams();
-        $this->params->BEGIN_ROW = 10;
-        $this->params->FIRST_START = 28;
-        $this->params->FIRST_FINISH = 35;
-        $this->params->NEXT_START = 33;
-        $this->params->NEXT_FINISH = 40;
-        $this->params->LEFT_COL = 2;
-        $this->params->RIGHT_COL = 8;
-        $this->params->HEADER_START = 8;
-        $this->params->HEADER_FINISH = 9;
-    }
 
     public function index(): array
     {
@@ -45,12 +24,11 @@ class MovementReport extends AccountingReport
 
     protected function createSpreadSheet(int $document_id): Spreadsheet
     {
-        //Создаем из шаблона пустой документ
         $movement = MovementDocument::find($document_id);
-        $template = $this->service->template('movement');
-
-        $spreadsheet = IOFactory::load($template);
-        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $params = new ReportParams(10, 28, 35, 33, 40,
+            2, 8, 8, 9,
+            'Перемещение запасов № ' . $movement->number . ' от ' . $movement->created_at->translatedFormat('d.m.Y')
+        );
 
         //Заполняем общие статичные данные
         $replaceItems = [
@@ -61,20 +39,8 @@ class MovementReport extends AccountingReport
             '{staff}' => $movement->staff->fullname->getShortname(),
 
         ];
-        $this->service->findReplaceArray($activeWorksheet, $replaceItems);
 
-        $this->params->document = 'Перемещение запасов № ' . $movement->number . ' от ' . $movement->created_at->translatedFormat('d.m.Y');
-        $this->service->createPages(
-            $activeWorksheet, //&Страница
-            $movement->products()->getModels(), //Массив данных
-            $this->params, //Параметры шаблона
-            //Кэллбеки
-            [$this, 'rowData'],
-            [$this, 'emptyAmount'],
-            [$this, 'rowInterim'],
-            [$this, 'rowAmount'],
-        );
-        return $spreadsheet;
+        return $this->SpreadSheet('movement', $replaceItems, $params, $movement->products()->getModels());
     }
 
     public function rowData(Worksheet &$activeWorksheet, int $row, int $position, mixed $item, array &$amount_page): void

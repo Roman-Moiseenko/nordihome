@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Service;
 use App\Events\DepartureHasCompleted;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
@@ -22,12 +23,18 @@ class DepartureService
         $this->storages = $storages;
     }
 
-    public function create(int $storage_id): DepartureDocument
+    public function create(int $storage_id, int $customer_id = null): DepartureDocument
     {
         /** @var Admin $manager */
         $manager = Auth::guard('admin')->user();
-        //dd($storage_id);
-        return DepartureDocument::register($storage_id, $manager->id);
+        $departure = DepartureDocument::register($storage_id, $manager->id);
+        if (is_null($customer_id)) {
+            $trader = Trader::default();
+            $customer_id = $trader->organization->id;
+        }
+        $departure->customer_id = $customer_id;
+        $departure->save();
+        return $departure;
     }
 
     public function update(Request $request, DepartureDocument $departure): DepartureDocument
@@ -97,6 +104,7 @@ class DepartureService
 
     public function completed(DepartureDocument $departure): void
     {
+        if (is_null($departure->customer_id)) throw new \DomainException('Не указан заказчик');
         //Проведение документа
         DB::transaction(function () use ($departure) {
             $this->storages->departure($departure->storage, $departure->products);
@@ -120,6 +128,7 @@ class DepartureService
             //TODO Проверка на кол-во!
             $departure->storage_id = $request->integer('storage_id');
         }
+        $departure->customer_id = $request->input('customer_id');
         $departure->save();
     }
 

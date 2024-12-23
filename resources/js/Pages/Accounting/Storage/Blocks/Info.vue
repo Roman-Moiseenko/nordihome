@@ -25,7 +25,7 @@
                 <el-descriptions-item label="Выдача">
                     <Active :active="storage.point_of_delivery" />
                 </el-descriptions-item>
-                <el-descriptions-item label="По-умолчанию">
+                <el-descriptions-item label="Основной">
                     <Active :active="storage.default" />
                 </el-descriptions-item>
             </el-descriptions>

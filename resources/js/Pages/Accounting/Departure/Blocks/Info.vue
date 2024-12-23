@@ -13,7 +13,11 @@
                                    :readonly="notEdit"/>
                     </el-select>
                 </el-form-item>
-
+                <el-form-item label="Организация заказчик">
+                    <el-select v-model="info.customer_id"  @change="setInfo" :disabled="iSavingInfo || notEdit" filterable>
+                        <el-option v-for="item in customers" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
+                    </el-select>
+                </el-form-item>
             </el-form>
 
             <template v-if="departure.completed">
@@ -56,6 +60,7 @@ import AccountingDocument from "@Comp/Accounting/Document.vue";
 const props = defineProps({
     departure: Object,
     storages: Array,
+    customers: Array,
 })
 const iSavingInfo = ref(false)
 
@@ -68,6 +73,7 @@ const info = reactive({
         comment: props.departure.comment,
     },
     storage_id: props.departure.storage_id,
+    customer_id: props.departure.customer_id,
 
 })
 const notEdit = computed(() => props.departure.completed);

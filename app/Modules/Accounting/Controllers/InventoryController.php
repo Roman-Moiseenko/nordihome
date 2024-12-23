@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\InventoryProduct;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Report\InventoryReport;
 use App\Modules\Accounting\Repository\InventoryRepository;
+use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Service\InventoryService;
 use App\Modules\Admin\Repository\StaffRepository;
 use Illuminate\Http\RedirectResponse;
@@ -19,11 +21,15 @@ class InventoryController extends Controller
     private InventoryService $service;
     private InventoryRepository $repository;
     private StaffRepository $staffs;
+    private OrganizationRepository $organizations;
+    private InventoryReport $report;
 
     public function __construct(
-        InventoryService $service,
-        InventoryRepository $repository,
-        StaffRepository       $staffs,
+        InventoryService       $service,
+        InventoryRepository    $repository,
+        StaffRepository        $staffs,
+        OrganizationRepository $organizations,
+        InventoryReport        $report,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
@@ -32,6 +38,8 @@ class InventoryController extends Controller
         $this->repository = $repository;
 
         $this->staffs = $staffs;
+        $this->organizations = $organizations;
+        $this->report = $report;
     }
 
     public function index(Request $request): Response
@@ -66,7 +74,8 @@ class InventoryController extends Controller
         return Inertia::render('Accounting/Inventory/Show', [
             'inventory' => $this->repository->InventoryWithToArray($inventory, $request, $filters),
             'filters' => $filters,
-            // 'printed' => $this->printed->getPrinted(),
+            'customers' => $this->organizations->getCustomers(),
+            'printed' => $this->report->index(),
         ]);
     }
 

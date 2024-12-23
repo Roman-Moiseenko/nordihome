@@ -12,6 +12,7 @@ use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Report\SupplyReport;
+use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Accounting\Service\SupplyService;
@@ -32,13 +33,15 @@ class SupplyController extends Controller
     private SupplyRepository $repository;
     private StaffRepository $staffs;
     private SupplyReport $report;
+    private OrganizationRepository $organizations;
 
     public function __construct(
-        SupplyService    $service,
-        StackRepository  $stacks,
-        SupplyRepository $repository,
-        StaffRepository  $staffs,
-        SupplyReport     $report,
+        SupplyService          $service,
+        StackRepository        $stacks,
+        SupplyRepository       $repository,
+        StaffRepository        $staffs,
+        SupplyReport           $report,
+        OrganizationRepository $organizations,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting'])->except(['work', 'destroy']);
@@ -48,6 +51,7 @@ class SupplyController extends Controller
         $this->repository = $repository;
         $this->staffs = $staffs;
         $this->report = $report;
+        $this->organizations = $organizations;
     }
 
     public function index(Request $request): Response
@@ -95,20 +99,11 @@ class SupplyController extends Controller
 
     public function show(SupplyDocument $supply, Request $request): Response
     {
-
-        $customers = Organization::has('trader')->get()->map(function (Organization $organization) {
-            return [
-                'id' => $organization->id,
-                'short_name' => $organization->short_name,
-                'inn' => $organization->inn,
-            ];
-        });
-
         return Inertia::render('Accounting/Supply/Show', [
             'supply' => $this->repository->SupplyWithToArray($supply, $request, $filters),
             'filters' => $filters,
             'printed' => $this->report->index(),
-            'customers' => $customers,
+            'customers' => $this->organizations->getCustomers(),
         ]);
     }
 

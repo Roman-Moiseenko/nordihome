@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Report\DepartureReport;
 use App\Modules\Accounting\Repository\DepartureRepository;
+use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Service\DepartureService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Repository\StaffRepository;
@@ -25,12 +27,16 @@ class DepartureController extends Controller
     private DepartureService $service;
     private DepartureRepository $repository;
     private StaffRepository $staffs;
+    private OrganizationRepository $organizations;
+    private DepartureReport $report;
 
 
     public function __construct(
-        DepartureService    $service,
-        DepartureRepository $repository,
-        StaffRepository     $staffs,
+        DepartureService       $service,
+        DepartureRepository    $repository,
+        StaffRepository        $staffs,
+        OrganizationRepository $organizations,
+        DepartureReport        $report,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
@@ -38,6 +44,8 @@ class DepartureController extends Controller
         $this->service = $service;
         $this->repository = $repository;
         $this->staffs = $staffs;
+        $this->organizations = $organizations;
+        $this->report = $report;
     }
 
     public function index(Request $request): \Inertia\Response
@@ -71,9 +79,11 @@ class DepartureController extends Controller
     {
         $storages = Storage::orderBy('name')->getModels();
         return Inertia::render('Accounting/Departure/Show', [
-            'departure' => $this->repository->DepartureWithToArray($departure, $request,$filters),
+            'departure' => $this->repository->DepartureWithToArray($departure, $request, $filters),
             'storages' => $storages,
             'filters' => $filters,
+            'customers' => $this->organizations->getCustomers(),
+            'printed' => $this->report->index(),
         ]);
     }
 

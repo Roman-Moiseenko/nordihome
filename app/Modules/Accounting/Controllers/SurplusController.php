@@ -8,6 +8,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Accounting\Report\SurplusReport;
+use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Repository\SurplusRepository;
 use App\Modules\Accounting\Service\SurplusService;
 use App\Modules\Admin\Repository\StaffRepository;
@@ -22,12 +23,14 @@ class SurplusController extends Controller
     private SurplusRepository $repository;
     private StaffRepository $staffs;
     private SurplusReport $report;
+    private OrganizationRepository $organizations;
 
     public function __construct(
-        SurplusService    $service,
-        SurplusRepository $repository,
-        StaffRepository   $staffs,
-        SurplusReport     $report,
+        SurplusService         $service,
+        SurplusRepository      $repository,
+        StaffRepository        $staffs,
+        SurplusReport          $report,
+        OrganizationRepository $organizations,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
@@ -36,6 +39,7 @@ class SurplusController extends Controller
         $this->repository = $repository;
         $this->staffs = $staffs;
         $this->report = $report;
+        $this->organizations = $organizations;
     }
 
     public function index(Request $request): Response
@@ -73,6 +77,7 @@ class SurplusController extends Controller
             'storages' => $storages,
             'filters' => $filters,
             'printed' => $this->report->index(),
+            'customers' => $this->organizations->getCustomers(),
         ]);
     }
 

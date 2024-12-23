@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $surplus_id
  * @property int $departure_id
  * @property int $storage_id
+ * @property int $customer_id
  *
  * @property SurplusDocument $surplus
  * @property DepartureDocument $departure
  * @property Storage $storage
+ * @property Organization $customer Заказчик
  *
  * @property InventoryProduct[] $surpluses
  * @property InventoryProduct[] $shortages
@@ -76,6 +78,12 @@ class InventoryDocument extends AccountingDocument
             $amount += $product->cost * ($product->formal - $product->quantity);
         }
         return $amount;
+    }
+
+    //** RELATIONS */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'customer_id', 'id');
     }
 
     public function storage(): BelongsTo

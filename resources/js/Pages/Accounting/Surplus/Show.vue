@@ -7,7 +7,7 @@
             {{ func.date(surplus.created_at) }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <SurplusInfo :surplus="surplus" :storages="storages"/>
+            <SurplusInfo :surplus="surplus" :storages="storages" :customers="customers"/>
         </div>
         <el-affix target=".affix-container" :offset="64">
             <div class="bg-white rounded-lg my-2 p-1 shadow flex">
@@ -87,6 +87,7 @@ const props = defineProps({
     storages: Array,
     printed: Object,
     filters: Array,
+    customers: Array,
 })
 provide('$filters', props.filters) //Фильтр товаров в списке документа
 provide('$printed', props.printed) //Для печати

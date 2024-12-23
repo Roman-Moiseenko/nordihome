@@ -6,8 +6,6 @@ namespace App\Modules\Accounting\Report;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Base\Service\ReportParams;
-use App\Modules\Base\Service\ReportService;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -15,27 +13,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ArrivalReport extends AccountingReport
 {
-
-    protected ReportService $service;
-    protected ReportParams $params;
     protected string $class = 'arrival';
-
-    public function __construct(ReportService $service)
-    {
-        $this->service = $service;
-
-        //Параметры шаблона
-        $this->params = new ReportParams();
-        $this->params->BEGIN_ROW = 11;
-        $this->params->FIRST_START = 28;
-        $this->params->FIRST_FINISH = 35;
-        $this->params->NEXT_START = 33;
-        $this->params->NEXT_FINISH = 40;
-        $this->params->LEFT_COL = 2;
-        $this->params->RIGHT_COL = 8;
-        $this->params->HEADER_START = 9;
-        $this->params->HEADER_FINISH = 10;
-    }
 
     public function index(): array
     {
@@ -46,15 +24,13 @@ class ArrivalReport extends AccountingReport
         return $this->renderArray($items);
     }
 
-
     protected function createSpreadSheet(int $document_id): Spreadsheet
     {
-        //Создаем из шаблона пустой документ
         $arrival = ArrivalDocument::find($document_id);
-        $template = $this->service->template('arrival');
-
-        $spreadsheet = IOFactory::load($template);
-        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $params = new ReportParams(11, 28, 35, 33, 40,
+            2, 8, 9, 10,
+            'Приходная накладная № ' . $arrival->number . ' от ' . $arrival->created_at->translatedFormat('d.m.Y')
+        );
 
         //Заполняем общие статичные данные
         $amount_total = $arrival->getAmount();
@@ -80,22 +56,8 @@ class ArrivalReport extends AccountingReport
             '{currency}' => $arrival->currency->cbr_code,
             '{count}' => $arrival->products()->count(),
         ];
-        $this->service->findReplaceArray($activeWorksheet, $replaceItems);
-
-        $this->params->document = 'Приходная накладная № ' . $arrival->number . ' от ' . $arrival->created_at->translatedFormat('d.m.Y');
-        $this->service->createPages(
-            $activeWorksheet, //&Страница
-            $arrival->products()->getModels(), //Массив данных
-            $this->params, //Параметры шаблона
-            //Кэллбеки
-            [$this, 'rowData'],
-            [$this, 'emptyAmount'],
-            [$this, 'rowInterim'],
-            [$this, 'rowAmount'],
-        );
-        return $spreadsheet;
+        return $this->SpreadSheet('arrival', $replaceItems, $params, $arrival->products()->getModels());
     }
-
 
     public function rowData(Worksheet &$activeWorksheet, int $row, int $position, mixed $item, array &$amount_page): void
     {
@@ -123,20 +85,22 @@ class ArrivalReport extends AccountingReport
 
     public function rowInterim(Worksheet &$activeWorksheet, int $row, array $amount_page): void
     {
-        $activeWorksheet->mergeCells([6, $row, 7, $row]);
-        $activeWorksheet->getStyle([4, $row, 8, $row])->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-        $activeWorksheet->getStyle([4, $row, 8, $row])->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        $activeWorksheet->setCellValue([4, $row], 'На странице');
-        $activeWorksheet->setCellValue([5, $row], $amount_page['quantity']);
-        $activeWorksheet->setCellValue([8, $row], $amount_page['amount']);
+        $this->_row($activeWorksheet, $row, $amount_page, 'На странице');
     }
 
     public function rowAmount(Worksheet &$activeWorksheet, int $row, array $amount_document): void
     {
+        $this->_row($activeWorksheet, $row, $amount_document, 'Всего');
+    }
+
+    private function _row(Worksheet &$activeWorksheet, int $row, array $amount, string $caption)
+    {
         $activeWorksheet->mergeCells([6, $row, 7, $row]);
         $activeWorksheet->getStyle([4, $row, 8, $row])->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-        $activeWorksheet->setCellValue([4, $row], 'Всего');
-        $activeWorksheet->setCellValue([5, $row], $amount_document['quantity']);
-        $activeWorksheet->setCellValue([8, $row], $amount_document['amount']);
+        $activeWorksheet->getStyle([4, $row, 8, $row])->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        $activeWorksheet->getStyle([4, $row, 8, $row])->getFont()->setBold(true);
+        $activeWorksheet->setCellValue([4, $row], $caption);
+        $activeWorksheet->setCellValue([5, $row], $amount['quantity']);
+        $activeWorksheet->setCellValue([8, $row], $amount['amount']);
     }
 }
