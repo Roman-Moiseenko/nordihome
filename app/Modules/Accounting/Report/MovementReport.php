@@ -29,6 +29,8 @@ class MovementReport extends AccountingReport
             2, 8, 8, 9,
             'Перемещение запасов № ' . $movement->number . ' от ' . $movement->created_at->translatedFormat('d.m.Y')
         );
+        $params->notInterim();
+        $params->notAmount();
 
         //Заполняем общие статичные данные
         $replaceItems = [

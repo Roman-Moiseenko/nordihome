@@ -20,6 +20,9 @@ class ReportParams
 
     public string $document = ''; //Название документа на новых страницах
 
+    public bool $isInterim = true; //Добавлять строку промежуточных итогов
+    public bool $isAmount = true; //Добавлять итоговую строку
+
     public function __construct(int $BEGIN_ROW = 11,
                                 int $FIRST_START = 28, int $FIRST_FINISH = 35,
                                 int $NEXT_START = 33, int $NEXT_FINISH = 40,
@@ -38,5 +41,23 @@ class ReportParams
         $this->HEADER_START = $HEADER_START;
         $this->HEADER_FINISH = $HEADER_FINISH;
         $this->document = $document;
+    }
+
+    public static function utd(): self
+    {
+        return new self(20, 25, 12, 22, 42,
+            1, 88, 17, 19,
+            'УПД'
+        );
+    }
+
+    public function notInterim()
+    {
+        $this->isInterim = false;
+    }
+
+    public function notAmount()
+    {
+        $this->isAmount = false;
     }
 }

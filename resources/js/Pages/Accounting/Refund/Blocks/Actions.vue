@@ -1,7 +1,5 @@
 <template>
     <template v-if="refund.completed">
-
-        <AccountingPrint />
         <AccountingWork :route="route('admin.accounting.refund.work', {refund: props.refund.id})" />
     </template>
     <template v-else>
@@ -13,6 +11,7 @@
         <AccountingCompleted :route="route('admin.accounting.refund.completed', {refund: props.refund.id})" />
     </template>
     <AccountingOnBased />
+    <AccountingPrint />
     <AccountingFilter />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(refund.amount, refund.currency) }}</el-tag>

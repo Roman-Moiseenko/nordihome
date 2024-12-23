@@ -343,7 +343,7 @@ class ArrivalService
                     $item = RefundProduct::new(
                         $product->product_id,
                         $quantity,//Высчитываем свободное кол-во
-                        $product->cost_currency,
+                        (float)$product->cost_currency,
                     );
                     $refund->products()->save($item);
                 }

@@ -7,6 +7,7 @@ use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Report\RefundReport;
 use App\Modules\Accounting\Repository\RefundRepository;
 use App\Modules\Accounting\Service\RefundService;
 use App\Modules\Admin\Repository\StaffRepository;
@@ -20,11 +21,13 @@ class RefundController extends Controller
     private RefundService $service;
     private RefundRepository $repository;
     private StaffRepository $staffs;
+    private RefundReport $report;
 
     public function __construct(
         RefundService    $service,
         RefundRepository $repository,
         StaffRepository  $staffs,
+        RefundReport     $report,
     )
     {
         $this->middleware(['auth:admin', 'can:accounting']);
@@ -32,6 +35,7 @@ class RefundController extends Controller
         $this->service = $service;
         $this->repository = $repository;
         $this->staffs = $staffs;
+        $this->report = $report;
     }
 
     public function index(Request $request): \Inertia\Response
@@ -54,6 +58,7 @@ class RefundController extends Controller
             'refund' => $this->repository->RefundWithToArray($refund, $request, $filters),
             'storages' => $storages,
             'filters' => $filters,
+            'printed' => $this->report->index(),
         ]);
     }
 

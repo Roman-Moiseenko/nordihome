@@ -72,7 +72,7 @@ class ArrivalProduct extends AccountingProduct
      */
     public function getQuantityUnallocated(): float
     {
-        $quantity = $this->quantity;
+        $quantity = (float)$this->quantity;
 
         //Возврат
         foreach ($this->document->refunds as $refund) {

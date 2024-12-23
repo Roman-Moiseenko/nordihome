@@ -211,7 +211,7 @@ class ReportService
     /**
      * Замена данных в ячейках Excel из массива ["{key}" => "value"]
      */
-    public function findReplaceArray(Worksheet &$activeWorksheet, array $items, int $rows = 50, int $cols = 50): void
+    public function findReplaceArray(Worksheet &$activeWorksheet, array $items, int $rows = 45, int $cols = 90): void
     {
         for ($row = 1; $row < $rows; $row++) {
             for ($col = 1; $col < $cols; ++$col) {
@@ -343,10 +343,11 @@ class ReportService
     {
         //Рассчитываем кол-во листов документа
         $pages = $this->getList(count($list_items), $params);
-        $coef = 2; //Кол-во строк добавляемых для каждой страницы 1 - итоги промежуточные, 1 - номер страницы, х - шапка
 
+        $coef = 1; //Кол-во строк добавляемых для каждой страницы со второй. 1 - номер страницы
+        if ($params->isInterim) $coef++;// +1 - итоги промежуточные,
         if ($params->HEADER_START != 0)
-           $coef += ($params->HEADER_FINISH - $params->HEADER_START) + 1;
+            $coef += ($params->HEADER_FINISH - $params->HEADER_START) + 1; // , +высота шапки
 
         $amountDocument = $emptyAmount();
         $start = 0;
@@ -362,19 +363,25 @@ class ReportService
             foreach ($amountPage as $key => $value) $amountDocument[$key] += $value;
 
             if ($n != count($pages) - 1) {//Промежуточная вставка с указанием номера страницы
-                $row++;
-                $this->rowInsertEmpty($activeWorksheet, $row, $params);
-                $rowInterim($activeWorksheet, $row, $amountPage);//Итоги страницы
+                if ($params->isInterim) {
+                    $row++;
+                    $this->rowInsertEmpty($activeWorksheet, $row, $params);
+                    $rowInterim($activeWorksheet, $row, $amountPage);//Итоги страницы
+                }
                 $row++;
                 $this->rowPage($activeWorksheet, $row, $n + 2, $params); //Новая страница
                 $start += $page;
             } else { //Итоговая вставка данных
-                $row++;
-                $this->rowInsertEmpty($activeWorksheet, $row, $params);
-                $rowInterim($activeWorksheet, $row, $amountPage);
-                $row++;
-                $this->rowInsertEmpty($activeWorksheet, $row, $params);
-                $rowAmount($activeWorksheet, $row, $amountDocument);
+                if ($params->isInterim) {
+                    $row++;
+                    $this->rowInsertEmpty($activeWorksheet, $row, $params);
+                    $rowInterim($activeWorksheet, $row, $amountPage);
+                }
+                if ($params->isAmount) {
+                    $row++;
+                    $this->rowInsertEmpty($activeWorksheet, $row, $params);
+                    $rowAmount($activeWorksheet, $row, $amountDocument);
+                }
             }
         }
     }

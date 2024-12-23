@@ -72,7 +72,9 @@ return [
         'inventory' => [
             'template' => '/template/accounting/_inventory.xlsx',
         ],
-
+        'utd' => [
+            'template' => '/template/accounting/_utd2024.xlsx',
+        ],
         'base_path' => '',
         'invoice' => [
             'template' => '/template/_invoice.xlsx',
