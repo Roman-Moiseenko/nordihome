@@ -252,6 +252,7 @@ class ShopRepository
 
     public function getChildren(int $parent_id = null): Arrayable
     {
+
         return Category::defaultOrder()->where('parent_id', $parent_id)->get()->map(function (Category $category) {
             return [
                 'id' => $category->id,

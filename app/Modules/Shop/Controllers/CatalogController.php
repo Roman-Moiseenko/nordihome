@@ -52,8 +52,8 @@ class CatalogController extends Controller
         $description = $category->description;
 
         if (count($category->children) > 0) {
-            $categories = $this->repository->getChildren($category->id);
-            return view('shop.subcatalog', compact('category', 'categories', 'title', 'description'));
+            $children = $this->repository->getChildren($category->id);
+            return view('shop.subcatalog', compact('category', 'children', 'title', 'description'));
         }
 
         //TODO Переделать в запросы 1. получить только id Product,

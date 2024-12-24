@@ -10,7 +10,7 @@
         <h1>{{ $category->name }}</h1>
     </div>
     <div class="row">
-        @foreach($categories as $category)
+        @foreach($children as $category)
             @include('shop.cards.catalog', ['category' => $category])
         @endforeach
     </div>
