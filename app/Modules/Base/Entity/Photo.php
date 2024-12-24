@@ -11,9 +11,12 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
+
+
 use function class_basename;
 use function now;
 use function public_path;
+
 
 /**
  * @property int $id
@@ -167,9 +170,7 @@ class Photo extends Model
 
     final public function getThumbUrl(string $thumb): string
     {
-
         if ($this->createThumbsOnRequest) $this->createThumbs();
-
         return $this->urlThumb . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
     }
 
@@ -219,8 +220,9 @@ class Photo extends Model
             if (is_file($this->getUploadFile()) &&
                 !is_file($thumb_file) &&
                 (in_array($this->ext(), ['jpg', 'png', 'jpeg']))) {
-                $manager = new ImageManager(['driver' => 'gd']);
+                $manager = new ImageManager(['driver' => 'imagick']);
                 $img = $manager->make($this->getUploadFile());
+
                 if (isset($params['width']) && isset($params['height'])) $img->fit($params['width'], $params['height']);
                 if (isset($params['watermark'])) {
                     $watermark = $manager->make($this->watermark['file']);
@@ -232,7 +234,7 @@ class Photo extends Model
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-
+                if ($this->ext() == 'jpg') $img->encode(null, 70);
                 $img->save($thumb_file);
             }
         }

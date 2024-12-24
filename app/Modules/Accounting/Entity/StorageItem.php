@@ -116,7 +116,7 @@ class StorageItem extends Model
      * @param int|null $order_id
      * @return int
      */
-    public function getFreeToSell(int $order_id = null): int
+    public function getFreeToSell(int $order_id = null): float
     {
         return $this->quantity - $this->getQuantityReserve($order_id);
     }
