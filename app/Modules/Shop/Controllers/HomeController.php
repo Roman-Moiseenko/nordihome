@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 class HomeController extends Controller
 {
 
-    private Options $options;
+   // private Options $options;
 
     public function __construct(Options $options)
     {
@@ -26,7 +26,7 @@ class HomeController extends Controller
             Auth::logout();
             //throw new \DomainException('^^^^');
         }
-        $this->options = $options;
+      //  $this->options = $options;
     }
 
     /**

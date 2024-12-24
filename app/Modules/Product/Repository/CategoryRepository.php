@@ -84,6 +84,7 @@ class CategoryRepository
         return Category::where('name', '=', $name)->first();
     }
 
+    //TODO Ускорить для Shop
     public function getTree(int $parent_id = null)
     {
         $query = Category::defaultOrder()->withDepth();
@@ -104,6 +105,28 @@ class CategoryRepository
             $categories = Category::defaultOrder()->withDepth()->descendantsOf($parent_id)->toTree();
         } */
         // $categories;
+    }
+
+    //TODO Ускорить для Shop
+    public function getTreeForShop(int $parent_id = null)
+    {
+
+        return Category::defaultOrder()->where('parent_id', null)->get()->map(function (Category $category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'image' => $category->getImage('catalog'),
+            ];
+        });
+
+        if (is_null($parent_id)) {
+            $categories = $query->get();
+        } else {
+            $categories = $query->descendantsOf($parent_id);
+        }
+        return $categories->toTree();
+
     }
 
     /**

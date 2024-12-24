@@ -7,6 +7,7 @@ use App\Modules\Base\Helpers\AdminMenu;
 use App\Modules\Base\Helpers\AdminProfileMenu;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Shop\Schema;
+use App\Modules\Shop\ShopRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;
@@ -14,10 +15,12 @@ use Illuminate\View\View;
 class AdminComposer
 {
     private CategoryRepository $categories;
+    private ShopRepository $shopRepository;
 
-    public function __construct(CategoryRepository $categories)
+    public function __construct(CategoryRepository $categories, ShopRepository $shopRepository)
     {
         $this->categories = $categories;
+        $this->shopRepository = $shopRepository;
     }
 
     public function compose(View $view): void
@@ -42,6 +45,7 @@ class AdminComposer
             } elseif($layout == 'livewire') {
                 //
             } else {
+                //TODO Сделать отдельный View
                 if ($layout == 'shop') {
                     $view->with('schema', new Schema());
                 }
@@ -58,8 +62,7 @@ class AdminComposer
                 $view->with('user', $user);
                 $view->with('config', Config::get('shop-config.frontend'));
                 $city = 'Калининград';
-
-                $view->with('categories', $this->categories->getTree());
+                $view->with('categories', $this->shopRepository->getChildren());
                 $view->with('city', $city);
             }
         }

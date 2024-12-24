@@ -10,12 +10,12 @@
         <h1>{{ $category->name }}</h1>
     </div>
     <div class="row">
-        @foreach($category->children as $category)
+        @foreach($categories as $category)
             @include('shop.cards.catalog', ['category' => $category])
         @endforeach
     </div>
 
     <script type="application/ld+json" class="schemantra.com">
-        {{ json_encode($schema->CategoryPage($category)) }}
+        {{ json_encode($schema->CategoryPage($category['id'])) }}
     </script>
 @endsection

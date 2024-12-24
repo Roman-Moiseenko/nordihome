@@ -42,8 +42,9 @@ class Schema
         return $this->html($schema1) . PHP_EOL . $this->html($schema2);
     }
 
-    public function CategoryPage(Category $category)
+    public function CategoryPage(int $category_id)
     {
+        $category = Category::find($category_id);
         $schema = $this->_SubCategories($category);
         return $this->html($schema);
     }

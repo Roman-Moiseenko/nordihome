@@ -18,6 +18,7 @@ use App\Modules\Product\Entity\Tag;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
 use Carbon\Carbon;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -248,6 +249,18 @@ class ShopRepository
             return $query->take($take)->get();
         }
     */
+
+    public function getChildren(int $parent_id = null): Arrayable
+    {
+        return Category::defaultOrder()->where('parent_id', $parent_id)->get()->map(function (Category $category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'image' => $category->getImage('catalog'),
+            ];
+        });
+    }
 
     public function getTree(int $parent_id = null)
     {

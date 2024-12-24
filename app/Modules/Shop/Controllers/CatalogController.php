@@ -51,7 +51,10 @@ class CatalogController extends Controller
         $title = $category->title;
         $description = $category->description;
 
-        if (count($category->children) > 0) return view('shop.subcatalog', compact('category', 'title', 'description'));
+        if (count($category->children) > 0) {
+            $categories = $this->repository->getChildren($category->id);
+            return view('shop.subcatalog', compact('category', 'categories', 'title', 'description'));
+        }
 
         //TODO Переделать в запросы 1. получить только id Product,
         // 2. Получить мин и макс цены из таблицы напрямую whereIn($product_id, $product_ids), 3. Также получить бренды

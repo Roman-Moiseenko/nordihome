@@ -7,9 +7,9 @@
             <div class="catalog-rootmenu">
                 @foreach($categories as $category)
                     <li>
-                        <a class="dropdown-item" href="{{ route('shop.category.view', $category->slug) }}" data-id="{{ $category->id }}">
-                            <img src="{{ $category->getIcon() }}" width="20px"/>
-                            {{ $category->name }}
+                        <a class="dropdown-item" href="{{ route('shop.category.view', $category['slug']) }}" data-id="{{ $category['id'] }}">
+
+                            {{ $category['name'] }}
                         </a>
                     </li>
                 @endforeach
