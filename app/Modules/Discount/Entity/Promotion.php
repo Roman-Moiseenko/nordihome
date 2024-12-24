@@ -123,12 +123,12 @@ class Promotion extends Model implements DataWidgetInterface
         return !$this->published;
     }
 
-    public function finish()
+    public function finish(): void
     {
         $this->active = false;
     }
 
-    public function start()
+    public function start(): void
     {
         $this->active = true;
     }

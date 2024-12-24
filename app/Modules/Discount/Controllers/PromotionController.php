@@ -56,12 +56,8 @@ class PromotionController extends Controller
 
     public function set_info(Request $request, Promotion $promotion): RedirectResponse
     {
-        try {
-            $this->service->setInfo($request, $promotion);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($request, $promotion);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function add_product(Request $request, Promotion $promotion): RedirectResponse

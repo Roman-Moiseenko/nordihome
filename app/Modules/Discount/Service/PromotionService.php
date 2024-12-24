@@ -39,7 +39,7 @@ class PromotionService
         $promotion->saveIcon($request->file('icon'), $request->boolean('icon_clear'));
 
 
-        if (!$promotion->isPublished()) {
+        if (!$promotion->isFinished()) {
 
             $this->checkStartFinish($start, $finish, $request);
             $promotion->update([
@@ -48,7 +48,7 @@ class PromotionService
             ]);
 
         } else {
-           /// throw new \DomainException('Акция завершена, нельзя менять дату');
+           throw new \DomainException('Акция завершена, нельзя менять даты');
         }
         //Если изменилась скидка, пересчитать на весь товар
         if ($promotion->discount != $request->integer('discount')) {
