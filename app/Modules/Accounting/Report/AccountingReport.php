@@ -77,6 +77,7 @@ abstract class AccountingReport
     /** Формирование документа отчета */
     final protected function SpreadSheet(string $template, array $replaceItems, ReportParams $params, $items): Spreadsheet
     {
+        set_time_limit(300);
         $template = $this->service->template($template); //Шаблон из файла, пути в config\shop-config.php
 
         $spreadsheet = IOFactory::load($template);
@@ -93,6 +94,7 @@ abstract class AccountingReport
             [$this, 'rowInterim'],
             [$this, 'rowAmount'],
         );
+        set_time_limit(30);
         return $spreadsheet;
     }
 

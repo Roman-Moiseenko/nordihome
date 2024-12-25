@@ -20,6 +20,8 @@ class CurrencyService
             $request->string('cbr_code')->trim()->value(),
             $request->integer('extra'),
         );
+        $currency->code = $request->input('code');
+        $currency->save();
         $this->update_parser_currency($currency);
         return $currency;
     }
@@ -36,6 +38,7 @@ class CurrencyService
         $currency->exchange = $request->float('exchange');
         $currency->cbr_code = $request->string('cbr_code')->trim()->value();
         $currency->extra = $request->integer('extra');
+        $currency->code = $request->input('code');
         $currency->save();
         $this->update_parser_currency($currency);
     }

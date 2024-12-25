@@ -19,6 +19,9 @@
                     <el-form-item label="Обозначение по ЦБ">
                         <el-input v-model="form.cbr_code" :disabled="iSaving" :readonly="!isEdit" />
                     </el-form-item>
+                    <el-form-item label="Цифровой код (3-значный)">
+                        <el-input v-model="form.code" :disabled="iSaving" :readonly="!isEdit" />
+                    </el-form-item>
                     <el-form-item label="Наценка в %">
                         <el-input v-model="form.extra" :disabled="iSaving" :readonly="!isEdit" />
                     </el-form-item>
@@ -67,6 +70,7 @@ const form = reactive({
     sign: props.currency.sign,
     exchange: props.currency.exchange,
     cbr_code: props.currency.cbr_code,
+    code: props.currency.code,
     extra: props.currency.extra,
     default: props.currency.default,
 })

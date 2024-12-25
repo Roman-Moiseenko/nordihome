@@ -46,17 +46,17 @@ class ReportParams
     public static function utd(): self
     {
         return new self(20, 25, 12, 22, 42,
-            1, 88, 17, 19,
+            1, 36, 17, 19,
             'УПД'
         );
     }
 
-    public function notInterim()
+    public function notInterim(): void
     {
         $this->isInterim = false;
     }
 
-    public function notAmount()
+    public function notAmount(): void
     {
         $this->isAmount = false;
     }

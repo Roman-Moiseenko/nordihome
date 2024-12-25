@@ -31,6 +31,11 @@ class RefundProduct extends AccountingProduct
         $this->cost_currency = $cost_currency;
     }
 
+    public function getCost(): float
+    {
+        return $this->cost_currency;
+    }
+
     public function document(): BelongsTo
     {
         return $this->belongsTo(RefundDocument::class, 'refund_id', 'id');

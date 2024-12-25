@@ -27,6 +27,11 @@ class SurplusProduct extends AccountingProduct
         return $product;
     }
 
+    public function getCost(): float
+    {
+        return $this->cost;
+    }
+
     public function document(): BelongsTo
     {
         return $this->belongsTo(SurplusDocument::class, 'surplus_id', 'id');

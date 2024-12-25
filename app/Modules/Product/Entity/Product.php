@@ -874,7 +874,7 @@ class Product extends Model
     //СПРАВОЧНИКИ GUIDE
     public function VAT(): BelongsTo
     {
-        return $this->belongsTo(VAT::class, 'vat_id', 'id');
+        return $this->belongsTo(VAT::class, 'vat_id', 'id')->withDefault(['name' => 'Без НДС', 'value' => null]);
     }
 
     public function country(): BelongsTo

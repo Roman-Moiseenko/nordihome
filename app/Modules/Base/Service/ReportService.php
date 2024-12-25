@@ -211,7 +211,7 @@ class ReportService
     /**
      * Замена данных в ячейках Excel из массива ["{key}" => "value"]
      */
-    public function findReplaceArray(Worksheet &$activeWorksheet, array $items, int $rows = 45, int $cols = 90): void
+    public function findReplaceArray(Worksheet &$activeWorksheet, array $items, int $rows = 45, int $cols = 50): void
     {
         for ($row = 1; $row < $rows; $row++) {
             for ($col = 1; $col < $cols; ++$col) {
@@ -270,6 +270,7 @@ class ReportService
     {
         $row++;
         $activeWorksheet->insertNewRowBefore($row, 1);
+
         $this->copyRows(
             $activeWorksheet,
             [$params->LEFT_COL, $params->BEGIN_ROW],
@@ -295,7 +296,7 @@ class ReportService
             ],
         ];
         $activeWorksheet
-            ->insertNewRowBefore($row + $count - 1, $count)
+            ->insertNewRowBefore($row, $count)
             ->getStyle([$params->LEFT_COL, $row, $params->RIGHT_COL, $row + $count - 1])
             ->applyFromArray($styleBackground);
     }
@@ -315,20 +316,32 @@ class ReportService
             ->setHorizontal(Alignment::HORIZONTAL_LEFT);
         $activeWorksheet->getStyle([$params->LEFT_COL, $row])->getFont()->setItalic(true);
         //Если есть свободная ячейка справа, то  объединяем со следующей для названия документа
-        if ($params->RIGHT_COL - $params->LEFT_COL > 1)
-            $activeWorksheet->mergeCells([$params->LEFT_COL, $row, $params->LEFT_COL + 1, $row]); //Проверить на всех шаблонах
-        $activeWorksheet->setCellValue([$params->RIGHT_COL, $row], 'Страница ' . $number_page);
-        $activeWorksheet->getStyle([$params->RIGHT_COL, $row])->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-        $activeWorksheet->getStyle([$params->RIGHT_COL, $row])->getFont()->setItalic(true);
+        $delta = $params->RIGHT_COL - $params->LEFT_COL - 1;
+        $cells_right = [$params->RIGHT_COL, $row];
+        if ($delta > 0) {
+            $left_delta = intval($delta/2);
+            $right_delta = intval($delta/2) - $delta % 2;
+            $activeWorksheet->mergeCells([$params->LEFT_COL, $row, $params->LEFT_COL + $left_delta, $row]); //Проверить на всех шаблонах
+
+            $cells_right = [$params->RIGHT_COL - $right_delta, $row, $params->RIGHT_COL, $row];
+            $activeWorksheet->mergeCells($cells_right); //Проверить на всех шаблонах
+
+        }
+            $activeWorksheet->setCellValue($cells_right, 'Страница ' . $number_page);
+
+        $activeWorksheet->getStyle($cells_right)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        $activeWorksheet->getStyle($cells_right)->getFont()->setItalic(true);
         /*  //Шапка*/
-        $count_header = ($params->HEADER_FINISH - $params->HEADER_START) + 1;
-        //$row += $count_header;
-        $this->rowInsertEmpty($activeWorksheet, $row, $params, $count_header);
-        $this->copyRows(
-            $activeWorksheet,
-            [$params->LEFT_COL, $params->HEADER_START],
-            [$params->RIGHT_COL, $params->HEADER_FINISH],
-            [$params->LEFT_COL, $row + 1]);
+        if ($params->HEADER_START != 0) {
+            $count_header = ($params->HEADER_FINISH - $params->HEADER_START) + 1;
+            $row++;
+            $this->rowInsertEmpty($activeWorksheet, $row, $params, $count_header);
+            $this->copyRows(
+                $activeWorksheet,
+                [$params->LEFT_COL, $params->HEADER_START],
+                [$params->RIGHT_COL, $params->HEADER_FINISH],
+                [$params->LEFT_COL, $row]);
+        }
     }
 
     public function createPages(
@@ -348,7 +361,6 @@ class ReportService
         if ($params->isInterim) $coef++;// +1 - итоги промежуточные,
         if ($params->HEADER_START != 0)
             $coef += ($params->HEADER_FINISH - $params->HEADER_START) + 1; // , +высота шапки
-
         $amountDocument = $emptyAmount();
         $start = 0;
         $row = $params->BEGIN_ROW;

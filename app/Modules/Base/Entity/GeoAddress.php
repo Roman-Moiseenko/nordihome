@@ -87,13 +87,14 @@ class GeoAddress
         ]; */
     }
 
-    public function address(): string
+    public function address(bool $index = false): string
     {
+
         if (!empty($this->address)) {
-            return $this->address;
+            $address = $this->address;
         } else {
 
-            return implode(', ', [
+            $address = implode(', ', [
                 $this->region,
                 $this->district,
                 $this->city,
@@ -102,5 +103,7 @@ class GeoAddress
                 $this->room
             ]);
         }
+        if ($index) $address = $this->post . ', ' . $address;
+        return $address;
     }
 }

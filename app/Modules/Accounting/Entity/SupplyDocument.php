@@ -98,11 +98,17 @@ class SupplyDocument extends AccountingDocument
 
     public function getAmount(): float
     {
-        $amount = 0;
+        $amount = SupplyProduct::selectRaw('SUM(quantity * cost_currency) AS total')
+            ->where('supply_id', $this->id)
+            ->first();
+        $amount = (float)$amount->total ?? 0.0;
+        return ceil($amount * 100) / 100;
+
+        /*$amount = 0;
         foreach ($this->products as $product) {
             $amount += $product->quantity * $product->cost_currency;
         }
-        return ceil($amount * 100) / 100;
+        return ceil($amount * 100) / 100; */
     }
 
     public function getAmountVAT(): float

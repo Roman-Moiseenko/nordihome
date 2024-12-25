@@ -132,6 +132,21 @@ abstract class AccountingDocument extends Model
         return $this->comment;
     }
 
+
+    public function getAmountVAT(): float
+    {
+        $amount = 0;
+        try {
+            foreach ($this->products as $product) {
+                if (!is_null($product->product->VAT) && !is_null($product->product->VAT->value))
+                    $amount += $product->quantity * $product->getCost() * ($product->product->VAT->value / 100);
+            }
+        } catch (\Throwable $e) {
+
+        }
+        return ceil($amount * 100) / 100;
+    }
+
     public function getProduct(int $product_id): ?AccountingProduct
     {
         foreach ($this->products as $item) {

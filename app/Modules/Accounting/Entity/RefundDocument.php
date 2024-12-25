@@ -35,7 +35,7 @@ class RefundDocument extends AccountingDocument
         $amount = RefundProduct::selectRaw('SUM(quantity * cost_currency) AS total')
             ->where('refund_id', $this->id)
             ->first();
-        return $amount->total ?? 0.0;
+        return (float)$amount->total ?? 0.0;
 
     }
 
@@ -93,4 +93,6 @@ class RefundDocument extends AccountingDocument
     {
         return $this->foundedGenerate($this->arrival);
     }
+
+
 }

@@ -72,6 +72,12 @@ abstract class AccountingProduct extends Model
         return $this->product;
     }
 
+
+    public function getCost(): float
+    {
+        return 0.0;
+    }
+
     public function getQuantity(): float
     {
         return $this->quantity;
