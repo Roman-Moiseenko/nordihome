@@ -38,7 +38,7 @@ class Items extends Component
     #[On('delete-item')]
     public function del_item($item_id)
     {
-        $this->service->delete_item(OrderItem::find($item_id));
+        $this->service->deleteItem(OrderItem::find($item_id));
         $this->refresh_fields();
         $this->dispatch('update-amount-order');
     }
@@ -48,7 +48,7 @@ class Items extends Component
     {
 
         if (!is_numeric($product_id)) throw new \DomainException('Что-то пошло не так, обновите страницу');
-        $this->service->add_product($this->order, (int)$product_id, (int)$quantity, $preorder);
+        $this->service->addProduct($this->order, (int)$product_id, (int)$quantity, $preorder);
         $this->refresh_fields();
         $this->dispatch('update-amount-order');
         $this->dispatch('clear-search-product');

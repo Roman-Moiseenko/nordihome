@@ -28,7 +28,7 @@ class NotificationOrderPaid
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
         foreach ($staffs as $staff) {
-            if ($event->order->manager_id == $staff->id) {
+            if ($event->order->staff_id == $staff->id) {
                 $staff->notify(new StaffMessage(
                     'Заказ оплачен',
                     'Заказ ' . $event->order->htmlNumDate(),

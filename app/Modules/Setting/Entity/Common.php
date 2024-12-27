@@ -16,6 +16,7 @@ class Common extends AbstractSetting
     public bool $accounting = true;
     public int $group_last_id = -1;
     public string $date_bank = '01.01.1900';
+    public int $assembly = 5; //% за сборку мебели
 
     public function view()
     {

@@ -28,7 +28,7 @@ class NotificationOrderPrepaid
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
         foreach ($staffs as $staff) {
-            if ($event->order->manager_id == $staff->id) {
+            if ($event->order->staff_id == $staff->id) {
                 $staff->notify(new StaffMessage(
                     'Внесена предоплата по заказу',
                     'Заказ ' . $event->order->htmlNumDate(),

@@ -26,7 +26,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
- * @property int $manager_id // Admin::class - менеджер, создавший или прикрепленный к заказу
+ * @property int $staff_id // Admin::class - менеджер, создавший или прикрепленный к заказу
  * @property int $discount_id //Скидка на заказ - от суммы, или по дням
  * @property int $discount_amount //Скидка в рублях для фиксации конечного значения
  * @property float $coupon_amount //Примененная сумма скидки по товару
@@ -47,7 +47,7 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderResponsible[] $responsible - удалить
  * @property MovementDocument[] $movements
  * @property Discount $discount
- * @property Admin $manager
+ * @property Admin $staff
  * @property Coupon $coupon
  * @property OrderRefund $refund
  * @property LoggerOrder[] $logs
@@ -80,7 +80,7 @@ class Order extends Model
         'discount_amount',
         'manual',
         'comment',
-        'manager_id',
+        'staff_id',
     ];
     protected $casts = [
         'created_at' => 'datetime',
@@ -103,8 +103,6 @@ class Order extends Model
 
     /**
      * Статус $value был применен
-     * @param int $value
-     * @return bool
      */
     public function isStatus(#[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value): bool
     {
@@ -145,7 +143,7 @@ class Order extends Model
         return $this->status->value == OrderStatus::PAID;
     }
 
-    public function InWork(): bool
+    public function inWork(): bool
     {
         return $this->status->value >= OrderStatus::PREPAID && $this->status->value < OrderStatus::CANCEL;
     }
@@ -175,11 +173,11 @@ class Order extends Model
         return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
     }
 
-
+    ///*** SET-еры
     public function setStatus(
         #[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value,
         string $comment = ''
-    )
+    ): void
     {
         if ($this->finished && $value != OrderStatus::COMPLETED_REFUND) throw new \DomainException('Заказ закрыт, статус менять нельзя');
         if ($this->isStatus($value)) throw new \DomainException('Статус уже назначен');
@@ -197,7 +195,7 @@ class Order extends Model
         if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
     }
 
-    public function setPaid()
+    public function setPaid(): void
     {
         $this->setStatus(OrderStatus::PAID);
         $this->paid = true;
@@ -205,21 +203,21 @@ class Order extends Model
         //Увеличиваем резерв на оплаченные товары
     }
 
-    public function setManager(int $staff_id)
+    public function setManager(int $staff_id): void
     {
-        if ($this->manager_id != null) throw new \DomainException('Менеджер уже назначен, нельзя менять');
-        $this->manager_id = $staff_id;
+        if ($this->staff_id != null) throw new \DomainException('Менеджер уже назначен, нельзя менять');
+        $this->staff_id = $staff_id;
         $this->save();
     }
 
-    public function setReserve(Carbon $addDays)
+    public function setReserve(Carbon $addDays): void
     {
         foreach ($this->items as $item) {
             $item->updateReserves($addDays);
         }
     }
 
-    public function setNumber()
+    public function setNumber(): void
     {
         $count = Order::where('number', '<>', null)->count();
         $this->number = $count + 1;
@@ -230,8 +228,6 @@ class Order extends Model
 
     /**
      * Доступные статусы для текущего заказа, ограниченные сверху
-     * @param int $top_status
-     * @return array
      */
     public function getAvailableStatuses(int $top_status = OrderStatus::COMPLETED): array
     {
@@ -298,23 +294,34 @@ class Order extends Model
 
     public function getManager(): ?Admin
     {
-        if (is_null($this->manager_id)) return null;
-        return $this->manager()->first();
+        if (is_null($this->staff_id)) return null;
+        return $this->staff->first();
     }
 
     public function getNameManager(bool $short = false): string
     {
-        if (is_null($this->manager)) return '-';
+        if (is_null($this->staff)) return '-';
         if ($short) {
-            return $this->manager->fullname->getShortName();
+            return $this->staff->fullname->getShortName();
         } else {
-            return $this->manager->fullname->getFullName();
+            return $this->staff->fullname->getFullName();
         }
 
     }
 
-    //Суммы по заказу*******************
 
+    /**
+     * Доля выдачи заказа 0 - не выдан, 1 -выдан 100%
+     */
+    public function getPercentIssued(): float
+    {
+        $total = $this->getTotalAmount();
+        if ($total == 0) return 0;
+        $expense = $this->getExpenseAmount(OrderExpense::STATUS_COMPLETED);
+        return $expense / $total;
+    }
+
+    //Суммы по заказу*******************
     /**
      * Базовая стоимость всех товаров
      * @return float
@@ -330,7 +337,6 @@ class Order extends Model
 
     /**
      * Базовая стоимость всех товаров, за исключением Акционных и Бонусных
-     * @return float
      */
     public function getBaseAmountNotDiscount(): float
     {
@@ -343,7 +349,6 @@ class Order extends Model
 
     /**
      * Продажная стоимость всех товаров
-     * @return float
      */
     public function getSellAmount(): float
     {
@@ -356,7 +361,6 @@ class Order extends Model
 
     /**
      * Скидка по товаром - акции, бонусы
-     * @return float
      */
     public function getDiscountProducts(): float
     {
@@ -365,7 +369,6 @@ class Order extends Model
 
     /**
      * Скидка на заказ - по сумме, срокам и др.
-     * @return float
      */
     public function getDiscountOrder(): float
     {
@@ -381,7 +384,6 @@ class Order extends Model
 
     /**
      * Скидка на заказ - по сумме, срокам и др.
-     * @return float
      */
     public function getDiscountName(): string
     {
@@ -395,26 +397,15 @@ class Order extends Model
 
     /**
      * Сумма скидки по купону
-     * @return float
      */
     public function getCoupon(): float
     {
         return $this->coupon_amount ?? 0;
     }
 
-    /**
-     * Скидка ручная, разбросана в sell_cost. getManual() = getBaseAmount() - getSellAmount()
-     * @return float
-     */
-    #[Deprecated]
-    public function getManual(): float
-    {
-        return $this->manual ?? 0;
-    }
 
     /**
      * Сумма всех доп услуг
-     * @return float
      */
     public function getAdditionsAmount(): float
     {
@@ -427,10 +418,7 @@ class Order extends Model
 
     /**
      * Сборка товара, сумма по всем выбранным позициям из заказа
-     * @param int $percent
-     * @return float
      */
-    #[Pure]
     public function getAssemblageAmount(int $percent = 15): float
     {
         $assemblage = 0;
@@ -442,7 +430,6 @@ class Order extends Model
 
     /**
      * Расчет упаковки для товаров, которым требуется
-     * @return float
      */
     public function getPackagingAmount(): float
     {
@@ -452,9 +439,7 @@ class Order extends Model
 
     /**
      * Итоговая сумма оплаты за заказ, с учетом всех скидок и платежей
-     * @return float
      */
-    #[Pure]
     public function getTotalAmount(): float
     {
         return $this->getAdditionsAmount() +
@@ -479,18 +464,18 @@ class Order extends Model
     }
 
     /**
-     * Сумма всех распоряжений
-     * @return float
+     * Сумма всех распоряжений по статусу
      */
-    #[Pure]
-    public function getExpenseAmount(): float
+    public function getExpenseAmount(#[ExpectedValues(valuesFromClass: OrderExpense::class)] int $status = null): float
     {
         $amount = 0;
         foreach ($this->expenses as $expense) {
-            $amount += $expense->getAmount();
+            if (is_null($status) || $expense->status == $status)
+                $amount += $expense->getAmount();
         }
         return $amount;
     }
+
 
     /**
      * Общий вес заказа
@@ -522,7 +507,6 @@ class Order extends Model
 
     /**
      * Товары из заказа, которые были по наличию
-     * @return OrderItem[]
      */
     public function getInStock(): array
     {
@@ -531,7 +515,6 @@ class Order extends Model
 
     /**
      * Товары из заказа, которые на предзаказ
-     * @return OrderItem[]
      */
     public function getPreOrder(): array
     {
@@ -548,7 +531,7 @@ class Order extends Model
 
     ///*** Relations *************************************************************************************
 
-    public function invoice()
+    public function invoice(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         return $this->morphOne(Report::class, 'reportable');
     }
@@ -563,9 +546,9 @@ class Order extends Model
         return $this->belongsTo(Coupon::class, 'coupon_id', 'id');
     }
 
-    public function manager()
+    public function staff()
     {
-        return $this->belongsTo(Admin::class, 'manager_id', 'id');
+        return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }
 
     public function expenses()

@@ -9,9 +9,7 @@
                         <select id="addition-purpose" name="purpose" class="form-select w-full lg:w-56"
                                 wire:model="form_purpose">
                             <option value="0"></option>
-                            @foreach(\App\Modules\Order\Entity\Order\OrderAddition::PAYS as $code => $name)
-                                <option value="{{ $code }}">{{ $name }}</option>
-                            @endforeach
+
                         </select>
                         <div class="input-group ml-2 w-40 ">
                             <input id="input-amount" type="number" name="amount" class="form-control"

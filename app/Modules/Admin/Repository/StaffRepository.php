@@ -11,23 +11,25 @@ use JetBrains\PhpStorm\ExpectedValues;
 
 class StaffRepository
 {
-    public function getStaffsByCode(#[ExpectedValues(valuesFromClass: Responsibility::class)] int $code)
+    public function getStaffsByCode(#[ExpectedValues(valuesFromClass: Responsibility::class)] int $code, bool $chief = false): array
     {
-        return Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($q) use ($code) {
+        $query = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($q) use ($code) {
             $q->where('code', $code);
-        })->get();
+        });
+        if ($chief) $query->orWhere('role', Admin::ROLE_CHIEF);
+        return $query->getModels();
     }
 
-    public function getStaffsByCodes(array $codes)
+    public function getStaffsByCodes(array $codes): array
     {
         return Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($q) use ($codes) {
             $q->whereIn('code', $codes);
-        })->get();
+        })->getModels();
     }
 
-    public function getChief()
+    public function getChief(): array
     {
-        return Admin::where('role', Admin::ROLE_CHIEF)->get();
+        return Admin::where('role', Admin::ROLE_CHIEF)->getModels();
     }
 
     public function getIndex(Request $request, &$filters):Arrayable

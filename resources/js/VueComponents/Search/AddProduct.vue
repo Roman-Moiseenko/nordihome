@@ -28,8 +28,8 @@
                 Не найдено <el-button v-if="create" size="small" @click="createProduct">Создать?</el-button>
             </template>
         </el-select>
-        <el-input-number id="quantity" v-if="props.quantity" v-model="form.quantity" @keyup.enter="onQuantity" class="ml-1"/>
-        <el-checkbox id="preorder" v-if="props.preorder" v-model="form.product_id" label="Под заказ" @change="onPreorder" class="ml-1"/>
+        <el-input-number id="quantity" v-if="props.quantity" v-model="form.quantity" @keyup.enter="onQuantity" class="ml-1" min="1" style="width: 120px;"/>
+        <el-checkbox id="preorder" v-if="props.preorder" v-model="form.preorder" label="Под заказ" @change="onPreorder" class="ml-1"/>
         <el-button id="button" type="primary" @click="onAdd" class="ml-1">
             <i class="fa-light fa-box mr-2"></i>
             {{ props.caption }}

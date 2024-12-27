@@ -66,7 +66,7 @@ export const func = {
         return val;
     },
     MaskCount: (val, min = 1, max = null) => {
-        if (val === undefined || val === null) return 0;
+        if (val === undefined || val === null || val === '') return 0;
 
         let last = val.slice(-1);
         if (last.match(/\d+/g) === null) {

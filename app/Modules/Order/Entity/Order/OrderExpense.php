@@ -177,7 +177,7 @@ class OrderExpense extends Model
         $this->save();
     }
 
-    public function setNumber()
+    public function setNumber(): void
     {
         $count = OrderExpense::where('number', '<>', null)->count();
         $this->number = $count + 1;

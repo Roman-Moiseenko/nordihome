@@ -93,7 +93,7 @@ class InvoiceReport
             }
 
             $activeWorksheet->setCellValue([1, $begin_row_products + $count_items + $j], ($j + 1 + $count_items));
-            $activeWorksheet->setCellValue([2, $begin_row_products + $count_items + $j], $addition->purposeHTML());
+            $activeWorksheet->setCellValue([2, $begin_row_products + $count_items + $j], $addition->addition->name);
             $activeWorksheet->setCellValue([6, $begin_row_products + $count_items + $j], '-');
             $activeWorksheet->setCellValue([7, $begin_row_products + $count_items + $j], 1);
             $activeWorksheet->setCellValue([8, $begin_row_products + $count_items + $j], 'услуга');

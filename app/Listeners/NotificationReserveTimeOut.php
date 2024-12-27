@@ -27,7 +27,7 @@ class NotificationReserveTimeOut
     {
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
         foreach ($staffs as $staff) {
-            if ($staff->id == $event->order->manager_id) {
+            if ($staff->id == $event->order->staff_id) {
                 $staff->notify(new StaffMessage(
                     'Резерв по товару',
                     ($event->timeOut ? 'Закончилось время резерва' : 'Закачивается время резерва, осталось менее 12 ч.') . ' ' . $event->order->htmlNumDate(),

@@ -77,11 +77,8 @@ class OrderService
     {
         $this->coupon_set = $settings->getCoupon();
         $this->parser_set = $settings->getParser();
-
         $this->deliveries = $deliveries;
         $this->cart = $cart;
-
-
         $this->repository = $repository;
         $this->coupons = $coupons;
         $this->parserCart = $parserCart;
@@ -192,8 +189,6 @@ class OrderService
 
     /**
      * Создание заказа клиентом с Фронтенда
-     * @param Request $request
-     * @return Order
      */
     public function create(Request $request): Order
     {
@@ -214,7 +209,7 @@ class OrderService
 
             $items = ($request['preorder'] == 1) ? $this->cart->getItems() : $this->cart->getOrderItems();
             foreach ($items as $item) {
-                if ($item->check) $this->add_product($order, $item->product->id, $item->quantity);
+                if ($item->check) $this->addProduct($order, $item->product->id, $item->quantity);
             }
             $this->cart->clearOrder();
             if ($request['preorder'] == 1) $this->cart->clearPreOrder();
@@ -230,7 +225,6 @@ class OrderService
 
     /**
      * Создание заказа из корзины парсера клиента
-     * @return Order
      */
     //TODO Переделать на получение полных данных из базы
     public function create_parser(): Order
@@ -259,8 +253,6 @@ class OrderService
 
     /**
      * Создание заказа по кнопке В 1 клик
-     * @param Request $request
-     * @return Order
      */
     public function create_click(Request $request)
     {
@@ -302,7 +294,7 @@ class OrderService
             if ($product->getPrice(false, $user) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
             $order = Order::register($user->id, Order::ONLINE);
 
-            $order = $this->add_product($order, $product->id, 1);
+            $order = $this->addProduct($order, $product->id, 1);
             $this->recalculation($order);
             event(new OrderHasCreated($order));
         });
@@ -311,8 +303,6 @@ class OrderService
 
     /**
      * Создание пустого заказа менеджером из Продаж
-     * @param array $request
-     * @return void
      */
     public function create_sales(int $user_id = null): Order
     {
@@ -344,9 +334,6 @@ class OrderService
 
     /**
      * Отменить заказ
-     * @param Order $order
-     * @param string $comment
-     * @return void
      */
     public function canceled(Order $order, string $comment)
     {
@@ -358,22 +345,26 @@ class OrderService
 
     /**
      * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
-     * @param Order $order
-     * @return void
      */
     public function setAwaiting(Order $order)
     {
         DB::transaction(function () use ($order) {
             if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
-            if ($order->getTotalAmount() == 0)  throw new \DomainException('Сумма заказа не может быть равно нулю');
+            if ($order->getTotalAmount() == 0) throw new \DomainException('Сумма заказа не может быть равно нулю');
 
             foreach ($order->items as $item) {
-                if ($item->assemblage == true) {
+                //TODO Проверка, если у товара есть сборка и/или упаковка, то должна быть 1 услуга с таким типом
+           /*     if ($item->assemblage == true) {
                     $addition = OrderAddition::new($item->getAssemblage(), OrderAddition::PAY_ASSEMBLY, $item->product->name);
                     $order->additions()->save($addition);
                     $item->assemblage = false;
                     $item->save();
-                }
+                }*/
+            }
+            //Фиксируем цену за услугу
+            foreach ($order->additions as $addition) {
+                $addition->amount = $addition->getAmount();
+                $addition->save();
             }
             $order->setReserve(now()->addDays(3));
             $order->setNumber();
@@ -388,8 +379,6 @@ class OrderService
 
     /**
      * Удалить заказ, если еще нет с ним работы
-     * @param Order $order
-     * @return void
      */
     #[Deprecated]
     public function destroy(Order $order)
@@ -403,10 +392,6 @@ class OrderService
 
     /**
      * Установить новое время резерва
-     * @param Order $order
-     * @param string $date
-     * @param string $time
-     * @return void
      */
     public function setReserveService(Order $order, string $date, string $time)
     {
@@ -416,10 +401,11 @@ class OrderService
     }
 
     //** ФУНКЦИИ РАБОТЫ С ЭЛЕМЕНТАМИ ЗАКАЗА
+
     /**
      * Добавить в заказ товар. НОВАЯ ВЕРСИЯ
      */
-    public function add_product(Order $order, int $product_id, float $quantity, bool $preorder = false): Order
+    public function addProduct(Order $order, int $product_id, float $quantity, bool $preorder = false): Order
     {
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -460,10 +446,86 @@ class OrderService
         return $order;
     }
 
+    /**
+     * Изменить данные о товаре
+     */
+    public function setItem(OrderItem $item, Request $request): void
+    {
+        DB::transaction(function () use ($item, $request) {
+            $order = $item->order;
+            $quantity = $request->float('quantity');
+            $sell_cost = $request->integer('sell_cost');
+            $percent = $request->float('percent');
+            $comment = $request->string('comment')->trim()->value();
+            $assemblage = $request->boolean('assemblage');
+            $packing = $request->boolean('packing');
+
+            if ($sell_cost > $item->base_cost) throw new \DomainException('Высокая продажная цена');
+            if ($percent > 100 || $percent < 0) throw new \DomainException('Неверное значение скидки');
+
+            //Изменения происходят только по одному полю
+            ///*** 1. Изменилась Цена продажи или Процент скидки
+            if ($item->getPercent() != $percent)
+                $sell_cost = (int)ceil($item->base_cost - $item->base_cost * $percent / 100);
+            if ($item->sell_cost != $sell_cost) {
+                if ($item->product->getPriceMin() > $sell_cost) event(new PriceHasMinimum($item));
+                $item->sell_cost = $sell_cost;
+                $this->logger->logOrder($order, 'Изменена цена товара', $item->product->name, price($sell_cost));
+            }
+            ///*** 2. Изменилось Кол-во
+            if ($item->quantity != $quantity) {
+                $delta = $quantity - $item->quantity;
+                if (!$item->preorder) { //Если не под заказ, то изменяем резерв
+                    if ($delta > 0) {
+                        $delta = min($item->product->getQuantitySell(), $delta);
+                        $this->reserveService->upReserve($item, abs($delta));
+                    } else {
+                        $this->reserveService->downReserve($item, abs($delta));
+                    }
+                }
+                $item->quantity += $delta;
+                $this->logger->logOrder($order, 'Изменено кол-во товара', $item->product->name, (string)$quantity . ' шт.');
+            }
+            ///*** 3. Изменился комментарий
+            if ($item->comment != $comment)
+                $item->comment = $comment;
+            ///*** 4. Изменилась сборка
+            if ($item->assemblage != $assemblage) {
+                $item->assemblage = $assemblage;
+                $this->logger->logOrder($order, 'Изменена сборка товара', $item->product->name, $assemblage ? 'Установлена' : 'Отменена');
+            }
+            ///*** 5. Изменилась упаковка
+            if ($item->packing != $packing) {
+                $item->packing = $packing;
+                $this->logger->logOrder($order, 'Изменена упаковка товара', $item->product->name, $packing ? 'Установлена' : 'Отменена');
+            }
+            $item->save();
+            $order->refresh();
+            $this->recalculation($order);
+        });
+    }
+
+    /**
+     * Удаляем позицию в заказе, пересчитываем резерв и скидки по заказу. НОВАЯ ВЕРСИЯ
+     */
+    public function deleteItem(OrderItem $item): void
+    {
+        $order = $item->order;
+        $this->logger->logOrder($order, 'Удален товар из заказа', $item->product->name, (string)$item->quantity);
+        foreach ($item->reserves as $reserve) {
+            $reserve->delete();
+        }
+
+        $item->delete();
+        $order->refresh();
+        $this->recalculation($order);
+    }
+
 
     /**
      * Изменения кол-ва товара, с учетом "в наличии" и перерасчетом всего заказа. НОВАЯ ВЕРСИЯ.
      */
+    #[Deprecated]
     public function update_quantity(OrderItem $item, float $quantity): Order
     {
         $delta = $quantity - $item->quantity;
@@ -492,10 +554,8 @@ class OrderService
 
     /**
      * Изменяем цену продажи товара для текущего заказа
-     * @param OrderItem $item
-     * @param int $sell_cost
-     * @return Order
      */
+    #[Deprecated]
     public function update_sell(OrderItem $item, int $sell_cost): Order
     {
         $order = $item->order;
@@ -510,13 +570,10 @@ class OrderService
         $this->logger->logOrder($order, 'Изменена цена товара', $item->product->name, price($sell_cost));
         return $order;
     }
-
     /**
      * Изменяем цену продажи товара в %% для текущего заказа
-     * @param OrderItem $item
-     * @param float $percent
-     * @return Order
      */
+    #[Deprecated]
     public function discount_item_percent(OrderItem $item, float $percent): Order
     {
         if ($percent > 100) throw new \DomainException('Скидка слишком высока');
@@ -524,31 +581,13 @@ class OrderService
         $sell_cost = (int)ceil($item->base_cost - $item->base_cost * $percent / 100);
         return $this->update_sell($item, $sell_cost); //ф-ция сохраняет лог
     }
-
-    /**
-     * Удаляем позицию в заказе, пересчитываем резерв и скидки по заказу. НОВАЯ ВЕРСИЯ
-     * @param OrderItem $item
-     * @return Order
-     */
-    public function delete_item(OrderItem $item): Order
-    {
-        $order = $item->order;
-        $this->logger->logOrder($order, 'Удален товар из заказа', $item->product->name, (string)$item->quantity);
-        foreach ($item->reserves as $reserve) {
-            $reserve->delete();
-        }
-
-        $item->delete();
-        $order->refresh();
-        $this->recalculation($order);
-        return $order;
-    }
-
+    #[Deprecated]
     public function update_item_comment(OrderItem $item, string $comment)
     {
         $item->comment = $comment;
         $item->save();
     }
+
 
     //** СКИДКИ НА ВЕСЬ ЗАКАЗ
 
@@ -602,7 +641,7 @@ class OrderService
      * @param Order $order
      * @return void
      */
-    private function recalculation(Order &$order)
+    private function recalculation(Order &$order): void
     {
         $order->refresh();
         /** @var OrderItem[] $items */
@@ -644,34 +683,39 @@ class OrderService
     }
 
     //**** ФУНКЦИИ РАБОТЫ СО УСЛУГАМИ
+
     /**
      * Добавить в заказ доп.услугу
-     * @param Order $order
-     * @param array $request
-     * @return Order
      */
-    public function add_addition(Order $order, int $purpose, float $amount, string $comment): Order
+    public function addAddition(Order $order, int $addition_id): void
     {
-        if ($purpose == 0) throw new \DomainException('Не выбрана дополнительная услуга!');
-        if ($amount == 0) throw new \DomainException('Стоимость услуги должна быть больше нуля!');
-        $orderAddition = OrderAddition::new($amount, $purpose, $comment);
+        $orderAddition = OrderAddition::new($addition_id);
         $order->additions()->save($orderAddition);
         $order->refresh();
-        $this->logger->logOrder($order, 'Добавлена услуга', $orderAddition->purposeHTML(), price($orderAddition->amount));
-        return $order;
+        $this->logger->logOrder($order, 'Добавлена услуга', $orderAddition->addition->name, price($orderAddition->getAmount()));
+    }
+
+    public function setAddition(OrderAddition $addition, Request $request): void
+    {
+        if ($addition->addition->manual) {
+            $addition->amount = $request->integer('amount');
+        }
+        $addition->comment = $request->string('comment')->trim()->value();
+        $addition->quantity = $request->integer('quantity');
+        $addition->save();
+        $this->logger->logOrder($addition->order,
+            'Изменена услуга',
+            $addition->addition->name, json_encode(['Сумма' => $addition->amount, 'Кол-во' => $addition->quantity, 'Комментарий' => $addition->comment]));
     }
 
     /**
      * Изменяем сумму на услугу, возвращаем Заказ
-     * @param OrderAddition $addition
-     * @param int $amount
-     * @return Order
      */
     public function addition_amount(OrderAddition $addition, int $amount): Order
     {
         $addition->amount = $amount;
         $addition->save();
-        $this->logger->logOrder($addition->order, 'Изменена цена услуги', $addition->purposeHTML(), price($amount));
+        $this->logger->logOrder($addition->order, 'Изменена цена услуги', $addition->addition->name, price($amount));
         $addition->order->refresh();
         return $addition->order;
     }
@@ -696,7 +740,7 @@ class OrderService
     public function addition_delete(OrderAddition $addition): Order
     {
         $order = $addition->order;
-        $this->logger->logOrder($order, 'Удалена услуга', $addition->purposeHTML(), price($addition->amount));
+        $this->logger->logOrder($order, 'Удалена услуга', $addition->addition->name, price($addition->amount));
         $addition->delete();
         return $order;
     }
@@ -716,6 +760,7 @@ class OrderService
     }
 
     //**** ФУНКЦИИ ДРУГИЕ
+
     /**
      * Создать перемещение для заказа на основе резерва по складу отправки
      * @param Order $order
@@ -768,8 +813,8 @@ class OrderService
         } else {
             $coupon = $this->repository->getCoupon($code, $order->user_id);
             if (is_null($coupon)) throw new \DomainException('Неверный код купона');
-            if ($coupon->started_at->gt(now()))  throw new \DomainException('Купон еще не действует');
-            if ($coupon->finished_at->lt(now()))  throw new \DomainException('Купон уже не действует');
+            if ($coupon->started_at->gt(now())) throw new \DomainException('Купон еще не действует');
+            if ($coupon->finished_at->lt(now())) throw new \DomainException('Купон уже не действует');
             $order->coupon_id = $coupon->id;
         }
         $order->save();
@@ -823,11 +868,11 @@ class OrderService
 
             foreach ($order->items as $item) {
                 if ($item->product->isSale())
-                    $this->add_product($new_order, $item->product_id, $item->quantity);
+                    $this->addProduct($new_order, $item->product_id, $item->quantity);
             }
 
             foreach ($order->additions as $addition) {
-                $this->add_addition($new_order, $addition->purpose, $addition->amount, $addition->comment);
+                $this->addAddition($new_order, $addition->purpose, $addition->amount, $addition->comment);
             }
 
             $new_order->refresh();
@@ -845,10 +890,10 @@ class OrderService
      * @param string $_data
      * @return array
      */
-    #[ArrayShape(['remains' => "float", 'discount'=> "float", 'expense' => "int", 'disable' => "bool"])]
+    #[ArrayShape(['remains' => "float", 'discount' => "float", 'expense' => "int", 'disable' => "bool"])]
     public function expenseCalculate(Order $order, string $_data): array
     {
-        $remains = $order->getPaymentAmount() - $order->getExpenseAmount()+  $order->getCoupon() + $order->getDiscountOrder();
+        $remains = $order->getPaymentAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder();
         $data = json_decode($_data, true);
         $amount = 0;
         foreach ($data['items'] as $item) { //Суммируем по товарам
@@ -885,5 +930,11 @@ class OrderService
         $order->refresh();
         $this->recalculation($order);
         $this->logger->logOrder($order, 'Добавлен товар через Парсер', $product->name, $quantity . ' шт.');
+    }
+
+    public function deleteAddition(OrderAddition $addition): void
+    {
+        if (!$addition->order->isManager()) throw new \DomainException('Нельзя удалить услугу');
+        $addition->delete();
     }
 }

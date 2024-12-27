@@ -81,7 +81,7 @@ class UserRepository
                     'items' => $order->items()->with('product')->get()->toArray(),
                     'additions' => $order->additions()->get()->map(function (OrderAddition $addition) {
                         return array_merge($addition->toArray(), [
-                            'purposeText' => $addition->purposeHTML(),
+                            'purposeText' => $addition->addition->name,
                         ]);
                     }),
                 ]),

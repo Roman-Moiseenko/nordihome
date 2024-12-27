@@ -37,34 +37,6 @@ class SalesService
         $order->setReserve(Carbon::parse($new_reserve));
     }
 
-    /**
-     * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
-     * @param Order $order
-     * @return void
-     */
-    #[Deprecated]
-    public function setAwaiting(Order $order)
-    {
-        if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
-        if ($order->getTotalAmount() == 0)  throw new \DomainException('Сумма заказа не может быть равно нулю');
-
-        foreach ($order->items as $item) {
-            if ($item->assemblage == true) {
-                $addition = OrderAddition::new($item->getAssemblage(), OrderAddition::PAY_ASSEMBLY, $item->product->name);
-                $order->additions()->save($addition);
-                $item->assemblage = false;
-                $item->save();
-            }
-        }
-        $order->setReserve(now()->addDays(3));
-        $order->setNumber();
-        $order->setStatus(OrderStatus::AWAITING);
-        $order->refresh();
-
-        Mail::to($order->user->email)->queue(new OrderAwaiting($order));
-        flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
-    }
-
     #[Deprecated]
     public function destroy(Order $order)
     {

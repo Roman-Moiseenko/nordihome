@@ -4,9 +4,13 @@ declare(strict_types=1);
 namespace App\Modules\Order\Repository;
 
 
+use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Helpers\OrderHelper;
+use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -20,13 +24,26 @@ class OrderRepository
         $query = Order::orderByDesc('created_at');
         $filters = [];
 
+        if (!is_null($begin = $request->date('date_from'))) {
+            $filters['date_from'] = $begin->format('Y-m-d');
+            $query->where('created_at', '>', $begin);
+        }
+        if (!is_null($end = $request->date('date_to'))) {
+            $filters['date_to'] = $end->format('Y-m-d');
+            $query->where('created_at', '<=', $end);
+        }
+
         if ($request->string('user') != '') {
             $user = $request->string('user')->trim()->value();
             $filters['user'] = $user;
             $query->whereHas('user', function ($q) use ($user) {
                 $q->where('phone', 'LIKE', "%$user%")
                     ->orWhere('email', 'like', "%$user%")
-                    ->orWhereRaw("LOWER(fullname) like LOWER('%$user%')");
+                    ->orWhereRaw("LOWER(fullname) like LOWER('%$user%')")
+                    ->orWhereHas('shopper', function ($query) use ($user) {
+                        $query->where('inn', 'like', "%$user%")
+                            ->orWhereRaw("LOWER(short_name) like LOWER('%$user%')");
+                    });
             });
         }
         if ($request->string('comment') != '') {
@@ -37,21 +54,24 @@ class OrderRepository
         if ($request->integer('condition') > 0) {
             $condition = $request->integer('condition');
             $filters['condition'] = $condition;
-            $query->whereHas('status', function ($q) use($condition) {
-                $q->where('value' , $condition);
+            $query->whereHas('status', function ($q) use ($condition) {
+                $q->where('value', $condition);
             });
         }
-        if ($request->integer('manager_id') > 0) {
-            $manager_id = $request->integer('manager_id');
-            $filters['manager_id'] = $manager_id;
-            $query->where('manager_id', $manager_id);
+        if ($request->integer('staff_id') > 0) {
+            $staff_id = $request->integer('staff_id');
+            $filters['staff_id'] = $staff_id;
+            $query->where('staff_id', $staff_id);
         }
-
         if (count($filters) > 0) $filters['count'] = count($filters);
 
-        return $query->paginate($request->input('p', 20))
+        return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(fn(Order $order) => [
+            ->through(fn(Order $order) => $this->OrderToArray($order));
+    }
+
+    /*
+     [
                 'id' => $order->id,
                 'opl' => OrderHelper::pictogram($order),
                 'otg' => OrderHelper::pictogram($order),
@@ -64,90 +84,99 @@ class OrderRepository
                 'status_html' => OrderHelper::status($order),
                 'has_cancel' => !($order->InWork() || $order->isCanceled() || $order->isCompleted()),
                 'url' => route('admin.order.show', $order),
-                //'destroy' => route('admin.order.destroy', $order),
-               // 'log' => route('admin.order.log', $order),
 
                 'canceled' => route('admin.order.canceled', $order),
                 'copy' => route('admin.order.copy', $order),
-            ]);
-    }
+            ]
 
-    #[Deprecated]
-    public function getOrders(array $filters)
-    {
-        $query = Order::orderByDesc('created_at');
-        $user_field = $filters['user'];
-        $condition = $filters['condition'];
-        $staff = $filters['staff_id'];
-        $comment = $filters['comment'];
-
-        if (!is_null($user_field)) {
-            $users = User::where('phone', 'like', "%$user_field%")
-                ->orWhere('email', 'like', "%$user_field%")
-                ->orWhere('fullname', 'like', "%$user_field%")
-                ->pluck('id')->toArray();
-            $query->whereIn('user_id', $users);
+            if ($order->isAwaiting()) $type = 'warning';
+        if ($order->isPaid()) $type = 'green';
+        if ($order->isPrepaid()) $type = 'half-green';
+        if ($order->isAwaiting() || $order->isPrepaid()) {
+            if (!is_null($order->invoice) && $order->invoice->created_at->lte(now()->subDays(3))) {
+                $type = 'red';
+                $text = 'Оплата просрочена';
+            }
         }
+        if ($order->isPaid() && $order->getPaymentAmount() > $order->getTotalAmount()) {
+            $type = 'double-green';
+            $text = 'Переплата';
+        };
 
+     */
 
-        if (!is_null($condition)) $query->whereHas('status', function ($q) use($condition) {
-            $q->where('value' , $condition);
-        });
+    public function OrderToArray(Order $order): array
+    {
+        $status_out = -1;
+        $status_pay = -1;
 
-        if (!is_null($staff)) $query->where('manager_id', $staff);
+        //if ($order->isAwaiting()) $status_pay = -1;
+        if ($order->isPrepaid()) $status_pay = 0.5;
+        if ($order->isPaid()) $status_pay = 1;
+        if ($order->isAwaiting() || $order->isPrepaid()) {
+            if (!is_null($order->invoice) && $order->invoice->created_at->lte(now()->subDays(3))) {
+                $status_pay = 0;
+            }
+        }
+        if ($order->isPaid() && $order->getPaymentAmount() > $order->getTotalAmount()) $status_pay = 2;
 
-        if (!is_null($comment)) $query->where('comment', 'like', "%$comment%");
-        //dd($filters);
-        return $query;
+        if ($status_pay > -1) $status_out = $order->getPercentIssued();
+
+        return array_merge($order->toArray(), [
+            'staff' => is_null($order->staff_id) ? 'Не назначен' : $order->staff->fullname->getShortname(),
+            'user' => [
+                'name' => $order->user->getPublicName(),
+                'phone' => $order->user->phone,
+            ],
+            'amount' => $order->getTotalAmount(),
+
+            'status' => [
+                'is_new' => $order->isNew(),
+                'is_manager' => $order->isManager(),
+                'is_awaiting' => $order->isAwaiting(),
+                'is_prepaid' => $order->isPrepaid(),
+                'is_paid' => $order->isPaid(),
+                'is_completed' => $order->isCompleted(),
+                'is_canceled' => $order->isCanceled(),
+                'in_work' => $order->inWork(),
+            ],
+
+            'status_text' => $order->statusHtml(),
+            'has_cancel' => !($order->inWork() || $order->isCanceled() || $order->isCompleted()),
+            'status_pay' => $status_pay,
+            'status_out' => $status_out,
+        ]);
     }
 
-    #[Deprecated]
-    public function getOrdersByWork(string $filter)
+    public function OrderWithToArray(Order $order): array
     {
-        $query = Order::orderByDesc('created_at');
-        //$filter = $request['filter'];
-        if ($filter == 'all') return $query;
+        return array_merge($this->OrderToArray($order), [
+            'in_stock' => $order->items()->where('preorder', false)->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
+            'pre_order' => $order->items()->where('preorder', true)->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
+            'additions' => $order->additions()->get()->map(function (OrderAddition $orderAddition) {
+                return array_merge($orderAddition->toArray(), [
+                    'calculate' => $orderAddition->getAmount(),
+                    'name' => $orderAddition->addition->name,
+                    'manual' => $orderAddition->addition->manual,
+                    'base' => $orderAddition->addition->base,
 
-        if ($filter == 'new')
-            $query->whereHas('status', function ($q) {
-                $q->where('value', '<', OrderStatus::AWAITING);
-            });
-        if ($filter == 'awaiting')
-            $query->whereHas('status', function ($q) {
-                $q->where('value', OrderStatus::AWAITING);
-            });
-
-        if ($filter == 'at-work')
-            $query->whereHas('status', function ($q) {
-                $q->where('value', '>' , OrderStatus::AWAITING)->where('value', '<', OrderStatus::CANCEL);
-            });
-
-        if ($filter == 'canceled')
-            $query->whereHas('status', function ($q) {
-                $q->where('value', '>=' , OrderStatus::CANCEL)->where('value', '<', OrderStatus::COMPLETED);
-            });
-        if ($filter == 'completed')
-            $query->whereHas('status', function ($q) {
-                $q->where('value', '>=', OrderStatus::COMPLETED);
-            });
-        return $query;
+                ]);
+            }),
+        ]);
     }
 
-    #[ArrayShape(['new' => "int", 'awaiting' => "int", 'at-work' => "int"])]
-    #[Deprecated]
-    public function getFilterCount(): array
+    private function OrderItemToArray(OrderItem $item): array
     {
-        return [
-            'new' => Order::whereHas('status', function ($q) {
-                $q->where('value', '<', OrderStatus::AWAITING);
-            })->count(),
-            'awaiting' => Order::whereHas('status', function ($q) {
-                $q->where('value', OrderStatus::AWAITING);
-            })->count(),
-            'at-work' => Order::whereHas('status', function ($q) {
-                $q->where('value', '>' , OrderStatus::AWAITING)->where('value', '<', OrderStatus::CANCEL);
-            })->count(),
-        ];
+        return array_merge($item->toArray(), [
+            'percent' => $item->getPercent(),
+            'product' => array_merge($item->product->toArray(), [
+                'weight' => $item->product->weight(),
+                'volume' => ceil($item->product->volume() * 1000) / 1000,
+                'measuring' => $item->product->measuring->name,
+                'has_promotion' => $item->product->hasPromotion(),
+                'quantity_sell' => $item->product->getQuantitySell(),
+            ]),
+        ]);
     }
 
     /**
@@ -162,6 +191,19 @@ class OrderRepository
         });
         if (!is_null($order_id)) $query->orWhere('id', $order_id);
         return $query->orderBy('number')->get();
+    }
+
+    public function guideAddition(): array
+    {
+        $array = [];
+        foreach (Addition::TYPES as $type => $label) {
+            $array[] = [
+                'label' => $label,
+                'additions' => Addition::orderBy('name')->where('type', $type)->getModels(),
+            ];
+
+        }
+        return $array;
     }
 
 

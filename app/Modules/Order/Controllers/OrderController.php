@@ -27,6 +27,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
@@ -40,11 +41,11 @@ class OrderController extends Controller
     private StaffRepository $staffs;
     private OrderRepository $repository;
     private ProductRepository $products;
-    private OrderService $orderService;
+    private OrderService $service;
     private InvoiceReport $report;
 
     public function __construct(
-        OrderService      $orderService,
+        OrderService      $service,
         StaffRepository   $staffs,
         OrderRepository   $repository,
         ProductRepository $products,
@@ -55,48 +56,21 @@ class OrderController extends Controller
         $this->staffs = $staffs;
         $this->repository = $repository;
         $this->products = $products;
-        $this->orderService = $orderService;
+        $this->service = $service;
         //TODO загрузка процента по сборке
         $this->report = $report;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
-  /*      $filter = $request['status'] ?? 'all';
-
-        $filters = [
-            'staff_id' => $request['staff_id'] ?? null,
-            'user' => $request['user'] ?? null,
-            'condition' => $request['condition'] ?? null,
-            'comment' => $request['comment'] ?? null,
-        ];
-        $_filter_count = 0;
-        foreach ($filters as $item) {
-            if (!is_null($item)) $_filter_count++;
-        }
-        $filters['count'] = $_filter_count;
-        $staff_id = (int)$request['staff_id'] ?? 0;
-        $filter_count = $this->repository->getFilterCount();
-        //Фильтр
-        if ($request->has('search')) {
-            //Доп фильтр
-            $query = $this->repository->getOrders($filters);
-        } else {
-            //Выбор по типу
-            $query = $this->repository->getOrdersByWork($filter);
-        }
-
-        if ($staff_id != 0) $query->where('manager_id', $staff_id);
-        $orders = $this->pagination($query, $request, $pagination);
-        */
-
         $orders = $this->repository->getIndex($request, $filters);
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
-        $staffs = Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
-            $query->where('code', Responsibility::MANAGER_ORDER);
-        })->get();
-
-        return view('admin.order.index', compact('orders','filters', 'staffs'));
+        return Inertia::render('Order/Order/Index', [
+            'orders' => $orders,
+            'filters' => $filters,
+            'staffs' => $staffs,
+        ]);
     }
 
     public function show(Request $request, Order $order)
@@ -104,6 +78,17 @@ class OrderController extends Controller
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
         $storages = Storage::orderBy('name')->getModels();
         $mainStorage = Storage::where('default', true)->first();
+        $additions = $this->repository->guideAddition();
+        return Inertia::render('Order/Order/Show', [
+            'order' => $this->repository->OrderWithToArray($order),
+            'storages' => $storages,
+            'mainStorage' => $mainStorage,
+            'staffs' => $staffs,
+            'additions' => $additions,
+        ]);
+
+/*
+
         if ($order->isNew())
             return view('admin.order._new.show', compact('order', 'staffs'));
         if ($order->isManager())
@@ -117,12 +102,13 @@ class OrderController extends Controller
         if ($order->isCanceled())
             return view('admin.order._canceled.show', compact('order'));
         abort(404, 'Неверный статус заказа');
+        */
     }
 
     public function store(Request $request): RedirectResponse
     {
         try {
-            $order = $this->orderService->create_sales($request->input('user_id'));
+            $order = $this->service->create_sales($request->input('user_id'));
             return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -132,28 +118,25 @@ class OrderController extends Controller
 
     public function movement(Request $request, Order $order)
     {
-        $movement = $this->orderService->movement($order, (int)$request['storage_out'], (int)$request['storage_in']);
+        $movement = $this->service->movement($order, (int)$request['storage_out'], (int)$request['storage_in']);
         return redirect()->route('admin.accounting.movement.show', $movement);
     }
 
     #[Deprecated]
     public function destroy(Order $order)
     {
-        $this->orderService->destroy($order);
+        $this->service->destroy($order);
         return redirect()->back();
     }
 
-    public function canceled(Request $request, Order $order)
-    {
-        $this->orderService->canceled($order, $request['comment']);
-        return redirect()->back();
-    }
+
 
     public function log(Order $order)
     {
         return view('admin.order.log', compact('order'));
     }
 
+    //Документы
     public function invoice(Order $order)
     {
         $file = $this->report->xlsx($order);
@@ -188,51 +171,112 @@ class OrderController extends Controller
             });
         }
     */
-    public function set_manager(Request $request, Order $order)
+
+
+    public function copy(Order $order)
     {
-        $this->orderService->setManager($order, (int)$request['staff_id']);
-        return redirect()->back();
+        $order = $this->service->copy($order);
+        return redirect()->route('admin.order.show', $order);
     }
 
+
+    /** СМЕНА СОСТОЯНИЯ (СТАТУСА) ЗАКАЗА */
     public function take(Order $order)
     {
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
 
-        $this->orderService->setManager($order, $staff->id);
+        $this->service->setManager($order, $staff->id);
         flash('Вы взяли заказ в работу');
         return redirect()->back();
     }
 
-    public function set_reserve(Request $request, Order $order)
+    public function set_manager(Request $request, Order $order)
     {
-        $this->orderService->setReserveService($order, $request['reserve-date'], $request['reserve-time']);
+        $this->service->setManager($order, (int)$request['staff_id']);
         return redirect()->back();
     }
 
-    public function copy(Order $order)
+    public function canceled(Request $request, Order $order)
     {
-        $order = $this->orderService->copy($order);
-        return redirect()->route('admin.order.show', $order);
+        $this->service->canceled($order, $request['comment']);
+        return redirect()->back();
     }
 
     /**
      * На оплату
-     * @param Order $order
-     * @return mixed
      */
     public function set_awaiting(Order $order): mixed
     {
-        $this->orderService->setAwaiting($order);
+        $this->service->setAwaiting($order);
         return redirect()->back();
     }
 
+
+
+    /** РАБОТА С ЗАКАЗОМ */
+    public function set_reserve(Request $request, Order $order)
+    {
+        $this->service->setReserveService($order, $request['reserve-date'], $request['reserve-time']);
+        return redirect()->back();
+    }
+
+    /** РАБОТА С ТОВАРОМ В ЗАКАЗЕ */
+    public function add_product(Request $request, Order $order): RedirectResponse
+    {
+        $this->service->addProduct(
+            $order,
+            $request->integer('product_id'),
+            $request->float('quantity'),
+            $request->boolean('preorder')
+        );
+        return redirect()->back()->with('success', 'Товар добавлен');
+    }
+
+    public function set_item(Request $request, OrderItem $item): RedirectResponse
+    {
+        $this->service->setItem($item, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function del_item(OrderItem $item): RedirectResponse
+    {
+        $this->service->deleteItem($item);
+        return redirect()->back()->with('success', 'Товар удален');
+    }
+
+    public function add_products(Request $request, Order $order)
+    {
+
+    }
+
+    /** РАБОТА С УСЛУГАМИ В ЗАКАЗЕ */
+    public function add_addition(Request $request, Order $order): RedirectResponse
+    {
+        $this->service->addAddition(
+            $order,
+            $request->integer('addition_id'),
+        );
+        return redirect()->back()->with('success', 'Услуга добавлена');
+    }
+
+    public function set_addition(Request $request, OrderAddition $addition): RedirectResponse
+    {
+        $this->service->setAddition($addition, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function del_addition(OrderAddition $addition): RedirectResponse
+    {
+        $this->service->deleteAddition($addition);
+        return redirect()->back()->with('success', 'Услуга удалена');
+    }
     /**  НОВЫЕ ACTIONS  **/
     //AJAX
 
     public function expense_calculate(Request $request, Order $order)
     {
-        $result = $this->orderService->expenseCalculate($order, $request['data']);
+        $result = $this->service->expenseCalculate($order, $request['data']);
         return response()->json($result);
     }
 

@@ -1,0 +1,58 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Modules\Guide\Entity;
+
+use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\ExpectedValues;
+
+/**
+ * @property int $id
+ * @property string $name
+ * @property int $base
+ * @property int $type
+ * @property bool $manual
+ * @property string $class Class Обсчета стоимости
+ */
+class Addition extends Model
+{
+    protected $table = 'guide_addition';
+    public $timestamps = false;
+    protected $fillable = [
+        'name',
+        'manual',
+        'type',
+        'base',
+        'class',
+    ];
+    const DELIVERY = 102;
+    const PACKING = 103;
+    const ASSEMBLY = 104;
+    const LIFTING = 105;
+    const OTHER = 109;
+
+    const TYPES = [
+        self::DELIVERY => 'Доставка', //Автоматическая для Польши, По городу - фиксированная, ТК - ручная
+        self::PACKING => 'Упаковку', //Автоматическая будет
+        self::LIFTING => 'Подъем', //Ручная ... или автомат расчет за этаж два Вида, Подьем по лестнице, Подьем лифтом
+        self::ASSEMBLY => 'Сборка', //Автоматическая по указаным товарам
+        self::OTHER => 'Другое',
+    ];
+
+    public static function register(
+        string $name,
+        #[ExpectedValues(valuesFromClass: Addition::class)]int $type,
+        bool $manual,
+        int $base,
+        string $class = null,
+    ): self
+    {
+        return self::create([
+            'name' => $name,
+            'manual' => $manual,
+            'type' => $type,
+            'base' => $base,
+            'class' => $class,
+        ]);
+    }
+}

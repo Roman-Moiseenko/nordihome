@@ -30,6 +30,7 @@ use JetBrains\PhpStorm\Pure;
  * @property string $comment
  * @property int $reserve_id
  * @property bool $assemblage - требуется сборка
+ * @property bool $packing - требуется упаковка
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -92,6 +93,13 @@ class OrderItem extends Model implements CartItemInterface
 
 
     //*** GET-...
+
+    public function getPercent():float
+    {
+        if ($this->base_cost == 0) return 0;
+        return ceil(($this->base_cost - $this->sell_cost) / $this->base_cost * 100);
+    }
+
     public function getReserveByStorageItem(int $storage_item_id):? OrderReserve
     {
         foreach ($this->reserves as $reserve) {
@@ -107,6 +115,42 @@ class OrderItem extends Model implements CartItemInterface
         }
         return null;
     }
+
+
+    /**
+     * Сколько выдано данного товара
+     * @return float
+     */
+    public function getExpenseAmount(): float
+    {
+        $result = 0;
+        foreach ($this->expenseItems as $expenseItem) {
+            $result += $expenseItem->quantity;
+        }
+        return $result;
+    }
+
+    /**
+     * Не выданный остаток
+     * @return float
+     */
+    #[Pure] public function getRemains(): float
+    {
+        return $this->quantity - $this->getExpenseAmount();
+    }
+
+    public function getAssemblage(int $percent = 15): float
+    {
+        if ($this->assemblage) {
+            if (is_null($this->product->assemblage)) {
+                return (int)ceil($this->sell_cost * $this->quantity * $percent / 100);
+            } else {
+                return $this->product->assemblage;
+            }
+        }
+        return 0;
+    }
+
 
     //RELATIONS
     public function reserves(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -165,40 +209,6 @@ class OrderItem extends Model implements CartItemInterface
         if (empty($this->discount_id)) return '';
         $discount = $this->discount_type::find($this->discount_id);
         return $this->discount_type::TYPE . ' ' . $discount->title;
-    }
-
-    /**
-     * Сколько выдано данного товара
-     * @return int
-     */
-    public function getExpenseAmount(): float
-    {
-        $result = 0;
-        foreach ($this->expenseItems as $expenseItem) {
-            $result += $expenseItem->quantity;
-        }
-        return $result;
-    }
-
-    /**
-     * Не выданный остаток
-     * @return int
-     */
-    #[Pure] public function getRemains(): float
-    {
-        return $this->quantity - $this->getExpenseAmount();
-    }
-
-    public function getAssemblage(int $percent = 15): float
-    {
-        if ($this->assemblage) {
-            if (is_null($this->product->assemblage)) {
-                return (int)ceil($this->sell_cost * $this->quantity * $percent / 100);
-            } else {
-                return $this->product->assemblage;
-            }
-        }
-        return 0;
     }
 
     /**

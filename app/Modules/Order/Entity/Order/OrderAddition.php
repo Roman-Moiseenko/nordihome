@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Modules\Guide\Entity\Addition;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\Pure;
@@ -12,84 +13,54 @@ use function now;
  * Дополнительные оплаты(услуги) к заказу
  * @property int $id
  * @property int $order_id
- * @property float $amount
- * @property int $purpose
+ * @property int $amount
  * @property string $comment
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
+ * @property int $addition_id
+ * @property int $quantity
  * @property Order $order
+ * @property Addition $addition
  * @property OrderExpenseAddition[] $expenseAdditions
  */
 
 class OrderAddition extends Model
 {
-    /**
-     * Назначения платежа $purpose
-     */
-  //  const PAY_ORDER = 101;
-    const PAY_DELIVERY = 102;
-    const PAY_PACKING = 103;
-    const PAY_ASSEMBLY = 104;
-    const PAY_LIFTING = 105;
-    const PAY_OTHER = 109;
-
-    const PAYS = [
-      //  self::PAY_ORDER => 'Платеж за заказ',
-        self::PAY_DELIVERY => 'Платеж за доставку',
-        self::PAY_PACKING => 'Платеж за упаковку',
-        self::PAY_LIFTING => 'Платеж за подъем',
-        self::PAY_ASSEMBLY => 'Платеж за сборку',
-        self::PAY_OTHER => 'Другие платежи',
-    ];
 
     protected $table = 'order_additions';
     protected $touches = [
         'order',
     ];
     protected $fillable = [
-        'amount',
-        'purpose',
+        'addition_id',
         'comment',
+        'quantity',
     ];
 
-    public static function new(float $amount, int $purpose, string $comment = ''): self
+    public static function new(int $addition_id): self
     {
         return self::make([
-            'amount' => $amount,
-            'comment' => $comment,
-            'purpose' => $purpose,
+            'comment' => '',
+            'addition_id' => $addition_id,
+            'quantity' => 1,
         ]);
     }
 
-    /**
-     * Установка или смена назначения платежа
-     * @param int $purpose
-     * @param string $comment
-     * @return void
-     */
-    public function setType(int $purpose, string $comment = ''): void
+    public function getAmount(): float|int
     {
-        $this->purpose = $purpose;
-        $this->comment = $comment;
-        $this->save();
+        if ($this->addition->manual) {
+            $amount = $this->amount ?? 0; //Цена ставится в ручную после добавления в заказ
+        } else {
+            if (is_null($this->addition->class)) {
+                $amount = $this->addition->base; //Цена фиксирована,из справочника
+            } else {
+                //Цена рассчитывается по своему алгоритму
+                $amount = $this->addition->class::calculate($this->order, $this->addition->base);
+            }
+        }
+        return $amount * $this->quantity;
     }
 
-
-    public function purposeHTML(): string
-    {
-        return self::PAYS[$this->purpose];
-    }
-
-    public function order()
-    {
-        return $this->belongsTo(Order::class, 'order_id', 'id');
-    }
-
-    public function expenseAdditions()
-    {
-        return $this->hasMany(OrderExpenseAddition::class, 'order_addition_id', 'id');
-    }
 
     #[Pure] public function getRemains(): float
     {
@@ -104,4 +75,21 @@ class OrderAddition extends Model
         }
         return $result;
     }
+
+    //RELATIONS
+    public function addition(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Addition::class, 'addition_id', 'id');
+    }
+
+    public function order(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
+    }
+
+    public function expenseAdditions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(OrderExpenseAddition::class, 'order_addition_id', 'id');
+    }
+
 }

@@ -18,6 +18,9 @@
                     <el-form-item label="Дата последней загрузки из банка" label-position="top">
                         <el-input v-model="form.date_bank"  style="width: 150px;"/>
                     </el-form-item>
+                    <el-form-item label="% от стоимости за сборку товара" label-position="top">
+                        <el-input v-model="form.assembly"  style="width: 150px;"/>
+                    </el-form-item>
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="Группа в которую переносятся остатки товаров снятых с продажи" label-position="top">
@@ -57,6 +60,7 @@ const form = reactive({
     accounting: props.common.accounting,
     date_bank: props.common.date_bank,
     group_last_id: props.common.group_last_id,
+    assembly: props.common.assembly,
 })
 
 function onSubmit() {

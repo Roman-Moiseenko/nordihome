@@ -195,7 +195,7 @@ class Trade12Report
     private function _row_addition(int $i, OrderExpenseAddition $addition, array &$amount)
     {
         $this->activeWorksheet->setCellValue([2, self::BEGIN_ROW+ $i], ($i + 1));
-        $this->activeWorksheet->setCellValue([3, self::BEGIN_ROW+ $i], $addition->orderAddition->purposeHTML() . ' (' . $addition->orderAddition->comment . ')');
+        $this->activeWorksheet->setCellValue([3, self::BEGIN_ROW+ $i], $addition->orderAddition->addition->name . ' (' . $addition->orderAddition->comment . ')');
         $this->activeWorksheet->setCellValue([8, self::BEGIN_ROW+ $i], '');
         $this->activeWorksheet->setCellValue([9, self::BEGIN_ROW+ $i], 'услуга');
         $this->activeWorksheet->setCellValue([13, self::BEGIN_ROW+ $i], '356');
