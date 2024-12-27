@@ -152,7 +152,7 @@ function handleDeleteEntity(row) {
 }
 
 function handleCreate() {
-    router.get(route('admin.order.store'))
+    router.post(route('admin.order.store'))
 }
 
 function routeClick(row) {

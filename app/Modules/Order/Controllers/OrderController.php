@@ -87,33 +87,28 @@ class OrderController extends Controller
             'additions' => $additions,
         ]);
 
-/*
+        /*
 
-        if ($order->isNew())
-            return view('admin.order._new.show', compact('order', 'staffs'));
-        if ($order->isManager())
-            return view('admin.order._manager.show', compact('order', 'staffs', 'storages'));
-        if ($order->isAwaiting())
-            return view('admin.order._awaiting.show', compact('order'));
-        if ($order->isPrepaid() || $order->isPaid())
-            return view('admin.order._paid.show', compact('order', 'storages', 'mainStorage'));
-        if ($order->isCompleted())
-            return view('admin.order._completed.show', compact('order'));
-        if ($order->isCanceled())
-            return view('admin.order._canceled.show', compact('order'));
-        abort(404, 'Неверный статус заказа');
-        */
+                if ($order->isNew())
+                    return view('admin.order._new.show', compact('order', 'staffs'));
+                if ($order->isManager())
+                    return view('admin.order._manager.show', compact('order', 'staffs', 'storages'));
+                if ($order->isAwaiting())
+                    return view('admin.order._awaiting.show', compact('order'));
+                if ($order->isPrepaid() || $order->isPaid())
+                    return view('admin.order._paid.show', compact('order', 'storages', 'mainStorage'));
+                if ($order->isCompleted())
+                    return view('admin.order._completed.show', compact('order'));
+                if ($order->isCanceled())
+                    return view('admin.order._canceled.show', compact('order'));
+                abort(404, 'Неверный статус заказа');
+                */
     }
 
     public function store(Request $request): RedirectResponse
     {
-        try {
-            $order = $this->service->create_sales($request->input('user_id'));
-            return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-
+        $order = $this->service->create_sales($request->input('user_id'));
+        return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
     }
 
     public function movement(Request $request, Order $order)
@@ -128,7 +123,6 @@ class OrderController extends Controller
         $this->service->destroy($order);
         return redirect()->back();
     }
-
 
 
     public function log(Order $order)
@@ -211,7 +205,6 @@ class OrderController extends Controller
         $this->service->setAwaiting($order);
         return redirect()->back();
     }
-
 
 
     /** РАБОТА С ЗАКАЗОМ */
