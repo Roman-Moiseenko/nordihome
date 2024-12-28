@@ -25,6 +25,7 @@ class AdditionService
             $request->integer('base')
         );
         $addition->class = $request->input('class');
+        $addition->is_quantity = $request->boolean('is_quantity');
         $addition->save();
         return $addition;
     }
@@ -33,6 +34,7 @@ class AdditionService
     {
         $addition->name = $request->string('name')->trim()->value();
         $addition->class = $request->input('class');
+        $addition->is_quantity = $request->boolean('is_quantity');
         //Не для автоматического расчета - фиксированное значение (base) или вручную каждый раз
         if (is_null($addition->class)) $addition->manual = $request->boolean('manual');
         $addition->base = $request->integer('base');

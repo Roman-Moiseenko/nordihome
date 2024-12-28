@@ -159,7 +159,7 @@ class OrderRepository
                     'name' => $orderAddition->addition->name,
                     'manual' => $orderAddition->addition->manual,
                     'base' => $orderAddition->addition->base,
-
+                    'is_quantity' => $orderAddition->addition->is_quantity,
                 ]);
             }),
         ]);

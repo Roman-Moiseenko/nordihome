@@ -20,9 +20,14 @@
                 <el-table-column prop="name" label="Название" width="300"/>
                 <el-table-column prop="base" label="Базовое значение" width="160"/>
                 <el-table-column prop="type_name" label="Тип услуги" width="160"/>
-                <el-table-column prop="manual" label="Ручной расчет">
+                <el-table-column prop="manual" label="Ручной расчет" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.manual"/>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="manual" label="Количественная" align="center">
+                    <template #default="scope">
+                        <Active :active="scope.row.is_quantity"/>
                     </template>
                 </el-table-column>
                 <el-table-column prop="class_name" label="Класс расчета" show-overflow-tooltip/>
@@ -57,6 +62,9 @@
                     </el-form-item>
                     <el-form-item label="Ручное заполнение">
                         <el-checkbox v-model="form.manual" :checked="form.manual"/>
+                    </el-form-item>
+                    <el-form-item label="Количественная услуга">
+                        <el-checkbox v-model="form.is_quantity" :checked="form.is_quantity"/>
                     </el-form-item>
                     <el-form-item label="Класс авто расчета">
                         <el-select v-model="form.class">
@@ -99,6 +107,7 @@ const form = reactive({
     base: null,
     manual: false,
     class: null,
+    is_quantity: false,
 })
 
 function createDialog(row) {
@@ -108,6 +117,7 @@ function createDialog(row) {
     form.type = null
     form.manual = false
     form.class = null
+    form.is_quantity = false
     dialogCreate.value = true
 }
 
@@ -116,8 +126,9 @@ function editDialog(row) {
     form.name = row.name
     form.base = row.base
     form.type = row.type
-    form.manual = row.manual
+    form.manual = row.manual === 1
     form.class = row.class
+    form.is_quantity = row.is_quantity === 1
     dialogCreate.value = true
 }
 

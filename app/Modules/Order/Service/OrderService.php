@@ -695,17 +695,17 @@ class OrderService
         $this->logger->logOrder($order, 'Добавлена услуга', $orderAddition->addition->name, price($orderAddition->getAmount()));
     }
 
-    public function setAddition(OrderAddition $addition, Request $request): void
+    public function setAddition(OrderAddition $orderAddition, Request $request): void
     {
-        if ($addition->addition->manual) {
-            $addition->amount = $request->integer('amount');
+        if ($orderAddition->addition->manual) {
+            $orderAddition->amount = $request->integer('amount');
         }
-        $addition->comment = $request->string('comment')->trim()->value();
-        $addition->quantity = $request->integer('quantity');
-        $addition->save();
-        $this->logger->logOrder($addition->order,
+        $orderAddition->comment = $request->string('comment')->trim()->value();
+        if ($orderAddition->addition->is_quantity) $orderAddition->quantity = $request->integer('quantity');
+        $orderAddition->save();
+        $this->logger->logOrder($orderAddition->order,
             'Изменена услуга',
-            $addition->addition->name, json_encode(['Сумма' => $addition->amount, 'Кол-во' => $addition->quantity, 'Комментарий' => $addition->comment]));
+            $orderAddition->addition->name, json_encode(['Сумма' => $orderAddition->amount, 'Кол-во' => $orderAddition->quantity, 'Комментарий' => $orderAddition->comment]));
     }
 
     /**

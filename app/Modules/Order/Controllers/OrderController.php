@@ -264,6 +264,11 @@ class OrderController extends Controller
         $this->service->deleteAddition($addition);
         return redirect()->back()->with('success', 'Услуга удалена');
     }
+
+
+
+
+
     /**  НОВЫЕ ACTIONS  **/
     //AJAX
 

@@ -15,6 +15,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property int $base
  * @property int $type
  * @property bool $manual
+ * @property bool $is_quantity
  * @property string $class Class Обсчета стоимости
  * @property OrderAddition[] $orderAdditions
  */
@@ -28,6 +29,7 @@ class Addition extends Model
         'type',
         'base',
         'class',
+        'is_quantity',
     ];
     const DELIVERY = 102;
     const PACKING = 103;
@@ -57,6 +59,7 @@ class Addition extends Model
             'type' => $type,
             'base' => $base,
             'class' => $class,
+            'is_quantity' => false,
         ]);
     }
 
