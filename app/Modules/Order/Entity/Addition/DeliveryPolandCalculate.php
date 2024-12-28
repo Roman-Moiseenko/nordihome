@@ -5,7 +5,7 @@ namespace App\Modules\Order\Entity\Addition;
 
 use App\Modules\Order\Entity\Order\Order;
 
-class DeliveryPolandCalculate implements CalculateInterface
+class DeliveryPolandCalculate extends CalculateAddition
 {
     public static function calculate(Order $order, int $base): int
     {

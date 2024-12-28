@@ -5,7 +5,7 @@ namespace App\Modules\Order\Entity\Addition;
 
 use App\Modules\Order\Entity\Order\Order;
 
-class LiftingCalculate implements CalculateInterface
+class LiftingCalculate extends CalculateAddition
 {
     /**
      * @param Order $order

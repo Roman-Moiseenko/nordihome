@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Guide\Entity;
 
+use App\Modules\Order\Entity\Addition\CalculateAddition;
+use App\Modules\Order\Entity\Order\OrderAddition;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**
@@ -13,6 +16,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property int $type
  * @property bool $manual
  * @property string $class Class Обсчета стоимости
+ * @property OrderAddition[] $orderAdditions
  */
 class Addition extends Model
 {
@@ -33,7 +37,7 @@ class Addition extends Model
 
     const TYPES = [
         self::DELIVERY => 'Доставка', //Автоматическая для Польши, По городу - фиксированная, ТК - ручная
-        self::PACKING => 'Упаковку', //Автоматическая будет
+        self::PACKING => 'Упаковка', //Автоматическая будет
         self::LIFTING => 'Подъем', //Ручная ... или автомат расчет за этаж два Вида, Подьем по лестнице, Подьем лифтом
         self::ASSEMBLY => 'Сборка', //Автоматическая по указаным товарам
         self::OTHER => 'Другое',
@@ -54,5 +58,21 @@ class Addition extends Model
             'base' => $base,
             'class' => $class,
         ]);
+    }
+
+    public function typeName(): string
+    {
+        return self::TYPES[$this->type];
+    }
+
+    public function orderAdditions(): HasMany
+    {
+        return $this->hasMany(OrderAddition::class, 'addition_id', 'id');
+    }
+
+    public function className(): string
+    {
+        if (is_null($this->class)) return '';
+        return CalculateAddition::CLASSES[$this->class];
     }
 }

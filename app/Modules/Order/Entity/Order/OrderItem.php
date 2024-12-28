@@ -58,6 +58,7 @@ class OrderItem extends Model implements CartItemInterface
         'assemblage',
         'supply_stack_id',
         'fix_manual',
+        'packing',
     ];
     protected $casts = [
         'created_at' => 'datetime',
@@ -82,6 +83,7 @@ class OrderItem extends Model implements CartItemInterface
             //'sell_cost' => $product->getLastPrice($user_id),
             'options' => [],
             'preorder' => $preorder,
+            'packing' => false,
         ]);
     }
 

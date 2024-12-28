@@ -6,7 +6,7 @@ namespace App\Modules\Order\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Setting\Repository\SettingRepository;
 
-class AssemblyCalculate implements CalculateInterface
+class AssemblyCalculate extends CalculateAddition
 {
     /**
      * @param Order $order

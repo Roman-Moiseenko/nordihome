@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Guide\Entity;
 
+use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  * @property string $name
  * @property int $value
+ * @property Product[] $products
  */
 class VAT extends Model
 {
@@ -18,4 +21,16 @@ class VAT extends Model
         'name',
         'value',
     ];
+    public static function register(string $name, int $value)
+    {
+        return self::create([
+            'name' => $name,
+            'value' => $value,
+        ]);
+    }
+
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'vat_id', 'id');
+    }
 }
