@@ -37,10 +37,10 @@
                     </el-input>
                     <el-input
                         v-model="scope.row.percent"
-                        :formatter="val => func.MaskCount(val, 0, 100)"
+                        :formatter="val => func.MaskFloat(val, 0, 100)"
                         @change="setProduct(scope.row)"
                         :disabled="iSaving || isProm(scope.row)"
-                        :class="(scope.row.percent > 0 ? 'bg-red-100' : '') + ' ml-1'" style="width: 70px;">
+                        :class="(scope.row.percent > 0 ? 'bg-red-100' : '') + ' ml-1'" style="width: 90px;">
                         <template #append>%</template>
                     </el-input>
                 </span>
@@ -69,7 +69,7 @@
                 </span>
             </template>
         </el-table-column>
-        <el-table-column prop="product.quantity_sell" label="Наличие" width="90" align="center"/>
+        <el-table-column v-if="is_new" prop="product.quantity_sell" label="Наличие" width="90" align="center"/>
         <el-table-column prop="assemblage" label="Сборка" width="80" align="center">
             <template #default="scope">
                 <el-checkbox v-if="is_new"
@@ -128,20 +128,11 @@ import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     items: Array,
-    status: Object,
 })
 //console.log(props.items)
 const $delete_entity = inject("$delete_entity")
 const iSaving = ref(false)
-const is_new = computed(() => {
-    return props.status.is_new || props.status.is_manager
-})
-const is_issued = computed(() => {
-    return props.status.is_prepaid || props.status.is_paid
-})
-const is_view = computed(() => {
-    return !is_new.value && !is_issued.value
-})
+const {is_new, is_issued, is_view} = inject('$status')
 
 
 function setProduct(row) {

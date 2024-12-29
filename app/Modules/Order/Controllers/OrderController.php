@@ -208,16 +208,16 @@ class OrderController extends Controller
 
 
     /** РАБОТА С ЗАКАЗОМ */
-    public function set_reserve(Request $request, Order $order)
+    public function set_reserve(Request $request, Order $order): RedirectResponse
     {
-        $this->service->setReserveService($order, $request['reserve-date'], $request['reserve-time']);
-        return redirect()->back();
+        $this->service->setReserveService($order, $request);
+        return redirect()->back()->with('success', 'Время резерва установлено');
     }
 
-    public function set_discount(Request $request, Order $order)
+    public function set_discount(Request $request, Order $order): RedirectResponse
     {
         $this->service->setDiscount($order, $request);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
 

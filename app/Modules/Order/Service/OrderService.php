@@ -87,11 +87,9 @@ class OrderService
         $this->movementService = $movementService;
         $this->reserveService = $reserveService;
         $this->parserService = $parserService;
-
     }
 
     //**** ФУНКЦИИ СОЗДАНИЯ ЗАКАЗА
-
     #[ArrayShape(['payment' => "array", 'delivery' => "array", 'phone' => "string", 'amount' => "array"])]
     public function checkorder(array $data): array
     {
@@ -393,11 +391,13 @@ class OrderService
     /**
      * Установить новое время резерва
      */
-    public function setReserveService(Order $order, string $date, string $time)
+    public function setReserveService(Order $order, Request $request): void
     {
-        $new_reserve = $date . ' ' . $time . ':00';
-        $order->setReserve(Carbon::parse($new_reserve));
-        $this->logger->logOrder($order, 'Новое время резерва', '', $new_reserve);
+        //$new_reserve = $request->date('reserve');
+        $new_reserve = Carbon::parse($request->date('reserve_at'));
+        //dd($new_reserve);
+        $order->setReserve($new_reserve);
+        $this->logger->logOrder($order, 'Новое время резерва', '', $request->string('reserve')->trim()->value());
     }
 
     //** ФУНКЦИИ РАБОТЫ С ЭЛЕМЕНТАМИ ЗАКАЗА
@@ -522,125 +522,10 @@ class OrderService
         $this->recalculation($order);
     }
 
-
-    /**
-     * Изменения кол-ва товара, с учетом "в наличии" и перерасчетом всего заказа. НОВАЯ ВЕРСИЯ.
-     */
-    #[Deprecated]
-    public function update_quantity(OrderItem $item, float $quantity): Order
-    {
-        $delta = $quantity - $item->quantity;
-        if ($delta == 0) return $item->order;
-
-        DB::transaction(function () use ($item, $delta, $quantity, &$order) {
-            if (!$item->preorder) {
-                if ($delta > 0) {
-                    $delta = min($item->product->getQuantitySell(), $delta);
-                    $this->reserveService->upReserve($item, abs($delta));
-                } else {
-                    $this->reserveService->downReserve($item, abs($delta));
-                }
-            }
-            $item->quantity += $delta;
-            $item->save();
-            $order = $item->order;
-
-            $this->recalculation($order);
-            $order->refresh();
-            $this->logger->logOrder($order, 'Изменено кол-во товара', $item->product->name, (string)$quantity . ' шт.');
-        });
-
-        return $order;
-    }
-
-    /**
-     * Изменяем цену продажи товара для текущего заказа
-     */
-    #[Deprecated]
-    public function update_sell(OrderItem $item, int $sell_cost): Order
-    {
-        $order = $item->order;
-        if ($item->product->getPriceMin() > $sell_cost) {
-            event(new PriceHasMinimum($item));
-        }
-        $item->sell_cost = $sell_cost;
-        $item->save();
-        $order->refresh();
-        $this->recalculation($order);
-
-        $this->logger->logOrder($order, 'Изменена цена товара', $item->product->name, price($sell_cost));
-        return $order;
-    }
-    /**
-     * Изменяем цену продажи товара в %% для текущего заказа
-     */
-    #[Deprecated]
-    public function discount_item_percent(OrderItem $item, float $percent): Order
-    {
-        if ($percent > 100) throw new \DomainException('Скидка слишком высока');
-
-        $sell_cost = (int)ceil($item->base_cost - $item->base_cost * $percent / 100);
-        return $this->update_sell($item, $sell_cost); //ф-ция сохраняет лог
-    }
-    #[Deprecated]
-    public function update_item_comment(OrderItem $item, string $comment)
-    {
-        $item->comment = $comment;
-        $item->save();
-    }
-
-
     //** СКИДКИ НА ВЕСЬ ЗАКАЗ
 
     /**
-     * Ручная скидка для Заказа в рублях
-     * @param Order $order
-     * @param float $discount
-     * @return Order
-     */
-    public function discount_order(Order $order, float $discount): Order
-    {
-        $order->manual = $discount;
-        $order->save();
-        //Раскидываем скидку на все товары не из акций
-        $base_amount = $order->getBaseAmountNotDiscount();
-        if ($base_amount == 0) throw new \DomainException('В заказе нет товаров для установки ручной скидки');
-
-        $percent_item = $discount / $base_amount;
-        foreach ($order->items as $item) {
-            if (is_null($item->discount_id)) {
-                $sell_cost = (int)ceil($item->base_cost * (1 - $percent_item));
-                if ($item->product->getPriceMin() > $sell_cost) event(new PriceHasMinimum($item));
-                $item->sell_cost = $sell_cost;
-                $item->save();
-            }
-        }
-        $order->refresh();
-        $this->logger->logOrder($order, 'Установлена общая скидка', '', price($discount));
-
-        return $order;
-    }
-
-    /**
-     * Ручная скидка для Заказа в %%
-     * @param Order $order
-     * @param float $discount_percent
-     * @return Order
-     */
-    public function discount_order_percent(Order $order, float $discount_percent): Order
-    {
-        if ($discount_percent > 100) throw new \DomainException('Скидка слишком высока');
-        $base_amount = $order->getBaseAmountNotDiscount();
-        $discount = (int)ceil($discount_percent * $base_amount / 100);
-        $this->logger->logOrder($order, 'Установлена общая скидка', 'в %%', $discount_percent);
-
-        return $this->discount_order($order, $discount); //ф-ция имеет лог
-    }
-
-    /**
      * Пересчет заказа, расчет скидок на товар, по акциям и бонусам. Расчет скидки на заказ, по "Скидки"
-     * @param Order $order
-     * @return void
      */
     private function recalculation(Order &$order): void
     {
@@ -710,22 +595,7 @@ class OrderService
     }
 
     /**
-     * Изменяем сумму на услугу, возвращаем Заказ
-     */
-    public function addition_amount(OrderAddition $addition, int $amount): Order
-    {
-        $addition->amount = $amount;
-        $addition->save();
-        $this->logger->logOrder($addition->order, 'Изменена цена услуги', $addition->addition->name, price($amount));
-        $addition->order->refresh();
-        return $addition->order;
-    }
-
-    /**
      * Изменяем комментарий на услугу, возвращаем Заказ
-     * @param OrderAddition $addition
-     * @param string $comment
-     * @return void
      */
     public function addition_comment(OrderAddition $addition, string $comment): void
     {
@@ -733,41 +603,10 @@ class OrderService
         $addition->save();
     }
 
-    /**
-     * Удалить услугу, возвращает Заказ
-     * @param OrderAddition $addition
-     * @return Order
-     */
-    public function addition_delete(OrderAddition $addition): Order
-    {
-        $order = $addition->order;
-        $this->logger->logOrder($order, 'Удалена услуга', $addition->addition->name, price($addition->amount));
-        $addition->delete();
-        return $order;
-    }
-
-    /**
-     * Изменение сборки для элемента заказа вкл/выкл
-     * @param OrderItem $item
-     * @return Order
-     */
-    public function check_assemblage(OrderItem $item): Order
-    {
-        $item->assemblage = !$item->assemblage;
-        $item->save();
-        $this->logger->logOrder($item->order, 'Изменена сборка', $item->product->name, ($item->assemblage) ? 'Добавлена' : 'Удалена');
-
-        return $item->order;
-    }
-
     //**** ФУНКЦИИ ДРУГИЕ
 
     /**
      * Создать перемещение для заказа на основе резерва по складу отправки
-     * @param Order $order
-     * @param int $storage_out
-     * @param int $storage_in
-     * @return MovementDocument
      */
     public function movement(Order $order, int $storage_out, int $storage_in): MovementDocument
     {
@@ -798,33 +637,6 @@ class OrderService
         $this->logger->logOrder($order, 'Изменен комментарий', $order->comment, $comment);
         $order->comment = $comment;
         $order->save();
-    }
-
-    /**
-     * Установить скидку по купону
-     * @param Order $order
-     * @param string $code
-     * @return Order
-     */
-    public function set_coupon(Order $order, string $code)
-    {
-        if (empty($code)) {
-            $order->coupon_id = null;
-            $order->coupon_amount = 0;
-        } else {
-            $coupon = $this->repository->getCoupon($code, $order->user_id);
-            if (is_null($coupon)) throw new \DomainException('Неверный код купона');
-            if ($coupon->started_at->gt(now())) throw new \DomainException('Купон еще не действует');
-            if ($coupon->finished_at->lt(now())) throw new \DomainException('Купон уже не действует');
-            $order->coupon_id = $coupon->id;
-        }
-        $order->save();
-        $order->refresh();
-        $this->recalculation($order);
-        $this->logger->logOrder($order, 'Скидка по купону', empty($code) ? 'Удалена' : 'Установлена',
-            !empty($coupon) ? $coupon->bonus : '');
-
-        return $order;
     }
 
     /**
@@ -887,9 +699,6 @@ class OrderService
      * Пересчет суммы для выдачи товара по распоряжению.
      * Остаток неизрасходованного лимита денег должен быть выше
      * стоимости товаров и услуг для нового распоряжения
-     * @param Order $order
-     * @param string $_data
-     * @return array
      */
     #[ArrayShape(['remains' => "float", 'discount' => "float", 'expense' => "int", 'disable' => "bool"])]
     public function expenseCalculate(Order $order, string $_data): array
@@ -958,6 +767,8 @@ class OrderService
             }
             $order->save();
             $this->recalculation($order);
+            $this->logger->logOrder($order, 'Скидка по купону', empty($code) ? 'Удалена' : 'Установлена',
+                !empty($coupon) ? $coupon->bonus : '');
         }
 
         if ($action == 'manual' || $action == 'percent') {
@@ -968,6 +779,7 @@ class OrderService
 
             if ($action == 'manual') {
                 $percent_item = $manual / $base_amount;
+
             } else {
                 $percent_item = $percent / 100;
                 $manual = (int)ceil($percent * $percent_item);
@@ -986,6 +798,7 @@ class OrderService
             }
             $order->save();
             $this->recalculation($order);
+            $this->logger->logOrder($order, 'Установлена общая скидка', '', price($manual));
         }
 
 

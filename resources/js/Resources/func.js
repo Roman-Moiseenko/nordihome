@@ -137,7 +137,7 @@ export const func = {
         let day = _date_.getDate();
         if (day < 10) day = '0' + day;
         let days = _date_.getFullYear() + '-' + month + '-' + day;
-        return days + ' ' + _date_.getHours() + ':' + _date_.getMonth() + ':' + _date_.getSeconds();
+        return days + ' ' + _date_.getHours() + ':' + _date_.getMinutes() + ':' + _date_.getSeconds();
     },
 
     displayedInfo: (model = null, image = null, icon = null) => {

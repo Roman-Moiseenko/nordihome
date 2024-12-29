@@ -88,19 +88,10 @@ import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     additions: Array,
-    status: Object,
 })
 const $delete_entity = inject("$delete_entity")
 const iSaving = ref(false)
-const is_new = computed(() => {
-    return props.status.is_new || props.status.is_manager
-})
-const is_issued = computed(() => {
-    return props.status.is_prepaid || props.status.is_paid
-})
-const is_view = computed(() => {
-    return !is_new.value && !is_issued.value
-})
+const {is_new, is_issued, is_view} = inject('$status')
 
 function setAddition(row) {
     iSaving.value = true;

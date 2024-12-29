@@ -99,7 +99,7 @@ class OrderItem extends Model implements CartItemInterface
     public function getPercent():float
     {
         if ($this->base_cost == 0) return 0;
-        return ceil(($this->base_cost - $this->sell_cost) / $this->base_cost * 100);
+        return ceil(($this->base_cost - $this->sell_cost) / $this->base_cost * 100 * 10) / 10;
     }
 
     public function getReserveByStorageItem(int $storage_item_id):? OrderReserve

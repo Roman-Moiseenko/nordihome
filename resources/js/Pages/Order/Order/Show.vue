@@ -15,15 +15,15 @@
 
         <div v-if="order.in_stock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
             <h2 class="font-medium text-cyan-800">Товары в наличии</h2>
-            <OrderItems :items=[...order.in_stock] :status="order.status"/>
+            <OrderItems :items=[...order.in_stock] />
         </div>
         <div v-if="order.pre_order.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
             <h2 class="font-medium text-orange-800">Товары под заказ</h2>
-            <OrderItems :items=[...order.pre_order] :status="order.status" />
+            <OrderItems :items=[...order.pre_order]  />
         </div>
         <div v-if="order.additions.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
             <h2 class="font-medium text-green-800">Услуги</h2>
-            <OrderAdditions :additions=[...order.additions] :status="order.status" />
+            <OrderAdditions :additions=[...order.additions]  />
         </div>
 
     </el-config-provider>
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head} from "@inertiajs/vue3";
-import {defineProps} from "vue";
+import {computed, defineProps, provide} from "vue";
 import OrderActions from "./Blocks/Actions.vue";
 import OrderInfo from "./Blocks/Info.vue";
 import Active from "@Comp/Elements/Active.vue";
@@ -49,7 +49,20 @@ const props = defineProps({
     staffs: Array,
     mainStorage: Object,
 })
-console.log(props.order)
+const is_new = computed(() => {
+    return props.order.status.is_new || props.order.status.is_manager
+})
+const is_issued = computed(() => {
+    return props.order.status.is_prepaid || props.order.status.is_paid
+})
+const is_view = computed(() => {
+    return !is_new.value && !is_issued.value
+})
+provide("$status", {
+    is_new,
+    is_issued,
+    is_view,
+})
 </script>
 <style scoped>
 

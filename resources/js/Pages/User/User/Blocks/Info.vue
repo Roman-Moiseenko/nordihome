@@ -55,8 +55,8 @@
                 <el-button type="info" @click="editUser = false">Отмена</el-button>
                 <el-button type="success" @click="setInfo">Сохранить</el-button>
             </el-form>
-            <div class="mt-auto">
-                <el-button v-if="!user.active" type="primary" @click="onActive">Активировать</el-button>
+            <div v-if="!user.active" class="mt-3">
+                <el-button type="primary" @click="onActive">Активировать</el-button>
             </div>
         </el-col>
         <el-col :span="8">

@@ -22,9 +22,9 @@
                 <template #append>₽</template>
             </el-input>
             <el-input v-model="form.percent"
-                      :formatter="val => func.MaskCount(val, 0, 100)"
+                      :formatter="val => func.MaskFloat(val)"
                       clearable
-                      class="ml-1" style="width: 80px"
+                      class="ml-1" style="width: 90px"
                       @change="setDiscount('percent')"
                       :disabled="iSaving"
             >
@@ -58,7 +58,7 @@
 <script setup>
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
-import {defineProps, reactive, ref} from "vue";
+import {defineProps, inject, reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import {ElLoading} from "element-plus";
@@ -76,6 +76,7 @@ const form = reactive({
     percent: props.order.amount.percent,
     action: null,
 })
+const {is_new, is_issued, is_view} = inject('$status')
 function setDiscount(action) {
     form.action = action
     iSaving.value = true
