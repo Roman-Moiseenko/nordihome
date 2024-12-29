@@ -14,7 +14,7 @@ Route::group([
     Route::post('/set-info/{user}', 'UserController@set_info')->name('set-info');
     Route::post('/verify/{user}', 'UserController@verify')->name('verify');
     Route::post('/upload/{user}', 'UserController@upload')->name('upload');
-    Route::post('/search-add', 'UserController@search_add')->name('search-add');
+    Route::post('/search', 'UserController@search_add')->name('search');
 
     Route::get('/cart', 'CartController@index')->name('cart.index');
     Route::get('/wish', 'WishController@index')->name('wish.index');

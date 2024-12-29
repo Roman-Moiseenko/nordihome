@@ -11,19 +11,19 @@
                 filterable
                 remote
                 reserve-keyword
-                placeholder="Введите артикул или название"
+                placeholder="Введите Имя, Телефон, ИНН и др."
                 :remote-method="remoteMethod"
                 :loading="loading"
-                style="width: 160px"
+                style="width: 260px"
                 @keyup.enter="onSelect"
             >
                 <el-option
                     v-for="item in options"
                     :key="item.id"
                     :value="item.id"
-                    :label="item.name + ' ('+ item.phone + ')'"
+                    :label="item.public_name + ' ('+ item.phone + ')'"
                 >
-                    {{ item.name }} ({{ item.phone }})
+                    {{ item.public_name }} ({{ item.phone }})
                 </el-option>
                 <template #loading>
                     Загрузка
@@ -34,13 +34,13 @@
             </el-select>
 
             <el-button id="button" type="primary" @click="onAdd" class="ml-1">
-                <i class="fa-light fa-box mr-2"></i>
+                <i class="fa-light fa-user mr-2"></i>
                 Выбрать
             </el-button>
         </div>
         <el-dialog v-model="dialogCreate" title="Новый клиент" width="400">
             <el-form label-width="auto">
-                <el-form-item label="Товар">
+                <el-form-item label="Клиент">
                     <el-input v-model="formCreate.name" />
                 </el-form-item>
 
@@ -62,7 +62,6 @@ import axios from "axios";
 import {ElLoading} from "element-plus";
 import {router} from "@inertiajs/vue3";
 
-const search = route('admin.user.search-add')
 const props = defineProps({
     user_id: Number,
     route: String,
@@ -75,7 +74,7 @@ const options = ref([])
 const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
-        axios.post(search.value, {search: query}).then(response => {
+        axios.post(route('admin.user.search'), {search: query}).then(response => {
             console.log('responser', response)
             if (response.data.error !== undefined) console.log(response.data.error)
 

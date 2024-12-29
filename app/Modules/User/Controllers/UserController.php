@@ -24,7 +24,8 @@ class UserController extends Controller
 
     public function __construct(RegisterService $service, UserRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:user']);
+        $this->middleware(['auth:admin']);
+        $this->middleware(['can:user'])->except(['search_add']);
         $this->service = $service;
         $this->repository = $repository;
     }

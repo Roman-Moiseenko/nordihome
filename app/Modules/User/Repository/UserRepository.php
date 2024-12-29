@@ -217,7 +217,7 @@ class UserRepository
 
         return $query->get()->map(function (User $user) {
             return array_merge($user->toArray(), [
-
+                'public_name' => $user->getPublicName(),
             ]);
         });
     }
