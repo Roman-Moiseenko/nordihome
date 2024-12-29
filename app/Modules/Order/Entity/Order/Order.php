@@ -15,6 +15,10 @@ use App\Modules\User\Entity\User;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
@@ -435,10 +439,10 @@ class Order extends Model
      */
     public function getTotalAmount(): float
     {
-        return $this->getAdditionsAmount() +
+        return ceil($this->getAdditionsAmount() +
             $this->getSellAmount() +
             $this->getDiscountOrder() -
-            $this->getCoupon();
+            $this->getCoupon());
     }
 
     /**
@@ -527,27 +531,27 @@ class Order extends Model
         return $this->morphOne(Report::class, 'reportable');
     }
 
-    public function refund()
+    public function refund(): HasOne
     {
         return $this->hasOne(OrderRefund::class, 'order_id', 'id');
     }
 
-    public function coupon()
+    public function coupon(): BelongsTo
     {
         return $this->belongsTo(Coupon::class, 'coupon_id', 'id');
     }
 
-    public function staff()
+    public function staff(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }
 
-    public function expenses()
+    public function expenses(): HasMany
     {
         return $this->hasMany(OrderExpense::class, 'order_id', 'id');
     }
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
     }
@@ -558,7 +562,7 @@ class Order extends Model
         return $this->hasMany(OrderResponsible::class, 'order_id', 'id');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this
             ->belongsTo(User::class, 'user_id', 'id')
@@ -569,12 +573,12 @@ class Order extends Model
             });
     }
 
-    public function additions()
+    public function additions(): HasMany
     {
         return $this->hasMany(OrderAddition::class, 'order_id', 'id');
     }
 
-    public function payments()
+    public function payments(): HasMany
     {
         return $this->hasMany(OrderPayment::class, 'order_id', 'id');
     }
@@ -583,32 +587,32 @@ class Order extends Model
      * Последний платеж
      * @return mixed
      */
-    public function payment()
+    public function payment(): mixed
     {
         return $this->hasMany(OrderPayment::class, 'order_id', 'id')->latestOfMany();
     }
 
-    public function status()
+    public function status(): HasOne
     {
         return $this->hasOne(OrderStatus::class, 'order_id', 'id')->latestOfMany();
     }
 
-    public function statuses()
+    public function statuses(): HasMany
     {
         return $this->hasMany(OrderStatus::class, 'order_id', 'id');
     }
 
-    public function discount()
+    public function discount(): BelongsTo
     {
         return $this->belongsTo(Discount::class, 'discount_id', 'id');
     }
 
-    public function movements()
+    public function movements(): BelongsToMany
     {
         return $this->belongsToMany(MovementDocument::class, 'orders_movements', 'order_id', 'movement_id');
     }
 
-    public function logs()
+    public function logs(): HasMany
     {
         return $this->hasMany(LoggerOrder::class, 'order_id', 'id')->orderByDesc('created_at');
     }

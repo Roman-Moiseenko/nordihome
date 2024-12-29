@@ -198,4 +198,27 @@ class UserRepository
         ];
 
     }
+
+    public function search(string $value): Arrayable
+    {
+        $query = User::where('phone', 'like', "%$value%")
+            ->orWhere('email', 'like', "%$value%")
+            ->orWhereRaw("LOWER(fullname) like LOWER('%$value%')")
+            ->orWhereHas('organizations', function ($query) use ($value) {
+                $query->where('inn', 'LIKE', "%$value%")
+                    ->orWhereRaw("LOWER(short_name) like LOWER('%$value%')")
+                    ->orWhereRaw("LOWER(full_name) like LOWER('%$value%')")
+                    ->orWhereHas('contacts', function ($query) use ($value) {
+                        $query->where('email', 'like', "%$value%")
+                            ->where('phone', 'like', "%$value%")
+                            ->orWhereRaw("LOWER(fullname) like LOWER('%$value%')");
+                    });
+            });
+
+        return $query->get()->map(function (User $user) {
+            return array_merge($user->toArray(), [
+
+            ]);
+        });
+    }
 }

@@ -393,9 +393,7 @@ class OrderService
      */
     public function setReserveService(Order $order, Request $request): void
     {
-        //$new_reserve = $request->date('reserve');
         $new_reserve = Carbon::parse($request->date('reserve_at'));
-        //dd($new_reserve);
         $order->setReserve($new_reserve);
         $this->logger->logOrder($order, 'Новое время резерва', '', $request->string('reserve')->trim()->value());
     }
@@ -663,8 +661,6 @@ class OrderService
 
     /**
      * Копируем заказ
-     * @param Order $order
-     * @return Order
      */
     public function copy(Order $order): Order
     {
@@ -685,7 +681,9 @@ class OrderService
             }
 
             foreach ($order->additions as $addition) {
-                $this->addAddition($new_order, $addition->purpose, $addition->amount, $addition->comment);
+                //TODO Переделать
+                $this->addAddition($new_order, $addition->addition_id);
+
             }
 
             $new_order->refresh();
@@ -786,22 +784,28 @@ class OrderService
             }
             if ($percent_item > 1) throw new \DomainException('Скидка слишком высока');
 
-            $order->manual = $manual;
+           // $order->manual = $manual;
 
             foreach ($order->items as $item) {
                 if (is_null($item->discount_id)) {
-                    $sell_cost = (int)ceil($item->base_cost * (1 - $percent_item));
+                    $sell_cost = ($item->base_cost * (1 - $percent_item));
                     if ($item->product->getPriceMin() > $sell_cost) event(new PriceHasMinimum($item));
                     $item->sell_cost = $sell_cost;
                     $item->save();
                 }
             }
-            $order->save();
+            //$order->save();
             $this->recalculation($order);
             $this->logger->logOrder($order, 'Установлена общая скидка', '', price($manual));
         }
 
 
 
+    }
+
+    public function setUser(Order $order, Request $request): void
+    {
+        $order->user_id = $request->integer('user_id');
+        $order->save();
     }
 }

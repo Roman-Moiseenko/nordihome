@@ -165,7 +165,7 @@ class OrderRepository
 
             'amount' => [
                 'base' => $order->getBaseAmount(),
-                'manual' => $order->manual,
+                'manual' => (int)$order->manual,
                 'discount' => $order->discount_amount,
                 'total' => $order->getTotalAmount(),
                 'addition' => $order->getAdditionsAmount(),

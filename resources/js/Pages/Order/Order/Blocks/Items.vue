@@ -24,7 +24,7 @@
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="Продажа" width="200" align="center">
+        <el-table-column label="Продажа" width="230" align="center">
             <template #default="scope">
                 <span v-if="is_new" class="flex">
                     <el-input
@@ -32,7 +32,7 @@
                         :formatter="val => func.MaskInteger(val)"
                         @change="setProduct(scope.row)"
                         :disabled="iSaving || isProm(scope.row)"
-                        style="width: 100px;">
+                        style="width: 120px;">
                         <template #append>₽</template>
                     </el-input>
                     <el-input

@@ -9,6 +9,7 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\RegisterService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -121,5 +122,11 @@ class UserController extends Controller
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function search_add(Request $request): JsonResponse
+    {
+        $users = $this->repository->search($request->string('search')->trim()->value());
+        return \response()->json($users);
     }
 }
