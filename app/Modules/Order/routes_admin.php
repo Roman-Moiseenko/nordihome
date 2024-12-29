@@ -19,11 +19,13 @@ Route::group(
         Route::post('/send-invoice/{order}', 'OrderController@send_invoice')->name('send-invoice');
         Route::post('/resend-invoice/{order}', 'OrderController@resend_invoice')->name('resend-invoice');
 
-        Route::post('/set-info/{order}', 'OrderController@set_info')->name('set-info');
+    //    Route::post('/set-info/{order}', 'OrderController@set_info')->name('set-info');
         Route::post('/add-product/{order}', 'OrderController@add_product')->name('add-product');
         Route::post('/add-products/{order}', 'OrderController@add_products')->name('add-products');
         Route::post('/set-item/{item}', 'OrderController@set_item')->name('set-item');
         Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
+
+        Route::post('/set-discount/{order}', 'OrderController@set_discount')->name('set-discount');
 
         Route::post('/add-addition/{order}', 'OrderController@add_addition')->name('add-addition');
         Route::post('/set-addition/{addition}', 'OrderController@set_addition')->name('set-addition');

@@ -162,6 +162,19 @@ class OrderRepository
                     'is_quantity' => $orderAddition->addition->is_quantity,
                 ]);
             }),
+
+            'amount' => [
+                'base' => $order->getBaseAmount(),
+                'manual' => $order->manual,
+                'discount' => $order->discount_amount,
+                'total' => $order->getTotalAmount(),
+                'addition' => $order->getAdditionsAmount(),
+                'promotions' => $order->getDiscountPromotions(),
+                'coupon' =>$order->getCoupon(),
+                'percent' => ($order->getBaseAmountNotDiscount() == 0) ? 0 : ceil($order->manual / $order->getBaseAmountNotDiscount() * 100),
+            ],
+
+
         ]);
     }
 

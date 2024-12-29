@@ -99,7 +99,11 @@ class Promotion extends Model implements DataWidgetInterface
 
     public function isStarted(): bool
     {
-        if ($this->active && $this->start_at->lte(now()) && $this->finish_at->gte(now())) return true;
+        if (
+            $this->active
+            && $this->start_at->lte(now())
+            && (is_null($this->finish_at) || $this->finish_at->gte(now()))
+        ) return true;
         return false;
     }
 

@@ -19,6 +19,9 @@
                 <span :class="scope.row.percent > 0 ? 'text-red-800 font-medium' : ''">{{
                         func.price(scope.row.base_cost)
                     }}</span>
+                <div v-if="isProm(scope.row)" class="text-red-800">
+                    Акция
+                </div>
             </template>
         </el-table-column>
         <el-table-column label="Продажа" width="200" align="center">
@@ -28,7 +31,7 @@
                         v-model="scope.row.sell_cost"
                         :formatter="val => func.MaskInteger(val)"
                         @change="setProduct(scope.row)"
-                        :disabled="iSaving"
+                        :disabled="iSaving || isProm(scope.row)"
                         style="width: 100px;">
                         <template #append>₽</template>
                     </el-input>
@@ -36,7 +39,7 @@
                         v-model="scope.row.percent"
                         :formatter="val => func.MaskCount(val, 0, 100)"
                         @change="setProduct(scope.row)"
-                        :disabled="iSaving"
+                        :disabled="iSaving || isProm(scope.row)"
                         :class="(scope.row.percent > 0 ? 'bg-red-100' : '') + ' ml-1'" style="width: 70px;">
                         <template #append>%</template>
                     </el-input>
@@ -127,6 +130,7 @@ const props = defineProps({
     items: Array,
     status: Object,
 })
+//console.log(props.items)
 const $delete_entity = inject("$delete_entity")
 const iSaving = ref(false)
 const is_new = computed(() => {
@@ -163,7 +167,9 @@ function setProduct(row) {
 function handleDeleteItem(row) {
     $delete_entity.show(route('admin.order.del-item', {item: row.id}));
 }
-
+function isProm(row) {
+    return row.product.has_promotion && !row.preorder
+}
 </script>
 
 <style lang="scss">

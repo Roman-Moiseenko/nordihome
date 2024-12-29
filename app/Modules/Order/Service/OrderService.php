@@ -433,6 +433,7 @@ class OrderService
 
         if ($quantity_preorder > 0) {
             $orderItemPre = OrderItem::new($product, $quantity_preorder, true);
+
             $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
             if ($pre_price == 0) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
             $orderItemPre->setCost($last_price, $pre_price);
@@ -936,5 +937,58 @@ class OrderService
     {
         if (!$addition->order->isManager()) throw new \DomainException('Нельзя удалить услугу');
         $addition->delete();
+    }
+
+    public function setDiscount(Order $order, Request $request): void
+    {
+        $code = $request->string('coupon')->trim()->value();
+        $manual = $request->integer('manual');
+        $percent = $request->float('percent');
+        $action = $request->input('action');
+        if ($action == 'coupon') {
+            if (empty($code)) {
+                $order->coupon_id = null;
+                $order->coupon_amount = 0;
+            } else {
+                $coupon = $this->repository->getCoupon($code, $order->user_id);
+                if (is_null($coupon)) throw new \DomainException('Неверный код купона');
+                if ($coupon->started_at->gt(now())) throw new \DomainException('Купон еще не действует');
+                if ($coupon->finished_at->lt(now())) throw new \DomainException('Купон уже не действует');
+                $order->coupon_id = $coupon->id;
+            }
+            $order->save();
+            $this->recalculation($order);
+        }
+
+        if ($action == 'manual' || $action == 'percent') {
+
+            //Раскидываем скидку на все товары не из акций
+            $base_amount = $order->getBaseAmountNotDiscount();
+            if ($base_amount == 0) throw new \DomainException('В заказе нет товаров для установки ручной скидки');
+
+            if ($action == 'manual') {
+                $percent_item = $manual / $base_amount;
+            } else {
+                $percent_item = $percent / 100;
+                $manual = (int)ceil($percent * $percent_item);
+            }
+            if ($percent_item > 1) throw new \DomainException('Скидка слишком высока');
+
+            $order->manual = $manual;
+
+            foreach ($order->items as $item) {
+                if (is_null($item->discount_id)) {
+                    $sell_cost = (int)ceil($item->base_cost * (1 - $percent_item));
+                    if ($item->product->getPriceMin() > $sell_cost) event(new PriceHasMinimum($item));
+                    $item->sell_cost = $sell_cost;
+                    $item->save();
+                }
+            }
+            $order->save();
+            $this->recalculation($order);
+        }
+
+
+
     }
 }

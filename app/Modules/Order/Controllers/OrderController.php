@@ -214,6 +214,13 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
+    public function set_discount(Request $request, Order $order)
+    {
+        $this->service->setDiscount($order, $request);
+        return redirect()->back();
+    }
+
+
     /** РАБОТА С ТОВАРОМ В ЗАКАЗЕ */
     public function add_product(Request $request, Order $order): RedirectResponse
     {

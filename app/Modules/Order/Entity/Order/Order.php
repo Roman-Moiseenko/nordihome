@@ -367,6 +367,19 @@ class Order extends Model
         return $this->getBaseAmount() - $this->getSellAmount();
     }
 
+    public function getDiscountPromotions(): float
+    {
+        $result = 0;
+        foreach ($this->items as $item) {
+            if ($item->product->hasPromotion()) {
+                $result += ($item->base_cost - $item->sell_cost) * $item->quantity;
+
+            }
+        }
+        return $result;
+
+    }
+
     /**
      * Скидка на заказ - по сумме, срокам и др.
      */
@@ -411,31 +424,11 @@ class Order extends Model
     {
         $total_addition = 0;
         foreach ($this->additions as $addition) {
-            $total_addition += $addition->amount;
+            $total_addition += $addition->getAmount() * $addition->quantity;
         }
         return $total_addition;
     }
 
-    /**
-     * Сборка товара, сумма по всем выбранным позициям из заказа
-     */
-    public function getAssemblageAmount(int $percent = 15): float
-    {
-        $assemblage = 0;
-        foreach ($this->items as $item) {
-            $assemblage += $item->getAssemblage($percent);
-        }
-        return $assemblage;
-    }
-
-    /**
-     * Расчет упаковки для товаров, которым требуется
-     */
-    public function getPackagingAmount(): float
-    {
-        //TODO на будущее
-        return 0;
-    }
 
     /**
      * Итоговая сумма оплаты за заказ, с учетом всех скидок и платежей
@@ -443,9 +436,7 @@ class Order extends Model
     public function getTotalAmount(): float
     {
         return $this->getAdditionsAmount() +
-            $this->getPackagingAmount() +
             $this->getSellAmount() +
-            $this->getAssemblageAmount() -
             $this->getDiscountOrder() -
             $this->getCoupon();
     }

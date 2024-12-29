@@ -58,7 +58,7 @@ class OrderAddition extends Model
                 $amount = $this->addition->class::calculate($this->order, $this->addition->base);
             }
         }
-        return $amount * $this->quantity;
+        return $amount;
     }
 
 
