@@ -103,6 +103,8 @@ class User extends Authenticatable
         'address' => GeoAddressCast::class
     ];
 */
+
+
     protected function casts(): array
     {
         return [
@@ -373,6 +375,10 @@ class User extends Authenticatable
         return self::TYPE_PRICING[$this->client];
     }
 
+    public function deliveryText(): string
+    {
+        return OrderExpense::DELIVERIES[$this->delivery];
+    }
 
     public function scopeActive($query)
     {

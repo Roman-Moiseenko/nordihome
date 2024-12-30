@@ -55,13 +55,12 @@ class UserController extends Controller
 
     public function show(Request $request, User $user): Response
     {
-        $type_pricing = array_select(User::TYPE_PRICING);
        // $organizations = Organization::orderBy('short_name')->active()->getModels();
         return Inertia::render('User/User/Show', [
             'user' => $this->repository->UserWithToArray($user, $request),
             //'organizations' => $organizations,
             'deliveries' => array_select(OrderExpense::DELIVERIES),
-            'type_pricing' => $type_pricing,
+            'type_pricing' => array_select(User::TYPE_PRICING),
         ]);
     }
 
@@ -125,9 +124,20 @@ class UserController extends Controller
         }
     }
 
-    public function search_add(Request $request): JsonResponse
+    public function search(Request $request): JsonResponse
     {
         $users = $this->repository->search($request->string('search')->trim()->value());
         return \response()->json($users);
+    }
+
+    public function get_edit_data(Request $request): JsonResponse
+    {
+        $user = User::find($request->integer('user_id'));
+
+       /* $data = ['user' => $this->repository->UserWithToArray($user, $request),
+            'deliveries' => array_select(OrderExpense::DELIVERIES),
+            'type_pricing' => array_select(User::TYPE_PRICING),
+            ];*/
+        return \response()->json($this->repository->UserWithToArray($user, $request));
     }
 }

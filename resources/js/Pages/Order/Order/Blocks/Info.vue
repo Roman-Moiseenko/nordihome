@@ -4,7 +4,6 @@
             <SearchEditUser :user_id="order.user_id" :route="route('admin.order.set-user', {order: order.id})" />
         </el-col>
         <el-col :span="8">
-
             <el-descriptions column="2" border>
                 <el-descriptions-item
                     label="Сумма базовая"
@@ -68,7 +67,7 @@
 import {func} from '@Res/func.js'
 import {computed, inject, reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
-import SearchEditUser from "@Comp/User/Edit.vue"
+import SearchEditUser from "@Comp/User/SearchEdit.vue"
 
 const props = defineProps({
     order: Object,

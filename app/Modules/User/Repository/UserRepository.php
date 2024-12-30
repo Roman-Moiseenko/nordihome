@@ -94,6 +94,7 @@ class UserRepository
                         'title' => $file->title,
                     ];
                 }),
+            'delivery_name' => $user->deliveryText(),
         ]);
     }
 

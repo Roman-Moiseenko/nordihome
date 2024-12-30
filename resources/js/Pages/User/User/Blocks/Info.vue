@@ -1,6 +1,8 @@
 <template>
     <el-row :gutter="10">
         <el-col :span="8">
+            <!--EditUser  :user="user" :deliveries="deliveries" :type_pricing="type_pricing"/-->
+
             <el-descriptions v-if="!editUser" :column="1" border class="mb-5">
                 <el-descriptions-item label="ФИО">
                     {{ func.fullName(user.fullname) }}
@@ -12,7 +14,7 @@
                     {{ user.email }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Доставка">
-                    {{ deliveryText() }}
+                    {{ user.delivery_name }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Адрес">
                     {{ user.address.post }} {{ user.address.region }} {{ user.address.address }}
@@ -55,6 +57,7 @@
                 <el-button type="info" @click="editUser = false">Отмена</el-button>
                 <el-button type="success" @click="setInfo">Сохранить</el-button>
             </el-form>
+
             <div v-if="!user.active" class="mt-3">
                 <el-button type="primary" @click="onActive">Активировать</el-button>
             </div>
@@ -140,6 +143,7 @@ import {router, Link} from "@inertiajs/vue3";
 import SearchAttachOrganization from "@Comp/Search/AttachOrganization.vue";
 import {UploadUserFile} from "element-plus";
 import axios from "axios";
+import EditUser from "@Comp/User/Edit.vue";
 
 const props = defineProps({
     user: Object,
@@ -195,12 +199,13 @@ function setInfo() {
         }
     })
 }
+/*
 function deliveryText() {
     for (let key in props.deliveries) {
         let item = props.deliveries[key]
         if (item.value === props.user.delivery) return item.label
     }
-}
+} */
 
 ///Файлы ===>
 const fileList = ref<UploadUserFile[]>([]);
