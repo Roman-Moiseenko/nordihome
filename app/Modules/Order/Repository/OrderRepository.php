@@ -12,6 +12,7 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Helpers\OrderHelper;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\User;
+use App\Modules\User\Repository\UserRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ArrayShape;
@@ -19,6 +20,13 @@ use JetBrains\PhpStorm\Deprecated;
 
 class OrderRepository
 {
+    private UserRepository $users;
+
+    public function __construct(UserRepository $users)
+    {
+        $this->users = $users;
+    }
+
     public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = Order::orderByDesc('created_at');
@@ -162,7 +170,7 @@ class OrderRepository
                     'is_quantity' => $orderAddition->addition->is_quantity,
                 ]);
             }),
-
+            'user' => is_null($order->user_id) ? null : $this->users->UserToArray($order->user),
             'amount' => [
                 'base' => $order->getBaseAmount(),
                 'manual' => (int)$order->manual,

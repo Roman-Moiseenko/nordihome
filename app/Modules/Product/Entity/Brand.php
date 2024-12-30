@@ -71,4 +71,8 @@ class Brand extends Model
             $object->sameAs = json_decode($object->sameas_json);
         });
     }
+    public static function IkeaID(): int
+    {
+        return self::where('name', self::IKEA)->first()->id;
+    }
 }

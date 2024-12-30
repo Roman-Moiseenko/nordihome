@@ -51,9 +51,4 @@ props.user.organizations.forEach(function (item) {
         organization.inn = item.inn
     }
 })
-console.log(props.user)
-
-
-
-
 </script>

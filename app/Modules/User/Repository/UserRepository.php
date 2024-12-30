@@ -53,7 +53,7 @@ class UserRepository
 
     }
 
-    private function UserToArray(User $user): array
+    public function UserToArray(User $user): array
     {
         return array_merge($user->toArray(), [
             'name' => $user->getPublicName(),
@@ -62,6 +62,8 @@ class UserRepository
             'pricing' => $user->pricingText(),
             'quantity' => $user->orders()->count(),
             'amount' => $user->getAmountOrders(),
+            'delivery_name' => $user->deliveryText(),
+            'organization' => $user->organization,
         ]);
     }
 
@@ -94,7 +96,7 @@ class UserRepository
                         'title' => $file->title,
                     ];
                 }),
-            'delivery_name' => $user->deliveryText(),
+
         ]);
     }
 

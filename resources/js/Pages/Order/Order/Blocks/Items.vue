@@ -1,6 +1,6 @@
 <template>
     <el-table
-        :data="[...items]"
+        :data="tableData"
         header-cell-class-name="nordihome-header"
         style="width: 100%;"
     >
@@ -73,9 +73,8 @@
         <el-table-column prop="assemblage" label="Сборка" width="80" align="center">
             <template #default="scope">
                 <el-checkbox v-if="is_new"
-                             v-model="scope.row.assemblage"
                              :checked="scope.row.assemblage"
-                             @change="setProduct(scope.row)"
+                             @change="val => setAssemblage(val, scope.row)"
                              :disabled="iSaving"
                 />
                 <Active v-else :active="scope.row.assemblage"/>
@@ -84,9 +83,8 @@
         <el-table-column prop="assemblage" label="Упаковка" width="90" align="center">
             <template #default="scope">
                 <el-checkbox v-if="is_new"
-                             v-model="scope.row.packing"
                              :checked="scope.row.packing"
-                             @change="setProduct(scope.row)"
+                             @change="val => setPacking(val, scope.row)"
                              :disabled="iSaving"
                 />
                 <Active v-else :active="scope.row.packing"/>
@@ -133,9 +131,19 @@ const props = defineProps({
 const $delete_entity = inject("$delete_entity")
 const iSaving = ref(false)
 const {is_new, is_issued, is_view} = inject('$status')
+const tableData = ref([...props.items])
 
+function setAssemblage(val, row) {
+    row.assemblage = val
+    setProduct(row)
+}
+function setPacking(val, row) {
+    row.packing = val
+    setProduct(row)
+}
 
 function setProduct(row) {
+    console.log('row', row)
     iSaving.value = true;
     router.visit(route('admin.order.set-item', {item: row.id}), {
         method: "post",

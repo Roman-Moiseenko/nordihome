@@ -1,7 +1,33 @@
 <template>
     <el-row :gutter="10">
         <el-col :span="8">
-            <SearchEditUser :user_id="order.user_id" :route="route('admin.order.set-user', {order: order.id})" />
+            <div v-if="order.user_id">
+                <el-descriptions :column="1" border class="mb-1" size="small">
+                    <el-descriptions-item label="ФИО">
+                        {{ func.fullName(order.user.fullname) }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Телефон">
+                        {{ func.phone(order.user.phone) }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Email">
+                        {{ order.user.email }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Доставка">
+                        {{ order.user.delivery_name }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Адрес">
+                        {{ order.user.address.post }} {{ order.user.address.region }} {{ order.user.address.address }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Цена">
+                        {{ order.user.pricing }}
+                    </el-descriptions-item>
+                    <el-descriptions-item v-if="order.user.organization" label="Юридическое лицо">
+                        {{ order.user.organization.shot_name }} ({{ order.user.organization.inn }})
+                    </el-descriptions-item>
+                </el-descriptions>
+                <Link type="warning" :href="route('admin.user.show', {user: order.user.id})">Карточка клиента</Link>
+            </div>
+            <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})" />
         </el-col>
         <el-col :span="8">
             <el-descriptions column="2" border>
@@ -68,6 +94,7 @@ import {func} from '@Res/func.js'
 import {computed, inject, reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import SearchEditUser from "@Comp/User/SearchEdit.vue"
+import SearchUser from "@Comp/User/Search.vue";
 
 const props = defineProps({
     order: Object,

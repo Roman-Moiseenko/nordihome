@@ -16,9 +16,9 @@
                 v-for="item in options"
                 :key="item.id"
                 :value="item.id"
-                :label="item.public_name + ' ('+ item.phone + ')'"
+                :label="item.public_name"
             >
-                {{ item.public_name }} ({{ item.phone }})
+                {{ item.public_name }} ({{ func.phone(item.phone) }})
             </el-option>
             <template #loading>
                 Загрузка
@@ -44,6 +44,7 @@ import axios from "axios";
 import {ElLoading} from "element-plus";
 import {router} from "@inertiajs/vue3";
 import AddUser from "@Comp/User/Add.vue";
+import {func} from "@Res/func.js"
 
 const props = defineProps({
     user_id: Number,
