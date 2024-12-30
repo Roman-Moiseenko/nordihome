@@ -1,7 +1,7 @@
 <template>
     <el-row :gutter="10">
         <el-col :span="8">
-            <SearchAddUser :user_id="order.user_id" :route="route('admin.order.set-user', {order: order.id})" />
+            <SearchEditUser :user_id="order.user_id" :route="route('admin.order.set-user', {order: order.id})" />
         </el-col>
         <el-col :span="8">
 
@@ -68,8 +68,7 @@
 import {func} from '@Res/func.js'
 import {computed, inject, reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
-import SearchAddUser from "@Comp/Search/AddUser.vue"
-import AccountingDocument from "@Comp/Accounting/Document.vue";
+import SearchEditUser from "@Comp/User/Edit.vue"
 
 const props = defineProps({
     order: Object,

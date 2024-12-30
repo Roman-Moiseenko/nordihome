@@ -42,13 +42,13 @@ class UserController extends Controller
         ]);
     }
 
-    public function create(Request $request): RedirectResponse
+    public function create(Request $request)
     {
         try {
             $user = $this->service->create($request);
-            return redirect()->route('admin.user.show', $user)->with('success', 'Клиент добавлен');
+            return \response()->json($user->id);
         } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return \response()->json(['error' => $e->getMessage()]);
         }
 
     }

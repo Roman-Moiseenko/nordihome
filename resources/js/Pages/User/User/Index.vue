@@ -77,42 +77,7 @@
             :per_page="users.per_page"
             :total="users.total"
         />
-        <el-dialog v-model="dialogCreate" title="Новый клиент" width="500">
-            <el-form>
-                <el-form-item>
-                    <el-input v-model="formCreate.phone" placeholder="Телефон" :formatter="val => func.MaskPhone(val)"/>
-                </el-form-item>
-                <el-form-item>
-                    <el-input v-model="formCreate.email" placeholder="Email"/>
-                </el-form-item>
-                <el-form-item>
-                    <div class="flex">
-                        <el-input v-model="formCreate.fullname.surname" placeholder="Фамилия"/>
-                        <el-input v-model="formCreate.fullname.firstname" placeholder="Имя"/>
-                        <el-input v-model="formCreate.fullname.secondname" placeholder="Отчество"/>
-                    </div>
-                </el-form-item>
-                <el-form-item>
-                    <div class="flex">
-                        <el-input v-model="formCreate.inn" placeholder="ИНН"
-                                  :formatter="val => func.MaskInteger(val, 12)"/>
-                        <el-input v-model="formCreate.bik" placeholder="БИК"
-                                  :formatter="val => func.MaskInteger(val, 9)"/>
-                    </div>
-                </el-form-item>
-                <el-form-item>
-                    <el-input v-model="formCreate.account" placeholder="Р/счет"
-                              :formatter="val => func.MaskPhone(val, 20)"/>
-                </el-form-item>
-            </el-form>
-            <template #footer>
-                <div class="dialog-footer">
-                    <el-button @click="dialogCreate = false">Отмена</el-button>
-                    <el-button type="primary" @click="saveUser">Сохранить</el-button>
-                </div>
-            </template>
-
-        </el-dialog>
+        <AddUser :show="dialogCreate" @update:user="onCreateUser"/>
     </el-config-provider>
 </template>
 <script lang="ts" setup>
@@ -124,6 +89,8 @@ import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
+import AddUser from "@Comp/User/Add.vue"
+import {ElMessage} from "element-plus";
 
 const props = defineProps({
     users: Object,
@@ -144,28 +111,6 @@ const filter = reactive({
     wait: props.filters.wait,
 })
 const dialogCreate = ref(false)
-const formCreate = reactive({
-    email: null,
-    phone: null,
-    fullname: {
-        surname: null,
-        firstname: null,
-        secondname: null,
-    },
-    inn: null,
-    bik: null,
-    account: null,
-})
-
-function saveUser() {
-    router.visit(route('admin.user.create'), {
-        method: "post",
-        data: formCreate,
-        onSuccess: page => {
-            dialogCreate.value = false
-        }
-    })
-}
 
 interface IRow {
     active: any
@@ -199,6 +144,21 @@ function diffDate(date: any) {
     let old = Date.parse(date);
 
     return Math.round((today - old) / (1000 * 60 * 60 * 24))
+}
+
+function onCreateUser(val) {
+    dialogCreate.value = false
+    if (val !== null) {
+        ElMessage({
+            message: 'Клиент добавлен',
+            type: "success",
+            plain: true,
+            showClose: true,
+            duration: 3000,
+            center: true,
+        });
+        router.get(route('admin.user.show', {user: val}))
+    }
 }
 </script>
 

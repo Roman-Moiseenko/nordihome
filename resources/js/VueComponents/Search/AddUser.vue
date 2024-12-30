@@ -38,6 +38,7 @@
                 Выбрать
             </el-button>
         </div>
+
         <el-dialog v-model="dialogCreate" title="Новый клиент" width="400">
             <el-form label-width="auto">
                 <el-form-item label="Клиент">
@@ -113,6 +114,7 @@ const formCreate = reactive({
     name: null,
 })
 function createUser() {
+    dialogCreate.value = true
     //TODO
     /*const loading = ElLoading.service({
         lock: false,
