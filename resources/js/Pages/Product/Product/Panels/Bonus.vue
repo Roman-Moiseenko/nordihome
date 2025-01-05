@@ -49,8 +49,6 @@ const props = defineProps({
     product: Object,
     errors: Object,
 })
-console.log(props.product)
-
 const autoSave = ref(true)
 const isSaving = ref(false)
 const form = reactive({

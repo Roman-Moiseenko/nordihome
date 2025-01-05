@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Dimensions;
+use App\Modules\Base\Entity\Packages;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
@@ -139,6 +140,7 @@ class ProductController extends Controller
             'markingType' => MarkingType::orderBy('name')->getModels(),
             'distributors' => Distributor::orderBy('name')->getModels(),
             'dimensions' => array_select(Dimensions::TYPES),
+            'complexities' => array_select(Packages::COMPLEXITIES),
             'frequencies' => array_select(Product::FREQUENCIES),
             'equivalents' => Equivalent::orderBy('name')
                 ->whereHas('category', function ($query) use ($product) {

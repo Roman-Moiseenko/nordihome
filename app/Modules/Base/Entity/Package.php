@@ -52,6 +52,12 @@ class Package
         return  $volume / 1000000;
     }
 
+    //Сумма по 3-м сторонам
+    public function sides(): float
+    {
+        return $this->height + $this->length + $this->width;
+    }
+
     public function toArray(): array
     {
         return [

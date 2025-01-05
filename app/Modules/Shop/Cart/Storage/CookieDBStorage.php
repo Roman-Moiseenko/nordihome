@@ -29,7 +29,7 @@ class CookieDBStorage implements StorageInterface
             $result[] = CartItem::load(
                 $item->id,
                 $item->product,
-                $item->quantity,
+                (float)$item->quantity,
                 json_decode($item->options_json),
                 $item->check
             );

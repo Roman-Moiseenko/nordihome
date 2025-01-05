@@ -5,7 +5,7 @@ namespace App\Modules\Shop\Cart;
 
 class CartInfoBlock
 {
-    public int $count = 0;
+    public float $count = 0;
     public float $amount = 0;
     public float $discount = 0;
 /*
@@ -16,7 +16,7 @@ class CartInfoBlock
         $this->discount = 0;
     }
 */
-    public function clear()
+    public function clear(): void
     {
         $this->amount = 0;
         $this->count = 0;

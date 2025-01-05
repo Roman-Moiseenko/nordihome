@@ -29,6 +29,7 @@
                 <PanelDimensions :product="product"
                                  :errors="errors"
                                  :dimensions="dimensions"
+                                 :complexities="complexities"
                 />
                 <PanelImage :product="product"
                             :errors="errors"
@@ -99,6 +100,7 @@ const props = defineProps({
     dimensions: Array,
     frequencies: Array,
     equivalents: Array,
+    complexities: Array,
     title: {
         type: String,
         default: 'Редактирование товара',

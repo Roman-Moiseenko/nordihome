@@ -98,13 +98,19 @@
             <!-- Колонка 2 -->
             <el-col :span="8">
                 <el-form label-width="auto">
-                    <h2>Возможность доставки товара</h2>
+                    <h2>Доставка товара</h2>
 
                     <el-form-item label="Доставка в пределах региона">
-                        <el-checkbox v-model="form.local" :checked="form.local"  @change="onAutoSave" :disabled="isSaving"/>
+                        <el-checkbox v-model="form.local" :checked="form.local" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
                     <el-form-item label="Доставка ТК по России">
-                        <el-checkbox v-model="form.delivery" :checked="form.delivery"  @change="onAutoSave" :disabled="isSaving"/>
+                        <el-checkbox v-model="form.delivery" :checked="form.delivery" @change="onAutoSave" :disabled="isSaving"/>
+                    </el-form-item>
+
+                    <el-form-item label="Сложность упаковки">
+                        <el-select v-model="form.complexity" @change="onAutoSave" :disabled="isSaving">
+                            <el-option v-for="item in complexities" :key="item.value" :value="item.value" :label="item.label" />
+                        </el-select>
                     </el-form-item>
                     <!-- Повторить -->
 
@@ -125,7 +131,9 @@ const props = defineProps({
     product: Object,
     errors: Object,
     dimensions: Array,
+    complexities: Array,
 })
+console.log(props.product)
 const autoSave = ref(true)
 const isSaving = ref(false)
 const form = reactive({
@@ -133,6 +141,7 @@ const form = reactive({
     packages: [...props.product.packages.packages],
     local: props.product.local,
     delivery: props.product.delivery,
+    complexity: props.product.packages.complexity,
 })
 
 function onAutoSave() {

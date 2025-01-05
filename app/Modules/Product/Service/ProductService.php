@@ -122,7 +122,7 @@ class ProductService
             $product->push();
             $product->name_print = $request->string('name_print')->trim()->value();
             $product->comment = $request->string('comment')->trim()->value();
-            $product->country_id = $request->integer('country_id');
+            $product->country_id = $request->input('country_id');
             $product->vat_id = $request->integer('vat_id');
             $product->measuring_id = $request->integer('measuring_id');
             $product->fractional = $request->boolean('fractional');
@@ -374,13 +374,13 @@ class ProductService
         StorageItem::onlyTrashed()->where('product_id', $id)->restore();
     }
 
-    public function notSale(Product $product)
+    public function notSale(Product $product): void
     {
         $product->not_sale = true;
         $product->save();
     }
 
-    public function CheckNotSale(Product $product)
+    public function CheckNotSale(Product $product): void
     {
         if ($product->getQuantity() == 0 && $product->isSale()) {
             $product->setNotSale();
@@ -477,8 +477,10 @@ class ProductService
         foreach ($request->input('packages') as $array) {
             $product->packages->create(params: $array);
         }
-        $product->local = $request->boolean('local');
         $product->delivery = $request->boolean('delivery');
+        $product->local = $request->boolean('local');
+        $product->packages->complexity = $request->integer('complexity');
+
         $product->save();
     }
 

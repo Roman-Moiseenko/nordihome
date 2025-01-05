@@ -35,7 +35,7 @@ class CartItem implements CartItemInterface
         return $item;
     }
 
-    public static function load(int $id, Product $product, $quantity, $options, bool $check): self
+    public static function load(int $id, Product $product, float $quantity, $options, bool $check): self
     {
         $item = new static();
         $item->id = $id;

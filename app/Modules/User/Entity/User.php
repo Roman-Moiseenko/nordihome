@@ -377,6 +377,7 @@ class User extends Authenticatable
 
     public function deliveryText(): string
     {
+        if (empty($this->delivery)) $this->delivery = OrderExpense::DELIVERY_STORAGE;
         return OrderExpense::DELIVERIES[$this->delivery];
     }
 

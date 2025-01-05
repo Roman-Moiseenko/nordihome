@@ -8,6 +8,21 @@ class Packages
     /** @var Package[] $packages */
     public array $packages = [];
 
+    public int $complexity = 1;
+
+    const STANDARD = 1;
+    const DIFFICULT = 2;
+    const REPACKING = 3;
+    const FRAGILE = 4;
+    const MIRROR = 5;
+
+    const COMPLEXITIES = [
+        self::STANDARD => 'Стандарт',
+        self::DIFFICULT => 'Сложная',
+        self::REPACKING => 'Переупаковка',
+        self::FRAGILE => 'Хрупкая',
+        self::MIRROR => 'Зеркало',
+    ];
 
     public function volume(): float
     {
@@ -51,16 +66,25 @@ class Packages
     }
 
 
-    public function toArray(): array
+    public function toArray(): mixed
     {
-        return $this->packages;
+        return $this;
     }
 
     public static function fromArray(string|null $json): self
     {
-        $array = json_decode($json, true);
-        if (is_null($json) || is_null($array)) return new Packages();
+        $data = json_decode($json, true);
+        if (is_null($json) || is_null($data)) return new Packages();
         $packages = new Packages();
+
+        if (isset($data['packages'])) { //Новый формат хранения
+            $array = $data['packages'];
+            $packages->complexity = $data['complexity'];
+        } else { //Старый формат, без сложности
+            $array = $data;
+            $packages->complexity = 1;
+        }
+
         foreach ($array as $item) {
             $packages->create(
                 $item['height'] ?? 0,
@@ -72,5 +96,10 @@ class Packages
         }
 
         return $packages;
+    }
+
+    public function complexityName(): string
+    {
+        return self::COMPLEXITIES[$this->complexity];
     }
 }

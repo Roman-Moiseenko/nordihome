@@ -38,7 +38,6 @@ class DeliveryPolandCalculate extends CalculateAddition
         if ($weight == 0) return 0;
         //Коэффициент к стоимости
 
-
         $coef = 0;
         if ($weight <= 5.0) $coef = $parser->parser_delivery_0;
         if ($weight <= 10.0) $coef = $parser->parser_delivery_1;
@@ -51,11 +50,7 @@ class DeliveryPolandCalculate extends CalculateAddition
         if ($weight <= 400.0) $coef = $parser->parser_delivery_8;
         if ($weight <= 600.0) $coef = $parser->parser_delivery_9;
         if ($weight > 600.0) $coef = $parser->parser_delivery_10;
-/*
-        dd([
-            $weight,$coef, $fragile, $parser->cost_weight_fragile, $sanctioned
-        ]);
-*/
+
         $cost = $weight * $coef + $fragile * $parser->cost_weight_fragile + $sanctioned;
 
         return $cost < 1000 ? 1000 : (int)ceil($cost);
