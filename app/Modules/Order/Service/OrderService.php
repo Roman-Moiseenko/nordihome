@@ -3,20 +3,17 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Events\OrderHasAwaiting;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCreated;
 use App\Events\OrderHasPaid;
 use App\Events\OrderHasPrepaid;
 use App\Events\PriceHasMinimum;
-use App\Events\UserHasCreated;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 
 use App\Modules\Analytics\LoggerService;
-use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
@@ -47,7 +44,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
-use Mail;
 
 
 class OrderService
@@ -67,8 +63,6 @@ class OrderService
     private \App\Modules\Setting\Entity\Coupon $coupon_set;
     private Parser $parser_set;
     private InvoiceReport $invoiceReport;
-    private SystemMailService $service;
-
 
     public function __construct(
         DeliveryService     $deliveries,
@@ -83,7 +77,6 @@ class OrderService
         OrderReserveService $reserveService,
         SettingRepository   $settings,
         InvoiceReport       $invoiceReport, //
-        SystemMailService $service, //
     )
     {
         $this->coupon_set = $settings->getCoupon();
@@ -99,7 +92,6 @@ class OrderService
         $this->reserveService = $reserveService;
         $this->parserService = $parserService;
         $this->invoiceReport = $invoiceReport;
-        $this->service = $service;
     }
 
     private function createOrder(int $user_id = null, int $type = Order::ONLINE): Order
@@ -393,17 +385,11 @@ class OrderService
             $order->refresh();
             $this->logger->logOrder($order, 'Заказ отправлен на оплату', '', '');
 
+            //Пересоздать отчет и отправить письмо клиенту
+
             $invoice = $this->invoiceReport->xlsx($order);
-         /*   $mail = new OrderAwaitingMail($order, $invoice);
-
-
-            $system_mail = $this->service->create($mail, $order->user->id);
-            Mail::mailer('system')->to($order->user->email)->send($mail);
-            */
-            SendSystemMail::dispatch($order->user, $invoice);
-
-
-            //TODO Включить после теста
+            SendSystemMail::dispatch($order->user, new OrderAwaitingMail($order, $invoice));
+            //TODO Или создаем событие
             // event(new OrderHasAwaiting($order));
 
             //flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');

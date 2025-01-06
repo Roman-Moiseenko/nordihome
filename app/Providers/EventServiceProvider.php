@@ -39,7 +39,6 @@ use App\Listeners\NotificationCouponCreated;
 use App\Listeners\NotificationExpenseAssembly;
 use App\Listeners\NotificationExpenseCompleted;
 use App\Listeners\NotificationExpenseDelivery;
-use App\Listeners\NotificationOrderAwaiting;
 use App\Listeners\NotificationOrderCanceled;
 use App\Listeners\NotificationMovementCompleted;
 use App\Listeners\NotificationArrivalCompleted;
@@ -180,9 +179,7 @@ class EventServiceProvider extends ServiceProvider
         ReviewHasEdit::class => [
             NotificationReviewEdit::class,
         ],
-        OrderHasAwaiting::class => [
-            NotificationOrderAwaiting::class,
-        ],
+
         ProductHasBlocked::class => [
             NotificationProductBlocked::class,
         ],

@@ -31,8 +31,8 @@ class SendSystemMail implements ShouldQueue
     {
         //Сохраняем данные об отправленном письме
         $system_mail = $service->create($this->mail, $this->user->id);
-        //Отправляем письмо
-        try {
+
+        try { //Отправляем письмо
             Mail::mailer('system')->to($this->user->email)->send($this->mail);
         } catch (\Throwable $e) {
             Log::error(json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));
