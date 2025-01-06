@@ -19,16 +19,13 @@
 @component('mail::table')
 | Платеж | Сумма | Способ оплаты | Ссылка на оплату |
 | ----------- |:------------:|:----------------:|-------:|
-@foreach($order->payments as $payment)
-| {{ $payment->purposeHTML() }} | {{ price($payment->amount) }} | {{ $payment->nameType() }} | {{ $payment->document }} |
+@foreach($order->additions as $addition)
+| {{ $addition->name }} | {{ price($payment->amount) }} | {{ $payment->nameType() }} | {{ $payment->document }} |
 @endforeach
 @endcomponent
 
 Общая сумма к оплате {{ $order->getTotalAmount() }}
 
-<x-mail::button :url="''">
-Подтвердить?
-</x-mail::button>
 
 С уважением,<br>
 {{ config('app.name') }}

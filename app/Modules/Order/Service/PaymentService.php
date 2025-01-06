@@ -41,7 +41,7 @@ class PaymentService
             $payment->staff_id = $staff->id;
             $order->payments()->save($payment);
             $order->refresh();
-            $this->orderService->check_payment($order);
+            $this->orderService->checkPayment($order);
 
             $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
         });
@@ -65,7 +65,7 @@ class PaymentService
             $order->refresh();
             $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
 
-            $this->orderService->check_payment($order);
+            $this->orderService->checkPayment($order);
 
             event(new PaymentHasPaid($payment));
         });

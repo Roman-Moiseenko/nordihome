@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Discount\Entity\Coupon;
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
 use JetBrains\PhpStorm\Pure;
@@ -27,6 +29,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $id
  * @property int $number - номер заказа, присваивается автоматически ++ при отправке на оплату
  * @property int $user_id
+ * @property int $organization_id
  * @property int $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
@@ -47,7 +50,8 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderPayment $payment //Последний платежи за заказ
  * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
  * @property OrderItem[] $items
- * @property User $user
+ * @property User $user Клиент покупатель
+ * @property Organization $organization Организация продавец
  * @property OrderResponsible[] $responsible - удалить
  * @property MovementDocument[] $movements
  * @property Discount $discount
@@ -85,6 +89,7 @@ class Order extends Model
         'manual',
         'comment',
         'staff_id',
+        'organization_id',
     ];
     protected $casts = [
         'created_at' => 'datetime',
@@ -92,12 +97,13 @@ class Order extends Model
         'coupon_amount' => 'float',
     ];
 
-    public static function register(int|null $user_id, int $type = self::ONLINE): self
+    public static function register(int|null $user_id, int $type, int $organization_id): self
     {
         $order = self::create([
             'user_id' => $user_id,
             'type' => $type,
             'paid' => false,
+            'organization_id' => $organization_id,
         ]);
         $order->statuses()->create(['value' => OrderStatus::FORMED]);
         return $order;
@@ -526,7 +532,12 @@ class Order extends Model
 
     ///*** Relations *************************************************************************************
 
-    public function invoice(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function invoice(): MorphOne
     {
         return $this->morphOne(Report::class, 'reportable');
     }

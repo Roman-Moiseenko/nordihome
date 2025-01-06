@@ -7,6 +7,7 @@ namespace App\Modules\Order\Controllers;
 use App\Http\Controllers\Controller;
 use App\Mail\OrderAwaiting;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
@@ -23,12 +24,15 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\User\Entity\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Inertia\Response;
 use JetBrains\PhpStorm\Deprecated;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Общие операции с моделью Order. Все запросы POST или DELETE
@@ -43,13 +47,15 @@ class OrderController extends Controller
     private ProductRepository $products;
     private OrderService $service;
     private InvoiceReport $report;
+    private OrganizationRepository $organizations;
 
     public function __construct(
-        OrderService      $service,
-        StaffRepository   $staffs,
-        OrderRepository   $repository,
-        ProductRepository $products,
-        InvoiceReport     $report,
+        OrderService           $service,
+        StaffRepository        $staffs,
+        OrderRepository        $repository,
+        ProductRepository      $products,
+        InvoiceReport          $report,
+        OrganizationRepository $organizations,
     )
     {
         $this->middleware(['auth:admin', 'can:order']);
@@ -59,9 +65,10 @@ class OrderController extends Controller
         $this->service = $service;
         //TODO загрузка процента по сборке
         $this->report = $report;
+        $this->organizations = $organizations;
     }
 
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request): Response
     {
         $orders = $this->repository->getIndex($request, $filters);
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
@@ -73,7 +80,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function show(Request $request, Order $order)
+    public function show(Request $request, Order $order): Response
     {
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
         $storages = Storage::orderBy('name')->getModels();
@@ -85,6 +92,7 @@ class OrderController extends Controller
             'mainStorage' => $mainStorage,
             'staffs' => $staffs,
             'additions' => $additions,
+            'traders' => $this->organizations->getTraders(),
         ]);
 
         /*
@@ -107,7 +115,7 @@ class OrderController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $order = $this->service->create_sales($request->input('user_id'));
+        $order = $this->service->create_sales();
         return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
     }
 
@@ -131,14 +139,20 @@ class OrderController extends Controller
     }
 
     //Документы
-    public function invoice(Order $order)
+    public function invoice(Order $order): BinaryFileResponse|JsonResponse
     {
-        $file = $this->report->xlsx($order);
-        ob_end_clean();
-        ob_start();
-        return response()->file($file);
-        // return response()->download($file); //Для скачивания
-        //return response()->file($file); //для открытия pdf имя = id
+        try {
+            $file = $this->report->xlsx($order);
+            $headers = [
+                'filename' => basename($file),
+            ];
+            ob_end_clean();
+            ob_start();
+            return response()->file($file, $headers);
+
+        } catch (\Throwable $e) {
+            return response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
+        }
     }
 
     public function send_invoice(Order $order)
@@ -191,19 +205,19 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
-    public function canceled(Request $request, Order $order)
+    public function cancel(Request $request, Order $order): RedirectResponse
     {
-        $this->service->canceled($order, $request['comment']);
-        return redirect()->back();
+        $this->service->cancel($order, $request->string('comment')->trim()->value());
+        return redirect()->back()->with('success', 'Заказ отменен');
     }
 
     /**
      * На оплату
      */
-    public function set_awaiting(Order $order): mixed
+    public function awaiting(Order $order): mixed
     {
-        $this->service->setAwaiting($order);
-        return redirect()->back();
+        $this->service->awaiting($order);
+        return redirect()->back()->with('success', 'Заказ ожидает оплаты');
     }
 
 
@@ -226,6 +240,11 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Клиент назначен');
     }
 
+    public function set_info(Request $request, Order $order): RedirectResponse
+    {
+        $this->service->setInfo($order, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
 
     /** РАБОТА С ТОВАРОМ В ЗАКАЗЕ */
     public function add_product(Request $request, Order $order): RedirectResponse

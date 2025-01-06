@@ -77,7 +77,7 @@ class SurplusController extends Controller
             'storages' => $storages,
             'filters' => $filters,
             'printed' => $this->report->index(),
-            'customers' => $this->organizations->getCustomers(),
+            'customers' => $this->organizations->getTraders(),
         ]);
     }
 

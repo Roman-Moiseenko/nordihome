@@ -31,7 +31,7 @@ function getReport(val) {
         text: 'Идет формирование отчета',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    console.log(val)
+   // console.log(val)
     axios.post(route('admin.report'),null,
         {
             responseType: 'arraybuffer',

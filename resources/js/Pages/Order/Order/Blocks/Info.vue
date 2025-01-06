@@ -22,7 +22,7 @@
                         {{ order.user.pricing }}
                     </el-descriptions-item>
                     <el-descriptions-item v-if="order.user.organization" label="Юридическое лицо">
-                        {{ order.user.organization.shot_name }} ({{ order.user.organization.inn }})
+                        {{ order.user.organization.short_name }} ({{ order.user.organization.inn }})
                     </el-descriptions-item>
                 </el-descriptions>
                 <Link type="warning" :href="route('admin.user.show', {user: order.user.id})">Карточка клиента</Link>
@@ -80,13 +80,41 @@
                     <el-date-picker v-model="reserve" type="datetime" @change="handleReserve" :disabled="iSavingInfo"/>
                 </el-form-item>
 
-                <el-button type="success">На оплату</el-button>
-                <el-button type="success" plain>Скачать счет</el-button>
-                <el-button type="info" plain>Отменить</el-button>
+                <el-button v-if="is_new" type="success" @click="onAwaiting">На оплату</el-button>
+                <el-button v-if="!is_view" type="success" plain @click="getInvoice">Скачать счет</el-button>
+                <el-button v-if="!is_view" type="info" plain @click="dialogCancel = true">Отменить</el-button>
+            </div>
+            <div class="border-t mt-2 pt-2">
+                <el-form-item label="Продавец" size="small">
+                    <el-select v-model="info.organization_id"  @change="setInfo" :disabled="iSavingInfo || !is_new" filterable style="max-width: 280px;">
+                        <el-option v-for="item in traders" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Комментарий" size="small">
+                    <el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo || !is_new" />
+                </el-form-item>
             </div>
         </el-col>
 
     </el-row>
+
+    <el-dialog v-model="dialogCancel" title="Отменить заказ" center width="400">
+        <div class="font-medium text-md my-2">
+            Вы уверены, что хотите отменить заказ?
+        </div>
+        <el-form-item label="Причина">
+            <el-input v-model="cancel_comment" />
+        </el-form-item>
+        <slot />
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="dialogCancel = false">Отмена</el-button>
+                <el-button type="warning" @click="onCancel()">
+                    Отменить
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
 <script setup>
@@ -95,15 +123,25 @@ import {computed, inject, reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import SearchEditUser from "@Comp/User/SearchEdit.vue"
 import SearchUser from "@Comp/User/Search.vue";
+import {ElLoading} from "element-plus";
+import axios from "axios";
 
 const props = defineProps({
     order: Object,
     storages: Array,
     mainStorage: Object,
+    traders: Array,
 })
+
 const iSavingInfo = ref(false)
+const info = reactive({
+    organization_id: props.order.organization_id,
+    comment: props.order.comment,
+})
 const reserve = ref(props.order.reserve)
-const notEdit = computed(() => props.arrival.completed);
+
+const dialogCancel = ref(false)
+const cancel_comment = ref(null)
 const {is_new, is_issued, is_view} = inject('$status')
 function setInfo() {
     iSavingInfo.value = true
@@ -117,7 +155,6 @@ function setInfo() {
         }
     })
 }
-
 function handleReserve() {
     iSavingInfo.value = true
     router.visit(route('admin.order.set-reserve', {order: props.order.id}), {
@@ -131,6 +168,50 @@ function handleReserve() {
             iSavingInfo.value = false;
         }
     })
+}
+
+function getInvoice() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Идет формирование счета',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    axios.post(route('admin.order.invoice', {order: props.order.id}),null,
+        {
+            responseType: 'arraybuffer',
+        }
+    ).then(response => {
+        let blob = new Blob([response.data], {type: 'application/*'})
+        let link = document.createElement('a')
+        let headers = response.headers
+
+        link.href = window.URL.createObjectURL(blob)
+        link.download = headers['filename']
+        link._target = 'blank'
+        document.body.appendChild(link);
+        link.click();
+        loading.close()
+        URL.revokeObjectURL(link.href)
+    }).catch(reason => {
+        loading.close()
+    })
+}
+
+function onAwaiting() {
+    router.post(route('admin.order.awaiting', {order: props.order.id}))
+}
+function onCancel() {
+    router.visit(route('admin.order.cancel', {order: props.order.id}), {
+        method: "post",
+        data: {comment: cancel_comment.value},
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            dialogCancel.value = false;
+        }
+    })
+
+
 }
 </script>
 <style lang="scss" scoped>

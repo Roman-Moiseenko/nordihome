@@ -103,7 +103,7 @@ class SupplyController extends Controller
             'supply' => $this->repository->SupplyWithToArray($supply, $request, $filters),
             'filters' => $filters,
             'printed' => $this->report->index(),
-            'customers' => $this->organizations->getCustomers(),
+            'customers' => $this->organizations->getTraders(),
         ]);
     }
 

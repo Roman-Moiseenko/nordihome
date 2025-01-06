@@ -5,7 +5,7 @@
             Заказ покупателя
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <OrderInfo :order="order" :storages="storages" :mainStorage="mainStorage" />
+            <OrderInfo :order="order" :storages="storages" :mainStorage="mainStorage" :traders="traders" />
         </div>
         <el-affix target=".affix-container" :offset="64">
             <div class="bg-white rounded-lg my-2 p-1 shadow flex">
@@ -48,6 +48,7 @@ const props = defineProps({
     storages: Array,
     staffs: Array,
     mainStorage: Object,
+    traders: Array,
 })
 const is_new = computed(() => {
     return props.order.status.is_new || props.order.status.is_manager

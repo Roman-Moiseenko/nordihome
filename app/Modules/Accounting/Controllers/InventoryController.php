@@ -74,7 +74,7 @@ class InventoryController extends Controller
         return Inertia::render('Accounting/Inventory/Show', [
             'inventory' => $this->repository->InventoryWithToArray($inventory, $request, $filters),
             'filters' => $filters,
-            'customers' => $this->organizations->getCustomers(),
+            'customers' => $this->organizations->getTraders(),
             'printed' => $this->report->index(),
         ]);
     }

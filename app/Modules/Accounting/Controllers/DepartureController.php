@@ -82,7 +82,7 @@ class DepartureController extends Controller
             'departure' => $this->repository->DepartureWithToArray($departure, $request, $filters),
             'storages' => $storages,
             'filters' => $filters,
-            'customers' => $this->organizations->getCustomers(),
+            'customers' => $this->organizations->getTraders(),
             'printed' => $this->report->index(),
         ]);
     }

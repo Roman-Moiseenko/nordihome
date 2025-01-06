@@ -11,6 +11,7 @@ use App\Events\OrderHasPrepaid;
 use App\Events\PriceHasMinimum;
 use App\Events\UserHasCreated;
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 
@@ -20,12 +21,16 @@ use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Service\CouponService;
+use App\Modules\Guide\Entity\Addition;
+use App\Modules\Mail\Job\SendSystemMail;
+use App\Modules\Mail\Mailable\OrderAwaitingMail;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Calculate\CalculatorOrder;
@@ -59,6 +64,7 @@ class OrderService
 
     private \App\Modules\Setting\Entity\Coupon $coupon_set;
     private Parser $parser_set;
+    private InvoiceReport $invoiceReport;
 
 
     public function __construct(
@@ -73,6 +79,7 @@ class OrderService
         MovementService     $movementService,
         OrderReserveService $reserveService,
         SettingRepository   $settings,
+        InvoiceReport       $invoiceReport,
     )
     {
         $this->coupon_set = $settings->getCoupon();
@@ -87,6 +94,13 @@ class OrderService
         $this->movementService = $movementService;
         $this->reserveService = $reserveService;
         $this->parserService = $parserService;
+        $this->invoiceReport = $invoiceReport;
+    }
+
+    private function createOrder(int $user_id = null, int $type = Order::ONLINE): Order
+    {
+        $organization_id = Trader::default()->organization->id;
+        return Order::register($user_id, $type, $organization_id);
     }
 
     //**** ФУНКЦИИ СОЗДАНИЯ ЗАКАЗА
@@ -198,7 +212,7 @@ class OrderService
                 throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
             }
 
-            $order = Order::register($user->id, Order::ONLINE);
+            $order = $this->createOrder($user->id);
             if ($request->has('code')) {
                 $coupon = $this->repository->getCoupon($request->get('code'));
                 $order->coupon_id = $coupon->id;
@@ -235,7 +249,7 @@ class OrderService
                 throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
             }
             $OrderItems = $this->parserCart->getItems();
-            $order = Order::register($user->id, Order::PARSER);
+            $order = $this->createOrder($user->id);
             $order->save();
             foreach ($OrderItems as $item) {
                 $orderItemPre = OrderItem::new($item->product, $item->quantity, true);
@@ -290,7 +304,7 @@ class OrderService
             $product = Product::find($product_id);
             if (is_null($product)) throw new \DomainException('Данный товар не найден');
             if ($product->getPrice(false, $user) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
-            $order = Order::register($user->id, Order::ONLINE);
+            $order = $this->createOrder($user->id);
 
             $order = $this->addProduct($order, $product->id, 1);
             $this->recalculation($order);
@@ -302,10 +316,10 @@ class OrderService
     /**
      * Создание пустого заказа менеджером из Продаж
      */
-    public function create_sales(int $user_id = null): Order
+    public function create_sales(): Order
     {
-        DB::transaction(function () use ($user_id, &$order) {
-            $order = Order::register($user_id, Order::MANUAL); //Создаем пустой заказ
+        DB::transaction(function () use (&$order) {
+            $order = $this->createOrder(type: Order::MANUAL); //Создаем пустой заказ
 
             /** @var Admin $staff */
             $staff = Auth::guard('admin')->user();
@@ -333,7 +347,7 @@ class OrderService
     /**
      * Отменить заказ
      */
-    public function canceled(Order $order, string $comment)
+    public function cancel(Order $order, string $comment): void
     {
         $order->clearReserve();
         $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
@@ -344,34 +358,42 @@ class OrderService
     /**
      * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
      */
-    public function setAwaiting(Order $order)
+    public function awaiting(Order $order)
     {
         DB::transaction(function () use ($order) {
             if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
             if ($order->getTotalAmount() == 0) throw new \DomainException('Сумма заказа не может быть равно нулю');
 
+            $is_assemblage = false;
+            $is_packing = false;
             foreach ($order->items as $item) {
-                //TODO Проверка, если у товара есть сборка и/или упаковка, то должна быть 1 услуга с таким типом
-           /*     if ($item->assemblage == true) {
-                    $addition = OrderAddition::new($item->getAssemblage(), OrderAddition::PAY_ASSEMBLY, $item->product->name);
-                    $order->additions()->save($addition);
-                    $item->assemblage = false;
-                    $item->save();
-                }*/
+                //Проверка, если у товара есть сборка и/или упаковка, то должна быть 1 услуга с таким типом
+                if ($item->assemblage) $is_assemblage = true;
+                if ($item->packing) $is_packing = true;
+
             }
             //Фиксируем цену за услугу
             foreach ($order->additions as $addition) {
+                if ($is_packing && $addition->addition->type == Addition::PACKING) $is_packing = false;
+                if ($is_assemblage && $addition->addition->type == Addition::ASSEMBLY) $is_assemblage = false;
                 $addition->amount = $addition->getAmount();
                 $addition->save();
             }
+            if ($is_assemblage) throw new \DomainException('Не назначена услуга сборки');
+            if ($is_packing) throw new \DomainException('Не назначена услуга упаковки');
+
             $order->setReserve(now()->addDays(3));
             $order->setNumber();
             $order->setStatus(OrderStatus::AWAITING);
             $order->refresh();
             $this->logger->logOrder($order, 'Заказ отправлен на оплату', '', '');
 
-            event(new OrderHasAwaiting($order));
-            flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
+            $invoice = $this->invoiceReport->xlsx($order);
+            SendSystemMail::dispatch($order->user, new OrderAwaitingMail($order, $invoice));
+            //TODO Включить после теста
+            // event(new OrderHasAwaiting($order));
+
+            //flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
         });
     }
 
@@ -642,8 +664,9 @@ class OrderService
      * @param Order $order
      * @return void
      */
-    public function check_payment(Order $order)
+    public function checkPayment(Order $order)
     {
+        $order->setReserve(now()->addDays(45));//Увеличиваем резерв
         if ($order->getTotalAmount() <= $order->getPaymentAmount()) {
             $order->setPaid();
             event(new OrderHasPaid($order));
@@ -806,6 +829,13 @@ class OrderService
     public function setUser(Order $order, Request $request): void
     {
         $order->user_id = $request->integer('user_id');
+        $order->save();
+    }
+
+    public function setInfo(Order $order, Request $request): void
+    {
+        $order->organization_id = $request->integer('organization_id');
+        $order->comment = $request->string('comment')->trim()->value();
         $order->save();
     }
 }

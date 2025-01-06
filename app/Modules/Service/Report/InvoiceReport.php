@@ -23,41 +23,45 @@ class InvoiceReport
 
     private function create_xls(Order $order): Spreadsheet
     {
-        //Открываем шаблон
         $spreadsheet = IOFactory::load($this->template);
         $activeWorksheet = $spreadsheet->getActiveSheet();
 
-        //TODO Данные об организации - в счет
-
+        //Данные о клиенте
+        if (is_null($order->user->organization)) {
+            $client = $order->userFullName();
+        } else {
+            $organization = $order->user->organization;
+            $client = $organization->full_name . ', ИНН ' .
+                $organization->inn . ', КПП ' . $organization->kpp . ', ' .
+                $organization->legal_address->address() . ', ' .
+                phone($organization->phone);
+        }
+        //Данные о продавце
+        $trader = $order->organization->full_name . ', ИНН ' .
+            $order->organization->inn . ', КПП ' . $order->organization->kpp . ', ' .
+            $order->organization->legal_address->address() . ', ' .
+            phone($order->organization->phone);
+        //...
         $replaceItems = [
             '{num-date}' => $order->htmlNumDate(),
-            '{client}' => $order->userFullName(),
+            '{client}' => $client,
+            '{trader}' => $trader,
             '{quantity}' => (string)($order->getQuantity() + $order->additions()->count()),
             '{amount}' => price($order->getTotalAmount()),
             '{amount_text}' => $this->service->PriceToText($order->getTotalAmount()),
+            '{bank}' => $order->organization->bank_name,
+            '{bik}' => $order->organization->bik,
+            '{inn}' => $order->organization->inn,
+            '{kpp}' => $order->organization->kpp,
+
+            '{full_name}' => $order->organization->full_name,
+            '{corr_account}' => $order->organization->corr_account,
+            '{pay_account}' => $order->organization->pay_account,
+            '{chief}' => $order->organization->chief->getShortname(),
+
         ];
         $this->service->findReplaceArray($activeWorksheet, $replaceItems);
 
-
-
-        //Данные о клиенте и Данные отчета
-        /*
-         for ($row = 1; $row < 50; $row++) {
-             for ($col = 1; $col < 50; ++$col) {
-                 $value = $activeWorksheet->getCell([$col, $row])->getValue();
-
-                 if (!is_null($value)) {
-                     $value = str_replace('{num-date}', (string)$order->htmlNumDate(), (string)$value);//Номер и дата
-                     $value = str_replace('{client}', (string)$order->userFullName(), (string)$value);//Клиент
-                     $value = str_replace('{quantity}', (string)($order->getQuantity() + $order->additions()->count()), (string)$value);//Кол-во товаров
-                     $value = str_replace('{amount}', price($order->getTotalAmount()), (string)$value);//Сумма по заказу
-                     $value = str_replace('{amount_text}', $this->service->PriceToText($order->getTotalAmount()), (string)$value);//Сумма по заказу
-
-                     $activeWorksheet->setCellValue([$col, $row], $value);
-                 }
-             }
-         }
- */
         //Список товара
         $begin_row_products = 15; //TODO Перенести в настройки отчетов
         $_from = $begin_row_products;

@@ -100,7 +100,7 @@ class OrganizationRepository
 
     }
 
-    public function getCustomers(): Arrayable
+    public function getTraders(): Arrayable
     {
         return Organization::has('trader')->get()->map(function (Organization $organization) {
             return [
