@@ -105,6 +105,8 @@ class OutboxController extends Controller
     public function attachment(Request $request)
     {
         $path = storage_path('app/');
+        ob_end_clean();
+        ob_start();
         return response()->download($path .
             $request->string('file')->value());
     }

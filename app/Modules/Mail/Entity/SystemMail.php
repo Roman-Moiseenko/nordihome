@@ -3,6 +3,7 @@
 namespace App\Modules\Mail\Entity;
 
 use App\Modules\Mail\Mailable\AbstractMailable;
+use App\Modules\Mail\Mailable\OrderAwaitingMail;
 use App\Modules\Mail\Mailable\TestMail;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -45,6 +46,7 @@ class SystemMail extends Model
     //TODO Возможно перенести в Хелпер
     const MAILABLES = [
         TestMail::class => 'Тестовое письмо',
+        OrderAwaitingMail::class => 'Счет на оплату',
     ];
 
     public static function register(AbstractMailable $mailable, int $user_id): self

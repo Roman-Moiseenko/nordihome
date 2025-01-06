@@ -18,7 +18,7 @@ class OrderAwaitingMail extends SystemMailable
         parent::__construct();
         $this->subject = 'Заказ подтвержден. Счет на оплату';
         $this->order = $order;
-        $this->files['Счет на оплату'] = $invoice;
+        $this->files['Счет на оплату.xlsx'] = $invoice;
     }
 
     #[Pure] public function content(): Content

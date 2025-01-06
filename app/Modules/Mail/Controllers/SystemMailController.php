@@ -50,6 +50,8 @@ class SystemMailController extends Controller
 
     public function attachment(Request $request)
     {
+        ob_end_clean();
+        ob_start();
         return response()->download(
             $request->string('file')->value());
     }

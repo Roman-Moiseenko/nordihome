@@ -35,6 +35,6 @@ class NotificationOrderAwaiting
         $event->order->invoice()->create(['file' => $invoice, 'name' => 'Счет на оплату (первоначальный)']);
         SendSystemMail::dispatch($event->order->user, new OrderAwaitingMail($event->order, $invoice));
 
-        Mail::to($event->order->user->email)->queue(new OrderAwaiting($event->order));
+        //Mail::to($event->order->user->email)->queue(new OrderAwaiting($event->order));
     }
 }

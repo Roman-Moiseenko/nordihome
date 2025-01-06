@@ -24,6 +24,7 @@ use App\Modules\Discount\Service\CouponService;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Mail\Job\SendSystemMail;
 use App\Modules\Mail\Mailable\OrderAwaitingMail;
+use App\Modules\Mail\Service\SystemMailService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
@@ -46,6 +47,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
+use Mail;
 
 
 class OrderService
@@ -65,6 +67,7 @@ class OrderService
     private \App\Modules\Setting\Entity\Coupon $coupon_set;
     private Parser $parser_set;
     private InvoiceReport $invoiceReport;
+    private SystemMailService $service;
 
 
     public function __construct(
@@ -79,7 +82,8 @@ class OrderService
         MovementService     $movementService,
         OrderReserveService $reserveService,
         SettingRepository   $settings,
-        InvoiceReport       $invoiceReport,
+        InvoiceReport       $invoiceReport, //
+        SystemMailService $service, //
     )
     {
         $this->coupon_set = $settings->getCoupon();
@@ -95,6 +99,7 @@ class OrderService
         $this->reserveService = $reserveService;
         $this->parserService = $parserService;
         $this->invoiceReport = $invoiceReport;
+        $this->service = $service;
     }
 
     private function createOrder(int $user_id = null, int $type = Order::ONLINE): Order
@@ -358,7 +363,7 @@ class OrderService
     /**
      * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
      */
-    public function awaiting(Order $order)
+    public function awaiting(Order $order): void
     {
         DB::transaction(function () use ($order) {
             if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
@@ -389,7 +394,15 @@ class OrderService
             $this->logger->logOrder($order, 'Заказ отправлен на оплату', '', '');
 
             $invoice = $this->invoiceReport->xlsx($order);
-            SendSystemMail::dispatch($order->user, new OrderAwaitingMail($order, $invoice));
+         /*   $mail = new OrderAwaitingMail($order, $invoice);
+
+
+            $system_mail = $this->service->create($mail, $order->user->id);
+            Mail::mailer('system')->to($order->user->email)->send($mail);
+            */
+            SendSystemMail::dispatch($order->user, $invoice);
+
+
             //TODO Включить после теста
             // event(new OrderHasAwaiting($order));
 

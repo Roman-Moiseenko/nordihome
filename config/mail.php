@@ -45,6 +45,26 @@ return [
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
+        'outbox' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_OUTBOX_USERNAME'),
+            'password' => env('MAIL_OUTBOX_PASSWORD'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
+        ],
+        'system' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+            'port' => env('MAIL_PORT', 587),
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_SYSTEM_USERNAME'),
+            'password' => env('MAIL_SYSTEM_PASSWORD'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
+        ],
 
         'ses' => [
             'transport' => 'ses',
