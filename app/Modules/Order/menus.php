@@ -29,6 +29,8 @@ return [
                 'title' => 'Платежи',
                 'route_name' => 'admin.order.payment.index',
                 'can' => 'payment',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-credit-card',
             ],
             'refund' => [
                 'icon' => 'refresh-ccw',

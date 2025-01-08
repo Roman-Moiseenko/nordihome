@@ -28,18 +28,20 @@ class OrderReserveService
     /**
      * Добавить в резерв при наличии свободных товаров по всем складам, начиная с Основного
      */
-    public function toReserve(OrderItem $orderItem, float $quantity): void
+    public function toReserve(OrderItem $orderItem, float $quantity): \Illuminate\Support\Carbon
     {
         DB::transaction(function () use ($orderItem, $quantity) {
             if ($orderItem->product->getQuantitySell() < $quantity)
                 throw new \DomainException('Нельзя поставить товар ' . $orderItem->product->name .
                     ' в резерв, в наличии ' . $orderItem->product->getQuantitySell());
-            $storageItem = $this->storage->getItem($orderItem->product_id);
+            $storageItem = $this->storage->getItem($orderItem->product_id); //Берем со основного склада
             if ($storageItem->getFreeToSell() >= $quantity) {
                 OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
-            } else {
+            } else { //На основном складе нехватает
+                //На основном складе резервируем все, что есть
                 OrderReserve::register($orderItem->id, $storageItem->id, $storageItem->getFreeToSell(), $this->minutes);
                 $quantity -= $storageItem->getFreeToSell();
+                //На остальных - под остаток
                 foreach ($orderItem->product->storageItems as $_storageItem) {
                     if ($quantity > 0 && $_storageItem->id != $storageItem->id) {
                         if ($quantity > $_storageItem->getFreeToSell()) {
@@ -53,6 +55,7 @@ class OrderReserveService
                 }
             }
         });
+        return now()->addMinutes($this->minutes);
     }
 
     /**

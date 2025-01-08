@@ -430,11 +430,10 @@ class OrderService
         $product = Product::find($product_id);
         $quantity_preorder = 0;
         //По предзаказу
-        if ($preorder == true) {
+        if ($preorder) {
             $quantity_preorder = $quantity;
             $quantity = 0;
         }
-
 
         if ($quantity > 0 && $product->getQuantitySell() <= $quantity) {
             $quantity_preorder = $quantity - $product->getQuantitySell(); //По предзаказу
@@ -447,12 +446,19 @@ class OrderService
             if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);
             $orderItem->setCost($last_price, $last_price);
             $order->items()->save($orderItem);
-            $this->reserveService->toReserve($orderItem, $quantity);
+            //Товар в резерв, возвращаем новое время резерва
+            $reserve_at = $this->reserveService->toReserve($orderItem, $quantity);
+            //И устанавливаем его для всех товаров
+            foreach ($order->items as $item) {
+                foreach ($item->reserves as $reserve) {
+                    $reserve->reserve_at = $reserve_at;
+                    $reserve->save();
+                }
+            }
         }
 
         if ($quantity_preorder > 0) {
             $orderItemPre = OrderItem::new($product, $quantity_preorder, true);
-
             $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
             if ($pre_price == 0) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
             $orderItemPre->setCost($last_price, $pre_price);
@@ -462,6 +468,7 @@ class OrderService
         $order->refresh();
         $this->recalculation($order);
         $this->logger->logOrder($order, 'Добавлен товар', $product->name, $quantity . ' шт.');
+
 
         return $order;
     }
