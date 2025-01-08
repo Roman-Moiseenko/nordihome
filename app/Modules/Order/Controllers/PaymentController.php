@@ -13,6 +13,8 @@ use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\PaymentService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PaymentController extends Controller
 {
@@ -36,23 +38,16 @@ class PaymentController extends Controller
         $this->staffs = $staffs;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        /*
-        $filters = [
-            'staff_id' => $request['staff_id'] ?? null,
-            'user' => $request['user'] ?? null,
-            'order' => $request['order'] ?? null,
-        ];
-*/
-
         $payments = $this->repository->getIndex($request, $filters);
         $staffs = $this->staffs->getStaffsChiefs();
-        /*Admin::where('role', Admin::ROLE_STAFF)->whereHas('responsibilities', function ($query) {
-            $query->where('code', Responsibility::MANAGER_PAYMENT);
-        })->get();
-        */
-        return view('admin.order.payment.index', compact('payments', 'staffs', 'filters'));
+
+        return Inertia::render('Order/Payment/Index', [
+            'payments' => $payments,
+            'filters' => $filters,
+            'staffs' => $staffs,
+        ]);
     }
 
     public function create()

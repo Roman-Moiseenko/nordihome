@@ -29,7 +29,8 @@ use JetBrains\PhpStorm\Pure;
  * @property int $id
  * @property int $number - номер заказа, присваивается автоматически ++ при отправке на оплату
  * @property int $user_id
- * @property int $organization_id
+ * @property int $shopper_id
+ * @property int $trader_id
  * @property int $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
@@ -51,7 +52,8 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
  * @property OrderItem[] $items
  * @property User $user Клиент покупатель
- * @property Organization $organization Организация продавец
+ * @property Organization $shopper Организация покупатель
+ * @property Organization $trader Организация продавец
  * @property OrderResponsible[] $responsible - удалить
  * @property MovementDocument[] $movements
  * @property Discount $discount
@@ -89,7 +91,7 @@ class Order extends Model
         'manual',
         'comment',
         'staff_id',
-        'organization_id',
+        'trader_id',
     ];
     protected $casts = [
         'created_at' => 'datetime',
@@ -97,13 +99,13 @@ class Order extends Model
         'coupon_amount' => 'float',
     ];
 
-    public static function register(int|null $user_id, int $type, int $organization_id): self
+    public static function register(int|null $user_id, int $type, int $trader_id): self
     {
         $order = self::create([
             'user_id' => $user_id,
             'type' => $type,
             'paid' => false,
-            'organization_id' => $organization_id,
+            'trader_id' => $trader_id,
         ]);
         $order->statuses()->create(['value' => OrderStatus::FORMED]);
         return $order;
@@ -532,9 +534,14 @@ class Order extends Model
 
     ///*** Relations *************************************************************************************
 
-    public function organization(): BelongsTo
+    public function shopper(): BelongsTo
     {
-        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+        return $this->belongsTo(Organization::class, 'shopper_id', 'id');
+    }
+
+    public function trader(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'trader_id', 'id');
     }
 
     public function invoice(): MorphOne

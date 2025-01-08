@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class PaymentService
 {
 

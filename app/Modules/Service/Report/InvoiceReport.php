@@ -27,20 +27,20 @@ class InvoiceReport
         $activeWorksheet = $spreadsheet->getActiveSheet();
 
         //Данные о клиенте
-        if (is_null($order->user->organization)) {
+        if (is_null($order->shopper_id)) {
             $client = $order->userFullName();
         } else {
-            $organization = $order->user->organization;
+            $organization = $order->shopper;
             $client = $organization->full_name . ', ИНН ' .
                 $organization->inn . ', КПП ' . $organization->kpp . ', ' .
                 $organization->legal_address->address() . ', ' .
                 phone($organization->phone);
         }
         //Данные о продавце
-        $trader = $order->organization->full_name . ', ИНН ' .
-            $order->organization->inn . ', КПП ' . $order->organization->kpp . ', ' .
-            $order->organization->legal_address->address() . ', ' .
-            phone($order->organization->phone);
+        $trader = $order->trader->full_name . ', ИНН ' .
+            $order->trader->inn . ', КПП ' . $order->trader->kpp . ', ' .
+            $order->trader->legal_address->address() . ', ' .
+            phone($order->trader->phone);
         //...
         $replaceItems = [
             '{num-date}' => $order->htmlNumDate(),
@@ -49,15 +49,15 @@ class InvoiceReport
             '{quantity}' => (string)($order->getQuantity() + $order->additions()->count()),
             '{amount}' => price($order->getTotalAmount()),
             '{amount_text}' => $this->service->PriceToText($order->getTotalAmount()),
-            '{bank}' => $order->organization->bank_name,
-            '{bik}' => $order->organization->bik,
-            '{inn}' => $order->organization->inn,
-            '{kpp}' => $order->organization->kpp,
+            '{bank}' => $order->trader->bank_name,
+            '{bik}' => $order->trader->bik,
+            '{inn}' => $order->trader->inn,
+            '{kpp}' => $order->trader->kpp,
 
-            '{full_name}' => $order->organization->full_name,
-            '{corr_account}' => $order->organization->corr_account,
-            '{pay_account}' => $order->organization->pay_account,
-            '{chief}' => $order->organization->chief->getShortname(),
+            '{full_name}' => $order->trader->full_name,
+            '{corr_account}' => $order->trader->corr_account,
+            '{pay_account}' => $order->trader->pay_account,
+            '{chief}' => $order->trader->chief->getShortname(),
 
         ];
         $this->service->findReplaceArray($activeWorksheet, $replaceItems);
@@ -148,6 +148,4 @@ class InvoiceReport
         $writer->save($file);
         return $file;
     }
-
-
 }

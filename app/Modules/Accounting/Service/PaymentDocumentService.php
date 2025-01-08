@@ -13,13 +13,13 @@ use JetBrains\PhpStorm\Deprecated;
 
 class PaymentDocumentService
 {
-    public function create(int $recipient_id, string $recipient_account, int $payer_id, string $payer_account, float $amount): PaymentDocument
+    public function create(int $recipient_id, int $payer_id, float $amount): PaymentDocument
     {
         $staff = Auth::guard('admin')->user();
 
         return PaymentDocument::register(
-            $recipient_id, $recipient_account, //Получатель
-            $payer_id, $payer_account, //Плательщик
+            $recipient_id, //Получатель
+            $payer_id, //Плательщик
             $amount, $staff->id
         );
     }
@@ -46,16 +46,14 @@ class PaymentDocumentService
     public function setInfo(PaymentDocument $payment, Request $request): void
     {
         $payment->baseSave($request->input('document'));
-        //$payment->number = $request->string('number')->value();
-        //$payment->created_at = $request->date('created_at');
-
-        //$payment->comment = $request->string('comment')->value();
 
         $payment->amount = $request->input('amount');
-        $payer = Organization::find($request->integer('payer_id'));
+        $payer = Organization::find($request->integer('payer_id')); //Смена плательщика
         if ($payment->payer_id != $payer->id) {
             $payment->payer_id = $payer->id;
-            $payment->payer_account = $payer->pay_account;
+
+            $payment->bank_payment->account_payer = $payer->pay_account;
+            $payment->bank_payment->bik_payer = $payer->bik;
         }
         $payment->save();
     }

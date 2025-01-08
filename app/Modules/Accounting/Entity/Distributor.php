@@ -77,8 +77,9 @@ class Distributor extends Model
      */
     public function credit(): float
     {
+        $organizations = $this->organizations()->pluck('id')->toArray();
         $amount = PaymentDocument::selectRaw('SUM(amount * 1) AS total')
-            ->where('recipient_id', $this->organization_id)->where('completed', true)
+            ->whereIn('recipient_id', $organizations)->where('completed', true)
             ->first();
         return (float)($amount->total ?? 0);
 

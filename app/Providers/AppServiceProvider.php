@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
     {
         setlocale(LC_ALL, 'ru_RU.utf8');
         Carbon::setLocale(config('app.locale'));
-        date_default_timezone_set('Europe/Kaliningrad');
+        //date_default_timezone_set('Europe/Kaliningrad');
 
         $local = env('APP_ENV');
         if ($local == 'local') {

@@ -3,6 +3,8 @@
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Base\Casts\BankPaymentCast;
+use App\Modules\Base\Entity\BankPayment;
 use App\Modules\Base\Traits\CompletedFieldModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -14,12 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool $manual
  * @property int $recipient_id
  * @property int $payer_id
- * @property string $recipient_account
- * @property string $payer_account
  *
- * @property string $bank_purpose Назначение платежа Банковские данные
- * @property string $bank_number Банковские данные
- * @property Carbon $bank_date Банковские данные
+ * @property BankPayment $bank_payment
 
  * @property Organization $recipient Получатель платежа
  * @property Organization $payer Плательщик платежа
@@ -30,23 +28,26 @@ class PaymentDocument extends AccountingDocument
     protected string $blank = 'Платежное поручение';
     protected $attributes = [
         'comment' => '',
+        'bank_payment' => '{}',
     ];
+
     protected $fillable = [
         'amount',
         'recipient_id',
         'payer_id',
         'manual',
-        'recipient_account',
-        'payer_account'
+      //  'recipient_account',
+    //    'payer_account'
+    ];
+    protected $casts = [
+        'bank_payment' => BankPaymentCast::class,
     ];
 
-    public static function register(int $recipient_id, string $recipient_account, int $payer_id, string $payer_account, float $amount, int $staff_id): self
+    public static function register(int $recipient_id, int $payer_id, float $amount, int $staff_id): self
     {
         $document = parent::baseNew($staff_id);
         $document->recipient_id = $recipient_id;
-        $document->recipient_account = $recipient_account;
         $document->payer_id = $payer_id;
-        $document->payer_account = $payer_account;
         $document->amount = $amount;
         $document->manual = false;
         $document->save();
@@ -57,7 +58,7 @@ class PaymentDocument extends AccountingDocument
     public function manual(): void
     {
         $this->manual = true;
-        $this->bank_purpose = 'В ручную';
+        $this->bank_payment->purpose = 'В ручную';
         $this->save();
     }
 
@@ -97,7 +98,7 @@ class PaymentDocument extends AccountingDocument
                 $debit = $supply->debit();
                 //Если задолженность > 0 и  по данному заказу еще нет записи
                 if ($debit != 0 && is_null($this->getDecryption($supply->id))) {
-                    $decryption = PaymentDecryption::register($debit, $supply->id, $this->bank_purpose);
+                    $decryption = PaymentDecryption::register($debit, $supply->id, $this->bank_payment->purpose);
                     $this->decryptions()->save($decryption);
                 }
             }

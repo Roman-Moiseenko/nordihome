@@ -181,7 +181,7 @@ class OrderRepository
                 'coupon' =>$order->getCoupon(),
                 'percent' => ($order->getBaseAmountNotDiscount() == 0) ? 0 : ceil($order->manual / $order->getBaseAmountNotDiscount() * 100 * 10) / 10,
             ],
-
+            'shoppers' => is_null($order->user) ? [] : $order->user->organizations,
             'reserve' => $order->getReserveTo(),
         ]);
     }

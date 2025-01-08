@@ -96,8 +96,8 @@ class OrderService
 
     private function createOrder(int $user_id = null, int $type = Order::ONLINE): Order
     {
-        $organization_id = Trader::default()->organization->id;
-        return Order::register($user_id, $type, $organization_id);
+        $trader_id = Trader::default()->organization->id;
+        return Order::register($user_id, $type, $trader_id);
     }
 
     //**** ФУНКЦИИ СОЗДАНИЯ ЗАКАЗА
@@ -827,13 +827,19 @@ class OrderService
 
     public function setUser(Order $order, Request $request): void
     {
-        $order->user_id = $request->integer('user_id');
+        $user = User::find($request->integer('user_id'));
+        $order->user_id = $user->id;
+        if (!is_null($user->organization)) $order->shopper_id = $user->organization->id;
         $order->save();
     }
 
+    //TODO Сменить организацию для выставления счета
+
     public function setInfo(Order $order, Request $request): void
     {
-        $order->organization_id = $request->integer('organization_id');
+
+        $order->trader_id = $request->integer('trader_id');
+        $order->shopper_id = $request->input('shopper_id');
         $order->comment = $request->string('comment')->trim()->value();
         $order->save();
     }

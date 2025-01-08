@@ -14,10 +14,10 @@
                 </el-form-item>
                 <el-form-item label="Плательщик">
                     <el-select v-model="info.payer_id" @change="setInfo" :disabled="iSavingInfo || notEdit" style="width: 260px">
-                        <el-option v-for="item in payers" :key="item.organization_id" :value="item.organization_id" :label="item.shot_name" :readonly="notEdit">{{ item.full_name }}</el-option>
+                        <el-option v-for="item in payers" :key="item.organization_id" :value="item.organization_id" :label="item.short_name" :readonly="notEdit">{{ item.full_name }}</el-option>
                     </el-select>
                     <span class="ml-2 mr-1">Счет</span>
-                    <span class="text-blue-900">{{ payment.payer_account }}</span>
+                    <span class="text-blue-900">{{ payment.bank_payment.account_payer }}</span>
                 </el-form-item>
                 <el-form-item label="Сумма оплаты">
                     <el-input v-model="info.amount" @change="setInfo" :disabled="iSavingInfo" :readonly="notEdit || !payment.manual" style="width: 160px"/>
@@ -27,10 +27,10 @@
                 </el-form-item>
 
                 <el-form-item label="Назначение">
-                    <el-input :model-value="payment.bank_purpose" :readonly="true"/>
+                    <el-input :model-value="payment.bank_payment.purpose" :readonly="true"/>
                 </el-form-item>
                 <el-form-item label="Платежное поручение">
-                    <el-input v-if="payment.bank_number" :model-value="'№' + payment.bank_number + ' от ' + func.date(payment.bank_number)" :readonly="true" style="width: 300px"/>
+                    <el-input v-if="payment.bank_payment.number" :model-value="'№' + payment.bank_payment.number + ' от ' + func.date(payment.bank_payment.date)" :readonly="true" style="width: 300px"/>
                 </el-form-item>
             </el-form>
         </el-col>
@@ -47,7 +47,6 @@ const props = defineProps({
     payment: Object,
     payers: Array,
 })
-
 const iSavingInfo = ref(false)
 const info = reactive({
     document: {

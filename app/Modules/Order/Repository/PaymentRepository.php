@@ -32,7 +32,11 @@ class PaymentRepository
                 $query->whereHas('user', function ($q) use ($user) {
                     $q->where('phone', 'LIKE', "%$user%")
                         ->orWhere('email', 'like', "%$user%")
-                        ->orWhereRaw("LOWER(fullname) like LOWER('%$user%')");
+                        ->orWhereRaw("LOWER(fullname) like LOWER('%$user%')")
+                        ->orWhereHas('organizations', function ($query) use ($user) {
+                            $query->whereRaw("LOWER(full_name) like LOWER('%$user%')")
+                                ->orWhere('inn', 'like', "%$user%");
+                        });
                 });
             });
         }
@@ -49,8 +53,7 @@ class PaymentRepository
             $query->where('staff_id', $staff_id);
         }
 
-        if ($request->integer('order') > 0) {
-            $order = $request->integer('order');
+        if (($order = $request->string('order')->value()) != '') {
             $filters['order'] = $order;
             $query->whereHas('order', function ($query) use ($order) {
                 $query->where('number', $order);
@@ -59,23 +62,31 @@ class PaymentRepository
 
         if (count($filters) > 0) $filters['count'] = count($filters);
 
-        return $query->paginate($request->input('p', 20))
+        return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(function(OrderPayment $document) {
-                return [
-                    'id' => $document->id,
-                    'date' => $document->htmlDate(),
-                    'amount' => price($document->amount),
-                    'order' => $document->order->htmlNumDate(),
-                    'user' => $document->order->user->getPublicName(),
-                    'document' => $document->document,
-                    'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
-                    'url' => route('admin.order.payment.edit', $document),
-                    'destroy' => route('admin.order.payment.destroy', $document),
-                ];
-            });
+            ->through(fn(OrderPayment $payment) => $this->PaymentToArray($payment));
     }
 
+    private function PaymentToArray(OrderPayment $payment): array
+    {
+        return array_merge($payment->toArray(),
+            [
+                'date' => $payment->htmlDate(),
+                'order' => $payment->order,
+                'user_name' => $payment->order->user->getPublicName(),
+                'comment' => $payment->comment,
+                'staff' => !is_null($payment->staff) ? $payment->staff->fullname->getFullName() : '-',
+                'method_text' => $payment->methodText(),
+            ]
+        );
+    }
+
+    public function PaymentWithToArray(OrderPayment $payment): array
+    {
+        return array_merge($this->PaymentToArray($payment), [
+
+        ]);
+    }
 
     /**
      * Cписок всех платежных вариантов

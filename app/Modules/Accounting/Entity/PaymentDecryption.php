@@ -28,7 +28,7 @@ class PaymentDecryption extends Model
         'supply_id',
     ];
 
-    public static function register(float $amount, int $supply_id = null, string $order_bank = '')
+    public static function register(float $amount, int $supply_id = null, string $order_bank = ''): self
     {
         return self::make([
             'amount' => $amount,

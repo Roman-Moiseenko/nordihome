@@ -22,7 +22,9 @@
                         {{ order.user.pricing }}
                     </el-descriptions-item>
                     <el-descriptions-item v-if="order.user.organization" label="Юридическое лицо">
-                        {{ order.user.organization.short_name }} ({{ order.user.organization.inn }})
+                        <el-select v-model="info.shopper_id"  @change="setInfo" :disabled="iSavingInfo || !is_new" filterable style="max-width: 280px;" clearable>
+                            <el-option v-for="item in order.shoppers" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
+                        </el-select>
                     </el-descriptions-item>
                 </el-descriptions>
                 <Link type="warning" :href="route('admin.user.show', {user: order.user.id})">Карточка клиента</Link>
@@ -86,7 +88,7 @@
             </div>
             <div class="border-t mt-2 pt-2">
                 <el-form-item label="Продавец" size="small">
-                    <el-select v-model="info.organization_id"  @change="setInfo" :disabled="iSavingInfo || !is_new" filterable style="max-width: 280px;">
+                    <el-select v-model="info.trader_id"  @change="setInfo" :disabled="iSavingInfo || !is_new" filterable style="max-width: 280px;">
                         <el-option v-for="item in traders" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
                     </el-select>
                 </el-form-item>
@@ -135,7 +137,8 @@ const props = defineProps({
 
 const iSavingInfo = ref(false)
 const info = reactive({
-    organization_id: props.order.organization_id,
+    trader_id: props.order.trader_id,
+    shopper_id: props.order.shopper_id,
     comment: props.order.comment,
 })
 const reserve = ref(props.order.reserve)

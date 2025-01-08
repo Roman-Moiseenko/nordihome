@@ -8,6 +8,8 @@ use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -52,6 +54,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property FileStorage[] $files
  * @property FileStorage[] $contracts
  * @property FileStorage[] $documents
+ * @property PaymentDocument[] $paymentsPayer - Заплачено Поставщикам
+ * @property PaymentDocument[] $paymentsRecipient - Получено Поставщиком
+ *
+ * @property OrderPayment[] $paymentsShopper - Куплено Покупателем
+ * @property OrderPayment[] $paymentsTrader - Продано Продавцом
  */
 class Organization extends Model
 {
@@ -167,6 +174,26 @@ class Organization extends Model
     public function holding(): BelongsTo
     {
         return$this->belongsTo(OrganizationHolding::class, 'holding_id', 'id');
+    }
+
+    public function paymentsShopper(): HasOneThrough
+    {
+        //TODO Протестировать
+        return $this->hasOneThrough(
+            OrderPayment::class,
+            Order::class,
+            'shopper_id', 'order_id', 'id', 'id'
+        );
+    }
+
+    public function paymentsTrader(): HasOneThrough
+    {
+        //TODO Протестировать
+        return $this->hasOneThrough(
+            OrderPayment::class,
+            Order::class,
+            'trader_id', 'order_id', 'id', 'id'
+        );
     }
 
     public function trader(): HasOneThrough

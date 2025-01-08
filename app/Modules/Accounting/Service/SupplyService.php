@@ -171,7 +171,13 @@ class SupplyService
         $payer = Trader::default()->organization;
         $recipient = $supply->distributor->organization;
 
-        $payment = $this->paymentService->create($recipient->id, $recipient->pay_account, $payer->id, $payer->pay_account, $debit);
+        $payment = $this->paymentService->create($recipient->id, $payer->id, $debit);
+        $payment->bank_payment->bik_recipient = $recipient->bik;
+        $payment->bank_payment->account_recipient = $recipient->pay_account;
+        $payment->bank_payment->bik_payer = $payer->bik;
+        $payment->bank_payment->account_payer = $payer->pay_account;
+        $payment->save();
+
         $payment->manual();
         $payment->addDecryption($debit, $supply->id);
         return $payment;
@@ -189,7 +195,7 @@ class SupplyService
     {
         $supply = $this->createEmpty($old_supply->distributor);
         foreach ($old_supply->products as $product) {
-            $this->addProduct($supply, $product->product_id, $product->quantity);
+            $this->addProduct($supply, $product->product_id, (float)$product->quantity);
         }
         return $supply;
     }

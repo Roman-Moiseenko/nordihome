@@ -7,6 +7,11 @@ use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Analytics\Entity\LoggerCron;
+use App\Modules\Base\Entity\BankPayment;
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
@@ -25,21 +30,25 @@ class BankService
     private OrganizationService $organizationService;
     private Organization $payer;
     private array $valute = [];
+    private OrderPaymentService $orderPaymentService;
 
     public function __construct(
         PaymentDocumentService $paymentDocumentService,
         SettingRepository $settings,
         OrganizationService $organizationService,
+        OrderPaymentService $orderPaymentService
         //TODO Добавить сервис платежей от клиентов
     )
     {
         $this->paymentDocumentService = $paymentDocumentService;
         $common = $settings->getCommon();
+
         $this->date_bank = Carbon::parse($common->date_bank);
         $this->organizationService = $organizationService;
+        $this->orderPaymentService = $orderPaymentService;
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request): array
     {
         $file = $request->file('file');
         $payment = [];
@@ -76,12 +85,16 @@ class BankService
                 }
             }
         }
+       // dd($payments);
+
+
         $this->loadPayments($section, $payments);
         return $payments;
     }
 
     private function loadPayments(array $section, array $payments): void
     {
+        //TODO Поиск организации по расчетному счету
         $this->payer = Organization::where('pay_account', $section['РасчСчет'])->first();
         foreach ($payments as $payment) {
             if ($this->checkDate($payment['ДатаСписано'])) {
@@ -90,6 +103,7 @@ class BankService
                 } else {
                     $this->createPaymentOrder($payment);
                 }
+            } else {
             }
         }
 
@@ -106,6 +120,9 @@ class BankService
         return $this->date_bank->lt(Carbon::parse($dateDocument));
     }
 
+    /**
+     * Загрузка платежей поставщикам
+     */
     private function createPaymentDocument(array $payment): void
     {
 
@@ -117,25 +134,56 @@ class BankService
         }
 
         $paymentDocument = $this->paymentDocumentService->create(
-            $recipient->id, $payment['ПолучательСчет'],
-            $payer->id, $payment['ПлательщикРасчСчет'],
+            $recipient->id,
+            $payer->id,
             $payment['Сумма']);
-        $paymentDocument->bank_purpose = $payment['НазначениеПлатежа'];
-        $paymentDocument->bank_number = $payment['Номер'];
-        $paymentDocument->bank_date = Carbon::parse($payment['Дата']);
+
+        //TODO Переделать как в createPaymentOrder
+
+        $paymentDocument->bank_payment = BankPayment::createFromBankPayment($payment);
+
         $paymentDocument->save();
         $paymentDocument->fillDecryptions();
     }
 
-    private function createPaymentOrder(mixed $payment)
+    /**
+     * Загрузка платежей клиентов
+     */
+    private function createPaymentOrder(mixed $payment): void
     {
-        //TODO Загрузка платежей клиентов
+        $trader = Organization::where('inn', $payment['ПолучательИНН'])->first();
+        $shopper = Organization::where('inn', $payment['ПлательщикИНН'])->first();
+
+        $orders = Order::where('trader_id', $trader->id)
+            ->where('shopper_id', $shopper->id)
+            ->whereHas('status', function ($query) {
+                $query->whereIn('value', [OrderStatus::AWAITING, OrderStatus::PREPAID]);
+            })->getModels();
+
+        $amount = $payment['Сумма'];
+        if (count($orders) == 1) { //Неоплаченный заказ 1
+            $order = $orders[0];
+        } else { //Несколько не оплаченных заказов
+            $order = null;
+            foreach ($orders as $_order) {
+                //Выбираем заказ, у которого остаток меньше или равен платежу
+                if ($_order->getTotalAmount() - $_order->getPaymentAmount() >= $amount) $order = $_order;
+            }
+            if (is_null($order)) { //Переплата, выбираем первый неоплаченный заказ
+                $order = $orders[0];
+            }
+        }
+
+        $orderPayment = $this->orderPaymentService->create($order, $amount, OrderPayment::METHOD_ACCOUNT);
+        $orderPayment->bank_payment = BankPayment::createFromBankPayment($payment);
+        $orderPayment->save();
+
     }
 
     /**
      * Обновление валюты
      */
-    public function currency(Request $request)
+    public function currency(Request $request): void
     {
         $currency_id = $request->input('currency_id');
         $query = Currency::orderBy('name')->where('cbr_code', '<>', '');
