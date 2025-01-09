@@ -2,7 +2,7 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Заказ покупателя
+            Заказ покупателя [{{ order.status_text }}]
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <OrderInfo :order="order" :storages="storages" :mainStorage="mainStorage" :traders="traders" />
@@ -53,14 +53,18 @@ const props = defineProps({
 const is_new = computed(() => {
     return props.order.status.is_new || props.order.status.is_manager
 })
+const is_awaiting = computed(() => {
+    return props.order.status.is_awaiting
+})
 const is_issued = computed(() => {
     return props.order.status.is_prepaid || props.order.status.is_paid
 })
 const is_view = computed(() => {
-    return !is_new.value && !is_issued.value
+    return !is_new.value && !is_issued.value && !is_awaiting.value
 })
 provide("$status", {
     is_new,
+    is_awaiting,
     is_issued,
     is_view,
 })

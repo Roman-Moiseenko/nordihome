@@ -67,6 +67,11 @@
                         {{ func.price(scope.row.amount) }}
                     </template>
                 </el-table-column>
+                <el-table-column prop="completed" label="Проведен" width="120">
+                    <template #default="scope">
+                        <Active :active="scope.row.completed"/>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="method_text" label="Способ оплаты" />
                 <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
                 <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
@@ -146,13 +151,14 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 function handleDeleteEntity(row) {
     //$delete_entity.show(route('admin.order.destroy', {order: row.id}));
 }
-
+/*
 function handleCreate() {
     router.post(route('admin.order.store'))
 }
+*/
 
 function routeClick(row) {
-    router.get(route('admin.order.show', {order: row.id}))
+    router.get(route('admin.order.payment.show', {payment: row.id}))
 }
 
 const handleSuccess: UploadProps['onError'] = (response, uploadFile, uploadFiles) => {

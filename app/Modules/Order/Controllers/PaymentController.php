@@ -4,14 +4,18 @@ declare(strict_types=1);
 namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Repository\PaymentRepository;
+use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\PaymentService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,16 +23,18 @@ use Inertia\Response;
 class PaymentController extends Controller
 {
 
-    private PaymentService $service;
+    private OrderPaymentService $service;
     private PaymentRepository $repository;
     private OrderRepository $orders;
     private StaffRepository $staffs;
+    private StorageRepository $storages;
 
     public function __construct(
-        PaymentService    $service,
+        OrderPaymentService    $service,
         PaymentRepository $repository,
         OrderRepository   $orders,
         StaffRepository   $staffs,
+        StorageRepository $storages
     )
     {
         $this->middleware(['auth:admin', 'can:payment']);
@@ -36,6 +42,7 @@ class PaymentController extends Controller
         $this->repository = $repository;
         $this->orders = $orders;
         $this->staffs = $staffs;
+        $this->storages = $storages;
     }
 
     public function index(Request $request): Response
@@ -47,27 +54,15 @@ class PaymentController extends Controller
             'payments' => $payments,
             'filters' => $filters,
             'staffs' => $staffs,
+            'methods' => array_select(OrderPayment::METHODS),
         ]);
     }
 
-    public function create()
+    public function create(Order $order, Request $request): RedirectResponse
     {
-        $methods = PaymentHelper::payments();
-        $orders = $this->orders->getNotPaidYet();
-        return view('admin.order.payment.create', compact('methods', 'orders'));
-    }
+        $payment = $this->service->createByOrder($order, $request->string('method')->value());
+        return redirect()->route('admin.order.payment.show', $payment);
 
-    public function store(Request $request)
-    {
-        $payment = $this->service->create($request->only(['order', 'amount', 'method', 'document']));
-        return redirect()->route('admin.order.payment.index');
-    }
-
-    public function edit(OrderPayment $payment)
-    {
-        $methods = PaymentHelper::payments();
-        $orders = $this->orders->getNotPaidYet($payment->order_id);
-        return view('admin.order.payment.edit', compact('payment', 'methods', 'orders'));
     }
 
     public function update(OrderPayment $payment, Request $request)
@@ -76,14 +71,24 @@ class PaymentController extends Controller
         return redirect()->route('admin.order.payment.index');
     }
 
-    public function show(OrderPayment $payment)
+    public function show(OrderPayment $payment): Response
     {
-        return redirect()->route('admin.order.payment.index');
+        return Inertia::render('Order/Payment/Show', [
+            'payment' => $this->repository->PaymentWithToArray($payment),
+            'methods' => array_select(OrderPayment::METHODS),
+            'storages' => $this->storages->getPointSale(),
+        ]);
     }
 
     public function destroy(OrderPayment $payment)
     {
         $this->service->destroy($payment);
         return redirect()->route('admin.order.payment.index');
+    }
+
+    public function set_info(OrderPayment $payment, Request $request)
+    {
+        $this->service->setInfo($payment, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 }

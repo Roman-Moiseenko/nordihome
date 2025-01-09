@@ -16,13 +16,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property int $order_id
  * @property int $staff_id
- *
-
+ * @property bool $completed
  * @property bool $manual - ручная оплата (в кассу, картой и по счету не ч/з банк)
  *
  * @property int $storage_id - склад оплаты по кассе/карте
  * @property BankPayment $bank_payment
- *
+ * @property int $shopper_id - Получатель и
+ * @property int $trader_id - ... Продавец, если не найден Заказ. Обнуляются, при назначении Заказа!
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property float $amount
@@ -87,6 +87,48 @@ class OrderPayment extends Model
         ]);
     }
 
+    public function isCash(): bool
+    {
+        return $this->method == OrderPayment::METHOD_CASH;
+    }
+
+    public function isCard(): bool
+    {
+        return $this->method == OrderPayment::METHOD_CARD;
+    }
+
+    public function isAccount(): bool
+    {
+        return $this->method == OrderPayment::METHOD_ACCOUNT;
+    }
+
+    /**
+     * Документ проведен
+     */
+    final public function isCompleted(): bool
+    {
+        return $this->completed == true;
+    }
+
+    /**
+     * Провести документ
+     */
+    final public function completed(): void
+    {
+        $this->completed = true;
+        $this->save();
+    }
+
+    /**
+     * Вернуть в работу
+     */
+    final public function work(): void
+    {
+        $this->completed = false;
+        $this->save();
+
+    }
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
@@ -118,4 +160,15 @@ class OrderPayment extends Model
     {
         return 'НЕ используется *';
     }
+
+    final public function scopeCompleted($query)
+    {
+        return $query->where('completed', true);
+    }
+
+    final public function scopeWork($query)
+    {
+        return $query->where('completed', false);
+    }
+
 }

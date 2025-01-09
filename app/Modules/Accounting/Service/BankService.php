@@ -166,15 +166,15 @@ class BankService
         } else { //Несколько не оплаченных заказов
             $order = null;
             foreach ($orders as $_order) {
-                //Выбираем заказ, у которого остаток меньше или равен платежу
-                if ($_order->getTotalAmount() - $_order->getPaymentAmount() >= $amount) $order = $_order;
-            }
-            if (is_null($order)) { //Переплата, выбираем первый неоплаченный заказ
-                $order = $orders[0];
+                //Выбираем заказ, у которого остаток равен платежу
+                if ($_order->getTotalAmount() - $_order->getPaymentAmount() == $amount) $order = $_order;
             }
         }
-
-        $orderPayment = $this->orderPaymentService->create($order, $amount, OrderPayment::METHOD_ACCOUNT);
+        if (is_null($order)) { //Создаем непривязанный платеж
+            $orderPayment = $this->orderPaymentService->createUnresolved($shopper->id, $trader->id, $amount, OrderPayment::METHOD_ACCOUNT);
+        } else {
+            $orderPayment = $this->orderPaymentService->create($order, $amount, OrderPayment::METHOD_ACCOUNT);
+        }
         $orderPayment->bank_payment = BankPayment::createFromBankPayment($payment);
         $orderPayment->save();
 

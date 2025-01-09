@@ -1,6 +1,6 @@
 <template>
 
-    <template v-if="order.status.is_new || order.status.is_manager">
+    <template v-if="is_new">
         <SearchAddProduct
             :route="route('admin.order.add-product', {order: order.id})"
             :quantity="true"
@@ -8,7 +8,6 @@
             :create="true"
         />
         <SearchAddProducts :route="route('admin.order.add-products', {order: order.id})" class="ml-3"/>
-
         <SelectAddition :additions="additions" :order="order"/>
         <div class="flex ml-1">
             <span class="ml-2 my-auto text-red-800">Скидка: </span>
@@ -37,7 +36,27 @@
         </div>
 
     </template>
-    <template v-if="order.status.is_awaiting">
+
+    <el-dropdown v-if="is_awaiting || is_issued">
+        <el-button type="primary">
+            Создать на основании<el-icon class="el-icon--right"><arrow-down /></el-icon>
+        </el-button>
+        <template #dropdown>
+            <el-dropdown-menu>
+                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('cash')">Оплата в кассу</el-dropdown-item>
+                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('card')">Оплата по карту</el-dropdown-item>
+                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('account')">Оплата по счету</el-dropdown-item>
+                <el-dropdown-item v-if="!order.status.is_paid" @click="onFindPayment">Найти оплату</el-dropdown-item>
+
+                <el-dropdown-item v-if="is_issued" @click="onMovement">Выдать из магазина</el-dropdown-item>
+                <el-dropdown-item v-if="is_issued" @click="onMovement">Выдать со склада</el-dropdown-item>
+                <el-dropdown-item v-if="is_issued" @click="onMovement">Распоряжение на отгрузку</el-dropdown-item>
+
+            </el-dropdown-menu>
+        </template>
+    </el-dropdown>
+
+    <template v-if="order.is_awaiting">
 
     </template>
     <template v-if="order.status.is_prepaid">
@@ -76,7 +95,7 @@ const form = reactive({
     percent: props.order.amount.percent,
     action: null,
 })
-const {is_new, is_issued, is_view} = inject('$status')
+const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
 function setDiscount(action) {
     form.action = action
     iSaving.value = true
@@ -90,20 +109,40 @@ function setDiscount(action) {
         }
     })
 }
-/*
-function onExpenses() {
+function onPayment(val) {
     const loading = ElLoading.service({
         lock: false,
         text: 'Создание документа',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    router.visit(route('admin.accounting.arrival.expense', {arrival: props.arrival.id}), {
+    router.visit(route('admin.order.payment.create', {order: props.order.id}), {
+        method: "post",
+        data: {method: val},
+        onSuccess: page => {
+            loading.close()
+        }
+    })
+    //router.post(route('admin.order.payment.create', {order: props.order.id}), {})
+
+}
+function onExpense(val) {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Создание документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    router.visit(route('admin.order.expense.create', {order: props.order.id}), {
         method: "post",
         onSuccess: page => {
             loading.close()
         }
     })
 }
+function onFindPayment() {
+    //TODO Модальное Окно с Загрузкой всех платежек по данному покупателю
+    // props.order.shopper_id
+}
+/*
 function onMovement() {
     const loading = ElLoading.service({
         lock: false,

@@ -461,7 +461,7 @@ class Order extends Model
     {
         $payments = 0;
         foreach ($this->payments as $payment) {
-            $payments += $payment->amount;
+            if ($payment->isCompleted()) $payments += $payment->amount;
         }
         return $payments;
     }

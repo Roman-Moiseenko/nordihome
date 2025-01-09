@@ -52,7 +52,8 @@ Route::group(
                 'as' => 'expense.',
             ],
             function () {
-                Route::post('/create', 'ExpenseController@create')->name('create');
+                Route::post('/create/{order}', 'ExpenseController@create')->name('create');
+
                 Route::post('/issue_shop', 'ExpenseController@issue_shop')->name('issue-shop');
                 Route::post('/issue_warehouse', 'ExpenseController@issue_warehouse')->name('issue-warehouse');
                 Route::get('/show/{expense}', 'ExpenseController@show')->name('show');
@@ -75,7 +76,7 @@ Route::group(
                 Route::get('/', 'RefundController@index')->name('index');
             }
         );
-        //Распоряжения
+        //Товары
         Route::group(
             [
                 'prefix' => 'product',
@@ -88,7 +89,18 @@ Route::group(
             }
         );
         //Платежи
-        Route::resource('payment', 'PaymentController');
+        Route::group(
+            [
+                'prefix' => 'payment',
+                'as' => 'payment.',
+            ],
+            function () {
+                Route::get('/', 'PaymentController@index')->name('index');
+                Route::get('/{payment}', 'PaymentController@show')->name('show');
+                Route::post('/{order}', 'PaymentController@create')->name('create');
+                Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
+            }
+        );
 
         //Резерв
         Route::get('/reserve', 'ReserveController@index')->name('reserve.index');

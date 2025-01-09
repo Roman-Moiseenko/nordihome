@@ -1,5 +1,6 @@
 <template>
     <el-row :gutter="10">
+        <!-- Данные клиента -->
         <el-col :span="8">
             <div v-if="order.user_id">
                 <el-descriptions :column="1" border class="mb-1" size="small">
@@ -31,6 +32,7 @@
             </div>
             <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})" />
         </el-col>
+        <!-- Суммы по заказу -->
         <el-col :span="8">
             <el-descriptions column="2" border>
                 <el-descriptions-item
@@ -75,10 +77,11 @@
                 </el-descriptions-item>
             </el-descriptions>
         </el-col>
+        <!-- Действия (кнопки) с заказом -->
         <el-col :span="8">
             <div class="inline-grid ">
 
-                <el-form-item v-if="is_new" label="Резерв">
+                <el-form-item v-if="is_new || is_awaiting" label="Резерв">
                     <el-date-picker v-model="reserve" type="datetime" @change="handleReserve" :disabled="iSavingInfo"/>
                 </el-form-item>
 
@@ -145,7 +148,7 @@ const reserve = ref(props.order.reserve)
 
 const dialogCancel = ref(false)
 const cancel_comment = ref(null)
-const {is_new, is_issued, is_view} = inject('$status')
+const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
 function setInfo() {
     iSavingInfo.value = true
     router.visit(route('admin.order.set-info', {order: props.order.id}), {

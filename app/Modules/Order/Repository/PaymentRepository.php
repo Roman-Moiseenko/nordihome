@@ -84,7 +84,9 @@ class PaymentRepository
     public function PaymentWithToArray(OrderPayment $payment): array
     {
         return array_merge($this->PaymentToArray($payment), [
-
+            'is_cash' => $payment->isCash(),
+            'is_card' => $payment->isCard(),
+            'is_account' => $payment->isAccount(),
         ]);
     }
 
