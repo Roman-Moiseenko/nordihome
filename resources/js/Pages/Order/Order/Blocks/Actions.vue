@@ -38,7 +38,7 @@
     </template>
 
     <el-dropdown v-if="is_awaiting || is_issued">
-        <el-button type="primary">
+        <el-button type="primary mr-2">
             Создать на основании<el-icon class="el-icon--right"><arrow-down /></el-icon>
         </el-button>
         <template #dropdown>
@@ -56,8 +56,17 @@
         </template>
     </el-dropdown>
 
-    <template v-if="order.is_awaiting">
-
+    <template v-if="!is_new && !is_awaiting">
+        <el-dropdown v-if="is_awaiting || is_issued">
+            <el-button type="success" class="mr-2">
+                Платежи <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </el-button>
+            <template #dropdown>
+                <div v-for="item in order.payments" class="p-2">
+                    <Link class="ml-6" type="primary" :href="route('admin.order.payment.show', {payment: item.id})">Платеж на сумму {{ func.price(item.amount) }} [{{ item.method_text }}]</Link>
+                </div>
+            </template>
+        </el-dropdown>
     </template>
     <template v-if="order.status.is_prepaid">
 
@@ -78,7 +87,7 @@
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import {defineProps, inject, reactive, ref} from "vue";
-import {router} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import {ElLoading} from "element-plus";
 import SelectAddition from "@Page/Order/Order/Blocks/SelectAddition.vue";

@@ -99,6 +99,8 @@ Route::group(
                 Route::get('/{payment}', 'PaymentController@show')->name('show');
                 Route::post('/{order}', 'PaymentController@create')->name('create');
                 Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
+                Route::post('/completed/{payment}', 'PaymentController@completed')->name('completed');
+                Route::post('/work/{payment}', 'PaymentController@work')->name('work');
             }
         );
 

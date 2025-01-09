@@ -667,8 +667,6 @@ class OrderService
 
     /**
      * Проверка Заказа после поступления оплаты, смена статуса, генерация события
-     * @param Order $order
-     * @return void
      */
     public function checkPayment(Order $order)
     {

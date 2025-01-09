@@ -8,6 +8,7 @@ use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Helpers\OrderHelper;
 use App\Modules\Product\Entity\Product;
@@ -180,9 +181,15 @@ class OrderRepository
                 'promotions' => $order->getDiscountPromotions(),
                 'coupon' =>$order->getCoupon(),
                 'percent' => ($order->getBaseAmountNotDiscount() == 0) ? 0 : ceil($order->manual / $order->getBaseAmountNotDiscount() * 100 * 10) / 10,
+                'payment' => $order->getPaymentAmount(),
             ],
             'shoppers' => is_null($order->user) ? [] : $order->user->organizations,
             'reserve' => $order->getReserveTo(),
+            'payments' => $order->payments()->get()->map(fn(OrderPayment $payment) => [
+                'id' => $payment->id,
+                'amount' => $payment->amount,
+                'method_text' => $payment->methodText(),
+            ]),
         ]);
     }
 

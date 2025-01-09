@@ -75,6 +75,11 @@
                                       class-name="bg-amount">
                     {{ func.price(order.amount.total) }}
                 </el-descriptions-item>
+                <el-descriptions-item v-if="order.amount.payment" label="Оплачено"
+                                      label-class-name="bg-amount"
+                                      class-name="bg-amount">
+                    {{ func.price(order.amount.payment) }}
+                </el-descriptions-item>
             </el-descriptions>
         </el-col>
         <!-- Действия (кнопки) с заказом -->

@@ -135,4 +135,18 @@ class OrderPaymentService
     {
 
     }
+
+    public function completed(OrderPayment $payment): void
+    {
+        if (is_null($payment->order_id)) throw new \DomainException('Нельзя провести платеж без привязки к договору');
+        $payment->completed();
+        $this->orderService->checkPayment($payment->order);
+    }
+
+    public function work(OrderPayment $payment): void
+    {
+        if (!$payment->manual) throw new \DomainException('Нельзя отменить проведение на автоматический платеж');
+        $payment->work();
+        $this->orderService->checkPayment($payment->order);
+    }
 }

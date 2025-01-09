@@ -38,6 +38,7 @@ class PaymentController extends Controller
     )
     {
         $this->middleware(['auth:admin', 'can:payment']);
+        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->repository = $repository;
         $this->orders = $orders;
@@ -65,12 +66,6 @@ class PaymentController extends Controller
 
     }
 
-    public function update(OrderPayment $payment, Request $request)
-    {
-        $this->service->update($payment, $request);
-        return redirect()->route('admin.order.payment.index');
-    }
-
     public function show(OrderPayment $payment): Response
     {
         return Inertia::render('Order/Payment/Show', [
@@ -86,7 +81,19 @@ class PaymentController extends Controller
         return redirect()->route('admin.order.payment.index');
     }
 
-    public function set_info(OrderPayment $payment, Request $request)
+    public function completed(OrderPayment $payment): RedirectResponse
+    {
+        $this->service->completed($payment);
+        return redirect()->back()->with('success', 'Документ проведен');
+    }
+
+    public function work(OrderPayment $payment): RedirectResponse
+    {
+        $this->service->work($payment);
+        return redirect()->back()->with('success', 'Документ в работе');
+    }
+
+    public function set_info(OrderPayment $payment, Request $request): RedirectResponse
     {
         $this->service->setInfo($payment, $request);
         return redirect()->back()->with('success', 'Сохранено');

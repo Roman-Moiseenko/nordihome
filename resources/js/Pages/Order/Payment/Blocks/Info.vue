@@ -61,13 +61,17 @@
                 </el-form-item>
             </el-form>
         </el-col>
+        <el-col v-if="payment.order_id" :span="8">
+            <Link type="primary" :href="route('admin.order.show', {order: payment.order_id})">Заказ № {{ payment.order.number }} от {{ func.date(payment.order.created_at) }} </Link>
+        </el-col>
+
     </el-row>
 
 </template>
 
 <script setup lang="ts">
 import {computed, defineProps, reactive, ref} from "vue";
-import {router} from "@inertiajs/vue3";
+import {router, Link} from "@inertiajs/vue3";
 import {func} from  "@Res/func.js"
 
 const props = defineProps({
