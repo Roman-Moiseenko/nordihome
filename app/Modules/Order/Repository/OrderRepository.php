@@ -4,10 +4,14 @@ declare(strict_types=1);
 namespace App\Modules\Order\Repository;
 
 
+use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Entity\Order\OrderMovement;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Helpers\OrderHelper;
@@ -162,6 +166,7 @@ class OrderRepository
         return array_merge($this->OrderToArray($order), [
             'in_stock' => $order->items()->where('preorder', false)->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
             'pre_order' => $order->items()->where('preorder', true)->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
+            'items' => $order->items()->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
             'additions' => $order->additions()->get()->map(function (OrderAddition $orderAddition) {
                 return array_merge($orderAddition->toArray(), [
                     'calculate' => $orderAddition->getAmount(),
@@ -179,7 +184,7 @@ class OrderRepository
                 'total' => $order->getTotalAmount(),
                 'addition' => $order->getAdditionsAmount(),
                 'promotions' => $order->getDiscountPromotions(),
-                'coupon' =>$order->getCoupon(),
+                'coupon' => $order->getCoupon(),
                 'percent' => ($order->getBaseAmountNotDiscount() == 0) ? 0 : ceil($order->manual / $order->getBaseAmountNotDiscount() * 100 * 10) / 10,
                 'payment' => $order->getPaymentAmount(),
             ],
@@ -189,6 +194,11 @@ class OrderRepository
                 'id' => $payment->id,
                 'amount' => $payment->amount,
                 'method_text' => $payment->methodText(),
+            ]),
+            'movements' => $order->movements()->get()->map(fn(MovementDocument $movement) => [
+                'id' => $movement->id,
+                'number' => $movement->number,
+                'status_text' => $movement->statusHTML(),
             ]),
         ]);
     }
@@ -204,6 +214,22 @@ class OrderRepository
                 'has_promotion' => $item->product->hasPromotion(),
                 'quantity_sell' => $item->product->getQuantitySell(),
             ]),
+            'supply_stack' => is_null($item->supply_stack_id) ? null : [
+                'id' => $item->supplyStack->id,
+                'status_text' => $item->supplyStack->status(),
+            ],
+            'remains' => $item->getRemains(),
+            'storages' => Storage::orderBy('name')->get()->map(function (Storage $storage) use ($item) {
+                $storageItem = $storage->getItem($item->product_id);
+                $orderReserve = $item->getReserveByStorageItem($storageItem->id);
+                return [
+                    'id' => $storage->id,
+                    'name' => $storage->name,
+                    'reserve' => is_null($orderReserve) ? 0 : (float)$orderReserve->quantity,
+                    'quantity' => (float)$storageItem->quantity,
+                    'reserve_other' => $storageItem->getQuantityReserve($item->order_id),
+                ];
+            }),
         ]);
     }
 

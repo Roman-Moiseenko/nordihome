@@ -48,6 +48,7 @@ class OrderController extends Controller
     private OrderService $service;
     private InvoiceReport $report;
     private OrganizationRepository $organizations;
+    private OrderReserveService $reserveService;
 
     public function __construct(
         OrderService           $service,
@@ -56,6 +57,7 @@ class OrderController extends Controller
         ProductRepository      $products,
         InvoiceReport          $report,
         OrganizationRepository $organizations,
+        OrderReserveService    $reserveService,
     )
     {
         $this->middleware(['auth:admin', 'can:order']);
@@ -66,6 +68,7 @@ class OrderController extends Controller
         //TODO загрузка процента по сборке
         $this->report = $report;
         $this->organizations = $organizations;
+        $this->reserveService = $reserveService;
     }
 
     public function index(Request $request): Response
@@ -119,19 +122,11 @@ class OrderController extends Controller
         return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
     }
 
-    public function movement(Request $request, Order $order)
+    public function movement(Request $request, Order $order): RedirectResponse
     {
         $movement = $this->service->movement($order, (int)$request['storage_out'], (int)$request['storage_in']);
         return redirect()->route('admin.accounting.movement.show', $movement);
     }
-
-    #[Deprecated]
-    public function destroy(Order $order)
-    {
-        $this->service->destroy($order);
-        return redirect()->back();
-    }
-
 
     public function log(Order $order)
     {
@@ -272,7 +267,13 @@ class OrderController extends Controller
 
     public function add_products(Request $request, Order $order)
     {
+        dd('Сделать');
+    }
 
+    public function reserve_collect(Request $request, OrderItem $item)
+    {
+        $this->reserveService->CollectReserve($item, $request->integer('storage_id'), $request->float('quantity'));
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     /** РАБОТА С УСЛУГАМИ В ЗАКАЗЕ */

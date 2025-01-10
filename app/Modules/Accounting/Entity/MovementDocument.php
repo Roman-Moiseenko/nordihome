@@ -6,6 +6,7 @@ namespace App\Modules\Accounting\Entity;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderMovement;
 use App\Modules\Product\Entity\Product;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
@@ -24,6 +25,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property Storage $storageOut
  * @property Storage $storageIn
  * @property ArrivalDocument $arrival
+ * @property Order $order
  * @property MovementProduct[] $movementProducts
  */
 class MovementDocument extends AccountingDocument
@@ -108,9 +110,20 @@ class MovementDocument extends AccountingDocument
         return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
     }
 
-    public function order():? Order
+    public function order()
     {
-        return $this->belongsToMany(Order::class, 'orders_movements', 'movement_id', 'order_id')->first();
+        return $this->hasOneThrough(
+            Order::class,
+            OrderMovement::class,
+            'movement_id', 'id',
+            'id', 'order_id');
+
+        /*return $this->hasOneThrough(Organization::class, ShopperOrganization::class,
+            'user_id', 'id',
+            'id', 'organization_id')
+            ->where('shopper_organizations.default', true);
+        */
+        //return $this->belongsToMany(Order::class, 'orders_movements', 'movement_id', 'order_id')->first();
     }
 
     #[Deprecated]

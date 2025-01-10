@@ -13,13 +13,21 @@
             </div>
         </el-affix>
 
-        <div v-if="order.in_stock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
-            <h2 class="font-medium text-cyan-800">Товары в наличии</h2>
-            <OrderItems :items=[...order.in_stock] />
+        <div v-if="is_new || is_awaiting">
+            <div v-if="order.in_stock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+                <h2 class="font-medium text-cyan-800">Товары в наличии</h2>
+                <OrderItemsNew :items=[...order.in_stock] />
+            </div>
+            <div v-if="order.pre_order.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+                <h2 class="font-medium text-orange-800">Товары под заказ</h2>
+                <OrderItemsNew :items=[...order.pre_order]  />
+            </div>
         </div>
-        <div v-if="order.pre_order.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
-            <h2 class="font-medium text-orange-800">Товары под заказ</h2>
-            <OrderItems :items=[...order.pre_order]  />
+        <div v-if="is_issued">
+            <div v-if="order.in_stock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+                <h2 class="font-medium text-cyan-800">Товары на выдачу</h2>
+                <OrderItemsIssued :items=[...order.items] />
+            </div>
         </div>
         <div v-if="order.additions.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
             <h2 class="font-medium text-green-800">Услуги</h2>
@@ -35,7 +43,8 @@ import {computed, defineProps, provide} from "vue";
 import OrderActions from "./Blocks/Actions.vue";
 import OrderInfo from "./Blocks/Info.vue";
 import Active from "@Comp/Elements/Active.vue";
-import OrderItems from "./Blocks/Items.vue"
+import OrderItemsNew from "./Blocks/ItemsNew.vue"
+import OrderItemsIssued from "./Blocks/ItemsIssued.vue"
 import OrderAdditions from  "./Blocks/Additions.vue"
 
 const props = defineProps({

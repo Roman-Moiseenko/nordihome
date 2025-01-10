@@ -151,10 +151,8 @@ class SupplyController extends Controller
 
     public function add_stack(Request $request, OrderItem $item): RedirectResponse
     {
-        $request->validate([
-            'storage' => 'required|numeric|min:0|not_in:0',
-        ]);
-        $stack = $this->service->addStack($item, $request->integer('storage'));
+
+        $stack = $this->service->addStack($item, $request->input('storage'));
         if (!empty($stack)) flash('Товар ' . $stack->product->name . ' помещен в стек заказа', 'info');
         return redirect()->back()->with('success', 'Товар ' . $stack->product->name . ' помещен в стек заказа');
     }

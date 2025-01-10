@@ -83,7 +83,7 @@ class MovementService // extends AccountingService
 
     }
 
-    public function arrival(MovementDocument $document)
+    public function arrival(MovementDocument $document): void
     {
         DB::transaction(function () use ($document) {
             $storageIn = $document->storageIn;
@@ -93,15 +93,15 @@ class MovementService // extends AccountingService
                 $arrivalItem->delete();//удаляем StorageArrivalItem
 
                 //Если перемещение под заказ, то резервируем
-                if (!empty($document->order()))
+                if (!is_null($document->order))
                     $this->reserveService->ReserveWithMovement(
                         $document->storageOut, $document->storageIn,
                         $movementProduct->orderItem,
                         (float)$movementProduct->quantity);
             }
             $document->statusCompleted();
-            if (!empty($document->order())) { //Уведомляем менеджера, что товар поступил
-                $document->order()->manager->notify(new StaffMessage('Перемещение товара по заказу', $document->order()->htmlNum()));
+            if (!is_null($document->order)) { //Уведомляем менеджера, что товар поступил
+                $document->order->staff->notify(new StaffMessage('Перемещение товара по заказу', $document->order->htmlNum()));
             }
         });
     }

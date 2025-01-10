@@ -63,10 +63,22 @@
             </el-button>
             <template #dropdown>
                 <div v-for="item in order.payments" class="p-2">
-                    <Link class="ml-6" type="primary" :href="route('admin.order.payment.show', {payment: item.id})">Платеж на сумму {{ func.price(item.amount) }} [{{ item.method_text }}]</Link>
+                    <Link type="primary" :href="route('admin.order.payment.show', {payment: item.id})">Платеж на сумму {{ func.price(item.amount) }} [{{ item.method_text }}]</Link>
                 </div>
             </template>
         </el-dropdown>
+        <el-dropdown v-if="order.movements.length > 0">
+            <el-button type="warning" class="mr-2">
+                Перемещения <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </el-button>
+            <template #dropdown>
+                <div v-for="item in order.movements" class="p-2">
+                    <Link type="warning"
+                          :href="route('admin.accounting.movement.show', {movement: item.id})">Перемещение №{{ item.number }} [{{ item.status_text }}]</Link>
+                </div>
+            </template>
+        </el-dropdown>
+
     </template>
     <template v-if="order.status.is_prepaid">
 

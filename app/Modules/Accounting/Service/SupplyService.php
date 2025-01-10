@@ -78,7 +78,7 @@ class SupplyService
                 $stack = SupplyStack::find((int)$stack_id); //В стеке указываем Документ на заказ
                 $stack->setSupply($supply->id);
                 $d_product = $distributor->getProduct($stack->product_id);
-                $supply->addProduct($stack->product, $stack->quantity, $d_product->pivot->cost);
+                $supply->addProduct($stack->product, (float)$stack->quantity, (float)$d_product->pivot->cost);
                 $supply->refresh();
             }
         });
@@ -304,8 +304,12 @@ class SupplyService
     ////<===============
 
     ////Фун-ции работы с товарами в Стеке =======>
-    public function addStack(OrderItem $item, int $storage_id): SupplyStack
+    public function addStack(OrderItem $item, ?int $storage_id): SupplyStack
     {
+        if (is_null($storage_id)) {
+            $storage_id = Storage::where('default', true)->first()->id;
+        }
+
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $stack = SupplyStack::register($item->product_id, $item->quantity, $staff->id, $storage_id, 'Заказ # ' . $item->order->htmlNum());

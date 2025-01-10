@@ -13,6 +13,7 @@ use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 
+use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Service\DeliveryService;
@@ -389,24 +390,13 @@ class OrderService
 
             $invoice = $this->invoiceReport->xlsx($order);
             SendSystemMail::dispatch($order->user, new OrderAwaitingMail($order, $invoice));
+            //TODO Сохранить в логе Заказа ссылку на письмо (ID)
+
             //TODO Или создаем событие
             // event(new OrderHasAwaiting($order));
 
             //flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
         });
-    }
-
-    /**
-     * Удалить заказ, если еще нет с ним работы
-     */
-    #[Deprecated]
-    public function destroy(Order $order)
-    {
-        if ($order->status->value == OrderStatus::FORMED) {
-            $order->delete();
-        } else {
-            throw new \DomainException('Нельзя удалить заказ, который уже в работе');
-        }
     }
 
     /**
@@ -468,7 +458,6 @@ class OrderService
         $order->refresh();
         $this->recalculation($order);
         $this->logger->logOrder($order, 'Добавлен товар', $product->name, $quantity . ' шт.');
-
 
         return $order;
     }
@@ -633,18 +622,20 @@ class OrderService
 
     /**
      * Создать перемещение для заказа на основе резерва по складу отправки
+     * LoggerOrder::class
      */
     public function movement(Order $order, int $storage_out, int $storage_in): MovementDocument
     {
         DB::transaction(function () use ($order, $storage_out, $storage_in, &$movement) {
             $movement = $this->movementService->create($storage_out, $storage_in);
+            $this->movementService->completed($movement);
             $order->movements()->attach($movement->id);
             $movement->refresh();
 
             foreach ($order->items as $item) {
                 if (!is_null($reserve = $item->getReserveByStorage($storage_out))) {
                     if ($reserve->quantity > 0) {
-                        $movement->addProduct($item->product_id, $reserve->quantity, $item->id);
+                        $movement->addProduct($item->product_id, (float)$reserve->quantity, $item->id);
                     }
                 }
             }
@@ -688,9 +679,11 @@ class OrderService
 
     /**
      * Копируем заказ
+     * LoggerOrder::class
      */
     public function copy(Order $order): Order
     {
+        //TODO Переделать под новые данные (+ организации, упаковка/сборка товара, кол-во и цена услуг)
         DB::transaction(function () use ($order, &$new_order) {
             $new_order = $order->replicate();
             $new_order->created_at = Carbon::now();
@@ -708,9 +701,7 @@ class OrderService
             }
 
             foreach ($order->additions as $addition) {
-                //TODO Переделать
                 $this->addAddition($new_order, $addition->addition_id);
-
             }
 
             $new_order->refresh();
@@ -749,6 +740,7 @@ class OrderService
 
     /**
      * Добавление товара в заказ, через Парсер
+     * LoggerOrder::class
      */
     //TODO Переделать на получение полных данных из базы
     public function add_parser(Order $order, $search, float $quantity)
@@ -767,12 +759,21 @@ class OrderService
         $this->logger->logOrder($order, 'Добавлен товар через Парсер', $product->name, $quantity . ' шт.');
     }
 
+    /**
+     * Удаление услуги из заказа
+     * LoggerOrder::class
+     */
     public function deleteAddition(OrderAddition $addition): void
     {
         if (!$addition->order->isManager()) throw new \DomainException('Нельзя удалить услугу');
+        $this->logger->logOrder($addition->order, 'Удалена услуга', $addition->addition->name, price($addition->getAmount()));
         $addition->delete();
     }
 
+    /**
+     * Установка скидки на Заказ
+     * LoggerOrder::class
+     */
     public function setDiscount(Order $order, Request $request): void
     {
         $code = $request->string('coupon')->trim()->value();
@@ -838,14 +839,32 @@ class OrderService
         $order->save();
     }
 
-    //TODO Сменить организацию для выставления счета
-
+    /**
+     * Сменить организацию для выставления счета (покупателя и продавца)
+     * LoggerOrder::class
+     */
     public function setInfo(Order $order, Request $request): void
     {
+        if ($order->trader_id != $request->integer('trader_id')) {
+            $old = $order->trader->short_name;
+            $order->trader_id = $request->integer('trader_id');
+            $order->save();
+            $order->refresh();
+            $this->logger->logOrder($order, 'Изменена организация Продавец', $old, $order->trader->short_name);
+            return;
+        }
 
-        $order->trader_id = $request->integer('trader_id');
-        $order->shopper_id = $request->input('shopper_id');
+        if ($order->shopper_id != $request->input('shopper_id')) {
+            $old = is_null($order->shopper) ? 'Физ.лицо' : $order->shopper->short_name;
+            $order->shopper_id = $request->input('shopper_id');
+            $order->save();
+            $order->refresh();
+            $this->logger->logOrder($order, 'Изменена организация Покупатель', $old, is_null($order->shopper) ? 'Физ.лицо' : $order->shopper->short_name);
+            return;
+        }
         $order->comment = $request->string('comment')->trim()->value();
+        $this->logger->logOrder($order, 'Добавлен комментарий', '', $order->comment);
         $order->save();
     }
+
 }

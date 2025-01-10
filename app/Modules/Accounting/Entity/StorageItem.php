@@ -123,8 +123,7 @@ class StorageItem extends Model
 
     /**
      * Кол-во товара в резерве для текущего склада
-     * @param int|null $order_id
-     * @return int
+     * $order_id == null - по всем заказам, != null - по другим заказам за исключением текущего
      */
     public function getQuantityReserve(int $order_id = null): float
     {

@@ -30,6 +30,10 @@
                           :href="route('admin.accounting.arrival.show', {arrival: movement.arrival_id})" class="ml-2">
                         Приходная накладная {{ movement.arrival_text }}
                     </Link>
+                    <Link v-if="movement.order" type="danger"
+                          :href="route('admin.order.show', {order: movement.order.id})" class="ml-2">
+                        Перемещение по заказу №{{ movement.order.number }} от {{ func.date( movement.order.created_at) }}
+                    </Link>
                 </el-form-item>
             </el-form>
         </el-col>

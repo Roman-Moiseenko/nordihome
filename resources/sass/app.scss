@@ -87,6 +87,11 @@ a[type="info"] {
     @apply hover:text-slate-400;
     @apply font-medium;
 }
+a[type="danger"] {
+    @apply text-red-600;
+    @apply hover:text-red-400;
+    @apply font-medium;
+}
 .el-form-item {
     margin-bottom: 10px !important;
 }

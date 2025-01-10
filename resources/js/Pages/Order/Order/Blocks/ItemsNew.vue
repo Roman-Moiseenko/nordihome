@@ -80,7 +80,7 @@
                 <Active v-else :active="scope.row.assemblage"/>
             </template>
         </el-table-column>
-        <el-table-column prop="assemblage" label="Упаковка" width="90" align="center">
+        <el-table-column prop="packing" label="Упаковка" width="90" align="center">
             <template #default="scope">
                 <el-checkbox v-if="is_new"
                              :checked="scope.row.packing"
@@ -107,9 +107,6 @@
                     <el-button type="danger" @click="handleDeleteItem(scope.row)">
                         <i class="fa-light fa-trash"></i>
                     </el-button>
-                </div>
-                <div v-if="is_issued">
-                    Выдать, Переместить и др.
                 </div>
             </template>
         </el-table-column>

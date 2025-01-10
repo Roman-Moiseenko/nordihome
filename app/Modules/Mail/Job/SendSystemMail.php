@@ -21,7 +21,8 @@ class SendSystemMail implements ShouldQueue
     private User $user;
     private AbstractMailable $mail;
 
-    public function __construct(User $user, AbstractMailable $mail)
+
+    public function __construct(User $user, AbstractMailable $mail, callable $callable = null)
     {
         $this->user = $user;
         $this->mail = $mail;

@@ -58,6 +58,7 @@ class MovementRepository extends AccountingRepository
                 'is_active' => $document->isFinished(),
                 'is_departure' => $document->isDeparture(),
                 'is_arrival' => $document->isArrival(),
+                'order' => $document->order,
                 'products' => $query
                     ->with('product')
                     ->paginate($request->input('size', 20))

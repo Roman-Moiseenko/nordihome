@@ -20,6 +20,7 @@ Route::group(
         Route::post('/set-info/{order}', 'OrderController@set_info')->name('set-info');
         Route::post('/resend-invoice/{order}', 'OrderController@resend_invoice')->name('resend-invoice');
 
+        Route::post('/reserve-collect/{item}', 'OrderController@reserve_collect')->name('reserve-collect');
     //    Route::post('/set-info/{order}', 'OrderController@set_info')->name('set-info');
         Route::post('/add-product/{order}', 'OrderController@add_product')->name('add-product');
         Route::post('/add-products/{order}', 'OrderController@add_products')->name('add-products');

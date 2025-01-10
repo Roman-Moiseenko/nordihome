@@ -90,7 +90,27 @@
                     <el-date-picker v-model="reserve" type="datetime" @change="handleReserve" :disabled="iSavingInfo"/>
                 </el-form-item>
 
+
+                <el-popover v-if="is_issued" :visible="visible_movement" placement="bottom-start" :width="246">
+                    <template #reference>
+                        <el-button type="primary" class="p-4 my-3" @click="visible_movement = !visible_movement" ref="buttonRef">
+                            Перемещение
+                            <el-icon class="ml-1"><ArrowDown /></el-icon>
+                        </el-button>
+                    </template>
+                    <el-select v-model="movement.storage_out" placeholder="Склад Убытия" class="mt-1">
+                        <el-option v-for="item in storages" :key="item.id" :label="item.name" :value="item.id"/>
+                    </el-select>
+                    <el-select v-model="movement.storage_in" placeholder="Склад Назначения" class="mt-1">
+                        <el-option v-for="item in storages" :key="item.id" :label="item.name" :value="item.id"/>
+                    </el-select>
+                    <div class="mt-2">
+                        <el-button @click="visible_movement = false">Отмена</el-button><el-button @click="onMovement" type="primary">Создать</el-button>
+                    </div>
+                </el-popover>
+
                 <el-button v-if="is_new" type="success" @click="onAwaiting">На оплату</el-button>
+
                 <el-button v-if="!is_view" type="success" plain @click="getInvoice">Скачать счет</el-button>
                 <el-button v-if="!is_view" type="info" plain @click="dialogCancel = true">Отменить</el-button>
             </div>
@@ -221,9 +241,18 @@ function onCancel() {
             dialogCancel.value = false;
         }
     })
-
-
 }
+
+//Перемещение
+const visible_movement = ref(false)
+const movement = reactive({
+    storage_out: null,
+    storage_in: null
+})
+function onMovement() {
+    router.post(route('admin.order.movement', {order: props.order.id}), movement)
+}
+
 </script>
 <style lang="scss" scoped>
 :deep(.bg-sell) {
