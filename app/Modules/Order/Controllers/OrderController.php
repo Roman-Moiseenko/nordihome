@@ -122,11 +122,7 @@ class OrderController extends Controller
         return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
     }
 
-    public function movement(Request $request, Order $order): RedirectResponse
-    {
-        $movement = $this->service->movement($order, (int)$request['storage_out'], (int)$request['storage_in']);
-        return redirect()->route('admin.accounting.movement.show', $movement);
-    }
+
 
     public function log(Order $order)
     {
@@ -206,6 +202,12 @@ class OrderController extends Controller
 
 
     /** РАБОТА С ЗАКАЗОМ */
+    public function movement(Request $request, Order $order): RedirectResponse
+    {
+        $movement = $this->service->movement($order, (int)$request['storage_out'], (int)$request['storage_in']);
+        return redirect()->route('admin.accounting.movement.show', $movement);
+    }
+
     public function set_reserve(Request $request, Order $order): RedirectResponse
     {
         $this->service->setReserveService($order, $request);

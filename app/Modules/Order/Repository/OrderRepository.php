@@ -10,6 +10,7 @@ use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderMovement;
 use App\Modules\Order\Entity\Order\OrderPayment;
@@ -141,6 +142,7 @@ class OrderRepository
                     'manual' => $orderAddition->addition->manual,
                     'base' => $orderAddition->addition->base,
                     'is_quantity' => $orderAddition->addition->is_quantity,
+                    'remains' => $orderAddition->getRemains(),
                 ]);
             }),
             'user' => is_null($order->user_id) ? null : $this->users->UserToArray($order->user),
@@ -166,6 +168,12 @@ class OrderRepository
                 'id' => $movement->id,
                 'number' => $movement->number,
                 'status_text' => $movement->statusHTML(),
+            ]),
+            'expenses' => $order->expenses()->get()->map(fn(OrderExpense $expense) => [
+                'id' => $expense->id,
+                'number' => $expense->number,
+                'created_at' => $expense->created_at,
+                'status_text' => $expense->statusHTML(),
             ]),
         ]);
     }

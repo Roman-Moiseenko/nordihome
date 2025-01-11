@@ -33,11 +33,10 @@
         <el-table-column v-if="is_new" prop="product.quantity_sell" label="Наличие" width="90" align="center"/>
 
 
-        <el-table-column label="Выдача" width="240">
+        <el-table-column label="Не выдано" width="240">
             <template #default="scope">
                 <div v-if="scope.row.reserves">
-                    <el-input v-model="scope.row.remains" style="width: 60px;" :disabled="!scope.row.issued"/>
-                    <el-checkbox v-model="scope.row.issued" :checked="scope.row.issued" class="ml-2 my-auto">На выдачу</el-checkbox>
+                    {{ scope.row.remains }}
                 </div>
                 <div v-if="scope.row.preorder">
                     <el-button v-if="!scope.row.supply_stack" type="primary" class="p-4 my-3"
@@ -115,11 +114,6 @@ const props = defineProps({
 const iSaving = ref(false)
 const {is_new, is_issued, is_view} = inject('$status')
 const tableData = ref([...props.items])
-
-const tableDate = [...props.items.map(item => {
-    item.issued = !item.preorder
-    return item
-})]
 
 //Проверяем хватает ли на складе для выдачи товара
 function notStorage(row, storage) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Service\Report\Trade12Report;
@@ -43,14 +44,15 @@ class ExpenseController extends Controller
         return response()->file($file);
     }
 
-    //Через AJAX
-    public function create(Request $request)
-    {
-        $data = json_decode($request['data'], true);
-        $expense = $this->service->create_expense($data);
-        return response()->json(route('admin.order.expense.show', $expense));
-    }
 
+    public function create(Order $order, Request $request)
+    {
+        $expense = $this->service->create_expense($order, $request);
+        if ($request->input('method') == 'shop') return redirect()->back()->with('success', 'Товар выдан');
+
+        return redirect()->json(route('admin.order.expense.show', $expense))->with('success', 'Распоряжение сформировано');
+    }
+/*
     public function issue_shop(Request $request)
     {
         $data = json_decode($request['data'], true);
@@ -63,7 +65,7 @@ class ExpenseController extends Controller
             return response()->json(['error' => $e->getMessage()]);
         }
     }
-
+/*
     public function issue_warehouse(Request $request)
     {
         $data = json_decode($request['data'], true);
@@ -71,7 +73,7 @@ class ExpenseController extends Controller
         flash('Заявка на выдачу сформирована. Распечатайте накладную', 'info');
         return response()->json(route('admin.order.expense.show', $expense));
     }
-
+*/
     public function assembly(OrderExpense $expense)
     {
         $order = $this->service->assembly($expense);

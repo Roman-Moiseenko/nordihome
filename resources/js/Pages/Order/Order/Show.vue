@@ -9,7 +9,7 @@
         </div>
         <el-affix target=".affix-container" :offset="64">
             <div class="bg-white rounded-lg my-2 p-1 shadow flex">
-                <OrderActions :order="order" :additions="additions" />
+                <OrderActions :order="order" :additions="additions" :storages="storages" />
             </div>
         </el-affix>
 
@@ -31,7 +31,8 @@
         </div>
         <div v-if="order.additions.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
             <h2 class="font-medium text-green-800">Услуги</h2>
-            <OrderAdditions :additions=[...order.additions]  />
+            <OrderAdditions v-if="is_new || is_awaiting" :additions=[...order.additions] />
+            <OrderAdditionsIssued v-if="is_issued" :additions=[...order.additions] />
         </div>
 
     </el-config-provider>
@@ -46,7 +47,7 @@ import Active from "@Comp/Elements/Active.vue";
 import OrderItemsNew from "./Blocks/ItemsNew.vue"
 import OrderItemsIssued from "./Blocks/ItemsIssued.vue"
 import OrderAdditions from  "./Blocks/Additions.vue"
-
+import OrderAdditionsIssued from  "./Blocks/Additionsissued.vue"
 const props = defineProps({
     order: Object,
     title: {

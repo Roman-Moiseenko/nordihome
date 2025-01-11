@@ -19,6 +19,7 @@ use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
@@ -36,13 +37,12 @@ class ExpenseService
         $this->logger = $logger;
     }
 
-    public function create(array $request): OrderExpense
+    public function create(Order $order, Request $request): OrderExpense
     {
-        DB::transaction(function () use ($request, &$expense) {
+        DB::transaction(function () use ($order, $request, &$expense) {
             /** @var Storage $storage */
             $storage = Storage::find($request['storage_id']); //Откуда выдать товар
-            /** @var Order $order */
-            $order = Order::find($request['order_id']);
+
 
             $expense = OrderExpense::register($order->id, $storage->id);
             $items = $request['items'];
@@ -80,15 +80,37 @@ class ExpenseService
         return $expense;
     }
 
-    public function create_expense(array $request): OrderExpense
+    public function create_expense(Order $order, Request $request): OrderExpense
     {
-        $expense = $this->create($request);
-        $user = $expense->order->user;
-        $expense->recipient = clone $user->fullname;
-        $expense->address = clone $user->address;
-        $expense->phone = $user->phone;
-        if (!$user->isStorage()) $expense->type = $user->delivery;
+        $expense = $this->create($order, $request);
+
+        $method = $request->string('method')->value();
+
+        if ($method == 'expense') {
+            $user = $expense->order->user;
+            $expense->recipient = clone $user->fullname;
+            $expense->address = clone $user->address;
+            $expense->phone = $user->phone;
+            if (!$user->isStorage()) $expense->type = $user->delivery;
+            $expense->save();
+            return $expense;
+        }
+
+        $expense->type = OrderExpense::DELIVERY_STORAGE;
+        $expense->recipient = clone $expense->order->user->fullname;
+        $expense->phone = $expense->order->user->phone;
         $expense->save();
+        $expense->setNumber();
+
+        if ($method == 'shop') {
+            $this->completed($expense);
+            $expense->refresh();
+            $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
+        }
+        if ($method == 'wherehouse') {
+
+        }
+
 
         return $expense;
     }
@@ -124,35 +146,32 @@ class ExpenseService
 
     /**
      * Регистрация выдачи товара на месте (без доставки)
-     * @param array $request
-     * @return OrderExpense
      */
+
     private function issue(array $request): OrderExpense
     {
-        $expense = $this->create($request);
+       // $expense = $this->create($request);
 
-        $expense->type = OrderExpense::DELIVERY_STORAGE;
+     /*   $expense->type = OrderExpense::DELIVERY_STORAGE;
         $expense->recipient = clone $expense->order->user->fullname;
         $expense->phone = $expense->order->user->phone;
         $expense->save();
         $expense->setNumber();
-        return $expense;
+        return $expense;*/
     }
 
     /**
      * Выдать товар из магазина, витрины
-     * @param array $request
-     * @return OrderExpense
      */
     public function issue_shop(array $request): OrderExpense
     {
-       DB::transaction(function () use ($request, &$expense) {
+     /*  DB::transaction(function () use ($request, &$expense) {
             $expense = $this->issue($request);
             $this->completed($expense);
             $expense->refresh();
             $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
         });
-        return $expense;
+        return $expense;*/
     }
 
     /**

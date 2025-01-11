@@ -1,0 +1,56 @@
+<template>
+    <el-table
+        :data="tableDate"
+        header-cell-class-name="nordihome-header"
+        style="width: 100%;"
+    >
+        <el-table-column type="index" label="п/п"/>
+        <el-table-column prop="name" label="Услуга" width="340"/>
+
+        <el-table-column prop="" label="Сумма" width="140" align="center">
+            <template #default="scope">
+                <el-tag type="success" effect="dark">
+                    {{ func.price(scope.row.amount * scope.row.quantity) }}
+                </el-tag>
+            </template>
+        </el-table-column>
+        <el-table-column prop="quantity" label="Кол-во" width="80" align="center">
+            <template #default="scope">
+                <div v-if="scope.row.is_quantity">
+                    <el-tag type="primary" effect="dark">{{ scope.row.quantity }}</el-tag>
+                </div>
+                <div v-else>
+                    -
+                </div>
+            </template>
+        </el-table-column>
+        <el-table-column prop="remains"  label="Не выдано" width="240" >
+            <template #default="scope">
+                {{ func.price(scope.row.remains) }}
+            </template>
+        </el-table-column>
+        <el-table-column prop="comment" label="Комментарий" align="right" show-overflow-tooltip />
+
+    </el-table>
+</template>
+
+<script setup lang="ts">
+import Active from "@Comp/Elements/Active.vue";
+import {func} from "@Res/func.js"
+import {computed, inject, ref} from "vue";
+import {Link, router} from "@inertiajs/vue3";
+
+const props = defineProps({
+    additions: Array,
+})
+const tableDate = [...props.additions]
+console.log(props.additions)
+const $delete_entity = inject("$delete_entity")
+const iSaving = ref(false)
+const {is_new, is_issued, is_view} = inject('$status')
+
+</script>
+
+<style scoped>
+
+</style>

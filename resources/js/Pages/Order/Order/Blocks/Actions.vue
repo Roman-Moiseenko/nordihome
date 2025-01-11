@@ -34,7 +34,6 @@
                       :disabled="iSaving"/>
 
         </div>
-
     </template>
 
     <el-dropdown v-if="is_awaiting || is_issued">
@@ -52,18 +51,21 @@
                 </el-dropdown-item>
                 <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('account')">Оплата по счету
                 </el-dropdown-item>
-                <el-dropdown-item v-if="!order.status.is_paid && order.shopper_id" @click="onFindPayment">Найти оплату
+
+                <el-dropdown-item v-if="!order.status.is_paid && order.shopper_id" @click="onFindPayment">
+                    <span class="text-orange-600"> Найти оплату </span>
                 </el-dropdown-item>
 
-                <el-dropdown-item v-if="is_issued" @click="onMovement">Выдать из магазина</el-dropdown-item>
-                <el-dropdown-item v-if="is_issued" @click="onMovement">Выдать со склада</el-dropdown-item>
-                <el-dropdown-item v-if="is_issued" @click="onMovement">Распоряжение на отгрузку</el-dropdown-item>
+                <el-dropdown-item v-if="is_issued" @click="dialogIssued = true">
+                    Распоряжение на отгрузку
+                </el-dropdown-item>
 
             </el-dropdown-menu>
         </template>
     </el-dropdown>
 
     <template v-if="!is_new && !is_awaiting">
+
         <el-dropdown v-if="is_awaiting || is_issued">
             <el-button type="success" class="mr-2">
                 Платежи
@@ -79,6 +81,7 @@
                 </div>
             </template>
         </el-dropdown>
+
         <el-dropdown v-if="order.movements.length > 0">
             <el-button type="warning" class="mr-2">
                 Перемещения
@@ -91,6 +94,23 @@
                     <Link type="warning"
                           :href="route('admin.accounting.movement.show', {movement: item.id})">Перемещение
                         №{{ item.number }} [{{ item.status_text }}]
+                    </Link>
+                </div>
+            </template>
+        </el-dropdown>
+
+        <el-dropdown v-if="order.expenses.length > 0">
+            <el-button type="success" plain class="mr-2">
+                Распоряжения на выдачу
+                <el-icon class="el-icon--right">
+                    <arrow-down/>
+                </el-icon>
+            </el-button>
+            <template #dropdown>
+                <div v-for="item in order.expenses" class="p-2">
+                    <Link type="success"
+                          :href="route('admin.order.expense.show', {expense: item.id})">Распоряжение
+                        №{{ item.number }} от {{ func.date(item.created_at) }} [{{ item.status_text }}]
                     </Link>
                 </div>
             </template>
@@ -110,11 +130,11 @@
 
     </template>
 
-
     <el-dialog v-model="dialogFindPayment" title="Выбрать платеж" width="400">
         <el-select v-model="payment_id">
             <el-option v-for="item in payments" :value="item.id" :label="item.purpose">
-                {{ item.purpose }} <el-tag type="success" effect="plain">{{ func.price(item.amount) }}</el-tag>
+                {{ item.purpose }}
+                <el-tag type="success" effect="plain">{{ func.price(item.amount) }}</el-tag>
             </el-option>
         </el-select>
         <template #footer>
@@ -125,12 +145,82 @@
         </template>
     </el-dialog>
 
+    <el-dialog v-model="dialogIssued" title="Распоряжение на выдачу товара">
+
+        <el-radio-group v-model="issued.method" >
+            <el-radio-button value="shop" size="large" @click="onStorage(true)">Выдать с магазина</el-radio-button>
+            <el-radio-button value="wherehouse" size="large" @click="onStorage(true)">Выдать со склада</el-radio-button>
+            <el-radio-button value="expense" size="large" @click="onStorage(false)">На доставку</el-radio-button>
+        </el-radio-group>
+
+        <el-form-item label="Склад/Магазин выдачи">
+            <el-select v-model="issued.storage_id" style="width: 200px;" class="mt-2 mb-2" :disabled="disabled_storage">
+                <el-option v-for="item in storages" :key="item.id" :value="item.id" :label="item.name"/>
+            </el-select>
+        </el-form-item>
+
+        <el-table
+            :data="issued.items"
+            header-cell-class-name="nordihome-header"
+            style="width: 100%;"
+        >
+            <el-table-column type="index" label="п/п"/>
+            <el-table-column prop="product.code" label="Артикул" width="110"/>
+            <el-table-column prop="product.name" label="Товар" width="240" show-overflow-tooltip/>
+            <el-table-column label="Продажа" width="230" align="center">
+                <template #default="scope">
+                    {{ func.price(scope.row.sell_cost) }}
+                </template>
+            </el-table-column>
+
+            <el-table-column label="Не выдано" width="240">
+                <template #default="scope">
+                    <div class="flex">
+                        <el-input v-model="scope.row.remains" :disabled="!scope.row.issued" style="width: 60px;"/>
+                        <el-checkbox v-model="scope.row.issued" :checked="scope.row.issued" class="ml-2"
+                                     label="Выдать"/>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-table
+            :data="issued.additions"
+            header-cell-class-name="nordihome-header"
+            style="width: 100%;"
+        >
+            <el-table-column type="index" label="п/п"/>
+            <el-table-column prop="name" label="Услуга" width="240" show-overflow-tooltip/>
+            <el-table-column label="Продажа" width="230" align="center">
+                <template #default="scope">
+                    {{ func.price(scope.row.amount) }}
+                </template>
+            </el-table-column>
+
+            <el-table-column label="Не выдано" width="240">
+                <template #default="scope">
+                    <div class="flex">
+                        <el-input v-model="scope.row.remains" :disabled="!scope.row.issued" style="width: 80px;"/>
+                        <el-checkbox v-model="scope.row.issued" :checked="scope.row.issued" class="ml-2"
+                                     label="Выдать"/>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="dialogIssued = false">Отмена</el-button>
+                <el-button type="primary" @click="setIssued">Выдать</el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
 <script setup>
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
-import {defineProps, inject, reactive, ref} from "vue";
+import {defineProps, inject, reactive, ref, onMounted} from "vue";
 import {Link, router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import {ElLoading, ElMessage} from "element-plus";
@@ -140,6 +230,7 @@ import axios from "axios";
 const props = defineProps({
     order: Object,
     additions: Array,
+    storages: Array,
 })
 const iSaving = ref(false)
 const form = reactive({
@@ -149,7 +240,6 @@ const form = reactive({
     action: null,
 })
 const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
-
 function setDiscount(action) {
     form.action = action
     iSaving.value = true
@@ -163,7 +253,6 @@ function setDiscount(action) {
         }
     })
 }
-
 function onPayment(val) {
     const loading = ElLoading.service({
         lock: false,
@@ -179,24 +268,11 @@ function onPayment(val) {
     })
 }
 
-function onExpense(val) {
-    const loading = ElLoading.service({
-        lock: false,
-        text: 'Создание документа',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
-    router.visit(route('admin.order.expense.create', {order: props.order.id}), {
-        method: "post",
-        onSuccess: page => {
-            loading.close()
-        }
-    })
-}
-
-
+//Найти платежку
 const dialogFindPayment = ref(false)
 const payment_id = ref(null)
 const payments = ref([])
+
 function onFindPayment() {
     const loading = ElLoading.service({
         lock: false,
@@ -226,6 +302,7 @@ function onFindPayment() {
         }
     })
 }
+
 function setPayment() {
     router.visit(route('admin.order.payment.set-order', {order: props.order.id, payment: payment_id.value}), {
         method: "post",
@@ -235,45 +312,72 @@ function setPayment() {
     })
 }
 
-/*
-function onMovement() {
+//Выдача товара
+const dialogIssued = ref(false)
+const issued = reactive({
+    method: 'expense',
+    storage_id: null,
+    items: [...props.order.items.map(item => {
+        if (item.preorder || item.remains === null || item.remains === 0) return null
+        item.issued = true
+        return item
+    }).filter(item => {
+        return item !== null
+    })],
+    additions: [...props.order.additions.map(addition => {
+        if (addition.remains === null || addition.remains === 0) return null
+        addition.issued = true
+        return addition
+    }).filter(addition => {
+        return addition !== null
+    })],
+})
+const disabled_storage = ref(true)
+function onStorage(val) {
+    if (val) {
+        disabled_storage.value = false
+    } else {
+        disabled_storage.value = true
+        issued.storage_id = null
+    }
+}
+function setIssued() {
+    const form = reactive({
+        method: issued.method,
+        storage_id: issued.storage_id,
+        items: issued.items.filter(item => {
+            return item.issued !== false
+        }).map(item => {
+            return {
+                id: item.id,
+                value: item.quantity
+            }
+        }),
+        additions: issued.additions.filter(addition => {
+            return addition.issued !== false
+        }).map(addition => {
+            return {
+                id: addition.id,
+                value: addition.amount
+            }
+        }),
+
+
+    })
+
     const loading = ElLoading.service({
         lock: false,
         text: 'Создание документа',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    router.visit(route('admin.accounting.arrival.movement', {arrival: props.arrival.id}), {
+
+    router.visit(route('admin.order.expense.create', {order: props.order.id}), {
         method: "post",
+        data: form,
         onSuccess: page => {
             loading.close()
+            dialogIssued.value = false
         }
     })
 }
-function onPricing() {
-    const loading = ElLoading.service({
-        lock: false,
-        text: 'Создание документа',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
-    router.visit(route('admin.accounting.arrival.pricing', {arrival: props.arrival.id}), {
-        method: "post",
-        onSuccess: page => {
-            loading.close()
-        }
-    })
-}
-function onRefund() {
-    const loading = ElLoading.service({
-        lock: false,
-        text: 'Создание документа',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
-    router.visit(route('admin.accounting.arrival.refund', {arrival: props.arrival.id}), {
-        method: "post",
-        onSuccess: page => {
-            loading.close()
-        }
-    })
-}
-*/
 </script>
