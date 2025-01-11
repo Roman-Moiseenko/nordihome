@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Base\Casts\BankPaymentCast;
 use App\Modules\Base\Entity\BankPayment;
@@ -31,6 +32,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $comment
  * @property Admin $staff
  * @property Order $order
+ * @property Organization $shopper
+ * @property Organization $trader
  */
 class OrderPayment extends Model
 {
@@ -127,6 +130,16 @@ class OrderPayment extends Model
         $this->completed = false;
         $this->save();
 
+    }
+
+    public function shopper(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'shopper_id', 'id');
+    }
+
+    public function trader(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class, 'trader_id', 'id');
     }
 
     public function order(): BelongsTo

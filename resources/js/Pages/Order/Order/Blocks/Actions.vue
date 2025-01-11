@@ -39,14 +39,21 @@
 
     <el-dropdown v-if="is_awaiting || is_issued">
         <el-button type="primary mr-2">
-            Создать на основании<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            Создать на основании
+            <el-icon class="el-icon--right">
+                <arrow-down/>
+            </el-icon>
         </el-button>
         <template #dropdown>
             <el-dropdown-menu>
-                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('cash')">Оплата в кассу</el-dropdown-item>
-                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('card')">Оплата по карту</el-dropdown-item>
-                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('account')">Оплата по счету</el-dropdown-item>
-                <el-dropdown-item v-if="!order.status.is_paid" @click="onFindPayment">Найти оплату</el-dropdown-item>
+                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('cash')">Оплата в кассу
+                </el-dropdown-item>
+                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('card')">Оплата по карту
+                </el-dropdown-item>
+                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('account')">Оплата по счету
+                </el-dropdown-item>
+                <el-dropdown-item v-if="!order.status.is_paid && order.shopper_id" @click="onFindPayment">Найти оплату
+                </el-dropdown-item>
 
                 <el-dropdown-item v-if="is_issued" @click="onMovement">Выдать из магазина</el-dropdown-item>
                 <el-dropdown-item v-if="is_issued" @click="onMovement">Выдать со склада</el-dropdown-item>
@@ -59,22 +66,32 @@
     <template v-if="!is_new && !is_awaiting">
         <el-dropdown v-if="is_awaiting || is_issued">
             <el-button type="success" class="mr-2">
-                Платежи <el-icon class="el-icon--right"><arrow-down /></el-icon>
+                Платежи
+                <el-icon class="el-icon--right">
+                    <arrow-down/>
+                </el-icon>
             </el-button>
             <template #dropdown>
                 <div v-for="item in order.payments" class="p-2">
-                    <Link type="primary" :href="route('admin.order.payment.show', {payment: item.id})">Платеж на сумму {{ func.price(item.amount) }} [{{ item.method_text }}]</Link>
+                    <Link type="primary" :href="route('admin.order.payment.show', {payment: item.id})">Платеж на сумму
+                        {{ func.price(item.amount) }} [{{ item.method_text }}]
+                    </Link>
                 </div>
             </template>
         </el-dropdown>
         <el-dropdown v-if="order.movements.length > 0">
             <el-button type="warning" class="mr-2">
-                Перемещения <el-icon class="el-icon--right"><arrow-down /></el-icon>
+                Перемещения
+                <el-icon class="el-icon--right">
+                    <arrow-down/>
+                </el-icon>
             </el-button>
             <template #dropdown>
                 <div v-for="item in order.movements" class="p-2">
                     <Link type="warning"
-                          :href="route('admin.accounting.movement.show', {movement: item.id})">Перемещение №{{ item.number }} [{{ item.status_text }}]</Link>
+                          :href="route('admin.accounting.movement.show', {movement: item.id})">Перемещение
+                        №{{ item.number }} [{{ item.status_text }}]
+                    </Link>
                 </div>
             </template>
         </el-dropdown>
@@ -93,6 +110,21 @@
 
     </template>
 
+
+    <el-dialog v-model="dialogFindPayment" title="Выбрать платеж" width="400">
+        <el-select v-model="payment_id">
+            <el-option v-for="item in payments" :value="item.id" :label="item.purpose">
+                {{ item.purpose }} <el-tag type="success" effect="plain">{{ func.price(item.amount) }}</el-tag>
+            </el-option>
+        </el-select>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="dialogFindPayment = false">Отмена</el-button>
+                <el-button type="primary" @click="setPayment">Выбрать</el-button>
+            </div>
+        </template>
+    </el-dialog>
+
 </template>
 
 <script setup>
@@ -101,9 +133,9 @@ import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import {defineProps, inject, reactive, ref} from "vue";
 import {Link, router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
-import {ElLoading} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
 import SelectAddition from "@Page/Order/Order/Blocks/SelectAddition.vue";
-
+import axios from "axios";
 
 const props = defineProps({
     order: Object,
@@ -117,6 +149,7 @@ const form = reactive({
     action: null,
 })
 const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
+
 function setDiscount(action) {
     form.action = action
     iSaving.value = true
@@ -130,6 +163,7 @@ function setDiscount(action) {
         }
     })
 }
+
 function onPayment(val) {
     const loading = ElLoading.service({
         lock: false,
@@ -143,9 +177,8 @@ function onPayment(val) {
             loading.close()
         }
     })
-    //router.post(route('admin.order.payment.create', {order: props.order.id}), {})
-
 }
+
 function onExpense(val) {
     const loading = ElLoading.service({
         lock: false,
@@ -159,10 +192,49 @@ function onExpense(val) {
         }
     })
 }
+
+
+const dialogFindPayment = ref(false)
+const payment_id = ref(null)
+const payments = ref([])
 function onFindPayment() {
-    //TODO Модальное Окно с Загрузкой всех платежек по данному покупателю
-    // props.order.shopper_id
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Ищем платежи',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    axios.post(route('admin.order.payment.find'),
+        {
+            shopper_id: props.order.shopper_id,
+            trader_id: props.order.trader_id,
+        },
+    ).then(result => {
+        loading.close()
+        console.log(result)
+        if (result.data.length === 0) {
+            ElMessage({
+                message: 'Платежи не найдены',
+                type: 'error',
+                plain: true,
+                showClose: true,
+                duration: 5000,
+                center: true,
+            });
+        } else {
+            dialogFindPayment.value = true
+            payments.value = [...result.data]
+        }
+    })
 }
+function setPayment() {
+    router.visit(route('admin.order.payment.set-order', {order: props.order.id, payment: payment_id.value}), {
+        method: "post",
+        onSuccess: page => {
+            dialogFindPayment.value = false;
+        }
+    })
+}
+
 /*
 function onMovement() {
     const loading = ElLoading.service({

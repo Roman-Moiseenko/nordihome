@@ -83,40 +83,7 @@ class OrderRepository
             ->through(fn(Order $order) => $this->OrderToArray($order));
     }
 
-    /*
-     [
-                'id' => $order->id,
-                'opl' => OrderHelper::pictogram($order),
-                'otg' => OrderHelper::pictogram($order),
-                'number' => $order->htmlNum(),
-                'date' => $order->htmlDate(),
-                'manager' => is_null($order->manager_id) ? 'Не назначен' : $order->manager->fullname->getShortname(),
-                'user' => $order->user->getPublicName(),
-                'amount' => price($order->getTotalAmount()),
-                'status' => $order->status->value,
-                'status_html' => OrderHelper::status($order),
-                'has_cancel' => !($order->InWork() || $order->isCanceled() || $order->isCompleted()),
-                'url' => route('admin.order.show', $order),
 
-                'canceled' => route('admin.order.canceled', $order),
-                'copy' => route('admin.order.copy', $order),
-            ]
-
-            if ($order->isAwaiting()) $type = 'warning';
-        if ($order->isPaid()) $type = 'green';
-        if ($order->isPrepaid()) $type = 'half-green';
-        if ($order->isAwaiting() || $order->isPrepaid()) {
-            if (!is_null($order->invoice) && $order->invoice->created_at->lte(now()->subDays(3))) {
-                $type = 'red';
-                $text = 'Оплата просрочена';
-            }
-        }
-        if ($order->isPaid() && $order->getPaymentAmount() > $order->getTotalAmount()) {
-            $type = 'double-green';
-            $text = 'Переплата';
-        };
-
-     */
 
     public function OrderToArray(Order $order): array
     {
@@ -217,8 +184,10 @@ class OrderRepository
             'supply_stack' => is_null($item->supply_stack_id) ? null : [
                 'id' => $item->supplyStack->id,
                 'status_text' => $item->supplyStack->status(),
+                'supply_id' => $item->supplyStack->supply_id,
             ],
             'remains' => $item->getRemains(),
+            'reserves' => ($item->reserves()->count() == 0) ? null : $item->reserves,
             'storages' => Storage::orderBy('name')->get()->map(function (Storage $storage) use ($item) {
                 $storageItem = $storage->getItem($item->product_id);
                 $orderReserve = $item->getReserveByStorageItem($storageItem->id);

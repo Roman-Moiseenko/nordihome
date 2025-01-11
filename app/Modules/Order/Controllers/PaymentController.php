@@ -15,6 +15,7 @@ use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\PaymentService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,11 +31,11 @@ class PaymentController extends Controller
     private StorageRepository $storages;
 
     public function __construct(
-        OrderPaymentService    $service,
-        PaymentRepository $repository,
-        OrderRepository   $orders,
-        StaffRepository   $staffs,
-        StorageRepository $storages
+        OrderPaymentService $service,
+        PaymentRepository   $repository,
+        OrderRepository     $orders,
+        StaffRepository     $staffs,
+        StorageRepository   $storages
     )
     {
         $this->middleware(['auth:admin', 'can:payment']);
@@ -97,5 +98,26 @@ class PaymentController extends Controller
     {
         $this->service->setInfo($payment, $request);
         return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function set_order(Order $order, OrderPayment $payment): RedirectResponse
+    {
+        $this->service->setOrder($order, $payment);
+        return redirect()->back()->with('success', 'Платеж назначен');
+    }
+
+    public function find(Request $request): JsonResponse
+    {
+        $payments = OrderPayment::where('order_id', null)
+            ->where('shopper_id', $request->integer('shopper_id'))
+            ->where('trader_id', $request->integer('trader_id'))
+            ->get()->map(function (OrderPayment $payment) {
+                return [
+                    'id' => $payment->id,
+                    'amount' => $payment->amount,
+                    'purpose' => $payment->bank_payment->purpose,
+                ];
+            });
+        return \response()->json($payments);
     }
 }

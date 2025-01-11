@@ -90,7 +90,6 @@
                     <el-date-picker v-model="reserve" type="datetime" @change="handleReserve" :disabled="iSavingInfo"/>
                 </el-form-item>
 
-
                 <el-popover v-if="is_issued" :visible="visible_movement" placement="bottom-start" :width="246">
                     <template #reference>
                         <el-button type="primary" class="p-4 my-3" @click="visible_movement = !visible_movement" ref="buttonRef">
@@ -110,7 +109,6 @@
                 </el-popover>
 
                 <el-button v-if="is_new" type="success" @click="onAwaiting">На оплату</el-button>
-
                 <el-button v-if="!is_view" type="success" plain @click="getInvoice">Скачать счет</el-button>
                 <el-button v-if="!is_view" type="info" plain @click="dialogCancel = true">Отменить</el-button>
             </div>

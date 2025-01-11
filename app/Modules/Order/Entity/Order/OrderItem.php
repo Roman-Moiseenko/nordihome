@@ -10,6 +10,8 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\Pure;
 
 
@@ -141,37 +143,24 @@ class OrderItem extends Model implements CartItemInterface
         return $this->quantity - $this->getExpenseAmount();
     }
 
-    public function getAssemblage(int $percent = 15): float
-    {
-        if ($this->assemblage) {
-            if (is_null($this->product->assemblage)) {
-                return (int)ceil($this->sell_cost * $this->quantity * $percent / 100);
-            } else {
-                return $this->product->assemblage;
-            }
-        }
-        return 0;
-    }
-
-
     //RELATIONS
-    public function reserves(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function reserves(): HasMany
     {
         return $this->hasMany(OrderReserve::class, 'order_item_id', 'id');
     }
 
-    public function supplyStack(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function supplyStack(): BelongsTo
     {
-        if (!$this->preorder) throw new \DomainException('Данная функция должна вызываться для preorder == true');
+        //if (!$this->preorder) throw new \DomainException('Данная функция должна вызываться для preorder == true');
         return $this->belongsTo(SupplyStack::class, 'supply_stack_id', 'id');
     }
 
-    public function expenseItems(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function expenseItems(): HasMany
     {
         return $this->hasMany(OrderExpenseItem::class, 'order_item_id', 'id');
     }
 
-    public function order(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
@@ -181,12 +170,12 @@ class OrderItem extends Model implements CartItemInterface
         return $this->belongsTo(Reserve::class, 'reserve_id', 'id');
     }
 */
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function discount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function discount(): BelongsTo
     {
         return $this->belongsTo(Discount::class, 'discount_id', 'id');
     }

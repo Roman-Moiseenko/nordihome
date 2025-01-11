@@ -73,7 +73,7 @@ class PaymentRepository
             [
                 'date' => $payment->htmlDate(),
                 'order' => $payment->order,
-                'user_name' => $payment->order->user->getPublicName(),
+                'user_name' => is_null($payment->order) ? $payment->shopper->short_name : $payment->order->user->getPublicName(),
                 'comment' => $payment->comment,
                 'staff' => !is_null($payment->staff) ? $payment->staff->fullname->getFullName() : '-',
                 'method_text' => $payment->methodText(),

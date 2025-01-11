@@ -66,7 +66,8 @@ Breadcrumbs::for('admin.order.payment.edit', function (BreadcrumbTrail $trail, O
 });
 Breadcrumbs::for('admin.order.payment.show', function (BreadcrumbTrail $trail, OrderPayment $payment) {
     $trail->parent('admin.order.payment.index');
-    $trail->push('Платеж за заказ ' . $payment->order->htmlDate() . ' ' . $payment->order->htmlNum(), route('admin.order.payment.show', $payment));
+    $text = is_null($payment->order) ? 'Нераспределенный платеж' : 'Платеж за заказ ' . $payment->order->htmlDate() . ' ' . $payment->order->htmlNum();
+    $trail->push($text, route('admin.order.payment.show', $payment));
 });
 
 //REFUND

@@ -24,7 +24,7 @@
             </div>
         </div>
         <div v-if="is_issued">
-            <div v-if="order.in_stock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+            <div v-if="order.items.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
                 <h2 class="font-medium text-cyan-800">Товары на выдачу</h2>
                 <OrderItemsIssued :items=[...order.items] />
             </div>
@@ -65,9 +65,12 @@ const is_new = computed(() => {
 const is_awaiting = computed(() => {
     return props.order.status.is_awaiting
 })
+
 const is_issued = computed(() => {
     return props.order.status.is_prepaid || props.order.status.is_paid
 })
+
+console.log(props.order)
 const is_view = computed(() => {
     return !is_new.value && !is_issued.value && !is_awaiting.value
 })
@@ -77,6 +80,7 @@ provide("$status", {
     is_issued,
     is_view,
 })
+
 </script>
 <style scoped>
 

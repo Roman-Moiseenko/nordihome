@@ -11,6 +11,7 @@ use App\Modules\Accounting\Repository\PaymentDocumentRepository;
 use App\Modules\Accounting\Repository\TraderRepository;
 use App\Modules\Accounting\Service\PaymentDocumentService;
 use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Order\Entity\Order\OrderPayment;
 use DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -122,6 +123,5 @@ class PaymentController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-
 
 }

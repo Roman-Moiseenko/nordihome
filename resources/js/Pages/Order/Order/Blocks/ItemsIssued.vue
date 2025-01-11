@@ -33,10 +33,12 @@
         <el-table-column v-if="is_new" prop="product.quantity_sell" label="Наличие" width="90" align="center"/>
 
 
-
-
         <el-table-column label="Выдача" width="240">
             <template #default="scope">
+                <div v-if="scope.row.reserves">
+                    <el-input v-model="scope.row.remains" style="width: 60px;" :disabled="!scope.row.issued"/>
+                    <el-checkbox v-model="scope.row.issued" :checked="scope.row.issued" class="ml-2 my-auto">На выдачу</el-checkbox>
+                </div>
                 <div v-if="scope.row.preorder">
                     <el-button v-if="!scope.row.supply_stack" type="primary" class="p-4 my-3"
                                @click="toStackSupply(scope.row)" ref="buttonRef">
@@ -49,12 +51,6 @@
                         </Link>
                         <el-tag v-else type="warning" size="large" effect="dark">{{ scope.row.supply_stack.status_text }}</el-tag>
                     </span>
-
-
-                </div>
-                <div v-else>
-                    <el-input v-model="scope.row.remains" style="width: 60px;" :disabled="!scope.row.issued"/>
-                    <el-checkbox v-model="scope.row.issued" :checked="scope.row.issued" class="ml-2 my-auto">На выдачу</el-checkbox>
                 </div>
             </template>
         </el-table-column>
@@ -86,13 +82,16 @@
                         </el-tooltip>
 
                         <el-tooltip effect="dark" placement="top-start" content="Перенести резерв 1 шт">
-                            <el-button type="info"  plain class="" @click="onUpReserve(scope.row.id, storage.id, 1)">
-                                <i class="fa-light fa-chevron-up"></i>
+                            <el-button type="info"  plain class="" @click="onUpReserve(scope.row.id, storage.id, 1)"
+                                       :disabled="!scope.row.reserves"
+                            >
+                                <i class="fa-light fa-chevron-left"></i>
                             </el-button>
                         </el-tooltip>
                         <el-tooltip effect="dark" placement="top-start" content="Перенести резерв Все">
-                            <el-button type="info" plain class="" @click="onUpReserve(scope.row.id, storage.id, scope.row.quantity)" style="margin-left: 0;">
-                                <i class="fa-light fa-chevrons-up"></i>
+                            <el-button type="info" plain class="" @click="onUpReserve(scope.row.id, storage.id, scope.row.quantity)"
+                                       :disabled="!scope.row.reserves" style="margin-left: 0;">
+                                <i class="fa-light fa-chevrons-left"></i>
                             </el-button>
                         </el-tooltip>
                     </div>
@@ -101,8 +100,6 @@
         </el-table-column>
         <el-table-column prop="comment" align="right" label="Комментарий" width="120" show-overflow-tooltip />
     </el-table>
-    <DeleteEntityModal name_entity="Товар из заказа"/>
-
 </template>
 
 <script setup lang="ts">
@@ -114,8 +111,7 @@ import {router, Link} from "@inertiajs/vue3";
 const props = defineProps({
     items: Array,
 })
-console.log(props.items)
-const $delete_entity = inject("$delete_entity")
+
 const iSaving = ref(false)
 const {is_new, is_issued, is_view} = inject('$status')
 const tableData = ref([...props.items])
@@ -128,27 +124,6 @@ const tableDate = [...props.items.map(item => {
 //Проверяем хватает ли на складе для выдачи товара
 function notStorage(row, storage) {
     return row.remains > (storage.quantity - storage.reserve_other)
-}
-
-function setProduct(row) {
-    console.log('row', row)
-    iSaving.value = true;
-    router.visit(route('admin.order.set-item', {item: row.id}), {
-        method: "post",
-        data: {
-            quantity: row.quantity,
-            sell_cost: row.sell_cost,
-            percent: row.percent,
-            comment: row.comment,
-            assemblage: row.assemblage,
-            packing: row.packing,
-        },
-        preserveScroll: true,
-        preserveState: false,
-        onSuccess: page => {
-            iSaving.value = false;
-        }
-    })
 }
 
 function toStackSupply(row) {

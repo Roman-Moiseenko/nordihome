@@ -150,6 +150,7 @@ class OrderController extends Controller
         }
     }
 
+    #[Deprecated]
     public function send_invoice(Order $order)
     {
         Mail::to($order->user->email)->queue(new OrderAwaiting($order));
@@ -157,6 +158,7 @@ class OrderController extends Controller
         return redirect()->back();
     }
 
+    #[Deprecated]
     public function resend_invoice(Order $order)
     {
         $this->report->xlsx($order);
@@ -164,17 +166,6 @@ class OrderController extends Controller
         flash('Счет создан заново и отправлен клиенту');
         return redirect()->back();
     }
-
-    /*
-        public function completed(Order $order)
-        {
-            return $this->try_catch_admin(function () use ($order) {
-                $this->service->completed($order);
-                return redirect()->back();
-            });
-        }
-    */
-
 
     public function copy(Order $order)
     {
@@ -184,20 +175,18 @@ class OrderController extends Controller
 
 
     /** СМЕНА СОСТОЯНИЯ (СТАТУСА) ЗАКАЗА */
-    public function take(Order $order)
+    public function take(Order $order): RedirectResponse
     {
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
-
         $this->service->setManager($order, $staff->id);
-        flash('Вы взяли заказ в работу');
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Вы взяли заказ в работу');
     }
 
-    public function set_manager(Request $request, Order $order)
+    public function set_manager(Request $request, Order $order): RedirectResponse
     {
         $this->service->setManager($order, (int)$request['staff_id']);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Менеджер назначен');
     }
 
     public function cancel(Request $request, Order $order): RedirectResponse
@@ -270,7 +259,7 @@ class OrderController extends Controller
         dd('Сделать');
     }
 
-    public function reserve_collect(Request $request, OrderItem $item)
+    public function reserve_collect(Request $request, OrderItem $item): RedirectResponse
     {
         $this->reserveService->CollectReserve($item, $request->integer('storage_id'), $request->float('quantity'));
         return redirect()->back()->with('success', 'Сохранено');
@@ -297,8 +286,6 @@ class OrderController extends Controller
         $this->service->deleteAddition($addition);
         return redirect()->back()->with('success', 'Услуга удалена');
     }
-
-
 
 
 

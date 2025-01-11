@@ -185,7 +185,7 @@ class ArrivalService
                 foreach ($arrival->supply->stacks as $stack) {
                     //Поступления, для которых есть стек из заказа, ставим в резерв
                     if (!is_null($stack->orderItem)) {
-                        $this->reserveService->toReserveStorage($stack->orderItem, $arrival->storage, $stack->quantity);
+                        $this->reserveService->toReserveStorage($stack->orderItem, $arrival->storage, (float)$stack->quantity);
                         $stack->orderItem->preorder = false;
                         $stack->orderItem->save();
                         //сохраняем список $orders для оповещения

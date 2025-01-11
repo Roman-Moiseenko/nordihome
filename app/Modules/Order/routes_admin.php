@@ -96,12 +96,15 @@ Route::group(
                 'as' => 'payment.',
             ],
             function () {
-                Route::get('/', 'PaymentController@index')->name('index');
+                Route::post('/find', 'PaymentController@find')->name('find');
+                Route::post('/set-order/{order}/{payment}', 'PaymentController@set_order')->name('set-order');
                 Route::get('/{payment}', 'PaymentController@show')->name('show');
                 Route::post('/{order}', 'PaymentController@create')->name('create');
                 Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
                 Route::post('/completed/{payment}', 'PaymentController@completed')->name('completed');
                 Route::post('/work/{payment}', 'PaymentController@work')->name('work');
+
+                Route::get('/', 'PaymentController@index')->name('index');
             }
         );
 

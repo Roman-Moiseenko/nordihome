@@ -59,7 +59,10 @@
                 </el-table-column>
                 <el-table-column label="Заказ">
                     <template #default="scope">
+                        <span v-if="scope.row.order">
                         № {{ scope.row.order.number }} от {{ func.date(scope.row.order.created_at) }}
+                            </span>
+                        <el-tag v-else type="danger">Не найден</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="amount" label="Сумма" width="120">
@@ -72,7 +75,7 @@
                         <Active :active="scope.row.completed"/>
                     </template>
                 </el-table-column>
-                <el-table-column prop="method_text" label="Способ оплаты" />
+                <el-table-column prop="method_text" label="Способ оплаты"/>
                 <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
                 <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
 
@@ -151,6 +154,7 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 function handleDeleteEntity(row) {
     //$delete_entity.show(route('admin.order.destroy', {order: row.id}));
 }
+
 /*
 function handleCreate() {
     router.post(route('admin.order.store'))

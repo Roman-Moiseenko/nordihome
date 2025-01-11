@@ -659,7 +659,7 @@ class OrderService
     /**
      * Проверка Заказа после поступления оплаты, смена статуса, генерация события
      */
-    public function checkPayment(Order $order)
+    public function checkPayment(Order $order): void
     {
         $order->setReserve(now()->addDays(45));//Увеличиваем резерв
         if ($order->getTotalAmount() <= $order->getPaymentAmount()) {

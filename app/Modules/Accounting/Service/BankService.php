@@ -161,15 +161,12 @@ class BankService
             })->getModels();
 
         $amount = $payment['Сумма'];
-        if (count($orders) == 1) { //Неоплаченный заказ 1
-            $order = $orders[0];
-        } else { //Несколько не оплаченных заказов
-            $order = null;
-            foreach ($orders as $_order) {
-                //Выбираем заказ, у которого остаток равен платежу
-                if ($_order->getTotalAmount() - $_order->getPaymentAmount() == $amount) $order = $_order;
-            }
+        $order = null;
+        foreach ($orders as $_order) {
+            //Выбираем заказ, у которого остаток равен платежу
+            if ($_order->getTotalAmount() - $_order->getPaymentAmount() == $amount) $order = $_order;
         }
+
         if (is_null($order)) { //Создаем непривязанный платеж
             $orderPayment = $this->orderPaymentService->createUnresolved($shopper->id, $trader->id, $amount, OrderPayment::METHOD_ACCOUNT);
         } else {

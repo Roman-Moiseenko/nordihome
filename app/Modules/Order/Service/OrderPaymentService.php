@@ -8,6 +8,7 @@ use App\Modules\Base\Entity\BankPayment;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 
 class OrderPaymentService
@@ -62,22 +63,24 @@ class OrderPaymentService
      */
     public function setOrder(Order $order, OrderPayment $payment): void
     {
-        //Если сумма по платежу больше, то остаток переносится в новый нераспределенный платеж
-        $debit = $order->getTotalAmount() - $order->getPaymentAmount();
-        if ($debit < $payment->amount) {
-            $new = $this->createUnresolved($payment->shopper_id, $payment->trader_id, $payment->amount - $debit, $payment->method);
-            $new->bank_payment = $payment->bank_payment;
-            $new->save();
-            $payment->amount = $debit;
-        }
-        $payment->order_id = $order->id;
-        $payment->completed = true;
-        $payment->shopper_id = null;
-        $payment->trader_id = null;
-        $payment->save();
-
-        $this->orderService->checkPayment($order);
-        $this->logger->logOrder($order, 'Разнесена оплата', $payment->methodText(), price($payment->amount));
+        DB::transaction(function () use ($order, $payment) {
+            //Если сумма по платежу больше, то остаток переносится в новый нераспределенный платеж
+            $debit = $order->getTotalAmount() - $order->getPaymentAmount();
+            if ($debit < $payment->amount) {
+                $new = $this->createUnresolved($payment->shopper_id, $payment->trader_id, $payment->amount - $debit, $payment->method);
+                $new->bank_payment = $payment->bank_payment;
+                $new->save();
+                $payment->amount = $debit;
+            }
+            $payment->order_id = $order->id;
+            $payment->completed = true;
+            $payment->shopper_id = null;
+            $payment->trader_id = null;
+            $payment->save();
+            $order->refresh();
+            $this->orderService->checkPayment($order);
+            $this->logger->logOrder($order, 'Разнесена оплата', $payment->methodText(), price($payment->amount));
+        });
     }
 
     /**
