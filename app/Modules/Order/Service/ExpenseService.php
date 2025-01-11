@@ -74,6 +74,8 @@ class ExpenseService
                     $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
             }
             $expense->refresh();
+
+            if ($order->getPaymentAmount() < $order->getExpenseAmount()) throw new \DomainException('Нехватает средств на выдачу товара');
             $this->logger->logOrder($expense->order, 'Создано распоряжение на выдачу', '', $expense->htmlNumDate());
         });
 
