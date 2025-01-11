@@ -47,7 +47,7 @@ import Active from "@Comp/Elements/Active.vue";
 import OrderItemsNew from "./Blocks/ItemsNew.vue"
 import OrderItemsIssued from "./Blocks/ItemsIssued.vue"
 import OrderAdditions from  "./Blocks/Additions.vue"
-import OrderAdditionsIssued from  "./Blocks/Additionsissued.vue"
+import OrderAdditionsIssued from  "./Blocks/AdditionsIssued.vue"
 const props = defineProps({
     order: Object,
     title: {
@@ -71,7 +71,6 @@ const is_issued = computed(() => {
     return props.order.status.is_prepaid || props.order.status.is_paid
 })
 
-console.log(props.order)
 const is_view = computed(() => {
     return !is_new.value && !is_issued.value && !is_awaiting.value
 })

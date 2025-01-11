@@ -35,19 +35,16 @@
 </template>
 
 <script setup lang="ts">
-import Active from "@Comp/Elements/Active.vue";
 import {func} from "@Res/func.js"
-import {computed, inject, ref} from "vue";
+import {defineProps, inject, ref} from "vue";
 import {Link, router} from "@inertiajs/vue3";
 
 const props = defineProps({
     additions: Array,
 })
 const tableDate = [...props.additions]
-console.log(props.additions)
-const $delete_entity = inject("$delete_entity")
-const iSaving = ref(false)
-const {is_new, is_issued, is_view} = inject('$status')
+
+//const {is_new, is_issued, is_view} = inject('$status')
 
 </script>
 
