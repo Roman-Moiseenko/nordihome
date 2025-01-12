@@ -83,7 +83,9 @@ class ArrivalService
     public function destroy(ArrivalDocument $arrival): void
     {
         if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Удалять нельзя');
-        $arrival->expense()->delete();
+        foreach ($arrival->expenses as $expense) {
+            $expense->delete();
+        }
         $arrival->delete();
     }
 
@@ -242,6 +244,7 @@ class ArrivalService
     public function work(ArrivalDocument $arrival): void
     {
         DB::transaction(function () use ($arrival) {
+
             if (!is_null($arrival->pricing)) {
                 if ($arrival->pricing->isCompleted()) {
                     throw new \DomainException('Проведен связанный документ Установка цен.');
@@ -252,7 +255,9 @@ class ArrivalService
 
             $arrival->work();
             $this->storages->departure($arrival->storage, $arrival->products);
-            foreach ($arrival->products as $item) {//Проверка на отрицательное кол-во
+            foreach ($arrival->products as $item) {//Проверка на отрицательное кол-во или на реализацию
+                if ($item->quantity != $item->remains)
+                    throw new \DomainException('По текущему документу были продажи');
                 if ($arrival->storage->getQuantity($item->product_id) < 0)
                     throw new \DomainException('Нельзя отменить проведение. Остаток ' . $item->product->name . ' < 0');
             }

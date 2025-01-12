@@ -53,7 +53,7 @@ class NotificationArrivalCompleted
         if (!empty($this->users)) {
             $products = []; //Список товаров в поступлении, которых не было
             /** @var ArrivalProduct $arrivalProduct */
-            foreach ($event->arrival->arrivalProducts()->getModels() as $arrivalProduct) {
+            foreach ($event->arrival->products()->getModels() as $arrivalProduct) {
                 if ($arrivalProduct->product->getQuantitySell() <= $arrivalProduct->quantity) { //Кол-во на продажу, до поступления было = 0
                     $products[] = $arrivalProduct->product;
                 }

@@ -11,6 +11,8 @@ use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseAddition;
+use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderMovement;
 use App\Modules\Order\Entity\Order\OrderPayment;
@@ -174,6 +176,8 @@ class OrderRepository
                 'number' => $expense->number,
                 'created_at' => $expense->created_at,
                 'status_text' => $expense->statusHTML(),
+                'is_canceled' => $expense->isCanceled(),
+                'is_completed' => $expense->isCompleted(),
             ]),
         ]);
     }
@@ -235,6 +239,31 @@ class OrderRepository
 
         }
         return $array;
+    }
+
+    public function ExpenseWithToArray(OrderExpense $expense): array
+    {
+        return array_merge($expense->toArray(), [
+            'status_text' => $expense->statusHTML(),
+            'type_text' => $expense->typeHTML(),
+            'items' => $expense->items()->get()->map(fn(OrderExpenseItem $expenseItem) => array_merge($expenseItem->toArray(), [
+                'product' =>  $expenseItem->orderItem->product,
+            ])),
+            'additions' => $expense->additions()->get()->map(fn(OrderExpenseAddition $expenseAddition) => array_merge($expenseAddition->toArray(), [
+                'addition' => $expenseAddition->orderAddition->addition,
+            ])),
+            'status' => [
+                'is_new' => $expense->isNew(),
+                'is_assembly' => $expense->isAssembly(),
+                'is_assembling' => $expense->isAssembling(),
+                'is_delivery' => $expense->isDelivery(),
+                'is_completed' => $expense->isCompleted(),
+                'is_canceled' => $expense->isCanceled(),
+            ],
+            'weight' => $expense->getWeight(),
+            'volume' => $expense->getVolume(),
+            'is_delivery' => !$expense->isStorage(),
+        ]);
     }
 
 

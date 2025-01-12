@@ -48,23 +48,28 @@
                               :disabled="iSaving"
                               :readonly="!isEdit"
                     >
-                        <template #append>шт</template>
+                        <template #append>{{ scope.row.measuring }}</template>
                     </el-input>
                 </template>
             </el-table-column>
-            <el-table-column prop="quantity" label="Сумма в валюте" width="180">
+            <el-table-column label="Сумма в валюте" width="180">
                 <template #default="scope">
                     {{ func.price(scope.row.quantity * scope.row.cost_currency, arrival.currency) }}
                 </template>
             </el-table-column>
-            <el-table-column prop="quantity" label="Сумма в рублях" width="180">
+            <el-table-column label="Сумма в рублях" width="180">
                 <template #default="scope">
                     {{ func.price(scope.row.quantity * scope.row.cost_currency * arrival.exchange_fix) }}
                 </template>
             </el-table-column>
-            <el-table-column label="Действия" align="right" width="180">
+            <el-table-column v-if="isEdit" label="Действия" align="right" width="180">
                 <template #default="scope">
                     <el-button v-if="isEdit" type="danger" @click="handleDeleteEntity(scope.row)" plain><el-icon><Delete /></el-icon></el-button>
+                </template>
+            </el-table-column>
+            <el-table-column v-if="!isEdit"  prop="remains" label="Остаток" align="right" width="180" >
+                <template #default="scope">
+                {{ parseFloat(scope.row.remains) }} {{ scope.row.measuring }}
                 </template>
             </el-table-column>
         </el-table>
@@ -98,6 +103,7 @@ const props = defineProps({
     printed: Object,
     filters: Array,
 })
+console.log(props.arrival)
 provide('$filters', props.filters) //Фильтр товаров в списке документа
 provide('$printed', props.printed) //Для печати
 provide('$accounting', props.arrival) //Для общих действий

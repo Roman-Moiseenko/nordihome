@@ -6,35 +6,45 @@ namespace App\Modules\Order\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Service\Report\Trade12Report;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class ExpenseController extends Controller
 {
     private ExpenseService $service;
     private Trade12Report $report;
+    private OrderRepository $repository;
 
-    public function __construct(ExpenseService $service, Trade12Report $report)
+
+    public function __construct(ExpenseService $service, OrderRepository $repository, Trade12Report $report)
     {
         $this->middleware(['auth:admin', 'can:order']);
         $this->service = $service;
         $this->report = $report;
+        $this->repository = $repository;
     }
 
 
     public function show(OrderExpense $expense)
     {
-        return view('admin.order.expense.show', compact('expense'));
+        return Inertia::render('Order/Expense/Show', [
+            'expense' => $this->repository->ExpenseWithToArray($expense),
+
+        ]);
+
     }
 
-    public function destroy(OrderExpense $expense)
+    public function canceled(OrderExpense $expense): RedirectResponse
     {
         $order = $this->service->cancel($expense);
-        flash('Распоряжение успешно удалено. Товар возвращен в резерв и хранилище.', 'info');
-        return redirect()->route('admin.order.show', $order);
+        return redirect()->route('admin.order.show', $order)->with('success', 'Распоряжение удалено. Товар возвращен в резерв и хранилище');
     }
+
 
     public function trade12(OrderExpense $expense)
     {
@@ -50,8 +60,15 @@ class ExpenseController extends Controller
         $expense = $this->service->create_expense($order, $request);
         if ($request->input('method') == 'shop') return redirect()->back()->with('success', 'Товар выдан');
 
-        return redirect()->json(route('admin.order.expense.show', $expense))->with('success', 'Распоряжение сформировано');
+        return redirect()->route('admin.order.expense.show', $expense)->with('success', 'Распоряжение сформировано');
     }
+
+    public function set_info(OrderExpense $expense, Request $request)
+    {
+        $this->service->setInfo($expense, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
 /*
     public function issue_shop(Request $request)
     {

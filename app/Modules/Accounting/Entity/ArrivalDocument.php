@@ -109,12 +109,6 @@ class ArrivalDocument extends AccountingDocument
         return $this->hasMany(MovementDocument::class, 'arrival_id', 'id');
     }
 
-    #[Deprecated]
-    public function expense(): HasOne
-    {
-        return $this->hasOne(ArrivalExpenseDocument::class, 'arrival_id', 'id');
-    }
-
     public function expenses(): HasMany
     {
         return $this->hasMany(ArrivalExpenseDocument::class, 'arrival_id', 'id');
@@ -123,12 +117,6 @@ class ArrivalDocument extends AccountingDocument
     public function supply(): BelongsTo
     {
         return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
-    }
-
-    #[Deprecated]
-    public function arrivalProducts(): HasMany
-    {
-        return $this->hasMany(ArrivalProduct::class, 'arrival_id', 'id');
     }
 
     public function products(): HasMany

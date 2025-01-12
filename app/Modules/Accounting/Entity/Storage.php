@@ -198,6 +198,10 @@ class Storage extends Model
         }
     }
 
+    public static function default(): self
+    {
+        return self::where('default', true)->first();
+    }
 
 
 }

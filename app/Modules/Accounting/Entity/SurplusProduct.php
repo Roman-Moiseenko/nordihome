@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $surplus_id
  *
  * @property int $cost
+ * @property float $remains
  * @property SurplusDocument $document
  */
 class SurplusProduct extends AccountingProduct
@@ -24,6 +25,7 @@ class SurplusProduct extends AccountingProduct
     {
         $product = self::baseNew($product_id, $quantity);
         $product->cost = $cost;
+        $product->remains = $quantity;
         return $product;
     }
 
@@ -35,5 +37,11 @@ class SurplusProduct extends AccountingProduct
     public function document(): BelongsTo
     {
         return $this->belongsTo(SurplusDocument::class, 'surplus_id', 'id');
+    }
+
+    public function batchSale(mixed $batch_quantity): void
+    {
+        $this->remains -= $batch_quantity;
+        $this->save();
     }
 }

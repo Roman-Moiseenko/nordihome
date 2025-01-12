@@ -108,7 +108,7 @@
             </el-button>
             <template #dropdown>
                 <div v-for="item in order.expenses" class="p-2">
-                    <Link type="success"
+                    <Link :type="typeExpense(item)"
                           :href="route('admin.order.expense.show', {expense: item.id})">Распоряжение
                         №{{ item.number }} от {{ func.date(item.created_at) }} [{{ item.status_text }}]
                     </Link>
@@ -147,9 +147,9 @@
 
     <el-dialog v-model="dialogIssued" title="Распоряжение на выдачу товара">
 
-        <el-radio-group v-model="issued.method" >
+        <el-radio-group v-model="issued.method">
             <el-radio-button value="shop" size="large" @click="onStorage(true)">Выдать с магазина</el-radio-button>
-            <el-radio-button value="wherehouse" size="large" @click="onStorage(true)">Выдать со склада</el-radio-button>
+            <el-radio-button value="warehouse" size="large" @click="onStorage(true)">Выдать со склада</el-radio-button>
             <el-radio-button value="expense" size="large" @click="onStorage(false)">На доставку</el-radio-button>
         </el-radio-group>
 
@@ -232,6 +232,8 @@ const props = defineProps({
     additions: Array,
     storages: Array,
 })
+
+
 const iSaving = ref(false)
 const form = reactive({
     coupon: null,
@@ -240,6 +242,7 @@ const form = reactive({
     action: null,
 })
 const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
+
 function setDiscount(action) {
     form.action = action
     iSaving.value = true
@@ -253,6 +256,7 @@ function setDiscount(action) {
         }
     })
 }
+
 function onPayment(val) {
     const loading = ElLoading.service({
         lock: false,
@@ -333,6 +337,13 @@ const issued = reactive({
     })],
 })
 const disabled_storage = ref(true)
+
+function typeExpense(item) {
+    if (item.is_canceled) return 'info'
+    if (item.is_completed) return 'success'
+    return 'warning'
+}
+
 function onStorage(val) {
     if (val) {
         disabled_storage.value = false
@@ -341,6 +352,7 @@ function onStorage(val) {
         issued.storage_id = null
     }
 }
+
 function setIssued() {
     const form = reactive({
         method: issued.method,

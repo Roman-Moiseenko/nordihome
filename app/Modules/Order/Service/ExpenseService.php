@@ -10,9 +10,11 @@ use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCompleted;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Service\BatchSaleService;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Analytics\LoggerService;
+use App\Modules\Base\Entity\FullName;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
@@ -27,47 +29,53 @@ class ExpenseService
 {
     private OrderReserveService $reserveService;
     private LoggerService $logger;
+    private BatchSaleService $batchSaleService;
 
     public function __construct(
         OrderReserveService $reserveService,
         LoggerService       $logger,
+        BatchSaleService    $batchSaleService,
     )
     {
         $this->reserveService = $reserveService;
         $this->logger = $logger;
+        $this->batchSaleService = $batchSaleService;
     }
 
-    public function create(Order $order, Request $request): OrderExpense
+    /**
+     * Создаем Распоряжение на выдачу
+     */
+    public function create(Order $order, Storage $storage, Request $request): OrderExpense
     {
-        DB::transaction(function () use ($order, $request, &$expense) {
-            /** @var Storage $storage */
-            $storage = Storage::find($request['storage_id']); //Откуда выдать товар
-
-
+        DB::transaction(function () use ($storage, $order, $request, &$expense) {
             $expense = OrderExpense::register($order->id, $storage->id);
             $items = $request['items'];
             foreach ($items as $item) {
                 /** @var OrderItem $orderItem */
                 $orderItem = OrderItem::find($item['id']);
                 $quantity = (float)$item['value']; //Сколько выдать товара
-                if ($quantity > 0) {
-                    $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
-                    //Проверка на наличие на складе выдачи
-                    $reserve = $orderItem->getReserveByStorage($storage->id);
-                    if (is_null($reserve) || $reserve->quantity < $quantity)
-                        throw new \DomainException('Товара нет в резерве на складе отгрузки, дождитесь исполнения поступления или перемещения!');
-                    $this->reserveService->downReserve($orderItem, $quantity); //Убираем из резерва
-                    $storageItem = $storage->getItem($orderItem->product_id);
-                    $storageItem->sub($quantity); //Списываем со склада
 
-                    $storageItem->refresh();
-                    if ($storageItem->quantity < 0) {
-                        throw new \DomainException('Исключительная ситуация. Товар есть в резерве, НО требуется перемещение');
-                    }
-                }
+                if ($quantity <= 0) throw new \DomainException('Недопустимое кол-во на выдачу - ' . $quantity);
+                //Проверка на наличие на складе выдачи
+                $reserve = $orderItem->getReserveByStorage($storage->id);
+                if (is_null($reserve) || $reserve->quantity < $quantity)
+                    throw new \DomainException('Товара нет в резерве на складе отгрузки, дождитесь исполнения поступления или перемещения!');
+
+                $expense->items()->save(OrderExpenseItem::new($orderItem->id, $quantity));
+                $this->reserveService->downReserve($orderItem, $quantity); //Убираем из резерва
+                $storageItem = $storage->getItem($orderItem->product_id);
+                $storageItem->sub($quantity); //Списываем со склада
+                $storageItem->refresh();
+                if ($storageItem->quantity < 0)
+                    throw new \DomainException('Исключительная ситуация. Товар есть в резерве, НО требуется перемещение');
             }
             $expense->storage_id = $storage->id;
             $expense->save();
+            $expense->refresh();
+            if ($order->getPaymentAmount() < $order->getExpenseAmount()) throw new \DomainException('Нехватает средств на выдачу товара');
+
+            $this->batchSaleService->create($expense); //Проведение по партиям
+
             $additions = $request['additions'] ?? [];
             foreach ($additions as $addition) {
                 if ((float)$addition['value'] > 0)
@@ -75,16 +83,24 @@ class ExpenseService
             }
             $expense->refresh();
 
-            if ($order->getPaymentAmount() < $order->getExpenseAmount()) throw new \DomainException('Нехватает средств на выдачу товара');
+
             $this->logger->logOrder($expense->order, 'Создано распоряжение на выдачу', '', $expense->htmlNumDate());
         });
 
         return $expense;
     }
 
+    /**
+     * Распоряжение на выдачу в зависимости от метода выдачи (С магазина, Со склада, На доставку).
+     */
     public function create_expense(Order $order, Request $request): OrderExpense
     {
-        $expense = $this->create($order, $request);
+        if (is_null($storage_id = $request->input('storage_id'))) {
+            $storage = Storage::default(); //Если склад не выбран (Доставка), то основной
+        } else {
+            $storage = Storage::find($storage_id);
+        }
+        $expense = $this->create($order, $storage, $request);
 
         $method = $request->string('method')->value();
 
@@ -109,41 +125,46 @@ class ExpenseService
             $expense->refresh();
             $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
         }
-        if ($method == 'wherehouse') {
-
+        if ($method == 'warehouse') {
+            //Нет отличных данных
         }
-
 
         return $expense;
     }
 
     /**
      * Отмена распоряжения. Возвращаем кол-во в резерв и на склад. Удаляем записи и само распоряжение
-     * @param OrderExpense $expense
-     * @return Order
      */
     public function cancel(OrderExpense $expense): Order
     {
-        DB::transaction(function () use($expense, &$order) {
+        DB::transaction(function () use ($expense, &$order) {
+            $this->batchSaleService->return($expense); //Удаляем продажи по партиям
             $order = $expense->order;
             foreach ($expense->items as $item) {
-                $expense->storage->add($item->orderItem->product, $item->quantity);
-                $expense->storage->refresh();
-                $this->reserveService->upReserve($item->orderItem, $item->quantity);
-                $item->delete();
+                //Возвращаем на склад
+                $expense->storage->add($item->orderItem->product, (float)$item->quantity);
+                $expense->refresh();
+                //Добавляем в резерв
+                $this->reserveService->upReserve($item->orderItem, (float)$item->quantity);
+                $item->quantity = 0;
+                $item->save();
+                //TODO Удаление или отмена Выдачи
+                // $item->delete();
+
             }
+            foreach ($expense->additions as $addition) {
+                $addition->amount = 0;
+                $addition->save();
+            }
+
             $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу', '', $expense->htmlNumDate());
-            $expense->delete();
+            $expense->status = OrderExpense::STATUS_CANCELED;
+            $expense->save();
+            //$expense->delete();
             $order->refresh();
         });
 
         return $order;
-    }
-
-    public function update_comment(OrderExpense $expense, string $comment)
-    {
-        $expense->comment = $comment;
-        $expense->save();
     }
 
     /**
@@ -152,14 +173,14 @@ class ExpenseService
 
     private function issue(array $request): OrderExpense
     {
-       // $expense = $this->create($request);
+        // $expense = $this->create($request);
 
-     /*   $expense->type = OrderExpense::DELIVERY_STORAGE;
-        $expense->recipient = clone $expense->order->user->fullname;
-        $expense->phone = $expense->order->user->phone;
-        $expense->save();
-        $expense->setNumber();
-        return $expense;*/
+        /*   $expense->type = OrderExpense::DELIVERY_STORAGE;
+           $expense->recipient = clone $expense->order->user->fullname;
+           $expense->phone = $expense->order->user->phone;
+           $expense->save();
+           $expense->setNumber();
+           return $expense;*/
     }
 
     /**
@@ -167,13 +188,13 @@ class ExpenseService
      */
     public function issue_shop(array $request): OrderExpense
     {
-     /*  DB::transaction(function () use ($request, &$expense) {
-            $expense = $this->issue($request);
-            $this->completed($expense);
-            $expense->refresh();
-            $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
-        });
-        return $expense;*/
+        /*  DB::transaction(function () use ($request, &$expense) {
+               $expense = $this->issue($request);
+               $this->completed($expense);
+               $expense->refresh();
+               $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
+           });
+           return $expense;*/
     }
 
     /**
@@ -222,7 +243,7 @@ class ExpenseService
         }
         $expense->status = OrderExpense::STATUS_DELIVERY;
         $expense->save();
-        $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '' );
+        $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '');
     }
 
     public function completed(OrderExpense $expense)
@@ -244,8 +265,18 @@ class ExpenseService
                 $this->logger->logOrder($expense->order, 'Заказ завершен', '', '');
             } else {
                 event(new ExpenseHasCompleted($expense));
-                $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate() );
+                $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate());
             }
         });
+    }
+
+    public function setInfo(OrderExpense $expense, Request $request): void
+    {
+        $expense->recipient = FullName::create(params: $request->input('recipient'));
+        $expense->phone = phoneToDB($request->string('phone')->value());
+        $expense->address = $request->string('address')->value();
+        $expense->comment = $request->string('comment');
+        $expense->type = $request->input('type');
+        $expense->save();
     }
 }

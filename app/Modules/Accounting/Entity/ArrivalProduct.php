@@ -102,4 +102,10 @@ class ArrivalProduct extends AccountingProduct
             'cost_currency' => (float)$this->cost_currency,
         ]);
     }
+
+    public function batchSale(mixed $batch_quantity): void
+    {
+        $this->remains -= $batch_quantity;
+        $this->save();
+    }
 }

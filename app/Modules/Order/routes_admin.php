@@ -58,7 +58,8 @@ Route::group(
                 Route::post('/issue_shop', 'ExpenseController@issue_shop')->name('issue-shop');
                 Route::post('/issue_warehouse', 'ExpenseController@issue_warehouse')->name('issue-warehouse');
                 Route::get('/show/{expense}', 'ExpenseController@show')->name('show');
-                Route::delete('/destroy/{expense}', 'ExpenseController@destroy')->name('destroy');
+                Route::post('/canceled/{expense}', 'ExpenseController@canceled')->name('canceled');
+                Route::post('/set-info/{expense}', 'ExpenseController@set_info')->name('set-info');
                 Route::post('/assembly/{expense}', 'ExpenseController@assembly')->name('assembly');
                 Route::post('/trade12/{expense}', 'ExpenseController@trade12')->name('trade12');
             }

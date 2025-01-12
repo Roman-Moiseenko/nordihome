@@ -52,6 +52,7 @@ class OrderExpense extends Model
     const STATUS_ASSEMBLING = 3;
     const STATUS_DELIVERY = 4;
     const STATUS_COMPLETED = 10;
+    const STATUS_CANCELED = 11;
 
     const DELIVERY_STORAGE = 401;
     const DELIVERY_LOCAL = 402;
@@ -76,6 +77,7 @@ class OrderExpense extends Model
         self::STATUS_ASSEMBLING => 'Собирается',
         self::STATUS_DELIVERY => 'На доставке',
         self::STATUS_COMPLETED => 'Выдано',
+        self::STATUS_CANCELED => 'Отменен',
     ];
 
     protected $attributes = [
@@ -147,6 +149,11 @@ class OrderExpense extends Model
         return $this->status == self::STATUS_COMPLETED;
     }
 
+    public function isCanceled(): bool
+    {
+        return $this->status == self::STATUS_CANCELED;
+    }
+
     //тип доставки
     public function isStorage(): bool
     {
@@ -165,7 +172,7 @@ class OrderExpense extends Model
 
 
     //*** SET-...
-    public function completed()
+    public function completed(): void
     {
         $this->status = self::STATUS_COMPLETED;
         $this->save();
