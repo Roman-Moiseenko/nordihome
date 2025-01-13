@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property Carbon $date_at
+ * @property boolean $blocked
  * @property CalendarPeriod[] $periods
  */
 class Calendar extends Model
@@ -22,6 +23,11 @@ class Calendar extends Model
     protected $casts = [
         'date_at' => 'datetime',
     ];
+
+    public function isBlocked(): bool
+    {
+        return $this->blocked == true;
+    }
 
     public static function register(Carbon $date_at): self
     {

@@ -11,10 +11,13 @@ use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Entity\Calendar;
+use App\Modules\Delivery\Entity\CalendarExpense;
 use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Отгрузки
@@ -42,6 +45,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Admin $staff
  * @property Worker $worker
  * @property CalendarPeriod[] $calendarPeriods
+ * @property CalendarPeriod $calendarPeriod
  */
 class OrderExpense extends Model
 {
@@ -266,17 +270,20 @@ class OrderExpense extends Model
 
     public function calendar():? Calendar
     {
-
-        $period = $this->calendarPeriod();
-        return is_null($period) ? null : $period->calendar;
+        return is_null($this->calendarPeriod) ? null : $this->calendarPeriod->calendar;
     }
 
-    public function calendarPeriod():? CalendarPeriod
+    public function calendarPeriod(): HasOneThrough
     {
-        return $this->calendarPeriods()->first();
+        return $this->hasOneThrough(
+            CalendarPeriod::class,
+            CalendarExpense::class,
+            'expense_id', 'id',
+            'id', 'period_id'
+        );
     }
 
-    public function calendarPeriods()
+    public function calendarPeriods(): BelongsToMany
     {
         return $this->belongsToMany(CalendarPeriod::class, 'calendars_expenses', 'expense_id', 'period_id');
     }

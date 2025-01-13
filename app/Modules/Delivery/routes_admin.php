@@ -15,9 +15,13 @@ Route::group(
         Route::get('/region', 'DeliveryController@index_region')->name('region');
         Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
 
+
         Route::get('/calendar', 'CalendarController@index')->name('calendar.index');
         Route::get('/calendar/schedule', 'CalendarController@schedule')->name('calendar.schedule');
+        Route::post('/calendar/get-day', 'CalendarController@get_day')->name('calendar.get-day');
+
         Route::post('/assembling/{expense}', 'DeliveryController@assembling')->name('assembling');
+
         Route::post('/delivery/{expense}', 'DeliveryController@delivery')->name('delivery');
         Route::post('/completed/{expense}', 'DeliveryController@completed')->name('completed');
 

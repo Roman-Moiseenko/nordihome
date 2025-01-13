@@ -9,7 +9,9 @@ use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryTruck;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use Carbon\Carbon;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\Deprecated;
 
 class CalendarService
 {
@@ -21,17 +23,38 @@ class CalendarService
         $this->logger = $logger;
     }
 
-    /**
-     * @return Calendar[]
-     */
-    public function Nearest(): array
+    #[Deprecated]
+    public function Nearest(): Arrayable
     {
+        return [];
         $this->checkCalendarMonth(now()->month, now()->year);
         $this->checkCalendarMonth(now()->addMonth()->month, now()->addMonth()->year);
-        return Calendar::where('date_at', '>', now()->toDateString())->orderBy('date_at')->getModels();
+
+        return Calendar::orderBy('date_at')->where('date_at', '>', now()->toDateString())
+            ->get()->map(function (Calendar $calendar) {
+                return [
+                    'id' => $calendar->id,
+                    'date_at' => $calendar->date_at->format('Y-m-d'),
+                    'periods' => $calendar->periods()->get()->map(fn(CalendarPeriod $period) => $this->PeriodToArray($period)),
+                ];
+            });
     }
 
-    public function checkCalendarMonth(int $month, int $year)
+    private function PeriodToArray(CalendarPeriod $period): array
+    {
+        return [
+            'id' => $period->id,
+            'weight' => $period->weight,
+            'volume' => $period->volume,
+            'free_weight' => $period->freeWeight(),
+            'free_volume' => $period->freeVolume(),
+            'is_full' => $period->isFull(),
+            'time_text' => $period->timeHtml(),
+        ];
+    }
+
+    #[Deprecated]
+    public function checkCalendarMonth(int $month, int $year): void
     {
         $begin_date = Carbon::parse($year . '-' . $month . '-01');
 
@@ -52,11 +75,11 @@ class CalendarService
         }
     }
 
-    public function create_date(Carbon $date, float $weight = null, float $volume = null)
+    public function create_date(Carbon $date, float $weight = null, float $volume = null): Calendar
     {
 
         $calendar = Calendar::where('date_at', $date->toDateString())->first();
-        if (!is_null($calendar)) return null;
+        if (!is_null($calendar)) return $calendar;
         if ($weight == null || $volume == null) {
             /** @var DeliveryTruck[] $trucks */
             $trucks = DeliveryTruck::where('active', true)->get();
@@ -71,8 +94,10 @@ class CalendarService
         foreach (CalendarPeriod::TIMES as $time => $name) {
             $calendar->addPeriod($time, $weight, $volume);
         }
+        return $calendar;
     }
 
+    #[Deprecated]
     public function addPeriod(Carbon $date, int $time)
     {
         if (is_null($calendar = Calendar::where('date_at', $date->toDateString())->first())) {
@@ -90,6 +115,7 @@ class CalendarService
         $calendar->addPeriod($time, $weight, $volume);
     }
 
+    #[Deprecated]
     public function removePeriod(Carbon $date, int $time)
     {
         DB::transaction(function () use ($date, $time) {
@@ -109,10 +135,12 @@ class CalendarService
     }
 
 
-    public function attach_expense(CalendarPeriod $calendarPeriod, OrderExpense $expense)
+    public function attach_expense(OrderExpense $expense, int $period_id): void
     {
+        $calendarPeriod = CalendarPeriod::find($period_id);
+
         DB::transaction(function () use ($calendarPeriod, $expense) {
-            $previousCalendarPeriod = $expense->calendarPeriod();
+            $previousCalendarPeriod = $expense->calendarPeriod;
             $expense->calendarPeriods()->detach();
             $expense->calendarPeriods()->attach($calendarPeriod->id);
 
@@ -123,11 +151,11 @@ class CalendarService
             $calendarPeriod->refresh();
             $this->check_full($calendarPeriod);
 
-            $this->logger->logOrder($expense->order, 'Установлена дата отгрузки', $calendarPeriod->calendar->htmlDate(),  $calendarPeriod->timeHtml());
+            $this->logger->logOrder($expense->order, 'Установлена дата отгрузки', $calendarPeriod->calendar->htmlDate(), $calendarPeriod->timeHtml());
         });
     }
 
-    private function check_full(CalendarPeriod $calendarPeriod)
+    private function check_full(CalendarPeriod $calendarPeriod): void
     {
         if ($calendarPeriod->isCompleted()) throw new \DomainException('Доставка завершена, внесение изменений невозможно');
         if (
@@ -139,6 +167,16 @@ class CalendarService
             $calendarPeriod->status = CalendarPeriod::STATUS_DRAFT;
         }
         $calendarPeriod->save();
+    }
+
+    public function getDayPeriods(?\Illuminate\Support\Carbon $date)
+    {
+        //TODO Добавить правило (например кроме выходных), тогда return null;
+
+        $calendar = Calendar::where('date_at', $date->toDateString())->first();
+        if (is_null($calendar)) $calendar = $this->create_date($date);
+        if ($calendar->isBlocked()) return null;
+        return $calendar->periods()->get()->map(fn(CalendarPeriod $period) => $this->PeriodToArray($period));
     }
 
 }

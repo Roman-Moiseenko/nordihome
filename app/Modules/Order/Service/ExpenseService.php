@@ -83,7 +83,6 @@ class ExpenseService
             }
             $expense->refresh();
 
-
             $this->logger->logOrder($expense->order, 'Создано распоряжение на выдачу', '', $expense->htmlNumDate());
         });
 
@@ -150,13 +149,11 @@ class ExpenseService
                 $item->save();
                 //TODO Удаление или отмена Выдачи
                 // $item->delete();
-
             }
             foreach ($expense->additions as $addition) {
                 $addition->amount = 0;
                 $addition->save();
             }
-
             $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу', '', $expense->htmlNumDate());
             $expense->status = OrderExpense::STATUS_CANCELED;
             $expense->save();
@@ -165,50 +162,6 @@ class ExpenseService
         });
 
         return $order;
-    }
-
-    /**
-     * Регистрация выдачи товара на месте (без доставки)
-     */
-
-    private function issue(array $request): OrderExpense
-    {
-        // $expense = $this->create($request);
-
-        /*   $expense->type = OrderExpense::DELIVERY_STORAGE;
-           $expense->recipient = clone $expense->order->user->fullname;
-           $expense->phone = $expense->order->user->phone;
-           $expense->save();
-           $expense->setNumber();
-           return $expense;*/
-    }
-
-    /**
-     * Выдать товар из магазина, витрины
-     */
-    public function issue_shop(array $request): OrderExpense
-    {
-        /*  DB::transaction(function () use ($request, &$expense) {
-               $expense = $this->issue($request);
-               $this->completed($expense);
-               $expense->refresh();
-               $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
-           });
-           return $expense;*/
-    }
-
-    /**
-     * Выдать товар со склада
-     * @param array $request
-     * @return OrderExpense
-     */
-    public function issue_warehouse(array $request): OrderExpense
-    {
-        $expense = $this->issue($request);
-        $this->assembly($expense);
-        $expense->refresh();
-        $this->logger->logOrder($expense->order, 'Выдать товар со склада', '', $expense->htmlNumDate());
-        return $expense;
     }
 
     public function assembly(OrderExpense $expense): void
@@ -273,8 +226,13 @@ class ExpenseService
     {
         $expense->recipient = FullName::create(params: $request->input('recipient'));
         $expense->phone = phoneToDB($request->string('phone')->value());
-        $expense->address = $request->string('address')->value();
+        $expense->address->address = $request->string('address')->value();
         $expense->comment = $request->string('comment');
+        if ($expense->isLocal() && $request->input('type') !== OrderExpense::DELIVERY_LOCAL) {
+            $expense->calendarPeriods()->detach();
+        }
+
+
         $expense->type = $request->input('type');
         $expense->save();
     }

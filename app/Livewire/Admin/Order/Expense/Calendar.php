@@ -39,7 +39,7 @@ class Calendar extends Component
     public function set_period()
     {
         $period = CalendarPeriod::find($this->period);
-        $this->service->attach_expense($period, $this->expense);
+        //$this->service->attach_expense($period, $this->expense);
 
         $this->refresh_fields();
     }

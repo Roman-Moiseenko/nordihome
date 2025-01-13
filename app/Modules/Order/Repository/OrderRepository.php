@@ -7,6 +7,7 @@ namespace App\Modules\Order\Repository;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
@@ -29,10 +30,12 @@ use JetBrains\PhpStorm\Deprecated;
 class OrderRepository
 {
     private UserRepository $users;
+    private CalendarService $calendar;
 
-    public function __construct(UserRepository $users)
+    public function __construct(UserRepository $users, CalendarService $calendar)
     {
         $this->users = $users;
+        $this->calendar = $calendar;
     }
 
     public function getIndex(Request $request, &$filters): Arrayable
@@ -263,6 +266,12 @@ class OrderRepository
             'weight' => $expense->getWeight(),
             'volume' => $expense->getVolume(),
             'is_delivery' => !$expense->isStorage(),
+            'calendar' => is_null($expense->calendarPeriod) ? null : [
+                'date_at' => $expense->calendarPeriod->calendar->date_at,
+                'period_id' => $expense->calendarPeriod->id,
+                'periods' => $this->calendar->getDayPeriods($expense->calendarPeriod->calendar->date_at),
+            ],
+
         ]);
     }
 

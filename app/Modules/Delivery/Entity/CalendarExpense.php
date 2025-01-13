@@ -7,10 +7,9 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property int $calendar_id
+ * @property int $period_id
  * @property int $expense_id
- * @property int $truck_id
- * @property Calendar $calendar
+ * @property CalendarPeriod $period
  * @property OrderExpense $expense
  */
 class CalendarExpense extends Model
@@ -18,9 +17,9 @@ class CalendarExpense extends Model
     public $timestamps = false;
     protected $table = 'calendars_expenses';
 
-    public function calendar()
+    public function period()
     {
-        return $this->belongsTo(Calendar::class, 'calendar_id', 'id');
+        return $this->belongsTo(CalendarPeriod::class, 'period_id', 'id');
     }
 
     public function expense()

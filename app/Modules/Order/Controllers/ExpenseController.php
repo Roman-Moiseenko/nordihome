@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Repository\OrderRepository;
@@ -19,14 +20,21 @@ class ExpenseController extends Controller
     private ExpenseService $service;
     private Trade12Report $report;
     private OrderRepository $repository;
+    private CalendarService $calendar;
 
 
-    public function __construct(ExpenseService $service, OrderRepository $repository, Trade12Report $report)
+    public function __construct(
+        ExpenseService $service,
+        OrderRepository $repository,
+        Trade12Report $report,
+        CalendarService $calendar,
+    )
     {
         $this->middleware(['auth:admin', 'can:order']);
         $this->service = $service;
         $this->report = $report;
         $this->repository = $repository;
+        $this->calendar = $calendar;
     }
 
 
@@ -34,7 +42,7 @@ class ExpenseController extends Controller
     {
         return Inertia::render('Order/Expense/Show', [
             'expense' => $this->repository->ExpenseWithToArray($expense),
-
+           // 'calendar' => $this->calendar->Nearest(),
         ]);
 
     }
@@ -45,6 +53,11 @@ class ExpenseController extends Controller
         return redirect()->route('admin.order.show', $order)->with('success', 'Распоряжение удалено. Товар возвращен в резерв и хранилище');
     }
 
+    public function set_delivery(OrderExpense $expense, Request $request): RedirectResponse
+    {
+        $this->calendar->attach_expense($expense, $request->integer('period_id'));
+        return redirect()->back()->with('success', 'Дата отгрузки установлена');
+    }
 
     public function trade12(OrderExpense $expense)
     {

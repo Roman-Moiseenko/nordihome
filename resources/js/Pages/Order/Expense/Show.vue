@@ -5,7 +5,7 @@
             Распоряжение на выдачу {{ expense.number }} [{{ expense.status_text }}] - {{ expense.type_text }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <ExpenseInfo :expense="expense"/>
+            <ExpenseInfo :expense="expense" :calendar="calendar"/>
         </div>
         <el-affix target=".affix-container" :offset="64">
             <div class="bg-white rounded-lg my-2 p-1 shadow flex">
@@ -58,7 +58,7 @@ const props = defineProps({
         type: String,
         default: 'Распоряжение на выдачу',
     },
-
+    calendar: Array,
 })
 </script>
 
