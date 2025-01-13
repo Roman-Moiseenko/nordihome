@@ -43,13 +43,6 @@ class SupplyReport extends AccountingReport
         //Заполняем общие статичные данные
         $amount_total = $supply->getAmount();
         $amount_vat = $supply->getAmountVAT();
-        $trader = [
-            $supply->customer->full_name,
-            'ИНН ' . $supply->customer->inn,
-            'КПП ' . $supply->customer->kpp,
-            $supply->customer->legal_address->post . ', ' . $supply->customer->legal_address->address,
-            phone($supply->customer->phone)
-        ];
 
         $replaceItems = [
             '{number}' => $supply->number,
@@ -59,7 +52,7 @@ class SupplyReport extends AccountingReport
             '{amount_total}' => $amount_total,
             '{amount_text}' => $this->service->PriceToText($amount_total, $supply->currency->sign),
             '{staff}' => $supply->staff->fullname->getShortname(),
-            '{trader}' => implode(', ', $trader),
+            '{trader}' => $this->service->OrganizationText($supply->supply->customer, false),
             '{distributor}' => $supply->organization->short_name,
             '{currency}' => $supply->currency->cbr_code,
             '{count}' => $supply->products()->count(),

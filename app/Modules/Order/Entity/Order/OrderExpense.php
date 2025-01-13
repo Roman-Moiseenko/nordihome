@@ -205,7 +205,7 @@ class OrderExpense extends Model
         return $result;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         $result = 0;
         foreach ($this->items as $item) {

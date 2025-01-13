@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Base\Service;
 
+use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Admin\Entity\Options;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -396,5 +397,20 @@ class ReportService
                 }
             }
         }
+    }
+
+    public function OrganizationText(Organization $organization, bool $withBank): string
+    {
+        $text =  $organization->full_name . ', ' .
+            'ИНН ' . $organization->inn . ', ' .
+            'КПП ' . $organization->kpp . ', ' .
+            $organization->legal_address->post . ', ' . $organization->legal_address->address . ', ' .
+            phone($organization->phone);
+        if ($withBank)
+            $text .= ', р/с ' . $organization->pay_account .
+                ', в банке ' . $organization->bank_name .
+                ', БИК ' . $organization->bik .
+                ', к/с ' . $organization->corr_account;
+        return $text;
     }
 }

@@ -10,13 +10,20 @@ class MeasuringService
 {
     public function create(Request $request): Measuring
     {
-        return Measuring::register($request->string('name')->trim()->value(), $request->boolean('fractional'));
+        return Measuring::register(
+            $request->string('name')->trim()->value(),
+            $request->integer('code'),
+            $request->boolean('fractional'),
+            $request->string('fractional_name')->trim()->value()
+        );
     }
 
     public function update(Measuring $measuring, Request $request): void
     {
         $measuring->name = $request->string('name')->trim()->value();
+        $measuring->code = $request->integer('code');
         $measuring->fractional = $request->boolean('fractional');
+        $measuring->fractional_name = $request->string('fractional_name')->trim()->value();
         $measuring->save();
     }
 

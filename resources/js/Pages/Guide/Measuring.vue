@@ -16,9 +16,11 @@
                 @row-click="editDialog"
             >
                 <el-table-column prop="name" label="Название" width="300"/>
+                <el-table-column prop="code" label="Код по ОКЕИ" width="300"/>
                 <el-table-column prop="manual" label="Дробление товара">
                     <template #default="scope">
                         <Active :active="scope.row.fractional"/>
+                        <span v-if="scope.row.fractional" class="ml-2">({{ scope.row.fractional_name }})</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="Действия" align="right">
@@ -41,8 +43,14 @@
                     <el-form-item label="Название">
                         <el-input v-model="form.name"/>
                     </el-form-item>
+                    <el-form-item label="Код по ОКЕИ">
+                        <el-input v-model="form.code"/>
+                    </el-form-item>
                     <el-form-item label="Дробление товара">
                         <el-checkbox v-model="form.fractional" :checked="form.fractional"/>
+                    </el-form-item>
+                    <el-form-item v-if="form.fractional" label="Название дробной единицы">
+                        <el-input v-model="form.fractional_name"/>
                     </el-form-item>
                 </el-form>
                 <div class="dialog-footer">
@@ -75,13 +83,17 @@ const tableData = [...props.measurings]
 const form = reactive({
     id: null,
     name: null,
+    code: null,
     fractional: false,
+    fractional_name: null,
 })
 
 function createDialog() {
     form.id = null
     form.name = null
+    form.code = null
     form.fractional = false
+    form.fractional_name = null
     dialogCreate.value = true
 }
 
@@ -89,7 +101,9 @@ function editDialog(row) {
     console.log(row)
     form.id = row.id
     form.name = row.name
+    form.code = row.code
     form.fractional = (row.fractional === 1)
+    form.fractional_name = row.fractional_name
     dialogCreate.value = true
 }
 

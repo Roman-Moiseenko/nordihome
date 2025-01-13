@@ -428,7 +428,6 @@ class Order extends Model
         return $this->coupon_amount ?? 0;
     }
 
-
     /**
      * Сумма всех доп услуг
      */
@@ -440,7 +439,6 @@ class Order extends Model
         }
         return $total_addition;
     }
-
 
     /**
      * Итоговая сумма оплаты за заказ, с учетом всех скидок и платежей

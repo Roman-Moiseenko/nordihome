@@ -23,7 +23,6 @@ use function now;
  * @property Addition $addition
  * @property OrderExpenseAddition[] $expenseAdditions
  */
-
 class OrderAddition extends Model
 {
 
@@ -48,17 +47,14 @@ class OrderAddition extends Model
 
     public function getAmount(): float|int
     {
-        if ($this->addition->manual) {
-            $amount = $this->amount ?? 0; //Цена ставится в ручную после добавления в заказ
-        } else {
-            if (is_null($this->addition->class)) {
-                $amount = $this->addition->base; //Цена фиксирована,из справочника
-            } else {
-                //Цена рассчитывается по своему алгоритму
-                $amount = $this->addition->class::calculate($this->order, $this->addition->base);
-            }
-        }
-        return $amount;
+        //Для установки вручную и если стоимость услуги уже зафиксирована /для awaiting
+        if ($this->amount != 0) return $this->amount;
+
+        if (is_null($this->addition->class))
+            return $this->addition->base; //Цена фиксирована,из справочника
+
+        //Цена рассчитывается по своему алгоритму
+        return $this->addition->class::calculate($this->order, $this->addition->base);
     }
 
 

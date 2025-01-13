@@ -6,6 +6,7 @@ namespace App\Modules\Service\Report;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Base\Service\ReportParams;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
@@ -53,13 +54,46 @@ class Trade12Report
     private function create_xls(OrderExpense $expense): Spreadsheet
     {
         $spreadsheet = IOFactory::load($this->template);
+        //TODO Сделать по аналогии с AccountingReport
+        $params = new ReportParams(23, 10, 20, 18, 40,
+            2, 40, 20, 22,
+            'Товарная накладная № ' . $expense->number . ' от ' . $expense->created_at->translatedFormat('d.m.Y')
+        );
         $this->activeWorksheet = $spreadsheet->getActiveSheet();
 
         $count_items = $expense->items()->count();
         $count_additions = $expense->additions()->count();
         $pages = $this->getList($count_items + $count_additions); //Разбивка на страницы
 
-        $this->_general_info($expense, count($pages)); //Заполняем основные данные об организации и общие по счету
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+
+        $trader = $expense->order->trader;
+
+        $_count = $expense->items()->count() + $expense->additions()->count();
+        //TODO Сделать разбивку, если quantity дробное
+        $_quantity = (int)$expense->getQuantity();
+
+        $replaceItems = [
+            '{organization}' => $this->service->OrganizationText($trader, true),
+            '{storage}' => $expense->storage->name,
+            '{user}' => is_null($expense->order->shopper_id)
+                ? $expense->order->userFullName()
+                : $this->service->OrganizationText($expense->order->shopper, true),
+            '{document}' => $expense->order->user->getDocumentName(),
+            '{number}' => $expense->number,
+            '{date}' => $expense->created_at->format('d.m.Y'),
+            '{day}' => $expense->created_at->format('d'),
+            '{month}' => $expense->created_at->translatedFormat('F'),
+            '{year}' => $expense->created_at->format('Y'),
+            '{post_chief}' => $trader->post,
+            '{chief}' => $trader->chief->getShortname(),
+            '{count}' => $this->service->CountToText($_count),
+            '{quantity}' => $this->service->CountToText($_quantity),
+            '{amount_text}' => $this->service->PriceToText($expense->getAmount()),
+            '{pages}' => count($pages),
+        ];
+
+        $this->service->findReplaceArray($activeWorksheet, $replaceItems);
 
         $list_items = array_merge(
             $expense->items()->getModels(),
@@ -92,52 +126,6 @@ class Trade12Report
         $spreadsheet->getActiveSheet()->getPageSetup()->setFitToWidth(1);
 
         return $spreadsheet;
-    }
-
-    private function _general_info(OrderExpense $expense, int $page_count)
-    {
-
-        //TODO Выбор организации продавца, default или по id
-        /** @var Trader $trader */
-        $trader = Trader::where('default', true)->first();
-        $organization = $trader->organization;
-        $organization_text = $organization->full_name .
-            ', ИНН ' . $organization->inn .
-            ', ' . $organization->legal_address->post . ', ' . $organization->legal_address->address .
-            ', тел: ' . $organization->phone .
-            ', р/с ' . $organization->pay_account . ', в банке ' . $organization->bank_name . ', БИК ' . $organization->bik . ', к/с ' . $organization->corr_account;
-        $_count = $expense->items()->count() + $expense->additions()->count();
-        $_quantity = $expense->getQuantity();
-
-        for ($row = 1; $row < 50; $row++) {
-            for ($col = 1; $col < 50; ++$col) {
-                $value = $this->activeWorksheet->getCell([$col, $row])->getValue();
-                if (!is_null($value)) {
-
-                    $value = str_replace('{organization}', (string)$organization_text, (string)$value);
-                    $value = str_replace('{storage}', (string)$expense->storage->name, (string)$value);
-                    $value = str_replace('{user}', (string)$expense->order->userFullName(), (string)$value);
-                    $value = str_replace('{document}', (string)$expense->order->user->getDocumentName(), (string)$value);
-                    $value = str_replace('{number}', (string)$expense->number, (string)$value);
-                    $value = str_replace('{date}', (string)$expense->created_at->format('d.m.Y'), (string)$value);
-
-                    $value = str_replace('{day}', (string)$expense->created_at->format('d'), (string)$value);
-                    $value = str_replace('{month}', (string)$expense->created_at->translatedFormat('F'), (string)$value);
-                    $value = str_replace('{year}', (string)$expense->created_at->format('Y'), (string)$value);
-
-                    $value = str_replace('{post_chief}', (string)$organization->post, (string)$value);
-                    $value = str_replace('{chief}', (string)$organization->chief->getShortname(), (string)$value);
-
-                    $value = str_replace('{count}', $this->service->CountToText($_count), (string)$value);
-                    $value = str_replace('{quantity}', $this->service->CountToText($_quantity, true), (string)$value);
-                    $value = str_replace('{amount_text}', $this->service->PriceToText($expense->getAmount()), (string)$value);//Сумма по заказу
-
-                    $value = str_replace('{pages}', (string)$page_count, (string)$value);//Сумма по заказу
-
-                    $this->activeWorksheet->setCellValue([$col, $row], $value);
-                }
-            }
-        }
     }
 
     private function _row_insert(int $i)
@@ -175,16 +163,16 @@ class Trade12Report
         $this->activeWorksheet->setCellValue([2, self::BEGIN_ROW + $i], ($i + 1));
         $this->activeWorksheet->setCellValue([3, self::BEGIN_ROW + $i], $item->orderItem->product->name);
         $this->activeWorksheet->setCellValue([8, self::BEGIN_ROW + $i], $item->orderItem->product->code);
-        $this->activeWorksheet->setCellValue([9, self::BEGIN_ROW + $i], 'шт.');
-        $this->activeWorksheet->setCellValue([13, self::BEGIN_ROW+ $i], '796');
-        $this->activeWorksheet->setCellValue([14, self::BEGIN_ROW+ $i], 'шт.');
-        $this->activeWorksheet->setCellValue([15, self::BEGIN_ROW+ $i], $item->quantity);
-        $this->activeWorksheet->setCellValue([18, self::BEGIN_ROW+ $i], $item->quantity);
-        $this->activeWorksheet->setCellValue([24, self::BEGIN_ROW+ $i], $item->orderItem->product->weight() * $item->quantity); //Вес
+        $this->activeWorksheet->setCellValue([9, self::BEGIN_ROW + $i], $item->orderItem->product->measuring->name);
+        $this->activeWorksheet->setCellValue([13, self::BEGIN_ROW + $i], (string)$item->orderItem->product->measuring->code);
+        $this->activeWorksheet->setCellValue([14, self::BEGIN_ROW + $i], $item->orderItem->product->measuring->name);
+        $this->activeWorksheet->setCellValue([15, self::BEGIN_ROW + $i], $item->quantity);
+        $this->activeWorksheet->setCellValue([18, self::BEGIN_ROW + $i], $item->quantity);
+        $this->activeWorksheet->setCellValue([24, self::BEGIN_ROW + $i], $item->orderItem->product->weight() * $item->quantity); //Вес
 
-        $this->activeWorksheet->setCellValue([26, self::BEGIN_ROW+ $i], $item->orderItem->sell_cost);
-        $this->activeWorksheet->setCellValue([29, self::BEGIN_ROW+ $i], $item->orderItem->sell_cost * $item->quantity);
-        $this->activeWorksheet->setCellValue([39, self::BEGIN_ROW+ $i], $item->orderItem->sell_cost * $item->quantity);
+        $this->activeWorksheet->setCellValue([26, self::BEGIN_ROW + $i], $item->orderItem->sell_cost);
+        $this->activeWorksheet->setCellValue([29, self::BEGIN_ROW + $i], $item->orderItem->sell_cost * $item->quantity);
+        $this->activeWorksheet->setCellValue([39, self::BEGIN_ROW + $i], $item->orderItem->sell_cost * $item->quantity);
 
         $amount['quantity'] += $item->quantity;
         $amount['weight'] += $item->orderItem->product->weight() * $item->quantity;
@@ -194,18 +182,20 @@ class Trade12Report
 
     private function _row_addition(int $i, OrderExpenseAddition $addition, array &$amount)
     {
-        $this->activeWorksheet->setCellValue([2, self::BEGIN_ROW+ $i], ($i + 1));
-        $this->activeWorksheet->setCellValue([3, self::BEGIN_ROW+ $i], $addition->orderAddition->addition->name . ' (' . $addition->orderAddition->comment . ')');
-        $this->activeWorksheet->setCellValue([8, self::BEGIN_ROW+ $i], '');
-        $this->activeWorksheet->setCellValue([9, self::BEGIN_ROW+ $i], 'услуга');
-        $this->activeWorksheet->setCellValue([13, self::BEGIN_ROW+ $i], '356');
-        $this->activeWorksheet->setCellValue([14, self::BEGIN_ROW+ $i], 'услуга');
-        $this->activeWorksheet->setCellValue([15, self::BEGIN_ROW+ $i], 1);
-        $this->activeWorksheet->setCellValue([18, self::BEGIN_ROW+ $i], 1);
+        $name = $addition->orderAddition->addition->name;
+        if (!empty($addition->orderAddition->comment)) $name .= ' (' . $addition->orderAddition->comment . ')';
+        $this->activeWorksheet->setCellValue([2, self::BEGIN_ROW + $i], ($i + 1));
+        $this->activeWorksheet->setCellValue([3, self::BEGIN_ROW + $i], $name);
+        $this->activeWorksheet->setCellValue([8, self::BEGIN_ROW + $i], '');
+        $this->activeWorksheet->setCellValue([9, self::BEGIN_ROW + $i], 'услуга');
+        $this->activeWorksheet->setCellValue([13, self::BEGIN_ROW + $i], '356');
+        $this->activeWorksheet->setCellValue([14, self::BEGIN_ROW + $i], 'услуга');
+        $this->activeWorksheet->setCellValue([15, self::BEGIN_ROW + $i], 1);
+        $this->activeWorksheet->setCellValue([18, self::BEGIN_ROW + $i], 1);
 
-        $this->activeWorksheet->setCellValue([26, self::BEGIN_ROW+ $i], $addition->amount);
-        $this->activeWorksheet->setCellValue([29, self::BEGIN_ROW+ $i], $addition->amount);
-        $this->activeWorksheet->setCellValue([39, self::BEGIN_ROW+ $i], $addition->amount);
+        $this->activeWorksheet->setCellValue([26, self::BEGIN_ROW + $i], $addition->amount);
+        $this->activeWorksheet->setCellValue([29, self::BEGIN_ROW + $i], $addition->amount);
+        $this->activeWorksheet->setCellValue([39, self::BEGIN_ROW + $i], $addition->amount);
 
         $amount['quantity']++;
         $amount['amount'] += $addition->amount;
@@ -214,10 +204,10 @@ class Trade12Report
 
     private function _row_amount(int $i, array $data)
     {
-        $this->activeWorksheet->setCellValue([18, self::BEGIN_ROW+ $i], $data['quantity']);
-        $this->activeWorksheet->setCellValue([24, self::BEGIN_ROW+ $i], $data['weight']);
-        $this->activeWorksheet->setCellValue([29, self::BEGIN_ROW+ $i], $data['amount']);
-        $this->activeWorksheet->setCellValue([39, self::BEGIN_ROW+ $i], $data['amount_nds']);
+        $this->activeWorksheet->setCellValue([18, self::BEGIN_ROW + $i], $data['quantity']);
+        $this->activeWorksheet->setCellValue([24, self::BEGIN_ROW + $i], $data['weight']);
+        $this->activeWorksheet->setCellValue([29, self::BEGIN_ROW + $i], $data['amount']);
+        $this->activeWorksheet->setCellValue([39, self::BEGIN_ROW + $i], $data['amount_nds']);
     }
 
     private function getList(int $count): array

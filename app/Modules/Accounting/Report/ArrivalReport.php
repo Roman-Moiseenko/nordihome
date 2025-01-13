@@ -35,13 +35,6 @@ class ArrivalReport extends AccountingReport
         //Заполняем общие статичные данные
         $amount_total = $arrival->getAmount();
         $amount_vat = $arrival->getAmountVAT();
-        $trader = [
-            $arrival->supply->customer->full_name,
-            'ИНН ' . $arrival->supply->customer->inn,
-            'КПП ' . $arrival->supply->customer->kpp,
-            $arrival->supply->customer->legal_address->post . ', ' . $arrival->supply->customer->legal_address->address,
-            phone($arrival->supply->customer->phone)
-        ];
 
         $replaceItems = [
             '{number}' => $arrival->number,
@@ -51,7 +44,7 @@ class ArrivalReport extends AccountingReport
             '{amount_total}' => $amount_total,
             '{amount_text}' => $this->service->PriceToText($amount_total, $arrival->currency->sign),
             '{staff}' => $arrival->staff->fullname->getShortname(),
-            '{trader}' => implode(', ', $trader),
+            '{trader}' => $this->service->OrganizationText($arrival->supply->customer, false),
             '{distributor}' => $arrival->supply->organization->short_name,
             '{currency}' => $arrival->currency->cbr_code,
             '{count}' => $arrival->products()->count(),

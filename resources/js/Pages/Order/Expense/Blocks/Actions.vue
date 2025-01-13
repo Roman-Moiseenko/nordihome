@@ -1,7 +1,7 @@
 <template>
 
     <el-button type="primary" v-if="expense.status.is_new" @click="onAssembly">На сборку</el-button>
-    <el-button type="warning" plain @click="onReport">Накладная</el-button>
+    <el-button type="warning" plain @click="onTrade12">Накладная</el-button>
     <el-button type="danger" plain v-if="!expense.status.is_completed && !expense.status.is_canceled" @click="onCancel">Отменить</el-button>
 
     <el-button type="primary" plain @click="onOrder" class="ml-auto mr-3">Вернуться к заказу</el-button>
@@ -11,6 +11,7 @@
 import {defineProps} from "vue";
 import {ElLoading} from "element-plus";
 import {Link, router} from "@inertiajs/vue3";
+import axios from "axios";
 
 const props = defineProps({
     expense: Object,
@@ -25,6 +26,35 @@ function onCancel() {
 }
 function onOrder() {
     router.get(route('admin.order.show', {order: props.expense.order_id}))
+}
+
+function onTrade12() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Идет формирование накладной',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    // console.log(val)
+    axios.post(route('admin.order.expense.trade12', {expense: props.expense.id}),null,
+        {
+            responseType: 'arraybuffer',
+//            params: {class: val.class, method: val.method, id: $accounting.id},
+        }
+    ).then(response => {
+        let blob = new Blob([response.data], {type: 'application/*'})
+        let link = document.createElement('a')
+        let headers = response.headers
+
+        link.href = window.URL.createObjectURL(blob)
+        link.download = headers['filename']
+        link._target = 'blank'
+        document.body.appendChild(link);
+        link.click();
+        loading.close()
+        URL.revokeObjectURL(link.href)
+    }).catch(reason => {
+        loading.close()
+    })
 }
 /*
 function onCompleted() {

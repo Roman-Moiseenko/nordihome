@@ -211,10 +211,10 @@ class ExpenseService
         return $expense;
     }
 
-    public function assembly(OrderExpense $expense): Order
+    public function assembly(OrderExpense $expense): void
     {
         if (!$expense->isStorage()) {
-            if ($expense->isLocal() == false && $expense->isRegion() == false) throw new \DomainException('Не выбран тип доставки');
+            if (!$expense->isLocal() && !$expense->isRegion()) throw new \DomainException('Не выбран тип доставки');
             if ($expense->isLocal() && is_null($expense->calendar())) throw new \DomainException('Не выбрано время доставки');
             if (empty($expense->phone) || empty($expense->address->address)) throw new \DomainException('Не указан адрес и/или телефон');
         }
@@ -222,7 +222,6 @@ class ExpenseService
         $expense->assembly();
         event(new ExpenseHasAssembly($expense)); //Уведомление на склад на выдачу
         $this->logger->logOrder($expense->order, 'Распоряжение отправлено на сборку', '', $expense->htmlNumDate());
-        return $expense->order;
     }
 
     public function assembling(OrderExpense $expense, int $worker_id)

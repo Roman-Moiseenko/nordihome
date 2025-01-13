@@ -48,14 +48,22 @@ class ExpenseController extends Controller
 
     public function trade12(OrderExpense $expense)
     {
-        $file = $this->report->xlsx($expense);
-        ob_end_clean();
-        ob_start();
-        return response()->file($file);
+        try {
+            $file = $this->report->xlsx($expense);
+            $headers = [
+                'filename' => basename($file),
+            ];
+            ob_end_clean();
+            ob_start();
+            return response()->file($file, $headers);
+        } catch (\Throwable $e) {
+            return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+        }
+
     }
 
 
-    public function create(Order $order, Request $request)
+    public function create(Order $order, Request $request): RedirectResponse
     {
         $expense = $this->service->create_expense($order, $request);
         if ($request->input('method') == 'shop') return redirect()->back()->with('success', 'Товар выдан');
@@ -63,7 +71,7 @@ class ExpenseController extends Controller
         return redirect()->route('admin.order.expense.show', $expense)->with('success', 'Распоряжение сформировано');
     }
 
-    public function set_info(OrderExpense $expense, Request $request)
+    public function set_info(OrderExpense $expense, Request $request): RedirectResponse
     {
         $this->service->setInfo($expense, $request);
         return redirect()->back()->with('success', 'Сохранено');
@@ -91,10 +99,9 @@ class ExpenseController extends Controller
         return response()->json(route('admin.order.expense.show', $expense));
     }
 */
-    public function assembly(OrderExpense $expense)
+    public function assembly(OrderExpense $expense): RedirectResponse
     {
-        $order = $this->service->assembly($expense);
-        flash('Распоряжение отправлено на склад на сборку.', 'info');
-        return redirect()->route('admin.order.show', $order);
+        $this->service->assembly($expense);
+        return redirect()->back()->with('success', 'Распоряжение отправлено на склад на сборку.');
     }
 }
