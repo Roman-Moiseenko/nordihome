@@ -76,14 +76,6 @@ export default defineConfig({
                 "resources/js/vendor/transition/index.js",
                 "resources/js/vendor/xlsx/index.js",
 
-                // Pages
-           /*     "resources/js/pages/chat/index.js",
-                "resources/js/pages/login/index.js",
-                "resources/js/pages/modal/index.js",
-                "resources/js/pages/notification/index.js",
-                "resources/js/pages/slideover/index.js",
-                "resources/js/pages/tabulator/index.js",
-                "resources/js/pages/validation/index.js",*/
 
                 // Layouts
                 "resources/js/layouts/side-menu/index.js",
@@ -108,18 +100,6 @@ export default defineConfig({
                 "resources/js/components/mobile-menu/index.js",
                 "resources/js/components/pie-chart/index.js",
                 "resources/js/components/preview-component/index.js",
-                "resources/js/components/report-bar-chart/index.js",
-                "resources/js/components/report-bar-chart-1/index.js",
-                "resources/js/components/report-donut-chart/index.js",
-                "resources/js/components/report-donut-chart-1/index.js",
-                "resources/js/components/report-donut-chart-2/index.js",
-                "resources/js/components/report-line-chart/index.js",
-                "resources/js/components/report-pie-chart/index.js",
-                "resources/js/components/simple-line-chart/index.js",
-                "resources/js/components/simple-line-chart-1/index.js",
-                "resources/js/components/simple-line-chart-2/index.js",
-                "resources/js/components/simple-line-chart-3/index.js",
-                "resources/js/components/simple-line-chart-4/index.js",
                 "resources/js/components/source/index.js",
                 "resources/js/components/stacked-bar-chart/index.js",
                 "resources/js/components/stacked-bar-chart-1/index.js",
@@ -128,18 +108,6 @@ export default defineConfig({
                 "resources/js/components/tippy-content/index.js",
                 "resources/js/components/tom-select/index.js",
                 "resources/js/components/top-bar/index.js",
-                "resources/js/components/vertical-bar-chart/index.js",
-
-                //Собственные
-                "resources/js/components/widget.js",
-                'resources/js/components/search-product.js',
-                'resources/js/components/list-code-products.js',
-                'resources/css/components/_list-code-products.css',
-                'resources/js/components/search-add-product.js',
-                'resources/js/components/create-add-product.js',
-                'resources/js/components/table-filter.js',
-                'resources/js/components/company/fields.js',
-                'resources/js/components/company/info.js',
 
                 //Vue
                 'resources/sass/app.scss',

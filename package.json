@@ -42,7 +42,6 @@
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/progress": "^0.2.7",
         "@inertiajs/vue3": "2.0",
-        "@left4code/tw-starter": "^4.0.1",
         "@tinymce/tinymce-vue": "^6.1.0",
         "@vitejs/plugin-vue": "^5.1.4",
         "animate.css": "^4.1.1",

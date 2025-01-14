@@ -10,6 +10,7 @@ use App\Modules\Delivery\Repository\CalendarRepository;
 use App\Modules\Delivery\Service\CalendarService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CalendarController extends Controller
 {
@@ -29,6 +30,11 @@ class CalendarController extends Controller
         $filter = $request['filter'] ?? 'new';
         $query = $this->repository->getIndex($filter);
         $calendars = $this->pagination($query, $request, $pagination);
+        //TODO Список отгрузок по области
+        return Inertia::render('Delivery/Calendar/Index', [
+            '$calendars' => $calendars,
+            'filter' => $filter,
+        ]);
 
         return view('admin.delivery.calendar.index', compact('calendars', 'filter', 'pagination'));
     }

@@ -8,6 +8,7 @@ use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Entity\DeliveryTruck;
 use App\Modules\Delivery\Service\TruckService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TruckController extends Controller
 {
@@ -23,44 +24,34 @@ class TruckController extends Controller
     {
         $query = DeliveryTruck::orderBy('name')->where('active', true);
         $trucks = $this->pagination($query, $request, $pagination);
-        return view('admin.delivery.truck.index', compact('trucks', 'pagination'));
+        //TODO Список грузовиков Название/Грузоподъемность/Объем/Активен/(Активен/Неактивен, Удалить)
+        return Inertia::render('Delivery/Truck/Index', [
+            'trucks' => $trucks,
+        ]);
     }
 
-    public function create()
-    {
-        $drivers = Worker::where('post', Worker::DRIVER)->where('active', true)->get();
-        return view('admin.delivery.truck.create', compact('drivers'));
-    }
+
 
     public function store(Request $request)
     {
+        //TODO Редактирование через Модальное окно
         $request->validate([
             'name' => 'required|string',
         ]);
-        $truck = $this->service->register($request->all());
-        return redirect()->route('admin.delivery.truck.show', compact('truck'));
+        $this->service->register($request->all());
+        return redirect()->back()->with('success', 'Транспорт добавлен');
     }
 
-    public function show(DeliveryTruck $truck)
-    {
-        return view('admin.delivery.truck.show', compact('truck'));
-    }
-
-    public function edit(DeliveryTruck $truck)
-    {
-        $drivers = Worker::where('post', Worker::DRIVER)->where('active', true)->get();
-        return view('admin.delivery.truck.edit', compact('truck', 'drivers'));
-    }
 
     public function update(Request $request, DeliveryTruck $truck)
     {
         $this->service->update($request->all(), $truck);
-        return redirect()->route('admin.delivery.truck.show', compact('truck'));
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function destroy(DeliveryTruck $truck)
     {
         $this->service->delete($truck);
-        return redirect()->route('admin.delivery.truck.index');
+        return redirect()->back()->with('success', 'Транспорт удален');
     }
 }

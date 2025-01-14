@@ -21,22 +21,31 @@ class RefundController extends Controller
 
     public function index(Request $request)
     {
+        return redirect()->back()->with('warning', 'В разработке');
+        /*
         $query = OrderRefund::orderByDesc('created_at');
         $refunds = $this->pagination($query, $request, $pagination);
         return view('admin.order.refund.index', compact('refunds', 'pagination'));
+        */
     }
 
     public function create(Request $request)
     {
+
         /** @var Order $order */
         $order = Order::where('number', trim($request['order_id']))->first();
         if (is_null($order)) throw new \DomainException('Заказ № ' . $request['order_id'] . ' не найден');
 
+        //TODO Список всех товаров + услуг, + сколько выдано
+        // Список платежей
+        // Колонка "На возврат" для денег и товаров/услуг
+        return redirect()->back()->with('warning', 'В разработке');
+        /*
         if ($order->isCompleted(true) || $order->isPaid() || $order->isPrepaid()) {
             //Создать на возврат товаров
             return view('admin.order.refund.create', compact('order'));
         }
-
+*/
         throw new \DomainException('Для данного заказа нельзя сделать возврат');
     }
 
@@ -49,7 +58,9 @@ class RefundController extends Controller
 
     public function show(OrderRefund $refund)
     {
-        return view('admin.order.refund.show', compact('refund'));
+        return redirect()->back()->with('warning', 'В разработке');
+
+        //return view('admin.order.refund.show', compact('refund'));
     }
 
 }
