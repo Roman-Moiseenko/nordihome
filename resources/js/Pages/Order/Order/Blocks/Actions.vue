@@ -362,7 +362,7 @@ function setIssued() {
         }).map(item => {
             return {
                 id: item.id,
-                value: item.quantity
+                value: item.remains
             }
         }),
         additions: issued.additions.filter(addition => {

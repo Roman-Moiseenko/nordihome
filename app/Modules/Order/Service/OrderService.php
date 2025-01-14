@@ -27,6 +27,7 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Service\Report\InvoiceReport;
@@ -347,10 +348,22 @@ class OrderService
      */
     public function cancel(Order $order, string $comment): void
     {
-        $order->clearReserve();
-        $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
-        event(new OrderHasCanceled($order));
-        $this->logger->logOrder($order, 'Заказ отменен менеджером', '', $comment);
+        DB::transaction(function () use ($order, $comment) {
+            $order->clearReserve();
+            $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
+
+            foreach ($order->payments as $payment) {
+                if ($payment->method != OrderPayment::METHOD_ACCOUNT)
+                    throw new \DomainException('Есть платежи не по счету. Отмена только через Возврат');
+                $payment->order_id = null;
+                $payment->shopper_id = $order->shopper_id;
+                $payment->trader_id = $order->trader_id;
+                $payment->save();
+            }
+            event(new OrderHasCanceled($order));
+            $this->logger->logOrder($order, 'Заказ отменен менеджером', '', $comment);
+
+        });
     }
 
     /**
@@ -396,6 +409,24 @@ class OrderService
             // event(new OrderHasAwaiting($order));
 
             //flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
+        });
+    }
+
+
+    public function work(Order $order)
+    {
+        DB::transaction(function () use ($order) {
+            if ($order->status->value != OrderStatus::AWAITING) throw new \DomainException('Заказ нельзя вернуть в работу');
+            $order->status->delete();
+
+            //Удаляем фиксацию цен на услугу
+            foreach ($order->additions as $addition) {
+                if (!$addition->addition->manual) {
+                    $addition->amount = 0;
+                    $addition->save();
+                }
+            }
+            $this->logger->logOrder($order, 'Заказ вернулся в работу', '', '');
         });
     }
 
@@ -827,8 +858,6 @@ class OrderService
             $this->logger->logOrder($order, 'Установлена общая скидка', '', price($manual));
         }
 
-
-
     }
 
     public function setUser(Order $order, Request $request): void
@@ -866,5 +895,6 @@ class OrderService
         $this->logger->logOrder($order, 'Добавлен комментарий', '', $order->comment);
         $order->save();
     }
+
 
 }

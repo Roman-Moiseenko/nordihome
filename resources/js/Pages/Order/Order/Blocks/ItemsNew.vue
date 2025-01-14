@@ -69,7 +69,8 @@
                 </span>
             </template>
         </el-table-column>
-        <el-table-column v-if="is_new" prop="product.quantity_sell" label="Наличие" width="90" align="center"/>
+        <el-table-column v-if="is_new" prop="quantity_sell" label="Наличие" width="90" align="center" >
+        </el-table-column>
         <el-table-column prop="assemblage" label="Сборка" width="80" align="center">
             <template #default="scope">
                 <el-checkbox v-if="is_new"

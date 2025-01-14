@@ -89,8 +89,6 @@ class OrderRepository
             ->through(fn(Order $order) => $this->OrderToArray($order));
     }
 
-
-
     public function OrderToArray(Order $order): array
     {
         $status_out = -1;
@@ -187,6 +185,9 @@ class OrderRepository
 
     private function OrderItemToArray(OrderItem $item): array
     {
+        $quantity_sell = $item->product->getQuantitySell();
+        $quantity_order = $item->order->getQuantityProduct($item->product_id, false);
+
         return array_merge($item->toArray(), [
             'percent' => $item->getPercent(),
             'product' => array_merge($item->product->toArray(), [
@@ -194,7 +195,7 @@ class OrderRepository
                 'volume' => ceil($item->product->volume() * 1000) / 1000,
                 'measuring' => $item->product->measuring->name,
                 'has_promotion' => $item->product->hasPromotion(),
-                'quantity_sell' => $item->product->getQuantitySell(),
+                //'quantity_sell' => $item->product->getQuantitySell(),
             ]),
             'supply_stack' => is_null($item->supply_stack_id) ? null : [
                 'id' => $item->supplyStack->id,
@@ -214,6 +215,7 @@ class OrderRepository
                     'reserve_other' => $storageItem->getQuantityReserve($item->order_id),
                 ];
             }),
+            'quantity_sell' => $quantity_order + $quantity_sell,
         ]);
     }
 

@@ -122,8 +122,6 @@ class OrderController extends Controller
         return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
     }
 
-
-
     public function log(Order $order)
     {
         return view('admin.order.log', compact('order'));
@@ -200,6 +198,14 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Заказ ожидает оплаты');
     }
 
+    /**
+     * Вернуть в работу
+     */
+    public function work(Order $order): mixed
+    {
+        $this->service->work($order);
+        return redirect()->back()->with('success', 'Заказ в работе');
+    }
 
     /** РАБОТА С ЗАКАЗОМ */
     public function movement(Request $request, Order $order): RedirectResponse

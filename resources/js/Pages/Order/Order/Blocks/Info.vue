@@ -4,6 +4,11 @@
         <el-col :span="8">
             <div v-if="order.user_id">
                 <el-descriptions :column="1" border class="mb-1" size="small">
+                    <el-descriptions-item v-if="order.user.organization" label="Юридическое лицо">
+                        <el-select v-model="info.shopper_id"  @change="setInfo" :disabled="iSavingInfo || !is_new" filterable style="max-width: 280px;" clearable>
+                            <el-option v-for="item in order.shoppers" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
+                        </el-select>
+                    </el-descriptions-item>
                     <el-descriptions-item label="ФИО">
                         {{ func.fullName(order.user.fullname) }}
                     </el-descriptions-item>
@@ -22,11 +27,7 @@
                     <el-descriptions-item label="Цена">
                         {{ order.user.pricing }}
                     </el-descriptions-item>
-                    <el-descriptions-item v-if="order.user.organization" label="Юридическое лицо">
-                        <el-select v-model="info.shopper_id"  @change="setInfo" :disabled="iSavingInfo || !is_new" filterable style="max-width: 280px;" clearable>
-                            <el-option v-for="item in order.shoppers" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
-                        </el-select>
-                    </el-descriptions-item>
+
                 </el-descriptions>
                 <Link type="warning" :href="route('admin.user.show', {user: order.user.id})">Карточка клиента</Link>
             </div>
@@ -110,6 +111,7 @@
 
                 <el-button v-if="is_new" type="success" @click="onAwaiting">На оплату</el-button>
                 <el-button v-if="!is_view" type="success" plain @click="getInvoice">Скачать счет</el-button>
+                <el-button v-if="is_awaiting" type="warning" plain @click="onWork">Вернуть в работу</el-button>
                 <el-button v-if="!is_view" type="info" plain @click="dialogCancel = true">Отменить</el-button>
             </div>
             <div class="border-t mt-2 pt-2">
@@ -228,6 +230,10 @@ function getInvoice() {
 
 function onAwaiting() {
     router.post(route('admin.order.awaiting', {order: props.order.id}))
+}
+
+function onWork() {
+    router.post(route('admin.order.work', {order: props.order.id}))
 }
 function onCancel() {
     router.visit(route('admin.order.cancel', {order: props.order.id}), {

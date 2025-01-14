@@ -24,9 +24,13 @@
             </div>
         </div>
         <div v-if="is_issued">
-            <div v-if="order.items.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+            <div v-if="order.in_stock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
                 <h2 class="font-medium text-cyan-800">Товары на выдачу</h2>
-                <OrderItemsIssued :items=[...order.items] />
+                <OrderItemsIssued :items=[...order.in_stock] />
+            </div>
+            <div v-if="order.pre_order.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+                <h2 class="font-medium text-orange-800">Товары под заказ</h2>
+                <OrderItemsIssued :items=[...order.pre_order] />
             </div>
         </div>
         <div v-if="order.additions.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">

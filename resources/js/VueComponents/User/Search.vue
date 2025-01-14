@@ -109,6 +109,8 @@ function onCreateUser(val) {
                  console.log('Error', page)
              }
          })
+    } else {
+        dialogCreate.value = false
     }
 }
 //<==

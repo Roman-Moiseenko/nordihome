@@ -231,9 +231,11 @@ class Order extends Model
 
     public function setNumber(): void
     {
-        $count = Order::where('number', '<>', null)->count();
-        $this->number = $count + 1;
-        $this->save();
+        if (!is_null($this->number)) { //Не меняем уже назначенный номер
+            $count = Order::where('number', '<>', null)->max('number');
+            $this->number = (int)$count + 1;
+            $this->save();
+        }
     }
 
     ///*** GET-еры
@@ -258,6 +260,17 @@ class Order extends Model
         $quantity = 0;
         foreach ($this->items as $item) {
             $quantity += $item->quantity;
+        }
+        return $quantity;
+    }
+
+    public function getQuantityProduct(int $product_id, bool $withPreorder): float
+    {
+        $quantity = 0;
+        foreach ($this->items as $item) {
+            if ($item->product_id == $product_id) {
+                if (!$item->preorder || $withPreorder) $quantity += $item->quantity;
+            }
         }
         return $quantity;
     }

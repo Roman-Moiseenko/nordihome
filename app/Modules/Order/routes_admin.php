@@ -40,6 +40,7 @@ Route::group(
 
         Route::post('/cancel/{order}', 'OrderController@cancel')->name('cancel');
         Route::post('/awaiting/{order}', 'OrderController@awaiting')->name('awaiting');
+        Route::post('/work/{order}', 'OrderController@work')->name('work');
 
         Route::post('/search-user', 'OrderController@search_user')->name('search-user');
 

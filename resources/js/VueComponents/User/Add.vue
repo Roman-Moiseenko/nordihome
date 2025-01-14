@@ -69,20 +69,12 @@ const formCreate = reactive({
 
 function saveUser() {
     axios.post(route('admin.user.create'), formCreate).then(response => {
-        //console.log('response', response)
+
         if (response.data.error !== undefined) console.log(response.data.error)
         $emit('update:user', response.data)
     }).catch(reason => {
         console.log('reason', reason)
     });
-
-  /*  router.visit(route('admin.user.create'), {
-        method: "post",
-        data: formCreate,
-        onSuccess: page => {
-
-        }
-    })*/
 }
 function onCancel() {
     $emit('update:user', null)
