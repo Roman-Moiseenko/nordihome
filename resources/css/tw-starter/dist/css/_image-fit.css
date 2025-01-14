@@ -1,8 +1,0 @@
-@layer components {
-  .image-fit {
-    @apply relative;
-    & > img {
-      @apply absolute object-cover w-full h-full;
-    }
-  }
-}
