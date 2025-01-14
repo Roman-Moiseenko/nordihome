@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Service\PageService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PageController extends Controller
 {
@@ -19,10 +19,13 @@ class PageController extends Controller
         $this->service = $service;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
         $pages = Page::get();
-        return view('admin.page.page.index', compact('pages'));
+        return Inertia::render('Page/Page/Index', [
+            'pages' => $pages,
+        ]);
+       // return view('admin.page.page.index', compact('pages'));
     }
 
     public function create()

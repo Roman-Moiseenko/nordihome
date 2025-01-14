@@ -7,6 +7,14 @@ return [
         'title' => 'Доставка',
         'can' => ['delivery'],
         'sub_menu' => [
+            'assembly' => [
+                'title' => 'На сборку',
+                'route_name' => 'admin.delivery.assembly',
+                'action' => true,
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-cart-flatbed-boxes',
+            ],
+
             'truck' => [
                 'icon' => 'truck',
                 'title' => 'Транспорт',
@@ -14,34 +22,36 @@ return [
             ],
             'storage' => [
                 'icon' => 'warehouse',
-                'title' => 'Выдача со склада',
+                'title' => '*Выдача со склада',
                 'route_name' => 'admin.delivery.storage',
                 'action' => true,
             ],
             'local' => [
                 'icon' => 'map-pin',
-                'title' => 'Доставка по региону',
+                'title' => '*Доставка по региону',
                 'route_name' => 'admin.delivery.local',
                 'action' => true,
             ],
             'region' => [
                 'icon' => 'map',
-                'title' => 'Доставка по РФ',
+                'title' => '*Доставка по РФ',
                 'route_name' => 'admin.delivery.region',
                 'action' => true,
             ],
             'calendar' => [
                 'icon' => 'calendar-days',
-                'title' => 'Календарь доставок',
+                'title' => '*Календарь доставок',
                 'route_name' => 'admin.delivery.calendar.index',
                 //'action' => true,
             ],
+            /*
             'schedule' => [
                 'icon' => 'calendar-check',
                 'title' => 'График доставок',
                 'route_name' => 'admin.delivery.calendar.schedule',
                 'action' => true,
             ],
+            */
         ],
 
     ],

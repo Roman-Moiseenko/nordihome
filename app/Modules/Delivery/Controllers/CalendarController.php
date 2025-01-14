@@ -35,9 +35,11 @@ class CalendarController extends Controller
 
     public function schedule(Request $request)
     {
+        //TODO Заменить на Правила + добавление дней в блокировку
+        /*
         $this->service->checkCalendarMonth(Carbon::now()->month, Carbon::now()->year);
         $this->service->checkCalendarMonth(Carbon::now()->addMonth()->month, Carbon::now()->addMonth()->year);
-
+        */
         $days = $this->repository->getDays();
         return view('admin.delivery.calendar.schedule', compact('days'));
     }

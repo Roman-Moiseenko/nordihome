@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $name
- * @property bool $active // -?
+ * @property bool $published // -?
  * @property string $data_class
  * @property int $data_id
  * @property string $template
@@ -54,7 +54,7 @@ class Widget extends Model
             'name' => $name,
             'data_class' => $data_class,
             'data_id' => $data_id,
-            'active' => true,
+            'published' => true,
             'template' => $template,
             'params' => $params,
         ]);
@@ -88,15 +88,15 @@ class Widget extends Model
         return $item->getDataWidget($this->params);
     }
 
-    public function draft()
+    public function draft(): void
     {
-        $this->active = false;
+        $this->published = false;
         $this->save();
     }
 
-    public function activated()
+    public function published(): void
     {
-        $this->active = true;
+        $this->published = true;
         $this->save();
     }
 

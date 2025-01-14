@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Page\Entity\Widget;
 use App\Modules\Page\Service\WidgetService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 
 class WidgetController extends Controller
@@ -21,10 +22,23 @@ class WidgetController extends Controller
         $this->service = $service;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
-        $widgets = Widget::get();
-        return view('admin.page.widget.index', compact('widgets'));
+        $widgets = Widget::get()->map(function (Widget $widget) {
+            return [
+                'id' => $widget->id,
+                'name' => $widget->name,
+                'object' => $widget->getObject(),
+                'object_name' => $widget->getName(),
+                'template' => $widget->templateName(),
+                'published' => $widget->published,
+
+            ];
+        });
+        return Inertia::render('Page/Widget/Index', [
+            'widgets' => $widgets,
+        ]);
+      //  return view('admin.page.widget.index', compact('widgets'));
     }
 
     public function create()
@@ -70,7 +84,7 @@ class WidgetController extends Controller
 
     public function activated(Widget $widget)
     {
-        $widget->activated();
+        $widget->published();
         return redirect()->route('admin.page.widget.show', compact('widget'));
     }
 

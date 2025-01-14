@@ -9,6 +9,7 @@ use App\Modules\Delivery\Repository\DeliveryRepository;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use JetBrains\PhpStorm\ArrayShape;
 
 class DeliveryController extends Controller
@@ -23,9 +24,17 @@ class DeliveryController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function assembly(Request $request)
     {
-        //return $this->view($request);
+
+        $expenses = $this->repository->getAssembly($request, $filters);
+        return Inertia::render('Delivery/Assembly/Index', [
+            'expenses' => $expenses,
+            'filters' => $filters,
+            'works' => Worker::where('active', true)->get(),
+        ]);
+
+
     }
 
     public function index_local(Request $request)

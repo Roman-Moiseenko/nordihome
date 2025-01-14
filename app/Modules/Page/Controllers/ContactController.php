@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Service\ContactService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ContactController extends Controller
 {
@@ -18,10 +19,14 @@ class ContactController extends Controller
         $this->service = $service;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
         $contacts = Contact::orderBy('sort')->get();
-        return view('admin.page.contact.index', compact('contacts'));
+        return Inertia::render('Page/Contact/Index', [
+            'contacts' => $contacts,
+        ]);
+
+       // return view('admin.page.contact.index', compact('contacts'));
     }
 
     public function create()

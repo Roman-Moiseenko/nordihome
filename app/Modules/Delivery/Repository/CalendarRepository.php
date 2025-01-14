@@ -12,7 +12,6 @@ class CalendarRepository
 
     public function getDays(): array
     {
-
         $today = Carbon::now();
         $begin = Carbon::parse($today->year . '-' . $today->month . '-01');
         $month = 0;

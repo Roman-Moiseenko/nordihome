@@ -6,6 +6,11 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 //DELIVERY
+Breadcrumbs::for('admin.delivery.assembly', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.delivery.all');
+    $trail->push('На сборку', route('admin.delivery.assembly'));
+});
+
 
 Breadcrumbs::for('admin.delivery.all', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
@@ -23,6 +28,7 @@ Breadcrumbs::for('admin.delivery.storage', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.delivery.all');
     $trail->push('Самовывоз', route('admin.delivery.storage'));
 });
+
 
 //TRUCK
 Breadcrumbs::for('admin.delivery.truck.index', function (BreadcrumbTrail $trail) {

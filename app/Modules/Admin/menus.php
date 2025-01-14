@@ -19,7 +19,7 @@ return [
         'vue' => true,
         'font_awesome' => 'fa-light fa-user-helmet-safety'
     ],
-    'task' => [
+   /* 'task' => [
         'sort' => 70,
         'icon' => 'clipboard-check',
         'title' => 'Задачи',
@@ -32,5 +32,5 @@ return [
                 'action' => true,
             ],
         ],
-    ],
+    ],*/
 ];

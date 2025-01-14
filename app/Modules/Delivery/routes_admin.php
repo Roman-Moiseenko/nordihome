@@ -14,7 +14,7 @@ Route::group(
         Route::get('/local', 'DeliveryController@index_local')->name('local');
         Route::get('/region', 'DeliveryController@index_region')->name('region');
         Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
-
+        Route::get('/assembly', 'DeliveryController@assembly')->name('assembly');
 
         Route::get('/calendar', 'CalendarController@index')->name('calendar.index');
         Route::get('/calendar/schedule', 'CalendarController@schedule')->name('calendar.schedule');
