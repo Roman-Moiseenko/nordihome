@@ -13,13 +13,17 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $mailable
- * @property string $user_id
+ * @property int $user_id
  * @property string $title
  * @property string $content
  * @property array $attachments
  * @property int $count
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property int $systemable_id
+ * @property string $systemable_type
+ * @property array $emails
  * @property User $user
  */
 class SystemMail extends Model
@@ -28,11 +32,13 @@ class SystemMail extends Model
 
     protected $attributes = [
         'attachments' => '{}',
+        'emails' => '{}',
     ];
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'attachments' =>'json',
+        'emails' => 'json',
     ];
     protected $fillable = [
         'mailable',
@@ -41,6 +47,7 @@ class SystemMail extends Model
         'attachments',
         'count',
         'title',
+        'emails',
     ];
 
     //TODO Возможно перенести в Хелпер
@@ -49,19 +56,27 @@ class SystemMail extends Model
         OrderAwaitingMail::class => 'Счет на оплату',
     ];
 
-    public static function register(AbstractMailable $mailable, int $user_id): self
+    public function systemable()
     {
+        return $this->morphTo()->withTrashed();
+    }
+
+    public static function register(AbstractMailable $mailable, int $user_id, array $emails): self
+    {
+
+
         return self::create([
             'mailable' => $mailable::class,
             'user_id' => $user_id,
             'title' => $mailable->envelope()->subject,
             'content' => $mailable->render(),
             'attachments' => $mailable->getFiles(),
-            'count' => 1
+            'count' => 1,
+            'emails' => $emails,
         ]);
     }
 
-    public function notSent()
+    public function notSent(): void
     {
         $this->count = 0;
         $this->save();
@@ -72,7 +87,7 @@ class SystemMail extends Model
         return self::MAILABLES[$this->mailable];
     }
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }

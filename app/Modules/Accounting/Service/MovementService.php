@@ -63,14 +63,16 @@ class MovementService // extends AccountingService
         });
     }
 
-    public function departure(MovementDocument $document)
+    public function departure(MovementDocument $document): void
     {
         DB::transaction(function () use ($document) {
             $storageOut = $document->storageOut;
             $storageIn = $document->storageIn;
             // Удаляем товар из Storage и создаем StorageArrivalItem
+
             foreach ($document->movementProducts as $movementProduct) {
                 //удаляем из Storage и StorageDepartureItem
+                //dd($movementProduct->departureItem);
                 $departureItem = $movementProduct->departureItem;
                 $storageOut->sub($departureItem->product, (float)$departureItem->quantity);
                 $departureItem->delete();
@@ -160,7 +162,12 @@ class MovementService // extends AccountingService
         if ($movement->storage_out == $movement->storage_in) throw new \DomainException('Склады совпадают');
 
         foreach ($movement->products as $product) {
-            if ($movement->storageOut->getAvailable($product->product) < $product->quantity) throw new \DomainException('Недостаточно товара на складе убытия!');
+            $available = $movement->storageOut->getAvailable($product->product);
+            if ($movement->order) { //Если товар переносится под Заказ, учитываем кол-во в заказе
+                $available += $movement->order->getQuantityProduct($product->product_id, false);
+            }
+            if ($available < $product->quantity)
+                throw new \DomainException('Недостаточно товара на складе убытия!');
         }
         DB::transaction(function () use ($movement) {
             $storageOut = $movement->storageOut;
@@ -179,7 +186,6 @@ class MovementService // extends AccountingService
         if ($movement->isDeparture()) {
             DB::transaction(function () use ($movement) {
                 foreach ($movement->products as $movementProduct) {
-
                     $movementProduct->departureItem->delete();
                 }
                 $movement->status == MovementDocument::STATUS_DRAFT;

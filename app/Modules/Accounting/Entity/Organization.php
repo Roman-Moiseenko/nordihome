@@ -138,12 +138,24 @@ class Organization extends Model
         return true;
     }
 
-    public function getContactById(int $id):? OrganizationContact
+    public function getContactById(int $id): ?OrganizationContact
     {
         foreach ($this->contacts as $contact) {
             if ($contact->id == $id) return $contact;
         }
         return null;
+    }
+
+    public function getEmails(): array
+    {
+        $array = [];
+        if (!empty($this->email)) $array['Общий'] = $this->email;
+        foreach ($this->contacts as $contact) {
+            if (!empty($contact->email))
+                $array[$contact->post] = $contact->email;
+        }
+        return $array;
+
     }
 
     public function types(): string
@@ -173,7 +185,7 @@ class Organization extends Model
 
     public function holding(): BelongsTo
     {
-        return$this->belongsTo(OrganizationHolding::class, 'holding_id', 'id');
+        return $this->belongsTo(OrganizationHolding::class, 'holding_id', 'id');
     }
 
     public function paymentsShopper(): HasOneThrough
@@ -227,10 +239,6 @@ class Organization extends Model
 
         //return $this->hasOne(User::class, 'organization_id', 'id');
     }
-
-
-
-
 
     public function scopeActive($query)
     {

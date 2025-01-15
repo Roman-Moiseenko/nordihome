@@ -160,6 +160,7 @@ class OrderRepository
                 'percent' => ($order->getBaseAmountNotDiscount() == 0) ? 0 : ceil($order->manual / $order->getBaseAmountNotDiscount() * 100 * 10) / 10,
                 'payment' => $order->getPaymentAmount(),
             ],
+            'emails' => is_null($order->shopper_id) ? [] : array_select($order->shopper->getEmails()),
             'shoppers' => is_null($order->user) ? [] : $order->user->organizations,
             'reserve' => $order->getReserveTo(),
             'payments' => $order->payments()->get()->map(fn(OrderPayment $payment) => [

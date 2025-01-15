@@ -369,9 +369,9 @@ class OrderService
     /**
      * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
      */
-    public function awaiting(Order $order): void
+    public function awaiting(Order $order, array $emails): void
     {
-        DB::transaction(function () use ($order) {
+        DB::transaction(function () use ($order, $emails) {
             if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
             if ($order->getTotalAmount() == 0) throw new \DomainException('Сумма заказа не может быть равно нулю');
 
@@ -400,10 +400,14 @@ class OrderService
             $this->logger->logOrder($order, 'Заказ отправлен на оплату', '', '');
 
             //Пересоздать отчет и отправить письмо клиенту
-
             $invoice = $this->invoiceReport->xlsx($order);
-            SendSystemMail::dispatch($order->user, new OrderAwaitingMail($order, $invoice));
-            //TODO Сохранить в логе Заказа ссылку на письмо (ID)
+            SendSystemMail::dispatch(
+                $order->user,
+                new OrderAwaitingMail($order, $invoice),
+                Order::class,
+                $order->id,
+                $emails
+            );
 
             //TODO Или создаем событие
             // event(new OrderHasAwaiting($order));
@@ -659,9 +663,8 @@ class OrderService
     {
         DB::transaction(function () use ($order, $storage_out, $storage_in, &$movement) {
             $movement = $this->movementService->create($storage_out, $storage_in);
-            $this->movementService->completed($movement);
-            $order->movements()->attach($movement->id);
             $movement->refresh();
+            $order->movements()->attach($movement->id);
 
             foreach ($order->items as $item) {
                 if (!is_null($reserve = $item->getReserveByStorage($storage_out))) {
@@ -670,6 +673,8 @@ class OrderService
                     }
                 }
             }
+            $movement->refresh();
+            $this->movementService->completed($movement);
             $this->logger->logOrder(
                 $order,
                 'Создано перемещение для заказа',

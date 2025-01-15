@@ -192,9 +192,10 @@ class OrderController extends Controller
     /**
      * На оплату
      */
-    public function awaiting(Order $order): mixed
+    public function awaiting(Order $order, Request $request): mixed
     {
-        $this->service->awaiting($order);
+        dd($request->input('emails', []));
+        $this->service->awaiting($order, $request->input('emails', []));
         return redirect()->back()->with('success', 'Заказ ожидает оплаты');
     }
 

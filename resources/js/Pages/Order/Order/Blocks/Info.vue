@@ -109,7 +109,8 @@
                     </div>
                 </el-popover>
 
-                <el-button v-if="is_new" type="success" @click="onAwaiting">На оплату</el-button>
+                <el-button v-if="is_new" type="success" @click="dialogAwaiting = true">На оплату</el-button>
+
                 <el-button v-if="!is_view" type="success" plain @click="getInvoice">Скачать счет</el-button>
                 <el-button v-if="is_awaiting" type="warning" plain @click="onWork">Вернуть в работу</el-button>
                 <el-button v-if="!is_view" type="info" plain @click="dialogCancel = true">Отменить</el-button>
@@ -128,6 +129,26 @@
 
     </el-row>
 
+    <el-dialog v-model="dialogAwaiting" title="Отправить заказ на оплату?" width="360">
+        <div v-if="order.shopper_id">
+            <h3>Если email отличается от учетной записи, выберите и/или введите новые адреса почты</h3>
+            <el-select v-model="formEmails" multiple allow-create filterable class="mt-2">
+                <el-option v-for="item in order.emails" :key="item.label" :value="item.label" :label="item.value" >
+                    {{ item.value }} <{{ item.label }}>
+                </el-option>
+            </el-select>
+        </div>
+
+        <template #footer>
+            <div class="dialog-footer mt-3">
+                <el-button @click="dialogAwaiting = false">Отмена</el-button>
+                <el-button type="success" @click="onAwaiting()">
+                    Отправить
+                </el-button>
+            </div>
+        </template>
+
+    </el-dialog>
     <el-dialog v-model="dialogCancel" title="Отменить заказ" center width="400">
         <div class="font-medium text-md my-2">
             Вы уверены, что хотите отменить заказ?
@@ -135,7 +156,6 @@
         <el-form-item label="Причина">
             <el-input v-model="cancel_comment" />
         </el-form-item>
-        <slot />
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="dialogCancel = false">Отмена</el-button>
@@ -163,6 +183,8 @@ const props = defineProps({
     traders: Array,
 })
 
+console.log(props.order)
+
 const iSavingInfo = ref(false)
 const info = reactive({
     trader_id: props.order.trader_id,
@@ -180,7 +202,7 @@ function setInfo() {
         method: "post",
         data: info,
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             iSavingInfo.value = false;
         }
@@ -200,7 +222,6 @@ function handleReserve() {
         }
     })
 }
-
 function getInvoice() {
     const loading = ElLoading.service({
         lock: false,
@@ -228,8 +249,11 @@ function getInvoice() {
     })
 }
 
+//На оплату
+const dialogAwaiting =ref(false)
+const formEmails = ref([]);
 function onAwaiting() {
-    router.post(route('admin.order.awaiting', {order: props.order.id}))
+    router.post(route('admin.order.awaiting', {order: props.order.id}), {emails: formEmails.value})
 }
 
 function onWork() {

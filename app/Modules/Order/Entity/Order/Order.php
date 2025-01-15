@@ -9,6 +9,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
+use App\Modules\Mail\Entity\SystemMail;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Service\Entity\Report;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
@@ -62,6 +64,7 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderRefund $refund
  * @property LoggerOrder[] $logs
  * @property Report $invoice
+ * @property SystemMail[] $systemMails
  */
 
 class Order extends Model
@@ -331,9 +334,7 @@ class Order extends Model
         } else {
             return $this->staff->fullname->getFullName();
         }
-
     }
-
 
     /**
      * Доля выдачи заказа 0 - не выдан, 1 -выдан 100%
@@ -544,6 +545,11 @@ class Order extends Model
     }
 
     ///*** Relations *************************************************************************************
+
+    public function systemMails(): MorphMany
+    {
+        return $this->morphMany(SystemMail::class, 'systemable');
+    }
 
     public function shopper(): BelongsTo
     {

@@ -55,6 +55,7 @@ class UserRepository
 
     public function UserToArray(User $user): array
     {
+
         return array_merge($user->toArray(), [
             'name' => $user->getPublicName(),
             'data' => $this->getOrderData($user->id),

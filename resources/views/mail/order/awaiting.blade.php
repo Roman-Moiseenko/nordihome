@@ -15,12 +15,12 @@
 @endcomponent
 
 
-## Платежи по заказу
+## Услуги по заказу
 @component('mail::table')
-| Платеж | Сумма | Способ оплаты | Ссылка на оплату |
+| Услуга | Сумма | Комментарий |
 | ----------- |:------------:|:----------------:|-------:|
 @foreach($order->additions as $addition)
-| {{ $addition->name }} | {{ price($payment->amount) }} | {{ $payment->nameType() }} | {{ $payment->document }} |
+| {{ $addition->addition->name }} | {{ price($addition->amount) }} | {{ $addition->comment }} |
 @endforeach
 @endcomponent
 
