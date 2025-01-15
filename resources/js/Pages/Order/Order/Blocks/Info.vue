@@ -183,8 +183,6 @@ const props = defineProps({
     traders: Array,
 })
 
-console.log(props.order)
-
 const iSavingInfo = ref(false)
 const info = reactive({
     trader_id: props.order.trader_id,

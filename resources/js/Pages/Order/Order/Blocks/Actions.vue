@@ -174,6 +174,9 @@
             </el-table-column>
 
             <el-table-column label="Не выдано" width="240">
+                <template #header>
+                    Не выдано <el-checkbox v-model="checkedItems" :checked="checkedItems" @change="checkItems" />
+                </template>
                 <template #default="scope">
                     <div class="flex">
                         <el-input v-model="scope.row.remains" :disabled="!scope.row.issued" style="width: 60px;"/>
@@ -198,6 +201,9 @@
             </el-table-column>
 
             <el-table-column label="Не выдано" width="240">
+                <template #header>
+                    Не выдано <el-checkbox v-model="checkedAdditions" :checked="checkedAdditions" @change="checkAdditions" />
+                </template>
                 <template #default="scope">
                     <div class="flex">
                         <el-input v-model="scope.row.remains" :disabled="!scope.row.issued" style="width: 80px;"/>
@@ -220,7 +226,7 @@
 <script setup>
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
-import {defineProps, inject, reactive, ref, onMounted} from "vue";
+import {defineProps, inject, reactive, ref, onMounted, computed} from "vue";
 import {Link, router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import {ElLoading, ElMessage} from "element-plus";
@@ -337,7 +343,34 @@ const issued = reactive({
     })],
 })
 const disabled_storage = ref(true)
+const checkedItems = computed( () => {
+    let check = true
+    issued.items.forEach(function (item) {
+        if (item.issued !== true) check = false
+    })
+    return check
+})
+const checkedAdditions = computed( () => {
+    let check = true
+    issued.additions.forEach(function (item) {
+        if (item.issued !== true) check = false
+    })
+    return check
+})
+function checkItems() {
+    let val = !checkedItems.value
+    issued.items.forEach(function (item) {
+        item.issued = val
+    })
 
+}
+function checkAdditions() {
+    let val = !checkedAdditions.value
+    issued.additions.forEach(function (item) {
+        item.issued = val
+    })
+
+}
 function typeExpense(item) {
     if (item.is_canceled) return 'info'
     if (item.is_completed) return 'success'
