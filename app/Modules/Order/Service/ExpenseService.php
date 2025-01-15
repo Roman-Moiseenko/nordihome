@@ -209,12 +209,20 @@ class ExpenseService
             $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName())
         ;
         $expense->save();
-        $worker = Worker::find($worker_id);
-        $worker->notify(new StaffMessage(
+        //$worker = Worker::find($worker_id);
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_DELIVERY);
+        foreach ($staffs as $staff) {
+            $staff->notify(new StaffMessage(
+                event: NotificationHelper::EVENT_ASSEMBLY,
+                message: $message,
+                params: new TelegramParams(TelegramParams::OPERATION_ASSEMBLING, $expense->id)
+            ));
+        }
+      /*  $worker->notify(new StaffMessage(
             event: NotificationHelper::EVENT_ASSEMBLY,
             message: $message,
             params: new TelegramParams(TelegramParams::OPERATION_ASSEMBLING, $expense->id)
-        ));
+        ));*/
     }
 
     /**
