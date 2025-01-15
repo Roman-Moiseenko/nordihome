@@ -206,14 +206,15 @@ class OrderRepository
             'remains' => $item->getRemains(),
             'reserves' => ($item->reserves()->count() == 0) ? null : $item->reserves,
             'storages' => Storage::orderBy('name')->get()->map(function (Storage $storage) use ($item) {
+
                 $storageItem = $storage->getItem($item->product_id);
-                $orderReserve = $item->getReserveByStorageItem($storageItem->id);
+                $orderReserve = is_null($storageItem) ? null : $item->getReserveByStorageItem($storageItem->id);
                 return [
                     'id' => $storage->id,
                     'name' => $storage->name,
                     'reserve' => is_null($orderReserve) ? 0 : (float)$orderReserve->quantity,
-                    'quantity' => (float)$storageItem->quantity,
-                    'reserve_other' => $storageItem->getQuantityReserve($item->order_id),
+                    'quantity' => is_null($storageItem) ? 0 : (float)$storageItem->quantity,
+                    'reserve_other' => is_null($storageItem) ? 0 : $storageItem->getQuantityReserve($item->order_id),
                 ];
             }),
             'quantity_sell' => $quantity_order + $quantity_sell,
