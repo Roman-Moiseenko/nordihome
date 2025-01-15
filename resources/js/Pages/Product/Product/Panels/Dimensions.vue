@@ -82,7 +82,7 @@
 
                         <el-form-item label="Вес (кг)" label-position="top" class="ml-2">
                             <el-input v-model="item.weight" @change="onAutoSave" :disabled="isSaving"
-                                      :formatter="val => func.MaskInteger(val)"/>
+                                      :formatter="val => func.MaskFloat(val)"/>
                         </el-form-item>
                         <el-form-item label="Кол-во" label-position="top" class="ml-2">
                             <el-input v-model="item.quantity" @change="onAutoSave" :disabled="isSaving"
