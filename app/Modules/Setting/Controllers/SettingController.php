@@ -80,6 +80,16 @@ class SettingController extends Controller
         );
     }
 
+    //Настройки Уведомлений
+    public function notification()
+    {
+        $notification = $this->repository->getNotification();
+        return Inertia::render('Setting/Notification', [
+                'notification' => $notification,
+            ]
+        );
+    }
+
     public function update(Request $request): RedirectResponse
     {
         try {

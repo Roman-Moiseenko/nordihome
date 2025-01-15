@@ -32,6 +32,14 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-piggy-bank',
             ],
+            'notification' => [
+                'icon' => 'layout-panel-top',
+                'title' => 'Уведомления',
+                'route_name' => 'admin.setting.notification',
+                'action' => true,
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-bell',
+            ],
             'web' => [
                 'icon' => 'layout-panel-top',
                 'title' => 'Сайт',

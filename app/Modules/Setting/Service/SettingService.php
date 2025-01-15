@@ -28,11 +28,16 @@ class SettingService
 
         $setting->data = $data;
         $setting->save();
+        if ($slug == 'notification') $this->saveTelegramToken();
         if ($slug == 'parser') $this->productService->updateCostAllProductsIkea();
         if ($slug == 'mail') $this->saveMailBoxes();
     }
 
-
+    private function saveTelegramToken()
+    {
+        $notification = $this->repository->getNotification();
+        $this->putPermanentEnv('TELEGRAM_BOT_TOKEN', $notification->telegram_api);
+    }
 
     private function saveMailBoxes(): void
     {

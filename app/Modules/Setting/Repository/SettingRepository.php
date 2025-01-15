@@ -6,6 +6,7 @@ namespace App\Modules\Setting\Repository;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Coupon;
 use App\Modules\Setting\Entity\Mail;
+use App\Modules\Setting\Entity\Notification;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
 
@@ -58,5 +59,11 @@ class SettingRepository
     {
         $setting = Setting::where('slug', 'mail')->first();
         return new Mail($setting->getData());
+    }
+
+    public function getNotification(): Notification
+    {
+        $notification = Setting::where('slug', 'notification')->first();
+        return new Notification($notification->getData());
     }
 }
