@@ -67,6 +67,10 @@ use App\Listeners\NotificationUserCreated;
 use App\Listeners\ParsingImageProduct;
 use App\Listeners\NotificationPromotionMoved;
 use App\Listeners\WelcomeToShop;
+use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Notification\Events\TelegramHasReceived;
+use App\Modules\Notification\Service\NotificationService;
+use App\Modules\Order\Service\ExpenseService;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Notifications\Events\NotificationSending;
 
@@ -79,6 +83,18 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
+        TelegramHasReceived::class => [
+            ExpenseService::class, //Сбор заказа
+            DeliveryService::class, //Сбор? и доставка Заказа
+            NotificationService::class, //Подтверждение уведомления
+            //CalendarService::class, //Подтверждение записи
+            //OrderService::class, //Взятие в работу заказ
+            /**
+             * Добавляем классы, которые обрабатывают подтверждения из Телеграм.
+             */
+
+        ],
+
         /* Registered::class => [
              SendEmailVerificationNotification::class,
          ],*/
@@ -163,9 +179,7 @@ class EventServiceProvider extends ServiceProvider
         ExpenseHasCompleted::class => [
             NotificationExpenseCompleted::class
         ],
-        ExpenseHasAssembly::class => [
-            NotificationExpenseAssembly::class
-        ],
+
         ExpenseHasDelivery::class => [
             NotificationExpenseDelivery::class
         ],

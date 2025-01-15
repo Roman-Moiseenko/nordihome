@@ -7,6 +7,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Entity\FullName;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * @property int $id
@@ -23,6 +24,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Worker extends Model
 {
+    use Notifiable;
+
+    const WORK_DRIVER = 1; //Доставщик, Водитель
+    const WORK_ASSEMBLE = 1; //Сборка мебели
+    const WORK_LOADER = 1; //Грузчик, Упаковка
+    const WORK_LOGISTIC = 1;
+
     protected $attributes = [
         'fullname' => '{}',
         'storage_id' => null,

@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
+/**
+ * Контроллер работы с выдачей товара OrderExpense для Менеджера
+ */
 class ExpenseController extends Controller
 {
     private ExpenseService $service;
@@ -42,7 +45,6 @@ class ExpenseController extends Controller
     {
         return Inertia::render('Order/Expense/Show', [
             'expense' => $this->repository->ExpenseWithToArray($expense),
-           // 'calendar' => $this->calendar->Nearest(),
         ]);
 
     }
@@ -90,28 +92,6 @@ class ExpenseController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-/*
-    public function issue_shop(Request $request)
-    {
-        $data = json_decode($request['data'], true);
-
-        try {
-            $expense = $this->service->issue_shop($data);
-            flash('Товар выдан', 'info');
-            return response()->json(route('admin.order.show', $expense->order));
-        } catch (\Throwable $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
-    }
-/*
-    public function issue_warehouse(Request $request)
-    {
-        $data = json_decode($request['data'], true);
-        $expense = $this->service->issue_warehouse($data);
-        flash('Заявка на выдачу сформирована. Распечатайте накладную', 'info');
-        return response()->json(route('admin.order.expense.show', $expense));
-    }
-*/
     public function assembly(OrderExpense $expense): RedirectResponse
     {
         $this->service->assembly($expense);

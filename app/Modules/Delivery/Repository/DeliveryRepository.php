@@ -19,7 +19,9 @@ class DeliveryRepository
 
     public function getAssembly(Request $request, &$filters)
     {
-        $query = OrderExpense::where('status', OrderExpense::STATUS_ASSEMBLY);
+        $query = OrderExpense::orderBy('status')
+            ->orderBy('type')
+            ->whereIn('status', [OrderExpense::STATUS_ASSEMBLY, OrderExpense::STATUS_ASSEMBLING]);
         $filters = [];
         //TODO Фильтр?
         if (count($filters) > 0) $filters['count'] = count($filters);

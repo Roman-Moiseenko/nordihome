@@ -105,7 +105,8 @@
                         <el-option v-for="item in storages" :key="item.id" :label="item.name" :value="item.id"/>
                     </el-select>
                     <div class="mt-2">
-                        <el-button @click="visible_movement = false">Отмена</el-button><el-button @click="onMovement" type="primary">Создать</el-button>
+                        <el-button @click="visible_movement = false">Отмена</el-button>
+                        <el-button @click="onMovement" type="primary">Создать</el-button>
                     </div>
                 </el-popover>
 

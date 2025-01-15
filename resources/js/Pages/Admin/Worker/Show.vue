@@ -57,10 +57,10 @@
                             <el-input v-model="form.telegram_user_id" :formatter="val => func.MaskInteger(val)"/>
                         </el-form-item>
                         <el-form-item label="Специализация">
-                            <el-checkbox v-model="form.driver" label="Водитель"/>
-                            <el-checkbox v-model="form.loader" label="Грузчик"/>
-                            <el-checkbox v-model="form.assemble" label="Сборщик"/>
-                            <el-checkbox v-model="form.logistic" label="Логист"/>
+                            <el-checkbox v-model="form.driver" :checked="form.driver" label="Водитель"/>
+                            <el-checkbox v-model="form.loader" :checked="form.loader"  label="Грузчик"/>
+                            <el-checkbox v-model="form.assemble" :checked="form.assemble"  label="Сборщик"/>
+                            <el-checkbox v-model="form.logistic" :checked="form.logistic"  label="Логист"/>
                         </el-form-item>
                         <el-form-item label="Склад">
                             <el-select v-model="form.storage_id" clearable>
@@ -107,10 +107,10 @@ const form = reactive({
     secondname: props.worker.fullname.secondname,
     phone: props.worker.phone,
     telegram_user_id: props.worker.telegram_user_id,
-    driver: props.worker.driver,
-    loader: props.worker.loader,
-    assemble: props.worker.assemble,
-    logistic: props.worker.logistic,
+    driver: props.worker.driver === 1 ? true : false,
+    loader: props.worker.loader === 1 ? true : false,
+    assemble: props.worker.assemble === 1 ? true : false,
+    logistic: props.worker.logistic === 1 ? true : false,
     storage_id: props.worker.storage_id,
 })
 

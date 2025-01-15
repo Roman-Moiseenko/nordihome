@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use JetBrains\PhpStorm\ArrayShape;
 
+/**
+ * Контроллер работы с выдачей товара OrderExpense и доставкой для Склада
+ */
 class DeliveryController extends Controller
 {
     private ExpenseService $expenseService;
@@ -24,7 +27,7 @@ class DeliveryController extends Controller
         $this->repository = $repository;
     }
 
-    public function assembly(Request $request)
+    public function assembly(Request $request): \Inertia\Response
     {
 
         $expenses = $this->repository->getAssembly($request, $filters);
@@ -80,10 +83,10 @@ class DeliveryController extends Controller
         return redirect()->back();
     }
 
-    public function assembling(Request $request, OrderExpense $expense)
+    public function assembling(Request $request, OrderExpense $expense): \Illuminate\Http\RedirectResponse
     {
         $this->expenseService->assembling($expense, $request->integer('worker_id'));
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Грузчик назначен');
     }
 
     public function delivery(Request $request, OrderExpense $expense)

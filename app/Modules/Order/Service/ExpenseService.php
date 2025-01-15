@@ -12,9 +12,17 @@ use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\BatchSaleService;
 use App\Modules\Accounting\Service\MovementService;
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Admin\Entity\Worker;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\FullName;
+use App\Modules\Notification\Events\TelegramHasReceived;
+use App\Modules\Notification\Helpers\NotificationHelper;
+use App\Modules\Notification\Helpers\TelegramParams;
+use App\Modules\Notification\Message\StaffMessage;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
@@ -30,16 +38,19 @@ class ExpenseService
     private OrderReserveService $reserveService;
     private LoggerService $logger;
     private BatchSaleService $batchSaleService;
+    private StaffRepository $staffs;
 
     public function __construct(
         OrderReserveService $reserveService,
         LoggerService       $logger,
         BatchSaleService    $batchSaleService,
+        StaffRepository     $staffs,
     )
     {
         $this->reserveService = $reserveService;
         $this->logger = $logger;
         $this->batchSaleService = $batchSaleService;
+        $this->staffs = $staffs;
     }
 
     /**
@@ -100,7 +111,6 @@ class ExpenseService
             $storage = Storage::find($storage_id);
         }
         $expense = $this->create($order, $storage, $request);
-
         $method = $request->string('method')->value();
 
         if ($method == 'expense') {
@@ -127,7 +137,6 @@ class ExpenseService
         if ($method == 'warehouse') {
             //Нет отличных данных
         }
-
         return $expense;
     }
 
@@ -147,8 +156,6 @@ class ExpenseService
                 $this->reserveService->upReserve($item->orderItem, (float)$item->quantity);
                 $item->quantity = 0;
                 $item->save();
-                //TODO Удаление или отмена Выдачи
-                // $item->delete();
             }
             foreach ($expense->additions as $addition) {
                 $addition->amount = 0;
@@ -157,7 +164,6 @@ class ExpenseService
             $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу', '', $expense->htmlNumDate());
             $expense->status = OrderExpense::STATUS_CANCELED;
             $expense->save();
-            //$expense->delete();
             $order->refresh();
         });
 
@@ -173,17 +179,69 @@ class ExpenseService
         }
         $expense->setNumber();
         $expense->assembly();
-        event(new ExpenseHasAssembly($expense)); //Уведомление на склад на выдачу
+
+
+        //Уведомление на склад на выдачу
+
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_DELIVERY);
+        foreach ($staffs as $staff) {
+            $staff->notify(new StaffMessage(
+                event: NotificationHelper::EVENT_INFO,
+                message: 'Новое распоряжение на сборку',
+
+            ));
+        }
         $this->logger->logOrder($expense->order, 'Распоряжение отправлено на сборку', '', $expense->htmlNumDate());
     }
 
-    public function assembling(OrderExpense $expense, int $worker_id)
+    public function assembling(OrderExpense $expense, int $worker_id): void
     {
-        $expense->worker_id = $worker_id;
+        $expense->workers()->attach($worker_id, ['work' => Worker::WORK_LOADER]);
+        $expense->push();
+        $expense->refresh();
+        //$expense->worker_id = $worker_id;
+        $message = 'Список товаров на сборку';
         $expense->status = OrderExpense::STATUS_ASSEMBLING;
-        $this->logger->logOrder($expense->order, 'Назначен сборщик распоряжению', $expense->htmlNumDate(), $expense->worker->fullname->getFullName());
-
+        $this->logger->logOrder(
+            $expense->order,
+            'Назначен грузчик распоряжению',
+            $expense->htmlNumDate(),
+            $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName())
+        ;
         $expense->save();
+        $worker = Worker::find($worker_id);
+        $worker->notify(new StaffMessage(
+            event: NotificationHelper::EVENT_ASSEMBLY,
+            message: $message,
+            params: new TelegramParams(TelegramParams::OPERATION_ASSEMBLING, $expense->id)
+        ));
+    }
+
+    /**
+     * Обрабатываем ответ от Телеграм - заказ Собран грузчиком
+     */
+    public function handle(TelegramHasReceived $event): void
+    {
+        if ($event->operation == TelegramParams::OPERATION_ASSEMBLING) {
+            $expense = OrderExpense::find($event->id);
+            if ($expense->isAssembled()) {
+                $event->user->notify(
+                    new StaffMessage(
+                        NotificationHelper::EVENT_ERROR,
+                        'Вы уже отметили!'
+                    )
+                );
+            } else {
+                $expense->status = OrderExpense::STATUS_ASSEMBLED;
+                $expense->save();
+                $event->user->notify(
+                    new StaffMessage(
+                        NotificationHelper::EVENT_INFO,
+                        'Принято!'
+                    )
+                );
+            }
+        }
     }
 
     public function delivery(OrderExpense $expense, string $track = '')
@@ -198,7 +256,7 @@ class ExpenseService
         $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '');
     }
 
-    public function completed(OrderExpense $expense)
+    public function completed(OrderExpense $expense): void
     {
         DB::transaction(function () use ($expense) {
             $expense->completed();

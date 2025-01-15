@@ -42,7 +42,7 @@
                         {{ func.date(scope.row.created_at) }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="number" label="Номер" width="160"/>
+                <el-table-column prop="number" label="Номер" width="100"/>
                 <el-table-column prop="recipient" label="Клиент" width="260" show-overflow-tooltip>
                     <template #default="scope">
                         <div class="font-medium text-sm">{{ func.fullName(scope.row.recipient) }}</div>
@@ -50,21 +50,41 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="Товар" width="120">
+                <el-table-column prop="type_text" label="Доставка" width="180">
 
                 </el-table-column>
-                <el-table-column label="Услуги ?" width="120">
-
+                <el-table-column prop="status_text" label="Статус">
+                    <template #default="scope">
+                        <el-tag :type="statusType(scope.row.status)">{{ scope.row.status_text }}</el-tag>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="status_text" label="Статус" show-overflow-tooltip/>
+
+                <el-table-column prop="work" label="Ответственный" >
+                    <template #default="scope">
+                        <span v-if="scope.row.work">{{ func.fullName(scope.row.work.fullname) }}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
-                <el-table-column prop="work" label="Ответственный" show-overflow-tooltip/>
-
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        Назначить ответственного.
-                        <br>
-                        Отметка о сборке
+                        <el-popover v-if="scope.row.status.is_assembly"
+
+                                    :visible="visible_assembly"
+                                    placement="bottom-start" :width="246">
+                            <template #reference>
+                                <el-button type="primary" class="p-4 mr-2" @click.stop="visible_assembly = !visible_assembly">
+                                    Назначить
+                                    <el-icon class="ml-1"><ArrowDown /></el-icon>
+                                </el-button>
+                            </template>
+                            <el-select v-model="worker_id">
+                                <el-option v-for="item in works" :value="item.id" :label="func.fullName(item.fullname)" />
+                            </el-select>
+                            <div class="mt-2">
+                                <el-button @click="visible_assembly = false">Отмена</el-button>
+                                <el-button @click="onAssembly(scope.row)" type="primary">Назначить</el-button>
+                            </div>
+                        </el-popover>
                     </template>
                 </el-table-column>
             </el-table>
@@ -100,7 +120,7 @@ const props = defineProps({
 
     works: Array,
 })
-///console.log(props.expenses)
+console.log(props.expenses)
 
 const store = useStore();
 
@@ -113,7 +133,8 @@ const filter = reactive({
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
 })
-
+const worker_id = ref(null)
+const visible_assembly = ref(false)
 interface IRow {
     completed: number
 }
@@ -130,6 +151,25 @@ function routeClick(row) {
     router.get(route('admin.order.show', {order: row.id}))
 }
 
+function onAssembly(row) {
+    router.visit(route('admin.delivery.assembling', {expense: row.id}), {
+        method: "post",
+        data: {worker_id: worker_id.value},
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            visible_assembly.value = false
+        }
+    })
+}
+
+function statusType(status) {
+    if (status.is_assembly) return 'danger'
+    if (status.is_assembling) return 'warning'
+    if (status.is_delivery) return 'primary'
+    if (status.is_completed) return 'success'
+    return 'info'
+}
 
 </script>
 <style scoped>

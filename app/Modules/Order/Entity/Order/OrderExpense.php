@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use JetBrains\PhpStorm\ExpectedValues;
 
 /**
  * Отгрузки
@@ -43,7 +44,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property Storage $storage
  * @property Order $order
  * @property Admin $staff
- * @property Worker $worker
+ * @property Worker[] $workers
  * @property CalendarPeriod[] $calendarPeriods
  * @property CalendarPeriod $calendarPeriod
  */
@@ -54,13 +55,16 @@ class OrderExpense extends Model
     const STATUS_NEW = 1;
     const STATUS_ASSEMBLY = 2;
     const STATUS_ASSEMBLING = 3;
-    const STATUS_DELIVERY = 4;
+    const STATUS_ASSEMBLED = 4;
+    const STATUS_DELIVERY = 6;
+    const STATUS_DELIVERED = 7;
     const STATUS_COMPLETED = 10;
     const STATUS_CANCELED = 11;
 
     const DELIVERY_STORAGE = 401;
     const DELIVERY_LOCAL = 402;
     const DELIVERY_REGION = 403;
+    const DELIVERY_OZON = 404;
 
     const TYPES = [
         '' => 'Неопределенно',
@@ -79,7 +83,9 @@ class OrderExpense extends Model
         self::STATUS_NEW => 'Новое',
         self::STATUS_ASSEMBLY => 'Ожидает сборки',
         self::STATUS_ASSEMBLING => 'Собирается',
+        self::STATUS_ASSEMBLED => 'Собран',
         self::STATUS_DELIVERY => 'На доставке',
+        self::STATUS_DELIVERED => 'Доставлен',
         self::STATUS_COMPLETED => 'Выдано',
         self::STATUS_CANCELED => 'Отменен',
     ];
@@ -132,13 +138,18 @@ class OrderExpense extends Model
 
     /**
      * Собирается сборщиком - назначен (таблица?)
-     * @return bool
      */
     public function isAssembling(): bool
     {
         return $this->status == self::STATUS_ASSEMBLING;
     }
-
+    /**
+     * Заказ собран, ожидает выдачи или доставки
+     */
+    public function isAssembled(): bool
+    {
+        return $this->status == self::STATUS_ASSEMBLED;
+    }
     /**
      * На доставке по РФ Почтой, есть трек номер
      * @return bool
@@ -237,11 +248,24 @@ class OrderExpense extends Model
         return $result;
     }
 
-    //*** RELATIONS
-    public function worker()
+    public function getWorker( #[ExpectedValues(valuesFromClass: Worker::class)]int $work): Worker
     {
-        return $this->belongsTo(Worker::class, 'worker_id', 'id');
+        foreach ($this->workers as $worker) {
+            if ($worker->pivot->work == $work) return $worker;
+        }
+        throw new \DomainException('Неверный код работы');
     }
+
+
+    //*** RELATIONS
+
+    public function workers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Worker::class, 'order_expenses_workers',
+            'expense_id','worker_id')->withPivot(['work']);
+    }
+
 
     public function staff()
     {
