@@ -203,4 +203,10 @@ class Admin extends Authenticatable
     {
         return self::ROLES[$this->role];
     }
+
+    public function setPassword(string $password)
+    {
+        $this->password = Hash::make($password);
+        $this->save();
+    }
 }

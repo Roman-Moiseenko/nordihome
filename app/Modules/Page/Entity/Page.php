@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
  */
 class Page extends Model
 {
-    const PATH_TEMPLATES = 'shop.pages.';
+    const PATH_TEMPLATES = 'pages.';
 
     const PAGES_TEMPLATES = [
         'contact',
@@ -84,8 +84,9 @@ class Page extends Model
         $this->save();
     }
 
-    public function view(): string
+    public function view(string $theme): string
     {
-        return view(self::PATH_TEMPLATES . $this->template, ['page' => $this, 'title' => $this->title, 'description' => $this->description])->render();
+       // dd('shop.' . $theme . '.pages.' . $this->template);
+        return view('shop.' . $theme . '.pages.' . $this->template, ['page' => $this, 'title' => $this->title, 'description' => $this->description])->render();
     }
 }

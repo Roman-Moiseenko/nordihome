@@ -2,6 +2,7 @@
 
 return [
     /* COMMON */
+    'theme' => env('SHOP_THEME', ''),
     'crm' => [
         'name-crm' => 'shop-L',
         'version' => '0.1',
@@ -85,7 +86,7 @@ return [
 
     ],
     /* SHOP => DB*/
-
+    //Не используется
     'shop' => [
         'pre_order' => false,
         'only-offline' => false,

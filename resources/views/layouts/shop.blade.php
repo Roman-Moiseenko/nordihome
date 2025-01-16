@@ -21,20 +21,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     @livewireStyles
-@yield('head')
-<!-- Scripts -->
+    @yield('head')
+    <!-- Scripts -->
     @vite(['resources/sass/shop.scss', 'resources/js/shop.js'])
     @stack('styles')
 </head>
 <body class="@yield('body')">
-
-
 @include('shop.header')
-
-
 @include('shop.widgets.flash')
-
-
 
 @section('breadcrumbs')
     <div class="container-xl">
@@ -57,12 +51,7 @@
 @include('shop.footer')
 <button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>
 @stack('scripts')
-<script>
-    /*let tagArr = document.getElementsByTagName("input");
-    for (let i = 0; i < tagArr.length; i++) {
-        tagArr[i].autocomplete = 'off';
-    }*/
-</script>
+
 @livewireScripts
 </body>
 </html>

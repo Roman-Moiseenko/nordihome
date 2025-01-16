@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
 
-class CatalogController extends Controller
+class CatalogController extends ShopController
 {
     private ShopRepository $repository;
 
@@ -27,6 +27,7 @@ class CatalogController extends Controller
 
     public function __construct(ShopRepository $repository, SettingRepository $settings)
     {
+        parent::__construct();
         $this->repository = $repository;
         $this->web = $settings->getWeb();
         $this->common = $settings->getCommon();
@@ -39,7 +40,7 @@ class CatalogController extends Controller
         $title = $this->web->categories_title;
         $description = $this->web->categories_desc;
 
-        return view('shop.catalog', compact('categories', 'title', 'description'));
+        return view($this->route('catalog'), compact('categories', 'title', 'description'));
     }
 
     public function view(Request $request, $slug)
@@ -53,7 +54,7 @@ class CatalogController extends Controller
 
         if (count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
-            return view('shop.subcatalog', compact('category', 'children', 'title', 'description'));
+            return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description'));
         }
 
         //TODO Переделать в запросы 1. получить только id Product,
@@ -102,7 +103,7 @@ class CatalogController extends Controller
             /*'NORDI HOME ' .
             ' Калининград ☎ [+7(4012) 37-37-30] (Круглосуточно)';*/
 
-        return view('shop.product.index',
+        return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',
                 'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order'));
 

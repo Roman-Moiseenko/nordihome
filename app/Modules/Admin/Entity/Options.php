@@ -25,6 +25,7 @@ class Options
         $image = Config::get('shop-config.image');
         $this->image = Image::createFromArray($image);
         $this->report = Config::get('shop-config.report');
+
     }
 
     /*

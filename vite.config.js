@@ -32,9 +32,14 @@ export default defineConfig({
         }),
         laravel({
             input: [
-                'resources/sass/shop.scss',
+                //Theme - Nordihome
+                'resources/sass/nordihome.scss',
+                'resources/js/nordihome.js',
+                //Theme - NB Russia
+                'resources/sass/nbrussia.scss',
+                'resources/js/nbrussia.js',
+
                 'resources/sass/admin.scss',
-                'resources/js/shop.js',
                 'resources/js/admin.js',
                 'resources/css/admin.css',
                 'resources/images/logo.svg',

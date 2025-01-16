@@ -15,7 +15,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ProductController extends Controller
+class ProductController extends ShopController
 {
 
     private ShopRepository $repository;
@@ -25,6 +25,7 @@ class ProductController extends Controller
     public function __construct(ShopRepository $repository, SettingRepository $settings)
     {
         $this->middleware(['auth:admin'])->only(['view_draft']);
+        parent::__construct();
         $this->repository = $repository;
         $this->web = $settings->getWeb();
     }
@@ -37,7 +38,7 @@ class ProductController extends Controller
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
 
-        return view('shop.product.view', compact('product', 'title', 'description', 'productAttributes'));
+        return view($this->route('product.view'), compact('product', 'title', 'description', 'productAttributes'));
     }
 
     public function view_draft(Product $product)
@@ -50,7 +51,7 @@ class ProductController extends Controller
         Интернет-магазин ' . $this->web->title_city;
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
-        return view('shop.product.view', compact('product', 'title', 'description', 'productAttributes'));
+        return view($this->route('product.view'), compact('product', 'title', 'description', 'productAttributes'));
     }
 
     public function old_slug($old_slug)

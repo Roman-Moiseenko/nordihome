@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 /**
  * Контроллер по созданию заказа из клиентской части, для просмотра используется контроллер из User
  */
-class OrderController extends Controller
+class OrderController extends ShopController
 {
     private Cart $cart;
     private PaymentService $payments;
@@ -41,6 +41,7 @@ class OrderController extends Controller
         StorageRepository $storages,
     )
     {
+        parent::__construct();
         $this->middleware('auth:user', ['except' => 'create_click']);
         $this->cart = $cart;
         $this->payments = $payments;
@@ -74,7 +75,7 @@ class OrderController extends Controller
         $companies = DeliveryHelper::deliveries();
         $delivery_cost = $this->deliveries->calculate($user_id, $this->cart->getItems());
 
-        return view('shop.order.create', compact('cart', 'payments',
+        return view($this->route('order.create'), compact('cart', 'payments',
             'storages', 'companies', 'delivery_cost', 'preorder'));
 
 
@@ -92,7 +93,7 @@ class OrderController extends Controller
         $companies = DeliveryHelper::deliveries();
         $delivery_cost = $this->deliveries->calculate($user_id, $this->parserCart->getItems());
         $cart = $this->parserCart;
-        return view('shop.order.create-parser', compact('cart', 'payments',
+        return view($this->route('order.create-parser'), compact('cart', 'payments',
             'storages', 'companies', 'delivery_cost'));
 
     }

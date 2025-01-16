@@ -3,32 +3,22 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
 use App\Modules\Accounting\Entity\ArrivalExpenseItem;
 use App\Modules\Accounting\Entity\ArrivalProduct;
-use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Report\ArrivalReport;
 use App\Modules\Accounting\Repository\ArrivalRepository;
-use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Service\ArrivalExpenseService;
 use App\Modules\Accounting\Service\ArrivalService;
-use App\Modules\Accounting\Service\PricingService;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Repository\StaffRepository;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\ProductRepository;
-use DB;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use JetBrains\PhpStorm\Deprecated;
 
 class ArrivalController extends Controller
 {

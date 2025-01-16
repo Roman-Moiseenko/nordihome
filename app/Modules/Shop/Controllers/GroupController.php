@@ -6,13 +6,14 @@ namespace App\Modules\Shop\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Shop\ShopRepository;
 
-class GroupController extends Controller
+class GroupController extends ShopController
 {
 
     private ShopRepository $repository;
 
     public function __construct(ShopRepository $repository)
     {
+        parent::__construct();
         $this->repository = $repository;
     }
 
@@ -22,7 +23,7 @@ class GroupController extends Controller
         $products = $group->products;
         $title = 'Группа товаров ' . $group->name . ' | Цены снижены в интернет-магазине';
         $description = $group->description;
-        return view('shop.group', compact('group', 'products', 'title', 'description'));
+        return view($this->route('group'), compact('group', 'products', 'title', 'description'));
     }
 
 

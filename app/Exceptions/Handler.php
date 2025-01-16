@@ -8,6 +8,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
 use Inertia\Inertia;
 use Throwable;
+use Illuminate\Support\Facades\Config;
 
 class Handler extends ExceptionHandler
 {
@@ -47,6 +48,8 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        $theme = Config::get('shop-config.theme');
+        $shop_errors = 'shop.' . $theme . '.errors.';
 
         $response = parent::render($request, $e);
 
@@ -78,7 +81,7 @@ class Handler extends ExceptionHandler
             }
         } else {
             //Клиентская часть
-            if ($response->status() == 404) return response()->view('errors.' . '404', [], 404);
+            if ($response->status() == 404) return response()->view($shop_errors . '404', [], 404);
             //TODO Добавить все ошибки http
         }
 

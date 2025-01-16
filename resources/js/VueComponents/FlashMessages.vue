@@ -20,6 +20,8 @@ watch(() => props.flash, (newValues, oldValues) => {
 
 function message() {
     let _type = '', _mes = '', _duration = 3000;
+    if (props.flash === undefined) return;
+
     if (props.flash.info) {
         _type = 'info'
         _mes = props.flash.info

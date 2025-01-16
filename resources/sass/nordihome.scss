@@ -2,7 +2,7 @@
 @import url('https://fonts.bunny.net/css?family=Nunito');
 
 // Variables
-@import 'variables';
+@import 'nordihome/variables';
 
 // Bootstrap
 
@@ -24,16 +24,16 @@ $font-sizes: (
 
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 @import './resources/sass/fontawesome/scss/fontawesome.scss';
-@import "shop-l-classes";
-@import "element";
-@import "menu";
-@import "cart_page";
-@import "order_page";
-@import "home_page";
-@import "pages";
-@import "parser";
-@import "cabinet";
-@import "catalog";
-@import "products";
-@import "widgets/feedback";
-@import "old_widget";
+@import "nordihome/shop-l-classes";
+@import "nordihome/element";
+@import "nordihome/menu";
+@import "nordihome/cart_page";
+@import "nordihome/order_page";
+@import "nordihome/home_page";
+@import "nordihome/pages";
+@import "nordihome/parser";
+@import "nordihome/cabinet";
+@import "nordihome/catalog";
+@import "nordihome/products";
+@import "nordihome/widgets/feedback";
+@import "nordihome/old_widget";

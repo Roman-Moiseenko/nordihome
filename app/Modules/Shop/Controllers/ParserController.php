@@ -12,13 +12,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
-class ParserController extends Controller
+class ParserController extends ShopController
 {
     private ParserService $service;
     private ParserCart $cart;
 
     public function __construct(ParserService $service, ParserCart $cart)
     {
+        parent::__construct();
         $this->service = $service;
         $this->cart = $cart;
     }
@@ -33,7 +34,7 @@ class ParserController extends Controller
 
         $title = 'Купить товары Икеа по артикулу в Калининграде и с доставкой по России';
         $description = 'Закажите товары Икеа из Польши через наш поисковый сервис. Цены ниже чем в интернет магазине';
-        return view('shop.parser.show', compact('cart', 'title', 'description'));
+        return view($this->route('parser.show'), compact('cart', 'title', 'description'));
     }
 
     public function search(Request $request)

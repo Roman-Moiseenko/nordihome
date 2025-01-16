@@ -8,13 +8,14 @@ use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PageController extends Controller
+class PageController extends ShopController
 {
 
     private ShopRepository $repository;
 
     public function __construct(ShopRepository $repository)
     {
+        parent::__construct();
         $this->repository = $repository;
     }
 
@@ -22,7 +23,7 @@ class PageController extends Controller
     {
         try {
             $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
-            return $page->view();
+            return $page->view($this->theme);
         } catch (\Throwable $e) {
             abort(404, 'Страница не найдена');
         }
@@ -30,8 +31,8 @@ class PageController extends Controller
 
     public function map_data(Request $request)
     {
-            $map = $this->repository->getMapData($request);
-            return response()->json($map);
+        $map = $this->repository->getMapData($request);
+        return response()->json($map);
     }
 
     public function email(Request $request)

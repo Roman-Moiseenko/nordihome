@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
 use Illuminate\Http\Request;
 
-class Controller  extends BaseController
+class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 

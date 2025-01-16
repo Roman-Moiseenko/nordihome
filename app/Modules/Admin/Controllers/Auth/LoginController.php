@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
 use function back;
@@ -56,54 +57,21 @@ class LoginController extends Controller
         return view('auth.login');
     } */
 
-    public function showLoginForm(): View
+    public function showLoginForm()
     {
-        return view('admin.login');
+        //TODO Не работает vue3
+        return Inertia::render('Admin/Auth/Login');
+      //  return view('admin.login');
     }
-    /**
-     * Handle a login request to the application.
-     *
-     * @param Request $request
-     * @return Response
-     *
-     * @throws ValidationException
-     */
-    /*
-    public function login(LoginRequest $request)
-    {
-        if (method_exists($this, 'hasTooManyLoginAttempts') &&
-            $this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-            return $this->sendLockoutResponse($request);
-        }
-       $authenticate = Auth::guard('user')->attempt(
-            $request->only(['email', 'password']),
-            $request->filled('remember')
-        );
-        if ($authenticate) {
-            $request->session()->regenerate();
-            $this->clearLoginAttempts($request);
 
-            $user = Auth::user(); //Auth::guard('user')->user();
-
-            if ($user->status != User::STATUS_ACTIVE) {
-                Auth::logout();
-                flash('Не верифицирован', 'danger');
-                return back();
-            }
-                return redirect()->intended(route('shop.home'));
-        }
-        $this->incrementLoginAttempts($request);
-        throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
-    }*/
 
     public function login(Request $request)
-    {
-
+    {/*
         $this->validate($request, [
             'name'   => 'required',
             'password' => 'required|min:6'
         ]);
+*/
 
         if (Auth::guard('admin')->attempt(['name' => $request['name'], 'password' => $request['password']], $request->get('remember'))) {
 
@@ -111,15 +79,15 @@ class LoginController extends Controller
             $admin = $this->guard()->user();
             if ($admin->isBlocked()) {
                 Auth::logout();
-                flash('Ваш аккаунт заблокирован', 'danger');
-                return back();
+                throw new \DomainException('Ваш аккаунт заблокирован');
+                //return back()->with('danger', 'Ваш аккаунт заблокирован');
             }
 
-            flash('Добро пожаловать ' . $admin->fullname->getFullName(), 'success');
-            return redirect()->intended('/admin');
+            //flash('Добро пожаловать ' . $admin->fullname->getFullName(), 'success');
+            return redirect()->intended('/admin')->with('success', 'Добро пожаловать ' . $admin->fullname->getFullName());
         }
-
-        return back()->withInput($request->only('name', 'remember'));
+        throw new \DomainException('Неверный логин или пароль');
+       // return back()->with('danger', 'Неверный логин или пароль')->withInput($request->only('name', 'remember'));
 
     }
 

@@ -11,19 +11,20 @@ use Illuminate\Http\Request;
 
 
 
-class CartController extends Controller
+class CartController extends ShopController
 {
     private Cart $cart;
 
     public function __construct(Cart $cart)
     {
+        parent::__construct();
         $this->cart = $cart;
     }
 
     public function view(Request $request)
     {
             $cart = $this->cart->getCartToFront($request['tz']);
-            return view('shop.cart.index', compact('cart'));
+            return view($this->route('cart.index'), compact('cart'));
     }
 
     //AJAX
