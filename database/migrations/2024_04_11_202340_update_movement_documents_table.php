@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('movement_documents', function (Blueprint $table) {
-            $table->unsignedBigInteger('expense_id')->change();
-            $table->foreign('expense_id')->nullable()->references('id')->on('order_expenses')->onDelete('set null');
+            $table->unsignedBigInteger('expense_id')->nullable()->change();
+            $table->foreign('expense_id')->references('id')->on('order_expenses')->onDelete('set null');
         });
     }
 

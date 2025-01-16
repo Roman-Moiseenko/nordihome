@@ -106,7 +106,7 @@ export default defineConfig({
                 "resources/js/components/tippy-content/index.js",
                 "resources/js/components/tom-select/index.js",
                 "resources/js/components/top-bar/index.js",*/
-
+                "resources/js/components/widget.js",
                 //Vue
                 'resources/sass/app.scss',
                 'resources/js/app.js',

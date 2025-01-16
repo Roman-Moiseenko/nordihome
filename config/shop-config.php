@@ -109,4 +109,6 @@ return [
         'brand-alt' => 'NORDI Home',
     ],
     'tinymce' => env('TINYMCE', ''),
+
+
 ];

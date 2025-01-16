@@ -15,11 +15,6 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
         });
 
-        $products = \App\Modules\Product\Entity\Product::where('published', true)->get();
-        foreach ($products as $product) {
-            $product->published_at = now();
-            $product->save();
-        }
     }
 
     /**

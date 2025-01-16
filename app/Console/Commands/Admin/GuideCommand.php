@@ -35,19 +35,11 @@ class GuideCommand extends Command
         Measuring::register('уп', '778');
         Measuring::register('кг', '166', true, 'г');
         Measuring::register('м', '006', true, 'мм');
-
-
         Measuring::register('г', '163');
         Measuring::register('т', '534', true, 'кг');
         Measuring::register('км','008', true, 'м');
         Measuring::register('п.м.', '018');
 
-
-
-        Measuring::create(['name' => 'г']);
-        Measuring::create(['name' => 'т', 'fractional' => true]);
-        Measuring::create(['name' => 'км', 'fractional' => true]);
-        Measuring::create(['name' => 'п.м.', 'fractional' => true]);
 
         $this->info('Справочник - guide_v_a_t');
         VAT::create(['name' => 'Без НДС', 'value' => null]);

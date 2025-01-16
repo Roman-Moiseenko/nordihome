@@ -13,11 +13,6 @@ return new class extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->string('code_search')->default('');
         });
-        foreach (\App\Modules\Product\Entity\Product::orderBy('id')->get() as $product) {
-            $product->update([
-                'code_search' => str_replace(['-', ',', '.', '_'],'', $product->code),
-            ]);
-        }
     }
 
     /**

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $currency_default = \App\Modules\Accounting\Entity\Currency::first();
-        Schema::table('distributors', function (Blueprint $table) use ($currency_default) {
-            $table->unsignedBigInteger('currency_id')->default($currency_default->id);
+        //$currency_default = \App\Modules\Accounting\Entity\Currency::first();
+        Schema::table('distributors', function (Blueprint $table) {
+            $table->unsignedBigInteger('currency_id')->nullable();
         });
-        Schema::table('distributors', function (Blueprint $table) use ($currency_default) {
+        Schema::table('distributors', function (Blueprint $table) {
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('cascade');
         });
 
