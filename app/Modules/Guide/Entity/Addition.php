@@ -51,6 +51,7 @@ class Addition extends Model
         bool $manual,
         int $base,
         string $class = null,
+        bool $is_quantity = false,
     ): self
     {
         return self::create([

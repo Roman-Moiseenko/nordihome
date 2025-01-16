@@ -1,6 +1,5 @@
 <?php
 
-use App\Modules\Guide\Entity\MarkingType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guide_marking_type', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->boolean('honest')->default(true);
+        Schema::table('guide_measuring', function (Blueprint $table) {
+            $table->string('code')->default('')->change();
         });
-
     }
 
     /**
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guide_marking_type');
+        Schema::table('guide_measuring', function (Blueprint $table) {
+            $table->integer('code')->default(0)->change();
+        });
     }
 };

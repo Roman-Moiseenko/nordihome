@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property int $id
  * @property string $name
- * @property int $code
+ * @property string $code
  * @property string $fractional_name
  * @property boolean $fractional
  * @property Product[] $products
@@ -26,7 +26,7 @@ class Measuring extends Model
         'fractional_name',
     ];
 
-    public static function register(string $name, int $code, bool $fractional, string $fractional_name = '')
+    public static function register(string $name, string $code, bool $fractional = false, string $fractional_name = '')
     {
         return self::create([
             'name' => $name,

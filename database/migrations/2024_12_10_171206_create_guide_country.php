@@ -14,14 +14,9 @@ return new class extends Migration
     {
         Schema::create('guide_country', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
         });
-        Country::create(['name' => 'Россия']);
-        Country::create(['name' => 'Китай']);
-        Country::create(['name' => 'Польша']);
-        Country::create(['name' => 'Вьетнам']);
-        Country::create(['name' => 'Тайланд']);
-        Country::create(['name' => 'Индия']);
+
     }
 
     /**

@@ -36,6 +36,14 @@ class Setting extends Model
         'description',
     ];
 
+    public static function register(string $name, string $slug, string $description): self
+    {
+        return Setting::create([
+            'name' => $name,
+            'slug' => $slug,
+            'description' => $description,
+        ]);
+    }
 
     public function setData($object): void
     {
