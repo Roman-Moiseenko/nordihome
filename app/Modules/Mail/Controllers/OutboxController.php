@@ -21,7 +21,7 @@ class OutboxController extends Controller
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->tiny_api = config('shop-config.tinymce');
+        $this->tiny_api = config('shop.tinymce');
     }
 
     public function index(Request $request)

@@ -7,7 +7,6 @@
                 Добавить
             </el-button>
         </div>
-
         <div class="mt-2 p-5 bg-white rounded-md">
             <el-table
                 :data="tableData"
@@ -29,7 +28,6 @@
                 </el-table-column>
             </el-table>
         </div>
-
         <el-dialog v-model="dialogCreate" :title="form.id ? 'Изменить' : 'Новая страна'" width="500">
 
             <template #footer>

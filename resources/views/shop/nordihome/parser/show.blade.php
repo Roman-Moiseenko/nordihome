@@ -43,7 +43,7 @@
                 </div>
                 @endif
                 @foreach($cart->items as $i => $item)
-                    @include('shop.layouts.parser._item', ['item' => $item])
+                    @include('shop.nordihome.parser._item', ['item' => $item])
                 @endforeach
             </div>
         </div>

@@ -139,7 +139,7 @@ class ParserCart //Repository
             return new ParserItem(
                 $product_parser->product,
                 $product_parser,
-                $storage->quantity,
+                (int)$storage->quantity,
                 (int)$cost_item,
                 $this->quantityHTML($product_parser->quantity)
             );

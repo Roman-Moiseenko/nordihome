@@ -21,7 +21,8 @@ abstract class ShopController extends BaseController
             Auth::logout();
         }
         //$options = new Options();
-        $this->theme = Config::get('shop-config.theme'); // $options->shop->theme;
+       // config();
+        $this->theme = config('shop.theme'); // $options->shop->theme;
     }
 
     final public function route(string $blade): string

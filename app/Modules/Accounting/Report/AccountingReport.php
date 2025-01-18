@@ -78,7 +78,7 @@ abstract class AccountingReport
     final protected function SpreadSheet(string $template, array $replaceItems, ReportParams $params, $items): Spreadsheet
     {
         set_time_limit(300);
-        $template = $this->service->template($template); //Шаблон из файла, пути в config\shop-config.php
+        $template = $this->service->template($template); //Шаблон из файла, пути в config\shop.php
 
         $spreadsheet = IOFactory::load($template);
         $activeWorksheet = $spreadsheet->getActiveSheet();

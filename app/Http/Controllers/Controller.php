@@ -28,7 +28,7 @@ class Controller extends BaseController
             $result = $query->paginate($pagination);
             $result->appends(['p' => $pagination]);
         } else {
-            $pagination = Config::get('shop-config.p-list');
+            $pagination = config('shop.p-list');
             $result = $query->paginate($pagination);
         }
         return $result;

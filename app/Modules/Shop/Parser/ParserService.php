@@ -229,7 +229,7 @@ class ParserService
         );
     }
 
-    private function toCode(string $code): string
+    public function toCode(string $code): string
     {
         if (empty($code)) return '';
         $code = substr_replace($code, '.', 6, 0);

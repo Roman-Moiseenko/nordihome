@@ -28,7 +28,7 @@ class ParserItem implements CartItemInterface
         return $this->product;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): float
     {
         return $this->quantity;
     }

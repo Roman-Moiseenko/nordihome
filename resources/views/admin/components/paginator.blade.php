@@ -70,7 +70,7 @@
     @endif
 
     <select id="select-pagination" name="p" class="w-20 form-select box mt-3 sm:mt-0 ml-auto">
-        @foreach(Illuminate\Support\Facades\Config::get((isset($card)) ? 'shop-config.options-card' : 'shop-config.options-list') as $value)
+        @foreach(Illuminate\Support\Facades\Config::get((isset($card)) ? 'shop.options-card' : 'shop.options-list') as $value)
             <option value="{{ $value }}">{{ $value }}</option>
         @endforeach
     </select>

@@ -22,9 +22,9 @@ class Options
     public function __construct()
     {
         //Считываем из Config
-        $image = Config::get('shop-config.image');
+        $image = Config::get('shop.image');
         $this->image = Image::createFromArray($image);
-        $this->report = Config::get('shop-config.report');
+        $this->report = Config::get('shop.report');
 
     }
 
