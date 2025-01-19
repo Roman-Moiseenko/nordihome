@@ -32,6 +32,10 @@ class Storage extends Model
 {
     use ImageField;
 
+    protected $attributes = [
+        'latitude' => 0,
+        'longitude' => 0,
+    ];
     public $timestamps = false;
     protected $fillable = [
         'name',

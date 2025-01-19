@@ -11,3 +11,4 @@ import './nordihome/frontend';
 import './nordihome/maps';
 import './nordihome/parser';
 import './nordihome/sliders';
+import './functions.js';

@@ -11,6 +11,7 @@ Route::group(
     ], function () {
 
     Route::get('/', 'TestController@index')->name('index');
+    Route::post('/test', 'TestController@test')->name('test');
 
 
 });
