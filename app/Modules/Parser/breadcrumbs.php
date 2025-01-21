@@ -1,17 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\Product\Entity\Brand;
-use App\Modules\Product\Entity\Equivalent;
-use App\Modules\Product\Entity\Group;
-use App\Modules\Product\Entity\Modification;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Entity\Series;
-use App\Modules\Shop\Parser\ProductParser;
+use App\Modules\Parser\Entity\CategoryParser;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
-use App\Modules\Product\Entity\Category;
-use App\Modules\Product\Entity\Attribute;
+
 /*
 Breadcrumbs::for('admin.product.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
@@ -36,7 +29,7 @@ Breadcrumbs::for('admin.parser.category.index', function (BreadcrumbTrail $trail
 });
 
 
-Breadcrumbs::for('admin.parser.category.show', function (BreadcrumbTrail $trail, Category $category) {
+Breadcrumbs::for('admin.parser.category.show', function (BreadcrumbTrail $trail, CategoryParser $category) {
     if ($category->parent) {
         $trail->parent('admin.parser.category.show', $category->parent);
     } else {

@@ -16,17 +16,17 @@ Route::group(
 
 
 
-            Route::post('/toggle/{category}', 'CategoryController@toggle')->name('toggle');
-            Route::get('/child/{category}', 'CategoryController@child')->name('child');
-            Route::get('/{category}', 'CategoryController@show')->name('show');
-            Route::delete('/{category}', 'CategoryController@destroy')->name('destroy');
+            Route::post('/toggle/{category}', 'CategoryParserController@toggle')->name('toggle');
+            Route::get('/child/{category}', 'CategoryParserController@child')->name('child');
+            Route::get('/{category}', 'CategoryParserController@show')->name('show');
+            Route::delete('/{category}', 'CategoryParserController@destroy')->name('destroy');
 
-            Route::post('/', 'CategoryController@store')->name('store');
+            Route::post('/', 'CategoryParserController@store')->name('store');
 
-            Route::get('/', 'CategoryController@index')->name('index');
+            Route::get('/', 'CategoryParserController@index')->name('index');
 
-         //   Route::post('/list', 'CategoryController@list')->name('list');
-        //    Route::post('/set-info/{category}', 'CategoryController@set_info')->name('set-info');
+         //   Route::post('/list', 'CategoryParserController@list')->name('list');
+        //    Route::post('/set-info/{category}', 'CategoryParserController@set_info')->name('set-info');
         });
 
 

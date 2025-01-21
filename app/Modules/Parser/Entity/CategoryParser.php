@@ -22,6 +22,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property int $_lft
  * @property int $_rgt
  * @property Brand $brand
+ * @property CategoryParser $parent
  * @property Category $category
  */
 class CategoryParser extends Model

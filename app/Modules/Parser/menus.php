@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'shop' => [
+    'parser' => [
         'sort' => 45,
         'icon' => 'store',
         'title' => 'Парсер',
