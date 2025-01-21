@@ -25,14 +25,19 @@ class FunctionService
         $array = [];
         foreach ($codes as $code) {
             if (!empty(trim($code))) {
-                $parser_product = $this->parserService->parsingData($code);
-                $packades = $parser_product['packages'];
                 $composites = [];
-                foreach ($parser_product['composite'] as $composite) {
-                    $parser_composite = $this->parserService->parsingData($composite['code']);
-                    $composites[$composite['code']] = ['packages' => $parser_composite['packages']];
+                try {
+                    $parser_product = $this->parserService->parsingData($code);
+                    $packages = $parser_product['packages'];
+
+                    foreach ($parser_product['composite'] as $composite) {
+                        $parser_composite = $this->parserService->parsingData($composite['code']);
+                        $composites[$composite['code']] = ['packages' => $parser_composite['packages']];
+                    }
+                } catch (\DomainException $e) {
+                    $packages = new Package();
                 }
-                $array[$code] = ['packages' => $packades, 'composites' => $composites];
+                $array[$code] = ['packages' => $packages, 'composites' => $composites];
             }
         }
        // dd($array);
