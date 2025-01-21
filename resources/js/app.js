@@ -13,6 +13,8 @@ import Layout from './VueComponents/Layout.vue'
 import DeleteEntityModal from  './Plugins/DeleteEntity'
 
 const pinia = createPinia();
+//const theme_name = process.env.NAME_THEME
+//console.log(theme_name)
 
 createInertiaApp({
     title: title => `NORDIHOME - ${title}`,

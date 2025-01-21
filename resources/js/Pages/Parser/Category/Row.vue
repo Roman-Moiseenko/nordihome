@@ -3,9 +3,13 @@
         <div class="w-11">
             <span>{{ category.brand_name }}</span>
         </div>
+        <div>
+            <Active :active="category.active" />
+        </div>
         <div class="ml-4" style="width: 350px;">
             <Link type="primary" :href="route('admin.parser.category.show', {category: category.id})">{{ category.name }}</Link>
         </div>
+
         <div class="ml-4" style="width: 350px;">
             <span class="text-cyan-800">{{ category.url }}</span>
         </div>
@@ -63,6 +67,7 @@
 import {router, Link} from "@inertiajs/vue3";
 import {computed, inject, onActivated, reactive, ref} from "vue";
 import CategoryChildren from "./Children.vue";
+import Active from "@Comp/Elements/Active.vue";
 
 const props = defineProps({
     category: Object,

@@ -47,6 +47,17 @@ class CategoryParser extends Model
             'active' => true,
         ]);
     }
+    public function draft(): void
+    {
+        $this->active = false;
+        $this->save();
+    }
+
+    public function active(): void
+    {
+        $this->active = true;
+        $this->save();
+    }
 
     public function brand(): BelongsTo
     {
@@ -57,4 +68,5 @@ class CategoryParser extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
 }

@@ -17,7 +17,7 @@ class CategoryParserRepository
         }
         return $categories->map(function (CategoryParser $category) {
             $category->brand_name = $category->brand->name;
-            $category->category_name = $category->category->name;
+            $category->category_name = is_null($category->category) ? null : $category->category->name;
             return $category;
         })->toTree();
         /*

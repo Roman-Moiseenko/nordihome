@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('url')->default('');
             $table->boolean('active')->default(true);
             $table->foreignId('brand_id')->nullable()->constrained('brands')->cascadeOnDelete();
-            $table->foreignId('category_id')->nullable()->constrained('categories')->cascadeOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
             NestedSet::columns($table);
         });
     }
