@@ -39,18 +39,22 @@ class ParserService
 
         $children  = $menu['children'];
         foreach ($children as $child) {
-            $this->addCategory($child);
+          $this->addCategory($child);
         }
         return $menu;
     }
 
     private function addCategory($category, $parent_parser = null, $parent = null): void
     {
+        //Есть ли у категории ссылка
+        $url = $category['href'] ?? '';
+        if (empty($url)) $url = $category['niceUrl'] ?? '';
+        if (empty($url)) return;
         //Если категория еще не парсилась
-        if (is_null($cat_parser = CategoryParser::where('url', $category['niceUrl'])->first())) {
+        if (is_null($cat_parser = CategoryParser::where('url', $url)->first())) {
             //Создаем новую категорию парсера
             $name = GoogleTranslateForFree::translate('pl','ru', $category['title']);
-            $cat_parser = $this->categoryParserService->create($name, $category['niceUrl'], $parent_parser);
+            $cat_parser = $this->categoryParserService->create($name, $url, $parent_parser);
             //Дублируем категорию в список Категорий магазина
             $cat = Category::register(
                 $name,
@@ -62,7 +66,7 @@ class ParserService
         }
         //Дочерние категории
         foreach ($category['children'] as $child) {
-            $this->addCategory($child, $cat_parser->id, $cat->id);
+            $this->addCategory($child, $cat_parser->id, $cat_parser->category->id);
         }
         //Создать категорию
     }
