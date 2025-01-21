@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Nordihome\Controllers;
+namespace App\Modules\NBRussia\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\NBRussia\Service\TestService;

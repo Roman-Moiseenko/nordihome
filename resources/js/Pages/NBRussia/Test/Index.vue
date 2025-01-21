@@ -21,7 +21,7 @@ const props = defineProps({
 })
 
 function test() {
-    router.post('admin.nbrussia.test')
+    router.post(route('admin.nbrussia.test'))
 }
 
 </script>

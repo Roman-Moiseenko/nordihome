@@ -1,0 +1,362 @@
+{
+    "data": {
+        "productsByIds": [
+            {
+                "id": "3213770",
+                "name": "Buty męskie New Balance MT410OK8 – czarne",
+                "niceUrl": "buty_meskie_new_balance_mt410ok8_czarne",
+                "picturesCategories": [
+                    {
+                        "slug": "comparer",
+                        "pictures": []
+                    },
+                    {
+                        "slug": "newbalance",
+                        "pictures": []
+                    }
+                ],
+                "flags": [
+                    {
+                        "id": "2",
+                        "name": "Nowość",
+                        "symbol": "new"
+                    }
+                ],
+                "prices": {
+                    "sellPrice": {
+                        "gross": 349.99,
+                        "nett": 284.54,
+                        "currency": "PLN",
+                        "vat": null,
+                        "vatValue": 23
+                    },
+                    "listPrice": null,
+                    "basePrice": {
+                        "gross": 349.99,
+                        "nett": 284.54,
+                        "currency": "PLN",
+                        "vat": null,
+                        "vatValue": 23
+                    },
+                    "omnibusPrice": null
+                },
+                "producer": {
+                    "id": 911,
+                    "name": "New Balance",
+                    "description": null
+                },
+                "categoryPath": [
+                    {
+                        "id": "13026",
+                        "name": "Męskie",
+                        "niceUrl": "meskie"
+                    },
+                    {
+                        "id": "13031",
+                        "name": "Obuwie",
+                        "niceUrl": "meskie/obuwie"
+                    },
+                    {
+                        "id": "13033",
+                        "name": "Biegowe",
+                        "niceUrl": "meskie/obuwie/biegowe"
+                    },
+                    {
+                        "id": "13161",
+                        "name": "BIEGI W TERENIE",
+                        "niceUrl": "meskie/obuwie/biegowe/biegi_w_terenie"
+                    }
+                ],
+                "reviewStats": {
+                    "scoreCount": 0,
+                    "totalScore": 0,
+                    "averageScore": 0,
+                    "percentageScore": 0
+                },
+                "categories": [
+                    {
+                        "id": "13161",
+                        "name": "BIEGI W TERENIE",
+                        "niceUrl": "meskie/obuwie/biegowe/biegi_w_terenie"
+                    },
+                    {
+                        "id": "13513",
+                        "name": "Męskie",
+                        "niceUrl": "sport/bieganie/obuwie/meskie"
+                    },
+                    {
+                        "id": "14103",
+                        "name": "Buty do biegania w terenie",
+                        "niceUrl": "bieganie/aktywnosc/buty_do_biegania_w_terenie"
+                    },
+                    {
+                        "id": "14105",
+                        "name": "Wszystkie buty biegowe",
+                        "niceUrl": "bieganie/buty_biegowe/wszystkie_buty_biegowe"
+                    },
+                    {
+                        "id": "13157",
+                        "name": "NEUTRALNE / SUPINACJA",
+                        "niceUrl": "meskie/obuwie/biegowe/neutralne_supinacja"
+                    }
+                ],
+                "properties": [
+                    {
+                        "name": "Model",
+                        "value": {
+                            "type": "text_line",
+                            "dataList": [
+                                "MT410OK8 "
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Dla kogo",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": [
+                                "Dla niego"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Płeć",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    },
+                    {
+                        "name": "Kategoria",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": [
+                                "Obuwie"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Drop",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": [
+                                "8 mm"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Szerokość",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    },
+                    {
+                        "name": "Kolor",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": [
+                                "Czarny"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Produkt ocieplany",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    },
+                    {
+                        "name": "Rodzaj zapięcia",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "3212449",
+                "name": "Buty unisex New Balance MR530RB – białe",
+                "niceUrl": "buty_unisex_new_balance_mr530rb_biale",
+                "picturesCategories": [
+                    {
+                        "slug": "newbalance",
+                        "pictures": []
+                    },
+                    {
+                        "slug": "comparer",
+                        "pictures": []
+                    }
+                ],
+                "flags": [
+                    {
+                        "id": "1",
+                        "name": "Promocja",
+                        "symbol": "promotion"
+                    }
+                ],
+                "prices": {
+                    "sellPrice": {
+                        "gross": 269.99,
+                        "nett": 219.5,
+                        "currency": "PLN",
+                        "vat": null,
+                        "vatValue": 23
+                    },
+                    "listPrice": null,
+                    "basePrice": {
+                        "gross": 549.99,
+                        "nett": 447.15,
+                        "currency": "PLN",
+                        "vat": null,
+                        "vatValue": 23
+                    },
+                    "omnibusPrice": {
+                        "gross": 379.99,
+                        "nett": 308.93,
+                        "currency": "PLN",
+                        "vat": null,
+                        "vatValue": 23
+                    }
+                },
+                "producer": {
+                    "id": 911,
+                    "name": "New Balance",
+                    "description": null
+                },
+                "categoryPath": [
+                    {
+                        "id": "13026",
+                        "name": "Męskie",
+                        "niceUrl": "meskie"
+                    },
+                    {
+                        "id": "13031",
+                        "name": "Obuwie",
+                        "niceUrl": "meskie/obuwie"
+                    },
+                    {
+                        "id": "13043",
+                        "name": "Klasyczne",
+                        "niceUrl": "meskie/obuwie/klasyczne"
+                    },
+                    {
+                        "id": "13261",
+                        "name": "Seria 530",
+                        "niceUrl": "meskie/obuwie/klasyczne/seria_530"
+                    }
+                ],
+                "reviewStats": {
+                    "scoreCount": 0,
+                    "totalScore": 0,
+                    "averageScore": 0,
+                    "percentageScore": 0
+                },
+                "categories": [
+                    {
+                        "id": "13261",
+                        "name": "Seria 530",
+                        "niceUrl": "meskie/obuwie/klasyczne/seria_530"
+                    },
+                    {
+                        "id": "13035",
+                        "name": "Treningowe",
+                        "niceUrl": "meskie/obuwie/treningowe"
+                    },
+                    {
+                        "id": "13262",
+                        "name": "Seria 530",
+                        "niceUrl": "damskie/obuwie/klasyczne/seria_530"
+                    },
+                    {
+                        "id": "13072",
+                        "name": "Treningowe",
+                        "niceUrl": "damskie/obuwie/treningowe"
+                    },
+                    {
+                        "id": "14101",
+                        "name": "Buty treningowe",
+                        "niceUrl": "bieganie/aktywnosc/buty_treningowe"
+                    }
+                ],
+                "properties": [
+                    {
+                        "name": "Model",
+                        "value": {
+                            "type": "text_line",
+                            "dataList": [
+                                "MR530RB"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Dla kogo",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": [
+                                "Dla niej",
+                                "Dla niego",
+                                "Dla każdego"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Płeć",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    },
+                    {
+                        "name": "Kategoria",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": [
+                                "Obuwie"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Drop",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    },
+                    {
+                        "name": "Szerokość",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    },
+                    {
+                        "name": "Kolor",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": [
+                                "Biały"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Produkt ocieplany",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    },
+                    {
+                        "name": "Rodzaj zapięcia",
+                        "value": {
+                            "type": "multiple_choice",
+                            "dataList": []
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

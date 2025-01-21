@@ -9,7 +9,7 @@ return [
         'can' => '',
         'vue' => true,
         'font_awesome' => 'fa-light fa-book',
-        'route_name' => 'admin.nbrussia.index',
+        'route_name' => 'admin.nbrussia.parser.index',
 
     ],
 ];

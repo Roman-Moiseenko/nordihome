@@ -6,10 +6,8 @@ use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
-use App\Modules\Shop\Parser\HttpPage;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use SimpleXMLElement;
 use Tests\CreatesApplication;
 
 class CurrencyCommand extends Command

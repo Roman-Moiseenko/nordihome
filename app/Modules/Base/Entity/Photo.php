@@ -5,14 +5,11 @@ namespace App\Modules\Base\Entity;
 
 use App\Jobs\ClearTempFile;
 use App\Modules\Admin\Entity\Options;
-use App\Modules\Shop\Parser\HttpPage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
-
-
 use function class_basename;
 use function now;
 use function public_path;

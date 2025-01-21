@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Parser;
 
 use App\Events\ProductHasParsed;
-use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Package;
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Service\GoogleTranslateForFree;
+use App\Modules\Base\Service\HttpPage;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;

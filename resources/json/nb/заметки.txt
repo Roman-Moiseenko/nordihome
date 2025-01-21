@@ -1,0 +1,27 @@
+
+Забираем json <script id="__NEXT_DATA__" type="application/json">
+с Главной страницы
+
+Разбираем Категории, если категории нет, то добавляем.
+Проходим все категории, которые не имеют дочерних
+    по урлу
+Проходим все товары.
+Если товара нет, то создаем - грузим фото (job) Варианты и цены
+Если товар уже есть, проверяем наличие и цену.
+Если есть Пагинация, то к урлу добавляем ?page=2 и т.д.
+
+
+На странице каталога по
+data-qa-product_id="" найти id товаров
+
+Варианты
+Ссылка
+https://nbsklep.pl/api/graphql/frontend/productVariants/3214057
+Запрос
+{"query":"\n    query productVariants($productId: ID!) {\n  variants(productId: $productId) {\n    ...VariantData\n  }\n}\n    \n    fragment VariantData on Variant {\n  id\n  option\n  ean\n  warehouseSymbol\n  skus\n  prices {\n    ...PricesData\n  }\n  availability {\n    buyable\n    message {\n      content\n      type\n    }\n  }\n  options {\n    id\n    groupId\n    name\n    value\n  }\n}\n    \n\n    fragment PricesData on Prices {\n  sellPrice {\n    ...PriceData\n  }\n  listPrice {\n    ...PriceData\n  }\n  basePrice {\n    ...PriceData\n  }\n  omnibusPrice {\n    ...PriceData\n  }\n}\n    \n\n    fragment PriceData on Price {\n  gross\n  nett\n  currency\n  vat\n  vatValue\n}\n    ","variables":{"productId":"3214057"}}
+
+Данные о товаре
+Ссылка
+https://nbsklep.pl/api/graphql/frontend/productAssociations/3214057-product_colours-10
+Запрос
+{"query":"\n    query productAssociations($id: ID!, $purposes: [String!]! = [], $limit: Int!) {\n  product(id: $id) {\n    associations(purposes: $purposes, limit: $limit) {\n      ...AssociationsData\n    }\n  }\n}\n    \n    fragment AssociationsData on AssociationsList {\n  header\n  purpose\n  products {\n    id\n    name\n    variants {\n      ...VariantData\n    }\n    ...ListProductData\n  }\n}\n    \n\n    fragment VariantData on Variant {\n  id\n  option\n  ean\n  warehouseSymbol\n  skus\n  prices {\n    ...PricesData\n  }\n  availability {\n    buyable\n    message {\n      content\n      type\n    }\n  }\n  options {\n    id\n    groupId\n    name\n    value\n  }\n}\n    \n\n    fragment PricesData on Prices {\n  sellPrice {\n    ...PriceData\n  }\n  listPrice {\n    ...PriceData\n  }\n  basePrice {\n    ...PriceData\n  }\n  omnibusPrice {\n    ...PriceData\n  }\n}\n    \n\n    fragment PriceData on Price {\n  gross\n  nett\n  currency\n  vat\n  vatValue\n}\n    \n\n    fragment ListProductData on ProductInterface {\n  niceUrl\n  picturesCategories {\n    slug\n    pictures {\n      filename\n      description\n    }\n  }\n  flags {\n    ...FlagData\n  }\n  prices {\n    ...PricesData\n  }\n  producer {\n    ...ProducerData\n  }\n  categoryPath {\n    id\n    name\n    niceUrl\n  }\n  reviewStats {\n    scoreCount\n    totalScore\n    averageScore\n    percentageScore\n  }\n  categories {\n    id\n    name\n    niceUrl\n  }\n  properties {\n    name\n    value {\n      ... on PropertyYesNoValue {\n        type\n        data\n      }\n      ... on PropertyOtherValue {\n        type\n        dataList: data\n      }\n    }\n  }\n}\n    \n\n    fragment FlagData on Flag {\n  id\n  name\n  symbol\n}\n    \n\n    fragment ProducerData on Producer {\n  id\n  name\n  description\n}\n    ","variables":{"id":"3214057","purposes":["product_colours"],"limit":10}}

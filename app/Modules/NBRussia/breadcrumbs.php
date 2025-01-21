@@ -7,8 +7,8 @@ use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 if (config('shop.theme') != 'nbrussia') return;
 
 
-Breadcrumbs::for('admin.nbrussia.index', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.nbrussia.parser.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('NB Russia', route('admin.nbrussia.index'));
+    $trail->push('NB Russia', route('admin.nbrussia.parser.index'));
 });
 
