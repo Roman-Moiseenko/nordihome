@@ -17,15 +17,20 @@ class ParserController
 
     public function index(Request $request)
     {
-        return Inertia::render('NBRussia/Test/Index', [
+        return Inertia::render('NBRussia/Parser/Index', [
 
         ]);
     }
 
     public function categories()
     {
-        $categories = $this->service->parserCategories();
-        return redirect()->json($categories);
+        try {
+            $categories = $this->service->parserCategories();
+            return response()->json($categories);
+        } catch (\Throwable $e) {
+            return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+        }
+
     }
 
     public function products()

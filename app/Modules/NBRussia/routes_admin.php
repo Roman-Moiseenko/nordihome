@@ -19,8 +19,8 @@ Route::group(
             'as' => 'parser.',
         ], function () {
         Route::get('/', 'ParserController@index')->name('index');
-        Route::get('/categories', 'ParserController@categories')->name('categories');
-        Route::get('/products', 'ParserController@products')->name('products');
+        Route::post('/categories', 'ParserController@categories')->name('categories');
+        Route::post('/products', 'ParserController@products')->name('products');
 
     });
 

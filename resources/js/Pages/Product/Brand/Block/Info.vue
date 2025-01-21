@@ -2,7 +2,7 @@
     <el-row :gutter="10" v-if="!showEdit">
         <el-col :span="8">
             <el-descriptions :column="2" border class="mb-5">
-                <el-descriptions-item label="Группа">
+                <el-descriptions-item label="Бренд">
                     {{ brand.name }}
                     <el-button class="ml-2" type="warning" size="small" @click="showEdit = true">
                         <i class="fa-light fa-pen-to-square"></i>

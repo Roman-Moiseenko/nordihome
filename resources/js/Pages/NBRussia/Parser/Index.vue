@@ -2,7 +2,9 @@
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Парсинг New Balance</h1>
-        <el-button @click="test">Категории</el-button>
+
+        <el-button @click="test" class="mt-2">Категории</el-button>
+
     </el-config-provider>
 </template>
 
