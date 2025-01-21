@@ -19,9 +19,9 @@
                 </div>
             </el-popover>
         </div>
-        <CategoryChildren :categories="categories" @delete:category="handleDeleteEntity" />
+        <CategoryChildren :categories="categories" />
         <!--CategoryRow v-for="item in categories" :category="item" @delete:category="handleDeleteEntity" /-->
-        <DeleteEntityModal name_entity="Категорию" />
+        <DeleteEntityModal name_entity="Категорию" name="category"/>
     </el-config-provider>
 </template>
 
@@ -52,9 +52,6 @@ function createButton() {
     router.post(route('admin.product.category.store', form))
 }
 
-function handleDeleteEntity(id) {
-    $delete_entity.show(route('admin.product.category.destroy', {category: id}));
-}
 function routeClick(row) {
     router.get(route('admin.product.category.show', {category: row.id}))
 }

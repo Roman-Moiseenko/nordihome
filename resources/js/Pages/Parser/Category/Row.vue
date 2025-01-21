@@ -89,7 +89,10 @@ function onToggle() {
     router.visit(route('admin.parser.category.toggle', {category: props.category.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
+        onSuccess: page => {
+            console.log(page.props)
+        }
     })
 }
 

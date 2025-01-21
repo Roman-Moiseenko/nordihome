@@ -58,8 +58,9 @@
     </div>
     <div v-if="showChildren" class="pl-5 ml-2 mb-5 pb-2 pt-2">
         <!--CategoryRow v-for="item in category.children" :category="item" @delete:category="handleDeleteEntity" /-->
-        <CategoryChildren :category="category" @delete:category="handleDeleteEntity" />
+        <CategoryChildren :category="category" />
     </div>
+
 </template>
 
 <script setup lang="ts">
@@ -78,6 +79,7 @@ const form = reactive({
 })
 const checkChildren = ref(false)
 const isChildren = ref(props.category.children.length > 0)
+const $delete_entity = inject("$delete_entity")
 
 const showChildren = computed(() => {
     return isChildren && checkChildren.value
@@ -98,7 +100,8 @@ function onDown() {
     })
 }
 function handleDeleteEntity() {
-    $emit('delete:category', props.category.id)
+    $delete_entity.show(route('admin.product.category.destroy', {category: props.category.id}), 'category');
+
 }
 function handleChild() {
     //console.log(form)
