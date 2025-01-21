@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Parser\Controller;
+namespace App\Modules\Parser\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Parser\Repository\CategoryParserRepository;
