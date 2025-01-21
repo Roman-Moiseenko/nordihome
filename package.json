@@ -84,7 +84,6 @@
         "proxy-from-env": "^1.1.0",
         "readdirp": "^3.6.0",
         "rollup": "^3.28.1",
-        "sass": "^1.83.0",
         "simplebar": "^5.3.9",
         "sortablejs": "^1.15.6",
         "source-map-js": "^1.0.2",

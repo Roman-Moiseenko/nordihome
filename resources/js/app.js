@@ -13,11 +13,9 @@ import Layout from './VueComponents/Layout.vue'
 import DeleteEntityModal from  './Plugins/DeleteEntity'
 
 const pinia = createPinia();
-//const theme_name = process.env.NAME_THEME
-//console.log(theme_name)
 
 createInertiaApp({
-    title: title => `NORDIHOME - ${title}`,
+    title: title => import.meta.env.VITE_APP_NAME +` - ${title}`,
     resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
         let page = pages[`./Pages/${name}.vue`]

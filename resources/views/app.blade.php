@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.2/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
     <!--script src="//cdn.jsdelivr.net/npm/@element-plus/icons-vue"></script-->
-    <title inertia>{{ 'NORDI HOME - CRM' }}</title>
+    <title inertia>{{ 'SMAP&Shop' }}</title>
     @routes
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @stack('styles')
