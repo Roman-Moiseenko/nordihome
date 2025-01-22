@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $url
  * @property string $sameas_json
  * @property Product[] $products
- * @property string $parser ... класс Парсер товаров
- * @property string $setting ... клас Настройка парсера Settings
+ * @property string $parser_class ... класс Парсер товаров
+ * @property string $setting_class ... клас Настройка парсера Settings
  */
 class Brand extends Model
 {

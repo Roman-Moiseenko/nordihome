@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\NBRussia\Service;
+namespace App\Modules\Parser\Service;
 
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\HttpPage;
@@ -8,26 +8,17 @@ use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Service\CategoryParserService;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Entity\Product;
+use Illuminate\Contracts\Support\Arrayable;
 
-class ParserService
+class ParserNB extends ParserAbstract
 {
-    private HttpPage $httpPage;
-    private CategoryParserService $categoryParserService;
-    private Brand $brand;
 
-    public function __construct(
-        HttpPage $httpPage,
-        CategoryParserService  $categoryParserService,
-    )
-    {
-        $this->httpPage = $httpPage;
-        $this->categoryParserService = $categoryParserService;
-        $this->brand = Brand::where('name', 'NB')->first();
-    }
+    protected string $brand_name = 'NB';
+
 
     public function parserCategories()
     {
-
         $data = $this->httpPage->getPage($this->brand->url);
         $queries = $this->getQueries($data);
         $menu = [];
@@ -35,11 +26,10 @@ class ParserService
             if (isset($query['state']['data']['menu']))
                 $menu = $query['state']['data']['menu'];
         }
-        //TODO Добавление категорий
 
-        $children  = $menu['children'];
+        $children = $menu['children'];
         foreach ($children as $child) {
-          $this->addCategory($child);
+            $this->addCategory($child);
         }
         return $menu;
     }
@@ -53,7 +43,7 @@ class ParserService
         //Если категория еще не парсилась
         if (is_null($cat_parser = CategoryParser::where('url', $url)->first())) {
             //Создаем новую категорию парсера
-            $name = GoogleTranslateForFree::translate('pl','ru', $category['title']);
+            $name = GoogleTranslateForFree::translate('pl', 'ru', $category['title']);
             $cat_parser = $this->categoryParserService->create($name, $url, $parent_parser);
             //Дублируем категорию в список Категорий магазина
             $cat = Category::register(
@@ -85,31 +75,50 @@ class ParserService
 
     public function parserProducts(?int $category_id)
     {
-        if (is_null($category_id)) {
-            $categories = CategoryParser::where('active', true)->getModels();
-        } else {
-            $category = CategoryParser::find($category_id);
-            $categories = CategoryParser::where('active', true)
-                ->where('_lft', '>=', $category->_lft)
-                ->where('_rgt', '<=', $category->_rgt)
-                ->getModels();
-        }
-            /** @var CategoryParser $category */
-            foreach ($categories as $category) {
-                $this->parserProductsByUrl($this->brand->url . '/' . $category->url);
-            }
+
     }
 
-    private function parserProductsByUrl(string $url)
+
+    public function findProduct(string $search): Product
+    {
+        // TODO: Implement findProduct() method.
+    }
+
+    public function remainsProduct(string $code): float
+    {
+        // TODO: Implement remainsProduct() method.
+    }
+
+    public function costProduct(string $code): float
+    {
+        // TODO: Implement costProduct() method.
+    }
+
+    public function availablePrice(string $code): bool
+    {
+        // TODO: Implement availablePrice() method.
+    }
+
+
+    protected function parserProductsByUrl(string $url, bool $is_first_page = true)
     {
         $data = $this->httpPage->getPage($url);
         $queries = $this->getQueries($data);
-        $products = [];
+        $data = [];
         foreach ($queries as $query) {
             if (isset($query['state']['data']['products']))
-                $products = $query['state']['data']['products'];
+                $data = $query['state']['data']['products'];
         }
-        dd($products);
-    }
+        $products = $data['items'];
+        if (!$is_first_page) return $products; //Уже обрабатывается пагинация
+        $pagination = $data['pagination']['lastPage'];
+        for ($i = 2; $i <= $pagination; $i++) {
+            $products = array_merge(
+                $products,
+                $this->parserProductsByUrl($url . '?page=' .$i, false)
+            );
+        }
+        dd($products[0]);
 
+    }
 }

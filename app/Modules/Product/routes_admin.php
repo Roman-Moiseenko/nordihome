@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -14,7 +15,7 @@ Route::group(
         Route::group([
             'prefix' => 'attribute',
             'as' => 'attribute.',
-        ], function() {
+        ], function () {
             //Доп. - сменить категорию, добавить фото
             Route::get('/groups', 'AttributeController@groups')->name('groups');
             Route::delete('/group-destroy/{group}', 'AttributeController@group_destroy')->name('group-destroy');
@@ -73,7 +74,7 @@ Route::group(
         Route::group([
             'prefix' => 'group',
             'as' => 'group.',
-        ], function() {
+        ], function () {
             Route::post('/add-products/{group}', 'GroupController@add_products')->name('add-products');
             Route::post('/add-product/{group}', 'GroupController@add_product')->name('add-product');
             Route::post('/set-info/{group}', 'GroupController@set_info')->name('set-info');
@@ -83,7 +84,7 @@ Route::group(
         Route::group([
             'prefix' => 'series',
             'as' => 'series.',
-        ], function() {
+        ], function () {
             Route::post('/add-product/{series}', 'SeriesController@add_product')->name('add-product');
             Route::post('/add-products/{series}', 'SeriesController@add_products')->name('add-products');
             Route::delete('/del-product/{series}', 'SeriesController@del_product')->name('del-product');
@@ -92,11 +93,25 @@ Route::group(
         Route::group([
             'prefix' => 'priority',
             'as' => 'priority.',
-        ], function() {
+        ], function () {
             Route::get('/', 'PriorityController@index')->name('index');
             Route::post('/add-product', 'PriorityController@add_product')->name('add-product');
             Route::post('/add-products', 'PriorityController@add_products')->name('add-products');
             Route::delete('/del-product/{product}', 'PriorityController@del_product')->name('del-product');
+        });
+        //SIZE
+        Route::group([
+            'prefix' => 'size',
+            'as' => 'size.',
+        ], function () {
+            Route::post('/{category}/add-size', 'SizeController@add_size')->name('add-size');
+            Route::post('/{size}/del-size', 'SizeController@del_size')->name('del-size');
+            Route::post('/{size}/set-size', 'SizeController@set_size')->name('set-size');
+            Route::post('/', 'SizeController@store')->name('store');
+            Route::get('/{category}', 'SizeController@show')->name('show');
+            Route::delete('/{category}', 'SizeController@destroy')->name('destroy');
+
+            Route::get('/', 'SizeController@index')->name('index');
         });
         //MODIFICATION
         Route::group([
@@ -113,7 +128,7 @@ Route::group(
         Route::group([
             'prefix' => 'parser',
             'as' => 'parser.',
-        ], function (){
+        ], function () {
             Route::get('/', 'ParserController@index')->name('index');
             Route::get('/show/{parser}', 'ParserController@show')->name('show');
             Route::post('/block/{parser}', 'ParserController@block')->name('block');
@@ -130,12 +145,13 @@ Route::group(
         Route::resource('group', 'GroupController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('modification', 'ModificationController'); //CRUD
         Route::resource('series', 'SeriesController')->except(['create', 'edit']); //CRUD
+      //  Route::resource('size', 'SizeController')->except(['create', 'edit']); //CRUD
 
         //PRODUCT
         Route::group([
             'prefix' => 'image',
             'as' => 'image.',
-        ], function (){
+        ], function () {
             Route::post('/add/{product}', 'ProductController@add_image')->name('add');
             Route::post('/get/{product}', 'ProductController@get_images')->name('get');
             Route::delete('/del/{product}', 'ProductController@del_image')->name('del');

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Modules\Product\Entity\Brand;
+use App\Modules\Product\Entity\CategorySize;
 use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Modification;
@@ -132,18 +133,21 @@ Breadcrumbs::for('admin.product.group.index', function (BreadcrumbTrail $trail) 
     $trail->parent('admin.product.index');
     $trail->push('Группы', route('admin.product.group.index'));
 });
-Breadcrumbs::for('admin.product.group.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.product.group.index');
-    $trail->push('Добавить новую', route('admin.product.group.create'));
-});
+
 Breadcrumbs::for('admin.product.group.show', function (BreadcrumbTrail $trail, Group $group) {
     $trail->parent('admin.product.group.index');
     $trail->push($group->name, route('admin.product.group.show', $group));
 });
+/*
+Breadcrumbs::for('admin.product.group.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.group.index');
+    $trail->push('Добавить новую', route('admin.product.group.create'));
+});*/
+/*
 Breadcrumbs::for('admin.product.group.edit', function (BreadcrumbTrail $trail, Group $group) {
     $trail->parent('admin.product.group.show', $group);
     $trail->push('Редактировать', route('admin.product.group.edit', $group));
-});
+});*/
 
 //MODIFICATION
 Breadcrumbs::for('admin.product.modification.index', function (BreadcrumbTrail $trail) {
@@ -188,3 +192,13 @@ Breadcrumbs::for('admin.product.priority.index', function (BreadcrumbTrail $trai
     $trail->push('Приоритетный показ товаров', route('admin.product.priority.index'));
 });
 
+//GROUP
+Breadcrumbs::for('admin.product.size.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Размеры', route('admin.product.size.index'));
+});
+
+Breadcrumbs::for('admin.product.size.show', function (BreadcrumbTrail $trail, CategorySize $category) {
+    $trail->parent('admin.product.size.index');
+    $trail->push($category->name, route('admin.product.size.show', $category));
+});

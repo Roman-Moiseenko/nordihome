@@ -1,24 +1,20 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Бренды товаров</h1>
+        <h1 class="font-medium text-xl">Размеры товаров</h1>
         <div class="flex">
             <el-popover :visible="visible_create" placement="bottom-start" :width="246">
                 <template #reference>
                     <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
-                        Добавить бренд
+                        Создать категорию
                         <el-icon class="ml-1"><ArrowDown /></el-icon>
                     </el-button>
                 </template>
-                <el-input v-model="new_brand" placeholder="Бренд" class="mt-1"/>
+                <el-input v-model="new_category" placeholder="Категория" class="mt-1"/>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
-
-            <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
-                <el-input v-model="filter.brand" placeholder="Бренд" class="mt-1"/>
-            </TableFilter>
         </div>
 
         <div class="mt-2 p-5 bg-white rounded-md">
@@ -26,21 +22,12 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
                 @row-click="routeClick"
-                v-loading="store.getLoading"
             >
-                <el-table-column prop="image" label="IMG" width="60">
+                <el-table-column prop="name" label="Название категории"  width="280" show-overflow-tooltip/>
+                <el-table-column prop="quantity" label="Размеры"  align="center">
                     <template #default="scope">
-                        <img :src="scope.row.image" style="width: 100%">
-                    </template>
-                </el-table-column>
-                <el-table-column prop="name" label="Название бренда"/>
-                <el-table-column prop="url" label="Ссылка"/>
-                <el-table-column prop="quantity" label="Кол-во товаров" />
-                <el-table-column prop="parser_class" label="Парсер">
-                    <template #default="scope">
-                        <Active :active="scope.row.parser_class" />
+                        <el-tag type="info" v-for="item in scope.row.size">{{ item.name }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="Действия" align="right">
@@ -58,59 +45,51 @@
         </div>
 
         <pagination
-            :current_page="brands.current_page"
-            :per_page="brands.per_page"
-            :total="brands.total"
+            :current_page="categories.current_page"
+            :per_page="categories.per_page"
+            :total="categories.total"
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Бренд" />
+    <DeleteEntityModal name_entity="Категорию размеров" />
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
-import {useStore} from "@Res/store.js"
-import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 
 const props = defineProps({
-    brands: Object,
+    categories: Object,
     title: {
         type: String,
-        default: 'Бренды товаров',
+        default: 'Категории размеров товаров',
     },
     filters: Array,
 })
-const store = useStore();
+
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.brands.data])
-const filter = reactive({
-    brand: props.filters.brand,
+const tableData = ref([...props.categories.data])
+/*const filter = reactive({
+    product: props.filters.product,
+    group: props.filters.group,
 
-})
-const new_brand = ref('')
-interface IRow {
-    completed: number
-}
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.completed === 0) {
-        return 'warning-row'
-    }
-    return ''
-}
+})*/
+const new_category = ref('')
+
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.brand.destroy', {brand: row.id}));
+    $delete_entity.show(route('admin.product.size.destroy', {category: row.id}));
 }
 function createButton() {
-    router.post(route('admin.product.brand.store', {name: new_brand.value}))
+    router.post(route('admin.product.size.store'), {name: new_category.value})
 }
 function routeClick(row) {
-    router.get(route('admin.product.brand.show', {brand: row.id}))
+    console.log(row.id)
+    router.get(route('admin.product.size.show', {category: row.id}))
 }
 </script>
 

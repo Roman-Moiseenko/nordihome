@@ -21,6 +21,7 @@ class BrandService
         $brand->name = $request->string('name')->trim()->value();
         $brand->description = $request->string('description')->trim()->value();
         $brand->url = $request->string('url')->trim()->value();
+        $brand->parser_class = $request->input('parser_class');
         $brand->setSameAs($request['sameAs']);
         $brand->save();
 

@@ -3,7 +3,7 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Бренд товаров {{ brand.name }}</h1>
         <div class="p-5 bg-white rounded-md">
-            <BrandInfo :brand="brand" />
+            <BrandInfo :brand="brand" :parsers="parsers"/>
         </div>
         <div class="p-5 bg-white rounded-md">
             <el-table
@@ -36,6 +36,7 @@ import Pagination from "@Comp/Pagination.vue";
 
 const props = defineProps({
     brand: Object,
+    parsers: Array,
     title: {
         type: String,
         default: 'Карточка бренда товаров',

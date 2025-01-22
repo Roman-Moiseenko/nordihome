@@ -17,15 +17,24 @@ class CategoryParserRepository
         }
         return $categories->map(function (CategoryParser $category) {
             $category->brand_name = $category->brand->name;
-            $category->category_name = is_null($category->category) ? null : $category->category->name;
+            $category->category_name = is_null($category->category) ? null : $category->category->getParentNames();
             return $category;
         })->toTree();
-        /*
-        if (is_null($parent_id)) {
-            $categories = Category::defaultOrder()->withDepth()->get()->toTree();
-        } else {
-            $categories = Category::defaultOrder()->withDepth()->descendantsOf($parent_id)->toTree();
-        } */
-        // $categories;
+
+    }
+
+    private function CategoryToArray(CategoryParser $category)
+    {
+        return $category->toArray();
+    }
+
+    public function CategoryWithToArray(CategoryParser $category)
+    {
+        return array_merge($this->CategoryToArray($category), [
+            'brand_name' => $category->brand->name,
+            'category_name' => is_null($category->category) ? null : $category->category->getParentNames(),
+            'children' => $this->getTree($category->id),
+            'products' => [],
+        ]);
     }
 }

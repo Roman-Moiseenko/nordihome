@@ -3,7 +3,8 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Парсинг New Balance</h1>
 
-        <el-button @click="test" class="mt-2">Категории</el-button>
+        <el-button @click="categories" class="mt-2">Категории</el-button>
+        <el-button @click="products" class="mt-2">Товары</el-button>
 
     </el-config-provider>
 </template>
@@ -22,9 +23,17 @@ const props = defineProps({
     }
 })
 
-function test() {
+function categories() {
    // router.post(route('admin.nbrussia.test'))
     axios.post(route('admin.nbrussia.parser.categories')).then(response => {
+        console.log(response.data)
+    })
+
+}
+
+function products() {
+    // router.post(route('admin.nbrussia.test'))
+    axios.post(route('admin.nbrussia.parser.products')).then(response => {
         console.log(response.data)
     })
 

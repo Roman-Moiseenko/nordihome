@@ -2,8 +2,8 @@
     <el-row :gutter="10" v-if="!showEdit">
         <el-col :span="8">
             <el-descriptions :column="2" border class="mb-5">
-                <el-descriptions-item label="Бренд">
-                    {{ brand.name }}
+                <el-descriptions-item label="Группа">
+                    {{ group.name }}
                     <el-button class="ml-2" type="warning" size="small" @click="showEdit = true">
                         <i class="fa-light fa-pen-to-square"></i>
                     </el-button>
@@ -13,19 +13,15 @@
         <el-col :span="8">
             <el-descriptions :column="2" border class="mb-5">
                 <el-descriptions-item label="Описание">
-                    {{ brand.description }}
+                    {{ group.description }}
                 </el-descriptions-item>
             </el-descriptions>
         </el-col>
         <el-col :span="8">
-            <el-descriptions :column="1" border class="mb-5">
-                <el-descriptions-item label="Ссылка на сайт">
-                    {{ brand.url }}
+            <el-descriptions :column="3" border class="mb-5">
+                <el-descriptions-item label="Своя страница">
+                    <Active :active="group.published" />
                 </el-descriptions-item>
-                <el-descriptions-item label="Класс Парсера">
-                    {{ brand.parser_class }}
-                </el-descriptions-item>
-
             </el-descriptions>
         </el-col>
     </el-row>
@@ -33,20 +29,15 @@
     <el-row :gutter="10" v-if="showEdit">
         <el-col :span="8">
             <el-form label-width="auto">
-                <el-form-item label="Название бренда">
+                <el-form-item label="Название группы">
                     <el-input v-model="info.name" />
                 </el-form-item>
-
-
-                <el-form-item label="Ссылка на сайт">
-                    <el-input v-model="info.url"/>
+                <el-form-item label="Ссылка">
+                    <el-input v-model="info.slug"/>
                 </el-form-item>
-                <el-form-item label="Класс Парсера">
-                    <el-select v-model="info.parser_class">
-                        <el-option v-for="item in parsers" :key="item.value" :value="item.value" :label="item.label" />
-                    </el-select>
+                <el-form-item label="Страница на сайте">
+                    <el-checkbox v-model="info.published"  :checked="info.published"/>
                 </el-form-item>
-
                 <el-form-item label="Описание">
                     <el-input v-model="info.description" type="textarea" :rows="3" />
                 </el-form-item>
@@ -62,16 +53,16 @@
         <el-col :span="8">
             <UploadImageFile
                 label="Изображение для сайта"
-                v-model:image="brand.image"
+                v-model:image="group.image"
                 @selectImageFile="onSelectImage"
             />
+
         </el-col>
         <el-col :span="8">
             <HelpBlock>
-                <p><b>Название Бренда</b> является обязательным полем.</p>
-                <p>Поле <b>Ссылка на сайт</b> используется в Shcema для SEO</p>
+                <p><b>Название Группы</b> является обязательным полем.</p>
+                <p>Поле <b>Slug</b> (ссылка на группу) можно не заполнять, тогда оно заполнится автоматически. При заполнении использовать латинский алфавит. Ссылка используется, если у группы есть своя траница на стороне клиента</p>
                 <p>Рекомендуемое разрешение для <b>картинок</b> в карточку 700х700.</p>
-                <p>Если используется <b>Парсер</b>, то Ссылка на тот сайт, который парсится</p>
             </HelpBlock>
         </el-col>
     </el-row>
@@ -86,16 +77,14 @@ import Active from "@Comp/Elements/Active.vue";
 import HelpBlock from "@Comp/HelpBlock.vue";
 
 const props = defineProps({
-    brand: Object,
-    parsers: Array,
+    group: Object,
 })
 const iSavingInfo = ref(false)
 const info = reactive({
-    name: props.brand.name,
-    description: props.brand.description,
-    url: props.brand.url,
-    parser_class: props.brand.parser_class,
-    sameAs: props.brand.sameAs,
+    name: props.group.name,
+    description: props.group.description,
+    slug: props.group.slug,
+    published: props.group.published,
     file: null,
     clear_file: false,
 })
@@ -103,7 +92,7 @@ const showEdit = ref(false)
 
 function onSetInfo() {
     router.visit(
-        route('admin.product.brand.set-info', {brand: props.brand.id}), {
+        route('admin.product.group.set-info', {group: props.group.id}), {
             method: "post",
             data: info,
             onSuccess: page => {

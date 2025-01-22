@@ -3,14 +3,16 @@
 namespace App\Modules\NBRussia\Controllers;
 
 use App\Modules\NBRussia\Service\ParserService;
+use App\Modules\Parser\Service\ParserNB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ParserController
 {
-    private ParserService $service;
+    private ParserNB $service;
 
-    public function __construct(ParserService $service)
+    public function __construct(ParserNB $service)
     {
         $this->service = $service;
     }
@@ -22,7 +24,7 @@ class ParserController
         ]);
     }
 
-    public function categories()
+    public function categories(): JsonResponse
     {
         try {
             $categories = $this->service->parserCategories();
@@ -33,9 +35,11 @@ class ParserController
 
     }
 
-    public function products()
+    public function products(Request $request)
     {
-        $this->service->parserProducts();
+
+        $products = $this->service->parserProducts($request->input('category_id'));
+        return response()->json($products);
 
     }
 

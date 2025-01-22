@@ -7,7 +7,7 @@ return [
         'title' => 'Парсер',
         'can' => 'product',
         'vue' => true,
-        'font_awesome' => 'fa-light fa-shop',
+        'font_awesome' => 'fa-light fa-folder-magnifying-glass',
         'sub_menu' => [
           /*  'product' => [
                 'icon' => 'package-open',

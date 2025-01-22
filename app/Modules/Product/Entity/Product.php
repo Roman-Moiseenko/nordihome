@@ -120,6 +120,7 @@ use JetBrains\PhpStorm\Pure;
  * @property ProductParser $parser
  * @property Product[] $composites
  * @property BalanceProduct $balance
+ * @property Size[] $sizes
 
  */
 class Product extends Model
@@ -131,7 +132,6 @@ class Product extends Model
     const FREQUENCY_SMALL = 103;
     const FREQUENCY_PERIOD = 104;
     const FREQUENCY_NOT = 105;
-
     const FREQUENCIES = [
         self::FREQUENCY_MAJOR => 'Крупная покупка (от 3 лет)',
         self::FREQUENCY_AVERAGE => 'Средняя покупка (1-3 года)',
@@ -140,7 +140,6 @@ class Product extends Model
         self::FREQUENCY_NOT => 'Нет',
     ];
 
-
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -148,7 +147,6 @@ class Product extends Model
         'dimensions' => DimensionsCast::class,
         'packages' => PackagesCast::class,
     ];
-
     protected $attributes = [
         'short' => '',
         'dimensions' => '{}',
@@ -166,7 +164,6 @@ class Product extends Model
         'fractional' => false,
         'only_offline' => false,
     ];
-
     protected $fillable = [
         'name',
         'slug',
@@ -191,7 +188,6 @@ class Product extends Model
         'packages',
         'fractional',
     ];
-
     protected $hidden = [
 
     ];
@@ -332,6 +328,14 @@ class Product extends Model
         return $this->getQuantity() < $this->balance->min;
     }
 
+    /**
+     * Товар размерный
+     */
+    public function isSize(): bool
+    {
+        return $this->sizes()->count() > 0;
+    }
+
     //*** SET-....
     //SET и GET
     /**
@@ -380,18 +384,6 @@ class Product extends Model
         $this->published = false;
         $this->save();
     }
-
-    /*
-            public function setModeration()
-            {
-                $this->status = self::STATUS_MODERATION;
-            }
-
-            public function setApproved()
-            {
-                $this->status = self::STATUS_APPROVED;
-            }
-        */
 
     //*** GET-....
 
@@ -762,6 +754,14 @@ class Product extends Model
     }
 
     //ХАРАКТЕРИСТИКИ ТОВАРА
+    public function sizes(): BelongsToMany
+    {
+        return $this->belongsToMany(Size::class,
+            'products_sizes',
+            'product_id',
+            'size_id');
+    }
+
     public function parser(): HasOne
     {
         return $this->hasOne(ProductParser::class, 'product_id', 'id');

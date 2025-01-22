@@ -9,7 +9,7 @@
                         class="flex items-center justify-between px-6 py-4 bg-teal-950 md:shrink-0 md:justify-center md:w-64">
                         <Link class="mt-1 flex" href="/admin">
                             <logo class="fill-white" width="28" height="28"/>
-                            <span class="text-white text-lg ml-3 font-medium">HORDI HOME</span>
+                            <span class="text-white text-lg ml-3 font-medium">{{ app_name }}</span>
                         </Link>
 
                         <dropdown class="md:hidden" placement="bottom-end">
@@ -87,6 +87,8 @@ import Dropdown from '@Comp/Dropdown.vue'
 import MainMenu from '@Comp/Menu/MainMenu.vue'
 import FlashMessages from '@Comp/FlashMessages.vue'
 import BreadCrumbs from '@Comp/BreadCrumbs.vue';
+
+const app_name = import.meta.env.VITE_APP_NAME
 </script>
 <style>
 .bottom-fix {

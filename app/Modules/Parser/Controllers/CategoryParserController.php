@@ -41,9 +41,14 @@ class CategoryParserController extends Controller
     {
         $product_categories = $this->categoryRepository->forFilters();
         return Inertia::render('Parser/Category/Show', [
-            'category' => $category,
+            'category' => $this->repository->CategoryWithToArray($category),
             'product_categories' => $product_categories,
         ]);
+    }
+    public function set_category(CategoryParser $category, Request $request)
+    {
+        $this->service->setCategory($category, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function toggle(CategoryParser $category): RedirectResponse
@@ -55,5 +60,19 @@ class CategoryParserController extends Controller
             $category->active();
             return redirect()->back()->with('success', 'Категория добавлена в парсинг');
         }
+    }
+
+    public function parser_products(CategoryParser $category): RedirectResponse
+    {
+        $this->service->parserProducts($category);
+        return redirect()->back()->with('success', 'Спарсено');
+    }
+
+    public function add_category(CategoryParser $category, Request $request): RedirectResponse
+    {
+        //TODO Добавить вручную. Название, УРл - без домена, Категория товаров привязки
+
+        return redirect()->back()->with('success', 'Добавлено');
+
     }
 }

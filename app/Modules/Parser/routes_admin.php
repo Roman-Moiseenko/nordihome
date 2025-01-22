@@ -20,8 +20,9 @@ Route::group(
             Route::get('/child/{category}', 'CategoryParserController@child')->name('child');
             Route::get('/{category}', 'CategoryParserController@show')->name('show');
             Route::delete('/{category}', 'CategoryParserController@destroy')->name('destroy');
-
+            Route::post('/set-category/{category}', 'CategoryParserController@set_category')->name('set-category');
             Route::post('/', 'CategoryParserController@store')->name('store');
+            Route::post('/parser-products/{category}', 'CategoryParserController@parser_products')->name('parser-products');
 
             Route::get('/', 'CategoryParserController@index')->name('index');
 

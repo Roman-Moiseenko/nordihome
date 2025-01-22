@@ -77,6 +77,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-regular fa-booth-curtain',
             ],
+            'size' => [
+                'icon' => 'component',
+                'title' => 'Размеры',
+                'route_name' => 'admin.product.size.index',
+                'vue' => true,
+                'font_awesome' => 'fa-regular fa-maximize',
+            ],
             'priority' => [
                 'icon' => 'flag-triangle-right  ',
                 'title' => 'Приоритет',
@@ -86,7 +93,7 @@ return [
             ],
             'parser' => [
                 'icon' => 'package-search',
-                'title' => 'Парсер',
+                'title' => 'Парсер * (временно)',
                 'route_name' => 'admin.product.parser.index',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-folder-magnifying-glass',
