@@ -9,7 +9,9 @@ use App\Modules\Product\Service\SizeService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class SizeController extends Controller
 {
     private SizeService $service;

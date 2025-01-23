@@ -35,7 +35,7 @@ class FunctionService
                         $composites[$composite['code']] = ['packages' => $parser_composite['packages']];
                     }
                 } catch (\DomainException $e) {
-                    $packages = new Package();
+                    $packages[] = new Package();
                 }
                 $array[$code] = ['packages' => $packages, 'composites' => $composites];
             }
@@ -54,7 +54,6 @@ class FunctionService
         $activeWorksheet->setCellValue([2, 1], 'Высота');
         $activeWorksheet->setCellValue([3, 1], 'Ширина');
         $activeWorksheet->setCellValue([4, 1], 'Длина');
-
         $row = 1;
         foreach ($array as $key => $value) {
             $row++;
@@ -83,14 +82,16 @@ class FunctionService
 
     private function packagesToXLSX(&$activeWorksheet, $packages, &$col, $row): void
     {
+        //391.246.22
         /** @var Package $package */
+
         foreach ($packages as $package) {
             $col++;
-            $activeWorksheet->setCellValue([$col, $row], $package->height);
+            $activeWorksheet->setCellValue([$col, $row], (string)$package->height);
             $col++;
-            $activeWorksheet->setCellValue([$col, $row], $package->width);
+            $activeWorksheet->setCellValue([$col, $row], (string)$package->width);
             $col++;
-            $activeWorksheet->setCellValue([$col, $row], $package->length);
+            $activeWorksheet->setCellValue([$col, $row], (string)$package->length);
         }
     }
 }

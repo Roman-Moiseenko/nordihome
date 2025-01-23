@@ -100,6 +100,7 @@ Route::group(
             Route::delete('/del-product/{product}', 'PriorityController@del_product')->name('del-product');
         });
         //SIZE
+        /*
         Route::group([
             'prefix' => 'size',
             'as' => 'size.',
@@ -113,6 +114,7 @@ Route::group(
 
             Route::get('/', 'SizeController@index')->name('index');
         });
+        */
         //MODIFICATION
         Route::group([
             'prefix' => 'modification',

@@ -4,7 +4,9 @@ namespace App\Modules\Product\Repository;
 
 use App\Modules\Product\Entity\CategorySize;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class SizeRepository
 {
 

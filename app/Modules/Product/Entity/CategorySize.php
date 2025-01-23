@@ -3,12 +3,14 @@
 namespace App\Modules\Product\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
  * @property string $name
  * @property Size[] $sizes
  */
+#[Deprecated]
 class CategorySize extends Model
 {
     public $timestamps = false;
