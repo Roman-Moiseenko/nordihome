@@ -68,6 +68,7 @@ class CategoryParserController extends Controller
         return redirect()->back()->with('success', 'Спарсено');
     }
 
+
     public function add_category(CategoryParser $category, Request $request): RedirectResponse
     {
         //TODO Добавить вручную. Название, УРл - без домена, Категория товаров привязки

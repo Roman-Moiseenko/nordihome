@@ -32,8 +32,9 @@ function categories() {
 }
 
 function products() {
+    return;
     // router.post(route('admin.nbrussia.test'))
-    axios.post(route('admin.nbrussia.parser.products')).then(response => {
+    axios.post(route('admin.parser.category.parser-products')).then(response => {
         console.log(response.data)
     })
 

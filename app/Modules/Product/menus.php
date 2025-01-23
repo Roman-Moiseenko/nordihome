@@ -77,13 +77,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-regular fa-booth-curtain',
             ],
-            'size' => [
+           /* 'size' => [
                 'icon' => 'component',
                 'title' => 'Размеры',
                 'route_name' => 'admin.product.size.index',
                 'vue' => true,
                 'font_awesome' => 'fa-regular fa-maximize',
-            ],
+            ],*/
             'priority' => [
                 'icon' => 'flag-triangle-right  ',
                 'title' => 'Приоритет',

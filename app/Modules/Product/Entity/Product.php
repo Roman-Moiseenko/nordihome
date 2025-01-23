@@ -44,30 +44,30 @@ use JetBrains\PhpStorm\Pure;
  * @property string $name
  * @property string $slug
  * @property string $old_slug
- * @property string $code
- * @property string $code_search
+ * @property string $code Артикул
+ * @property string $code_search Артикул для поиска, без разделительных символов
  * @property string $description
- * @property string $short
+ * @property string $short короткое описание
  * @property int $main_category_id
- * @property int $frequency
+ * @property int $frequency частота покупки
  * @property int $brand_id
- * @property float $current_rating
- * @property int $count_for_sell
- * @property float $current_price Для быстрой сортировки ??
+ * @property float $current_rating рейтинг по отзывам
+ * @property int $count_for_sell *** неиспользуется, кол-во для продажи
+ * @property float $current_price *** неиспользуется, Для быстрой сортировки ??
  * @property bool $published    Опубликован
- * @property bool $only_offline Только в магазине
+ * @property bool $only_offline ** неиспользуется, Только в магазине
  * @property bool $pre_order Установка для всего магазина из опций, после каждый отдельно можно менять
  * @property bool $delivery Доставка ТК
  * @property bool $local Доставка по региону
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $published_at
- * @property int $series_id
+ * @property int $series_id серия
  * @property Dimensions $dimensions Габариты товара (Без веса),
  * @property Packages $packages Упаковки + вес + кол-во пачек
  * @property bool $priority Приоритетный показ
  * @property bool $not_sale Снят с продажи
- *
+ * @property string $model Модель товара, не для всех товаров, опционо
  * @property bool $fractional  Дробное кол-во при учете
  * @property int $vat_id
  * @property int $country_id
@@ -121,7 +121,6 @@ use JetBrains\PhpStorm\Pure;
  * @property Product[] $composites
  * @property BalanceProduct $balance
  * @property Size[] $sizes
-
  */
 class Product extends Model
 {

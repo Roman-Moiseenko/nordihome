@@ -464,6 +464,7 @@ class ProductService
     {
         $product->description = $request->string('description')->trim()->value();
         $product->short = $request->string('short')->trim()->value();
+        $product->model = $request->string('model')->trim()->value();
         $product->tags()->detach();
         $this->tags($request->input('tags'), $product);
         $this->series($request, $product);

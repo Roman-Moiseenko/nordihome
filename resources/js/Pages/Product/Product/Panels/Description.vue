@@ -27,17 +27,21 @@
                         <div v-if="errors.short" class="text-red-700">{{ errors.short }}</div>
                     </el-form-item>
                     <!-- Повторить -->
-                    <el-form-item label="Метки" label-position="top">
+                    <el-form-item label="Метки" label-position="left">
                         <el-select v-model="form.tags" @change="onAutoSave" :disabled="isSaving" multiple filterable allow-create>
                             <el-option v-for="item in tags" :key="item.id" :value="item.id" :label="item.name" />
                         </el-select>
                         <div v-if="errors.tags" class="text-red-700">{{ errors.tags }}</div>
                     </el-form-item>
-                    <el-form-item label="Серия" label-position="top">
+                    <el-form-item label="Серия" label-position="left">
                         <el-select v-model="form.series_id" @change="onAutoSave" :disabled="isSaving" filterable allow-create>
                             <el-option v-for="item in series" :key="item.id" :value="item.id" :label="item.name" />
                         </el-select>
                         <div v-if="errors.tags" class="text-red-700">{{ errors.tags }}</div>
+                    </el-form-item>
+                    <el-form-item label="Модель" label-position="left">
+                        <el-input v-model="form.model" @change="onAutoSave" :disabled="isSaving" />
+                        <div v-if="errors.model" class="text-red-700">{{ errors.model }}</div>
                     </el-form-item>
                 </el-form>
             </el-col>
@@ -80,6 +84,7 @@ const form = reactive({
     short: props.product.short,
     tags: [...props.product.tags.map(item => item.id)],
     series_id: props.product.series_id,
+    model: props.product.model,
 })
 
 
