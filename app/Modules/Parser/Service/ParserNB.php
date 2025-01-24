@@ -17,7 +17,7 @@ use Illuminate\Contracts\Support\Arrayable;
 class ParserNB extends ParserAbstract
 {
 
-    protected string $brand_name = 'NB';
+    protected string $brand_name = 'New Balance';
 
 
     public function parserCategories()
@@ -61,7 +61,6 @@ class ParserNB extends ParserAbstract
         foreach ($category['children'] as $child) {
             $this->addCategory($child, $cat_parser->id, $cat_parser->category->id);
         }
-        //Создать категорию
     }
 
 
@@ -201,7 +200,7 @@ class ParserNB extends ParserAbstract
             //Размер
             $size_attr = Attribute::where('name', 'Размер')->whereIn(''); //Отбор по категории
             //Цвет
-            
+
             //Заполняем остальные данные, задание на парсинг Фото товара
 
 

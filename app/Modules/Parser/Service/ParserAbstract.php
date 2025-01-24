@@ -12,6 +12,7 @@ abstract class ParserAbstract
 {
     const PARSERS = [
         ParserNB::class => 'New Balance Польша',
+        ParserIkea::class => 'Икеа Польша',
     ];
 
     protected HttpPage $httpPage;

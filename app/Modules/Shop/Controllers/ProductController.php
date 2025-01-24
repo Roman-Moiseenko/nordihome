@@ -69,6 +69,7 @@ class ProductController extends ShopController
         return \response()->json($result);
     }
 
+    //TODO Переименовать
     public function count_for_sell(Product $product)
     {
         return response()->json($product->getQuantitySell());

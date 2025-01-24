@@ -1159,7 +1159,8 @@
         "hydrate": true,
         "loadingMessage": "Sprawdzanie dostępności..."
     }
-}"><div class="pip-product__left-top"><div class="js-product-gallery pip-product-gallery" data-initial-props="{
+}
+"><div class="pip-product__left-top"><div class="js-product-gallery pip-product-gallery" data-initial-props="{
     "a11yShowAllMediaLabel": "Pokaż wszystkie zdjęcia, otwórz widok.",
     "a11yShowNextImageLabel": "Pokaż następne zdjęcie",
     "a11yShowPreviousImageLabel": "Pokaż poprzednie zdjęcie",

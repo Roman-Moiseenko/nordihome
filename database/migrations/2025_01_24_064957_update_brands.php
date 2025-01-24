@@ -22,7 +22,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('brands', function (Blueprint $table) {
-            //
+            $table->dropForeign(['currency_id']);
+        });
+
+        Schema::table('brands', function (Blueprint $table) {
+            $table->dropColumn('currency_id');
         });
     }
 };

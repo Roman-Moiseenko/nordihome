@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Repository\CategoryParserRepository;
 use App\Modules\Parser\Service\CategoryParserService;
+use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Repository\CategoryRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ class CategoryParserController extends Controller
         $categories = $this->repository->getTree();
         return Inertia::render('Parser/Category/Index', [
             'categories' => $categories,
+            'brands' => Brand::where('parser_class', '<>', null)->getModels(),
         ]);
     }
 
@@ -69,10 +71,10 @@ class CategoryParserController extends Controller
     }
 
 
-    public function add_category(CategoryParser $category, Request $request): RedirectResponse
+    public function add_category(Request $request): RedirectResponse
     {
         //TODO Добавить вручную. Название, УРл - без домена, Категория товаров привязки
-
+        $this->service->addCategory($request);
         return redirect()->back()->with('success', 'Добавлено');
 
     }

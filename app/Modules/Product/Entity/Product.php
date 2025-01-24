@@ -42,45 +42,51 @@ use JetBrains\PhpStorm\Pure;
 /**
  * @property int $id
  * @property string $name
+ * @property string $name_print Название для печати
  * @property string $slug
  * @property string $old_slug
  * @property string $code Артикул
  * @property string $code_search Артикул для поиска, без разделительных символов
  * @property string $description
  * @property string $short короткое описание
+ * @property string $comment Комментарий, для специалистов. Клиентам не видно
+ *
  * @property int $main_category_id
  * @property int $frequency частота покупки
  * @property int $brand_id
+ * @property int $series_id серия
  * @property float $current_rating рейтинг по отзывам
- * @property int $count_for_sell *** неиспользуется, кол-во для продажи
+ *
  * @property float $current_price *** неиспользуется, Для быстрой сортировки ??
- * @property bool $published    Опубликован
  * @property bool $only_offline ** неиспользуется, Только в магазине
+ *
+ * @property bool $published  Опубликован
  * @property bool $pre_order Установка для всего магазина из опций, после каждый отдельно можно менять
  * @property bool $delivery Доставка ТК
  * @property bool $local Доставка по региону
+ * @property bool $priority Приоритетный показ
+ * @property bool $not_sale Снят с продажи
+ *
+ * @property Dimensions $dimensions Габариты товара (+ вес),
+ * @property Packages $packages Упаковки + вес + кол-во пачек
+ * @property string $model Модель товара, не для всех товаров, опционо
+ * @property string $barcode Штрих-код
+ * @property bool $fractional  Дробное кол-во при учете
+ * @property bool $hide_price Не указывать в прайс листах
+ *
+ * @property int $vat_id НДС
+ * @property int $country_id Страна
+ * @property int $measuring_id Ед.измерения
+ * @property int $marking_type_id Вид продукции
+ *
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $published_at
- * @property int $series_id серия
- * @property Dimensions $dimensions Габариты товара (Без веса),
- * @property Packages $packages Упаковки + вес + кол-во пачек
- * @property bool $priority Приоритетный показ
- * @property bool $not_sale Снят с продажи
- * @property string $model Модель товара, не для всех товаров, опционо
- * @property bool $fractional  Дробное кол-во при учете
- * @property int $vat_id
- * @property int $country_id
- * @property int $measuring_id
- * @property int $marking_type_id
- * @property bool $hide_price Не указывать в прайс листах
- * @property string $comment Комментарий
- * @property string $name_print Название для печати
  *
- * @property VAT $VAT НДС
- * @property Country $country Страна
- * @property Measuring $measuring Ед.измерения
- * @property MarkingType $markingType Вид продукции
+ * @property VAT $VAT
+ * @property Country $country
+ * @property Measuring $measuring
+ * @property MarkingType $markingType
  *
  * @property Tag[] $tags
  * @property Category $category
@@ -119,8 +125,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Review[] $reviewsAll
  * @property ProductParser $parser
  * @property Product[] $composites
- * @property BalanceProduct $balance
- * @property Size[] $sizes
+ * @property BalanceProduct $balance - минимальный и макисмальный объемы для авто заказа
  */
 class Product extends Model
 {
@@ -152,7 +157,6 @@ class Product extends Model
         'packages' => '[]',
         'description' => '',
         'frequency' => self::FREQUENCY_NOT,
-        'count_for_sell' => 0,
         'current_rating' => 0,
         'published' => false,
         'pre_order' => true,
@@ -174,7 +178,6 @@ class Product extends Model
         'brand_id',
         'frequency',
         'current_rating',
-        'count_for_sell',
         'published',
         'only_offline ',
         'pre_order',
@@ -530,13 +533,6 @@ class Product extends Model
             $result += $storageItem->getQuantityReserve();
         }
         return $result;
-    }
-
-    #[Deprecated]
-    public function setCountSell(int $count): void
-    {
-        //$this->count_for_sell = $count;
-        //$this->save();
     }
 
 

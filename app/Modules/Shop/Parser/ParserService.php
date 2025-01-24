@@ -26,6 +26,8 @@ class ParserService
 
     const API_URL_PRODUCTS = 'https://sik.search.blue.cdtapps.com/pl/pl/product-list-page/more-products?category=%s&start=%s&end=%s';
 
+    const API_URL_CATEGORIES = 'https://www.ikea.com/pl/pl/meta-data/navigation/catalog-products-slim.json?cb=2dy1g6t4pz';
+
 //https://www.ikea.com/pl/pl/catalog/products/70332124/?type=xml&dataset=normal,allImages,prices,attributes
 
     const STORES = [

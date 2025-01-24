@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white rounded-md flex items-center mb-1 p-2 border border-slate-200">
-        <div class="w-11">
+        <div style="width: 100px;">
             <span>{{ category.brand_name }}</span>
         </div>
         <div>

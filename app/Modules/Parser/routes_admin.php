@@ -14,8 +14,7 @@ Route::group(
             'as' => 'category.',
         ], function () {
 
-
-
+            Route::post('/add-category', 'CategoryParserController@add_category')->name('add-category');
             Route::post('/toggle/{category}', 'CategoryParserController@toggle')->name('toggle');
             Route::get('/child/{category}', 'CategoryParserController@child')->name('child');
             Route::get('/{category}', 'CategoryParserController@show')->name('show');

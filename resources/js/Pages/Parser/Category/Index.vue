@@ -11,7 +11,10 @@
                     </el-button>
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
-                <el-input v-model="form.url" placeholder="Ссылка (без домена)"/>
+                <el-input v-model="form.url" class="mt-1" placeholder="Ссылка (без домена)"/>
+                <el-select v-model="form.brand_id" placeholder="Бренд" class="mt-1" >
+                    <el-option v-for="item in brands" :value="item.id" :label="item.name" />
+                </el-select>
                 <el-select v-model="form.parent_id" placeholder="Родительская категория" class="mt-1" filterable clearable>
                     <el-option v-for="item in categories" :value="item.id" :label="item.name" />
                 </el-select>
@@ -40,6 +43,7 @@ const props = defineProps({
         type: String,
         default: 'Категории парсера',
     },
+    brands: Array,
 })
 
 const visible_create = ref(false)
@@ -49,6 +53,7 @@ console.log(props.categories)
 const form = reactive({
     name: null,
     parent_id: null,
+    brand_id: null,
 })
 function createButton() {
     router.post(route('admin.parser.category.store', form))

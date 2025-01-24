@@ -24,6 +24,9 @@ class ParserController
         ]);
     }
 
+    /**
+     * Первоначальный парсинг всех категорий
+     */
     public function categories(): JsonResponse
     {
         try {
@@ -32,15 +35,16 @@ class ParserController
         } catch (\Throwable $e) {
             return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
         }
-
     }
 
+
+/*
     public function products(Request $request)
     {
 
         $products = $this->service->parserProducts($request->input('category_id'));
         return response()->json($products);
 
-    }
+    }*/
 
 }

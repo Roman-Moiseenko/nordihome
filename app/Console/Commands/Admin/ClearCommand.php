@@ -61,9 +61,7 @@ class ClearCommand extends Command
         $this->info('Склады очищены');
 
         $products = Product::where('published', true)->get();
-        foreach ($products as $item) {
-            $item->update(['count_for_sell' => 0]);
-        }
+
         $this->info('Кол-во товаров обнулено');
 
         $this->clearDocument(Order::get(), 'Заказы удалены');

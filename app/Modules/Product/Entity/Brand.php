@@ -3,20 +3,22 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Modules\Base\Entity\Photo;
+use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
+ * @property int $currency_id
  * @property string $name
  * @property string $description
  * @property string $url
  * @property string $sameas_json
  * @property Product[] $products
  * @property string $parser_class ... класс Парсер товаров
- * @property string $setting_class ... клас Настройка парсера Settings
+ * @property Currency $currency
  */
 class Brand extends Model
 {
@@ -24,6 +26,7 @@ class Brand extends Model
 
     const DEFAULT = 1;
     const IKEA = 'Икеа';
+    const NB = 'New Balance';
 
     private array $sameAs = [];
     protected $fillable = [
@@ -56,13 +59,17 @@ class Brand extends Model
         return $this->sameAs;
     }
 
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
+    }
+
     public function products(): HasMany
     {
-       // return null;
        return $this->hasMany(Product::class, 'brand_id', 'id');
     }
 
-    public static function boot()
+    public static function boot(): void
     {
         parent::boot();
         self::saving(function (Brand $object) {
@@ -73,8 +80,14 @@ class Brand extends Model
             $object->sameAs = json_decode($object->sameas_json);
         });
     }
+
     public static function IkeaID(): int
     {
         return self::where('name', self::IKEA)->first()->id;
+    }
+
+    public static function NbID(): int
+    {
+        return self::where('name', self::NB)->first()->id;
     }
 }
