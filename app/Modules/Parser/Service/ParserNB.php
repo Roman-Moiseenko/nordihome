@@ -2,10 +2,13 @@
 
 namespace App\Modules\Parser\Service;
 
+use App\Jobs\LoadingImageProduct;
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\HttpPage;
 use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Service\CategoryParserService;
+use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
@@ -118,7 +121,102 @@ class ParserNB extends ParserAbstract
                 $this->parserProductsByUrl($url . '?page=' .$i, false)
             );
         }
-        dd($products[0]);
+
+
+       // dd($products[0]);
+
+        foreach ($products as $product) {
+            //Ищем товар в базе по Id
+            $parser_product = ProductParser::where('maker_id', $product['id'])->first();
+            //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
+            if (!is_null($parser_product)) {
+                $this->updateVariants($product);
+            } else {
+                $this->createProduct($product);
+            }
+
+            //Если не нашли
+        }
+
+    }
+
+    private function createProduct(mixed $product)
+    {
+        //Создаем массив данных для добавления. Название, Модель, Изображения
+        $id = $product['id'];
+        $name = GoogleTranslateForFree::translate('pl','ru', $product['name']);
+        $image_urls = array_map(function ($item) {
+            return $this->brand->url . '/picture/' . str_replace('{imageSafeUri}', '', $item);
+        }, $product['pictures']);
+        $url = $product['niceUrl'];
+        $price_base = $product['prices']['basePrice']['gross'];
+        $price_sell = $product['prices']['sellPrice']['gross'];
+
+        $parser_categories = array_map(function ($item) {
+            return Category::where('brand_id', $this->brand->id)->where('url', $item['niceUrl'])->first();
+        }, $product['categories']);
+
+        $main_category_id = null;
+        $categories = [];
+        /** @var CategoryParser[]  $parser_categories */
+        for($i = 0; $i < count($parser_categories); $i++) {
+            if ($i == 0) $main_category_id = $parser_categories[$i]->category_id;
+            if ($i > 0) $categories[] = $parser_categories[$i]->category_id;
+        }
+        $model = '';
+        $color = [];
+        foreach ($product['properties'] as $property) {
+            if ($property['name'] == 'Model') $model = trim($property['value']['dataList'][0]);
+            if ($property['name'] == 'Kolor') $color = trim($property['value']['dataList']);
+        }
+
+        $_products = []; //Массив вариантов для Модификации
+        //Если есть варианты
+        foreach ($product['variants'] as $variant) {
+            $ean = $variant['ean'];
+            $code = $variant['warehouseSymbol']; //Артикул на основе модели и размера
+            $price_base_v = $variant['prices']['basePrice']['gross'];
+            $price_sell_v = $variant['prices']['sellPrice']['gross'];
+            $availability = $variant['availability']['buyable'];
+            //TODO Создавать если $availability ?? Проверить наличие на сайте
+            $size = null;
+            foreach ($variant['options'] as $option) {
+                if ($option['name'] == 'Rozmiar' || $option['groupId'] == '32') $size = $option['value'];
+            }
+            //К названию добавляем Размер, ищем и назначаем атрибут, остальные данные дублируем
+            $name_v = $name . ' ' . $size;
+
+            $_product = Product::register($name_v, $code, $main_category_id);
+            foreach ($categories as $category) {//Назначаем категории
+                $_product->categories()->attach($category);
+            }
+            $_product->not_sale = !$availability;
+            $_product->model = $model;
+            $_product->save();
+
+            foreach ($image_urls as $image_url) {
+                LoadingImageProduct::dispatch($_product, $image_url, $name_v);
+            }
+            //Аттрибуты
+            //Размер
+            $size_attr = Attribute::where('name', 'Размер')->whereIn(''); //Отбор по категории
+            //Цвет
+            
+            //Заполняем остальные данные, задание на парсинг Фото товара
+
+
+            $_products[] = $_product;
+        }
+        ProductParser::register($name, $url, $_products[0]->id);
+        //Создаем парсер-товар, ссылка на первый размер
+
+        //Заполняем данные, привязываем категории
+
+    }
+
+    private function updateVariants(mixed $product)
+    {
+
 
     }
 }

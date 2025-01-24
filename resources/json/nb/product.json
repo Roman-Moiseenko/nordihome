@@ -1,0 +1,1026 @@
+{
+    "id": "3214017",
+    "name": "Buty unisex New Balance U574BKR – szare",
+    "pictures": [
+        "{imageSafeUri}/ca9b8b97c823b811d146437401a16585.png",
+        "{imageSafeUri}/7a263fe2be8d2d0f20e4e72e864f1b8f.png",
+        "{imageSafeUri}/9e1cb82b4e61228a3b55f68f4752a7b0.png",
+        "{imageSafeUri}/6face502f548136cdff88520956d4d7a.png",
+        "{imageSafeUri}/8e257b4a2b33bd0947b27f0f839e6762.png",
+        "{imageSafeUri}/ed9264a22c03f3d43dbd3643c3663c6a.png",
+        "{imageSafeUri}/a45de449560daf3b6cf434db159ac35c.png",
+        "{imageSafeUri}/2cf8faca979db4e3d12f8ab66cb6003b.png",
+        "{imageSafeUri}/d796e1dc4139aa313cc9c68f9142f8da.png"
+    ],
+    "reviewStats": {
+        "scoreCount": 0,
+        "averageScore": 0,
+        "totalScore": 0,
+        "percentageScore": 0
+    },
+    "variants": [
+        {
+            "id": "4916009",
+            "option": "37 Standardowa (D)",
+            "ean": "197967955983",
+            "warehouseSymbol": "NBU574BKR.D.045",
+            "skus": [
+                "#pv-4916009"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6560",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "37"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916010",
+            "option": "38 Standardowa (D)",
+            "ean": "197967956003",
+            "warehouseSymbol": "NBU574BKR.D.055",
+            "skus": [
+                "#pv-4916010"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6562",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "38"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916011",
+            "option": "38.5 Standardowa (D)",
+            "ean": "197967956010",
+            "warehouseSymbol": "NBU574BKR.D.060",
+            "skus": [
+                "#pv-4916011"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6563",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "38.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916012",
+            "option": "39.5 Standardowa (D)",
+            "ean": "197967956027",
+            "warehouseSymbol": "NBU574BKR.D.065",
+            "skus": [
+                "#pv-4916012"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6565",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "39.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916013",
+            "option": "40 Standardowa (D)",
+            "ean": "197967956034",
+            "warehouseSymbol": "NBU574BKR.D.070",
+            "skus": [
+                "#pv-4916013"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6566",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "40"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916014",
+            "option": "40.5 Standardowa (D)",
+            "ean": "197967956041",
+            "warehouseSymbol": "NBU574BKR.D.075",
+            "skus": [
+                "#pv-4916014"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6567",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "40.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916015",
+            "option": "41.5 Standardowa (D)",
+            "ean": "197967956058",
+            "warehouseSymbol": "NBU574BKR.D.080",
+            "skus": [
+                "#pv-4916015"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6569",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "41.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916016",
+            "option": "42 Standardowa (D)",
+            "ean": "197967956065",
+            "warehouseSymbol": "NBU574BKR.D.085",
+            "skus": [
+                "#pv-4916016"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": true,
+                "message": {
+                    "content": "available",
+                    "type": "success"
+                }
+            },
+            "options": [
+                {
+                    "id": "6570",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "42"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916017",
+            "option": "42.5 Standardowa (D)",
+            "ean": "197967956072",
+            "warehouseSymbol": "NBU574BKR.D.090",
+            "skus": [
+                "#pv-4916017"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": true,
+                "message": {
+                    "content": "available",
+                    "type": "success"
+                }
+            },
+            "options": [
+                {
+                    "id": "6571",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "42.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916018",
+            "option": "43 Standardowa (D)",
+            "ean": "197967956089",
+            "warehouseSymbol": "NBU574BKR.D.095",
+            "skus": [
+                "#pv-4916018"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": true,
+                "message": {
+                    "content": "available",
+                    "type": "success"
+                }
+            },
+            "options": [
+                {
+                    "id": "6572",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "43"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916019",
+            "option": "44 Standardowa (D)",
+            "ean": "197967956096",
+            "warehouseSymbol": "NBU574BKR.D.100",
+            "skus": [
+                "#pv-4916019"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": true,
+                "message": {
+                    "content": "available",
+                    "type": "success"
+                }
+            },
+            "options": [
+                {
+                    "id": "6574",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "44"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916040",
+            "option": "44.5 Standardowa (D)",
+            "ean": "197967956102",
+            "warehouseSymbol": "NBU574BKR.D.105",
+            "skus": [
+                "#pv-4916040"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": true,
+                "message": {
+                    "content": "available",
+                    "type": "success"
+                }
+            },
+            "options": [
+                {
+                    "id": "6575",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "44.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916020",
+            "option": "45 Standardowa (D)",
+            "ean": "197967956119",
+            "warehouseSymbol": "NBU574BKR.D.110",
+            "skus": [
+                "#pv-4916020"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": true,
+                "message": {
+                    "content": "available",
+                    "type": "success"
+                }
+            },
+            "options": [
+                {
+                    "id": "6576",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "45"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916021",
+            "option": "45.5 Standardowa (D)",
+            "ean": "197967956126",
+            "warehouseSymbol": "NBU574BKR.D.115",
+            "skus": [
+                "#pv-4916021"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": true,
+                "message": {
+                    "content": "available",
+                    "type": "success"
+                }
+            },
+            "options": [
+                {
+                    "id": "6577",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "45.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916037",
+            "option": "46.5 Standardowa (D)",
+            "ean": "197967956133",
+            "warehouseSymbol": "NBU574BKR.D.120",
+            "skus": [
+                "#pv-4916037"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6579",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "46.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916038",
+            "option": "47.5 Standardowa (D)",
+            "ean": "197967956140",
+            "warehouseSymbol": "NBU574BKR.D.130",
+            "skus": [
+                "#pv-4916038"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6581",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "47.5"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        },
+        {
+            "id": "4916039",
+            "option": "49 Standardowa (D)",
+            "ean": "197967956157",
+            "warehouseSymbol": "NBU574BKR.D.140",
+            "skus": [
+                "#pv-4916039"
+            ],
+            "prices": {
+                "sellPrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "listPrice": null,
+                "basePrice": {
+                    "gross": 499.99,
+                    "nett": 406.5,
+                    "currency": "PLN",
+                    "vat": null,
+                    "vatValue": 23
+                },
+                "omnibusPrice": null
+            },
+            "availability": {
+                "buyable": false,
+                "message": {
+                    "content": "\u003cspan class=\"tcl\" data-tcl=\"true\" style=\"color:#CF0A2C;font-weight:800;\"\u003eProdukt wyprzedany\u003c/span\u003e",
+                    "type": "danger"
+                }
+            },
+            "options": [
+                {
+                    "id": "6584",
+                    "groupId": "32",
+                    "name": "Rozmiar",
+                    "value": "49"
+                },
+                {
+                    "id": "6985",
+                    "groupId": "46",
+                    "name": "Szerokość",
+                    "value": "Standardowa (D)"
+                }
+            ]
+        }
+    ],
+    "niceUrl": "buty_unisex_new_balance_u574bkr_szare",
+    "picturesCategories": [
+        {
+            "slug": "comparer",
+            "pictures": [
+                {
+                    "filename": "{imageSafeUri}/ca9b8b97c823b811d146437401a16585.png",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "slug": "newbalance",
+            "pictures": [
+                {
+                    "filename": "{imageSafeUri}/7a263fe2be8d2d0f20e4e72e864f1b8f.png",
+                    "description": null
+                },
+                {
+                    "filename": "{imageSafeUri}/9e1cb82b4e61228a3b55f68f4752a7b0.png",
+                    "description": null
+                },
+                {
+                    "filename": "{imageSafeUri}/6face502f548136cdff88520956d4d7a.png",
+                    "description": null
+                },
+                {
+                    "filename": "{imageSafeUri}/8e257b4a2b33bd0947b27f0f839e6762.png",
+                    "description": null
+                },
+                {
+                    "filename": "{imageSafeUri}/ed9264a22c03f3d43dbd3643c3663c6a.png",
+                    "description": null
+                },
+                {
+                    "filename": "{imageSafeUri}/a45de449560daf3b6cf434db159ac35c.png",
+                    "description": null
+                },
+                {
+                    "filename": "{imageSafeUri}/2cf8faca979db4e3d12f8ab66cb6003b.png",
+                    "description": null
+                },
+                {
+                    "filename": "{imageSafeUri}/d796e1dc4139aa313cc9c68f9142f8da.png",
+                    "description": null
+                }
+            ]
+        }
+    ],
+    "flags": [
+        {
+            "id": "2",
+            "name": "Nowość",
+            "symbol": "new"
+        }
+    ],
+    "prices": {
+        "sellPrice": {
+            "gross": 499.99,
+            "nett": 406.5,
+            "currency": "PLN",
+            "vat": null,
+            "vatValue": 23
+        },
+        "listPrice": null,
+        "basePrice": {
+            "gross": 499.99,
+            "nett": 406.5,
+            "currency": "PLN",
+            "vat": null,
+            "vatValue": 23
+        },
+        "omnibusPrice": null
+    },
+    "producer": {
+        "id": 911,
+        "name": "New Balance",
+        "description": null
+    },
+    "categoryPath": [
+        {
+            "id": "13026",
+            "name": "Męskie",
+            "niceUrl": "meskie"
+        },
+        {
+            "id": "13031",
+            "name": "Obuwie",
+            "niceUrl": "meskie/obuwie"
+        },
+        {
+            "id": "13043",
+            "name": "Klasyczne",
+            "niceUrl": "meskie/obuwie/klasyczne"
+        },
+        {
+            "id": "13164",
+            "name": "Seria 574",
+            "niceUrl": "meskie/obuwie/klasyczne/seria_574"
+        }
+    ],
+    "categories": [
+        {
+            "id": "13164",
+            "name": "Seria 574",
+            "niceUrl": "meskie/obuwie/klasyczne/seria_574"
+        },
+        {
+            "id": "13181",
+            "name": "Seria 574",
+            "niceUrl": "damskie/obuwie/klasyczne/seria_574"
+        }
+    ],
+    "properties": [
+        {
+            "name": "Model",
+            "value": {
+                "type": "text_line",
+                "dataList": [
+                    "U574BKR "
+                ]
+            }
+        },
+        {
+            "name": "Dla kogo",
+            "value": {
+                "type": "multiple_choice",
+                "dataList": [
+                    "Dla niej",
+                    "Dla niego"
+                ]
+            }
+        },
+        {
+            "name": "Płeć",
+            "value": {
+                "type": "multiple_choice",
+                "dataList": []
+            }
+        },
+        {
+            "name": "Kategoria",
+            "value": {
+                "type": "multiple_choice",
+                "dataList": [
+                    "Obuwie"
+                ]
+            }
+        },
+        {
+            "name": "Drop",
+            "value": {
+                "type": "multiple_choice",
+                "dataList": []
+            }
+        },
+        {
+            "name": "Szerokość",
+            "value": {
+                "type": "multiple_choice",
+                "dataList": []
+            }
+        },
+        {
+            "name": "Kolor",
+            "value": {
+                "type": "multiple_choice",
+                "dataList": [
+                    "Szary"
+                ]
+            }
+        },
+        {
+            "name": "Produkt ocieplany",
+            "value": {
+                "type": "multiple_choice",
+                "dataList": []
+            }
+        },
+        {
+            "name": "Rodzaj zapięcia",
+            "value": {
+                "type": "multiple_choice",
+                "dataList": []
+            }
+        }
+    ]
+},

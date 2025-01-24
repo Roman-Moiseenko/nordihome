@@ -18,6 +18,8 @@ const codes = ref(null)
 
 function onParsing() {
 
+ //   router.post(route('admin.nordihome.parser-dimensions'), {codes: codes.value})
+  //  return;
     const loading = ElLoading.service({
         lock: false,
         text: 'Создание документа',

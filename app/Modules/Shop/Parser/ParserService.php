@@ -264,6 +264,7 @@ class ParserService
         if (empty($_array['searchResultPage']['products']['main']['items']))
             throw new \DomainException('Данный продукт недоступен для текущей продажи');
         $item = $_array['searchResultPage']['products']['main']['items'][0]['product'];
+
         //Парсим первычный JSON
         $name = $item['name'];
         $link = $item['pipUrl'];

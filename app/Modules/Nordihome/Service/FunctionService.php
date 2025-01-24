@@ -26,8 +26,10 @@ class FunctionService
         foreach ($codes as $code) {
             if (!empty(trim($code))) {
                 $composites = [];
+                $packages = null;
                 try {
                     $parser_product = $this->parserService->parsingData($code);
+
                     $packages = $parser_product['packages'];
 
                     foreach ($parser_product['composite'] as $composite) {
@@ -35,12 +37,12 @@ class FunctionService
                         $composites[$composite['code']] = ['packages' => $parser_composite['packages']];
                     }
                 } catch (\DomainException $e) {
-                    $packages[] = new Package();
+                    //   $packages[] = new Package();
                 }
                 $array[$code] = ['packages' => $packages, 'composites' => $composites];
             }
         }
-       // dd($array);
+        // dd($array);
         //TODO Записать $array в файл xlsx
         return $this->reportXLSX($array);
     }
@@ -59,7 +61,7 @@ class FunctionService
             $row++;
             $col = 1;
             $activeWorksheet->setCellValue([$col, $row], $this->parserService->toCode($key));
-           // dd($value['packages']);
+            // dd($value['packages']);
             $this->packagesToXLSX($activeWorksheet, $value['packages'], $col, $row);
 
             foreach ($value['composites'] as $key2 => $composite) {
@@ -84,14 +86,14 @@ class FunctionService
     {
         //391.246.22
         /** @var Package $package */
-
-        foreach ($packages as $package) {
-            $col++;
-            $activeWorksheet->setCellValue([$col, $row], (string)$package->height);
-            $col++;
-            $activeWorksheet->setCellValue([$col, $row], (string)$package->width);
-            $col++;
-            $activeWorksheet->setCellValue([$col, $row], (string)$package->length);
-        }
+        if (!is_null($packages))
+            foreach ($packages as $package) {
+                $col++;
+                $activeWorksheet->setCellValue([$col, $row], (string)$package->height);
+                $col++;
+                $activeWorksheet->setCellValue([$col, $row], (string)$package->width);
+                $col++;
+                $activeWorksheet->setCellValue([$col, $row], (string)$package->length);
+            }
     }
 }
