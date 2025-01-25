@@ -14,3 +14,4 @@ Route::group(
 );
 
 Route::post('/report', 'ReportController@report')->name('report');
+Route::get('/test', 'FileController@test')->name('test');

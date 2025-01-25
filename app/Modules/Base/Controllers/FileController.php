@@ -12,6 +12,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends Controller
 {
+    public function test()
+    {
+        return view('admin.test');
+    }
 
     public function download(Request $request)
     {
