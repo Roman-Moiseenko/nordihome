@@ -5,6 +5,9 @@ namespace App\Modules\Parser\Service;
 use App\Jobs\LoadingImageProduct;
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\HttpPage;
+use App\Modules\Guide\Entity\Country;
+use App\Modules\Guide\Entity\Measuring;
+use App\Modules\Guide\Entity\VAT;
 use App\Modules\NBRussia\Helper\MenuListing;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
@@ -12,6 +15,7 @@ use App\Modules\Parser\Service\CategoryParserService;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -126,7 +130,9 @@ class ParserNB extends ParserAbstract
                 $this->parserProductsByUrl($url . '?page=' .$i, false)
             );
         }
-
+        return $products;
+        //dd($products);
+        //TODO Убрать когда заработает через axios
         foreach ($products as $product) {
             //Ищем товар в базе по Id
             $parser_product = ProductParser::where('maker_id', $product['id'])->first();
@@ -138,12 +144,27 @@ class ParserNB extends ParserAbstract
             }
 
         }
-        return [];
+        return $products;
     }
+
+    public function parserProductByData(array $product): void
+    {
+        $parser_product = ProductParser::where('maker_id', $product['id'])->first();
+        //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
+        if (!is_null($parser_product)) {
+            $this->updateVariants($product);
+        } else {
+            \DB::transaction(function () use ($product) {
+                $this->createProduct($product);
+            });
+
+        }
+    }
+
+
 
     private function createProduct(mixed $product): void
     {
-        dd($product);
         //Создаем массив данных для добавления. Название, Модель, Изображения
         $maker_id = $product['id'];
         $name = GoogleTranslateForFree::translate('pl','ru', $product['name']);
@@ -157,7 +178,7 @@ class ParserNB extends ParserAbstract
         $parser_categories = array_filter(array_map(function ($item) {
             return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item['niceUrl'])->where('active', true)->first();
         }, $product['categories']));
-        dd([$product['categories'],$parser_categories]);
+
         $main_category = null;
         $categories = [];
         /** @var CategoryParser[]  $parser_categories */
@@ -166,14 +187,28 @@ class ParserNB extends ParserAbstract
             if ($i > 0) $categories[] = $parser_categories[$i]->category_id;
         }
         $model = '';
-        $color = [];
+        $color = '';
         foreach ($product['properties'] as $property) {
             if ($property['name'] == 'Model') $model = trim($property['value']['dataList'][0]);
-            if ($property['name'] == 'Kolor') $color = trim($property['value']['dataList']);
+            if ($property['name'] == 'Kolor') $color = $property['value']['dataList'][0];
         }
+
         $attributes = $main_category->all_attributes();
 
-        dd($attributes);
+        $attr_size = null;
+        $attr_color = null;
+
+        foreach ($attributes as $attribute) {
+            if ($attribute->name == 'Размер') $attr_size = $attribute;
+            if ($attribute->name == 'Цвет') $attr_color = $attribute;
+        }
+        //TODO Для цветов и других атрибутов сделать таблицу перевода world (unique), russia
+        $color_ru = GoogleTranslateForFree::translate('pl','ru', $color);
+        if (!$attr_color->isValue($color_ru)) {
+            $attr_color->addVariant($color_ru);
+            $attr_color->refresh();
+        }
+        $variant_color = $attr_color->findVariant($color_ru)->id;
 
         $_products = []; //Массив вариантов для Модификации
         $data = [];
@@ -181,6 +216,8 @@ class ParserNB extends ParserAbstract
         foreach ($product['variants'] as $variant) {
             $ean = $variant['ean'];
             $code = $variant['warehouseSymbol']; //Артикул на основе модели и размера
+            if ($code == null) continue;
+
             $price_base_v = $variant['prices']['basePrice']['gross'];
             $price_sell_v = $variant['prices']['sellPrice']['gross'];
             $availability = $variant['availability']['buyable'];
@@ -189,6 +226,12 @@ class ParserNB extends ParserAbstract
             foreach ($variant['options'] as $option) {
                 if ($option['name'] == 'Rozmiar' || $option['groupId'] == '32') $size = $option['value'];
             }
+            if (!$attr_size->isValue($size)) {
+                $attr_size->addVariant($size);
+                $attr_size->refresh();
+            }//Если такого размера нет, то добавляем
+            $variant_size = $attr_size->findVariant($size)->id;
+
             $data[$size] = [
                 'price_base' => $price_base_v,
                 'price_sell' => $price_sell_v,
@@ -204,33 +247,42 @@ class ParserNB extends ParserAbstract
             $_product->not_sale = !$availability;
             $_product->model = $model;
             $_product->barcode = $ean;
+            $_product->name_print = $_product->name;
+
+            $_product->brand_id = $this->brand->id;
+            $_product->country_id = Country::where('name', 'Польша')->first()->id;
+            $_product->vat_id = VAT::where('value', null)->first()->id;
+            $_product->measuring_id = Measuring::where('name', 'шт')->first()->id;
             $_product->save();
-
-            foreach ($image_urls as $image_url) {
-                LoadingImageProduct::dispatch($_product, $image_url, $name_v);
-            }
             //Аттрибуты
-            //Размер
-            $size_attr = Attribute::where('name', 'Размер')->whereIn(''); //Отбор по категории
-            //Цвет
+            $_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
+            $_product->prod_attributes()->attach($attr_size->id, ['value' => json_encode($variant_size)]);
 
-            //Заполняем остальные данные, задание на парсинг Фото товара
-
+            //задание на парсинг Фото товара
+            foreach ($image_urls as $image_url) {
+                LoadingImageProduct::dispatch($_product, $image_url, $name_v, true);
+            }
 
             $_products[] = $_product;
         }
 
-        $product_parser = ProductParser::register($name, $url, $_products[0]->id);
+        $modification = Modification::register($name, $_products[0]->id, [$attr_size]);
+        $values = [];
+        foreach ($_products as $_product) {
+            //dd($_product->Value($attr_size->id));
+            $values[$attr_size->id] = $_product->Value($attr_size->id);
+            $modification->products()->attach($_product->id, ['values_json' => json_encode($values)]);
+        }
+
+        $product_parser = ProductParser::register($url, $_products[0]->id);
         $product_parser->maker_id = $maker_id;
         $product_parser->model = $model;
         $product_parser->price_base = $price_base;
         $product_parser->price_sell = $price_sell;
         $product_parser->data = $data;
-
         $product_parser->save();
-        //Создаем парсер-товар, ссылка на первый размер
-
-        //Заполняем данные, привязываем категории
+        foreach ($parser_categories as $category) //Назначаем категории
+            $product_parser->categories()->attach($category);
 
     }
 

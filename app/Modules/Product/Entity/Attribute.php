@@ -63,6 +63,39 @@ class Attribute extends Model
 
     }
 
+    public function isVariant(): bool
+    {
+        return $this->type == self::TYPE_VARIANT;
+    }
+
+    public function isBool(): bool
+    {
+        return $this->type == self::TYPE_BOOL;
+    }
+
+    public function isNumeric(): bool
+    {
+        return $this->type == self::TYPE_INTEGER || $this->type == self::TYPE_FLOAT;
+    }
+
+    public function isString(): bool
+    {
+        return $this->type == self::TYPE_STRING;
+    }
+
+    public function isDate(): bool
+    {
+        return $this->type == self::TYPE_DATE;
+    }
+
+    public function isValue($value): bool
+    {
+        foreach ($this->variants as $variant) {
+            if ($variant->name == $value) return true;
+        }
+        return false;
+    }
+
     public function group(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(AttributeGroup::class, 'group_id', 'id');
@@ -73,6 +106,7 @@ class Attribute extends Model
             return $this->belongsTo(Category::class, 'group_id', 'id');
         }
     */
+
     public function variants()
     {
         return $this->hasMany(AttributeVariant::class, 'attribute_id', 'id');
@@ -124,28 +158,7 @@ class Attribute extends Model
     }
 
 
-    public function isVariant(): bool
-    {
-        return $this->type == self::TYPE_VARIANT;
-    }
-    public function isBool(): bool
-    {
-        return $this->type == self::TYPE_BOOL;
-    }
 
-    public function isNumeric(): bool
-    {
-        return $this->type == self::TYPE_INTEGER || $this->type == self::TYPE_FLOAT;
-    }
-    public function isString(): bool
-    {
-        return $this->type == self::TYPE_STRING;
-    }
-
-    public function isDate(): bool
-    {
-        return $this->type == self::TYPE_DATE;
-    }
 
     public function getUploadUrl(): string
     {
@@ -162,6 +175,15 @@ class Attribute extends Model
         }
         throw new \DomainException('Не найдет вариант id = ' . $id . ' атрибута ' . $this->name);
     }
+
+    public function findVariant(string $name): AttributeVariant
+    {
+        foreach ($this->variants as $variant) {
+            if ($variant->name == $name) return $variant;
+        }
+        throw new \DomainException('Не найдет вариант ' . $name . ' атрибута ' . $this->name);
+    }
+
     public function typeText(): string
     {
         return self::ATTRIBUTES[$this->type];

@@ -43,16 +43,16 @@
 </template>
 
 <script setup lang="ts">
-import {inject, ref, defineProps, reactive} from "vue";
+import {inject, ref, defineProps, reactive, watch} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head, router} from "@inertiajs/vue3";
-import CategoryInfo from "./Block/Info.vue";
 
 
 import PanelChildren from './Panels/Children.vue'
 import PanelAttributes from './Panels/Attributes.vue'
 import PanelProducts from  './Panels/Products.vue'
 import {ElLoading} from "element-plus";
+import axios from "axios";
 
 const props = defineProps({
     category: Object,
@@ -82,6 +82,29 @@ function products() {
         text: 'Парсим категорию, процесс может быть очень долгим',
         background: 'rgba(0, 0, 0, 0.7)',
     })
+    const count = ref(0);
+    axios.post(route('admin.parser.category.parser-products', {category: props.category.id})).then(response => {
+        watch(() => count.value, (newValues, oldValues) => {
+            if (newValues === response.data.length) loading.close();
+        });
+        let text = 'Найдено ' + response.data.length + ' товаров.'
+        loading.text.value = text
+        response.data.forEach(function (product) {
+
+         //   router.post(route('admin.parser.category.parser-product', {category: props.category.id}), {product: product});
+
+            axios.post(route('admin.parser.category.parser-product', {category: props.category.id}), {product: product}).then(response => {
+                console.log('response', response)
+                count.value++;
+                loading.text.value = text + ' Спарсено ' + count.value
+            }).catch(resolve => {
+                console.log('resolve', resolve)
+            })
+        })
+    })
+
+    return;
+
     router.visit(route('admin.parser.category.parser-products', {category: props.category.id}), {
         method: "post",
         data: {

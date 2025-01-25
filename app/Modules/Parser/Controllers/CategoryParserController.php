@@ -64,12 +64,24 @@ class CategoryParserController extends Controller
         }
     }
 
-    public function parser_products(CategoryParser $category): RedirectResponse
+    public function parser_products(CategoryParser $category)
     {
-        $this->service->parserProducts($category);
-        return redirect()->back()->with('success', 'Спарсено');
+        $products = $this->service->parserProducts($category);
+        return response()->json($products);// redirect()->back()->with('success', 'Спарсено');
     }
 
+
+    public function parser_product(CategoryParser $category, Request $request)
+    {
+        try {
+            $this->service->parserProduct($category, $request);
+           // return redirect()->back();
+            return response()->json(true);
+        } catch (\Throwable $e) {
+            return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
+        }
+
+    }
 
     public function add_category(Request $request): RedirectResponse
     {

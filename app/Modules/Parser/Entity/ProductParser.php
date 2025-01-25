@@ -36,7 +36,11 @@ class ProductParser extends Model
 {
     public $timestamps = false;
     protected $table = 'parser_products';
-
+    protected $attributes = [
+        'composite' => '{}',
+        'quantity' => '{}',
+        'data' => '{}',
+    ];
     protected $casts =[
         'data' => 'json',
         'composite' => 'json',
@@ -45,15 +49,13 @@ class ProductParser extends Model
     ];
 
     protected $fillable = [
-        'name',
         'url',
         'product_id',
     ];
 
-    public static function register(string $name, string $url, int $product_id, ): self
+    public static function register(string $url, int $product_id, ): self
     {
         return self::create([
-            'name' => $name,
             'url' => $url,
             'product_id' => $product_id,
         ]);

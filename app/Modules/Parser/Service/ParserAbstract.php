@@ -21,14 +21,15 @@ abstract class ParserAbstract
     protected string $brand_name;
 
     public function __construct(
-        HttpPage $httpPage,
-        CategoryParserService  $categoryParserService,
+        HttpPage              $httpPage,
+        CategoryParserService $categoryParserService,
     )
     {
         $this->httpPage = $httpPage;
         $this->categoryParserService = $categoryParserService;
         $this->brand = Brand::where('name', $this->brand_name)->first();
     }
+
     abstract public function findProduct(string $search): Product;
 
     abstract public function remainsProduct(string $code): float;
@@ -40,7 +41,7 @@ abstract class ParserAbstract
     /**
      * Парсит товары по категории текущего бренда и добавляем товары в каталог
      */
-    final public function getProductsByCategory(?int $category_id)
+    final public function getProductsByCategory(?int $category_id): array
     {
         if (is_null($category_id)) {
             $categories = CategoryParser::where('active', true)->where('brand_id', $this->brand->id)->getModels();
@@ -53,15 +54,23 @@ abstract class ParserAbstract
                 ->getModels();
         }
         /** @var CategoryParser $category */
+        $products = [];
         foreach ($categories as $category) {
             if ($category->children()->count() == 0) //Парсим только дочерние
-                $this->parserProductsByUrl($this->brand->url . '/' . $category->url);
+                $products = array_merge($products,
+                    $this->parserProductsByUrl($this->brand->url . '/' . $category->url)
+                );
+
         }
+        return $products;
     }
 
     /**
-     * Функция распарсивания товара и добавления в каталог
+     * Функция поиска данных для товаров по урлу
      */
     abstract protected function parserProductsByUrl(string $url);
 
+    //Функция распарсивания товара по найденным данным
+    abstract public function parserProductByData(array $product): void;
 }
+

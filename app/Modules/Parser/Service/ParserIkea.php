@@ -15,7 +15,7 @@ class ParserIkea extends ParserAbstract
     const API_URL_CATEGORIES = 'https://www.ikea.com/pl/pl/meta-data/navigation/catalog-products-slim.json?cb=2dy1g6t4pz';
 
 
-    public function parserCategories()
+    public function parserCategories(): ?string
     {
         set_time_limit(1000);
         $data = $this->httpPage->getPage(self::API_URL_CATEGORIES);

@@ -7,6 +7,7 @@ use App\Modules\Product\Entity\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -23,6 +24,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property int $_rgt
  * @property Brand $brand
  * @property CategoryParser $parent
+ * @property ProductParser[] $products
  * @property Category $category
  */
 class CategoryParser extends Model
@@ -68,5 +70,8 @@ class CategoryParser extends Model
     {
         return $this->belongsTo(Category::class);
     }
-
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(ProductParser::class, 'parser_categories_products', 'category_id', 'product_id');
+    }
 }

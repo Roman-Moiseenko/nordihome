@@ -58,7 +58,11 @@ class ModificationService
         foreach ($modification->prod_attributes as $attribute) {
             if (is_null($product->getProdAttribute($attribute->id)))
                 throw new \DomainException('Товар ' . $product->name . ' не имеет атрибута из модификации');
-            $values[$attribute->id] = (int)$product->Value($attribute->id)[0];
+            if (is_array($product->Value($attribute->id))) {
+                $values[$attribute->id] = (int)$product->Value($attribute->id)[0];
+            } else {
+                $values[$attribute->id] = $product->Value($attribute->id);
+            }
         }
         $modification->products()->attach($product->id, ['values_json' => json_encode($values)]);
     }

@@ -3,6 +3,8 @@
 namespace App\Modules\Parser\Repository;
 
 use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Product\Entity\Product;
 
 class CategoryParserRepository
 {
@@ -23,18 +25,22 @@ class CategoryParserRepository
 
     }
 
-    private function CategoryToArray(CategoryParser $category)
+    private function CategoryToArray(CategoryParser $category): array
     {
         return $category->toArray();
     }
 
-    public function CategoryWithToArray(CategoryParser $category)
+    public function CategoryWithToArray(CategoryParser $category): array
     {
         return array_merge($this->CategoryToArray($category), [
             'brand_name' => $category->brand->name,
             'category_name' => is_null($category->category) ? null : $category->category->getParentNames(),
             'children' => $this->getTree($category->id),
-            'products' => [],
+            'products' => $category->products()->get()->map(function (ProductParser $product) {
+                return array_merge($product->toArray(), [
+                    'name' => $product->product->name,
+                ]);
+            }),
         ]);
     }
 }

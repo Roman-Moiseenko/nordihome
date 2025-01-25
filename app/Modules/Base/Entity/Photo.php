@@ -5,6 +5,7 @@ namespace App\Modules\Base\Entity;
 
 use App\Jobs\ClearTempFile;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Base\Service\HttpPage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -107,11 +108,11 @@ class Photo extends Model
         $upload_file_name = basename($url);
 
         //Старая версия
-        //$http = new HttpPage();
-        //$content = $http->getPage($url);// dlFile($url);
+        $http = new HttpPage();
+        $content = $http->getPage($url);// dlFile($url);
 
         //TODO Протестировать !!!
-        $content = Http::get($url)->body();
+        //$content = Http::get($url)->body();
 
         $fp = fopen($storage . $upload_file_name,'x');
         fwrite($fp, $content);

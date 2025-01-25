@@ -13,14 +13,13 @@ class CategoryParserService
     }
 
     //
-    public function parserProducts(CategoryParser $category): void
+    public function parserProducts(CategoryParser $category): array
     {
         $parser_class = $category->brand->parser_class;
         /** @var ParserAbstract $parser */
         $parser = app()->make($parser_class);
 
-        $parser->getProductsByCategory($category->id);
-
+        return $parser->getProductsByCategory($category->id);
     }
 
     public function setCategory(CategoryParser $category, Request $request): void
@@ -29,6 +28,14 @@ class CategoryParserService
         $category->save();
     }
 
+    public function parserProduct(CategoryParser $category, Request $request): void
+    {
+        $parser_class = $category->brand->parser_class;
+        /** @var ParserAbstract $parser */
+        $parser = app()->make($parser_class);
+        //throw new \DomainException($request->input('product'));
+        $parser->parserProductByData($request->input('product'));
+    }
 
 
 }
