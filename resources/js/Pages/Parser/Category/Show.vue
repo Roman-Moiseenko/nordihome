@@ -2,7 +2,7 @@
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Категория {{ category.name }}</h1>
-        <div class="p-5 bg-white rounded-md" v-if="category.category_id">
+        <div class="p-5 bg-white rounded-md" v-if="category.active">
             <el-row :gutter="10" v-if="!showEdit">
                 <el-col :span="8">
                     <el-descriptions :column="1" border class="mb-5">

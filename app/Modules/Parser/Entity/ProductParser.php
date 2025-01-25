@@ -50,7 +50,7 @@ class ProductParser extends Model
         'product_id',
     ];
 
-    public static function register(string $name, string $url, int $product_id, )
+    public static function register(string $name, string $url, int $product_id, ): self
     {
         return self::create([
             'name' => $name,

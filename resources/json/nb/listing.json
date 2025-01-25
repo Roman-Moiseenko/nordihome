@@ -232,14 +232,6 @@
                                             "title": "Trekkingowe oraz zimowe",
                                             "niceUrl": "meskie/obuwie/klasyczne/trekkingowe_oraz_zimowe",
                                             "children": []
-                                        },
-                                        {
-                                            "kind": "product_category",
-                                            "labels": [],
-                                            "picture": null,
-                                            "title": "Pozostałe",
-                                            "niceUrl": "meskie/obuwie/klasyczne/pozostale",
-                                            "children": []
                                         }
                                     ]
                                 },
@@ -874,14 +866,6 @@
                                             "kind": "product_category",
                                             "labels": [],
                                             "picture": null,
-                                            "title": "Pozostałe",
-                                            "niceUrl": "damskie/obuwie/klasyczne/pozostale",
-                                            "children": []
-                                        },
-                                        {
-                                            "kind": "product_category",
-                                            "labels": [],
-                                            "picture": null,
                                             "title": "Made in USA",
                                             "niceUrl": "damskie/obuwie/klasyczne/made_in_usa",
                                             "children": []
@@ -1034,8 +1018,24 @@
                                             "kind": "product_category",
                                             "labels": [],
                                             "picture": null,
+                                            "title": "Seria U8040",
+                                            "niceUrl": "damskie/obuwie/klasyczne/seria_u8040",
+                                            "children": []
+                                        },
+                                        {
+                                            "kind": "product_category",
+                                            "labels": [],
+                                            "picture": null,
                                             "title": "Seria BB100",
                                             "niceUrl": "damskie/obuwie/klasyczne/seria_bb100",
+                                            "children": []
+                                        },
+                                        {
+                                            "kind": "product_category",
+                                            "labels": [],
+                                            "picture": null,
+                                            "title": "Seria 370",
+                                            "niceUrl": "damskie/obuwie/klasyczne/seria_370",
                                             "children": []
                                         }
                                     ]
@@ -1146,14 +1146,6 @@
                                             "children": []
                                         }
                                     ]
-                                },
-                                {
-                                    "kind": "product_category",
-                                    "labels": [],
-                                    "picture": null,
-                                    "title": "Sandały",
-                                    "niceUrl": "damskie/obuwie/sandaly",
-                                    "children": []
                                 }
                             ]
                         },

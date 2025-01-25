@@ -5,6 +5,7 @@ namespace App\Modules\Parser\Service;
 use App\Jobs\LoadingImageProduct;
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\HttpPage;
+use App\Modules\NBRussia\Helper\MenuListing;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Service\CategoryParserService;
@@ -20,20 +21,25 @@ class ParserNB extends ParserAbstract
     protected string $brand_name = 'New Balance';
 
 
-    public function parserCategories()
+    public function parserCategories(): array
     {
-        $data = $this->httpPage->getPage($this->brand->url);
+        set_time_limit(1000);
+        /*$data = $this->httpPage->getPage($this->brand->url);
         $queries = $this->getQueries($data);
         $menu = [];
         foreach ($queries as $query) {
             if (isset($query['state']['data']['menu']))
                 $menu = $query['state']['data']['menu'];
         }
+        */
+        $menu = MenuListing::categories();
+        //dd($menu);
 
         $children = $menu['children'];
         foreach ($children as $child) {
             $this->addCategory($child);
         }
+        set_time_limit(30);
         return $menu;
     }
 
@@ -121,9 +127,6 @@ class ParserNB extends ParserAbstract
             );
         }
 
-
-       // dd($products[0]);
-
         foreach ($products as $product) {
             //Ищем товар в базе по Id
             $parser_product = ProductParser::where('maker_id', $product['id'])->first();
@@ -134,15 +137,15 @@ class ParserNB extends ParserAbstract
                 $this->createProduct($product);
             }
 
-            //Если не нашли
         }
-
+        return [];
     }
 
-    private function createProduct(mixed $product)
+    private function createProduct(mixed $product): void
     {
+        dd($product);
         //Создаем массив данных для добавления. Название, Модель, Изображения
-        $id = $product['id'];
+        $maker_id = $product['id'];
         $name = GoogleTranslateForFree::translate('pl','ru', $product['name']);
         $image_urls = array_map(function ($item) {
             return $this->brand->url . '/picture/' . str_replace('{imageSafeUri}', '', $item);
@@ -151,15 +154,15 @@ class ParserNB extends ParserAbstract
         $price_base = $product['prices']['basePrice']['gross'];
         $price_sell = $product['prices']['sellPrice']['gross'];
 
-        $parser_categories = array_map(function ($item) {
-            return Category::where('brand_id', $this->brand->id)->where('url', $item['niceUrl'])->first();
-        }, $product['categories']);
-
-        $main_category_id = null;
+        $parser_categories = array_filter(array_map(function ($item) {
+            return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item['niceUrl'])->where('active', true)->first();
+        }, $product['categories']));
+        dd([$product['categories'],$parser_categories]);
+        $main_category = null;
         $categories = [];
         /** @var CategoryParser[]  $parser_categories */
         for($i = 0; $i < count($parser_categories); $i++) {
-            if ($i == 0) $main_category_id = $parser_categories[$i]->category_id;
+            if ($i == 0) $main_category = $parser_categories[$i]->category;
             if ($i > 0) $categories[] = $parser_categories[$i]->category_id;
         }
         $model = '';
@@ -168,8 +171,12 @@ class ParserNB extends ParserAbstract
             if ($property['name'] == 'Model') $model = trim($property['value']['dataList'][0]);
             if ($property['name'] == 'Kolor') $color = trim($property['value']['dataList']);
         }
+        $attributes = $main_category->all_attributes();
+
+        dd($attributes);
 
         $_products = []; //Массив вариантов для Модификации
+        $data = [];
         //Если есть варианты
         foreach ($product['variants'] as $variant) {
             $ean = $variant['ean'];
@@ -177,20 +184,26 @@ class ParserNB extends ParserAbstract
             $price_base_v = $variant['prices']['basePrice']['gross'];
             $price_sell_v = $variant['prices']['sellPrice']['gross'];
             $availability = $variant['availability']['buyable'];
-            //TODO Создавать если $availability ?? Проверить наличие на сайте
+
             $size = null;
             foreach ($variant['options'] as $option) {
                 if ($option['name'] == 'Rozmiar' || $option['groupId'] == '32') $size = $option['value'];
             }
+            $data[$size] = [
+                'price_base' => $price_base_v,
+                'price_sell' => $price_sell_v,
+                'availability' => $availability,
+            ];
             //К названию добавляем Размер, ищем и назначаем атрибут, остальные данные дублируем
             $name_v = $name . ' ' . $size;
 
-            $_product = Product::register($name_v, $code, $main_category_id);
+            $_product = Product::register($name_v, $code, $main_category->id);
             foreach ($categories as $category) {//Назначаем категории
                 $_product->categories()->attach($category);
             }
             $_product->not_sale = !$availability;
             $_product->model = $model;
+            $_product->barcode = $ean;
             $_product->save();
 
             foreach ($image_urls as $image_url) {
@@ -206,7 +219,15 @@ class ParserNB extends ParserAbstract
 
             $_products[] = $_product;
         }
-        ProductParser::register($name, $url, $_products[0]->id);
+
+        $product_parser = ProductParser::register($name, $url, $_products[0]->id);
+        $product_parser->maker_id = $maker_id;
+        $product_parser->model = $model;
+        $product_parser->price_base = $price_base;
+        $product_parser->price_sell = $price_sell;
+        $product_parser->data = $data;
+
+        $product_parser->save();
         //Создаем парсер-товар, ссылка на первый размер
 
         //Заполняем данные, привязываем категории

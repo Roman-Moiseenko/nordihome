@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $id
  * @property string $name //Наименование группы по первому товару
  * @property int $base_product_id //Базовый продукт unique
+ * @property string $description
  * @property string $attributes_json
  * @property Product[] $products
  * @property Attribute[] $prod_attributes

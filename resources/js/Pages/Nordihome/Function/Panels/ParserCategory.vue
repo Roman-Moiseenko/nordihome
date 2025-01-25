@@ -26,8 +26,8 @@ const props = defineProps({
 })
 
 function categories() {
-    router.post(route('admin.nordihome.parser.categories'))
-    return;
+//    router.post(route('admin.nordihome.parser.categories'))
+  //  return;
     axios.post(route('admin.nordihome.parser.categories')).then(response => {
         console.log(response.data)
     })

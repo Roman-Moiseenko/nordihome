@@ -24,7 +24,8 @@ const props = defineProps({
 })
 
 function categories() {
-   // router.post(route('admin.nbrussia.test'))
+    //router.post(route('admin.nbrussia.parser.categories'))
+    //return;
     axios.post(route('admin.nbrussia.parser.categories')).then(response => {
         console.log(response.data)
     })

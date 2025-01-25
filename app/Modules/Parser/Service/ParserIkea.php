@@ -17,7 +17,7 @@ class ParserIkea extends ParserAbstract
 
     public function parserCategories()
     {
-        set_time_limit(300);
+        set_time_limit(1000);
         $data = $this->httpPage->getPage(self::API_URL_CATEGORIES);
         $categories = json_decode($data, true);
         foreach ($categories as $category) {

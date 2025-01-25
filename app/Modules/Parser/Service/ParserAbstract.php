@@ -37,13 +37,17 @@ abstract class ParserAbstract
 
     abstract public function availablePrice(string $code): bool;
 
+    /**
+     * Парсит товары по категории текущего бренда и добавляем товары в каталог
+     */
     final public function getProductsByCategory(?int $category_id)
     {
         if (is_null($category_id)) {
-            $categories = CategoryParser::where('active', true)->getModels();
+            $categories = CategoryParser::where('active', true)->where('brand_id', $this->brand->id)->getModels();
         } else {
             $category = CategoryParser::find($category_id);
             $categories = CategoryParser::where('active', true)
+                ->where('brand_id', $this->brand->id)
                 ->where('_lft', '>=', $category->_lft)
                 ->where('_rgt', '<=', $category->_rgt)
                 ->getModels();
@@ -54,6 +58,10 @@ abstract class ParserAbstract
                 $this->parserProductsByUrl($this->brand->url . '/' . $category->url);
         }
     }
+
+    /**
+     * Функция распарсивания товара и добавления в каталог
+     */
     abstract protected function parserProductsByUrl(string $url);
 
 }

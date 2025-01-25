@@ -13,11 +13,11 @@ use Kalnoy\Nestedset\NodeTrait;
 /**
  * @property int $id
  * @property string $name
- * @property string $url
+ * @property string $url уникальный для исключения двойного парсинга
  * @property bool $active
  * @property int $parent_id
  * @property int $category_id
- * @property int $brand_id .. для фильтра, на будущее
+ * @property int $brand_id Привязка к бренду
  *
  * @property int $_lft
  * @property int $_rgt
@@ -38,7 +38,7 @@ class CategoryParser extends Model
         'active',
     ];
 
-    public static function register($name, $url, $parent_id = null): self
+    public static function register(string $name, string $url, ?int $parent_id): self
     {
         return self::create([
             'name' => $name,
