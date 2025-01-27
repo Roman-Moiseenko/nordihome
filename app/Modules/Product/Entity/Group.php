@@ -74,7 +74,7 @@ class Group extends Model implements DataWidgetInterface
         $data->title = $this->name;
         $data->items = array_map(function (Product $product) {
             return [
-                'image' => $product->photo,
+                'image' => $product->getImage(),
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
                 'price' => $product->getPrice(),

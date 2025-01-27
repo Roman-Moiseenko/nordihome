@@ -16,7 +16,7 @@ class DraftCommand extends Command
         /** @var Product[] $products */
         $products = Product::where('published', true)->getModels();
         foreach ($products as $product) {
-            if (is_null($product->photo)) {
+            if (is_null($product->gallery)) {
                 $product->published = false;
                 $product->save();
 

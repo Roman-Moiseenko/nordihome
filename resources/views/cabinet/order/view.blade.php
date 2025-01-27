@@ -46,10 +46,10 @@
             <div class="image">
                 @if($item->product->isPublished())
                     <a href="{{ route('shop.product.view', $item->product->slug) }}" target="_blank">
-                        <img src="{{ $item->product->photo->getThumbUrl('mini') }}"/>
+                        <img src="{{ $item->product->getImage('mini') }}"/>
                     </a>
                 @else
-                    <img src="{{ $item->product->photo->getThumbUrl('mini') }}"/>
+                    <img src="{{ $item->product->getImage('mini') }}"/>
                 @endif
             </div>
             <div class="info">

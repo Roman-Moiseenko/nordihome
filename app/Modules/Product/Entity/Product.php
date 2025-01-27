@@ -12,6 +12,7 @@ use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
+use App\Modules\Base\Traits\GalleryField;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
@@ -32,7 +33,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -92,9 +92,8 @@ use JetBrains\PhpStorm\Pure;
  * @property Category $category
  * @property Category[] $categories
  * @property Attribute[] $prod_attributes
- * @property Photo $photo
- * @property Photo $photo_next
- * @property Photo[] $photos
+ *
+ *
  * @property Video[] $videos
  *
  * @property ProductPriceRetail[] $prices
@@ -129,7 +128,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class Product extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, GalleryField;
 
     const FREQUENCY_MAJOR = 101;
     const FREQUENCY_AVERAGE = 102;
@@ -640,6 +639,7 @@ class Product extends Model
         return StorageItem::where('product_id', $this->id)->getModels();
     }
 
+/*
     public function getImage(string $thumb = ''): string
     {
         if (empty($this->photo->file)) {
@@ -652,7 +652,7 @@ class Product extends Model
             }
         }
     }
-
+*/
     /**
      * Действующая акция или null
      * @return Promotion|null
@@ -803,7 +803,7 @@ class Product extends Model
             Attribute::class, 'attributes_products',
             'product_id', 'attribute_id')->withPivot('value');
     }
-
+/*
     public function photo(): MorphOne
     {
         return $this->morphOne(Photo::class, 'imageable')->where('sort', '=', 0);
@@ -818,7 +818,7 @@ class Product extends Model
     {
         return $this->photos()->where('sort', '>', 0)->first();
     }
-
+*/
     public function videos(): MorphMany
     {
         return $this->morphMany(Video::class, 'videoable');

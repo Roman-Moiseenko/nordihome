@@ -58,7 +58,7 @@ class ClearCommand extends Command
         $products = Product::where('id', '>', $product_id)->getModels();
         $this->info('Товаров - ' . count($products));
         foreach ($products as $product) {
-            foreach ($product->photos as $photo) {
+            foreach ($product->gallery as $photo) {
                 $photo->delete();
             }
         }

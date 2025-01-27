@@ -263,7 +263,7 @@ class Cart
     {
         return [
             'id' => $item->id,
-            'img' => is_null($item->getProduct()->photo) ? $item->getProduct()->getImage() : $item->getProduct()->photo->getThumbUrl('thumb'),
+            'img' => $item->getProduct()->getImage('thumb'),
             'name' => $item->getProduct()->name,
             'url' => route('shop.product.view', $item->getProduct()->slug),
             'product_id' => $item->getProduct()->id,

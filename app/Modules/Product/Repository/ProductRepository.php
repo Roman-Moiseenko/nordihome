@@ -177,7 +177,7 @@ class ProductRepository
                     'quantity' => $product->pivot->quantity,
                 ];
             }),
-            'photos' => $product->photos()->get()->map(function (Photo $photo) {
+            'photos' => $product->gallery()->get()->map(function (Photo $photo) {
                 return [
                     'id' => $photo->id,
                     'name' => $photo->file,

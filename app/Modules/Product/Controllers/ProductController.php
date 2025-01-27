@@ -258,7 +258,7 @@ class ProductController extends Controller
     public function get_images(Product $product)
     {
         $result = [];
-        foreach ($product->photos as $photo) {
+        foreach ($product->gallery as $photo) {
             $result[] = [
                 'id' => $photo->id,
                 'url' => $photo->getUploadUrl(),
@@ -277,12 +277,14 @@ class ProductController extends Controller
 
     public function up_image(Request $request, Product $product)
     {
+        dd('Ошибка');
         $this->service->upPhoto($request->integer('photo_id'), $product);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function down_image(Request $request, Product $product)
     {
+        dd('Ошибка');
         $this->service->downPhoto($request->integer('photo_id'), $product);
         return redirect()->back()->with('success', 'Сохранено');
     }

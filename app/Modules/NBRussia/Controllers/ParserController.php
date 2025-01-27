@@ -2,7 +2,8 @@
 
 namespace App\Modules\NBRussia\Controllers;
 
-use App\Modules\NBRussia\Service\ParserService;
+use App\Modules\Base\Entity\Photo;
+
 use App\Modules\Parser\Service\ParserNB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,6 +39,13 @@ class ParserController
     }
 
 
+    public function image()
+    {
+        // https://nbsklep.pl/picture/a039472f606caffbd63a5420ca26b717.jpg
+     /*   $data = Photo::uploadByUrlProxy("https://nbsklep.pl/picture/a039472f606caffbd63a5420ca26b717.jpg");
+
+        dd($data);*/
+    }
 /*
     public function products(Request $request)
     {

@@ -99,7 +99,7 @@ class ParserService
             }
 
             $product->save();
-            if (!empty($parser_product['image'])) $product->photo()->save(Photo::uploadByUrlProxy($parser_product['image']));
+            $product->addImageByUrl($parser_product['image']);
             $product->refresh();
 
             //Проверяем есть ли товары в составе

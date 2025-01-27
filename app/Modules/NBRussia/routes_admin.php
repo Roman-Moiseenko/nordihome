@@ -21,6 +21,7 @@ Route::group(
         Route::get('/', 'ParserController@index')->name('index');
         Route::post('/categories', 'ParserController@categories')->name('categories');
         Route::post('/products', 'ParserController@products')->name('products');
+        Route::post('/image', 'ParserController@image')->name('image');
 
     });
 

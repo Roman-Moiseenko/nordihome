@@ -53,14 +53,8 @@ class PhotoCommand extends Command
         foreach ($products as $product) {
             $change = false;
 
+            $product->reSort();
 
-            foreach ($product->photos as $i => $photo) {
-                if ($photo->sort != $i) {
-                    $change = true;
-                    $photo->sort = $i;
-                    $photo->save();
-                }
-            }
 
             if ($change) {
                 $_count++;

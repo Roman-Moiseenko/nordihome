@@ -6,11 +6,16 @@ namespace App\Modules\Base\Entity;
 use App\Jobs\ClearTempFile;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Service\HttpPage;
+use App\Modules\Setting\Entity\Setting;
+use App\Modules\Setting\Repository\SettingRepository;
+use App\Modules\Setting\Service\SettingService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
+use JetBrains\PhpStorm\Deprecated;
 use function class_basename;
 use function now;
 use function public_path;
@@ -102,43 +107,57 @@ class Photo extends Model
         return $photo;
     }
 
+    #[Deprecated]
     public static function uploadByUrlProxy(string $url, string $type = '', int $sort = 0, string $alt = ''): self
     {
+        return self::uploadByUrl($url, $type, $sort, $alt);
+        /*
         $storage = public_path() . '/temp/';
         $upload_file_name = basename($url);
+        $full_filename = $storage . uniqid() . '.' . pathinfo($upload_file_name, PATHINFO_EXTENSION);
 
-        //Старая версия
         $http = new HttpPage();
         $content = $http->getPage($url);// dlFile($url);
-
-        //TODO Протестировать !!!
-        //$content = Http::get($url)->body();
-
-        $fp = fopen($storage . $upload_file_name,'x');
+        $fp = fopen($full_filename,'x');
         fwrite($fp, $content);
         fclose($fp);
 
         $upload = new UploadedFile(
-            $storage . $upload_file_name,
+            $full_filename,
             $upload_file_name,
             null, null, true);
 
-        ClearTempFile::dispatch($storage . $upload_file_name)->delay(now()->addMinutes(30)); //Удаление временного файла через 30 минут
-        return self::upload($upload, $type, $sort, $alt);
+        ClearTempFile::dispatch($full_filename)->delay(now()->addMinutes(10)); //Удаление временного файла через 30 минут
+        return self::upload($upload, $type, $sort, $alt); */
     }
 
     public static function uploadByUrl(string $url, string $type = '', int $sort = 0, string $alt = ''): self
     {
+        //Настройка парсера
+        Log::info('1');
+        $is_proxy = (new SettingRepository())->getParser()->with_proxy;
+        Log::info((string)$is_proxy);
         $storage = public_path() . '/temp/';
         $upload_file_name = basename($url);
-        copy($url, $storage . $upload_file_name);
+        $full_filename = $storage . uniqid() . '.' . pathinfo($upload_file_name, PATHINFO_EXTENSION);
+
+        if ($is_proxy) {
+            $http = new HttpPage();
+            $content = $http->getPage($url);
+
+            $fp = fopen($full_filename,'x');
+            fwrite($fp, $content);
+            fclose($fp);
+        } else {
+            copy($url, $full_filename);
+        }
 
         $upload = new UploadedFile(
-            $storage . $upload_file_name,
+            $full_filename,
             $upload_file_name,
             null, null, true);
 
-        ClearTempFile::dispatch($storage . $upload_file_name)->delay(now()->addMinutes(30)); //Удаление временного файла через 30 минут
+        ClearTempFile::dispatch($full_filename)->delay(now()->addMinutes(10)); //Удаление временного файла через 30 минут
         return self::upload($upload, $type, $sort, $alt);
     }
 
@@ -193,7 +212,7 @@ class Photo extends Model
     }
 
     //
-    public static function boot()
+    public static function boot(): void
     {
         parent::boot();
 
@@ -218,7 +237,7 @@ class Photo extends Model
             if (is_file($this->getUploadFile()) &&
                 !is_file($thumb_file) &&
                 (in_array($this->ext(), ['jpg', 'png', 'jpeg']))) {
-                $manager = new ImageManager(['driver' => 'imagick']);
+                $manager = new ImageManager(); //['driver' => 'imagick']
                 $img = $manager->make($this->getUploadFile());
 
                 if (isset($params['width']) && isset($params['height'])) $img->fit($params['width'], $params['height']);

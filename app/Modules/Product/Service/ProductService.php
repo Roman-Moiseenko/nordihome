@@ -656,57 +656,38 @@ class ProductService
     ///Работа с Фото Продукта
     public function addPhoto(Request $request, Product $product): Photo
     {
+        return $product->addImage($request->file('file'));
+        /*
         if (empty($file = $request->file('file'))) throw new \DomainException('Нет файла');
         $sort = count($product->photos);
         $photo = Photo::upload($file, '', $sort);
         $product->photo()->save($photo);
         $photo->refresh();
-        return $photo;
+        return $photo; */
     }
 
     public function delPhoto(Request $request, Product $product): void
     {
         //return;
+        $product->delImage($request->integer('photo_id'));
+        /*
         $photo = Photo::find($request->integer('photo_id'));
         $photo->delete();
         foreach ($product->photos as $i => $photo) {
             $photo->update(['sort' => $i]);
-        }
+        }*/
     }
 
+    #[Deprecated]
     public function upPhoto(int $photo_id, Product $product): void
     {
-        $photos = [];
-        foreach ($product->photos as $i => $photo) {
-            $photos[] = $photo;
-        }
-
-        for ($i = 1; $i < count($photos); $i++) {
-            if ($photos[$i]->id == $photo_id) {
-                $prev = $photos[$i - 1]->sort;
-                $next = $photos[$i]->sort;
-                $photos[$i]->update(['sort' => $prev]);
-                $photos[$i - 1]->update(['sort' => $next]);
-            }
-        }
+        $product->upImage($photo_id);
     }
 
+    #[Deprecated]
     public function downPhoto(int $photo_id, Product $product): void
     {
-        /** @var Photo[] $photos */
-        $photos = [];
-        foreach ($product->photos as $i => $photo) {
-            $photos[] = $photo;
-        }
-
-        for ($i = 0; $i < count($photos) - 1; $i++) {
-            if ($photos[$i]->id == $photo_id) {
-                $prev = $photos[$i + 1]->sort;
-                $next = $photos[$i]->sort;
-                $photos[$i]->update(['sort' => $prev]);
-                $photos[$i + 1]->update(['sort' => $next]);
-            }
-        }
+        $product->downImage($photo_id);
     }
 
     public function movePhoto(Request $request, Product $product): void
@@ -723,15 +704,18 @@ class ProductService
     public function setPhoto(Request $request, Product $product): void
     {
         $id = $request->integer('photo_id');
-        foreach ($product->photos as $photo) {
+        $product->setAlt(photo_id: $id,
+            alt: $request->string('alt')->trim()->value(),
+            title: $request->string('title')->trim()->value(),
+            description: $request->string('description')->trim()->value(),
+        );
+      /*  foreach ($product->gallery as $photo) {
             if ($photo->id === $id) {
                 $photo->update([
-                    'alt' => $request->string('alt')->trim()->value(),
-                    'title' => $request->string('title')->trim()->value(),
-                    'description' => $request->string('description')->trim()->value(),
+
                 ]);
             }
-        }
+        }*/
     }
 
     public function published(Product $product): void
@@ -739,8 +723,8 @@ class ProductService
         //TODO Проверка на заполнение и на модерацию - добавить другие проверки
         if ($product->getPriceRetail() == 0) throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
 
-        if (is_null($product->photo)) {
-            throw new \DomainException('Для товара ' . $product->name . ' нет главного фото');
+        if ($product->gallery()->count() == 0) {
+            throw new \DomainException('Для товара ' . $product->name . ' нет изображений');
         }
         $product->setPublished();
     }

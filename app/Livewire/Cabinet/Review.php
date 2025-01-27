@@ -43,7 +43,7 @@ class Review extends Component
             $this->caption = 'Изменить';
             $this->edit = false;
             $this->service->update($this->review, $this->text, $this->rating);
-            if (!is_null($this->image)) $this->review->photo()->save(Photo::upload($this->image));
+            if (!is_null($this->image)) $this->review->addPhoto($this->image);
         } else {
             $this->edit = true;
             $this->caption = 'Сохранить';

@@ -4,13 +4,13 @@
         @foreach($modification->products as $_product)
             <div>
                 @if($current_id == $_product->id)
-                    <img src="{{ $product->photo->getThumbUrl('thumb') }}"
-                         alt="{{ $_product->photo->alt }}">
+                    <img src="{{ $product->getImage('thumb') }}"
+                         alt="{{ $_product->name }}">
                 @else
                     <a href="{{ route('shop.product.view', $_product->slug) }}"
                        title="{{ ($_product->isSale() ? '' : 'Снят с продажи! ') . $_product->name }}">
-                        <img src="{{ $_product->photo->getThumbUrl('thumb') }}"
-                             alt="{{ $_product->photo->alt }}">
+                        <img src="{{ $_product->getImage('thumb') }}"
+                             alt="{{ $_product->name }}">
                     </a>
                 @endif
             </div>

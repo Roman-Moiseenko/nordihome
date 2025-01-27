@@ -18,7 +18,7 @@
         <div class="mt-1 font-medium text-base">Отзыв: </div>
         <div class="ml-3">{{ $review->text }}</div>
         @if(!is_null($review->photo))
-            <img src="{{ $review->photo->getThumbUrl('original') }}" />
+            <img src="{{ $review->getPhoto('original') }}" />
         @endif
     </div>
     <hr/>

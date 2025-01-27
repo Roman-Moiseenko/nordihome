@@ -5,6 +5,7 @@ namespace App\Modules\Product\Entity;
 
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
+use App\Modules\Base\Traits\PhotoField;
 use App\Modules\Discount\Entity\DiscountReview;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $status
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Photo $photo
+
  * @property \App\Modules\Base\Entity\Video $video
  * @property DiscountReview $discount
  *
@@ -28,6 +29,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Review extends Model
 {
+    use PhotoField;
+
     const STATUS_DRAFT = 5501;
     const STATUS_MODERATED = 5502;
     const STATUS_PUBLISHED = 5503;
@@ -119,10 +122,6 @@ class Review extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function photo()
-    {
-        return $this->morphOne(\App\Modules\Base\Entity\Photo::class, 'imageable');//->orderBy('sort');;
-    }
 
     public function video()
     {

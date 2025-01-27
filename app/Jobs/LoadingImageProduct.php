@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class LoadingImageProduct implements ShouldQueue
 {
@@ -17,15 +18,13 @@ class LoadingImageProduct implements ShouldQueue
     private Product $product;
     private string $image_url;
     private string $image_alt;
-    private bool $proxy;
 
-    public function __construct(Product $product, string $image_url, string $image_alt = '', bool $proxy = false)
+    public function __construct(Product $product, string $image_url, string $image_alt = '')
     {
         //
         $this->product = $product;
         $this->image_url = $image_url;
         $this->image_alt = $image_alt;
-        $this->proxy = $proxy;
     }
 
     /**
@@ -33,12 +32,8 @@ class LoadingImageProduct implements ShouldQueue
      */
     public function handle(): void
     {
-        $sort = count($this->product->photos);
-        if ($this->proxy) {
-            $photo = Photo::uploadByUrlProxy($this->image_url, '', $sort, $this->image_alt); //Через прокси
-        } else {
-            $photo = Photo::uploadByUrl($this->image_url, '', $sort, $this->image_alt);
-        }
-        $this->product->photo()->save($photo);
+       // Log::info($this->image_url);
+        $photo = $this->product->addImageByUrl($this->image_url);
+        $this->product->setAlt(photo_id: $photo->id, alt: $this->image_alt);
     }
 }

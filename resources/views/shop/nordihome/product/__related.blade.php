@@ -7,7 +7,7 @@
                     <a
                         href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}"
                        class="dropdown-toggle dropdown-hover" aria-expanded="false" id="dropdown-related" aria-haspopup="true">
-                        <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
+                        <img src="{{ $_product->getImage('thumb') }}" alt="{{ $_product->name}}">
                     </a>
                     <div class="item-price">{{ price($_product->getPrice(false, $user)) }}</div>
                     <div class="button">

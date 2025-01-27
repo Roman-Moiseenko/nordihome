@@ -6,6 +6,7 @@ use App\Jobs\LoadingImageProduct;
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\HttpPage;
 use App\Modules\Guide\Entity\Country;
+use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
 use App\Modules\NBRussia\Helper\MenuListing;
@@ -130,6 +131,7 @@ class ParserNB extends ParserAbstract
                 $this->parserProductsByUrl($url . '?page=' .$i, false)
             );
         }
+
         return $products;
         //dd($products);
         //TODO Убрать когда заработает через axios
@@ -169,7 +171,7 @@ class ParserNB extends ParserAbstract
         $maker_id = $product['id'];
         $name = GoogleTranslateForFree::translate('pl','ru', $product['name']);
         $image_urls = array_map(function ($item) {
-            return $this->brand->url . '/picture/' . str_replace('{imageSafeUri}', '', $item);
+            return $this->brand->url . '/picture' . str_replace('{imageSafeUri}', '', $item);
         }, $product['pictures']);
         $url = $product['niceUrl'];
         $price_base = $product['prices']['basePrice']['gross'];
@@ -246,19 +248,24 @@ class ParserNB extends ParserAbstract
             }
             $_product->not_sale = !$availability;
             $_product->model = $model;
-            $_product->barcode = $ean;
+            $_product->barcode = $ean ?? '';
             $_product->name_print = $_product->name;
+            $_product->local = true;
+            $_product->delivery = true;
 
             $_product->brand_id = $this->brand->id;
             $_product->country_id = Country::where('name', 'Польша')->first()->id;
             $_product->vat_id = VAT::where('value', null)->first()->id;
             $_product->measuring_id = Measuring::where('name', 'шт')->first()->id;
+            $_product->marking_type_id = MarkingType::whereRaw("LOWER(name) like '%одежда%'")->first()->id;
+
             $_product->save();
             //Аттрибуты
             $_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
             $_product->prod_attributes()->attach($attr_size->id, ['value' => json_encode($variant_size)]);
 
             //задание на парсинг Фото товара
+            //dd($image_urls);
             foreach ($image_urls as $image_url) {
                 LoadingImageProduct::dispatch($_product, $image_url, $name_v, true);
             }

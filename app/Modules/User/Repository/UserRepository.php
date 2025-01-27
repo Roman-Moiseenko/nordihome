@@ -105,7 +105,7 @@ class UserRepository
     {
         return array_map(function (Wish $wish) {
             return [
-                'img' => $wish->product->photo->getThumbUrl('thumb'),
+                'img' => $wish->product->getImage('thumb'),
                 'name' => $wish->product->name,
                 'url' => route('shop.product.view', $wish->product),
                 'cost' => $wish->product->getPrice(),

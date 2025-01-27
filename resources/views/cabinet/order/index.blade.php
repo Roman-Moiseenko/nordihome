@@ -32,7 +32,7 @@
                     @foreach($order->items()->paginate(4) as $item)
                         <div class="col-6 col-lg-3 ">
                             <div class="order-item-block">
-                                <img src="{{ $item->product->photo->getThumbUrl('thumb') }}">
+                                <img src="{{ $item->product->getImage('thumb') }}">
                                 <span class="order-item-container"><span class="order-item-quantity fs-8">{{ $item->quantity }} шт.</span></span>
                             </div>
                         </div>

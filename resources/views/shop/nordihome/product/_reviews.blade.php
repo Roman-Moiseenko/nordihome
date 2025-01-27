@@ -21,9 +21,7 @@
                 </div>
                 @if(!is_null($review->photo))
                 <div class="photo mt-2">
-
-                        <img src="{{ $review->photo->getThumbUrl('mini') }}">
-
+                    <img src="{{ $review->getImage('mini') }}">
                 </div>
                 @endif
             </div>

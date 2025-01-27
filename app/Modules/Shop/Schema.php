@@ -291,7 +291,7 @@ class Schema
                 return [
                     $photo->getThumbUrl('card'),
                 ];
-            }, $product->photo()->getModels()),
+            }, $product->gallery()->getModels()),
             'url' => route('shop.product.view', $product->slug),
             'sku' => $product->code,
             'mpn' => $product->code,
@@ -374,7 +374,7 @@ class Schema
                 "mainEntityOfPage" => route('shop.product.view', $product->slug),
                 "url" => route('shop.product.view', $product->slug),
                 "name" => $product->name,
-                "image" => is_null($product->photo) ? $product->getImage() : $product->photo->getThumbUrl('card'),
+                "image" => $product->getImage('card'),
                 "description" => strip_tags($product->description),
                 "Offers" => [
                     "@type" => "Offer",

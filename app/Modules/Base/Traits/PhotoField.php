@@ -3,13 +3,14 @@
 namespace App\Modules\Base\Traits;
 
 use App\Modules\Base\Entity\Photo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * @property Photo $photo
  */
 trait PhotoField
 {
-    public function photo()
+    public function photo(): MorphOne
     {
         return $this->morphOne(Photo::class, 'imageable')->withDefault();
     }

@@ -5,7 +5,7 @@
             @foreach($bonus as $_product)
                 <div class="item-bonus px-2">
                     <a href="{{ route('shop.product.view', $_product->slug) }}" title="{{ $_product->name }}">
-                        <img src="{{ $_product->photo->getThumbUrl('thumb') }}" alt="{{ $_product->photo->alt }}">
+                        <img src="{{ $_product->getImage('thumb') }}" alt="{{ $_product->name }}">
                     </a>
                     <div class="price-block">
                         <div class="discount-price">{{ price($_product->pivot->discount) }}</div>

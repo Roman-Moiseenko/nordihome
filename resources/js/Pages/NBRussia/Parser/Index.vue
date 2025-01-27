@@ -5,6 +5,7 @@
 
         <el-button @click="categories" class="mt-2">Категории</el-button>
         <el-button @click="products" class="mt-2">Товары</el-button>
+        <el-button type="warning" plain @click="image" class="mt-2">Изображение</el-button>
 
     </el-config-provider>
 </template>
@@ -22,6 +23,10 @@ const props = defineProps({
         type: String,
     }
 })
+
+function image() {
+    router.post(route('admin.nbrussia.parser.image'))
+}
 
 function categories() {
     //router.post(route('admin.nbrussia.parser.categories'))

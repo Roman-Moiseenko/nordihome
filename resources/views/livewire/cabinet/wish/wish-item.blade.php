@@ -2,7 +2,7 @@
     <div class="box-card d-flex wish-item">
         <div class="wish-item-img">
             <a href="{{ route('shop.product.view', $product->slug) }}" target="_blank"><img
-                    src="{{ $product->photo->getThumbUrl('thumb') }}"/></a>
+                    src="{{ $product->getImage('thumb') }}"/></a>
         </div>
         <div class="wish-item-info">
             <a href="{{ route('shop.product.view', $product->slug) }}" target="_blank">{{ $product->name }}</a>

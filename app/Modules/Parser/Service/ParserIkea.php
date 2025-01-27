@@ -74,4 +74,9 @@ class ParserIkea extends ParserAbstract
     {
         // TODO: Implement parserProductsByUrl() method.
     }
+
+    public function parserProductByData(array $product): void
+    {
+        // TODO: Implement parserProductByData() method.
+    }
 }

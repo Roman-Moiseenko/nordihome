@@ -33,14 +33,14 @@ class Cart extends Component
     }
 
     #[On('update-header-cart')]
-    public function refresh_fields()
+    public function refresh_fields(): void
     {
         $this->cart->loadItems();
         //dd(count($this->cart->getItems()));
         $this->items = array_map(function (CartItem $item) {
             return [
                 'id' => $item->id,
-                'image' => is_null($item->product->photo) ? $item->product->getImage() : $item->product->photo->getThumbUrl('thumb'),
+                'image' => $item->product->getImage('thumb'),
                 'name' => $item->product->name,
                 'url' => route('shop.product.view', $item->getProduct()->slug),
                 'product_id' => $item->product->id,

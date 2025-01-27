@@ -3,11 +3,11 @@
         <div class="product-card-image">
             <a href="{{ route('shop.product.view', $product->slug) }}">
                 <img class="product-card-image-main"
-                     src="{{ (is_null($product->photo)) ? '/images/no-image.jpg' : $product->photo->getThumbUrl('catalog-watermark') }}"
-                     alt="{{ empty($product->photo->alt) ? $product->name : $product->photo->alt }}">
+                     src="{{ $product->getImage('catalog-watermark') }}"
+                     alt="{{ $product->name }}">
                 <img class="product-card-image-hover"
-                     src="{{ (is_null($product->photo_next())) ? '/images/no-image.jpg' : $product->photo_next()->getThumbUrl('catalog-watermark') }}"
-                     alt="{{ empty($product->photo_next()->alt) ? $product->name : $product->photo_next()->alt }}">
+                     src="{{ $product->getImageNext('catalog-watermark') }}"
+                     alt="{{ $product->name }}">
 
                 @if($product->hasPromotion())
                     <div class="promotion-label"><span>Акция</span></div>

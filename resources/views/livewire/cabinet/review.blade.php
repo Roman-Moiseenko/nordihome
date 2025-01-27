@@ -38,7 +38,7 @@
     <div class="mt-3">
         @if(!is_null($review->photo))
             <div class="">Фотография товара</div>
-            <img src="{{ $review->photo->getThumbUrl('thumb') }}" class="mt-2">
+            <img src="{{ $review->getImagel('thumb') }}" class="mt-2">
         @endif
         @if($edit)
             <div

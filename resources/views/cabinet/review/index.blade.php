@@ -13,7 +13,7 @@
         <div class="box-card d-flex review-item">
             <div class="product-img">
                 <a href="{{ route('shop.product.view', $review->product->slug) }}" target="_blank"><img
-                        src="{{ $review->product->photo->getThumbUrl('mini') }}"/></a>
+                        src="{{ $review->product->getImage('mini') }}"/></a>
             </div>
             <div class="product-info">
                 <a href="{{ route('shop.product.view', $review->product->slug) }}" target="_blank">{{ $review->product->name }}</a>
