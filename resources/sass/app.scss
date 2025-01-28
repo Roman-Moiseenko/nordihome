@@ -25,6 +25,11 @@
     background-color: rgb(2 6 23 / var(--tw-bg-opacity))!important;
     @apply text-white;
 }
+.light-header {
+    --tw-bg-opacity: 1;
+    background-color: rgb(102 105 107 / var(--tw-bg-opacity))!important;
+    @apply text-white;
+}
 
 [type='checkbox'],[type='radio'] {
     border: 0 !important;

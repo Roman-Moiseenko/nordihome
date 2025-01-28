@@ -16,6 +16,10 @@ class InventoryProduct extends AccountingProduct
 {
     public $timestamps = false;
 
+    public $casts = [
+        'cost' => 'float',
+    ];
+
     protected $fillable = [
         'cost',
         'formal',

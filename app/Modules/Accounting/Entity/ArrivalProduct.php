@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $arrival_id
- * @property int $remains //Остаток для фильтрации
+ * @property float $remains //Остаток для фильтрации
  * @property float $cost_currency //В валюте документа
  * @property int $supply_product_id //На основе Заказа
  * @property ArrivalDocument $document
@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class ArrivalProduct extends AccountingProduct
 {
     protected $table = 'arrival_products';
+    public $casts = [
+        'remains' => 'float',
+    ];
     protected $fillable = [
         'arrival_id',
         'product_id',

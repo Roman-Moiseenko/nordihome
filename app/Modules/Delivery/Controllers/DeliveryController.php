@@ -6,11 +6,15 @@ namespace App\Modules\Delivery\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Repository\DeliveryRepository;
+use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Контроллер работы с выдачей товара OrderExpense и доставкой для Склада
@@ -19,76 +23,119 @@ class DeliveryController extends Controller
 {
     private ExpenseService $expenseService;
     private DeliveryRepository $repository;
+    private CalendarService $calendarService;
 
-    public function __construct(ExpenseService $expenseService, DeliveryRepository $repository)
+    public function __construct(
+        ExpenseService $expenseService,
+        DeliveryRepository $repository,
+        CalendarService $calendarService,
+    )
     {
         $this->middleware(['auth:admin', 'can:delivery', 'can:order']);
         $this->expenseService = $expenseService;
         $this->repository = $repository;
+        $this->calendarService = $calendarService;
     }
 
-    public function assembly(Request $request): \Inertia\Response
+    /**
+     * Все распоряжения, кроме отмененных
+     */
+    public function all(Request $request): Response
     {
-
-        $expenses = $this->repository->getAssembly($request, $filters);
-        return Inertia::render('Delivery/Assembly/Index', [
+        $expenses = $this->repository->getAll($request, $filters);
+        return Inertia::render('Delivery/All/Index', [
             'expenses' => $expenses,
             'filters' => $filters,
             'works' => Worker::where('active', true)->get(),
         ]);
-
-
     }
 
-    public function index_local(Request $request)
+    /**
+     * Распоряжения на упаковку
+     */
+    public function to_loader(Request $request): Response
     {
-        return $this->view($request, OrderExpense::DELIVERY_LOCAL);
+        $expenses = $this->repository->getLoader($request);
+        return Inertia::render('Delivery/Loader/Index', [
+            'expenses' => $expenses,
+            'works' => Worker::where('active', true)->get(),
+        ]);
     }
 
-    public function index_region(Request $request)
+    /**
+     * Распоряжения на доставку
+     */
+    public function to_delivery(Request $request): Response
     {
-        return $this->view($request, OrderExpense::DELIVERY_REGION);
+        $local = $this->repository->getCalendar();
+        $incomplete = $this->repository->getCalendar(false);
+        $region = $this->repository->getRegion();
+        $ozon = $this->repository->getOzon();
+        return Inertia::render('Delivery/Delivery/Index', [
+            'local' => $local,
+            'incomplete' => $incomplete,
+            'region' => $region,
+            'ozon' => $ozon,
+            'drivers' => Worker::where('active', true)->where('driver', true)->get(),
+            'assembles' => Worker::where('active', true)->where('assemble', true)->get(),
+        ]);
     }
 
-    public function index_storage(Request $request)
+   //Назначение рабочих
+    /**
+     * Назначаем упаковщика => Груз (распоряжение) собирается
+     */
+    public function set_loader(Request $request, OrderExpense $expense): RedirectResponse
     {
-        return $this->view($request, OrderExpense::DELIVERY_STORAGE);
+        $this->expenseService->setLoader($expense, $request->integer('worker_id'));
+        return redirect()->back()->with('success', 'Упаковщик назначен');
     }
 
-    private function view(Request $request, $type)
+    /**
+     * Назначаем доставщика => Груз (распоряжение) на доставке
+     */
+    public function set_driver(Request $request, OrderExpense $expense): RedirectResponse
     {
-        $workers = Worker::where('active', true)->get();
-        $filter = $request['filter'] ?? 'new';
-        $filter_count = $this->getFilterCount($type);
-
-        $query = $this->repository->getExpense($type, $filter);
-        $expenses = $this->pagination($query, $request, $pagination);
-        return view('admin.delivery.index', compact('expenses', 'type', 'filter_count', 'filter', 'workers', 'pagination'));
-
+        $this->expenseService->setDriver($expense, $request->integer('worker_id'));
+        return redirect()->back()->with('success', 'Доставщик назначен');
     }
 
-    #[ArrayShape(['new' => "int", 'assembly' => "int", 'delivery' => "int"])]
-    public function getFilterCount(int $type_delivery): array
+    /**
+     * Назначаем Сборщика мебели => Статус не меняется, для учета работ.
+     */
+    public function set_assemble(Request $request, OrderExpense $expense): RedirectResponse
     {
-        return [
-            'new' => OrderExpense::where('type', $type_delivery)->where('status', OrderExpense::STATUS_ASSEMBLY)->count(),
-            'assembly' => OrderExpense::where('type', $type_delivery)->where('status', OrderExpense::STATUS_ASSEMBLING)->count(),
-            'delivery' => OrderExpense::where('type', $type_delivery)->where('status', OrderExpense::STATUS_DELIVERY)->count(),
-        ];
+        $this->expenseService->setAssemble($expense, $request->integer('worker_id'));
+        return redirect()->back()->with('success', 'Сборщик назначен');
     }
 
-    public function completed(OrderExpense $expense)
+    /**
+     * Груз (распоряжение) выдан
+     */
+    public function completed(OrderExpense $expense): RedirectResponse
     {
         $this->expenseService->completed($expense);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Распоряжение выдано');
     }
 
-    public function assembling(Request $request, OrderExpense $expense): \Illuminate\Http\RedirectResponse
+
+    /**
+     * Груз (распоряжение) собран (ожидает доставки)
+     */
+    public function assembled(OrderExpense $expense): RedirectResponse
     {
-        $this->expenseService->assembling($expense, $request->integer('worker_id'));
-        return redirect()->back()->with('success', 'Грузчик назначен');
+        $this->expenseService->assembled($expense);
+        return redirect()->back()->with('success', 'Распоряжение собрано');
     }
 
+    public function set_period(OrderExpense $expense, Request $request): RedirectResponse
+    {
+        $this->calendarService->attach_expense($expense, $request->integer('period_id'));
+        return redirect()->back()->with('success', 'Назначена новая дата отгрузки');
+    }
+
+    //TODO Заменить для доставки ТК на setTrackNumber
+    #[Deprecated]
     public function delivery(Request $request, OrderExpense $expense)
     {
         $this->expenseService->delivery($expense, $request['track'] ?? '');

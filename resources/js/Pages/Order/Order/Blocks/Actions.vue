@@ -65,8 +65,7 @@
     </el-dropdown>
 
     <template v-if="!is_new && !is_awaiting">
-
-        <el-dropdown v-if="is_awaiting || is_issued">
+        <el-dropdown>
             <el-button type="success" class="mr-2">
                 Платежи
                 <el-icon class="el-icon--right">
@@ -81,7 +80,6 @@
                 </div>
             </template>
         </el-dropdown>
-
         <el-dropdown v-if="order.movements.length > 0">
             <el-button type="warning" class="mr-2">
                 Перемещения
@@ -98,7 +96,6 @@
                 </div>
             </template>
         </el-dropdown>
-
         <el-dropdown v-if="order.expenses.length > 0">
             <el-button type="success" plain class="mr-2">
                 Распоряжения на выдачу
@@ -115,8 +112,11 @@
                 </div>
             </template>
         </el-dropdown>
-
     </template>
+    <template v-if="is_view">
+        <el-button type="warning" class="ml-5" @click="onCopy">Скопировать</el-button>
+    </template>
+
     <template v-if="order.status.is_prepaid">
 
     </template>
@@ -272,6 +272,20 @@ function onPayment(val) {
     router.visit(route('admin.order.payment.create', {order: props.order.id}), {
         method: "post",
         data: {method: val},
+        onSuccess: page => {
+            loading.close()
+        }
+    })
+}
+
+function onCopy() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Идет копирование заказа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    router.visit(route('admin.order.copy', {order: props.order.id}), {
+        method: "post",
         onSuccess: page => {
             loading.close()
         }

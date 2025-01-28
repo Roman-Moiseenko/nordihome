@@ -27,7 +27,7 @@ abstract class AccountingProduct extends Model
         parent::__construct($attributes);
 
         $casts = [
-
+            'quantity' => 'float',
         ];
         $fillable = [
             'product_id',

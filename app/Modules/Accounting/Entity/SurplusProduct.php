@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $surplus_id
  *
- * @property int $cost
+ * @property float $cost
  * @property float $remains
  * @property SurplusDocument $document
  */
@@ -16,6 +16,10 @@ class SurplusProduct extends AccountingProduct
 {
     protected $table = 'surplus_products';
     public $timestamps = false;
+    public $casts = [
+        'remains' => 'float',
+        'cost' => 'float',
+    ];
     protected $fillable = [
         'surplus_id',
         'cost',

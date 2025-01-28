@@ -33,6 +33,9 @@
                 <OrderItemsIssued :items=[...order.pre_order] />
             </div>
         </div>
+        <div v-if="is_view">
+            <OrderItemsView :items=[...order.items] />
+        </div>
         <div v-if="order.additions.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
             <h2 class="font-medium text-green-800">Услуги</h2>
             <OrderAdditions v-if="is_new || is_awaiting" :additions=[...order.additions] />
@@ -50,6 +53,7 @@ import OrderInfo from "./Blocks/Info.vue";
 import Active from "@Comp/Elements/Active.vue";
 import OrderItemsNew from "./Blocks/ItemsNew.vue"
 import OrderItemsIssued from "./Blocks/ItemsIssued.vue"
+import OrderItemsView from "./Blocks/ItemsView.vue"
 import OrderAdditions from  "./Blocks/Additions.vue"
 import OrderAdditionsIssued from  "./Blocks/AdditionsIssued.vue"
 const props = defineProps({

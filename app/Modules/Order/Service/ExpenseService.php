@@ -31,6 +31,7 @@ use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\Deprecated;
 
 
 class ExpenseService
@@ -161,6 +162,14 @@ class ExpenseService
                 $addition->amount = 0;
                 $addition->save();
             }
+            //Удаляем календарь доставки
+            if (!is_null($period = $expense->calendarPeriod)) {
+                $expense->calendarPeriods()->detach();
+                $period->refresh();
+                if ($period->expenses()->count() == 0) $period->delete();
+            }
+            //Удаляем назначенных рабочих
+            $expense->workers()->detach();
             $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу', '', $expense->htmlNumDate());
             $expense->status = OrderExpense::STATUS_CANCELED;
             $expense->save();
@@ -194,22 +203,21 @@ class ExpenseService
         $this->logger->logOrder($expense->order, 'Распоряжение отправлено на сборку', '', $expense->htmlNumDate());
     }
 
-    public function assembling(OrderExpense $expense, int $worker_id): void
+    public function setLoader(OrderExpense $expense, int $worker_id): void
     {
         $expense->workers()->attach($worker_id, ['work' => Worker::WORK_LOADER]);
         $expense->push();
         $expense->refresh();
-        //$expense->worker_id = $worker_id;
+
         $message = 'Список товаров на сборку';
         $expense->status = OrderExpense::STATUS_ASSEMBLING;
         $this->logger->logOrder(
             $expense->order,
             'Назначен грузчик распоряжению',
             $expense->htmlNumDate(),
-            $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName())
-        ;
+            $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName());
         $expense->save();
-        //$worker = Worker::find($worker_id);
+
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_DELIVERY);
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
@@ -218,15 +226,38 @@ class ExpenseService
                 params: new TelegramParams(TelegramParams::OPERATION_ASSEMBLING, $expense->id)
             ));
         }
-      /*  $worker->notify(new StaffMessage(
-            event: NotificationHelper::EVENT_ASSEMBLY,
-            message: $message,
-            params: new TelegramParams(TelegramParams::OPERATION_ASSEMBLING, $expense->id)
-        ));*/
+    }
+
+    public function setDriver(OrderExpense $expense, int $worker_id): void
+    {
+        $expense->workers()->attach($worker_id, ['work' => Worker::WORK_DRIVER]);
+        $expense->push();
+        $expense->refresh();
+
+        $expense->status = OrderExpense::STATUS_DELIVERY;
+        $this->logger->logOrder(
+            $expense->order,
+            'Назначен доставщик распоряжению',
+            $expense->htmlNumDate(),
+            $expense->getWorker(Worker::WORK_DRIVER)->fullname->getFullName());
+        $expense->save();
+    }
+
+    public function setAssemble(OrderExpense $expense, int $worker_id): void
+    {
+        $expense->workers()->attach($worker_id, ['work' => Worker::WORK_ASSEMBLE]);
+        $expense->push();
+        $expense->refresh();
+
+        $this->logger->logOrder(
+            $expense->order,
+            'Назначен сборщик мебели',
+            $expense->htmlNumDate(),
+            $expense->getWorker(Worker::WORK_ASSEMBLE)->fullname->getFullName());
     }
 
     /**
-     * Обрабатываем ответ от Телеграм - заказ Собран грузчиком
+     * Груз собран - Обрабатываем ответ от Телеграм
      */
     public function handle(TelegramHasReceived $event): void
     {
@@ -240,8 +271,7 @@ class ExpenseService
                     )
                 );
             } else {
-                $expense->status = OrderExpense::STATUS_ASSEMBLED;
-                $expense->save();
+                $this->assembled($expense);
                 $event->user->notify(
                     new StaffMessage(
                         NotificationHelper::EVENT_INFO,
@@ -252,7 +282,17 @@ class ExpenseService
         }
     }
 
-    public function delivery(OrderExpense $expense, string $track = '')
+    /**
+     * Груз собран - ручное назначение статуса
+     */
+    public function assembled(OrderExpense $expense): void
+    {
+        $expense->status = OrderExpense::STATUS_ASSEMBLED;
+        $expense->save();
+    }
+
+    #[Deprecated]
+    public function delivery(OrderExpense $expense, string $track = ''): void
     {
         if ($expense->isRegion()) {
             if (empty($track)) throw new \DomainException('Не указан трек-номер посылки');
@@ -269,8 +309,8 @@ class ExpenseService
         DB::transaction(function () use ($expense) {
             $expense->completed();
             $expense->refresh();
-            /** @var Order $order */
-            $order = Order::find($expense->order_id);
+
+            $order = $expense->order;
 
             if (($order->getTotalAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) < 1) {
                 $check = true;
@@ -278,9 +318,14 @@ class ExpenseService
                     if (!$_expense->isCompleted()) $check = false;
                 }
                 //Проверить все ли распоряжения выданы?
-                if ($check) $expense->order->setStatus(OrderStatus::COMPLETED);
-                event(new OrderHasCompleted($expense->order));
-                $this->logger->logOrder($expense->order, 'Заказ завершен', '', '');
+                if ($check) {
+                    $expense->order->setStatus(OrderStatus::COMPLETED);
+                    event(new OrderHasCompleted($expense->order));
+                    $this->logger->logOrder($expense->order, 'Заказ завершен', '', '');
+                } else {
+                    event(new ExpenseHasCompleted($expense));
+                    $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate());
+                }
             } else {
                 event(new ExpenseHasCompleted($expense));
                 $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate());
@@ -298,8 +343,9 @@ class ExpenseService
             $expense->calendarPeriods()->detach();
         }
 
-
         $expense->type = $request->input('type');
         $expense->save();
     }
+
+
 }

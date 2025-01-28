@@ -5,8 +5,10 @@
             <div v-if="order.user_id">
                 <el-descriptions :column="1" border class="mb-1" size="small">
                     <el-descriptions-item v-if="order.user.organization" label="Юридическое лицо">
-                        <el-select v-model="info.shopper_id"  @change="setInfo" :disabled="iSavingInfo || !is_new" filterable style="max-width: 280px;" clearable>
-                            <el-option v-for="item in order.shoppers" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
+                        <el-select v-model="info.shopper_id" @change="setInfo" :disabled="iSavingInfo || !is_new"
+                                   filterable style="max-width: 280px;" clearable>
+                            <el-option v-for="item in order.shoppers" :key="item.id" :value="item.id"
+                                       :label="item.short_name + ' (' + item.inn +')'"/>
                         </el-select>
                     </el-descriptions-item>
                     <el-descriptions-item label="ФИО">
@@ -31,7 +33,7 @@
                 </el-descriptions>
                 <Link type="warning" :href="route('admin.user.show', {user: order.user.id})">Карточка клиента</Link>
             </div>
-            <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})" />
+            <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})"/>
         </el-col>
         <!-- Суммы по заказу -->
         <el-col :span="8">
@@ -93,9 +95,12 @@
 
                 <el-popover v-if="is_issued" :visible="visible_movement" placement="bottom-start" :width="246">
                     <template #reference>
-                        <el-button type="primary" class="p-4 my-3" @click="visible_movement = !visible_movement" ref="buttonRef">
+                        <el-button type="primary" class="p-4 my-3" @click="visible_movement = !visible_movement"
+                                   ref="buttonRef">
                             Перемещение
-                            <el-icon class="ml-1"><ArrowDown /></el-icon>
+                            <el-icon class="ml-1">
+                                <ArrowDown/>
+                            </el-icon>
                         </el-button>
                     </template>
                     <el-select v-model="movement.storage_out" placeholder="Склад Убытия" class="mt-1">
@@ -118,12 +123,14 @@
             </div>
             <div class="border-t mt-2 pt-2">
                 <el-form-item label="Продавец" size="small">
-                    <el-select v-model="info.trader_id"  @change="setInfo" :disabled="iSavingInfo || !is_new" filterable style="max-width: 280px;">
-                        <el-option v-for="item in traders" :key="item.id" :value="item.id" :label="item.short_name + ' (' + item.inn +')'"/>
+                    <el-select v-model="info.trader_id" @change="setInfo" :disabled="iSavingInfo || !is_new" filterable
+                               style="max-width: 280px;">
+                        <el-option v-for="item in traders" :key="item.id" :value="item.id"
+                                   :label="item.short_name + ' (' + item.inn +')'"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Комментарий" size="small">
-                    <el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo || !is_new" />
+                    <el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo || !is_new"/>
                 </el-form-item>
             </div>
         </el-col>
@@ -134,7 +141,7 @@
         <div v-if="order.shopper_id">
             <h3>Если email отличается от учетной записи, выберите и/или введите новые адреса почты</h3>
             <el-select v-model="formEmails" multiple allow-create filterable class="mt-2">
-                <el-option v-for="item in order.emails" :key="item.label" :value="item.label" :label="item.value" >
+                <el-option v-for="item in order.emails" :key="item.label" :value="item.label" :label="item.value">
                     {{ item.value }} <{{ item.label }}>
                 </el-option>
             </el-select>
@@ -155,7 +162,7 @@
             Вы уверены, что хотите отменить заказ?
         </div>
         <el-form-item label="Причина">
-            <el-input v-model="cancel_comment" />
+            <el-input v-model="cancel_comment"/>
         </el-form-item>
         <template #footer>
             <div class="dialog-footer">
@@ -195,6 +202,7 @@ const reserve = ref(props.order.reserve)
 const dialogCancel = ref(false)
 const cancel_comment = ref(null)
 const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
+
 function setInfo() {
     iSavingInfo.value = true
     router.visit(route('admin.order.set-info', {order: props.order.id}), {
@@ -207,6 +215,7 @@ function setInfo() {
         }
     })
 }
+
 function handleReserve() {
     iSavingInfo.value = true
     router.visit(route('admin.order.set-reserve', {order: props.order.id}), {
@@ -221,13 +230,14 @@ function handleReserve() {
         }
     })
 }
+
 function getInvoice() {
     const loading = ElLoading.service({
         lock: false,
         text: 'Идет формирование счета',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    axios.post(route('admin.order.invoice', {order: props.order.id}),null,
+    axios.post(route('admin.order.invoice', {order: props.order.id}), null,
         {
             responseType: 'arraybuffer',
         }
@@ -249,15 +259,25 @@ function getInvoice() {
 }
 
 //На оплату
-const dialogAwaiting =ref(false)
+const dialogAwaiting = ref(false)
 const formEmails = ref([]);
+
 function onAwaiting() {
-    router.post(route('admin.order.awaiting', {order: props.order.id}), {emails: formEmails.value})
+    router.visit(route('admin.order.awaiting', {order: props.order.id}), {
+        method: "post",
+        data: {emails: formEmails.value},
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            dialogAwaiting.value = false;
+        }
+    })
 }
 
 function onWork() {
     router.post(route('admin.order.work', {order: props.order.id}))
 }
+
 function onCancel() {
     router.visit(route('admin.order.cancel', {order: props.order.id}), {
         method: "post",
@@ -276,6 +296,7 @@ const movement = reactive({
     storage_out: null,
     storage_in: null
 })
+
 function onMovement() {
     router.post(route('admin.order.movement', {order: props.order.id}), movement)
 }

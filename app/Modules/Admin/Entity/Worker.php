@@ -26,10 +26,15 @@ class Worker extends Model
 {
     use Notifiable;
 
-    const WORK_DRIVER = 1; //Доставщик, Водитель
-    const WORK_ASSEMBLE = 1; //Сборка мебели
+    const WORK_DRIVER = 2; //Доставщик, Водитель
+    const WORK_ASSEMBLE = 3; //Сборка мебели
     const WORK_LOADER = 1; //Грузчик, Упаковка
-    const WORK_LOGISTIC = 1;
+    const WORK_LOGISTIC = 4;
+    const WORKS = [
+        self::WORK_LOADER => 'Упаковка на складе',
+        self::WORK_DRIVER => 'Доставка',
+        self::WORK_ASSEMBLE => 'Сборка мебели',
+    ];
 
     protected $attributes = [
         'fullname' => '{}',

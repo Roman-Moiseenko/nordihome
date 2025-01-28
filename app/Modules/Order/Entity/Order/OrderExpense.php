@@ -13,6 +13,7 @@ use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarExpense;
 use App\Modules\Delivery\Entity\CalendarPeriod;
+use App\Modules\Guide\Entity\Addition;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -152,11 +153,18 @@ class OrderExpense extends Model
     }
     /**
      * На доставке по РФ Почтой, есть трек номер
-     * @return bool
      */
     public function isDelivery(): bool
     {
         return $this->status == self::STATUS_DELIVERY;
+    }
+
+    /**
+     * Доставлен. (Отметка доставщика или Почты)
+     */
+    public function isDelivered(): bool
+    {
+        return $this->status == self::STATUS_DELIVERED;
     }
 
     public function isCompleted(): bool
@@ -168,6 +176,19 @@ class OrderExpense extends Model
     {
         return $this->status == self::STATUS_CANCELED;
     }
+
+
+    /**
+     * Требуется сборка
+     */
+    public function isAssemble(): bool
+    {
+        foreach ($this->additions as $addition) {
+            if ($addition->orderAddition->addition->type == Addition::ASSEMBLY) return true;
+        }
+        return false;
+    }
+
 
     //тип доставки
     public function isStorage(): bool
@@ -248,14 +269,35 @@ class OrderExpense extends Model
         return $result;
     }
 
-    public function getWorker( #[ExpectedValues(valuesFromClass: Worker::class)]int $work): Worker
+    public function getWorker( #[ExpectedValues(valuesFromClass: Worker::class)]int $work):? Worker
     {
         foreach ($this->workers as $worker) {
             if ($worker->pivot->work == $work) return $worker;
         }
-        throw new \DomainException('Неверный код работы');
+        return null;
     }
 
+    /**
+     * Доставщик
+     */
+    public function getDriver(): ?Worker
+    {
+        return $this->getWorker(Worker::WORK_DRIVER);
+    }
+    /**
+     * Сборщик мебели
+     */
+    public function getAssemble(): ?Worker
+    {
+        return $this->getWorker(Worker::WORK_ASSEMBLE);
+    }
+    /**
+     * Упаковщик (грузчик)
+     */
+    public function getLoader(): ?Worker
+    {
+        return $this->getWorker(Worker::WORK_LOADER);
+    }
 
     //*** RELATIONS
 
@@ -324,6 +366,9 @@ class OrderExpense extends Model
     {
         return self::TYPES[$this->type];
     }
+
+
+
 
 
 

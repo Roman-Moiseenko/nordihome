@@ -33,7 +33,6 @@ const props = defineProps({
 const width = ref(16)
 const stroke = ref(8)
 
-
 const show = computed(() => {
 
     if (props.value < 0)

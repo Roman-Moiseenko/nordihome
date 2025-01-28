@@ -7,6 +7,7 @@ namespace App\Modules\Order\Repository;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
@@ -94,7 +95,6 @@ class OrderRepository
         $status_out = -1;
         $status_pay = -1;
 
-        //if ($order->isAwaiting()) $status_pay = -1;
         if ($order->isPrepaid()) $status_pay = 0.5;
         if ($order->isPaid()) $status_pay = 1;
         if ($order->isAwaiting() || $order->isPrepaid()) {
@@ -103,9 +103,16 @@ class OrderRepository
             }
         }
         if ($order->isPaid() && $order->getPaymentAmount() > $order->getTotalAmount()) $status_pay = 2;
-
         if ($status_pay > -1) $status_out = $order->getPercentIssued();
 
+        if ($order->isCompleted()) {
+            $status_out = 1;
+            if ($order->getPaymentAmount() > $order->getTotalAmount()) {
+                $status_pay = 2;
+            } else {
+                $status_pay = 1;
+            }
+        }
         return array_merge($order->toArray(), [
             'staff' => is_null($order->staff_id) ? 'Не назначен' : $order->staff->fullname->getShortname(),
             'user' => [
@@ -255,6 +262,7 @@ class OrderRepository
             'type_text' => $expense->typeHTML(),
             'items' => $expense->items()->get()->map(fn(OrderExpenseItem $expenseItem) => array_merge($expenseItem->toArray(), [
                 'product' =>  $expenseItem->orderItem->product,
+                'quantity' => (float)$expenseItem->quantity,
             ])),
             'additions' => $expense->additions()->get()->map(fn(OrderExpenseAddition $expenseAddition) => array_merge($expenseAddition->toArray(), [
                 'addition' => $expenseAddition->orderAddition->addition,
@@ -275,6 +283,11 @@ class OrderRepository
                 'period_id' => $expense->calendarPeriod->id,
                 'periods' => $this->calendar->getDayPeriods($expense->calendarPeriod->calendar->date_at),
             ],
+            'workers' => $expense->workers()->get()->map(function (Worker $worker) {
+                return array_merge($worker->toArray(), [
+                    'work' => Worker::WORKS[$worker->pivot->work],
+                ]);
+            }),
 
         ]);
     }

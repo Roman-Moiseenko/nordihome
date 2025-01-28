@@ -19,6 +19,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class SupplyProduct extends AccountingProduct
 {
     protected $table = 'supply_products';
+    public $casts = [
+        'cost_currency' => 'float',
+        'pre_cost' => 'float',
+    ];
+
     protected $fillable = [
         'supply_id',
         'cost_currency',

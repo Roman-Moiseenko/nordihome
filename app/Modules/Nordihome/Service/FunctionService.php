@@ -29,7 +29,6 @@ class FunctionService
                 $packages = null;
                 try {
                     $parser_product = $this->parserService->parsingData($code);
-
                     /** @var Package $package */
                     foreach ($parser_product['packages'] as $package) {
                         for ($i = 0; $i < $package->quantity; $i++) {

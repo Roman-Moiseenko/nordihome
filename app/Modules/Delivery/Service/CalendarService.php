@@ -23,22 +23,6 @@ class CalendarService
         $this->logger = $logger;
     }
 
-    #[Deprecated]
-    public function Nearest(): Arrayable
-    {
-        return [];
-        $this->checkCalendarMonth(now()->month, now()->year);
-        $this->checkCalendarMonth(now()->addMonth()->month, now()->addMonth()->year);
-
-        return Calendar::orderBy('date_at')->where('date_at', '>', now()->toDateString())
-            ->get()->map(function (Calendar $calendar) {
-                return [
-                    'id' => $calendar->id,
-                    'date_at' => $calendar->date_at->format('Y-m-d'),
-                    'periods' => $calendar->periods()->get()->map(fn(CalendarPeriod $period) => $this->PeriodToArray($period)),
-                ];
-            });
-    }
 
     private function PeriodToArray(CalendarPeriod $period): array
     {
@@ -150,6 +134,10 @@ class CalendarService
             }
             $calendarPeriod->refresh();
             $this->check_full($calendarPeriod);
+
+            //Если есть Доставщик и сборщик, отменить
+            if (!is_null($driver = $expense->getDriver())) $expense->workers()->detach($driver->id);
+            if (!is_null($assemble = $expense->getAssemble())) $expense->workers()->detach($assemble->id);
 
             $this->logger->logOrder($expense->order, 'Установлена дата отгрузки', $calendarPeriod->calendar->htmlDate(), $calendarPeriod->timeHtml());
         });

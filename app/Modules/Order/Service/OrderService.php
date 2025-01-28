@@ -305,7 +305,7 @@ class OrderService
             if ($product->getPrice(false, $user) == 0) throw new \DomainException('Данный товар не подлежит продажи.');
             $order = $this->createOrder($user->id);
 
-            $order = $this->addProduct($order, $product->id, 1);
+            $this->addProduct($order, $product->id, 1);
             $this->recalculation($order);
             event(new OrderHasCreated($order));
         });
@@ -333,7 +333,7 @@ class OrderService
 
     //**** ФУНКЦИИ РАБОТЫ С ЗАКАЗОМ МЕНЕДЖЕРОМ
 
-    public function setManager(Order $order, int $staff_id)
+    public function setManager(Order $order, int $staff_id): void
     {
         /** @var Admin $staff */
         $staff = Admin::find($staff_id);
@@ -417,7 +417,7 @@ class OrderService
     }
 
 
-    public function work(Order $order)
+    public function work(Order $order): void
     {
         DB::transaction(function () use ($order) {
             if ($order->status->value != OrderStatus::AWAITING) throw new \DomainException('Заказ нельзя вернуть в работу');
@@ -449,7 +449,10 @@ class OrderService
     /**
      * Добавить в заказ товар. НОВАЯ ВЕРСИЯ
      */
-    public function addProduct(Order $order, int $product_id, float $quantity, bool $preorder = false): Order
+    public function addProduct(
+        Order $order, int $product_id,
+        float $quantity, bool $preorder = false,
+        bool $assemblage = false, bool $packing = false): Order
     {
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -470,6 +473,9 @@ class OrderService
             $orderItem = OrderItem::new($product, $quantity, false);
             if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);
             $orderItem->setCost($last_price, $last_price);
+            $orderItem->assemblage = $assemblage;
+            $orderItem->packing = $packing;
+
             $order->items()->save($orderItem);
             //Товар в резерв, возвращаем новое время резерва
             $reserve_at = $this->reserveService->toReserve($orderItem, $quantity);
@@ -487,6 +493,8 @@ class OrderService
             $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
             if ($pre_price == 0) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
             $orderItemPre->setCost($last_price, $pre_price);
+            $orderItemPre->assemblage = $assemblage;
+            $orderItemPre->packing = $packing;
             $order->items()->save($orderItemPre);
         }
 
@@ -623,12 +631,13 @@ class OrderService
     /**
      * Добавить в заказ доп.услугу
      */
-    public function addAddition(Order $order, int $addition_id): void
+    public function addAddition(Order $order, int $addition_id): OrderAddition
     {
         $orderAddition = OrderAddition::new($addition_id);
         $order->additions()->save($orderAddition);
-        $order->refresh();
+        $orderAddition->refresh();
         $this->logger->logOrder($order, 'Добавлена услуга', $orderAddition->addition->name, price($orderAddition->getAmount()));
+        return $orderAddition;
     }
 
     public function setAddition(OrderAddition $orderAddition, Request $request): void
@@ -722,6 +731,7 @@ class OrderService
         //TODO Переделать под новые данные (+ организации, упаковка/сборка товара, кол-во и цена услуг)
         DB::transaction(function () use ($order, &$new_order) {
             $new_order = $order->replicate();
+
             $new_order->created_at = Carbon::now();
             $new_order->number = null;
             $new_order->paid = false;
@@ -732,12 +742,18 @@ class OrderService
             $new_order->refresh();
 
             foreach ($order->items as $item) {
-                if ($item->product->isSale())
-                    $this->addProduct($new_order, $item->product_id, $item->quantity);
+                if ($item->product->isSale()) {
+                    //dd($item->assemblage);
+
+                    $this->addProduct($new_order, $item->product_id, $item->quantity, $item->preorder, $item->assemblage, $item->packing);
+                }
             }
 
             foreach ($order->additions as $addition) {
-                $this->addAddition($new_order, $addition->addition_id);
+                $orderAddition = $this->addAddition($new_order, $addition->addition_id);
+                if ($addition->addition->is_quantity) $orderAddition->quantity = $addition->quantity;
+                if ($addition->addition->manual) $orderAddition->amount = $addition->amount;
+                $orderAddition->save();
             }
 
             $new_order->refresh();

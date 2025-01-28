@@ -75,11 +75,13 @@ class Order extends Model
     const MANUAL = 702;
     const SHOP = 703;
     const PARSER = 704;
+    const OZON = 705;
     const TYPES = [
         self::ONLINE => 'Интернет-магазин',
         self::MANUAL => 'Менеджер',
         self::SHOP => 'Магазин',
         self::PARSER => 'Парсер',
+        self::OZON => 'Озон',
     ];
 
     protected $fillable = [
@@ -130,6 +132,11 @@ class Order extends Model
     public function isParser(): bool
     {
         return $this->type == self::PARSER;
+    }
+
+    public function isOzon(): bool
+    {
+        return $this->type == self::OZON;
     }
 
     ///***Проверка текущего статуса

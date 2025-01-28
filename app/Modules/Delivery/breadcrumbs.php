@@ -6,10 +6,15 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 //DELIVERY
-Breadcrumbs::for('admin.delivery.assembly', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.delivery.to-loader', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.delivery.all');
-    $trail->push('На сборку', route('admin.delivery.assembly'));
+    $trail->push('На сборку', route('admin.delivery.to-loader'));
 });
+Breadcrumbs::for('admin.delivery.to-delivery', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.delivery.all');
+    $trail->push('На доставку', route('admin.delivery.to-delivery'));
+});
+
 
 
 Breadcrumbs::for('admin.delivery.all', function (BreadcrumbTrail $trail) {

@@ -21,7 +21,15 @@ use Illuminate\Database\Eloquent\Model;
 class PricingProduct extends AccountingProduct
 {
     public $timestamps = false;
-
+    public $casts = [
+        'product_id' => 'float',
+        'price_cost' => 'float',
+        'price_retail' => 'float',
+        'price_bulk' => 'float',
+        'price_special' => 'float',
+        'price_min' => 'float',
+        'price_pre' => 'float',
+    ];
     protected $table = 'pricing_products';
     protected $fillable = [
         'product_id',

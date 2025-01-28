@@ -70,6 +70,8 @@ class OrderItem extends Model implements CartItemInterface
         'sell_cost' => 'float',
         'preorder' => 'bool',
         'fix_manual' => 'bool',
+        'assemblage' => 'bool',
+        'packing' => 'bool',
         'quantity' => 'float',
     ];
     protected $touches = [

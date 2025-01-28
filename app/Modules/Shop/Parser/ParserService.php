@@ -307,6 +307,7 @@ class ParserService
             $_quantity = $_item['quantity']['value']; //кол-во элементов в пачке данного товара
             if (count($_item['measurements']) != 0) //Пропускаем для самого товара, только по составным
                 foreach ($_item['measurements'] as $measurement) { //Если товар в 1 пачке разбит на несколько
+                   // dd($measurement);
                     $packages[] = Package::create(
                         $this->toHeight($measurement),
                         $this->toWidth($measurement),
@@ -356,7 +357,16 @@ class ParserService
         foreach ($_measures as $_measure) {
             if ($_measure['type'] == "height") $height = $_measure['value'];
         }
+        if ($height == 0.0) $height = $this->fromDiameter($_measures);
         return $height;
+    }
+
+    private function fromDiameter(array $_measures)
+    {
+        foreach ($_measures as $_measure) {
+            if ($_measure['type'] == "diameter") return $_measure['value'];
+        }
+        return 0.0;
     }
 
     private function toLength(array $_measures)
@@ -365,6 +375,8 @@ class ParserService
         foreach ($_measures as $_measure) {
             if ($_measure['type'] == "length") $length = $_measure['value'];
         }
+        if ($length == 0.0) $length = $this->fromDiameter($_measures);
+
         return $length;
     }
 
@@ -374,6 +386,8 @@ class ParserService
         foreach ($_measures as $_measure) {
             if ($_measure['type'] == "width") $width = $_measure['value'];
         }
+        if ($width == 0.0) $width = $this->fromDiameter($_measures);
+
         return $width;
     }
 

@@ -62,6 +62,7 @@ Route::group(
                 Route::post('/set-delivery/{expense}', 'ExpenseController@set_delivery')->name('set-delivery');
 
                 Route::post('/canceled/{expense}', 'ExpenseController@canceled')->name('canceled');
+               // Route::post('/completed/{expense}', 'ExpenseController@completed')->name('completed');
                 Route::post('/set-info/{expense}', 'ExpenseController@set_info')->name('set-info');
                 Route::post('/assembly/{expense}', 'ExpenseController@assembly')->name('assembly');
                 Route::post('/trade12/{expense}', 'ExpenseController@trade12')->name('trade12');

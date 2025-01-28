@@ -6,27 +6,37 @@ Route::group(
     [
         'prefix' => 'delivery',
         'as' => 'delivery.',
-        //'namespace' => 'Delivery',
     ],
     function () {
-        //Просмотры - index
-        Route::get('/', 'DeliveryController@index')->name('all');
-        Route::get('/local', 'DeliveryController@index_local')->name('local');
-        Route::get('/region', 'DeliveryController@index_region')->name('region');
-        Route::get('/storage', 'DeliveryController@index_storage')->name('storage');
-        Route::get('/assembly', 'DeliveryController@assembly')->name('assembly');
-
         Route::get('/calendar', 'CalendarController@index')->name('calendar.index');
         Route::get('/calendar/schedule', 'CalendarController@schedule')->name('calendar.schedule');
         Route::post('/calendar/get-day', 'CalendarController@get_day')->name('calendar.get-day');
 
-        Route::post('/assembling/{expense}', 'DeliveryController@assembling')->name('assembling');
+        // Route::post('/assembling/{expense}', 'DeliveryController@assembling')->name('assembling');
+        //Смена статуса (вручную)
+        Route::post('/assembled/{expense}', 'DeliveryController@assembled')->name('assembled');//Собран
+        Route::post('/completed/{expense}', 'DeliveryController@completed')->name('completed');//Выдан
 
+        Route::post('/set-track/{expense}', 'DeliveryController@set_track')->name('set-track'); //Назначить трек-номер
         Route::post('/delivery/{expense}', 'DeliveryController@delivery')->name('delivery');
-        Route::post('/completed/{expense}', 'DeliveryController@completed')->name('completed');
+        Route::post('/set-period/{expense}', 'DeliveryController@set_period')->name('set-period');
 
         Route::resource('truck', 'TruckController');
         Route::post('/truck/toggle/{truck}', 'TruckController@toggle')->name('truck.toggle');
+
+        //Назначить рабочего
+        Route::post('/set-loader/{expense}', 'DeliveryController@set_loader')->name('set-loader');
+        Route::post('/set-driver/{expense}', 'DeliveryController@set_driver')->name('set-driver');
+        Route::post('/set-assemble/{expense}', 'DeliveryController@set_assemble')->name('set-assemble');
+
+
+        //Отправить, сменить состояние
+        //Route::get('/assembly', 'DeliveryController@assembly')->name('assembly'); //На сборку (to-loader)
+
+        //Распоряжения
+        Route::get('/', 'DeliveryController@all')->name('all'); //Все
+        Route::get('/to-delivery', 'DeliveryController@to_delivery')->name('to-delivery'); //На отгрузку
+        Route::get('/to-loader', 'DeliveryController@to_loader')->name('to-loader'); //На упаковку, перед отгрузкой
         //Действия
     }
 );

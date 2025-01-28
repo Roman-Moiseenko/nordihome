@@ -16,6 +16,9 @@ class DepartureProduct extends AccountingProduct
 {
     protected $table = 'departure_products';
     public $timestamps = false;
+    public $casts = [
+        'cost' => 'float',
+    ];
     protected $fillable = [
         'departure_id',
         'cost',
