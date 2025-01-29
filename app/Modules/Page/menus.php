@@ -35,11 +35,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-address-book',
             ],
-          /*  'banners' => [
+            'banners' => [
                 'icon' => 'book-image', //book-image  gallery-horizontal-end
                 'title' => 'Баннеры',
-                'route_name' => 'admin.home',
-            ],*/
+                'route_name' => 'admin.page.banner.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-files',
+            ],
 
         ],
     ],

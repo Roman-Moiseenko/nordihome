@@ -1,0 +1,174 @@
+
+
+
+/* ХЛЕБНЫЕ КРОШКИ */
+.breadcrumbs {
+    margin: 16px 0;
+    padding-left: 0;
+    >li {
+        display: inline-block;
+        list-style-type: none;
+        font-size: 1rem;
+        &:before {
+            margin: 0 4px;
+        }
+        >a {
+            text-decoration: none;
+            color: var(--bs-gray-700);
+            &:hover {
+                text-decoration: none;
+                color: var(--bs-gray-400);
+            }
+        }
+        &.active {
+
+        }
+    }
+}
+
+//Кнопка Scroll Up
+%scrollup_hover_focus {
+    color: #fff;
+    transform: translateY(-95%) rotate(-45deg);
+    -webkit-transform: translateY(-95%) rotate(-45deg);
+    -moz-transform: translateY(-95%) rotate(-45deg);
+    -o-transform: translateY(-95%) rotate(-45deg);
+    -ms-transform: translateY(-95%) rotate(-45deg);
+    i {
+        transform: translateY(0) rotate(45deg);
+        -webkit-transform: translateY(0) rotate(45deg);
+        -moz-transform: translateY(0) rotate(45deg);
+        -o-transform: translateY(0) rotate(45deg);
+        -ms-transform: translateY(0) rotate(45deg);
+    }
+}
+.scrollup {
+    position: fixed;
+    top: 0;
+    right: 25px;
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    background-color: var(--bs-gray-900);
+    border: 1px solid var(--bs-gray-100);
+    outline: none;
+    border-radius: 50% 0 50% 50%;
+    box-shadow: 0 0 12px 0 rgba(0,0,0,.2);
+    -webkit-transition: .9s;
+    transition: .9s;
+    z-index: 99;
+    visibility: hidden;
+    opacity: 0;
+    i {
+        display: inline-block;
+        -webkit-transition: all .5s;
+        -o-transition: all .5s;
+        transition: all .5s;
+    }
+    &.is-active {
+        top: 98%;
+        -webkit-transform: translateY(-95%);
+        transform: translateY(-95%);
+        opacity: 1;
+        visibility: visible;
+
+        &:hover {
+            @extend %scrollup_hover_focus;
+        }
+        &:focus {
+            @extend %scrollup_hover_focus;
+        }
+    }
+}
+@media screen and (max-width: 991px) {
+    .scrollup {
+        &.is-active {
+            top: unset;
+            bottom: 16px;
+        }
+    }
+}
+
+//Рейтинг звездочки поле выбора
+
+.rating-area {
+    overflow: hidden;
+}
+.rating-area:not(:checked) > input {
+    display: none;
+}
+.rating-area:not(:checked) > label {
+    float: right;
+    width: 24px;
+    padding: 0;
+
+    font-size: 20px;
+    line-height: 32px;
+    color: lightgrey;
+    // text-shadow: 1px 1px #bbb;
+}
+.rating-area.edit:not(:checked) > label {
+    cursor: pointer;
+}
+.rating-area:not(:checked) > label:before {
+    content: '\f005';
+    font-family: "Font Awesome 6 Pro", serif;
+    font-weight: 600;
+}
+.rating-area > input:checked ~ label {
+    color: gold;
+    // text-shadow: 1px 1px #c60;
+}
+.rating-area.edit:not(:checked) > label:hover,
+.rating-area.edit:not(:checked) > label:hover ~ label {
+    color: gold;
+}
+.rating-area.edit > input:checked + label:hover,
+.rating-area.edit > input:checked + label:hover ~ label,
+.rating-area.edit > input:checked ~ label:hover,
+.rating-area.edit > input:checked ~ label:hover ~ label,
+.rating-area.edit > label:hover ~ input:checked ~ label {
+    color: gold;
+    text-shadow: 1px 1px goldenrod;
+}
+
+.rate-area > label:active {
+    position: relative;
+}
+
+//Элемент с загрузкой
+.show-load {
+    display: none;
+}
+.hide-load {
+    display: block;
+}
+.loading {
+    .show-load {
+        display: block;
+        animation-name: rotation;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
+    .hide-load {
+        display: none;
+    }
+}
+@keyframes rotation {
+    0% {
+        transform:rotate(0deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}
+//Кнопки избранное
+button.to-wish, button.is-wish {
+    background: var(--bs-white);
+}

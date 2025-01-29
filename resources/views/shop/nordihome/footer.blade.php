@@ -37,7 +37,7 @@
             <div class="col-lg-1"></div>
             <div class="col-lg-5">
                 <div class="row">
-                    @foreach(\App\Modules\Shop\MenuHelper::getFooterMenu() as $column)
+                    @foreach(\App\Modules\Nordihome\Helper\MenuHelper::getFooterMenu() as $column)
                         <div class="col-lg-6 px-2">
                             <div class="menu-column">
                                 <div class="heading">{{ $column['title'] }}</div>

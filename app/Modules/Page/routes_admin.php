@@ -24,5 +24,8 @@ Route::group(
         Route::post('/contact/{contact}/published', 'ContactController@published')->name('contact.published');
         Route::post('/contact/{contact}/up', 'ContactController@up')->name('contact.up');
         Route::post('/contact/{contact}/down', 'ContactController@down')->name('contact.down');
+
+        Route::resource('banner', 'BannerController'); //CRUD
+
     }
 );

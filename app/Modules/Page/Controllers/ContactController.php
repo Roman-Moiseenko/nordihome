@@ -25,8 +25,6 @@ class ContactController extends Controller
         return Inertia::render('Page/Contact/Index', [
             'contacts' => $contacts,
         ]);
-
-       // return view('admin.page.contact.index', compact('contacts'));
     }
 
     public function create()

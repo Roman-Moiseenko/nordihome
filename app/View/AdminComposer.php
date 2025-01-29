@@ -63,7 +63,10 @@ class AdminComposer
                 $view->with('config', config('shop.frontend'));
                 $city = 'Калининград';
                 $view->with('categories', $this->shopRepository->getChildren());
+                $view->with('tree', $this->shopRepository->getTree());
+
                 $view->with('city', $city);
+                //dd($this->shopRepository->getChildren());
             }
         }
     }

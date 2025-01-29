@@ -6,6 +6,7 @@ namespace App\Modules\Page\Controllers;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Page\Entity\Widget;
+use App\Modules\Page\Repository\TemplateRepository;
 use App\Modules\Page\Service\WidgetService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,15 +16,19 @@ class WidgetController extends Controller
 {
 
     private WidgetService $service;
+    private TemplateRepository $templates;
 
-    public function __construct(WidgetService $service)
+    public function __construct(WidgetService $service, TemplateRepository $templates)
     {
         $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
+        $this->templates = $templates;
     }
 
     public function index(Request $request): \Inertia\Response
     {
+        $templates = $this->templates->getTemplates('widget');
+
         $widgets = Widget::get()->map(function (Widget $widget) {
             return [
                 'id' => $widget->id,
