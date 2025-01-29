@@ -28,3 +28,8 @@ Breadcrumbs::for('admin.guide.vat.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.guide.index');
     $trail->push('НДС', route('admin.guide.vat.index'));
 });
+
+Breadcrumbs::for('admin.guide.cargo-company.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.guide.index');
+    $trail->push('Транспортные компании', route('admin.guide.cargo-company.index'));
+});

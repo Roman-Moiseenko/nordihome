@@ -3,7 +3,7 @@
 #Товар по распоряжению {{ $expense->htmlNumDate() }} отправлен
 </x-mail::panel>
 
-##Посылке присвоен трек-номер <a href="https://pochta.ru/tracking#{{ $expense->track }}">{{ $expense->track }}</a>
+##Посылке присвоен трек-номер <a href="{{ $expense->delivery->url . '/' . $expense->delivery->track_number }}">{{ $expense->delivery->track_number }}</a>
 
 ###Список товара:
 @component('mail::table')

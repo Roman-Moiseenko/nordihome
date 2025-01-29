@@ -37,7 +37,7 @@
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
-                <el-table-column label="Дата" width="120">
+                <el-table-column label="Дата создания" width="120">
                     <template #default="scope">
                         {{ func.date(scope.row.created_at) }}
                     </template>
@@ -58,7 +58,11 @@
                         <el-tag :type="statusType(scope.row.status)">{{ scope.row.status_text }}</el-tag>
                     </template>
                 </el-table-column>
-
+                <el-table-column label="Дата изменения" width="120">
+                    <template #default="scope">
+                        {{ func.date(scope.row.updated_at) }}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="work" label="Ответственный"  show-overflow-tooltip>
                     <template #default="scope">
                         <div v-for="worker in scope.row.workers">

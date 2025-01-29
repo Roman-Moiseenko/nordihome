@@ -13,11 +13,13 @@ use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarExpense;
 use App\Modules\Delivery\Entity\CalendarPeriod;
+use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Guide\Entity\Addition;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use JetBrains\PhpStorm\ExpectedValues;
 
@@ -48,6 +50,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property Worker[] $workers
  * @property CalendarPeriod[] $calendarPeriods
  * @property CalendarPeriod $calendarPeriod
+ * @property DeliveryCargo $delivery
  */
 class OrderExpense extends Model
 {
@@ -339,6 +342,10 @@ class OrderExpense extends Model
         return is_null($this->calendarPeriod) ? null : $this->calendarPeriod->calendar;
     }
 
+    public function delivery(): HasOne
+    {
+        return $this->hasOne(DeliveryCargo::class, 'expense_id', 'id');
+    }
     public function calendarPeriod(): HasOneThrough
     {
         return $this->hasOneThrough(

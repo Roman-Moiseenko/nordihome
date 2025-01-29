@@ -7,6 +7,7 @@ use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\GeoAddress;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 use function now;
 
 
@@ -24,6 +25,7 @@ use function now;
  * @property DeliveryStatus $status
  * @property DeliveryStatus[] $statuses
  */
+#[Deprecated]
 class Delivery extends Model
 {
     protected $table = 'delivery_transport';

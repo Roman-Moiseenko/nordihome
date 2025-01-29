@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity\Transport;
 
+use JetBrains\PhpStorm\Deprecated;
+
+#[Deprecated]
 class DeliveryData
 {
     public float $cost;

@@ -47,6 +47,12 @@ class GuideController extends Controller
                 'comment' => 'Налог на добавленную стоимость',
                 'font_awesome' => 'fa-light fa-cent-sign',
             ],
+            [
+                'name' => 'Транспортные компании',
+                'route' => 'admin.guide.cargo-company.index',
+                'comment' => 'ТК доставки по России (Почта, СДЭК и др.)',
+                'font_awesome' => 'fa-light fa-truck',
+            ],
 
         ];
         return Inertia::render('Guide/Index', [

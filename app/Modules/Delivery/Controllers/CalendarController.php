@@ -25,30 +25,7 @@ class CalendarController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
-    {
-        $filter = $request['filter'] ?? 'new';
-        $query = $this->repository->getIndex($filter);
-        $calendars = $this->pagination($query, $request, $pagination);
-        //TODO Список отгрузок по области
-        return Inertia::render('Delivery/Calendar/Index', [
-            '$calendars' => $calendars,
-            'filter' => $filter,
-        ]);
 
-        return view('admin.delivery.calendar.index', compact('calendars', 'filter', 'pagination'));
-    }
-
-    public function schedule(Request $request)
-    {
-        //TODO Заменить на Правила + добавление дней в блокировку
-        /*
-        $this->service->checkCalendarMonth(Carbon::now()->month, Carbon::now()->year);
-        $this->service->checkCalendarMonth(Carbon::now()->addMonth()->month, Carbon::now()->addMonth()->year);
-        */
-        $days = $this->repository->getDays();
-        return view('admin.delivery.calendar.schedule', compact('days'));
-    }
 
     public function get_day(Request $request)
     {

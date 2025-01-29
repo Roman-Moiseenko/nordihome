@@ -14,8 +14,8 @@
         </div>
 
         <div class="mt-2 p-5 bg-white rounded-md">
-            <h2 class="font-medium text-slate-600">По РФ (Почта, СДЭК)</h2>
-            <RegionTable :region="region" :drivers="drivers" />
+            <h2 class="font-medium text-slate-600">По РФ (Почта, ТК)</h2>
+            <RegionTable :region="region" :drivers="drivers" :companies="cargo_companies"/>
         </div>
 
     </el-config-provider>
@@ -43,8 +43,9 @@ const props = defineProps({
     },
     drivers: Array,
     assembles: Array,
+    cargo_companies: Array,
 })
-console.log(props.incomplete)
+
 </script>
 
 <style scoped>

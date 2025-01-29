@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $product_id
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $depth
  * @property int $weight
  */
+#[Deprecated]
 class ProductDelivery extends Model
 {
     public $timestamps = false;

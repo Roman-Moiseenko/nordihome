@@ -3,16 +3,28 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Service;
 
+use App\Events\ExpenseHasDelivery;
 use App\Events\OrderHasCreated;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Analytics\LoggerService;
+use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
+use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Shop\CartItemInterface;
 use App\Modules\User\Entity\UserDelivery;
+use Illuminate\Http\Request;
 
 class DeliveryService
 {
+
+    private LoggerService $logger;
+
+    public function __construct(LoggerService $logger,)
+    {
+        $this->logger = $logger;
+    }
 
     public function user(int $user_id): UserDelivery
     {
@@ -20,22 +32,7 @@ class DeliveryService
         return UserDelivery::register($user_id);
     }
 
-    public function get(int $user_id): array
-    {
-        //Получаем список всех доставок
-        //Получаем default для клиента
 
-        //Если default нет
-
-
-        return [];
-    }
-
-
-    public function companies(): array
-    {
-        return DeliveryHelper::deliveries();
-    }
 
     /**
      * @param CartItemInterface[] $items
@@ -66,6 +63,23 @@ class DeliveryService
         //Получаем координаты точки доставки
 
         return 22; //расстояние в км
+    }
+
+
+    public function create(OrderExpense $expense, Request $request)
+    {
+
+        if (!$expense->isRegion()) throw new \DomainException('Неверный тип доставки');
+
+        $delivery = DeliveryCargo::new($request->integer('company_id'), $request->string('track')->trim()->value());
+
+        $expense->delivery()->save($delivery);
+        event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
+
+        $expense->status = OrderExpense::STATUS_DELIVERY;
+        $expense->save();
+        $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '');
+
     }
 
 }

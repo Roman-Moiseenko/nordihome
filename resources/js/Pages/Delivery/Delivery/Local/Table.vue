@@ -124,7 +124,6 @@
                 <Active :active="scope.row.is_drivers"/>
             </template>
         </el-table-column>
-
         <el-table-column label="Действия" align="right">
             <template #default="scope">
             </template>

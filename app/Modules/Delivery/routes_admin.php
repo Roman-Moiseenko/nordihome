@@ -17,7 +17,7 @@ Route::group(
         Route::post('/assembled/{expense}', 'DeliveryController@assembled')->name('assembled');//Собран
         Route::post('/completed/{expense}', 'DeliveryController@completed')->name('completed');//Выдан
 
-        Route::post('/set-track/{expense}', 'DeliveryController@set_track')->name('set-track'); //Назначить трек-номер
+        Route::post('/set-cargo/{expense}', 'DeliveryController@set_cargo')->name('set-cargo'); //Назначить трек-номер и ТК
         Route::post('/delivery/{expense}', 'DeliveryController@delivery')->name('delivery');
         Route::post('/set-period/{expense}', 'DeliveryController@set_period')->name('set-period');
 

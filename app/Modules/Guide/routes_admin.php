@@ -61,4 +61,15 @@ Route::group(
         Route::put('/{vat}', 'VATController@update')->name('update');
         Route::delete('/{vat}', 'VATController@destroy')->name('destroy');
     });
+
+    //ADDITION
+    Route::group([
+        'prefix' => 'cargo-company',
+        'as' => 'cargo-company.',
+    ], function () {
+        Route::get('/', 'CargoCompanyController@index')->name('index');
+        Route::post('/', 'CargoCompanyController@store')->name('store');
+        Route::put('/{cargo}', 'CargoCompanyController@update')->name('update');
+        Route::delete('/{cargo}', 'CargoCompanyController@destroy')->name('destroy');
+    });
 });

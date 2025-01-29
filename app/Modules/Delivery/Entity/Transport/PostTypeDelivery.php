@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Entity\Transport;
 
 use App\Modules\Shop\CartItemInterface;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class PostTypeDelivery extends DeliveryAbstract
 {
 

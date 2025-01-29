@@ -19,6 +19,7 @@ use App\Modules\Admin\Entity\Worker;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\FullName;
+use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
 use App\Modules\Notification\Helpers\TelegramParams;
@@ -289,19 +290,6 @@ class ExpenseService
     {
         $expense->status = OrderExpense::STATUS_ASSEMBLED;
         $expense->save();
-    }
-
-    #[Deprecated]
-    public function delivery(OrderExpense $expense, string $track = ''): void
-    {
-        if ($expense->isRegion()) {
-            if (empty($track)) throw new \DomainException('Не указан трек-номер посылки');
-            $expense->track = $track;
-            event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
-        }
-        $expense->status = OrderExpense::STATUS_DELIVERY;
-        $expense->save();
-        $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '');
     }
 
     public function completed(OrderExpense $expense): void

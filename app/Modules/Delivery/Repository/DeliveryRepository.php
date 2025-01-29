@@ -32,7 +32,7 @@ class DeliveryRepository
     }
 
 
-    public function getExpense(int $type, string $filter)
+    public function getExpense(int $type, string $filter): OrderExpense
     {
         $query = OrderExpense::where('type', $type);
         if ($filter == 'new') $query->where('status', OrderExpense::STATUS_ASSEMBLY);
@@ -57,7 +57,7 @@ class DeliveryRepository
                 $query->where('type', '<>', Order::OZON);
             })
             ->whereIn('status', [OrderExpense::STATUS_DELIVERY, OrderExpense::STATUS_DELIVERED, OrderExpense::STATUS_ASSEMBLED]);
-        return $query->get()->map(fn(OrderExpense $expense) => $this->orderRepository->ExpenseWithToArray($expense));
+        return $query->get()->map(fn(OrderExpense $expense) => $this->DeliveryItemToArray($expense));
     }
 
     public function getOzon(): Arrayable
@@ -70,23 +70,18 @@ class DeliveryRepository
         return $query->get()->map(fn(OrderExpense $expense) => $this->orderRepository->ExpenseWithToArray($expense));
     }
 
-    public function getDelivery(Request $request, &$filters)
+    private function DeliveryItemToArray(OrderExpense $expense): array
     {
-        $query = OrderExpense::orderByDesc('updated_at')->orderBy('status')
-            ->orderBy('type')
-            ->whereIn('status', [OrderExpense::STATUS_DELIVERY, OrderExpense::STATUS_DELIVERED, OrderExpense::STATUS_ASSEMBLED]);
-        $filters = [];
-        //TODO Фильтр?
-        if (count($filters) > 0) $filters['count'] = count($filters);
-
-        return $query->paginate($request->input('size', 20))
-            ->withQueryString()
-            ->through(fn(OrderExpense $expense) => $this->orderRepository->ExpenseWithToArray($expense));
+        return array_merge($expense->toArray(), [
+            'visible_cargo' => false,
+            'delivery' => $expense->delivery()->with('cargo')->first(),
+        ]);
     }
+
 
     public function getAll(Request $request, &$filters)
     {
-        $query = OrderExpense::orderByDesc('updated_at')->orderBy('status')
+        $query = OrderExpense::orderByDesc('created_at')->orderBy('status')
             ->orderBy('type')
             ->whereNotIn('status', [OrderExpense::STATUS_CANCELED]);
         $filters = [];

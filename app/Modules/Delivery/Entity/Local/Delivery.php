@@ -8,6 +8,7 @@ use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Entity\Transport\DeliveryStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property DeliveryStatus $status
  * @property DeliveryStatus[] $statuses
  */
+#[Deprecated]
 class Delivery extends Model
 {
     protected $table = 'delivery_local';

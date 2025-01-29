@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Repository\DeliveryRepository;
 use App\Modules\Delivery\Service\CalendarService;
+use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Guide\Entity\CargoCompany;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
 use Illuminate\Http\RedirectResponse;
@@ -24,17 +26,20 @@ class DeliveryController extends Controller
     private ExpenseService $expenseService;
     private DeliveryRepository $repository;
     private CalendarService $calendarService;
+    private DeliveryService $service;
 
     public function __construct(
         ExpenseService $expenseService,
         DeliveryRepository $repository,
         CalendarService $calendarService,
+        DeliveryService $service,
     )
     {
         $this->middleware(['auth:admin', 'can:delivery', 'can:order']);
         $this->expenseService = $expenseService;
         $this->repository = $repository;
         $this->calendarService = $calendarService;
+        $this->service = $service;
     }
 
     /**
@@ -76,6 +81,7 @@ class DeliveryController extends Controller
             'incomplete' => $incomplete,
             'region' => $region,
             'ozon' => $ozon,
+            'cargo_companies' => CargoCompany::orderBy('name')->getModels(),
             'drivers' => Worker::where('active', true)->where('driver', true)->get(),
             'assembles' => Worker::where('active', true)->where('assemble', true)->get(),
         ]);
@@ -132,6 +138,12 @@ class DeliveryController extends Controller
     {
         $this->calendarService->attach_expense($expense, $request->integer('period_id'));
         return redirect()->back()->with('success', 'Назначена новая дата отгрузки');
+    }
+
+    public function set_cargo(OrderExpense $expense, Request $request): RedirectResponse
+    {
+        $this->service->create($expense, $request);
+        return redirect()->back()->with('success', 'Трек номер и ТК установлены');
     }
 
     //TODO Заменить для доставки ТК на setTrackNumber

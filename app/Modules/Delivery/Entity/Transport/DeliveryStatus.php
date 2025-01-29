@@ -5,6 +5,7 @@ namespace App\Modules\Delivery\Entity\Transport;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 use function now;
 
 /**
@@ -13,6 +14,7 @@ use function now;
  * @property int $status
  * @property Carbon $created_at
  */
+#[Deprecated]
 class DeliveryStatus extends Model
 {
 
