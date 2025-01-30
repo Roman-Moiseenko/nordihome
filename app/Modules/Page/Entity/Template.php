@@ -9,11 +9,12 @@ class Template
     const TYPES = [
         'banner' => 'Баннеры',
         'widget' => 'Виджеты с товарами',
+        'page' => 'Страницы',
     ];
+
     /**
      * Собираем все шаблоны в один массив
      */
-
     public static function TEMPLATES(): array
     {
         $base['widget'] = 'Виджет';
@@ -33,7 +34,17 @@ class Template
      */
     public static function Path(string $type): string
     {
-        return resource_path() . '/views/shop/' . config('shop.theme') .'/templates/' . $type . '/';
+        return resource_path() . '/views/shop/' . config('shop.theme') . '/templates/' . $type . '/';
+    }
+
+    /**
+     * Генерация пути к blade файлу для view
+     * @param string $type
+     * @return string
+     */
+    public static function blade(string $type): string
+    {
+        return 'shop.' . config('shop.theme') . '.templates.' . $type . '.';
     }
 
     /**
@@ -54,6 +65,6 @@ class Template
      */
     public static function Base(string $type): string
     {
-        return resource_path('views/shop/' . config('shop.theme') .'/templates/base/'. $type . '.stub');
+        return resource_path('views/shop/' . config('shop.theme') . '/templates/base/' . $type . '.stub');
     }
 }

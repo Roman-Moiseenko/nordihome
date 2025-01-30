@@ -64,14 +64,9 @@ Breadcrumbs::for('admin.page.contact.edit', function (BreadcrumbTrail $trail, Co
 //BANNER
 Breadcrumbs::for('admin.page.banner.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Контакты', route('admin.page.banner.index'));
+    $trail->push('Баннеры', route('admin.page.banner.index'));
 });
-Breadcrumbs::for('admin.page.banner.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.page.banner.index');
-    $trail->push('Добавить новый', route('admin.page.banner.create'));
-});
-
-Breadcrumbs::for('admin.page.banner.edit', function (BreadcrumbTrail $trail, Banner $banner) {
+Breadcrumbs::for('admin.page.banner.show', function (BreadcrumbTrail $trail, Banner $banner) {
     $trail->parent('admin.page.banner.index', $banner);
-    $trail->push($banner->name . ' - Редактировать', route('admin.page.banner.edit', $banner));
+    $trail->push($banner->name, route('admin.page.banner.show', $banner));
 });

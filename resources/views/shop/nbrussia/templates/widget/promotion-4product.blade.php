@@ -1,3 +1,4 @@
+<!--template:Акция - 4 товара-->
 <div class="container-xl shop-home-widget">
     <div class="row promotion-widget">
         <div class="col-lg-3">

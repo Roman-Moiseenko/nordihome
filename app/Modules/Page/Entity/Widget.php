@@ -100,4 +100,27 @@ class Widget extends Model
         $this->save();
     }
 
+    public static function findView(int $id): string
+    {
+        /** @var Widget $widget */
+        $widget = self::find($id);
+        if (is_null($widget)) return '';
+        return $widget->view();
+    }
+
+    public static function renderFromText(string|null $text): string
+    {
+        if (is_null($text)) return '';
+        preg_match_all('/\[widget=\"(.+)\"\]/', $text, $matches);
+        $replaces = $matches[0]; //шот-коды вида [widget="7"] (массив)
+        $widget_ids = $matches[1]; //значение id виджета (массив)
+
+        foreach ($widget_ids as $key => $widget_id) {
+            $text = str_replace(
+                $replaces[$key],
+                self::findView((int)$widget_id),
+                $text);
+        }
+        return $text;
+    }
 }

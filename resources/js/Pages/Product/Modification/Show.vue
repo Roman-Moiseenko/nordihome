@@ -13,10 +13,10 @@
             <div class="w-11" style="height: 40px;">
                 <img v-if="product.image" :src="product.image" style="width: 40px; height: 40px;">
             </div>
-            <div class="ml-4" style="width: 120px;">
+            <div class="ml-4" style="width: 200px;">
                 {{ product.code }}
             </div>
-            <div class="ml-4" style="width: 350px;">
+            <div class="ml-4" style="min-width: 350px;">
                 <Link type="primary" :href="route('admin.product.edit', {product: product.id})">{{ product.name }}</Link>
             </div>
             <div>

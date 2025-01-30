@@ -5,6 +5,7 @@ namespace App\Modules\Page\Entity;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 /**
@@ -21,17 +22,11 @@ use Illuminate\Support\Str;
  * @property int $sort
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Page $parent
  */
 class Page extends Model
 {
-    const PATH_TEMPLATES = 'pages.';
 
-    const PAGES_TEMPLATES = [
-        'contact',
-        'review',
-        'tariff',
-        'text',
-    ];
     protected $fillable = [
         'parent_id',
         'name',
@@ -51,7 +46,7 @@ class Page extends Model
     public static function register(string $name, string $slug,
                                     string $title, string $description, string $template, bool $menu, int $parent_id = null): self
     {
-        $sort = Page::where('parent_id', $parent_id)->max('sort');
+        $sort = Page::where('parent_id', $parent_id)->count();
         return self::create([
             'parent_id' => $parent_id,
             'name' => $name,
@@ -59,7 +54,7 @@ class Page extends Model
             'title' => $title,
             'description' => $description,
             'template' => $template,
-            'sort' => ($sort + 1),
+            'sort' => $sort,
             'menu' => $menu,
             'published' => false,
             'text' => '',
@@ -84,9 +79,38 @@ class Page extends Model
         $this->save();
     }
 
-    public function view(string $theme): string
+    public function view(): string
     {
-       // dd('shop.' . $theme . '.pages.' . $this->template);
-        return view('shop.' . $theme . '.pages.' . $this->template, ['page' => $this, 'title' => $this->title, 'description' => $this->description])->render();
+        $this->text = Widget::renderFromText($this->text); //Рендерим виджеты в тексте
+        $this->text = Banner::renderFromText($this->text); //Рендерим баннеры в тексте
+
+       // $repository = app()->make(WebRepository::class);
+       // $breadcrumb = $repository->getBreadcrumbModel($this); //Хлебные крошки - image, текст
+    /*    $class = strtolower(class_basename(static::class)); //Класс вызвавший
+        if (empty($this->template)) {
+            $template = 'web.' .$class . '.show'; //Базовый шаблон системы
+        } else {
+            $template = 'web.templates.' . $class . '.' . $this->template; //Выбранный шаблон
+        }
+*/
+        return view(Template::blade('page') . $this->template, ['page' => $this, 'title' => $this->title, 'description' => $this->description])->render();
+        //dd($this);
+     /*   return view($template,
+            [
+                $class => $this,
+                'meta' => $this->meta,
+                'breadcrumb' => $breadcrumb,
+            ]
+        )->render();*/
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Page::class, 'parent_id', 'id');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('published', true);
     }
 }

@@ -16,7 +16,7 @@ Route::group(
             return phpinfo();
         });
 
-        Route::get('/', 'HomeController@index')->name('home');
+        Route::get('/', 'PageController@home')->name('home');
         Route::post('/', function () {
             return abort(404);
         });

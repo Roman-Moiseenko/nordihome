@@ -44,12 +44,14 @@
         margin: 0;
         padding: 0;
         .menu-item {
-            //position: relative;
             text-align: left;
+            >a {
+                font-weight: 600;
+            }
             .dropdown-item {
                 padding: 28px 20px;
             }
-            > .sub-menu {
+            >.sub-menu {
                 border-top: 1px solid var(--bs-gray-200);
                 position: absolute;
                 left: 0;
@@ -58,7 +60,8 @@
                 background: var(--bs-white);
                 width: auto;
                 display: none;
-                box-shadow: 0 8px 4px 0 var(--bs-gray-400);
+                box-shadow: 0 4px 4px 0 rgb(0 0 0 / 0.3);
+                z-index: 2;
             }
 
             &:hover {

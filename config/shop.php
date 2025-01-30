@@ -38,7 +38,8 @@ return [
             //'card-no-watermark' => ['width' => 700, 'height' => 700],
             'promotion' => ['width' => 450, 'height' => 550,],
             'promotion-mini' => ['width' => 400, 'height' => 250,],
-            'original' => ['watermark' => true]
+            'original' => ['watermark' => true],
+            'banner' => ['width' => 1616, 'height' => 736],
         ],
         'path' => [
             'uploads' => '/uploads',

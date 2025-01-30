@@ -103,7 +103,6 @@ import SupplyActions from './Blocks/Actions.vue'
 import Pagination from '@Comp/Pagination.vue'
 import ProductRename from "@Comp/Product/Rename.vue";
 
-
 const props = defineProps({
     supply: Object,
     title: {
@@ -117,19 +116,14 @@ const props = defineProps({
 provide('$filters', props.filters) //Фильтр товаров в списке документа
 provide('$printed', props.printed) //Для печати
 provide('$accounting', props.supply) //Для общих действий
-
 const tableDate = [...props.supply.products.data.map(item => {
     item.amount = (item.quantity * item.cost_currency).toFixed(2)
     return item
 })]
-
-
-
 interface IRow {
     cost_currency: number,
     quantity: number,
 }
-
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.cost_currency === 0 || row.quantity === 0) {
         return 'error-row'
@@ -159,11 +153,9 @@ function setAmount(row) {
     row.cost_currency = row.amount / row.quantity
     setItem(row)
 }
-
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.supply.del-product', {product: row.id}));
 }
-
 function classCost(row) {
     if (row.pre_cost > row.cost_currency) return 'success'
     if (row.pre_cost < row.cost_currency) return 'danger'

@@ -1,3 +1,4 @@
+<!--template:Построчно 6 товаров-->
 <div class="container-xl shop-home-widget">
     <a href="{{ $widget->url }}" title="{{ $widget->title }}">
         <h2 class="fs-4">{{ $widget->title }} <i class="fa-sharp fa-light fa-circle-arrow-right"></i></h2>

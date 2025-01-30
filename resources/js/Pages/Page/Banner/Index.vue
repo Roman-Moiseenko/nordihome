@@ -27,7 +27,14 @@
 
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <el-button v-if="!scope.row.published"
+                        <el-button
+                            size="small"
+                            :type="scope.row.active ? 'warning' : 'success'"
+                            @click.stop="onToggle(scope.row)"
+                        >
+                            {{ scope.row.active ? 'Draft' : 'Active' }}
+                        </el-button>
+                        <el-button v-if="!scope.row.active"
                                    size="small"
                                    type="danger"
                                    @click.stop="handleDeleteEntity(scope.row)"
@@ -57,7 +64,7 @@
             <template #footer>
                 <div class="dialog-footer">
                     <el-button @click="dialogCreate = false">Отмена</el-button>
-                    <el-button type="primary" @click="saveContact">Сохранить</el-button>
+                    <el-button type="primary" @click="saveBanner">Сохранить</el-button>
                 </div>
             </template>
         </el-dialog>
@@ -77,7 +84,6 @@ import {defineProps, inject, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import axios from "axios";
 
-
 const props = defineProps({
     banners: Array,
     templates: Array,
@@ -95,7 +101,6 @@ const tableData = ref([...props.banners])
 const form = reactive({
     name: null,
     template: null,
-    //TODO
 })
 
 function onOpenDialog() {
@@ -105,28 +110,21 @@ function onOpenDialog() {
     dialogCreate.value = true
 }
 
-function handleGetProduct(val) {
-  /*  form.product_id = val
-
-    const getAttributes = route('admin.product.attr-modification', {product: form.product_id});
-
-    axios.post(getAttributes).then(response => {
-        console.log(response.data)
-        if (response.data.error !== undefined) console.log(response.data.error)
-        attributes.value = response.data
-        placeholder_name.value = 'Введите название'
-        placeholder_attr.value = 'Выберите 1-2 атрибута'
-        document.getElementById('name-modif').focus()
-    });*/
-}
-
-function saveContact() {
+function saveBanner() {
     router.post(route('admin.page.banner.store' ), form)
 }
 
 function routeClick(row) {
 
    router.get(route('admin.page.banner.show', {banner: row.id}))
+}
+
+function onToggle(row) {
+    router.visit(route('admin.page.banner.toggle', {banner: row.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+    })
 }
 
 function handleDeleteEntity(row) {

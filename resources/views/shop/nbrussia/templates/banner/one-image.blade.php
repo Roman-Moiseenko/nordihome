@@ -1,4 +1,4 @@
-<!--template:Главный слайдер-->
+<!--template:Одно изображение-->
 @php
     /**
     * Banner::class - string
@@ -11,15 +11,10 @@
     * $item->caption - string
     * $item->description - string
     */
+    $item = $banner->items()->first();
 @endphp
 <div>
-    <div id="main-slider" class="owl-carousel owl-theme">
-    @foreach($banner->items as $item)
-        <div>
-            <a href="{{ $item->url }}">
-                <img src="{{ $item->getImage('banner') }}" />
-            </a>
-        </div>
-    @endforeach
-    </div>
+    <a href="{{ $item->url }}">
+        <img src="{{ $item->getImage('banner') }}" style="width: 100%;"/>
+    </a>
 </div>

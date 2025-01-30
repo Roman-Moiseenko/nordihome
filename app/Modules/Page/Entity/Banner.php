@@ -18,12 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Banner extends Model
 {
 
-    const PATH_TEMPLATES = 'admin.page.banner.template.';
-    const BANNER_TEMPLATES = [
-        'promotion-4product' => 'Акция + 4 товара',
-        'row-4product' => 'Список товаров, 4 в ряд (1 ряд)',
-        'row-6product' => 'Список товаров, 6 в ряд (множество рядов)',
-    ];
     public $timestamps = false;
 
     protected $fillable = [
@@ -41,21 +35,43 @@ class Banner extends Model
         ]);
     }
 
-    public function addItem($file): void
+    public function isActive(): bool
     {
-        $item = BannerItem::new();
-        $this->items()->save(BannerItem::new());
-        $item->refresh();
-        $item->saveImage($file);
-    }
-
-    public function delItem(int $id): void
-    {
-
+        return $this->active == true;
     }
 
     public function items(): HasMany
     {
-        return $this->hasMany(BannerItem::class, 'banner_id', 'id');
+        return $this->hasMany(BannerItem::class, 'banner_id', 'id')->orderBy('sort');
+    }
+
+    public static function findView(int $id): string
+    {
+        /** @var Banner $banner */
+        $banner = self::find($id);
+        if (is_null($banner)) return '';
+        return $banner->view();
+    }
+
+    public static function renderFromText(string|null $text): string
+    {
+        if (is_null($text)) return '';
+        preg_match_all('/\[banner=\"(.+)\"\]/', $text, $matches);
+        $replaces = $matches[0]; //шот-коды вида [widget="7"] (массив)
+        $banner_ids = $matches[1]; //значение id виджета (массив)
+
+        foreach ($banner_ids as $key => $banner_id) {
+            $text = str_replace(
+                $replaces[$key],
+                self::findView((int)$banner_id),
+                $text);
+        }
+        return $text;
+    }
+
+
+    public function view(): string
+    {
+        return view( Template::blade('banner') . $this->template, ['banner' => $this])->render();
     }
 }

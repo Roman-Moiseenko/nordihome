@@ -1,3 +1,4 @@
+<!--template:Построчно 4 товара-->
 <div class="container-xl shop-home-widget">
     <h2 class="fs-4">{{ $widget->title }}</h2>
     <div class="row list-big-widget">

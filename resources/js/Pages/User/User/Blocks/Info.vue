@@ -1,7 +1,6 @@
 <template>
     <el-row :gutter="10">
         <el-col :span="8">
-            <!--EditUser  :user="user" :deliveries="deliveries" :type_pricing="type_pricing"/-->
 
             <el-descriptions v-if="!editUser" :column="1" border class="mb-5">
                 <el-descriptions-item label="ФИО">

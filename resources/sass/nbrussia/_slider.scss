@@ -1,0 +1,63 @@
+.owl-carousel {
+    .owl-nav {
+        >button {
+            display: none;
+            justify-content: space-between;
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            border: none !important;
+            background: var(--bs-white) !important;
+            color: var(--color-accent) !important;
+            cursor: pointer;
+
+            font-size: 24px !important;
+            transform: translateY(-50%);
+
+            box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
+            &.owl-prev {
+                left: 20px;
+            }
+            &.owl-next {
+                right: 20px;
+            }
+        }
+    }
+    &:hover {
+        .owl-nav > button {
+            display: block;
+        }
+    }
+    .owl-dots {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+        display: flex;
+        >.owl-dot {
+            margin: 0 10px;
+            display: block;
+            height: 1rem;
+            width: 1rem;
+            cursor: pointer;
+            border-style: solid;
+            border-radius: 9999px;
+            border-width: 2px;
+            --tw-border-opacity: 1;
+            border-color: rgb(255 255 255 / 1);
+            background-color: rgb(255 255 255 / 0);
+            --tw-bg-opacity: 0;
+            transition-property: color,background-color,border-color,fill,stroke,-webkit-text-decoration-color;
+            transition-property: color,background-color,border-color,text-decoration-color,fill,stroke;
+            transition-property: color,background-color,border-color,text-decoration-color,fill,stroke,-webkit-text-decoration-color;
+            transition-timing-function: cubic-bezier(.4,0,.2,1);
+            transition-duration: .15s;
+            &.active {
+                background-color: rgb(255 255 255 / 1);
+            }
+        }
+    }
+}

@@ -7,6 +7,7 @@ use App\Modules\Page\Entity\Page;
 use App\Modules\Shop\ShopRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class PageController extends ShopController
 {
@@ -19,11 +20,27 @@ class PageController extends ShopController
         $this->repository = $repository;
     }
 
+    public function home()
+    {
+        if (!is_null($page = Page::where('slug', 'home')->active()->first())) {
+            $callback = fn() => $page->view();
+        } else {
+            $callback = fn() => view($this->route('home'))->render();
+        }
+        //TODO Настройка использовать кеширование
+        return $callback();
+        // if (in_array('page', $this->web->use_caches)) {
+        //return Cache::rememberForever('home', $callback);
+        //  } else {
+        //     return $callback();
+        //  }
+    }
+
     public function view($slug)
     {
         try {
             $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
-            return $page->view($this->theme);
+            return $page->view();
         } catch (\Throwable $e) {
             abort(404, 'Страница не найдена');
         }

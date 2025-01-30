@@ -3,6 +3,7 @@
 @section('breadcrumbs')
 @endsection
 
+
 @section('main', 'home')
 
 @section('content')
@@ -10,13 +11,6 @@
         <h1>САЙТ НАХОДИТСЯ В РАЗРАБОТКЕ 1</h1>
         <h2>Весь ассортимент товара, количество, цена являются вымешенными и не имеют отношение к реальной продажи</h2>
     </div>
-    @foreach($widgets as $widget)
-        {!! $widget->view() !!}
-    @endforeach
-
-
-
-
 
     {!! '$schema->HomePage()' !!}
 @endsection

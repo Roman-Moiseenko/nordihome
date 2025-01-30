@@ -3,7 +3,7 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Сайт. Страницы</h1>
         <div class="flex">
-            <el-button type="primary" class="p-4 my-3" @click="onOpenDialog" ref="buttonRef">
+            <el-button type="primary" class="p-4 my-3" @click="dialogCreate = true" ref="buttonRef">
                 Добавить страницу
             </el-button>
         </div>
@@ -29,7 +29,19 @@
                 </el-table-column>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        Up, Down, Draft/Active
+                        <el-button size="small" type="primary" dark @click.stop="onUp(scope.row)">
+                            <i class="fa-light fa-chevron-up"></i>
+                        </el-button>
+                        <el-button size="small" type="primary" dark @click.stop="onDown(scope.row)">
+                            <i class="fa-light fa-chevron-down"></i>
+                        </el-button>
+
+                        <el-button size="small"
+                                   :type="scope.row.published ? 'warning' : 'success'"
+                                   @click.stop="onToggle(scope.row)"
+                        >
+                            {{ scope.row.published ? 'Draft' : 'Active' }}
+                        </el-button>
                         <el-button v-if="!scope.row.published"
                                    size="small"
                                    type="danger"
@@ -44,33 +56,37 @@
 
         <DeleteEntityModal name_entity="Страницу"/>
 
-
         <el-dialog v-model="dialogCreate" title="Страница" width="500">
             <el-form label-width="auto">
-                <el-form-item label="Название" label-position="top" class="mt-3">
-                    <el-input v-model="form.name" placeholder="Подпись, ALT"/>
+                <el-form-item label="Имя страницы" label-position="top" class="mt-3">
+                    <el-input v-model="form.name" placeholder="Внутреннее"/>
                 </el-form-item>
-                <el-form-item label="Класс иконки" label-position="top" class="mt-3">
-                    <el-input v-model="form.icon" placeholder="fontawesome 6.0"/>
+                <el-form-item label="Ссылка" label-position="top" class="mt-3">
+                    <el-input v-model="form.slug" placeholder="Заполнится автоматически" clearable/>
+                </el-form-item>
+                <el-form-item label="Родительская страница" label-position="top" class="mt-3">
+                    <el-select v-model="form.parent_id" filterable clearable>
+                        <el-option v-for="item in parent_pages" :value="item.id" :label="item.name" />
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="Шаблон" label-position="top" class="mt-3">
+                    <el-select v-model="form.template" filterable clearable>
+                        <el-option v-for="item in templates" :value="item.value" :label="item.label" />
+                    </el-select>
                 </el-form-item>
 
 
-                <el-form-item label="Ссылка на контакт" label-position="top" class="mt-3">
-                    <el-input v-model="form.url" placeholder="https://"/>
-                </el-form-item>
-                <el-form-item label="Тип для аналитики" label-position="top" class="mt-3">
-                    <el-input-number v-model="form.type" min="0"/>
-                </el-form-item>
+
 
             </el-form>
             <template #footer>
                 <div class="dialog-footer">
                     <el-button @click="dialogCreate = false">Отмена</el-button>
-                    <el-button type="primary" @click="saveContact">Сохранить</el-button>
+                    <el-button type="primary" @click="savePage">Сохранить</el-button>
                 </div>
             </template>
         </el-dialog>
-
     </el-config-provider>
 
 </template>
@@ -86,66 +102,66 @@ import {defineProps, inject, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import axios from "axios";
 
-
 const props = defineProps({
     pages: Array,
     title: {
         type: String,
         default: 'Сайт. Страницы',
     },
+    templates: Array,
+    parent_pages: Array,
 })
 
-const store = useStore();
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.pages])
-
-
 const form = reactive({
-    id: null,
     name: null,
-    icon: null,
-    //TODO
+    slug: null,
+    template: null,
+    parent_id: null,
 })
 
-function onOpenDialog() {
-    form.id = null
-    form.name = null
-
-    dialogCreate.value = true
+function savePage() {
+    router.visit(route('admin.page.page.store'), {
+        method: "post",
+        data: form,
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            dialogCreate.value = false;
+        }
+    })
 }
-
-function handleGetProduct(val) {
-  /*  form.product_id = val
-
-    const getAttributes = route('admin.product.attr-modification', {product: form.product_id});
-
-    axios.post(getAttributes).then(response => {
-        console.log(response.data)
-        if (response.data.error !== undefined) console.log(response.data.error)
-        attributes.value = response.data
-        placeholder_name.value = 'Введите название'
-        placeholder_attr.value = 'Выберите 1-2 атрибута'
-        document.getElementById('name-modif').focus()
-    });*/
+function onToggle(row) {
+    router.visit(route('admin.page.page.toggle', {page: row.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+    })
 }
-
-function saveContact() {
-    if (form.id === null) {
-        router.post(route('admin.page.page.store' ), form)
-    } else {
-        router.put(route('admin.page.page.update', {page: form.id}) , form)
-    }
-}
-
 function routeClick(row) {
-    //TODO Открыть модальное окно
-    form.id = row.id
-    dialogCreate.value = true
-    //TODO Открыть модальное окно
-    //router.get(route('admin.product.modification.show', {modification: row.id}))
+    router.get(route('admin.page.page.show', {page: row.id}))
+}
+function onUp(row) {
+    router.visit(route('admin.page.page.up', {page: row.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+        }
+    })
 }
 
+function onDown(row) {
+    router.visit(route('admin.page.page.down', {page: row.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+        }
+    })
+}
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.page.page.destroy', {page: row.id}));
 }

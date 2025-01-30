@@ -5,92 +5,111 @@ namespace App\Modules\Page\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Repository\PageRepository;
+use App\Modules\Page\Repository\TemplateRepository;
 use App\Modules\Page\Service\PageService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class PageController extends Controller
 {
     private PageService $service;
+    private TemplateRepository $templates;
+    private PageRepository $repository;
 
-    public function __construct(PageService $service)
+    public function __construct(
+        PageService        $service,
+        TemplateRepository $templates,
+        PageRepository     $repository,
+    )
     {
         $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
+        $this->templates = $templates;
+        $this->repository = $repository;
     }
 
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request): Response
     {
-        $pages = Page::get();
+        $parent_pages = Page::where('parent_id', null)->get();
+
+        $pages = $this->repository->getIndex($request);
+        $templates = $this->templates->getTemplates('page');
+
         return Inertia::render('Page/Page/Index', [
             'pages' => $pages,
+            'templates' => $templates,
+            'parent_pages' => $parent_pages,
         ]);
-       // return view('admin.page.page.index', compact('pages'));
+
     }
 
-    public function create()
-    {
-        $templates = Page::PAGES_TEMPLATES;
-        $pages = Page::where('parent_id', null)->get();
-        return view('admin.page.page.create', compact('templates', 'pages'));
-    }
-
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|min:3',
-            'title' => 'required|string|min:6',
+            //'title' => 'required|string|min:6',
             'template' => 'required',
         ]);
         $page = $this->service->create($request);
-        return redirect()->route('admin.page.page.show', $page);
+        return redirect()->route('admin.page.page.show', $page)->with('success', 'Страница сохранена');
     }
 
-    public function show(Page $page)
+    public function show(Page $page): Response
     {
-        return view('admin.page.page.show', compact('page'));
-    }
+        $templates = $this->templates->getTemplates('page');
+        $parent_pages = Page::where('parent_id', null)->get();
 
-    public function edit(Page $page)
-    {
-        $templates = Page::PAGES_TEMPLATES;
-        $pages = Page::where('parent_id', null)->get();
-        return view('admin.page.page.edit', compact('page', 'templates', 'pages'));
-    }
-
-    public function update(Request $request, Page $page)
-    {
-        $request->validate([
-            'name' => 'required|string|min:3',
-            'title' => 'required|string|min:6',
-            'template' => 'required',
+        return Inertia::render('Page/Page/Show', [
+            'page' => $this->repository->PageWithToArray($page),
+            'templates' => $templates,
+            'parent_pages' => $parent_pages,
+            'tiny_api' => config('shop.tinymce'),
         ]);
-        $this->service->update($request, $page);
-        return redirect()->route('admin.page.page.show', $page);
     }
 
-    public function text(Request $request, Page $page)
+    public function set_info(Page $page, Request $request): RedirectResponse
     {
-        $page = $this->service->setText($request, $page);
-        return redirect()->route('admin.page.page.show', $page);
+        $this->service->setInfo($page, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function draft(Page $page)
+    public function set_text(Page $page, Request $request): \Illuminate\Http\JsonResponse
     {
-        $page->draft();
-        return redirect()->back();
+        $this->service->setText($page, $request->string('text')->trim()->value());
+        return \response()->json(true);
     }
 
-    public function published(Page $page)
+    public function toggle(Page $page): RedirectResponse
     {
-        $page->published();
-        return redirect()->back();
+        if ($page->published) {
+            $message = 'Страница убрана из публикации';
+            $page->draft();
+        } else {
+            $message = 'Страница опубликована';
+            $page->published();
+        }
+        return redirect()->back()->with('success', $message);
     }
 
-    public function destroy(Page $page)
+    public function up(Page $page)
+    {
+        $this->service->up($page);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function down(Page $page)
+    {
+        $this->service->down($page);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function destroy(Page $page): RedirectResponse
     {
         $this->service->destroy($page);
-        return redirect()->route('admin.page.page.index');
+        return redirect()->back()->with('success', 'Страница удалена');
     }
 
 }
