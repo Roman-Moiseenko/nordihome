@@ -42,11 +42,16 @@ const props = defineProps({
 const showEdit = ref(false)
 const field_new = ref(props.field)
 const field_fio = reactive({
-    surname: props.field.surname,
-    firstname: props.field.firstname,
-    secondname: props.field.secondname,
+    surname: null,
+    firstname: null,
+    secondname: null,
 })
-const $emit = defineEmits(['update:field'])
+if (props.isFIO) {
+    field_fio.surname = props.field.surname
+    field_fio.firstname = props.field.firstname
+    field_fio.secondname = props.field.secondname
+}
+const $emit = defineEmits(['update:field', 'change'])
 function saveField(){
     showEdit.value = false
     if (props.isFIO) {
@@ -54,7 +59,7 @@ function saveField(){
     } else {
         $emit('update:field', field_new.value)
     }
-
+    $emit('change', true)
 }
 </script>
 <style scoped>

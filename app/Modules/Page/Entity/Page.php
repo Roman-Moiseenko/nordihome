@@ -81,8 +81,12 @@ class Page extends Model
 
     public function view(): string
     {
-        $this->text = Widget::renderFromText($this->text); //Рендерим виджеты в тексте
-        $this->text = Banner::renderFromText($this->text); //Рендерим баннеры в тексте
+        $this->text = Template::renderClasses($this->text);
+
+
+        //TODO На будущее
+        // $this->text = Template::renderFromText('promotion', $this->text);
+
 
        // $repository = app()->make(WebRepository::class);
        // $breadcrumb = $repository->getBreadcrumbModel($this); //Хлебные крошки - image, текст

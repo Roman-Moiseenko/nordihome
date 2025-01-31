@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $caption
  * @property string $description
  * @property int $sort
+ * @property string $slug
  *
  * @property Banner $banner
  */

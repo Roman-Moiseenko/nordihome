@@ -14,6 +14,8 @@ class Web extends AbstractSetting
     public string $title_contact = '';
     public string $title_city = '';
 
+    public bool $is_cache = false;
+
     public function view()
     {
         return view('admin.settings.web', ['web' => $this]);

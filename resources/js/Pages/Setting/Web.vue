@@ -16,7 +16,9 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-
+                    <el-form-item label="Кеширование страниц" label-position="left">
+                        <el-checkbox v-model="form.is_cache" :checked="form.is_cache"/>
+                    </el-form-item>
                 </el-col>
                 <el-col :span="8">
                     <h2 class="font-medium">SEO-настройки (Заголовки)</h2>
@@ -62,7 +64,7 @@ const form = reactive({
     categories_desc: props.web.categories_desc,
     title_contact: props.web.title_contact,
     title_city: props.web.title_city,
-
+    is_cache: props.web.is_cache,
 })
 
 function onSubmit() {

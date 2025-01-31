@@ -59,20 +59,7 @@
                         ['placeholder' => 'Имя виджета', 'value' => !is_null($widget) ? $widget->name : ''])
                         ->label('Имя')->show() }}
                         <x-base.form-label for="select-object" class="mt-3">Данные для виджета</x-base.form-label>
-                        <x-base.tom-select id="select-object" name="data_class" class="w-full"
-                                           data-placeholder="Выберите класс">
-                            <option value="0"></option>
-                            @foreach(\App\Modules\Page\Entity\Widget::WIDGET_CLASSES as $name => $class)
-                                <option value="{{ $class }}"
-                                        data-widget="{{ strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $class)) }}"
-                                @if(isset($widget))
-                                    {{ $class == $widget->data_class ? 'selected' : ''}}
-                                    @endif
-                                >
-                                    {{ $name }}
-                                </option>
-                            @endforeach
-                        </x-base.tom-select>
+
 
                         <x-base.form-label for="select-id" class="mt-3">Объект</x-base.form-label>
                         <select id="select-id" name="data_id" class="w-full new-tom-select bg-white tom-select"

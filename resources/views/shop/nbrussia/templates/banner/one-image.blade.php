@@ -11,6 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
+    /** @var \App\Modules\Page\Entity\Banner $banner */
     $item = $banner->items()->first();
 @endphp
 <div>

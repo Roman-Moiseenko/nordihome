@@ -9,10 +9,21 @@ Route::group(
        // 'namespace' => 'Page',
     ],
     function () {
-        Route::resource('widget', 'WidgetController'); //CRUD
-        Route::post('/widget/ids', 'WidgetController@get_ids')->name('widget.ids');
-        Route::post('/widget/{widget}/draft', 'WidgetController@draft')->name('widget.draft');
-        Route::post('/widget/{widget}/activated', 'WidgetController@activated')->name('widget.activated');
+
+        Route::group([
+            'prefix' => 'widget',
+            'as' => 'widget.'
+        ], function () {
+            Route::post('/set-widget/{widget}', 'WidgetController@set_widget')->name('set-widget');
+            Route::post('/add-item/{widget}', 'WidgetController@add_item')->name('add-item');
+            Route::post('/set-item/{item}', 'WidgetController@set_item')->name('set-item');
+            Route::delete('/del-item/{item}', 'WidgetController@del_item')->name('del-item');
+            Route::post('/toggle/{widget}', 'WidgetController@toggle')->name('toggle');
+            Route::post('/up-item/{item}', 'WidgetController@up_item')->name('up-item');
+            Route::post('/down-item/{item}', 'WidgetController@down_item')->name('down-item');
+        });
+        Route::resource('widget', 'WidgetController')->except(['create', 'edit', 'update']); //CRUD
+
 
         Route::group([
             'prefix' => 'page',
@@ -25,7 +36,7 @@ Route::group(
             Route::post('/down/{page}', 'PageController@down')->name('down');
         });
 
-        Route::resource('page', 'PageController')->except(['create', 'edit', 'update']);; //CRUD
+        Route::resource('page', 'PageController')->except(['create', 'edit', 'update']); //CRUD
 
 
         Route::resource('contact', 'ContactController')->except(['show']); //CRUD

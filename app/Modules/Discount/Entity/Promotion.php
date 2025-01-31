@@ -30,6 +30,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property bool $published //Опубликовать из черновиков. Опубликованные запускаются автоматически по Cron-у
  * @property bool $active // по Cron if ($start_at > time() && $published) $active = true;
  * @property string $slug  //По title, если существует, добавляем год
+ * @property string $template
  * @property int $discount
  * @property Product[] $products
  */
@@ -181,7 +182,7 @@ class Promotion extends Model implements DataWidgetInterface
         $data->url = route('shop.promotion.view', $this->slug);
         $data->items = $this->products()->get()->map(function (Product $product) {
             return [
-                'image' => $product->getImage(),
+                'image' => $product->gallery()->first(),
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
                 'price' => $product->getPrice(),

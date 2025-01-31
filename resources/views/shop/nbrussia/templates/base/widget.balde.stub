@@ -1,0 +1,23 @@
+<!--template:Виджет-->
+@php
+/**
+* $widget->banner - Banner::class
+* $widget->name
+* $widget->url
+* $widget->caption
+* $widget->description
+* $widget->items - array WidgetItem
+* $item->slug
+* $item->name
+* $item->url
+* $item->caption
+* $item->description
+* $item-group - Group::class
+*/
+
+use App\Modules\Page\Entity\Widget;
+/** @var Widget $widget  */
+@endphp
+<div>
+
+</div>

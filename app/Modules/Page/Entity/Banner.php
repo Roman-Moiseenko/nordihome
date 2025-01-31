@@ -5,6 +5,7 @@ namespace App\Modules\Page\Entity;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -40,11 +41,20 @@ class Banner extends Model
         return $this->active == true;
     }
 
+    public function itemBySlug(string $slug): ?BannerItem
+    {
+        foreach ($this->items as $item) {
+            if ($item->slug = $slug) return $item;
+        }
+        return null;
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(BannerItem::class, 'banner_id', 'id')->orderBy('sort');
     }
 
+    #[Deprecated]
     public static function findView(int $id): string
     {
         /** @var Banner $banner */
@@ -53,6 +63,7 @@ class Banner extends Model
         return $banner->view();
     }
 
+    #[Deprecated]
     public static function renderFromText(string|null $text): string
     {
         if (is_null($text)) return '';
@@ -69,7 +80,7 @@ class Banner extends Model
         return $text;
     }
 
-
+    #[Deprecated]
     public function view(): string
     {
         return view( Template::blade('banner') . $this->template, ['banner' => $this])->render();

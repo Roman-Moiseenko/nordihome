@@ -19,7 +19,7 @@ class TemplateRepository
             $filters['count'] = 1;
         } else {
             $filters = [];
-            foreach (Template::TEMPLATES() as $key => $value) {
+            foreach (Template::TYPES as $key => $value) {
                 $result = array_merge($result, $this->getDataArray($key));
             }
         }
@@ -42,7 +42,7 @@ class TemplateRepository
                 'template' => $template[1],
                 'name' => empty($name) ? $template[1] : $name[1],
                 'type' => $type,
-                'type_name' => Template::TEMPLATES()[$type],
+                'type_name' => Template::TYPES[$type],
             ];
         }
         return $result;

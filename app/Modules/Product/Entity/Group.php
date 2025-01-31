@@ -47,11 +47,6 @@ class Group extends Model implements DataWidgetInterface
         ]);
     }
 
-
-    public function setVisible(array $visible)
-    {
-    }
-
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'groups_products', 'group_id', 'product_id');
@@ -74,7 +69,7 @@ class Group extends Model implements DataWidgetInterface
         $data->title = $this->name;
         $data->items = array_map(function (Product $product) {
             return [
-                'image' => $product->getImage(),
+                'image' => $product->gallery()->first(),
                 'url' => route('shop.product.view', $product->slug),
                 'title' => $product->getName(),
                 'price' => $product->getPrice(),

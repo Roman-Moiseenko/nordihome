@@ -11,6 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
+    /** @var \App\Modules\Page\Entity\Banner $banner */
 @endphp
 <div>
     <div id="main-slider" class="owl-carousel owl-theme">

@@ -2,12 +2,10 @@
     <el-table :data="[...items]"
               header-cell-class-name="nordihome-header"
               style="width: 100%;">
-        <el-table-column prop="image_file" label="IMG" width="80">
-            <template #default="scope">
-                <img :src="scope.row.image_file" style="height: 40px;"/>
-            </template>
+        <el-table-column prop="group.name" label="Группа товаров" width="200">
         </el-table-column>
-        <el-table-column prop="url" label="Ссылка на страницу" width="240">
+
+        <el-table-column prop="url" label="Ссылка на страницу" width="200">
             <template #default="scope">
                 <EditField :field="scope.row.url" @update:field="val => setUrl(scope.row, val)" />
             </template>
@@ -17,14 +15,14 @@
                 <EditField :field="scope.row.slug" @update:field="val => setSlug(scope.row, val)"/>
             </template>
         </el-table-column>
-        <el-table-column prop="caption" label="Заголовок" width="300">
+        <el-table-column prop="caption" label="Заголовок" width="220">
             <template #default="scope">
                 <EditField :field="scope.row.caption" @update:field="val => setCaption(scope.row, val)" />
             </template>
         </el-table-column>
         <el-table-column prop="description" label="Описание" >
             <template #default="scope">
-                <EditField :field="scope.row.description" @update:field="val => setDescription(scope.row, val)" />
+                <EditField :field="scope.row.description" @update:field="val => setDescription(scope.row, val)"/>
             </template>
         </el-table-column>
         <el-table-column label="Действия" align="right" width="200">
@@ -67,7 +65,7 @@ const form = reactive({
 const $delete_entity = inject("$delete_entity")
 
 function onUp(row) {
-    router.visit(route('admin.page.banner.up-item', {item: row.id}), {
+    router.visit(route('admin.page.widget.up-item', {item: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -75,8 +73,9 @@ function onUp(row) {
         }
     })
 }
+
 function onDown(row) {
-    router.visit(route('admin.page.banner.down-item', {item: row.id}), {
+    router.visit(route('admin.page.widget.down-item', {item: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -112,7 +111,7 @@ function setDescription(row, val) {
 }
 
 function setItem(row) {
-    router.visit(route('admin.page.banner.set-item', {item: row.id}), {
+    router.visit(route('admin.page.widget.set-item', {item: row.id}), {
         method: "post",
         data: form,
         preserveScroll: true,
@@ -122,6 +121,6 @@ function setItem(row) {
     })
 }
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.page.banner.del-item', {item: row.id}));
+    $delete_entity.show(route('admin.page.widget.del-item', {item: row.id}));
 }
 </script>

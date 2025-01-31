@@ -63,6 +63,8 @@ class BannerService
     {
         $item->saveImage($request->file('file'), $request->boolean('clear_file'));
 
+        $item->slug = $request->string('slug')->trim()->value();
+
         $item->url = $request->string('url')->trim()->value();
         $item->caption = $request->string('caption')->trim()->value();
         $item->description = $request->string('description')->trim()->value();

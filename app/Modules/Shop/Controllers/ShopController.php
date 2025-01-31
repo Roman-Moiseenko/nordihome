@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
+use App\Modules\Setting\Entity\Web;
+use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -13,6 +15,7 @@ abstract class ShopController extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
     protected string $theme;
+    public Web $web;
 
     public function __construct()
     {
@@ -22,6 +25,8 @@ abstract class ShopController extends BaseController
         }
         //$options = new Options();
        // config();
+        $settings = new SettingRepository();
+        $this->web = $settings->getWeb();
         $this->theme = config('shop.theme'); // $options->shop->theme;
     }
 

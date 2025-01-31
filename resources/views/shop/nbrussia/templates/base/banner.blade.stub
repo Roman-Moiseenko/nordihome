@@ -6,11 +6,14 @@
 * $banner->description - string
 * BannerItem:class
 * $banner->items - Arraible
+* $banner->itemBySlug(string)?: Banneritem
 * $item->image - Photo::class
 * $item->url - string
 * $item->caption - string
 * $item->description - string
+* $item->slug - string
 */
+/** @var \App\Modules\Page\Entity\Banner $banner */
 @endphp
 <div>
 

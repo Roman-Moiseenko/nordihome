@@ -23,7 +23,6 @@ class CatalogController extends ShopController
     private ShopRepository $repository;
 
     private Common $common;
-    private Web $web;
 
     public function __construct(ShopRepository $repository, SettingRepository $settings)
     {

@@ -28,19 +28,25 @@ class PageController extends ShopController
             $callback = fn() => view($this->route('home'))->render();
         }
         //TODO Настройка использовать кеширование
-        return $callback();
-        // if (in_array('page', $this->web->use_caches)) {
-        //return Cache::rememberForever('home', $callback);
-        //  } else {
-        //     return $callback();
-        //  }
+        //return $callback();
+        if ($this->web->is_cache) {
+            return Cache::rememberForever('home', $callback);
+        } else {
+            return $callback();
+        }
     }
 
     public function view($slug)
     {
         try {
             $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
-            return $page->view();
+            $callback = fn() => $page->view();
+            if ($this->web->is_cache) {
+                return Cache::rememberForever('page-' . $slug, $callback);
+            } else {
+                return $callback();
+            }
+
         } catch (\Throwable $e) {
             abort(404, 'Страница не найдена');
         }

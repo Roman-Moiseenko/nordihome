@@ -19,7 +19,6 @@ class ProductController extends ShopController
 {
 
     private ShopRepository $repository;
-    private Web $web;
 
 
     public function __construct(ShopRepository $repository, SettingRepository $settings)

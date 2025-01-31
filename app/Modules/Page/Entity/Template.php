@@ -3,31 +3,22 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Entity;
 
+use App\Modules\Discount\Entity\Promotion;
+
 class Template
 {
-
-    const TYPES = [
+    public const TYPES = [
         'banner' => 'Баннеры',
         'widget' => 'Виджеты с товарами',
         'page' => 'Страницы',
+        'promotion' => 'Акции',
     ];
 
-    /**
-     * Собираем все шаблоны в один массив
-     */
-    public static function TEMPLATES(): array
-    {
-        $base['widget'] = 'Виджет';
-        foreach (self::TYPES as $key => $name) {
-            $base[$key] = $name;
-        }
-        return $base;
-    }
-
-    public static function TEMPLATE_NAME($type): string
-    {
-        return self::TEMPLATES()[$type];
-    }
+    const RENDERS = [
+        'widget' => Widget::class,
+        'banner' => Banner::class,
+        'promotion' => Promotion::class,
+    ];
 
     /**
      * Папка с шаблонами по виду
@@ -67,4 +58,39 @@ class Template
     {
         return resource_path('views/shop/' . config('shop.theme') . '/templates/base/' . $type . '.stub');
     }
+
+    public static function renderClasses(string|null $text): array|string|null
+    {
+        foreach (self::RENDERS as $code => $class) {
+            $text = self::renderFromText($class, $code, $text);
+        }
+        return $text;
+    }
+
+    private static function renderFromText(string $class, string $code, string|null $text): array|string|null
+    {
+
+        if (is_null($text)) return '';
+        $pattern = '/\[' . $code . '=\"(.+)\"\]/';
+        preg_match_all($pattern, $text, $matches);
+        $replaces = $matches[0]; //шот-коды вида [widget="7"] (массив)
+        $ids = $matches[1]; //значение id виджета (массив)
+
+        foreach ($ids as $key => $id) {
+            $text = str_replace(
+                $replaces[$key],
+                self::findView($class, $code, (int)$id),
+                $text);
+        }
+        return $text;
+    }
+
+    private static function findView(string $class, string $code, int $id): string
+    {
+
+        $model = $class::find($id);
+        if (is_null($model)) return '';
+        return view(Template::blade($code) . $model->template, [$code => $model])->render();
+    }
+
 }

@@ -3,44 +3,42 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Entity;
 
-use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Product\Entity\Group;
+use App\Modules\Base\Traits\IconField;
+use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
  * @property string $name
- * @property bool $published // -?
- * @property string $data_class
- * @property int $data_id
+ * @property bool $active
  * @property string $template
- * @property array $params
+ * @property string $caption
+ * @property string $description
+ * @property string $url
+ * @property array $params -?
+ * @property int $banner_id
+ * @property Banner $banner
+ * @property WidgetItem[] $items
  */
 class Widget extends Model
 {
-    const PATH_TEMPLATES = 'admin.page.widget.template.';
-    const WIDGET_CLASSES = [
-        'Акция' => Promotion::class,
-        'Группа товаров' => Group::class,
-        //'Товар' => Product::class,
-      //  'Банер (В разработке)' => '1',
-     //   'Карта (В разработке)' => '2'
-    ];
-
-    const WIDGET_TEMPLATES = [
-        'promotion-4product' => 'Акция + 4 товара',
-        'row-4product' => 'Список товаров, 4 в ряд (1 ряд)',
-        'row-6product' => 'Список товаров, 6 в ряд (множество рядов)',
-    ];
+    use ImageField, IconField;
 
     public $timestamps = false;
+    protected $attributes = [
+        'params' => '{}',
+    ];
     public $fillable = [
         'name',
-        'data_class',
-        'data_id',
         'active',
         'template',
+        'caption',
+        'description',
         'params',
+        'url'
     ];
 
     protected $casts = [
@@ -48,79 +46,30 @@ class Widget extends Model
     ];
 
 
-    public static function register(string $name, string $data_class, int $data_id, string $template, array $params): self
+    public static function register(string $name, string $template): self
     {
         return self::create([
             'name' => $name,
-            'data_class' => $data_class,
-            'data_id' => $data_id,
-            'published' => true,
+            'active' => false,
             'template' => $template,
-            'params' => $params,
+
         ]);
     }
 
-    public function view(): string
+    public function isActive(): bool
     {
-        $dataItem = $this->DataWidget();
-        return view(self::PATH_TEMPLATES . $this->template, ['widget' => $dataItem])->render();
+        return $this->active == true;
     }
 
-    public function getName(): string
+    public function banner(): BelongsTo
     {
-        return $this->DataWidget()->title;
+        return $this->belongsTo(Banner::class, 'banner_id', 'id');
     }
 
-    public function getObject(): string
+    public function items(): HasMany
     {
-        return array_search($this->data_class, self::WIDGET_CLASSES);
+        return $this->hasMany(WidgetItem::class, 'widget_id', 'id')->orderBy('sort');
     }
 
-    public function templateName():string
-    {
-        return self::WIDGET_TEMPLATES[$this->template];
-    }
 
-    private function DataWidget(): DataWidget
-    {
-        /** @var DataWidgetInterface $item */
-        $item = ($this->data_class)::find($this->data_id);
-        return $item->getDataWidget($this->params);
-    }
-
-    public function draft(): void
-    {
-        $this->published = false;
-        $this->save();
-    }
-
-    public function published(): void
-    {
-        $this->published = true;
-        $this->save();
-    }
-
-    public static function findView(int $id): string
-    {
-        /** @var Widget $widget */
-        $widget = self::find($id);
-        if (is_null($widget)) return '';
-        return $widget->view();
-    }
-
-    public static function renderFromText(string|null $text): string
-    {
-        if (is_null($text)) return '';
-        preg_match_all('/\[widget=\"(.+)\"\]/', $text, $matches);
-        $replaces = $matches[0]; //шот-коды вида [widget="7"] (массив)
-        $widget_ids = $matches[1]; //значение id виджета (массив)
-
-        foreach ($widget_ids as $key => $widget_id) {
-            $text = str_replace(
-                $replaces[$key],
-                self::findView((int)$widget_id),
-                $text);
-        }
-        return $text;
-    }
 }

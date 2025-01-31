@@ -14,18 +14,12 @@ Breadcrumbs::for('admin.page.widget.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Виджеты', route('admin.page.widget.index'));
 });
-Breadcrumbs::for('admin.page.widget.create', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.page.widget.index');
-    $trail->push('Добавить новый', route('admin.page.widget.create'));
-});
+
 Breadcrumbs::for('admin.page.widget.show', function (BreadcrumbTrail $trail, Widget $widget) {
     $trail->parent('admin.page.widget.index');
     $trail->push($widget->name, route('admin.page.widget.show', $widget));
 });
-Breadcrumbs::for('admin.page.widget.edit', function (BreadcrumbTrail $trail, Widget $widget) {
-    $trail->parent('admin.page.widget.show', $widget);
-    $trail->push('Редактировать', route('admin.page.widget.edit', $widget));
-});
+
 
 
 
