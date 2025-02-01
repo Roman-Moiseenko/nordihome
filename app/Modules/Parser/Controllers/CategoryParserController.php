@@ -33,9 +33,11 @@ class CategoryParserController extends Controller
     public function index(): \Inertia\Response
     {
         $categories = $this->repository->getTree();
+        $product_categories = $this->categoryRepository->forFilters();
         return Inertia::render('Parser/Category/Index', [
             'categories' => $categories,
             'brands' => Brand::where('parser_class', '<>', null)->getModels(),
+            'product_categories' => $product_categories,
         ]);
     }
 

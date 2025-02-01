@@ -23,7 +23,7 @@
                 </div>
             </el-popover>
         </div>
-        <CategoryChildren :categories="categories" @delete:category="handleDeleteEntity" />
+        <CategoryChildren :categories="categories" @delete:category="handleDeleteEntity" :product_categories="product_categories"/>
         <!--CategoryRow v-for="item in categories" :category="item" @delete:category="handleDeleteEntity" /-->
         <DeleteEntityModal name_entity="Категорию" />
     </el-config-provider>
@@ -44,6 +44,7 @@ const props = defineProps({
         default: 'Категории парсера',
     },
     brands: Array,
+    product_categories: Array,
 })
 
 const visible_create = ref(false)

@@ -29,6 +29,11 @@
                 </el-table-column>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
+                        <el-tooltip effect="dark" placement="top-start" content="Скопировать шорт-код в буфер">
+                            <el-button type="primary" plain @click.stop="copyBuffer(scope.row)">
+                                Buffer
+                            </el-button>
+                        </el-tooltip>
                         <el-button
                             size="small"
                             :type="scope.row.active ? 'warning' : 'success'"
@@ -100,7 +105,9 @@ const form = reactive({
     name: null,
     templates: null,
 })
-
+function copyBuffer(row) {
+    navigator.clipboard.writeText('[widget="' + row.id + '" name="' + row.name + '"]');
+}
 function saveWidget() {
     router.visit(route('admin.page.widget.store' ), {
         method: "post",

@@ -1,5 +1,5 @@
 <template>
-    <CategoryRow v-for="item in children" :category="item" @delete:category="handleDeleteEntity" />
+    <CategoryRow v-for="item in children" :category="item" @delete:category="handleDeleteEntity" :product_categories="product_categories"/>
 </template>
 <script setup lang="ts">
 import CategoryRow from "./Row.vue";
@@ -14,6 +14,7 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    product_categories: Array,
 })
 const $emit = defineEmits(['delete:category'])
 const children = computed(() => {
