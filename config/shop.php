@@ -34,7 +34,7 @@ return [
             'catalog-watermark' => ['width' => 320, 'height' => 320, 'watermark' => true],
             //Для карточки товара
             'card' => ['width' => 700, 'height' => 700,'watermark' => true],
-
+            'slide' => ['width' => 500, 'height' => 500],
             //'card-no-watermark' => ['width' => 700, 'height' => 700],
             'promotion' => ['width' => 450, 'height' => 550,],
             'promotion-mini' => ['width' => 400, 'height' => 250,],

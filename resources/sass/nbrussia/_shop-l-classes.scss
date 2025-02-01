@@ -250,6 +250,9 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
 .hidden {
     display: none !important;
 }
+.show {
+    display: block !important;
+}
 
 //карточка тенью и закругл.углами
 .box-card {

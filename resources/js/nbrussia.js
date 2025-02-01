@@ -11,3 +11,4 @@ import './nbrussia/frontend';
 //import './nordihome/maps';
 
 import './nbrussia/sliders';
+import './nbrussia/widget'

@@ -161,7 +161,6 @@ class Photo extends Model
         return self::upload($upload, $type, $sort, $alt);
     }
 
-
     // Set и Is
     public function setSort(int $sort): void
     {
@@ -237,10 +236,16 @@ class Photo extends Model
             if (is_file($this->getUploadFile()) &&
                 !is_file($thumb_file) &&
                 (in_array($this->ext(), ['jpg', 'png', 'jpeg']))) {
-                $manager = new ImageManager(); //['driver' => 'imagick']
+                $manager = new ImageManager(['driver' => 'imagick']); //['driver' => 'imagick']
                 $img = $manager->make($this->getUploadFile());
 
-                if (isset($params['width']) && isset($params['height'])) $img->fit($params['width'], $params['height']);
+                if (isset($params['width']) && isset($params['height'])) {
+                    //$max = max($params['width'], $params['height']);
+                    $img->scale($params['width'], $params['height']);
+                    // $img->fit($params['width'], $params['height']);
+                    $img->resizeCanvas($params['width'], $params['height'], 'fff');
+                    //
+                }
                 if (isset($params['watermark'])) {
                     $watermark = $manager->make($this->watermark['file']);
                     $watermark->resize((int)($img->width() * $this->watermark['size']), (int)($img->width() * $this->watermark['size']));
