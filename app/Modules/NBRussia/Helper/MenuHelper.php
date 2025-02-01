@@ -49,21 +49,38 @@ class MenuHelper
     {
         return [
             'column-1' => [
-                'title' => 'Меню',
-                'items' => array_merge(
-                [
+                'title' => 'Обслуживание клиентов',
+                'items' => [
                     [
-                        'name' => 'Каталог товаров',
+                        'name' => 'Доставка и Оплата',
                         'icon' => '',
-                        'route' => route('shop.category.index'),
+                        'route' => route('shop.page.view', 'home'),
+                    ],
+                    [
+                        'name' => 'Условия возврат',
+                        'icon' => '',
+                        'route' => route('shop.page.view', 'home'),
+                    ],
+                    [
+                        'name' => 'Потребительская информация',
+                        'icon' => '',
+                        'route' => route('shop.page.view', 'home'),
+                    ],
+                    [
+                        'name' => 'Как выбрать размер одежды',
+                        'icon' => '',
+                        'route' => route('shop.page.view', 'home'),
                     ],
                 ],
-                    self::getMenuPages()
-                ),
             ],
             'column-2' => [
-                'title' => 'Для клиента',
+                'title' => 'Информация',
                 'items' => [//TODO сделать аналог self::getMenuPages(),
+                    [
+                        'name' => 'Отзывы',
+                        'icon' => '',
+                        'route' => route('shop.page.view', 'home'),
+                    ],
                     [
                         'name' => 'Условия использования сайта',
                         'icon' => '',
@@ -73,6 +90,11 @@ class MenuHelper
                         'name' => 'Политика обработки персональных данных',
                         'icon' => '',
                         'route' => route('shop.page.view', 'political'),
+                    ],
+                    [
+                        'name' => 'Контактная информация',
+                        'icon' => '',
+                        'route' => route('shop.page.view', 'contacts'),
                     ],
                 ],
             ],

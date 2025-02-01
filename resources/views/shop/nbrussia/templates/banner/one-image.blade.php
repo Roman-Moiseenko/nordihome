@@ -14,8 +14,8 @@
     /** @var \App\Modules\Page\Entity\Banner $banner */
     $item = $banner->items()->first();
 @endphp
-<div>
+<div class="my-4 py-3">
     <a href="{{ $item->url }}">
-        <img src="{{ $item->getImage('banner') }}" style="width: 100%;"/>
+        <img src="{{ $item->getImage() }}" style="width: 100%;"/>
     </a>
 </div>

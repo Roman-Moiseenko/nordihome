@@ -18,7 +18,7 @@
     @foreach($banner->items as $item)
         <div>
             <a href="{{ $item->url }}">
-                <img src="{{ $item->getImage('banner') }}" />
+                <img src="{{ $item->getImage() }}" />
             </a>
         </div>
     @endforeach

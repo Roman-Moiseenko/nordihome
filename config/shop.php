@@ -39,7 +39,7 @@ return [
             'promotion' => ['width' => 450, 'height' => 550,],
             'promotion-mini' => ['width' => 400, 'height' => 250,],
             'original' => ['watermark' => true],
-            'banner' => ['width' => 1616, 'height' => 736],
+            'banner' => ['width' => 1616, 'height' => 736, 'fit' => true],
         ],
         'path' => [
             'uploads' => '/uploads',

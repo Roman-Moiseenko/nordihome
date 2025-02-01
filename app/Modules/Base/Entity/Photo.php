@@ -236,16 +236,21 @@ class Photo extends Model
             if (is_file($this->getUploadFile()) &&
                 !is_file($thumb_file) &&
                 (in_array($this->ext(), ['jpg', 'png', 'jpeg']))) {
-                $manager = new ImageManager(['driver' => 'imagick']); //['driver' => 'imagick']
+                $manager = new ImageManager(); //['driver' => 'imagick']
                 $img = $manager->make($this->getUploadFile());
 
                 if (isset($params['width']) && isset($params['height'])) {
-                    //$max = max($params['width'], $params['height']);
-                    $img->scale($params['width'], $params['height']);
-                    // $img->fit($params['width'], $params['height']);
-                    $img->resizeCanvas($params['width'], $params['height'], 'fff');
-                    //
+                    if (isset($params['fit'])) { //Если установлена обрезка фото
+                        $img->fit($params['width'], $params['height']);
+                    } else { //Масштабирование, и заполнение пустот белым
+                        $scale_w = $img->width() / $params['width'];
+                        $scale_h = $img->height() / $params['height'];
+                        $scale = max($scale_w, $scale_h);
+                        $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale),);
+                        $img->resizeCanvas($params['width'], $params['height']);
+                    }
                 }
+
                 if (isset($params['watermark'])) {
                     $watermark = $manager->make($this->watermark['file']);
                     $watermark->resize((int)($img->width() * $this->watermark['size']), (int)($img->width() * $this->watermark['size']));

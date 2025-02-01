@@ -48,10 +48,6 @@ class RegisterController extends Controller
         return redirect()->route('login');
     }
 
-    public function showRegistrationForm()
-    {
-        return view('auth.register');
-    }
 
     /**
      * Handle a registration request for the application.

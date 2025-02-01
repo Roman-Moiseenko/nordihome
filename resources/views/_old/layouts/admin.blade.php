@@ -29,7 +29,7 @@
 
 <body class="@yield('body')">
 @yield('content')
-@include('flash::message')
+
 <!-- @ include('layouts.partials.notification') -->
 
 <!-- BEGIN: Vendor JS Assets-->

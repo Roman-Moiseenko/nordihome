@@ -30,7 +30,7 @@ window.$ = jQuery;
         let optionsSliderBase = {
             rtl: false,
             startPosition: 0,
-            items: 4,
+            items: 3,
             autoplay: false, //
             smartSpeed: 1500, //Время движения слайда
             autoplayTimeout: 1000, //Время смены слайда
@@ -55,7 +55,7 @@ window.$ = jQuery;
                     smartSpeed: 500
                 },
                 991: {
-                    items: 4,
+                    items: 3,
                     smartSpeed: 500
                 },
             }
@@ -63,6 +63,7 @@ window.$ = jQuery;
         let sliderPayment = $('.slider-best-group');
         sliderPayment.each(function () {
             $(this).owlCarousel(optionsSliderBase);
+            $(this).trigger('refresh.owl.carousel');
         })
     }
 })();

@@ -45,6 +45,9 @@ class BannerService
         DB::transaction(function () use ($banner, $file) {
             $item = BannerItem::register($banner->id);
             $item->saveImage($file);
+            $item->refresh();
+            $item->image->thumb = false;
+            $item->image->save();
         });
     }
 

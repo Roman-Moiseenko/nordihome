@@ -51,11 +51,6 @@ class LoginController extends Controller
 
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
-/*
-    public function showLoginForm(): View
-    {
-        return view('auth.login');
-    } */
 
     public function showLoginForm()
     {
