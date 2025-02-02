@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "start": "concurrently \"php artisan optimize:clear\"  \"php artisan config:cache\" \"php artisan serve\" \"npm run dev\""
+        "start": "concurrently  \"php artisan config:cache\" \"php artisan serve\" \"php artisan optimize:clear\" \"npm run dev\""
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
