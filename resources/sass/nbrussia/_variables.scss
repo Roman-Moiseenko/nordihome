@@ -15,21 +15,28 @@ $shadow-box: 0 2px 8px rgb(0 0 0 / 20%);
 $shadow-card: 0 2px 2px rgb(0 0 0 / 20%);
 $shadow-img: 0 4px 4px #7d7c7c;
 
-$transition: all .3s cubic-bezier(.645,.045,.355,1);
-$transition-slow: all 1s cubic-bezier(.645,.045,.355,1);
+$transition: all .3s cubic-bezier(.645, .045, .355, 1);
+$transition-slow: all 1s cubic-bezier(.645, .045, .355, 1);
 
 $radius-big: 12px;
 $radius-card: 8px;
 $radius-button: 6px;
 $radius-icon: 4px;
 
+$border-radius: 0;
+$border-radius-sm: 0;
+$border-radius-lg: 0;
+$border-radius-xl: 0;
+$border-radius-xxl: 0;
+$border-radius-pill: 0;
 
-$h1-font-size:                $font-size-base * 2.125 !default;
-$h2-font-size:                $font-size-base * 1.85 !default;
-$h3-font-size:                $font-size-base * 1.65 !default;
-$h4-font-size:                $font-size-base * 1.4 !default;
-$h5-font-size:                $font-size-base * 1.20 !default;
-$h6-font-size:                $font-size-base !default;
+
+$h1-font-size: $font-size-base * 2.125 !default;
+$h2-font-size: $font-size-base * 1.85 !default;
+$h3-font-size: $font-size-base * 1.65 !default;
+$h4-font-size: $font-size-base * 1.4 !default;
+$h5-font-size: $font-size-base * 1.20 !default;
+$h6-font-size: $font-size-base !default;
 
 
 //#{$pagination-padding-x};
