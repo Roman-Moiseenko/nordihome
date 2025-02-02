@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  */
 trait IconField
 {
+    protected bool $is_thumb = false;
+
     public function icon()
     {
         return $this->morphOne(Photo::class, 'imageable')->where('type','icon')->withDefault();
@@ -21,7 +23,7 @@ trait IconField
             $this->icon->delete();
 
         if (empty($file)) return;
-        $this->icon->newUploadFile($file, 'icon');
+        $this->icon->newUploadFile($file, 'icon', $this->is_thumb);
     }
 
     public function getIcon(string $thumb = ''): ?string

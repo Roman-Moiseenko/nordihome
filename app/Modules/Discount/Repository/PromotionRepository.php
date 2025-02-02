@@ -65,7 +65,7 @@ class PromotionRepository
                     'id' => $product->id,
                     'name' => $product->name,
                     'code' => $product->code,
-                    'image' => $product->getImage('mini'),
+                    'image' => $product->miniImage(),
                     'price' => $product->getPriceRetail(),
                     'discount' => $product->pivot->price
                 ];

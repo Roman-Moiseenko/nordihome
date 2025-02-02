@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  */
 trait PhotoField
 {
+    protected bool $is_thumb = false;
+
     public function photo(): MorphOne
     {
         return $this->morphOne(Photo::class, 'imageable')->withDefault();
@@ -21,7 +23,7 @@ trait PhotoField
             $this->photo->delete();
 
         if (empty($file)) return;
-        $this->photo->newUploadFile($file, 'photo');
+        $this->photo->newUploadFile($file, 'photo', $this->is_thumb);
     }
 
     public function getPhoto(string $thumb = ''): ?string

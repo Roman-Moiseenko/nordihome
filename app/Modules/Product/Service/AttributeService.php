@@ -110,13 +110,16 @@ class AttributeService
 
     public function image(Attribute $attribute, Request $request): void
     {
+        $attribute->saveImage($request->file('file'));
+
+        /*
         if ($request->file('file') == null) return;
         if (!empty($attribute->image)) {
             $attribute->image->newUploadFile($request->file('file'));
         } else {
             $attribute->image()->save(Photo::upload($request->file('file')));
         }
-        $attribute->refresh();
+        $attribute->refresh(); */
     }
 
     /*

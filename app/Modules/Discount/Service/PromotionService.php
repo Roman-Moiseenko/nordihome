@@ -105,15 +105,13 @@ class PromotionService
 
     public function image(Promotion $promotion, $file): void
     {
-        if (empty($file)) return;
-        $promotion->image->newUploadFile($file, 'image');
+        $promotion->saveImage($file);
         $promotion->refresh();
     }
 
     public function icon(Promotion $promotion, $file): void
     {
-        if (empty($file)) return;
-        $promotion->icon->newUploadFile($file, 'icon');
+        $promotion->saveIcon($file);
         $promotion->refresh();
     }
 

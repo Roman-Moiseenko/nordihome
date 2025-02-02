@@ -81,6 +81,7 @@ class Photo extends Model
 
         $this->watermark = $options->image->watermark;
 
+        //TODO Считывать список из БД
         if (empty($this->thumbs)) $this->thumbs = $options->image->thumbs;
 
         $this->createThumbsOnSave = $options->image->createThumbsOnSave;
@@ -131,12 +132,12 @@ class Photo extends Model
         return self::upload($upload, $type, $sort, $alt); */
     }
 
-    public static function uploadByUrl(string $url, string $type = '', int $sort = 0, string $alt = ''): self
+    public static function uploadByUrl(string $url, string $type = '', int $sort = 0, string $alt = '', bool $thumb = true): self
     {
         //Настройка парсера
-        Log::info('1');
+
         $is_proxy = (new SettingRepository())->getParser()->with_proxy;
-        Log::info((string)$is_proxy);
+
         $storage = public_path() . '/temp/';
         $upload_file_name = basename($url);
         $full_filename = $storage . uniqid() . '.' . pathinfo($upload_file_name, PATHINFO_EXTENSION);
@@ -158,7 +159,16 @@ class Photo extends Model
             null, null, true);
 
         ClearTempFile::dispatch($full_filename)->delay(now()->addMinutes(10)); //Удаление временного файла через 30 минут
-        return self::upload($upload, $type, $sort, $alt);
+        return self::upload($upload, $type, $sort, $alt, $thumb);
+    }
+
+    public function newUploadFile(UploadedFile $file, string $type = null, bool $thumb = true): void
+    {
+        if ($type) $this->type = $type;
+        $this->fileForUpload = $file;
+        $this->thumb = $thumb;
+        $this->uploadFile();
+        $this->save();
     }
 
     // Set и Is
@@ -186,6 +196,7 @@ class Photo extends Model
 
     final public function getThumbUrl(string $thumb): string
     {
+        if (!$this->thumb) return '';
         if ($this->createThumbsOnRequest) $this->createThumbs();
         return $this->urlThumb . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
     }
@@ -200,14 +211,6 @@ class Photo extends Model
     final public function getThumbFile(string $thumb): string
     {
         return $this->catalogThumb . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
-    }
-
-    public function newUploadFile(UploadedFile $file, string $type = null): void
-    {
-        if ($type) $this->type = $type;
-        $this->fileForUpload = $file;
-        $this->uploadFile();
-        $this->save();
     }
 
     //
@@ -279,9 +282,11 @@ class Photo extends Model
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
-        $pathThumbs = $this->catalogThumb . $this->patternGeneratePath();
-        if (!file_exists($pathThumbs)) {
-            mkdir($pathThumbs, 0777, true);
+        if ($this->thumb) {
+            $pathThumbs = $this->catalogThumb . $this->patternGeneratePath();
+            if (!file_exists($pathThumbs)) {
+                mkdir($pathThumbs, 0777, true);
+            }
         }
         //dd($path);
         //dd($this->fileForUpload->getPath());
@@ -296,6 +301,8 @@ class Photo extends Model
 
     private function clearThumbs(): void
     {
+        if (!$this->thumb) return;
+
         foreach ($this->thumbs as $thumb => $params) {
             $thumb_file = $this->getThumbFile($thumb);
             if (is_file($thumb_file)) {

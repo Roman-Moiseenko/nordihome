@@ -82,17 +82,13 @@ class CategoryService
 
     public function image(Category $category, $file): void
     {
-        if (empty($file)) return;
-        $category->image->newUploadFile($file, 'image');
-        $category->refresh();
+        $category->saveImage($file);
     }
 
 
     public function icon(Category $category, $file): void
     {
-        if (empty($file)) return;
-        $category->icon->newUploadFile($file, 'icon');
-        $category->refresh();
+        $category->saveIcon($file);
     }
 
 }

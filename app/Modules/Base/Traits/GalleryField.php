@@ -3,33 +3,41 @@
 namespace App\Modules\Base\Traits;
 
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
- * @property Photo[] $gallery
+ * @property Photo[] $gallery - для бэкенда, изображения относящиеся к товару
+ * @property Photo[] $photos - для фронтенда, изображения с учетом модификации
  */
 trait GalleryField
 {
+    protected bool $is_thumb = true;
+
     public function gallery(): MorphMany
     {
         return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');
     }
 
+    public function photos(): MorphMany
+    {
+        if ($this instanceof Product) {
+            $query = $this->morphMany(Photo::class, 'imageable')->orderBy('sort');
+            if ($query->count() > 0) return $query; //У товара есть изображения, в противном случае:
+            //Если есть модификация и текущий продукт не базовый (Избежание зацикливания, когда у базового нет изображений)
+            if (!is_null($this->modification) && $this->modification->base_product_id != $this->id) {
+                return $this->modification->base_product->gallery(); //Изображения из базового
+            }
+        }
+        return $this->gallery();
+    }
+
     public function getImageBySort(int $sort, string $thumb = null): string
     {
         /** @var Photo $image */
-        $image = $this->gallery()->where('sort', $sort)->first();
+        $image = $this->photos()->where('sort', $sort)->first();
         if (is_null($image)) return '/images/no-image.jpg';
-        return  is_null($thumb) ? $image->getUploadUrl() : $image->getThumbUrl($thumb);
-
-        /*
-        $images = $this->gallery()->getModels();
-        $count = count($images);
-        if ($count == 0) return '';
-        $pos = $sort - 1;
-        if ( ($count - 1) < $pos ) $pos = $count - 1;
-        return $images[$pos]->getThumbUrl($thumb);
-        */
+        return is_null($thumb) ? $image->getUploadUrl() : $image->getThumbUrl($thumb);
     }
 
     public function getImage(string $thumb = null): string
@@ -42,23 +50,36 @@ trait GalleryField
         return $this->getImageBySort(1, $thumb);
     }
 
+    /**
+     * Для списка товаров в админке
+     */
+    public function miniImage(): string
+    {
+        $image = $this->gallery()->first();
+        if (is_null($image)) {
+            if (!is_null($this->photos)) return '/images/modification.jpg';
+            return '/images/no-image.jpg';
+        }
+        return $image->getThumbUrl('mini');
+    }
+
     public function addImage($file): Photo
     {
         if (empty($file)) throw new \DomainException('Нет файла');
 
         $sort = count($this->gallery);
-        $photo = Photo::upload($file, '', $sort);
+        $photo = Photo::upload(file: $file, sort: $sort, thumb: $this->is_thumb);
         $this->gallery()->save($photo);
         $photo->refresh();
         return $photo;
     }
 
-    public function addImageByUrl(string $url):? Photo
+    public function addImageByUrl(string $url): ?Photo
     {
         if (empty($url)) return null;
 
         $sort = count($this->gallery);
-        $photo = Photo::uploadByUrl($url, '', $sort);
+        $photo = Photo::uploadByUrl(url: $url, sort: $sort, thumb: $this->is_thumb);
         $this->gallery()->save($photo);
         $photo->refresh();
         return $photo;

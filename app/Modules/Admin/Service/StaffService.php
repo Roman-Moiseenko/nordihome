@@ -111,7 +111,7 @@ class StaffService
         }
     }
 
-    public function responsibility(int $code, Admin $admin)
+    public function responsibility(int $code, Admin $admin): void
     {
         if (!$admin->isStaff()) throw new \DomainException('Обязанность назначается только персоналу');
         $admin->toggleResponsibilities($code);
@@ -119,13 +119,7 @@ class StaffService
 
     public function photo(Admin $admin, $file): void
     {
-        if (empty($file)) return;
-        if (!empty($admin->photo)) {
-            $admin->photo->newUploadFile($file);
-        } else {
-            $admin->photo()->save(Photo::upload($file));
-        }
-        $admin->refresh();
+        $admin->savePhoto($file);
     }
 
     public function delete(Admin $admin): void

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $attributes_json
  * @property Product[] $products
  * @property Attribute[] $prod_attributes
+ * @property Product $base_product
  */
 class Modification extends Model
 {

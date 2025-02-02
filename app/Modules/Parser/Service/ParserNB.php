@@ -149,6 +149,9 @@ class ParserNB extends ParserAbstract
         return $products;
     }
 
+    /**
+     * Парсинг данных из фронтенда ()
+     */
     public function parserProductByData(array $product): void
     {
         $parser_product = ProductParser::where('maker_id', $product['id'])->first();
@@ -159,7 +162,6 @@ class ParserNB extends ParserAbstract
             \DB::transaction(function () use ($product) {
                 $this->createProduct($product);
             });
-
         }
     }
 
@@ -169,7 +171,7 @@ class ParserNB extends ParserAbstract
     {
         //Создаем массив данных для добавления. Название, Модель, Изображения
         $maker_id = $product['id'];
-        $name = GoogleTranslateForFree::translate('pl','ru', $product['name']);
+        $name = $this->translate->translate($product['name']); // GoogleTranslateForFree::translate('pl','ru', $product['name']);
         $image_urls = array_map(function ($item) {
             return $this->brand->url . '/picture' . str_replace('{imageSafeUri}', '', $item);
         }, $product['pictures']);
@@ -205,11 +207,13 @@ class ParserNB extends ParserAbstract
             if ($attribute->name == 'Цвет') $attr_color = $attribute;
         }
         //TODO Для цветов и других атрибутов сделать таблицу перевода world (unique), russia
-        $color_ru = GoogleTranslateForFree::translate('pl','ru', $color);
+
+        $color_ru = $this->translate->translate($color); //GoogleTranslateForFree::translate('pl','ru', $color);
         if (!$attr_color->isValue($color_ru)) {
             $attr_color->addVariant($color_ru);
             $attr_color->refresh();
         }
+
         $variant_color = $attr_color->findVariant($color_ru)->id;
 
         $_products = []; //Массив вариантов для Модификации
@@ -264,16 +268,14 @@ class ParserNB extends ParserAbstract
             $_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
             $_product->prod_attributes()->attach($attr_size->id, ['value' => json_encode($variant_size)]);
 
-            //задание на парсинг Фото товара
-            //dd($image_urls);
-            foreach ($image_urls as $image_url) {
-                LoadingImageProduct::dispatch($_product, $image_url, $name_v, true);
-            }
-
             $_products[] = $_product;
         }
 
         $modification = Modification::register($name, $_products[0]->id, [$attr_size]);
+        //Парсинг Фото только для базового товара
+        foreach ($image_urls as $image_url) {
+            LoadingImageProduct::dispatch($_products[0], $image_url, $name, true);
+        }
         $values = [];
         foreach ($_products as $_product) {
             //dd($_product->Value($attr_size->id));

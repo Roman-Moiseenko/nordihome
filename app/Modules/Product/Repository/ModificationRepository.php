@@ -44,7 +44,7 @@ class ModificationRepository
             'name_attributes' => array_map(function (Attribute $item) {
                 return $item->name;
             }, $modification->prod_attributes),
-            'image' => $modification->base_product->getImage('mini'),
+            'image' => $modification->base_product->miniImage(),
         ]);
     }
 
@@ -73,7 +73,7 @@ class ModificationRepository
                     $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
                 }
                 return array_merge($product->toArray(), [
-                    'image' => $product->getImage('mini'),
+                    'image' => $product->miniImage(),
                     'variants' => $variants,
                 ]);
             }),

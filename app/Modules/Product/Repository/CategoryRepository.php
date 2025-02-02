@@ -169,7 +169,7 @@ class CategoryRepository
             ],
             'products' => $category->products()->get()->map(function (Product $product) {
                 return array_merge($product->toArray(), [
-                    'image' => $product->getImage(),
+                    'image' => $product->miniImage(),
                 ]);
             }),
         ]);

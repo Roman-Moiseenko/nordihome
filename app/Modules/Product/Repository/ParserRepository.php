@@ -74,7 +74,7 @@ class ParserRepository
                 'code' => $parser->product->code,
                 'name' => $parser->product->name,
                 'category' => $parser->product->category->getParentNames(),
-                'image' => $parser->product->getImage('mini'),
+                'image' => $parser->product->miniImage(),
             ],
         ]);
     }

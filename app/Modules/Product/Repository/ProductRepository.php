@@ -52,7 +52,7 @@ class ProductRepository
     private function ProductToArray(Product $product): array
     {
         return array_merge($product->toArray(), [
-            'image' => $product->getImage('mini'),
+            'image' => $product->miniImage(),
             'category_name' => $product->category->getParentNames(),
             'price' => $product->getPriceRetail(),
             'quantity' => $product->getQuantity(),
@@ -117,6 +117,7 @@ class ProductRepository
             'modification' => is_null($product->modification) ? null : [
                 'id' => $product->modification->id,
                 'name' => $product->modification->name,
+                'base_product_id' => $product->modification->base_product_id,
                 'attributes' => array_map(function (Attribute $attribute){
                     return [
                         'name' => $attribute->name,
@@ -128,7 +129,7 @@ class ProductRepository
                         'id' => $product->id,
                         'name' => $product->name,
                         'code' => $product->code,
-                        'image' => $product->getImage('mini'),
+                        'image' => $product->miniImage(),
                         'attributes' => array_map(function (Attribute $attribute) use ($product){
                             return [
                                 'name' => $attribute->getVariant($product->Value($attribute->id))->name,
@@ -145,7 +146,7 @@ class ProductRepository
                         'id' => $product->id,
                         'code' => $product->code,
                         'name' => $product->name,
-                        'image' => $product->getImage('mini'),
+                        'image' => $product->miniImage(),
                     ];
                 }),
             ],
@@ -154,7 +155,7 @@ class ProductRepository
                     'id' => $product->id,
                     'name' => $product->name,
                     'code' => $product->code,
-                    'image' => $product->getImage('mini'),
+                    'image' => $product->miniImage(),
                 ];
             }),
 
@@ -163,7 +164,7 @@ class ProductRepository
                     'id' => $product->id,
                     'name' => $product->name,
                     'code' => $product->code,
-                    'image' => $product->getImage('mini'),
+                    'image' => $product->miniImage(),
                     'price' => $product->getPriceRetail(),
                     'discount' => $product->pivot->discount,
                 ];
@@ -173,11 +174,11 @@ class ProductRepository
                     'id' => $product->id,
                     'name' => $product->name,
                     'code' => $product->code,
-                    'image' => $product->getImage('mini'),
+                    'image' => $product->miniImage(),
                     'quantity' => $product->pivot->quantity,
                 ];
             }),
-            'photos' => $product->gallery()->get()->map(function (Photo $photo) {
+            'photos' => $product->gallery()->where('imageable_id', $product->id)->get()->map(function (Photo $photo) {
                 return [
                     'id' => $photo->id,
                     'name' => $photo->file,

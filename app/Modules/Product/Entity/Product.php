@@ -10,7 +10,6 @@ use App\Modules\Base\Casts\DimensionsCast;
 use App\Modules\Base\Casts\PackagesCast;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\GalleryField;
 use App\Modules\Discount\Entity\Promotion;
@@ -329,14 +328,6 @@ class Product extends Model
         return $this->getQuantity() < $this->balance->min;
     }
 
-    /**
-     * Товар размерный
-     */
-    public function isSize(): bool
-    {
-        return $this->sizes()->count() > 0;
-    }
-
     //*** SET-....
     //SET и GET
     /**
@@ -639,20 +630,6 @@ class Product extends Model
         return StorageItem::where('product_id', $this->id)->getModels();
     }
 
-/*
-    public function getImage(string $thumb = ''): string
-    {
-        if (empty($this->photo->file)) {
-            return '/images/no-image.jpg';
-        } else {
-            if ($thumb == '') {
-                return $this->photo->getUploadUrl();
-            } else {
-                return $this->photo->getThumbUrl($thumb);
-            }
-        }
-    }
-*/
     /**
      * Действующая акция или null
      * @return Promotion|null
@@ -749,13 +726,6 @@ class Product extends Model
     }
 
     //ХАРАКТЕРИСТИКИ ТОВАРА
-    public function sizes(): BelongsToMany
-    {
-        return $this->belongsToMany(Size::class,
-            'products_sizes',
-            'product_id',
-            'size_id');
-    }
 
     public function parser(): HasOne
     {
@@ -803,22 +773,7 @@ class Product extends Model
             Attribute::class, 'attributes_products',
             'product_id', 'attribute_id')->withPivot('value');
     }
-/*
-    public function photo(): MorphOne
-    {
-        return $this->morphOne(Photo::class, 'imageable')->where('sort', '=', 0);
-    }
 
-    public function photos(): MorphMany
-    {
-        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort')->orderBy('id');//->where('sort', '>',0);
-    }
-
-    public function photo_next()
-    {
-        return $this->photos()->where('sort', '>', 0)->first();
-    }
-*/
     public function videos(): MorphMany
     {
         return $this->morphMany(Video::class, 'videoable');

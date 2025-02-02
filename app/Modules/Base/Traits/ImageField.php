@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  */
 trait ImageField
 {
+    protected bool $is_thumb = false;
 
     public function image()
     {
@@ -23,7 +24,7 @@ trait ImageField
 
         if (empty($file)) return;
 
-        $this->image->newUploadFile($file, 'image');
+        $this->image->newUploadFile($file, 'image', $this->is_thumb);
     }
 
     public function getImage(string $thumb = ''): ?string
