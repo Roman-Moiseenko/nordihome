@@ -74,7 +74,6 @@ class ProductController extends Controller
             'categories' => $categories,
             'count' => $count,
         ]);
-
     }
 
     public function create(Request $request): Response

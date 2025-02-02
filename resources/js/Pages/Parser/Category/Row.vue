@@ -23,7 +23,7 @@
                 {{ category.category_name }}
             </Link>
             <div v-else class="flex">
-                <el-select v-model="category_id" placeholder="Связанная категория">
+                <el-select v-model="category_id" placeholder="Связанная категория" filterable>
                     <el-option v-for="item in product_categories" :key="item.id" :value="item.id" :label="item.name"/>
                 </el-select>
                 <el-button type="success" size="" @click="onSetCategory">

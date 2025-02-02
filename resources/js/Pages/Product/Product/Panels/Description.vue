@@ -7,6 +7,11 @@
             </span>
         </template>
         <el-checkbox v-model="autoSave" :checked="autoSave">Автосохранение</el-checkbox>
+        <el-checkbox v-if="product.modification"
+                     v-model="form.modification"
+                     :checked="form.modification" class="checkbox-warning">
+            Сохранять для всех товаров из Модификации
+        </el-checkbox>
         <el-row :gutter="10" class="mt-2">
             <!-- Колонка 1 -->
             <el-col :span="12">
@@ -85,6 +90,7 @@ const form = reactive({
     tags: [...props.product.tags.map(item => item.id)],
     series_id: props.product.series_id,
     model: props.product.model,
+    modification: props.product.modification,
 })
 
 

@@ -7,6 +7,8 @@ import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel';
 
 import.meta.glob(["../images/**"]);
+
+/* Собственные */
 import './nordihome/frontend';
 import './nordihome/maps';
 import './nordihome/parser';

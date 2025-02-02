@@ -9,9 +9,15 @@
         <el-row :gutter="10" class="mt-2">
             <!-- Колонка 1 -->
             <el-col :span="8">
+                <el-checkbox v-if="product.modification"
+                             v-model="form.modification"
+                             :checked="form.modification" class="checkbox-warning">
+                    Сохранять для всех товаров из Модификации
+                </el-checkbox>
                 <SearchAddProduct  caption="Добавить аксессуар"
                                    :route="route('admin.product.edit.related', {product: product.id})"
                                    :preserveState="true"
+                                   :params="form"
                 />
             </el-col>
             <!-- Колонка 2 -->
@@ -42,6 +48,9 @@ const props = defineProps({
 })
 
 const isSaving = ref(false)
+const form = reactive({
+    modification: props.product.modification,
+})
 
 function onRemoveRelated(id) {
     isSaving.value = true;

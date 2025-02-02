@@ -121,6 +121,10 @@ const props = defineProps({
     preserveState: {
         default: false,
         type: Boolean
+    },
+    params: { //Доп.параметры для post-запроса
+        default: {},
+        type: Object,
     }
 })
 const width = computed<String>( () => 'width: ' + props.width + 'px;')
@@ -137,7 +141,7 @@ const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
         axios.post(props.search, {search: query}).then(response => {
-            //console.log('responser', response)
+            console.log('response', response)
             if (response.data.error !== undefined) console.log(response.data.error)
 
             options.value = response.data
@@ -171,7 +175,7 @@ function onAdd() {
 
     router.visit(props.route, {
         method: "post",
-        data: form,
+        data: {...form, ...props.params},
         preserveScroll: true,
         preserveState: props.preserveState,
         onSuccess: page => {

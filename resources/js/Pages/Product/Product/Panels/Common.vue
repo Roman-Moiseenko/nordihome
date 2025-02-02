@@ -7,6 +7,12 @@
             </span>
         </template>
         <el-checkbox v-model="autoSave" :checked="autoSave">Автосохранение</el-checkbox>
+        <el-checkbox v-if="product.modification"
+            v-model="form.modification"
+            :checked="form.modification" class="checkbox-warning">
+            Сохранять для всех товаров из Модификации
+        </el-checkbox>
+
         <el-row :gutter="10" class="mt-2">
             <!-- Колонка 1 -->
             <el-col :span="8">
@@ -98,7 +104,6 @@
 import {reactive, ref, defineProps } from "vue";
 import {router} from "@inertiajs/vue3";
 
-
 const props = defineProps({
     product: Object,
     errors: Object,
@@ -109,7 +114,6 @@ const props = defineProps({
     measuring: Array,
     markingType: Array,
 })
-
 const autoSave = ref(true)
 const isSaving = ref(false)
 const form = reactive({
@@ -127,6 +131,7 @@ const form = reactive({
     marking_type_id: props.product.marking_type_id,
     measuring_id: props.product.measuring_id,
     fractional: props.product.fractional,
+    modification: props.product.modification,
 })
 function onAutoSave() {
     if (autoSave.value === false) return;

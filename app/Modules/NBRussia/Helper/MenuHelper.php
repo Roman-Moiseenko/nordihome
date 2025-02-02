@@ -57,7 +57,7 @@ class MenuHelper
                         'route' => route('shop.page.view', 'home'),
                     ],
                     [
-                        'name' => 'Условия возврат',
+                        'name' => 'Условия возврата',
                         'icon' => '',
                         'route' => route('shop.page.view', 'home'),
                     ],

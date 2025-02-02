@@ -32,3 +32,23 @@ const props = defineProps({
     },
 })
 </script>
+<style lang="scss">
+.checkbox-warning {
+    &.el-checkbox.is-checked {
+        .el-checkbox__label {
+            @apply text-orange-600;
+        }
+        .el-checkbox__input.is-checked {
+            .el-checkbox__inner {
+                @apply bg-orange-600;
+                @apply border-orange-600;
+            }
+        }
+
+        //color: var(--el-checkbox-button-checked-text-color);
+        //background-color: #208eff;
+        //border-color: var(--el-checkbox-button-checked-border-color);
+        //box-shadow: -1px 0 0 0 var(--el-color-primary-light-7);
+    }
+}
+</style>

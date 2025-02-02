@@ -23,6 +23,7 @@ use App\Modules\Product\Repository\TagRepository;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Repository\SettingRepository;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -399,62 +400,68 @@ class ProductService
     public function editCommon(Product $product, Request $request): void
     {
         $update_attributes = false;
+        //Индивидуальные данные
         $product->name = $request->string('name')->trim()->value();
         $product->code = $request->string('code')->trim()->value();
-        if ($product->main_category_id != $request->integer('category_id')) {
-            $product->main_category_id = $request->integer('category_id');
-            $update_attributes = true;
-        }
-        $product->main_category_id = $request->integer('category_id');
         $product->slug = empty($request->string('slug')->value()) ? Str::slug($product->name) : $request->string('slug')->value();
-
-        $product->brand_id = $request->integer('brand_id');
-        //Проверить изменения в списке категорий
-        $array_old = [];
-        $array_new = $request['categories'] ?? null;
-
-        foreach ($product->categories as $category) $array_old[] = $category->id;
-        foreach ($array_old as $key => $item) {
-            if (!is_null($array_new) && in_array($item, $array_new)) {
-                $key_new = array_search($item, $array_new);
-                unset($array_old[$key]);
-                unset($array_new[$key_new]);
-            }
-        }
-        if (!empty($array_old)) { //Список категорий, которые надо удалить
-            $update_attributes = true;
-            foreach ($array_old as $item) {
-                $product->categories()->detach((int)$item);
-            }
-        }
-        if (!is_null($array_new)) {//Список категорий, которые надо добавить
-            $update_attributes = true;
-            foreach ($array_new as $item) {
-                if ($this->categories->exists((int)$item)) {
-                    $product->categories()->attach((int)$item);
-                }
-            }
-        }
-
         $product->name_print = $request->string('name_print')->trim()->value();
-        $product->comment = $request->string('comment')->trim()->value();
-        $product->country_id = $request->input('country_id');
-        $product->vat_id = $request->integer('vat_id');
-        $product->measuring_id = $request->integer('measuring_id');
-        $product->fractional = $request->boolean('fractional');
-        $product->marking_type_id = $request->input('marking_type_id');
         $product->save();
 
-        //Проверка атрибутов, в случае смены категории
-        if ($update_attributes) {
-            $product->refresh();
-            $array = array_map(function (Attribute $attribute) {
-                return $attribute->id;
-            }, $product->getPossibleAttribute());
+        $products = $this->list($product, $request->boolean('modification'));
+        foreach ($products as $product) {
+            if ($product->main_category_id != $request->integer('category_id')) {
+                $product->main_category_id = $request->integer('category_id');
+                $update_attributes = true;
+            }
+            $product->main_category_id = $request->integer('category_id');
+            $product->brand_id = $request->integer('brand_id');
+            //Проверить изменения в списке категорий
+            $array_old = [];
+            $array_new = $request['categories'] ?? null;
 
-            foreach ($product->prod_attributes as $attribute) {
-                if (!in_array($attribute->id, $array)) {
-                    $product->prod_attributes()->detach($attribute->id);
+            foreach ($product->categories as $category) $array_old[] = $category->id;
+            foreach ($array_old as $key => $item) {
+                if (!is_null($array_new) && in_array($item, $array_new)) {
+                    $key_new = array_search($item, $array_new);
+                    unset($array_old[$key]);
+                    unset($array_new[$key_new]);
+                }
+            }
+            if (!empty($array_old)) { //Список категорий, которые надо удалить
+                $update_attributes = true;
+                foreach ($array_old as $item) {
+                    $product->categories()->detach((int)$item);
+                }
+            }
+            if (!is_null($array_new)) {//Список категорий, которые надо добавить
+                $update_attributes = true;
+                foreach ($array_new as $item) {
+                    if ($this->categories->exists((int)$item)) {
+                        $product->categories()->attach((int)$item);
+                    }
+                }
+            }
+
+
+            $product->comment = $request->string('comment')->trim()->value();
+            $product->country_id = $request->input('country_id');
+            $product->vat_id = $request->integer('vat_id');
+            $product->measuring_id = $request->integer('measuring_id');
+            $product->fractional = $request->boolean('fractional');
+            $product->marking_type_id = $request->input('marking_type_id');
+            $product->save();
+
+            //Проверка атрибутов, в случае смены категории
+            if ($update_attributes) {
+                $product->refresh();
+                $array = array_map(function (Attribute $attribute) {
+                    return $attribute->id;
+                }, $product->getPossibleAttribute());
+
+                foreach ($product->prod_attributes as $attribute) {
+                    if (!in_array($attribute->id, $array)) {
+                        $product->prod_attributes()->detach($attribute->id);
+                    }
                 }
             }
         }
@@ -462,38 +469,46 @@ class ProductService
 
     public function editDescription(Product $product, Request $request): void
     {
-        $product->description = $request->string('description')->trim()->value();
-        $product->short = $request->string('short')->trim()->value();
-        $product->model = $request->string('model')->trim()->value();
-        $product->tags()->detach();
-        $this->tags($request->input('tags'), $product);
-        $this->series($request, $product);
-        $product->save();
+        $products = $this->list($product, $request->boolean('modification'));
+        foreach ($products as $product) {
+            $product->description = $request->string('description')->trim()->value();
+            $product->short = $request->string('short')->trim()->value();
+            $product->model = $request->string('model')->trim()->value();
+            $product->tags()->detach();
+            $this->tags($request->input('tags'), $product);
+            $this->series($request, $product);
+            $product->save();
+        }
     }
 
     public function editDimensions(Product $product, Request $request): void
     {
-        $product->dimensions = Dimensions::create(params: $request->input('dimensions'));
-        $product->packages->clear();
-        foreach ($request->input('packages') as $array) {
-            $product->packages->create(params: $array);
+        $products = $this->list($product, $request->boolean('modification'));
+        foreach ($products as $product) {
+            $product->dimensions = Dimensions::create(params: $request->input('dimensions'));
+            $product->packages->clear();
+            foreach ($request->input('packages') as $array) {
+                $product->packages->create(params: $array);
+            }
+            $product->delivery = $request->boolean('delivery');
+            $product->local = $request->boolean('local');
+            $product->packages->complexity = $request->integer('complexity');
+            $product->save();
         }
-        $product->delivery = $request->boolean('delivery');
-        $product->local = $request->boolean('local');
-        $product->packages->complexity = $request->integer('complexity');
-
-        $product->save();
     }
 
     public function editVideo(Product $product, Request $request): void
     {
-        $product->videos()->delete();
-        foreach ($request->input('videos') as $i => $item) {
-            $product->videos()->save(Video::register(
-                $item['url'],
-                $item['caption'] ?? '',
-                $item['description'] ?? '', $i));
-            $product->save();
+        $products = $this->list($product, $request->boolean('modification'));
+        foreach ($products as $product) {
+            $product->videos()->delete();
+            foreach ($request->input('videos') as $i => $item) {
+                $product->videos()->save(Video::register(
+                    $item['url'],
+                    $item['caption'] ?? '',
+                    $item['description'] ?? '', $i));
+                $product->save();
+            }
         }
     }
 
@@ -524,81 +539,92 @@ class ProductService
 
     public function editManagement(Product $product, Request $request): void
     {
-        if ($request->boolean('published')) {
-            $product->setPublished();
-        } else {
-            $product->setDraft();
-        }
-        if ($request->boolean('not_sale')) {
-            $product->setNotSale();
-        } else {
-            $product->setForSale();
-        }
-        $product->priority = $request->boolean('priority');
-        $product->hide_price = $request->boolean('hide_price');
-        $product->frequency = $request->integer('frequency');
-        $product->save();
+        $products = $this->list($product, $request->boolean('modification'));
+        foreach ($products as $product) {
+            if ($request->boolean('published')) {
+                $product->setPublished();
+            } else {
+                $product->setDraft();
+            }
+            if ($request->boolean('not_sale')) {
+                $product->setNotSale();
+            } else {
+                $product->setForSale();
+            }
+            $product->priority = $request->boolean('priority');
+            $product->hide_price = $request->boolean('hide_price');
+            $product->frequency = $request->integer('frequency');
+            $product->save();
 
-        $product->balance->min = $request->integer('balance.min');
-        $product->balance->max = $request->input('balance.max');
-        $product->balance->buy = $request->boolean('balance.buy');
-        $product->push();
+            $product->balance->min = $request->integer('balance.min');
+            $product->balance->max = $request->input('balance.max');
+            $product->balance->buy = $request->boolean('balance.buy');
+            $product->push();
 
-        foreach ($request->input('storages') as $item) {
-            $storageItem = StorageItem::find($item['id']);
-            $storageItem->cell = $item['cell'];
-            $storageItem->save();
+            foreach ($request->input('storages') as $item) {
+                $storageItem = StorageItem::find($item['id']);
+                $storageItem->cell = $item['cell'];
+                $storageItem->save();
+            }
         }
     }
 
     public function editEquivalent(Product $product, Request $request): void
     {
-        $equivalent_id = $request->integer('equivalent_id');
-
-        if ($equivalent_id == 0 && !is_null($product->equivalent)) {
-            $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-        }
-        if ($equivalent_id != 0) {
-            if (is_null($product->equivalent)) {
-                $this->equivalentService->addProductByIds($equivalent_id, $product->id);
-            } elseif ($equivalent_id !== $product->equivalent->id) {
+        $products = $this->list($product, $request->boolean('modification'));
+        foreach ($products as $product) {
+            $equivalent_id = $request->integer('equivalent_id');
+            if ($equivalent_id == 0 && !is_null($product->equivalent)) {
                 $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-                $this->equivalentService->addProductByIds($equivalent_id, $product->id);
             }
+            if ($equivalent_id != 0) {
+                if (is_null($product->equivalent)) {
+                    $this->equivalentService->addProductByIds($equivalent_id, $product->id);
+                } elseif ($equivalent_id !== $product->equivalent->id) {
+                    $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+                    $this->equivalentService->addProductByIds($equivalent_id, $product->id);
+                }
+            }
+            $product->save();
         }
-        $product->save();
     }
 
     public function editRelated(Product $product, Request $request): void
     {
-        $product_id = $request->integer('product_id');
-        if ($request->string('action')->value() == 'remove') {
-            $product->related()->detach($product_id);
-        } else {
-            if ($product->isRelated($product_id)) throw new \DomainException('Товар уже добавлен в Аксессуары');
-            $product->related()->attach($product_id);
+        $products = $this->list($product, $request->boolean('modification'));
+        foreach ($products as $product) {
+            $product_id = $request->integer('product_id');
+            if ($request->string('action')->value() == 'remove') {
+                $product->related()->detach($product_id);
+            } else {
+                if ($product->isRelated($product_id)) throw new \DomainException('Товар уже добавлен в Аксессуары');
+                $product->related()->attach($product_id);
+            }
+            $product->save();
         }
-        $product->save();
     }
 
     public function editBonus(Product $product, Request $request): void
     {
-        $product_id = $request->integer('product_id');
-        $action = $request->string('action')->value();
-        if (empty($action)) {
-            if ($product->id === $product_id) throw new \DomainException('Товар совпадает с текущим');
-            if ($product->isBonus($product_id)) throw new \DomainException('Товар уже добавлен в Бонусные');
-            $bonus = Bonus::where('bonus_id', $product_id)->first();
-            if (!is_null($bonus)) throw new \DomainException('Товар уже назначен бонусным у товара ' . $bonus->product->name);
-            $bonus_add = Product::find($product_id);
-            $product->bonus()->attach($product_id, ['discount' => $bonus_add->getPriceRetail()]);
-        }
-        if ($action == 'remove') {
-            $product->bonus()->detach($product_id);
-        }
-        if ($action == 'edit') {
-            foreach ($request->input('bonus') as $item) {
-                $product->bonus()->updateExistingPivot($item['id'], ['discount' => (int)$item['discount']]);
+        $products = $this->list($product, $request->boolean('modification'));
+        foreach ($products as $product) {
+            $product_id = $request->integer('product_id');
+            $action = $request->string('action')->value();
+            if (empty($action)) {
+                if ($product->id === $product_id) throw new \DomainException('Товар совпадает с текущим');
+                if ($product->isBonus($product_id)) throw new \DomainException('Товар уже добавлен в Бонусные');
+                $bonus = Bonus::where('bonus_id', $product_id)->first();
+                if (!is_null($bonus)) throw new \DomainException('Товар уже назначен бонусным у товара ' . $bonus->product->name);
+                $bonus_add = Product::find($product_id);
+                $product->bonus()->attach($product_id, ['discount' => $bonus_add->getPriceRetail()]);
+            }
+            if ($action == 'remove') {
+                $product->bonus()->detach($product_id);
+            }
+            if ($action == 'edit') {
+                foreach ($request->input('bonus') as $item) {
+                    $product->bonus()->updateExistingPivot($item['id'], ['discount' => (int)$item['discount']]);
+                }
             }
         }
     }
@@ -795,4 +821,15 @@ class ProductService
         }
     }
 
+    /**
+     * Если у товара есть модификация и выбрано сохранить для всех, возвращаем список всех товаров из модификации, в противном случае сам товар в массиве
+     */
+    private function list(Product $product, bool $save_modification): array|Arrayable
+    {
+        if (is_null($product->modification) || !$save_modification) {
+            $ar[] = $product;
+            return $ar;
+        };
+        return $product->modification->products;
+    }
 }
