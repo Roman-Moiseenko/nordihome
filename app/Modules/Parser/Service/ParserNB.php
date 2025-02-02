@@ -128,14 +128,16 @@ class ParserNB extends ParserAbstract
         for ($i = 2; $i <= $pagination; $i++) {
             $products = array_merge(
                 $products,
-                $this->parserProductsByUrl($url . '?page=' .$i, false)
+                $this->parserProductsByUrl($url . '?page=' . $i, false)
             );
         }
 
         return $products;
         //dd($products);
         //TODO Убрать когда заработает через axios
+
         foreach ($products as $product) {
+            //dd($product);
             //Ищем товар в базе по Id
             $parser_product = ProductParser::where('maker_id', $product['id'])->first();
             //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
@@ -165,8 +167,6 @@ class ParserNB extends ParserAbstract
         }
     }
 
-
-
     private function createProduct(mixed $product): void
     {
         //Создаем массив данных для добавления. Название, Модель, Изображения
@@ -185,28 +185,46 @@ class ParserNB extends ParserAbstract
 
         $main_category = null;
         $categories = [];
-        /** @var CategoryParser[]  $parser_categories */
-        for($i = 0; $i < count($parser_categories); $i++) {
+        /** @var CategoryParser[] $parser_categories */
+        for ($i = 0; $i < count($parser_categories); $i++) {
             if ($i == 0) $main_category = $parser_categories[$i]->category;
             if ($i > 0) $categories[] = $parser_categories[$i]->category_id;
         }
-        $model = '';
-        $color = '';
-        foreach ($product['properties'] as $property) {
-            if ($property['name'] == 'Model') $model = trim($property['value']['dataList'][0]);
-            if ($property['name'] == 'Kolor') $color = $property['value']['dataList'][0];
-        }
 
+        //Парсим общие атрибуты
         $attributes = $main_category->all_attributes();
 
-        $attr_size = null;
+        $attribute_data = $this->parseAttributes($product['properties'], $attributes);
+
+       // dd($attribute_data);
+        /*
+
+        $model = '';
+        $color = '';
+        $for_whom = '';
+        $sex = '';
+        $attr_category = '';
+        $drop = '';
+
+        foreach ($product['properties'] as $property) {
+            if ($property['name'] == 'Model') $model = trim($property['value']['dataList'][0]); //Модель
+            if ($property['name'] == 'Kolor') $color = $property['value']['dataList'][0]; //Цвет
+            if ($property['name'] == 'Dla kogo') $for_whom = $property['value']['dataList']; //Для кого
+            if ($property['name'] == 'Płeć') $sex = $property['value']['dataList']; //Пол
+            if ($property['name'] == 'Kategoria') $attr_category = $property['value']['dataList'][0]; //Категория
+            if ($property['name'] == 'Drop') $drop = $property['value']['dataList'][0]; //?? Подошва
+        }
+
+
+
+
         $attr_color = null;
 
         foreach ($attributes as $attribute) {
             if ($attribute->name == 'Размер') $attr_size = $attribute;
             if ($attribute->name == 'Цвет') $attr_color = $attribute;
         }
-        //TODO Для цветов и других атрибутов сделать таблицу перевода world (unique), russia
+
 
         $color_ru = $this->translate->translate($color); //GoogleTranslateForFree::translate('pl','ru', $color);
         if (!$attr_color->isValue($color_ru)) {
@@ -215,6 +233,12 @@ class ParserNB extends ParserAbstract
         }
 
         $variant_color = $attr_color->findVariant($color_ru)->id;
+        */
+        //Размер распарсиваем отдельно, для создания новых товаров из Модификации
+        $attr_size = null;
+        foreach ($attributes as $attribute) {
+            if ($attribute->name == 'Размер') $attr_size = $attribute;
+        }
 
         $_products = []; //Массив вариантов для Модификации
         $data = [];
@@ -251,7 +275,7 @@ class ParserNB extends ParserAbstract
                 $_product->categories()->attach($category);
             }
             $_product->not_sale = !$availability;
-            $_product->model = $model;
+            //$_product->model = $model;
             $_product->barcode = $ean ?? '';
             $_product->name_print = $_product->name;
             $_product->local = true;
@@ -264,8 +288,12 @@ class ParserNB extends ParserAbstract
             $_product->marking_type_id = MarkingType::whereRaw("LOWER(name) like '%одежда%'")->first()->id;
 
             $_product->save();
-            //Аттрибуты
-            $_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
+            //Атрибуты общие
+            foreach ($attribute_data as $datum) {
+                $_product->prod_attributes()->attach($datum['attribute']->id, ['value' => json_encode($datum['variant'])]);
+            }
+            //$_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
+            //Атрибут размера
             $_product->prod_attributes()->attach($attr_size->id, ['value' => json_encode($variant_size)]);
 
             $_products[] = $_product;
@@ -285,7 +313,7 @@ class ParserNB extends ParserAbstract
 
         $product_parser = ProductParser::register($url, $_products[0]->id);
         $product_parser->maker_id = $maker_id;
-        $product_parser->model = $model;
+        //$product_parser->model = $model;
         $product_parser->price_base = $price_base;
         $product_parser->price_sell = $price_sell;
         $product_parser->data = $data;
@@ -299,5 +327,73 @@ class ParserNB extends ParserAbstract
     {
 
 
+    }
+
+    private function parseAttributes(array $properties, $attributes): array
+    {
+        $array = [];
+        //Заносим список значений в массив
+        foreach ($properties as $property) {
+            $dataList = $property['value']['dataList'];
+            if (!empty($dataList)) {
+                if ($property['name'] == 'Model') {
+                    $model = trim($dataList[0]);
+                    preg_match_all('/\d/', $model, $res);
+                    $result = implode($res[0]);
+                    $array['Серия'] = ['value' => $result];
+                    $array['Модель'] = ['value' => $model];
+                }
+                if ($property['name'] == 'Kolor') $array['Цвет'] = ['value' => trim($dataList[0])];
+                if ($property['name'] == 'Dla kogo') $array['Для кого'] = ['value' => $dataList,];
+                if ($property['name'] == 'Płeć') $array['Пол'] = ['value' => $dataList,];
+                if ($property['name'] == 'Kategoria') $array['Категория'] = ['value' => $dataList[0]];
+                if ($property['name'] == 'Drop') $array['Подошва'] = ['value' => $dataList[0]];
+            }
+            //Одежда
+            // Szerokość - Ширина
+            // Produkt ocieplany - Утепленный продукт
+            // Rodzaj zapięcia - Тип застежки
+
+        }
+        //Каждому типу значений находим соответствующий атрибут
+        foreach ($attributes as $attribute) {
+            foreach ($array as $key => $value) {
+                if ($attribute->name == $key)
+                    $array[$key]['attribute'] = $attribute;
+            }
+
+        }
+        //Для каждого значения value находим id его Варианта (если не нашли, создаем)
+        foreach ($array as $key => $item) {
+            $value = $item['value'];
+            /** @var Attribute $attribute */
+            $attribute = $item['attribute'];
+            $variant = null;
+            if ($attribute->isVariant()) { //Если атрибут Вариативный ищем id
+                if (is_array($value)) {
+                    foreach ($value as $_v) {
+                        $variant[] = $this->ValueToVariant($attribute, $_v);
+                    }
+                } else {
+                    $variant = $this->ValueToVariant($attribute, $value);
+                }
+            } else { //Если нет (строка), то присваиваем само значение
+                $variant = $value;
+            }
+
+            $array[$key]['variant'] = $variant;
+        }
+
+        return $array;
+    }
+
+    private function ValueToVariant(Attribute $attribute, string $value): int
+    {
+        $value_ru = $this->translate->translate($value);
+        if (!$attribute->isValue($value_ru)) {
+            $attribute->addVariant($value_ru);
+            $attribute->refresh();
+        }
+        return $attribute->findVariant($value_ru)->id;
     }
 }

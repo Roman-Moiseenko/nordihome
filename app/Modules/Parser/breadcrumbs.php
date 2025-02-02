@@ -25,7 +25,7 @@ Breadcrumbs::for('admin.product.edit', function (BreadcrumbTrail $trail, Product
 //CATEGORY
 Breadcrumbs::for('admin.parser.category.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Категории', route('admin.parser.category.index'));
+    $trail->push('Категории Парсера', route('admin.parser.category.index'));
 });
 
 
