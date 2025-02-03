@@ -28,6 +28,7 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
+use App\Modules\Order\Entity\Order\OrderExpenseWorker;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use Illuminate\Http\Request;
@@ -219,15 +220,60 @@ class ExpenseService
             $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName());
         $expense->save();
 
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_DELIVERY);
-        foreach ($staffs as $staff) {
-            $staff->notify(new StaffMessage(
+        /** @var Worker $worker */
+        $worker = Worker::find($worker_id);
+        //$staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_DELIVERY);
+
+        //foreach ($staffs as $staff) {
+            $worker->notify(new StaffMessage(
                 event: NotificationHelper::EVENT_ASSEMBLY,
                 message: $message,
                 params: new TelegramParams(TelegramParams::OPERATION_ASSEMBLING, $expense->id)
             ));
-        }
+        //}
     }
+
+
+    public function delLoader(OrderExpense $expense): void
+    {
+        $worker_id = $expense->getLoader()->id;
+
+        $expense->status = OrderExpense::STATUS_ASSEMBLY;
+        $expense->save();
+        /** @var Worker $worker */
+        $worker = Worker::find($worker_id);
+        $worker->notify(new StaffMessage(
+            event: NotificationHelper::EVENT_INFO,
+            message: 'Отмена сборки по распоряжению ' . $expense->number,
+        ));
+
+        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Worker::WORK_LOADER)->delete();
+    }
+
+    public function delDriver(OrderExpense $expense): void
+    {
+        $worker_id = $expense->getDriver()->id;
+        $expense->status = OrderExpense::STATUS_ASSEMBLED;
+        $expense->save();
+        /** @var Worker $worker */
+        $worker = Worker::find($worker_id);
+        $worker->notify(new StaffMessage(
+            event: NotificationHelper::EVENT_INFO,
+            message: 'Отмена доставки по распоряжению ' . $expense->number,
+        ));
+        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Worker::WORK_DRIVER)->delete();
+
+    }
+
+    public function delAssemble(OrderExpense $expense): void
+    {
+        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Worker::WORK_ASSEMBLE)->delete();
+        /*$workers = $expense->getAssemble();
+        foreach ($workers as $worker) {
+            $expense->workers()->detach($worker->id);
+        }*/
+    }
+
 
     public function setDriver(OrderExpense $expense, int $worker_id): void
     {
@@ -244,9 +290,10 @@ class ExpenseService
         $expense->save();
     }
 
-    public function setAssemble(OrderExpense $expense, int $worker_id): void
+    public function setAssemble(OrderExpense $expense, array $workers): void
     {
-        $expense->workers()->attach($worker_id, ['work' => Worker::WORK_ASSEMBLE]);
+        foreach ($workers as $worker_id)
+            $expense->workers()->attach($worker_id, ['work' => Worker::WORK_ASSEMBLE]);
         $expense->push();
         $expense->refresh();
 
@@ -334,6 +381,7 @@ class ExpenseService
         $expense->type = $request->input('type');
         $expense->save();
     }
+
 
 
 }

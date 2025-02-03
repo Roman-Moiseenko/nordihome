@@ -702,20 +702,53 @@ class OrderService
     }
 
     /**
-     * Проверка Заказа после поступления оплаты, смена статуса, генерация события
+     * Проверка Заказа после поступления/отмены оплаты, смена статуса, генерация события
      */
     public function checkPayment(Order $order): void
     {
-        $order->setReserve(now()->addDays(45));//Увеличиваем резерв
-        if ($order->getTotalAmount() <= $order->getPaymentAmount()) {
-            $order->setPaid();
-            event(new OrderHasPaid($order));
-        } else {
-            event(new OrderHasPrepaid($order));
-            if ($order->status->value == OrderStatus::AWAITING) {
+        $payment = $order->getPaymentAmount();
+        $total = $order->getTotalAmount();
+        //Заказ в ожидании
+        if ($order->status->value == OrderStatus::AWAITING) {
+            $order->setReserve(now()->addDays(45));//Увеличиваем резерв
+            if ($payment == $total) { //Оплачен полностью
+                $order->setPaid();
+                event(new OrderHasPaid($order));
+            }
+            if ($payment < $total) { //Оплачен частично
                 $order->setStatus(OrderStatus::PREPAID);
+                event(new OrderHasPrepaid($order));
             }
         }
+
+        //Заказ на предоплате
+        if ($order->status->value == OrderStatus::PREPAID) {
+            if ($payment == $total) { //Оплачен полностью
+                $order->setPaid();
+                $order->setReserve(now()->addDays(45));//Увеличиваем резерв
+                event(new OrderHasPaid($order));
+            } else {
+                if ($payment == 0) { //Отмена предоплаты
+                    $order->delStatus(OrderStatus::PREPAID);
+                } else { //Новая предоплата
+                    $order->setReserve(now()->addDays(45));//Увеличиваем резерв
+                    event(new OrderHasPrepaid($order));
+                }
+
+            }
+        }
+        if ($order->status->value == OrderStatus::PAID) {
+            if ($payment == $total) throw new \DomainException('Неверный вызов checkPayment');
+            if ($payment == 0) { //Полная отмена оплаты
+                $order->delStatus(OrderStatus::PAID);
+                $order->delStatus(OrderStatus::PREPAID);
+            } else {
+                $order->delStatus(OrderStatus::PAID);
+                $order->refresh();
+                if ($order->status->value != OrderStatus::PREPAID) $order->setStatus(OrderStatus::PREPAID);
+            }
+        }
+
         //Если купон в заказе, то завершаем его использование
         if (!is_null($order->coupon_id) && $order->coupon->isNew()) {
             $order->coupon->completed();

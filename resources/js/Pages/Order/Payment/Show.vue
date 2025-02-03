@@ -34,6 +34,7 @@ const props = defineProps({
     storages: Array,
     orders: Array, //Заказы awaiting
 })
+
 </script>
 
 <style scoped>

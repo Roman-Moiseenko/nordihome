@@ -10,7 +10,7 @@
             <h2 class="font-medium text-teal-600">По региону</h2>
             <LocalTable :local="local" :assembles="assembles" :drivers="drivers" />
             <h2 v-if="incomplete.length > 0" class="mt-3 font-medium text-red-600">Не завершенные</h2>
-            <LocalTable v-if="incomplete.length > 0" :local="incomplete" :assembles="assembles" :drivers="drivers" :incomplete="true" />
+            <LocalTable v-if="incomplete.length > 0" :local="incomplete" :assembles="assembles" :drivers="drivers" :is_incomplete="true" />
         </div>
 
         <div class="mt-2 p-5 bg-white rounded-md">
@@ -22,14 +22,15 @@
 
 </template>
 <script lang="ts" setup>
-import { defineProps} from "vue";
-import {Head} from '@inertiajs/vue3'
+import { defineProps } from "vue";
+import {Head } from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 import LocalTable from './Local/Table.vue'
 import RegionTable from './Region/Table.vue'
 import OzonTable from './Ozon/Table.vue'
+
 
 const props = defineProps({
     local: Array,

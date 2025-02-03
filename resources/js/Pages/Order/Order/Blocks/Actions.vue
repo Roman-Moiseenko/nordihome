@@ -47,7 +47,7 @@
             <el-dropdown-menu>
                 <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('cash')">Оплата в кассу
                 </el-dropdown-item>
-                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('card')">Оплата по карту
+                <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('card')">Оплата по карте
                 </el-dropdown-item>
                 <el-dropdown-item v-if="!order.status.is_paid" @click="onPayment('account')">Оплата по счету
                 </el-dropdown-item>
@@ -63,8 +63,7 @@
             </el-dropdown-menu>
         </template>
     </el-dropdown>
-
-    <template v-if="!is_new && !is_awaiting">
+    <template v-if="!is_new && order.payments.length > 0">
         <el-dropdown>
             <el-button type="success" class="mr-2">
                 Платежи
@@ -80,6 +79,9 @@
                 </div>
             </template>
         </el-dropdown>
+    </template>
+    <template v-if="!is_new && !is_awaiting">
+
         <el-dropdown v-if="order.movements.length > 0">
             <el-button type="warning" class="mr-2">
                 Перемещения

@@ -2,7 +2,7 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Заказ покупателя [{{ order.status_text }}]
+            Заказ <span v-if="order.number">№ {{ order.number }}</span> покупателя [{{ order.status_text }}]
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <OrderInfo :order="order" :storages="storages" :mainStorage="mainStorage" :traders="traders" />

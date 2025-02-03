@@ -98,21 +98,50 @@ class DeliveryController extends Controller
     }
 
     /**
+     * Отменяем упаковщика => Груз (распоряжение) ждет сборщика
+     */
+    public function del_loader(Request $request, OrderExpense $expense): RedirectResponse
+    {
+        $this->expenseService->delLoader($expense);
+        return redirect()->back()->with('success', 'Упаковщик отменен');
+    }
+
+    /**
      * Назначаем доставщика => Груз (распоряжение) на доставке
      */
     public function set_driver(Request $request, OrderExpense $expense): RedirectResponse
     {
+
         $this->expenseService->setDriver($expense, $request->integer('worker_id'));
         return redirect()->back()->with('success', 'Доставщик назначен');
     }
+
+    /**
+     * Отменяем доставщика => Груз (распоряжение) ждет доставщика
+     */
+    public function del_driver(Request $request, OrderExpense $expense): RedirectResponse
+    {
+        $this->expenseService->delDriver($expense);
+        return redirect()->back()->with('success', 'Доставщик отменен');
+    }
+
 
     /**
      * Назначаем Сборщика мебели => Статус не меняется, для учета работ.
      */
     public function set_assemble(Request $request, OrderExpense $expense): RedirectResponse
     {
-        $this->expenseService->setAssemble($expense, $request->integer('worker_id'));
+        $this->expenseService->setAssemble($expense, $request->input('worker_id', []));
         return redirect()->back()->with('success', 'Сборщик назначен');
+    }
+
+    /**
+     * Отменяем Сборщика мебели => Статус не меняется
+     */
+    public function del_assemble(Request $request, OrderExpense $expense): RedirectResponse
+    {
+        $this->expenseService->delAssemble($expense);
+        return redirect()->back()->with('success', 'Сборщик отменен');
     }
 
     /**

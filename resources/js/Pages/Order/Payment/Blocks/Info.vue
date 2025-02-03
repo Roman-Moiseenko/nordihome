@@ -79,7 +79,6 @@ const props = defineProps({
     methods: Array,
     storages: Array,
 })
-console.log(props.payment)
 const iSavingInfo = ref(false)
 
 const disabled = computed(() => {

@@ -97,23 +97,6 @@ class OrderController extends Controller
             'additions' => $additions,
             'traders' => $this->organizations->getTraders(),
         ]);
-
-        /*
-
-                if ($order->isNew())
-                    return view('admin.order._new.show', compact('order', 'staffs'));
-                if ($order->isManager())
-                    return view('admin.order._manager.show', compact('order', 'staffs', 'storages'));
-                if ($order->isAwaiting())
-                    return view('admin.order._awaiting.show', compact('order'));
-                if ($order->isPrepaid() || $order->isPaid())
-                    return view('admin.order._paid.show', compact('order', 'storages', 'mainStorage'));
-                if ($order->isCompleted())
-                    return view('admin.order._completed.show', compact('order'));
-                if ($order->isCanceled())
-                    return view('admin.order._canceled.show', compact('order'));
-                abort(404, 'Неверный статус заказа');
-                */
     }
 
     public function store(Request $request): RedirectResponse

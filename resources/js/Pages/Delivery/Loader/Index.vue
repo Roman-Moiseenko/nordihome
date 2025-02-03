@@ -24,38 +24,50 @@
                         <div class="text-slate-700 text-xs">{{ func.phone(scope.row.phone) }}</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="type_text" label="Доставка" width="180" />
+                <el-table-column prop="type_text" label="Доставка" width="180"/>
                 <el-table-column prop="status_text" label="Статус" width="120">
                     <template #default="scope">
                         <el-tag :type="statusType(scope.row.status)">{{ scope.row.status_text }}</el-tag>
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="work" label="Ответственный"  show-overflow-tooltip>
+                <el-table-column prop="work" label="Ответственный" show-overflow-tooltip>
                     <template #default="scope">
                         <div v-for="worker in scope.row.workers">
-                            <el-tag>{{worker.work}}</el-tag> {{ func.fullName(worker.fullname) }}
+                            <el-tag>{{ worker.work }}</el-tag>
+                            {{ func.fullName(worker.fullname) }}
+                            <el-tooltip v-if="scope.row.status.is_assembling" content="Отменить" placement="top-start" effect="dark">
+                                <el-button type="danger" size="small" @click.stop="delLoader(scope.row, worker.id)">
+                                    <i class="fa-light fa-xmark"></i>
+                                </el-button>
+                            </el-tooltip>
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip width="200"/>
+                <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip width="120"/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
                         <el-popover v-if="scope.row.status.is_assembly"
                                     :visible="scope.row.visible_assembly"
                                     placement="bottom-start" :width="246">
                             <template #reference>
-                                <el-button type="primary" class="p-4 mr-2" @click.stop="scope.row.visible_assembly = !scope.row.visible_assembly">
+                                <el-button type="primary" class="p-4 mr-2"
+                                           @click.stop="scope.row.visible_assembly = !scope.row.visible_assembly">
                                     Назначить
-                                    <el-icon class="ml-1"><ArrowDown /></el-icon>
+                                    <el-icon class="ml-1">
+                                        <ArrowDown/>
+                                    </el-icon>
                                 </el-button>
                             </template>
                             <el-select v-model="worker_id">
-                                <el-option v-for="item in works" :value="item.id" :label="func.fullName(item.fullname)" />
+                                <el-option v-for="item in works" :value="item.id"
+                                           :label="func.fullName(item.fullname)"/>
                             </el-select>
                             <div class="mt-2">
                                 <el-button @click="scope.row.visible_assembly = false">Отмена</el-button>
-                                <el-button @click="scope.row.visible_assembly = false; setLoader(scope.row)" type="primary">Назначить</el-button>
+                                <el-button @click="scope.row.visible_assembly = false; setLoader(scope.row)"
+                                           type="primary">Назначить
+                                </el-button>
                             </div>
                         </el-popover>
                         <el-button type="success"
@@ -63,7 +75,8 @@
                                    @click.stop="onComplete(scope.row)">
                             Выдать
                         </el-button>
-                        <el-button v-if="scope.row.status.is_assembling && scope.row.is_delivery" @click.stop="onAssembled(scope.row)">
+                        <el-button v-if="scope.row.status.is_assembling && scope.row.is_delivery"
+                                   @click.stop="onAssembled(scope.row)">
                             Собран
                         </el-button>
                     </template>
@@ -102,9 +115,11 @@ const tableData = ref([...props.expenses.data.map(item => {
     return item
 })])
 const worker_id = ref(null)
+
 interface IRow {
     completed: number
 }
+
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.completed === 0) {
         return 'warning-row'
@@ -115,6 +130,7 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 function routeClick(row) {
     router.get(route('admin.order.expense.show', {expense: row.id}))
 }
+
 function setLoader(row) {
     router.visit(route('admin.delivery.set-loader', {expense: row.id}), {
         method: "post",
@@ -124,6 +140,17 @@ function setLoader(row) {
 
     })
 }
+
+function delLoader(row, id) {
+    router.visit(route('admin.delivery.del-loader', {expense: row.id}), {
+        method: "post",
+        data: {worker_id, id},
+        preserveScroll: true,
+        preserveState: false,
+
+    })
+}
+
 function onAssembled(row) {
     router.visit(route('admin.delivery.assembled', {expense: row.id}), {
         method: "post",
@@ -131,6 +158,7 @@ function onAssembled(row) {
         preserveState: false,
     })
 }
+
 function onComplete(row) {
     router.visit(route('admin.delivery.completed', {expense: row.id}), {
         method: "post",
@@ -138,6 +166,7 @@ function onComplete(row) {
         preserveState: false,
     })
 }
+
 function statusType(status) {
     if (status.is_assembly) return 'danger'
     if (status.is_assembling) return 'warning'

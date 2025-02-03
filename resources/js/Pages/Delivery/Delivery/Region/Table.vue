@@ -20,7 +20,39 @@
                 </Link>
             </template>
         </el-table-column>
-        <el-table-column label="Отгружено" width="250">
+        <el-table-column label="Доставщик" width="250">
+            <template #default="scope">
+                <el-tag v-if="scope.row.driver">{{
+                        func.fullName(scope.row.driver.fullname)
+                    }}
+                </el-tag>
+                <el-popover v-else
+                            :visible="scope.row.visible_driver"
+                            placement="bottom-start" :width="246">
+                    <template #reference>
+                        <el-button type="primary" class="p-4 mr-2"
+                                   @click.stop="scope.row.visible_driver = !scope.row.visible_driver">
+                            Назначить
+                            <el-icon class="ml-1">
+                                <ArrowDown/>
+                            </el-icon>
+                        </el-button>
+                    </template>
+                    <el-select v-model="worker_id">
+                        <el-option v-for="item in drivers" :value="item.id"
+                                   :label="func.fullName(item.fullname)"/>
+                    </el-select>
+                    <div class="mt-2">
+                        <el-button @click="scope.row.visible_driver = false">Отмена</el-button>
+                        <el-button @click="scope.row.visible_driver = false; setDriver(scope.row)"
+                                   type="primary">Назначить
+                        </el-button>
+                    </div>
+                </el-popover>
+
+            </template>
+        </el-table-column>
+        <el-table-column label="Транспортная компания" width="250">
             <template #default="scope">
                 <span v-if="scope.row.delivery" >
                     {{ scope.row.delivery.cargo.name }}. Трек № <el-tag>{{ scope.row.delivery.track_number }}</el-tag>
@@ -75,6 +107,7 @@ const props = defineProps({
     companies: Array,
 })
 const tableRegion = ref([...props.region])
+const worker_id = ref(null)
 const form = reactive({
     track: null,
     company_id: null,
@@ -90,5 +123,15 @@ function setTrack(row) {
         }
     })
 }
-
+function setDriver(row) {
+    router.visit(route('admin.delivery.set-driver', {expense: row.id}), {
+        method: "post",
+        data: {worker_id: worker_id.value},
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+            tableRegion.value = [...page.props.region]
+        }
+    })
+}
 </script>

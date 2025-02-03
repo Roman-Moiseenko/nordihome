@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Service;
 
+use App\Modules\Admin\Entity\Worker;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryTruck;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseWorker;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
@@ -134,11 +136,8 @@ class CalendarService
             }
             $calendarPeriod->refresh();
             $this->check_full($calendarPeriod);
-
             //Если есть Доставщик и сборщик, отменить
-            if (!is_null($driver = $expense->getDriver())) $expense->workers()->detach($driver->id);
-            if (!is_null($assemble = $expense->getAssemble())) $expense->workers()->detach($assemble->id);
-
+            OrderExpenseWorker::where('expense_id', $expense->id)->where('work', '<>', Worker::WORK_LOADER)->delete();
             $this->logger->logOrder($expense->order, 'Установлена дата отгрузки', $calendarPeriod->calendar->htmlDate(), $calendarPeriod->timeHtml());
         });
     }

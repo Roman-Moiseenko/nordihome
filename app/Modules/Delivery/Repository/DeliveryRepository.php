@@ -75,6 +75,7 @@ class DeliveryRepository
         return array_merge($expense->toArray(), [
             'visible_cargo' => false,
             'delivery' => $expense->delivery()->with('cargo')->first(),
+            'driver' => $expense->getDriver(),
         ]);
     }
 
@@ -131,7 +132,7 @@ class DeliveryRepository
                                         'visible_driver' => false,
                                         'driver' => $expense->getDriver(),
                                         'is_assemble' => $expense->isAssemble(),
-                                        'assemble' => $expense->getAssemble(),
+                                        'assembles' => $expense->getAssemble(),
                                         'visible_assemble' => false,
                                         'visible_loader' => false,
                                     ]);

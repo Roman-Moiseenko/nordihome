@@ -26,8 +26,11 @@ Route::group(
 
         //Назначить рабочего
         Route::post('/set-loader/{expense}', 'DeliveryController@set_loader')->name('set-loader');
+        Route::post('/del-loader/{expense}', 'DeliveryController@del_loader')->name('del-loader');
         Route::post('/set-driver/{expense}', 'DeliveryController@set_driver')->name('set-driver');
+        Route::post('/del-driver/{expense}', 'DeliveryController@del_driver')->name('del-driver');
         Route::post('/set-assemble/{expense}', 'DeliveryController@set_assemble')->name('set-assemble');
+        Route::post('/del-assemble/{expense}', 'DeliveryController@del_assemble')->name('del-assemble');
 
 
         //Отправить, сменить состояние

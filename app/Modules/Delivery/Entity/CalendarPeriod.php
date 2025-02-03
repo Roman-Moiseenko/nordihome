@@ -90,7 +90,7 @@ class CalendarPeriod extends Model
         foreach ($this->expenses as $expense) {
             $volume += $expense->getVolume();
         }
-        return $this->volume - $volume;
+        return ceil(($this->volume - $volume) * 1000)/1000;
     }
 
     public function expenses()

@@ -241,7 +241,7 @@ class Order extends Model
 
     public function setNumber(): void
     {
-        if (!is_null($this->number)) { //Не меняем уже назначенный номер
+        if (is_null($this->number)) { //Не меняем уже назначенный номер
             $count = Order::where('number', '<>', null)->max('number');
             $this->number = (int)$count + 1;
             $this->save();
@@ -249,6 +249,8 @@ class Order extends Model
     }
 
     ///*** GET-еры
+
+
 
     /**
      * Доступные статусы для текущего заказа, ограниченные сверху
@@ -686,12 +688,18 @@ class Order extends Model
         return $this->user->fullname->getFullName();
     }
 
-    public function clearReserve()
+    public function clearReserve(): void
     {
         foreach ($this->items as $item) {
             $item->clearReserves();
         }
     }
 
+    public function delStatus(#[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value): void
+    {
+        foreach ($this->statuses as $status) {
+            if ($status->value == $value) $status->delete();
+        }
+    }
 
 }

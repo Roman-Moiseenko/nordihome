@@ -26,10 +26,20 @@
                             </el-table-column>
                             <el-table-column label="Доставщик" width="250">
                                 <template #default="scope">
-                                    <el-tag v-if="scope.row.driver">{{
-                                            func.fullName(scope.row.driver.fullname)
-                                        }}
+                                    <span v-if="scope.row.driver">
+                                        <el-tag>{{
+                                                func.fullName(scope.row.driver.fullname)
+                                            }}
                                     </el-tag>
+                                        <el-tooltip content="Отменить" placement="top-start" effect="dark">
+                                                <el-button type="danger" size="small" class="ml-1"
+                                                           @click.stop="delDriver(scope.row)">
+                                                    <i class="fa-light fa-xmark"></i>
+                                                </el-button>
+                                            </el-tooltip>
+                                    </span>
+
+
                                     <el-popover v-else
                                                 :visible="scope.row.visible_driver"
                                                 placement="bottom-start" :width="246">
@@ -59,9 +69,17 @@
                             <el-table-column label="Сборка" width="250">
                                 <template #default="scope">
                                     <div v-if="scope.row.is_assemble">
-                                        <el-tag v-if="scope.row.assemble">
-                                            {{ func.fullName(scope.row.assemble.fullname) }}
-                                        </el-tag>
+                                        <span v-if="scope.row.assembles.length !== 0">
+                                            <el-tag v-for="assemble in scope.row.assembles">
+                                                {{ func.fullName(assemble.fullname) }}
+                                            </el-tag>
+                                            <el-tooltip content="Отменить" placement="top-start" effect="dark">
+                                                <el-button type="danger" size="small" class="ml-1"
+                                                           @click.stop="delAssemble(scope.row)">
+                                                    <i class="fa-light fa-xmark"></i>
+                                                </el-button>
+                                            </el-tooltip>
+                                        </span>
                                         <el-popover v-else
                                                     :visible="scope.row.visible_assemble"
                                                     placement="bottom-start" :width="246">
@@ -74,7 +92,7 @@
                                                     </el-icon>
                                                 </el-button>
                                             </template>
-                                            <el-select v-model="worker_id">
+                                            <el-select v-model="worker_id" multiple multiple-limit="2">
                                                 <el-option v-for="item in assembles" :value="item.id"
                                                            :label="func.fullName(item.fullname)"/>
                                             </el-select>
@@ -100,8 +118,11 @@
                             </el-table-column>
                             <el-table-column label="Действия">
                                 <template #default="scope">
-                                    <el-button type="success" v-if="scope.row.driver" @click="onCompleted(scope.row)">Выдано</el-button>
-                                    <el-button type="warning" @click="openDialogPeriod(scope.row)">Сменить дату</el-button>
+                                    <el-button type="success" v-if="scope.row.driver" @click="onCompleted(scope.row)">
+                                        Выдано
+                                    </el-button>
+                                    <el-button type="warning" @click="openDialogPeriod(scope.row)">Сменить дату
+                                    </el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -135,12 +156,12 @@
             v-model="form_calendar.date_at"
             :disabled-date="disabledDate"
             placeholder="Выберите дату доставки"
-            @change="findPeriod" />
+            @change="findPeriod"/>
         <div class="mt-3" v-if="periods.length > 0">
             <h2>Время доставки</h2>
-            <el-radio-group v-model="form_calendar.period_id" style="display: block;" >
+            <el-radio-group v-model="form_calendar.period_id" style="display: block;">
                 <el-row v-for="period in periods" class="mt-2">
-                    <el-radio border :value="period.id" >
+                    <el-radio border :value="period.id">
                         {{ period.time_text }} ({{ period.free_weight }} кг, {{ period.free_volume }} м3)
                     </el-radio>
                 </el-row>
@@ -161,7 +182,7 @@
 <script setup lang="ts">
 import {func} from '@Res/func.js'
 import {defineProps, reactive, ref} from "vue";
-import {Link, router} from "@inertiajs/vue3";
+import {Link, router, usePage} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
 import axios from "axios";
 
@@ -169,14 +190,15 @@ const props = defineProps({
     local: Array,
     drivers: Array,
     assembles: Array,
-    incomplete: {
+    is_incomplete: {
         type: Boolean,
         default: false,
     }
 })
+
 const expands = ref([])
 const tableLocal = ref([...props.local])
-const worker_id = ref(null)
+const worker_id = ref([])
 const expense_id = ref(null)
 const dialogPeriod = ref(false)
 
@@ -195,7 +217,7 @@ function setDriver(row) {
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
-            if (props.incomplete) {
+            if (props.is_incomplete) {
                 tableLocal.value = [...page.props.incomplete]
             } else {
                 tableLocal.value = [...page.props.local]
@@ -210,7 +232,35 @@ function setAssemble(row) {
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
-            if (props.incomplete) {
+            if (props.is_incomplete) {
+                tableLocal.value = [...page.props.incomplete]
+            } else {
+                tableLocal.value = [...page.props.local]
+            }
+        }
+    })
+}
+function delAssemble(row) {
+    router.visit(route('admin.delivery.del-assemble', {expense: row.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+            if (props.is_incomplete) {
+                tableLocal.value = [...page.props.incomplete]
+            } else {
+                tableLocal.value = [...page.props.local]
+            }
+        }
+    })
+}
+function delDriver(row) {
+    router.visit(route('admin.delivery.del-driver', {expense: row.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+            if (props.is_incomplete) {
                 tableLocal.value = [...page.props.incomplete]
             } else {
                 tableLocal.value = [...page.props.local]
@@ -225,7 +275,7 @@ function onCompleted(row) {
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
-            if (props.incomplete) {
+            if (props.is_incomplete) {
                 tableLocal.value = [...page.props.incomplete]
             } else {
                 tableLocal.value = [...page.props.local]
@@ -233,6 +283,7 @@ function onCompleted(row) {
         }
     })
 }
+
 //Смена даты
 const disabledDate = (time: Date) => {
     return time.getTime() <= Date.now()
@@ -244,8 +295,7 @@ const form_calendar = reactive({
 const periods = ref([])
 function findPeriod() {
     form_calendar.date_at = func.date(form_calendar.date_at)
-    axios.post(route('admin.delivery.calendar.get-day'), {date: form_calendar.date_at}).then( result => {
-        console.log(result.data)
+    axios.post(route('admin.delivery.calendar.get-day'), {date: form_calendar.date_at}).then(result => {
         if (result.data.length > 0) {
             periods.value = [...result.data]
         } else {
@@ -266,8 +316,10 @@ function setPeriod() {
         preserveState: true,
         onSuccess: page => {
             dialogPeriod.value = false
-            if (props.incomplete) {
+            console.log(page)
+            if (props.is_incomplete) {
                 tableLocal.value = [...page.props.incomplete]
+                router.get(usePage().url)
             } else {
                 tableLocal.value = [...page.props.local]
             }

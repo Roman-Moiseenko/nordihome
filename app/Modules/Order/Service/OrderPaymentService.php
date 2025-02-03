@@ -142,6 +142,9 @@ class OrderPaymentService
     public function completed(OrderPayment $payment): void
     {
         if (is_null($payment->order_id)) throw new \DomainException('Нельзя провести платеж без привязки к договору');
+        if ($payment->isCard() || $payment->isCash()) {
+            if (is_null($payment->storage_id)) throw new \DomainException('Не выбрана точка расчета');
+        }
         $payment->completed();
         $this->orderService->checkPayment($payment->order);
     }
@@ -150,6 +153,7 @@ class OrderPaymentService
     {
         if (!$payment->manual) throw new \DomainException('Нельзя отменить проведение на автоматический платеж');
         $payment->work();
+
         $this->orderService->checkPayment($payment->order);
     }
 }

@@ -290,9 +290,15 @@ class OrderExpense extends Model
     /**
      * Сборщик мебели
      */
-    public function getAssemble(): ?Worker
+    public function getAssemble(): array
     {
-        return $this->getWorker(Worker::WORK_ASSEMBLE);
+        $result = [];
+        foreach ($this->workers as $worker) {
+            if ($worker->pivot->work == Worker::WORK_ASSEMBLE) $result[] = $worker;
+        }
+        return $result;
+
+
     }
     /**
      * Упаковщик (грузчик)
