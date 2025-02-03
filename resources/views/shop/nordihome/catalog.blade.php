@@ -5,6 +5,7 @@
 @section('title', $title)
 @section('description', $description)
 
+
 @section('content')
 <div class="title-page">
     <h1>Каталог товаров NORDIHOME</h1>

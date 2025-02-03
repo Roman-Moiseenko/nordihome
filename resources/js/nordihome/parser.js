@@ -3,6 +3,7 @@ window.$ = jQuery;
 
 (function () {
     "use strict";
+
     let parserButton = $('#search-parser-button');
     let inputButton = $('#search-parser-field');
     let parserItemSet = $('.parser-set-input');
@@ -76,4 +77,5 @@ window.$ = jQuery;
         if (_str === null || _str === '') return '';
         return _str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ₽';
     }
+
 })();
