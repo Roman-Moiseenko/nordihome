@@ -52,7 +52,7 @@ class LoggerOrder extends Model
         ]);
     }
 
-    public function staff()
+    public function staff(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }

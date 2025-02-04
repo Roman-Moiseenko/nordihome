@@ -10,40 +10,27 @@ use JetBrains\PhpStorm\Pure;
 /**
  * @property int $id
  * @property string $name
- * @property int $worker_id
  * @property float $weight
  * @property float $volume
- * @property bool $cargo
- * @property bool $service
  * @property bool $active
- * @property Worker $worker
  */
 class DeliveryTruck extends Model
 {
     public $timestamps = false;
-    protected $attributes = [
-        'cargo' => true,
-        'service' => true,
-        'worker_id' => null,
-    ];
+
     protected $fillable = [
         'name',
-        'worker_id',
         'weight',
         'volume',
-        'cargo',
-        'service',
         'active',
     ];
 
-    public static function register(string $name, float $weight, float $volume, bool $cargo, bool $service): self
+    public static function register(string $name, float $weight, float $volume): self
     {
         return self::create([
             'name' => $name,
             'weight' => $weight,
             'volume' => $volume,
-            'cargo' => $cargo,
-            'service' => $service,
             'active' => true,
         ]);
     }
@@ -58,12 +45,7 @@ class DeliveryTruck extends Model
         return $this->active == false;
     }
 
-    public function setDriver(int $worker_id)
-    {
-        $this->update(['worker_id' => $worker_id]);
-    }
-
-    public function draft()
+    public function draft(): void
     {
         $this->active = false;
         $this->save();
@@ -71,15 +53,9 @@ class DeliveryTruck extends Model
 
     //*** GET-....
 
-    #[Pure]
-    public function getNameWorker(): string
+    public function active(): void
     {
-        if (is_null($this->worker)) return 'Не назначен';
-        return $this->worker->fullname->getFullName();
-    }
-
-    public function worker()
-    {
-        return $this->belongsTo(Worker::class, 'worker_id', 'id');
+        $this->active = true;
+        $this->save();
     }
 }

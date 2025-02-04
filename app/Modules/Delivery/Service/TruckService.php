@@ -4,53 +4,32 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Service;
 
 use App\Modules\Delivery\Entity\DeliveryTruck;
+use Illuminate\Http\Request;
 
 class TruckService
 {
 
-    public function register(array $request): DeliveryTruck
+    public function register(Request $request): DeliveryTruck
     {
-        $truck = DeliveryTruck::register(
-            $request['name'],
-            (float)$request['weight'] ?? 0,
-            (float)$request['volume'] ?? 0,
-            isset($request['cargo']),
-            isset($request['service']),
+        return DeliveryTruck::register(
+            $request->string('name')->trim()->value(),
+            $request->float('weight'),
+            $request->float('volume'),
         );
-
-        if (isset($request['worker_id'])) $truck->setDriver((int)$request['worker_id']);
-        return $truck;
     }
 
-    public function update(array $request, DeliveryTruck $truck)
+    public function setInfo(Request $request, DeliveryTruck $truck): void
     {
-        $truck->update([
-            'name' => $request['name'],
-            'weight' => $request['weight'] ?? 0,
-            'volume' => $request['volume'] ?? 0,
-            'cargo' => isset($request['cargo']),
-            'service' => isset($request['service'])
-        ]);
-
-        if (isset($request['worker_id'])) $truck->setDriver((int)$request['worker_id']);
-    }
-
-    public function draft(DeliveryTruck $truck)
-    {
-        //Проверка, есть ли активные доставки ??
-        $truck->active = false;
-        $truck->save();
-    }
-
-    public function activated(DeliveryTruck $truck)
-    {
-        $truck->active = true;
+        $truck->name = $request->string('name')->trim()->value();
+        $truck->weight = $request->float('weight');
+        $truck->volume = $request->float('volume');
         $truck->save();
 
     }
 
-    public function delete(DeliveryTruck $truck)
+    public function delete(DeliveryTruck $truck): void
     {
-
+        if ($truck->isActive()) throw new \DomainException('Транспорт используется, удалить нельзя');
+        $truck->delete();
     }
 }

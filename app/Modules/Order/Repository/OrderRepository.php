@@ -194,7 +194,8 @@ class OrderRepository
     public function OrderLogToArray(Order $order): array
     {
         return array_merge($order->toArray(), [
-            'logs' => $order->logs,
+            'logs' => $order->logs()->with('staff')->get(),
+
         ]);
     }
 

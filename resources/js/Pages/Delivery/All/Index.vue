@@ -103,7 +103,6 @@ const props = defineProps({
     filters: Array,
     works: Array,
 })
-console.log(props.expenses)
 
 const store = useStore();
 

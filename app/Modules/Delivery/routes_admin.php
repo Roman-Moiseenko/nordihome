@@ -21,8 +21,18 @@ Route::group(
         Route::post('/delivery/{expense}', 'DeliveryController@delivery')->name('delivery');
         Route::post('/set-period/{expense}', 'DeliveryController@set_period')->name('set-period');
 
-        Route::resource('truck', 'TruckController');
-        Route::post('/truck/toggle/{truck}', 'TruckController@toggle')->name('truck.toggle');
+        Route::group(
+            [
+                'prefix' => 'truck',
+                'as' => 'truck.',
+            ],function () {
+            Route::post('/toggle/{truck}', 'TruckController@toggle')->name('toggle');
+            Route::post('/set-info/{truck}', 'TruckController@set_info')->name('set-info');
+
+        });
+        Route::resource('truck', 'TruckController')->only(['index', 'store', 'destroy']);
+
+
 
         //Назначить рабочего
         Route::post('/set-loader/{expense}', 'DeliveryController@set_loader')->name('set-loader');

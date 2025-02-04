@@ -6,50 +6,62 @@ namespace App\Modules\Delivery\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Entity\DeliveryTruck;
+use App\Modules\Delivery\Repository\TruckRepository;
 use App\Modules\Delivery\Service\TruckService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TruckController extends Controller
 {
     private TruckService $service;
+    private TruckRepository $repository;
 
-    public function __construct(TruckService $service)
+    public function __construct(TruckService $service, TruckRepository $repository)
     {
         $this->middleware(['auth:admin']);
         $this->service = $service;
+        $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $query = DeliveryTruck::orderBy('name')->where('active', true);
-        $trucks = $this->pagination($query, $request, $pagination);
-        //TODO Список грузовиков Название/Грузоподъемность/Объем/Активен/(Активен/Неактивен, Удалить)
+        $trucks = $this->repository->getIndex($request);
         return Inertia::render('Delivery/Truck/Index', [
             'trucks' => $trucks,
         ]);
     }
 
-
-
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //TODO Редактирование через Модальное окно
         $request->validate([
             'name' => 'required|string',
         ]);
-        $this->service->register($request->all());
+        $this->service->register($request);
         return redirect()->back()->with('success', 'Транспорт добавлен');
     }
 
 
-    public function update(Request $request, DeliveryTruck $truck)
+    public function set_info(Request $request, DeliveryTruck $truck): RedirectResponse
     {
-        $this->service->update($request->all(), $truck);
+        $this->service->setInfo($request, $truck);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(DeliveryTruck $truck)
+    public function toggle(DeliveryTruck $truck): RedirectResponse
+    {
+        if ($truck->isActive()) {
+            $message = 'Транспорт убран из расчета доставки';
+            $truck->draft();
+        } else {
+            $message = 'Транспорт добавлен в расчет доставки';
+            $truck->active();
+        }
+        return redirect()->back()->with('success', $message);
+    }
+
+    public function destroy(DeliveryTruck $truck): RedirectResponse
     {
         $this->service->delete($truck);
         return redirect()->back()->with('success', 'Транспорт удален');

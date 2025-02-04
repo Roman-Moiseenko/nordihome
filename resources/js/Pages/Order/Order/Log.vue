@@ -7,18 +7,21 @@
             <el-table
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
-                style="width: 100%; cursor: pointer;"
+                style="width: 100%;"
             >
-                <el-table-column prop="created_at" label="Дата" width="160"/>
-                <el-table-column prop="action" label="Действие" width="160"/>
-                <el-table-column prop="object" label="Объект" width="160"/>
-                <el-table-column prop="value" label="Значение" width="160"/>
-                <el-table-column prop="link" label="Ссылка на документа" >
+                <el-table-column prop="created_at" label="Дата" width="160">
                     <template #default="scope">
-                        <Link v-if="scope.row.link" :href="scope.row.link" >Ссылка</Link>
+                        {{ func.datetime(scope.row.created_at)}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
+                <el-table-column prop="action" label="Действие" width="260"/>
+                <el-table-column prop="object" label="Объект/Дата" width="180"/>
+                <el-table-column prop="value" label="Значение" width="260"/>
+                <el-table-column prop="link" label="Ссылка на документ" >
+                    <template #default="scope">
+                        <Link type="primary" v-if="scope.row.link" :href="scope.row.link" >Ссылка</Link>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="staff" label="Ответственный" >
                     <template #default="scope">
                         {{ func.fullName(scope.row.staff.fullname)}}
@@ -43,6 +46,6 @@ const props = defineProps({
         default: 'История заказа',
     },
 })
-
+console.log(props.order.logs)
 const tableData = ref([...props.order.logs])
 </script>

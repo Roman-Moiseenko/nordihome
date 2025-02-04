@@ -53,13 +53,13 @@ return [
                 'title' => '*Доставка по РФ',
                 'route_name' => 'admin.delivery.region',
                 'action' => true,
-            ], */
+            ],
             'calendar' => [
                 'icon' => 'calendar-days',
                 'title' => '*Календарь доставок',
                 'route_name' => 'admin.delivery.calendar.index',
                 //'action' => true,
-            ],
+            ],*/
             /*
             'schedule' => [
                 'icon' => 'calendar-check',
