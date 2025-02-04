@@ -62,7 +62,6 @@ class ContactController extends Controller
             $message = 'Контакт убран с сайта';
             $contact->draft();
         }
-
         return redirect()->back()->with('success', $message);
     }
 

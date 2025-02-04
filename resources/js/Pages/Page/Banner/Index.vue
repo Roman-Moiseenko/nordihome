@@ -14,17 +14,16 @@
                 style="width: 100%; cursor: pointer;"
                 @row-click="routeClick"
             >
-                <el-table-column prop="name" label="Название" width="280" show-overflow-tooltip/>
-                <el-table-column prop="active" label="Опубликован" width="180" >
+                <el-table-column prop="name" label="Название" width="200" show-overflow-tooltip/>
+                <el-table-column prop="active" label="Опубликован" width="120" >
                     <template #default="scope">
                         <Active :active="scope.row.active" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="count" label="Кол-во элементов" width="120"/>
-                <el-table-column prop="template" label="Шаблон" width="280" />
-                <el-table-column prop="caption" label="Заголовок" width="280" show-overflow-tooltip/>
+                <el-table-column prop="count" label="Элементов" width="120"/>
+                <el-table-column prop="template" label="Шаблон" width="180" />
+                <el-table-column prop="caption" label="Заголовок" width="200" show-overflow-tooltip/>
                 <el-table-column prop="description" label="Описание" width="280" show-overflow-tooltip/>
-
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
                         <el-tooltip effect="dark" placement="top-start" content="Скопировать шорт-код в буфер">
