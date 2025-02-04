@@ -36,4 +36,9 @@ class WriteReview extends SystemMailable
     {
         return [];
     }
+
+    public function getName(): string
+    {
+        return 'Напишите отзыв';
+    }
 }

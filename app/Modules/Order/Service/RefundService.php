@@ -82,7 +82,9 @@ class RefundService
 
             $order->setStatus(OrderStatus::COMPLETED_REFUND);
             $order->clearReserve();//Возврат товаров в продажу
-            $this->logger->logOrder($order, 'Заказ завершен с возвратом', '', '');
+            $this->logger->logOrder($order, 'Заказ завершен с возвратом', '', '',
+                route('admin.order.refund.show', $refund)
+            );
         });
 
 

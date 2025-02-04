@@ -25,4 +25,6 @@ abstract class AbstractMailable extends Mailable
     abstract public function content(): Content;
     abstract public function attachments(): array;
     abstract public function getFiles(): array;
+
+
 }

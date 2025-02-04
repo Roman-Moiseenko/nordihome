@@ -37,7 +37,7 @@ Breadcrumbs::for('admin.order.show', function (BreadcrumbTrail $trail, Order $or
 
 Breadcrumbs::for('admin.order.log', function (BreadcrumbTrail $trail, Order $order) {
     $trail->parent('admin.order.show', $order);
-    $trail->push('Лог заказа', route('admin.order.log', $order));
+    $trail->push('История заказа', route('admin.order.log', $order));
 });
 
 //EXPENSE

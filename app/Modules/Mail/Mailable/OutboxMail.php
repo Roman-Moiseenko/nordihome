@@ -60,4 +60,5 @@ class OutboxMail extends AbstractMailable
     {
         return $this->files;
     }
+
 }

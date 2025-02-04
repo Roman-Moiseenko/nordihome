@@ -38,4 +38,9 @@ class ExpenseCompleted extends SystemMailable
     {
         return [];
     }
+
+    public function getName(): string
+    {
+        return 'Распоряжение выполнено';
+    }
 }

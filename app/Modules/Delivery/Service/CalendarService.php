@@ -138,7 +138,8 @@ class CalendarService
             $this->check_full($calendarPeriod);
             //Если есть Доставщик и сборщик, отменить
             OrderExpenseWorker::where('expense_id', $expense->id)->where('work', '<>', Worker::WORK_LOADER)->delete();
-            $this->logger->logOrder($expense->order, 'Установлена дата отгрузки', $calendarPeriod->calendar->htmlDate(), $calendarPeriod->timeHtml());
+            $this->logger->logOrder($expense->order, 'Установлена дата отгрузки',
+                $calendarPeriod->calendar->htmlDate(), $calendarPeriod->timeHtml(), null);
         });
     }
 

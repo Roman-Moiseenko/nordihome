@@ -191,6 +191,13 @@ class OrderRepository
         ]);
     }
 
+    public function OrderLogToArray(Order $order): array
+    {
+        return array_merge($order->toArray(), [
+            'logs' => $order->logs,
+        ]);
+    }
+
     private function OrderItemToArray(OrderItem $item): array
     {
         $quantity_sell = $item->product->getQuantitySell();

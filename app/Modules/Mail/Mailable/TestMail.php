@@ -46,4 +46,9 @@ class TestMail extends SystemMailable
     {
         return $this->files;
     }
+
+    public function getName(): string
+    {
+        return 'Тест';
+    }
 }

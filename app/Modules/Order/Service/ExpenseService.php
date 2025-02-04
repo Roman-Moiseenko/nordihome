@@ -87,7 +87,10 @@ class ExpenseService
             }
             $expense->refresh();
 
-            $this->logger->logOrder($expense->order, 'Создано распоряжение на выдачу', '', $expense->htmlNumDate());
+            $this->logger->logOrder($expense->order, 'Создано распоряжение на выдачу',
+                '', $expense->htmlNumDate(),
+                route('admin.order.expense.show', $expense)
+            );
         });
 
         return $expense;
@@ -125,7 +128,8 @@ class ExpenseService
         if ($method == 'shop') {
             $this->completed($expense);
             $expense->refresh();
-            $this->logger->logOrder($expense->order, 'Выдать товар с магазина', '', $expense->htmlNumDate());
+            $this->logger->logOrder($expense->order, 'Выдать товар с магазина',
+                '', $expense->htmlNumDate(), null);
         }
         if ($method == 'warehouse') {
             //Нет отличных данных
@@ -162,7 +166,9 @@ class ExpenseService
             }
             //Удаляем назначенных рабочих
             $expense->workers()->detach();
-            $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу', '', $expense->htmlNumDate());
+            $this->logger->logOrder($expense->order, 'Отмена распоряжения на выдачу',
+                '', $expense->htmlNumDate(),
+                route('admin.order.expense.show', $expense));
             $expense->status = OrderExpense::STATUS_CANCELED;
             $expense->save();
             $order->refresh();
@@ -192,7 +198,9 @@ class ExpenseService
 
             ));
         }
-        $this->logger->logOrder($expense->order, 'Распоряжение отправлено на сборку', '', $expense->htmlNumDate());
+        $this->logger->logOrder($expense->order, 'Распоряжение отправлено на сборку',
+            '', $expense->htmlNumDate(),
+            route('admin.order.expense.show', $expense));
     }
 
     public function setLoader(OrderExpense $expense, int $worker_id): void
@@ -203,11 +211,10 @@ class ExpenseService
 
         $message = 'Список товаров на сборку';
         $expense->status = OrderExpense::STATUS_ASSEMBLING;
-        $this->logger->logOrder(
-            $expense->order,
-            'Назначен грузчик распоряжению',
+        $this->logger->logOrder($expense->order, 'Назначен грузчик распоряжению',
             $expense->htmlNumDate(),
-            $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName());
+            $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName(),
+            route('admin.order.expense.show', $expense));
         $expense->save();
 
         /** @var Worker $worker */
@@ -258,10 +265,6 @@ class ExpenseService
     public function delAssemble(OrderExpense $expense): void
     {
         OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Worker::WORK_ASSEMBLE)->delete();
-        /*$workers = $expense->getAssemble();
-        foreach ($workers as $worker) {
-            $expense->workers()->detach($worker->id);
-        }*/
     }
 
     public function setDriver(OrderExpense $expense, int $worker_id): void
@@ -271,26 +274,27 @@ class ExpenseService
         $expense->refresh();
 
         $expense->status = OrderExpense::STATUS_DELIVERY;
-        $this->logger->logOrder(
-            $expense->order,
-            'Назначен доставщик распоряжению',
+        $this->logger->logOrder($expense->order, 'Назначен доставщик распоряжению',
             $expense->htmlNumDate(),
-            $expense->getWorker(Worker::WORK_DRIVER)->fullname->getFullName());
+            $expense->getWorker(Worker::WORK_DRIVER)->fullname->getFullName(),
+            route('admin.order.expense.show', $expense));
         $expense->save();
     }
 
     public function setAssemble(OrderExpense $expense, array $workers): void
     {
-        foreach ($workers as $worker_id)
+        $_workers = [];
+        foreach ($workers as $worker_id) {
             $expense->workers()->attach($worker_id, ['work' => Worker::WORK_ASSEMBLE]);
+            $_workers[] = Worker::find($worker_id)->fullname->getFullName();
+        }
         $expense->push();
         $expense->refresh();
 
-        $this->logger->logOrder(
-            $expense->order,
-            'Назначен сборщик мебели',
+        $this->logger->logOrder($expense->order, 'Назначен сборщик(и) мебели',
             $expense->htmlNumDate(),
-            $expense->getWorker(Worker::WORK_ASSEMBLE)->fullname->getFullName());
+            implode(', ', $_workers),
+            route('admin.order.expense.show', $expense));
     }
 
     /**
@@ -345,12 +349,17 @@ class ExpenseService
                 //Проверить все ли распоряжения выданы?
                 if ($check) {
                     $expense->order->setStatus(OrderStatus::COMPLETED);
-                    $this->logger->logOrder($expense->order, 'Заказ завершен', '', '');
+                    $this->logger->logOrder($expense->order, 'Заказ завершен',
+                        '', '', null);
                 } else {
-                    $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate());
+                    $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению',
+                        '', $expense->htmlNumDate(),
+                        route('admin.order.expense.show', $expense));
                 }
             } else {
-                $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate());
+                $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению',
+                    '', $expense->htmlNumDate(),
+                    route('admin.order.expense.show', $expense));
             }
             event(new ExpenseHasCompleted($expense));
         });

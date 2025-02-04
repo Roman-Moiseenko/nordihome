@@ -43,4 +43,9 @@ class OrderAwaitingMail extends SystemMailable
     {
         return $this->files;
     }
+
+    public function getName(): string
+    {
+        return 'Письмо на оплату';
+    }
 }

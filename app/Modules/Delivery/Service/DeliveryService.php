@@ -79,7 +79,10 @@ class DeliveryService
 
         $expense->status = OrderExpense::STATUS_DELIVERY;
         $expense->save();
-        $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '');
+        $this->logger->logOrder($expense->order, 'Распоряжение в пути',
+            '', !empty($track) ? ('Трек посылки ' . $track) : '',
+            route('admin.order.expense.show', $expense)
+        );
 
     }
 

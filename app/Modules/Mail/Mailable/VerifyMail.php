@@ -38,4 +38,9 @@ class VerifyMail extends SystemMailable
     {
         return [];
     }
+
+    public function getName(): string
+    {
+        return 'Подтверждение почты';
+    }
 }

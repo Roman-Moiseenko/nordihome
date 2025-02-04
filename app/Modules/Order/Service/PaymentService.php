@@ -44,7 +44,10 @@ class PaymentService
             $order->refresh();
             $this->orderService->checkPayment($order);
 
-            $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
+            $this->logger->logOrder($order, 'Внесена оплата',
+                $payment->methodHTML(), price($payment->amount),
+                route('admin.order.payment.show', $payment)
+            );
         });
 
         return $payment;
@@ -64,7 +67,10 @@ class PaymentService
 
             $order->payments()->save($payment);
             $order->refresh();
-            $this->logger->logOrder($order, 'Внесена оплата', $payment->methodHTML(), price($payment->amount));
+            $this->logger->logOrder($order, 'Внесена оплата',
+                $payment->methodHTML(), price($payment->amount),
+                route('admin.order.payment.show', $payment)
+            );
 
             $this->orderService->checkPayment($order);
 
@@ -84,14 +90,20 @@ class PaymentService
             $old_value = price($payment->amount);
             $payment->amount = $amount;
             $new_value = price($payment->amount);
-            $this->logger->logOrder($order, 'Изменена сумма оплаты', $old_value, $new_value);
+            $this->logger->logOrder($order, 'Изменена сумма оплаты',
+                $old_value, $new_value,
+                route('admin.order.payment.show', $payment)
+            );
         }
 
         if ($payment->method != $request['method']) {
             $old_value = $payment->methodHTML();
             $payment->method = $request['method'];
             $new_value = $payment->methodHTML();
-            $this->logger->logOrder($order, 'Изменен способ оплаты', $old_value, $new_value);
+            $this->logger->logOrder($order, 'Изменен способ оплаты',
+                $old_value, $new_value,
+                route('admin.order.payment.show', $payment)
+            );
         }
 
         $payment->document = $request->string('document')->trim()->value();
@@ -106,7 +118,8 @@ class PaymentService
         $order = $payment->order;
         if ($order->status->value != OrderStatus::PREPAID)
             throw new \DomainException('Нельзя удалить платеж за заказ!');
-        $this->logger->logOrder($order, 'Удален платеж', $payment->methodHTML(), price($payment->amount));
+        $this->logger->logOrder($order, 'Удален платеж',
+            $payment->methodHTML(), price($payment->amount), null);
         $payment->delete();
         $order->refresh();
         if ($order->getPaymentAmount() == 0) {

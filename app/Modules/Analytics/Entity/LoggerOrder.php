@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $action - действие
  * @property string $object - объект изменения
  * @property string $value - новое значение
- *
+ * @property string $link
  * @property Admin $staff
  * @property Order $order
  */
@@ -30,13 +30,16 @@ class LoggerOrder extends Model
         'action',
         'object',
         'value',
+        'link'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
     ];
 
-    public static function register(int $order_id, int $staff_id, string $action, string $object = '', string $value = ''): self
+    public static function register(
+        int $order_id, int $staff_id, string $action,
+        string $object = '', string $value = '', ?string $link = null): self
     {
         return self::create([
             'order_id' => $order_id,
@@ -45,6 +48,7 @@ class LoggerOrder extends Model
             'action' => $action,
             'object' => $object,
             'value' => $value,
+            'link' => $link
         ]);
     }
 

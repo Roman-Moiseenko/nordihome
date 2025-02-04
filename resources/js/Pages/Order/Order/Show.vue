@@ -51,7 +51,7 @@
 </template>
 <script setup lang="ts">
 import ru from 'element-plus/dist/locale/ru.mjs'
-import {Head} from "@inertiajs/vue3";
+import {Head, router} from "@inertiajs/vue3";
 import {computed, defineProps, provide} from "vue";
 import OrderActions from "./Blocks/Actions.vue";
 import OrderInfo from "./Blocks/Info.vue";
@@ -95,7 +95,7 @@ provide("$status", {
 })
 
 function handleLogOrder() {
-    //TODO router()
+    router.get(route('admin.order.log', {order: props.order.id}))
 }
 </script>
 <style scoped>

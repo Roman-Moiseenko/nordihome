@@ -105,9 +105,13 @@ class OrderController extends Controller
         return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
     }
 
-    public function log(Order $order)
+    public function log(Order $order): Response
     {
-        return view('admin.order.log', compact('order'));
+        return Inertia::render('Order/Order/Log', [
+            'order' => $this->repository->OrderLogToArray($order),
+        ]);
+
+       // return view('admin.order.log', compact('order'));
     }
 
     //Документы
