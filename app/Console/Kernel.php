@@ -25,8 +25,10 @@ class Kernel extends ConsoleKernel
         //Рассылка по новым товара
         $schedule->command('cron:product-new')->weeklyOn(3, '1:00');
         //Курс валют по ЦБ России
-        $schedule->command('cron:currency')->everyFiveMinutes();
+        $schedule->command('cron:currency')->dailyAt('00:02');
         //$schedule->command('cron:currency')->dailyAt('00:01');
+        //Проверка доставок ТК
+        $schedule->command('cron:delivery')->everySixHours();
     }
 
     protected function commands(): void

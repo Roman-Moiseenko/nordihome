@@ -55,13 +55,12 @@ class BatchSaleService
 
                 $batch_quantity = min($quantity, (float)$product->quantity);
                 if ($arrival) {
-                    $batch = BatchSale::register($product->id, $item->order_item_id, $batch_quantity, $cost, null);
+                    $batch = BatchSale::register($item->id, $batch_quantity, $cost, $product->id,null);
                 } else {
-                    $batch = BatchSale::register(null, $item->order_item_id, $batch_quantity, $cost, $product->id);
+                    $batch = BatchSale::register($item->id, $batch_quantity, $cost, null, $product->id);
                 }
                 $batch->product_id = $item->orderItem->product_id;
                 $batch->sell_cost = $item->orderItem->sell_cost;
-                $batch->expense_id = $expense->id;
                 $batch->save();
                 $product->batchSale($batch_quantity);
                 $quantity -= $batch_quantity;
@@ -70,11 +69,12 @@ class BatchSaleService
         }
     }
 
-    public
-    function return(OrderExpense $expense): void
+    public function return(OrderExpense $expense): void
     {
         /** @var BatchSale[] $batches */
-        $batches = BatchSale::where('expense_id', $expense->id)->getModels();
+        $batches = BatchSale::whereHas('expenseItem', function ($query) use ($expense) {
+            $query->where('expense', $expense->id);
+        })->getModels();
         foreach ($batches as $batch) {
             //Возвращаем кол-во в Поступление
             if (is_null($batch->arrivalProduct)) {

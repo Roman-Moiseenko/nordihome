@@ -3,6 +3,11 @@
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
             Заказ <span v-if="order.number">№ {{ order.number }}</span> покупателя [{{ order.status_text }}]
+            <el-tooltip content="История заказа" placement="right-start" effect="dark">
+                <el-button size="small" type="primary" plain @click="handleLogOrder">
+                    <i class="fa-light fa-rectangle-history"></i>
+                </el-button>
+            </el-tooltip>
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <OrderInfo :order="order" :storages="storages" :mainStorage="mainStorage" :traders="traders" />
@@ -89,6 +94,9 @@ provide("$status", {
     is_view,
 })
 
+function handleLogOrder() {
+    //TODO router()
+}
 </script>
 <style scoped>
 

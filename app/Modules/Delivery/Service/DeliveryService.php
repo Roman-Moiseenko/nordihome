@@ -12,6 +12,7 @@ use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Shop\CartItemInterface;
 use App\Modules\User\Entity\UserDelivery;
 use Illuminate\Http\Request;
@@ -20,10 +21,12 @@ class DeliveryService
 {
 
     private LoggerService $logger;
+    private ExpenseService $expenseService;
 
-    public function __construct(LoggerService $logger,)
+    public function __construct(LoggerService $logger, ExpenseService $expenseService)
     {
         $this->logger = $logger;
+        $this->expenseService = $expenseService;
     }
 
     public function user(int $user_id): UserDelivery
@@ -31,8 +34,6 @@ class DeliveryService
         if ($user = UserDelivery::where('user_id', $user_id)->first()) return $user;
         return UserDelivery::register($user_id);
     }
-
-
 
     /**
      * @param CartItemInterface[] $items
@@ -80,6 +81,16 @@ class DeliveryService
         $expense->save();
         $this->logger->logOrder($expense->order, 'Распоряжение в пути', '', !empty($track) ? ('Трек посылки ' . $track) : '');
 
+    }
+
+    public function setStatus(OrderExpense $expense, int $status): void
+    {
+        $expense->delivery->completed_at = now();
+        $expense->delivery->status = $status;
+        $expense->delivery->save();
+        if ($status == DeliveryCargo::STATUS_ISSUED) {
+            $this->expenseService->completed($expense);
+        }
     }
 
 }

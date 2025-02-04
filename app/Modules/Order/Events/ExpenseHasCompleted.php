@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Events;
+namespace App\Modules\Order\Events;
 
 use App\Modules\Order\Entity\Order\OrderExpense;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -22,7 +19,6 @@ class ExpenseHasCompleted
      */
     public function __construct(OrderExpense $expense)
     {
-        //
         $this->expense = $expense;
     }
 

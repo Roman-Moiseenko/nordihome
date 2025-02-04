@@ -15,12 +15,32 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $cargo_company_id
  * @property string $track_number
  * @property int $completed
+ * @property int $status
  * @property Carbon $completed_at
  * @property OrderExpense $expense
  * @property CargoCompany $cargo
  */
 class DeliveryCargo extends Model
 {
+    const STATUS_NEW = 1301;
+    const STATUS_SHIPPED = 1302;
+
+    /**
+     * Добавить
+     */
+    const STATUS_ISSUED = 1330;
+    const STATUS_REFUND = 1331;
+
+    const STATUSES = [
+        self::STATUS_NEW => 'Получено',
+        self::STATUS_SHIPPED => 'Отгружено',
+        /**
+         *
+         */
+        self::STATUS_ISSUED => 'Выдано',
+        self::STATUS_REFUND => 'Возврат',
+    ];
+
     protected $table = 'deliveries';
     protected $fillable = [
         'expense_id',

@@ -3,23 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Events\ExpenseHasAssembly;
-use App\Events\ExpenseHasCompleted;
-use App\Events\ExpenseHasDelivery;
-use App\Events\OrderHasCanceled;
-use App\Events\OrderHasCompleted;
-use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\BatchSaleService;
-use App\Modules\Accounting\Service\MovementService;
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\FullName;
-use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
 use App\Modules\Notification\Helpers\TelegramParams;
@@ -31,9 +21,9 @@ use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderExpenseWorker;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Events\ExpenseHasCompleted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use JetBrains\PhpStorm\Deprecated;
 
 
 class ExpenseService
@@ -274,7 +264,6 @@ class ExpenseService
         }*/
     }
 
-
     public function setDriver(OrderExpense $expense, int $worker_id): void
     {
         $expense->workers()->attach($worker_id, ['work' => Worker::WORK_DRIVER]);
@@ -342,7 +331,8 @@ class ExpenseService
     public function completed(OrderExpense $expense): void
     {
         DB::transaction(function () use ($expense) {
-            $expense->completed();
+            $expense->status = OrderExpense::STATUS_COMPLETED;
+            $expense->save();
             $expense->refresh();
 
             $order = $expense->order;
@@ -355,16 +345,14 @@ class ExpenseService
                 //Проверить все ли распоряжения выданы?
                 if ($check) {
                     $expense->order->setStatus(OrderStatus::COMPLETED);
-                    event(new OrderHasCompleted($expense->order));
                     $this->logger->logOrder($expense->order, 'Заказ завершен', '', '');
                 } else {
-                    event(new ExpenseHasCompleted($expense));
                     $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate());
                 }
             } else {
-                event(new ExpenseHasCompleted($expense));
                 $this->logger->logOrder($expense->order, 'Товар выдан по распоряжению', '', $expense->htmlNumDate());
             }
+            event(new ExpenseHasCompleted($expense));
         });
     }
 

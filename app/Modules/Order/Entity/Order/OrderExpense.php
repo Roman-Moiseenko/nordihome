@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**
@@ -64,6 +65,7 @@ class OrderExpense extends Model
     const STATUS_DELIVERED = 7;
     const STATUS_COMPLETED = 10;
     const STATUS_CANCELED = 11;
+    const STATUS_REFUND = 12;
 
     const DELIVERY_STORAGE = 401;
     const DELIVERY_LOCAL = 402;
@@ -92,6 +94,7 @@ class OrderExpense extends Model
         self::STATUS_DELIVERED => 'Доставлен',
         self::STATUS_COMPLETED => 'Выдано',
         self::STATUS_CANCELED => 'Отменен',
+        self::STATUS_REFUND => 'Возврат',
     ];
 
     protected $attributes = [
@@ -211,13 +214,8 @@ class OrderExpense extends Model
 
 
     //*** SET-...
-    public function completed(): void
-    {
-        $this->status = self::STATUS_COMPLETED;
-        $this->save();
-    }
 
-    public function assembly()
+    public function assembly(): void
     {
         $this->status = self::STATUS_ASSEMBLY;
         $this->save();

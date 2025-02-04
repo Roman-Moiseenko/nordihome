@@ -5,12 +5,9 @@ namespace App\Providers;
 use App\Events\ArrivalHasCompleted;
 use App\Events\CouponHasCreated;
 use App\Events\DepartureHasCompleted;
-use App\Events\ExpenseHasAssembly;
-use App\Events\ExpenseHasCompleted;
 use App\Events\ExpenseHasDelivery;
 use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
-use App\Events\OrderHasAwaiting;
 use App\Events\OrderHasCanceled;
 use App\Events\OrderHasCompleted;
 use App\Events\OrderHasCreated;
@@ -35,16 +32,15 @@ use App\Events\ThrowableHasAppeared;
 use App\Events\UserHasCreated;
 use App\Events\UserHasRegistered;
 use App\Listeners\CheckNotificationStatus;
-use App\Listeners\NotificationCouponCreated;
-use App\Listeners\NotificationExpenseAssembly;
-use App\Listeners\NotificationExpenseCompleted;
-use App\Listeners\NotificationExpenseDelivery;
-use App\Listeners\NotificationOrderCanceled;
-use App\Listeners\NotificationMovementCompleted;
 use App\Listeners\NotificationArrivalCompleted;
+use App\Listeners\NotificationCouponCreated;
 use App\Listeners\NotificationDepartureNew;
-use App\Listeners\NotificationNewLogger;
+use App\Listeners\NotificationExpenseAssembly;
+use App\Listeners\NotificationExpenseDelivery;
+use App\Listeners\NotificationMovementCompleted;
 use App\Listeners\NotificationMovementNew;
+use App\Listeners\NotificationNewLogger;
+use App\Listeners\NotificationOrderCanceled;
 use App\Listeners\NotificationOrderCompleted;
 use App\Listeners\NotificationOrderNew;
 use App\Listeners\NotificationOrderPaid;
@@ -57,6 +53,7 @@ use App\Listeners\NotificationProductBlocked;
 use App\Listeners\NotificationProductFastCreat;
 use App\Listeners\NotificationProductParserNew;
 use App\Listeners\NotificationProductPublished;
+use App\Listeners\NotificationPromotionMoved;
 use App\Listeners\NotificationRefundNew;
 use App\Listeners\NotificationReserveTimeOut;
 use App\Listeners\NotificationReviewEdit;
@@ -65,11 +62,15 @@ use App\Listeners\NotificationSupplySent;
 use App\Listeners\NotificationThrowable;
 use App\Listeners\NotificationUserCreated;
 use App\Listeners\ParsingImageProduct;
-use App\Listeners\NotificationPromotionMoved;
 use App\Listeners\WelcomeToShop;
+use App\Modules\Admin\Listeners\NewTaskStaff;
+use App\Modules\Admin\Listeners\NotificationStaff;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Service\NotificationService;
+use App\Modules\Order\Events\ExpenseHasCompleted;
+use App\Modules\Order\Listeners\UserMailExpenseCompleted;
+use App\Modules\Order\Listeners\UserWriteReview;
 use App\Modules\Order\Service\ExpenseService;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Notifications\Events\NotificationSending;
@@ -94,6 +95,16 @@ class EventServiceProvider extends ServiceProvider
              */
 
         ],
+        //Модуль Order
+        ExpenseHasCompleted::class => [
+            UserMailExpenseCompleted::class,
+            UserWriteReview::class,
+            NotificationStaff::class,
+            NewTaskStaff::class,
+        ],
+
+
+        //TODO Остальные проработать
 
         /* Registered::class => [
              SendEmailVerificationNotification::class,
@@ -173,12 +184,12 @@ class EventServiceProvider extends ServiceProvider
         ProductHasPublished::class => [
             NotificationProductPublished::class,
             ],
+
+        //Удалить
         OrderHasCompleted::class => [
             NotificationOrderCompleted::class
         ],
-        ExpenseHasCompleted::class => [
-            NotificationExpenseCompleted::class
-        ],
+
 
         ExpenseHasDelivery::class => [
             NotificationExpenseDelivery::class
