@@ -66,7 +66,7 @@ class CategoryParserController extends Controller
         }
     }
 
-    public function parser_products(CategoryParser $category)
+    public function parser_products(CategoryParser $category): \Illuminate\Http\JsonResponse
     {
         $products = $this->service->parserProducts($category);
         return response()->json($products);// redirect()->back()->with('success', 'Спарсено');
@@ -87,7 +87,6 @@ class CategoryParserController extends Controller
 
     public function add_category(Request $request): RedirectResponse
     {
-        //TODO Добавить вручную. Название, УРл - без домена, Категория товаров привязки
         $this->service->addCategory($request);
         return redirect()->back()->with('success', 'Добавлено');
 

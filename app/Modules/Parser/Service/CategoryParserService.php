@@ -12,7 +12,6 @@ class CategoryParserService
         return CategoryParser::register($name, $url, $parent_id);
     }
 
-    //
     public function parserProducts(CategoryParser $category): array
     {
         $parser_class = $category->brand->parser_class;
@@ -35,6 +34,16 @@ class CategoryParserService
         $parser = app()->make($parser_class);
         //throw new \DomainException($request->input('product'));
         $parser->parserProductByData($request->input('product'));
+    }
+
+    public function addCategory(Request $request): void
+    {
+        $category = CategoryParser::register(
+            $request->string('name')->trim()->value(),
+            $request->string('url')->trim()->value(),
+            $request->input('parent_id'));
+        $category->brand_id = $request->integer('brand_id');
+        $category->save();
     }
 
 
