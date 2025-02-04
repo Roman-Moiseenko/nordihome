@@ -28,7 +28,19 @@
                 </el-table-column>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        Up, Down, Draft/Active
+                        <el-button size="small" type="primary" dark @click.stop="onUp(scope.row)">
+                            <i class="fa-light fa-chevron-up"></i>
+                        </el-button>
+                        <el-button size="small" type="primary" dark @click.stop="onDown(scope.row)">
+                            <i class="fa-light fa-chevron-down"></i>
+                        </el-button>
+                        <el-button
+                            size="small"
+                            :type="scope.row.published ? 'warning' : 'success'"
+                            @click.stop="onToggle(scope.row)"
+                        >
+                            {{ scope.row.published ? 'Draft' : 'Active' }}
+                        </el-button>
                         <el-button v-if="!scope.row.published"
                                    size="small"
                                    type="danger"
@@ -104,45 +116,71 @@ const form = reactive({
     id: null,
     name: null,
     icon: null,
-    //TODO
+    url: null,
+    type: null,
 })
 
 function onOpenDialog() {
     form.id = null
     form.name = null
-
+    form.icon = null
+    form.url = null
+    form.type = null
     dialogCreate.value = true
-}
-
-function handleGetProduct(val) {
-  /*  form.product_id = val
-
-    const getAttributes = route('admin.product.attr-modification', {product: form.product_id});
-
-    axios.post(getAttributes).then(response => {
-        console.log(response.data)
-        if (response.data.error !== undefined) console.log(response.data.error)
-        attributes.value = response.data
-        placeholder_name.value = 'Введите название'
-        placeholder_attr.value = 'Выберите 1-2 атрибута'
-        document.getElementById('name-modif').focus()
-    });*/
 }
 
 function saveContact() {
+    let _route = '';
     if (form.id === null) {
-        router.post(route('admin.page.contact.store' ), form)
+        _route = route('admin.page.contact.store' )
     } else {
-        router.put(route('admin.page.contact.update', {contact: form.id}) , form)
+        _route = route('admin.page.contact.update', {contact: form.id})
     }
+
+    router.visit(_route , {
+        method: "post",
+        data: form,
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+            props.contacts = [...page.props.contacts]
+        }
+    })
+
+
+    dialogCreate.value = false
 }
 
 function routeClick(row) {
-    //TODO Открыть модальное окно
     form.id = row.id
+    form.name = row.name
+    form.icon = row.icon
+    form.url = row.url
+    form.type = row.type
     dialogCreate.value = true
-    //TODO Открыть модальное окно
-    //router.get(route('admin.product.modification.show', {modification: row.id}))
+}
+
+function onToggle(row) {
+    contactRouter(row.id, 'toggle')
+}
+function onUp(row) {
+    contactRouter(row.id, 'up')
+}
+function onDown(row) {
+    contactRouter(row.id, 'down')
+}
+
+const contactRouter = (id: Number, action: String) => {
+    router.visit(route('admin.page.contact.' + action, {contact: id}) , {
+        method: "post",
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+          //  console.log(page.props.contacts)
+            tableData.value = [...page.props.contacts]
+           // props.contacts = [...page.props.contacts]
+        }
+    })
 }
 
 function handleDeleteEntity(row) {

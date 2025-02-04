@@ -6,6 +6,7 @@ namespace App\Modules\Page\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Service\ContactService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -27,66 +28,59 @@ class ContactController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return view('admin.page.contact.create');
-    }
-
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|min:3',
             'icon' => 'required|string|min:3',
             'url' => 'required|string|min:6',
         ]);
-        $contact = $this->service->create($request);
-        return redirect()->route('admin.page.contact.index');
+        $this->service->create($request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function edit(Contact $contact)
-    {
-        return view('admin.page.contact.edit', compact('contact'));
-    }
 
-    public function update(Request $request, Contact $contact)
+
+    public function set_info(Request $request, Contact $contact): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|min:3',
             'icon' => 'required|string|min:3',
             'url' => 'required|string|min:6',
         ]);
-        $this->service->update($request, $contact);
-        return redirect()->route('admin.page.contact.index');
+        $this->service->setInfo($request, $contact);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
 
-    public function draft(Contact $contact)
+    public function toggle(Contact $contact): RedirectResponse
     {
-        $contact->draft();
-        return redirect()->back();
+        if ($contact->isDraft()) {
+            $message = 'Контакт опубликован на сайте';
+            $contact->published();
+        } else {
+            $message = 'Контакт убран с сайта';
+            $contact->draft();
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 
-    public function published(Contact $contact)
-    {
-        $contact->published();
-        return redirect()->back();
-    }
-
-    public function up(Contact $contact)
+    public function up(Contact $contact): RedirectResponse
     {
         $this->service->up($contact);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function down(Contact $contact)
+    public function down(Contact $contact): RedirectResponse
     {
         $this->service->down($contact);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(Contact $contact)
+    public function destroy(Contact $contact): RedirectResponse
     {
         $this->service->destroy($contact);
-        return redirect()->route('admin.page.contact.index');
+        return redirect()->back()->with('success', 'Контакт удален');
     }
 }

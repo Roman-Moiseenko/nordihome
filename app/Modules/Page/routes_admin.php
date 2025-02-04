@@ -38,12 +38,17 @@ Route::group(
 
         Route::resource('page', 'PageController')->except(['create', 'edit', 'update']); //CRUD
 
+        Route::group([
+            'prefix' => 'contact',
+            'as' => 'contact.'
+        ], function () {
+            Route::post('/toggle/{contact}', 'ContactController@toggle')->name('toggle');
+            Route::post('/up/{contact}', 'ContactController@up')->name('up');
+            Route::post('/down/{contact}', 'ContactController@down')->name('down');
+            Route::post('/set-info/{contact}', 'ContactController@set_info')->name('set-info');
+        });
+        Route::resource('contact', 'ContactController')->except(['show', 'create', 'edit', 'update']); //CRUD
 
-        Route::resource('contact', 'ContactController')->except(['show']); //CRUD
-        Route::post('/contact/{contact}/draft', 'ContactController@draft')->name('contact.draft');
-        Route::post('/contact/{contact}/published', 'ContactController@published')->name('contact.published');
-        Route::post('/contact/{contact}/up', 'ContactController@up')->name('contact.up');
-        Route::post('/contact/{contact}/down', 'ContactController@down')->name('contact.down');
 
 
         Route::group([

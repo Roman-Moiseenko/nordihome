@@ -1,12 +1,12 @@
 <template>
-    <Head title="Login in I-Shop-L" />
+    <Head title="Авторизация" />
 
     <div class="flex items-center justify-center p-6 min-h-screen bg-cyan-600">
         <flash-messages />
         <div class="w-full max-w-md">
             <div class="block mx-auto w-full max-w-xs fill-white flex text-gray-50" >
                 <logo height="100" />
-                <span class="text-4xl my-auto font-semibold pt-3">Online Shop</span>
+                <span class="text-4xl my-auto font-semibold pt-3">SMAP&Shop</span>
             </div>
 
 

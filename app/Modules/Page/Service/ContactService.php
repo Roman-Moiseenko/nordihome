@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 class ContactService
 {
 
-    public function create(Request $request)
+    public function create(Request $request): void
     {
-        return Contact::register(
+        Contact::register(
             name: $request->string('name')->trim()->value(),
             icon: $request->string('icon')->trim()->value(),
             color: $request->string('color')->trim()->value(),
@@ -20,7 +20,7 @@ class ContactService
         );
     }
 
-    public function update(Request $request, Contact $contact)
+    public function setInfo(Request $request, Contact $contact): void
     {
         $contact->update([
             'name' => $request->string('name')->trim()->value(),
@@ -29,17 +29,15 @@ class ContactService
             'url' => $request->string('url')->trim()->value(),
             'type' => $request->integer('type')
         ]);
-        $contact->refresh();
-        return $contact;
     }
 
-    public function destroy(Contact $contact)
+    public function destroy(Contact $contact): void
     {
         if (!$contact->isDraft()) throw new \DomainException('Контакт опубликован, удалить нельзя');
         $contact->delete();
     }
 
-    public function up(Contact $contact)
+    public function up(Contact $contact): void
     {
         if ($contact->sort == 1) return;
 
@@ -56,7 +54,7 @@ class ContactService
 
     }
 
-    public function down(Contact $contact)
+    public function down(Contact $contact): void
     {
         if (Contact::count() == $contact->sort) return;
 
