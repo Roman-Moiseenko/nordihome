@@ -44,7 +44,7 @@ class PaymentRepository
         if ($request->string('comment') != '') {
             $comment = $request->string('comment')->trim()->value();
             $filters['comment'] = $comment;
-            $query->where('document', 'like', "%$comment%");
+            $query->where('comment', 'like', "%$comment%");
         }
 
         if ($request->integer('staff_id') > 0) {

@@ -127,16 +127,18 @@ class DeliveryRepository
                         ->get()->map(function (CalendarPeriod $period) {
                             return array_merge($period->toArray(), [
                                 'time_text' => $period->timeHtml(),
-                                'expenses' => $period->expenses()->get()->map(function (OrderExpense $expense) {
-                                    return array_merge($expense->toArray(), [
-                                        'visible_driver' => false,
-                                        'driver' => $expense->getDriver(),
-                                        'is_assemble' => $expense->isAssemble(),
-                                        'assembles' => $expense->getAssemble(),
-                                        'visible_assemble' => false,
-                                        'visible_loader' => false,
-                                    ]);
-                                }),
+                                'expenses' => $period->expenses()->where('status', '<>', OrderExpense::STATUS_COMPLETED)
+                                    ->get()->map(function (OrderExpense $expense) {
+                                        return array_merge($expense->toArray(), [
+                                            'visible_driver' => false,
+                                            'driver' => $expense->getDriver(),
+                                            'is_assemble' => $expense->isAssemble(),
+                                            'assembles' => $expense->getAssemble(),
+                                            'is_completed' => $expense->isCompleted(),
+                                            'visible_assemble' => false,
+                                            'visible_loader' => false,
+                                        ]);
+                                    }),
                             ]);
                         }),
                 ]);

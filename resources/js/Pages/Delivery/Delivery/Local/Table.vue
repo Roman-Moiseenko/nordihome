@@ -121,7 +121,8 @@
                                     <el-button type="success" v-if="scope.row.driver" @click="onCompleted(scope.row)">
                                         Выдано
                                     </el-button>
-                                    <el-button type="warning" @click="openDialogPeriod(scope.row)">Сменить дату
+                                    <el-button type="warning" @click="openDialogPeriod(scope.row)">
+                                        Сменить дату
                                     </el-button>
                                 </template>
                             </el-table-column>

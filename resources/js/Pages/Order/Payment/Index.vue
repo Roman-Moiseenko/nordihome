@@ -137,6 +137,7 @@ const filter = reactive({
     user: props.filters.user,
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
+    order: props.filters.order,
 })
 const create_id = ref<Number>(null)
 
