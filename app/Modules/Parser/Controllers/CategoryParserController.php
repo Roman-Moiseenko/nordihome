@@ -91,4 +91,10 @@ class CategoryParserController extends Controller
         return redirect()->back()->with('success', 'Добавлено');
 
     }
+
+    public function destroy(CategoryParser $category)
+    {
+        $category->delete();
+        return redirect()->back()->with('success', 'Удалено');
+    }
 }

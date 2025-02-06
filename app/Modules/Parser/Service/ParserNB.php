@@ -113,8 +113,9 @@ class ParserNB extends ParserAbstract
     }
 
 
-    protected function parserProductsByUrl(string $url, bool $is_first_page = true)
+    protected function parserProductsByUrl(string $domain, string $url, bool $is_first_page = true)
     {
+        $url = $domain . '/' . $url;
         $data = $this->httpPage->getPage($url);
         $queries = $this->getQueries($data);
         $data = [];

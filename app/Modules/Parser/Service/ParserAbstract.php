@@ -11,7 +11,7 @@ use Illuminate\Contracts\Support\Arrayable;
 
 abstract class ParserAbstract
 {
-    const PARSERS = [
+    const array PARSERS = [
         ParserNB::class => 'New Balance Польша',
         ParserIkea::class => 'Икеа Польша',
     ];
@@ -23,12 +23,11 @@ abstract class ParserAbstract
     protected TranslateService $translate;
 
     public function __construct(
-        HttpPage              $httpPage,
         CategoryParserService $categoryParserService,
         TranslateService      $translate,
     )
     {
-        $this->httpPage = $httpPage;
+        $this->httpPage = new HttpPage(); //Без кеша
         $this->categoryParserService = $categoryParserService;
         $this->brand = Brand::where('name', $this->brand_name)->first();
         $this->translate = $translate;
@@ -62,7 +61,7 @@ abstract class ParserAbstract
         foreach ($categories as $category) {
             if ($category->children()->count() == 0) //Парсим только дочерние
                 $products = array_merge($products,
-                    $this->parserProductsByUrl($this->brand->url . '/' . $category->url)
+                    $this->parserProductsByUrl($this->brand->url, $category->url)
                 );
 
         }
@@ -72,7 +71,7 @@ abstract class ParserAbstract
     /**
      * Функция поиска данных для товаров по урлу
      */
-    abstract protected function parserProductsByUrl(string $url);
+    abstract protected function parserProductsByUrl(string $domain, string $url);
 
     //Функция распарсивания товара по найденным данным
     abstract public function parserProductByData(array $product): void;
