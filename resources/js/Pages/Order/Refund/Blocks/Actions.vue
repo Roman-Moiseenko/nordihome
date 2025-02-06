@@ -11,6 +11,8 @@
         </el-button>
         <Link v-else type="primary" :href="route('admin.order.payment.show', {payment: refund.order_payment_id})">Платежный документ</Link>
     </span>
+
+    <OrderRelatedDocuments />
 </template>
 
 <script setup lang="ts">
@@ -18,6 +20,7 @@ import {defineProps} from "vue";
 import {ElLoading} from "element-plus";
 import {Link, router} from "@inertiajs/vue3";
 import axios from "axios";
+import OrderRelatedDocuments from "@Comp/Order/RelatedDocuments.vue"
 
 const props = defineProps({
     refund: Object,

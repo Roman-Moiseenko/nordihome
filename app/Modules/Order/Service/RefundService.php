@@ -84,7 +84,6 @@ class RefundService
     {
         $refund->items()->delete();
         $refund->additions()->delete();
-        $refund->retention = 0;
         $refund->save();
         $expense = $refund->expense;
         foreach ($expense->items as $item) {
@@ -99,7 +98,6 @@ class RefundService
     {
         $refund->reason = $request->input('reason');
         $refund->comment = $request->string('comment')->trim()->value();
-        $refund->retention = $request->integer('retention');
         $refund->save();
     }
 

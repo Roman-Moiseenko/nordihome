@@ -93,6 +93,7 @@ class OrderController extends Controller
             'staffs' => $staffs,
             'additions' => $additions,
             'traders' => $this->organizations->getTraders(),
+            'order_related' => $order->relatedDocuments(),
         ]);
     }
 

@@ -144,7 +144,7 @@ class OrderReserveService
     public function ReserveWithMovement(Storage $storageOut, Storage $storageIn, OrderItem $orderItem, float $quantity): void
     {
         $reserveOut = $orderItem->getReserveByStorage($storageOut->id);
-
+        if (is_null($reserveOut)) return;
         if ($reserveOut->quantity == $quantity) {
             $reserveOut->delete();
         } else {

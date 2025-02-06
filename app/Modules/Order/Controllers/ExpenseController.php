@@ -47,6 +47,7 @@ class ExpenseController extends Controller
         return Inertia::render('Order/Expense/Show', [
             'expense' => $this->repository->ExpenseWithToArray($expense),
             'reasons' => array_select(OrderExpenseRefund::REASONS),
+            'order_related' => $expense->order->relatedDocuments(),
         ]);
 
     }

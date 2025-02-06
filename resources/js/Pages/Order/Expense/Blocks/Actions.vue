@@ -21,6 +21,8 @@
             <el-button @click="onRefund" type="primary">Создать</el-button>
         </div>
     </el-popover>
+
+    <OrderRelatedDocuments />
 </template>
 
 <script setup lang="ts">
@@ -28,6 +30,7 @@ import {defineProps, ref} from "vue";
 import {ElLoading} from "element-plus";
 import {Link, router} from "@inertiajs/vue3";
 import axios from "axios";
+import OrderRelatedDocuments from "@Comp/Order/RelatedDocuments.vue";
 
 const props = defineProps({
     expense: Object,

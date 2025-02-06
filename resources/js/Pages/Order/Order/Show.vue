@@ -77,7 +77,10 @@ const props = defineProps({
     staffs: Array,
     mainStorage: Object,
     traders: Array,
+    order_related: Array,
 })
+provide('$order_related', props.order_related)
+
 const is_new = computed(() => {
     return props.order.status.is_new || props.order.status.is_manager
 })

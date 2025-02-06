@@ -4,12 +4,15 @@
         <el-button v-if="!payment.completed" type="danger" plain class="ml-5" @click="onCompleted">Провести документ</el-button>
         <el-button v-if="payment.completed" type="danger" class="ml-5" @click="onWork">Отмена проведения</el-button>
     </div>
+    <OrderRelatedDocuments />
+
 </template>
 
 <script setup lang="ts">
 import {defineProps} from "vue";
 import {ElLoading} from "element-plus";
 import {router} from "@inertiajs/vue3";
+import OrderRelatedDocuments from "@Comp/Order/RelatedDocuments.vue"
 
 const props = defineProps({
     payment: Object,

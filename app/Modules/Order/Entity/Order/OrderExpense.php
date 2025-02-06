@@ -388,4 +388,19 @@ class OrderExpense extends Model
         return self::TYPES[$this->type];
     }
 
+    public function relatedDocuments(): array
+    {
+        $documents = [];
+        foreach ($this->refunds as $refund) {
+            $documents[] = [
+                'name' => 'Возврат № ' .$refund->number . ' от ' . $refund->created_at->format('d-m-y'),
+                'link' => route('admin.order.refund.show', $refund, false),
+                'type' => 'danger',
+                'completed' => $refund->isCompleted(),
+                'children' => $refund->relatedDocuments(),
+            ];
+        }
+        return $documents;
+    }
+
 }

@@ -69,7 +69,6 @@
                                 <el-tag type="danger" >{{ func.price(scope.row.refund)}}</el-tag>
                             </el-tooltip>
                         </span>
-
                     </template>
                 </el-table-column>
                 <el-table-column prop="status_text" label="Статус" show-overflow-tooltip/>
@@ -98,7 +97,7 @@
 
 </template>
 <script lang="ts" setup>
-import {inject, reactive, ref, defineProps} from "vue";
+import {inject, reactive, ref, defineProps, provide} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"
@@ -119,7 +118,6 @@ const props = defineProps({
     staffs: Array,
 })
 const store = useStore();
-
 const tableData = ref([...props.orders.data])
 const filter = reactive({
     condition: props.filters.condition,

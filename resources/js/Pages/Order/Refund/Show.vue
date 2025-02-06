@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import {Head, Link, router} from "@inertiajs/vue3";
 import ru from 'element-plus/dist/locale/ru.mjs'
-import {computed, defineProps, inject, ref} from "vue";
+import {computed, defineProps, inject, provide, ref} from "vue";
 import RefundInfo from "./Blocks/Info.vue"
 import RefundActions from "./Blocks/Actions.vue"
 import { func } from  "@Res/func.js"
@@ -80,7 +80,10 @@ const props = defineProps({
         default: 'Возврат товаров',
     },
     reasons: Array,
+    order_related: Array,
 })
+provide('$order_related', props.order_related)
+
 const iSavingInfo = ref(false)
 
 const disabled = computed(() => {

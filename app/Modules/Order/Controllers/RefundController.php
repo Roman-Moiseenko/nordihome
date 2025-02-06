@@ -59,6 +59,8 @@ class RefundController extends Controller
         return Inertia::render('Order/Refund/Show', [
             'refund' => $this->repository->RefundWithToArray($refund),
             'reasons' => array_select(OrderExpenseRefund::REASONS),
+            'order_related' => $refund->expense->order->relatedDocuments(),
+
         ]);
 
     }

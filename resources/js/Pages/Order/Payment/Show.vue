@@ -28,6 +28,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import PaymentInfo from "./Blocks/Info.vue";
 import PaymentActions from "./Blocks/Actions.vue";
 import {func} from  "@Res/func.js"
+import {provide} from "vue";
 
 const props = defineProps({
     payment: Object,
@@ -38,7 +39,9 @@ const props = defineProps({
     methods: Array,
     storages: Array,
     orders: Array, //Заказы awaiting
+    order_related: Array,
 })
+provide('$order_related', props.order_related)
 
 </script>
 

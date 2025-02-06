@@ -63,7 +63,7 @@
             </el-dropdown-menu>
         </template>
     </el-dropdown>
-    <template v-if="!is_new && order.payments.length > 0">
+    <!--template v-if="!is_new && order.payments.length > 0">
         <el-dropdown>
             <el-button type="success" class="mr-2">
                 Платежи
@@ -79,8 +79,8 @@
                 </div>
             </template>
         </el-dropdown>
-    </template>
-    <template v-if="!is_new && !is_awaiting">
+    </template-->
+    <!--template v-if="!is_new && !is_awaiting">
 
         <el-dropdown v-if="order.movements.length > 0">
             <el-button type="warning" class="mr-2">
@@ -98,6 +98,7 @@
                 </div>
             </template>
         </el-dropdown>
+
         <el-dropdown v-if="order.expenses.length > 0">
             <el-button type="success" plain class="mr-2">
                 Распоряжения на выдачу
@@ -114,7 +115,8 @@
                 </div>
             </template>
         </el-dropdown>
-    </template>
+
+    </template-->
     <template v-if="is_view">
         <el-button type="warning" class="ml-5" @click="onCopy">Скопировать</el-button>
     </template>
@@ -131,6 +133,8 @@
     <template v-if="order.status.is_canceled">
 
     </template>
+
+    <OrderRelatedDocuments  v-if="!is_new" />
 
     <el-dialog v-model="dialogFindPayment" title="Выбрать платеж" width="400">
         <el-select v-model="payment_id">
@@ -234,6 +238,7 @@ import {func} from '@Res/func.js'
 import {ElLoading, ElMessage} from "element-plus";
 import SelectAddition from "@Page/Order/Order/Blocks/SelectAddition.vue";
 import axios from "axios";
+import OrderRelatedDocuments from "@Comp/Order/RelatedDocuments.vue";
 
 const props = defineProps({
     order: Object,

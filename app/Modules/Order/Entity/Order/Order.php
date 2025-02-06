@@ -485,6 +485,7 @@ class Order extends Model
                     $payments += $payment->amount;
                 }
         }
+
         return $payments;
     }
 
@@ -607,7 +608,7 @@ class Order extends Model
 
     public function expenses(): HasMany
     {
-        return $this->hasMany(OrderExpense::class, 'order_id', 'id');
+        return $this->hasMany(OrderExpense::class, 'order_id', 'id')->orderBy('status');
     }
 
     public function items(): HasMany
@@ -717,13 +718,43 @@ class Order extends Model
         }
     }
 
-
-    public function relatedDocuments()
+    public function relatedDocuments(): array
     {
         $documents = [];
-
         foreach ($this->movements as $movement) {
-
+            $documents[] = [
+                'name' => 'Перемещение № ' .$movement->number . ' от ' . $movement->created_at->format('d-m-y'),
+                'link' => route('admin.accounting.movement.show', $movement, false),
+                'type' => 'warning',
+                'completed' => $movement->isCompleted(),
+            ];
         }
+        foreach ($this->payments as $payment) {
+            if (!$payment->isRefund()) {
+                $documents[] = [
+                    'name' => 'Платеж от ' . $payment->created_at->format('d-m-y'),
+                    'link' => route('admin.order.payment.show', $payment, false),
+                    'type' => 'primary',
+                    'completed' => $payment->isCompleted(),
+                ];
+            }
+        }
+        foreach ($this->expenses as $expense) {
+                $documents[] = [
+                    'name' => 'Распоряжение № ' .$expense->number . ' от ' . $expense->created_at->format('d-m-y'),
+                    'link' => route('admin.order.expense.show', $expense, false),
+                    'type' => 'success',
+                    'completed' => $expense->isCompleted(),
+                    'children' => $expense->relatedDocuments(),
+                ];
+        }
+
+        return [
+            'name' => 'Заказ № ' . $this->number . ' от ' . $this->created_at->format('d-m-y'),
+            'link' => route('admin.order.show', $this, false),
+            'type' => 'info',
+            'completed' => $this->isCompleted(),
+            'children' => $documents,
+        ];
     }
 }

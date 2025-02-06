@@ -80,6 +80,7 @@ class PaymentController extends Controller
             'payment' => $this->repository->PaymentWithToArray($payment),
             'methods' => array_select(OrderPayment::METHODS),
             'storages' => $this->storages->getPointSale(),
+            'order_related' => $payment->order->relatedDocuments(),
         ]);
     }
 

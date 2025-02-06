@@ -172,7 +172,7 @@ class OrderPaymentService
             }
         }
         if (is_null($method)) throw new \DomainException('Не найдены платежи по заказу');
-        $payment = OrderPayment::new($refund->amountTotal(), $method);
+        $payment = OrderPayment::new($refund->amount(), $method);
 
         $staff = Auth::guard('admin')->user();
         $payment->staff_id = $staff->id;

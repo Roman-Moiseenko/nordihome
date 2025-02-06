@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import {Head, Link} from "@inertiajs/vue3";
 import ru from 'element-plus/dist/locale/ru.mjs'
-import {defineProps} from "vue";
+import {defineProps, provide} from "vue";
 import ExpenseInfo from "./Blocks/Info.vue"
 import ExpenseActions from "./Blocks/Actions.vue"
 
@@ -59,7 +59,9 @@ const props = defineProps({
     },
     calendar: Array,
     reasons: Array,
+    order_related: Array,
 })
+provide('$order_related', props.order_related)
 </script>
 
 <style scoped>

@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $comment
- * @property float $retention - удержание при возврате
  * @property int $reason
  * @property bool $completed
  * @property int $order_payment_id
@@ -56,7 +55,6 @@ class OrderExpenseRefund extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'retention' => 'float',
     ];
 
     public static function register(int $expense_id, int $staff_id, int $reason): self
@@ -102,11 +100,6 @@ class OrderExpenseRefund extends Model
     public function amount(): float
     {
         return $this->amountItems() + $this->amountAdditions();
-    }
-
-    public function amountTotal(): float
-    {
-        return $this->amount() - $this->retention;
     }
 
     public function amountItems(): float
@@ -188,6 +181,20 @@ class OrderExpenseRefund extends Model
     public function staff(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
+    }
+
+    public function relatedDocuments(): array
+    {
+        $documents = [];
+        if (!is_null($this->order_payment_id)) {
+            $documents[] = [
+                'name' => 'Платеж на возврат от ' . $this->payment->created_at->format('d-m-y'),
+                'link' => route('admin.order.payment.show', $this->payment, false),
+                'type' => 'primary',
+                'completed' => $this->payment->isCompleted(),
+            ];
+        }
+        return $documents;
     }
 
 

@@ -39,7 +39,7 @@ class RefundRepository
 
         return array_merge($refund->toArray(), [
             'status' => $status,
-            'amount' => $refund->amountTotal(),
+            'amount' => $refund->amount(),
             'staff' => $refund->staff,
         ]);
     }
