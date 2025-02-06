@@ -24,10 +24,8 @@ class MovementRepository extends AccountingRepository
                 $filters['storage_in'] = $storage_in;
                 $query->where('storage_in', $storage_in);
             }
-            if (($status = $request->integer('status')) > 0) {
-                $filters['status'] = $status;
-                $query->where('status', $status);
-            }
+            $this->_status($request, $filters, $query);
+
         }, false);
 
         return $query->paginate($request->input('size', 20))

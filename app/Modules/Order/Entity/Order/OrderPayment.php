@@ -7,8 +7,6 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Base\Casts\BankPaymentCast;
 use App\Modules\Base\Entity\BankPayment;
-use App\Modules\Order\Entity\Payment\PaymentHelper;
-use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $commission --
  * @property int $method
  * @property string $comment
+ * @property bool $refund - Возврат
  * @property Admin $staff
  * @property Order $order
  * @property Organization $shopper
@@ -37,19 +36,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class OrderPayment extends Model
 {
+    const int METHOD_CARD = 1;
+    const int METHOD_CASH = 2;
+    const int METHOD_ACCOUNT = 3;
+    const int METHOD_SBP = 4;
+    const int METHOD_YUKASSA = 5;
 
-    const METHOD_CARD = 1;
-    const METHOD_CASH = 2;
-    const METHOD_ACCOUNT = 3;
-    const METHOD_SBP = 4;
-    const METHOD_YUKASSA = 4;
-
-    const MANUAL_METHODS = [
+    const array MANUAL_METHODS = [
         self::METHOD_CASH => 'В кассу',
         self::METHOD_CARD => 'Картой',
         self::METHOD_ACCOUNT => 'По счету (в ручную)'
     ];
-    const METHODS = [
+    const array METHODS = [
         self::METHOD_CASH => 'В кассу',
         self::METHOD_CARD => 'Картой',
         self::METHOD_ACCOUNT => 'По счету',
@@ -57,7 +55,7 @@ class OrderPayment extends Model
         self::METHOD_YUKASSA => 'ЮКасса',
     ];
 
-    const ONLINE_METHODS = [
+    const array ONLINE_METHODS = [
         'СПБ',
         'Ю касса',
         'По счету (ч/з банк)'
@@ -65,6 +63,7 @@ class OrderPayment extends Model
 
     protected $attributes = [
         'bank_payment' => '{}',
+        'refund' => false,
     ];
 
     protected $table = 'order_payments';
@@ -72,12 +71,14 @@ class OrderPayment extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'bank_payment' => BankPaymentCast::class,
+        'refund' => 'bool'
     ];
     protected $fillable = [
         'amount',
         'method',
         'comment',
         'commission',
+        'refund',
     ];
 
     public static function new(float $amount, int $method): self
@@ -87,6 +88,7 @@ class OrderPayment extends Model
             'method' => $method,
             'commission' => 0,
             'comment' => '',
+            'refund' => false,
         ]);
     }
 
@@ -105,6 +107,10 @@ class OrderPayment extends Model
         return $this->method == OrderPayment::METHOD_ACCOUNT;
     }
 
+    public function isRefund(): bool
+    {
+        return $this->refund == true;
+    }
     /**
      * Документ проведен
      */

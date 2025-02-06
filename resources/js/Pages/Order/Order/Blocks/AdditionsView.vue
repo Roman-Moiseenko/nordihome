@@ -5,16 +5,15 @@
         style="width: 100%;"
     >
         <el-table-column type="index" label="п/п"/>
-        <el-table-column prop="name" label="Услуга" width="340"/>
-
-        <el-table-column prop="" label="Сумма" width="140" align="center">
+        <el-table-column prop="name" label="Услуга" width="430"/>
+        <el-table-column prop="" label="Сумма" width="240" align="center">
             <template #default="scope">
                 <el-tag type="success" effect="dark">
                     {{ func.price(scope.row.amount * scope.row.quantity) }}
                 </el-tag>
             </template>
         </el-table-column>
-        <el-table-column prop="quantity" label="Кол-во" width="80" align="center">
+        <el-table-column prop="quantity" label="Кол-во" width="110" align="center">
             <template #default="scope">
                 <div v-if="scope.row.is_quantity">
                     <el-tag type="primary" effect="dark">{{ scope.row.quantity }}</el-tag>
@@ -22,11 +21,6 @@
                 <div v-else>
                     -
                 </div>
-            </template>
-        </el-table-column>
-        <el-table-column prop="remains"  label="Не выдано" width="240" >
-            <template #default="scope">
-                {{ func.price(scope.row.remains) }}
             </template>
         </el-table-column>
         <el-table-column label="Возврат" width="100" align="center">

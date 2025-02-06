@@ -18,7 +18,9 @@ use App\Modules\Guide\Entity\Addition;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use JetBrains\PhpStorm\Deprecated;
@@ -43,6 +45,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property int $type
  * @property GeoAddress $address
  *
+ * @property OrderExpenseRefund[] $refunds
  * @property OrderExpenseItem[] $items
  * @property OrderExpenseAddition[] $additions
  * @property Storage $storage
@@ -57,35 +60,35 @@ class OrderExpense extends Model
 {
     use HtmlInfoData;
 
-    const STATUS_NEW = 1;
-    const STATUS_ASSEMBLY = 2;
-    const STATUS_ASSEMBLING = 3;
-    const STATUS_ASSEMBLED = 4;
-    const STATUS_DELIVERY = 6;
-    const STATUS_DELIVERED = 7;
-    const STATUS_COMPLETED = 10;
-    const STATUS_CANCELED = 11;
-    const STATUS_REFUND = 12;
+    const int STATUS_NEW = 1;
+    const int STATUS_ASSEMBLY = 2;
+    const int STATUS_ASSEMBLING = 3;
+    const int STATUS_ASSEMBLED = 4;
+    const int STATUS_DELIVERY = 6;
+    const int STATUS_DELIVERED = 7;
+    const int STATUS_COMPLETED = 10;
+    const int STATUS_CANCELED = 11;
+    const int STATUS_REFUND = 12;
 
-    const DELIVERY_STORAGE = 401;
-    const DELIVERY_LOCAL = 402;
-    const DELIVERY_REGION = 403;
-    const DELIVERY_OZON = 404;
+    const int DELIVERY_STORAGE = 401;
+    const int DELIVERY_LOCAL = 402;
+    const int DELIVERY_REGION = 403;
+    const int DELIVERY_OZON = 404;
 
-    const TYPES = [
+    const array TYPES = [
         '' => 'Неопределенно',
         null => 'Неопределенно',
         self::DELIVERY_STORAGE => 'Самовывоз из магазина',
         self::DELIVERY_LOCAL => 'Доставка по региону',
         self::DELIVERY_REGION => 'Доставка ТК по России',
     ];
-    const DELIVERIES = [
+    const array DELIVERIES = [
         self::DELIVERY_STORAGE => 'Самовывоз из магазина',
         self::DELIVERY_LOCAL => 'Доставка по региону',
         self::DELIVERY_REGION => 'Доставка ТК по России',
     ];
 
-    const STATUSES = [
+    const array STATUSES = [
         self::STATUS_NEW => 'Новое',
         self::STATUS_ASSEMBLY => 'Ожидает сборки',
         self::STATUS_ASSEMBLING => 'Собирается',
@@ -150,6 +153,7 @@ class OrderExpense extends Model
     {
         return $this->status == self::STATUS_ASSEMBLING;
     }
+
     /**
      * Заказ собран, ожидает выдачи или доставки
      */
@@ -157,6 +161,7 @@ class OrderExpense extends Model
     {
         return $this->status == self::STATUS_ASSEMBLED;
     }
+
     /**
      * На доставке по РФ Почтой, есть трек номер
      */
@@ -175,7 +180,7 @@ class OrderExpense extends Model
 
     public function isCompleted(): bool
     {
-        return $this->status == self::STATUS_COMPLETED;
+        return $this->status == self::STATUS_COMPLETED || $this->status == self::STATUS_REFUND;
     }
 
     public function isCanceled(): bool
@@ -183,6 +188,10 @@ class OrderExpense extends Model
         return $this->status == self::STATUS_CANCELED;
     }
 
+    public function isRefund(): bool
+    {
+        return $this->refunds()->count() > 0;
+    }
 
     /**
      * Требуется сборка
@@ -194,7 +203,6 @@ class OrderExpense extends Model
         }
         return false;
     }
-
 
     //тип доставки
     public function isStorage(): bool
@@ -212,9 +220,7 @@ class OrderExpense extends Model
         return $this->type == self::DELIVERY_REGION;
     }
 
-
     //*** SET-...
-
     public function assembly(): void
     {
         $this->status = self::STATUS_ASSEMBLY;
@@ -285,6 +291,7 @@ class OrderExpense extends Model
     {
         return $this->getWorker(Worker::WORK_DRIVER);
     }
+
     /**
      * Сборщик мебели
      */
@@ -298,6 +305,7 @@ class OrderExpense extends Model
 
 
     }
+
     /**
      * Упаковщик (грузчик)
      */
@@ -307,6 +315,10 @@ class OrderExpense extends Model
     }
 
     //*** RELATIONS
+    public function refunds(): HasMany
+    {
+        return $this->hasMany(OrderExpenseRefund::class, 'expense_id', 'id');
+    }
 
     public function workers(): BelongsToMany
     {
@@ -315,28 +327,27 @@ class OrderExpense extends Model
             'expense_id','worker_id')->withPivot(['work']);
     }
 
-
-    public function staff()
+    public function staff(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'staff_id', 'id');
     }
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(OrderExpenseItem::class, 'expense_id', 'id');
     }
 
-    public function additions()
+    public function additions(): HasMany
     {
         return $this->hasMany(OrderExpenseAddition::class, 'expense_id', 'id');
     }
 
-    public function storage()
+    public function storage(): BelongsTo
     {
         return $this->belongsTo(Storage::class, 'storage_id', 'id');
     }
 
-    public function order()
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
@@ -350,6 +361,7 @@ class OrderExpense extends Model
     {
         return $this->hasOne(DeliveryCargo::class, 'expense_id', 'id');
     }
+
     public function calendarPeriod(): HasOneThrough
     {
         return $this->hasOneThrough(
@@ -365,9 +377,7 @@ class OrderExpense extends Model
         return $this->belongsToMany(CalendarPeriod::class, 'calendars_expenses', 'expense_id', 'period_id');
     }
 
-
     //*** Хелперы
-
     public function statusHTML(): string
     {
         return self::STATUSES[$this->status];
@@ -377,10 +387,5 @@ class OrderExpense extends Model
     {
         return self::TYPES[$this->type];
     }
-
-
-
-
-
 
 }

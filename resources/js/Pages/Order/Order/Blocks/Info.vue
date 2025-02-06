@@ -73,7 +73,7 @@
                                       class-name="bg-discount">
                     {{ func.price(order.amount.discount) }}
                 </el-descriptions-item>
-                <el-descriptions-item label="Итого к оплате"
+                <el-descriptions-item label="Итого"
                                       label-class-name="bg-amount"
                                       class-name="bg-amount">
                     {{ func.price(order.amount.total) }}
@@ -82,6 +82,11 @@
                                       label-class-name="bg-amount"
                                       class-name="bg-amount">
                     {{ func.price(order.amount.payment) }}
+                </el-descriptions-item>
+                <el-descriptions-item v-if="order.amount.refund !== 0" label="Возврат"
+                                      label-class-name="bg-discount"
+                                      class-name="bg-discount">
+                    {{ func.price(order.amount.refund) }}
                 </el-descriptions-item>
             </el-descriptions>
         </el-col>

@@ -8,12 +8,16 @@
                      :stroke-width="stroke" :show-text="false"/>
         <el-progress v-if="show.value == 1" type="circle" :percentage="100" :width="width" status="success"
                      :stroke-width="stroke" :show-text="false"/>
-        <template v-if="show.value > 1.01" class="flex">
-            <el-progress type="circle" :percentage="100" :width="width" status="success" :stroke-width="stroke"
-                         :show-text="false"/>
-            <el-progress type="circle" :percentage="100" :width="width" status="success" style="margin-left: -6px"
-                         :stroke-width="stroke" :show-text="false"/>
-        </template>
+        <div v-if="show.value > 1.01" class="flex">
+            <div>
+                <el-progress type="circle" :percentage="100" :width="width" status="success" :stroke-width="stroke"
+                             :show-text="false" style="margin-left: 3px"/>
+            </div>
+            <div>
+                <el-progress type="circle" :percentage="100" :width="width" status="success" style="margin-left: -6px"
+                             :stroke-width="stroke" :show-text="false"/>
+            </div>
+        </div>
     </el-tooltip>
 </template>
 
@@ -32,9 +36,7 @@ const props = defineProps({
 })
 const width = ref(16)
 const stroke = ref(8)
-
 const show = computed(() => {
-
     if (props.value < 0)
         return {
             value: -1,
@@ -55,10 +57,10 @@ const show = computed(() => {
         }
     if (props.value > 1)
         return {
-        value: 1,
-        content: props.type === 'pay' ? 'Переплата' : '',
-        visible: null,
-    }
+            value: 2,
+            content: props.type === 'pay' ? 'Переплата' : '',
+            visible: null,
+        }
 
     return {
         value: 0.5,

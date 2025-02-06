@@ -33,7 +33,7 @@
         <el-table-column v-if="is_new" prop="product.quantity_sell" label="Наличие" width="90" align="center"/>
 
 
-        <el-table-column label="Не выдано" width="240">
+        <el-table-column label="Не выдано" width="220">
             <template #default="scope">
                 <div v-if="scope.row.reserves">
                     {{ scope.row.remains }}
@@ -53,6 +53,14 @@
                 </div>
             </template>
         </el-table-column>
+        <el-table-column label="Возврат" width="80" align="center">
+            <template #default="scope">
+                <span v-if="scope.row.refund">
+                    <span class="text-red-600">{{ scope.row.refund }}</span>
+                </span>
+            </template>
+        </el-table-column>
+
         <el-table-column label="Резерв по складам" width="">
             <template #default="scope">
                 <div v-for="storage in scope.row.storages" class="flex">

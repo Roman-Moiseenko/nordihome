@@ -1,9 +1,9 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Заказы</h1>
+        <h1 class="font-medium text-xl">Возвраты</h1>
         <div class="flex">
-            <el-button type="primary" class="p-4 my-3" @click="handleCreate">Новый заказ</el-button>
+
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-date-picker
                     v-model="filter.date_from"
@@ -40,58 +40,42 @@
             >
                 <el-table-column label="ОПЛ" width="40" class-name="no-space-cell" align="center">
                     <template #default="scope">
-                        <StatusGraph :value="scope.row.status_pay" type="pay"/>
+                        <StatusGraph :value="scope.row.status"/>
                     </template>
                 </el-table-column>
-                <el-table-column label="ОТГ" width="40" class-name="no-space-cell" align="center">
-                    <template #default="scope">
-                        <StatusGraph :value="scope.row.status_out" type="out"/>
-                    </template>
-                </el-table-column>
+  =
                 <el-table-column label="Дата" width="120">
                     <template #default="scope">
                         {{ func.date(scope.row.created_at) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="number" label="Номер" width="160"/>
-                <el-table-column prop="distributor_name" label="Клиент" width="260" show-overflow-tooltip>
-                    <template #default="scope">
-                        <div class="font-medium text-sm">{{ scope.row.user.name }}</div>
-                        <div class="text-slate-700 text-xs">{{ func.phone(scope.row.user.phone) }}</div>
-                    </template>
-                </el-table-column>
+
 
                 <el-table-column prop="amount" label="Сумма" width="120">
                     <template #default="scope">
                         {{ func.price(scope.row.amount) }}
-                        <span v-if="scope.row.refund !== 0">
-                            <el-tooltip content="Возврат" >
-                                <el-tag type="danger" >{{ func.price(scope.row.refund)}}</el-tag>
-                            </el-tooltip>
-                        </span>
-
                     </template>
                 </el-table-column>
-                <el-table-column prop="status_text" label="Статус" show-overflow-tooltip/>
+                <el-table-column prop="status_text" label="Статус" />
                 <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
-                <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
+                <el-table-column prop="staff" label="Ответственный" >
+                    <template #default="scope">
+                        {{ func.fullName(scope.row.staff.fullname)}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <el-button
-                            size="small"
-                            type="warning"
-                            @click.stop="handleCopy(scope.row)">
-                            Copy
-                        </el-button>
+
                     </template>
                 </el-table-column>
             </el-table>
         </div>
 
         <pagination
-            :current_page="orders.current_page"
-            :per_page="orders.per_page"
-            :total="orders.total"
+            :current_page="refunds.current_page"
+            :per_page="refunds.per_page"
+            :total="refunds.total"
         />
 
     </el-config-provider>
@@ -109,18 +93,17 @@ import Active from '@Comp/Elements/Active.vue'
 import StatusGraph from "@Comp/Elements/StatusGraph.vue";
 
 const props = defineProps({
-    orders: Object,
+    refunds: Object,
     title: {
         type: String,
-        default: 'Заказы клиентов',
+        default: 'Возвраты клиентов',
     },
     filters: Array,
-
     staffs: Array,
 })
 const store = useStore();
 
-const tableData = ref([...props.orders.data])
+const tableData = ref([...props.refunds.data])
 const filter = reactive({
     condition: props.filters.condition,
     staff_id: props.filters.staff_id,
@@ -129,6 +112,7 @@ const filter = reactive({
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
 })
+/*
 const create_id = ref<Number>(null)
 
 interface IRow {
@@ -141,18 +125,12 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     }
     return ''
 }
-
-function handleCreate() {
-    router.post(route('admin.order.store'))
-}
+*/
 
 function routeClick(row) {
-    router.get(route('admin.order.show', {order: row.id}))
+    router.get(route('admin.order.refund.show', {refund: row.id}))
 }
 
-function handleCopy(row) {
-    router.post(route('admin.order.copy', {order: row.id}))
-}
 
 
 </script>

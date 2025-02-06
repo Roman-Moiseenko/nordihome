@@ -119,7 +119,7 @@
                             <el-table-column label="Действия">
                                 <template #default="scope">
                                     <el-button type="success" v-if="scope.row.driver" @click="onCompleted(scope.row)">
-                                        Выдано
+                                        Завершено
                                     </el-button>
                                     <el-button type="warning" @click="openDialogPeriod(scope.row)">
                                         Сменить дату

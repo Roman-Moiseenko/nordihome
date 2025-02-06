@@ -86,6 +86,7 @@ class SupplyController extends Controller
     {
         $distributor = Distributor::find($request->integer('distributor'));
         $stacks = $this->stacks->getByDistributor($distributor);
+        //dd($stacks);
         if (!empty($stacks)) { //Если стек не пуст, то показываем
             return Inertia::render('Accounting/Supply/Create', [
                 'stacks' => $stacks,

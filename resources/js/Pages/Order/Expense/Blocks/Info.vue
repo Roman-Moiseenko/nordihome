@@ -61,7 +61,6 @@
 
         </el-col>
     </el-row>
-
 </template>
 
 <script setup lang="ts">
@@ -74,7 +73,6 @@ const props = defineProps({
     expense: Object,
 })
 const iSavingInfo = ref(false)
-console.log(props.expense)
 const disabled = computed(() => {
     return iSavingInfo.value || !props.expense.status.is_new
 })

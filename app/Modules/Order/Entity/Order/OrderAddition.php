@@ -6,6 +6,8 @@ namespace App\Modules\Order\Entity\Order;
 use App\Modules\Guide\Entity\Addition;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\Pure;
 use function now;
 
@@ -73,19 +75,28 @@ class OrderAddition extends Model
     }
 
     //RELATIONS
-    public function addition(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function addition(): BelongsTo
     {
         return $this->belongsTo(Addition::class, 'addition_id', 'id');
     }
 
-    public function order(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
-    public function expenseAdditions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function expenseAdditions(): HasMany
     {
         return $this->hasMany(OrderExpenseAddition::class, 'order_addition_id', 'id');
+    }
+
+    public function getRefund(): float
+    {
+        $refund = 0.0;
+        foreach ($this->expenseAdditions as $expenseAddition) {
+            $refund += $expenseAddition->amountRefund();
+        }
+        return $refund;
     }
 
 }

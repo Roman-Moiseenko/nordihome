@@ -75,10 +75,17 @@ Route::group(
                 'as' => 'refund.',
             ],
             function () {
+                Route::post('/completed/{refund}', 'RefundController@completed')->name('completed');
+                Route::post('/throw/{refund}', 'RefundController@throw')->name('throw');
+                Route::post('/set-info/{refund}', 'RefundController@set_info')->name('set-info');
+                Route::post('/set-item/{item}', 'RefundController@set_item')->name('set-item');
+                Route::delete('/del-item/{item}', 'RefundController@del_item')->name('del-item');
+                Route::post('/set-addition/{addition}', 'RefundController@set_addition')->name('set-addition');
+                Route::delete('/del-addition/{addition}', 'RefundController@del_addition')->name('del-addition');
+
 
                 Route::get('/show/{refund}', 'RefundController@show')->name('show');
-                Route::get('/create', 'RefundController@create')->name('create');
-                Route::post('/store/{order}', 'RefundController@store')->name('store');
+                Route::post('/store/{expense}', 'RefundController@store')->name('store');
                 Route::get('/', 'RefundController@index')->name('index');
             }
         );

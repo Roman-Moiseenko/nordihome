@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Service\Report\Trade12Report;
@@ -45,6 +46,7 @@ class ExpenseController extends Controller
     {
         return Inertia::render('Order/Expense/Show', [
             'expense' => $this->repository->ExpenseWithToArray($expense),
+            'reasons' => array_select(OrderExpenseRefund::REASONS),
         ]);
 
     }

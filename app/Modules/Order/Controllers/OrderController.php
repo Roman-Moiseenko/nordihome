@@ -44,7 +44,6 @@ class OrderController extends Controller
 {
     private StaffRepository $staffs;
     private OrderRepository $repository;
-    private ProductRepository $products;
     private OrderService $service;
     private InvoiceReport $report;
     private OrganizationRepository $organizations;
@@ -54,7 +53,6 @@ class OrderController extends Controller
         OrderService           $service,
         StaffRepository        $staffs,
         OrderRepository        $repository,
-        ProductRepository      $products,
         InvoiceReport          $report,
         OrganizationRepository $organizations,
         OrderReserveService    $reserveService,
@@ -63,7 +61,6 @@ class OrderController extends Controller
         $this->middleware(['auth:admin', 'can:order']);
         $this->staffs = $staffs;
         $this->repository = $repository;
-        $this->products = $products;
         $this->service = $service;
         //TODO загрузка процента по сборке
         $this->report = $report;

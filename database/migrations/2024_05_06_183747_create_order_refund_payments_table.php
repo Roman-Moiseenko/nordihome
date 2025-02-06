@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('order_payment_id')->constrained('order_payments')->onDelete('cascade');
             $table->float('amount');
         });
+
     }
 
     /**

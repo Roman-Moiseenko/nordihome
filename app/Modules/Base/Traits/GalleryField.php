@@ -57,7 +57,7 @@ trait GalleryField
     {
         $image = $this->gallery()->first();
         if (is_null($image)) {
-            if (!is_null($this->photos)) return '/images/modification.jpg';
+            if (!is_null($this->modification) && !is_null($this->photos)) return '/images/modification.jpg';
             return '/images/no-image.jpg';
         }
         return $image->getThumbUrl('mini');

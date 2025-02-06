@@ -296,5 +296,14 @@ class OrderItem extends Model implements CartItemInterface
         if (!is_null($sell)) $this->sell_cost = $sell;
     }
 
+    public function getRefund(): float
+    {
+        $refund = 0.0;
+        foreach ($this->expenseItems as $expenseItem) {
+           $refund += $expenseItem->quantityRefund();
+        }
+        return $refund;
+    }
+
 
 }

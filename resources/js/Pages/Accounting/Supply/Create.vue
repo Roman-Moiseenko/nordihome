@@ -40,12 +40,13 @@ import {ref, reactive} from "vue";
 
 const props = defineProps({
     distributor: Number,
-    stacks: Object,
+    stacks: Array,
     title: {
         type: String,
         default: 'Новый заказ. Товары со стека',
     },
 })
+console.log(props.stacks)
 const tableData = ref([...props.stacks])
 const form = reactive({
     distributor: props.distributor.id,

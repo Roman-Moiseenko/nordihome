@@ -7,12 +7,8 @@
         <el-table-column type="index" label="п/п"/>
         <el-table-column prop="product.code" label="Артикул" width="110"/>
         <el-table-column prop="product.name" label="Товар" width="320" show-overflow-tooltip />
-        <el-table-column label="Базовая цена" width="230" align="center">
-            <template #default="scope">
-                {{ func.price(scope.row.base_cost) }}
-            </template>
-        </el-table-column>
-        <el-table-column label="Продажа" width="230" align="center">
+
+        <el-table-column label="Продажа" width="240" align="center">
             <template #default="scope">
                 <span class="text-green-800">{{ func.price(scope.row.sell_cost) }}</span>
                 <span v-if="scope.row.percent > 0" class="text-green-800 ml-2"> -{{
@@ -22,14 +18,20 @@
         </el-table-column>
         <el-table-column label="Кол-во" width="110" align="center">
             <template #default="scope">
-
                 <span>
                     <span class="text-green-800">{{ scope.row.quantity }}</span>
                 </span>
             </template>
         </el-table-column>
+        <el-table-column label="Возврат" width="100" align="center">
+            <template #default="scope">
+                <span v-if="scope.row.refund">
+                    <span class="text-red-600">{{ scope.row.refund }}</span>
+                </span>
+            </template>
+        </el-table-column>
 
-        <el-table-column prop="comment" align="right" label="Комментарий" width="120" show-overflow-tooltip />
+        <el-table-column prop="comment" align="right" label="Комментарий" show-overflow-tooltip />
     </el-table>
 </template>
 

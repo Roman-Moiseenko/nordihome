@@ -37,6 +37,8 @@ return [
                 'title' => 'Возвраты',
                 'route_name' => 'admin.order.refund.index',
                 'can' => 'refund',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-rotate-right',
             ],
             'reserve' => [
                 'icon' => 'baggage-claim',

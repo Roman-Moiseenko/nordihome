@@ -7,6 +7,7 @@ use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\BatchSale;
 use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 
 class BatchSaleService
 {
@@ -32,7 +33,7 @@ class BatchSaleService
                 $query = ArrivalProduct::orderBy('id')
                     ->where('product_id', $item->orderItem->product_id)
                     ->where('remains', '>', 0)
-                     ->whereHas('document', function ($query) {
+                    ->whereHas('document', function ($query) {
                         $query->where('completed', true);
                     });
 
@@ -55,7 +56,7 @@ class BatchSaleService
 
                 $batch_quantity = min($quantity, (float)$product->quantity);
                 if ($arrival) {
-                    $batch = BatchSale::register($item->id, $batch_quantity, $cost, $product->id,null);
+                    $batch = BatchSale::register($item->id, $batch_quantity, $cost, $product->id, null);
                 } else {
                     $batch = BatchSale::register($item->id, $batch_quantity, $cost, null, $product->id);
                 }
@@ -69,11 +70,11 @@ class BatchSaleService
         }
     }
 
-    public function return(OrderExpense $expense): void
+    public function returnByExpense(OrderExpense $expense): void
     {
-        /** @var BatchSale[] $batches */
+
         $batches = BatchSale::whereHas('expenseItem', function ($query) use ($expense) {
-            $query->where('expense', $expense->id);
+            $query->where('expense_id', $expense->id);
         })->getModels();
         foreach ($batches as $batch) {
             //Возвращаем кол-во в Поступление
@@ -87,4 +88,40 @@ class BatchSaleService
             $batch->delete(); //Удаляем проведение
         }
     }
+
+    public function returnByRefund(OrderExpenseRefund $refund): void
+    {
+        /** @var BatchSale[] $batches */
+        $batches = BatchSale::whereHas('expenseItem', function ($query) use ($refund) {
+            $query->where('expense_id', $refund->expense_id);
+        })->getModels();
+
+        foreach ($refund->items as $item) {
+            $quantity = $item->quantity;
+
+            foreach ($batches as $batch) {
+
+                if ($item->expenseItem->orderItem->product_id == $batch->product_id
+                    && $quantity > 0) {
+                    $min = min($quantity, $batch->quantity);
+                    //Возвращаем кол-во в Поступление
+                    if (is_null($batch->arrivalProduct)) {
+                        $batch->surplusProduct->remains += $min;
+                        $batch->surplusProduct->save();
+                    } else {
+                        $batch->arrivalProduct->remains += $min;
+                        $batch->arrivalProduct->save();
+                    }
+                    if ($batch->quantity == $min) {
+                        $batch->delete(); //Удаляем проведение
+                    } else {
+                        $batch->quantity -= $min;
+                        $batch->save();
+                    }
+                    $quantity -= $min;
+                }
+            }
+        }
+    }
+
 }

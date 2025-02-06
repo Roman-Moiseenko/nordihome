@@ -9,7 +9,7 @@
         </div>
         <el-affix target=".affix-container" :offset="64">
             <div class="bg-white rounded-lg my-2 p-1 shadow flex">
-                <ExpenseActions :expense="expense"/>
+                <ExpenseActions :expense="expense" :reasons="reasons"/>
             </div>
         </el-affix>
         <div class="mt-1 px-3 py-1 bg-white rounded-md">
@@ -23,23 +23,22 @@
                 <el-table-column prop="product.name" label="Товар / Вес, Объем" width="240" show-overflow-tooltip/>
 
                 <el-table-column prop="quantity" label="Кол-во" width="110" align="center"/>
+                <el-table-column v-if="expense.refunds" prop="refund" label="Возврат" width="110" align="center"/>
                 <el-table-column prop="comment" align="right" label="Комментарий"/>
             </el-table>
-            <el-table
+            <el-table v-if="expense.additions.length > 0"
                 :data="[...expense.additions]"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%;"
                 class="mt-2"
             >
                 <el-table-column type="index" label="п/п"/>
-                <el-table-column prop="addition.name" label="Товар / Вес, Объем" width="240" show-overflow-tooltip/>
-
+                <el-table-column prop="addition.name" label="Услуга" width="350" show-overflow-tooltip/>
                 <el-table-column prop="amount" label="Кол-во" width="110" align="center"/>
+                <el-table-column v-if="expense.refunds" prop="refund" label="Возврат" width="110" align="center"/>
                 <el-table-column prop="comment" align="right" label="Комментарий"/>
             </el-table>
-
         </div>
-
     </el-config-provider>
 
 </template>
@@ -59,6 +58,7 @@ const props = defineProps({
         default: 'Распоряжение на выдачу',
     },
     calendar: Array,
+    reasons: Array,
 })
 </script>
 

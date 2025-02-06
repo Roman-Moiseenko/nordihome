@@ -109,6 +109,7 @@ class ExpenseService
         $expense = $this->create($order, $storage, $request);
         $method = $request->string('method')->value();
 
+
         if ($method == 'expense') {
             $user = $expense->order->user;
             $expense->recipient = clone $user->fullname;
@@ -143,7 +144,7 @@ class ExpenseService
     public function cancel(OrderExpense $expense): Order
     {
         DB::transaction(function () use ($expense, &$order) {
-            $this->batchSaleService->return($expense); //Удаляем продажи по партиям
+            $this->batchSaleService->returnByExpense($expense); //Удаляем продажи по партиям
             $order = $expense->order;
             foreach ($expense->items as $item) {
                 //Возвращаем на склад
@@ -334,18 +335,21 @@ class ExpenseService
 
     public function completed(OrderExpense $expense): void
     {
+
         DB::transaction(function () use ($expense) {
             $expense->status = OrderExpense::STATUS_COMPLETED;
             $expense->save();
             $expense->refresh();
 
             $order = $expense->order;
+            $order->refresh();
 
             if (($order->getTotalAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) < 1) {
                 $check = true;
                 foreach ($order->expenses as $_expense) {
-                    if (!$_expense->isCompleted()) $check = false;
+                    if (!$_expense->isCompleted() && !$_expense->isCanceled()) $check = false;
                 }
+
                 //Проверить все ли распоряжения выданы?
                 if ($check) {
                     $expense->order->setStatus(OrderStatus::COMPLETED);

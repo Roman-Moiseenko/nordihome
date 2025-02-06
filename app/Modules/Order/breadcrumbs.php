@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderPayment;
-use App\Modules\Order\Entity\Order\OrderRefund;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -73,15 +73,12 @@ Breadcrumbs::for('admin.order.payment.show', function (BreadcrumbTrail $trail, O
 //REFUND
 Breadcrumbs::for('admin.order.refund.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Возвраты по заказам', route('admin.order.refund.index'));
+    $trail->push('Возвраты товаров', route('admin.order.refund.index'));
 });
-Breadcrumbs::for('admin.order.refund.create', function (BreadcrumbTrail $trail) {
+
+Breadcrumbs::for('admin.order.refund.show', function (BreadcrumbTrail $trail, OrderExpenseRefund $refund) {
     $trail->parent('admin.order.refund.index');
-    $trail->push('Создать возврат по заказу', route('admin.order.refund.create'));
-});
-Breadcrumbs::for('admin.order.refund.show', function (BreadcrumbTrail $trail, OrderRefund $refund) {
-    $trail->parent('admin.order.refund.index');
-    $trail->push('Возврат по заказу ' . $refund->order->htmlNum() . ' от ' . $refund->order->htmlDate(), route('admin.order.refund.show', $refund));
+    $trail->push('Возврат по заказу ' . $refund->expense->order->htmlNum() . ' от ' . $refund->expense->order->htmlDate(), route('admin.order.refund.show', $refund));
 });
 //PRODUCT
 Breadcrumbs::for('admin.order.product.index', function (BreadcrumbTrail $trail) {

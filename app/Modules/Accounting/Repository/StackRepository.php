@@ -16,13 +16,14 @@ class StackRepository
 
         /** @var SupplyStack[] $stacks */
         $stacks = SupplyStack::where('supply_id', null)->getModels();
-        foreach ($stacks as $i => $stack) {
+
+       foreach ($stacks as $i => $stack) {
             if (DistributorProduct::where('product_id', $stack->product->id)->get())
                 if (!$distributor->isProduct($stack->product))
                     unset($stacks[$i]);
         }
-
-        return array_map(function (SupplyStack $stack) {
+     //   dd($stacks);
+        $map = array_map(function (SupplyStack $stack) {
             return [
                 'id' => $stack->id,
                 'code' => $stack->product->code,
@@ -33,5 +34,10 @@ class StackRepository
                 'order_id' => !is_null($stack->orderItem) ? $stack->orderItem->order_id : null,
             ];
         },$stacks);
+       $array = [];
+       foreach ($map as $item) {
+           $array[] = $item;
+       }
+       return $array;
     }
 }

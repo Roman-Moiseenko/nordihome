@@ -4,12 +4,17 @@ declare(strict_types=1);
 namespace App\Modules\Order\Service;
 
 use App\Events\OrderHasRefund;
+use App\Modules\Accounting\Service\BatchSaleService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseRefundAddition;
+use App\Modules\Order\Entity\Order\OrderExpenseRefundItem;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Order\Entity\Order\OrderRefund;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
@@ -18,76 +23,110 @@ class RefundService
 {
 
     private LoggerService $logger;
+    private BatchSaleService $batchSaleService;
 
-    public function __construct(LoggerService $logger)
+    public function __construct(LoggerService $logger, BatchSaleService $batchSaleService)
     {
         $this->logger = $logger;
+        $this->batchSaleService = $batchSaleService;
     }
 
-    public function create(Order $order, array $params)
+    public function create(OrderExpense $expense, $request): OrderExpenseRefund
     {
-        DB::transaction(function () use ($order, $params) {
-            $items = $params['item'] ?? [];
-            $additions = $params['addition'] ?? [];
-            $payments = $params['payment'] ?? [];
-            $comment = $params['comment'] ?? '';
-            $number = $params['number'] ?? '';
-
+        DB::transaction(function () use ($expense, $request, &$refund) {
             /** @var Admin $staff */
             $staff = Auth::guard('admin')->user();
-            $refund = OrderRefund::register($order->id, $staff->id, $comment, $number);
 
-            $amount_items = 0;
-            foreach ($items as $id => $quantity) {
-                $refund->items()->create([
-                    'order_item_id' => $id,
-                    'quantity' => (float)$quantity,
-                ]);
-                /** @var OrderItem $itemOrder */
-                $itemOrder = OrderItem::find($id);
-                $amount_items += $itemOrder->sell_cost * (float)$quantity;
+            $refund = OrderExpenseRefund::register($expense->id, $staff->id, $request->input('reason'));
+
+            foreach ($expense->items as $item) {
+                $refund->items()->save(OrderExpenseRefundItem::new($item->id, $item->quantityNotRefund()));
             }
 
-            foreach ($additions as $id => $amount) {
-                $refund->additions()->create([
-                    'order_addition_id' => $id,
-                    'amount' => (float)$amount,
-                ]);
-            }
-            $amount_payments = 0;
-            foreach ($payments as $id => $amount) {
-                $refund->payments()->create([
-                    'order_payment_id' => (int)$id,
-                    'amount' => (float)$amount,
-                ]);
-                $amount_payments += (float)$amount;
+            foreach ($expense->additions as $addition) {
+                $refund->additions()->save(OrderExpenseRefundAddition::new($addition->id, $addition->amountNotRefund()));
             }
 
-            //Проверка на сумму возврат
-            if ($order->isCompleted())
-            {
-                if ($amount_payments != $amount_items)
-                    throw new \DomainException('Сумма возврата не совпадает со стоимостью возвращаемого товара');
-            }
-            if ($order->isPrepaid() || $order->isPaid())
-            {
-                if ($amount_payments != $order->getPaymentAmount() - $order->getExpenseAmount())
-                    throw new \DomainException('Сумма возврата не совпадает с переплатой');
-            }
-            $refund->amount = $amount_payments;
-            $refund->save();
-
-            $refund->refresh();
-            event(new OrderHasRefund($order));
-
-            $order->setStatus(OrderStatus::COMPLETED_REFUND);
-            $order->clearReserve();//Возврат товаров в продажу
-            $this->logger->logOrder($order, 'Заказ завершен с возвратом', '', '',
+            $order = $refund->expense->order;
+            $this->logger->logOrder($order, 'Создан документ на возврат', '', '',
                 route('admin.order.refund.show', $refund)
             );
         });
 
+        return $refund;
+    }
 
+    public function completed(OrderExpenseRefund $refund)
+    {
+        //TODO
+        foreach ($refund->items as $item) {
+            if ($item->expenseItem->quantityNotRefund() < $item->quantity) throw new \DomainException('Кол-во превышает выданного');
+        }
+        foreach ($refund->additions as $addition) {
+            if ($addition->expenseAddition->amountNotRefund() < $addition->amount) throw new \DomainException('Сумма превышает выданного');
+        }
+        $refund->completed = true;
+        $refund->number = (int)OrderExpenseRefund::where('number', '<>', null)->max('number') + 1;
+        $refund->save();
+
+        $this->batchSaleService->returnByRefund($refund);
+    }
+
+    public function work(OrderExpenseRefund $refund)
+    {
+        //TODO ????
+        $refund->completed = false;
+        $refund->save();
+
+    }
+
+    public function throw(OrderExpenseRefund $refund): void
+    {
+        $refund->items()->delete();
+        $refund->additions()->delete();
+        $refund->retention = 0;
+        $refund->save();
+        $expense = $refund->expense;
+        foreach ($expense->items as $item) {
+            $refund->items()->save(OrderExpenseRefundItem::new($item->id, $item->quantityNotRefund()));
+        }
+        foreach ($expense->additions as $addition) {
+            $refund->additions()->save(OrderExpenseRefundAddition::new($addition->id, $addition->amountNotRefund()));
+        }
+    }
+
+    public function setInfo(OrderExpenseRefund $refund, Request $request): void
+    {
+        $refund->reason = $request->input('reason');
+        $refund->comment = $request->string('comment')->trim()->value();
+        $refund->retention = $request->integer('retention');
+        $refund->save();
+    }
+
+    public function setItem(OrderExpenseRefundItem $item, Request $request): void
+    {
+        $quantity = $request->integer('quantity');
+        if ($item->expenseItem->quantityNotRefund() < $quantity) throw new \DomainException('Кол-во превышает выданного');
+        $item->quantity = $quantity;
+        $item->save();
+    }
+
+    public function delItem(OrderExpenseRefundItem $item): void
+    {
+        $item->delete();
+    }
+
+    public function setAddition(OrderExpenseRefundAddition $addition, Request $request): void
+    {
+        $amount = $request->integer('amount');
+        if ($addition->expenseAddition->amountNotRefund() < $amount) throw new \DomainException('Сумма превышает выданного');
+        $addition->amount = $amount;
+        $addition->save();
+    }
+
+    public function delAddition(OrderExpenseRefundAddition $addition): void
+    {
+        $addition->delete();
     }
 
 }

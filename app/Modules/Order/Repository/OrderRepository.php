@@ -8,6 +8,7 @@ use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Admin\Entity\Worker;
+use App\Modules\Base\Traits\FiltersRepository;
 use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
@@ -30,6 +31,8 @@ use JetBrains\PhpStorm\Deprecated;
 
 class OrderRepository
 {
+    use FiltersRepository;
+
     private UserRepository $users;
     private CalendarService $calendar;
 
@@ -44,14 +47,10 @@ class OrderRepository
         $query = Order::orderByDesc('created_at');
         $filters = [];
 
-        if (!is_null($begin = $request->date('date_from'))) {
-            $filters['date_from'] = $begin->format('Y-m-d');
-            $query->where('created_at', '>', $begin);
-        }
-        if (!is_null($end = $request->date('date_to'))) {
-            $filters['date_to'] = $end->format('Y-m-d');
-            $query->where('created_at', '<=', $end);
-        }
+        $this->_date_from($request, $filters, $query);
+        $this->_date_to($request, $filters, $query);
+        $this->_comment($request, $filters, $query);
+        $this->_staff_id($request, $filters, $query);
 
         if ($request->string('user') != '') {
             $user = $request->string('user')->trim()->value();
@@ -66,11 +65,7 @@ class OrderRepository
                     });
             });
         }
-        if ($request->string('comment') != '') {
-            $comment = $request->string('comment')->trim()->value();
-            $filters['comment'] = $comment;
-            $query->where('comment', 'like', "%$comment%");
-        }
+
         if ($request->integer('condition') > 0) {
             $condition = $request->integer('condition');
             $filters['condition'] = $condition;
@@ -78,11 +73,7 @@ class OrderRepository
                 $q->where('value', $condition);
             });
         }
-        if ($request->integer('staff_id') > 0) {
-            $staff_id = $request->integer('staff_id');
-            $filters['staff_id'] = $staff_id;
-            $query->where('staff_id', $staff_id);
-        }
+
         if (count($filters) > 0) $filters['count'] = count($filters);
 
         return $query->paginate($request->input('size', 20))
@@ -120,7 +111,7 @@ class OrderRepository
                 'phone' => $order->user->phone,
             ],
             'amount' => $order->getTotalAmount(),
-
+            'refund' => $order->getRefundAmount(),
             'status' => [
                 'is_new' => $order->isNew(),
                 'is_manager' => $order->isManager(),
@@ -145,16 +136,7 @@ class OrderRepository
             'in_stock' => $order->items()->where('preorder', false)->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
             'pre_order' => $order->items()->where('preorder', true)->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
             'items' => $order->items()->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
-            'additions' => $order->additions()->get()->map(function (OrderAddition $orderAddition) {
-                return array_merge($orderAddition->toArray(), [
-                    'calculate' => $orderAddition->getAmount(),
-                    'name' => $orderAddition->addition->name,
-                    'manual' => $orderAddition->addition->manual,
-                    'base' => $orderAddition->addition->base,
-                    'is_quantity' => $orderAddition->addition->is_quantity,
-                    'remains' => $orderAddition->getRemains(),
-                ]);
-            }),
+            'additions' => $order->additions()->get()->map(fn(OrderAddition $orderAddition) => $this->OrderAdditionToArray($orderAddition)),
             'user' => is_null($order->user_id) ? null : $this->users->UserToArray($order->user),
             'amount' => [
                 'base' => $order->getBaseAmount(),
@@ -166,6 +148,7 @@ class OrderRepository
                 'coupon' => $order->getCoupon(),
                 'percent' => ($order->getBaseAmountNotDiscount() == 0) ? 0 : ceil($order->manual / $order->getBaseAmountNotDiscount() * 100 * 10) / 10,
                 'payment' => $order->getPaymentAmount(),
+                'refund' => $order->getRefundAmount(),
             ],
             'emails' => is_null($order->shopper_id) ? [] : array_select($order->shopper->getEmails()),
             'shoppers' => is_null($order->user) ? [] : $order->user->organizations,
@@ -195,7 +178,6 @@ class OrderRepository
     {
         return array_merge($order->toArray(), [
             'logs' => $order->logs()->with('staff')->get(),
-
         ]);
     }
 
@@ -203,6 +185,7 @@ class OrderRepository
     {
         $quantity_sell = $item->product->getQuantitySell();
         $quantity_order = $item->order->getQuantityProduct($item->product_id, false);
+        $refund = $item->getRefund();
 
         return array_merge($item->toArray(), [
             'percent' => $item->getPercent(),
@@ -233,9 +216,23 @@ class OrderRepository
                 ];
             }),
             'quantity_sell' => $quantity_order + $quantity_sell,
+            'refund' => $refund == 0 ? null : $refund,
         ]);
     }
 
+    private function OrderAdditionToArray(OrderAddition $orderAddition): array
+    {
+        $refund = $orderAddition->getRefund();
+        return array_merge($orderAddition->toArray(), [
+            'calculate' => $orderAddition->getAmount(),
+            'name' => $orderAddition->addition->name,
+            'manual' => $orderAddition->addition->manual,
+            'base' => $orderAddition->addition->base,
+            'is_quantity' => $orderAddition->addition->is_quantity,
+            'remains' => $orderAddition->getRemains(),
+            'refund' => $refund == 0 ? null : $refund,
+        ]);
+    }
     /**
      * Возвращает список заказов, которые ждут оплаты, в том числе с внесенной предоплатой
      * @param int|null $order_id - id текущего заказа, для случая, когда надо поменять назначения платежа, для уже оплаченного заказа
@@ -271,9 +268,11 @@ class OrderRepository
             'items' => $expense->items()->get()->map(fn(OrderExpenseItem $expenseItem) => array_merge($expenseItem->toArray(), [
                 'product' =>  $expenseItem->orderItem->product,
                 'quantity' => (float)$expenseItem->quantity,
+                'refund' => $expenseItem->quantityRefund(),
             ])),
             'additions' => $expense->additions()->get()->map(fn(OrderExpenseAddition $expenseAddition) => array_merge($expenseAddition->toArray(), [
                 'addition' => $expenseAddition->orderAddition->addition,
+                'refund' => $expenseAddition->amountRefund(),
             ])),
             'status' => [
                 'is_new' => $expense->isNew(),
@@ -296,6 +295,7 @@ class OrderRepository
                     'work' => Worker::WORKS[$worker->pivot->work],
                 ]);
             }),
+            'refunds' => ($expense->refunds()->count() == 0) ? null : true,
 
         ]);
     }

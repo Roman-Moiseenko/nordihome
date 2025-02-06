@@ -13,10 +13,7 @@ class OrganizationRepository
     public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = Organization::orderBy('short_name');
-
         $filters = [];
-
-
         if (($name = $request->string('name')->trim()->value()) != '') {
             $filters['name'] = $name;
             $query->where(function ($query) use ($name) {

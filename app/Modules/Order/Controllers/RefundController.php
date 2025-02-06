@@ -4,63 +4,105 @@ declare(strict_types=1);
 namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderRefund;
+use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
+use App\Modules\Order\Entity\Order\OrderExpenseRefundAddition;
+use App\Modules\Order\Entity\Order\OrderExpenseRefundItem;
+use App\Modules\Order\Repository\RefundRepository;
 use App\Modules\Order\Service\RefundService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class RefundController extends Controller
 {
     private RefundService $service;
+    private RefundRepository $repository;
+    private StaffRepository $staffs;
 
-    public function __construct(RefundService $service)
+    public function __construct(
+        RefundService    $service,
+        StaffRepository  $staffs,
+        RefundRepository $repository,
+    )
     {
         $this->middleware(['auth:admin', 'can:refund']);
         $this->service = $service;
+        $this->repository = $repository;
+        $this->staffs = $staffs;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        return redirect()->back()->with('warning', 'В разработке');
-        /*
-        $query = OrderRefund::orderByDesc('created_at');
-        $refunds = $this->pagination($query, $request, $pagination);
-        return view('admin.order.refund.index', compact('refunds', 'pagination'));
-        */
+        $refunds = $this->repository->getIndex($request, $filters);
+        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_REFUND);
+        return Inertia::render('Order/Refund/Index', [
+            'refunds' => $refunds,
+            'filters' => $filters,
+            'staffs' => $staffs,
+        ]);
+
     }
 
-    public function create(Request $request)
+    public function store(OrderExpense $expense, Request $request): RedirectResponse
     {
-
-        /** @var Order $order */
-        $order = Order::where('number', trim($request['order_id']))->first();
-        if (is_null($order)) throw new \DomainException('Заказ № ' . $request['order_id'] . ' не найден');
-
-        //TODO Список всех товаров + услуг, + сколько выдано
-        // Список платежей
-        // Колонка "На возврат" для денег и товаров/услуг
-        return redirect()->back()->with('warning', 'В разработке');
-        /*
-        if ($order->isCompleted(true) || $order->isPaid() || $order->isPrepaid()) {
-            //Создать на возврат товаров
-            return view('admin.order.refund.create', compact('order'));
-        }
-*/
-        throw new \DomainException('Для данного заказа нельзя сделать возврат');
+        $refund = $this->service->create($expense, $request);
+        return redirect()->route('admin.order.refund.show', $refund)->with('success', 'Сохранено');
     }
 
-    public function store(Order $order, Request $request)
+    public function show(OrderExpenseRefund $refund): Response
     {
-        $params = $request->all();
-        $this->service->create($order, $params);
-        return redirect()->route('admin.order.refund.index');
+        return Inertia::render('Order/Refund/Show', [
+            'refund' => $this->repository->RefundWithToArray($refund),
+            'reasons' => array_select(OrderExpenseRefund::REASONS),
+        ]);
+
     }
 
-    public function show(OrderRefund $refund)
+    public function completed(OrderExpenseRefund $refund): RedirectResponse
     {
-        return redirect()->back()->with('warning', 'В разработке');
+        $this->service->completed($refund);
+        return redirect()->back()->with('success', 'Документ проведен');
+    }
 
-        //return view('admin.order.refund.show', compact('refund'));
+    public function throw(OrderExpenseRefund $refund): RedirectResponse
+    {
+        $this->service->throw($refund);
+        return redirect()->back()->with('success', 'Документ сброшен до начальных значений');
+    }
+
+    public function set_info(OrderExpenseRefund $refund, Request $request): RedirectResponse
+    {
+        $this->service->setInfo($refund, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function set_item(OrderExpenseRefundItem $item, Request $request): RedirectResponse
+    {
+        $this->service->setItem($item, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function del_item(OrderExpenseRefundItem $item): RedirectResponse
+    {
+        $this->service->delItem($item);
+        return redirect()->back()->with('success', 'Удалено');
+    }
+
+    public function set_addition(OrderExpenseRefundAddition $addition, Request $request): RedirectResponse
+    {
+        $this->service->setAddition($addition, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function del_addition(OrderExpenseRefundAddition $item): RedirectResponse
+    {
+        $this->service->delAddition($item);
+        return redirect()->back()->with('success', 'Удалено');
     }
 
 }

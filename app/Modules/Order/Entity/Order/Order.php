@@ -61,7 +61,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Discount $discount
  * @property Admin $staff
  * @property Coupon $coupon
- * @property OrderRefund $refund
+ * @property OrderExpenseRefund $refund
  * @property LoggerOrder[] $logs
  * @property Report $invoice
  * @property SystemMail[] $systemMails
@@ -71,12 +71,12 @@ class Order extends Model
 {
     use HtmlInfoData;
 
-    const ONLINE = 701;
-    const MANUAL = 702;
-    const SHOP = 703;
-    const PARSER = 704;
-    const OZON = 705;
-    const TYPES = [
+    const int ONLINE = 701;
+    const int MANUAL = 702;
+    const int SHOP = 703;
+    const int PARSER = 704;
+    const int OZON = 705;
+    const array TYPES = [
         self::ONLINE => 'Интернет-магазин',
         self::MANUAL => 'Менеджер',
         self::SHOP => 'Магазин',
@@ -250,21 +250,15 @@ class Order extends Model
 
     ///*** GET-еры
 
-
-
     /**
      * Доступные статусы для текущего заказа, ограниченные сверху
      */
     public function getAvailableStatuses(int $top_status = OrderStatus::COMPLETED): array
     {
         $last_code = $this->status->value;
-        $result = [];
-        foreach (OrderStatus::STATUSES as $code => $name) {
-            if ($code > $last_code && $code < $top_status) {
-                $result[$code] = $name;
-            }
-        }
-        return $result;
+        return array_filter(OrderStatus::STATUSES, function ($code) use ($top_status, $last_code) {
+            return $code > $last_code && $code < $top_status;
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     public function getQuantity(): float
@@ -471,18 +465,25 @@ class Order extends Model
         return ceil($this->getAdditionsAmount() +
             $this->getSellAmount() +
             $this->getDiscountOrder() -
-            $this->getCoupon());
+            $this->getCoupon() -
+            $this->getRefundAmount()
+        );
     }
 
     /**
-     * Сумма всех платежей по заказу
+     * Сумма всех платежей по заказу, за вычетом возврата денег
      * @return float
      */
     public function getPaymentAmount(): float
     {
         $payments = 0;
         foreach ($this->payments as $payment) {
-            if ($payment->isCompleted()) $payments += $payment->amount;
+            if ($payment->isCompleted())
+                if ($payment->isRefund()) {
+                    $payments -= $payment->amount;
+                } else {
+                    $payments += $payment->amount;
+                }
         }
         return $payments;
     }
@@ -500,6 +501,20 @@ class Order extends Model
         return $amount;
     }
 
+    /**
+     * Сумма всех возвратов
+     */
+    public function getRefundAmount(): float
+    {
+        $refund = 0.0;
+        foreach ($this->items as $item) {
+            $refund += $item->getRefund() * $item->sell_cost;
+        }
+        foreach ($this->additions as $addition) {
+            $refund += $addition->getRefund();
+        }
+        return $refund;
+    }
 
     /**
      * Общий вес заказа
@@ -577,7 +592,7 @@ class Order extends Model
 
     public function refund(): HasOne
     {
-        return $this->hasOne(OrderRefund::class, 'order_id', 'id');
+        return $this->hasOne(OrderExpenseRefund::class, 'order_id', 'id');
     }
 
     public function coupon(): BelongsTo
@@ -702,4 +717,13 @@ class Order extends Model
         }
     }
 
+
+    public function relatedDocuments()
+    {
+        $documents = [];
+
+        foreach ($this->movements as $movement) {
+
+        }
+    }
 }

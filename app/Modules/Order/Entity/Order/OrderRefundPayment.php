@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $amount
  * @property OrderPayment $orderPayment
  */
+#[Deprecated]
 class OrderRefundPayment extends Model
 {
     public $timestamps = false;

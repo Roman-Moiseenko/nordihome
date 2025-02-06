@@ -11,6 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::drop('order_refunds');
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
 
         Schema::create('order_refunds', function (Blueprint $table) {
             $table->id();
@@ -20,13 +28,5 @@ return new class extends Migration
             $table->timestamps();
             $table->string('comment')->default('');
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::drop('order_refunds');
     }
 };
