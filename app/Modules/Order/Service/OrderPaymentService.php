@@ -6,6 +6,7 @@ namespace App\Modules\Order\Service;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\BankPayment;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use Auth;
 use DB;
@@ -115,7 +116,7 @@ class OrderPaymentService
 
         if ($payment->method != $request->integer('method')) {
             $payment->method = $request->integer('method');
-            if ($payment->isCard()) {
+            if ($payment->isCard() && !$payment->isRefund()) { //Если картой и не возврат, тогда комиссия
                 $payment->commission = $this->commission_card;
             } else {
                 $payment->commission = 0.0;
@@ -159,5 +160,29 @@ class OrderPaymentService
         $payment->work();
 
         $this->orderService->checkPayment($payment->order);
+    }
+
+    public function createByRefund(OrderExpenseRefund $refund): OrderPayment
+    {
+        $order = $refund->expense->order;
+        $method = null; //Находим способ оплаты по последнему платежу к заказу
+        foreach ($order->payments as $payment) {
+            if (!$payment->isRefund()) {
+                $method = $payment->method;
+            }
+        }
+        if (is_null($method)) throw new \DomainException('Не найдены платежи по заказу');
+        $payment = OrderPayment::new($refund->amountTotal(), $method);
+
+        $staff = Auth::guard('admin')->user();
+        $payment->staff_id = $staff->id;
+        $payment->is_refund = true; //Возврат
+        $payment->manual = true; //В ручную
+        $order->payments()->save($payment);
+        $payment->refresh();
+
+        $refund->order_payment_id = $payment->id;
+        $refund->save();
+        return $payment;
     }
 }

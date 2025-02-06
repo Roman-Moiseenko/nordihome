@@ -5,9 +5,12 @@
     <el-button v-if="!refund.completed" type="warning" class="ml-2" @click="onThrow">
         Сбросить
     </el-button>
-    <el-button v-if="refund.completed" @click="onPayment" type="success" plain>
-        Платежный документ
-    </el-button>
+    <span v-if="refund.completed">
+        <el-button v-if="!refund.order_payment_id" @click="onPayment" type="success" plain>
+            Платежный документ
+        </el-button>
+        <Link v-else type="primary" :href="route('admin.order.payment.show', {payment: refund.order_payment_id})">Платежный документ</Link>
+    </span>
 </template>
 
 <script setup lang="ts">
@@ -30,7 +33,7 @@ function onThrow() {
 
 
 function onPayment() {
-    //TODO router.post(route('admin.order.refund.throw', {refund: props.refund.id}))
+    router.post(route('admin.order.payment.create-refund', {refund: props.refund.id}))
 }
 
 /*

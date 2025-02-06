@@ -76,7 +76,7 @@ class OrderExpenseRefund extends Model
 
     public function isPayment(): bool
     {
-        //TODO Возвращать true, когда платежка проведена
+        if (!is_null($this->order_payment_id) && $this->payment->isCompleted()) return true;
         return false;
     }
 

@@ -10,6 +10,7 @@ use App\Modules\Base\Entity\BankPayment;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -28,11 +29,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $commission --
  * @property int $method
  * @property string $comment
- * @property bool $refund - Возврат
+ * @property bool $is_refund - Возврат
  * @property Admin $staff
  * @property Order $order
  * @property Organization $shopper
  * @property Organization $trader
+ * @property OrderExpenseRefund $refund
  */
 class OrderPayment extends Model
 {
@@ -63,7 +65,7 @@ class OrderPayment extends Model
 
     protected $attributes = [
         'bank_payment' => '{}',
-        'refund' => false,
+        'is_refund' => false,
     ];
 
     protected $table = 'order_payments';
@@ -71,14 +73,14 @@ class OrderPayment extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'bank_payment' => BankPaymentCast::class,
-        'refund' => 'bool'
+        'is_refund' => 'bool'
     ];
     protected $fillable = [
         'amount',
         'method',
         'comment',
         'commission',
-        'refund',
+        'is_refund',
     ];
 
     public static function new(float $amount, int $method): self
@@ -88,7 +90,7 @@ class OrderPayment extends Model
             'method' => $method,
             'commission' => 0,
             'comment' => '',
-            'refund' => false,
+            'is_refund' => false,
         ]);
     }
 
@@ -109,7 +111,7 @@ class OrderPayment extends Model
 
     public function isRefund(): bool
     {
-        return $this->refund == true;
+        return $this->is_refund == true;
     }
     /**
      * Документ проведен
@@ -136,6 +138,11 @@ class OrderPayment extends Model
         $this->completed = false;
         $this->save();
 
+    }
+
+    public function refund(): HasOne
+    {
+        return $this->hasOne(OrderExpenseRefund::class, 'order_payment_id', 'id');
     }
 
     public function shopper(): BelongsTo

@@ -115,6 +115,7 @@ Route::group(
                 Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
                 Route::post('/completed/{payment}', 'PaymentController@completed')->name('completed');
                 Route::post('/work/{payment}', 'PaymentController@work')->name('work');
+                Route::post('/create-refund/{refund}', 'PaymentController@create_refund')->name('create-refund');
 
                 Route::get('/', 'PaymentController@index')->name('index');
             }

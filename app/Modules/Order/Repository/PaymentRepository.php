@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Repository;
 
+use App\Modules\Base\Traits\FiltersRepository;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\User\Entity\User;
@@ -11,19 +12,15 @@ use Illuminate\Http\Request;
 
 class PaymentRepository
 {
+    use FiltersRepository;
+
     public function getIndex(Request $request, &$filters): Arrayable
     {
         $query = OrderPayment::orderByDesc('created_at');
         $filters = [];
+        $this->_date_from($request, $filters, $query);
+        $this->_date_to($request, $filters, $query);
 
-        if (!is_null($begin = $request->date('date_begin'))) {
-            $filters['date_begin'] = $begin->format('Y-m-d');
-            $query->where('created_at', '>', $begin);
-        }
-        if (!is_null($end = $request->date('date_end'))) {
-            $filters['date_end'] = $end->format('Y-m-d');
-            $query->where('created_at', '<=', $end);
-        }
 
         if ($request->string('user') != '') {
             $user = $request->string('user')->trim()->value();
@@ -40,18 +37,8 @@ class PaymentRepository
                 });
             });
         }
-
-        if ($request->string('comment') != '') {
-            $comment = $request->string('comment')->trim()->value();
-            $filters['comment'] = $comment;
-            $query->where('comment', 'like', "%$comment%");
-        }
-
-        if ($request->integer('staff_id') > 0) {
-            $staff_id = $request->integer('staff_id');
-            $filters['staff_id'] = $staff_id;
-            $query->where('staff_id', $staff_id);
-        }
+        $this->_comment($request, $filters, $query);
+        $this->_staff_id($request, $filters, $query);
 
         if (($order = $request->string('order')->value()) != '') {
             $filters['order'] = $order;
@@ -87,6 +74,7 @@ class PaymentRepository
             'is_cash' => $payment->isCash(),
             'is_card' => $payment->isCard(),
             'is_account' => $payment->isAccount(),
+            'refund' => $payment->refund,
         ]);
     }
 

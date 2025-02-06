@@ -2,7 +2,12 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Платеж за заказ {{ payment.order_id ? '№ ' + payment.order.number + ' от ' + func.date(payment.order.created_at) : '[Неопределен]' }}
+            <span v-if="payment.is_refund">
+                Платеж за возврат № {{ payment.refund.number }} от {{ func.date(payment.refund.created_at) }}
+            </span>
+            <span v-else>
+                Платеж за заказ {{ payment.order_id ? '№ ' + payment.order.number + ' от ' + func.date(payment.order.created_at) : '[Неопределен]' }}
+            </span>
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <PaymentInfo :payment="payment" :methods="methods" :storages="storages" />

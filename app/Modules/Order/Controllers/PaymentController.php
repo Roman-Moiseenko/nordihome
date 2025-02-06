@@ -9,6 +9,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
 use App\Modules\Order\Repository\OrderRepository;
@@ -65,6 +66,12 @@ class PaymentController extends Controller
         $payment = $this->service->createByOrder($order, $request->string('method')->value());
         return redirect()->route('admin.order.payment.show', $payment);
 
+    }
+
+    public function create_refund(OrderExpenseRefund $refund, Request $request): RedirectResponse
+    {
+        $payment = $this->service->createByRefund($refund);
+        return redirect()->route('admin.order.payment.show', $payment);
     }
 
     public function show(OrderPayment $payment): Response
