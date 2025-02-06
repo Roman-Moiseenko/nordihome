@@ -3,52 +3,42 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
 use App\Modules\Discount\Service\PromotionService;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\GroupRepository;
-use App\Modules\Product\Repository\ProductRepository;
-use App\UseCase\PaginationService;
+
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use JetBrains\PhpStorm\Deprecated;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PromotionController extends Controller
 {
     private PromotionService $service;
     private PromotionRepository $repository;
-    private GroupRepository $groups;
-    private ProductRepository $products;
 
     public function __construct(
         PromotionService    $service,
         PromotionRepository $repository,
-        GroupRepository     $groups,
-        ProductRepository   $products)
+    )
     {
         $this->middleware(['auth:admin', 'can:discount']);
         $this->service = $service;
         $this->repository = $repository;
-        $this->groups = $groups;
-        $this->products = $products;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $query = $this->repository->getIndex();
-        $promotions = $this->pagination($query, $request, $pagination);
-        return view('admin.discount.promotion.index', compact('promotions', 'pagination'));
+        $promotions = $this->repository->getIndex($request, $filters);
+        return Inertia::render('Discount/Promotion/Index', [
+            'promotions' => $promotions,
+            'filters' => $filters,
+            'statuses' => array_select(Promotion::STATUSES),
+        ]);
     }
 
-    public function create()
-    {
-        return view('admin.discount.promotion.create');
-    }
-
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string'
@@ -57,79 +47,77 @@ class PromotionController extends Controller
         return redirect()->route('admin.discount.promotion.show', compact('promotion'));
     }
 
-    public function show(Promotion $promotion)
+    public function show(Promotion $promotion): Response
     {
-        $groups = $this->groups->getNotInPromotions($promotion);
-        return view('admin.discount.promotion.show', compact('promotion', 'groups'));
+        return Inertia::render('Discount/Promotion/Show', [
+            'promotion' => $this->repository->PromotionWithToArray($promotion),
+            'statuses' => array_select(Promotion::STATUSES),
+        ]);
     }
 
-    public function edit(Promotion $promotion)
+    public function set_info(Request $request, Promotion $promotion): RedirectResponse
     {
-        return view('admin.discount.promotion.edit', compact('promotion'));
+        $this->service->setInfo($request, $promotion);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function update(Request $request, Promotion $promotion)
-    {
-        $this->service->update($request, $promotion);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
-    }
-
-    public function add_product(Request $request, Promotion $promotion)
+    public function add_product(Request $request, Promotion $promotion): RedirectResponse
     {
         $request->validate([
             'product_id' => 'required|integer|gt:0',
         ]);
-        $this->service->add_product($promotion, (int)$request['product_id']);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        $this->service->addProduct($promotion, (int)$request['product_id']);
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
-    public function add_products(Request $request, Promotion $promotion)
+    public function add_products(Request $request, Promotion $promotion): RedirectResponse
     {
-        $this->service->add_products($promotion, $request['products']);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        $this->service->addProducts($promotion, $request['products']);
+        return redirect()->back()->with('success', 'Товары добавлены');
     }
 
-    public function del_product(Promotion $promotion, Product $product)
+    public function del_product(Promotion $promotion, Request $request): RedirectResponse
     {
-        $this->service->del_product($product, $promotion);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        $this->service->delProduct($request, $promotion);
+        return redirect()->back()->with('success', 'Товар удален');
     }
 
-    public function set_product(Request $request, Promotion $promotion, Product $product)
+    public function set_product(Request $request, Promotion $promotion): RedirectResponse
     {
-        $this->service->set_product($request, $promotion, $product);
-        return response()->json(true);
+        $this->service->setProduct($request, $promotion);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(Promotion $promotion)
+    public function destroy(Promotion $promotion): RedirectResponse
     {
         $this->service->delete($promotion);
-        return redirect()->route('admin.discount.promotion.index');
+        return redirect()->back()->with('success', 'Акция удалена');
     }
 
     //Команды
-    public function draft(Promotion $promotion)
+    public function toggle(Promotion $promotion): RedirectResponse
     {
-        $this->service->draft($promotion);
-        return redirect()->back();
+        if ($promotion->isPublished()) {
+            $this->service->draft($promotion);
+            $success = 'Акция отключена';
+        } else {
+            $this->service->published($promotion);
+            $success = 'Акция добавлена в очередь';
+        }
+        return redirect()->back()->with('success', $success);
     }
 
-    public function published(Promotion $promotion)
-    {
-        $this->service->published($promotion);
-        return redirect()->back();
-    }
-
-    public function stop(Promotion $promotion)
+    public function stop(Promotion $promotion): RedirectResponse
     {
         $this->service->stop($promotion);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Акция остановлена в ручную');
     }
 
-    public function start(Promotion $promotion)
+    public function start(Promotion $promotion): RedirectResponse
     {
         $this->service->start($promotion);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Акция запущена в ручную');
+
     }
 
 }
