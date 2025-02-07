@@ -1,25 +1,45 @@
 <template>
     <el-tooltip content="Загрузить товары из файла" effect="dark" placement="top-start">
-        <el-button type="primary" plain @click="onUpload" class="ml-1"><i class="fa-light fa-upload"></i></el-button>
+        <el-button type="primary" plain @click="openDialog" class="ml-1"><i class="fa-light fa-upload"></i></el-button>
     </el-tooltip>
-    <div v-if="false" class="flex relative">
-        <div class="relative" style="width: 180px;">
-            <el-input v-model="data" :class="focus.class" style="width: 180px"
-                      type="textarea" :rows="focus.rows" resize="none"
-                      @focusin="inFocus" @focusout="outFocus"
-            />
-        </div>
-        <el-button type="primary" plain @click="onAdd" class="ml-1">{{ caption }}</el-button>
-    </div>
-    <!--
-    //TODO Модальное окно, с выбором файла => Автоопределение строк и столбцов, если не удалось, то в ручную
-    -->
+
+    <el-dialog v-model="uploadDialog" title="Пакетная загрузка товаров" width="400">
+        <HelpBlock>
+            <div>Для распарсивания отсутствующих товаров по списку, выберите бренд</div>
+            <div>Формат файла <b>xlsx</b></div>
+            <div>Первая колонка - артикулы, Вторая - кол-во, Третья (опционно) - Цена</div>
+        </HelpBlock>
+        <el-form label-width="auto">
+            <el-select v-model="formCreate.brand_id" filterable @change="selectBrand" clearable class="my-3"
+                       placeholder="Бренд">
+                <el-option v-for="item in brands" :value="item.id" :label="item.name"/>
+            </el-select>
+            <el-upload
+                class="upload-demo"
+                :action="route_upload"
+                :on-success="handleSuccess"
+                :on-error="handleError"
+
+            >
+                <el-button type="primary">Выбрать файл</el-button>
+            </el-upload>
+        </el-form>
+        <el-tag v-show="!disabledUnload" type="success" class="my-2">{{ textUpload }}</el-tag>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="uploadDialog = false">Отмена</el-button>
+                <el-button type="primary" @click="onUpload" :disabled="disabledUnload">Загрузить</el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
-<script setup>
-import {reactive, ref, defineProps} from "vue";
+<script lang="ts" setup>
+import {reactive, ref, defineProps, inject} from "vue";
 import {router} from "@inertiajs/vue3";
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage, type UploadProps} from "element-plus";
+import axios from "axios";
+import HelpBlock from "@Comp/HelpBlock.vue";
 
 const props = defineProps({
     route: String,
@@ -28,45 +48,78 @@ const props = defineProps({
         type: String
     }
 })
-const data = ref(null)
-const focus = reactive({
-    rows: 1,
-    class: 'out-focus',
-})
+const uploadDialog = ref(false);
+interface ISelect {
+    id: Number,
+    name: String,
+}
 
-function onAdd() {
-    let products = [], string = '', item = [];
-    let array = data.value.split("\n")
-    for (let i in array) {
-        string = array[i].replace(/ +/g, ' ')
-        if (string !== '') {
-            item = string.split(' ')
-            products.push({
-                code:item[0],
-                quantity: (item[1] === undefined) ? 1 : Number(item[1]),
-            })
-        }
+interface IProduct {
+    product_id: Number,
+    quantity: Number,
+    price: Number,
+}
+
+const products = ref([])
+const brands = ref<ISelect[]>([]);
+const formCreate = reactive({
+    brand_id: null,
+})
+const route_upload = ref(null)
+const disabledUnload = ref(true)
+const upload = ref<UploadInstance>()
+const textUpload = ref(null)
+
+function selectBrand() {
+    route_upload.value = route('admin.product.upload', {brand_id: formCreate.brand_id});
+}
+function openDialog() {
+    //Загружаем список брендов и категорий в диалог
+    if (brands.value.length === 0) {
+        const loading = ElLoading.service({
+            lock: false,
+            text: 'Загружаем бренды',
+            background: 'rgba(0, 0, 0, 0.7)',
+        })
+        route_upload.value = route('admin.product.upload');
+        axios.post(route('admin.product.brand.list')).then(response => {
+            brands.value = [...response.data]
+            loading.close()
+            uploadDialog.value = true
+        });
+    } else {
+        uploadDialog.value = true
     }
-    if (products.length === 0) return;
+
+}
+const handleSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFiles) => {
+    textUpload.value = 'Товары считаны - ' + response.length.toString() + ' шт.'
+    disabledUnload.value = false;
+    products.value = [...response]
+}
+const handleError: UploadProps['onError'] = (error, uploadFile, uploadFiles) => {
+    console.log(error, uploadFile)
+}
+
+function onUpload() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Добавляем товары',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     router.visit(props.route, {
         method: "post",
-        data: {products: products},
+        data: {products: products.value,},
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
-            data.value = null
+            disabledUnload.value = false
+            uploadDialog.value = false
+            loading.close()
         }
     })
-}
-function inFocus() {
-    focus.rows = 12
-    focus.class = 'in-focus'
-}
-function outFocus() {
-    focus.rows = 1
-    focus.class = 'out-focus'
-}
-function onUpload() {
+
+    /*
     ElMessage({
         message: 'В разработке',
         type: 'warning',
@@ -74,7 +127,7 @@ function onUpload() {
         showClose: true,
         duration: 5000,
         center: true,
-    });
+    }); */
 }
 
 </script>
@@ -85,6 +138,7 @@ function onUpload() {
     top: 0;
     width: 180px;
 }
+
 .out-focus {
     > textarea {
         overflow: hidden !important;

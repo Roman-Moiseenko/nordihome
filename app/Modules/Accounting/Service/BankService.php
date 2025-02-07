@@ -85,8 +85,6 @@ class BankService
                 }
             }
         }
-       // dd($payments);
-
 
         $this->loadPayments($section, $payments);
         return $payments;

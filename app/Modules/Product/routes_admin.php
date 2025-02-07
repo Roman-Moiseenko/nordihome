@@ -11,6 +11,7 @@ Route::group(
     function () {
 
         Route::post('/action', 'ProductController@action')->name('action');
+        Route::post('/upload', 'ProductController@upload')->name('upload');
         //Атрибуты
         Route::group([
             'prefix' => 'attribute',

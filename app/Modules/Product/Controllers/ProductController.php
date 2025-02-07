@@ -230,9 +230,7 @@ class ProductController extends Controller
 
     public function search(Request $request): JsonResponse
     {
-       //return \response()->json(true);
         $result = [];
-
         try {
             $products = $this->repository->search($request['search']);
             /** @var Product $product */
@@ -243,6 +241,13 @@ class ProductController extends Controller
         } catch (\Throwable $e) {
             return \response()->json(['error' => $e->getMessage(),]);
         }
+    }
+
+    public function upload(Request $request): JsonResponse
+    {
+        $file = $request->file('file');
+        $result = $this->service->uploadByXlsx($file, $request->input('brand_id'));
+        return response()->json($result);
     }
 
     public function search_add(Request $request)

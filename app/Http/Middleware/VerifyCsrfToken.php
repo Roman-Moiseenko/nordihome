@@ -16,7 +16,8 @@ class VerifyCsrfToken extends Middleware
         '/admin/mail/system/attachment',
         '/file-upload',
         '/admin/staff/photo/*',
-        '/admin/accounting/bank/upload'
+        '/admin/accounting/bank/upload',
+        '/admin/product/upload',
         /*'/catalog/search',
         '/cart_post/cart',
         '/cabinet/wish/get'*/

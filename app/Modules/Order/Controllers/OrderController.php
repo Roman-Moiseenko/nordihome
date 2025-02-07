@@ -245,9 +245,10 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Товар удален');
     }
 
-    public function add_products(Request $request, Order $order)
+    public function add_products(Request $request, Order $order): RedirectResponse
     {
-        dd('Сделать');
+        $this->service->addProducts($order, $request);
+        return redirect()->back()->with('success', 'Товары добавлены');
     }
 
     public function reserve_collect(Request $request, OrderItem $item): RedirectResponse

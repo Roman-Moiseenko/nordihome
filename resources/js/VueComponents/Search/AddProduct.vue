@@ -206,13 +206,14 @@ const brands = ref<ISelect[]>([]);
 const categories = ref<ISelect[]>([]);
 
 function createProduct() {
-    const loading = ElLoading.service({
-        lock: false,
-        text: 'Загружаем категории',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
     //Загружаем список брендов и категорий в диалог
     if (brands.value.length === 0) {
+        const loading = ElLoading.service({
+            lock: false,
+            text: 'Загружаем категории',
+            background: 'rgba(0, 0, 0, 0.7)',
+        })
+
         axios.post(route('admin.product.brand.list')).then(response => {
             brands.value = [...response.data]
             axios.post(route('admin.product.category.list')).then(response => {

@@ -458,7 +458,7 @@ class OrderService
     public function addProduct(
         Order $order, int $product_id,
         float $quantity, bool $preorder = false,
-        bool $assemblage = false, bool $packing = false): Order
+        bool $assemblage = false, bool $packing = false): void
     {
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -468,12 +468,10 @@ class OrderService
             $quantity_preorder = $quantity;
             $quantity = 0;
         }
-
         if ($quantity > 0 && $product->getQuantitySell() <= $quantity) {
             $quantity_preorder = $quantity - $product->getQuantitySell(); //По предзаказу
             $quantity = $product->getQuantitySell(); //в наличии
         }
-
 
         $last_price = $product->getPrice(false, $order->user);
         if ($quantity > 0) {
@@ -482,7 +480,6 @@ class OrderService
             $orderItem->setCost($last_price, $last_price);
             $orderItem->assemblage = $assemblage;
             $orderItem->packing = $packing;
-
             $order->items()->save($orderItem);
             //Товар в резерв, возвращаем новое время резерва
             $reserve_at = $this->reserveService->toReserve($orderItem, $quantity);
@@ -507,8 +504,6 @@ class OrderService
                 //$parser->price_sell;
                 $pre_price = $last_price;
             }
-
-                //
             $orderItemPre->setCost($last_price, $pre_price);
             $orderItemPre->assemblage = $assemblage;
             $orderItemPre->packing = $packing;
@@ -519,8 +514,18 @@ class OrderService
         $this->recalculation($order);
         $this->logger->logOrder($order, 'Добавлен товар',
             $product->name, $quantity . ' шт.', null);
+    }
 
-        return $order;
+    public function addProducts(Order $order, Request $request): void
+    {
+        $products = $request->input('products');
+
+        foreach ($products as $product) {
+            $this->addProduct($order,
+                $product['product_id'],
+                $product['quantity'],
+            );
+        }
     }
 
     /**

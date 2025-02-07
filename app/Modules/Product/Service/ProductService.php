@@ -756,13 +756,13 @@ class ProductService
             title: $request->string('title')->trim()->value(),
             description: $request->string('description')->trim()->value(),
         );
-      /*  foreach ($product->gallery as $photo) {
-            if ($photo->id === $id) {
-                $photo->update([
+        /*  foreach ($product->gallery as $photo) {
+              if ($photo->id === $id) {
+                  $photo->update([
 
-                ]);
-            }
-        }*/
+                  ]);
+              }
+          }*/
     }
 
     public function published(Product $product): void
@@ -852,5 +852,40 @@ class ProductService
             return $ar;
         };
         return $product->modification->products;
+    }
+
+    public function uploadByXlsx($file, $brand_id): array
+    {
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $spreadsheet = $reader->load($file->getPathName());
+        $sheetData = $spreadsheet->getActiveSheet()->toArray();
+        $result = [];
+        foreach ($sheetData as $row) {
+            $result[] = array_values(array_filter($row));
+        }
+
+        $array = array_values(array_filter($result));
+        //return $array;
+        $brand = is_null($brand_id) ? null : Brand::find($brand_id);
+
+        $products = [];
+
+        foreach ($array as $item) {
+            if (is_null($product = Product::whereCode($item[0])->first())) {
+                if (is_null($brand)) continue;
+                $parser_class = $brand->parser_class;
+                $parser = app()->make($parser_class);
+                $product = $parser->findProduct($item[0]);
+            }
+            if (!is_null($product))
+                $products[] = [
+                    'product_id' => $product->id,
+                    'quantity' => isset($item[1]) ? (float)$item[1] : 1,
+                    'price' => isset($item[2]) ? (float)$item[2] : 0,
+                ];
+
+        }
+        return $products;
+
     }
 }
