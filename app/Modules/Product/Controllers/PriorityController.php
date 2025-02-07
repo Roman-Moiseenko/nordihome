@@ -48,32 +48,20 @@ class PriorityController extends Controller
 
     public function add_product(Request $request): RedirectResponse
     {
-        try {
-            $this->service->setPriorityProduct($request->integer('product_id'));
-            return redirect()->back()->with('success', 'Товар добавлен в приоритет');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setPriorityProduct($request->integer('product_id'));
+        return redirect()->back()->with('success', 'Товар добавлен в приоритет');
     }
 
     public function add_products(Request $request): RedirectResponse
     {
-        try {
-            $this->service->setPriorityProducts($request['products']);
-            return redirect()->back()->with('success', 'Товары добавлены в приоритет');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setPriorityProducts($request->input('products'));
+        return redirect()->back()->with('success', 'Товары добавлены в приоритет');
     }
 
     public function del_product(Product $product): RedirectResponse
     {
-        try {
-            $this->service->delPriorityProduct($product);
-            return redirect()->back()->with('success', 'Товар убран из приоритета');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->delPriorityProduct($product);
+        return redirect()->back()->with('success', 'Товар убран из приоритета');
     }
 
 }

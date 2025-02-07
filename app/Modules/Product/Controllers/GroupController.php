@@ -42,12 +42,8 @@ class GroupController extends Controller
         $request->validate([
             'name' => 'required|string'
         ]);
-        try {
-            $group = $this->service->create($request);
-            return redirect()->route('admin.product.group.show', $group)->with('success', 'Группа создана');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $group = $this->service->create($request);
+        return redirect()->route('admin.product.group.show', $group)->with('success', 'Группа создана');
     }
 
     public function show(Group $group, Request $request): Response
@@ -59,52 +55,31 @@ class GroupController extends Controller
 
     public function destroy(Group $group): RedirectResponse
     {
-        try {
-            $this->service->delete($group);
-            return redirect()->back()->with('success', 'Группа удалена');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->delete($group);
+        return redirect()->back()->with('success', 'Группа удалена');
     }
 
     public function add_product(Request $request, Group $group): RedirectResponse
     {
-        try {
-            $this->service->add_product($group, (int)$request['product_id']);
-            return redirect()->back()->with('success', 'Товар добавлен из группы');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($group, (int)$request['product_id']);
+        return redirect()->back()->with('success', 'Товар добавлен из группы');
     }
 
     public function add_products(Request $request, Group $group): RedirectResponse
     {
-        try {
-            $this->service->add_products($group, $request['products']);
-            return redirect()->back()->with('success', 'Товары добавлены из группы');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($group, $request->input('products'));
+        return redirect()->back()->with('success', 'Товары добавлены из группы');
     }
 
     public function del_product(Request $request, Group $group): RedirectResponse
     {
-        try {
-            $this->service->del_product($request, $group);
-            return redirect()->back()->with('success', 'Товар удален из группы');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-
+        $this->service->del_product($request, $group);
+        return redirect()->back()->with('success', 'Товар удален из группы');
     }
 
     public function set_info(Request $request, Group $group): RedirectResponse
     {
-        try {
-            $this->service->setInfo($group, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($group, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 }

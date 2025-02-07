@@ -130,14 +130,11 @@ class MovementService // extends AccountingService
     public function addProducts(MovementDocument $movement, array $products): void
     {
         foreach ($products as $product) {
-            $_product = Product::whereCode($product['code'])->first();
-            if (!is_null($_product)) {
-                $this->addProduct($movement, $_product->id, (float)$product['quantity']);
-            } else {
-                $errors[] = $product['code'];
-            }
+            $this->addProduct($movement,
+                $product['product_id'],
+                $product['quantity'],
+            );
         }
-        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
     public function setProduct(Request $request, MovementProduct $product): void

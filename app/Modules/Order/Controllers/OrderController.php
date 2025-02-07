@@ -247,7 +247,7 @@ class OrderController extends Controller
 
     public function add_products(Request $request, Order $order): RedirectResponse
     {
-        $this->service->addProducts($order, $request);
+        $this->service->addProducts($order, $request->input('products'));
         return redirect()->back()->with('success', 'Товары добавлены');
     }
 

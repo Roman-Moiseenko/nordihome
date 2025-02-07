@@ -129,16 +129,12 @@ class ArrivalService
 
     public function addProducts(ArrivalDocument $arrival, array $products): void
     {
-        $errors = [];
         foreach ($products as $product) {
-            $_product = Product::whereCode($product['code'])->first();
-            if (!is_null($_product)) {
-                $this->addProduct($arrival, $_product->id, (float)$product['quantity']);
-            } else {
-                $errors[] = $product['code'];
-            }
+            $this->addProduct($arrival,
+                $product['product_id'],
+                $product['quantity'],
+            );
         }
-        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
     public function setProduct(ArrivalProduct $arrivalProduct, float $quantity, float $cost): void

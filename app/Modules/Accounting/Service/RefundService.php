@@ -86,16 +86,12 @@ class RefundService
 
     public function addProducts(RefundDocument $refund, mixed $products): void
     {
-        $errors = [];
         foreach ($products as $product) {
-            $_product = Product::whereCode($product['code'])->first();
-            if (!is_null($_product)) {
-                $this->addProduct($refund, $_product->id, (float)$product['quantity']);
-            } else {
-                $errors[] = $product['code'];
-            }
+            $this->addProduct($refund,
+                $product['product_id'],
+                $product['quantity'],
+            );
         }
-        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
     public function setProduct(RefundProduct $refundProduct, float $quantity): void

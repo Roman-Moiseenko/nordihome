@@ -54,16 +54,11 @@ class PricingService
 
     public function addProducts(PricingDocument $pricing, array $products): void
     {
-        $errors = [];
         foreach ($products as $product) {
-            $_product = Product::whereCode($product['code'])->first();
-            if (!is_null($_product)) {
-                $this->addProduct($pricing, $_product->id);
-            } else {
-                $errors[] = $product['code'];
-            }
+            $this->addProduct($pricing,
+                $product['product_id'],
+            );
         }
-        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
     public function setProduct(PricingProduct $product, array $request): void

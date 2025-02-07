@@ -83,82 +83,49 @@ class SurplusController extends Controller
 
     public function destroy(SurplusDocument $surplus): RedirectResponse
     {
-        try {
-            $this->service->destroy($surplus);
-            return redirect()->back()->with('success', 'Документ удален');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->destroy($surplus);
+        return redirect()->back()->with('success', 'Документ удален');
     }
 
     public function add_product(Request $request, SurplusDocument $surplus): RedirectResponse
     {
-        try {
-            $this->service->addProduct($surplus, $request->integer('product_id'), $request->float('quantity'));
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($surplus, $request->integer('product_id'), $request->float('quantity'));
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function add_products(Request $request, SurplusDocument $surplus): RedirectResponse
     {
-        try {
-            $this->service->addProducts($surplus, $request->input('products'));
-            return redirect()->back()->with('success', 'Товары добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($surplus, $request->input('products'));
+        return redirect()->back()->with('success', 'Товары добавлен');
     }
 
     public function del_product(SurplusProduct $product): RedirectResponse
     {
-        try {
-            $product->delete();
-            return redirect()->back()->with('success', 'Удалено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $product->delete();
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function completed(SurplusDocument $surplus): RedirectResponse
     {
-        try {
-            $this->service->completed($surplus);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-
+        $this->service->completed($surplus);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function work(SurplusDocument $surplus): RedirectResponse
     {
-        try {
-            $this->service->work($surplus);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->work($surplus);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function set_product(Request $request, SurplusProduct $product): RedirectResponse
     {
-        try {
-            $this->service->setProduct($request, $product);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setProduct($request, $product);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function set_info(SurplusDocument $surplus, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($surplus, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($surplus, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 }

@@ -73,20 +73,11 @@ class PromotionService
 
     public function addProducts(Promotion $promotion, array $products): void
     {
-        $errors = [];
         foreach ($products as $product) {
-            $_product = Product::whereCode($product['code'])->first();
-            if (!is_null($_product)) {
-                try {
-                    $this->addProduct($promotion, $_product->id);
-                } catch (\DomainException $e) {
-                    //Глушим вывод уже добавленных товаров
-                }
-            } else {
-                $errors[] = $product['code'];
-            }
+            $this->addProduct($promotion,
+                $product['product_id'],
+            );
         }
-        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
     public function delProduct(Request $request, Promotion $promotion)

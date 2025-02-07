@@ -516,10 +516,8 @@ class OrderService
             $product->name, $quantity . ' шт.', null);
     }
 
-    public function addProducts(Order $order, Request $request): void
+    public function addProducts(Order $order, array $products): void
     {
-        $products = $request->input('products');
-
         foreach ($products as $product) {
             $this->addProduct($order,
                 $product['product_id'],

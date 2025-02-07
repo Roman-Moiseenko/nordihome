@@ -86,64 +86,38 @@ class MovementController extends Controller
 
     public function set_info(MovementDocument $movement, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($movement, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($movement, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function completed(MovementDocument $movement): RedirectResponse
     {
-        try {
-            $this->service->completed($movement);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->completed($movement);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function work(MovementDocument $movement): RedirectResponse
     {
-        try {
-            $this->service->work($movement);
-            return redirect()->back()->with('success', 'Документ в работе');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->work($movement);
+        return redirect()->back()->with('success', 'Документ в работе');
     }
 
     public function destroy(MovementDocument $movement): RedirectResponse
     {
-        try {
-            $this->service->destroy($movement);
-            return redirect()->back()->with('success', 'Документ удален');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-
+        $this->service->destroy($movement);
+        return redirect()->back()->with('success', 'Документ удален');
     }
 
     public function add_product(Request $request, MovementDocument $movement): RedirectResponse
     {
-        try {
-            $this->service->addProduct($movement, $request->integer('product_id'), $request->float('quantity'));
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-
+        $this->service->addProduct($movement, $request->integer('product_id'), $request->float('quantity'));
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function add_products(Request $request, MovementDocument $movement): RedirectResponse
     {
-        try {
-            $this->service->addProducts($movement, $request['products']);
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($movement, $request->input('products'));
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function del_product(MovementProduct $product): RedirectResponse
@@ -154,32 +128,20 @@ class MovementController extends Controller
 
     public function departure(MovementDocument $movement): RedirectResponse
     {
-        try {
-            $this->service->departure($movement);
-            return redirect()->back()->with('success', 'Товар отмечен как в пути');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->departure($movement);
+        return redirect()->back()->with('success', 'Товар отмечен как в пути');
     }
 
     public function arrival(MovementDocument $movement): RedirectResponse
     {
-        try {
-            $this->service->arrival($movement);
-            return redirect()->back()->with('success', 'Товар поступил на склад');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->arrival($movement);
+        return redirect()->back()->with('success', 'Товар поступил на склад');
     }
 
     public function set_product(Request $request, MovementProduct $product): RedirectResponse
     {
-        try {
-            $this->service->setProduct($request, $product);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setProduct($request, $product);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
 }

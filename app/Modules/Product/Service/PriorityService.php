@@ -13,11 +13,10 @@ class PriorityService
         $product->setPriority(true);
     }
 
-    public function setPriorityProducts(array $codes): void
+    public function setPriorityProducts(array $products): void
     {
-        foreach ($codes as $code) {
-            $product = Product::where('code', trim($code))->first();
-            $product->setPriority(true);
+        foreach ($products as $product) {
+            $this->setPriorityProduct($product['product_id']);
         }
     }
 

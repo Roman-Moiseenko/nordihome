@@ -17,6 +17,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+
 class PricingController extends Controller
 {
 
@@ -52,12 +53,8 @@ class PricingController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        try {
-            $pricing = $this->service->create();
-            return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $pricing = $this->service->create();
+        return redirect()->route('admin.accounting.pricing.show', $pricing); //view('admin.accounting.pricing.create');
     }
 
     public function show(PricingDocument $pricing, Request $request)
@@ -71,42 +68,26 @@ class PricingController extends Controller
 
     public function destroy(PricingDocument $pricing): RedirectResponse
     {
-        try {
-            $this->service->destroy($pricing);
-            return redirect()->back()->with('success', 'Удалено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->destroy($pricing);
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function completed(PricingDocument $pricing): RedirectResponse
     {
-        try {
-            $this->service->completed($pricing);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->completed($pricing);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function work(PricingDocument $pricing): RedirectResponse
     {
-        try {
-            $this->service->work($pricing);
-            return redirect()->back()->with('success', 'Документ в работе');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->work($pricing);
+        return redirect()->back()->with('success', 'Документ в работе');
     }
 
     public function set_info(PricingDocument $pricing, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($pricing, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($pricing, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function del_product(PricingProduct $product)
@@ -117,32 +98,20 @@ class PricingController extends Controller
 
     public function add_product(Request $request, PricingDocument $pricing): RedirectResponse
     {
-        try {
-            $this->service->addProduct($pricing, $request->integer('product_id'));
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($pricing, $request->integer('product_id'));
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function add_products(Request $request, PricingDocument $pricing): RedirectResponse
     {
-        try {
-            $this->service->addProducts($pricing, $request->input('products'));
-            return redirect()->back()->with('success', 'Товары добавлены');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($pricing, $request->input('products'));
+        return redirect()->back()->with('success', 'Товары добавлены');
     }
 
     public function set_product(PricingProduct $product, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setProduct($product, $request->all());
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setProduct($product, $request->all());
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function copy(PricingDocument $pricing): RedirectResponse

@@ -413,7 +413,7 @@ class ProductService
         if ($this->common_set->group_last_id > 0 && $product->getQuantity() != 0) {
             /** @var Group $group */
             $group = Group::find($this->common_set->group_last_id);
-            $this->groupService->add_product($group, $product->id);
+            $this->groupService->addProduct($group, $product->id);
         }
 
     }

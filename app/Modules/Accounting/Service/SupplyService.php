@@ -239,17 +239,12 @@ class SupplyService
 
     public function addProducts(SupplyDocument $supply, mixed $products): void
     {
-        $errors = [];
         foreach ($products as $product) {
-            $_product = Product::whereCode($product['code'])->first();
-            if (!is_null($_product)) {
-                $this->addProduct($supply, $_product->id, (float)$product['quantity']);
-            } else {
-                $errors[] = $product['code'];
-            }
+            $this->addProduct($supply,
+                $product['product_id'],
+                $product['quantity'],
+            );
         }
-
-        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
     public function delProduct(SupplyProduct $supplyProduct): void

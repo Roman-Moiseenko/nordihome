@@ -48,41 +48,25 @@ class SeriesController extends Controller
 
     public function add_product(Request $request, Series $series): RedirectResponse
     {
-        try {
-            $this->service->add_product($series, $request->integer('product_id'));
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($series, $request->integer('product_id'));
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function add_products(Request $request, Series $series): RedirectResponse
     {
-        try {
-            $this->service->add_products($series, $request->input('products'));
-            return redirect()->back()->with('success', 'Товары добавлены');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($series, $request->input('products'));
+        return redirect()->back()->with('success', 'Товары добавлены');
     }
 
     public function del_product(Request $request, Series $series): RedirectResponse
     {
-        try {
-            $this->service->remove_product($series, $request->integer('product_id'));
-            return redirect()->back()->with('success', 'Товар удален');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->remove_product($series, $request->integer('product_id'));
+        return redirect()->back()->with('success', 'Товар удален');
     }
 
     public function destroy(Series $series): RedirectResponse
     {
-        try {
-            $this->service->remove($series);
-            return redirect()->back()->with('success', 'Серия удалена');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->remove($series);
+        return redirect()->back()->with('success', 'Серия удалена');
     }
 }

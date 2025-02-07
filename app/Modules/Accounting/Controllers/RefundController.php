@@ -65,52 +65,32 @@ class RefundController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate(['distributor' => 'required',]);
-        try {
-            $refund = $this->service->create($request->integer('distributor_id'));
-            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ создан');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $refund = $this->service->create($request->integer('distributor_id'));
+        return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Документ создан');
     }
 
     public function completed(RefundDocument $refund): RedirectResponse
     {
-        try {
-            $this->service->completed($refund);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->completed($refund);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function work(RefundDocument $refund): RedirectResponse
     {
-        try {
-            $this->service->work($refund);
-            return redirect()->back()->with('success', 'Документ возвращен в работу');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->work($refund);
+        return redirect()->back()->with('success', 'Документ возвращен в работу');
     }
 
     public function set_info(RefundDocument $refund, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($refund, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($refund, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function add_product(RefundDocument $refund, Request $request): RedirectResponse
     {
-        try {
-            $this->service->addProduct($refund, $request->integer('product_id'), $request->float('quantity'));
-            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($refund, $request->integer('product_id'), $request->float('quantity'));
+        return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Товар добавлен');
     }
 
     public function add_products(RefundDocument $refund, Request $request): RedirectResponse
@@ -118,22 +98,14 @@ class RefundController extends Controller
         $request->validate([
             'products' => 'required',
         ]);
-        try {
-            $this->service->addProducts($refund, $request->input('products'));
-            return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Товары добавлены');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($refund, $request->input('products'));
+        return redirect()->route('admin.accounting.refund.show', $refund)->with('success', 'Товары добавлены');
     }
 
     public function set_product(RefundProduct $product, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setProduct($product, $request->float('quantity'));
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setProduct($product, $request->float('quantity'));
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function del_product(RefundProduct $product): RedirectResponse
@@ -144,11 +116,7 @@ class RefundController extends Controller
 
     public function destroy(RefundDocument $refund): RedirectResponse
     {
-        try {
-            $this->service->delete($refund);
-            return redirect()->back()->with('success', 'Документ удален');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->delete($refund);
+        return redirect()->back()->with('success', 'Документ удален');
     }
 }

@@ -127,16 +127,12 @@ class InventoryService
     #[Deprecated]
     public function addProducts(InventoryDocument $inventory, array $products): void
     {
-        $errors = [];
         foreach ($products as $product) {
-            $_product = Product::whereCode($product['code'])->first();
-            if (!is_null($_product)) {
-                $this->addProduct($inventory, $_product->id, (float)$product['quantity']);
-            } else {
-                $errors[] = $product['code'];
-            }
+            $this->addProduct($inventory,
+                $product['product_id'],
+                $product['quantity'],
+            );
         }
-        if (!empty($errors)) throw new \DomainException('Не найдены товары ' . implode(', ', $errors));
     }
 
     public function setProduct(InventoryProduct $product, float $quantity): void

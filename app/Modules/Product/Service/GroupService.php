@@ -19,22 +19,18 @@ class GroupService
         );
     }
 
-    public function add_product(Group $group, int $product_id): void
+    public function addProduct(Group $group, int $product_id): void
     {
         if ($group->isProduct($product_id)) throw new \DomainException('Товар уже добавлен в группу');
             $group->products()->attach($product_id);
     }
 
-    public function add_products(Group $group, string $textarea): void
+    public function addProducts(Group $group, mixed $products): void
     {
-        $list = explode("\r\n", $textarea);
-        foreach ($list as $item) {
-            $product = Product::whereCode($item)->first();
-            if (!is_null($product)) {
-                $this->add_product($group, $product->id);
-            } else {
-                throw new \DomainException('Товар с артикулом ' . $item . ' не найден');
-            }
+        foreach ($products as $product) {
+            $this->addProduct($group,
+                $product['product_id'],
+            );
         }
     }
 

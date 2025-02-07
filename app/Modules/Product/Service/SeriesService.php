@@ -32,7 +32,7 @@ class SeriesService
         Series::destroy($series->id);
     }
 
-    public function add_product(Series $series, int $product_id)
+    public function addProduct(Series $series, int $product_id): void
     {
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -40,10 +40,12 @@ class SeriesService
         $product->save();
     }
 
-    public function add_products(Series $series, array $products)
+    public function addProducts(Series $series, array $products): void
     {
-        foreach ($products as $product_id) {
-            $this->add_product($series, $product_id);
+        foreach ($products as $product) {
+            $this->addProduct($series,
+                $product['product_id'],
+            );
         }
     }
 
