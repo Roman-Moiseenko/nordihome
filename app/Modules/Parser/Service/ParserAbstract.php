@@ -5,6 +5,7 @@ namespace App\Modules\Parser\Service;
 use App\Modules\Base\Service\HttpPage;
 use App\Modules\Base\Service\TranslateService;
 use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Contracts\Support\Arrayable;
@@ -37,7 +38,7 @@ abstract class ParserAbstract
 
     abstract public function remainsProduct(string $code): float;
 
-    abstract public function costProduct(string $code): float;
+    abstract public function parserCost(ProductParser $parser): float;
 
     abstract public function availablePrice(string $code): bool;
 

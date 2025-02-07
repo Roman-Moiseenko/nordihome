@@ -228,13 +228,19 @@ class ParserIkea extends ParserAbstract
         // TODO: Implement remainsProduct() method.
     }
 
-    public function costProduct(string $code): float
+    public function parserCost(ProductParser $parser): float
     {
+        $code = $parser->product->code;
         $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
         $json_product = $this->httpPage->getPage($url, '_cache');
         $_array = json_decode($json_product, true);
 
-        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items'])) return -1;
+        //Товар теперь недоступен
+        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items'])) {
+            $parser->availability = false;
+            $parser->save();
+            return 0;
+        }
 
         $item = $_array['searchResultPage']['products']['main']['items'][0]['product']['salesPrice'];
         $price = $item['numeral'];
@@ -242,13 +248,14 @@ class ParserIkea extends ParserAbstract
             $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
             if ($_previous > (float)$price) $price = $_previous;
         }
-
+        $parser->price_sell = $price;
+        $parser->save();
         return $price;
     }
 
     public function availablePrice(string $code): bool
     {
-        return $this->costProduct($code) > 0;
+        //return $this->parserCost($code) > 0;
     }
 
     private function updateVariants(mixed $product)

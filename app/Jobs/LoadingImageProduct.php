@@ -21,7 +21,6 @@ class LoadingImageProduct implements ShouldQueue
 
     public function __construct(Product $product, string $image_url, string $image_alt = '')
     {
-        //
         $this->product = $product;
         $this->image_url = $image_url;
         $this->image_alt = $image_alt;
@@ -32,7 +31,6 @@ class LoadingImageProduct implements ShouldQueue
      */
     public function handle(): void
     {
-       // Log::info($this->image_url);
         $photo = $this->product->addImageByUrl($this->image_url);
         $this->product->setAlt(photo_id: $photo->id, alt: $this->image_alt);
     }

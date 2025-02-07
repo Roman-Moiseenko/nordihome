@@ -102,7 +102,7 @@ class ParserNB extends ParserAbstract
         // TODO: Implement remainsProduct() method.
     }
 
-    public function costProduct(string $code): float
+    public function parserCost(ProductParser $parser): float
     {
         // TODO: Implement costProduct() method.
     }
