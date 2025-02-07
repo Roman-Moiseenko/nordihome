@@ -13,8 +13,10 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
+use App\Modules\Parser\Service\ParserAbstract;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Bonus;
+use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Composite;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
@@ -72,6 +74,25 @@ class ProductService
 
     public function create(Request $request): Product
     {
+        if ($request->boolean('parser')) {
+
+            $brand = Brand::find($request->integer('brand_id'));
+            $code = $request->string('code')->trim()->value();
+            $category_id = $request->integer('category_id');
+
+            $parser_class = $brand->parser_class;
+            /** @var ParserAbstract $parser */
+            $parser = app()->make($parser_class);
+            //throw new \DomainException($request->input('product'));
+            $product = $parser->findProduct($code);
+            $product->main_category_id = $category_id;
+            $product->save();
+            return $product;
+
+            //throw new \DomainException(json_encode($request->all()));
+
+        }
+
         DB::transaction(function () use ($request, &$product) {
             $arguments = [
                 'pre_order' => $this->common_set->pre_order,

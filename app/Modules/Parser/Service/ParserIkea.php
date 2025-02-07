@@ -151,57 +151,58 @@ class ParserIkea extends ParserAbstract
 
         $data = $this->parsingDataByUrl($url);
         //Создаем товар
-        $product = Product::register($name, $this->toCode($code), $main_category_id);
-        $product->barcode = '';
-        $product->name_print = $product->name;
-        $product->local = true;
-        $product->delivery = true;
-        $product->brand_id = $this->brand->id;
-        $product->country_id = Country::where('name', 'Польша')->first()->id;
-        $product->vat_id = VAT::where('value', null)->first()->id;
-        $product->measuring_id = Measuring::where('name', 'шт')->first()->id;
-        $product->short = $data['description'];
-        foreach ($data['packages'] as $item) {
-            $product->packages->add($item);
-        }
-        $product->save();
-        //Проверяем есть ли товары в составе
-        foreach ($data['composite'] as $composite) {
-            $_prod = $this->findProduct($composite['code']);
-            $product->composites()->attach($_prod, ['quantity' => $composite['quantity']]);
-        }
-
-        //Создаем парсер товара
-        $product_parser = ProductParser::register($url, $product->id);
-        $product_parser->maker_id = $maker_id;
-        $product_parser->price_base = $price_base;
-        $product_parser->price_sell = $price_sell;
-        //Данные о наличии
-        //$product_parser->data = $data;
-        $product_parser->save();
-        if (isset($product_data['parser_category_id'])) $product_parser->categories()->attach($product_data['parser_category_id']);
-
-        if (isset($product_data['categoryPath'])) {
-            $code_categories = array_map(function ($item) {
-                return $item['key'];
-            }, $product_data['categoryPath']);
-            /** @var CategoryParser[] $parser_categories */
-            $parser_categories = array_filter(array_map(function ($item) {
-                return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item)->where('active', true)->first();
-            }, $code_categories));
-            foreach ($parser_categories as $category) //Назначаем категории
-                $product_parser->categories()->attach($category);
-        }
-
-
-
-        //dd(1);
-        if (true) {
+        if (is_null($product = Product::whereCode($code)->first())) {
+            $product = Product::register($name, $this->toCode($code), $main_category_id);
+            $product->barcode = '';
+            $product->name_print = $product->name;
+            $product->local = true;
+            $product->delivery = true;
+            $product->brand_id = $this->brand->id;
+            $product->country_id = Country::where('name', 'Польша')->first()->id;
+            $product->vat_id = VAT::where('value', null)->first()->id;
+            $product->measuring_id = Measuring::where('name', 'шт')->first()->id;
+            $product->short = $data['description'];
+            foreach ($data['packages'] as $item) {
+                $product->packages->add($item);
+            }
+            $product->save();
+            //Проверяем есть ли товары в составе
+            foreach ($data['composite'] as $composite) {
+                $_prod = $this->findProduct($composite['code']);
+                $product->composites()->attach($_prod, ['quantity' => $composite['quantity']]);
+            }
             //Парсинг Фото
             LoadingImageProduct::dispatch($product, $image, $name, true); //Главное фото
             foreach ($data['images'] as $image_url) {
                 LoadingImageProduct::dispatch($product, $image_url, $name, true);
             }
+        }
+        //Создаем парсер товара
+
+        if (is_null($product_parser = ProductParser::where('url', $url)->first())) {
+            $product_parser = ProductParser::register($url, $product->id);
+            $product_parser->maker_id = $maker_id;
+            $product_parser->price_base = $price_base;
+            $product_parser->price_sell = $price_sell;
+            //Данные о наличии
+            //$product_parser->data = $data;
+            $product_parser->save();
+            if (isset($product_data['parser_category_id'])) $product_parser->categories()->attach($product_data['parser_category_id']);
+
+            if (isset($product_data['categoryPath'])) {
+                $code_categories = array_map(function ($item) {
+                    return $item['key'];
+                }, $product_data['categoryPath']);
+                /** @var CategoryParser[] $parser_categories */
+                $parser_categories = array_filter(array_map(function ($item) {
+                    return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item)->where('active', true)->first();
+                }, $code_categories));
+                foreach ($parser_categories as $category) //Назначаем категории
+                    $product_parser->categories()->attach($category);
+            }
+        } else {
+            $product_parser->product_id = $product->id;
+            $product_parser->save();
         }
 
         return $product;

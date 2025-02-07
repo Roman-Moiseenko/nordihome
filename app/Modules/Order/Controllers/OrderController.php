@@ -108,8 +108,6 @@ class OrderController extends Controller
         return Inertia::render('Order/Order/Log', [
             'order' => $this->repository->OrderLogToArray($order),
         ]);
-
-       // return view('admin.order.log', compact('order'));
     }
 
     //Документы
@@ -151,7 +149,6 @@ class OrderController extends Controller
         $order = $this->service->copy($order);
         return redirect()->route('admin.order.show', $order);
     }
-
 
     /** СМЕНА СОСТОЯНИЯ (СТАТУСА) ЗАКАЗА */
     public function take(Order $order): RedirectResponse

@@ -474,6 +474,7 @@ class OrderService
             $quantity = $product->getQuantitySell(); //в наличии
         }
 
+
         $last_price = $product->getPrice(false, $order->user);
         if ($quantity > 0) {
             $orderItem = OrderItem::new($product, $quantity, false);
@@ -497,7 +498,17 @@ class OrderService
         if ($quantity_preorder > 0) {
             $orderItemPre = OrderItem::new($product, $quantity_preorder, true);
             $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
-            if ($pre_price == 0) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
+            if ($last_price == 0) {
+                //TODO Высчитываем цену по парсеру Доп.наценка и другое
+                $parser = $product->parser;
+                if (is_null($parser)) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
+
+                $last_price = ceil($parser->price_sell * $product->brand->currency->exchange * (1  + $product->brand->currency->extra / 100));
+                //$parser->price_sell;
+                $pre_price = $last_price;
+            }
+
+                //
             $orderItemPre->setCost($last_price, $pre_price);
             $orderItemPre->assemblage = $assemblage;
             $orderItemPre->packing = $packing;

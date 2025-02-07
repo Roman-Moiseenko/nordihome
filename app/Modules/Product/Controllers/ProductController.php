@@ -103,18 +103,24 @@ class ProductController extends Controller
 
     public function fast_create(Request $request): JsonResponse
     {
-        $product = $this->service->create($request);
-        if ($request->integer('price') > 0) {
-            $product->pricesRetail()->create([
-                'value' => $request->integer('price'),
-                'founded' => 'Создано из заказа',
-            ]);
-            $product->pricesPre()->create([
-                'value' => $request->integer('price'),
-                'founded' => 'Создано из заказа',
-            ]);
+        try {
+            $product = $this->service->create($request);
+
+            if ($request->integer('price') > 0) {
+                $product->pricesRetail()->create([
+                    'value' => $request->integer('price'),
+                    'founded' => 'Создано из заказа',
+                ]);
+                $product->pricesPre()->create([
+                    'value' => $request->integer('price'),
+                    'founded' => 'Создано из заказа',
+                ]);
+            }
+            return response()->json(['product_id' => $product->id]);
+        } catch (\Throwable $e) {
+            return response()->json([$e->getMessage()]);
         }
-        return response()->json($product->id);
+
     }
 
     public function show(Product $product): Response

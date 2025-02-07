@@ -19,7 +19,7 @@ use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
-use App\Modules\Shop\Parser\ProductParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
 use App\Modules\User\Entity\User;
@@ -388,19 +388,20 @@ class Product extends Model
         } else {
             $weight = $this->packages->weight();
         }
-        return $weight;
+        return ceil($weight * 1000) /1000;
     }
 
     public function volume(): float|int
     {
-        $weight = 0;
+        $volume = 0;
         if ($this->composites()->count() > 0) {
             foreach ($this->composites as $composite)
-                $weight += $composite->volume() * $composite->pivot->quantity;
+                $volume += $composite->volume() * $composite->pivot->quantity;
         } else {
-            $weight = $this->packages->volume();
+            $volume = $this->packages->volume();
         }
-        return $weight;
+
+        return ceil($volume * 10000) / 10000;
     }
 
     public function getSlug(): string

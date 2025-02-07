@@ -18,9 +18,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property float $price_base
  * @property float $price_sell
  *
+ * удалить ----
  * @property bool $fragile - Хрупкий, может влиять на стоимость доставки
  * @property bool $sanctioned - Санкционный, может влиять на стоимость доставки
  * @property bool $availability - Можно или нет возить под заказ
+ * -----
  *
  * @property array $composite список id товаров входящих в состав
  * @property array $quantity  Кол-во на складах
@@ -45,7 +47,8 @@ class ProductParser extends Model
         'data' => 'json',
         'composite' => 'json',
         'quantity' => 'json',
-
+        'price_base' => 'float',
+        'price_sell' => 'float',
     ];
 
     protected $fillable = [

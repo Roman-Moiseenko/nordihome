@@ -25,7 +25,9 @@
                 <el-descriptions-item label="Класс Парсера">
                     {{ brand.parser_class }}
                 </el-descriptions-item>
-
+                <el-descriptions-item v-if="brand.currency" label="Валюта парсера">
+                    {{ brand.currency.name }}
+                </el-descriptions-item>
             </el-descriptions>
         </el-col>
     </el-row>
@@ -46,7 +48,11 @@
                         <el-option v-for="item in parsers" :key="item.value" :value="item.value" :label="item.label" />
                     </el-select>
                 </el-form-item>
-
+                <el-form-item label="Валюта">
+                    <el-select v-model="info.currency_id">
+                        <el-option v-for="item in currencies" :key="item.id" :value="item.id" :label="item.name" />
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="Описание">
                     <el-input v-model="info.description" type="textarea" :rows="3" />
                 </el-form-item>
@@ -88,6 +94,7 @@ import HelpBlock from "@Comp/HelpBlock.vue";
 const props = defineProps({
     brand: Object,
     parsers: Array,
+    currencies: Array,
 })
 const iSavingInfo = ref(false)
 const info = reactive({
@@ -96,6 +103,7 @@ const info = reactive({
     url: props.brand.url,
     parser_class: props.brand.parser_class,
     sameAs: props.brand.sameAs,
+    currency_id: props.brand.currency_id,
     file: null,
     clear_file: false,
 })

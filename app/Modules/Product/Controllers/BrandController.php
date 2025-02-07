@@ -5,6 +5,7 @@ namespace App\Modules\Product\Controllers;
 
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Parser\Service\ParserAbstract;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Repository\BrandRepository;
@@ -56,6 +57,7 @@ class BrandController extends Controller
         return Inertia::render('Product/Brand/Show', [
             'brand' => $this->repository->BrandWithToArray($brand, $request),
             'parsers' => array_select(ParserAbstract::PARSERS),
+            'currencies' => Currency::getModels(),
         ]);
     }
 
@@ -85,6 +87,7 @@ class BrandController extends Controller
             return [
                 'id' => $brand->id,
                 'name' => $brand->name,
+                'parser' => $brand->parser_class,
             ];
         });
         return response()->json($list);

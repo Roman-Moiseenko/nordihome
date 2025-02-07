@@ -3,7 +3,7 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Бренд товаров {{ brand.name }}</h1>
         <div class="p-5 bg-white rounded-md">
-            <BrandInfo :brand="brand" :parsers="parsers"/>
+            <BrandInfo :brand="brand" :parsers="parsers" :currencies="currencies"/>
         </div>
         <div class="p-5 bg-white rounded-md">
             <el-table
@@ -41,7 +41,7 @@ const props = defineProps({
         type: String,
         default: 'Карточка бренда товаров',
     },
-
+    currencies: Array,
 })
 const store = useStore();
 const tableData = ref([...props.brand.products.data])

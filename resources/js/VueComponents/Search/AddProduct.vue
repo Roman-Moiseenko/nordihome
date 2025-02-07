@@ -44,9 +44,12 @@
                 <el-input v-model="formCreate.code" />
             </el-form-item>
             <el-form-item label="Бренд">
-                <el-select v-model="formCreate.brand_id" filterable>
+                <el-select v-model="formCreate.brand_id" filterable @change="selectBrand">
                     <el-option v-for="item in brands" :value="item.id" :label="item.name"/>
                 </el-select>
+            </el-form-item>
+            <el-form-item v-if="showParser" label="Спарсить товар">
+                <el-checkbox v-model="formCreate.parser" :checked="formCreate.parser" />
             </el-form-item>
             <el-form-item label="Категория">
                 <el-select v-model="formCreate.category_id" filterable>
@@ -136,14 +139,12 @@ interface ListItem {
 }
 const options = ref<ListItem[]>([])
 const loading = ref(false)
-
 const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
         axios.post(props.search, {search: query}).then(response => {
-            console.log('response', response)
+            //console.log('response', response)
             if (response.data.error !== undefined) console.log(response.data.error)
-
             options.value = response.data
             loading.value = false
         }).catch(reason => {
@@ -188,18 +189,19 @@ function onAdd() {
 }
 
 //Доб.товара ===>
+const showParser = ref(false)
 const dialogCreate = ref(false)
 const formCreate = reactive({
     name: null,
     code: null,
     brand_id: null,
     category_id: null,
+    parser: false,
 })
 interface ISelect {
     id: Number,
     name: String,
 }
-
 const brands = ref<ISelect[]>([]);
 const categories = ref<ISelect[]>([]);
 
@@ -223,14 +225,32 @@ function createProduct() {
     } else {
         dialogCreate.value = true
     }
-
 }
 function storeProduct() {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Идет создание товара',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     axios.post(route('admin.product.fast-create'), formCreate).then(response => {
-        form.product_id = response.data
-        onAdd()
+        if (response.data.product_id === undefined) {
+            form.product_id = null
+            console.log(response.data)
+        } else {
+            form.product_id = response.data.product_id
+            onAdd()
+        }
+
         dialogCreate.value = false
+        loading.close()
     });
+}
+function selectBrand(){
+    showParser.value = false
+    brands.value.forEach(function (item) {
+        if (formCreate.brand_id === item.id && item.parser)
+            showParser.value = true
+    })
 }
 //<============
 </script>
