@@ -129,12 +129,12 @@ class Product extends Model
 {
     use SoftDeletes, GalleryField;
 
-    const FREQUENCY_MAJOR = 101;
-    const FREQUENCY_AVERAGE = 102;
-    const FREQUENCY_SMALL = 103;
-    const FREQUENCY_PERIOD = 104;
-    const FREQUENCY_NOT = 105;
-    const FREQUENCIES = [
+    const int FREQUENCY_MAJOR = 101;
+    const int FREQUENCY_AVERAGE = 102;
+    const int FREQUENCY_SMALL = 103;
+    const int FREQUENCY_PERIOD = 104;
+    const int FREQUENCY_NOT = 105;
+    const array FREQUENCIES = [
         self::FREQUENCY_MAJOR => 'Крупная покупка (от 3 лет)',
         self::FREQUENCY_AVERAGE => 'Средняя покупка (1-3 года)',
         self::FREQUENCY_SMALL => 'Ходовой товар, с небольшим сроком пользования',

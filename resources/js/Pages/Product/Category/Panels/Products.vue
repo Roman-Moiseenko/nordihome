@@ -34,6 +34,6 @@ const props = defineProps({
     category: Object,
 })
 function routeClick(row) {
-    router.get(route('admin.product.show', {product: row.id}))
+    router.get(route('admin.product.edit', {product: row.id}))
 }
 </script>

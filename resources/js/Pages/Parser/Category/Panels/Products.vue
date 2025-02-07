@@ -30,6 +30,6 @@ const props = defineProps({
 })
 function routeClick(row) {
     //TODO
-    // router.get(route('admin.parser.product.show', {product: row.id}))
+    router.get(route('admin.product.edit', {product: row.product_id}))
 }
 </script>

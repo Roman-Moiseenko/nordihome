@@ -92,7 +92,7 @@ class ParserNB extends ParserAbstract
     }
 
 
-    public function findProduct(string $search): Product
+    public function findProduct(string $search):? Product
     {
         // TODO: Implement findProduct() method.
     }
@@ -112,8 +112,14 @@ class ParserNB extends ParserAbstract
         // TODO: Implement availablePrice() method.
     }
 
+    protected function parserProductsByCategory(CategoryParser $categoryParser)
+    {
+        $domain = $categoryParser->brand->url;
+        $url = $categoryParser->url;
+        return $this->parserProductsByUrl($domain, $url);
+    }
 
-    protected function parserProductsByUrl(string $domain, string $url, bool $is_first_page = true)
+    private function parserProductsByUrl(string $domain, string $url, bool $is_first_page = true)
     {
         $url = $domain . '/' . $url;
         $data = $this->httpPage->getPage($url);

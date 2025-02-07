@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
- * @property int $maker_id id в магазине Бренда
+ * @property string $maker_id id в магазине Бренда
  * @property int $product_id
  * @property string $url
  * @property string $model используется для поиска товара в базе, совместно с maker_id

@@ -33,7 +33,7 @@ abstract class ParserAbstract
         $this->translate = $translate;
     }
 
-    abstract public function findProduct(string $search): Product;
+    abstract public function findProduct(string $search):? Product;
 
     abstract public function remainsProduct(string $code): float;
 
@@ -61,17 +61,18 @@ abstract class ParserAbstract
         foreach ($categories as $category) {
             if ($category->children()->count() == 0) //Парсим только дочерние
                 $products = array_merge($products,
-                    $this->parserProductsByUrl($this->brand->url, $category->url)
+                    $this->parserProductsByCategory($category)
                 );
 
         }
         return $products;
     }
-
     /**
-     * Функция поиска данных для товаров по урлу
+     * Функция поиска данных для товаров по категории парсера
      */
-    abstract protected function parserProductsByUrl(string $domain, string $url);
+    abstract protected function parserProductsByCategory(CategoryParser $categoryParser);
+
+    //abstract protected function parserProductsByUrl(string $domain, string $url);
 
     //Функция распарсивания товара по найденным данным
     abstract public function parserProductByData(array $product): void;

@@ -13,6 +13,7 @@ use App\Modules\Guide\Entity\VAT;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Product\Entity\Brand;
+use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Support\Facades\Log;
 
@@ -60,19 +61,20 @@ class ParserIkea extends ParserAbstract
             }
     }
 
-
-    protected function parserProductsByUrl(string $domain, string $url): array
+    protected function parserProductsByCategory(CategoryParser $categoryParser)
     {
-        $category = $url;
+        $code_category = $categoryParser->url;
+        $main_category_id = $categoryParser->category_id;
+        $parser_category = $categoryParser->id;
         $products = [];
         $start = 0;
         $end = 1000;
         do {
-            $_url = sprintf(self::API_URL_PRODUCTS, $category, $start, $end);
+            $_url = sprintf(self::API_URL_PRODUCTS, $code_category, $start, $end);
             $json_product = $this->httpPage->getPage($_url);
             if (!is_null($json_product)) {
                 $_array = json_decode($json_product, true);
-                $list =  $_array['moreProducts']['productWindow'];
+                $list = $_array['moreProducts']['productWindow'];
             } else {
                 $list = [];
             }
@@ -80,10 +82,18 @@ class ParserIkea extends ParserAbstract
             $start += 1000;
             $end += 1000;
         } while (count($list) == 1000);
-       // return $products;
+/*
+        return array_map(function ($item) use ($main_category_id, $parser_category) {
+            $item['main_category_id'] = $main_category_id;
+            $item['parser_category_id'] = $parser_category;
+            return $item;
+
+        }, $products);
+        */
         // dd($products);
         //TODO Убрать когда заработает через axios
 
+        set_time_limit(10000);
         foreach ($products as $product) {
             //dd($product);
             //Ищем товар в базе по Id
@@ -92,22 +102,125 @@ class ParserIkea extends ParserAbstract
             if (!is_null($parser_product)) {
                 $this->updateVariants($product);
             } else {
-                $this->createProduct($product);
+                $product['main_category_id'] = $main_category_id;
+                $product['parser_category_id'] = $parser_category;
+                \DB::transaction(function () use ($product) {
+                    $this->createProduct($product);
+                });
             }
         }
+        set_time_limit(30);
         return $products;
-
     }
+
+
+    private function createProduct(mixed $product_data): Product
+    {
+
+        $maker_id = $product_data['id'];
+        $name = $product_data['name'] . ' ' . $product_data['typeName'];
+        $url = $product_data['pipUrl'];
+        $code = $product_data['itemNoGlobal'];
+        $price_sell = $product_data['salesPrice']['numeral'];
+        $price_base = $price_sell;
+        $image = $product_data['mainImageUrl'] ?? '';
+
+        $name = $this->translate->translate($name);
+
+        //Проверяем, была ли предыдущая цена.
+        if (isset($product_data['salesPrice']['lowestPreviousSalesPrice'])) {
+            $price_base = (float)(str_replace(' ', '', $product_data['salesPrice']['lowestPreviousSalesPrice']['wholeNumber']) . '.' . $product_data['salesPrice']['lowestPreviousSalesPrice']['decimals']);
+            if ($price_base > (float)$price_sell) $price_sell = $price_base;
+        }
+        $colors = [];
+        if (isset($product_data['colors'])) $colors = array_map(function ($item) {
+            return $item['name'];
+        }, $product_data['colors']);
+        /*  foreach ($colors as $color) {
+
+          }*/
+
+
+
+        if (isset($product_data['main_category_id'])) {
+            $main_category_id = $product_data['main_category_id'];
+        } else {
+            $main_category_id = Category::where('slug', 'temp')->first()->id;
+        }
+        if ($main_category_id == null) throw new \DomainException('Не верная главная категория');
+
+        $data = $this->parsingDataByUrl($url);
+        //Создаем товар
+        $product = Product::register($name, $this->toCode($code), $main_category_id);
+        $product->barcode = '';
+        $product->name_print = $product->name;
+        $product->local = true;
+        $product->delivery = true;
+        $product->brand_id = $this->brand->id;
+        $product->country_id = Country::where('name', 'Польша')->first()->id;
+        $product->vat_id = VAT::where('value', null)->first()->id;
+        $product->measuring_id = Measuring::where('name', 'шт')->first()->id;
+        $product->short = $data['description'];
+        foreach ($data['packages'] as $item) {
+            $product->packages->add($item);
+        }
+        $product->save();
+        //Проверяем есть ли товары в составе
+        foreach ($data['composite'] as $composite) {
+            $_prod = $this->findProduct($composite['code']);
+            $product->composites()->attach($_prod, ['quantity' => $composite['quantity']]);
+        }
+
+        //Создаем парсер товара
+        $product_parser = ProductParser::register($url, $product->id);
+        $product_parser->maker_id = $maker_id;
+        $product_parser->price_base = $price_base;
+        $product_parser->price_sell = $price_sell;
+        //Данные о наличии
+        //$product_parser->data = $data;
+        $product_parser->save();
+        if (isset($product_data['parser_category_id'])) $product_parser->categories()->attach($product_data['parser_category_id']);
+
+        if (isset($product_data['categoryPath'])) {
+            $code_categories = array_map(function ($item) {
+                return $item['key'];
+            }, $product_data['categoryPath']);
+            /** @var CategoryParser[] $parser_categories */
+            $parser_categories = array_filter(array_map(function ($item) {
+                return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item)->where('active', true)->first();
+            }, $code_categories));
+            foreach ($parser_categories as $category) //Назначаем категории
+                $product_parser->categories()->attach($category);
+        }
+
+
+
+        //dd(1);
+        if (true) {
+            //Парсинг Фото
+            LoadingImageProduct::dispatch($product, $image, $name, true); //Главное фото
+            foreach ($data['images'] as $image_url) {
+                LoadingImageProduct::dispatch($product, $image_url, $name, true);
+            }
+        }
+
+        return $product;
+    }
+
 
     public function parserProductByData(array $product): void
     {
-        // TODO: Implement parserProductByData() method.
+        $parser_product = ProductParser::where('maker_id', $product['id'])->first();
+        //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
+        if (!is_null($parser_product)) {
+            $this->updateVariants($product);
+        } else {
+            \DB::transaction(function () use ($product) {
+                $this->createProduct($product);
+            });
+        }
     }
 
-    public function findProduct(string $search): Product
-    {
-        // TODO: Implement findProduct() method.
-    }
 
     public function remainsProduct(string $code): float
     {
@@ -116,153 +229,51 @@ class ParserIkea extends ParserAbstract
 
     public function costProduct(string $code): float
     {
-        // TODO: Implement costProduct() method.
+        $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
+        $json_product = $this->httpPage->getPage($url, '_cache');
+        $_array = json_decode($json_product, true);
+
+        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items'])) return -1;
+
+        $item = $_array['searchResultPage']['products']['main']['items'][0]['product']['salesPrice'];
+        $price = $item['numeral'];
+        if (isset($item['previous'])) {
+            $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
+            if ($_previous > (float)$price) $price = $_previous;
+        }
+
+        return $price;
     }
 
     public function availablePrice(string $code): bool
     {
-        // TODO: Implement availablePrice() method.
+        return $this->costProduct($code) > 0;
     }
 
     private function updateVariants(mixed $product)
     {
     }
 
-    private function createProduct(mixed $product): void
+
+    public function findProduct(string $search): ?Product
     {
-        $maker_id = $product['id'];
-        $name = $product['name'] . ' ' . $product['typeName'];
-        $url = $product['pipUrl'];
-        $code = $product['itemNoGlobal'];
-        $price_sell = $product['salesPrice']['numeral'];
-        $price_base = $price_sell;
-        $image = $product['mainImageUrl'] ?? '';
-
-        $name = $this->translate->translate($name);
-
-        //Проверяем, была ли предыдущая цена.
-        if (isset($product['salesPrice']['lowestPreviousSalesPrice'])) {
-            $price_base = (float)(str_replace(' ', '', $product['salesPrice']['lowestPreviousSalesPrice']['wholeNumber']) . '.' . $product['salesPrice']['lowestPreviousSalesPrice']['decimals']);
-            if ($price_base > (float)$price_sell) $price_sell = $price_base;
-        }
-        $color = [];
-        if (isset($product['colors'])) $color = array_map(function ($item) { return $item['name'];}, $product['colors']);
-        $_categories = array_map(function ($item) { return $item['key'];}, $product['categoryPath']);
-
-
-        $parser_categories = array_filter(array_map(function ($item) {
-            return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item)->where('active', true)->first();
-        }, $_categories));
-
-        /** @var CategoryParser[] $parser_categories */
-        $main_category = $parser_categories[count($parser_categories) - 1]->category; //Последняя главная
-
-//        dd($parser_categories);
-
-        $data = $this->parsingDataByUrl($url);
-
-        //Создаем товар
-        $_product = Product::register($name, $this->toCode($code), $main_category->id);
-
-        //$_product->model = $model;
-        $_product->barcode = '';
-        $_product->name_print = $_product->name;
-        $_product->local = true;
-        $_product->delivery = true;
-
-        $_product->brand_id = $this->brand->id;
-        $_product->country_id = Country::where('name', 'Польша')->first()->id;
-        $_product->vat_id = VAT::where('value', null)->first()->id;
-        $_product->measuring_id = Measuring::where('name', 'шт')->first()->id;
-        //$_product->marking_type_id = MarkingType::whereRaw("LOWER(name) like '%одежда%'")->first()->id;
-
-        $_product->short = $_product['description'];
-        foreach ($_product['packages'] as $item) {
-            $product->packages->add($item);
-        }
-
-        $product->save();
-
-
-        //Проверяем есть ли товары в составе
-        foreach ($_product['composite'] as $composite) {
-            $_prod = $this->findProduct($composite['code']);
-            $product->composites()->attach($_prod, ['quantity' => $composite['quantity']]);
-        }
-
-
-        $_product->save();
-
-        //Создаем парсер товара
-
-        $product_parser = ProductParser::register($url, $_product->id);
-        $product_parser->maker_id = $maker_id;
-        //$product_parser->model = $model;
-        $product_parser->price_base = $price_base;
-        $product_parser->price_sell = $price_sell;
-        $product_parser->data = $data;
-        $product_parser->save();
-        foreach ($parser_categories as $category) //Назначаем категории
-            $product_parser->categories()->attach($category);
-
-        dd(1);
-        //Парсинг Фото
-        LoadingImageProduct::dispatch($_product, $image, $name, true); //Главное фото
-        foreach ($data['images'] as $image_url) {
-            LoadingImageProduct::dispatch($_product, $image_url, $name, true);
-        }
-
-      //  dd([$image, $data['images']]);
-    }
-
-    public function parsingData(string $code)
-    {
-        $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
+        $url = sprintf(self::API_URL_PRODUCT, $search); //API для поиска товара
         $json_product = $this->httpPage->getPage($url, '_cache');
         if ($json_product == null) {
-            Log::error('Икеа Парсинг ' . $code . ' null');
+            Log::error('Икеа Парсинг ' . $search . ' null');
             return null;
         }
         $_array = json_decode($json_product, true);
-
-        if ($_array == null){
-            Log::error('Икеа Парсинг ' . $code . ' null');
+        if ($_array == null) {
+            Log::error('Икеа Парсинг ' . $search . ' null');
             return null;
         }
-        if (empty($_array['searchResultPage']['products']['main']['items']))
-        {
-            Log::error('Икеа Парсинг ' . $code . ' empty($_array[searchResultPage][products][main][items])');
+        if (empty($_array['searchResultPage']['products']['main']['items'])) {
+            Log::error('Икеа Парсинг ' . $search . ' empty($_array[searchResultPage][products][main][items])');
             return null;
         }
         $item = $_array['searchResultPage']['products']['main']['items'][0]['product'];
-        //TODO Вынести отдельно
-
-        //Парсим первычный JSON
-        $name = $item['name'] . ' ' . $item['typeName']; ;
-        $link = $item['pipUrl'];
-        $image = $item['mainImageUrl'] ?? '';
-        $price = $item['salesPrice']['numeral'];
-
-        //Проверяем, была ли предыдущая цена.
-        if (isset($item['salesPrice']['lowestPreviousSalesPrice'])) {
-            $_previous = (float)(str_replace(' ', '', $item['salesPrice']['lowestPreviousSalesPrice']['wholeNumber']) . '.' . $item['salesPrice']['lowestPreviousSalesPrice']['decimals']);
-            if ($_previous > (float)$price) $price = $_previous;
-        }
-
-        $color = [];
-        if (isset($product['colors'])) $color = array_map(function ($item) { return $item['name'];}, $product['colors']);
-        $_categories = array_map(function ($item) { return $item['key'];}, $product['categoryPath']);
-
-
-        $parser_categories = array_filter(array_map(function ($item) {
-            return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item)->where('active', true)->first();
-        }, $_categories));
-
-        /** @var CategoryParser[] $parser_categories */
-        $main_category = $parser_categories[count($parser_categories) - 1]->category; //Последняя главная
-
-
-        return $this->parsingDataByUrl($link);
+        return $this->createProduct($item);
     }
 
     public function parsingDataByUrl(string $url): array|null
@@ -273,7 +284,6 @@ class ParserIkea extends ParserAbstract
         $_res = $res[1][0];
         $_res = str_replace('&quot;', '"', $_res);
         $_data = json_decode($_res, true);
-
         ////Определяем есть ли составные артикулы
         $_sub = $_data['stockcheckSection']['subProducts']; //availabilityHeaderSection
 
@@ -314,7 +324,7 @@ class ParserIkea extends ParserAbstract
             if ($item['type'] == 'image' && $item['content']['type'] != 'MAIN_PRODUCT_IMAGE')
                 $images[] = $item['content']['url'];
         }
-       // return $images;
+        // return $images;
 
         return [
             'description' => $description,

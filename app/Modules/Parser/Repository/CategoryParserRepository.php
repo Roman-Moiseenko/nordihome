@@ -39,6 +39,7 @@ class CategoryParserRepository
             'products' => $category->products()->get()->map(function (ProductParser $product) {
                 return array_merge($product->toArray(), [
                     'name' => $product->product->name,
+                    'code' => $product->product->code,
                 ]);
             }),
         ]);
