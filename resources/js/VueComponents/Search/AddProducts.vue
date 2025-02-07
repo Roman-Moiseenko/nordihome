@@ -111,7 +111,7 @@ function onUpload() {
         method: "post",
         data: {products: products.value,},
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             disabledUnload.value = false
             uploadDialog.value = false
