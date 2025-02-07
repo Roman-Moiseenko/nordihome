@@ -23,9 +23,18 @@ class CategoryParserService
 
     public function setCategory(CategoryParser $category, Request $request): void
     {
-        $category->category_id = $request->input('category_id');
-        $category->save();
+        $categories = CategoryParser::where('_lft', '>=', $category->_lft)->where('_rgt', '<=', $category->_rgt)->get();
+        foreach ($categories as $category) {
+            if (is_null($category->category_id)) {
+                $category->category_id = $request->input('category_id');
+                $category->save();
+            }
+        }
+        //$category->category_id = $request->input('category_id');
+        //$category->save();
     }
+
+
 
     public function parserProduct(CategoryParser $category, Request $request): void
     {
