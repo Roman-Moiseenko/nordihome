@@ -768,12 +768,33 @@ class ProductService
     public function published(Product $product): void
     {
         //TODO Проверка на заполнение и на модерацию - добавить другие проверки
-        if ($product->getPriceRetail() == 0) throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
 
-        if ($product->gallery()->count() == 0) {
+        if ($product->getPriceRetail() == 0) {
+            //Для товара не задана цена
+            if (is_null($product->modification) && is_null($product->parser)) {
+                //у товара нет модификации и нет товара из парсера
+                throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
+            } else {
+                if (is_null($product->modification->base_product->parser) &&
+                    $product->modification->base_product->getPriceRetail() == 0
+                ) {
+                    //В базовом товаре модификации нет цены или нет парсера
+                    throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
+                }
+            }
+        }
+
+            //throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
+
+        if ($product->photos()->count() == 0) {
             throw new \DomainException('Для товара ' . $product->name . ' нет изображений');
         }
         $product->setPublished();
+        if (!is_null($product->modification) && ($product->modification->base_product_id == $product->id)) {
+            foreach ($product->modification->products as $_product) {
+                $_product->setPublished();
+            }
+        }
     }
 
     public function draft(Product $product): void

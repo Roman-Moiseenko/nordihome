@@ -33,7 +33,7 @@ class ShopRepository
         $this->web = $settingRepository->getWeb();
     }
 
-    public function getProductBySlug($slug):? Product
+    public function getProductBySlug($slug): ?Product
     {
         if (is_numeric($slug)) return Product::findOrFail($slug);
         return Product::where('slug', '=', $slug)->first();
@@ -84,7 +84,7 @@ class ShopRepository
             default => $query->orderBy('name', 'asc'),
         };
 
-       // $query = Product::orderBy('name');
+        // $query = Product::orderBy('name');
 
         ///Фильтрация по $request
 
@@ -197,13 +197,34 @@ class ShopRepository
             return $query->get();
         }
     */
-    public function ProductsByCategory(int $id)
+    public function ProductsByCategory(Category $category)
     {
 
-        $query = Product::where('published', true);
-        //TODO Показывать товары снятые с продажи?
-        // $query->where('not_sale', false);
+        $lft = $category->_lft;
+        $rgt = $category->_rgt;
+        // dd($category);
 
+
+        $query = Product::where('published', true) //Опубликован AND
+            ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND
+                $query->whereHas('category', function ($query) use ($lft, $rgt) {
+                    $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
+                })->orWhereHas('categories', function ($query) use ($lft, $rgt) {
+                    $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
+                });
+            })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
+                $query->doesntHave('modification')->orHas('main_modification');
+            });
+
+        /*       $query = Product::where('published', true)->has('main_modification')
+                   ->whereHas('main_modification', function ($query) use ($lft, $rgt) {
+
+               });
+       */
+        //TODO Выбрать дочерние категории
+
+
+        /*
         $query->where(function ($_query) use ($id) {
             $_query->where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {
                 $query->whereHas('categories', function ($_query) use ($id) {
@@ -211,7 +232,7 @@ class ShopRepository
                 });
             });
         });
-
+*/
 
         //Предзаказ
         //TODO Фильтр по наличию ????
@@ -221,7 +242,7 @@ class ShopRepository
 
     ////КАТЕГОРИИ
     ///
-    public function CategoryBySlug($slug):? Category
+    public function CategoryBySlug($slug): ?Category
     {
         if (is_numeric($slug)) {
             $category = Category::find($slug);

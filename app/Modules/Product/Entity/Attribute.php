@@ -6,6 +6,7 @@ namespace App\Modules\Product\Entity;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $group_id
  * @property string $name
  * @property AttributeGroup $group
+ * @property Product[] $products
  * @property Category[] $categories
  * @property int $type
  * @property AttributeVariant[] $variants
@@ -32,7 +34,7 @@ class Attribute extends Model
     const TYPE_FLOAT = 105;
     const TYPE_DATE = 106;
 
-    const ATTRIBUTES = [
+    const array ATTRIBUTES = [
         self::TYPE_STRING => 'Строка',
         self::TYPE_INTEGER => 'Число',
         self::TYPE_BOOL => 'Флажок',
@@ -121,14 +123,14 @@ class Attribute extends Model
         return $variant;
     }
 
-    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'attributes_categories', 'attribute_id', 'category_id');
     }
 
-    public function products(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'attributes_products',
+        return $this->belongsToMany(Product::class, 'attributes_products',
             'attribute_id', 'product_id')->withPivot('value');
     }
 

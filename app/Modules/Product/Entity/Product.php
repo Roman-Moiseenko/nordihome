@@ -110,6 +110,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Brand $brand
  * @property Group[] $groups
  * @property Modification $modification
+ * @property Modification $main_modification
  * @property ModificationProduct $modification_product
  * @property Series $series
  *
@@ -783,6 +784,11 @@ class Product extends Model
     public function series(): BelongsTo
     {
         return $this->belongsTo(Series::class, 'series_id', 'id');
+    }
+
+    public function main_modification(): HasOne
+    {
+        return $this->hasOne(Modification::class, 'base_product_id', 'id');
     }
 
     public function modification_product(): HasOne

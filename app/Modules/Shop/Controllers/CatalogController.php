@@ -51,7 +51,7 @@ class CatalogController extends ShopController
         $title = $category->title;
         $description = $category->description;
 
-        if (count($category->children) > 0) {
+        if ($this->web->is_category && count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
             return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description'));
         }
@@ -63,8 +63,14 @@ class CatalogController extends ShopController
         $maxPrice = 999999999;
         $product_ids = [];
         $brands = [];
-
-        $products = $this->repository->ProductsByCategory($category->id);
+        $children = $category->children()->get()->map(function (Category $category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                ];
+        });
+        $products = $this->repository->ProductsByCategory($category);
 
         /** @var Product $product */
         foreach ($products as $i => $product) {
@@ -89,6 +95,7 @@ class CatalogController extends ShopController
                 'image' => $product->brand->getImage(),
             ];
         }
+       // dd($category->getParentIdAll());
 
         $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
 
@@ -104,7 +111,7 @@ class CatalogController extends ShopController
 
         return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',
-                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order'));
+                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order', 'children'));
 
     }
 

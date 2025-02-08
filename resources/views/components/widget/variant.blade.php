@@ -1,5 +1,5 @@
 <div class="widget-variants {{ $class }}">
-    <span class="fs-6">{{ $caption }}</span>
+    <span class="widget-name">{{ $caption }}</span>
     {{ $slot }}
 </div>
 

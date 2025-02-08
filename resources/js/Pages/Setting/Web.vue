@@ -24,6 +24,9 @@
                         <el-input v-model="form.breadcrumbs_home" />
                     </el-form-item>
 
+                    <el-form-item label="Показывать категории товаров" label-position="left">
+                        <el-checkbox v-model="form.is_category" :checked="form.is_category"/>
+                    </el-form-item>
                 </el-col>
                 <el-col :span="8">
                     <h2 class="font-medium">SEO-настройки (Заголовки)</h2>
@@ -71,6 +74,7 @@ const form = reactive({
     title_city: props.web.title_city,
     is_cache: props.web.is_cache,
     breadcrumbs_home: props.web.breadcrumbs_home,
+    is_category: props.web.is_category,
 })
 
 function onSubmit() {
