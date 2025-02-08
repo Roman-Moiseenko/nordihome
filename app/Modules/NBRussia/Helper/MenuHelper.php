@@ -54,22 +54,22 @@ class MenuHelper
                     [
                         'name' => 'Доставка и Оплата',
                         'icon' => '',
-                        'route' => route('shop.page.view', 'home'),
+                        'route' => route('shop.page.view', 'delivery'),
                     ],
                     [
-                        'name' => 'Условия возврата',
+                        'name' => 'Обмен и Возврат',
                         'icon' => '',
-                        'route' => route('shop.page.view', 'home'),
+                        'route' => route('shop.page.view', 'refund'),
                     ],
                     [
                         'name' => 'Потребительская информация',
                         'icon' => '',
-                        'route' => route('shop.page.view', 'home'),
+                        'route' => route('shop.page.view', 'information'),
                     ],
                     [
                         'name' => 'Как выбрать размер одежды',
                         'icon' => '',
-                        'route' => route('shop.page.view', 'home'),
+                        'route' => route('shop.page.view', 'size'),
                     ],
                 ],
             ],
@@ -79,7 +79,7 @@ class MenuHelper
                     [
                         'name' => 'Отзывы',
                         'icon' => '',
-                        'route' => route('shop.page.view', 'home'),
+                        'route' => route('shop.page.view', 'review'),
                     ],
                     [
                         'name' => 'Условия использования сайта',
