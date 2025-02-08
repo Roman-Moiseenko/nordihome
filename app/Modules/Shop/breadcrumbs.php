@@ -6,8 +6,11 @@ use App\Modules\Shop\ShopRepository;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
-Breadcrumbs::for('shop.home', function (BreadcrumbTrail $trail) {
-    $trail->push('<i class="fa-light fa-house"></i>', route('shop.home'));
+$settings = new \App\Modules\Setting\Repository\SettingRepository();
+$web = $settings->getWeb();
+
+Breadcrumbs::for('shop.home', function (BreadcrumbTrail $trail) use ($web) {
+    $trail->push($web->breadcrumbs_home, route('shop.home'));
 });
 
 /**  S H O P */

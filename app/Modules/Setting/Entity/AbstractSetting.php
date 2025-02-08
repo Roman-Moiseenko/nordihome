@@ -14,6 +14,8 @@ abstract class AbstractSetting
                 $this->$field = (int)($value);
             } elseif (gettype($this->$field) == 'double') {
                 $this->$field = (float)($value);
+            } elseif (gettype($this->$field) == 'string') {
+                $this->$field = (string)($value);
             } else {
                 $this->$field = $value;
             }
