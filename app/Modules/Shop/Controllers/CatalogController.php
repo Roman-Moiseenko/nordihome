@@ -4,32 +4,33 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Events\ThrowableHasAppeared;
-use App\Modules\Admin\Entity\Options;
-use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\AttributeRepository;
 use App\Modules\Setting\Entity\Common;
-use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
-use App\Modules\Shop\ShopRepository;
+use App\Modules\Shop\Repository\ShopRepository;
+use App\Modules\Shop\Repository\SlugRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cookie;
 
 class CatalogController extends ShopController
 {
     private ShopRepository $repository;
 
     private Common $common;
+    private SlugRepository $slugs;
 
-    public function __construct(ShopRepository $repository, SettingRepository $settings)
+    public function __construct(
+        ShopRepository $repository,
+        SettingRepository $settings,
+        SlugRepository $slugs,
+    )
     {
         parent::__construct();
         $this->repository = $repository;
         $this->web = $settings->getWeb();
         $this->common = $settings->getCommon();
+        $this->slugs = $slugs;
     }
 
     public function index()
@@ -44,7 +45,7 @@ class CatalogController extends ShopController
 
     public function view(Request $request, $slug)
     {
-        $category = $this->repository->CategoryBySlug($slug);
+        $category = $this->slugs->CategoryBySlug($slug);
         if (is_null($category)) return abort(404);
 
 
@@ -109,28 +110,7 @@ class CatalogController extends ShopController
         //Переводим коллекцию в массив
 
         $products = $products->withQueryString()
-            ->through(fn(Product $product) => [
-                'id' => $product->id,
-                'code' => $product->code,
-                'name' => $product->name,
-                'slug' => $product->slug,
-                'has_promotion' => $product->hasPromotion(),
-                'is_new' => $product->isNew(),
-                'is_wish' => !is_null($this->user) && $product->isWish($this->user->id),
-                'is_sale' => $product->isSale(),
-                'rating' => $product->current_rating,
-                'count_reviews' =>$product->countReviews(),
-                'price' => $product->getPrice(),
-                'price_promotion' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
-                'images' => [
-                    'catalog-watermark' => $product->getImageData('catalog-watermark'),
-                ],
-                'images-next' => [
-                    'catalog-watermark' => $product->getImageNextData('catalog-watermark'),
-                ],
-
-
-            ]);
+            ->through(fn(Product $product) => $this->repository->ProductToArrayCard($product));
 
         return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',

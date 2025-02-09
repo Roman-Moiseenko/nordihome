@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use App\Modules\Product\Entity\Product;
-use App\Modules\Shop\ShopRepository;
+use App\Modules\Shop\Repository\SlugRepository;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -21,7 +21,7 @@ Breadcrumbs::for('shop.category.index', function (BreadcrumbTrail $trail) { //Б
 });
 
 Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) { //Без указания главной - home
-    $category = (new ShopRepository())->CategoryBySlug($slug);
+    $category = (new SlugRepository())->CategoryBySlug($slug);
     if (is_null($category)) {
         $trail->parent('shop.category.index');
         $trail->push('Категория не найдена');
@@ -37,7 +37,7 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) 
 
 //Для товара собираем из предыдущих
 Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, $slug) {
-    $product = (new ShopRepository())->getProductBySlug($slug);
+    $product = (new SlugRepository())->getProductBySlug($slug);
     //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
     if (is_null($product)) {
         $trail->parent('shop.category.index');
@@ -59,7 +59,7 @@ Breadcrumbs::for('shop.product.view-draft', function (BreadcrumbTrail $trail, Pr
 });
 
 Breadcrumbs::for('shop.page.view', function (BreadcrumbTrail $trail, $slug) {
-    $page = (new ShopRepository())->PageBySlug($slug);
+    $page = (new SlugRepository())->PageBySlug($slug);
     $trail->parent('shop.home');
     $trail->push($page->name, route('shop.page.view', $slug));
 });
@@ -70,13 +70,13 @@ Breadcrumbs::for('shop.parser.view', function (BreadcrumbTrail $trail) {
 });
 
 Breadcrumbs::for('shop.promotion.view', function (BreadcrumbTrail $trail, $slug) {
-    $promotion = (new ShopRepository())->getPromotionBySlug($slug);
+    $promotion = (new SlugRepository())->getPromotionBySlug($slug);
     $trail->parent('shop.home');
     $trail->push('Акция ' . $promotion->title, route('shop.promotion.view', $slug));
 });
 
 Breadcrumbs::for('shop.group.view', function (BreadcrumbTrail $trail, $slug) {
-    $group = (new ShopRepository())->getGroupBySlug($slug);
+    $group = (new SlugRepository())->getGroupBySlug($slug);
     $trail->parent('shop.home');
     $trail->push('Группа товаров ' . $group->name, route('shop.group.view', $slug));
 });

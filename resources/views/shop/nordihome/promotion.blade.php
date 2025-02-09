@@ -10,7 +10,7 @@
     <div class="title-page">
         <div class="products-page-title d-flex h1">
             <h1>{{ $promotion->title }} </h1>
-            <span>&nbsp;{{ \App\Modules\Shop\Helper::_countProd(count($products)) }} </span>
+            <span>&nbsp;{{ count_product(count($products)) }} </span>
         </div>
     </div>
 

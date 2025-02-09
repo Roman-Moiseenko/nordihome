@@ -6,10 +6,9 @@ namespace App\View;
 use App\Modules\Base\Helpers\AdminMenu;
 use App\Modules\Base\Helpers\AdminProfileMenu;
 use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Schema;
-use App\Modules\Shop\ShopRepository;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;
 
 class AdminComposer

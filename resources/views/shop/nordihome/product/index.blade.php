@@ -10,7 +10,7 @@
         <div class="products-page-title">
             <div class="title h1">
                 <h1>{{ $category->name }} </h1>
-                <span>&nbsp;{{ \App\Modules\Shop\Helper::_countProd(count($products)) }} </span>
+                <span>&nbsp;{{ count_product(count($products)) }} </span>
             </div>
             <div class="order btn-group">
                 <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

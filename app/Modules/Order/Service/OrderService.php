@@ -12,8 +12,6 @@ use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
-
-use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Service\DeliveryService;
@@ -22,7 +20,6 @@ use App\Modules\Discount\Service\CouponService;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Mail\Job\SendSystemMail;
 use App\Modules\Mail\Mailable\OrderAwaitingMail;
-use App\Modules\Mail\Service\SystemMailService;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
@@ -37,7 +34,7 @@ use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\Parser\ParserService;
-use App\Modules\Shop\ShopRepository;
+use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -45,7 +42,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Deprecated;
 
 
 class OrderService

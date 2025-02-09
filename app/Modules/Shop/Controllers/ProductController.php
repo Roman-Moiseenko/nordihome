@@ -3,35 +3,35 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
-use App\Events\ThrowableHasAppeared;
-use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\CategoryRepository;
-use App\Modules\Product\Repository\ProductRepository;
-use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
-use App\Modules\Shop\ShopRepository;
-use Illuminate\Http\Client\Response;
+use App\Modules\Shop\Repository\ShopRepository;
+use App\Modules\Shop\Repository\SlugRepository;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class ProductController extends ShopController
 {
 
     private ShopRepository $repository;
+    private SlugRepository $slugs;
 
 
-    public function __construct(ShopRepository $repository, SettingRepository $settings)
+    public function __construct(
+        ShopRepository $repository,
+        SettingRepository $settings,
+        SlugRepository $slugs,
+    )
     {
         $this->middleware(['auth:admin'])->only(['view_draft']);
         parent::__construct();
         $this->repository = $repository;
         $this->web = $settings->getWeb();
+        $this->slugs = $slugs;
     }
 
     public function view($slug)
     {
-        $product = $this->repository->getProductBySlug($slug);
+        $product = $this->slugs->getProductBySlug($slug);
         if (empty($product) || !$product->isPublished()) abort(404);
         $title = $product->name . ' купить по цене ' . $product->getPriceRetail() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
         $description = $product->short;

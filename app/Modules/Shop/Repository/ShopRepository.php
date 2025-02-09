@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Shop;
+namespace App\Modules\Shop\Repository;
 
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\Trader;
@@ -13,31 +13,40 @@ use App\Modules\Product\Entity\AttributeProduct;
 use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Group;
+use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Tag;
+use App\Modules\Product\Repository\ModificationRepository;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
+use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use JetBrains\PhpStorm\Deprecated;
 
 class ShopRepository
 {
 
     private Web $web;
+    protected ?User $user;
+    private ModificationRepository $modifications;
 
-    public function __construct()
+    public function __construct(ModificationRepository $modifications)
     {
         $settingRepository = new SettingRepository();
         $this->web = $settingRepository->getWeb();
+
+        if (Auth::guard('user')->check()) {
+            $this->user = Auth::guard('user')->user();
+        } else {
+            $this->user = null;
+        }
+
+        $this->modifications = $modifications;
     }
 
-    public function getProductBySlug($slug): ?Product
-    {
-        if (is_numeric($slug)) return Product::findOrFail($slug);
-        return Product::where('slug', '=', $slug)->first();
-    }
 
     public function maxPrice(array $product_ids)
     {
@@ -242,25 +251,8 @@ class ShopRepository
 
     ////КАТЕГОРИИ
     ///
-    public function CategoryBySlug($slug): ?Category
-    {
-        if (is_numeric($slug)) {
-            $category = Category::find($slug);
-        } else {
-            $category = Category::where('slug', '=', $slug)->first();
-        }
-        return $category;
-    }
 
-    /*
-        public function searchCategory(string $search, int $take = 10)
-        {
-            $query = Category::orderBy('name')->where(function ($query) use ($search) {
-                $query->where('name', 'LIKE', "% {$search}%")->orWhere('name', 'LIKE', "{$search}%");
-            });
-            return $query->take($take)->get();
-        }
-    */
+
 
     public function getChildren(int $parent_id = null): Arrayable
     {
@@ -493,10 +485,7 @@ class ShopRepository
         return $output;
     }
 
-    public function PageBySlug(string $slug): Page
-    {
-        return Page::where('slug', $slug)->where('published', true)->firstOrFail();
-    }
+
 
     public function getMapData(): array
     {
@@ -528,11 +517,6 @@ class ShopRepository
      ];*/
     }
 
-    public function getPromotionBySlug($slug): Promotion
-    {
-        return Promotion::where('slug', $slug)->where('published', true)->firstOrFail();
-    }
-
     public function getProdAttributes(Product $product): array
     {
         $productAttributes = [];
@@ -551,9 +535,69 @@ class ShopRepository
         return $productAttributes;
     }
 
-    public function getGroupBySlug(string $slug): Group
+
+
+    //Product to Array для Frontend
+
+    public function ProductToArrayCard(Product $product): array
     {
-        return Group::where('slug', $slug)->firstOrFail();
+
+        return [
+            'id' => $product->id,
+            'code' => $product->code,
+            'name' => $product->name,
+            'slug' => $product->slug,
+            'has_promotion' => $product->hasPromotion(),
+            'is_new' => $product->isNew(),
+            'is_wish' => !is_null($this->user) && $product->isWish($this->user->id),
+            'is_sale' => $product->isSale(),
+            'rating' => $product->current_rating,
+            'count_reviews' =>$product->countReviews(),
+            'price' => $product->getPrice(false, $this->user),
+            'price_promotion' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
+            'images' => [
+                'catalog-watermark' => $product->getImageData('catalog-watermark'),
+            ],
+            'images-next' => [
+                'catalog-watermark' => $product->getImageNextData('catalog-watermark'),
+            ],
+            'modification' => is_null($product->modification) ? null : $this->ModificationWithToArray($product->modification),
+
+        ];
     }
 
+    private function ModificationWithToArray(Modification $modification): array
+    {
+        return  [
+            'attributes' => array_map(function (Attribute $attribute) {
+                return [
+                    'id' => $attribute->id,
+                    'name' => $attribute->name,
+                    'image' => $attribute->getImage(),
+                    'variants' => $attribute->variants()->get()->map(function (AttributeVariant $variant) {
+                        return [
+                            'id' => $variant->id,
+                            'name' => $variant->name,
+                            'image' => $variant->getImage(),
+                        ];
+                    })->toArray(),
+                ];
+            }, $modification->prod_attributes),
+            'products' => $modification->products()->get()->map(function (Product $product) {
+                $values = json_decode($product->pivot->values_json, true);
+
+                $variants = [];
+                foreach ($values as $attr_id => $variant_id) {
+                    $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
+                }
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'image' => $product->miniImage(),
+                    'variants' => $variants,
+                ];
+            })->toArray(),
+        ];
+    }
 }

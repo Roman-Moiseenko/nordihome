@@ -9,6 +9,23 @@ if (!function_exists('price')) {
     }
 }
 
+if (!function_exists('count_product')) {
+    function count_product(int $count): string
+    {
+        $basis = 'товар';
+        $ending_a = 'а';
+        $ending_ov = 'ов';
+        $mod_10 = $count % 10;
+        $mod_100 = $count % 100;
+
+        if ($count >= 11 && $count <= 19) return $count . ' ' . $basis . $ending_ov;
+        if ($mod_100 >= 11 && $mod_100 <= 19) return $count  . ' ' . $basis . $ending_ov;
+        if ($mod_10 == 1) return $count . ' ' . $basis;
+        if (in_array($mod_10, [2,3,4])) return $count . ' ' . $basis . $ending_a;
+        return $count . ' ' . $basis . $ending_ov;
+    }
+}
+
 if (!function_exists('modules')) {
     /**
      * Список всех Модулей в приложении

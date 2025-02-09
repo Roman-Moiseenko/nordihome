@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Modules\Page\Entity\Page;
-use App\Modules\Shop\ShopRepository;
+use App\Modules\Shop\Repository\ShopRepository;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 
 class PageController extends ShopController
