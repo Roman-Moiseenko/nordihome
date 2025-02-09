@@ -176,18 +176,30 @@
 
 }
 
-
-
-
-
-
-
 //КАРТОЧКА ТОВАРА В СПИСКЕ
 .product-card {
     overflow: hidden;
     /*border-radius: $radius-card;
     border: 1px solid var(--bs-gray-400);
     box-shadow: $shadow-card; */
+
+    .product-modification {
+        display: flex;
+        flex-wrap: wrap;
+        a {
+            color: black;
+            display: block;
+            width: 40px;
+            margin: 2px 4px;
+            min-width: 40px;
+            border: 1px solid black;
+            text-align: center;
+            &:hover {
+                color: white;
+                background: black;
+            }
+        }
+    }
 }
 .product-card-review {
     margin-top: 4px;

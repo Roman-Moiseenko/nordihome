@@ -122,6 +122,7 @@ Route::group(
             'as' => 'modification.',
         ], function () {
             Route::post('/set-modifications/{modification}', 'ModificationController@set_modifications')->name('set-modifications');
+            Route::post('/set-base/{modification}', 'ModificationController@set_base')->name('set-base');
             Route::post('/search', 'ModificationController@search')->name('search');
             Route::post('/rename/{modification}', 'ModificationController@rename')->name('rename');
             Route::post('/add-product/{modification}', 'ModificationController@add_product')->name('add-product');

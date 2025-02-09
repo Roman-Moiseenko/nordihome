@@ -56,6 +56,7 @@ trait GalleryField
         return $this->ImageToData($image, $thumb);
 
     }
+
     public function getImageNextData(string $thumb = null): array
     {
         $image = $this->photos()->skip(1)->first();
@@ -172,6 +173,13 @@ trait GalleryField
         foreach ($this->gallery as $i => $photo) {
             $photo->update(['sort' => $i]);
         }
+    }
+
+    public function copyImage(Photo $image): void
+    {
+        $sort = count($this->gallery);
+        $photo = Photo::copyByPath(path: $image->getUploadFile(), sort: $sort, thumb: $this->is_thumb);
+        $this->gallery()->save($photo);
     }
 
 }

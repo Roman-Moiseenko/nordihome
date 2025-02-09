@@ -73,4 +73,20 @@ class ModificationService
         $modification->products()->detach($product_id);
     }
 
+    public function setBase(Modification $modification, Request $request): void
+    {
+        $base = $modification->base_product;
+        $product = Product::find($request->integer('product_id'));
+        set_time_limit(300);
+        if ($product->gallery->count() == 0) {
+            foreach ($base->gallery as $photo) {
+                $product->copyImage($photo);
+                $photo->delete();
+            }
+        }
+        $modification->base_product_id = $product->id;
+        $modification->save();
+        set_time_limit(30);
+    }
+
 }

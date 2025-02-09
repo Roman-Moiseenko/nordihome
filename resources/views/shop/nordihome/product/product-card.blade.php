@@ -1,4 +1,5 @@
 <div>
+    {!! dd($product) !!}
     <div class="product-card">
         <div class="product-card-image">
             <a href="{{ route('shop.product.view', $product['slug']) }}">
@@ -40,15 +41,6 @@
                 @endif
             </div>
         </div>
-        @if(!is_null($product['modification'])) @endif
-        <div class="product-modification">
-            @foreach($product['modification'] as $attribute)
-                @foreach($attribute['products'] as $value => $_product_mod)
-                    <a href="{{ route('shop.product.view', $_product_mod[0]['slug']) }}" title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</a>
-                @endforeach
-            @endforeach
-        </div>
-
         <div class="product-card-name fs-6">
             <a class="product-trunc" href="{{ route('shop.product.view', $product['slug']) }}"
                title="{{ $product['name'] }}">{{ $product['name'] }}</a>

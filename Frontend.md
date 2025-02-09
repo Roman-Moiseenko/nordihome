@@ -29,7 +29,22 @@ ImageData = [
     'description' => Описание изображения
 ];
 Modification = [
-    'base_product' => $modification->base_product,
+    [
+    'id_attribute' => [
+            'name' => Название атрибута
+        'image' => Картинка
+        'products' => [
+                'Значение атрибута' => [
+                        Товар (
+                            "id" => 4041
+                            "name" => "New Balance BB550ESG Мужская обувь - бежевая 40.5"
+                            "slug" => "new-balance-bb550esg-muzskaia-obuv-bezevaia-405"
+                            "image" => "/images/modification.jpg"
+                            )
+                    ]
+            ]
+        ]    
+],
     'attributes' => array_map(function (Attribute $attribute) {
     return [
         'id' => $attribute->id,

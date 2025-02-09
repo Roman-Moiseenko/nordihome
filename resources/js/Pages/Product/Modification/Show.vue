@@ -22,9 +22,15 @@
             <div>
                 <el-tag v-for="(variant, index) in product.variants" :type="getType(index)" class="ml-1">{{ variant }}</el-tag>
             </div>
+
+            <div class="ml-4" v-if="modification.base_product_id !== product.id">
+                <el-button type="success" size="small" @click="onBase(product)">Base</el-button>
+            </div>
+            <el-tag v-if="product.not_sale" type="warning" class="ml-2">Снят с продажи</el-tag>
             <div class="ml-4">
                 <el-button type="danger" size="small" @click="handleDeleteEntity(product)">Delete</el-button>
             </div>
+
         </div>
     </el-config-provider>
     <DeleteEntityModal name_entity="Товар из модификации"/>
@@ -53,6 +59,16 @@ function getType(index) {
     if (index === 1) return 'success'
     if (index === 2) return 'warning'
     if (index === 3) return 'info'
+}
+function onBase(product) {
+    router.visit(route('admin.product.modification.set-base', {modification: props.modification.id}), {
+        method: "post",
+        data: {
+            product_id: product.id
+        },
+        preserveScroll: true,
+        preserveState: false,
+    })
 }
 
 function handleDeleteEntity(row) {

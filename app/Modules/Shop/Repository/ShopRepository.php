@@ -208,11 +208,8 @@ class ShopRepository
     */
     public function ProductsByCategory(Category $category)
     {
-
         $lft = $category->_lft;
         $rgt = $category->_rgt;
-        // dd($category);
-
 
         $query = Product::where('published', true) //Опубликован AND
             ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND
@@ -224,27 +221,6 @@ class ShopRepository
             })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
                 $query->doesntHave('modification')->orHas('main_modification');
             });
-
-        /*       $query = Product::where('published', true)->has('main_modification')
-                   ->whereHas('main_modification', function ($query) use ($lft, $rgt) {
-
-               });
-       */
-        //TODO Выбрать дочерние категории
-
-
-        /*
-        $query->where(function ($_query) use ($id) {
-            $_query->where('main_category_id', '=', $id)->OrWhere(function ($query) use ($id) {
-                $query->whereHas('categories', function ($_query) use ($id) {
-                    $_query->where('category_id', $id);
-                });
-            });
-        });
-*/
-
-        //Предзаказ
-        //TODO Фильтр по наличию ????
 
         return $query->get();
     }
@@ -545,7 +521,7 @@ class ShopRepository
         return [
             'id' => $product->id,
             'code' => $product->code,
-            'name' => $product->name,
+            'name' => is_null($product->modification) ? $product->name : $product->modification->name,
             'slug' => $product->slug,
             'has_promotion' => $product->hasPromotion(),
             'is_new' => $product->isNew(),
@@ -561,13 +537,41 @@ class ShopRepository
             'images-next' => [
                 'catalog-watermark' => $product->getImageNextData('catalog-watermark'),
             ],
-            'modification' => is_null($product->modification) ? null : $this->ModificationWithToArray($product->modification),
+            'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
 
         ];
     }
 
-    private function ModificationWithToArray(Modification $modification): array
+    private function ModificationToArray(Modification $modification): array
     {
+        $attributes = [];
+        foreach ($modification->prod_attributes as $attribute) {
+            $attributes[$attribute->id] = [
+                'name' => $attribute->name,
+                'image' => $attribute->getImage(),
+            ];
+        }
+
+        foreach ($modification->products as $product) {
+            if ($product->isSale()) {
+                $values = json_decode($product->pivot->values_json, true);
+                foreach ($values as $attr_id => $variant_id) {
+                    //    $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
+                    $variant_name = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
+                    $attributes[$attr_id]['products'][$variant_name][] = [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'slug' => $product->slug,
+                        'image' => $product->miniImage(),
+                        //  'variants' => $variants,
+                    ];
+                }
+            }
+        }
+      //  dd($attributes);
+        return $attributes;
+        //dd($attributes);
+        /*
         return  [
             'attributes' => array_map(function (Attribute $attribute) {
                 return [
@@ -599,5 +603,6 @@ class ShopRepository
                 ];
             })->toArray(),
         ];
+        */
     }
 }

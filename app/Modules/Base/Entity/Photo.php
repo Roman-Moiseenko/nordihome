@@ -162,6 +162,15 @@ class Photo extends Model
         return self::upload($upload, $type, $sort, $alt, $thumb);
     }
 
+    public static function copyByPath(string $path, string $type = '', int $sort = 0, string $alt = '', bool $thumb = true): Photo
+    {
+        $upload = new UploadedFile(
+            $path,
+            basename($path),
+            null, null, true);
+        return self::upload($upload, $type, $sort, $alt, $thumb);
+    }
+
     public function newUploadFile(UploadedFile $file, string $type = null, bool $thumb = true): void
     {
         if ($type) $this->type = $type;
@@ -249,7 +258,7 @@ class Photo extends Model
                         $scale_w = $img->width() / $params['width'];
                         $scale_h = $img->height() / $params['height'];
                         $scale = max($scale_w, $scale_h);
-                        $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale),);
+                        $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale));
                         $img->resizeCanvas($params['width'], $params['height']);
                     }
                 }

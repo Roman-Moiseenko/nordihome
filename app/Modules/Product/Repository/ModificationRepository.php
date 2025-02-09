@@ -50,6 +50,7 @@ class ModificationRepository
 
     public function ModificationWithToArray(Modification $modification): array
     {
+
         return array_merge($this->ModificationToArray($modification), [
             'base_product' => $modification->base_product,
             'attributes' => array_map(function (Attribute $attribute) {

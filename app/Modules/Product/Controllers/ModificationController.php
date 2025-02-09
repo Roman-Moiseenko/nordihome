@@ -72,22 +72,20 @@ class ModificationController extends Controller
 
     public function destroy(Modification $modification): RedirectResponse
     {
-        try {
             $this->service->delete($modification);
             return redirect()->back()->with('success', 'Модификация удалена');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+    }
+
+    public function set_base(Request $request, Modification $modification): RedirectResponse
+    {
+        $this->service->setBase($modification, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function del_product(Request $request, Modification $modification): RedirectResponse
     {
-        try {
             $this->service->delProduct($request, $modification);
             return redirect()->back()->with('success', 'Товар убран из модификации');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
     }
 
 //AJAX
