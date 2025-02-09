@@ -50,6 +50,35 @@ trait GalleryField
         return $this->getImageBySort(1, $thumb);
     }
 
+    public function getImageData(string $thumb = null): array
+    {
+        $image = $this->photos()->first();
+        return $this->ImageToData($image, $thumb);
+
+    }
+    public function getImageNextData(string $thumb = null): array
+    {
+        $image = $this->photos()->skip(1)->first();
+        if (is_null($image)) $image = $this->photos()->first();
+        return $this->ImageToData($image, $thumb);
+    }
+
+    private function ImageToData(Photo $image, string $thumb = null): array
+    {
+        if (is_null($image)) return [
+            'src' => '/images/no-image.jpg',
+            'alt' => '',
+            'title' => '',
+            'description' => '',
+        ];
+        return [
+            'src' => is_null($thumb) ? $image->getUploadUrl() : $image->getThumbUrl($thumb),
+            'alt' => $image->alt,
+            'title' => $image->alt,
+            'description' => $image->description,
+        ];
+    }
+
     /**
      * Для списка товаров в админке
      */

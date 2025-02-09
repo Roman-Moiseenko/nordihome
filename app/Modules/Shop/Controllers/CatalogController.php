@@ -61,7 +61,7 @@ class CatalogController extends ShopController
 
         $minPrice = 10;
         $maxPrice = 999999999;
-        $product_ids = [];
+
         $brands = [];
         $children = $category->children()->get()->map(function (Category $category) {
             return [
@@ -71,11 +71,11 @@ class CatalogController extends ShopController
                 ];
         });
         $products = $this->repository->ProductsByCategory($category);
-        $in_stock = $request->has('in_stock');
-        $products = $products->reject(function (Product $product) use ($in_stock) {
 
-            return !(($in_stock && $product->getQuantitySell() > 0) ||
-                ($product->pre_order || $product->getQuantitySell() > 0));
+        $in_stock = $request->has('in_stock');
+        //Убираем из коллекции товары, которые не продаем под заказ
+        $products = $products->reject(function (Product $product) use ($in_stock) {
+            return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
         });
 
         /** @var Product $product */
@@ -87,23 +87,14 @@ class CatalogController extends ShopController
                 if ($product->getPrice() < $minPrice) $minPrice = $product->getPrice();
                 if ($product->getPrice() > $maxPrice) $maxPrice = $product->getPrice();
             }
-/*
-            if ($request->has('in_stock')) {
-                if ($product->getQuantitySell() > 0)
-                    $product_ids[] = $product->id;
-            } else {
-                if ($this->common->pre_order || $product->pre_order || $product->getQuantitySell() > 0)
-                    $product_ids[] = $product->id;
-            }
-*/
             $brands[$product->brand->id] = [
                 'name' => $product->brand->name,
                 'image' => $product->brand->getImage(),
             ];
         }
-       // dd($category->getParentIdAll());
 
         $product_ids = $products->pluck('id')->toArray();
+
         $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
 
         $tags = $this->repository->TagsByProducts($product_ids);
@@ -115,6 +106,31 @@ class CatalogController extends ShopController
             $this->web->title_city . ' ☎ ' . $this->web->title_contact;
             /*'NORDI HOME ' .
             ' Калининград ☎ [+7(4012) 37-37-30] (Круглосуточно)';*/
+        //Переводим коллекцию в массив
+
+        $products = $products->withQueryString()
+            ->through(fn(Product $product) => [
+                'id' => $product->id,
+                'code' => $product->code,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'has_promotion' => $product->hasPromotion(),
+                'is_new' => $product->isNew(),
+                'is_wish' => !is_null($this->user) && $product->isWish($this->user->id),
+                'is_sale' => $product->isSale(),
+                'rating' => $product->current_rating,
+                'count_reviews' =>$product->countReviews(),
+                'price' => $product->getPrice(),
+                'price_promotion' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
+                'images' => [
+                    'catalog-watermark' => $product->getImageData('catalog-watermark'),
+                ],
+                'images-next' => [
+                    'catalog-watermark' => $product->getImageNextData('catalog-watermark'),
+                ],
+
+
+            ]);
 
         return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',
