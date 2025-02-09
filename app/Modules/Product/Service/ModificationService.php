@@ -77,6 +77,14 @@ class ModificationService
     {
         $base = $modification->base_product;
         $product = Product::find($request->integer('product_id'));
+
+        //Если базовый Парсер, а новый нет - то переносим парсер на новый
+        //dd([$base->parser,$product->parser ]);
+        if (!is_null($base->parser) && is_null($product->parser)) {
+            $parser = $base->parser;
+            $parser->product_id = $product->id;
+            $parser->save();
+        }
         set_time_limit(300);
         if ($product->gallery->count() == 0) {
             foreach ($base->gallery as $photo) {

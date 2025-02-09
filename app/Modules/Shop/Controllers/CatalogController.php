@@ -112,6 +112,7 @@ class CatalogController extends ShopController
         $products = $products->withQueryString()
             ->through(fn(Product $product) => $this->repository->ProductToArrayCard($product));
 
+
         return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',
                 'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order', 'children'));

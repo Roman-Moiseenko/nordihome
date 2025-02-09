@@ -517,7 +517,6 @@ class ShopRepository
 
     public function ProductToArrayCard(Product $product): array
     {
-
         return [
             'id' => $product->id,
             'code' => $product->code,
