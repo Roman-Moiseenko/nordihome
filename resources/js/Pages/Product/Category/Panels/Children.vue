@@ -40,6 +40,7 @@ const form = reactive({
 })
 function createButton() {
     router.post(route('admin.product.category.store', form))
+    visible_create.value = false
 }
 
 </script>

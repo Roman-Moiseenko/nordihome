@@ -419,16 +419,21 @@ class Product extends Model
     //TODO Переделать, везде запрашивать $user
     public function getPrice(bool $previous = false, User $user = null): float
     {
-        if (!$this->isSale()) return 0;
+        $price = 0;
+        if (!$this->isSale()) return $price;
         if (is_null($user)) {
             $user = Auth::guard('user')->user();
         }
+
         if (!is_null($user)) {
 
-            if ($user->isBulk() && $this->getPriceBulk($previous) != 0) return $this->getPriceBulk($previous); //Оптовый клиент
-            if ($user->isSpecial() && $this->getPriceSpecial($previous) != 0) return $this->getPriceSpecial($previous); //Спец Клиент
+            if ($user->isBulk() && $this->getPriceBulk($previous) != 0) $price = $this->getPriceBulk($previous); //Оптовый клиент
+            if ($user->isSpecial() && $this->getPriceSpecial($previous) != 0) $price = $this->getPriceSpecial($previous); //Спец Клиент
         }
-        return $this->getPriceRetail($previous);
+        if ($price == 0) $price = $this->getPriceRetail($previous);
+        if ($price == 0) $price = $this->getPriceParser();
+
+        return $price;
     }
 
     //ЦЕНЫ ДЛЯ АДМИНКИ
@@ -499,6 +504,13 @@ class Product extends Model
             $model = $this->pricesMin()->skip(0)->first();
         }
         return $model->value;
+    }
+
+    public function getPriceParser(): float
+    {
+        if (is_null($this->parser)) return 0;
+
+        return ceil($this->parser->price_sell * ($this->brand->currency->exchange * (1 + $this->brand->currency->extra/100)));
     }
 
     /**
