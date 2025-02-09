@@ -71,6 +71,12 @@ class CatalogController extends ShopController
                 ];
         });
         $products = $this->repository->ProductsByCategory($category);
+        $in_stock = $request->has('in_stock');
+        $products = $products->reject(function (Product $product) use ($in_stock) {
+
+            return !(($in_stock && $product->getQuantitySell() > 0) ||
+                ($product->pre_order || $product->getQuantitySell() > 0));
+        });
 
         /** @var Product $product */
         foreach ($products as $i => $product) {
@@ -81,7 +87,7 @@ class CatalogController extends ShopController
                 if ($product->getPrice() < $minPrice) $minPrice = $product->getPrice();
                 if ($product->getPrice() > $maxPrice) $maxPrice = $product->getPrice();
             }
-
+/*
             if ($request->has('in_stock')) {
                 if ($product->getQuantitySell() > 0)
                     $product_ids[] = $product->id;
@@ -89,7 +95,7 @@ class CatalogController extends ShopController
                 if ($this->common->pre_order || $product->pre_order || $product->getQuantitySell() > 0)
                     $product_ids[] = $product->id;
             }
-
+*/
             $brands[$product->brand->id] = [
                 'name' => $product->brand->name,
                 'image' => $product->brand->getImage(),
@@ -97,6 +103,7 @@ class CatalogController extends ShopController
         }
        // dd($category->getParentIdAll());
 
+        $product_ids = $products->pluck('id')->toArray();
         $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
 
         $tags = $this->repository->TagsByProducts($product_ids);
