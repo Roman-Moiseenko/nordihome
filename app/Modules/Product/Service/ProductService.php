@@ -35,7 +35,6 @@ use JetBrains\PhpStorm\Deprecated;
 
 class ProductService
 {
-    private Options $options;
     private CategoryRepository $categories;
     private TagRepository $tags;
     private TagService $tagService;
@@ -48,19 +47,18 @@ class ProductService
 
 
     public function __construct(
-        Options            $options,
         CategoryRepository $categories,
         TagRepository      $tags,
         TagService         $tagService,
         EquivalentService  $equivalentService,
         SeriesService      $seriesService,
         StorageService     $storageService,
-        Settings  $settings,
+        Settings           $settings,
         GroupService       $groupService,
     )
     {
         //Конфигурация
-        $this->options = $options;
+
         $this->categories = $categories;
         $this->tags = $tags;
         $this->tagService = $tagService;
@@ -785,7 +783,7 @@ class ProductService
             }
         }
 
-            //throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
+        //throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
 
         if ($product->photos()->count() == 0) {
             throw new \DomainException('Для товара ' . $product->name . ' нет изображений');
