@@ -186,6 +186,7 @@
     .product-modification {
         display: flex;
         flex-wrap: wrap;
+        font-size: 0.85rem;
         a {
             color: black;
             display: block;
@@ -229,7 +230,7 @@
 .product-label {
     position: absolute;
     z-index: 1;
-    left: 4px;
+
     top: 4px;
    // border-radius: 50%;
     font-size: 0.85rem;
@@ -240,13 +241,21 @@
     >span {
         margin: auto;
     }
+    &.wish {
+        right: 4px;
+        >button {
+            font-size: 22px;
+        }
+    }
     &.promotion {
         background: var(--bs-secondary-700);
+        left: 4px;
     }
     &.new {
         background: var(--bs-gray-900);
         color: var(--bs-white);
         text-transform: uppercase;
+        left: 4px;
     }
 }
 
@@ -256,6 +265,9 @@
     //align-items: center;
     margin: auto 0;
     display: flex;
+    a {
+        color: black;
+    }
 }
 .product-card-info {
     padding: 0 4px;
@@ -324,14 +336,14 @@
 .to-wish {
     cursor: pointer;
     &:hover {
-        color: #ffc107;
+        color: var(--bs-secondary-700);
     }
 }
 .is-wish {
     cursor: pointer;
-    color: #ffc107;
+    color: var(--bs-secondary-700);
     &:hover {
-        color: #ffca2c;
+        color: rgba(var(--bs-secondary-700), 0.3);
     }
 }
 

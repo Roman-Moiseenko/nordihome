@@ -7,6 +7,7 @@ use App\Modules\Shop\Repository\SlugRepository;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
+/** @var Settings $settings */
 $settings = app()->make(Settings::class);
 
 Breadcrumbs::for('shop.home', function (BreadcrumbTrail $trail) use ($settings) {
@@ -20,16 +21,16 @@ Breadcrumbs::for('shop.category.index', function (BreadcrumbTrail $trail) { //Б
     $trail->push('Каталог', route('shop.category.index'));
 });
 
-Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) { //Без указания главной - home
+Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) use ($settings) { //Без указания главной - home
     $category = (new SlugRepository())->CategoryBySlug($slug);
     if (is_null($category)) {
-        $trail->parent('shop.category.index');
+        if ($settings->web->is_category) $trail->parent('shop.category.index');
         $trail->push('Категория не найдена');
     } else {
         if ($category->parent) {
             $trail->parent('shop.category.view', $category->parent_id);
         } else {
-            $trail->parent('shop.category.index');
+            if ($settings->web->is_category) $trail->parent('shop.category.index');
         }
         $trail->push($category->name, route('shop.category.view', $category->slug));
     }

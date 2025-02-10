@@ -16,7 +16,7 @@
                     </div>
                     @foreach($category->children as $child)
                         <div class="col-2">
-                            <h4 class="mt-2">{{ $child->name }}</h4>
+                            <a class="fs-6 text-uppercase fw-bold" href="{{ route('shop.category.view', $child->slug) }}">{{ $child->name }}</a>
                             @foreach($child->children as $sub)
                                 <div>
                                     <a class="" href="{{ route('shop.category.view', $sub->slug) }}"

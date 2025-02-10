@@ -15,31 +15,24 @@
                 @if($product['is_new'])
                     <div class="product-label new"><span>Новинка</span></div>
                 @endif
+
+                <div class="product-label wish">
+                    @if(!is_null($user))
+                        <button class="{{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" type="button"
+                                title="В Избранное">
+                            <i class="{{ $product['is_wish'] ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
+                        </button>
+                    @else
+                        <button class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
+                                type="button"
+                                onclick="event.preventDefault();">
+                            <i class="fa-light fa-heart" type="button" title="В Избранное"></i>
+                        </button>
+                    @endif
+                </div>
             </a>
         </div>
-        <div class="product-card-review">
-            <div>
-                <a href="{{ route('shop.product.view', $product['slug']) }}/#review"
-                   title="Отзывы реальных покупателей на {{ $product['name'] }}">
-                    <i class="fa-solid fa-star"></i>{{ $product['rating'] }} <span
-                        class="">{{ $product['count_reviews'] }}</span>
-                </a>
-            </div>
-            <div>
-                @if(!is_null($user))
-                    <button class="{{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" type="button"
-                            title="В Избранное">
-                        <i class="{{ $product['is_wish'] ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
-                    </button>
-                @else
-                    <button class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
-                            type="button"
-                            onclick="event.preventDefault();">
-                        <i class="fa-light fa-heart" type="button" title="В Избранное"></i>
-                    </button>
-                @endif
-            </div>
-        </div>
+
         @if(!is_null($product['modification'])) @endif
         <div class="product-modification">
             @foreach($product['modification'] as $attribute)
