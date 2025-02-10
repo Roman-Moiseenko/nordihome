@@ -5,10 +5,12 @@ namespace App\View;
 
 use App\Modules\Base\Helpers\AdminMenu;
 use App\Modules\Base\Helpers\AdminProfileMenu;
+use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Schema;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class AdminComposer
@@ -57,12 +59,26 @@ class AdminComposer
                 } else {
                     $city = 'Лунапарк';
                 }*/
+                //Категории в кеше
+                if (!Cache::has(CacheHelper::MENU_CATEGORIES))
+                    Cache::put(CacheHelper::MENU_CATEGORIES, $this->shopRepository->getChildren());
+
+                if (!Cache::has(CacheHelper::MENU_TREES))
+                    Cache::put(CacheHelper::MENU_TREES, $this->shopRepository->getTree());
+
+                $categories =  Cache::get(CacheHelper::MENU_CATEGORIES, function () {
+                    return $this->shopRepository->getChildren();
+                });
+                $trees = Cache::get(CacheHelper::MENU_TREES, function () {
+                    return $this->shopRepository->getTree();
+                });
+
                 $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
                 $view->with('user', $user);
                 $view->with('config', config('shop.frontend'));
                 $city = 'Калининград';
-                $view->with('categories', $this->shopRepository->getChildren());
-                $view->with('tree', $this->shopRepository->getTree());
+                $view->with('categories', $categories);
+                $view->with('tree', $trees);
 
                 $view->with('city', $city);
                 //dd($this->shopRepository->getChildren());

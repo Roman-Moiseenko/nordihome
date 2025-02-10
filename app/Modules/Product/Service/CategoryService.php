@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
+use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Product\Entity\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class CategoryService
@@ -23,10 +25,11 @@ class CategoryService
         $category->saveIcon($request->file('icon'));
 
         $category->save();
+        $this->clearCache();
         return $category;
     }
 
-    public function setInfo(Request $request, Category $category): Category
+    public function setInfo(Request $request, Category $category): void
     {
         $category->name = $request->string('name')->trim()->value();
         if ($request->has('parent_id')) {
@@ -42,53 +45,23 @@ class CategoryService
 
         $category->saveImage($request->file('image'), $request->boolean('image_clear'));
         $category->saveIcon($request->file('icon'), $request->boolean('icon_clear'));
-        /*
 
-
-        if ($request['image-clear'] == 'delete') {
-            $category->image->delete();
-            $category->refresh();
-        }
-        if ($request['icon-clear'] == 'delete') {
-            $category->icon->delete();
-            $category->refresh();
-        }
-
-        $this->image($category, $request->file('image'));
-        $this->icon($category, $request->file('icon'));
-*/
-
-        return $category;
+        $this->clearCache();
     }
 
-    public function destroy(Category $category): void
-    {
-        if (!empty($category->allProducts())) {
-            Category::destroy($category->id);
-        } else {
-            throw new \DomainException('Нельзя удалить категорию с товарами');
-        }
-    }
-
-    public function delete(Category $category)
+    public function delete(Category $category): void
     {
         if (count($category->children) == 0) {
             Category::destroy($category->id);
+            $this->clearCache();
         } else {
             throw new \DomainException('Нельзя удалить категорию с подкатегориями');
         }
     }
 
-
-    public function image(Category $category, $file): void
+    private function clearCache(): void
     {
-        $category->saveImage($file);
+        Cache::put(CacheHelper::MENU_CATEGORIES, '', -1);
+        Cache::put(CacheHelper::MENU_TREES, '', -1);
     }
-
-
-    public function icon(Category $category, $file): void
-    {
-        $category->saveIcon($file);
-    }
-
 }

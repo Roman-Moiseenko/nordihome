@@ -3,34 +3,31 @@ declare(strict_types=1);
 
 namespace App\Modules\Setting\Service;
 
-use App\Modules\Product\Service\ProductService;
 use App\Modules\Setting\Entity\Setting;
 use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class SettingService
 {
-    private ProductService $productService;
     private SettingRepository $repository;
 
-    public function __construct(ProductService $productService, SettingRepository $repository)
+    public function __construct(SettingRepository $repository)
     {
-        $this->productService = $productService;
         $this->repository = $repository;
     }
 
     public function update(Request $request): void
     {
         $slug = $request->string('slug')->value();
-
         $setting = Setting::where('slug', $slug)->first();
         $data = $request->except(['slug','_method', '_token']);
-
         $setting->data = $data;
         $setting->save();
         if ($slug == 'notification') $this->saveTelegramToken();
       //  if ($slug == 'parser') $this->productService->updateCostAllProductsIkea();
         if ($slug == 'mail') $this->saveMailBoxes();
+        if ($slug == 'web') $this->saveCache();
     }
 
     private function saveTelegramToken(): void
@@ -60,5 +57,12 @@ class SettingService
             "{$key}={$value}",
             file_get_contents($path)
         ));
+    }
+
+    private function saveCache()
+    {
+        Cache::flush();//Очищаем весь кэш
+
+        //Cache::put(CacheHelper::MENU_TOP, Menu::menuTop()); //Сохраняем меню
     }
 }
