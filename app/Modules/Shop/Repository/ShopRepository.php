@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Repository;
 
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
@@ -32,6 +33,7 @@ class ShopRepository
 
     private Web $web;
     protected ?User $user;
+    private Settings $settings;
 
     public function __construct(Settings $settings)
     {
@@ -42,6 +44,7 @@ class ShopRepository
         } else {
             $this->user = null;
         }
+        $this->settings = $settings;
     }
 
 
@@ -209,22 +212,21 @@ class ShopRepository
         $rgt = $category->_rgt;
 
         $query = Product::where('published', true) //Опубликован AND
-            ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND
-                $query->whereHas('category', function ($query) use ($lft, $rgt) {
-                    $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
-                })->orWhereHas('categories', function ($query) use ($lft, $rgt) {
-                    $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
-                });
-            })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
-                $query->doesntHave('modification')->orHas('main_modification');
+        ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND
+            $query->whereHas('category', function ($query) use ($lft, $rgt) {
+                $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
+            })->orWhereHas('categories', function ($query) use ($lft, $rgt) {
+                $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
             });
+        })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
+            $query->doesntHave('modification')->orHas('main_modification');
+        });
 
         return $query->get();
     }
 
     ////КАТЕГОРИИ
     ///
-
 
 
     public function getChildren(int $parent_id = null): Arrayable
@@ -459,7 +461,6 @@ class ShopRepository
     }
 
 
-
     public function getMapData(): array
     {
         $trader = Trader::where('default', true)->first();
@@ -509,33 +510,18 @@ class ShopRepository
     }
 
 
-
     //Product to Array для Frontend
 
     public function ProductToArrayCard(Product $product): array
     {
-        return [
-            'id' => $product->id,
-            'code' => $product->code,
-            'name' => is_null($product->modification) ? $product->name : $product->modification->name,
-            'slug' => $product->slug,
-            'has_promotion' => $product->hasPromotion(),
-            'is_new' => $product->isNew(),
-            'is_wish' => !is_null($this->user) && $product->isWish($this->user->id),
-            'is_sale' => $product->isSale(),
-            'rating' => $product->current_rating,
-            'count_reviews' =>$product->countReviews(),
-            'price' => $product->getPrice(false, $this->user),
-            'price_promotion' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
+        return array_merge($this->ProductToArray($product), [
             'images' => [
                 'catalog' => $product->getImageData('catalog'),
             ],
             'images-next' => [
                 'catalog' => $product->getImageNextData('catalog'),
             ],
-            'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
-
-        ];
+        ]);
     }
 
     private function ModificationToArray(Modification $modification): array
@@ -564,7 +550,7 @@ class ShopRepository
                 }
             }
         }
-      //  dd($attributes);
+        //  dd($attributes);
         return $attributes;
         //dd($attributes);
         /*
@@ -600,5 +586,49 @@ class ShopRepository
             })->toArray(),
         ];
         */
+    }
+
+    public function ProductToArrayView(Product $product): array
+    {
+        return array_merge($this->ProductToArray($product), [
+            'description' => $product->description,
+            'short' => $product->short,
+            'price_previous' => $product->getPrice(true, $this->user),
+            'promotion_title' => is_null($product->promotion()) ? null : $product->promotion()->title,
+            'quantity' => $product->getQuantitySell(),
+            'brand' => [
+                'src' => $product->brand->getImage(),
+                'name' => $product->brand->name,
+            ],
+            'gallery' => $product->photos()->get()->map(function (Photo $photo) {
+                return [
+                    'src' => $photo->getThumbUrl('card'),
+                    'alt' => $photo->alt,
+                    'title' => $photo->alt,
+                    'description' => $photo->description,
+                ];
+            }),
+        ]);
+
+    }
+
+
+    private function ProductToArray(Product $product): array
+    {
+        return [
+            'id' => $product->id,
+            'code' => $product->code,
+            'name' => is_null($product->modification) ? $product->name : $product->modification->name,
+            'slug' => $product->slug,
+            'has_promotion' => $product->hasPromotion(),
+            'is_new' => $product->isNew(),
+            'is_wish' => !is_null($this->user) && $product->isWish($this->user->id),
+            'is_sale' => $product->isSale(),
+            'rating' => $product->current_rating,
+            'count_reviews' => $product->countReviews(),
+            'price' => $product->getPrice(false, $this->user),
+            'price_promotion' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
+            'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
+        ];
     }
 }

@@ -35,6 +35,7 @@ class ProductController extends ShopController
         $title = $product->name . ' купить по цене ' . $product->getPriceRetail() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
+        $product = $this->repository->ProductToArrayView($product);
 
         return view($this->route('product.view'), compact('product', 'title', 'description', 'productAttributes'));
     }

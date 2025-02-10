@@ -179,10 +179,44 @@
 //КАРТОЧКА ТОВАРА В СПИСКЕ
 .product-card {
     overflow: hidden;
-    /*border-radius: $radius-card;
-    border: 1px solid var(--bs-gray-400);
-    box-shadow: $shadow-card; */
+    .product-card-image {
+        overflow: hidden;
+        position: relative;
+        img {
+            width: 100%;
+        }
+        .product-label {
+            position: absolute;
+            z-index: 1;
 
+            top: 4px;
+            // border-radius: 50%;
+            font-size: 0.85rem;
+            width: 90px;
+            height: 30px;
+            color: #fff;
+            display: grid;
+            >span {
+                margin: auto;
+            }
+            &.wish {
+                right: 4px;
+                >button {
+                    font-size: 22px;
+                }
+            }
+            &.promotion {
+                background: var(--bs-secondary-700);
+                left: 4px;
+            }
+            &.new {
+                background: var(--bs-gray-900);
+                color: var(--bs-white);
+                text-transform: uppercase;
+                left: 4px;
+            }
+        }
+    }
     .product-modification {
         display: flex;
         flex-wrap: wrap;
@@ -201,22 +235,40 @@
             }
         }
     }
-}
-.product-card-review {
-    margin-top: 4px;
-    font-size: 0.9rem;
-    padding: 0 4px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.product-card-image {
-    overflow: hidden;
-    position: relative;
-    img {
-        width: 100%;
+    .product-card-name {
+        padding: 4px;
+        height: 60px;
+        //align-items: center;
+        margin: auto 0;
+        display: flex;
+        a {
+            color: black;
+        }
+    }
+    .product-card-info {
+        padding: 0 4px;
+        font-size: 1.5rem;
+        >.discount-price {
+            color: var(--bs-discount-color);
+        }
+        >.base-price {
+            font-size: 1.0rem;
+            color: var(--bs-gray-600);
+            text-decoration: line-through;
+            padding-left: 8px;
+        }
+    }
+    .product-card-review {
+        margin-top: 4px;
+        font-size: 0.9rem;
+        padding: 0 4px;
+        display: flex;
+        justify-content: space-between;
     }
 }
+
+
+
 .product-card-image-hover {
     position: absolute;
     top: 0;
@@ -227,61 +279,9 @@
         opacity: 1;
     }
 }
-.product-label {
-    position: absolute;
-    z-index: 1;
 
-    top: 4px;
-   // border-radius: 50%;
-    font-size: 0.85rem;
-    width: 90px;
-    height: 30px;
-    color: #fff;
-    display: grid;
-    >span {
-        margin: auto;
-    }
-    &.wish {
-        right: 4px;
-        >button {
-            font-size: 22px;
-        }
-    }
-    &.promotion {
-        background: var(--bs-secondary-700);
-        left: 4px;
-    }
-    &.new {
-        background: var(--bs-gray-900);
-        color: var(--bs-white);
-        text-transform: uppercase;
-        left: 4px;
-    }
-}
 
-.product-card-name {
-    padding: 4px;
-    height: 60px;
-    //align-items: center;
-    margin: auto 0;
-    display: flex;
-    a {
-        color: black;
-    }
-}
-.product-card-info {
-    padding: 0 4px;
-    font-size: 1.5rem;
-    >.discount-price {
-        color: var(--bs-discount-color);
-    }
-    >.base-price {
-        font-size: 1.0rem;
-        color: var(--bs-gray-600);
-        text-decoration: line-through;
-        padding-left: 8px;
-    }
-}
+
 
 //.product-card-info
 
@@ -353,6 +353,67 @@
 }
 
 //КАРТОЧКА ТОВАРА
+
+.product-view {
+    margin-top: -5rem;
+    margin-bottom: 5rem;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 5rem;
+    .pre-block-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 69%;
+        min-width: 750px;
+        .block-gallery {
+            position: relative;
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+            padding-right: 1.25rem;
+            .gallery {
+                position: sticky;
+                top: 0;
+                display: grid;
+                width: 100%;
+                grid-template-columns: repeat(2,minmax(0,1fr));
+                grid-gap: .5rem;
+                gap: .5rem;
+                white-space: nowrap;
+                grid-auto-flow: row;
+                >.item {
+                    max-width: 100%;
+                    position: relative;
+                    img {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        height: 0;
+                        max-height: 100%;
+                        min-height: 100%;
+                        width: 0;
+                        min-width: 100%;
+                        max-width: 100%;
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    .specification {
+        min-width: 480px;
+        display: flex;
+        flex-direction: column;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+//Что ниже - УДАЛИТЬ
 .product-page {
     .box-card {
         padding: 10px 20px;
