@@ -5,7 +5,7 @@ namespace App\Modules\Setting\Entity;
 
 class Web extends AbstractSetting
 {
-    public int $paginate = 0;
+    public int $paginate = 21;
     public string $logo_img = '';
     public string $logo_alt = '';
 
@@ -18,10 +18,4 @@ class Web extends AbstractSetting
     public string $title_contact = '';
     public string $title_city = '';
 
-
-
-    public function view()
-    {
-        return view('admin.settings.web', ['web' => $this]);
-    }
 }

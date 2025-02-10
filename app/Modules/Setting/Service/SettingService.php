@@ -29,7 +29,7 @@ class SettingService
         $setting->data = $data;
         $setting->save();
         if ($slug == 'notification') $this->saveTelegramToken();
-        if ($slug == 'parser') $this->productService->updateCostAllProductsIkea();
+      //  if ($slug == 'parser') $this->productService->updateCostAllProductsIkea();
         if ($slug == 'mail') $this->saveMailBoxes();
     }
 

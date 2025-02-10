@@ -5,6 +5,7 @@ namespace App\Modules\Setting\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Group;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Setting\Service\SettingService;
 use Illuminate\Http\RedirectResponse;
@@ -16,11 +17,13 @@ class SettingController extends Controller
 {
     private SettingService $service;
     private SettingRepository $repository;
+    private Settings $settings;
 
-    public function __construct(SettingService $service, SettingRepository $repository)
+    public function __construct(SettingService $service, SettingRepository $repository, Settings $settings)
     {
         $this->service = $service;
         $this->repository = $repository;
+        $this->settings = $settings;
     }
 
     public function index(Request $request): Response
@@ -34,10 +37,9 @@ class SettingController extends Controller
 
     public function common(): Response
     {
-        $common = $this->repository->getCommon();
         $groups = Group::orderBy('name')->get()->toArray();
         return Inertia::render('Setting/Common', [
-                'common' => $common,
+                'common' => $this->settings->common,
                 'groups' => $groups,
             ]
         );
@@ -45,27 +47,24 @@ class SettingController extends Controller
 
     public function coupon(): Response
     {
-        $coupon = $this->repository->getCoupon();
         return Inertia::render('Setting/Coupon', [
-                'coupon' => $coupon,
+                'coupon' => $this->settings->coupon,
             ]
         );
     }
 
     public function parser(): Response
     {
-        $parser = $this->repository->getParser();
         return Inertia::render('Setting/Parser', [
-                'parser' => $parser,
+                'parser' => $this->settings->parser,
             ]
         );
     }
 
     public function web(): Response
     {
-        $web = $this->repository->getWeb();
         return Inertia::render('Setting/Web', [
-                'web' => $web,
+                'web' => $this->settings->web,
             ]
         );
     }
@@ -73,9 +72,8 @@ class SettingController extends Controller
     //Настройки почты
     public function mail(): Response
     {
-        $mail = $this->repository->getMail();
         return Inertia::render('Setting/Mail', [
-                'mail' => $mail,
+                'mail' => $this->settings->mail,
             ]
         );
     }
@@ -83,9 +81,8 @@ class SettingController extends Controller
     //Настройки Уведомлений
     public function notification()
     {
-        $notification = $this->repository->getNotification();
         return Inertia::render('Setting/Notification', [
-                'notification' => $notification,
+                'notification' => $this->settings->notification,
             ]
         );
     }
@@ -93,9 +90,8 @@ class SettingController extends Controller
     //Изображения на сайт
     public function image(): Response
     {
-        $image = $this->repository->getImage();
         return Inertia::render('Setting/Image', [
-                'image' => $image,
+                'image' => $this->settings->image,
             ]
         );
     }

@@ -15,6 +15,7 @@ use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Common;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
@@ -47,8 +48,8 @@ class LoadCommand extends Command
         $this->storage = public_path() . '/temp/';
         $type = $this->option('type');
 
-        $settings = new SettingRepository();
-        $this->common = $settings->getCommon();
+        $settings = app()->make(Settings::class);
+        $this->common = $settings->common;
 
         $this->storageService = new StorageService();
 

@@ -13,9 +13,9 @@ return [
     'options-list' => [20, 40, 100, 200, 500],
     'options-card' => [3, 9, 15, 30, 90],
 
-    //***  OPTIONS   **//
 
     /* IMAGE */
+    //TODO Удалить
     'image' => [
         'watermark' => [
             'file' => '/images/watermark.png',
@@ -86,26 +86,7 @@ return [
         ],
 
     ],
-    /* SHOP => DB*/
-    //Не используется
-    'shop' => [
-        'pre_order' => false,
-        'only-offline' => false,
-        'show-finished' => true,
-        'delivery' => [
-            'local' => true,
-            'all' => true,
-        ],
-        'product' => [
 
-        ],
-        'paginate' => 20,
-        'reserve_cart' => 3, //время (ч) резерва товара в корзине
-        'cookie' => [
-            'key' => 'shop-l-Nordihome',
-            'timeout' => 60 * 24 * 3,
-        ],
-    ],
     'frontend' => [
         'logo-nav' => '/images/logo-nordi-home-2.svg',
         'brand-alt' => 'NORDI Home',

@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Parser;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Parser;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\User\Entity\ParserStorage;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,9 @@ class ParserCart //Repository
     private string|null $user_ui = null;
     private Parser $parser;
 
-
-    public function __construct(SettingRepository $settings)
+    public function __construct(Settings $settings)
     {
-        $this->parser = $settings->getParser();
+        $this->parser = $settings->parser;
     }
 
     public function load(string $user_ui = '')

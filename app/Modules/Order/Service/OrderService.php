@@ -29,6 +29,7 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\Setting\Entity\Parser;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
@@ -73,12 +74,12 @@ class OrderService
         LoggerService       $logger,
         MovementService     $movementService,
         OrderReserveService $reserveService,
-        SettingRepository   $settings,
+        Settings  $settings,
         InvoiceReport       $invoiceReport, //
     )
     {
-        $this->coupon_set = $settings->getCoupon();
-        $this->parser_set = $settings->getParser();
+        $this->coupon_set = $settings->coupon;
+        $this->parser_set = $settings->parser;
         $this->deliveries = $deliveries;
         $this->cart = $cart;
         $this->repository = $repository;

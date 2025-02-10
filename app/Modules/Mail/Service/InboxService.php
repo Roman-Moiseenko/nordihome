@@ -3,6 +3,7 @@
 namespace App\Modules\Mail\Service;
 
 use App\Modules\Setting\Entity\Mail;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,9 +20,9 @@ class InboxService
 
     private Mail $mail;
 
-    public function __construct(SettingRepository $settings)
+    public function __construct(Settings $settings)
     {
-        $this->mail = $settings->getMail();
+        $this->mail = $settings->mail;
     }
 
     public function destroy(Inbox $inbox)

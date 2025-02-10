@@ -6,14 +6,15 @@ namespace App\Modules\Order\Entity\Addition;
 use App\Modules\Admin\Entity\Setting;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Product\Entity\Brand;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 
 class DeliveryPolandCalculate extends CalculateAddition
 {
     public static function calculate(Order $order, int $base): int
     {
-        $settings = new SettingRepository();
-        $parser = $settings->getParser();
+        $settings = app()->make(Settings::class);
+        $parser = $settings->parser;
         //Первично поиск по brand = 'Икеа'
         //В дальнейшем ?? перейти на список из ProductParser
         $ikea = Brand::IkeaID();

@@ -6,6 +6,7 @@ namespace App\Modules\Base\Service;
 
 
 use App\Modules\Setting\Entity\Parser;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -19,8 +20,8 @@ class HttpPage
     {
         $this->cache = $cache;
 
-        $settings = new SettingRepository();
-        $this->parser =  $settings->getParser();
+        $settings = app()->make(Settings::class);
+        $this->parser =  $settings->parser;
     }
 
     public function addDomainToRequest(string $url)

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\SlugRepository;
@@ -18,14 +19,12 @@ class ProductController extends ShopController
 
     public function __construct(
         ShopRepository $repository,
-        SettingRepository $settings,
         SlugRepository $slugs,
     )
     {
         $this->middleware(['auth:admin'])->only(['view_draft']);
         parent::__construct();
         $this->repository = $repository;
-        $this->web = $settings->getWeb();
         $this->slugs = $slugs;
     }
 

@@ -15,6 +15,8 @@ use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
+
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -31,21 +33,23 @@ class BankService
     private Organization $payer;
     private array $valute = [];
     private OrderPaymentService $orderPaymentService;
+    private Settings $settings;
 
     public function __construct(
         PaymentDocumentService $paymentDocumentService,
-        SettingRepository $settings,
+        Settings $settings,
         OrganizationService $organizationService,
-        OrderPaymentService $orderPaymentService
+        OrderPaymentService $orderPaymentService,
+        //Settings $settings,
         //TODO Добавить сервис платежей от клиентов
     )
     {
         $this->paymentDocumentService = $paymentDocumentService;
-        $common = $settings->getCommon();
 
-        $this->date_bank = Carbon::parse($common->date_bank);
+        $this->date_bank = Carbon::parse($settings->common->date_bank);
         $this->organizationService = $organizationService;
         $this->orderPaymentService = $orderPaymentService;
+        $this->settings = $settings;
     }
 
     public function upload(Request $request): array
@@ -107,10 +111,11 @@ class BankService
 
         ;
         //Записываем Дату
-        $setting = Setting::where('slug', 'common')->first();
-        $common = new Common($setting->getData());
-        $common->date_bank = $section['ДатаКонца'];
-        $setting->setData($common);
+        $this->settings->common->date_bank = $section['ДатаКонца'];
+        $this->settings->common->save();
+        //TODO Test
+       // $setting = Setting::where('slug', 'common')->first();
+       // $setting->setData($this->settings->common);
     }
 
     private function checkDate(string $dateDocument): bool
@@ -204,10 +209,10 @@ class BankService
                 ]);
                 //Если злоты, меняем в Настройках Парсера
                 if ($currency->cbr_code == 'PLN') {
+                    //TODO Test Удалить
                     $setting = Setting::where('slug', 'parser')->first();
-                    $parser = new Parser($setting->getData());
-                    $parser->parser_coefficient = $currency->getExchange();
-                    $setting->setData($parser);
+                    $this->settings->parser->parser_coefficient = $currency->getExchange();
+                    $setting->setData($this->settings->parser);
                 }
             }
         }

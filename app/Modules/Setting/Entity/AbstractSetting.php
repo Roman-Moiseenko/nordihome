@@ -22,9 +22,33 @@ abstract class AbstractSetting
         }
     }
 
-    public function save()
+    public static function create(array $data): static
     {
+        $setting = new static([]);
 
+        foreach ($data as $field => $value) {
+            if (gettype($setting->$field) == 'boolean') {
+                $setting->$field = (bool)$value;
+            } elseif (gettype($setting->$field) == 'integer') {
+                $setting->$field = (int)($value);
+            } elseif (gettype($setting->$field) == 'double') {
+                $setting->$field = (float)($value);
+            } elseif (gettype($setting->$field) == 'string') {
+                $setting->$field = (string)($value);
+            } else {
+                $setting->$field = $value;
+            }
+        }
+       // $setting->save();
+        return $setting;
+    }
+
+    final public function save(): void
+    {
+      /*  $slug = '';
+        $setting = Setting::where('slug', $slug)->first();
+        $setting->data = $this;
+        $setting->save();*/
     }
 
    // abstract public function view();

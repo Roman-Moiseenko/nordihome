@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Mail\Mailable;
 
 use App\Modules\Setting\Entity\AbstractSetting;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Envelope;
@@ -11,7 +12,6 @@ use JetBrains\PhpStorm\Pure;
 
 abstract class SystemMailable extends AbstractMailable
 {
-    //protected string $subject;
 
     #[Pure] public function __construct()
     {
@@ -24,12 +24,10 @@ abstract class SystemMailable extends AbstractMailable
 
     public function envelope(): Envelope
     {
-        $mail_set = (new SettingRepository())->getMail();
-
         return new Envelope(
             from: new Address(
-                $mail_set->system_name . '@' . $mail_set->mail_domain,
-                $mail_set->system_from
+                $this->mail_settings->system_name . '@' . $this->mail_settings->mail_domain,
+                $this->mail_settings->system_from
             ),
             subject: $this->subject,
         );

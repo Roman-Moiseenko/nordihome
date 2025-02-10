@@ -17,6 +17,7 @@ use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Repository\ModificationRepository;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\User\Entity\User;
@@ -31,20 +32,16 @@ class ShopRepository
 
     private Web $web;
     protected ?User $user;
-    private ModificationRepository $modifications;
 
-    public function __construct(ModificationRepository $modifications)
+    public function __construct(Settings $settings)
     {
-        $settingRepository = new SettingRepository();
-        $this->web = $settingRepository->getWeb();
+        $this->web = $settings->web;
 
         if (Auth::guard('user')->check()) {
             $this->user = Auth::guard('user')->user();
         } else {
             $this->user = null;
         }
-
-        $this->modifications = $modifications;
     }
 
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Admin\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $type
 
  */
+
+#[Deprecated]
 class SettingItem extends Model
 {
     const KEY_INTEGER = 1;

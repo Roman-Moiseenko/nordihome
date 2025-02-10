@@ -9,6 +9,7 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -18,10 +19,10 @@ class OrderReserveService
     private int $minutes;
     private LoggerService $logger;
 
-    public function __construct(LoggerService $logger, SettingRepository $settings)
+    public function __construct(LoggerService $logger, Settings $settings)
     {
         $this->storage = Storage::where('default', true)->first();
-        $this->minutes = $settings->getCommon()->reserve;
+        $this->minutes = $settings->common->reserve;
         $this->logger = $logger;
     }
 

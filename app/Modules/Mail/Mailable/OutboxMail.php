@@ -15,13 +15,11 @@ use JetBrains\PhpStorm\Pure;
 class OutboxMail extends AbstractMailable
 {
     public Outbox $outbox;
-    private Mail $mail_set;
 
     public function __construct(Outbox $outbox)
     {
         parent::__construct();
         $this->outbox = $outbox;
-        $this->mail_set = (new SettingRepository())->getMail();
 
         foreach ($outbox->attachments as $key => $attachment) {
             $this->files[$key] = storage_path('app/') . $attachment;
@@ -32,8 +30,8 @@ class OutboxMail extends AbstractMailable
     {
         return new Envelope(
             from: new Address(
-                $this->mail_set->outbox_name . '@' . $this->mail_set->mail_domain,
-                $this->mail_set->outbox_from
+                $this->mail_settings->outbox_name . '@' . $this->mail_settings->mail_domain,
+                $this->mail_settings->outbox_from
             ),
             subject: $this->outbox->subject,
         );

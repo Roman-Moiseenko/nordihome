@@ -6,6 +6,7 @@ namespace App\Modules\Notification\Service;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Repository\TelegramRepository;
 use App\Modules\Setting\Entity\Notification;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use NotificationChannels\Telegram\TelegramUpdates;
 
@@ -15,9 +16,9 @@ class TelegramService
     private Notification $notification;
     private TelegramRepository $repository;
 
-    public function __construct(SettingRepository $settings, TelegramRepository $repository)
+    public function __construct(Settings $settings, TelegramRepository $repository)
     {
-        $this->notification = $settings->getNotification();
+        $this->notification = $settings->notification;
         $this->repository = $repository;
     }
 

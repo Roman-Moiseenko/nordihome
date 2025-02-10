@@ -6,17 +6,18 @@ namespace App\Modules\Discount\Service;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\Pure;
 
 class CouponService
 {
     //TODO Купоны считаем
-    private $coupon;
+    private int $coupon;
 
-    public function __construct(SettingRepository $settings)
+    public function __construct(Settings $settings)
     {
-        $this->coupon = $settings->getCoupon()->coupon;
+        $this->coupon = $settings->coupon->coupon;
     }
 
     #[Pure]

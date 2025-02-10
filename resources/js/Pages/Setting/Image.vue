@@ -27,16 +27,16 @@
                             <el-input v-model="thumb.name" />
                         </el-form-item>
                         <el-form-item label="Ширина" label-position="left">
-                            <el-input v-model="form.width" :formatter="val => func.MaskInteger(val)"  style="width: 150px;"/>
+                            <el-input v-model="thumb.width" :formatter="val => func.MaskInteger(val)"  style="width: 150px;"/>
                         </el-form-item>
                         <el-form-item label="Высота" label-position="left">
-                            <el-input v-model="form.height" :formatter="val => func.MaskInteger(val)"  style="width: 150px;"/>
+                            <el-input v-model="thumb.height" :formatter="val => func.MaskInteger(val)"  style="width: 150px;"/>
                         </el-form-item>
                         <el-form-item label="Обрезка" label-position="left">
-                            <el-checkbox v-model="form.fit" :checked="form.fit"/>
+                            <el-checkbox v-model="thumb.fit" :checked="form.fit"/>
                         </el-form-item>
                         <el-form-item label="Водяной знак" label-position="left">
-                            <el-checkbox v-model="form.watermark" :checked="form.watermark"/>
+                            <el-checkbox v-model="thumb.watermark" :checked="form.watermark"/>
                         </el-form-item>
                         <el-button>Удалить</el-button>
                     </div>

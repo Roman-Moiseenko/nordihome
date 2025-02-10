@@ -13,6 +13,7 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Service\ProductService;
 use App\Modules\Setting\Entity\Common;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -64,11 +65,11 @@ class ParserService
 
 
 
-    public function __construct(HttpPage $httpPage, ProductService $productService, SettingRepository $settings)
+    public function __construct(HttpPage $httpPage, ProductService $productService, Settings $settings)
     {
         $this->httpPage = $httpPage;
         $this->productService = $productService;
-        $this->common = $settings->getCommon();
+        $this->common = $settings->common;
     }
 
     public function findProduct(string $search): Product

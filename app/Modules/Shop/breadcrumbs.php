@@ -2,15 +2,15 @@
 declare(strict_types=1);
 
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Repository\SlugRepository;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
-$settings = new \App\Modules\Setting\Repository\SettingRepository();
-$web = $settings->getWeb();
+$settings = app()->make(Settings::class);
 
-Breadcrumbs::for('shop.home', function (BreadcrumbTrail $trail) use ($web) {
-    $trail->push($web->breadcrumbs_home, route('shop.home'));
+Breadcrumbs::for('shop.home', function (BreadcrumbTrail $trail) use ($settings) {
+    $trail->push($settings->web->breadcrumbs_home, route('shop.home'));
 });
 
 /**  S H O P */

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Setting\Entity\Setting;
+use App\Modules\Setting\Entity\Settings;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
@@ -16,6 +18,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
 
+        $this->app->singleton(Settings::class, function () {
+            return new Settings();
+        });
   /*
         if (!Auth::guard('user')->check()) {
             $userId = null;

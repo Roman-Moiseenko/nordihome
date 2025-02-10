@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Entity;
 
-use App\Modules\Admin\Entity\Options\Image;
-use App\Modules\Admin\Entity\Options\Shop;
 use Illuminate\Support\Facades\Config;
-use JetBrains\PhpStorm\NoReturn;
+use JetBrains\PhpStorm\Deprecated;
 use stdClass;
 
 /**
@@ -14,16 +12,18 @@ use stdClass;
  * @property string $shop_json
  * @property stdClass $shop
  */
+
+#[Deprecated]
 class Options
 {
-    public Image $image;
+    //public Image $image;
     public mixed $report;
 
     public function __construct()
     {
         //Считываем из Config
-        $image = Config::get('shop.image');
-        $this->image = Image::createFromArray($image);
+       // $image = Config::get('shop.image');
+       // $this->image = Image::createFromArray($image);
         $this->report = Config::get('shop.report');
 
     }

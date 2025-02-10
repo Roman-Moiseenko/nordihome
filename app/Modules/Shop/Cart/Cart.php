@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Cart;
 
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Storage\HybridStorage;
@@ -26,14 +27,14 @@ class Cart
     private bool $pre_order;
 
 
-    public function __construct(HybridStorage $storage, CalculatorOrder $calculator, SettingRepository $settings)
+    public function __construct(HybridStorage $storage, CalculatorOrder $calculator, Settings $settings)
     {
         $this->storage = $storage;
         $this->calculator = $calculator;
         $this->info = new CartInfo();
         $this->itemsOrder = [];
         $this->itemsPreOrder = [];
-        $this->pre_order =  $settings->getCommon()->pre_order;;
+        $this->pre_order =  $settings->common->pre_order;
     }
 
     public function getItems(): array

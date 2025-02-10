@@ -5,7 +5,7 @@ namespace App\Modules\Setting\Entity;
 
 class Image extends AbstractSetting
 {
-    public string $watermark_file = '';
+    public string $watermark_file = '/image/watermark.png';
     public float $watermark_size = 0.2; //от размера изображения
     public string $watermark_position = 'bottom-right';
     public int $watermark_offset = 20;
@@ -13,7 +13,10 @@ class Image extends AbstractSetting
     public bool $createThumbsOnSave = true;
     public bool $createThumbsOnRequest = true;
 
-    public array $thumbs = [];
+    public array $thumbs = [
+        ['name' => 'mini', 'width' => 80, 'height' => 80,],
+        ['name' => 'original', 'watermark' => false],
+    ];
 
     //'__name__' => ['width' => int, 'height' => int, 'fit' => true, 'watermark' => true],
 

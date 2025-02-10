@@ -7,6 +7,7 @@ use App\Events\ThrowableHasAppeared;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Common;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\SlugRepository;
@@ -16,20 +17,15 @@ use Illuminate\Http\Request;
 class CatalogController extends ShopController
 {
     private ShopRepository $repository;
-
-    private Common $common;
     private SlugRepository $slugs;
 
     public function __construct(
         ShopRepository $repository,
-        SettingRepository $settings,
         SlugRepository $slugs,
     )
     {
         parent::__construct();
         $this->repository = $repository;
-        $this->web = $settings->getWeb();
-        $this->common = $settings->getCommon();
         $this->slugs = $slugs;
     }
 

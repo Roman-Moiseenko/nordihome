@@ -24,6 +24,7 @@ use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\TagRepository;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Parser;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class ProductService
         EquivalentService  $equivalentService,
         SeriesService      $seriesService,
         StorageService     $storageService,
-        SettingRepository  $settings,
+        Settings  $settings,
         GroupService       $groupService,
     )
     {
@@ -67,8 +68,8 @@ class ProductService
         $this->seriesService = $seriesService;
         $this->storageService = $storageService;
 
-        $this->common_set = $settings->getCommon();
-        $this->parser_set = $settings->getParser();
+        $this->common_set = $settings->common;
+        $this->parser_set = $settings->parser;
         $this->groupService = $groupService;
     }
 
