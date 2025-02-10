@@ -90,6 +90,16 @@ class SettingController extends Controller
         );
     }
 
+    //Изображения на сайт
+    public function image(): Response
+    {
+        $image = $this->repository->getImage();
+        return Inertia::render('Setting/Image', [
+                'image' => $image,
+            ]
+        );
+    }
+
     public function update(Request $request): RedirectResponse
     {
         try {

@@ -5,6 +5,7 @@ namespace App\Modules\Setting\Repository;
 
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Coupon;
+use App\Modules\Setting\Entity\Image;
 use App\Modules\Setting\Entity\Mail;
 use App\Modules\Setting\Entity\Notification;
 use App\Modules\Setting\Entity\Parser;
@@ -73,6 +74,13 @@ class SettingRepository
         return new Notification($setting->getData());
     }
 
+    public function getImage(): Image
+    {
+        $image = Setting::where('slug', 'image')->first();
+        if (is_null($image)) $image = $this->createImage();
+        return new Image($image->getData());
+    }
+
     private function createCommon(): Setting
     {
         return Setting::register(
@@ -123,6 +131,15 @@ class SettingRepository
             'Настройки уведомлений',
             'notification',
             'API доступы и ключи к мессенджерам, настройки уведомлений'
+        );
+    }
+
+    private function createImage(): Setting
+    {
+        return Setting::register(
+            'Изображения на сайте',
+            'image',
+            'Водяной знак, обрезка и масштабирование изображений товара'
         );
     }
 }

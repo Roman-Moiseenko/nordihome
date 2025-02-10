@@ -41,3 +41,7 @@ Breadcrumbs::for('admin.setting.notification', function (BreadcrumbTrail $trail)
     $trail->parent('admin.setting.index');
     $trail->push('Уведомления', route('admin.setting.notification'));
 });
+Breadcrumbs::for('admin.setting.image', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.setting.index');
+    $trail->push('Изображения', route('admin.setting.image'));
+});

@@ -55,6 +55,13 @@ return [
                 'route_name' => 'admin.setting.mail',
                 'font_awesome' => 'fa-light fa-envelope',
             ],
+            'image' => [
+                'title' => 'Изображения',
+                'action' => true,
+                'vue' => true,
+                'route_name' => 'admin.setting.image',
+                'font_awesome' => 'fa-light fa-image',
+            ],
         ],
     ],
 ];

@@ -33,7 +33,7 @@ class SettingService
         if ($slug == 'mail') $this->saveMailBoxes();
     }
 
-    private function saveTelegramToken()
+    private function saveTelegramToken(): void
     {
         $notification = $this->repository->getNotification();
         $this->putPermanentEnv('TELEGRAM_BOT_TOKEN', $notification->telegram_api);
