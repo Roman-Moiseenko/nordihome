@@ -3,11 +3,11 @@
         <div class="product-card-image">
             <a href="{{ route('shop.product.view', $product['slug']) }}">
                 <img class="product-card-image-main"
-                     src="{{ $product['images']['catalog-watermark']['src'] }}"
-                     alt="{{ $product['images']['catalog-watermark']['alt'] }}">
+                     src="{{ $product['images']['catalog']['src'] }}"
+                     alt="{{ $product['images']['catalog']['alt'] }}">
                 <img class="product-card-image-hover"
-                     src="{{ $product['images-next']['catalog-watermark']['src'] }}"
-                     alt="{{ $product['images-next']['catalog-watermark']['alt'] }}">
+                     src="{{ $product['images-next']['catalog']['src'] }}"
+                     alt="{{ $product['images-next']['catalog']['alt'] }}">
 
                 @if($product['has_promotion'])
                     <div class="product-label promotion"><span>Акция</span></div>

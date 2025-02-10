@@ -15,6 +15,7 @@ class Image extends AbstractSetting
 
     public array $thumbs = [
         ['name' => 'mini', 'width' => 80, 'height' => 80,],
+        ['name' => 'catalog', 'width' => 320, 'height' => 320,],
         ['name' => 'original', 'watermark' => false],
     ];
 

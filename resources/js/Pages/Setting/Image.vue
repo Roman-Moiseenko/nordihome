@@ -55,13 +55,13 @@
                         </el-table-column>
                         <el-table-column label="" width="80">
                             <template #default="scope">
-                                <el-button type="danger"><i class="fa-light fa-trash"></i></el-button>
+                                <el-button type="danger" @click="onDelete(scope.row)"><i class="fa-light fa-trash"></i></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
 
 
-                    <el-button>Добавить</el-button>
+                    <el-button type="success" @click="onAdd">Добавить</el-button>
 
                 </el-col>
 
@@ -94,9 +94,25 @@ const form = reactive({
     createThumbsOnSave: props.image.createThumbsOnSave,
     createThumbsOnRequest: props.image.createThumbsOnRequest,
     thumbs: [...props.image.thumbs],
-
-
 })
+
+function onAdd() {
+    form.thumbs.push({
+        name: 'new-name',
+        width: null,
+        height: null,
+        fit: false,
+        watermark: false,
+    })
+}
+
+function onDelete(row) {
+    let index = form.thumbs.map(function (el) {
+        return el.name;
+    }).indexOf(row.name);
+    form.thumbs.splice(index, 1)
+
+}
 
 function onSubmit() {
     router.put(route('admin.setting.update'), form)

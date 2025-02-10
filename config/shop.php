@@ -16,7 +16,7 @@ return [
 
     /* IMAGE */
     //TODO Удалить
-    'image' => [
+ /*   'image' => [
         'watermark' => [
             'file' => '/images/watermark.png',
             'size' => 0.2, //от размера изображения
@@ -54,6 +54,7 @@ return [
 
         ],//другие параметры
     ],
+    */
     //TODO Перенести в DB
     'report' => [
         'supply' => [

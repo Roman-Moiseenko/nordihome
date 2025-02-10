@@ -528,10 +528,10 @@ class ShopRepository
             'price' => $product->getPrice(false, $this->user),
             'price_promotion' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
             'images' => [
-                'catalog-watermark' => $product->getImageData('catalog-watermark'),
+                'catalog' => $product->getImageData('catalog'),
             ],
             'images-next' => [
-                'catalog-watermark' => $product->getImageNextData('catalog-watermark'),
+                'catalog' => $product->getImageNextData('catalog'),
             ],
             'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
 
