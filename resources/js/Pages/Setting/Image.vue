@@ -20,34 +20,51 @@
                         <el-input v-model="form.watermark_offset" :formatter="val => func.MaskInteger(val)"  style="width: 150px;"/>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="16">
                     <h2 class="font-medium">Образы</h2>
-                    <div v-for="(thumb, index) in form.thumbs">
-                        <el-form-item label="Название slug" label-position="left">
-                            <el-input v-model="thumb.name" />
-                        </el-form-item>
-                        <el-form-item label="Ширина" label-position="left">
-                            <el-input v-model="thumb.width" :formatter="val => func.MaskInteger(val)"  style="width: 150px;"/>
-                        </el-form-item>
-                        <el-form-item label="Высота" label-position="left">
-                            <el-input v-model="thumb.height" :formatter="val => func.MaskInteger(val)"  style="width: 150px;"/>
-                        </el-form-item>
-                        <el-form-item label="Обрезка" label-position="left">
-                            <el-checkbox v-model="thumb.fit" :checked="form.fit"/>
-                        </el-form-item>
-                        <el-form-item label="Водяной знак" label-position="left">
-                            <el-checkbox v-model="thumb.watermark" :checked="form.watermark"/>
-                        </el-form-item>
-                        <el-button>Удалить</el-button>
-                    </div>
+
+                    <el-table
+                        :data="[...form.thumbs]"
+                        header-cell-class-name="nordihome-header"
+                    >
+                        <el-table-column prop="name" label="Название" width="120">
+                            <template #default="scope">
+                                <el-input v-model="scope.row.name" />
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column prop="width" label="Ширина" width="100">
+                            <template #default="scope">
+                                <el-input v-model="scope.row.width" :formatter="val => func.MaskInteger(val)" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="height" label="Высота" width="100">
+                            <template #default="scope">
+                                <el-input v-model="scope.row.height" :formatter="val => func.MaskInteger(val)" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="fit" label="Обрезка" width="120">
+                            <template #default="scope">
+                                <el-checkbox v-model="scope.row.fit"  :checked="scope.row.fit   "/>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="watermark" label="Водяной знак" width="120">
+                            <template #default="scope">
+                                <el-checkbox v-model="scope.row.watermark"  :checked="scope.row.watermark"/>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="" width="80">
+                            <template #default="scope">
+                                <el-button type="danger"><i class="fa-light fa-trash"></i></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+
                     <el-button>Добавить</el-button>
 
-
                 </el-col>
-                <el-col :span="8">
 
-
-                </el-col>
             </el-row>
 
             <el-button type="primary" @click="onSubmit">Сохранить</el-button>
