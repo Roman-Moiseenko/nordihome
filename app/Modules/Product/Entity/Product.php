@@ -430,8 +430,14 @@ class Product extends Model
             if ($user->isBulk() && $this->getPriceBulk($previous) != 0) $price = $this->getPriceBulk($previous); //Оптовый клиент
             if ($user->isSpecial() && $this->getPriceSpecial($previous) != 0) $price = $this->getPriceSpecial($previous); //Спец Клиент
         }
+        //Проверяем установленные цены
         if ($price == 0) $price = $this->getPriceRetail($previous);
+        //Проверяем парсер
         if ($price == 0) $price = $this->getPriceParser();
+        //Проверяем модификацию
+        if ($price == 0 && !is_null($this->modification) && ($this->id != $this->modification->base_product_id)) {
+            return $this->modification->base_product->getPrice($previous, $user);
+        }
 
         return $price;
     }

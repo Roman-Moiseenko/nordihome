@@ -176,6 +176,26 @@
 
 }
 
+/* Общие блоки  */
+.product-modification {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    a {
+        color: black;
+        display: block;
+        min-width: 40px;
+        width: 40px;
+        margin: 2px 4px;
+        border: 1px solid black;
+        text-align: center;
+        &:hover {
+            color: white;
+            background: black;
+        }
+    }
+}
+
 //КАРТОЧКА ТОВАРА В СПИСКЕ
 .product-card {
     overflow: hidden;
@@ -217,23 +237,8 @@
             }
         }
     }
-    .product-modification {
-        display: flex;
-        flex-wrap: wrap;
-        font-size: 0.85rem;
-        a {
-            color: black;
-            display: block;
-            width: 40px;
-            margin: 2px 4px;
-            min-width: 40px;
-            border: 1px solid black;
-            text-align: center;
-            &:hover {
-                color: white;
-                background: black;
-            }
-        }
+    .modification {
+        @extend .product-modification;
     }
     .product-card-name {
         padding: 4px;
@@ -266,9 +271,6 @@
         justify-content: space-between;
     }
 }
-
-
-
 .product-card-image-hover {
     position: absolute;
     top: 0;
@@ -279,9 +281,6 @@
         opacity: 1;
     }
 }
-
-
-
 
 //.product-card-info
 
@@ -296,7 +295,6 @@
     transition: var(--transition);
     word-break: break-word;
 }
-
 .product-card-to-cart {
     display: flex;
     justify-content: space-between;
@@ -381,10 +379,37 @@
                 gap: .5rem;
                 white-space: nowrap;
                 grid-auto-flow: row;
+
                 >.item {
+                    cursor: pointer;
                     max-width: 100%;
                     position: relative;
-                    img {
+                    margin: 0;
+                    display: inline-block;
+                    overflow: hidden;
+                    border-width: 0;
+                    padding: 0;
+                    opacity: 1;
+                    width: auto;
+                    height: auto;
+                    background: none;
+                    box-sizing: border-box;
+                    .pre-item {
+                        height: auto;
+                        margin: 0;
+                        display: block;
+                        width: 100%;
+                        max-width: 100%;
+                        border-width: 0;
+                        padding: 0;
+                        opacity: 1;
+                        background: none;
+                        >img {
+                            max-width: 100%;
+                            height: auto;
+                        }
+                    }
+                    >img {
                         position: absolute;
                         top: 0;
                         right: 0;
@@ -402,14 +427,120 @@
         }
 
     }
-
-
-    .specification {
+    .pre-block-specification {
         min-width: 480px;
         display: flex;
         flex-direction: column;
         padding-left: 1rem;
         padding-right: 1rem;
+        .specification {
+            position: sticky;
+            top: 4rem;
+            max-width: 36rem;
+            >h1 {
+                margin-bottom: 0;
+            }
+            >.category-name {
+                font-size: 0.85rem;
+            }
+            >.rating {
+                margin: 12px 0;
+                >a {
+                    font-size: 0.85rem;
+                    color: var(--bs-gray-500)
+                }
+            }
+            >.price {
+                >.current {
+                    color: var(--bs-secondary-700);
+                    font-size: 1.75rem;
+                    font-weight: 800;
+                }
+                >.previous {
+                    color: var(--bs-gray-500);
+                }
+            }
+            >.available {
+                margin-top: 12px;
+                font-size: 1.15rem;
+            }
+            >.sizes {
+                >.caption {
+                    margin: 12px 0;
+                    display: flex;
+                    >span {
+                        font-size: 1.15rem;
+                        font-weight: 800;
+                    }
+                    a {
+                        margin-left: auto;
+                        font-weight: 600;
+                        color: var(--bs-gray-900);
+                    }
+                }
+                >.modification {
+                    @extend .product-modification;
+                    font-size: 1.25rem;
+                    a {
+                        min-width: 72px;
+                        width: 72px;
+                        padding: 8px 0;
+                    }
+                }
+
+            }
+            >.equivalent {
+                display: flex;
+                margin: 12px 0;
+                >.item {
+                    display: inline-block;
+                   // max-height: 3rem;
+                    min-width: 80px;
+                    max-width: 80px;
+                    cursor: pointer;
+                    overflow: hidden;
+                    border-bottom-style: solid;
+                    border-bottom-width: 4px;
+                    border-color: transparent;
+                    padding-bottom: 4px;
+                    text-align: center;
+                    a {
+                        overflow: hidden;
+                        img {
+                            width: 100%;
+                            height: auto;
+                            padding: 0 10px;
+                        }
+                    }
+                    &:hover {
+                        border-color: var(--bs-secondary-700);
+                    }
+                }
+
+
+            }
+            >.color {
+                margin: 12px 0;
+            }
+            >.description {
+                margin-top: 18px;
+                >.accordion {
+
+                    .accordion-header {
+                        border-bottom: 1px solid #ddd;
+                        >.accordion-button {
+                            font-weight: 600;
+                            font-size: 1.15rem;
+                        }
+
+                    }
+
+                }
+            }
+            >.to-wish- {
+                margin-top: 12px;
+            }
+        }
     }
 }
 

@@ -44,11 +44,18 @@ class EquivalentService
         return $equivalent;
     }
 
-    public function addProductByIds(int $equivalent_id, int $product_id)
+    public function addProductByIds(int $equivalent_id, int $product_id): void
     {
         /** @var Equivalent $equivalent */
         $equivalent = Equivalent::find($equivalent_id);
         $equivalent->products()->attach($product_id);
+/*
+        $base_product = Product::find($product_id);
+        if (!is_null($base_product->main_modification)) {
+            foreach ($base_product->modification->products as $product) {
+                $equivalent->products()->attach($product->id);
+            }
+        } */
     }
 
     public function delProductByIds(int $equivalent_id, int $product_id)

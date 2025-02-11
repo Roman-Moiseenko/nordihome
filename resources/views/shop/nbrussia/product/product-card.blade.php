@@ -9,7 +9,7 @@
                      src="{{ $product['images-next']['catalog']['src'] }}"
                      alt="{{ $product['images-next']['catalog']['alt'] }}">
 
-                @if($product['has_promotion'])
+                @if($product['promotion']['has'])
                     <div class="product-label promotion"><span>Акция</span></div>
                 @endif
                 @if($product['is_new'])
@@ -33,25 +33,25 @@
             </a>
         </div>
 
-        @if(!is_null($product['modification'])) @endif
-        <div class="product-modification">
+        @if(!is_null($product['modification']))
+        <div class="modification">
             @foreach($product['modification'] as $attribute)
                 @foreach($attribute['products'] as $value => $_product_mod)
                     <a href="{{ route('shop.product.view', $_product_mod[0]['slug']) }}" title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</a>
                 @endforeach
             @endforeach
         </div>
-
+        @endif
         <div class="product-card-name fs-6">
             <a class="product-trunc" href="{{ route('shop.product.view', $product['slug']) }}"
                title="{{ $product['name'] }}">{{ $product['name'] }}</a>
         </div>
         <div class="product-card-info">
             @if($product['is_sale'])
-                @if(!$product['has_promotion'])
+                @if(!$product['promotion']['has'])
                     {{ price($product['price']) }}
                 @else
-                    <span class="discount-price">{{ price($product['price_promotion']) }}</span><span
+                    <span class="discount-price">{{ price($product['promotion']['price']) }}</span><span
                         class="base-price">{{ price($product['price']) }}</span>
                 @endif
             @else

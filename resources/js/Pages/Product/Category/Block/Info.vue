@@ -45,9 +45,11 @@
         </el-col>
 
     </el-row>
+
     <el-button v-if="!showEdit" class="ml-2" type="warning" @click="showEdit = true">
         <i class="fa-light fa-pen-to-square"></i>&nbsp;Редактировать
     </el-button>
+
     <el-row :gutter="10" v-if="showEdit">
         <el-col :span="8">
             <el-form label-width="auto">
@@ -99,6 +101,30 @@
             </HelpBlock>
         </el-col>
     </el-row>
+    <el-row :gutter="10" v-if="showEdit" class="mt-2">
+        <el-col :span="6">
+            <h2>Данные перед списком товаров</h2>
+            <el-form-item label="Заголовок">
+                <el-input v-model="info.top_title"/>
+            </el-form-item>
+            <el-form-item label="Текст">
+                <el-input v-model="info.top_description" type="textarea" rows="5"/>
+            </el-form-item>
+        </el-col>
+        <el-col :span="12">
+            <h2>Данные после списка товаров</h2>
+
+                <el-input v-model="info.bottom_text" type="textarea" rows="10"/>
+
+        </el-col>
+
+        <el-col :span="6">
+            <h2>Скрытые данные</h2>
+
+                <el-input v-model="info.data" type="textarea" rows="10"/>
+
+        </el-col>
+    </el-row>
 </template>
 
 <script setup>
@@ -123,6 +149,13 @@ const info = reactive({
     clear_image: false,
     icon: null,
     clear_icon: false,
+
+    top_title: props.category.top_title,
+    top_description: props.category.top_description,
+    bottom_text: props.category.bottom_text,
+    data: props.category.data,
+
+
 })
 const showEdit = ref(false)
 

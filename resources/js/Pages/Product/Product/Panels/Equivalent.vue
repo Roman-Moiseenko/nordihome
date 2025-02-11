@@ -34,7 +34,7 @@
                         <h2>Товары из группы</h2>
                         <div v-for="equi_prod in product.equivalent.products" class="mt-3 flex items-center p-2 bg-slate-100 rounded-md">
                             <img v-if="equi_prod.image" :src="equi_prod.image" width="40" height="40"/>
-                            <span class="font-medium ml-3" style="width: 120px;">{{ equi_prod.code }}</span>
+                            <span class="font-medium ml-3" style="width: 160px;">{{ equi_prod.code }}</span>
                             <span class="font-medium ml-2">
                                 <span v-if="equi_prod.id === product.id">{{ equi_prod.name }}</span>
                                 <Link v-else type="primary" :href="route('admin.product.edit', {product: equi_prod.id})">{{ equi_prod.name }}</Link>

@@ -26,10 +26,22 @@ use Kalnoy\Nestedset\NodeTrait;
  *
  * @property int $_lft
  * @property int $_rgt
+ *
+ * @property string $top_title
+ * @property string $top_description
+ * @property string $bottom_text
+ * @property string $data
  */
 class Category extends Model
 {
     use NodeTrait, HasFactory, ImageField, IconField;
+
+    protected $attributes = [
+        'top_title' => '',
+        'top_description' => '',
+        'bottom_text' => '',
+        'data' => '',
+    ];
 
     protected $fillable = [
       'name', 'parent_id', 'slug', 'title', 'description',

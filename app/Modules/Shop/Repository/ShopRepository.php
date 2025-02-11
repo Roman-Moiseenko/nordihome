@@ -496,10 +496,15 @@ class ShopRepository
         $productAttributes = [];
         foreach ($product->prod_attributes as $attribute) {
             $value = $attribute->Value();
-            if (is_array($value)) {
-                $value = implode(', ', array_map(function ($id) use ($attribute) {
-                    return $attribute->getVariant((int)$id)->name;
-                }, $attribute->Value()));
+            if ($attribute->isVariant()) {
+                //if (!is_array($value)) $value[] = $value;
+                if (is_array($attribute->Value())) {
+                    $value = implode(', ', array_map(function ($id) use ($attribute) {
+                        return $attribute->getVariant((int)$id)->name;
+                    }, $attribute->Value()));
+                } else {
+                    $value = $attribute->getVariant((int)$attribute->Value())->name;
+                }
             }
             $productAttributes[$attribute->group->name][] = [
                 'name' => $attribute->name,
@@ -545,7 +550,6 @@ class ShopRepository
                         'name' => $product->name,
                         'slug' => $product->slug,
                         'image' => $product->miniImage(),
-                        //  'variants' => $variants,
                     ];
                 }
             }
@@ -590,11 +594,29 @@ class ShopRepository
 
     public function ProductToArrayView(Product $product): array
     {
+
+        $_product = null;
+        $equivalents = [];
+        if (!is_null($product->equivalent_product)) {
+            $_product = $product;
+        } elseif (!is_null($product->modification) && is_null($product->main_modification)) {
+            $_product = $product->modification->base_product;
+        }
+        if (!is_null($_product)) {
+            $equivalents = $_product->equivalent->products()->get()->map(function (Product $product) {
+                return [
+                    'slug' => $product->slug,
+                    'name' => $product->name,
+                    'src' => $product->miniImage(),
+                ];
+            });
+        }
+
         return array_merge($this->ProductToArray($product), [
             'description' => $product->description,
             'short' => $product->short,
             'price_previous' => $product->getPrice(true, $this->user),
-            'promotion_title' => is_null($product->promotion()) ? null : $product->promotion()->title,
+
             'quantity' => $product->getQuantitySell(),
             'brand' => [
                 'src' => $product->brand->getImage(),
@@ -608,6 +630,12 @@ class ShopRepository
                     'description' => $photo->description,
                 ];
             }),
+            'category' => [
+                'id' => $product->category->id,
+                'slug' => $product->category->slug,
+                'name' => $product->category->name,
+            ],
+            'equivalents' => $equivalents,
         ]);
 
     }
@@ -620,15 +648,20 @@ class ShopRepository
             'code' => $product->code,
             'name' => is_null($product->modification) ? $product->name : $product->modification->name,
             'slug' => $product->slug,
-            'has_promotion' => $product->hasPromotion(),
+
             'is_new' => $product->isNew(),
             'is_wish' => !is_null($this->user) && $product->isWish($this->user->id),
             'is_sale' => $product->isSale(),
             'rating' => $product->current_rating,
             'count_reviews' => $product->countReviews(),
             'price' => $product->getPrice(false, $this->user),
-            'price_promotion' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
+
             'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
+            'promotion' => [
+                'has' => $product->hasPromotion(),
+                'price' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
+                'title' => is_null($product->promotion()) ? null : $product->promotion()->title,
+            ],
         ];
     }
 }

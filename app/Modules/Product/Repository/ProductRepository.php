@@ -63,6 +63,28 @@ class ProductRepository
 
     public function ProductWithToArray(Product $product): array
     {
+        $_product = null; $equivalent = null;
+        if (!is_null($product->equivalent_product)) {
+            $_product = $product;
+        } elseif (!is_null($product->modification) && is_null($product->main_modification)) {
+            $_product = $product->modification->base_product;
+        }
+        if (!is_null($_product)) {
+            $equivalent = [
+                'id' => $_product->equivalent_product->equivalent_id,
+                'name' => $_product->equivalent->name,
+                'products' => $_product->equivalent->products()->get()->map(function (Product $product) {
+                    return [
+                        'id' => $product->id,
+                        'code' => $product->code,
+                        'name' => $product->name,
+                        'image' => $product->miniImage(),
+                    ];
+                }),
+            ];
+
+        }
+
         return array_merge($this->ProductToArray($product), [
             'equivalents' => Equivalent::orderBy('name')
                 ->whereHas('category', function ($query) use ($product) {
@@ -138,18 +160,7 @@ class ProductRepository
                     ];
                 }),
             ],
-            'equivalent' => is_null($product->equivalent_product) ? null : [
-                'id' => $product->equivalent_product->equivalent_id,
-                'name' => $product->equivalent->name,
-                'products' => $product->equivalent->products()->get()->map(function (Product $product) {
-                    return [
-                        'id' => $product->id,
-                        'code' => $product->code,
-                        'name' => $product->name,
-                        'image' => $product->miniImage(),
-                    ];
-                }),
-            ],
+            'equivalent' => $equivalent,
             'related' => $product->related()->get()->map(function (Product $product) {
                 return [
                     'id' => $product->id,

@@ -68,16 +68,29 @@ class EquivalentRepository
         ]);
     }
 
-    public function search(Equivalent $equivalent, Request $request)
+    public function search(Equivalent $equivalent, Request $request): \Illuminate\Support\Collection
     {
         $search = $request->string('search')->trim()->value();
+
         return Product::orderBy('name')
             ->where(function ($query) use ($search) {
                 $query->where('code_search', 'LIKE', "%{$search}%")->orWhere('code', 'LIKE', "%{$search}%")
                     ->orWhere('name', 'LIKE', "%{$search}%");
             })
-            ->where('main_category_id', '>=', $equivalent->category->_lft)
-            ->where('main_category_id', '<=', $equivalent->category->_rgt)
+            ->where(function ($query) use ($equivalent) {
+                $query
+                    ->whereHas('category', function ($query) use ($equivalent) {
+                        $query->where('_lft', '>=', $equivalent->category->_lft)
+                            ->where('_rgt', '<=', $equivalent->category->_rgt);
+                    })
+                    ->orWhereHas('categories', function ($query) use ($equivalent) {
+                        $query->where('_lft', '>=', $equivalent->category->_lft)
+                            ->where('_rgt', '<=', $equivalent->category->_rgt);
+                    });
+            })
+            ->where(function ($query) {
+                $query->doesntHave('modification')->orHas('main_modification');
+            })
             ->doesntHave('equivalent')
             ->get()->map(fn(Product $product) => $product->toArrayForSearch());
     }

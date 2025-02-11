@@ -1,6 +1,4 @@
-@if(isset($show_number) && $show_number == true)
-<span class="rating-info">{{ $rating }}</span>
-@endif
+
 <span class="rating-stars">
 @for($i = 1; $i <= 5; $i++)
     @if($i <= $rating)
@@ -12,3 +10,6 @@
     @endif
 @endfor
 </span>
+@if(isset($show_number) && $show_number == true)
+    <span class="rating-info">{{ $rating }}</span>
+@endif

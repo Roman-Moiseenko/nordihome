@@ -41,6 +41,12 @@ class CategoryService
         if ($category->slug != $new_slug) {
             $category->slug = empty($new_slug) ? Str::slug($category->name) : $new_slug;
         }
+
+        $category->top_title = $request->string('top_title')->trim()->value();
+        $category->top_description = $request->string('top_description')->trim()->value();
+        $category->bottom_text = $request->string('bottom_text')->trim()->value();
+        $category->data = $request->string('data')->trim()->value();
+
         $category->save();
 
         $category->saveImage($request->file('image'), $request->boolean('image_clear'));
