@@ -35,7 +35,17 @@ body {
     height: 100vh;
 }
 
-
+//Уведомление
+#notification {
+    >.toast-header {
+        &.error {
+            color: var(--bs-secondary-700);
+        }
+        &.success {
+            color: #3cc01e;
+        }
+    }
+}
 
 
 //DROPDOWN-HOVER ПРИ НАВЕДЕНИИ

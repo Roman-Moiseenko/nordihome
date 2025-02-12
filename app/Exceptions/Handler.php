@@ -93,7 +93,7 @@ class Handler extends ExceptionHandler
             }
 
             if ($request->ajax()) {
-                return \response()->json(['error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()]);
+                return \response()->json(['error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine(), 'type' => 'error']);
             } else {
                 return redirect()->back()->with('error', $e->getMessage());
             }

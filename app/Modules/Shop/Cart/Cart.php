@@ -57,6 +57,7 @@ class Cart
 
     public function add(Product $product, $quantity, array $options)
     {
+
         $this->loadItems();
         foreach ($this->items as $i => $current) {
             if ($current->isProduct($product->id)) {
@@ -67,6 +68,7 @@ class Cart
         if (!$this->pre_order && $product->getQuantitySell() < $quantity) {
             throw new \DomainException('Превышение остатка');
         }
+
         $this->storage->add(CartItem::create($product, $quantity, $options));
     }
 

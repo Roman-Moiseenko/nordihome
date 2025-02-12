@@ -240,7 +240,7 @@ window.$ = jQuery;
 
     /** КНОПКА В КОРЗИНУ **/
     //Оставлено для блоков без livewire
-    $('.to-cart').on('click', function (item) {
+  /*  $('.to-cart').on('click', function (item) {
         item.preventDefault();
         let _productId = $(this).data('product');
         let _quantity = 1;
@@ -255,7 +255,7 @@ window.$ = jQuery;
                 if (!common.error(data)) window.Livewire.dispatch('update-header-cart');//Меняем кол-во и сумму товаров в виджете корзины в хеадере
             }
         );
-    });
+    });*/
     //Обновление виджета корзины
   /*  function widget_cart() {
         window.Livewire.dispatch('update-header-cart');

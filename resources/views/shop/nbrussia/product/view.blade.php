@@ -160,7 +160,7 @@
         </div>
     </div>
 
-    <div class="product-video">
+    <!--div class="product-video">
         Видео товара
     </div>
 
@@ -174,7 +174,7 @@
 
     <div id="reviews" class="product-review">
         Отзывы и рейтинг
-    </div>
+    </div-->
 
 
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">

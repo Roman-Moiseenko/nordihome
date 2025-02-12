@@ -60,6 +60,12 @@
                     @endforeach
                 </div>
                 @endif
+                <div class="top-text-category mb-3">
+                    <h2>{{ $category->top_title }}</h2>
+                    <div>
+                        {!! $category->top_description !!}
+                    </div>
+                </div>
                 <div class="products">
                     <div class="row">
                     @foreach($products as $product)
@@ -73,6 +79,10 @@
                 <div class="products-page-list--bottom">
                     {{ $products->links('shop.nbrussia.widgets.paginator') }}
                 </div>
+
+                    <div class="bottom-text-category">
+                        {!! $category->bottom_text !!}
+                    </div>
 
             </div>
     </div>

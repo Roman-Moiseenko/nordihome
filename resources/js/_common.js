@@ -49,21 +49,24 @@ if (showHidePassword !== undefined) {
 
 
 const common = {
-
+    notification(type, msg) {
+        let notification = $('#notification');
+        notification.find('.toast-body').html(msg);
+        notification.find('.toast-header').addClass(type)
+        notification.remove('hide');
+        notification.addClass('show');
+        notification.find('button[data-bs-dismiss=toast]').on('click', function () {
+            notification.addClass('hide');
+            notification.remove('show');
+        });
+    },
     //Отображение ошибок
     error(data) {
         if (data.error !== undefined) {
             if (Array.isArray(data.error)) {
                 console.log(data.error);
             } else {
-                let notification = $('#notification');
-                notification.find('.toast-body').html(data.error);
-                notification.remove('hide');
-                notification.addClass('show');
-                notification.find('button[data-bs-dismiss=toast]').on('click', function () {
-                    notification.addClass('hide');
-                    notification.remove('show');
-                });
+                this.notification('error', data.error)
             }
             return true;
         }

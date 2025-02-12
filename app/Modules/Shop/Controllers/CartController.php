@@ -30,8 +30,8 @@ class CartController extends ShopController
     //AJAX
     public function add(Request $request, Product $product) //sub, set_count, clear
     {
-            $this->cart->add($product, 1, $request['options'] ?? []);
-            return \response()->json(true);
+        $this->cart->add($product, 1, $request['options'] ?? []);
+        return \response()->json('Товар добавлен в корзину');
     }
 
 
