@@ -80,8 +80,8 @@
                     <div class="modification">
                         @foreach($product['modification'] as $attribute)
                             @foreach($attribute['products'] as $value => $_product_mod)
-                                <a href="{{ route('shop.product.view', $_product_mod[0]['slug']) }}"
-                                   title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</a>
+                                <span class="size {{ $product['id'] === $_product_mod[0]['id'] ? 'active' : '' }}" data-id="{{ $_product_mod[0]['id'] }}"
+                                   title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</span>
                             @endforeach
                         @endforeach
                     </div>
@@ -90,7 +90,7 @@
 
                 <div class="d-flex mt-3">
                     @if($product['is_sale'])
-                        <button class="to-cart btn-nb" data-product="{{ $product['id'] }}" style="width: 100%;">В Корзину</button>
+                        <button id="to-cart" class="to-cart btn-nb" data-product="{{ $product['id'] }}" style="width: 100%;">В Корзину</button>
                     @else
                         <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
                     @endif

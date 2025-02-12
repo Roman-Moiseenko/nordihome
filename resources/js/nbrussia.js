@@ -9,6 +9,7 @@ import 'owl.carousel';
 import.meta.glob(["../images/**"]);
 import './nbrussia/frontend';
 //import './nordihome/maps';
-
+import './_common.js';
 import './nbrussia/sliders';
 import './nbrussia/widget'
+import './nbrussia/product.js'

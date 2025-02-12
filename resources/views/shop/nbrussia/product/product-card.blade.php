@@ -37,7 +37,7 @@
         <div class="modification">
             @foreach($product['modification'] as $attribute)
                 @foreach($attribute['products'] as $value => $_product_mod)
-                    <a href="{{ route('shop.product.view', $_product_mod[0]['slug']) }}" title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</a>
+                    <a href="{{ route('shop.product.view', $product['slug']) }}" title="{{ $product['name'] }}"> {{ $value }}</a>
                 @endforeach
             @endforeach
         </div>

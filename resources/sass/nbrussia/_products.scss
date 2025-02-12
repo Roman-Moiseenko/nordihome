@@ -479,12 +479,28 @@
                     }
                 }
                 >.modification {
-                    @extend .product-modification;
+                    display: flex;
+                    flex-wrap: wrap;
+
                     font-size: 1.25rem;
-                    a {
+                    >.size {
+                        color: black;
+                        display: block;
+
+                        margin: 2px 4px;
+                        border: 1px solid black;
+                        text-align: center;
+                        &:hover {
+
+                        }
+                        cursor: pointer;
                         min-width: 72px;
                         width: 72px;
                         padding: 8px 0;
+                        &.active {
+                            color: white;
+                            background: black;
+                        }
                     }
                 }
 
