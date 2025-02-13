@@ -8,6 +8,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\GroupRepository;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Service\GroupService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -81,5 +82,15 @@ class GroupController extends Controller
     {
         $this->service->setInfo($group, $request);
         return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function search(Group $group, Request $request): JsonResponse
+    {
+        try {
+            $products = $this->repository->search($group, $request);
+            return \response()->json($products);
+        } catch (\Throwable $e) {
+            return \response()->json(['error' => $e->getMessage()]);
+        }
     }
 }

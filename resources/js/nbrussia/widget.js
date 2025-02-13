@@ -48,7 +48,8 @@ window.$ = jQuery;
             responsive: {
                 0: {
                     items: 1,
-                    smartSpeed: 500
+                    smartSpeed: 500,
+                    dots: true,
                 },
                 576: {
                     items: 2,
@@ -56,7 +57,8 @@ window.$ = jQuery;
                 },
                 991: {
                     items: 3,
-                    smartSpeed: 500
+                    smartSpeed: 500,
+                    dots: false,
                 },
             }
         };

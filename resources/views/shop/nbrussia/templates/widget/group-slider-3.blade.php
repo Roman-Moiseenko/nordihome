@@ -33,13 +33,18 @@
             <div id="tab-item-{{$item->id}}" class="{{ $i == 0 ? '' : 'hidden' }}">
                 <div class="owl-carousel owl-theme slider-best-group">
                     @foreach($item->group->products as $product)
-                        <div style="scroll-snap-align: start;max-width: 100%; overflow: hidden;">
+                        <div style="scroll-snap-align: start;max-width: 100%; overflow: hidden;text-align: left;">
                             <a href="{{ route('shop.product.view', $product->slug) }}" style="max-width: 100%; overflow: hidden;">
-                                <img loading="lazy" src="{{ $product->getImage('slide') }}" alt="{{ $product->name }}"  style="width: 100%;"/>
+                                <img loading="lazy" src="{{ $product->getImage('slide') }}" alt="{{ $product->getName() }}"  style="width: 100%;"/>
                             </a>
-                            <a href="{{ route('shop.product.view', $product->slug) }}" class="flex justify-content-between">
-                                <div>{{ $product->name }}</div>
-                                <div>{{ price($product->getPriceRetail()) }}</div>
+                            <a href="{{ route('shop.product.view', $product->slug) }}">
+                                <div class="d-flex justify-content-between">
+                                    <div class="name">{{ $product->getName() }}</div>
+                                    <div class="price">{{ price($product->getPrice()) }}</div>
+                                </div>
+                                <div class="category">
+                                    {{ $product->category->name }}
+                                </div>
                             </a>
                         </div>
                     @endforeach

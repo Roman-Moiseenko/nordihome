@@ -8,6 +8,7 @@
         <div class="flex mt-5">
             <SearchAddProduct
                 :route="route('admin.product.group.add-product', {group: group.id})"
+                :search="route('admin.product.group.search', {group: group.id})"
             />
             <SearchAddProducts :route="route('admin.product.group.add-products', {group: group.id})" class="ml-3"/>
         </div>

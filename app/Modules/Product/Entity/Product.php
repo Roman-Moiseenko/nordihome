@@ -410,6 +410,15 @@ class Product extends Model
         return $this->slug;
     }
 
+    /**
+     * Если есть модификация возвращает ее название, иначе название товара
+     */
+    public function getName(): string
+    {
+        if (is_null($this->modification)) return $this->name;
+        return $this->modification->name;
+    }
+
     //*** ЦЕНЫ
 
     /**
@@ -578,11 +587,6 @@ class Product extends Model
         return $quantity;
     }
 
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
 
     /**
      * Значение атрибута по его Id

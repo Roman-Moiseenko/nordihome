@@ -15,7 +15,7 @@
 @endphp
 <div class="banner-2-image-button my-5 py-3">
     @foreach($banner->items as $item)
-        <div style="width: 50%">
+        <div>
             <a href="{{ $item->url }}">
                 <img src="{{ $item->getImage() }}" style="width: 100%;"/>
             </a>

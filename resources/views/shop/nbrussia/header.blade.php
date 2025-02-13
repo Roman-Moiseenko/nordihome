@@ -129,9 +129,10 @@
             <li class="menu-item">
                 <a href="{{ route('shop.parser.view') }}" class="nav-link d-flex flex-column text-center">
                     <!--img src="/images/ikea.svg" style="height: 40px;"-->
-                    <i class="fa-light fa-lightbulb fs-3"></i>
+                    <i class="fa-light fa-hundred-points"></i>
+                    <!--i class="fa-light fa-lightbulb fs-3"></i-->
                     <!--i class="fa-sharp fa-light fa-box-open fs-3"></i-->
-                    <span class="fs-8">-</span>
+                    <span class="fs-8">Акции</span>
                 </a>
             </li>
             @guest

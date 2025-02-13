@@ -80,6 +80,7 @@ Route::group(
             Route::post('/add-product/{group}', 'GroupController@add_product')->name('add-product');
             Route::post('/set-info/{group}', 'GroupController@set_info')->name('set-info');
             Route::delete('/del-product/{group}', 'GroupController@del_product')->name('del-product');
+            Route::post('/search/{group}', 'GroupController@search')->name('search');
         });
         //Серия товаров
         Route::group([

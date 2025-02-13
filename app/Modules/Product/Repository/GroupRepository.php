@@ -77,5 +77,21 @@ class GroupRepository
         ]);
     }
 
+    public function search(Group $group, Request $request)
+    {
+        $search = $request->string('search')->trim()->value();
+        $group_ids = $group->products()->get()->pluck('id')->toArray();
+        return Product::orderBy('name')
+            ->where(function ($query) use ($search) {
+                $query->where('code_search', 'LIKE', "%{$search}%")->orWhere('code', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%");
+            })
+            ->whereNotIn('id', $group_ids)
+            ->where(function ($query) {
+                $query->doesntHave('modification')->orHas('main_modification');
+            })
+            ->get()->map(fn(Product $product) => $product->toArrayForSearch());
+    }
+
 
 }

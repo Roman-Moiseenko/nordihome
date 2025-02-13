@@ -76,7 +76,7 @@ class AdminComposer
                 $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
                 $view->with('user', $user);
                 $view->with('config', config('shop.frontend'));
-                $city = 'Калининград';
+                $city = 'Россия';
                 $view->with('categories', $categories);
                 $view->with('tree', $trees);
 

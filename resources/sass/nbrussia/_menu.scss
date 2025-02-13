@@ -480,9 +480,16 @@
     font-size: 1.25rem;
 
 }
+
+.show-mobile {
+    display: none;
+}
 @media screen and (max-width: 991px) {
     .hide-mobile {
         display: none !important;
+    }
+    .show-mobile {
+        display: block !important;
     }
 }
 //Мобильное меню
