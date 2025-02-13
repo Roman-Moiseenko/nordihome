@@ -96,9 +96,12 @@ class CatalogController extends ShopController
         $tag_id = $request['tag_id'] ?? null;
         $order = $request['order'] ?? 'name';
         $products = $this->repository->filter($request, $product_ids);
-
-        $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ' .
-            $this->web->title_city . ' ☎ ' . $this->web->title_contact;
+        if (empty($category->title)) {
+            $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ' .
+                $this->web->title_city . ' ☎ ' . $this->web->title_contact;
+        } else {
+            $title = $category->title;
+        }
             /*'NORDI HOME ' .
             ' Калининград ☎ [+7(4012) 37-37-30] (Круглосуточно)';*/
         //Переводим коллекцию в массив
