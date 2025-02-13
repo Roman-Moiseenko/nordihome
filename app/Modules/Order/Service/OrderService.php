@@ -13,6 +13,7 @@ use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
+use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
@@ -98,6 +99,42 @@ class OrderService
         $trader_id = Trader::default()->organization->id;
         return Order::register($user_id, $type, $trader_id);
     }
+
+    public function create_cart(Request $request): void
+    {
+        DB::transaction(function () use ($request) {
+            $email = $request->string('email')->trim()->value();
+            $phone = phoneToDB($request->string('phone')->trim()->value());
+            $fullname = $request->string('fullname')->trim()->value();
+            $address = $request->string('address')->trim()->value();
+            $delivery = $request->string('delivery')->trim()->value();
+            $type_delivery = OrderExpense::DELIVERY_STORAGE;
+            if ($delivery == 'local') $type_delivery =  OrderExpense::DELIVERY_LOCAL;
+            if ($delivery == 'region') $type_delivery =  OrderExpense::DELIVERY_REGION;
+
+            if (is_null($user = User::where('email', $email)->orWhere('phone', $phone)->first())) {
+                $user = User::new($email, $phone);
+            }
+
+            list($surname, $firstname, $secondname) = array_pad(explode(' ', $fullname), 3, '');
+            $user->fullname = FullName::create($surname, $firstname, $secondname);
+            $user->delivery = $type_delivery;
+            if (!empty($address)) $user->address->address = $address;
+            $user->save();
+
+            $order = $this->createOrder($user->id);
+            $items = $this->cart->getItems();
+            foreach ($items as $item) {
+                if ($item->check) $this->addProduct($order, $item->product->id, $item->quantity);
+            }
+            $this->cart->clearOrder();
+            $order->refresh();
+            $this->recalculation($order);
+
+            event(new OrderHasCreated($order));
+        });
+    }
+
 
     //**** ФУНКЦИИ СОЗДАНИЯ ЗАКАЗА
     #[ArrayShape(['payment' => "array", 'delivery' => "array", 'phone' => "string", 'amount' => "array"])]
@@ -983,6 +1020,8 @@ class OrderService
             '', $order->comment, null);
         $order->save();
     }
+
+
 
 
 }

@@ -42,7 +42,7 @@ class OrderController extends ShopController
     )
     {
         parent::__construct();
-        $this->middleware('auth:user', ['except' => 'create_click']);
+        $this->middleware('auth:user')->except(['create_cart', 'create_click']);
         $this->cart = $cart;
         $this->payments = $payments;
         $this->deliveries = $deliveries;
@@ -81,6 +81,13 @@ class OrderController extends ShopController
 
     }
 
+    public function create_cart(Request $request)
+    {
+
+        $this->service->create_cart($request);
+        return redirect()->route('shop.home')->with('success', 'Ваш заказ успешно создан!');
+    }
+
     public function create_parser(Request $request)
     {
         if (Auth::guard('user')->check()) {
@@ -100,6 +107,8 @@ class OrderController extends ShopController
 
     public function create_click(Request $request)
     {
+
+
         $order = $this->service->create_click($request);
         //->route('cabinet.order.view', $order)
         return redirect()->back()->with('success', 'Ваш заказ успешно создан!');

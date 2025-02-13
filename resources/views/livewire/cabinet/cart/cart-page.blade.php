@@ -29,7 +29,7 @@
                     <form id="to-order" method="POST" action="{{ route('shop.order.create') }}">
                         @csrf
                         <input type="hidden" name="preorder" value="false">
-                        <button id="button-to-order" class="btn btn-dark w-100 py-3"
+                        <button id="button-to-order" class="btn-cart w-100 py-3"
                                 @guest()
                                 data-bs-toggle="modal" data-bs-target="#login-popup" type="button"
                                 @endguest
@@ -65,11 +65,14 @@
                         Либо, сделать предзаказ на товар которого нет в наличии.
                     </div>
                     <div class="checkbox-group mt-2">
-                        <input id="preorder-false" type="radio" class="form-check-inline" data-state="change" autocomplete="off" name="pre-order" checked="checked">
+                        <input id="preorder-false" type="radio" class="form-check-inline"
+                               data-state="change" autocomplete="off"
+                               name="pre-order"
+                        >
                         <label for="preorder-false">Отгрузить по наличию на складе</label>
                     </div>
                     <div class="checkbox-group">
-                        <input id="preorder-true" type="radio" class="form-check-inline" data-state="change" autocomplete="off" name="pre-order">
+                        <input id="preorder-true" type="radio" class="form-check-inline" data-state="change" autocomplete="off" name="pre-order" checked="checked">
                         <label for="preorder-true">Оформить с предзаказом</label>
                     </div>
                 </div>

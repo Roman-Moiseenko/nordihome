@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Livewire\Cabinet\Cart;
+namespace App\Livewire\NBRussia\Cart;
 
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\WishService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class CartItem extends Component
+class Item extends Component
 {
 
     /**
@@ -71,7 +71,7 @@ class CartItem extends Component
 
     public function sub_item()
     {
-       // $this->quantity--;
+        // $this->quantity--;
         $this->cart->sub($this->item['product_id'], 1);
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
@@ -79,7 +79,7 @@ class CartItem extends Component
 
     public function plus_item()
     {
-       // $this->quantity++;
+        // $this->quantity++;
         $this->cart->plus($this->item['product_id'], 1);
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
@@ -104,9 +104,9 @@ class CartItem extends Component
         $this->dispatch('update-header-cart');
     }
 
+
     public function render()
     {
-        //$item = $this->item;
-        return view('livewire.cabinet.cart.cart-item');
+        return view('livewire.n-b-russia.cart.item');
     }
 }

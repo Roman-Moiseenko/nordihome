@@ -45,6 +45,7 @@
 @endguest
 
 @include('shop.nbrussia.pop-up.buy-click')
+@include('shop.nbrussia.pop-up.new-order')
 @include('shop.nbrussia.pop-up.notification')
 
 <!--FOOTER-->

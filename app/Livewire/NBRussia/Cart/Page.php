@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Livewire\Cabinet\Cart;
+namespace App\Livewire\NBRussia\Cart;
 
-use App\Modules\User\Entity\User;
+use App\Modules\Shop\Cart\Cart;
+use App\Modules\Shop\Cart\Cart as CartEntity;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-use \App\Modules\Shop\Cart\Cart as CartEntity;
-
-class CartPage extends Component
+class Page extends Component
 {
 
     private CartEntity $cart;
 
-   // public Product $product;
+    // public Product $product;
 
     public array $items = [];
     public int $count;
@@ -28,7 +27,7 @@ class CartPage extends Component
 
     public function boot()
     {
-        $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
+        $this->cart = app()->make(Cart::class);
     }
 
     public function mount(mixed $user, bool $preorder = false)
@@ -71,6 +70,6 @@ class CartPage extends Component
 
     public function render()
     {
-        return view('livewire.cabinet.cart.cart-page');
+        return view('livewire.n-b-russia.cart.page');
     }
 }

@@ -119,10 +119,9 @@ body {
 
 //карточка тенью и закругл.углами
 .box-card {
-    box-shadow: $shadow-box;
-    border-radius: $radius-card;
     margin-bottom: 20px;
     padding: 10px;
+    border: 1px solid #ddd;
 }
 
 .no-resize {
@@ -177,10 +176,11 @@ progress {
 }
 
 .btn-nb {
-    color: var(--bs-white);
-    background: var(--bs-secondary-700);
+    color: var(--bs-white) !important;
+    background: var(--bs-secondary-700) !important;
     padding: 1.2rem 2.4rem;
+    text-align: center;
     &:hover {
-        background: var(--bs-accent);
+        background: var(--bs-accent) !important;
     }
 }

@@ -31,8 +31,10 @@
                         <div class="fs-7 mt-3">
                             <a href="{{ route('password.request') }}">Забыли пароль?</a>
                         </div>
+                        <h5 class="mt-3" style="color: var(--bs-secondary-700);">В текущий момент регистрация не доступна.</h5>
+                        <h5>Заказы оформляются через форму заказа из Корзины</h5>
                         <div class="d-flex justify-content-center my-5">
-                            <button id="button-login" type="button" class="btn-nb">Отправить</button>
+                            <button id="button-login" type="button" class="btn-nb" disabled>Отправить</button>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-center">

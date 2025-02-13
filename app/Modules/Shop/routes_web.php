@@ -73,7 +73,7 @@ Route::group(
             Route::post('/create', 'OrderController@create')->name('create');
             Route::put('/create', 'OrderController@store');
             Route::post('/create-parser', 'OrderController@create_parser')->name('create-parser');
-
+            Route::post('/create-cart', 'OrderController@create_cart')->name('create-cart');
             Route::get('/create-click', function () {
                 abort(404);
             });

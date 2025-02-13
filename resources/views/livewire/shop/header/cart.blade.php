@@ -59,18 +59,7 @@
                             @endif
                         </div>
                         <div class="cart-footer-button d-flex">
-                            <button class="btn btn-outline-dark"
-                                @guest()
-                                    data-bs-toggle="modal" data-bs-target="#login-popup"
-                                @endguest
-                                @auth('user')
-                                    onclick="document.getElementById('to-order').submit()"
-                                @endauth
-                            >Оформить</button>
-                            <form id="to-order" method="POST" action="{{ route('shop.order.create') }}">
-                                @csrf
-                            </form>
-                            <a class="btn btn-dark ms-2" href="{{ route('shop.cart.view') }}">В корзину</a>
+                            <a class="btn-cart ms-2" href="{{ route('shop.cart.view') }}" style="width: 240px;">В корзину</a>
                         </div>
                     </div>
                 </div>

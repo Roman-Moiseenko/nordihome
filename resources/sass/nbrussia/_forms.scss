@@ -44,14 +44,15 @@ input[type='radio']:not([role='switch']) {
     appearance: none;
     width: 20px;
     height: 20px;
-    border: 2px solid #999;
+    border: 1px solid var(--bs-black);
     border-radius: $radius-icon;
     outline: none;
     transition: background-color 0.3s ease-in-out;
     cursor: pointer;
 }
 input[type='radio']:checked:not([role='switch']) {
-    background: var(--bs-gray-900);
+    background: var(--bs-secondary-700);
+    border: 1px solid var(--bs-secondary-700);
 }
 input[type='radio']:not([role='switch']):checked::before {
     content: '\2714'; /* check mark symbol Unicode */
@@ -60,6 +61,7 @@ input[type='radio']:not([role='switch']):checked::before {
     font-size: 16px;
     line-height: 18px;
     color: white;
+    border: 1px solid var(--bs-secondary-700);
 }
 
 //РАДИОКНОПКА С ИЗОБРАЖЕНИЕМ

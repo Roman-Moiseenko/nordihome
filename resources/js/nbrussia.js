@@ -13,3 +13,4 @@ import './_common.js';
 import './nbrussia/sliders';
 import './nbrussia/widget'
 import './nbrussia/product.js'
+import './nbrussia/cart.js'
