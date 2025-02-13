@@ -162,12 +162,17 @@ class ShopRepository
 
                 if ($attr->isVariant()) {
                     $query->whereHas('prod_attributes', function ($q) use ($item) {
-                        foreach ($item as $k => $_od) {
-                            if ($k == 0) {
-                                $q->whereJsonContains('value', $_od);
-                            } else {
-                                $q->orWhereJsonContains('value', $_od);
+                        if (is_array($item)) {
+                            foreach ($item as $k => $_od) {
+                                if ($k == 0) {
+                                    $q->whereJsonContains('value', (int)$_od);
+                                } else {
+                                    $q->orWhereJsonContains('value', $_od);
+                                }
                             }
+                        } else {
+
+                            $q->whereJsonContains('value', $item);
                         }
                     });
                 }
@@ -284,11 +289,15 @@ class ShopRepository
 
         $attributes = Attribute::whereIn('id', $_attr_intersect)->where('filter', '=', true)->orderBy('group_id')->get();
         $prod_attributes = [];
+       // dd($attributes);
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {  //Заполняем варианты и мин.и макс. значения из возможных для данных товаров
             if ($attribute->isNumeric()) $prod_attributes[] = $this->getNumericAttribute($attribute, $product_ids);
-            if ($attribute->isVariant()) $prod_attributes[] = $this->getVariantAttribute($attribute, $product_ids);
+            if ($attribute->isVariant()) {
+
+                $prod_attributes[] = $this->getVariantAttribute($attribute, $product_ids);
+        }
             if (!$attribute->isNumeric() && !$attribute->isVariant()) {
                 if ($attribute->isBool()) {
                     $prod_attributes[] = [
@@ -328,6 +337,7 @@ class ShopRepository
             return json_decode($item);
         }, AttributeProduct::where('attribute_id', '=', $attribute->id)->whereIn('product_id', $product_ids)->pluck('value')->toArray());
 
+
         $variant_ids = [];
         foreach ($values as $item) {
             if (is_array($item)) {
@@ -337,7 +347,6 @@ class ShopRepository
             }
         }
         $variant_ids = array_unique($variant_ids);
-
         $variants = [];
         foreach ($variant_ids as $item) {
             $_var = AttributeVariant::find($item);

@@ -89,6 +89,7 @@ class CatalogController extends ShopController
 
         $product_ids = $products->pluck('id')->toArray();
 
+
         $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
 
         $tags = $this->repository->TagsByProducts($product_ids);
