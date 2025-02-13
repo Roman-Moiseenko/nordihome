@@ -237,7 +237,7 @@ class ShopRepository
                 'id' => $category->id,
                 'name' => $category->name,
                 'slug' => $category->slug,
-                'image' => $category->getImage('catalog'),
+                'image' => $category->getImage(),
             ];
         });
     }

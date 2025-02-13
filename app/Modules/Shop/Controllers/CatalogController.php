@@ -6,9 +6,6 @@ namespace App\Modules\Shop\Controllers;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
-use App\Modules\Setting\Entity\Common;
-use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\SlugRepository;
 use Illuminate\Http\JsonResponse;
@@ -31,12 +28,12 @@ class CatalogController extends ShopController
 
     public function index()
     {
-        $categories = $this->repository->getRootCategories();
+       // $categories = $this->repository->getRootCategories();
 
         $title = $this->web->categories_title;
         $description = $this->web->categories_desc;
 
-        return view($this->route('catalog'), compact('categories', 'title', 'description'));
+        return view($this->route('catalog'), compact( 'title', 'description'));
     }
 
     public function view(Request $request, $slug)

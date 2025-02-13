@@ -30,7 +30,11 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) 
         if ($category->parent) {
             $trail->parent('shop.category.view', $category->parent_id);
         } else {
-            if ($settings->web->is_category) $trail->parent('shop.category.index');
+            if ($settings->web->is_category) {
+                $trail->parent('shop.category.index');
+            } else {
+                $trail->parent('shop.home');
+            }
         }
         $trail->push($category->name, route('shop.category.view', $category->slug));
     }
