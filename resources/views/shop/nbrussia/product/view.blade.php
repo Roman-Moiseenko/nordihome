@@ -8,7 +8,7 @@
 @section('content')
 
     <div class="product-view">
-        <div class="pre-block-gallery">
+        <div class="pre-block-gallery hide-mobile">
             <div class="block-gallery">
                 <div>
                     <div class="gallery hide-mobile">
@@ -26,6 +26,15 @@
                 </div>
             </div>
 
+        </div>
+        <div class="show-mobile">
+            <div id="product-slider" class="owl-carousel owl-theme">
+                @foreach($product['gallery'] as $image)
+                    <div>
+                        <img src="{{ $image['src'] }}" alt="{{ $image['alt'] }}" decoding="async"/>
+                    </div>
+                @endforeach
+            </div>
         </div>
         <div class="pre-block-specification">
             <div class="specification">

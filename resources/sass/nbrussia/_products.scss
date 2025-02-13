@@ -356,6 +356,7 @@
     margin-top: -5rem;
     margin-bottom: 5rem;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     padding-top: 5rem;
     .pre-block-gallery {
@@ -760,6 +761,15 @@
 }
 
 @media screen and (max-width: 991px) {
+    .product-view {
+        flex-direction: column;
+        .pre-block-specification {
+            width: 100%;
+            min-width: unset;
+        }
+    }
+
+
     .view-info-product {
         .price-brand-block {
             .view-price {

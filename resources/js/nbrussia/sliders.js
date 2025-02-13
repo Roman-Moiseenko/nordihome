@@ -16,7 +16,7 @@ window.$ = jQuery;
         animateOut: 'fadeOut',
         animateIn: 'fadeIn',
         margin: 10,
-        loop: false,
+        loop: true,
         dots: false,
         nav: true,
         navText: ['<i class="fa-light fa-chevron-left"></i>', '<i class="fa-light fa-chevron-right"></i>'],
@@ -26,19 +26,28 @@ window.$ = jQuery;
         mouseDrag: false,
         responsive: {
             0: {
-                items: 2,
-                smartSpeed: 500
+                items: 1,
+                smartSpeed: 500,
+                dots: true,
             },
             576: {
-                items: 3,
+                items: 1,
                 smartSpeed: 500
             },
             991: {
-                items: 6,
-                smartSpeed: 500
+                items: 1,
+                smartSpeed: 500,
+                dots: false,
             },
         }
     };
+
+    let sliderProduct = $('#product-slider')
+    if (sliderProduct.length) {
+        sliderProduct.owlCarousel(optionsSliderBase);
+        sliderProduct.trigger('refresh.owl.carousel');
+    }
+
     let sliderPayment = $('#main-slider');
     if (sliderPayment.length) {
         optionsSliderBase.responsive = {0: {items: 1}}; //, 576: {items: 1}, 991: {items: 1}
@@ -46,12 +55,12 @@ window.$ = jQuery;
         optionsSliderBase.dots = true
         sliderPayment.owlCarousel(optionsSliderBase);
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
-        /*    if (e.originalEvent.deltaY > 0) {
-                sliderPayment.trigger('next.owl');
-            } else {
-                sliderPayment.trigger('prev.owl');
-            } */
-           // e.preventDefault();
+            /*    if (e.originalEvent.deltaY > 0) {
+                    sliderPayment.trigger('next.owl');
+                } else {
+                    sliderPayment.trigger('prev.owl');
+                } */
+            // e.preventDefault();
         });
     }
     if (document.getElementById('slider-delivery-company') !== null) {
@@ -74,7 +83,11 @@ window.$ = jQuery;
             let mouseScroll = sliderImagesProduct.data('mouse-scroll');
             let responsive = sliderImagesProduct.data('responsive');
             if (responsive === undefined || responsive.length !== 3) responsive = [3, 6, 9];
-            product_optionsSliderBase.responsive = {0: {items: responsive[0]}, 576: {items: responsive[1]}, 991: {items: responsive[2]}};
+            product_optionsSliderBase.responsive = {
+                0: {items: responsive[0]},
+                576: {items: responsive[1]},
+                991: {items: responsive[2]}
+            };
             product_optionsSliderBase.margin = 0;
             sliderImagesProduct.owlCarousel(product_optionsSliderBase);
             if (mouseScroll !== 0) {
@@ -96,7 +109,7 @@ window.$ = jQuery;
         optionsOldCatalog.mouseDrag = true;
         optionsOldCatalog.dots = true;
         optionsOldCatalog.nav = false;
-        optionsOldCatalog.responsive = { 0: {items: 1}};
+        optionsOldCatalog.responsive = {0: {items: 1}};
         sliderOldCatalog.owlCarousel(optionsOldCatalog);
     }
 
@@ -106,31 +119,31 @@ window.$ = jQuery;
         optionsOldReviews.mouseDrag = true;
         optionsOldReviews.dots = true;
         optionsOldReviews.margin = 40;
-        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 4}, 991: {items: 6}};
+        optionsOldReviews.responsive = {0: {items: 1}, 576: {items: 4}, 991: {items: 6}};
         sliderOldReviews.owlCarousel(optionsOldReviews);
     }
 
-/*
+    /*
 
-    if (document.getElementById('slider-images-product') !== null) {
-        let sliderImagesProduct = $('#slider-images-product');
+        if (document.getElementById('slider-images-product') !== null) {
+            let sliderImagesProduct = $('#slider-images-product');
 
-        let product_optionsSliderBase = optionsSliderBase;
-        let responsive = sliderImagesProduct.data('responsive');
-        if (responsive === undefined || responsive.length !== 3) responsive = [3, 6, 9];
-        product_optionsSliderBase.responsive = {0: {items: responsive[0]}, 576: {items: responsive[1]}, 991: {items: responsive[2]}};
-        product_optionsSliderBase.margin = 0;
-        sliderImagesProduct.owlCarousel(product_optionsSliderBase);
-        sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
-            if (e.originalEvent.deltaY > 0) {
-                sliderImagesProduct.trigger('next.owl');
-            } else {
-                sliderImagesProduct.trigger('prev.owl');
-            }
-            e.preventDefault();
-        });
-    }
+            let product_optionsSliderBase = optionsSliderBase;
+            let responsive = sliderImagesProduct.data('responsive');
+            if (responsive === undefined || responsive.length !== 3) responsive = [3, 6, 9];
+            product_optionsSliderBase.responsive = {0: {items: responsive[0]}, 576: {items: responsive[1]}, 991: {items: responsive[2]}};
+            product_optionsSliderBase.margin = 0;
+            sliderImagesProduct.owlCarousel(product_optionsSliderBase);
+            sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
+                if (e.originalEvent.deltaY > 0) {
+                    sliderImagesProduct.trigger('next.owl');
+                } else {
+                    sliderImagesProduct.trigger('prev.owl');
+                }
+                e.preventDefault();
+            });
+        }
 
- */
+     */
 })();
 
