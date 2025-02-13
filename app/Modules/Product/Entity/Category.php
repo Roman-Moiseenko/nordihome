@@ -50,10 +50,19 @@ class Category extends Model
 
     public static function register($name, $parent_id = null, $slug = '', $title = '', $description = ''): self
     {
+        $slug = empty($slug) ? Str::slug($name) : $slug;
+        if (!empty(self::where('slug', $slug)->first())) {
+            if (!is_null($parent_id)) {
+                $parent = Category::find($parent_id);
+                $slug .= '-' . $parent->slug;
+            } else {
+                $slug .= Str::random(4);
+            }
+        }
         return self::create([
             'name' => $name,
             'parent_id' => $parent_id,
-            'slug' => empty($slug) ? Str::slug($name) : $slug,
+            'slug' => $slug,
             'title' => $title,
             'description' => $description,
         ]);

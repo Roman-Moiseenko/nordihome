@@ -38,8 +38,19 @@ class CategoryService
         $category->description = $request->string('description')->trim()->value();
         $category->title = $request->string('title')->trim()->value();
         $new_slug = $request->string('slug')->trim()->value();
+
         if ($category->slug != $new_slug) {
-            $category->slug = empty($new_slug) ? Str::slug($category->name) : $new_slug;
+            if (empty($new_slug)) {
+                $new_slug = Str::slug($category->name);
+                if (!empty(Category::where('slug', $new_slug)->first())) {
+                    if (!is_null($category->parent_id)) {
+                        $new_slug .= '-' . $category->parent->slug;
+                    } else {
+                        $new_slug .= Str::random(4);
+                    }
+                }
+            }
+            $category->slug = $new_slug;
         }
 
         $category->top_title = $request->string('top_title')->trim()->value();
