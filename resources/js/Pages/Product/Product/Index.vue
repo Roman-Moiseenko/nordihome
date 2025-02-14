@@ -171,7 +171,11 @@ function onFullDelete(row) {
 }
 
 function onEdit(row) {
-    router.get(route('admin.product.edit', {product: row.id}))
+    router.visit(route('admin.product.edit', {product: row.id}), {
+        method: "get",
+        preserveState: true,
+        preserveScroll: true,
+    })
 }
 
 function onAnalitics(row) {
@@ -194,8 +198,11 @@ function onSaleToggle(row) {
 function onPublishedToggle(row) {
     router.visit(route('admin.product.toggle', {product: row.id}), {
         method: "post",
-        preserveState: false,
+        preserveState: true,
         preserveScroll: true,
+        onSuccess: page => {
+            props.products = page.props.products
+        }
     })
 }
 

@@ -421,14 +421,34 @@ class ProductService
     {
         $update_attributes = false;
         //Индивидуальные данные
-        $product->name = $request->string('name')->trim()->value();
+
+        $name = $request->string('name')->trim()->value();
+        $name_print = $request->string('name_print')->trim()->value();
+       // $product->name
         $product->code = $request->string('code')->trim()->value();
         $product->slug = empty($request->string('slug')->value()) ? Str::slug($product->name) : $request->string('slug')->value();
-        $product->name_print = $request->string('name_print')->trim()->value();
+      //  $product->name_print =
         $product->save();
 
+        /** @var Product[] $products */
         $products = $this->list($product, $request->boolean('modification'));
         foreach ($products as $product) {
+
+            if (count($products) > 1) {
+                $values = json_decode($product->pivot->values_json, true);
+                $variants = [];
+                foreach ($values as $attr_id => $variant_id) {
+                    $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
+                }
+                $variants_line = ' ' . implode(' ', $variants);
+            } else {
+                $variants_line = '';
+
+            }
+
+            if ($product->name != $name)  $product->name = $name . $variants_line;
+            if ($product->name_print != $name)  $product->name_print = $name_print . $variants_line;
+
             if ($product->main_category_id != $request->integer('category_id')) {
                 $product->main_category_id = $request->integer('category_id');
                 $update_attributes = true;
@@ -461,6 +481,7 @@ class ProductService
                     }
                 }
             }
+
 
 
             $product->comment = $request->string('comment')->trim()->value();

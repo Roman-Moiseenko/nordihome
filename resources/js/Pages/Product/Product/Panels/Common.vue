@@ -147,6 +147,9 @@ function onSave() {
         onSuccess: page => {
             isSaving.value = false
             form.slug = page.props.product.slug
+            form.name = page.props.product.name
+            form.name_print = page.props.product.name_print
+
         },
         onError: page => {
             isSaving.value = false
