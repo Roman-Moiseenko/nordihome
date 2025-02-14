@@ -131,7 +131,7 @@ class Attribute extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'attributes_products',
-            'attribute_id', 'product_id')->withPivot('value');
+            'attribute_id', 'product_id', 'id', 'id')->withPivot('value');
     }
 
     public function isCategory(Category $category): bool

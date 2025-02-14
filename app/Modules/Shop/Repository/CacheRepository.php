@@ -95,6 +95,7 @@ class CacheRepository
         $order = $request['order'] ?? 'name';
         $query = $this->repository->filter($request, $product_ids);
         $count_in_category = $query->count();
+
         $products = $query->paginate($this->web->paginate);
         if (empty($category->title)) {
             $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ' .

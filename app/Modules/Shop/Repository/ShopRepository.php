@@ -27,6 +27,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\Deprecated;
+use function Sodium\add;
 
 class ShopRepository
 {
@@ -93,10 +94,6 @@ class ShopRepository
             default => $query->orderBy('name', 'asc'),
         };
 
-        // $query = Product::orderBy('name');
-
-        ///Фильтрация по $request
-
         //Теги
         if (!empty($tag = $request['tag_id'] ?? null)) {
             $query->whereHas('tags', function ($q) use ($tag) {
@@ -104,12 +101,7 @@ class ShopRepository
             });
         }
         //Бренд
-        if (!empty($brands = $request['brands'] ?? null)) {
-            $query->whereIn('brand_id', $brands);
-        }
-
-        //TODO Наличие
-
+        if (!empty($brands = $request['brands'] ?? null)) $query->whereIn('brand_id', $brands);
         //Цена
         if (isset($request['price'])) {
             if (!empty($min = $request['price'][0]) && is_numeric($min)) {
@@ -161,28 +153,46 @@ class ShopRepository
                 }
 
                 if ($attr->isVariant()) {
-                    $query->whereHas('prod_attributes', function ($q) use ($item) {
-                        if (is_array($item)) {
-                            foreach ($item as $k => $_od) {
-                                if ($k == 0) {
-                                    $q->whereJsonContains('value', (int)$_od);
-                                } else {
-                                    $q->orWhereJsonContains('value', $_od);
-                                }
-                            }
-                        } else {
+                    $query->where(function ($query) use ($item) {
+                        $query
+                            ->where(function ($query) use ($item) {
+                                $query->doesntHave('modification')
+                                    ->whereHas('prod_attributes', function ($query) use ($item) {
+                                        $this->checkVariantsQuery($query, $item); //
+                                    });
 
-                            $q->whereJsonContains('value', $item);
-                        }
+                            })
+                            ->orWhere(function ($query) use ($item) {
+                                $query->whereHas('modification', function ($query) use ($item) {
+                                    $query->whereHas('products', function ($query) use ($item) {
+                                        $query->where('not_sale', false)->whereHas('prod_attributes', function ($query) use ($item) {
+                                            $this->checkVariantsQuery($query, $item);
+                                        });
+                                    });
+                                });
+                            });
+
                     });
                 }
-
             }
         }
-
         return $query->whereIn('id', $product_ids);
     }
 
+    private function checkVariantsQuery(&$query, $item): void
+    {
+        if (is_array($item)) {
+            foreach ($item as $k => $_od) {
+                if ($k == 0) {
+                    $query->whereJsonContains('value', (int)$_od);
+                } else {
+                    $query->orWhereJsonContains('value', (int)$_od);
+                }
+            }
+        } else {
+            $query->whereJsonContains('value', (int)$item);
+        }
+    }
 
     /*
         public function searchProduct(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true)
@@ -275,21 +285,31 @@ class ShopRepository
 
     ////АТРИБУТЫ
     ///
-    public function AttributeCommon(array $categories_id, array $product_ids)
+    public function AttributeCommon(array $categories_id, array $product_ids): array
     {
         $attrs_cat = Attribute::whereHas('categories', function ($query) use ($categories_id) {
             $query->whereIn('category_id', $categories_id);
         })->pluck('id')->toArray();
 
         $attrs_prod = Attribute::whereHas('products', function ($query) use ($product_ids) {
-            $query->whereIn('product_id', $product_ids);
+            $query->whereIn('id', $product_ids);
         })->pluck('id')->toArray();
 
+        //Включая и товары из модификации
+        $product_ids = array_merge(
+            $product_ids,
+            Product::whereHas('modification', function ($query) use ($product_ids) {
+                $query->whereHas('products', function ($query) use ($product_ids) {
+                    $query->whereIn('id', $product_ids);
+                });
+            })->pluck('id')->toArray()
+        );
         $_attr_intersect = array_intersect($attrs_cat, $attrs_prod); //Общие id атрибутов для товаров и категорий
 
         $attributes = Attribute::whereIn('id', $_attr_intersect)->where('filter', '=', true)->orderBy('group_id')->get();
         $prod_attributes = [];
-       // dd($attributes);
+        // dd($attributes);
+
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {  //Заполняем варианты и мин.и макс. значения из возможных для данных товаров
@@ -297,7 +317,7 @@ class ShopRepository
             if ($attribute->isVariant()) {
 
                 $prod_attributes[] = $this->getVariantAttribute($attribute, $product_ids);
-        }
+            }
             if (!$attribute->isNumeric() && !$attribute->isVariant()) {
                 if ($attribute->isBool()) {
                     $prod_attributes[] = [
@@ -331,7 +351,7 @@ class ShopRepository
         ];
     }
 
-    private function getVariantAttribute(Attribute $attribute, array $product_ids)
+    private function getVariantAttribute(Attribute $attribute, array $product_ids): array
     {
         $values = array_map(function ($item) {
             return json_decode($item);
@@ -381,11 +401,11 @@ class ShopRepository
 
     ////ТЕГИ
     ///
-    public function TagsByProducts(array $product_ids)
+    public function TagsByProducts(array $product_ids): array
     {
         return Tag::whereHas('products', function ($query) use ($product_ids) {
             $query->whereIn('id', $product_ids);
-        })->get();
+        })->getModels();
     }
 
     //////
