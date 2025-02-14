@@ -624,7 +624,7 @@ class ShopRepository
         return array_merge($this->ProductToArray($product), [
             'description' => $product->description,
             'short' => $product->short,
-            'price_previous' => $product->getPrice(true, $this->user),
+
 
             'quantity' => $product->getQuantitySell(),
             'brand' => [
@@ -649,7 +649,6 @@ class ShopRepository
 
     }
 
-
     private function ProductToArray(Product $product): array
     {
         return [
@@ -664,6 +663,7 @@ class ShopRepository
             'rating' => $product->current_rating,
             'count_reviews' => $product->countReviews(),
             'price' => $product->getPrice(false, $this->user),
+            'price_previous' => $product->getPrice(true, $this->user),
 
             'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
             'promotion' => [

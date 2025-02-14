@@ -442,7 +442,7 @@ class Product extends Model
         //Проверяем установленные цены
         if ($price == 0) $price = $this->getPriceRetail($previous);
         //Проверяем парсер
-        if ($price == 0) $price = $this->getPriceParser();
+        if ($price == 0) $price = $this->getPriceParser($previous);
         //Проверяем модификацию
         if ($price == 0 && !is_null($this->modification) && ($this->id != $this->modification->base_product_id)) {
             return $this->modification->base_product->getPrice($previous, $user);
@@ -521,11 +521,11 @@ class Product extends Model
         return $model->value;
     }
 
-    public function getPriceParser(): float
+    public function getPriceParser(bool $previous = false): float
     {
         if (is_null($this->parser)) return 0;
-
-        return ceil($this->parser->price_sell * ($this->brand->currency->exchange * (1 + $this->brand->currency->extra/100)));
+        $price = $previous ? $this->parser->price_base : $this->parser->price_sell;
+        return ceil($price * ($this->brand->currency->exchange * (1 + $this->brand->currency->extra/100)));
     }
 
     /**

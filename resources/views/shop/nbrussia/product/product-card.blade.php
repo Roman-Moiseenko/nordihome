@@ -42,22 +42,25 @@
             @endforeach
         </div>
         @endif
-        <div class="product-card-name fs-6">
-            <a class="product-trunc" href="{{ route('shop.product.view', $product['slug']) }}"
-               title="{{ $product['name'] }}">{{ $product['name'] }}</a>
-        </div>
         <div class="product-card-info">
-            @if($product['is_sale'])
-                @if(!$product['promotion']['has'])
-                    {{ price($product['price']) }}
+            <div class="name">
+                <a class="product-trunc" href="{{ route('shop.product.view', $product['slug']) }}"
+                   title="{{ $product['name'] }}">{{ $product['name'] }}</a>
+            </div>
+            <div class="price">
+                @if($product['is_sale'])
+                    @if($product['price_previous'] > $product['price'])
+                        <span class="discount-price">{{ price($product['price']) }}</span><span
+                            class="base-price">{{ price($product['price_previous']) }}</span>
+                    @else
+                        {{ price($product['price']) }}
+                    @endif
                 @else
-                    <span class="discount-price">{{ price($product['promotion']['price']) }}</span><span
-                        class="base-price">{{ price($product['price']) }}</span>
+                    {{ price($product['price']) }}
                 @endif
-            @else
-                {{ price($product['price']) }}
-            @endif
+            </div>
         </div>
+
 
     </div>
 </div>

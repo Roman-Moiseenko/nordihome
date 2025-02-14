@@ -48,7 +48,7 @@
                 <div class="price">
                     <div class="current">{{ price($product['price']) }}</div>
                     @if ($product['price_previous'] > $product['price'])
-                        <div class="previous">{{ $product['price_previous'] }}</div>
+                        <div class="previous">Базовая цена {{ price($product['price_previous']) }}</div>
                     @endif
                 </div>
                 <div class="equivalent">
