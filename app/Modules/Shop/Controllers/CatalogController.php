@@ -10,6 +10,7 @@ use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\SlugRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CatalogController extends ShopController
 {
@@ -38,9 +39,48 @@ class CatalogController extends ShopController
 
     public function view(Request $request, $slug)
     {
+        $callback = function () use ($request, $slug) {
+
+        };
+        $page = $request->has('page');
+        if (empty($request->all() || (count($request->all()) == 1 && $page)) && $this->web->is_cache) {
+            //Без фильтра берем кэш
+            set_time_limit(100);
+            $cache_name = 'category-' . $slug . '-' . $request->string('page')->value();
+            return Cache::rememberForever($cache_name, function () use ($request, $slug) {
+                return $this->callback_view($request, $slug);
+            });
+        } else {
+
+            return $this->callback_view($request, $slug);
+        }
+
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $result = [];
+        if (empty($request['category'])) return \response()->json($result);
+        try {
+            $categories = $this->repository->getTree((int)$request['category']);
+            /** @var Category $category */
+            foreach ($categories as $category) {
+                $result[] = $this->repository->toShopForSubMenu($category);
+            }
+        } catch (\Throwable $e) {
+            event(new ThrowableHasAppeared($e));
+            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
+        }
+        return \response()->json($result);
+    }
+
+    /**
+     * Генерация страницы категории
+     */
+    public function callback_view(Request $request, $slug)
+    {
         $category = $this->slugs->CategoryBySlug($slug);
         if (is_null($category)) return abort(404);
-
 
         $title = $category->title;
         $description = $category->description;
@@ -53,6 +93,7 @@ class CatalogController extends ShopController
         //TODO Переделать в запросы 1. получить только id Product,
         // 2. Получить мин и макс цены из таблицы напрямую whereIn($product_id, $product_ids), 3. Также получить бренды
 
+
         $minPrice = 10;
         $maxPrice = 999999999;
 
@@ -62,7 +103,7 @@ class CatalogController extends ShopController
                 'id' => $category->id,
                 'name' => $category->name,
                 'slug' => $category->slug,
-                ];
+            ];
         });
         $products = $this->repository->ProductsByCategory($category);
 
@@ -89,22 +130,20 @@ class CatalogController extends ShopController
 
         $product_ids = $products->pluck('id')->toArray();
 
-
         $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
 
         $tags = $this->repository->TagsByProducts($product_ids);
         $tag_id = $request['tag_id'] ?? null;
         $order = $request['order'] ?? 'name';
-        $products = $this->repository->filter($request, $product_ids);
+        $query = $this->repository->filter($request, $product_ids);
+        $count_in_category = $query->count();
+        $products = $query->paginate($this->web->paginate);
         if (empty($category->title)) {
             $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ' .
                 $this->web->title_city . ' ☎ ' . $this->web->title_contact;
         } else {
             $title = $category->title;
         }
-            /*'NORDI HOME ' .
-            ' Калининград ☎ [+7(4012) 37-37-30] (Круглосуточно)';*/
-        //Переводим коллекцию в массив
 
         $products = $products->withQueryString()
             ->through(fn(Product $product) => $this->repository->ProductToArrayCard($product));
@@ -112,25 +151,6 @@ class CatalogController extends ShopController
 
         return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',
-                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order', 'children'));
-
-    }
-
-
-    public function search(Request $request): JsonResponse
-    {
-        $result = [];
-        if (empty($request['category'])) return \response()->json($result);
-        try {
-            $categories = $this->repository->getTree((int)$request['category']);
-            /** @var Category $category */
-            foreach ($categories as $category) {
-                $result[] = $this->repository->toShopForSubMenu($category);
-            }
-        } catch (\Throwable $e) {
-            event(new ThrowableHasAppeared($e));
-            $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
-        }
-        return \response()->json($result);
+                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order', 'children', 'count_in_category'))->render();
     }
 }

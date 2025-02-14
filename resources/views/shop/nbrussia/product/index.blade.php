@@ -31,7 +31,7 @@
                     <div class="products-page-title">
                         <div class="title">
                             <h1>{{ $category->name }} </h1>
-                            <span>&nbsp;({{ count($products) }})</span>
+                            <span>&nbsp;({{ $count_in_category }})</span>
                         </div>
                         <div class="order btn-group">
                             <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

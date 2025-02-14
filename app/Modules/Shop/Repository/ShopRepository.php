@@ -180,7 +180,7 @@ class ShopRepository
             }
         }
 
-        return $query->whereIn('id', $product_ids)->paginate($this->web->paginate);
+        return $query->whereIn('id', $product_ids);
     }
 
 
