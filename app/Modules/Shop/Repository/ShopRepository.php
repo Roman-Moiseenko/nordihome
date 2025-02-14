@@ -81,11 +81,11 @@ class ShopRepository
         return $result;
     }
 
-    public function filter(Request $request, array $product_ids)
+    public function filter(array $request, array $product_ids)
     {
         $query = Product::orderByDesc('priority');
 
-        $query = match ($request['order']) {
+        $query = match ($request['order'] ?? null) {
             'price-down' => $query->orderBy('current_price', 'desc'),
             'price-up' => $query->orderBy('current_price', 'asc'),
             'rating' => $query->orderBy('current_rating', 'asc'),
@@ -98,13 +98,13 @@ class ShopRepository
         ///Фильтрация по $request
 
         //Теги
-        if (!empty($tag = $request['tag_id'])) {
+        if (!empty($tag = $request['tag_id'] ?? null)) {
             $query->whereHas('tags', function ($q) use ($tag) {
                 $q->where('id', $tag);
             });
         }
         //Бренд
-        if (!empty($brands = $request['brands'])) {
+        if (!empty($brands = $request['brands'] ?? null)) {
             $query->whereIn('brand_id', $brands);
         }
 
@@ -127,7 +127,7 @@ class ShopRepository
         //Акция -?
 
         //Атрибуты
-        foreach ($request->all() as $key => $item) {
+        foreach ($request as $key => $item) {
             if (str_contains($key, 'a_')) {
                 $attr_id = (int)substr($key, 2, strlen($key) - 2);
                 /** @var Attribute $attr */
