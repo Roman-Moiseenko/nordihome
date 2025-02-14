@@ -9,6 +9,16 @@ Route::group(
        // 'namespace' => 'Page',
     ],
     function () {
+        Route::group([
+            'prefix' => 'cache',
+            'as' => 'cache.'
+        ], function () {
+            Route::post('/remove', 'CacheController@remove')->name('remove');
+            Route::post('/create', 'CacheController@create')->name('create');
+
+            Route::post('/clear', 'CacheController@clear')->name('clear');
+            Route::get('/', 'CacheController@index')->name('index');
+        });
 
         Route::group([
             'prefix' => 'widget',

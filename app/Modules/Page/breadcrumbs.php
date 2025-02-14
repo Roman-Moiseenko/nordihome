@@ -20,7 +20,11 @@ Breadcrumbs::for('admin.page.widget.show', function (BreadcrumbTrail $trail, Wid
     $trail->push($widget->name, route('admin.page.widget.show', $widget));
 });
 
-
+//CACHE
+Breadcrumbs::for('admin.page.cache.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Кеш страниц', route('admin.page.cache.index'));
+});
 
 
 //PAGE
