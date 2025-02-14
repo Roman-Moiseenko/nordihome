@@ -201,7 +201,7 @@ function onPublishedToggle(row) {
         preserveState: true,
         preserveScroll: true,
         onSuccess: page => {
-            props.products = page.props.products
+            tableData.value = [...page.props.products.data]
         }
     })
 }

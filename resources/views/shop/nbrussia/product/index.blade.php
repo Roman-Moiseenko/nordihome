@@ -6,27 +6,7 @@
 @section('description', $description)
 
 @section('content')
-    <div class="title-page">
-        <div class="products-page-title">
-            <div class="title h1">
-                <h1>{{ $category->name }} </h1>
-                <span>&nbsp;{{ count_product(count($products)) }} </span>
-            </div>
-            <div class="order btn-group">
-                <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    Сортировка
-                </div>
-                <div class="dropdown-menu">
-                    <ul>
-                        <li class="{{ $order == 'price-down' ? 'active' : '' }}" data-order="price-down">По убыванию цены</li>
-                        <li class="{{ $order == 'price-up' ? 'active' : '' }}" data-order="price-up">По возрастанию цены</li>
-                        <li class="{{ $order == 'name' ? 'active' : '' }}" data-order="name">По названию</li>
-                        <li class="{{ $order == 'rating' ? 'active' : '' }}" data-order="rating">По популярности</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <form action="" method="GET">
         <div class="mobile-manager">
             <div class="order btn-group">
@@ -47,6 +27,28 @@
         <div class="products-page-content d-flex position-relative">
             @include('shop.nbrussia.product.filter')
             <div class="list">
+                <div class="title-page">
+                    <div class="products-page-title">
+                        <div class="title">
+                            <h1>{{ $category->name }} </h1>
+                            <span>&nbsp;({{ count($products) }})</span>
+                        </div>
+                        <div class="order btn-group">
+                            <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Сортировка
+                            </div>
+                            <div class="dropdown-menu">
+                                <ul>
+                                    <li class="{{ $order == 'price-down' ? 'active' : '' }}" data-order="price-down">По убыванию цены</li>
+                                    <li class="{{ $order == 'price-up' ? 'active' : '' }}" data-order="price-up">По возрастанию цены</li>
+                                    <li class="{{ $order == 'name' ? 'active' : '' }}" data-order="name">По названию</li>
+                                    <li class="{{ $order == 'rating' ? 'active' : '' }}" data-order="rating">По популярности</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @if(count($tags) > 0)
                 <div class="box-card top-tags">
                     @foreach($tags as $tag)
