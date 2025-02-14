@@ -36,7 +36,7 @@
                         <hr/>
                 @endif
                 @if(isset($attribute['isVariant']))
-                    <x-widget.variant class="mt-3" caption="{{ $attribute['name'] }}">
+                    <x-widget.variant class="mt-3" caption="{{ $attribute['name'] }}" id="{{ $attribute['id'] }}">
                         @foreach($attribute['variants'] as $variant)
                             <x-widget.variant-item name="a_{{ $attribute['id'] }}[]" id="{{ $variant['id'] }}"
                                                    caption="{{ $variant['name'] }}"

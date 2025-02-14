@@ -11,6 +11,9 @@ $padding-right-submenu: 20px;
 $width-sub-menu: $padding-left-submenu + $width-sub-menu-column * $count-col-submenu + $padding-right-submenu;
 $width-root-menu: 300px; //От кол-ва символов
 $widget-height: 1rem; //Высота элементов фильтров
+.accordion-button {
+    font-weight: 600;
+}
 
 *, *:after, *:before {
     box-sizing: border-box;

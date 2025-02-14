@@ -2,13 +2,14 @@
 @import url('https://fonts.bunny.net/css?family=Nunito');
 
 // Variables
-@import 'nbrussia/variables';
+
 
 // Bootstrap
-
+@import 'nbrussia/variables';
 
 @import 'bootstrap/scss/bootstrap';
 @import "bootstrap/scss/variables";
+
 
 $font-sizes: (
     1: $h1-font-size,
