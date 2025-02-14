@@ -37,18 +37,21 @@ class SitemapXmlController extends Controller
                 'date' => $product->updated_at->format('c'),
                 'changefreq' => 'weekly'
             ];
-        }, Product::where('published', true)->getModels());
+        }, Product::where('published', true)->where(function ($query) {
+            $query->doesntHave('modification')->orHas('main_modification');
+        })->getModels());
     }
 
     private function categories(): array
     {
+        //Исключить пустые категории
         return array_map(function (Category $category) {
             return [
                 'url' => route('shop.category.view', $category->slug),
                 'date' => now()->format('c'),
                 'changefreq' => 'weekly'
             ];
-        }, Category::getModels());
+        }, Category::has('products')->getModels());
     }
 
 
