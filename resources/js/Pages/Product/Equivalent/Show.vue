@@ -16,6 +16,7 @@
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
                 v-loading="store.getLoading"
+                @row-click="routeClick"
             >
                 <el-table-column prop="code" label="Артикул" width="160"/>
                 <el-table-column prop="name" label="Товар" width="300" show-overflow-tooltip/>
@@ -39,10 +40,11 @@
 </template>
 <script lang="ts" setup>
 import {inject, ref, defineProps} from "vue";
-import {Head} from '@inertiajs/vue3'
+import {Head, router} from '@inertiajs/vue3'
 import {useStore} from "@Res/store.js"
 import ru from 'element-plus/dist/locale/ru.mjs'
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
+import {route} from "ziggy-js";
 
 const props = defineProps({
     equivalent: Object,
@@ -60,5 +62,8 @@ function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.product.equivalent.del-product', {equivalent: props.equivalent.id, product_id: row.id}));
 }
 
+function routeClick(row) {
+    router.get(route('admin.product.edit', {product: row.id}))
+}
 </script>
 

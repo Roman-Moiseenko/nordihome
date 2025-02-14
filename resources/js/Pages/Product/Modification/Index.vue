@@ -24,7 +24,7 @@
                         <img :src="scope.row.image" style="width: 100%">
                     </template>
                 </el-table-column>
-                <el-table-column prop="name" label="Название" width="280" show-overflow-tooltip/>
+                <el-table-column prop="name" label="Название" width="380" show-overflow-tooltip/>
                 <el-table-column prop="quantity" label="Кол-во товаров" width="180" align="center"/>
                 <el-table-column prop="description" label="Атрибуты">
                     <template #default="scope">
