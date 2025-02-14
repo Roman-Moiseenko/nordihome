@@ -79,7 +79,7 @@ function onSetCategory() {
 function products() {
 
    // router.post(route('admin.parser.category.parser-products', {category: props.category.id}))
-  //  return;
+   // return;
 
     const loading = ElLoading.service({
         lock: false,

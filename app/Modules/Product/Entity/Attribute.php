@@ -27,12 +27,12 @@ class Attribute extends Model
 {
     use ImageField;
 
-    const TYPE_STRING = 101;
-    const TYPE_INTEGER = 103;
-    const TYPE_BOOL = 102;
-    const TYPE_VARIANT = 104;
-    const TYPE_FLOAT = 105;
-    const TYPE_DATE = 106;
+    const int TYPE_STRING = 101;
+    const int TYPE_INTEGER = 103;
+    const int TYPE_BOOL = 102;
+    const int TYPE_VARIANT = 104;
+    const int TYPE_FLOAT = 105;
+    const int TYPE_DATE = 106;
 
     const array ATTRIBUTES = [
         self::TYPE_STRING => 'Строка',

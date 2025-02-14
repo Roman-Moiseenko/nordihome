@@ -110,7 +110,7 @@
                 <div class="description">
                     <div class="accordion" id="accordionExample">
                         <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne">
+                            <h2 class="accordion-header py-3" id="headingOne">
                                 <button class="accordion-button"
                                         type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                     Описание товара

@@ -14,6 +14,7 @@ use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Service\CategoryParserService;
 use App\Modules\Product\Entity\Attribute;
+use App\Modules\Product\Entity\AttributeVariant;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Modification;
@@ -140,15 +141,17 @@ class ParserNB extends ParserAbstract
         }
 
         return $products;
-        //dd($products);
+//        dd($products);
         //TODO Убрать когда заработает через axios
 
         foreach ($products as $product) {
             //dd($product);
             //Ищем товар в базе по Id
+            //dd($product['id']);
             $parser_product = ProductParser::where('maker_id', $product['id'])->first();
             //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
             if (!is_null($parser_product)) {
+
                 $this->updateVariants($product);
             } else {
                 $this->createProduct($product);
@@ -203,72 +206,34 @@ class ParserNB extends ParserAbstract
 
         $attribute_data = $this->parseAttributes($product['properties'], $attributes);
 
-       // dd($attribute_data);
-        /*
-
-        $model = '';
-        $color = '';
-        $for_whom = '';
-        $sex = '';
-        $attr_category = '';
-        $drop = '';
-
-        foreach ($product['properties'] as $property) {
-            if ($property['name'] == 'Model') $model = trim($property['value']['dataList'][0]); //Модель
-            if ($property['name'] == 'Kolor') $color = $property['value']['dataList'][0]; //Цвет
-            if ($property['name'] == 'Dla kogo') $for_whom = $property['value']['dataList']; //Для кого
-            if ($property['name'] == 'Płeć') $sex = $property['value']['dataList']; //Пол
-            if ($property['name'] == 'Kategoria') $attr_category = $property['value']['dataList'][0]; //Категория
-            if ($property['name'] == 'Drop') $drop = $property['value']['dataList'][0]; //?? Подошва
-        }
-
-
-
-
-        $attr_color = null;
-
-        foreach ($attributes as $attribute) {
-            if ($attribute->name == 'Размер') $attr_size = $attribute;
-            if ($attribute->name == 'Цвет') $attr_color = $attribute;
-        }
-
-
-        $color_ru = $this->translate->translate($color); //GoogleTranslateForFree::translate('pl','ru', $color);
-        if (!$attr_color->isValue($color_ru)) {
-            $attr_color->addVariant($color_ru);
-            $attr_color->refresh();
-        }
-
-        $variant_color = $attr_color->findVariant($color_ru)->id;
-        */
         //Размер распарсиваем отдельно, для создания новых товаров из Модификации
         $attr_size = null;
         foreach ($attributes as $attribute) {
             if ($attribute->name == 'Размер') $attr_size = $attribute;
         }
-
         $_products = []; //Массив вариантов для Модификации
         $data = [];
         //Если есть варианты
         foreach ($product['variants'] as $variant) {
-            $ean = $variant['ean'];
+           // $ean = $variant['ean'];
             $code = $variant['warehouseSymbol']; //Артикул на основе модели и размера
             if ($code == null) continue;
-
-            $price_base_v = $variant['prices']['basePrice']['gross'];
-            $price_sell_v = $variant['prices']['sellPrice']['gross'];
-            $availability = $variant['availability']['buyable'];
-
             $size = null;
             foreach ($variant['options'] as $option) {
                 if ($option['name'] == 'Rozmiar' || $option['groupId'] == '32') $size = $option['value'];
             }
+
+            $_product = $this->createVariantProduct($variant, $attribute_data, $attr_size, $size, $name, $main_category, $categories, $data);
+            /*
             if (!$attr_size->isValue($size)) {
                 $attr_size->addVariant($size);
                 $attr_size->refresh();
             }//Если такого размера нет, то добавляем
             $variant_size = $attr_size->findVariant($size)->id;
 
+            $price_base_v = $variant['prices']['basePrice']['gross'];
+            $price_sell_v = $variant['prices']['sellPrice']['gross'];
+            $availability = $variant['availability']['buyable'];
             $data[$size] = [
                 'price_base' => $price_base_v,
                 'price_sell' => $price_sell_v,
@@ -302,7 +267,7 @@ class ParserNB extends ParserAbstract
             //$_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
             //Атрибут размера
             $_product->prod_attributes()->attach($attr_size->id, ['value' => json_encode($variant_size)]);
-
+*/
             $_products[] = $_product;
         }
 
@@ -330,10 +295,120 @@ class ParserNB extends ParserAbstract
 
     }
 
-    private function updateVariants(mixed $product)
+    private function updateVariants(mixed $product): void
     {
+        $maker_id = $product['id'];
+        $price_base = $product['prices']['basePrice']['gross'];
+        $price_sell = $product['prices']['sellPrice']['gross'];
+        /** @var ProductParser $product_parser */
+        $product_parser = ProductParser::where('maker_id', $maker_id)->first();
+        $product_parser->price_base = $price_base;
+        $product_parser->price_sell = $price_sell;
+        $product_parser->save();
 
+        $modification = $product_parser->product->modification;
+        $main_category = $modification->base_product->category;
+        $categories = $modification->base_product->categories;
 
+        $attributes = $main_category->all_attributes();
+
+        $attribute_data = $this->parseAttributes($product['properties'], $attributes);
+
+        $attr_size = null;
+        foreach ($modification->prod_attributes as $attribute) {
+            if ($attribute->name == 'Размер') $attr_size = $attribute;
+        }
+
+        foreach ($product['variants'] as $variant) {
+            $code = $variant['warehouseSymbol']; //Артикул на основе модели и размера
+            if ($code == null) continue;
+            $availability = $variant['availability']['buyable'];
+
+            $size = null;
+            foreach ($variant['options'] as $option) {
+                if ($option['name'] == 'Rozmiar' || $option['groupId'] == '32') $size = $option['value'];
+            }
+
+            if (is_null($product = $this->findByValueInModification($modification, $size, $attr_size))) {
+                $data = $product_parser->data;
+                $product = $this->createVariantProduct($variant, $attribute_data, $attr_size, $size, $modification->name, $main_category, $categories, $data);
+                $product_parser->data = $data;
+                $product_parser->save();
+                $values[$attr_size->id] = $product->Value($attr_size->id);
+                $modification->products()->attach($product->id, ['values_json' => json_encode($values)]);
+                $product->setPublished();
+
+            }
+            $product->not_sale = !$availability;
+            $product->save();
+        }
+    }
+
+    private function findByValueInModification(Modification $modification, $size, Attribute $attr_size)
+    {
+        foreach ($modification->products as $product) {
+            $values = json_decode($product->pivot->values_json, true);
+            $id_variant = $values[(string)$attr_size->id];
+            $variant = AttributeVariant::find($id_variant);
+            if ($variant->name == $size) return $product;
+        }
+        return null;
+    }
+
+    private function createVariantProduct(
+        $variant,
+        $attribute_data, $attr_size, $size,
+        $name,
+        $main_category, $categories,
+        &$data): Product
+    {
+        $ean = $variant['ean'];
+        $code = $variant['warehouseSymbol'];
+
+        if (!$attr_size->isValue($size)) {
+            $attr_size->addVariant($size);
+            $attr_size->refresh();
+        }//Если такого размера нет, то добавляем
+        $variant_size = $attr_size->findVariant($size)->id;
+
+        $price_base_v = $variant['prices']['basePrice']['gross'];
+        $price_sell_v = $variant['prices']['sellPrice']['gross'];
+        $availability = $variant['availability']['buyable'];
+        $data[$size] = [
+            'price_base' => $price_base_v,
+            'price_sell' => $price_sell_v,
+            'availability' => $availability,
+        ];
+        //К названию добавляем Размер, ищем и назначаем атрибут, остальные данные дублируем
+        $name_v = $name . ' ' . $size;
+
+        $_product = Product::register($name_v, $code, $main_category->id);
+        foreach ($categories as $category) {//Назначаем категории
+            $_product->categories()->attach($category);
+        }
+        $_product->not_sale = !$availability;
+        //$_product->model = $model;
+        $_product->barcode = $ean ?? '';
+        $_product->name_print = $_product->name;
+        $_product->local = true;
+        $_product->delivery = true;
+
+        $_product->brand_id = $this->brand->id;
+        $_product->country_id = Country::where('name', 'Польша')->first()->id;
+        $_product->vat_id = VAT::where('value', null)->first()->id;
+        $_product->measuring_id = Measuring::where('name', 'шт')->first()->id;
+        $_product->marking_type_id = MarkingType::whereRaw("LOWER(name) like '%одежда%'")->first()->id;
+
+        $_product->save();
+        //Атрибуты общие
+        foreach ($attribute_data as $datum) {
+            $_product->prod_attributes()->attach($datum['attribute']->id, ['value' => json_encode($datum['variant'])]);
+        }
+        //$_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
+        //Атрибут размера
+        $_product->prod_attributes()->attach($attr_size->id, ['value' => json_encode($variant_size)]);
+        $_product->refresh();
+        return $_product;
     }
 
     private function parseAttributes(array $properties, $attributes): array
