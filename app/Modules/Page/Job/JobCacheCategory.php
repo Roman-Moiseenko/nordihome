@@ -33,6 +33,9 @@ class JobCacheCategory implements ShouldQueue
     {
         try {
             Cache::forget('category-' . $this->slug . '-' . $this->page);
+            Cache::forget('category-' . $this->slug . '-0');
+            Cache::forget('category-' . $this->slug . '-1');
+            Cache::forget('category-' . $this->slug);
             Cache::forget('category-attributes-' . $this->slug);
             $cacheRepository->category(['page' => $this->page], $this->slug);
 
