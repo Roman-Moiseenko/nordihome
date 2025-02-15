@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Controllers;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
+use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\SlugRepository;
 use Illuminate\Http\Request;
@@ -15,17 +16,20 @@ class ProductController extends ShopController
 
     private ShopRepository $repository;
     private SlugRepository $slugs;
+    private CacheRepository $caches;
 
 
     public function __construct(
         ShopRepository $repository,
         SlugRepository $slugs,
+        CacheRepository $caches
     )
     {
         $this->middleware(['auth:admin'])->only(['view_draft']);
         parent::__construct();
         $this->repository = $repository;
         $this->slugs = $slugs;
+        $this->caches = $caches;
     }
 
     public function view($slug)
@@ -36,7 +40,7 @@ class ProductController extends ShopController
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
         //dd($productAttributes);
-        $product = $this->repository->ProductToArrayView($product);
+        $product = $this->caches->product_view_cache($product);
 
         return view($this->route('product.view'), compact('product', 'title', 'description', 'productAttributes'));
     }

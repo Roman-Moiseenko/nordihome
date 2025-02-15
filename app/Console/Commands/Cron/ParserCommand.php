@@ -18,9 +18,14 @@ class ParserCommand extends Command
     public function handle(): void
     {
         $logger = LoggerCron::new($this->description);
-        $this->info('Парсим цены товаров');
-        $parser_products = ProductParser::where('availability', true)->getModels();
+        $this->info('Парсим цены и доступность товаров');
 
+        $parser_products = ProductParser::whereHas('product', function ($query) {
+            $query->where('published', true);
+        })->get();
+
+
+        //$parser_products = ProductParser::where('availability', true)->getModels();
         foreach ($parser_products as $parser_product) {
             ParserPriceProduct::dispatch($logger->id, $parser_product->id);
         }

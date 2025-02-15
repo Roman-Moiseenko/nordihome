@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -31,6 +32,7 @@ class CacheProductCard implements ShouldQueue
     {
         try {
             $product = Product::find($this->product_id);
+            Cache::forget('product-card-' . $this->product_id);
             $cacheRepository->product_card_cache($product);
         } catch (\Throwable $e) {
             Log::error(json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));

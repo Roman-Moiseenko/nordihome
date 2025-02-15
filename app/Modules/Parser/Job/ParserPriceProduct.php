@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Parser\Job;
 
 use App\Modules\Analytics\Entity\LoggerCron;
+use App\Modules\Page\Job\CacheProductCard;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Service\ParserAbstract;
 use Illuminate\Bus\Queueable;
@@ -11,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class ParserPriceProduct implements ShouldQueue
 {
@@ -43,12 +45,13 @@ class ParserPriceProduct implements ShouldQueue
                     'action' => 'Цена спарсилась',
                     'value' => $price,
                 ]);
-            } else {
+            } elseif ($price < 0 ) {
                 $logger->items()->create([
                     'object' => $product_parser->product->code,
                     'action' => 'Товар не доступен больше',
                 ]);
             }
+            if ($price != 0) CacheProductCard::dispatch($product_parser->product_id);
         } catch (\Throwable $e) {
             $logger->items()->create([
                 'object' => $this->parser_product_id,

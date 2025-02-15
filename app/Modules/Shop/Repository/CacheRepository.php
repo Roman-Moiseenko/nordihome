@@ -99,12 +99,8 @@ class CacheRepository
             $title = $category->title;
         }
 
-
         $products = $products->withQueryString()
             ->through(fn(Product $product) => $this->product_card_cache($product));
-     //   $end = now();
-      //  dd($end->diff($begin)->format('%s:%F'));
-
 
         return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',
@@ -132,5 +128,11 @@ class CacheRepository
         });
     }
 
+    public function product_view_cache(Product $product)
+    {
+        return Cache::rememberForever('product-view-' . $product->id, function () use ($product) {
+            return $this->repository->ProductToArrayView($product);
+        });
+    }
 
 }

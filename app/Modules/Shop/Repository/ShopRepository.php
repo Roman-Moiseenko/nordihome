@@ -36,8 +36,9 @@ class ShopRepository
     private Web $web;
     protected ?User $user;
     private Settings $settings;
+    private SlugRepository $slugs;
 
-    public function __construct(Settings $settings)
+    public function __construct(Settings $settings, SlugRepository $slugs)
     {
         $this->web = $settings->web;
 
@@ -47,12 +48,7 @@ class ShopRepository
             $this->user = null;
         }
         $this->settings = $settings;
-    }
-
-
-    public function maxPrice(array $product_ids)
-    {
-        //ProductPricing::whereIn('product_id', $product_ids)->where
+        $this->slugs = $slugs;
     }
 
     public function search(string $search, int $take_cat = 3, int $take_prod = 7): array

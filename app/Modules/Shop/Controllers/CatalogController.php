@@ -44,11 +44,11 @@ class CatalogController extends ShopController
 
     public function view(Request $request, $slug)
     {
-
         $page = $request->has('page');
+        return $this->caches->category_cache($request->all(), $slug);
         if ((empty($request->all()) || (count($request->all()) == 1 && $page)) && $this->web->is_cache) {
             //Без фильтра берем кэш
-           // set_time_limit(100);
+
             $cache_name = 'category-' . $slug . '-' . $request->string('page', '1')->value();
             return Cache::rememberForever($cache_name, function () use ($request, $slug) {
                 return $this->caches->category_cache($request->all(), $slug);

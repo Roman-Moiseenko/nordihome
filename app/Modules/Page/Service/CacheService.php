@@ -33,21 +33,23 @@ class CacheService
 
     public function rebuildCache(): array
     {
-        $this->clearAll();
+       // $this->clearAll();
         //Кэш всех товаров для карточек
-        $products = Product::where('published', true)->get();
+        $products = Product::where('published', true)->where(function ($query) {
+            $query->doesntHave('modification')->orHas('main_modification');
+        })->get();
         foreach ($products as $product) {
             CacheProductCard::dispatch($product->id);
-
         }
         $count['products'] = $products->count();
         $categories = Category::get();
         $count['categories'] = $categories->count();
+
         foreach ($categories as $category) {
             $count_products = $this->shopRepository->ProductsByCategory($category)->count();
             $pages = (int)ceil($count_products / $this->web->paginate);
             for($i = 1; $i <= $pages; $i++) {
-                CacheCategory::dispatch($i, $category->slug);
+              //TODO   CacheCategory::dispatch($i, $category->slug);
             }
         }
         return $count;

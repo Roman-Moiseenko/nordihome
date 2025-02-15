@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <!--base href="https://39y.ru" /-->
-    <meta name="robots" content="noindex"/>
+    <!--base href="https://nbrussia.ru" /-->
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ url('images/nbrussia/favicon/32x32.png') }}" size="32x32">
