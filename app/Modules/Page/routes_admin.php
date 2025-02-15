@@ -15,6 +15,8 @@ Route::group(
         ], function () {
             Route::post('/remove', 'CacheController@remove')->name('remove');
             Route::post('/create', 'CacheController@create')->name('create');
+            Route::post('/categories', 'CacheController@categories')->name('categories');
+            Route::post('/products', 'CacheController@products')->name('products');
 
             Route::post('/clear', 'CacheController@clear')->name('clear');
             Route::get('/', 'CacheController@index')->name('index');

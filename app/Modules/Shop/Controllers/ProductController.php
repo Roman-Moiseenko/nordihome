@@ -9,40 +9,35 @@ use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\SlugRepository;
+use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
 
 class ProductController extends ShopController
 {
-
     private ShopRepository $repository;
-    private SlugRepository $slugs;
     private CacheRepository $caches;
-
+    private ViewRepository $views;
 
     public function __construct(
         ShopRepository $repository,
-        SlugRepository $slugs,
-        CacheRepository $caches
+        CacheRepository $caches,
+        ViewRepository $views,
     )
     {
         $this->middleware(['auth:admin'])->only(['view_draft']);
         parent::__construct();
         $this->repository = $repository;
-        $this->slugs = $slugs;
         $this->caches = $caches;
+        $this->views = $views;
     }
 
     public function view($slug)
     {
-        $product = $this->slugs->getProductBySlug($slug);
-        if (empty($product) || !$product->isPublished()) abort(404);
-        $title = $product->name . ' купить по цене ' . $product->getPriceRetail() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
-        $description = $product->short;
-        $productAttributes = $this->repository->getProdAttributes($product);
-        //dd($productAttributes);
-        $product = $this->caches->product_view_cache($product);
-
-        return view($this->route('product.view'), compact('product', 'title', 'description', 'productAttributes'));
+        if ($this->web->is_cache) {
+            return $this->caches->product($slug);
+        } else {
+            return $this->views->product($slug);
+        }
     }
 
     public function view_draft(Product $product)

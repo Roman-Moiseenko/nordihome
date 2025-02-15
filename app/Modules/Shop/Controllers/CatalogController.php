@@ -9,6 +9,7 @@ use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\SlugRepository;
+use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -19,19 +20,19 @@ use Illuminate\Support\Facades\Cache;
 class CatalogController extends ShopController
 {
     private ShopRepository $repository;
-    private SlugRepository $slugs;
     private CacheRepository $caches;
+    private ViewRepository $views;
 
     public function __construct(
         ShopRepository $repository,
-        SlugRepository $slugs,
         CacheRepository $caches,
+        ViewRepository $views,
     )
     {
         parent::__construct();
         $this->repository = $repository;
-        $this->slugs = $slugs;
         $this->caches = $caches;
+        $this->views = $views;
     }
 
     public function index(): Factory|View|Application|null
@@ -45,16 +46,10 @@ class CatalogController extends ShopController
     public function view(Request $request, $slug)
     {
         $page = $request->has('page');
-        return $this->caches->category_cache($request->all(), $slug);
         if ((empty($request->all()) || (count($request->all()) == 1 && $page)) && $this->web->is_cache) {
-            //Без фильтра берем кэш
-
-            $cache_name = 'category-' . $slug . '-' . $request->string('page', '1')->value();
-            return Cache::rememberForever($cache_name, function () use ($request, $slug) {
-                return $this->caches->category_cache($request->all(), $slug);
-            });
+            return $this->caches->category($request->all(), $slug);
         } else {
-            return $this->caches->category_cache($request->all(), $slug);
+            return $this->views->category($request->all(), $slug);
         }
     }
 

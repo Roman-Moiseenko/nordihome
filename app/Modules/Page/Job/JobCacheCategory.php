@@ -16,17 +16,15 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class CacheCategory implements ShouldQueue
+class JobCacheCategory implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
 
     private int $page;
     private string $slug;
 
     public function __construct(int $page, string $slug)
     {
-
         $this->page = $page;
         $this->slug = $slug;
     }
@@ -34,12 +32,9 @@ class CacheCategory implements ShouldQueue
     public function handle(CacheRepository $cacheRepository): void
     {
         try {
-
-            $cache_name = 'category-' . $this->slug . '-' . $this->page;
-            Cache::forget($cache_name);
-            Cache::rememberForever($cache_name, function () use ($cacheRepository) {
-                return $cacheRepository->category_cache(['page' => $this->page], $this->slug);
-            });
+            Cache::forget('category-' . $this->slug . '-' . $this->page);
+            Cache::forget('category-attributes-' . $this->slug);
+            $cacheRepository->category(['page' => $this->page], $this->slug);
 
         } catch (\Throwable $e) {
             Log::error(json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));

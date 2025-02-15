@@ -35,6 +35,18 @@ class CacheController extends Controller
         return redirect()->back()->with('success', 'Кеш запущен в обработку: Товаров - ' . $count['products'] . ' Категорий - ' . $count['categories']);
     }
 
+    public function categories(): RedirectResponse
+    {
+        $count = $this->service->rebuildCategories();
+        return redirect()->back()->with('success', 'Кеш запущен в обработку: Категорий - ' . $count);
+    }
+
+    public function products(): RedirectResponse
+    {
+        $count = $this->service->rebuildProducts();
+        return redirect()->back()->with('success', 'Кеш запущен в обработку: Товаров - ' . $count);
+    }
+
     public function clear(): RedirectResponse
     {
         $this->service->clearAll();

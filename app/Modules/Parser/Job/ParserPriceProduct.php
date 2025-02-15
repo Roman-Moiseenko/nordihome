@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Parser\Job;
 
 use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Page\Job\CacheProductCard;
+use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Service\ParserAbstract;
 use Illuminate\Bus\Queueable;
@@ -51,7 +51,8 @@ class ParserPriceProduct implements ShouldQueue
                     'action' => 'Товар не доступен больше',
                 ]);
             }
-            if ($price != 0) CacheProductCard::dispatch($product_parser->product_id);
+            //Если данные спарсились, то пересоздаем кэш
+            if ($price != 0) JobCacheProduct::dispatch($product_parser->product_id);
         } catch (\Throwable $e) {
             $logger->items()->create([
                 'object' => $this->parser_product_id,

@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('cron:reserve-before')->everyFiveMinutes();
         //Парсим цены
         //TODO Ежедневно парсить
-        $schedule->command('cron:parser-price')->monthlyOn(2, '02:01');//dailyAt('02:01');
+        $schedule->command('cron:parser-price')->dailyAt('02:01');//dailyAt('02:01');
         //Удаляем просроченные токены
         $schedule->command('auth:clear-resets')->everyFifteenMinutes();
         //Рассылка по новым товара

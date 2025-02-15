@@ -426,7 +426,7 @@ class ShopRepository
 
     ///КАТЕГОРИИ
 
-    private function CategoriesForSearch(Category $category)
+    private function CategoriesForSearch(Category $category): array
     {
         return [
             'id' => $category->id,
@@ -568,7 +568,6 @@ class ShopRepository
             if ($product->isSale()) {
                 $values = json_decode($product->pivot->values_json, true);
                 foreach ($values as $attr_id => $variant_id) {
-                    //    $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
                     $variant_name = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
                     $attributes[$attr_id]['products'][$variant_name][] = [
                         'id' => $product->id,
@@ -579,42 +578,7 @@ class ShopRepository
                 }
             }
         }
-        //  dd($attributes);
         return $attributes;
-        //dd($attributes);
-        /*
-        return  [
-            'attributes' => array_map(function (Attribute $attribute) {
-                return [
-                    'id' => $attribute->id,
-                    'name' => $attribute->name,
-                    'image' => $attribute->getImage(),
-                    'variants' => $attribute->variants()->get()->map(function (AttributeVariant $variant) {
-                        return [
-                            'id' => $variant->id,
-                            'name' => $variant->name,
-                            'image' => $variant->getImage(),
-                        ];
-                    })->toArray(),
-                ];
-            }, $modification->prod_attributes),
-            'products' => $modification->products()->get()->map(function (Product $product) {
-                $values = json_decode($product->pivot->values_json, true);
-
-                $variants = [];
-                foreach ($values as $attr_id => $variant_id) {
-                    $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
-                }
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'slug' => $product->slug,
-                    'image' => $product->miniImage(),
-                    'variants' => $variants,
-                ];
-            })->toArray(),
-        ];
-        */
     }
 
     public function ProductToArrayView(Product $product): array
@@ -640,8 +604,6 @@ class ShopRepository
         return array_merge($this->ProductToArray($product), [
             'description' => $product->description,
             'short' => $product->short,
-
-
             'quantity' => $product->getQuantitySell(),
             'brand' => [
                 'src' => $product->brand->getImage(),

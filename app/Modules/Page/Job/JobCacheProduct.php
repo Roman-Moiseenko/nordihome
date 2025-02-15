@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class CacheProductCard implements ShouldQueue
+class JobCacheProduct implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -28,12 +28,15 @@ class CacheProductCard implements ShouldQueue
         $this->product_id = $product_id;
     }
 
-    public function handle(CacheRepository $cacheRepository)
+    public function handle(CacheRepository $cacheRepository): void
     {
         try {
             $product = Product::find($this->product_id);
             Cache::forget('product-card-' . $this->product_id);
-            $cacheRepository->product_card_cache($product);
+            Cache::forget('product-view-' . $this->product_id);
+            Cache::forget('product-' . $product->slug);
+            //TODO Кеш страницы
+            $cacheRepository->product($product->slug);
         } catch (\Throwable $e) {
             Log::error(json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));
         }

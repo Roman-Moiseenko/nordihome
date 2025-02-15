@@ -13,6 +13,7 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
+use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Parser\Service\ParserAbstract;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Bonus;
@@ -424,16 +425,12 @@ class ProductService
 
         $name = $request->string('name')->trim()->value();
         $name_print = $request->string('name_print')->trim()->value();
-       // $product->name
         $product->code = $request->string('code')->trim()->value();
-//        $product->slug = empty($request->string('slug')->value()) ? Str::slug($product->name) : $request->string('slug')->value();
-      //  $product->name_print =
         $product->save();
 
         /** @var Product[] $products */
         $products = $this->list($product, $request->boolean('modification'));
         foreach ($products as $product) {
-
             if (count($products) > 1) {
                 $values = json_decode($product->pivot->values_json, true);
                 $variants = [];
@@ -507,6 +504,8 @@ class ProductService
                 }
             }
         }
+
+        JobCacheProduct::dispatch($products[0]);
     }
 
     public function editDescription(Product $product, Request $request): void
@@ -521,6 +520,7 @@ class ProductService
             $this->series($request, $product);
             $product->save();
         }
+        JobCacheProduct::dispatch($products[0]);
     }
 
     public function editDimensions(Product $product, Request $request): void
@@ -537,6 +537,7 @@ class ProductService
             $product->packages->complexity = $request->integer('complexity');
             $product->save();
         }
+        JobCacheProduct::dispatch($products[0]);
     }
 
     public function editVideo(Product $product, Request $request): void
@@ -552,6 +553,7 @@ class ProductService
                 $product->save();
             }
         }
+        JobCacheProduct::dispatch($products[0]);
     }
 
     public function editAttribute(Product $product, Request $request): void
@@ -577,6 +579,8 @@ class ProductService
             }
             $product->save();
         });
+
+        //JobCacheProduct::dispatch($products[0]);
     }
 
     public function editManagement(Product $product, Request $request): void
@@ -609,6 +613,7 @@ class ProductService
                 $storageItem->save();
             }
         }
+        JobCacheProduct::dispatch($products[0]);
     }
 
     public function editEquivalent(Product $product, Request $request): void
@@ -629,6 +634,7 @@ class ProductService
             }
             $product->save();
         }
+        JobCacheProduct::dispatch($products[0]);
     }
 
     public function editRelated(Product $product, Request $request): void
@@ -644,6 +650,7 @@ class ProductService
             }
             $product->save();
         }
+        JobCacheProduct::dispatch($products[0]);
     }
 
     public function editBonus(Product $product, Request $request): void
@@ -669,6 +676,7 @@ class ProductService
                 }
             }
         }
+        JobCacheProduct::dispatch($products[0]);
     }
 
     public function editComposite(Product $product, Request $request): void
@@ -694,6 +702,7 @@ class ProductService
                 $product->composites()->updateExistingPivot($item['id'], ['quantity' => $item['quantity']]);
             }
         }
+        JobCacheProduct::dispatch($product);
     }
 
     private function tags($tags, Product &$product): void
@@ -724,7 +733,10 @@ class ProductService
     ///Работа с Фото Продукта
     public function addPhoto(Request $request, Product $product): Photo
     {
-        return $product->addImage($request->file('file'));
+        $photo = $product->addImage($request->file('file'));
+        JobCacheProduct::dispatch($product);
+        return $photo;
+
         /*
         if (empty($file = $request->file('file'))) throw new \DomainException('Нет файла');
         $sort = count($product->photos);
@@ -738,6 +750,7 @@ class ProductService
     {
         //return;
         $product->delImage($request->integer('photo_id'));
+        JobCacheProduct::dispatch($product);
         /*
         $photo = Photo::find($request->integer('photo_id'));
         $photo->delete();
@@ -767,6 +780,7 @@ class ProductService
             $photo->sort = $i;
             $photo->save();
         }
+        JobCacheProduct::dispatch($product);
     }
 
     public function setPhoto(Request $request, Product $product): void
@@ -777,13 +791,7 @@ class ProductService
             title: $request->string('title')->trim()->value(),
             description: $request->string('description')->trim()->value(),
         );
-        /*  foreach ($product->gallery as $photo) {
-              if ($photo->id === $id) {
-                  $photo->update([
-
-                  ]);
-              }
-          }*/
+        JobCacheProduct::dispatch($product);
     }
 
     public function published(Product $product): void

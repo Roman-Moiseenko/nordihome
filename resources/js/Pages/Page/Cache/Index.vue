@@ -7,7 +7,14 @@
                 Очистить все
             </el-button>
             <el-button type="primary" class="p-4 my-3" @click="onCreate">
-                Пересоздать кеш
+                Пересоздать весь кеш
+            </el-button>
+
+            <el-button type="primary" class="p-4 my-3" @click="onCategories">
+                Кеш категорий
+            </el-button>
+            <el-button type="primary" class="p-4 my-3" @click="onProducts">
+                Кеш товаров
             </el-button>
         </div>
         <div class="mt-2 p-5 bg-white rounded-md">
@@ -67,8 +74,22 @@ function onClear() {
 }
 
 function onCreate() {
-    //TODO Через Аксиос Сколько нашлось и И сколько осталось, Как парсинг
     router.visit(route('admin.page.cache.create'), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+    })
+}
+
+function onCategories() {
+    router.visit(route('admin.page.cache.categories'), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+    })
+}
+function onProducts() {
+    router.visit(route('admin.page.cache.products'), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
