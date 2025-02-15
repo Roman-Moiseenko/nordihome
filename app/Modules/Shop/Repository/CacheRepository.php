@@ -33,9 +33,8 @@ class CacheRepository
      * Генерация страницы категории
      * Для запуска - Находим кол-во товаров в категории, делим на страницы (wep->pages) и передаем по порядку $request['page]
      */
-    public function category_cache(array $request, $slug): string
+    public function category_cache(array $request, $slug)
     {
-        //$begin = now();
         $category = $this->slugs->CategoryBySlug($slug);
         if (is_null($category)) return abort(404);
         $title = $category->title;
@@ -132,4 +131,6 @@ class CacheRepository
             return $this->repository->ProductToArrayCard($product);
         });
     }
+
+
 }
