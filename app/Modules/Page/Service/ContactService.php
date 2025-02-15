@@ -22,6 +22,7 @@ class ContactService
 
     public function setInfo(Request $request, Contact $contact): void
     {
+
         $contact->update([
             'name' => $request->string('name')->trim()->value(),
             'icon' => $request->string('icon')->trim()->value(),

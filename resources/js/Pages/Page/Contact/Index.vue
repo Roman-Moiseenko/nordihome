@@ -20,6 +20,11 @@
                         <i :class="scope.row.icon"/>
                     </template>
                 </el-table-column>
+                <el-table-column prop="icon" label="Цвет" width="180" >
+                    <template #default="scope">
+                        <span :style="'background:' + scope.row.color + '; padding: 0 10px;'"> </span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="url" label="Ссылка" width="280" show-overflow-tooltip/>
                 <el-table-column prop="published" label="Опубликован" width="180" align="center">
                     <template #default="scope">
@@ -65,7 +70,7 @@
                     <el-input v-model="form.icon" placeholder="fontawesome 6.0"/>
                 </el-form-item>
 
-
+                <el-color-picker v-model="form.color" />
                 <el-form-item label="Ссылка на контакт" label-position="top" class="mt-3">
                     <el-input v-model="form.url" placeholder="https://"/>
                 </el-form-item>
@@ -118,6 +123,7 @@ const form = reactive({
     icon: null,
     url: null,
     type: null,
+    color: null,
 })
 
 function onOpenDialog() {
@@ -126,6 +132,7 @@ function onOpenDialog() {
     form.icon = null
     form.url = null
     form.type = null
+    form.color = null
     dialogCreate.value = true
 }
 
@@ -157,6 +164,7 @@ function routeClick(row) {
     form.icon = row.icon
     form.url = row.url
     form.type = row.type
+    form.color = row.color
     dialogCreate.value = true
 }
 

@@ -1,5 +1,58 @@
 
-
+.button-contacts {
+    display: block;
+    position: fixed;
+    bottom: 16px;
+    right: 100px;
+    z-index: 999999;
+    >button {
+        background: var(--bs-secondary-700);
+        border: 1px solid #fff;
+        color: #fff;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+    >.list {
+        position: fixed;
+        display: flex;
+        right: 180px;
+        bottom: 8px;
+        z-index: 99999;
+        >div {
+            >a {
+                font-size: 3rem;
+            }
+        }
+    }
+}
+@media screen and (max-width: 991px) {
+    .button-contacts {
+        bottom: 70px;
+        right: unset;
+        left: 10px;
+        >button {
+            background: var(--bs-secondary-700);
+            color: #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 2rem;
+        }
+        >.list {
+            right: unset;
+            left: 65px;
+            bottom: 65px;
+            z-index: 99999;
+            >div {
+                >a {
+                    font-size: 3rem;
+                }
+            }
+        }
+    }
+}
 
 /* ХЛЕБНЫЕ КРОШКИ */
 .breadcrumbs {
@@ -46,9 +99,9 @@
     position: fixed;
     top: 0;
     right: 25px;
-    width: 42px;
-    height: 42px;
-    line-height: 42px;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
     padding: 0;
     font-size: 20px;
     text-align: center;
@@ -57,8 +110,8 @@
     background-color: var(--bs-gray-900);
     border: 1px solid var(--bs-gray-100);
     outline: none;
-    border-radius: 50% 0 50% 50%;
-    box-shadow: 0 0 12px 0 rgba(0,0,0,.2);
+    border-radius: 50% 50% 50% 50%;
+    //box-shadow: 0 0 12px 0 rgba(0,0,0,.2);
     -webkit-transition: .9s;
     transition: .9s;
     z-index: 99;
