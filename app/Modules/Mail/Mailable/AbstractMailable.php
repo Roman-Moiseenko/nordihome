@@ -21,7 +21,9 @@ abstract class AbstractMailable extends Mailable
     public function __construct()
     {
         $this->files = [];
-        $this->mail_settings = app()->make(Settings::class);
+        /** @var Settings $settings */
+        $settings = app()->make(Settings::class);
+        $this->mail_settings =$settings->mail;
     }
 
     abstract public function envelope(): Envelope;

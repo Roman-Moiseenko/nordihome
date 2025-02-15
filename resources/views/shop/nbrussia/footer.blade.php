@@ -39,6 +39,7 @@
                     <div>
                         <div>
                             <p>тел. <a href="tel:+7" style="color: var(--bs-secondary-700);">+7(9..) ... ....</a></p>
+                            <p><a href="mailto:info@nbrussia.ru">info@nbrussia.ru</a> </p>
                             <p>ООО «Кёнигс.ру», ИНН 3906396773, КПП 390601001, <span>236001</span>
                                 <span>Калининград</span></p>
                         </div>

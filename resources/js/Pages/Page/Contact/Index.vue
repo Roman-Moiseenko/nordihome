@@ -134,7 +134,7 @@ function saveContact() {
     if (form.id === null) {
         _route = route('admin.page.contact.store' )
     } else {
-        _route = route('admin.page.contact.update', {contact: form.id})
+        _route = route('admin.page.contact.set-info', {contact: form.id})
     }
 
     router.visit(_route , {
@@ -143,7 +143,7 @@ function saveContact() {
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
-            props.contacts = [...page.props.contacts]
+            tableData.value = [...page.props.contacts]
         }
     })
 
