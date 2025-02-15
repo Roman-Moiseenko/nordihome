@@ -25,7 +25,8 @@
         "mpdf/mpdf": "^v8.2.5",
         "nesbot/carbon": "^3.8",
         "phpoffice/phpspreadsheet": "^3.6.0",
-        "tightenco/ziggy": "^v2.4.1"
+        "tightenco/ziggy": "^v2.4.1",
+        "webklex/laravel-imap": "^6.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^v3.14.7",
