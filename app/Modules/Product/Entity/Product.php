@@ -193,6 +193,9 @@ class Product extends Model
 
     ];
 
+    protected $with = [
+        'brand',
+    ];
     public function sluggable()
     {
         return ['slug' => ['source' => 'name']];

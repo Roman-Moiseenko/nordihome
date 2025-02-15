@@ -48,6 +48,11 @@ class Category extends Model
     ];
     public $timestamps = false;
 
+    protected $with = [
+        'parent',
+        'prod_attributes',
+        ];
+
     public static function register($name, $parent_id = null, $slug = '', $title = '', $description = ''): self
     {
         $slug = empty($slug) ? Str::slug($name) : $slug;

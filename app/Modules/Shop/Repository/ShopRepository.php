@@ -27,6 +27,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\Deprecated;
+use LaravelIdea\Helper\App\Modules\Product\Entity\_IH_Tag_C;
 use function Sodium\add;
 
 class ShopRepository
@@ -282,7 +283,6 @@ class ShopRepository
         ];
     }
 
-
     ////АТРИБУТЫ
     ///
     public function AttributeCommon(array $categories_id, array $product_ids): array
@@ -304,12 +304,11 @@ class ShopRepository
                 });
             })->pluck('id')->toArray()
         );
+
         $_attr_intersect = array_intersect($attrs_cat, $attrs_prod); //Общие id атрибутов для товаров и категорий
 
         $attributes = Attribute::whereIn('id', $_attr_intersect)->where('filter', '=', true)->orderBy('group_id')->get();
         $prod_attributes = [];
-        // dd($attributes);
-
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {  //Заполняем варианты и мин.и макс. значения из возможных для данных товаров
@@ -333,6 +332,7 @@ class ShopRepository
                 }
             }
         }
+
         return $prod_attributes;
     }
 
@@ -401,11 +401,11 @@ class ShopRepository
 
     ////ТЕГИ
     ///
-    public function TagsByProducts(array $product_ids): array
+    public function TagsByProducts(array $product_ids): Arrayable
     {
         return Tag::whereHas('products', function ($query) use ($product_ids) {
             $query->whereIn('id', $product_ids);
-        })->getModels();
+        })->get();
     }
 
     //////
