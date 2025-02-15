@@ -3,6 +3,7 @@
 namespace App\Modules\Parser\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Repository\ProductParserRepository;
 use App\Modules\Parser\Service\ProductParserService;
 
@@ -24,5 +25,11 @@ class ProductParserController extends Controller
     public function index()
     {
         //TODO
+    }
+
+    public function parser(ProductParser $product): \Illuminate\Http\RedirectResponse
+    {
+        $price = $this->service->parserProduct($product);
+        return redirect()->back()->with('success', 'Товар спарсен: ' . $price);
     }
 }

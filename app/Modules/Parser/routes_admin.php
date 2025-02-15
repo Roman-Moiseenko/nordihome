@@ -30,7 +30,13 @@ Route::group(
         //    Route::post('/set-info/{category}', 'CategoryParserController@set_info')->name('set-info');
         });
 
+        Route::group([
+            'prefix' => 'product',
+            'as' => 'product.',
+        ], function () {
+            Route::post('/parser/{product}', 'ProductParserController@parser')->name('parser');
 
+        });
         //PRODUCT
  /*       Route::group([
             'prefix' => 'image',

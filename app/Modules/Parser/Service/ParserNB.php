@@ -83,29 +83,27 @@ class ParserNB extends ParserAbstract
         $end = strpos($text, '</script>');
         $newData = substr($text, 0, $end);
         $array = json_decode($newData, true);
-        $queries = $array['props']['pageProps']['dehydratedState']['queries'];
-        return $queries;
+        return $array['props']['pageProps']['dehydratedState']['queries'];
     }
 
-    public function parserProducts(?int $category_id)
-    {
-
-    }
-
-
-    public function findProduct(string $search):? Product
-    {
-        // TODO: Implement findProduct() method.
-    }
-
-    public function remainsProduct(string $code): float
-    {
-        // TODO: Implement remainsProduct() method.
-    }
 
     public function parserCost(ProductParser $parser): float
     {
-        // TODO: Implement costProduct() method.
+        $price_sell = $parser->price_sell;
+        $url = $parser->product->brand->url . '/' . $parser->url;
+        $data = $this->httpPage->getPage($url);
+        $queries = $this->getQueries($data);
+        $product = [];
+        foreach ($queries as $query) {
+            if (isset($query['state']['data']['product']))
+                $product = $query['state']['data']['product'];
+        }
+        if (empty($product)) return -1;
+        $this->parserProductByData($product);
+
+        $parser->refresh();
+        if ($price_sell == $parser->price_sell) return 0;
+        return $parser->price_sell;
     }
 
     public function availablePrice(string $code): bool
@@ -215,7 +213,6 @@ class ParserNB extends ParserAbstract
         $data = [];
         //Если есть варианты
         foreach ($product['variants'] as $variant) {
-           // $ean = $variant['ean'];
             $code = $variant['warehouseSymbol']; //Артикул на основе модели и размера
             if ($code == null) continue;
             $size = null;
@@ -224,50 +221,6 @@ class ParserNB extends ParserAbstract
             }
 
             $_product = $this->createVariantProduct($variant, $attribute_data, $attr_size, $size, $name, $main_category, $categories, $data);
-            /*
-            if (!$attr_size->isValue($size)) {
-                $attr_size->addVariant($size);
-                $attr_size->refresh();
-            }//Если такого размера нет, то добавляем
-            $variant_size = $attr_size->findVariant($size)->id;
-
-            $price_base_v = $variant['prices']['basePrice']['gross'];
-            $price_sell_v = $variant['prices']['sellPrice']['gross'];
-            $availability = $variant['availability']['buyable'];
-            $data[$size] = [
-                'price_base' => $price_base_v,
-                'price_sell' => $price_sell_v,
-                'availability' => $availability,
-            ];
-            //К названию добавляем Размер, ищем и назначаем атрибут, остальные данные дублируем
-            $name_v = $name . ' ' . $size;
-
-            $_product = Product::register($name_v, $code, $main_category->id);
-            foreach ($categories as $category) {//Назначаем категории
-                $_product->categories()->attach($category);
-            }
-            $_product->not_sale = !$availability;
-            //$_product->model = $model;
-            $_product->barcode = $ean ?? '';
-            $_product->name_print = $_product->name;
-            $_product->local = true;
-            $_product->delivery = true;
-
-            $_product->brand_id = $this->brand->id;
-            $_product->country_id = Country::where('name', 'Польша')->first()->id;
-            $_product->vat_id = VAT::where('value', null)->first()->id;
-            $_product->measuring_id = Measuring::where('name', 'шт')->first()->id;
-            $_product->marking_type_id = MarkingType::whereRaw("LOWER(name) like '%одежда%'")->first()->id;
-
-            $_product->save();
-            //Атрибуты общие
-            foreach ($attribute_data as $datum) {
-                $_product->prod_attributes()->attach($datum['attribute']->id, ['value' => json_encode($datum['variant'])]);
-            }
-            //$_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
-            //Атрибут размера
-            $_product->prod_attributes()->attach($attr_size->id, ['value' => json_encode($variant_size)]);
-*/
             $_products[] = $_product;
         }
 
@@ -288,6 +241,7 @@ class ParserNB extends ParserAbstract
         //$product_parser->model = $model;
         $product_parser->price_base = $price_base;
         $product_parser->price_sell = $price_sell;
+        $product_parser->availability = true;
         $product_parser->data = $data;
         $product_parser->save();
         foreach ($parser_categories as $category) //Назначаем категории
@@ -478,4 +432,18 @@ class ParserNB extends ParserAbstract
         }
         return $attribute->findVariant($value_ru)->id;
     }
+
+
+
+
+    public function findProduct(string $search):? Product
+    {
+        // TODO: Implement findProduct() method.
+    }
+
+    public function remainsProduct(string $code): float
+    {
+        // TODO: Implement remainsProduct() method.
+    }
 }
+
