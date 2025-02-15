@@ -40,11 +40,12 @@ class PageController extends ShopController
         try {
             $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
             $callback = fn() => $page->view();
-            if ($this->web->is_cache) {
-                return Cache::rememberForever('page-' . $slug, $callback);
-            } else {
+
+            //if ($this->web->is_cache) {
+            //    return Cache::rememberForever('page-' . $slug, $callback);
+         //   } else {
                 return $callback();
-            }
+         //   }
 
         } catch (\Throwable $e) {
             abort(404, 'Страница не найдена');

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Service;
 
+use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Job\JobCacheCategory;
 use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Product\Entity\Category;
@@ -74,6 +75,18 @@ class CacheService
         }
     }
 
+    public function rebuildPages()
+    {
+        $pages = Page::orderBy('name')->active()->get();
+
+        foreach ($pages as $page) {
+            Cache::forget('page-' . $page->slug);
+            Cache::rememberForever('page-' . $page->slug, function () use ($page) {
+                return $page->view();
+            });
+        }
+        return $pages->count();
+    }
 
 
 }

@@ -16,6 +16,9 @@
             <el-button type="primary" class="p-4 my-3" @click="onProducts">
                 Кеш товаров
             </el-button>
+            <el-button type="primary" class="p-4 my-3" @click="onPages">
+                Кеш Страниц
+            </el-button>
         </div>
         <div class="mt-2 p-5 bg-white rounded-md">
             <el-table
@@ -95,6 +98,14 @@ function onProducts() {
         preserveState: false,
     })
 }
+function onPages() {
+    router.visit(route('admin.page.cache.pages'), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+    })
+}
+
 function onRemove(row) {
     router.visit(route('admin.page.cache.remove'), {
         method: "post",
@@ -103,4 +114,6 @@ function onRemove(row) {
         preserveState: false,
     })
 }
+
+
 </script>

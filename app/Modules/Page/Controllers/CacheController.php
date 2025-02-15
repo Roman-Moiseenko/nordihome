@@ -52,4 +52,10 @@ class CacheController extends Controller
         $this->service->clearAll();
         return redirect()->back()->with('success', 'Кеш очищен');
     }
+
+    public function pages(): RedirectResponse
+    {
+        $count = $this->service->rebuildPages();
+        return redirect()->back()->with('success', 'Страницы пересозданы ' . $count);
+    }
 }

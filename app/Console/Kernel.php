@@ -19,8 +19,9 @@ class Kernel extends ConsoleKernel
         //Резерв товара - за 1 день или 12 часов
         $schedule->command('cron:reserve-before')->everyFiveMinutes();
         //Парсим цены
-        //TODO Ежедневно парсить
-        $schedule->command('cron:parser-price')->dailyAt('02:01');//dailyAt('02:01');
+        $schedule->command('cron:parser-price')->dailyAt('01:01');//dailyAt('02:01');
+        //Кешируем данные (категории)
+        $schedule->command('cron:cache')->dailyAt('04:01');//dailyAt('02:01');
         //Удаляем просроченные токены
         $schedule->command('auth:clear-resets')->everyFifteenMinutes();
         //Рассылка по новым товара
