@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Service;
 
+use App\Modules\Product\Entity\EquivalentProduct;
+use App\Modules\Product\Entity\GroupProduct;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\AttributeRepository;
@@ -77,6 +79,7 @@ class ModificationService
     {
         $base = $modification->base_product;
         $product = Product::find($product_id);
+        $base_id = $modification->base_product_id;
 
         //Если базовый Парсер, а новый нет - то переносим парсер на новый
         //dd([$base->parser,$product->parser ]);
@@ -92,6 +95,20 @@ class ModificationService
                 $photo->delete();
             }
         }
+
+
+
+        if (!is_null($base->equivalent)) {
+            $equivalent = $base->equivalent;
+            $equivalent->products()->attach($product_id);
+            $equivalent->products()->detach($base_id);
+        }
+
+        foreach ($base->groups as $group) {
+            $group->products()->attach($product_id);
+            $group->products()->detach($base_id);
+        }
+
         $modification->base_product_id = $product->id;
         $modification->save();
         set_time_limit(30);

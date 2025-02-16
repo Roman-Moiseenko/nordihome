@@ -8,7 +8,7 @@
         </template>
 
         <el-table
-            :data="[...category.products]"
+            :data="tableData"
             header-cell-class-name="nordihome-header"
             style="width: 100%;"
 
@@ -93,6 +93,7 @@ import {route} from "ziggy-js";
 const props = defineProps({
     category: Object,
 })
+const tableData = ref([...props.category.products]);
 const $delete_entity = inject("$delete_entity", "product")
 function routeClick(row) {
     router.get(route('admin.product.edit', {product: row.id}))
@@ -137,7 +138,7 @@ function onPublishedToggle(row) {
         preserveState: true,
         preserveScroll: true,
         onSuccess: page => {
-            tableData.value = [...page.props.products.data]
+            tableData.value = [...page.props.category.products.data]
         }
     })
 }
