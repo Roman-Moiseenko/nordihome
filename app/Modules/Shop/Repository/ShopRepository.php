@@ -231,7 +231,11 @@ class ShopRepository
                 $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
             });
         })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
-            $query->doesntHave('modification')->orHas('main_modification');
+            $query->doesntHave('modification')->orWhere(function ($query){
+              $query->has('main_modification')->whereHas('main_modification', function ($query) {
+                  $query->where('not_sale', false);
+              });
+            });
         });
 
         return $query->get();
@@ -583,7 +587,6 @@ class ShopRepository
 
     public function ProductToArrayView(Product $product): array
     {
-
         $_product = null;
         $equivalents = [];
         if (!is_null($product->equivalent_product)) {
@@ -592,7 +595,7 @@ class ShopRepository
             $_product = $product->modification->base_product;
         }
         if (!is_null($_product)) {
-            $equivalents = $_product->equivalent->products()->get()->map(function (Product $product) {
+            $equivalents = $_product->equivalent->products()->where('not_sale', false)->get()->map(function (Product $product) {
                 return [
                     'slug' => $product->slug,
                     'name' => $product->name,

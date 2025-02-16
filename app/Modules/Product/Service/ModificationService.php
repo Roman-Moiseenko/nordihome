@@ -73,10 +73,10 @@ class ModificationService
         $modification->products()->detach($product_id);
     }
 
-    public function setBase(Modification $modification, Request $request): void
+    public function setBase(Modification $modification, int $product_id): void
     {
         $base = $modification->base_product;
-        $product = Product::find($request->integer('product_id'));
+        $product = Product::find($product_id);
 
         //Если базовый Парсер, а новый нет - то переносим парсер на новый
         //dd([$base->parser,$product->parser ]);

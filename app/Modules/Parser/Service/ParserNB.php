@@ -19,6 +19,7 @@ use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Service\ModificationService;
 use Illuminate\Contracts\Support\Arrayable;
 
 class ParserNB extends ParserAbstract
@@ -295,6 +296,34 @@ class ParserNB extends ParserAbstract
             }
             $product->not_sale = !$availability;
             $product->save();
+            $product->refresh();
+            //TODO Вынести
+            // Изменение базового продукта, если он недоступен
+            if (!$availability) {
+                //Базовый в модификации стал не доступен
+                if (!is_null($product->main_modification)) {
+                    foreach ($product->modification->products as $_product) {
+                        if ($_product->isSale()) {
+                            /** @var ModificationService $service */
+                            $service = app()->make(ModificationService::class);
+                            $service->setBase($product->modification, $_product->id);
+                            return;
+                        }
+                    }
+                }
+            } else {
+                //Стал доступен один из модификации, когда вся модификация недоступна
+                if (!$product->modification->isSale()) {
+                    //И текущий не базовый
+                    if (!is_null($product->main_modification)) {
+                        /** @var ModificationService $service */
+                        $service = app()->make(ModificationService::class);
+                        $service->setBase($product->modification, $product->id);
+                        return;
+                    }
+                }
+
+            }
         }
     }
 

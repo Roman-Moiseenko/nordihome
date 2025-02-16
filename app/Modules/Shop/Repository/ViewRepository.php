@@ -121,7 +121,6 @@ class ViewRepository
                 }
 
             });
-
         return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',
                 'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order', 'children', 'count_in_category'))->render();

@@ -142,4 +142,12 @@ class Modification extends Model
         }
         return false;
     }
+
+    public function isSale(): bool
+    {
+        foreach ($this->products as $product) {
+            if ($product->isSale()) return true;
+        }
+        return false;
+    }
 }

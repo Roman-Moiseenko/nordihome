@@ -78,7 +78,7 @@ class ModificationController extends Controller
 
     public function set_base(Request $request, Modification $modification): RedirectResponse
     {
-        $this->service->setBase($modification, $request);
+        $this->service->setBase($modification, $request->integer('product_id'));
         return redirect()->back()->with('success', 'Сохранено');
     }
 
