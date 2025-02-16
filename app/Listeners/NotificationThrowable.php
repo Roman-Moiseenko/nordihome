@@ -6,6 +6,9 @@ use App\Events\ThrowableHasAppeared;
 use App\Mail\AdminThrowable;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
+use App\Modules\Mail\Job\SendSystemMail;
+use App\Modules\Mail\Mailable\SystemMailable;
+use App\Modules\Mail\Service\SystemMailService;
 use App\Notifications\StaffMessage;
 use Illuminate\Support\Facades\Mail;
 
@@ -24,6 +27,7 @@ class NotificationThrowable
      */
     public function handle(ThrowableHasAppeared $event): void
     {
+
         $staffs = Admin::where('role', Admin::ROLE_ADMIN)->orWhereHas('responsibilities', function ($q) {
             $q->where('code', Responsibility::REPORT_THROWABLE);
         })->get();
@@ -33,7 +37,8 @@ class NotificationThrowable
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage('Ошибка на сайте:', $message));
-            Mail::to($staff->email)->send(new AdminThrowable($event->throwable));
+            SendSystemMail::dispatch($staff, new AdminThrowable($event->throwable));
+            //Mail::to($staff->email)->send(new AdminThrowable($event->throwable));
         }
     }
 }

@@ -197,5 +197,5 @@
         </div>
     </div>
 
-    {!! ''; //$schema->ProductPage($product) !!}
+    {!! $schema->ProductPage($product) !!}
 @endsection

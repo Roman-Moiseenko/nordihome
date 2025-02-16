@@ -167,7 +167,9 @@ class CategoryRepository
                 'parent' => $this->attributeForCategory($category->parent_attributes()),
                 'self' => $this->attributeForCategory($category->prod_attributes()->getModels()),
             ],
-            'products' => $category->products()->doesntHave('modification')->orHas('main_modification')->get()->map(function (Product $product) {
+            'products' => $category->products()->where(function ($query) {
+                $query->doesntHave('modification')->orHas('main_modification');
+            })->get()->map(function (Product $product) {
                 return array_merge($product->toArray(), [
                     'image' => $product->miniImage(),
                 ]);

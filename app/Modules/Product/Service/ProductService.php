@@ -505,7 +505,7 @@ class ProductService
             }
         }
 
-        JobCacheProduct::dispatch($products[0]);
+        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editDescription(Product $product, Request $request): void
@@ -520,7 +520,7 @@ class ProductService
             $this->series($request, $product);
             $product->save();
         }
-        JobCacheProduct::dispatch($products[0]);
+        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editDimensions(Product $product, Request $request): void
@@ -537,7 +537,7 @@ class ProductService
             $product->packages->complexity = $request->integer('complexity');
             $product->save();
         }
-        JobCacheProduct::dispatch($products[0]);
+        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editVideo(Product $product, Request $request): void
@@ -553,7 +553,7 @@ class ProductService
                 $product->save();
             }
         }
-        JobCacheProduct::dispatch($products[0]);
+        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editAttribute(Product $product, Request $request): void
@@ -580,7 +580,7 @@ class ProductService
             $product->save();
         });
 
-        //JobCacheProduct::dispatch($products[0]);
+        //JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editManagement(Product $product, Request $request): void
@@ -613,7 +613,7 @@ class ProductService
                 $storageItem->save();
             }
         }
-        JobCacheProduct::dispatch($products[0]);
+        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editEquivalent(Product $product, Request $request): void
@@ -634,7 +634,7 @@ class ProductService
             }
             $product->save();
         }
-        JobCacheProduct::dispatch($products[0]);
+        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editRelated(Product $product, Request $request): void
@@ -650,7 +650,7 @@ class ProductService
             }
             $product->save();
         }
-        JobCacheProduct::dispatch($products[0]);
+        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editBonus(Product $product, Request $request): void
@@ -676,7 +676,7 @@ class ProductService
                 }
             }
         }
-        JobCacheProduct::dispatch($products[0]);
+        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editComposite(Product $product, Request $request): void
@@ -702,7 +702,7 @@ class ProductService
                 $product->composites()->updateExistingPivot($item['id'], ['quantity' => $item['quantity']]);
             }
         }
-        JobCacheProduct::dispatch($product);
+        JobCacheProduct::dispatch($product->id);
     }
 
     private function tags($tags, Product &$product): void
@@ -734,7 +734,7 @@ class ProductService
     public function addPhoto(Request $request, Product $product): Photo
     {
         $photo = $product->addImage($request->file('file'));
-        JobCacheProduct::dispatch($product);
+        JobCacheProduct::dispatch($product->id);
         return $photo;
 
         /*
@@ -750,7 +750,7 @@ class ProductService
     {
         //return;
         $product->delImage($request->integer('photo_id'));
-        JobCacheProduct::dispatch($product);
+        JobCacheProduct::dispatch($product->id);
         /*
         $photo = Photo::find($request->integer('photo_id'));
         $photo->delete();
@@ -780,7 +780,7 @@ class ProductService
             $photo->sort = $i;
             $photo->save();
         }
-        JobCacheProduct::dispatch($product);
+        JobCacheProduct::dispatch($product->id);
     }
 
     public function setPhoto(Request $request, Product $product): void
@@ -791,7 +791,7 @@ class ProductService
             title: $request->string('title')->trim()->value(),
             description: $request->string('description')->trim()->value(),
         );
-        JobCacheProduct::dispatch($product);
+        JobCacheProduct::dispatch($product->id);
     }
 
     public function published(Product $product): void

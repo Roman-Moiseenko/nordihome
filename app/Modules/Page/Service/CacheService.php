@@ -40,6 +40,7 @@ class CacheService
 
     public function rebuildCache(): array
     {
+        Cache::flush();
         //Кэш всех товаров для карточек
         $count['products'] = $this->rebuildProducts();
         $count['categories'] = $this->rebuildCategories();

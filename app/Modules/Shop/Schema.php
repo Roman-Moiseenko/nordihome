@@ -6,7 +6,10 @@ namespace App\Modules\Shop;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Settings;
+use App\Modules\Setting\Entity\Web;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 //TODO Автоматизировать и брать данные из Таблиц и настроек
 
@@ -14,10 +17,13 @@ use Carbon\Carbon;
 class Schema
 {
     private string $url;
+    private Web $web;
 
     public function __construct()
     {
         $this->url = route('shop.home');
+        $settings = app()->make(Settings::class);
+        $this->web = $settings->web;
     }
 
     public function ProductPage(Product $product)
@@ -29,9 +35,13 @@ class Schema
             true);
 
         $schema2 = $this->_Product($product);
-        return $this->html($schema1) . PHP_EOL . $this->html($schema2);
 
-
+        $callback = fn() => $this->html($schema1) . PHP_EOL . $this->html($schema2);
+        if ($this->web->is_cache) {
+            return Cache::rememberForever('product-scheme-' . $product->slug, $callback);
+        } else {
+            return $callback();
+        }
     }
 
     public function HomePage()
@@ -52,7 +62,12 @@ class Schema
     public function CategoryProductsPage(Category $category)
     {
         $schema = $this->_Products($category);
-        return $this->html($schema);
+        $callback = fn() => $this->html($schema);
+        if ($this->web->is_cache) {
+            return Cache::rememberForever('category-schema-' . $category->slug, $callback);
+        } else {
+            return $callback();
+        }
     }
 
 
@@ -115,6 +130,7 @@ class Schema
             'dateModified' => now(),
             'description' => '',
             'inLanguage' => 'ru-RU',
+         /*
             'potentialAction' => [
                 '@type' => 'SearchAction',
                 'target' => [
@@ -123,6 +139,7 @@ class Schema
                 ],
                 'query-input' => 'required name=search_term_string'
             ],
+            */
             'provider' => $this->_Organization(),
             "breadcrumb" => $breadcrumb ? ["@id" => "breadcrumb"] : null,
             "mainEntity" => [
@@ -133,6 +150,8 @@ class Schema
 
     private function _Organization()
     {
+        //TODO Данные из настроек текущей торговой организации
+        return [];
         return [
             "@type" => "Organization",
             "@id" => "https://nordihome.ru/#organization",
@@ -163,6 +182,8 @@ class Schema
 
     private function _Offer(Product $product)
     {
+        //TODO Данные из настроек текущей торговой организации
+        return [];
         //"offers" =>
         return [
             "@type" => "Offer",
@@ -215,6 +236,8 @@ class Schema
             "price" => $product->getPrice(),
             "priceCurrency" => "RUB",
             "availability" => 'https://schema.org/' . ($product->getQuantitySell() == 0 ? 'InStock' : 'PreOrder'),
+            //TODO Данные из настроек текущей торговой организации
+            /*
             "seller" => [
                 "@type" => "Organization",
                 "name" => "ООО «Негоциант»",
@@ -226,11 +249,15 @@ class Schema
                     "sameAs" => "https://vk.com/nordihome"
                 ]
             ]
+            */
         ];
     }
 
-    private function _Store()
+    private function _Store(): array
     {
+        //TODO Данные из настроек текущей торговой организации
+        return [];
+
         return [
             "@context" => "https://schema.org",
             "@type" => "Store",
@@ -304,6 +331,7 @@ class Schema
                     "url" => $category->getImage(),
                 ];
             }, $product->categories()->getModels()),
+            /*
             //Атрибуты
             "depth" => [
                 "@type" => "QuantitativeValue",
@@ -325,7 +353,8 @@ class Schema
                 "unitCode" => "KGM",
                 "value" => $product->weight()
             ],
-            //TODO Серия и Цвета
+            */
+            //TODO Серия, Цвета и другие Атрибуты ... из настроек???
 
             'model' => is_null($product->series) ? null : [
                 "@type" => "ProductModel",

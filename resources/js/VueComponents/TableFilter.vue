@@ -21,7 +21,6 @@
             </template>
         </el-popover>
     </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -51,12 +50,7 @@ function onClickOutside() {
     visible.value = false
 }
 function sendFilter() {
-    router.visit(usePage().url, {
-        method: "get",
-        data: filter.value,
-        preserveScroll: true,
-        preserveState: true,
-    })
+    router.get(usePage().url, filter.value)
 }
 </script>
 

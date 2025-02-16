@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Service\CurrencyService;

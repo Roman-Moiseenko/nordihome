@@ -98,6 +98,10 @@ class Handler extends ExceptionHandler
                 return redirect()->back()->with('error', $e->getMessage());
             }
         }
+        if ($e instanceof \Throwable) {
+            event(new ThrowableHasAppeared($e));
+            return redirect()->back()->with('error', 'Непредвиденная ошибка');
+        }
         return $response;
     }
 }

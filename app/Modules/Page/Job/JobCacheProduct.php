@@ -32,8 +32,9 @@ class JobCacheProduct implements ShouldQueue
     {
         try {
             $product = Product::find($this->product_id);
-            Cache::forget('product-card-' . $this->product_id);
-            Cache::forget('product-view-' . $this->product_id);
+            Cache::forget('product-card-' . $product->slug);
+            Cache::forget('product-schema-' . $product->slug);
+            Cache::forget('product-view-' . $product->slug);
             Cache::forget('product-' . $product->slug);
             //TODO Кеш страницы
             $cacheRepository->product($product->slug);
