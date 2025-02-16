@@ -79,7 +79,7 @@ class AdminComposer
                 $city = 'Россия';
                 $view->with('categories', $categories);
                 $view->with('tree', $trees);
-
+                $view->with('url_page', request()->url());
                 $view->with('city', $city);
                 //dd($this->shopRepository->getChildren());
             }

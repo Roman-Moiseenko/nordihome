@@ -8,7 +8,7 @@
     <link rel="icon" href="{{ url('images/nbrussia/favicon/32x32.png') }}" size="32x32">
     <link rel="icon" href="{{ url('images/nbrussia/favicon/192x192.png') }}" size="192x192">
     <link rel="apple-touch-icon" href="{{ url('images/nbrussia/favicon/180x180.png') }}" size="192x192">
-
+    <link rel="canonical" href="@yield('canonical', $url_page)">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
