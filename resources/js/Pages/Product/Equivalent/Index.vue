@@ -11,7 +11,7 @@
                     </el-button>
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
-                <el-select v-model="form.category_id" placeholder="Категория" class="mt-1">
+                <el-select v-model="form.category_id" placeholder="Категория" class="mt-1" filterable>
                     <el-option v-for="item in categories" :value="item.id" :label="item.name" />
                 </el-select>
                 <div class="mt-2">

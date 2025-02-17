@@ -62,7 +62,7 @@
                     <el-input v-model="info.name"/>
                 </el-form-item>
                 <el-form-item label="Ссылка">
-                    <el-input v-model="info.slug"/>
+                    <el-input v-model="info.slug" clearable/>
                 </el-form-item>
                 <el-form-item label="Meta-Title">
                     <el-input v-model="info.title" />
