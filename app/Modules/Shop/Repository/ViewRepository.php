@@ -30,7 +30,8 @@ class ViewRepository
     {
         $product = $this->slugs->getProductBySlug($slug);
         if (empty($product) || !$product->isPublished()) abort(404);
-        $title = $product->name . ' купить по цене ' . $product->getPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин Норди Хоум Калининград';
+        $name = is_null($product->modification()) ? $product->name : $product->modification->name;
+        $title = $name . ' купить по цене ' . $product->getPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин ' . $this->web->title_city ;
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
         if ($this->web->is_cache) {
