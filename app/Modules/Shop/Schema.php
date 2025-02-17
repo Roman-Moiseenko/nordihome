@@ -26,19 +26,20 @@ class Schema
         $this->web = $settings->web;
     }
 
-    public function ProductPage(Product $product)
+    public function ProductPage(array $product)
     {
-        $id = route('shop.product.view', $product->slug) . '/#' . $product->code_search;
+        $id = route('shop.product.view', $product['slug']) . '/#' . $product['code'];
         $schema1 = $this->_webPage(
             $id,
-            $product->created_at, $product->updated_at,
+            $product['created_at'], $product['updated_at'],
             true);
 
         $schema2 = $this->_Product($product);
 
+
         $callback = fn() => $this->html($schema1) . PHP_EOL . $this->html($schema2);
         if ($this->web->is_cache) {
-            return Cache::rememberForever('product-scheme-' . $product->slug, $callback);
+            return Cache::rememberForever('product-scheme-' . $product['slug'], $callback);
         } else {
             return $callback();
         }
@@ -120,26 +121,27 @@ class Schema
 
     //TODO Брать из Базы
 
-    private function _webPage(string $id = '', Carbon $created_at = null, Carbon $updated_at = null, bool $breadcrumb = false)
+    private function _webPage(string $id = '', $created_at = null, $updated_at = null, bool $breadcrumb = false)
     {
+
         return [
             '@context' => 'https://schema.org',
             '@type' => "WebPage",
             'url' => $this->url,
-            'datePublished' => $date ?? now(),
-            'dateModified' => now(),
+            'datePublished' => $created_at ?? now(),
+            'dateModified' => $updated_at ?? now(),
             'description' => '',
             'inLanguage' => 'ru-RU',
-         /*
-            'potentialAction' => [
-                '@type' => 'SearchAction',
-                'target' => [
-                    '@type' => 'EntryPoint',
-                    'urlTemplate' => 'https://nordihome.ru/search?q={search_term_string}'
-                ],
-                'query-input' => 'required name=search_term_string'
-            ],
-            */
+            /*
+               'potentialAction' => [
+                   '@type' => 'SearchAction',
+                   'target' => [
+                       '@type' => 'EntryPoint',
+                       'urlTemplate' => 'https://nordihome.ru/search?q={search_term_string}'
+                   ],
+                   'query-input' => 'required name=search_term_string'
+               ],
+               */
             'provider' => $this->_Organization(),
             "breadcrumb" => $breadcrumb ? ["@id" => "breadcrumb"] : null,
             "mainEntity" => [
@@ -180,10 +182,10 @@ class Schema
         ];
     }
 
-    private function _Offer(Product $product)
+    private function _Offer(array $product)
     {
         //TODO Данные из настроек текущей торговой организации
-        return [];
+        //return [];
         //"offers" =>
         return [
             "@type" => "Offer",
@@ -209,7 +211,7 @@ class Schema
             "inventoryLevel" => [
                 "@type" => "QuantitativeValue",
                 "unitCode" => "NMP",
-                "value" => $product->getQuantitySell(),
+                "value" => $product['quantity'],
             ],
             "hasMerchantReturnPolicy" => [
                 "@type" => "MerchantReturnPolicy",
@@ -233,9 +235,9 @@ class Schema
                 "@type" => "https://schema.org/BuyAction"
             ],
 
-            "price" => $product->getPrice(),
+            "price" => $product['price'],
             "priceCurrency" => "RUB",
-            "availability" => 'https://schema.org/' . ($product->getQuantitySell() == 0 ? 'InStock' : 'PreOrder'),
+            "availability" => 'https://schema.org/' . ($product['quantity'] == 0 ? 'InStock' : 'PreOrder'),
             //TODO Данные из настроек текущей торговой организации
             /*
             "seller" => [
@@ -307,30 +309,39 @@ class Schema
         ];
     }
 
-    private function _Product(Product $product)
+    private function _Product(array $product)
     {
+        $image = [];
+        foreach ($product['gallery'] as $photo)
+            $image[] = $photo['src'];
+
+        $equivalents = null;
+
+        foreach ($product['equivalents'] as $equivalent) {
+            $equivalent[] = [
+                "@type" => "Product",
+                "name" => $equivalent['name'],
+                "mainEntityOfPage" => route('shop.product.view', $equivalent['slug']),
+                "sku" => $equivalent['code'],
+            ];
+        }
+
         return [
             "@context" => "https://schema.org",
             "@type" => "Product",
-            "name" => $product->name,
-            'description' => strip_tags($product->description),
-            'image' => array_map(function (Photo $photo) {
-                return [
-                    $photo->getThumbUrl('card'),
-                ];
-            }, $product->gallery()->getModels()),
-            'url' => route('shop.product.view', $product->slug),
-            'sku' => $product->code,
-            'mpn' => $product->code,
-            'id' => route('shop.product.view', $product->slug) . '/#' . $product->code_search,
-            'category' => array_map(function (Category $category) {
-                return [
-                    "@type" => "CategoryCode",
-                    "name" => $category->name,
-                    "image" => route('shop.category.view', $category->slug),
-                    "url" => $category->getImage(),
-                ];
-            }, $product->categories()->getModels()),
+            "name" => $product['name'],
+            'description' => strip_tags($product['description']),
+            'image' => $image,
+
+            'url' => route('shop.product.view', $product['slug']),
+            'sku' => $product['code'],
+            'mpn' => $product['code'],
+            'id' => route('shop.product.view', $product['slug']) . '/#' . $product['code'],
+            'category' => [
+                "@type" => "CategoryCode",
+                "name" => $product['category']['name'],
+                "url" => route('shop.category.view', $product['category']['slug']),
+            ],
             /*
             //Атрибуты
             "depth" => [
@@ -355,21 +366,13 @@ class Schema
             ],
             */
             //TODO Серия, Цвета и другие Атрибуты ... из настроек???
-
-            'model' => is_null($product->series) ? null : [
-                "@type" => "ProductModel",
-                "name" => $product->series->name,
-                "aggregateRating" => ["@type" => "aggregateRating", "ratingValue" => "5", "ratingCount" => "70"]
-            ],
-            'isSimilarTo' => is_null($product->equivalent) ? null : array_map(function (Product $product) {
-                return [
-                    "@type" => "Product",
-                    "name" => $product->name,
-                    "mainEntityOfPage" => route('shop.product.view', $product->slug),
-                    "sku" => $product->code,
-                ];
-            },
-                $product->equivalent->products()->where('published', true)->getModels()),
+            /*
+                        'model' => is_null($product->series) ? null : [
+                            "@type" => "ProductModel",
+                            "name" => $product->series->name,
+                            "aggregateRating" => ["@type" => "aggregateRating", "ratingValue" => "5", "ratingCount" => "70"]
+                        ],*/
+            'isSimilarTo' => $equivalents,
 
             //TODO Отзывы
 

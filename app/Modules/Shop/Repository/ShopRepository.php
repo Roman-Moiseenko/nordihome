@@ -598,6 +598,7 @@ class ShopRepository
             $equivalents = $_product->equivalent->products()->where('not_sale', false)->get()->map(function (Product $product) {
                 return [
                     'slug' => $product->slug,
+                    'code' => $product->code,
                     'name' => $product->name,
                     'src' => $product->miniImage(),
                 ];
@@ -605,6 +606,8 @@ class ShopRepository
         }
 
         return array_merge($this->ProductToArray($product), [
+            'created_at' => $product->created_at,
+            'updated_at' => $product->updated_at,
             'description' => $product->description,
             'short' => $product->short,
             'quantity' => $product->getQuantitySell(),
@@ -645,6 +648,7 @@ class ShopRepository
             'count_reviews' => $product->countReviews(),
             'price' => $product->getPrice(false, $this->user),
             'price_previous' => $product->getPrice(true, $this->user),
+            'quantity' => $product->getQuantity(),
 
             'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
             'promotion' => [
