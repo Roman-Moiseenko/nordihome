@@ -443,8 +443,8 @@ class ProductService
 
             }
 
-            if ($product->name != $name)  $product->name = $name . $variants_line;
-            if ($product->name_print != $name_print)  $product->name_print = $name_print . $variants_line;
+            if ($product->name != $name) $product->name = $name . $variants_line;
+            if ($product->name_print != $name_print) $product->name_print = $name_print . $variants_line;
             $product->slug = empty($request->string('slug')->value()) ? Str::slug($product->name) : $request->string('slug')->value();
 
             if ($product->main_category_id != $request->integer('category_id')) {
@@ -479,7 +479,6 @@ class ProductService
                     }
                 }
             }
-
 
 
             $product->comment = $request->string('comment')->trim()->value();
@@ -559,6 +558,7 @@ class ProductService
     public function editAttribute(Product $product, Request $request): void
     {
         DB::transaction(function () use ($product, $request) {
+
             $product->prod_attributes()->detach();
             foreach ($request->input('attributes') as $item) {
                 $attribute = Attribute::find($item['id']);
@@ -580,7 +580,7 @@ class ProductService
             $product->save();
         });
 
-        //JobCacheProduct::dispatch($products[0]->id);
+        JobCacheProduct::dispatch($product->id);
     }
 
     public function editManagement(Product $product, Request $request): void
@@ -618,23 +618,24 @@ class ProductService
 
     public function editEquivalent(Product $product, Request $request): void
     {
-        $products = $this->list($product, $request->boolean('modification'));
-        foreach ($products as $product) {
-            $equivalent_id = $request->integer('equivalent_id');
-            if ($equivalent_id == 0 && !is_null($product->equivalent)) {
-                $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-            }
-            if ($equivalent_id != 0) {
-                if (is_null($product->equivalent)) {
-                    $this->equivalentService->addProductByIds($equivalent_id, $product->id);
-                } elseif ($equivalent_id !== $product->equivalent->id) {
-                    $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-                    $this->equivalentService->addProductByIds($equivalent_id, $product->id);
-                }
-            }
-            $product->save();
+        //Если есть Модификация, то в группу добавляем базовый товар
+        if (!is_null($product->modification))
+            $product = $product->modification->base_product;
+
+        $equivalent_id = $request->integer('equivalent_id');
+        if ($equivalent_id == 0 && !is_null($product->equivalent)) {
+            $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
         }
-        JobCacheProduct::dispatch($products[0]->id);
+        if ($equivalent_id != 0) {
+            if (is_null($product->equivalent)) {
+                $this->equivalentService->addProductByIds($equivalent_id, $product->id);
+            } elseif ($equivalent_id !== $product->equivalent->id) {
+                $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
+                $this->equivalentService->addProductByIds($equivalent_id, $product->id);
+            }
+        }
+        $product->save();
+        JobCacheProduct::dispatch($product->id);
     }
 
     public function editRelated(Product $product, Request $request): void
@@ -736,27 +737,12 @@ class ProductService
         $photo = $product->addImage($request->file('file'));
         JobCacheProduct::dispatch($product->id);
         return $photo;
-
-        /*
-        if (empty($file = $request->file('file'))) throw new \DomainException('Нет файла');
-        $sort = count($product->photos);
-        $photo = Photo::upload($file, '', $sort);
-        $product->photo()->save($photo);
-        $photo->refresh();
-        return $photo; */
     }
 
     public function delPhoto(Request $request, Product $product): void
     {
-        //return;
         $product->delImage($request->integer('photo_id'));
         JobCacheProduct::dispatch($product->id);
-        /*
-        $photo = Photo::find($request->integer('photo_id'));
-        $photo->delete();
-        foreach ($product->photos as $i => $photo) {
-            $photo->update(['sort' => $i]);
-        }*/
     }
 
     #[Deprecated]
