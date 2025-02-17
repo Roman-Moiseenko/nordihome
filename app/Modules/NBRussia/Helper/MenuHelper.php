@@ -31,7 +31,6 @@ class MenuHelper
 
     public static function getMenuContacts(): array
     {
-
         $contacts = Contact::where('published', true)->orderBy('sort')->getModels();
         return array_map(function (Contact $contact) {
             return [

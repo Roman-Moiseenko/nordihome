@@ -12,7 +12,7 @@
     <div class="menu-top py-0 hide-mobile">
         <div class="menu-container container-xl">
             <div class="d-flex justify-content-between">
-            <div><i class="fa-light fa-location-dot"></i>&nbsp;{{ $city }}</div>
+            <div class="d-flex  my-auto"><i class="fa-light fa-location-dot my-auto"></i>&nbsp;{{ $city }}</div>
             <div class="d-flex ">
                 <div>
                     @foreach(\App\Modules\NBRussia\Helper\MenuHelper::getMenuPages() as $item)
@@ -22,11 +22,14 @@
                         </a>
                     @endforeach
                 </div>
+                <div style="margin: auto 0;">
+                    <a href="tel:89812009869" style="color: #000;">8 (981) 200-98-69</a>
+                </div>
                 <div class="d-flex ms-2">
                     @foreach(\App\Modules\NBRussia\Helper\MenuHelper::getMenuContacts() as $item)
                         <div class="ms-2">
                             <a href="{{ $item['url'] }}" target="_blank" title="{{ $item['name'] }}">
-                                <i class="{{ $item['icon'] }} fs-3" style="color: {{ $item['color'] }}"></i>
+                                <i class="{{ $item['icon'] }} fs-3" style="color: #333"></i>
                             </a>
                         </div>
                     @endforeach
