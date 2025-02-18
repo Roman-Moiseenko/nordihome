@@ -12,9 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $sign
  * @property float $exchange
  * @property string $cbr_code
+ * @property float $fixed - фиксированный курс
  * @property int $code
  * @property boolean $default - по-умолчанию Рубль
- * @property int $extra // + %
+// * @property int $extra // + %
  * @property ArrivalDocument[] $arrivals
  * @property SupplyDocument[] $supplies
  */
@@ -27,17 +28,22 @@ class Currency extends Model
         'name',
         'exchange',
         'cbr_code',
-        'extra',
         'default',
         'code',
+        'fixed',
+    ];
+
+    protected $casts = [
+        'fixed' => 'float',
+        'exchange' => 'float',
+        'default' => 'boolean',
     ];
 
     public static function register(
         string $name,
         string $sign,
-        float $exchange,
+        float  $exchange,
         string $cbr_code = '',
-        int $extra = 0,
     ): self
     {
         return self::create([
@@ -45,7 +51,7 @@ class Currency extends Model
             'sign' => $sign,
             'exchange' => $exchange,
             'cbr_code' => $cbr_code,
-            'extra' => $extra,
+            'fixed' => $exchange,
             'default' => false
         ]);
     }
@@ -64,7 +70,7 @@ class Currency extends Model
     {
         return $this->exchange;
 
-       // return (int)ceil(($this->exchange + $this->exchange * $this->extra / 100) * 100) / 100;
+        // return (int)ceil(($this->exchange + $this->exchange * $this->extra / 100) * 100) / 100;
     }
 
     public function getExchangeExtra(): float

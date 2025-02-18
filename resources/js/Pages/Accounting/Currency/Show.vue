@@ -22,8 +22,8 @@
                     <el-form-item label="Цифровой код (3-значный)">
                         <el-input v-model="form.code" :disabled="iSaving" :readonly="!isEdit" />
                     </el-form-item>
-                    <el-form-item label="Наценка в %">
-                        <el-input v-model="form.extra" :disabled="iSaving" :readonly="!isEdit" />
+                    <el-form-item label="Фиксированный курс">
+                        <el-input v-model="form.fixed" :disabled="iSaving" :readonly="!isEdit" />
                     </el-form-item>
                     <el-form-item label="По умолчанию">
                         <el-checkbox v-model="form.default" :disabled="iSaving || !isEdit" :checked="currency.default"/>
@@ -71,7 +71,7 @@ const form = reactive({
     exchange: props.currency.exchange,
     cbr_code: props.currency.cbr_code,
     code: props.currency.code,
-    extra: props.currency.extra,
+    fixed: props.currency.fixed,
     default: props.currency.default,
 })
 const iSaving = ref(false)

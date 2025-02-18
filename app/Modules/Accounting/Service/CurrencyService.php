@@ -17,8 +17,7 @@ class CurrencyService
             $request->string('name')->trim()->value(),
             $request->string('sign')->trim()->value(),
             $request->float('exchange'),
-            $request->string('cbr_code')->trim()->value(),
-            $request->integer('extra'),
+            $request->string('cbr_code')->trim()->value()
         );
         $currency->code = $request->input('code');
         $currency->save();
@@ -37,7 +36,7 @@ class CurrencyService
         $currency->sign = $request->string('sign')->trim()->value();
         $currency->exchange = $request->float('exchange');
         $currency->cbr_code = $request->string('cbr_code')->trim()->value();
-        $currency->extra = $request->integer('extra');
+        $currency->fixed = $request->float('fixed');
         $currency->code = $request->input('code');
         $currency->save();
         $this->update_parser_currency($currency);
