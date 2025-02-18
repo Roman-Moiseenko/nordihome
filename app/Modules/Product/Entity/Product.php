@@ -528,7 +528,7 @@ class Product extends Model
     {
         if (is_null($this->parser)) return 0;
         $price = $previous ? $this->parser->price_base : $this->parser->price_sell;
-        return ceil($price * ($this->brand->currency->exchange * (1 + $this->brand->currency->extra/100)));
+        return ceil($price * ($this->brand->currency->fixed));
     }
 
     /**

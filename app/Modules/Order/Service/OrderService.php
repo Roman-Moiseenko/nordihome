@@ -534,7 +534,7 @@ class OrderService
                 $parser = $product->parser;
                 if (is_null($parser)) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
 
-                $last_price = ceil($parser->price_sell * $product->brand->currency->exchange * (1  + $product->brand->currency->extra / 100));
+                $last_price = ceil($parser->price_sell * $product->brand->currency->fixed);
                 //$parser->price_sell;
                 $pre_price = $last_price;
             }

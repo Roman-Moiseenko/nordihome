@@ -69,23 +69,17 @@ class Currency extends Model
     public function getExchange(): float
     {
         return $this->exchange;
-
-        // return (int)ceil(($this->exchange + $this->exchange * $this->extra / 100) * 100) / 100;
     }
 
-    public function getExchangeExtra(): float
-    {
-        return (int)ceil(($this->exchange + $this->exchange * $this->extra / 100) * 100) / 100;
-    }
 
     public function valueRub(int $rub): int
     {
         return (int)ceil($rub * $this->getExchange());
     }
 
-    public function valueRubExtra(int $rub): int
+    public function valueRubFixed(int $rub): int
     {
-        return (int)ceil($rub * $this->getExchangeExtra());
+        return (int)ceil($rub * $this->fixed);
     }
 
     public function arrivals(): HasMany
