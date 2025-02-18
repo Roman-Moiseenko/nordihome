@@ -9,9 +9,13 @@ class Web extends AbstractSetting
     public string $logo_img = '';
     public string $logo_alt = '';
 
+    public string $metrika = '';
+    public string $google = '';
+
     public bool $is_cache = false;
     public string $breadcrumbs_home = '<i class="fa-light fa-house"></i>';
     public bool $is_category = true;
+
 
     public string $categories_title = '';
     public string $categories_desc = '';

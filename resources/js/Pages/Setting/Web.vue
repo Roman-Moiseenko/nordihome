@@ -14,6 +14,13 @@
                     <el-form-item label="Подпись (alt) под логотипом" label-position="top">
                         <el-input v-model="form.logo_alt"   style="width: 300px;"/>
                     </el-form-item>
+
+                    <el-form-item label="Яндекс Метрика" label-position="top">
+                        <el-input v-model="form.metrika"   style="width: 300px;"/>
+                    </el-form-item>
+                    <el-form-item label="Гугл Аналитика" label-position="top">
+                        <el-input v-model="form.google"   style="width: 300px;"/>
+                    </el-form-item>
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="Кеширование страниц" label-position="left">
@@ -68,6 +75,9 @@ const form = reactive({
     paginate: props.web.paginate,
     logo_img: props.web.logo_img,
     logo_alt: props.web.logo_alt,
+    metrika: props.web.metrika,
+    google: props.web.google,
+
     categories_title: props.web.categories_title,
     categories_desc: props.web.categories_desc,
     title_contact: props.web.title_contact,

@@ -7,6 +7,7 @@ use App\Modules\Base\Helpers\AdminMenu;
 use App\Modules\Base\Helpers\AdminProfileMenu;
 use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Schema;
 use Illuminate\Support\Facades\Auth;
@@ -17,15 +18,18 @@ class AdminComposer
 {
     private CategoryRepository $categories;
     private ShopRepository $shopRepository;
+    private Settings $settings;
 
-    public function __construct(CategoryRepository $categories, ShopRepository $shopRepository)
+    public function __construct(CategoryRepository $categories, ShopRepository $shopRepository, Settings $settings)
     {
         $this->categories = $categories;
         $this->shopRepository = $shopRepository;
+        $this->settings = $settings;
     }
 
     public function compose(View $view): void
     {
+
         if (!is_null(request()->route())) {
             $pageName = request()->route()->getName();
             if ($pageName == null) {
@@ -81,6 +85,7 @@ class AdminComposer
                 $view->with('tree', $trees);
                 $view->with('url_page', request()->url());
                 $view->with('city', $city);
+                $view->with('web', $this->settings->web);
                 //dd($this->shopRepository->getChildren());
             }
         }
