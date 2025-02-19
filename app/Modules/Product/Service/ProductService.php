@@ -78,19 +78,18 @@ class ProductService
 
             $brand = Brand::find($request->integer('brand_id'));
             $code = $request->string('code')->trim()->value();
-            $category_id = $request->integer('category_id');
+            $category_id = $request->input('category_id');
 
             $parser_class = $brand->parser_class;
             /** @var ParserAbstract $parser */
             $parser = app()->make($parser_class);
             //throw new \DomainException($request->input('product'));
             $product = $parser->findProduct($code);
-            $product->main_category_id = $category_id;
-            $product->save();
+            if (!is_null($category_id)) {
+                $product->main_category_id = $category_id;
+                $product->save();
+            }
             return $product;
-
-            //throw new \DomainException(json_encode($request->all()));
-
         }
 
         DB::transaction(function () use ($request, &$product) {

@@ -3,14 +3,11 @@
 namespace App\Listeners;
 
 use App\Events\ThrowableHasAppeared;
-use App\Mail\AdminThrowable;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Mail\Job\SendSystemMail;
-use App\Modules\Mail\Mailable\SystemMailable;
-use App\Modules\Mail\Service\SystemMailService;
+use App\Modules\Mail\Mailable\AdminThrowable;
 use App\Notifications\StaffMessage;
-use Illuminate\Support\Facades\Mail;
 
 class NotificationThrowable
 {
@@ -37,8 +34,8 @@ class NotificationThrowable
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage('Ошибка на сайте:', $message));
+            //TODO
             SendSystemMail::dispatch($staff, new AdminThrowable($event->throwable));
-            //Mail::to($staff->email)->send(new AdminThrowable($event->throwable));
         }
     }
 }

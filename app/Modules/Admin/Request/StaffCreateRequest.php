@@ -21,7 +21,7 @@ class StaffCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|unique:admins|max:255',
-            'phone' => 'required',
+           // 'phone' => 'required',
             'password' => 'required|min:6',
             'surname' => 'required|max:33',
             'firstname' => 'required|max:33',

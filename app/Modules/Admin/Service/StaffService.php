@@ -31,7 +31,7 @@ class StaffService
             $request['secondname']
         ));
 
-        $admin->telegram_user_id = $request['chat_id'] ?? null;
+        $admin->telegram_user_id = $request['telegram_user_id'] ?? null;
         //Должность и Роли
         $admin->post = $request['post'];
         $admin->setRole($request['role']);
@@ -86,7 +86,7 @@ class StaffService
                 $request['firstname'],
                 $request['secondname']
             ));
-            $admin->telegram_user_id = $request['chat_id'] ?? null;
+            $admin->telegram_user_id = $request['telegram_user_id'] ?? null;
 
             $admin->post = $request['post'];
             if (!$admin->isCurrent()) $admin->setRole($request['role']);

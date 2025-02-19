@@ -24,7 +24,8 @@ class TelegramService
 
     public function getListChatIds(): array
     {
-        if (config('app.env') != 'local') $this->delWebHook();
+        //if (config('app.env') != 'local')
+           // $this->delWebHook();
         $updates = TelegramUpdates::create()->limit(2)
             ->options([
                 'timeout' => 0,
@@ -39,8 +40,11 @@ class TelegramService
                     'id' => $user['message']['chat']['id'],
                 ];
             }
+        } else {
+            return $updates;
         }
-        if (config('app.env') != 'local') $this->setWebHook();
+        //if (config('app.env') != 'local')
+          //  $this->setWebHook();
         return $list;
     }
 

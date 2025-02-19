@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response;
 use JetBrains\PhpStorm\Deprecated;
+use Log;
 
 class ProductController extends Controller
 {
@@ -105,7 +106,6 @@ class ProductController extends Controller
     {
         try {
             $product = $this->service->create($request);
-
             if ($request->integer('price') > 0) {
                 $product->pricesRetail()->create([
                     'value' => $request->integer('price'),

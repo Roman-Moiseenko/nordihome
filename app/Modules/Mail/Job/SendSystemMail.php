@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Mail\Job;
 
+use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Mail\Mailable\AbstractMailable;
 use App\Modules\Mail\Service\SystemMailService;
@@ -20,7 +21,7 @@ class SendSystemMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private User $user;
+    private Admin|User $user;
     private AbstractMailable $mail;
     private array $emails;
     private string $systemable_type;
@@ -28,7 +29,7 @@ class SendSystemMail implements ShouldQueue
 
 
     public function __construct(
-        User $user,
+        Admin|User $user,
         AbstractMailable $mail,
         string $systemable_type,
         int $systemable_id,

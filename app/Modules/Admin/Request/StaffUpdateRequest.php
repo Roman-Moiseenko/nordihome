@@ -23,8 +23,8 @@ class StaffUpdateRequest extends FormRequest
  {
      return [
          'name' => ['required', Rule::unique('admins')->ignore($this->staff->id),],
-         'email' => ['email', 'required', Rule::unique('admins')->ignore($this->staff->id),],
-         'phone' => 'required',
+        // 'email' => ['email', 'required', Rule::unique('admins')->ignore($this->staff->id),],
+        // 'phone' => 'required',
          'surname' => 'required|string|max:33',
          'firstname' => 'required|string|max:33',
          'secondname' => 'string|max:33',

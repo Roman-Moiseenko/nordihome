@@ -59,7 +59,7 @@ class ViewRepository
         $minPrice = 10;
         $maxPrice = 999999999;
         $brands = [];
-        $children = $category->children()->get()->map(function (Category $category) {
+        $children = $category->children()->defaultOrder()->get()->map(function (Category $category) {
             return [
                 'id' => $category->id,
                 'name' => $category->name,

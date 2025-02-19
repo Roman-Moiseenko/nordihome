@@ -6,6 +6,7 @@ use App\Events\ThrowableHasAppeared;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Throwable;
 use Illuminate\Support\Facades\Config;
@@ -53,6 +54,7 @@ class Handler extends ExceptionHandler
 
         $response = parent::render($request, $e);
 
+
         if (request()->is('admin/*')) {//Админ панель
             if (in_array($response->status(), [500, 503, 404, 403, 419])) {
                 if ($response->status() == 403) return redirect()->back()->with('error', 'Отказано в доступе');
@@ -98,10 +100,15 @@ class Handler extends ExceptionHandler
                 return redirect()->back()->with('error', $e->getMessage());
             }
         }
-        if ($e instanceof \Throwable) {
+
+        if ($e instanceof ValidationException) return $response;
+//TODO
+       /*
+        *  if ($e instanceof \Throwable) {
             event(new ThrowableHasAppeared($e));
             return redirect()->back()->with('error', 'Непредвиденная ошибка');
         }
+        */
         return $response;
     }
 }

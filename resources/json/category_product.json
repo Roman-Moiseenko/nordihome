@@ -1,0 +1,49 @@
+{
+    "category": "20611",
+    "category_local": "Taborety i drabinki",
+    "currency_code": "PLN",
+    "event_array": [
+        "product_view"
+    ],
+    "hfb_name": "Kitchen",
+    "hfb_no": "07",
+    "pa_name": "Kitchen small furniture",
+    "pa_no": "0782",
+    "page_name": "product information page\u003eprodview\u003e40178888",
+    "page_type": "product information page",
+    "pip_per_visit": "+1",
+    "pra_name": "Freestanding kitchens and kitchen furniture",
+    "pra_no": "078",
+    "price": [
+        "79.99"
+    ],
+    "product_collections": "no collections",
+    "product_ids": [
+        "40178888"
+    ],
+    "product_images_no": "5",
+    "product_item_names": [
+        "bekväm taboret ze schodkiem biały"
+    ],
+    "product_names": [
+        "bekväm"
+    ],
+    "product_prices": [
+        "65.03"
+    ],
+    "product_series": "no series",
+    "product_type": "ART",
+    "product_variant": "single variant",
+    "product_vats": [
+        "14.96"
+    ],
+    "prodview_type": "PIP",
+    "site_platform": "m2",
+    "site_section": "product information page",
+    "subproducts": "",
+    "tax": [
+        "14.96"
+    ],
+    "visit_country": "pl",
+    "visit_language": "pl"
+}

@@ -7,7 +7,7 @@
                     <div v-if="errors.name" class="text-red-700">{{ errors.name }}</div>
                 </el-form-item>
                 <el-form-item label="Email" :rules="{required: true}">
-                    <el-input v-model="form.email" placeholder="80000000000" :formatter="val => func.MaskEmail(val)"/>
+                    <el-input v-model="form.email" placeholder="email@domen.ru" :formatter="val => func.MaskEmail(val)"/>
                     <div v-if="errors.email" class="text-red-700">{{ errors.email }}</div>
                 </el-form-item>
                 <el-form-item label="Телефон" :rules="{required: true}">

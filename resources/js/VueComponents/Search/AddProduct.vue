@@ -236,7 +236,7 @@ function storeProduct() {
     axios.post(route('admin.product.fast-create'), formCreate).then(response => {
         if (response.data.product_id === undefined) {
             form.product_id = null
-            console.log(response.data)
+            console.log(JSON.parse(response.data))
         } else {
             form.product_id = response.data.product_id
             onAdd()

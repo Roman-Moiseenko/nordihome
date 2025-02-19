@@ -38,7 +38,7 @@ class ParserIkea extends ParserAbstract
         return $data;
     }
 
-    private function addCategory($category, $parent_parser = null): void
+    private function addCategory($category, $parent_parser = null, $parent = null): void
     {
         $url = $category['id'] ?? '';
         if (is_null($cat_parser = CategoryParser::where('url', $url)->first())) {
@@ -47,17 +47,21 @@ class ParserIkea extends ParserAbstract
             } catch (\Throwable $e) {
                 $name = $category['name'];
             }
-
             $cat_parser = $this->categoryParserService->create($name, $url, $parent_parser);
             $cat_parser->brand_id = $this->brand->id;
             $cat_parser->save();
-            //Пока не дублируем
-
+            //Дублируем категорию в список Категорий магазина
+            $cat = Category::register(
+                $name,
+                $parent,
+            );
+            $cat_parser->category_id = $cat->id;
+            $cat_parser->save();
         }
         //Дочерние категории
         if (isset($category['subs']))
             foreach ($category['subs'] as $child) {
-                $this->addCategory($child, $cat_parser->id);
+                $this->addCategory($child, $cat_parser->id, $cat_parser->category->id);
             }
     }
 
@@ -113,10 +117,8 @@ class ParserIkea extends ParserAbstract
         return $products;
     }
 
-
     private function createProduct(mixed $product_data): Product
     {
-
         $maker_id = $product_data['id'];
         $name = $product_data['name'] . ' ' . $product_data['typeName'];
         $url = $product_data['pipUrl'];
@@ -136,22 +138,32 @@ class ParserIkea extends ParserAbstract
         if (isset($product_data['colors'])) $colors = array_map(function ($item) {
             return $item['name'];
         }, $product_data['colors']);
-        /*  foreach ($colors as $color) {
-
-          }*/
-
-
 
         if (isset($product_data['main_category_id'])) {
             $main_category_id = $product_data['main_category_id'];
         } else {
-            $main_category_id = Category::where('slug', 'temp')->first()->id;
+            //TODO вытаскиваем последнюю categoryPath 'key'
+            $categories = $product_data['categoryPath'];
+            if (count($categories) == 0) {
+                $key = null;
+            } else {
+                $key = $categories[count($categories) - 1]['key'];
+            }
+            /** @var CategoryParser $category_parser */
+            $category_parser = CategoryParser::where('url', $key)->first();
+
+            if ($category_parser == null) {
+                $main_category_id = Category::where('slug', 'temp')->first()->id;
+            } else {
+                $main_category_id = $category_parser->category_id;
+            }
         }
-        if ($main_category_id == null) throw new \DomainException('Не верная главная категория');
+        if ($main_category_id == null) throw new \DomainException('Неверная главная категория');
 
         $data = $this->parsingDataByUrl($url);
         //Создаем товар
         if (is_null($product = Product::whereCode($code)->first())) {
+            Log::info('Создаем товар');
             $product = Product::register($name, $this->toCode($code), $main_category_id);
             $product->barcode = '';
             $product->name_print = $product->name;
@@ -166,6 +178,7 @@ class ParserIkea extends ParserAbstract
                 $product->packages->add($item);
             }
             $product->save();
+            Log::info('Сохраняем товар');
             //Проверяем есть ли товары в составе
             foreach ($data['composite'] as $composite) {
                 $_prod = $this->findProduct($composite['code']);
@@ -178,17 +191,14 @@ class ParserIkea extends ParserAbstract
             }
         }
         //Создаем парсер товара
-
         if (is_null($product_parser = ProductParser::where('url', $url)->first())) {
             $product_parser = ProductParser::register($url, $product->id);
             $product_parser->maker_id = $maker_id;
             $product_parser->price_base = $price_base;
             $product_parser->price_sell = $price_sell;
             //Данные о наличии
-            //$product_parser->data = $data;
             $product_parser->save();
             if (isset($product_data['parser_category_id'])) $product_parser->categories()->attach($product_data['parser_category_id']);
-
             if (isset($product_data['categoryPath'])) {
                 $code_categories = array_map(function ($item) {
                     return $item['key'];
@@ -197,6 +207,7 @@ class ParserIkea extends ParserAbstract
                 $parser_categories = array_filter(array_map(function ($item) {
                     return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item)->where('active', true)->first();
                 }, $code_categories));
+
                 foreach ($parser_categories as $category) //Назначаем категории
                     $product_parser->categories()->attach($category);
             }
@@ -204,10 +215,8 @@ class ParserIkea extends ParserAbstract
             $product_parser->product_id = $product->id;
             $product_parser->save();
         }
-
         return $product;
     }
-
 
     public function parserProductByData(array $product): void
     {
@@ -221,7 +230,6 @@ class ParserIkea extends ParserAbstract
             });
         }
     }
-
 
     public function remainsProduct(string $code): float
     {
@@ -262,7 +270,6 @@ class ParserIkea extends ParserAbstract
     {
     }
 
-
     public function findProduct(string $search): ?Product
     {
         $url = sprintf(self::API_URL_PRODUCT, $search); //API для поиска товара
@@ -280,6 +287,7 @@ class ParserIkea extends ParserAbstract
             Log::error('Икеа Парсинг ' . $search . ' empty($_array[searchResultPage][products][main][items])');
             return null;
         }
+
         $item = $_array['searchResultPage']['products']['main']['items'][0]['product'];
         return $this->createProduct($item);
     }
@@ -332,7 +340,6 @@ class ParserIkea extends ParserAbstract
             if ($item['type'] == 'image' && $item['content']['type'] != 'MAIN_PRODUCT_IMAGE')
                 $images[] = $item['content']['url'];
         }
-        // return $images;
 
         return [
             'description' => $description,
