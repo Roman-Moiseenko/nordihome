@@ -42,10 +42,10 @@ class ProductController extends Controller
         ]);
     }
 
-    public function show(Product $product)
+ /*   public function show(Product $product)
     {
         return Inertia::render('Order/Product/Show', [
             'product' => $product,
         ]);
-    }
+    }*/
 }

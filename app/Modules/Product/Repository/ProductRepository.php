@@ -55,6 +55,7 @@ class ProductRepository
             'image' => $product->miniImage(),
             'category_name' => $product->category->getParentNames(),
             'price' => $product->getPriceRetail(),
+            'bulk' => $product->getPriceBulk(),
             'quantity' => $product->getQuantity(),
             'reserve' => $product->getReserveCount(),
             'trashed' => $product->trashed(),

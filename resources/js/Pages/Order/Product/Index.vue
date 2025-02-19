@@ -31,11 +31,28 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="code" label="Артикул" width="120"/>
-                <el-table-column prop="name" label="Название" show-overflow-tooltip>
-
+                <el-table-column label="Наличие" width="160" align="center">
+                    <template #default="scope">
+                        <el-tag type="danger" v-if="scope.row.quantity - scope.row.reserve === 0" effect="dark">
+                            0
+                        </el-tag>
+                        <el-tag v-else type="success" effect="dark">
+                            {{ scope.row.quantity - scope.row.reserve}}
+                        </el-tag>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="category_name" label="Категория" width="250" align="center"
-                                 show-overflow-tooltip/>
+                <el-table-column label="Цена" width="120" align="center">
+                    <template #default="scope">
+                        {{ func.price(scope.row.price) }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="Оптовая" width="120" align="center">
+                    <template #default="scope">
+                        <span class="text-red-800">{{ func.price(scope.row.bulk) }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="name" label="Название" show-overflow-tooltip />
+
                 <el-table-column prop="published" label="Опубликован" width="120" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.published"/>

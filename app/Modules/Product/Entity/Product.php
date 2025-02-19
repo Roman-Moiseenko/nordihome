@@ -487,7 +487,7 @@ class Product extends Model
 
     public function getPriceBulk(bool $previous = false): float
     {
-        if ($this->pricesBulk()->count() == 0) return 0;
+        if ($this->pricesBulk()->count() == 0) return $this->getPriceRetail($previous);
         if ($previous) {
             /** @var ProductPriceBulk $model */
             $model = $this->pricesBulk()->skip(1)->first();
@@ -500,7 +500,7 @@ class Product extends Model
 
     public function getPriceSpecial(bool $previous = false): float
     {
-        if ($this->pricesSpecial()->count() == 0) return 0;
+        if ($this->pricesSpecial()->count() == 0) return $this->getPriceRetail($previous);
         if ($previous) {
             /** @var ProductPriceSpecial $model */
             $model = $this->pricesSpecial()->skip(1)->first();
