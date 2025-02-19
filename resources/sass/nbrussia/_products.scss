@@ -658,7 +658,7 @@
             > .equivalent {
                 display: flex;
                 margin: 12px 0;
-
+                flex-wrap: wrap;
                 > .item {
                     display: inline-block;
                     // max-height: 3rem;

@@ -370,6 +370,7 @@ class ShopRepository
         $variants = [];
         foreach ($variant_ids as $item) {
             $_var = AttributeVariant::find($item);
+            //if (is_null($_var)) dd($item);
             $variants[] = [
                 'id' => $_var->id,
                 'name' => $_var->name,

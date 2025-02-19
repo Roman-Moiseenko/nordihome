@@ -557,29 +557,57 @@ class ProductService
     public function editAttribute(Product $product, Request $request): void
     {
         DB::transaction(function () use ($product, $request) {
+            $no_detach = [];
+            if (!is_null($product->modification)) {
+                foreach ($product->modification->prod_attributes as $attribute)
+                    $no_detach[] = $attribute->id;
+            }
 
-            $product->prod_attributes()->detach();
-            foreach ($request->input('attributes') as $item) {
-                $attribute = Attribute::find($item['id']);
+            /** @var Product[] $products */
 
-                $value = null;
-                if (!isset($item['value'])) {
-                    if ($attribute->isBool()) $value = false;
-                    if ($attribute->isNumeric()) $value = 0;
-                    if ($attribute->isString()) $value = '';
+
+            $products = $this->list($product, $request->boolean('modification'));
+
+            foreach ($products as $product) {
+
+                if (!is_null($product->modification)) {
+                    foreach ($product->prod_attributes as $attribute) {
+                        if (!in_array($attribute->id, $no_detach)) {
+                            $product->prod_attributes()->detach($attribute->id);
+                        }
+                    }
                 } else {
-                    if ($attribute->isNumeric()) {
-                        $value = (float)$item['value'];
-                    } else {
-                        $value = $item['value'];
+                    $product->prod_attributes()->detach();
+                }
+
+
+                foreach ($request->input('attributes') as $item) {
+                    $attribute_id = (int)$item['id'];
+                    if (!in_array($attribute_id, $no_detach)) {
+                        $attribute = Attribute::find($item['id']);
+
+                        $value = null;
+                        if (!isset($item['value'])) {
+                            if ($attribute->isBool()) $value = false;
+                            if ($attribute->isNumeric()) $value = 0;
+                            if ($attribute->isString()) $value = '';
+                        } else {
+                            if ($attribute->isNumeric()) {
+                                $value = (float)$item['value'];
+                            } else {
+                                $value = $item['value'];
+                            }
+                        }
+                        $product->prod_attributes()->attach($attribute->id, ['value' => json_encode($value)]);
                     }
                 }
-                $product->prod_attributes()->attach($attribute->id, ['value' => json_encode($value)]);
             }
-            $product->save();
+
+            JobCacheProduct::dispatch($products[0]->id);
+          //  $product->save();
         });
 
-        JobCacheProduct::dispatch($product->id);
+
     }
 
     public function editManagement(Product $product, Request $request): void
