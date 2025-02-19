@@ -30,6 +30,7 @@ class Modification extends Model
 
     public static function register(string $name, int $base_product_id, array $attributes = []): self
     {
+
         if (empty($attributes)) throw new \DomainException('Не заданы атрибуты');
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
@@ -37,9 +38,10 @@ class Modification extends Model
                 throw new \DomainException('Неверный тип атрибутов. Должен быть Вариант!');
             }
         }
-
+        $prefix = '';
+        if (self::where('name', $name)->first() != null) $prefix = \Str::random(6);
         $modification = self::make([
-            'name' => $name,
+            'name' => $name . $prefix,
             'base_product_id' => $base_product_id,
         ]);
         $modification->prod_attributes = $attributes;

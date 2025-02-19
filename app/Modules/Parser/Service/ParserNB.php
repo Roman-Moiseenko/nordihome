@@ -140,18 +140,16 @@ class ParserNB extends ParserAbstract
         }
 
         return $products;
-//        dd($products);
+     //   dd($products);
         //TODO Убрать когда заработает через axios
 
         foreach ($products as $product) {
             //dd($product);
             //Ищем товар в базе по Id
-            //dd($product['id']);
             $parser_product = ProductParser::where('maker_id', $product['id'])->first();
             //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
             if (!is_null($parser_product)) {
-
-                $this->updateVariants($product);
+               $this->updateVariants($product);
             } else {
                 $this->createProduct($product);
             }
@@ -216,6 +214,7 @@ class ParserNB extends ParserAbstract
         foreach ($product['variants'] as $variant) {
             $code = $variant['warehouseSymbol']; //Артикул на основе модели и размера
             if ($code == null) continue;
+            if (strpos($code, '.2E.')) continue;
             $size = null;
             foreach ($variant['options'] as $option) {
                 if ($option['name'] == 'Rozmiar' || $option['groupId'] == '32') $size = $option['value'];

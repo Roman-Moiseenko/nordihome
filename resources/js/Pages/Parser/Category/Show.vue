@@ -4,13 +4,16 @@
         <h1 class="font-medium text-xl">Категория {{ category.name }}</h1>
         <div class="p-5 bg-white rounded-md" v-if="category.active">
             <el-row :gutter="10" v-if="!showEdit">
-                <el-col :span="8">
-                    <el-descriptions :column="1" border class="mb-5">
+                <el-col :span="12">
+                    <el-descriptions :column="2" border class="mb-5">
                         <el-descriptions-item label="Связанная категория">
                             {{ category.category_name }}
                             <el-button class="ml-2" type="warning" size="small" @click="showEdit = true">
                                 <i class="fa-light fa-pen-to-square"></i>
                             </el-button>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="Кол-во товаров">
+                            {{ category.products.length }}
                         </el-descriptions-item>
                     </el-descriptions>
                 </el-col>
@@ -78,8 +81,8 @@ function onSetCategory() {
 
 function products() {
 
-   // router.post(route('admin.parser.category.parser-products', {category: props.category.id}))
-   // return;
+//   router.post(route('admin.parser.category.parser-products', {category: props.category.id}))
+//    return;
 
     const loading = ElLoading.service({
         lock: false,
