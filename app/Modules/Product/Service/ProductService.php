@@ -930,15 +930,13 @@ class ProductService
         $sheetData = $spreadsheet->getActiveSheet()->toArray();
         $result = [];
         foreach ($sheetData as $row) {
-            $result[] = array_values(array_filter($row));
+            $result[] = array_values(array_filter($row, function ($item) {
+                return $item != null;
+            }));
         }
-
         $array = array_values(array_filter($result));
-        //return $array;
         $brand = is_null($brand_id) ? null : Brand::find($brand_id);
-
         $products = [];
-
         foreach ($array as $item) {
             if (is_null($product = Product::whereCode($item[0])->first())) {
                 if (is_null($brand)) continue;
@@ -951,11 +949,10 @@ class ProductService
                     'product_id' => $product->id,
                     'quantity' => isset($item[1]) ? (float)$item[1] : 1,
                     'price' => isset($item[2]) ? (float)$item[2] : 0,
+                    'price2' => isset($item[3]) ? (float)$item[3] : 0,
                 ];
-
         }
         set_time_limit(30);
         return $products;
-
     }
 }

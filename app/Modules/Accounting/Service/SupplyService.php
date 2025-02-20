@@ -223,8 +223,9 @@ class SupplyService
     /**
      * Добавить товар в заявку Поставщику
      */
-    public function addProduct(SupplyDocument $supply, int $product_id, float $quantity): void
+    public function addProduct(SupplyDocument $supply, int $product_id, float $quantity, float $price = null): void
     {
+        if ($quantity == 0) return;
         $distributor = $supply->distributor;
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -232,9 +233,9 @@ class SupplyService
             $distributor->addProduct($product, 0); // добавляем с ценой закупа = 0
             $distributor->refresh();
         }
-
         $d_product = $distributor->getProduct($product_id);
-        $supply->addProduct($product, $quantity, (float)$d_product->pivot->cost);//Добавляем товар в Заказ
+        $cost = ($price == 0) ? (float)$d_product->pivot->cost : $price;
+        $supply->addProduct($product, $quantity, $cost);//Добавляем товар в Заказ
     }
 
     public function addProducts(SupplyDocument $supply, mixed $products): void
@@ -243,6 +244,7 @@ class SupplyService
             $this->addProduct($supply,
                 $product['product_id'],
                 $product['quantity'],
+                $product['price'],
             );
         }
     }
