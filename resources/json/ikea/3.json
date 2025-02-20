@@ -1,0 +1,64 @@
+{
+    "name": "PO\u00c4NG",
+    "typeName": "Rama podn\u00f3\u017cka",
+    "itemMeasureReferenceText": "",
+    "mainImageUrl": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/poaeng-rama-podnozka-okleina-debowa-bejcowana-na-bialo__0962646_pe808179_s5.jpg",
+    "pipUrl": "https:\/\/www.ikea.com\/pl\/pl\/p\/poaeng-rama-podnozka-okleina-debowa-bejcowana-na-bialo-00433433\/",
+    "filterClass": "footstools",
+    "id": "00433433",
+    "itemNoGlobal": "00433433",
+    "onlineSellable": true,
+    "lastChance": false,
+    "gprDescription": {
+        "numberOfVariants": 0,
+        "variants": []
+    },
+    "colors": [
+        {
+            "name": "be\u017cowy",
+            "id": "10003",
+            "hex": "f4f3d7"
+        },
+        {
+            "name": "br\u0105zowy",
+            "id": "10019",
+            "hex": "814820"
+        }
+    ],
+    "tag": "NONE",
+    "quickFacts": [],
+    "features": [],
+    "availability": [],
+    "itemNo": "00433433",
+    "itemType": "ART",
+    "salesPrice": {
+        "currencyCode": "PLN",
+        "numeral": 120,
+        "current": {
+            "prefix": "",
+            "wholeNumber": "120",
+            "separator": "",
+            "decimals": "",
+            "suffix": ",-",
+            "isRegularCurrency": false
+        },
+        "isBreathTaking": false,
+        "discount": "",
+        "tag": "NONE",
+        "priceText": "Cena"
+    },
+    "mainImageAlt": "PO\u00c4NG Rama podn\u00f3\u017cka, okleina d\u0119bowa bejcowana na bia\u0142o",
+    "businessStructure": {
+        "homeFurnishingBusinessName": "Living room seating",
+        "homeFurnishingBusinessNo": "01",
+        "productAreaName": "Footstools",
+        "productAreaNo": "0126",
+        "productRangeAreaName": "Armchairs, footstool & sofa tables",
+        "productRangeAreaNo": "012"
+    },
+    "validDesignText": "okleina d\u0119bowa bejcowana na bia\u0142o",
+    "heroBackoffData": [],
+    "optimizelyAttributes": {
+        "PRODUCT_TYPE": "standard"
+    }
+}

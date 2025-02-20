@@ -32,6 +32,10 @@ class LoadingImageProduct implements ShouldQueue
     public function handle(): void
     {
         $photo = $this->product->addImageByUrl($this->image_url);
-        $this->product->setAlt(photo_id: $photo->id, alt: $this->image_alt);
+        if (!is_null($photo)) {
+            $this->product->setAlt(photo_id: $photo->id, alt: $this->image_alt);
+        } else {
+            Log::error('Фото не загружено ' . $this->product->code . ' ' . $this->image_url);
+        }
     }
 }

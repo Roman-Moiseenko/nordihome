@@ -924,7 +924,7 @@ class ProductService
 
     public function uploadByXlsx($file, $brand_id): array
     {
-        set_time_limit(99999);
+        set_time_limit(1000);
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($file->getPathName());
         $sheetData = $spreadsheet->getActiveSheet()->toArray();

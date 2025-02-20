@@ -143,7 +143,11 @@ class ParserIkea extends ParserAbstract
             $main_category_id = $product_data['main_category_id'];
         } else {
             //TODO вытаскиваем последнюю categoryPath 'key'
-            $categories = $product_data['categoryPath'];
+            if (!isset($product_data['categoryPath'])) {
+                $categories = [];
+            } else {
+                $categories = $product_data['categoryPath'];
+            }
             if (count($categories) == 0) {
                 $key = null;
             } else {
