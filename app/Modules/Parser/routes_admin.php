@@ -35,6 +35,7 @@ Route::group(
             'as' => 'product.',
         ], function () {
             Route::post('/parser/{product}', 'ProductParserController@parser')->name('parser');
+            Route::post('/by-list/', 'ProductParserController@by_list')->name('by-list');
 
         });
         //PRODUCT

@@ -72,24 +72,29 @@ class ProductService
         $this->groupService = $groupService;
     }
 
+    public function createByParser(int $brand_id, string $code, int $category_id = null): ?Product
+    {
+        $brand = Brand::find($brand_id);
+        $parser_class = $brand->parser_class;
+        /** @var ParserAbstract $parser */
+        $parser = app()->make($parser_class);
+        $product = $parser->findProduct($code);
+        if (!is_null($category_id)) {
+            $product->main_category_id = $category_id;
+            $product->save();
+        }
+        return $product;
+
+    }
+
     public function create(Request $request): Product
     {
         if ($request->boolean('parser')) {
-
-            $brand = Brand::find($request->integer('brand_id'));
-            $code = $request->string('code')->trim()->value();
-            $category_id = $request->input('category_id');
-
-            $parser_class = $brand->parser_class;
-            /** @var ParserAbstract $parser */
-            $parser = app()->make($parser_class);
-            //throw new \DomainException($request->input('product'));
-            $product = $parser->findProduct($code);
-            if (!is_null($category_id)) {
-                $product->main_category_id = $category_id;
-                $product->save();
-            }
-            return $product;
+            return $this->createByParser(
+                $request->integer('brand_id'),
+                $request->string('code')->trim()->value(),
+                $request->input('category_id')
+            );
         }
 
         DB::transaction(function () use ($request, &$product) {
@@ -919,6 +924,7 @@ class ProductService
 
     public function uploadByXlsx($file, $brand_id): array
     {
+        set_time_limit(99999);
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         $spreadsheet = $reader->load($file->getPathName());
         $sheetData = $spreadsheet->getActiveSheet()->toArray();
@@ -948,6 +954,7 @@ class ProductService
                 ];
 
         }
+        set_time_limit(30);
         return $products;
 
     }

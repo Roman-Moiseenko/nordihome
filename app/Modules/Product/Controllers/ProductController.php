@@ -245,9 +245,14 @@ class ProductController extends Controller
 
     public function upload(Request $request): JsonResponse
     {
-        $file = $request->file('file');
-        $result = $this->service->uploadByXlsx($file, $request->input('brand_id'));
-        return response()->json($result);
+        try {
+            $file = $request->file('file');
+            $result = $this->service->uploadByXlsx($file, $request->input('brand_id'));
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            return response()->json($e->getMessage());
+        }
+
     }
 
     public function search_add(Request $request)

@@ -96,6 +96,7 @@ const handleSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFil
     textUpload.value = 'Товары считаны - ' + response.length.toString() + ' шт.'
     disabledUnload.value = false;
     products.value = [...response]
+    console.log(response)
 }
 const handleError: UploadProps['onError'] = (error, uploadFile, uploadFiles) => {
     console.log(error, uploadFile)

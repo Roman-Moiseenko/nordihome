@@ -117,7 +117,7 @@ class ParserIkea extends ParserAbstract
         return $products;
     }
 
-    private function createProduct(mixed $product_data): Product
+    private function createProduct(mixed $product_data):? Product
     {
         $maker_id = $product_data['id'];
         $name = $product_data['name'] . ' ' . $product_data['typeName'];
@@ -138,7 +138,7 @@ class ParserIkea extends ParserAbstract
         if (isset($product_data['colors'])) $colors = array_map(function ($item) {
             return $item['name'];
         }, $product_data['colors']);
-
+        $main_category_id = null;
         if (isset($product_data['main_category_id'])) {
             $main_category_id = $product_data['main_category_id'];
         } else {
@@ -151,14 +151,13 @@ class ParserIkea extends ParserAbstract
             }
             /** @var CategoryParser $category_parser */
             $category_parser = CategoryParser::where('url', $key)->first();
+            if (!is_null($category_parser)) $main_category_id = $category_parser->category_id;
 
-            if ($category_parser == null) {
-                $main_category_id = Category::where('slug', 'temp')->first()->id;
-            } else {
-                $main_category_id = $category_parser->category_id;
-            }
         }
-        if ($main_category_id == null) throw new \DomainException('Неверная главная категория');
+        if (is_null($main_category_id)) {
+            $main_category_id = Category::where('slug', 'temp')->first()->id;
+            if (is_null($main_category_id)) return null; //throw new \DomainException('Неверная главная категория');
+        } //return /*null;*/
 
         $data = $this->parsingDataByUrl($url);
         //Создаем товар
@@ -284,7 +283,7 @@ class ParserIkea extends ParserAbstract
             return null;
         }
         if (empty($_array['searchResultPage']['products']['main']['items'])) {
-            Log::error('Икеа Парсинг ' . $search . ' empty($_array[searchResultPage][products][main][items])');
+            Log::error('Икеа Парсинг ' . $search . ' товар не найден');
             return null;
         }
 

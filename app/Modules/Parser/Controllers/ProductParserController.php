@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Repository\ProductParserRepository;
 use App\Modules\Parser\Service\ProductParserService;
+use Illuminate\Http\Request;
 
 class ProductParserController extends Controller
 {
@@ -27,9 +28,18 @@ class ProductParserController extends Controller
         //TODO
     }
 
+
     public function parser(ProductParser $product): \Illuminate\Http\RedirectResponse
     {
         $price = $this->service->parserProduct($product);
         return redirect()->back()->with('success', 'Товар спарсен: ' . $price);
+    }
+
+    public function by_list(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        //dd($request);
+
+      //  $this->service->parserProducts($request);
+      //  return redirect()->back()->with('success', 'Товары добавлены в очередь на спарсивание');
     }
 }

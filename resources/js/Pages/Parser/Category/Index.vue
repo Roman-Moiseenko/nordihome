@@ -22,6 +22,7 @@
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
+            <SearchAddProducts :route="route('admin.parser.product.by-list')" class="ml-3"/>
         </div>
         <CategoryChildren :categories="categories" @delete:category="handleDeleteEntity" :product_categories="product_categories"/>
         <!--CategoryRow v-for="item in categories" :category="item" @delete:category="handleDeleteEntity" /-->
@@ -36,6 +37,7 @@ import {inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import CategoryRow from "./Row.vue";
 import CategoryChildren from "./Children.vue";
+import SearchAddProducts from "@Comp/Search/AddProducts.vue";
 
 const props = defineProps({
     categories: Object,

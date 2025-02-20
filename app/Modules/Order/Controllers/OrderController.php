@@ -62,7 +62,6 @@ class OrderController extends Controller
         $this->staffs = $staffs;
         $this->repository = $repository;
         $this->service = $service;
-        //TODO загрузка процента по сборке
         $this->report = $report;
         $this->organizations = $organizations;
         $this->reserveService = $reserveService;

@@ -14,6 +14,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Повторное спарисание товара уже имеющегося в БД (прлверка цены и доступности)
+ */
 class ParserPriceProduct implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;

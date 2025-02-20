@@ -16,4 +16,9 @@ class ProductParserService
 
         return $parser->parserCost($product);
     }
+
+    public function parserProducts(mixed $input)
+    {
+//        foreach ()
+    }
 }
