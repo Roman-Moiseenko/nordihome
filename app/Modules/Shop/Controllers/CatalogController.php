@@ -37,10 +37,11 @@ class CatalogController extends ShopController
 
     public function index(): Factory|View|Application|null
     {
+        $url_page = $this->route('shop.category.index');
         $title = $this->web->categories_title;
         $description = $this->web->categories_desc;
-
-        return view($this->route('catalog'), compact( 'title', 'description'));
+        $categories = $this->repository->getChildren();
+        return view($this->route('catalog'), compact( 'title', 'description', 'categories', 'url_page'));
     }
 
     public function view(Request $request, $slug)
