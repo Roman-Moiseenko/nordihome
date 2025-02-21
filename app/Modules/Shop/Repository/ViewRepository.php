@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Repository;
 
+use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
@@ -33,6 +34,9 @@ class ViewRepository
 
     public function product(string $slug): string
     {
+     //   $categories = $this->categories_cache();
+    //    $trees = $this->trees_cache();
+
         $schema = new Schema();
         $url_page = route('shop.product.view', $slug);
 
@@ -57,6 +61,10 @@ class ViewRepository
 
     public function category(array $request, string $slug)
     {
+      //  $categories = $this->categories_cache();
+      //  $trees = $this->trees_cache();
+
+
         $schema = new Schema();
         $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
@@ -176,5 +184,17 @@ class ViewRepository
         });
     }
 
+    private function categories_cache()
+    {
+        return Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
+            return $this->repository->getChildren();
+        });
+    }
 
+    private function trees_cache()
+    {
+        return Cache::rememberForever(CacheHelper::MENU_TREES, function () {
+            return $this->repository->getTree();
+        });
+    }
 }
