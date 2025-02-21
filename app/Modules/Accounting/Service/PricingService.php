@@ -99,14 +99,14 @@ class PricingService
             $pricing->completed = true;
             $pricing->save();
             $pricing->refresh();
-            foreach ($pricing->pricingProducts as $pricingProduct) {
+            foreach ($pricing->pricingProducts as $i => $pricingProduct) {
                 if ($pricingProduct->price_cost == 0 ||
                     $pricingProduct->price_retail == 0 ||
                     $pricingProduct->price_bulk == 0 ||
                     $pricingProduct->price_special == 0 //||
                   //  $pricingProduct->price_min == 0 ||
                 //    $pricingProduct->price_pre == 0
-                ) throw new \DomainException('Не все цены заполнены');
+                ) throw new \DomainException('Не все цены заполнены ' . $pricingProduct->product->code . ' (позиция ' . ($i + 1) . ')');
 
                 $product = $pricingProduct->product;
                 $founded = 'Установка цен № ' . $pricing->htmlNum() . ' от ' . $pricing->htmlDate();

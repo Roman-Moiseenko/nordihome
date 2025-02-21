@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 use JetBrains\PhpStorm\Deprecated;
 
 class CategoryController extends Controller
@@ -27,7 +28,7 @@ class CategoryController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
         $categories = $this->repository->getTree();
         return Inertia::render('Product/Category/Index', [
@@ -35,24 +36,19 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function show(Category $category): \Inertia\Response
+    public function show(Category $category): Response
     {
         $categories = $this->repository->forFilters();
         return Inertia::render('Product/Category/Show', [
             'category' => $this->repository->CategoryWith($category),
             'categories' => $categories,
         ]);
-       // return view('admin.product.category.show', compact('category'));
     }
 
     public function set_info(Category $category, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($request, $category);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($request, $category);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function up(Category $category): RedirectResponse
@@ -84,12 +80,8 @@ class CategoryController extends Controller
             'name' => 'required|string',
             'parent_id' => 'nullable|integer|exists:categories,id',
         ]);
-        try {
-            $category = $this->service->register($request);
-            return redirect()->route('admin.product.category.show', $category)->with('success', 'Категория создана');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $category = $this->service->register($request);
+        return redirect()->route('admin.product.category.show', $category)->with('success', 'Категория создана');
     }
 
 
@@ -111,10 +103,9 @@ class CategoryController extends Controller
         return redirect()->back();
     }
 
-
     public function list(): JsonResponse
     {
-        $categories = array_map(function (Category $category){
+        $categories = array_map(function (Category $category) {
 
             $depth = str_repeat('-', $category->depth);
             return [
@@ -122,12 +113,7 @@ class CategoryController extends Controller
                 'name' => $depth . $category->name,
             ];
         }, $this->repository->withDepth());
-      /*  $list = Brand::orderBy('name')->get()->map(function (Brand $brand) {
-            return [
-                'id' => $brand->id,
-                'name' => $brand->name,
-            ];
-        });*/
+
         return response()->json($categories);
     }
 

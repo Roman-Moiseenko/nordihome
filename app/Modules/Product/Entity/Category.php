@@ -43,6 +43,7 @@ class Category extends Model
         'data' => '',
     ];
 
+
     protected $fillable = [
       'name', 'parent_id', 'slug', 'title', 'description',
     ];
@@ -51,6 +52,8 @@ class Category extends Model
     protected $with = [
         'parent',
         'prod_attributes',
+        'image',
+        'icon',
         ];
 
     public static function register($name, $parent_id = null, $slug = '', $title = '', $description = ''): self
