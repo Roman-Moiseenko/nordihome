@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Service;
 
 use App\Events\PricingHasCompleted;
 use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Admin\Entity\Admin;
@@ -31,14 +32,13 @@ class PricingService
     }
 
 
-
     public function destroy(PricingDocument $pricing): void
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, удалить нельзя');
         $pricing->delete();
     }
 
-    public function addProduct(PricingDocument $pricing, int $product_id): void
+    public function addProduct(PricingDocument $pricing, int $product_id, float $price_retail = null, float $price_bulk = null): void
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, менять данные нельзя');
 
@@ -48,6 +48,12 @@ class PricingService
             throw new \DomainException('Товар ' . $product->name . ' уже добавлен в документ');
 
         $pricingProduct = PricingProduct::new(product_id: $product->id);
+        if (!is_null($price_retail) && $price_retail > 0) $pricingProduct->price_retail = $price_retail;
+        if (!is_null($price_bulk) && $price_bulk > 0) {
+            $pricingProduct->price_bulk = $price_bulk;
+            $pricingProduct->price_special = $price_bulk;
+        }
+        if ($product->getPriceCost() == 0) $pricingProduct->price_cost = $this->calculateCost($product);
         $pricing->products()->save($pricingProduct);
         $pricing->refresh();
     }
@@ -57,6 +63,8 @@ class PricingService
         foreach ($products as $product) {
             $this->addProduct($pricing,
                 $product['product_id'],
+                $product['price'],
+                $product['price2'],
             );
         }
     }
@@ -90,9 +98,9 @@ class PricingService
                 if ($pricingProduct->price_cost == 0 ||
                     $pricingProduct->price_retail == 0 ||
                     $pricingProduct->price_bulk == 0 ||
-                    $pricingProduct->price_special == 0 ||
-                    $pricingProduct->price_min == 0 ||
-                    $pricingProduct->price_pre == 0
+                    $pricingProduct->price_special == 0 //||
+                  //  $pricingProduct->price_min == 0 ||
+                //    $pricingProduct->price_pre == 0
                 ) throw new \DomainException('Не все цены заполнены');
 
                 $product = $pricingProduct->product;
@@ -181,4 +189,24 @@ class PricingService
         $pricing->save();
     }
 
+    /**
+     * Вчисляем себестоимость товара
+     */
+    private function calculateCost(Product $product): float|int
+    {
+        $arrival = ArrivalDocument::orderByDesc('updated_at')->whereHas('products', function ($query) use ($product) {
+            $query->where('product_id', $product->id);
+        })->first();
+        /** @var ArrivalProduct $arrivalProduct */
+        $arrivalProduct = $arrival->getProduct($product->id);
+        if (is_null($arrivalProduct)) return 0;
+        $expense_amount = 0;
+        foreach ($arrival->expenses as $expense) {
+            $expense_amount += $expense->getAmount();
+        }
+        $coeff = 1 + $expense_amount /$arrival->getAmount();
+
+        return ceil($arrivalProduct->getCostRu() * $coeff);
+
+    }
 }

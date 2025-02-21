@@ -26,20 +26,22 @@ class ViewRepository
         $this->theme = config('shop.theme'); // $options->shop->theme;
     }
 
-    public function product(string $slug)
+    public function product(string $slug): string
     {
+
         $product = $this->slugs->getProductBySlug($slug);
         if (empty($product) || !$product->isPublished()) abort(404);
         $name = is_null($product->modification()) ? $product->name : $product->modification->name;
+        //TODO Перенести во view !!!
         $title = $name . ' купить по цене ' . $product->getPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин ' . $this->web->title_city ;
-        $description = $product->short;
+        $description = 'Оригинальный ' . $name . ' из Европы. Бесплатная доставка по всей России. Только брендовая одежда и обувь. ';
+
         $productAttributes = $this->repository->getProdAttributes($product);
         if ($this->web->is_cache) {
             $product = $this->product_view_cache($product);
         } else {
             $product = $this->repository->ProductToArrayView($product);
         }
-
 
         return view($this->route('product.view'), compact('product', 'title', 'description', 'productAttributes'))->render();
     }
@@ -107,6 +109,7 @@ class ViewRepository
 
         $products = $query->paginate($this->web->paginate);
         if (empty($category->title)) {
+            //TODO Перенести во view !!!
             $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ' .
                 $this->web->title_city . ' ☎ ' . $this->web->title_contact;
         } else {

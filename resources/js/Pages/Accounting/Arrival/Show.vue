@@ -103,7 +103,7 @@ const props = defineProps({
     printed: Object,
     filters: Array,
 })
-console.log(props.arrival)
+
 provide('$filters', props.filters) //Фильтр товаров в списке документа
 provide('$printed', props.printed) //Для печати
 provide('$accounting', props.arrival) //Для общих действий

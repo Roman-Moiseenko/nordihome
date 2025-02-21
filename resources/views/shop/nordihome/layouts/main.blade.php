@@ -27,25 +27,32 @@
     @stack('styles')
 </head>
 <body class="@yield('body')">
-@include('shop.nordihome.header')
-@include('shop.nordihome.widgets.flash')
+@if(env('APP_ENV') == 'production')
 
-@section('breadcrumbs')
-    <div class="container-xl">
-        {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nordihome.breadcrumbs') }}
-    </div>
-@show
+@else
+    @include('shop.nordihome.header')
+    @include('shop.nordihome.widgets.flash')
 
-<main class="@yield('main')">
-    @yield('content')
-</main>
-<!--POP-UP ОКНА-->
-@guest
-    @include('shop.nordihome.pop-up.login')
-@endguest
+    @section('breadcrumbs')
+        <div class="container-xl">
+            {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nordihome.breadcrumbs') }}
+        </div>
+    @show
 
-@include('shop.nordihome.pop-up.buy-click')
-@include('shop.nordihome.pop-up.notification')
+    <main class="@yield('main')">
+        @yield('content')
+    </main>
+
+    <!--POP-UP ОКНА-->
+    @guest
+        @include('shop.nordihome.pop-up.login')
+    @endguest
+
+    @include('shop.nordihome.pop-up.buy-click')
+    @include('shop.nordihome.pop-up.notification')
+@endif
+
+
 
 <!--FOOTER-->
 @include('shop.nordihome.footer')

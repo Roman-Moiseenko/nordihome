@@ -438,7 +438,6 @@ class Product extends Model
         }
 
         if (!is_null($user)) {
-
             if ($user->isBulk() && $this->getPriceBulk($previous) != 0) $price = $this->getPriceBulk($previous); //Оптовый клиент
             if ($user->isSpecial() && $this->getPriceSpecial($previous) != 0) $price = $this->getPriceSpecial($previous); //Спец Клиент
         }
@@ -457,7 +456,6 @@ class Product extends Model
     //ЦЕНЫ ДЛЯ АДМИНКИ
     /**
      * Последняя закупочная цена, через Поставщиков
-     * @return float
      */
     public function getPriceCost(bool $previous = false): float
     {
@@ -487,7 +485,7 @@ class Product extends Model
 
     public function getPriceBulk(bool $previous = false): float
     {
-        if ($this->pricesBulk()->count() == 0) return $this->getPriceRetail($previous);
+        if ($this->pricesBulk()->count() == 0) return 0;
         if ($previous) {
             /** @var ProductPriceBulk $model */
             $model = $this->pricesBulk()->skip(1)->first();
@@ -500,7 +498,7 @@ class Product extends Model
 
     public function getPriceSpecial(bool $previous = false): float
     {
-        if ($this->pricesSpecial()->count() == 0) return $this->getPriceRetail($previous);
+        if ($this->pricesSpecial()->count() == 0) return 0;
         if ($previous) {
             /** @var ProductPriceSpecial $model */
             $model = $this->pricesSpecial()->skip(1)->first();
@@ -513,6 +511,7 @@ class Product extends Model
 
     public function getPriceMin(bool $previous = false): float
     {
+        //Если минимальная не установлена, возвращается себестоимость
         if ($this->pricesMin()->count() == 0) return 0;
         if ($previous) {
             /** @var ProductPriceMin $model */
@@ -538,7 +537,6 @@ class Product extends Model
     {
         if ($this->pricesPre()->count() == 0) return 0;
         if ($previous) {
-            /** @var ProductPriceMin $model */
             $model = $this->pricesPre()->skip(1)->first();
             if (empty($model)) return 0;
         } else {
