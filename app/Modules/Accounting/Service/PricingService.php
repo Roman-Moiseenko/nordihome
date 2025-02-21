@@ -8,6 +8,8 @@ use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
+use App\Modules\Accounting\Entity\SurplusDocument;
+use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Admin\Entity\Admin;
 
 use App\Modules\Product\Entity\Product;
@@ -53,7 +55,10 @@ class PricingService
             $pricingProduct->price_bulk = $price_bulk;
             $pricingProduct->price_special = $price_bulk;
         }
-        if ($product->getPriceCost() == 0) $pricingProduct->price_cost = $this->calculateCost($product);
+        if ($product->getPriceCost() == 0) {
+            $pricingProduct->price_cost = $this->calculateCost($product);
+            if ($pricingProduct->price_cost == null) return; //Не добавлять товар, если нет его поступления или оприходывания
+        }
         $pricing->products()->save($pricingProduct);
         $pricing->refresh();
     }
@@ -190,23 +195,35 @@ class PricingService
     }
 
     /**
-     * Вчисляем себестоимость товара
+     * Вычисляем себестоимость товара
      */
-    private function calculateCost(Product $product): float|int
+    private function calculateCost(Product $product): float|null
     {
+        //1. Ищем в поступлениях
         $arrival = ArrivalDocument::orderByDesc('updated_at')->whereHas('products', function ($query) use ($product) {
             $query->where('product_id', $product->id);
         })->first();
-        /** @var ArrivalProduct $arrivalProduct */
-        $arrivalProduct = $arrival->getProduct($product->id);
-        if (is_null($arrivalProduct)) return 0;
-        $expense_amount = 0;
-        foreach ($arrival->expenses as $expense) {
-            $expense_amount += $expense->getAmount();
+        if (!is_null($arrival)) {
+            /** @var ArrivalProduct $arrivalProduct */
+            $arrivalProduct = $arrival->getProduct($product->id);
+            $expense_amount = 0;
+            foreach ($arrival->expenses as $expense) {
+                $expense_amount += $expense->getAmount();
+            }
+            $coeff = 1 + $expense_amount / ($arrival->getAmount() * $arrival->exchange_fix);
+
+            return ceil($arrivalProduct->getCostRu() * $coeff);
         }
-        $coeff = 1 + $expense_amount /$arrival->getAmount();
+        //2. Ищем в оприходовании
+        $surplus = SurplusDocument::orderByDesc('updated_at')->whereHas('products', function ($query) use ($product) {
+            $query->where('product_id', $product->id);
+        })->first();
+        if (!is_null($surplus)) {
+            /** @var SurplusProduct $surplusProduct */
+            $surplusProduct = $surplus->getProduct($product->id);
+            return $surplusProduct->cost;
+        }
 
-        return ceil($arrivalProduct->getCostRu() * $coeff);
-
+        return null;
     }
 }
