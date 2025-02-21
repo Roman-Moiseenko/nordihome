@@ -84,7 +84,7 @@
                         </li>
                     @endguest
                     <li class="nav-item">
-                        <livewire:shop.header.wish :user="$user"/>
+                        <livewire:shop.header.wish />
                     </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"

@@ -78,7 +78,7 @@ class AdminComposer
                 //$view->with('city', $city);
 
             }
-            $categories =  Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
+         /*   $categories =  Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
                 return $this->shopRepository->getChildren();
             });
             $trees = Cache::rememberForever(CacheHelper::MENU_TREES, function () {
@@ -87,7 +87,7 @@ class AdminComposer
 
 
             $view->with('categories', $categories);
-            $view->with('tree', $trees);
+            $view->with('tree', $trees);*/
             $view->with('web', $this->settings->web);
         }
     }

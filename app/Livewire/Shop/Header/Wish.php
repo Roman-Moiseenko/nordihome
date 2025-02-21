@@ -5,6 +5,7 @@ namespace App\Livewire\Shop\Header;
 use App\Modules\User\Entity\User;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Wish extends Component
 {
@@ -13,9 +14,9 @@ class Wish extends Component
     public int $count = 0;
     public array $items = [];
 
-    public function mount($user)
+    public function mount()
     {
-        $this->user = $user;
+        $this->user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
         $this->refresh_fields();
     }
 

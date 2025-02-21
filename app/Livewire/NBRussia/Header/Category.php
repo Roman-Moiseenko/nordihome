@@ -10,7 +10,7 @@ use Livewire\Component;
 class Category extends Component
 {
     public mixed $categories;
-    public mixed $trees;
+    public mixed $tree;
 
     public function mount() {
         $repository = app()->make(ShopRepository::class);
@@ -19,7 +19,7 @@ class Category extends Component
             return $repository->getChildren();
         });
 
-        $this->trees = Cache::rememberForever(CacheHelper::MENU_TREES, function () use ($repository) {
+        $this->tree = Cache::rememberForever(CacheHelper::MENU_TREES, function () use ($repository) {
             return $repository->getTree();
         });
     }
