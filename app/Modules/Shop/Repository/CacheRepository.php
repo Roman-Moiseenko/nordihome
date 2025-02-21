@@ -31,4 +31,11 @@ class CacheRepository
             return $this->views->category($request, $slug);
         });
     }
+
+    public function page($slug)
+    {
+        return Cache::rememberForever('page-' . $slug, function () use ($slug) {
+            return $this->views->page($slug);
+        });
+    }
 }

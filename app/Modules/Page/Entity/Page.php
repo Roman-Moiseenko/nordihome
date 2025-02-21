@@ -82,30 +82,15 @@ class Page extends Model
     public function view(): string
     {
         $this->text = Template::renderClasses($this->text);
-
+        $url_page = route('shop.page.view', $this->slug);
 
         //TODO На будущее
         // $this->text = Template::renderFromText('promotion', $this->text);
 
-
-       // $repository = app()->make(WebRepository::class);
-       // $breadcrumb = $repository->getBreadcrumbModel($this); //Хлебные крошки - image, текст
-    /*    $class = strtolower(class_basename(static::class)); //Класс вызвавший
-        if (empty($this->template)) {
-            $template = 'web.' .$class . '.show'; //Базовый шаблон системы
-        } else {
-            $template = 'web.templates.' . $class . '.' . $this->template; //Выбранный шаблон
-        }
-*/
-        return view(Template::blade('page') . $this->template, ['page' => $this, 'title' => $this->title, 'description' => $this->description])->render();
-        //dd($this);
-     /*   return view($template,
-            [
-                $class => $this,
-                'meta' => $this->meta,
-                'breadcrumb' => $breadcrumb,
-            ]
-        )->render();*/
+        return view(
+            Template::blade('page') . $this->template,
+            ['page' => $this, 'title' => $this->title, 'description' => $this->description, 'url_page' => $url_page])
+            ->render();
     }
 
     public function parent(): BelongsTo

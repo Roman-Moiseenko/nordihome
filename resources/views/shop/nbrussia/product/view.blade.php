@@ -104,7 +104,7 @@
                         <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
                     @endif
                 </div>
-                <div class="mt-3 fs-7 fw-bold">Бесплатная доставка в Калининград</div>
+                <div class="mt-3 fs-7 fw-bold">Бесплатная доставка по России</div>
                 <div class="fs-7 fw-bold">до 30 дней бесплатного возврата*</div>
 
                 <div class="description">
@@ -152,18 +152,13 @@
                     <a href="{{ route('shop.category.view', $product['category']['slug']) }}">Все товары из {{ $product['category']['name'] }}</a>
                 </div>
                 <div class="mt-3">
-                    @if(!is_null($user))
-                        <button class="{{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" type="button"
-                                title="В Избранное">
-                            <i class="{{ $product['is_wish'] ? 'fa-solid' : 'fa-light' }} fa-heart"></i> Добавить в избранное
-                        </button>
-                    @else
+                    {!! ''; //TODO livewire для Избранного @if(!is_null($user))  !!}
+
                         <button class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
                                 type="button"
                                 onclick="event.preventDefault();">
                             <i class="fa-light fa-heart" type="button" title="В Избранное"></i> Добавить в избранное
                         </button>
-                    @endif</div>
             </div>
 
         </div>

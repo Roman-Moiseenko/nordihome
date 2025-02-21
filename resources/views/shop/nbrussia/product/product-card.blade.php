@@ -17,18 +17,19 @@
                 @endif
 
                 <div class="product-label wish">
-                    @if(!is_null($user))
-                        <button class="{{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" type="button"
+                    {!! ''; //TODO livewire для Избранного @if(!is_null($user))  !!}
+
+                        <!--button class="{{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" type="button"
                                 title="В Избранное">
                             <i class="{{ $product['is_wish'] ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
-                        </button>
-                    @else
+                        </button-->
+
                         <button class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
                                 type="button"
                                 onclick="event.preventDefault();">
                             <i class="fa-light fa-heart" type="button" title="В Избранное"></i>
                         </button>
-                    @endif
+
                 </div>
             </a>
         </div>

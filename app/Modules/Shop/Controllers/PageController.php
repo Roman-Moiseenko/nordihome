@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Modules\Page\Entity\Page;
+use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
+use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -12,11 +14,16 @@ class PageController extends ShopController
 {
 
     private ShopRepository $repository;
+    private CacheRepository $caches;
+    private ViewRepository $views;
 
-    public function __construct(ShopRepository $repository)
+    public function __construct(ShopRepository $repository,         CacheRepository $caches,
+                                ViewRepository $views,)
     {
         parent::__construct();
         $this->repository = $repository;
+        $this->caches = $caches;
+        $this->views = $views;
     }
 
     public function home()
@@ -37,18 +44,10 @@ class PageController extends ShopController
 
     public function view($slug)
     {
-        try {
-            $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
-            $callback = fn() => $page->view();
-
-            //if ($this->web->is_cache) {
-            //    return Cache::rememberForever('page-' . $slug, $callback);
-         //   } else {
-                return $callback();
-         //   }
-
-        } catch (\Throwable $e) {
-            abort(404, 'Страница не найдена');
+        if ($this->web->is_cache) {
+            return $this->caches->page($slug);
+        } else {
+            return $this->views->page($slug);
         }
     }
 

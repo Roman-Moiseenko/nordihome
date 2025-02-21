@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Repository;
 
+use App\Modules\Page\Entity\Page;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
+use App\Modules\Shop\Schema;
+use Auth;
 use Illuminate\Support\Facades\Cache;
 
 class ViewRepository
@@ -16,24 +19,28 @@ class ViewRepository
     protected string $theme;
     public Web $web;
 
+
     public function __construct(ShopRepository $repository,
-                                SlugRepository $slugs,)
+                                SlugRepository $slugs)
     {
         $this->repository = $repository;
         $this->slugs = $slugs;
         $settings = app()->make(Settings::class);
         $this->web = $settings->web;
         $this->theme = config('shop.theme'); // $options->shop->theme;
+
     }
 
     public function product(string $slug): string
     {
+        $schema = new Schema();
+        $url_page = route('shop.product.view', $slug);
 
         $product = $this->slugs->getProductBySlug($slug);
         if (empty($product) || !$product->isPublished()) abort(404);
         $name = is_null($product->modification()) ? $product->name : $product->modification->name;
         //TODO Перенести во view !!!
-        $title = $name . ' купить по цене ' . $product->getPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин ' . $this->web->title_city ;
+        $title = $name . ' купить по цене ' . $product->getPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин ' . $this->web->title_city;
         $description = 'Оригинальный ' . $name . ' из Европы. Бесплатная доставка по всей России. Только брендовая одежда и обувь. ';
 
         $productAttributes = $this->repository->getProdAttributes($product);
@@ -43,19 +50,22 @@ class ViewRepository
             $product = $this->repository->ProductToArrayView($product);
         }
 
-        return view($this->route('product.view'), compact('product', 'title', 'description', 'productAttributes'))->render();
+        return view($this->route('product.view'),
+            compact('product', 'title', 'description', 'productAttributes', 'schema', 'url_page'))->render();
     }
 
 
     public function category(array $request, string $slug)
     {
+        $schema = new Schema();
+        $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
         if (is_null($category)) return abort(404);
         $title = $category->title;
         $description = $category->description;
         if ($this->web->is_category && count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
-            return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description'))->render();
+            return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description', 'url_page'))->render();
         }
 
         $minPrice = 10;
@@ -127,8 +137,17 @@ class ViewRepository
             });
         return view($this->route('product.index'),
             compact('category', 'products', 'prod_attributes', 'tags',
-                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id', 'order', 'children', 'count_in_category'))->render();
+                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
+                'order', 'children', 'count_in_category', 'schema', 'url_page'))->render();
     }
+
+    public function page($slug)
+    {
+        $page = $this->slugs->PageBySlug($slug); // Page::where('slug', $slug)->where('published', true)->firstOrFail();
+        if (is_null($page)) abort(404, 'Страница не найдена');
+        return $page->view();
+    }
+
 
     final public function route(string $blade): string
     {
@@ -156,5 +175,6 @@ class ViewRepository
             return $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids); //0.02 секунды
         });
     }
+
 
 }

@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
+ * @property int $attribute_id
  * @property Attribute $attribute
  * @property string $name
  * @property string $slug

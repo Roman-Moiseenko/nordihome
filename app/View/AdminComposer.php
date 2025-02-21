@@ -50,10 +50,7 @@ class AdminComposer
             } elseif($layout == 'livewire') {
                 //
             } else {
-                //TODO Сделать отдельный View
-                if ($layout == 'shop') {
-                    $view->with('schema', new Schema());
-                }
+
                 //TODO Определение местоположения
                 /*$token = env('DADATA_TOKEN', false);
                 if ($token) {

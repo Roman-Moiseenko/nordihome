@@ -31,7 +31,7 @@ class SlugRepository
 
     public function PageBySlug(string $slug): Page
     {
-        return Page::where('slug', $slug)->where('published', true)->firstOrFail();
+        return Page::where('slug', $slug)->where('published', true)->first();
     }
 
     public function getPromotionBySlug($slug): Promotion
