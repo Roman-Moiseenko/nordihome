@@ -44,8 +44,8 @@ class ViewRepository
         if (empty($product) || !$product->isPublished()) abort(404);
         $name = is_null($product->modification()) ? $product->name : $product->modification->name;
         //TODO Перенести во view !!!
-        $title = $name . ' купить по цене ' . $product->getPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин ' . $this->web->title_city;
-        $description = 'Оригинальный ' . $name . ' из Европы. Бесплатная доставка по всей России. Только брендовая одежда и обувь. ';
+        $title = ''; //$name . ' купить по цене ' . $product->getPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин  ★★★ Оригинал Нью Баланс';
+        $description = ''; //'Оригинальный ' . $name . ' из Европы. Бесплатная доставка по всей России. Только брендовая одежда и обувь. Гарантия качества. Маркировка Честный знак';
 
         $productAttributes = $this->repository->getProdAttributes($product);
         if ($this->web->is_cache) {
@@ -124,13 +124,13 @@ class ViewRepository
         $count_in_category = $query->count();
 
         $products = $query->paginate($this->web->paginate);
-        if (empty($category->title)) {
+    //   if (empty($category->title)) {
             //TODO Перенести во view !!!
-            $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ' .
-                $this->web->title_city . ' ☎ ' . $this->web->title_contact;
-        } else {
+     //       $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ★★★ Оригинал Нью Баланс' .
+      //          $this->web->title_city . ' ☎ ' . $this->web->title_contact;
+      //  } else {
             $title = $category->title;
-        }
+        //}
 
         $products = $products->withQueryString()
             ->through(function (Product $product) {

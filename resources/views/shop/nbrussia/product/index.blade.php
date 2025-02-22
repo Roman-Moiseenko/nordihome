@@ -2,13 +2,15 @@
 
 @section('body', 'products')
 @section('main', 'container-xl products-page')
-@section('title', $title)
-@section('description', $description)
-@section('breadcrumbs')
-    <div class="container-xl w">
-        {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nbrussia.breadcrumbs', 'shop.category.view', $category->slug) }}
-    </div>
+@section('title')
+    @if(empty($title))
+        {{ $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ★★★ Оригинал Нью Баланс' .
+        $web->title_city . ' ☎ ' . $web->title_contact }}
+    @else
+        {{ $title }}
+    @endif
 @endsection
+@section('description', $description)
 @section('content')
 
     <form action="" method="GET">

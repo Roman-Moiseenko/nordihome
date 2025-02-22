@@ -2,12 +2,19 @@
 
 @section('body', 'product')
 @section('main', 'container-xl product-page')
-@section('title', $title)
-@section('description', $description)
-@section('breadcrumbs')
-    <div class="container-xl w">
-        {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nbrussia.breadcrumbs', 'shop.product.view', $product['slug']) }}
-    </div>
+@section('title')
+    @if(empty($title))
+        {{ $product['name'] . ' купить по цене ' . $product['price'] . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин  ★★★ Оригинал Нью Баланс' }}
+    @else
+        {{ $title }}
+    @endif
+@endsection
+@section('description')
+    @if(empty($description))
+        {{ 'Оригинальный ' . $product['name'] . ' из Европы. Бесплатная доставка по всей России. Только брендовая одежда и обувь. Гарантия качества. Маркировка Честный знак' }}
+    @else
+        {{ $description }}
+    @endif
 @endsection
 @section('content')
 
