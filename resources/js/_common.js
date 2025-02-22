@@ -5,11 +5,23 @@ window.$ = jQuery;
 //Устанавливаем в сессию таймзону клиента
 sessionStorage.setItem("time", -(new Date().getTimezoneOffset()));
 
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+
+//Запрашиваем csrf-token
+
+let csrfMeta = $('meta[name="csrf-token"]')
+if (csrfMeta.length) {
+    $.post('/csrf-token', {}, function (data) {
+        csrfMeta.attr('content', data)
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': data
+            }
+        });
+    })
+
+}
+
+
 
 
 //Доп.элементы
@@ -49,6 +61,10 @@ if (showHidePassword !== undefined) {
 
 
 const common = {
+    csrf_token: {
+
+    },
+
     notification(type, msg) {
         let notification = $('#notification');
         notification.find('.toast-body').html(msg);

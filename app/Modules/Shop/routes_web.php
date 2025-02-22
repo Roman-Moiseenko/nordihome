@@ -20,6 +20,9 @@ Route::group(
         Route::post('/', function () {
             return abort(404);
         });
+        Route::post('/csrf-token', function () {
+            return csrf_token();
+        });
         Route::get('/shop/{old_slug}', 'ProductController@old_slug');
 
         Route::get('/page/{slug}', 'PageController@view')->name('page.view');
