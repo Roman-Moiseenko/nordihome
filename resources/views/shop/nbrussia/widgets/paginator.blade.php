@@ -4,20 +4,20 @@
     <nav class="w-full sm:w-auto sm:mr-auto">
         <ul class="pagination">
             @if ($paginator->onFirstPage())
-                <li class="page-item disabled">
+                <!--li class="page-item disabled">
                     <span class="page-link">
                         <i class="fa-light fa-chevrons-left"></i>
                     </span>
-                </li>
+                </li-->
                 <li class="page-item disabled" aria-disabled="true">
                     <span class="page-link"><i class="fa-light fa-chevron-left"></i></span>
                 </li>
             @else
-                <li class="page-item">
+                <!--li class="page-item">
                     <a class="page-link" href="{{ $paginator->url(1) }}">
                         <i class="fa-light fa-chevrons-left"></i>
                     </a>
-                </li>
+                </li-->
                 <li class="page-item">
                     <a class="page-link" href="{{ $paginator->previousPageUrl() }}">
                         <i class="fa-light fa-chevron-left"></i>
@@ -28,7 +28,7 @@
                 @foreach ($elements as $element)
                     {{-- "Three Dots" Separator --}}
                     @if (is_string($element))
-                        <li class="page-item disabled" aria-disabled="true"><span class="page-link">{{ $element }}</span></li>
+                        <li class="page-item disabled dots" aria-disabled="true"><span class="page-link">{{ $element }}</span></li>
                     @endif
                     {{-- Array Of Links --}}
                     @if (is_array($element))
@@ -47,22 +47,22 @@
                             <i class="fa-light fa-chevron-right"></i>
                         </a>
                     </li>
-                    <li class="page-item">
+                    <!--li class="page-item">
                         <a class="page-link" href="{{ $paginator->url($paginator->lastPage()) }}">
                             <i class="fa-light fa-chevrons-right"></i>
                         </a>
-                    </li>
+                    </li-->
                 @else
                     <li class="page-item disabled" aria-disabled="true">
                         <span class="page-link" aria-hidden="true">
                             <i class="fa-light fa-chevron-right"></i>
                         </span>
                     </li>
-                    <li class="page-item disabled" aria-disabled="true">
+                    <!--li class="page-item disabled" aria-disabled="true">
                         <span class="page-link" aria-hidden="true">
                             <i class="fa-light fa-chevrons-right"></i>
                         </span>
-                    </li>
+                    </li-->
                 @endif
         </ul>
     </nav>

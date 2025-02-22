@@ -63,8 +63,6 @@ class ViewRepository
     {
       //  $categories = $this->categories_cache();
       //  $trees = $this->trees_cache();
-
-
         $schema = new Schema();
         $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
