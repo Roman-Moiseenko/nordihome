@@ -38,7 +38,7 @@ class NotificationOrderNew
         foreach ($event->order->items as $item) {
             $_items .= "\n" . $item->product->name . ' ' . $item->quantity . " шт";
         }
-        //Mail::to($event->order->user->email)->queue(new OrderNew($event->order));
+
 
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 

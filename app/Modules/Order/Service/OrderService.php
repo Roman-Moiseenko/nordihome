@@ -1027,6 +1027,7 @@ class OrderService
         $order->save();
     }
 
+    /** Обрабатываем подтверждения из Телеграм */
     public function handle(TelegramHasReceived $event): void
     {
         if ($event->operation == TelegramParams::OPERATION_ORDER_TAKE) {

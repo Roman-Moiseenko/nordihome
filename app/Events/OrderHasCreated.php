@@ -11,6 +11,8 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
+//TODO Перенести в модуль Order
+
 class OrderHasCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;

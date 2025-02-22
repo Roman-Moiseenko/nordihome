@@ -123,6 +123,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasCreated::class => [
             NotificationOrderNew::class,
+            //TODO Возможно добавить создание лидов
+
+
             /* DeliveryService::class,
              PaymentService::class,*/
         ],
