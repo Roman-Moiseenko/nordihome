@@ -5,7 +5,7 @@ window.$ = jQuery;
 //Устанавливаем в сессию таймзону клиента
 sessionStorage.setItem("time", -(new Date().getTimezoneOffset()));
 
-
+/*
 //Запрашиваем csrf-token
 console.log('1')
 let csrfMeta = $('meta[name="csrf-token"]')
@@ -20,11 +20,14 @@ if (csrfMeta.length) {
             }
         });
     })
-
 }
 
-
-
+*/
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 
 //Доп.элементы
 let upButton = $('#upbutton');
