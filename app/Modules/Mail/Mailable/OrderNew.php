@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Modules\Mail\Mailable;
 
 use App\Modules\Order\Entity\Order\Order;
 use Illuminate\Bus\Queueable;
@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderNew extends Mailable
+class OrderNew extends SystemMailable
 {
     use Queueable, SerializesModels;
 
@@ -21,6 +21,7 @@ class OrderNew extends Mailable
      */
     public function __construct(Order $order)
     {
+        parent::__construct();
         $this->order = $order;
     }
 
@@ -41,6 +42,9 @@ class OrderNew extends Mailable
     {
         return new Content(
             markdown: 'mail.order.new',
+            with: [
+                'order' => $this->order
+            ],
         );
     }
 
@@ -54,9 +58,13 @@ class OrderNew extends Mailable
         return [];
     }
 
-    public function build()
+    public function getFiles(): array
     {
-        return $this->subject('Новый заказ')
-            ->markdown('mail.order.new')->with([ 'order' => $this->order]);
+        return [];
+    }
+
+    public function getName(): string
+    {
+        return 'Новый заказ';
     }
 }

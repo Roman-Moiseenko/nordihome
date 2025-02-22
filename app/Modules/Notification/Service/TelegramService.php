@@ -53,7 +53,7 @@ class TelegramService
         $route = route('api.telegram.web-hook');
         $url = "https://api.telegram.org/bot" .
             $this->notification->telegram_api .
-            "/setWebhook?url=" . $route . '&certificate=@sds_bot.pem';
+            "/setWebhook?url=" . $route . '&certificate=@crm.pem';
         return $this->setCurl($url);
     }
 
