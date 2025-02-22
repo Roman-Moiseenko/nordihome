@@ -4,7 +4,11 @@
 @section('main', 'container-xl products-page')
 @section('title', $title)
 @section('description', $description)
-
+@section('breadcrumbs')
+    <div class="container-xl w">
+        {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nbrussia.breadcrumbs', 'shop.category.view', $category->slug) }}
+    </div>
+@endsection
 @section('content')
 
     <form action="" method="GET">
@@ -79,7 +83,7 @@
                 </div>
 
                 <div class="products-page-list--bottom">
-                    {{ $products->links('shop.nbrussia.widgets.paginator') }}
+                    {{ $products->withPath($url_page)->links('shop.nbrussia.widgets.paginator') }}
                 </div>
 
                     <div class="bottom-text-category">

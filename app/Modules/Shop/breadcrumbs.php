@@ -22,6 +22,7 @@ Breadcrumbs::for('shop.category.index', function (BreadcrumbTrail $trail) { //Б
 });
 
 Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) use ($settings) { //Без указания главной - home
+   // \Log::info('shop.category.view ' .$slug);
     $category = (new SlugRepository())->CategoryBySlug($slug);
     if (is_null($category)) {
         if ($settings->web->is_category) $trail->parent('shop.category.index');

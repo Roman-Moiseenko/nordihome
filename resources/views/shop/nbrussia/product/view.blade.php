@@ -4,7 +4,11 @@
 @section('main', 'container-xl product-page')
 @section('title', $title)
 @section('description', $description)
-
+@section('breadcrumbs')
+    <div class="container-xl w">
+        {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nbrussia.breadcrumbs', 'shop.product.view', $product['slug']) }}
+    </div>
+@endsection
 @section('content')
 
     <div class="product-view">
@@ -89,10 +93,11 @@
                     <div class="modification">
                         @foreach($product['modification'] as $attribute)
                             @if(isset($attribute['products']))
-                            @foreach($attribute['products'] as $value => $_product_mod)
-                                <span class="size {{ $product['id'] === $_product_mod[0]['id'] ? 'active' : '' }}" data-id="{{ $_product_mod[0]['id'] }}"
-                                   title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</span>
-                            @endforeach
+                                @foreach($attribute['products'] as $value => $_product_mod)
+                                    <span class="size {{ $product['id'] === $_product_mod[0]['id'] ? 'active' : '' }}"
+                                          data-id="{{ $_product_mod[0]['id'] }}"
+                                          title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</span>
+                                @endforeach
                             @endif
                         @endforeach
                     </div>
@@ -101,7 +106,9 @@
 
                 <div class="d-flex mt-3">
                     @if($product['is_sale'])
-                        <button id="to-cart" class="to-cart btn-nb" data-product="{{ $product['id'] }}" style="width: 100%;">В Корзину</button>
+                        <button id="to-cart" class="to-cart btn-nb" data-product="{{ $product['id'] }}"
+                                style="width: 100%;">В Корзину
+                        </button>
                     @else
                         <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
                     @endif
@@ -114,11 +121,13 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header py-3" id="headingOne">
                                 <button class="accordion-button"
-                                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                        aria-expanded="true" aria-controls="collapseOne">
                                     Описание товара
                                 </button>
                             </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <div class="fs-5 fw-bold">{{ $product['name'] }}</div>
                                     {!! $product['description'] !!}
@@ -134,7 +143,8 @@
                                     Детали товара
                                 </button>
                             </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                 data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <ul>
                                         @foreach($productAttributes['Основные характеристики'] as $attr)
@@ -146,53 +156,53 @@
                                 </div>
                             </div>
                         </div>
-                </div>
+                    </div>
                 </div>
 
 
                 <div class="mt-3">
-                    <a href="{{ route('shop.category.view', $product['category']['slug']) }}">Все товары из {{ $product['category']['name'] }}</a>
+                    <a href="{{ route('shop.category.view', $product['category']['slug']) }}">Все товары
+                        из {{ $product['category']['name'] }}</a>
                 </div>
                 <div class="mt-3">
-                    {!! ''; //TODO livewire для Избранного @if(!is_null($user))  !!}
+                    <button class="to-wish ps-0" data-bs-toggle="modal" data-bs-target="#login-popup"
+                            type="button"
+                            onclick="event.preventDefault();">
+                        <i class="fa-light fa-heart" type="button" title="В Избранное"></i> Добавить в избранное
+                    </button>
+                </div>
 
-                        <button class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
-                                type="button"
-                                onclick="event.preventDefault();">
-                            <i class="fa-light fa-heart" type="button" title="В Избранное"></i> Добавить в избранное
-                        </button>
             </div>
-
         </div>
-    </div>
 
-    <!--div class="product-video">
-        Видео товара
-    </div>
-
-    <div class="product-info-block">
-        Инфо блоки
-    </div>
-
-    <div class="recently">
-        Вы смотрели
-    </div>
-
-    <div id="reviews" class="product-review">
-        Отзывы и рейтинг
-    </div-->
-
-
-    <div class="offcanvas offcanvas-end overflow-auto" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Таблица размеров</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+        <!--div class="product-video">
+            Видео товара
         </div>
-        <div class="offcanvas-body">
-            <livewire:n-b-russia.table-sizes :category_id="$product['category']['id']"/>
 
+        <div class="product-info-block">
+            Инфо блоки
         </div>
-    </div>
+
+        <div class="recently">
+            Вы смотрели
+        </div>
+
+        <div id="reviews" class="product-review">
+            Отзывы и рейтинг
+        </div-->
+
+
+        <div class="offcanvas offcanvas-end overflow-auto" tabindex="-1" id="offcanvasExample"
+             aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Таблица размеров</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+            </div>
+            <div class="offcanvas-body">
+                <livewire:n-b-russia.table-sizes :category_id="$product['category']['id']"/>
+
+            </div>
+        </div>
 
     {!! $schema->ProductPage($product) !!}
 @endsection

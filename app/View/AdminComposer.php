@@ -74,7 +74,7 @@ class AdminComposer
                // $view->with('config', config('shop.frontend'));
               //  $city = 'Россия';
 
-                //$view->with('url_page', request()->url());
+                $view->with('url_page', request()->url());
                 //$view->with('city', $city);
 
             }

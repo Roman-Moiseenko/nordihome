@@ -149,7 +149,10 @@ class ViewRepository
 
     public function page($slug)
     {
-        $page = $this->slugs->PageBySlug($slug); // Page::where('slug', $slug)->where('published', true)->firstOrFail();
+        $page = $this->slugs->PageBySlug($slug);
+
+        \Log::info('PageBySlug ' .$slug);
+        // Page::where('slug', $slug)->where('published', true)->firstOrFail();
         if (is_null($page)) abort(404, 'Страница не найдена');
         return $page->view();
     }
