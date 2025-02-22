@@ -36,7 +36,7 @@ class NotificationOrderNew
         SendSystemMail::dispatch($event->order->user, new OrderNew($event->order), Order::class, $event->order->id);
         $_items = '';
         foreach ($event->order->items as $item) {
-            $_items .= '\n' . $item->product->name . ' ' . $item->quantity . ' шт';
+            $_items .= "\n" . $item->product->name . ' ' . $item->quantity . " шт";
         }
         //Mail::to($event->order->user->email)->queue(new OrderNew($event->order));
 
@@ -46,8 +46,8 @@ class NotificationOrderNew
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
-                NotificationHelper::EVENT_ORDER_CONFIRM,
-                'Новый заказ ' . $_items,
+                NotificationHelper::EVENT_NEW_ORDER,
+                "Новый заказ " . $_items,
                 '',
             $params,
             ));

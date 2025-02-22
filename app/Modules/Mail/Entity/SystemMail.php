@@ -34,6 +34,8 @@ class SystemMail extends Model
     protected $attributes = [
         'attachments' => '{}',
         'emails' => '{}',
+        'systemable_id' => null,
+        'systemable_type' => null,
     ];
     protected $casts = [
         'created_at' => 'datetime',
