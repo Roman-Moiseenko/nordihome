@@ -4,14 +4,10 @@ declare(strict_types=1);
 namespace App\View;
 
 use App\Modules\Base\Helpers\AdminMenu;
-use App\Modules\Base\Helpers\AdminProfileMenu;
-use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Repository\ShopRepository;
-use App\Modules\Shop\Schema;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class AdminComposer
@@ -29,7 +25,6 @@ class AdminComposer
 
     public function compose(View $view): void
     {
-
         if (!is_null(request()->route())) {
             $pageName = request()->route()->getName();
             if ($pageName == null) {
@@ -39,14 +34,8 @@ class AdminComposer
             }
             $activeMenu = $this->activeMenu($pageName, $layout);
             if ($layout == 'admin') {
-                $admin = Auth::guard('admin')->user();
-
-           //     $view->with('sideMenu', AdminMenu::menu());
-           //     $view->with('profileMenu', AdminProfileMenu::menu());
-            //    $view->with('firstLevelActiveIndex', $activeMenu['first_level_active_index']);
-            //    $view->with('secondLevelActiveIndex', $activeMenu['second_level_active_index']);
-             //   $view->with('thirdLevelActiveIndex', $activeMenu['third_level_active_index']);
-                $view->with('admin', $admin);
+               // $admin = Auth::guard('admin')->user();
+              //  $view->with('admin', $admin);
             } elseif($layout == 'livewire') {
                 //
             } else {

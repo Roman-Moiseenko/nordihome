@@ -1,5 +1,5 @@
 <div class="button-contacts">
-    <button id="menu-contacts" ><i class="fa-light fa-align-center"></i></button>
+    <button id="menu-contacts"  aria-label="контакты"><i class="fa-light fa-align-center"></i></button>
     <div id="list-contacts" class="list hidden">
         @foreach(\App\Modules\NBRussia\Helper\MenuHelper::getMenuContacts() as $item)
             <div class="ms-2">
