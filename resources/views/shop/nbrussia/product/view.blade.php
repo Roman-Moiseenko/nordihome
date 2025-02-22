@@ -108,9 +108,11 @@
                         <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
                     @endif
                 </div>
-                <div class="mt-3 fs-7 fw-bold">Бесплатная доставка по России</div>
-                <div class="fs-7 fw-bold">до 30 дней бесплатного возврата*</div>
-
+                <div class="mt-3 fs-6 fw-bold"><span style="color: var(--bs-secondary-700)">Бесплатная</span> доставка по России</div>
+                <!--div class="fs-7 fw-bold">до 7 дней бесплатного возврата*</div-->
+                <div class="mt-3">
+                    <img src="{{ url('/images/true-sign-text-100.jpg') }}" alt="Маркировка Честный знак" style="height: 60px;"/>
+                </div>
                 <div class="description">
                     <div class="accordion" id="accordionExample">
                         <div class="accordion-item">
