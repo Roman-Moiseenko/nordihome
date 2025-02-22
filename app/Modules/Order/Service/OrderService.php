@@ -21,6 +21,10 @@ use App\Modules\Discount\Service\CouponService;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Mail\Job\SendSystemMail;
 use App\Modules\Mail\Mailable\OrderAwaitingMail;
+use App\Modules\Notification\Events\TelegramHasReceived;
+use App\Modules\Notification\Helpers\NotificationHelper;
+use App\Modules\Notification\Helpers\TelegramParams;
+use App\Modules\Notification\Message\StaffMessage;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
@@ -1023,7 +1027,29 @@ class OrderService
         $order->save();
     }
 
+    public function handle(TelegramHasReceived $event): void
+    {
+        if ($event->operation == TelegramParams::OPERATION_ORDER_TAKE) {
+            $order = Order::find($event->id);
+            try {
+                $order->setManager($event->user->id);
+                $event->user->notify(
+                    new StaffMessage(
+                        NotificationHelper::EVENT_INFO,
+                        'Принято!'
+                    )
+                );
+            } catch (\DomainException $e) {
+                $event->user->notify(
+                    new StaffMessage(
+                        NotificationHelper::EVENT_ERROR,
+                        $e->getMessage()
+                    )
+                );
+            }
 
+        }
+    }
 
 
 }

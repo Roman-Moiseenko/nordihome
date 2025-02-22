@@ -72,6 +72,7 @@ use App\Modules\Order\Events\ExpenseHasCompleted;
 use App\Modules\Order\Listeners\UserMailExpenseCompleted;
 use App\Modules\Order\Listeners\UserWriteReview;
 use App\Modules\Order\Service\ExpenseService;
+use App\Modules\Order\Service\OrderService;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Notifications\Events\NotificationSending;
 
@@ -89,7 +90,7 @@ class EventServiceProvider extends ServiceProvider
             DeliveryService::class, //Сбор? и доставка Заказа
             NotificationService::class, //Подтверждение уведомления
             //CalendarService::class, //Подтверждение записи
-            //OrderService::class, //Взятие в работу заказ
+            OrderService::class, //Взятие в работу заказ
             /**
              * Добавляем классы, которые обрабатывают подтверждения из Телеграм.
              */

@@ -11,6 +11,7 @@ use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
+use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Shop\CartItemInterface;
@@ -95,5 +96,8 @@ class DeliveryService
             $this->expenseService->completed($expense);
         }
     }
+    public function handle(TelegramHasReceived $event): void
+    {
 
+    }
 }

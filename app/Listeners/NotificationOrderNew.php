@@ -47,7 +47,7 @@ class NotificationOrderNew
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
                 NotificationHelper::EVENT_NEW_ORDER,
-                "Новый заказ " . $_items,
+                "Список товаров " . $_items,
                 '',
             $params,
             ));
