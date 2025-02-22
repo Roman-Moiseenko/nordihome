@@ -24,6 +24,8 @@ $font-sizes: (
 
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 @import './resources/sass/fontawesome/scss/fontawesome.scss';
+@import "common";
+
 @import "nordihome/shop-l-classes";
 @import "nordihome/element";
 @import "nordihome/menu";
