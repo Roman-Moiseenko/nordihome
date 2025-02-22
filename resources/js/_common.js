@@ -7,10 +7,12 @@ sessionStorage.setItem("time", -(new Date().getTimezoneOffset()));
 
 
 //Запрашиваем csrf-token
-
+console.log('1')
 let csrfMeta = $('meta[name="csrf-token"]')
 if (csrfMeta.length) {
+    console.log(csrfMeta)
     $.post('/csrf-token', {}, function (data) {
+        console.log('data', data)
         csrfMeta.attr('content', data)
         $.ajaxSetup({
             headers: {

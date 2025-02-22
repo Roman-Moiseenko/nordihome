@@ -103,6 +103,8 @@ class OrderService
     public function create_cart(Request $request): void
     {
         DB::transaction(function () use ($request) {
+            $items = $this->cart->getItems();
+            if (count($items) == 0) throw new \DomainException('Нет товаров в корзине!');
             $email = $request->string('email')->trim()->value();
             $phone = phoneToDB($request->string('phone')->trim()->value());
             $fullname = $request->string('fullname')->trim()->value();
@@ -123,7 +125,7 @@ class OrderService
             $user->save();
 
             $order = $this->createOrder($user->id);
-            $items = $this->cart->getItems();
+
             foreach ($items as $item) {
                 if ($item->check) $this->addProduct($order, $item->product->id, $item->quantity);
             }

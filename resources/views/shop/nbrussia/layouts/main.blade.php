@@ -47,6 +47,8 @@
     <!-- Scripts -->
     @vite(['resources/sass/nbrussia.scss', 'resources/js/nbrussia.js'])
     @stack('styles')
+
+    <livewire:shop.c-s-r-f />
 </head>
 <body class="@yield('body')">
 @include('shop.nbrussia.header')
