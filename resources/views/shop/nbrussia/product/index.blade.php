@@ -2,14 +2,10 @@
 
 @section('body', 'products')
 @section('main', 'container-xl products-page')
-@section('title')
-    @if(empty($title))
-        {{ $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ★★★ Оригинал Нью Баланс' .
-        $web->title_city . ' ☎ ' . $web->title_contact }}
-    @else
-        {{ $title }}
-    @endif
-@endsection
+@section('title', empty($title) ? ($category->parent->name . ' ' . $category->name . ' купить по цене от ' . $minPrice .
+    '₽ ☛ Низкие цены ☛ Большой выбор ☛ Бесплатная доставка по всей России ★★★ Интернет-магазин ★★★ Оригинал Нью Баланс ☛ Честный знак' .
+    $web->title_city . ' ☎ ' . $web->title_contact) : $title)
+
 @section('description', $description)
 @section('content')
 
