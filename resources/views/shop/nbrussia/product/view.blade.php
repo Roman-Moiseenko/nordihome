@@ -201,5 +201,5 @@
             </div>
         </div>
 
-    {!! $schema->ProductPage($product) !!}
+    {!! $schema !!}
 @endsection

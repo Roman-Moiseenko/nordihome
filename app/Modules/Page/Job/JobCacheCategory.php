@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Job;
 
+use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Mail\Mailable\OutboxMail;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Repository\SettingRepository;
@@ -32,12 +33,12 @@ class JobCacheCategory implements ShouldQueue
     public function handle(CacheRepository $cacheRepository): void
     {
         try {
-            Cache::forget('category-' . $this->slug . '-' . $this->page);
-            Cache::forget('category-' . $this->slug . '-0');
-            Cache::forget('category-' . $this->slug . '-1');
-            Cache::forget('category-' . $this->slug);
-            Cache::forget('category-schema-' . $this->slug);
-            Cache::forget('category-attributes-' . $this->slug);
+         //   Cache::forget('category-' . $this->slug . '-' . $this->page);
+         //   Cache::forget('category-' . $this->slug . '-0');
+         //   Cache::forget('category-' . $this->slug . '-1');
+          //  Cache::forget('category-' . $this->slug);
+            Cache::forget(CacheHelper::CATEGORY_SCHEMA . $this->slug);
+            Cache::forget(CacheHelper::CATEGORY_ATTRIBUTES . $this->slug);
             $cacheRepository->category(['page' => $this->page], $this->slug);
 
         } catch (\Throwable $e) {

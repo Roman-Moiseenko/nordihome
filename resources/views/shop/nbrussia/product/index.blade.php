@@ -102,6 +102,6 @@
         });
     </script>
 
-        {!! ''; // $schema->CategoryProductsPage($category) !!}
+    {!! $schema !!}
 
 @endsection

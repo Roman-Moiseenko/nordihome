@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop;
 
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
@@ -39,7 +40,7 @@ class Schema
 
         $callback = fn() => $this->html($schema1) . PHP_EOL . $this->html($schema2);
         if ($this->web->is_cache) {
-            return Cache::rememberForever('product-scheme-' . $product['slug'], $callback);
+            return Cache::rememberForever(CacheHelper::PRODUCT_SCHEMA . $product['slug'], $callback);
         } else {
             return $callback();
         }
@@ -65,7 +66,7 @@ class Schema
         $schema = $this->_Products($category);
         $callback = fn() => $this->html($schema);
         if ($this->web->is_cache) {
-            return Cache::rememberForever('category-schema-' . $category->slug, $callback);
+            return Cache::rememberForever(CacheHelper::CATEGORY_SCHEMA . $category->slug, $callback);
         } else {
             return $callback();
         }

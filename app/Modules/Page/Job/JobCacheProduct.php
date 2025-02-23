@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Job;
 
+use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Mail\Mailable\OutboxMail;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Repository\SettingRepository;
@@ -32,11 +33,11 @@ class JobCacheProduct implements ShouldQueue
     {
         try {
             $product = Product::find($this->product_id);
-            Cache::forget('product-card-' . $product->slug);
-            Cache::forget('product-schema-' . $product->slug);
-            Cache::forget('product-view-' . $product->slug);
-            Cache::forget('product-' . $product->slug);
-            //TODO Кеш страницы
+            Cache::forget(CacheHelper::PRODUCT_CARD . $product->slug);
+            Cache::forget(CacheHelper::PRODUCT_SCHEMA . $product->slug);
+            Cache::forget(CacheHelper::PRODUCT_VIEW . $product->slug);
+            //Cache::forget('product-' . $product->slug);
+
             $cacheRepository->product($product->slug);
         } catch (\Throwable $e) {
             Log::error(json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));

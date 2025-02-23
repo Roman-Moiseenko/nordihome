@@ -19,10 +19,11 @@ class ViewRepository
     private SlugRepository $slugs;
     protected string $theme;
     public Web $web;
+    private Schema $schema;
 
 
     public function __construct(ShopRepository $repository,
-                                SlugRepository $slugs)
+                                SlugRepository $slugs, Schema $schema)
     {
         $this->repository = $repository;
         $this->slugs = $slugs;
@@ -30,6 +31,7 @@ class ViewRepository
         $this->web = $settings->web;
         $this->theme = config('shop.theme'); // $options->shop->theme;
 
+        $this->schema = $schema;
     }
 
     public function product(string $slug): string
@@ -37,7 +39,7 @@ class ViewRepository
      //   $categories = $this->categories_cache();
     //    $trees = $this->trees_cache();
 
-        $schema = new Schema();
+
         $url_page = route('shop.product.view', $slug);
 
         $product = $this->slugs->getProductBySlug($slug);
@@ -53,7 +55,7 @@ class ViewRepository
         } else {
             $product = $this->repository->ProductToArrayView($product);
         }
-
+        $schema = $this->schema->ProductPage($product);
         return view($this->route('product.view'),
             compact('product', 'title', 'description', 'productAttributes', 'schema', 'url_page'))->render();
     }
@@ -63,12 +65,15 @@ class ViewRepository
     {
       //  $categories = $this->categories_cache();
       //  $trees = $this->trees_cache();
-        $schema = new Schema();
+
         $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
         if (is_null($category)) return abort(404);
         $title = $category->title;
         $description = $category->description;
+
+        $schema = $this->schema->CategoryProductsPage($category);
+
         if ($this->web->is_category && count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
             return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description', 'url_page'))->render();
@@ -115,7 +120,6 @@ class ViewRepository
         } else {
             $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
         }
-
 
         $tags = $this->repository->TagsByProducts($product_ids);  //0.0015 сек
         $tag_id = $request['tag_id'] ?? null;
@@ -166,21 +170,21 @@ class ViewRepository
 
     private function product_card_cache(Product $product)
     {
-        return Cache::rememberForever('product-card-' . $product->id, function () use ($product) {
+        return Cache::rememberForever(CacheHelper::PRODUCT_CARD . $product->id, function () use ($product) {
             return $this->repository->ProductToArrayCard($product);
         });
     }
 
     private function product_view_cache(Product $product)
     {
-        return Cache::rememberForever('product-view-' . $product->id, function () use ($product) {
+        return Cache::rememberForever(CacheHelper::PRODUCT_VIEW . $product->id, function () use ($product) {
             return $this->repository->ProductToArrayView($product);
         });
     }
 
     private function category_attributes_cache(Category $category, array $product_ids)
     {
-        return Cache::rememberForever('category-attributes-' . $category->slug, function () use ($category, $product_ids) {
+        return Cache::rememberForever(CacheHelper::CATEGORY_ATTRIBUTES . $category->slug, function () use ($category, $product_ids) {
             return $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids); //0.02 секунды
         });
     }
@@ -198,4 +202,6 @@ class ViewRepository
             return $this->repository->getTree();
         });
     }
+
+
 }
