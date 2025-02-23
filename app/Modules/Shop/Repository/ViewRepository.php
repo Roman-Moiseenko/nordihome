@@ -36,26 +36,16 @@ class ViewRepository
 
     public function product(string $slug): string
     {
-     //   $categories = $this->categories_cache();
-    //    $trees = $this->trees_cache();
-
-
         $url_page = route('shop.product.view', $slug);
 
         $product = $this->slugs->getProductBySlug($slug);
         if (empty($product) || !$product->isPublished()) abort(404);
-        $name = is_null($product->modification()) ? $product->name : $product->modification->name;
-        //TODO Перенести во view !!!
-        $title = ''; //$name . ' купить по цене ' . $product->getPrice() . '₽ ☛ Доставка по всей России ★★★ Интернет-магазин  ★★★ Оригинал Нью Баланс';
-        $description = ''; //'Оригинальный ' . $name . ' из Европы. Бесплатная доставка по всей России. Только брендовая одежда и обувь. Гарантия качества. Маркировка Честный знак';
+        $title = '';
+        $description = '';
 
         $productAttributes = $this->repository->getProdAttributes($product);
-        if ($this->web->is_cache) {
-            $product = $this->product_view_cache($product);
-        } else {
-            $product = $this->repository->ProductToArrayView($product);
-        }
-        $schema = $this->schema->ProductPage($product);
+        $product = $this->product_view_cache($product);
+        $schema = $this->schema_category_product($product);
         return view($this->route('product.view'),
             compact('product', 'title', 'description', 'productAttributes', 'schema', 'url_page'))->render();
     }
@@ -63,17 +53,12 @@ class ViewRepository
 
     public function category(array $request, string $slug)
     {
-      //  $categories = $this->categories_cache();
-      //  $trees = $this->trees_cache();
-
         $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
         if (is_null($category)) return abort(404);
         $title = $category->title;
         $description = $category->description;
-
-        $schema = $this->schema->CategoryProductsPage($category);
-
+        $schema = $this->schema_category_cache($category);
         if ($this->web->is_category && count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
             return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description', 'url_page'))->render();
@@ -113,49 +98,35 @@ class ViewRepository
                     'image' => $product->brand->getImage(),
                 ];
         }
-
         $product_ids = $products->pluck('id')->toArray();
-        if ($this->web->is_cache) {
-            $prod_attributes = $this->category_attributes_cache($category, $product_ids);
-        } else {
-            $prod_attributes = $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids);
-        }
-
+        $prod_attributes = $this->category_attributes_cache($category, $product_ids);
         $tags = $this->repository->TagsByProducts($product_ids);  //0.0015 сек
         $tag_id = $request['tag_id'] ?? null;
         $order = $request['order'] ?? 'name';
         $query = $this->repository->filter($request, $product_ids); //0.0015 сек
         $count_in_category = $query->count();
-
         $products = $query->paginate($this->web->paginate);
-    //   if (empty($category->title)) {
-            //TODO Перенести во view !!!
-     //       $title = $category->name . ' купить по цене от ' . $minPrice . '₽ ☛ Низкие цены ☛ Большой выбор ☛ Доставка по всей России ★★★ Интернет-магазин ★★★ Оригинал Нью Баланс' .
-      //          $this->web->title_city . ' ☎ ' . $this->web->title_contact;
-      //  } else {
-            $title = $category->title;
-        //}
+        $title = $category->title;
 
         $products = $products->withQueryString()
-            ->through(function (Product $product) {
-                if ($this->web->is_cache) {
-                    return $this->product_card_cache($product);
-                } else {
-                    return $this->repository->ProductToArrayCard($product);
-                }
-
-            });
-        return view($this->route('product.index'),
-            compact('category', 'products', 'prod_attributes', 'tags',
-                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                'order', 'children', 'count_in_category', 'schema', 'url_page'))->render();
+            ->through(fn(Product $product) => $this->product_card_cache($product));
+        return view(
+            $this->route('product.index'),
+            array_merge(
+                compact('category', 'products', 'prod_attributes', 'tags',
+                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
+                    'order', 'children', 'count_in_category', 'schema', 'url_page'),
+                [
+                    'web' => $this->web,
+                ]))
+            ->render();
     }
 
     public function page($slug)
     {
         $page = $this->slugs->PageBySlug($slug);
 
-        \Log::info('PageBySlug ' .$slug);
+        \Log::info('PageBySlug ' . $slug);
         // Page::where('slug', $slug)->where('published', true)->firstOrFail();
         if (is_null($page)) abort(404, 'Страница не найдена');
         return $page->view();
@@ -170,23 +141,35 @@ class ViewRepository
 
     private function product_card_cache(Product $product)
     {
-        return Cache::rememberForever(CacheHelper::PRODUCT_CARD . $product->id, function () use ($product) {
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::PRODUCT_CARD . $product->id, function () use ($product) {
+                return $this->repository->ProductToArrayCard($product);
+            });
+        } else {
             return $this->repository->ProductToArrayCard($product);
-        });
+        }
     }
 
     private function product_view_cache(Product $product)
     {
-        return Cache::rememberForever(CacheHelper::PRODUCT_VIEW . $product->id, function () use ($product) {
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::PRODUCT_VIEW . $product->id, function () use ($product) {
+                return $this->repository->ProductToArrayView($product);
+            });
+        } else {
             return $this->repository->ProductToArrayView($product);
-        });
+        }
     }
 
     private function category_attributes_cache(Category $category, array $product_ids)
     {
-        return Cache::rememberForever(CacheHelper::CATEGORY_ATTRIBUTES . $category->slug, function () use ($category, $product_ids) {
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::CATEGORY_ATTRIBUTES . $category->slug, function () use ($category, $product_ids) {
+                return $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids); //0.02 секунды
+            });
+        } else {
             return $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids); //0.02 секунды
-        });
+        }
     }
 
     private function categories_cache()
@@ -201,6 +184,22 @@ class ViewRepository
         return Cache::rememberForever(CacheHelper::MENU_TREES, function () {
             return $this->repository->getTree();
         });
+    }
+
+    private function schema_category_cache(Category $category)
+    {
+
+    }
+
+    private function schema_category_product(mixed $product)
+    {
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::PRODUCT_SCHEMA . $product->slug, function () use ($product) {
+                return $this->schema->ProductPage($product);
+            });
+        } else {
+            return $this->schema->ProductPage($product);
+        }
     }
 
 

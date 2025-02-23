@@ -18,13 +18,10 @@ use Illuminate\Support\Facades\Cache;
 class Schema
 {
     private string $url;
-    private Web $web;
 
     public function __construct()
     {
         $this->url = route('shop.home');
-        $settings = app()->make(Settings::class);
-        $this->web = $settings->web;
     }
 
     public function ProductPage(array $product)
@@ -37,13 +34,8 @@ class Schema
 
         $schema2 = $this->_Product($product);
 
+        return $this->html($schema1) . PHP_EOL . $this->html($schema2);
 
-        $callback = fn() => $this->html($schema1) . PHP_EOL . $this->html($schema2);
-        if ($this->web->is_cache) {
-            return Cache::rememberForever(CacheHelper::PRODUCT_SCHEMA . $product['slug'], $callback);
-        } else {
-            return $callback();
-        }
     }
 
     public function HomePage()
@@ -61,15 +53,10 @@ class Schema
         return $this->html($schema);
     }
 
-    public function CategoryProductsPage(Category $category)
+    public function CategoryProductsPage(Category $category): string
     {
         $schema = $this->_Products($category);
-        $callback = fn() => $this->html($schema);
-        if ($this->web->is_cache) {
-            return Cache::rememberForever(CacheHelper::CATEGORY_SCHEMA . $category->slug, $callback);
-        } else {
-            return $callback();
-        }
+        return $this->html($schema);
     }
 
 
@@ -398,7 +385,7 @@ class Schema
         return $this->_CollectionPage($list, $category);
     }
 
-    private function _Products(Category $category)
+    private function _Products(Category $category): array
     {
         $list = array_map(function (Product $product) {
             return [
@@ -417,7 +404,9 @@ class Schema
                 ],
             ];
         },
-            $category->products()->where('published', true)->getModels()
+            $category->products()->where('published', true)->where(function ($query) {
+                $query->doesntHave('modification')->orHas('main_modification');
+            })->getModels()
         );
         return $this->_CollectionPage($list, $category);
     }
