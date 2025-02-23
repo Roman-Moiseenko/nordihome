@@ -188,13 +188,19 @@ class ViewRepository
 
     private function schema_category_cache(Category $category)
     {
-
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::CATEGORY_SCHEMA . $category->slug, function () use ($category) {
+                return $this->schema->CategoryProductsPage($category);
+            });
+        } else {
+            return $this->schema->CategoryProductsPage($category);
+        }
     }
 
     private function schema_category_product(mixed $product)
     {
         if ($this->web->is_cache) {
-            return Cache::rememberForever(CacheHelper::PRODUCT_SCHEMA . $product->slug, function () use ($product) {
+            return Cache::rememberForever(CacheHelper::PRODUCT_SCHEMA . $product['slug'], function () use ($product) {
                 return $this->schema->ProductPage($product);
             });
         } else {
