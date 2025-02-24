@@ -21,7 +21,7 @@
         position: fixed;
         display: flex;
         right: 180px;
-        bottom: 8px;
+        bottom: 0;
         z-index: 99999;
         >div {
             >a {
@@ -48,7 +48,7 @@
         >.list {
             right: unset;
             left: 65px;
-            bottom: 65px;
+          //  bottom: 65px;
             z-index: 99999;
             >div {
                 >a {
