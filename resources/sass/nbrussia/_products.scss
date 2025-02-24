@@ -97,6 +97,12 @@
         .base-filter {
             border-bottom: 1px solid var(--bs-gray-400);
             padding: 12px;
+            .children {
+                a.active {
+                    color: var(--bs-gray-600);
+                    font-weight: 600;
+                }
+            }
         }
 
         .attribute-filter {

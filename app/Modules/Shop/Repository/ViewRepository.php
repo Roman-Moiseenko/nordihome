@@ -34,7 +34,7 @@ class ViewRepository
         $this->schema = $schema;
     }
 
-    public function product(string $slug): string
+    public function product(string $slug)
     {
         $url_page = route('shop.product.view', $slug);
 
@@ -47,9 +47,82 @@ class ViewRepository
         $product = $this->product_view_cache($product);
         $schema = $this->schema_category_product($product);
         return view($this->route('product.view'),
-            compact('product', 'title', 'description', 'productAttributes', 'schema', 'url_page'))->render();
+            compact('product', 'title', 'description', 'productAttributes', 'schema', 'url_page'));
     }
 
+    public function root(array $request)
+    {
+        $url_page = route('shop.category.index');
+        $title = $this->web->categories_title;
+        $description = $this->web->categories_desc;
+        $schema = '';
+        if ($this->web->is_category ) {
+            $categories = $this->repository->getChildren();
+            return view($this->route('catalog'), compact( 'title', 'description', 'categories', 'url_page'));
+        }
+        $minPrice = 10;
+        $maxPrice = 999999999;
+        $brands = [];
+        $children = Category::defaultOrder()->where('parent_id', null)->get()->map(function (Category $category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+            ];
+        });
+        $products = $this->repository->ProductsByCategory();
+        $in_stock = isset($request['in_stock']);
+        //Убираем из коллекции товары, которые не продаем под заказ
+        $products = $products->reject(function (Product $product) use ($in_stock) {
+            return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
+        });
+
+        /** @var Product $product */
+        foreach ($products as $i => $product) {
+            $_price_product = $product->getPrice();
+            if ($i == 0) {
+                $minPrice = $_price_product;
+                $maxPrice = $_price_product;
+            } else {
+                if ($_price_product < $minPrice) $minPrice = $_price_product;
+                if ($_price_product > $maxPrice) $maxPrice = $_price_product;
+            }
+            if (!isset($brands[$product->brand->id]))
+                $brands[$product->brand->id] = [
+                    'name' => $product->brand->name,
+                    'image' => $product->brand->getImage(),
+                ];
+        }
+        $product_ids = $products->pluck('id')->toArray();
+        $_prod_attributes = [];
+        foreach (Category::where('parent_id', null)->get() as $category) {
+            $_prod_attributes = array_merge($_prod_attributes, $this->category_attributes_cache($category, $product_ids));
+        }
+        $prod_attributes = [];
+        foreach ($_prod_attributes as $item) {
+            $prod_attributes[$item['id']] = $item;
+        }
+
+        $tags = $this->repository->TagsByProducts($product_ids);  //0.0015 сек
+        $tag_id = $request['tag_id'] ?? null;
+        $order = $request['order'] ?? 'name';
+        $query = $this->repository->filter($request, $product_ids); //0.0015 сек
+        $count_in_category = $query->count();
+        $products = $query->paginate($this->web->paginate);
+        $title = $category->title;
+
+        $products = $products->withQueryString()
+            ->through(fn(Product $product) => $this->product_card_cache($product));
+        return view(
+            $this->route('product.index'),
+            array_merge(
+                compact( 'products', 'prod_attributes', 'tags',
+                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
+                    'order', 'children', 'count_in_category', 'schema', 'url_page'),
+                [
+                    'web' => $this->web,
+                ]));
+    }
 
     public function category(array $request, string $slug)
     {
@@ -61,13 +134,19 @@ class ViewRepository
         $schema = $this->schema_category_cache($category);
         if ($this->web->is_category && count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
-            return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description', 'url_page'))->render();
+            return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description', 'url_page'));
         }
 
         $minPrice = 10;
         $maxPrice = 999999999;
         $brands = [];
-        $children = $category->children()->defaultOrder()->get()->map(function (Category $category) {
+        if ($category->children()->count() == 0) {
+            $_category = $category->parent;
+        } else {
+            $_category = $category;
+        }
+
+        $children = $_category->children()->defaultOrder()->get()->map(function (Category $category) {
             return [
                 'id' => $category->id,
                 'name' => $category->name,
@@ -99,6 +178,7 @@ class ViewRepository
                 ];
         }
         $product_ids = $products->pluck('id')->toArray();
+
         $prod_attributes = $this->category_attributes_cache($category, $product_ids);
         $tags = $this->repository->TagsByProducts($product_ids);  //0.0015 сек
         $tag_id = $request['tag_id'] ?? null;
@@ -118,8 +198,7 @@ class ViewRepository
                     'order', 'children', 'count_in_category', 'schema', 'url_page'),
                 [
                     'web' => $this->web,
-                ]))
-            ->render();
+                ]));
     }
 
     public function page($slug)
@@ -165,10 +244,10 @@ class ViewRepository
     {
         if ($this->web->is_cache) {
             return Cache::rememberForever(CacheHelper::CATEGORY_ATTRIBUTES . $category->slug, function () use ($category, $product_ids) {
-                return $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids); //0.02 секунды
+                return $this->repository->AttributeCommon(array_merge($category->getParentIdAll(), $category->getChildrenIdAll()), $product_ids); //0.02 секунды
             });
         } else {
-            return $this->repository->AttributeCommon($category->getParentIdAll(), $product_ids); //0.02 секунды
+            return $this->repository->AttributeCommon(array_merge($category->getParentIdAll(), $category->getChildrenIdAll()), $product_ids); //0.02 секунды
         }
     }
 

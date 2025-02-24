@@ -218,10 +218,16 @@ class ShopRepository
             return $query->get();
         }
     */
-    public function ProductsByCategory(Category $category)
+    public function ProductsByCategory(Category $category = null)
     {
-        $lft = $category->_lft;
-        $rgt = $category->_rgt;
+        if (is_null($category)) {
+            $lft = Category::get()->min('_lft');
+            $rgt = Category::get()->max('_rgt');
+
+        } else {
+            $lft = $category->_lft;
+            $rgt = $category->_rgt;
+        }
 
         $query = Product::where('published', true) //Опубликован AND
         ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND

@@ -2,10 +2,13 @@
 
 @section('body', 'products')
 @section('main', 'container-xl products-page')
-@section('title', empty($title) ? ($category->parent->name . ' ' . $category->name . ' купить по цене от ' . $minPrice .
+@if(isset($category))
+@section('title', empty($title) ? ((is_null($category->parent_id) ? '' : $category->parent->name) . ' ' . $category->name . ' купить по цене от ' . $minPrice .
     '₽ ☛ Низкие цены ☛ Большой выбор ☛ Бесплатная доставка по всей России ★★★ Интернет-магазин ★★★ Оригинал Нью Баланс ☛ Честный знак' .
     $web->title_city . ' ☎ ' . $web->title_contact) : $title)
-
+@else
+    @section('title', $title)
+@endif
 @section('description', $description)
 @section('content')
 
@@ -32,7 +35,7 @@
                 <div class="title-page">
                     <div class="products-page-title">
                         <div class="title">
-                            <h1>{{ $category->name }} </h1>
+                            <h1>{{ isset($category) ? $category->name : 'Каталог' }} </h1>
                             <span>&nbsp;({{ $count_in_category }})</span>
                         </div>
                         <div class="order btn-group">
@@ -55,21 +58,24 @@
                 <div class="box-card top-tags">
                     @foreach($tags as $tag)
                         @if($tag_id == $tag->id)
-                            <a href="{{ route('shop.category.view', [$category->slug]) }}"
+                            <a href="{{ isset($category) ? route('shop.category.view', [$category->slug]) : route('shop.category.index') }}"
                                class="tag-filter active" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
                         @else
-                            <a href="{{ route('shop.category.view', [$category->slug, 'tag_id' => $tag->id]) }}"
+                            <a href="{{ isset($category) ? route('shop.category.view', [$category->slug]) : route('shop.category.index') }}"
                                class="tag-filter" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
                         @endif
                     @endforeach
                 </div>
                 @endif
-                <div class="top-text-category mb-3">
-                    <h2>{{ $category->top_title }}</h2>
-                    <div>
-                        {!! $category->top_description !!}
+                @if(isset($category))
+                    <div class="top-text-category mb-3">
+                        <h2>{{ $category->top_title }}</h2>
+                        <div>
+                            {!! $category->top_description !!}
+                        </div>
                     </div>
-                </div>
+                @endif
+
                 <div class="products">
                     <div class="row">
                     @foreach($products as $product)
@@ -83,10 +89,11 @@
                 <div class="products-page-list--bottom">
                     {{ $products->withPath($url_page)->links('shop.nbrussia.widgets.paginator') }}
                 </div>
-
+                @if(isset($category))
                     <div class="bottom-text-category">
                         {!! $category->bottom_text !!}
                     </div>
+                @endif
 
             </div>
     </div>
