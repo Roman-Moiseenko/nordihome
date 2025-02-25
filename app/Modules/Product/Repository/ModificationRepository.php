@@ -16,7 +16,7 @@ class ModificationRepository
 {
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = Modification::orderBy('name');
+        $query = Modification::orderByDesc('id');
 
         $filters = [];
         if (($name = $request->string('name')->trim()->value()) != '') {

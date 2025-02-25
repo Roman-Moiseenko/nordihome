@@ -4,15 +4,10 @@ declare(strict_types=1);
 namespace App\Modules\Base\Entity;
 
 use App\Jobs\ClearTempFile;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Service\HttpPage;
-use App\Modules\Setting\Entity\Setting;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
-use App\Modules\Setting\Service\SettingService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
@@ -223,48 +218,53 @@ class Photo extends Model
     {
         if (!$this->thumb) return;
         //if (isset($this->imageable->thumbs) && !$this->imageable->thumbs) return;//В связном объекте запрет на кешированные изображения
+        try {
 
-        foreach ($this->thumbs as $params) {
-            $thumb_file = $this->getThumbFile($params['name']);
-            if (is_file($this->getUploadFile()) &&
-                !is_file($thumb_file) &&
-                (in_array($this->ext(), ['jpg', 'png', 'jpeg']))) {
-                $manager = new ImageManager(); //['driver' => 'imagick']
-                $img = $manager->make($this->getUploadFile());
 
-                if (isset($params['width']) && isset($params['height'])) {
-                    if (isset($params['fit']) && $params['fit']) { //Если установлена обрезка фото
-                        $img->fit($params['width'], $params['height']);
-                    } else { //Масштабирование, и заполнение пустот белым
-                        $scale_w = $img->width() / $params['width'];
-                        $scale_h = $img->height() / $params['height'];
-                        $scale = max($scale_w, $scale_h);
-                        $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale));
-                        $img->resizeCanvas($params['width'], $params['height']);
+            foreach ($this->thumbs as $params) {
+                $thumb_file = $this->getThumbFile($params['name']);
+                if (is_file($this->getUploadFile()) &&
+                    !is_file($thumb_file) &&
+                    (in_array($this->ext(), ['jpg', 'png', 'jpeg']))) {
+                    $manager = new ImageManager(); //['driver' => 'imagick']
+                    $img = $manager->make($this->getUploadFile());
+
+                    if (isset($params['width']) && isset($params['height'])) {
+                        if (isset($params['fit']) && $params['fit']) { //Если установлена обрезка фото
+                            $img->fit($params['width'], $params['height']);
+                        } else { //Масштабирование, и заполнение пустот белым
+                            $scale_w = $img->width() / $params['width'];
+                            $scale_h = $img->height() / $params['height'];
+                            $scale = max($scale_w, $scale_h);
+                            $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale));
+                            $img->resizeCanvas($params['width'], $params['height']);
+                        }
                     }
-                }
 
-                if (isset($params['watermark']) && $params['watermark']) {
-                    $watermark = $manager->make(public_path() . $this->settings->image->watermark_file);
-                    $watermark->resize(
-                        (int)($img->width() * $this->settings->image->watermark_size),
-                        (int)($img->width() * $this->settings->image->watermark_size)
-                    );
-                    $img->insert(
-                        $watermark,
-                        $this->settings->image->watermark_position,
-                        $this->settings->image->watermark_offset,
-                        $this->settings->image->watermark_offset
-                    );
-                }
+                    if (isset($params['watermark']) && $params['watermark']) {
+                        $watermark = $manager->make(public_path() . $this->settings->image->watermark_file);
+                        $watermark->resize(
+                            (int)($img->width() * $this->settings->image->watermark_size),
+                            (int)($img->width() * $this->settings->image->watermark_size)
+                        );
+                        $img->insert(
+                            $watermark,
+                            $this->settings->image->watermark_position,
+                            $this->settings->image->watermark_offset,
+                            $this->settings->image->watermark_offset
+                        );
+                    }
 
-                $path = pathinfo($thumb_file, PATHINFO_DIRNAME);
-                if (!file_exists($path)) {
-                    mkdir($path, 0777, true);
+                    $path = pathinfo($thumb_file, PATHINFO_DIRNAME);
+                    if (!file_exists($path)) {
+                        mkdir($path, 0777, true);
+                    }
+                    if ($this->ext() == 'jpg') $img->encode(null, 70);
+                    $img->save($thumb_file);
                 }
-                if ($this->ext() == 'jpg') $img->encode(null, 70);
-                $img->save($thumb_file);
             }
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
         }
     }
 

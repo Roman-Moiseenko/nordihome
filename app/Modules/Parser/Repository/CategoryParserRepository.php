@@ -37,6 +37,7 @@ class CategoryParserRepository
             'category_name' => is_null($category->category) ? null : $category->category->getParentNames(),
             'children' => $this->getTree($category->id),
             'products' => $category->products()->get()->map(function (ProductParser $product) {
+              //  if (is_null($product->product)) dd($product->id);
                 return array_merge($product->toArray(), [
                     'name' => $product->product->name,
                     'code' => $product->product->code,
