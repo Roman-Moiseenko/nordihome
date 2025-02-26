@@ -89,7 +89,7 @@ class SettingRepository
             'common',
             'Общие настройки торговой компании, товарный учет, время резерва товара и т.п.');
 
-        $setting->data = json_encode(new Common([]));
+        $setting->data = new Common([]);
         $setting->save();
         return $setting;
     }
@@ -101,7 +101,7 @@ class SettingRepository
             'coupon',
             'Настройка скидочных купонов - время действия, минимальная сумма, подарочные супоны и др.',
         );
-        $setting->data = json_encode(new Coupon([]));
+        $setting->data = new Coupon([]);
         $setting->save();
         return $setting;
     }
@@ -113,7 +113,7 @@ class SettingRepository
             'parser',
             'Стоимость доставки, прокси данные для парсера, коэффициент доставки и др.',
         );
-        $setting->data = json_encode(new Parser([]));
+        $setting->data = new Parser([]);
         $setting->save();
         return $setting;
     }
@@ -125,7 +125,7 @@ class SettingRepository
             'web',
             'Общие настройки главных цветов, подвала и шапки сайта, логотип, отображения товаров и др.',
         );
-        $setting->data = json_encode(new Web([]));
+        $setting->data = new Web([]);
         $setting->save();
         return $setting;
     }
@@ -137,7 +137,7 @@ class SettingRepository
             'mail',
             'Настройка входящей почты - почтовые ящики (+пароли), с которых необходимо собирать почту, Настройки исходящей и системной почты',
         );
-        $setting->data = json_encode(new Mail([]));
+        $setting->data = new Mail([]);
         $setting->save();
         return $setting;
     }
@@ -149,7 +149,7 @@ class SettingRepository
             'notification',
             'API доступы и ключи к мессенджерам, настройки уведомлений'
         );
-        $setting->data = json_encode(new Notification([]));
+        $setting->data = new Notification([]);
         $setting->save();
         return $setting;
     }
