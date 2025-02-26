@@ -8,6 +8,7 @@ use App\Modules\Notification\Repository\TelegramRepository;
 use App\Modules\Setting\Entity\Notification;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
+use NotificationChannels\Telegram\TelegramMessage;
 use NotificationChannels\Telegram\TelegramUpdates;
 
 class TelegramService
@@ -73,10 +74,8 @@ class TelegramService
         return $this->setCurl($url);
     }
 
-    public function checkOperation(mixed $data)
+    public function checkOperation(mixed $callback)
     {
-        if (!isset($data['callback_query'])) return;
-        $callback = $data['callback_query'];
         $message_id = $callback['message']['message_id'];
         $message = $callback['message']['text'];
         $telegram_user_id = $callback['from']['id'];
@@ -112,5 +111,35 @@ class TelegramService
         $result = curl_exec($curl);
         curl_close($curl);
         return $result;
+    }
+
+    public function getMessage(mixed $message): void
+    {
+        $id = $message['from']['id'];
+        if (isset($message['entities'])) {
+            if ($message['entities'][0]['type'] == 'bot_command') {
+                //TODO Обработка команды от бота
+                $command  = $message['text'];
+
+                \Log::info($command);
+                if ($command == '/help') {
+                    $message = TelegramMessage::create()
+                        ->content('Меню:')
+                        ->button('Доставка и Оплата', 'https://nbrussia.ru/page/delivery')
+                        ->button('Обмен и Возврат', 'https://nbrussia.ru/page/refund')
+                        ->button('Информация', 'https://nbrussia.ru/page/information')
+                        ->button('Как выбрать размер', 'https://nbrussia.ru/page/size');
+
+                    $message->to($id)->send();
+                }
+
+            }
+        } else {
+
+            $message = TelegramMessage::create()
+                ->content('Привет!');;
+            $message->to($id)->send();
+        }
+
     }
 }

@@ -1,0 +1,42 @@
+{
+    "update_id": 819951034,
+    "callback_query": {
+        "id": "5908689078671556804",
+        "from": {
+            "id": 1375723881,
+            "is_bot": false,
+            "first_name": "\u0420\u043e\u043c\u0430\u043d",
+            "username": "Saint_Koenigs",
+            "language_code": "ru"
+        },
+        "message": {
+            "message_id": 11,
+            "from": {
+                "id": 7228807546,
+                "is_bot": true,
+                "first_name": "New Balance",
+                "username": "nbrussia_bot"
+            },
+            "chat": {
+                "id": 1375723881,
+                "first_name": "\u0420\u043e\u043c\u0430\u043d",
+                "username": "Saint_Koenigs",
+                "type": "private"
+            },
+            "date": 1740257043,
+            "text": "\ud83d\udccb \u041d\u043e\u0432\u044b\u0439 \u0437\u0430\u043a\u0430\u0437.\u041d\u043e\u0432\u044b\u0439 \u0437\u0430\u043a\u0430\u0437 Unisex new Balance BB550ESD \u043e\u0431\u0443\u0432\u044c - \u0431\u0435\u043b\u044b\u0439 46.5 1 \u0448\u0442",
+            "reply_markup": {
+                "inline_keyboard": [
+                    [
+                        {
+                            "text": "\u0412\u0437\u044f\u0442\u044c \u0437\u0430\u043a\u0430\u0437",
+                            "callback_data": "{\"operation\":102,\"id\":8}"
+                        }
+                    ]
+                ]
+            }
+        },
+        "chat_instance": "-3490730418261777382",
+        "data": "{\"operation\":102,\"id\":8}"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "update_id": 819951032,
+    "message": {
+        "message_id": 16,
+        "from": {
+            "id": 1375723881,
+            "is_bot": false,
+            "first_name": "\u0420\u043e\u043c\u0430\u043d",
+            "username": "Saint_Koenigs",
+            "language_code": "ru"
+        },
+        "chat": {
+            "id": 1375723881,
+            "first_name": "\u0420\u043e\u043c\u0430\u043d",
+            "username": "Saint_Koenigs",
+            "type": "private"
+        },
+        "date": 1740600071,
+        "text": "\u0412\u043e\u043f\u0440\u043e\u0441"
+    }
+}

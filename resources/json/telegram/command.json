@@ -1,0 +1,28 @@
+{
+    "update_id": 819951033,
+    "message": {
+        "message_id": 17,
+        "from": {
+            "id": 1375723881,
+            "is_bot": false,
+            "first_name": "\u0420\u043e\u043c\u0430\u043d",
+            "username": "Saint_Koenigs",
+            "language_code": "ru"
+        },
+        "chat": {
+            "id": 1375723881,
+            "first_name": "\u0420\u043e\u043c\u0430\u043d",
+            "username": "Saint_Koenigs",
+            "type": "private"
+        },
+        "date": 1740600138,
+        "text": "\/question",
+        "entities": [
+            {
+                "offset": 0,
+                "length": 9,
+                "type": "bot_command"
+            }
+        ]
+    }
+}

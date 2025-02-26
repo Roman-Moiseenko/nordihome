@@ -28,9 +28,10 @@ class TelegramController extends Controller
     public function web_hook(Request $request)
     {
         try {
-            $this->service->checkOperation($request->all());
+            if ($request->has('callback_query')) $this->service->checkOperation($request->input('callback_query'));
+            if ($request->has('message')) $this->service->getMessage($request->input('message'));
         } catch (\Throwable $e) {
-            Log::error($request->all());
+            Log::error(json_encode($request->all()));
             Log::error(json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));
         }
 
