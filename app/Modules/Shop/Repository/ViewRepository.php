@@ -55,6 +55,7 @@ class ViewRepository
         $url_page = route('shop.category.index');
         $title = $this->web->categories_title;
         $description = $this->web->categories_desc;
+
         $schema = '';
         if ($this->web->is_category ) {
             $categories = $this->repository->getChildren();
@@ -109,7 +110,7 @@ class ViewRepository
         $query = $this->repository->filter($request, $product_ids); //0.0015 сек
         $count_in_category = $query->count();
         $products = $query->paginate($this->web->paginate);
-        $title = $category->title;
+
 
         $products = $products->withQueryString()
             ->through(fn(Product $product) => $this->product_card_cache($product));
