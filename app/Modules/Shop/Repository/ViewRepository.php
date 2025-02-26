@@ -55,7 +55,7 @@ class ViewRepository
         $url_page = route('shop.category.index');
         $title = $this->web->categories_title;
         $description = $this->web->categories_desc;
-
+        $page = $request['page'] ?? 1;
         $schema = '';
         if ($this->web->is_category ) {
             $categories = $this->repository->getChildren();
@@ -119,7 +119,7 @@ class ViewRepository
             array_merge(
                 compact( 'products', 'prod_attributes', 'tags',
                     'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                    'order', 'children', 'count_in_category', 'schema', 'url_page'),
+                    'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'),
                 [
                     'web' => $this->web,
                 ]));
@@ -129,6 +129,7 @@ class ViewRepository
     {
         $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
+        $page = $request['page'] ?? 1;
         if (is_null($category)) return abort(404);
         $title = $category->title;
         $description = $category->description;
@@ -196,7 +197,7 @@ class ViewRepository
             array_merge(
                 compact('category', 'products', 'prod_attributes', 'tags',
                     'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                    'order', 'children', 'count_in_category', 'schema', 'url_page'),
+                    'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'),
                 [
                     'web' => $this->web,
                 ]));

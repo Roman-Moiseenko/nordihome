@@ -59,9 +59,8 @@ class CategoryService
         $category->data = $request->string('data')->trim()->value();
 
         $category->save();
-
-        $category->saveImage($request->file('image'), $request->boolean('image_clear'));
-        $category->saveIcon($request->file('icon'), $request->boolean('icon_clear'));
+        $category->saveImage($request->file('image'), $request->boolean('clear_image'));
+        $category->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
 
         $this->clearCache();
     }

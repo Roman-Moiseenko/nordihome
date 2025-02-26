@@ -5,9 +5,9 @@
 @if(isset($category))
 @section('title', empty($title) ? ((is_null($category->parent_id) ? '' : $category->parent->name) . ' ' . $category->name . ' купить по цене от ' . $minPrice .
     '₽ ☛ Низкие цены ☛ Большой выбор ☛ Бесплатная доставка по всей России ★★★ Интернет-магазин ★★★ Оригинал Нью Баланс ☛ Честный знак' .
-    $web->title_city . ' ☎ ' . $web->title_contact) : $title)
+    $web->title_city . ' ☎ ' . $web->title_contact . '. Страница ' . $page) : ($title . '. Страница ' . $page))
 @else
-    @section('title', $title)
+    @section('title', ($title . '. Страница ' . $page))
 @endif
 @section('description', $description)
 @section('content')
