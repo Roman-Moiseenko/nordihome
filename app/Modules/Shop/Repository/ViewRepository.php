@@ -184,8 +184,8 @@ class ViewRepository
         $products = $products->withQueryString()
             ->through(fn(Product $product) => $this->product_card_cache($product));
 
-        $end = now();
-        \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
+      //  $end = now();
+   //     \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
         return view(
             $this->route('product.index'),
             array_merge(

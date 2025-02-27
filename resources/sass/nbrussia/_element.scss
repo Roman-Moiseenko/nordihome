@@ -7,7 +7,7 @@
   transform: translateY(-95%);
  //   bottom: 16px;
     right: 100px;
-    z-index: 999999;
+    z-index: 99;
     >button {
         background: var(--bs-secondary-700);
         border: 1px solid #fff;
@@ -22,7 +22,7 @@
         display: flex;
         right: 180px;
         bottom: 0;
-        z-index: 99999;
+        z-index: 99;
         >div {
             >a {
                 font-size: 3rem;
@@ -49,7 +49,6 @@
             right: unset;
             left: 65px;
           //  bottom: 65px;
-            z-index: 99999;
             >div {
                 >a {
                     font-size: 3rem;

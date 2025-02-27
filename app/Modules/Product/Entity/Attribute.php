@@ -175,7 +175,7 @@ class Attribute extends Model
         foreach ($this->variants as $variant) {
             if ($variant->id == $id) return $variant;
         }
-        throw new \DomainException('(get) Не найден вариант id = ' . $id . ' атрибута ' . $this->name);
+        throw new \DomainException('(get) Не найден вариант id = ' . $id . ' атрибута ' . $this->name );
     }
 
     public function findVariant(string $name): AttributeVariant

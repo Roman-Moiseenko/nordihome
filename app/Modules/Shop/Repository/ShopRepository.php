@@ -529,25 +529,31 @@ class ShopRepository
 
     public function getProdAttributes(Product $product): array
     {
-        $productAttributes = [];
-        foreach ($product->prod_attributes as $attribute) {
-            $value = $attribute->Value();
-            if ($attribute->isVariant()) {
-                //if (!is_array($value)) $value[] = $value;
-                if (is_array($attribute->Value())) {
-                    $value = implode(', ', array_map(function ($id) use ($attribute) {
-                        return $attribute->getVariant((int)$id)->name;
-                    }, $attribute->Value()));
-                } else {
-                    $value = $attribute->getVariant((int)$attribute->Value())->name;
+        try {
+            $productAttributes = [];
+            foreach ($product->prod_attributes as $attribute) {
+                $value = $attribute->Value();
+                if ($attribute->isVariant()) {
+                    //if (!is_array($value)) $value[] = $value;
+                    if (is_array($attribute->Value())) {
+                        $value = implode(', ', array_map(function ($id) use ($attribute) {
+                            return $attribute->getVariant((int)$id)->name;
+                        }, $attribute->Value()));
+                    } else {
+                        $value = $attribute->getVariant((int)$attribute->Value())->name;
+                    }
                 }
+                $productAttributes[$attribute->group->name][] = [
+                    'name' => $attribute->name,
+                    'value' => $value,
+                ];
             }
-            $productAttributes[$attribute->group->name][] = [
-                'name' => $attribute->name,
-                'value' => $value,
-            ];
+            return $productAttributes;
+        } catch (\DomainException $e) {
+            \Log::info('getProdAttributes: ' . $product->code);
+            return [];
         }
-        return $productAttributes;
+
     }
 
 
@@ -575,20 +581,26 @@ class ShopRepository
             ];
         }
 
-        foreach ($modification->products as $product) {
-            if ($product->isSale()) {
-                $values = json_decode($product->pivot->values_json, true);
-                foreach ($values as $attr_id => $variant_id) {
-                    $variant_name = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
-                    $attributes[$attr_id]['products'][$variant_name][] = [
-                        'id' => $product->id,
-                        'name' => $product->name,
-                        'slug' => $product->slug,
-                        'image' => $product->miniImage(),
-                    ];
+        try {
+            foreach ($modification->products as $product) {
+                if ($product->isSale()) {
+                    $values = json_decode($product->pivot->values_json, true);
+                    foreach ($values as $attr_id => $variant_id) {
+                        $variant_name = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
+                        $attributes[$attr_id]['products'][$variant_name][] = [
+                            'id' => $product->id,
+                            'name' => $product->name,
+                            'slug' => $product->slug,
+                            'image' => $product->miniImage(),
+                        ];
+                    }
                 }
             }
+        } catch (\DomainException $e) {
+            \Log::info('ModificationToArray: ' . $modification->name);
         }
+
+
         return $attributes;
     }
 
