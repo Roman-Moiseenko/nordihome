@@ -218,14 +218,15 @@ class Photo extends Model
     {
         if (!$this->thumb) return;
         //if (isset($this->imageable->thumbs) && !$this->imageable->thumbs) return;//В связном объекте запрет на кешированные изображения
-        try {
+     //   try {
 
 
             foreach ($this->thumbs as $params) {
                 $thumb_file = $this->getThumbFile($params['name']);
+
                 if (is_file($this->getUploadFile()) &&
                     !is_file($thumb_file) &&
-                    (in_array($this->ext(), ['jpg', 'png', 'jpeg']))) {
+                    (in_array($this->ext(), ['jpg', 'png', 'jpeg', 'webp']))) {
                     $manager = new ImageManager(); //['driver' => 'imagick']
                     $img = $manager->make($this->getUploadFile());
 
@@ -256,16 +257,18 @@ class Photo extends Model
                     }
 
                     $path = pathinfo($thumb_file, PATHINFO_DIRNAME);
+
                     if (!file_exists($path)) {
                         mkdir($path, 0777, true);
                     }
-                    if ($this->ext() == 'jpg') $img->encode(null, 70);
+                    if ($this->ext() == 'jpg' || $this->ext() == 'webp') $img->encode(null, 70);
                     $img->save($thumb_file);
+
                 }
             }
-        } catch (\Throwable $e) {
-            Log::error($e->getMessage());
-        }
+   //     } catch (\Throwable $e) {
+    //        Log::error($e->getMessage());
+      //  }
     }
 
     private function uploadFile(): void
@@ -326,5 +329,20 @@ class Photo extends Model
             unlink($this->file);
         }
         parent::delete();
+    }
+
+    public function convertToWebp(): void
+    {
+        $file_name = pathinfo($this->file, PATHINFO_FILENAME);
+        $path = $this->catalogUpload . $this->patternGeneratePath();
+
+        $manager = new ImageManager();
+        $image = $manager->make($this->getUploadFile());
+        $encode = $image->encode('webp', 75);
+
+        $encode->save($path . $file_name . '.webp');
+        unlink($path . $this->file);
+        $this->file = $file_name . '.webp';
+        $this->save();
     }
 }
