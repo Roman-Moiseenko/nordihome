@@ -12,6 +12,7 @@ class CacheHelper
     const string CATEGORY_ATTRIBUTES = 'category-attributes-';
     const string CATEGORY_CHILDREN = 'category-children-';
     const string CATEGORY_SCHEMA = 'category-schema-';
+    const string CATEGORY_PRODUCTS = 'category-products-';
 
     const string PRODUCT_SCHEMA = 'product-scheme-';
     const string PRODUCT_CARD = 'product-card-';
@@ -23,6 +24,7 @@ class CacheHelper
         self::CATEGORY_SCHEMA,
         self::CATEGORY_ATTRIBUTES,
         self::CATEGORY_CHILDREN,
+        self::CATEGORY_PRODUCTS,
     ];
 
     const array PRODUCTS = [

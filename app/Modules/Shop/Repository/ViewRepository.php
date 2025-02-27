@@ -71,13 +71,15 @@ class ViewRepository
                 'slug' => $category->slug,
             ];
         });
-        $products = $this->repository->ProductsByCategory();
         $in_stock = isset($request['in_stock']);
+
+        $products = $this->category_products_cache(null, $in_stock);
+  /*      $products = $this->repository->ProductsByCategory();
         //Убираем из коллекции товары, которые не продаем под заказ
         $products = $products->reject(function (Product $product) use ($in_stock) {
             return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
         });
-
+*/
         /** @var Product $product */
         foreach ($products as $i => $product) {
             $_price_product = $product->getPrice();
@@ -127,6 +129,7 @@ class ViewRepository
 
     public function category(array $request, string $slug)
     {
+       // $begin = now();
         $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
         $page = $request['page'] ?? 1;
@@ -134,44 +137,21 @@ class ViewRepository
         $title = $category->title;
         $description = $category->description;
         $schema = $this->schema_category_cache($category);
+
         if ($this->web->is_category && count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
             return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description', 'url_page'));
         }
 
+
         $minPrice = 10;
         $maxPrice = 999999999;
         $brands = [];
-        $begin = now();
+
         $children = $this->category_children_cache($category);
-        /*
-        if ($category->children()->count() == 0) {
-            $_category = $category->parent;
-        } else {
-            $_category = $category;
-        }
-
-        $children = $_category->children()->defaultOrder()->get()->map(function (Category $category) {
-            if ($category->allProducts()->count() == 0) return null;
-            return [
-                'id' => $category->id,
-                'name' => $category->name,
-                'slug' => $category->slug,
-            ];
-        });
-
-        $children = array_filter($children->toArray());
-        */
-        $end = now();
-        $products = $this->repository->ProductsByCategory($category);
-
-        \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
 
         $in_stock = isset($request['in_stock']);
-        //Убираем из коллекции товары, которые не продаем под заказ
-        $products = $products->reject(function (Product $product) use ($in_stock) {
-            return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
-        });
+        $products = $this->category_products_cache($category, $in_stock);
 
         /** @var Product $product */
         foreach ($products as $i => $product) {
@@ -200,8 +180,12 @@ class ViewRepository
         $products = $query->paginate($this->web->paginate);
         $title = $category->title;
 
+
         $products = $products->withQueryString()
             ->through(fn(Product $product) => $this->product_card_cache($product));
+
+        $end = now();
+        \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
         return view(
             $this->route('product.index'),
             array_merge(
@@ -249,6 +233,24 @@ class ViewRepository
             });
         } else {
             return $this->repository->ProductToArrayView($product);
+        }
+    }
+
+    private function category_products_cache(?Category $category, $in_stock)
+    {
+        $slug = is_null($category) ? 'root' : $category->slug;
+        $callback = function () use ($category, $in_stock) {
+            $products = $this->repository->ProductsByCategory($category); //0.07сек
+            //Убираем из коллекции товары, которые не продаем под заказ
+            return $products->reject(function (Product $product) use ($in_stock) {
+                return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
+            });
+        };
+
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::CATEGORY_PRODUCTS . $slug, $callback);
+        } else {
+            return $callback();
         }
     }
 

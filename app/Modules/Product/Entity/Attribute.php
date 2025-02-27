@@ -175,7 +175,7 @@ class Attribute extends Model
         foreach ($this->variants as $variant) {
             if ($variant->id == $id) return $variant;
         }
-        throw new \DomainException('Не найдет вариант id = ' . $id . ' атрибута ' . $this->name);
+        throw new \DomainException('(get) Не найден вариант id = ' . $id . ' атрибута ' . $this->name);
     }
 
     public function findVariant(string $name): AttributeVariant
@@ -183,7 +183,7 @@ class Attribute extends Model
         foreach ($this->variants as $variant) {
             if ($variant->name == $name) return $variant;
         }
-        throw new \DomainException('Не найдет вариант ' . $name . ' атрибута ' . $this->name);
+        throw new \DomainException('(find) Не найден вариант ' . $name . ' атрибута ' . $this->name);
     }
 
     public function typeText(): string
