@@ -18,7 +18,8 @@
                                         src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%27500%27%20height=%27500%27/%3e"
                                         height="500" width="500" alt="Блок задающий высоту ячейки"/>
                                 </span>
-                                <img src="{{ $image['src'] }}" alt="{{ empty($image['alt']) ? $product['name'] : $image['alt'] }}" decoding="async"/>
+                                <img src="{{ $image['src'] }}" alt="{{ empty($image['alt']) ? $product['name'] : $image['alt'] }}"
+                                     decoding="async" />
                             </span>
                         @endforeach
                     </div>
@@ -30,7 +31,8 @@
             <div id="product-slider" class="owl-carousel owl-theme">
                 @foreach($product['gallery'] as $image)
                     <div>
-                        <img src="{{ $image['src'] }}" alt="{{ empty($image['alt']) ? $product['name'] : $image['alt'] }}" decoding="async"/>
+                        <img src="{{ $image['src'] }}" alt="{{ empty($image['alt']) ? $product['name'] : $image['alt'] }}"
+                             decoding="async" />
                     </div>
                 @endforeach
             </div>
