@@ -526,7 +526,8 @@ class Product extends Model
     public function getPriceParser(bool $previous = false): float
     {
         if (is_null($this->parser)) return 0;
-        $price = $previous ? $this->parser->price_base : $this->parser->price_sell;
+      //TODO берем базовую цену  $price = $previous ? $this->parser->price_base : $this->parser->price_sell;
+        $price = $this->parser->price_base;
         return ceil($price * ($this->brand->currency->fixed));
     }
 
