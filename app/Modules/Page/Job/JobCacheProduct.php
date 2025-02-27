@@ -32,13 +32,17 @@ class JobCacheProduct implements ShouldQueue
     public function handle(CacheRepository $cacheRepository): void
     {
         try {
-            $product = Product::find($this->product_id);
+            $_product = Product::find($this->product_id);
+            foreach (CacheHelper::PRODUCTS as $PRODUCT) {
+                Cache::forget($PRODUCT . $_product->slug);
+            }
+/*
             Cache::forget(CacheHelper::PRODUCT_CARD . $product->slug);
             Cache::forget(CacheHelper::PRODUCT_SCHEMA . $product->slug);
-            Cache::forget(CacheHelper::PRODUCT_VIEW . $product->slug);
+            Cache::forget(CacheHelper::PRODUCT_VIEW . $product->slug);*/
             //Cache::forget('product-' . $product->slug);
 
-            $cacheRepository->product($product->slug);
+            $cacheRepository->product($_product->slug);
         } catch (\Throwable $e) {
             Log::error(json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));
         }

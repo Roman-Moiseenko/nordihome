@@ -131,8 +131,29 @@ class Category extends Model
         return $this->hasMany(Product::class, 'main_category_id', 'id');
     }
 
-    public function allProducts(int $pagination = null):? Product
+
+    public function allProducts(int $pagination = null)
     {
+
+        $query = Product::where('published', true) //Опубликован AND
+        ->where(function ($query) { //Категории входят в выбранную AND
+            $query->whereHas('category', function ($query) {
+                $query->where('_lft', '>=', $this->_lft)->where('_rgt', '<=', $this->_rgt);
+            })->orWhereHas('categories', function ($query) {
+                $query->where('_lft', '>=', $this->_lft)->where('_rgt', '<=', $this->_rgt);
+            });
+        })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
+            $query->doesntHave('modification')->orWhere(function ($query){
+                $query->has('main_modification')->whereHas('main_modification', function ($query) {
+                    $query->where('not_sale', false);
+                });
+            });
+        });
+
+        return $query->get();
+
+
+
         //TODO Связанные таблицы ......
         $subCategories = []; //Получаем все подкатегории всех уровней вложенности
         //Ищем товары, у которых category_id IN $subCategories

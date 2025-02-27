@@ -142,6 +142,9 @@ class ViewRepository
         $minPrice = 10;
         $maxPrice = 999999999;
         $brands = [];
+        $begin = now();
+        $children = $this->category_children_cache($category);
+        /*
         if ($category->children()->count() == 0) {
             $_category = $category->parent;
         } else {
@@ -149,13 +152,20 @@ class ViewRepository
         }
 
         $children = $_category->children()->defaultOrder()->get()->map(function (Category $category) {
+            if ($category->allProducts()->count() == 0) return null;
             return [
                 'id' => $category->id,
                 'name' => $category->name,
                 'slug' => $category->slug,
             ];
         });
+
+        $children = array_filter($children->toArray());
+        */
+        $end = now();
         $products = $this->repository->ProductsByCategory($category);
+
+        \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
 
         $in_stock = isset($request['in_stock']);
         //Убираем из коллекции товары, которые не продаем под заказ
@@ -239,6 +249,33 @@ class ViewRepository
             });
         } else {
             return $this->repository->ProductToArrayView($product);
+        }
+    }
+
+    private function category_children_cache(Category $category)
+    {
+        $callback = function () use ($category) {
+            if ($category->children()->count() == 0) {
+                $_category = $category->parent;
+            } else {
+                $_category = $category;
+            }
+
+            $children = $_category->children()->defaultOrder()->get()->map(function (Category $category) {
+                if ($category->allProducts()->count() == 0) return null;
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                ];
+            });
+
+            return array_filter($children->toArray());
+        };
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::CATEGORY_ATTRIBUTES . $category->slug, $callback);
+        } else {
+            return $callback();
         }
     }
 

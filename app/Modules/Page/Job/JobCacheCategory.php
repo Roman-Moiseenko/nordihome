@@ -21,12 +21,12 @@ class JobCacheCategory implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private int $page;
+   // private int $page;
     private string $slug;
 
-    public function __construct(int $page, string $slug)
+    public function __construct(string $slug)
     {
-        $this->page = $page;
+      //  $this->page = $page;
         $this->slug = $slug;
     }
 
@@ -37,9 +37,12 @@ class JobCacheCategory implements ShouldQueue
          //   Cache::forget('category-' . $this->slug . '-0');
          //   Cache::forget('category-' . $this->slug . '-1');
           //  Cache::forget('category-' . $this->slug);
-            Cache::forget(CacheHelper::CATEGORY_SCHEMA . $this->slug);
-            Cache::forget(CacheHelper::CATEGORY_ATTRIBUTES . $this->slug);
-            $cacheRepository->category(['page' => $this->page], $this->slug);
+            foreach (CacheHelper::CATEGORIES as $CATEGORY) {
+                Cache::forget($CATEGORY . $this->slug);
+            }
+
+            ///Cache::forget(CacheHelper::CATEGORY_ATTRIBUTES . $this->slug);
+            $cacheRepository->category([], $this->slug);
 
         } catch (\Throwable $e) {
             Log::error(json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));

@@ -10,9 +10,24 @@ class CacheHelper
 
     const string CATEGORY = 'category-';
     const string CATEGORY_ATTRIBUTES = 'category-attributes-';
+    const string CATEGORY_CHILDREN = 'category-children-';
     const string CATEGORY_SCHEMA = 'category-schema-';
 
     const string PRODUCT_SCHEMA = 'product-scheme-';
     const string PRODUCT_CARD = 'product-card-';
     const string PRODUCT_VIEW = 'product-view-';
+
+
+    const array CATEGORIES = [
+        self::CATEGORY,
+        self::CATEGORY_SCHEMA,
+        self::CATEGORY_ATTRIBUTES,
+        self::CATEGORY_CHILDREN,
+    ];
+
+    const array PRODUCTS = [
+        self::PRODUCT_CARD,
+        self::PRODUCT_SCHEMA,
+        self::PRODUCT_VIEW,
+    ];
 }
