@@ -333,10 +333,10 @@ class Photo extends Model
 
     public function convertToWebp(): void
     {
+        $file_name = pathinfo($this->file, PATHINFO_FILENAME);
+        $path = $this->catalogUpload . $this->patternGeneratePath();
+        $old_full_name = $path . $this->file;
         try {
-            $file_name = pathinfo($this->file, PATHINFO_FILENAME);
-            $path = $this->catalogUpload . $this->patternGeneratePath();
-            $old_full_name = $path . $this->file;
 
             $manager = new ImageManager();
             $image = $manager->make($this->getUploadFile());
