@@ -116,15 +116,24 @@ class Photo extends Model
 
         $storage = public_path() . '/temp/';
         $upload_file_name = basename($url);
-        $full_filename = $storage . uniqid() . '.' . pathinfo($upload_file_name, PATHINFO_EXTENSION);
+        $ext = pathinfo($upload_file_name, PATHINFO_EXTENSION);
+        if (empty($ext)) $ext = 'webp';
+        $full_filename = $storage . uniqid() . '.' . $ext;
 
         if ($is_proxy) {
-            $http = new HttpPage();
-            $content = $http->getPage($url);
+            try {
+                $http = new HttpPage();
+                $content = $http->getPage($url);
 
-            $fp = fopen($full_filename, 'x');
-            fwrite($fp, $content);
-            fclose($fp);
+                $fp = fopen($full_filename, 'x');
+                fwrite($fp, $content);
+                fclose($fp);
+            } catch (\Throwable $e) {
+                \Log::error($e->getMessage());
+                \Log::info($upload_file_name);
+                \Log::info($full_filename);
+            }
+
         } else {
             copy($url, $full_filename);
         }
