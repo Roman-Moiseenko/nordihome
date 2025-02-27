@@ -208,9 +208,11 @@ class Photo extends Model
             if ($photo->createThumbsOnSave) $photo->createThumbs();
         });
         self::deleting(function (Photo $photo) {
-            $photo->clearThumbs();
-            $old_file = $photo->getUploadFile();
-            if (is_file($old_file)) unlink($old_file);
+            if (!is_null($photo->imageable)) {
+                $photo->clearThumbs();
+                $old_file = $photo->getUploadFile();
+                if (is_file($old_file)) unlink($old_file);
+            }
         });
     }
 
@@ -321,7 +323,7 @@ class Photo extends Model
     {
         return pathinfo($this->file, PATHINFO_EXTENSION);
     }
-
+/*
     public function delete(): void
     {
         $this->clearThumbs();
@@ -329,7 +331,7 @@ class Photo extends Model
             unlink($this->file);
         }
         parent::delete();
-    }
+    }*/
 
     public function convertToWebp(): void
     {

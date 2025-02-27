@@ -33,6 +33,7 @@ class LoadingImageProduct implements ShouldQueue
     {
         $photo = $this->product->addImageByUrl($this->image_url);
         if (!is_null($photo)) {
+            if (pathinfo($photo->file, PATHINFO_EXTENSION) != 'webp') $photo->convertToWebp();
             $this->product->setAlt(photo_id: $photo->id, alt: $this->image_alt);
         } else {
             Log::error('Фото не загружено ' . $this->product->code . ' ' . $this->image_url);
