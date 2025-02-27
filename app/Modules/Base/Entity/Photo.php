@@ -32,7 +32,7 @@ use function public_path;
 class Photo extends Model
 {
     const string URL_THUMB = '/cache';
-    const string URL_UPLOAD= '/uploads';
+    const string URL_UPLOAD = '/uploads';
 
     private Settings $settings;
     protected bool $createThumbsOnSave;
@@ -72,20 +72,20 @@ class Photo extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-      //  $options = new Options();
+        //  $options = new Options();
         $this->settings = app()->make(Settings::class);
 
-       // $this->watermark = $options->image->watermark;
+        // $this->watermark = $options->image->watermark;
 
 
-        if (empty($this->thumbs)) $this->thumbs =  $this->settings->image->thumbs;
+        if (empty($this->thumbs)) $this->thumbs = $this->settings->image->thumbs;
 
         $this->createThumbsOnSave = $this->settings->image->createThumbsOnSave;
         $this->createThumbsOnRequest = $this->settings->image->createThumbsOnRequest;
 
         //TODO Сделать переключение  м/у getPublicPath и getStoragePath
         $this->catalogUpload = public_path() . self::URL_UPLOAD;
-        $this->catalogThumb =  public_path() . self::URL_THUMB;
+        $this->catalogThumb = public_path() . self::URL_THUMB;
 
     }
 
@@ -122,7 +122,7 @@ class Photo extends Model
             $http = new HttpPage();
             $content = $http->getPage($url);
 
-            $fp = fopen($full_filename,'x');
+            $fp = fopen($full_filename, 'x');
             fwrite($fp, $content);
             fclose($fp);
         } else {
@@ -183,7 +183,7 @@ class Photo extends Model
     {
         if (!$this->thumb) return '';
         if ($this->createThumbsOnRequest) $this->createThumbs();
-        return self::URL_THUMB. $this->patternGeneratePath() . $this->nameFileThumb($thumb);
+        return self::URL_THUMB . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
     }
 
     //Путь к файлам для переноса (для Бэкенда)
@@ -218,57 +218,57 @@ class Photo extends Model
     {
         if (!$this->thumb) return;
         //if (isset($this->imageable->thumbs) && !$this->imageable->thumbs) return;//В связном объекте запрет на кешированные изображения
-     //   try {
+        //   try {
 
 
-            foreach ($this->thumbs as $params) {
-                $thumb_file = $this->getThumbFile($params['name']);
+        foreach ($this->thumbs as $params) {
+            $thumb_file = $this->getThumbFile($params['name']);
 
-                if (is_file($this->getUploadFile()) &&
-                    !is_file($thumb_file) &&
-                    (in_array($this->ext(), ['jpg', 'png', 'jpeg', 'webp']))) {
-                    $manager = new ImageManager(); //['driver' => 'imagick']
-                    $img = $manager->make($this->getUploadFile());
+            if (is_file($this->getUploadFile()) &&
+                !is_file($thumb_file) &&
+                (in_array($this->ext(), ['jpg', 'png', 'jpeg', 'webp']))) {
+                $manager = new ImageManager(); //['driver' => 'imagick']
+                $img = $manager->make($this->getUploadFile());
 
-                    if (isset($params['width']) && isset($params['height'])) {
-                        if (isset($params['fit']) && $params['fit']) { //Если установлена обрезка фото
-                            $img->fit($params['width'], $params['height']);
-                        } else { //Масштабирование, и заполнение пустот белым
-                            $scale_w = $img->width() / $params['width'];
-                            $scale_h = $img->height() / $params['height'];
-                            $scale = max($scale_w, $scale_h);
-                            $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale));
-                            $img->resizeCanvas($params['width'], $params['height']);
-                        }
+                if (isset($params['width']) && isset($params['height'])) {
+                    if (isset($params['fit']) && $params['fit']) { //Если установлена обрезка фото
+                        $img->fit($params['width'], $params['height']);
+                    } else { //Масштабирование, и заполнение пустот белым
+                        $scale_w = $img->width() / $params['width'];
+                        $scale_h = $img->height() / $params['height'];
+                        $scale = max($scale_w, $scale_h);
+                        $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale));
+                        $img->resizeCanvas($params['width'], $params['height']);
                     }
-
-                    if (isset($params['watermark']) && $params['watermark']) {
-                        $watermark = $manager->make(public_path() . $this->settings->image->watermark_file);
-                        $watermark->resize(
-                            (int)($img->width() * $this->settings->image->watermark_size),
-                            (int)($img->width() * $this->settings->image->watermark_size)
-                        );
-                        $img->insert(
-                            $watermark,
-                            $this->settings->image->watermark_position,
-                            $this->settings->image->watermark_offset,
-                            $this->settings->image->watermark_offset
-                        );
-                    }
-
-                    $path = pathinfo($thumb_file, PATHINFO_DIRNAME);
-
-                    if (!file_exists($path)) {
-                        mkdir($path, 0777, true);
-                    }
-                    if ($this->ext() == 'jpg' || $this->ext() == 'webp') $img->encode(null, 70);
-                    $img->save($thumb_file);
-
                 }
+
+                if (isset($params['watermark']) && $params['watermark']) {
+                    $watermark = $manager->make(public_path() . $this->settings->image->watermark_file);
+                    $watermark->resize(
+                        (int)($img->width() * $this->settings->image->watermark_size),
+                        (int)($img->width() * $this->settings->image->watermark_size)
+                    );
+                    $img->insert(
+                        $watermark,
+                        $this->settings->image->watermark_position,
+                        $this->settings->image->watermark_offset,
+                        $this->settings->image->watermark_offset
+                    );
+                }
+
+                $path = pathinfo($thumb_file, PATHINFO_DIRNAME);
+
+                if (!file_exists($path)) {
+                    mkdir($path, 0777, true);
+                }
+                if ($this->ext() == 'jpg' || $this->ext() == 'webp') $img->encode(null, 70);
+                $img->save($thumb_file);
+
             }
-   //     } catch (\Throwable $e) {
-    //        Log::error($e->getMessage());
-      //  }
+        }
+        //     } catch (\Throwable $e) {
+        //        Log::error($e->getMessage());
+        //  }
     }
 
     private function uploadFile(): void
@@ -294,7 +294,7 @@ class Photo extends Model
         //TODO Копирование вместо Переносим Файл??
         //$this->fileForUpload->move($path, $this->fileForUpload->getClientOriginalName());
 
-        copy($this->fileForUpload->getPath() . '/' . $this->fileForUpload->getFilename(),$path . $this->fileForUpload->getClientOriginalName());
+        copy($this->fileForUpload->getPath() . '/' . $this->fileForUpload->getFilename(), $path . $this->fileForUpload->getClientOriginalName());
         //Очищаем все thumbs
         $this->clearThumbs();
         unset($this->fileForUpload);
@@ -333,16 +333,23 @@ class Photo extends Model
 
     public function convertToWebp(): void
     {
-        $file_name = pathinfo($this->file, PATHINFO_FILENAME);
-        $path = $this->catalogUpload . $this->patternGeneratePath();
+        try {
+            $file_name = pathinfo($this->file, PATHINFO_FILENAME);
+            $path = $this->catalogUpload . $this->patternGeneratePath();
+            $old_full_name = $path . $this->file;
 
-        $manager = new ImageManager();
-        $image = $manager->make($this->getUploadFile());
-        $encode = $image->encode('webp', 75);
+            $manager = new ImageManager();
+            $image = $manager->make($this->getUploadFile());
+            $encode = $image->encode('webp', 75);
 
-        $encode->save($path . $file_name . '.webp');
-        unlink($path . $this->file);
-        $this->file = $file_name . '.webp';
-        $this->save();
+            $encode->save($path . $file_name . '.webp');
+            $this->file = $file_name . '.webp';
+            $this->save();
+            unlink($old_full_name);
+        } catch (\Throwable $e) {
+            \Log::info('Ошибка конвертации файла для товара ' . $this->imageable_id . ' Файл . ' . $old_full_name);
+            \Log::info('Ошибка  ' . $e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getFile());
+        }
+
     }
 }
