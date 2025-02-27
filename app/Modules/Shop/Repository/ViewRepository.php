@@ -275,7 +275,7 @@ class ViewRepository
             return array_filter($children->toArray());
         };
         if ($this->web->is_cache) {
-            return Cache::rememberForever(CacheHelper::CATEGORY_ATTRIBUTES . $category->slug, $callback);
+            return Cache::rememberForever(CacheHelper::CATEGORY_CHILDREN . $category->slug, $callback);
         } else {
             return $callback();
         }
