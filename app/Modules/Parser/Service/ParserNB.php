@@ -332,6 +332,7 @@ class ParserNB extends ParserAbstract
             $values = json_decode($product->pivot->values_json, true);
             $id_variant = $values[(string)$attr_size->id];
             $variant = AttributeVariant::find($id_variant);
+            if (is_null($variant)) return null;
             if ($variant->name == $size) return $product;
         }
         return null;
