@@ -285,4 +285,6 @@ abstract class AccountingDocument extends Model
             ];
         }
     }
+
+    //Мягкое удаление
 }

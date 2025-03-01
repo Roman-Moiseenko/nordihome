@@ -101,7 +101,7 @@ class SupplyService
     public function completed(SupplyDocument $supply): void
     {
         if ($supply->products()->count() == 0) throw new \DomainException('В заказе нет позиций');
-        DB::transaction(function () use($supply) {
+        DB::transaction(function () use ($supply) {
             foreach ($supply->products as $product) {
                 if ($product->cost_currency == 0) throw new \DomainException('У товара не установлена цена поставщика');
                 $supply->distributor->addProduct($product->product, (float)$product->cost_currency);
@@ -116,7 +116,7 @@ class SupplyService
 
     public function work(SupplyDocument $supply): void
     {
-        DB::transaction(function () use($supply) {
+        DB::transaction(function () use ($supply) {
             $payments = PaymentDecryption::where('supply_id', $supply->id)->whereHas('payment', function ($query) {
                 $query->where('completed', true);
             })->getModels();
@@ -135,7 +135,7 @@ class SupplyService
      */
     public function arrival(SupplyDocument $supply): ArrivalDocument
     {
-        DB::transaction(function () use($supply, &$arrival) {
+        DB::transaction(function () use ($supply, &$arrival) {
             set_time_limit(600);
             $arrival = $this->arrivalService->create($supply->distributor->id);
             $arrival->supply_id = $supply->id;
@@ -185,7 +185,28 @@ class SupplyService
 
     public function destroy(SupplyDocument $supply): void
     {
-        $supply->delete();
+        if ($supply->isCompleted()) throw new \DomainException('Документ проведен');
+
+        DB::transaction(function () use ($supply) {
+            $supply->delete(); //Удаление каскадно связанных документов
+        });
+    }
+
+    public function restore(int $id): void
+    {
+        $document = SupplyDocument::onlyTrashed()->where('id', $id)->first();
+        DB::transaction(function () use ($document) {
+            $document->restore();//Восстановление каскадно связанных документов
+        });
+
+    }
+
+    public function fullDestroy(int $id): void
+    {
+        $document = SupplyDocument::onlyTrashed()->where('id', $id)->first();
+        DB::transaction(function () use ($document) {
+            $document->forceDelete();//Удаление каскадно связанных документов
+        });
     }
 
     /**

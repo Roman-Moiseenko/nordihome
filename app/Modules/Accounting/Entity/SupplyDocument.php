@@ -7,6 +7,7 @@ use App\Modules\Product\Entity\Product;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Поставка товар - заказ для поставщика, формируется автоматически из стека заказов, также можно добавить вручную
@@ -17,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property int $organization_id
  * @property int $customer_id
  *
- * @property ArrivalDocument[] $arrivals  - документы, который создастся после исполнения заказа
+ * @property ArrivalDocument[] $arrivals  - документы, которые создастся после исполнения заказа
  * @property SupplyProduct[] $products
  * @property SupplyStack[] $stacks
  * @property Distributor $distributor
@@ -128,7 +129,7 @@ class SupplyDocument extends AccountingDocument
 
         //Проверка на стек, если кол-во меньше чем в стеке, то изменить нельзя
         foreach ($this->stacks as $stack) {
-            if ($stack->product_id == $product->id){
+            if ($stack->product_id == $product->id) {
                 $quantity += $stack->quantity;
             }
         }
@@ -254,6 +255,41 @@ class SupplyDocument extends AccountingDocument
     public function onFounded(): ?array
     {
         return null;
+    }
+
+    //Удаление
+
+    public function delete(): void
+    {
+        foreach ($this->arrivals as $arrival) {
+            $arrival->delete();
+        }
+        foreach ($this->payments as $supplyPayment) {
+            $supplyPayment->delete();
+        }
+        parent::delete();
+    }
+
+    public function restore(): void
+    {
+        parent::restore();
+        foreach ($this->arrivals as $arrival) {
+            $arrival->restore();
+        }
+        foreach ($this->payments as $supplyPayment) {
+            $supplyPayment->restore();
+        }
+    }
+
+    public function forceDelete(): void
+    {
+        foreach ($this->arrivals as $arrival) {
+            $arrival->forceDelete();
+        }
+        foreach ($this->payments as $supplyPayment) {
+            $supplyPayment->forceDelete();
+        }
+        parent::forceDelete();
     }
 
 }

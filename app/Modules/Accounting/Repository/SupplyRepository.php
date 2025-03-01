@@ -21,7 +21,7 @@ class SupplyRepository extends AccountingRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = SupplyDocument::orderByDesc('created_at');
+        $query = SupplyDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request);
 
@@ -68,6 +68,7 @@ class SupplyRepository extends AccountingRepository
     public function SupplyToArray(SupplyDocument $document): array
     {
         return array_merge($document->toArray(), [
+            'trashed' => $document->trashed(),
             'quantity' => $document->getQuantity(),
             'positions' => $document->products()->count(),
             'amount' => $document->getAmountRefunds(),

@@ -174,7 +174,7 @@ class ProductController extends Controller
     public function destroy(Product $product): RedirectResponse
     {
         $this->service->destroy($product);
-        return redirect()->back();//route('admin.product.index');
+        return redirect()->back()->with('success', 'Товар помечен на удаление');
     }
 
     public function restore(int $id): RedirectResponse

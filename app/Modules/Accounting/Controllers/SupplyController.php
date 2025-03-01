@@ -117,7 +117,7 @@ class SupplyController extends Controller
     public function destroy(SupplyDocument $supply): RedirectResponse
     {
         $this->service->destroy($supply);
-        return redirect()->back()->with('success', 'Заказ удален успешно');
+        return redirect()->back()->with('success', 'Заказ помечен на удаление');
     }
 
     public function copy(SupplyDocument $supply): RedirectResponse

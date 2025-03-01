@@ -151,6 +151,11 @@ Route::group(
                 Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
                 Route::post('/work/{supply}', 'SupplyController@work')->name('work');
                 Route::post('/set-info/{supply}', 'SupplyController@set_info')->name('set-info');
+                //Мягкое удаление
+                Route::delete('/full-destroy/{supply}', 'SupplyController@full-destroy')->name('full-destroy');
+
+                Route::post('/restore/{supply}', 'SupplyController@restore')->name('restore');
+
 
             });
         //PRICING
