@@ -96,7 +96,7 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button>
-                        <el-button v-if="scope.row.trashed && staff.is_chief"
+                        <el-button v-if="scope.row.trashed"
                                    size="small"
                                    type="success"
                                    @click.stop="restore(scope.row)"
@@ -196,8 +196,16 @@ function routeClick(row) {
 function handleCopy(row) {
     router.post(route('admin.accounting.supply.copy', {supply: row.id}))
 }
+
 function restore(row) {
-    router.post(route('admin.accounting.supply.restore', {supply: row.id}))
+    router.visit(route('admin.accounting.supply.restore', {supply: row.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+            tableData.value = [...page.props.supplies.data]
+        }
+    })
 }
 function fullDestroy(row) {
     $delete_entity.show(route('admin.accounting.supply.full-destroy', {supply: row.id}));

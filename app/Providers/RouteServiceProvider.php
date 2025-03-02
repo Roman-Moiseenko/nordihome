@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Modules\Accounting\Entity\SupplyDocument;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -27,6 +28,8 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        $this->showSoftDeletes();
 
         $this->mapModulesRoutesAdmin();
         $this->mapModulesRoutesWeb();
@@ -122,5 +125,20 @@ class RouteServiceProvider extends ServiceProvider
                     }
                 )
             );
+    }
+
+    private function showSoftDeletes(): void
+    {
+        Route::bind('supply', function ($value) {
+            return SupplyDocument::withTrashed()->find($value);
+        });
+
+        //TODO Все AccountingDocument
+
+
+
+
+
+
     }
 }

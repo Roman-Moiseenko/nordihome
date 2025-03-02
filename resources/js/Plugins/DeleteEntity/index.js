@@ -1,6 +1,7 @@
 import { reactive } from "vue"
 import DeleteEntityModal from "./Modal.vue"
 import {router} from "@inertiajs/vue3";
+import {ElLoading} from "element-plus";
 
 const
     _current = reactive({name:"",resolve:null,reject:null, route: "", state: false}),
@@ -17,10 +18,22 @@ const
                 })
         },
         accept() {
+            const loading = ElLoading.service({
+                lock: false,
+                text: 'Удаление',
+                background: 'rgba(0, 0, 0, 0.7)',
+            })
             router.visit(_current.route, {
                 method: 'delete',
                 preserveScroll: true,
                 preserveState: _current.state,
+                onSuccess: page => {
+                    loading.close()
+                },
+                onFinish: page => {
+                    loading.close()
+                },
+
             });
             if (_current.resolve !== null) _current.resolve()
             _current.name = ""

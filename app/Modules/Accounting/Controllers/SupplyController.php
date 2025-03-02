@@ -120,6 +120,18 @@ class SupplyController extends Controller
         return redirect()->back()->with('success', 'Заказ помечен на удаление');
     }
 
+    public function restore(SupplyDocument $supply): RedirectResponse
+    {
+        $this->service->restore($supply);
+        return redirect()->back()->with('success', 'Заказ восстановлен');
+    }
+
+    public function full_destroy(SupplyDocument $supply): RedirectResponse
+    {
+        $this->service->fullDestroy($supply);
+        return redirect()->back()->with('success', 'Заказ удален окончательно');
+    }
+
     public function copy(SupplyDocument $supply): RedirectResponse
     {
         $supply = $this->service->copy($supply);

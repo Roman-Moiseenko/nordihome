@@ -180,7 +180,9 @@ class SupplyDocument extends AccountingDocument
 
     public function arrivals(): HasMany
     {
-        return $this->hasMany(ArrivalDocument::class, 'supply_id', 'id');
+        $query = $this->hasMany(ArrivalDocument::class, 'supply_id', 'id');
+        if ($this->trashed()) return $query->withTrashed();
+        return $query;
     }
 
     public function distributor(): BelongsTo
@@ -193,7 +195,10 @@ class SupplyDocument extends AccountingDocument
      */
     public function payments(): array
     {
-        $decryptions = PaymentDecryption::where('supply_id', $this->id)->getModels();
+        $query = PaymentDecryption::where('supply_id', $this->id);
+        if ($this->trashed()) $query->withTrashed();
+
+        $decryptions = $query->getModels();
         if (is_null($decryptions)) return [];
         $payments = [];
         foreach ($decryptions as $decryption) {
@@ -264,7 +269,7 @@ class SupplyDocument extends AccountingDocument
         foreach ($this->arrivals as $arrival) {
             $arrival->delete();
         }
-        foreach ($this->payments as $supplyPayment) {
+        foreach ($this->payments() as $supplyPayment) {
             $supplyPayment->delete();
         }
         parent::delete();
@@ -276,7 +281,7 @@ class SupplyDocument extends AccountingDocument
         foreach ($this->arrivals as $arrival) {
             $arrival->restore();
         }
-        foreach ($this->payments as $supplyPayment) {
+        foreach ($this->payments() as $supplyPayment) {
             $supplyPayment->restore();
         }
     }
@@ -286,7 +291,7 @@ class SupplyDocument extends AccountingDocument
         foreach ($this->arrivals as $arrival) {
             $arrival->forceDelete();
         }
-        foreach ($this->payments as $supplyPayment) {
+        foreach ($this->payments() as $supplyPayment) {
             $supplyPayment->forceDelete();
         }
         parent::forceDelete();
