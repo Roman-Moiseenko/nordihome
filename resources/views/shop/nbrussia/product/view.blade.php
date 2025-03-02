@@ -115,7 +115,7 @@
                     @else
                         <button type="button" class="btn btn-secondary" disabled
                                 style="width: 100%; padding: 1.2rem 2.4rem;"
-                        >Снят с продажи</button>
+                        >Нет в наличии</button>
                     @endif
                 </div>
                 <div class="mt-3 fs-6 fw-bold"><span style="color: var(--bs-secondary-700)"><a href="/page/delivery" title="Условия доставки">Бесплатная*</a> </span> доставка по России</div>
