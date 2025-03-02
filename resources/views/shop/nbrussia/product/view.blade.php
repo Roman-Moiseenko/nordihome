@@ -91,9 +91,15 @@
                         @foreach($product['modification'] as $attribute)
                             @if(isset($attribute['products']))
                                 @foreach($attribute['products'] as $value => $_product_mod)
+                                    @if($product['is_sale'])
                                     <span class="size {{ $product['id'] === $_product_mod[0]['id'] ? 'active' : '' }}"
                                           data-id="{{ $_product_mod[0]['id'] }}"
                                           title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</span>
+                                    @else
+                                        <a class="size"
+                                              href="{{ route('shop.product.view', $_product_mod[0]['id']) }}"
+                                              title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</a>
+                                    @endif
                                 @endforeach
                             @endif
                         @endforeach
@@ -107,7 +113,9 @@
                                 style="width: 100%;">В Корзину
                         </button>
                     @else
-                        <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
+                        <button type="button" class="btn btn-secondary" disabled
+                                style="width: 100%; padding: 1.2rem 2.4rem;"
+                        >Снят с продажи</button>
                     @endif
                 </div>
                 <div class="mt-3 fs-6 fw-bold"><span style="color: var(--bs-secondary-700)"><a href="/page/delivery" title="Условия доставки">Бесплатная*</a> </span> доставка по России</div>
