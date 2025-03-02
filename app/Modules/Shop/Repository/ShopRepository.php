@@ -613,7 +613,7 @@ class ShopRepository
         } elseif (!is_null($product->modification) && is_null($product->main_modification)) {
             $_product = $product->modification->base_product;
         }
-        if (!is_null($_product)) {
+        if (!is_null($_product) && !is_null($_product->equivalent_product)) {
             $equivalents = $_product->equivalent->products()->where('not_sale', false)->get()->map(function (Product $product) {
                 return [
                     'slug' => $product->slug,
