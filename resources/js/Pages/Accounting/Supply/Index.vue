@@ -96,21 +96,11 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button>
-                        <el-button v-if="scope.row.trashed"
-                                   size="small"
-                                   type="success"
-                                   @click.stop="restore(scope.row)"
-                        >
-                            Restore
-                        </el-button>
-                        <el-button v-if="scope.row.trashed && staff.is_chief"
-                                   size="small"
-                                   type="danger"
-                                   @click.stop="fullDestroy(scope.row)"
-                        >
-                            Delete
-                        </el-button>
-
+                        <AccountingSoftDelete v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.supply.restore', {supply: scope.row.id})"
+                            :destroy="route('admin.accounting.supply.full-destroy', {supply: scope.row.id})"
+                                              :small="true"
+                        />
                         <el-button v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
                             type="danger" plain
@@ -142,6 +132,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import StatusGraph from "@Comp/Elements/StatusGraph.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     supplies: Object,
@@ -155,7 +146,6 @@ const props = defineProps({
     staffs: Array,
 })
 const store = useStore();
-const staff = usePage().props.auth.user
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.supplies.data])

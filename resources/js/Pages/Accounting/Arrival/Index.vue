@@ -78,13 +78,12 @@
                 <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <!--el-button
-                            size="small"
-                            type="warning"
-                            @click.stop="handleCopy(scope.row)">
-                            Copy
-                        </el-button-->
-                        <el-button v-if="!scope.row.completed"
+                        <AccountingSoftDelete v-if="scope.row.trashed"
+                                              :restore="route('admin.accounting.arrival.restore', {arrival: scope.row.id})"
+                                              :destroy="route('admin.accounting.arrival.full-destroy', {arrival: scope.row.id})"
+                                              :small="true"
+                        />
+                        <el-button v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
                             type="danger"
                             @click.stop="handleDeleteEntity(scope.row)"
@@ -114,6 +113,7 @@ import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     arrivals: Object,
@@ -140,9 +140,11 @@ const filter = reactive({
 })
 const create_id = ref<Number>(null)
 interface IRow {
-    completed: number
+    completed: number,
+    trashed: boolean,
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }

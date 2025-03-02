@@ -37,7 +37,7 @@ class JobCacheCategory implements ShouldQueue
                 $cacheRepository->category([], $this->slug);
             }
         } catch (\Throwable $e) {
-            Log::error('JobCacheCategory ' . json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));
+            Log::error('JobCacheCategory - ' . $this->slug . ' ' . json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));
         }
     }
 

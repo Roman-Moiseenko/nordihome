@@ -1,8 +1,14 @@
 <template>
-    <el-button type="success" class="ml-5" @click="onRestore">Восстановить</el-button>
-    <el-button v-if="staff.is_chief" type="danger" class="ml-5" @click="onDelete">Удалить</el-button>
-
-
+    <el-button
+        type="success"
+        :size="small ? 'small' : 'default'"
+        :class="classBtn"
+        @click.stop="onRestore">{{ textRestore }}</el-button>
+    <el-button
+        v-if="staff.is_chief" type="danger"
+        :size="small ? 'small' : 'default'"
+        :class="classBtn"
+        @click.stop="onDelete">{{ textDelete}}</el-button>
     <DeleteEntityModal name_entity="Документ" name="document"/>
 </template>
 
@@ -20,7 +26,15 @@ const props = defineProps({
         required: true,
         type: String,
     },
+    small: {
+        default: false,
+        type: Boolean,
+    }
 })
+
+const textDelete = props.small ? 'Delete' : 'Удалить'
+const textRestore = props.small ? 'Restore' : 'Восстановить'
+const classBtn = props.small ? '' : 'mr-3'
 const staff = usePage().props.auth.user
 const $delete_entity = inject("$delete_entity")
 
@@ -37,7 +51,7 @@ function onRestore() {
     router.visit(props.restore, {
         method: "post",
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             loading.close()
         },
@@ -47,22 +61,4 @@ function onRestore() {
     })
 }
 
-function onWork() {
-    const loading = ElLoading.service({
-        lock: false,
-        text: 'Отмена проведения',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
-    router.visit(props.route, {
-        method: "post",
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: page => {
-            loading.close()
-        },
-        onFinish: page => {
-            loading.close()
-        },
-    })
-}
 </script>
