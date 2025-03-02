@@ -6,6 +6,7 @@ use App\Events\ThrowableHasAppeared;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Throwable;
@@ -84,6 +85,13 @@ class Handler extends ExceptionHandler
         } else {
             //Клиентская часть
             if ($response->status() == 404) return response()->view($shop_errors . '404', [], 404);
+            if ($response->status() == 500) {
+                //TODO отправка event(new ThrowableHasAppeared($e));
+                Log::error('Ошибка 500 ' . json_encode([$e->getMessage(), $e->getFile(), $e->getLine()]));
+                return response()->view($shop_errors . '500', [], 500);
+
+
+            }
             //TODO Добавить все ошибки http
         }
 
