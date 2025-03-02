@@ -87,7 +87,7 @@ class DepartureDocument extends AccountingDocument
 
     public function products(): HasMany
     {
-        return $this->hasMany(DepartureProduct::class, 'departure_id', 'id');
+        return $this->hasMany(DepartureProduct::class, 'departure_id', 'id')->withTrashed();
     }
 
     public function storage(): BelongsTo

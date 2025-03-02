@@ -32,11 +32,11 @@ class MovementDocument extends AccountingDocument
 {
     use HtmlInfoData;
 
-    const STATUS_DRAFT = 11; //Черновик
-    const STATUS_DEPARTURE = 12; //На убытие
-    const STATUS_ARRIVAL = 13; //В Пути
-    const STATUS_FINISHED = 14; //Исполнен
-    const STATUSES = [
+    const int STATUS_DRAFT = 11; //Черновик
+    const int STATUS_DEPARTURE = 12; //На убытие
+    const int STATUS_ARRIVAL = 13; //В Пути
+    const int STATUS_FINISHED = 14; //Исполнен
+    const array STATUSES = [
         self::STATUS_DRAFT => 'Черновик',
         self::STATUS_DEPARTURE => 'На отбытии',
         self::STATUS_ARRIVAL => 'В пути',
@@ -107,7 +107,7 @@ class MovementDocument extends AccountingDocument
 
     public function arrival(): BelongsTo
     {
-        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
+        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id')->withTrashed();
     }
 
     public function order()

@@ -66,7 +66,7 @@ class SurplusDocument extends AccountingDocument
     }
     public function inventory(): HasOne
     {
-        return $this->hasOne(InventoryDocument::class, 'surplus_id', 'id');
+        return $this->hasOne(InventoryDocument::class, 'surplus_id', 'id')->withTrashed();
     }
 
     public function products(): HasMany

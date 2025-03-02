@@ -258,6 +258,7 @@ abstract class AccountingDocument extends Model
         $result = [
             'label' => $document->documentName(),
             'url' => $document->documentUrl(),
+            'trashed' => $document->trashed(),
         ];
         if (!empty($document->onBased())) $result['children'] = $document->onBased();
         return $result;
@@ -286,5 +287,11 @@ abstract class AccountingDocument extends Model
         }
     }
 
+
+    public function delete(): void
+    {
+        if ($this->isCompleted()) throw new \DomainException('Документ проведен');
+        parent::delete();
+    }
     //Мягкое удаление
 }

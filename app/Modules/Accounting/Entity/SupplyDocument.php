@@ -180,9 +180,7 @@ class SupplyDocument extends AccountingDocument
 
     public function arrivals(): HasMany
     {
-        $query = $this->hasMany(ArrivalDocument::class, 'supply_id', 'id');
-        if ($this->trashed()) return $query->withTrashed();
-        return $query;
+        return $this->hasMany(ArrivalDocument::class, 'supply_id', 'id')->withTrashed();
     }
 
     public function distributor(): BelongsTo
@@ -199,11 +197,7 @@ class SupplyDocument extends AccountingDocument
         if (is_null($decryptions)) return [];
         $payments = [];
         foreach ($decryptions as $decryption) {
-            if ($this->trashed()) {
-                $payments[] = $decryption->payment()->withTrashed()->first();
-            } else {
-                $payments[] = $decryption->payment()->first();
-            }
+            $payments[] = $decryption->payment()->withTrashed()->first();
         }
         return $payments; //$this->hasMany(PaymentDocument::class, 'supply_id', 'id');
     }

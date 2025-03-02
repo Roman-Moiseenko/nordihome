@@ -65,7 +65,7 @@ class RefundDocument extends AccountingDocument
 
     public function arrival(): BelongsTo
     {
-        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
+        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id')->withTrashed();
     }
 
     public function storage(): BelongsTo
