@@ -182,30 +182,6 @@ class SupplyService extends AccountingService
         $payment->addDecryption($debit, $supply->id);
         return $payment;
     }
-/*
-    public function destroy(SupplyDocument $supply): void
-    {
-        if ($supply->isCompleted()) throw new \DomainException('Документ проведен');
-
-        DB::transaction(function () use ($supply) {
-            $supply->delete(); //Удаление каскадно связанных документов
-        });
-    }
-
-    public function restore(SupplyDocument $document): void
-    {
-        DB::transaction(function () use ($document) {
-            $document->restore();//Восстановление каскадно связанных документов
-        });
-
-    }
-
-    public function fullDestroy(SupplyDocument $document): void
-    {
-        DB::transaction(function () use ($document) {
-            $document->forceDelete();//Удаление каскадно связанных документов
-        });
-    }*/
 
     /**
      * Скопировать Заказ поставщику

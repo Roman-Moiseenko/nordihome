@@ -27,14 +27,27 @@ Route::group(
                 Route::post('/movement/{arrival}', 'ArrivalController@movement')->name('movement'); //Перемещение
                 Route::post('/pricing/{arrival}', 'ArrivalController@pricing')->name('pricing'); //Установка цен
                 Route::post('/refund/{arrival}', 'ArrivalController@refund')->name('refund'); //Возврат
+                //Мягкое удаление
+                Route::delete('/full-destroy/{arrival}', 'ArrivalController@full_destroy')->name('full-destroy');
+                Route::post('/restore/{arrival}', 'ArrivalController@restore')->name('restore');
+
 
                 //Доп.расходы
-                Route::get('/expense/view/{expense}', 'ArrivalController@expense_show')->name('expense.show'); //Доп.расходы
-                Route::post('/expense/set-info/{expense}', 'ArrivalController@expense_set_info')->name('expense.set-info'); //Доп.расходы
-                Route::post('/expense/add-item/{expense}', 'ArrivalController@expense_add_item')->name('expense.add-item'); //Доп.расходы
-                Route::post('/expense/set-item/{item}', 'ArrivalController@expense_set_item')->name('expense.set-item'); //Доп.расходы
-                Route::delete('/expense/del-item/{item}', 'ArrivalController@expense_del_item')->name('expense.del-item'); //Доп.расходы
-                Route::delete('/expense/destroy/{expense}', 'ArrivalController@expense_destroy')->name('expense.destroy'); //Доп.расходы
+                Route::group([
+                    'prefix' => 'expense',
+                    'as' => 'expense.',
+                ], function () {
+                    Route::get('/view/{expense}', 'ArrivalController@expense_show')->name('show'); //Доп.расходы
+                    Route::post('/set-info/{expense}', 'ArrivalController@expense_set_info')->name('set-info'); //Доп.расходы
+                    Route::post('/add-item/{expense}', 'ArrivalController@expense_add_item')->name('add-item'); //Доп.расходы
+                    Route::post('/set-item/{item}', 'ArrivalController@expense_set_item')->name('set-item'); //Доп.расходы
+                    Route::delete('/del-item/{item}', 'ArrivalController@expense_del_item')->name('del-item'); //Доп.расходы
+                    Route::delete('/destroy/{expense}', 'ArrivalController@expense_destroy')->name('destroy'); //Доп.расходы
+                    //Мягкое удаление
+                    Route::delete('/full-destroy/{arrival}', 'ArrivalController@expense_full_destroy')->name('full-destroy');
+                    Route::post('/restore/{arrival}', 'ArrivalController@expense_restore')->name('restore');
+                });
+
 
             });
         //MOVEMENT
@@ -54,6 +67,9 @@ Route::group(
 
                 Route::post('/departure/{movement}', 'MovementController@departure')->name('departure');
                 Route::post('/arrival/{movement}', 'MovementController@arrival')->name('arrival');
+                //Мягкое удаление
+                Route::delete('/full-destroy/{movement}', 'MovementController@full_destroy')->name('full-destroy');
+                Route::post('/restore/{movement}', 'MovementController@restore')->name('restore');
             });
         //INVENTORY
         Route::group([
@@ -69,6 +85,9 @@ Route::group(
                 Route::post('/set-info/{inventory}', 'InventoryController@set_info')->name('set-info');
                 Route::post('/completed/{inventory}', 'InventoryController@completed')->name('completed');
                 Route::post('/work/{inventory}', 'InventoryController@work')->name('work');
+                //Мягкое удаление
+                Route::delete('/full-destroy/{inventory}', 'InventoryController@full_destroy')->name('full-destroy');
+                Route::post('/restore/{inventory}', 'InventoryController@restore')->name('restore');
             });
         //SURPLUS
         Route::group([
@@ -88,6 +107,9 @@ Route::group(
                 Route::post('/', 'SurplusController@store')->name('store');
                 Route::get('/{surplus}', 'SurplusController@show')->name('show');
                 Route::delete('/destroy/{surplus}', 'SurplusController@destroy')->name('destroy');
+                //Мягкое удаление
+                Route::delete('/full-destroy/{surplus}', 'SurplusController@full_destroy')->name('full-destroy');
+                Route::post('/restore/{surplus}', 'SurplusController@restore')->name('restore');
 
             });
         //DEPARTURE
@@ -105,7 +127,10 @@ Route::group(
                 Route::post('/set-info/{departure}', 'DepartureController@set_info')->name('set-info');
                 Route::post('/upload/{departure}', 'DepartureController@upload')->name('upload');
                 Route::post('/delete-photo/{departure}', 'DepartureController@delete_photo')->name('delete-photo');
-            });
+                //Мягкое удаление
+                Route::delete('/full-destroy/{departure}', 'DepartureController@full_destroy')->name('full-destroy');
+                Route::post('/restore/{departure}', 'DepartureController@restore')->name('restore');
+        });
         //DISTRIBUTION
         Route::group([
             'prefix' => 'distributor',
@@ -172,6 +197,9 @@ Route::group(
                 Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
                 Route::post('/work/{pricing}', 'PricingController@work')->name('work');
                 Route::post('/copy/{pricing}', 'PricingController@copy')->name('copy');
+                //Мягкое удаление
+                Route::delete('/full-destroy/{pricing}', 'PricingController@full_destroy')->name('full-destroy');
+                Route::post('/restore/{pricing}', 'PricingController@restore')->name('restore');
             });
         //ORGANIZATION
         Route::group([
@@ -201,7 +229,10 @@ Route::group(
                 Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
                 Route::post('/not-paid/{payment}', 'PaymentController@not_paid')->name('not-paid');
                 Route::post('/set-amount/{decryption}', 'PaymentController@set_amount')->name('set-amount');
-            });
+                //Мягкое удаление
+                Route::delete('/full-destroy/{payment}', 'PaymentController@full_destroy')->name('full-destroy');
+                Route::post('/restore/{payment}', 'PaymentController@restore')->name('restore');
+        });
         //BANK
         Route::group([
             'prefix' => 'bank',
@@ -234,7 +265,9 @@ Route::group(
                 Route::post('/completed/{refund}', 'RefundController@completed')->name('completed');
                 Route::post('/work/{refund}', 'RefundController@work')->name('work');
                 //На основании:
-
+                //Мягкое удаление
+                Route::delete('/full-destroy/{refund}', 'RefundController@full_destroy')->name('full-destroy');
+                Route::post('/restore/{refund}', 'RefundController@restore')->name('restore');
             });
 
 

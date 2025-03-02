@@ -2,7 +2,12 @@
 
 namespace App\Providers;
 
+use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
+use App\Modules\Accounting\Entity\InventoryDocument;
+use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\SupplyDocument;
+use App\Modules\Order\Entity\Order\OrderExpense;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -121,7 +126,7 @@ class RouteServiceProvider extends ServiceProvider
                 array_filter(
                     scandir($modules_folder),
                     function ($item) use ($modules_folder) {
-                        return is_dir($modules_folder.DIRECTORY_SEPARATOR.$item) && ! in_array($item, ['.', '..']);
+                        return is_dir($modules_folder . DIRECTORY_SEPARATOR . $item) && !in_array($item, ['.', '..']);
                     }
                 )
             );
@@ -129,15 +134,44 @@ class RouteServiceProvider extends ServiceProvider
 
     private function showSoftDeletes(): void
     {
+
+       //  return;
+
         Route::bind('supply', function ($value) {
             return SupplyDocument::withTrashed()->find($value);
         });
-
         //TODO Все AccountingDocument
 
+        Route::bind('arrival', function ($value) {
+            return ArrivalDocument::withTrashed()->find($value);
+        });
+        Route::bind('expense', function ($value) {
+            if (strpos(Route::currentRouteName(), 'admin.accounting'))
+             return ArrivalExpenseDocument::withTrashed()->find($value);
+            return OrderExpense::find($value);
 
-
-
+        });
+        Route::bind('movement', function ($value) {
+            return MovementDocument::withTrashed()->find($value);
+        });
+        Route::bind('inventory', function ($value) {
+            return InventoryDocument::withTrashed()->find($value);
+        });
+        Route::bind('surplus', function ($value) {
+            return SupplyDocument::withTrashed()->find($value);
+        });
+        Route::bind('departure', function ($value) {
+            return SupplyDocument::withTrashed()->find($value);
+        });
+        Route::bind('pricing', function ($value) {
+            return SupplyDocument::withTrashed()->find($value);
+        });
+        Route::bind('payment', function ($value) {
+            return SupplyDocument::withTrashed()->find($value);
+        });
+        Route::bind('refund', function ($value) {
+            return SupplyDocument::withTrashed()->find($value);
+        });
 
 
     }

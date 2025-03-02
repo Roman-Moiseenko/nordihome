@@ -67,7 +67,7 @@ class PaymentController extends Controller
     public function destroy(PaymentDocument $payment): RedirectResponse
     {
         try {
-            $this->service->delete($payment);
+            $this->service->destroy($payment);
             return redirect()->back()->with('success', 'Платежный документ удален');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

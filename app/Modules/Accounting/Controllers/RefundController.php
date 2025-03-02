@@ -116,7 +116,7 @@ class RefundController extends Controller
 
     public function destroy(RefundDocument $refund): RedirectResponse
     {
-        $this->service->delete($refund);
+        $this->service->destroy($refund);
         return redirect()->back()->with('success', 'Документ удален');
     }
 }

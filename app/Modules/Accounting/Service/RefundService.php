@@ -9,7 +9,7 @@ use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
 
-class RefundService
+class RefundService extends AccountingService
 {
     private StorageService $storageService;
 
@@ -49,11 +49,6 @@ class RefundService
         $refund->storage_id = $request->input('storage_id');
         $refund->arrival_id = $request->input('arrival_id');
         $refund->save();
-    }
-
-    public function delete(RefundDocument $refund): void
-    {
-        if (!$refund->isCompleted()) $refund->delete();
     }
 
     public function addProduct(RefundDocument $refund, int $product_id, float $quantity): ?RefundProduct

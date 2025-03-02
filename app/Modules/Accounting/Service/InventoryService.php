@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\Deprecated;
 
-class InventoryService
+class InventoryService extends AccountingService
 {
     private DepartureService $departureService;
     private SurplusService $surplusService;
@@ -51,7 +51,7 @@ class InventoryService
 
     public function completed(InventoryDocument $inventory): void
     {
-        DB::transaction(function () use($inventory) {
+        \DB::transaction(function () use($inventory) {
             if ($inventory->surpluses()->count() > 0) { //Излишки
                 $surplus = $this->surplusService->create_storage($inventory->storage_id, $inventory->customer_id);
 
@@ -91,12 +91,6 @@ class InventoryService
         $inventory->baseSave($request->input('document'));
         $inventory->customer_id = $request->input('customer_id');
         $inventory->save();
-    }
-
-    public function destroy(InventoryDocument $inventory): void
-    {
-        if ($inventory->isCompleted()) throw new \DomainException('Нельзя удалить проведенный документ');
-        $inventory->delete();
     }
 
     public function work(InventoryDocument $inventory): void

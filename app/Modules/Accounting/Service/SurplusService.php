@@ -12,7 +12,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class SurplusService
+class SurplusService extends AccountingService
 {
     private StorageService $storages;
 
@@ -33,12 +33,6 @@ class SurplusService
         $surplus->customer_id = $customer_id;
         $surplus->save();
         return $surplus;
-    }
-
-    public function destroy(SurplusDocument $surplus): void
-    {
-        if ($surplus->isCompleted()) throw new \DomainException('Документ проведен');
-        $surplus->delete();
     }
 
     public function work(SurplusDocument $surplus): void

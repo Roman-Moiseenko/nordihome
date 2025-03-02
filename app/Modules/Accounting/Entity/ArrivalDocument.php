@@ -116,7 +116,7 @@ class ArrivalDocument extends AccountingDocument
 
     public function supply(): BelongsTo
     {
-        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
+        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id')->withTrashed();
     }
 
     public function products(): HasMany
@@ -191,5 +191,14 @@ class ArrivalDocument extends AccountingDocument
             $amount += $expense->getAmount();
         }
         return $amount;
+    }
+
+    public function delete()
+    {
+        //TODO доделать
+        foreach ($this->expenses as $expense) {
+            $expense->delete();
+        }
+        parent::delete();
     }
 }

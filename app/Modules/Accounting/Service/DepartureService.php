@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class DepartureService
+class DepartureService extends AccountingService
 {
     private StorageService $storages;
 
@@ -45,12 +45,6 @@ class DepartureService
         $departure->save();
 
         return $departure;
-    }
-
-    public function destroy(DepartureDocument $departure): void
-    {
-        if ($departure->isCompleted()) throw new \DomainException('Документ проведен. Удалять нельзя');
-        $departure->delete();
     }
 
     public function addProduct(DepartureDocument $departure, int $product_id, float $quantity): ?DepartureDocument

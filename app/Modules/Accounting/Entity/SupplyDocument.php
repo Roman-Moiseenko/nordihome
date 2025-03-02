@@ -195,14 +195,15 @@ class SupplyDocument extends AccountingDocument
      */
     public function payments(): array
     {
-        $query = PaymentDecryption::where('supply_id', $this->id);
-        if ($this->trashed()) $query->withTrashed();
-
-        $decryptions = $query->getModels();
+        $decryptions = PaymentDecryption::where('supply_id', $this->id)->getModels();
         if (is_null($decryptions)) return [];
         $payments = [];
         foreach ($decryptions as $decryption) {
-            $payments[] = $decryption->payment()->first();
+            if ($this->trashed()) {
+                $payments[] = $decryption->payment()->withTrashed()->first();
+            } else {
+                $payments[] = $decryption->payment()->first();
+            }
         }
         return $payments; //$this->hasMany(PaymentDocument::class, 'supply_id', 'id');
     }

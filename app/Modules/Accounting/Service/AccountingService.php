@@ -8,9 +8,14 @@ use Illuminate\Support\Facades\DB;
 
 abstract class AccountingService
 {
+    protected function isDeletable(AccountingDocument $document): bool
+    {
+        return $document->isCompleted();
+    }
+
     final public function destroy(AccountingDocument $document): void
     {
-        if ($document->isCompleted()) throw new \DomainException('Документ проведен');
+        if ($this->isDeletable($document)) throw new \DomainException('Документ проведен');
 
         DB::transaction(function () use ($document) {
             $document->delete(); //Удаление каскадно связанных документов
