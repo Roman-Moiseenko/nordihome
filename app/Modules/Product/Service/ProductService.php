@@ -449,7 +449,14 @@ class ProductService
 
             if ($product->name != $name) $product->name = $name . $variants_line;
             if ($product->name_print != $name_print) $product->name_print = $name_print . $variants_line;
-            $product->slug = empty($request->string('slug')->value()) ? Str::slug($product->name) : $request->string('slug')->value();
+            if ($request->boolean('modification')) {
+                //Для модификаций только если пустой
+                if (empty($request->string('slug')->value())) $product->slug = Str::slug($product->name);
+            } else {
+                $product->slug = empty($request->string('slug')->value())
+                    ? Str::slug($product->name)
+                    : $request->string('slug')->value();
+            }
 
             if ($product->main_category_id != $request->integer('category_id')) {
                 $product->main_category_id = $request->integer('category_id');
