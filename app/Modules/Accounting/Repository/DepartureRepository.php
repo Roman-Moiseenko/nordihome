@@ -13,7 +13,7 @@ class DepartureRepository extends AccountingRepository
 //TODO
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = DepartureDocument::orderByDesc('created_at');
+        $query = DepartureDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if ($request->integer('storage') > 0) {
@@ -31,6 +31,7 @@ class DepartureRepository extends AccountingRepository
     public function DepartureToArray(DepartureDocument $document): array
     {
         return array_merge($document->toArray(), [
+            'trashed' => $document->trashed(),
             'date' => $document->htmlDate(),
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),

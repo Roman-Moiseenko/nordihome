@@ -12,7 +12,7 @@ class SurplusRepository extends AccountingRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = SurplusDocument::orderByDesc('created_at');
+        $query = SurplusDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if ($request->integer('storage') > 0) {
@@ -30,6 +30,7 @@ class SurplusRepository extends AccountingRepository
     private function SurplusToArray(SurplusDocument $document): array
     {
         return array_merge($document->toArray(), [
+            'trashed' => $document->trashed(),
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',

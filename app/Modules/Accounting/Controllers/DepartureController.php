@@ -67,12 +67,8 @@ class DepartureController extends Controller
         $request->validate([
             'storage' => 'required',
         ]);
-        try {
-            $departure = $this->service->create($request->integer('storage'));
-            return redirect()->route('admin.accounting.departure.show', $departure)->with('success', 'Документ создан');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $departure = $this->service->create($request->integer('storage'));
+        return redirect()->route('admin.accounting.departure.show', $departure)->with('success', 'Документ создан');
     }
 
     public function show(DepartureDocument $departure, Request $request): \Inertia\Response
@@ -89,83 +85,63 @@ class DepartureController extends Controller
 
     public function destroy(DepartureDocument $departure): RedirectResponse
     {
-        try {
-            $this->service->destroy($departure);
-            return redirect()->back()->with('success', 'Документ удален');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->destroy($departure);
+        return redirect()->back()->with('success', 'Списание помечено на удаление');
+    }
+
+    public function restore(DepartureDocument $departure): RedirectResponse
+    {
+        $this->service->restore($departure);
+        return redirect()->back()->with('success', 'Списание восстановлено');
+    }
+
+    public function full_destroy(DepartureDocument $departure): RedirectResponse
+    {
+        $this->service->fullDestroy($departure);
+        return redirect()->back()->with('success', 'Списание удалено окончательно');
     }
 
     public function add_product(Request $request, DepartureDocument $departure): RedirectResponse
     {
-        try {
-            $this->service->addProduct($departure, $request->integer('product_id'), $request->float('quantity'));
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($departure, $request->integer('product_id'), $request->float('quantity'));
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function add_products(Request $request, DepartureDocument $departure): RedirectResponse
     {
-        try {
-            $this->service->addProducts($departure, $request->input('products'));
-            return redirect()->back()->with('success', 'Товары добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($departure, $request->input('products'));
+        return redirect()->back()->with('success', 'Товары добавлен');
     }
 
     public function del_product(DepartureProduct $product): RedirectResponse
     {
-        try {
-            $product->delete();
-            return redirect()->back()->with('success', 'Удалено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $product->delete();
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function completed(DepartureDocument $departure): RedirectResponse
     {
-        try {
-            $this->service->completed($departure);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->completed($departure);
+        return redirect()->back()->with('success', 'Документ проведен');
 
     }
 
     public function work(DepartureDocument $departure): RedirectResponse
     {
-        try {
-            $this->service->work($departure);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->work($departure);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function set_product(Request $request, DepartureProduct $product): RedirectResponse
     {
-        try {
-            $this->service->setProduct($request, $product);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setProduct($request, $product);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function set_info(DepartureDocument $departure, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($departure, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($departure, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function upload(DepartureDocument $departure, Request $request)

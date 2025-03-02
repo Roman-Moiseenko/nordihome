@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\PaymentDocument;
+use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\PaymentDocumentRepository;
 use App\Modules\Accounting\Repository\TraderRepository;
@@ -66,62 +67,50 @@ class PaymentController extends Controller
 
     public function destroy(PaymentDocument $payment): RedirectResponse
     {
-        try {
-            $this->service->destroy($payment);
-            return redirect()->back()->with('success', 'Платежный документ удален');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->destroy($payment);
+        return redirect()->back()->with('success', 'Платежный документ помечен на удаление');
+    }
+
+    public function restore(PaymentDocument $payment): RedirectResponse
+    {
+        $this->service->restore($payment);
+        return redirect()->back()->with('success', 'Платежный документ восстановлен');
+    }
+
+    public function full_destroy(PaymentDocument $payment): RedirectResponse
+    {
+        $this->service->fullDestroy($payment);
+        return redirect()->back()->with('success', 'Платежный документ удален окончательно');
     }
 
     public function completed(PaymentDocument $payment): RedirectResponse
     {
-        try {
-            $this->service->completed($payment);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->completed($payment);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function work(PaymentDocument $payment): RedirectResponse
     {
-        try {
-            $this->service->work($payment);
-            return redirect()->back()->with('success', 'Документ возвращен в работу');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->work($payment);
+        return redirect()->back()->with('success', 'Документ возвращен в работу');
     }
 
     public function set_info(PaymentDocument $payment, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($payment, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($payment, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function not_paid(PaymentDocument $payment, Request $request): RedirectResponse
     {
-        try {
-            $this->service->notPaid($payment);
-            return redirect()->back()->with('success', 'Добавлено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->notPaid($payment);
+        return redirect()->back()->with('success', 'Добавлено');
     }
 
     public function set_amount(PaymentDecryption $decryption, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setAmount($decryption, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setAmount($decryption, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
 }

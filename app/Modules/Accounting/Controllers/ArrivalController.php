@@ -105,7 +105,19 @@ class ArrivalController extends Controller
     public function destroy(ArrivalDocument $arrival): RedirectResponse
     {
         $this->service->destroy($arrival);
-        return redirect()->back()->with('success', 'Удалено');
+        return redirect()->back()->with('success', 'Поступление помечено на удаление');
+    }
+
+    public function restore(ArrivalDocument $arrival): RedirectResponse
+    {
+        $this->service->restore($arrival);
+        return redirect()->back()->with('success', 'Поступление восстановлено');
+    }
+
+    public function full_destroy(ArrivalDocument $arrival): RedirectResponse
+    {
+        $this->service->fullDestroy($arrival);
+        return redirect()->back()->with('success', 'Поступление удалено окончательно');
     }
 
     //На основании: ====>
@@ -190,7 +202,7 @@ class ArrivalController extends Controller
     public function expense_del_item(ArrivalExpenseItem $item): RedirectResponse
     {
         $this->expenseService->delItem($item);
-        return redirect()->back()->with('success', 'Удалено');
+        return redirect()->back()->with('success', 'Доп.расходы помечены на удаление');
     }
 
     public function expense_destroy(ArrivalExpenseDocument $expense): RedirectResponse
@@ -198,5 +210,17 @@ class ArrivalController extends Controller
         $arrival = $expense->arrival;
         $expense->delete();
         return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Удалено');
+    }
+
+    public function expense_restore(ArrivalExpenseDocument $expense): RedirectResponse
+    {
+        $this->service->restore($expense);
+        return redirect()->back()->with('success', 'Доп.расходы восстановлены');
+    }
+
+    public function expense_full_destroy(ArrivalExpenseDocument $expense): RedirectResponse
+    {
+        $this->service->fullDestroy($expense);
+        return redirect()->back()->with('success', 'Доп.расходы удалены окончательно');
     }
 }

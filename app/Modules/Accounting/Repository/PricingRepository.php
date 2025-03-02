@@ -13,7 +13,7 @@ class PricingRepository extends AccountingRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = PricingDocument::orderByDesc('created_at');
+        $query = PricingDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if ($request->integer('distributor') > 0) {
@@ -35,6 +35,7 @@ class PricingRepository extends AccountingRepository
     public function PricingToArray(PricingDocument $document): array
     {
         return array_merge($document->toArray(), [
+            'trashed' => $document->trashed(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'arrival' => is_null($document->arrival_id) ? null : $document->arrival()->first()->toArray(),
         ]);

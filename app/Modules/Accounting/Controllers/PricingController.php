@@ -69,7 +69,19 @@ class PricingController extends Controller
     public function destroy(PricingDocument $pricing): RedirectResponse
     {
         $this->service->destroy($pricing);
-        return redirect()->back()->with('success', 'Удалено');
+        return redirect()->back()->with('success', 'Ценообразование помечено на удаление');
+    }
+
+    public function restore(PricingDocument $pricing): RedirectResponse
+    {
+        $this->service->restore($pricing);
+        return redirect()->back()->with('success', 'Ценообразование восстановлено');
+    }
+
+    public function full_destroy(PricingDocument $pricing): RedirectResponse
+    {
+        $this->service->fullDestroy($pricing);
+        return redirect()->back()->with('success', 'Ценообразование удалено окончательно');
     }
 
     public function completed(PricingDocument $pricing): RedirectResponse

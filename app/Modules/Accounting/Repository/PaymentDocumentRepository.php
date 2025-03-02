@@ -17,7 +17,7 @@ class PaymentDocumentRepository extends AccountingRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = PaymentDocument::orderByDesc('created_at');
+        $query = PaymentDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if ($request->integer('distributor') > 0) {
@@ -41,6 +41,7 @@ class PaymentDocumentRepository extends AccountingRepository
     {
         $array = $payment->toArray();
         return array_merge($array, [
+                'trashed' => $document->trashed(),
                 'distributor_name' => $payment->recipient->distributor->name,
                 'trader' => $payment->payer->full_name,
                 'organization_id' => $payment->payer->id,

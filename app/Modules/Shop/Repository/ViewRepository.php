@@ -12,6 +12,7 @@ use App\Modules\Setting\Entity\Web;
 use App\Modules\Shop\Schema;
 use Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ViewRepository
 {
@@ -97,14 +98,37 @@ class ViewRepository
                 ];
         }
         $product_ids = $products->pluck('id')->toArray();
-        $_prod_attributes = [];
-        foreach (Category::where('parent_id', null)->get() as $category) {
-            $_prod_attributes = array_merge($_prod_attributes, $this->category_attributes_cache($category, $product_ids));
-        }
+      //  $_prod_attributes = [];
         $prod_attributes = [];
-        foreach ($_prod_attributes as $item) {
-            $prod_attributes[$item['id']] = $item;
+        foreach (Category::where('parent_id', null)->get() as $category) {
+            $_arr = $this->category_attributes_cache($category, $product_ids);
+           // $_prod_attributes = array_merge($_prod_attributes, $_arr);
+
+            foreach ($_arr as $item) {
+                if ($item['isVariant']) {
+                    $prod_attributes[$item['id']] = [
+                        'id' => $item['id'],
+                        'name' => $item['name'],
+                        'isVariant' => $item['isVariant'],
+                    ];
+
+                    foreach ($item['variants'] as $variant) {
+                        $prod_attributes[$item['id']]['variants'][$variant['id']] = $variant;
+                    }
+
+                } else {
+                    $prod_attributes[$item['id']] = $item;
+                }
+            }
+
         }
+     //   Log::info('$_prod_attributes ' . json_encode($_prod_attributes));
+
+   //     $prod_attributes = [];
+   //     foreach ($_prod_attributes as $item) {
+ //           $prod_attributes[$item['id']] = $item;
+       // }
+   //     Log::info('$prod_attributes ' . json_encode($prod_attributes));
 
         $tags = $this->repository->TagsByProducts($product_ids);  //0.0015 сек
         $tag_id = $request['tag_id'] ?? null;
@@ -288,6 +312,7 @@ class ViewRepository
                 return $this->repository->AttributeCommon(array_merge($category->getParentIdAll(), $category->getChildrenIdAll()), $product_ids); //0.02 секунды
             });
         } else {
+            Log::warning('NOT CACHE');
             return $this->repository->AttributeCommon(array_merge($category->getParentIdAll(), $category->getChildrenIdAll()), $product_ids); //0.02 секунды
         }
     }

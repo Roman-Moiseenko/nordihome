@@ -17,7 +17,7 @@ class RefundRepository extends AccountingRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = RefundDocument::orderByDesc('created_at');
+        $query = RefundDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request);
 
@@ -28,8 +28,8 @@ class RefundRepository extends AccountingRepository
 
     private function RefundToArray(RefundDocument $document): array
     {
-
         return array_merge($document->toArray(), [
+            'trashed' => $document->trashed(),
             'currency' => $document->distributor->currency->sign,
             'exchange_fix' => $document->arrival->exchange_fix,
             'distributor_name' => $document->distributor->name,
