@@ -15,24 +15,23 @@ class ModelCommand extends Command
     public function handle()
     {
 
-        $ids = Product::whereHas('prod_attributes', function ($query) {
-            $query->where('id', 15);
-        })->get()->pluck('id')->toArray();
+        $products = Product::whereHas('prod_attributes', function ($query) {
+            $query->where('id', 21);
+        })->where('model', '')->get();
 
-
-        $products = Product::whereNotIn('id', $ids)->get();
         $this->info($products->count());
-        $i = 0;
-       // $products = Product::where('id', 524)->get(); // BB550BWG
+
         //TODO Тест на 1 товаре
         /** @var Product $product */
         foreach ($products as $product) {
-
-            $this->info($product->id . ' ' . $product->code);
-
+            $value = $product->getProdAttribute(21)->Value();
+            $this->info($value);
+            $product->model = $value;
+            $product->save();
+          //  $product->prod_attributes()->detach(21);
         }
 
-
+        $this->info('*****');
         return true;
     }
 }

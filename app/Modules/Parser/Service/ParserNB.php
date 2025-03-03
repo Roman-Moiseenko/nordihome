@@ -384,7 +384,11 @@ class ParserNB extends ParserAbstract
 
         $_product->save();
         //Атрибуты общие
-        foreach ($attribute_data as $datum) {
+        foreach ($attribute_data as $key => $datum) {
+            if ($key == 'Модель') {
+                $_product->model = $datum['variant'];
+                $_product->save();
+            }
             $_product->prod_attributes()->attach($datum['attribute']->id, ['value' => json_encode($datum['variant'])]);
         }
         //$_product->prod_attributes()->attach($attr_color->id, ['value' => json_encode($variant_color)]);
