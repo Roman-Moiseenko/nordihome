@@ -85,10 +85,10 @@
                         />
                         <el-button v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
-                            type="danger"
+                            type="danger" plain
                             @click.stop="handleDeleteEntity(scope.row)"
                         >
-                            Delete
+                            For Delete
                         </el-button>
                     </template>
                 </el-table-column>

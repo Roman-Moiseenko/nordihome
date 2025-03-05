@@ -186,22 +186,5 @@ function routeClick(row) {
 function handleCopy(row) {
     router.post(route('admin.accounting.supply.copy', {supply: row.id}))
 }
-
-function restore(row) {
-    router.visit(route('admin.accounting.supply.restore', {supply: row.id}), {
-        method: "post",
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: page => {
-            tableData.value = [...page.props.supplies.data]
-        }
-    })
-}
-function fullDestroy(row) {
-    $delete_entity.show(route('admin.accounting.supply.full-destroy', {supply: row.id}));
-}
-
 </script>
-<style scoped>
 
-</style>

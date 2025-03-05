@@ -118,7 +118,7 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     return ''
 }
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.arrival.completed);
+const isEdit = computed<Boolean>(() => !props.arrival.completed && !props.arrival.trashed);
 const $delete_entity = inject("$delete_entity")
 function setItem(row: any) {
     iSaving.value = true;

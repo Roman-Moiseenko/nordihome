@@ -12,11 +12,9 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-
-
         <AccountingWork v-if="arrival.distributor_id" :route="route('admin.accounting.arrival.work', {arrival: props.arrival.id})" />
     </template>
-    <template v-else>
+    <template v-else-if="!arrival.trashed">
         <SearchAddProduct
             :route="route('admin.accounting.arrival.add-product', {arrival: arrival.id})"
             :quantity="true"
@@ -24,6 +22,12 @@
         <SearchAddProducts :route="route('admin.accounting.arrival.add-products', {arrival: arrival.id})" class="ml-3"/>
         <el-button type="warning"  class="ml-3" @click="onExpenses">Доп. расходы</el-button>
         <AccountingCompleted :route="route('admin.accounting.arrival.completed', {arrival: props.arrival.id})" />
+    </template>
+    <template v-else>
+        <AccountingSoftDelete
+            :restore="route('admin.accounting.arrival.restore', {arrival: arrival.id})"
+            :destroy="route('admin.accounting.arrival.full-destroy', {arrival: arrival.id})"
+        />
     </template>
     <AccountingOnBased />
     <AccountingPrint />
@@ -49,6 +53,7 @@ import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import {ElLoading} from "element-plus";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     arrival: Object,
