@@ -4,9 +4,14 @@ namespace App\Providers;
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
+use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\PaymentDocument;
+use App\Modules\Accounting\Entity\PricingDocument;
+use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\SupplyDocument;
+use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -135,8 +140,6 @@ class RouteServiceProvider extends ServiceProvider
     private function showSoftDeletes(): void
     {
 
-       //  return;
-
         Route::bind('supply', function ($value) {
             return SupplyDocument::withTrashed()->find($value);
         });
@@ -146,7 +149,7 @@ class RouteServiceProvider extends ServiceProvider
             return ArrivalDocument::withTrashed()->find($value);
         });
         Route::bind('expense', function ($value) {
-            if (strpos(Route::currentRouteName(), 'admin.accounting'))
+            if (str_contains(Route::currentRouteName(), 'admin.accounting.'))
              return ArrivalExpenseDocument::withTrashed()->find($value);
             return OrderExpense::find($value);
 
@@ -158,19 +161,19 @@ class RouteServiceProvider extends ServiceProvider
             return InventoryDocument::withTrashed()->find($value);
         });
         Route::bind('surplus', function ($value) {
-            return SupplyDocument::withTrashed()->find($value);
+            return SurplusDocument::withTrashed()->find($value);
         });
         Route::bind('departure', function ($value) {
-            return SupplyDocument::withTrashed()->find($value);
+            return DepartureDocument::withTrashed()->find($value);
         });
         Route::bind('pricing', function ($value) {
-            return SupplyDocument::withTrashed()->find($value);
+            return PricingDocument::withTrashed()->find($value);
         });
         Route::bind('payment', function ($value) {
-            return SupplyDocument::withTrashed()->find($value);
+            return PaymentDocument::withTrashed()->find($value);
         });
         Route::bind('refund', function ($value) {
-            return SupplyDocument::withTrashed()->find($value);
+            return RefundDocument::withTrashed()->find($value);
         });
 
 

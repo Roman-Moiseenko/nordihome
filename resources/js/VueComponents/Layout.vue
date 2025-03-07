@@ -87,7 +87,6 @@ import Dropdown from '@Comp/Dropdown.vue'
 import MainMenu from '@Comp/Menu/MainMenu.vue'
 import FlashMessages from '@Comp/FlashMessages.vue'
 import BreadCrumbs from '@Comp/BreadCrumbs.vue';
-
 const app_name = import.meta.env.VITE_APP_NAME
 </script>
 <style>

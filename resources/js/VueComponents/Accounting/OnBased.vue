@@ -11,7 +11,7 @@
                 <div v-if="founded">
                     <el-tag>Основание</el-tag>
                     <div v-for="item in founded">
-                        <Link :class="'ml-6' + item.trashed ? 'line-through' : ''" type="primary" :href="item.url">{{ item.label }}</Link>
+                        <Link :class="'ml-6' + (item.trashed ? ' line-through' : '')" type="primary" :href="item.url">{{ item.label }}</Link>
                     </div>
                 </div>
                 <div v-if="based">
@@ -45,6 +45,7 @@ const $accounting = inject('$accounting')
 const based = $accounting.based
 const founded = $accounting.founded
 if (based) dataSource.value = [...based]
+console.log(founded)
 </script>
 <style lang="scss">
 .accounting-based {

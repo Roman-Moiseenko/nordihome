@@ -273,6 +273,7 @@ abstract class AccountingDocument extends Model
                 $result[] = [
                     'label' => $item->documentName(),
                     'url' => $item->documentUrl(),
+                    'trashed' => $item->trashed(),
                 ];
             }
             return $result;
@@ -282,6 +283,7 @@ abstract class AccountingDocument extends Model
                 [
                     'label' => $document->documentName(),
                     'url' => $document->documentUrl(),
+                    'trashed' => $document->trashed(),
                 ]
             ];
         }
