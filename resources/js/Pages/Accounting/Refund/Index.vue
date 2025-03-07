@@ -3,20 +3,6 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Возвраты поставщикам</h1>
         <div class="flex">
-            <!--el-popover :visible="visible_create" placement="bottom-start" :width="246">
-                <template #reference>
-                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
-                        Создать документ
-                        <el-icon class="ml-1"><ArrowDown /></el-icon>
-                    </el-button>
-                </template>
-                <el-select v-model="create_id" placeholder="Поставщики" class="mt-1">
-                    <el-option v-for="item in $props.distributors" :key="item.id" :label="item.name" :value="item.id"/>
-                </el-select>
-                <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
-                </div>
-            </el-popover-->
 
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-date-picker
@@ -90,7 +76,12 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button-->
-                        <el-button v-if="!scope.row.completed"
+                        <AccountingSoftDelete v-if="scope.row.trashed"
+                                              :restore="route('admin.accounting.refund.restore', {refund: scope.row.id})"
+                                              :destroy="route('admin.accounting.refund.full-destroy', {refund: scope.row.id})"
+                                              :small="true"
+                        />
+                        <el-button v-if="!scope.row.completed && !scope.row.trashed"
                                    size="small"
                                    type="danger"
                                    @click.stop="handleDeleteEntity(scope.row)"
@@ -121,6 +112,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 import Active from '@Comp/Elements/Active.vue'
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     refunds: Object,
@@ -146,9 +138,11 @@ const filter = reactive({
 })
 const create_id = ref<Number>(null)
 interface IRow {
-    active: number
+    completed: number,
+    trashed: boolean,
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }

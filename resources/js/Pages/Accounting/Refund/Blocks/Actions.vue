@@ -2,13 +2,19 @@
     <template v-if="refund.completed">
         <AccountingWork :route="route('admin.accounting.refund.work', {refund: props.refund.id})" />
     </template>
-    <template v-else>
+    <template v-else-if="!refund.trashed">
         <SearchAddProduct
             :route="route('admin.accounting.refund.add-product', {refund: refund.id})"
             :quantity="true"
         />
         <SearchAddProducts :route="route('admin.accounting.refund.add-products', {refund: refund.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.refund.completed', {refund: props.refund.id})" />
+    </template>
+    <template v-else>
+        <AccountingSoftDelete
+            :restore="route('admin.accounting.refund.restore', {refund: refund.id})"
+            :destroy="route('admin.accounting.refund.full-destroy', {refund: refund.id})"
+        />
     </template>
     <AccountingOnBased />
     <AccountingPrint />
@@ -28,6 +34,7 @@ import AccountingPrint from "@Comp/Accounting/Print.vue";
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     refund: Object,

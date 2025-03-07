@@ -81,7 +81,7 @@ class ArrivalDocument extends AccountingDocument
 
     public function getAmountVAT(): float
     {
-        $amount = 0;
+        $amount = 0.0;
         foreach ($this->products as $product) {
             if (!is_null($product->product->VAT) && !is_null($product->product->VAT->value))
                 $amount += $product->quantity * $product->cost_currency * ($product->product->VAT->value / 100);

@@ -94,5 +94,9 @@ class RefundDocument extends AccountingDocument
         return $this->foundedGenerate($this->arrival);
     }
 
-
+    public function restore(): void
+    {
+        if ($this->arrival->trashed()) throw new \DomainException('Восстановите документ основание');
+        parent::restore();
+    }
 }
