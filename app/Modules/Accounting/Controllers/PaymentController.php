@@ -80,7 +80,7 @@ class PaymentController extends Controller
     public function full_destroy(PaymentDocument $payment): RedirectResponse
     {
         $this->service->fullDestroy($payment);
-        return redirect()->back()->with('success', 'Платежный документ удален окончательно');
+        return redirect()->route('admin.accounting.payment.index')->with('success', 'Платежный документ удален окончательно');
     }
 
     public function completed(PaymentDocument $payment): RedirectResponse

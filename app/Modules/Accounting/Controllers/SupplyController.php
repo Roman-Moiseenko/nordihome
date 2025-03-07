@@ -129,7 +129,7 @@ class SupplyController extends Controller
     public function full_destroy(SupplyDocument $supply): RedirectResponse
     {
         $this->service->fullDestroy($supply);
-        return redirect()->back()->with('success', 'Заказ удален окончательно');
+        return redirect()->route('admin.accounting.supply.index')->with('success', 'Заказ удален окончательно');
     }
 
     public function copy(SupplyDocument $supply): RedirectResponse

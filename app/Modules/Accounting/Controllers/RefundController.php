@@ -129,6 +129,6 @@ class RefundController extends Controller
     public function full_destroy(RefundDocument $refund): RedirectResponse
     {
         $this->service->fullDestroy($refund);
-        return redirect()->back()->with('success', 'Возврат удален окончательно');
+        return redirect()->route('admin.accounting.refund.index')->with('success', 'Возврат удален окончательно');
     }
 }

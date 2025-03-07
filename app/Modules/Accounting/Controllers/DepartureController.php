@@ -86,7 +86,7 @@ class DepartureController extends Controller
     public function destroy(DepartureDocument $departure): RedirectResponse
     {
         $this->service->destroy($departure);
-        return redirect()->back()->with('success', 'Списание помечено на удаление');
+        return redirect()->route('admin.accounting.departure.index')->with('success', 'Списание помечено на удаление');
     }
 
     public function restore(DepartureDocument $departure): RedirectResponse

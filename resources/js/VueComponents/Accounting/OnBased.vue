@@ -45,7 +45,6 @@ const $accounting = inject('$accounting')
 const based = $accounting.based
 const founded = $accounting.founded
 if (based) dataSource.value = [...based]
-console.log(founded)
 </script>
 <style lang="scss">
 .accounting-based {

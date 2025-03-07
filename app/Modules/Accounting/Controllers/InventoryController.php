@@ -100,7 +100,7 @@ class InventoryController extends Controller
     public function destroy(InventoryDocument $inventory): RedirectResponse
     {
         $this->service->destroy($inventory);
-        return redirect()->back()->with('success', 'Инвентаризация помечена на удаление');
+        return redirect()->route('admin.accounting.inventory.index')->with('success', 'Инвентаризация помечена на удаление');
     }
 
     public function restore(InventoryDocument $inventory): RedirectResponse

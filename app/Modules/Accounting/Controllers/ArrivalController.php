@@ -117,7 +117,7 @@ class ArrivalController extends Controller
     public function full_destroy(ArrivalDocument $arrival): RedirectResponse
     {
         $this->service->fullDestroy($arrival);
-        return redirect()->back()->with('success', 'Поступление удалено окончательно');
+        return redirect()->route('admin.accounting.arrival.index')->with('success', 'Поступление удалено окончательно');
     }
 
     //На основании: ====>
@@ -220,7 +220,8 @@ class ArrivalController extends Controller
 
     public function expense_full_destroy(ArrivalExpenseDocument $expense): RedirectResponse
     {
+        $arrival = $expense->arrival;
         $this->service->fullDestroy($expense);
-        return redirect()->back()->with('success', 'Доп.расходы удалены окончательно');
+        return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Доп.расходы удалены окончательно');
     }
 }

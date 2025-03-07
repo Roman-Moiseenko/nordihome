@@ -4,13 +4,19 @@
         <el-button v-if="movement.is_arrival" type="success" class="" @click="onArrival">Товар прибыл</el-button>
         <AccountingWork v-if="movement.is_departure" :route="route('admin.accounting.movement.work', {movement: props.movement.id})" />
     </template>
-    <template v-else>
+    <template v-else-if="!movement.trashed">
         <SearchAddProduct
             :route="route('admin.accounting.movement.add-product', {movement: movement.id})"
             :quantity="true"
         />
         <SearchAddProducts :route="route('admin.accounting.movement.add-products', {movement: movement.id})" class="ml-3"/>
         <AccountingCompleted :route="route('admin.accounting.movement.completed', {movement: props.movement.id})" />
+    </template>
+    <template v-else>
+        <AccountingSoftDelete
+            :restore="route('admin.accounting.movement.restore', {movement: movement.id})"
+            :destroy="route('admin.accounting.movement.full-destroy', {movement: movement.id})"
+        />
     </template>
     <AccountingOnBased />
     <AccountingPrint />
@@ -28,6 +34,7 @@ import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import {ElLoading} from "element-plus";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     movement: Object,

@@ -89,12 +89,18 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button-->
-                        <el-button v-if="!scope.row.completed"
+                        <AccountingSoftDelete v-if="scope.row.trashed"
+                                              :restore="route('admin.accounting.movement.restore', {movement: scope.row.id})"
+                                              :destroy="route('admin.accounting.movement.full-destroy', {movement: scope.row.id})"
+                                              :small="true"
+                        />
+                        <el-button v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
                             type="danger"
+                                   plain
                             @click.stop="handleDeleteEntity(scope.row)"
                         >
-                            Delete
+                            For Delete
                         </el-button>
                     </template>
                 </el-table-column>
@@ -120,6 +126,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 import Active from '@Comp/Elements/Active.vue'
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     movements: Object,
@@ -151,9 +158,11 @@ const storage = reactive({
 })
 
 interface IRow {
-    completed: number
+    completed: number,
+    trashed: boolean,
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }

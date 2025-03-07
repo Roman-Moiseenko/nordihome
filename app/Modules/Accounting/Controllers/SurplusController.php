@@ -97,7 +97,7 @@ class SurplusController extends Controller
     public function full_destroy(SurplusDocument $surplus): RedirectResponse
     {
         $this->service->fullDestroy($surplus);
-        return redirect()->back()->with('success', 'Оприходование удалено окончательно');
+        return redirect()->route('admin.accounting.surplus.index')->with('success', 'Оприходование удалено окончательно');
     }
 
     public function add_product(Request $request, SurplusDocument $surplus): RedirectResponse

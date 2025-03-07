@@ -81,7 +81,7 @@ class PricingController extends Controller
     public function full_destroy(PricingDocument $pricing): RedirectResponse
     {
         $this->service->fullDestroy($pricing);
-        return redirect()->back()->with('success', 'Ценообразование удалено окончательно');
+        return redirect()->route('admin.accounting.pricing.index')->with('success', 'Ценообразование удалено окончательно');
     }
 
     public function completed(PricingDocument $pricing): RedirectResponse
