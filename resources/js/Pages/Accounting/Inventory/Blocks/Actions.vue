@@ -2,8 +2,14 @@
     <template v-if="inventory.completed">
         <AccountingWork :route="route('admin.accounting.inventory.work', {inventory: props.inventory.id})" />
     </template>
-    <template v-else>
+    <template v-else-if="!inventory.trashed">
         <AccountingCompleted :route="route('admin.accounting.inventory.completed', {inventory: props.inventory.id})" />
+    </template>
+    <template v-else>
+        <AccountingSoftDelete
+            :restore="route('admin.accounting.inventory.restore', {inventory: inventory.id})"
+            :destroy="route('admin.accounting.inventory.full-destroy', {inventory: inventory.id})"
+        />
     </template>
     <AccountingOnBased />
     <AccountingPrint />
@@ -25,6 +31,7 @@ import AccountingPrint from "@Comp/Accounting/Print.vue";
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     inventory: Object,
