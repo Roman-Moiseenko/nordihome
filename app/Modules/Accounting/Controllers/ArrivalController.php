@@ -202,14 +202,14 @@ class ArrivalController extends Controller
     public function expense_del_item(ArrivalExpenseItem $item): RedirectResponse
     {
         $this->expenseService->delItem($item);
-        return redirect()->back()->with('success', 'Доп.расходы помечены на удаление');
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function expense_destroy(ArrivalExpenseDocument $expense): RedirectResponse
     {
         $arrival = $expense->arrival;
         $expense->delete();
-        return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Удалено');
+        return redirect()->route('admin.accounting.arrival.show', $arrival)->with('success', 'Доп.расходы помечены на удаление');
     }
 
     public function expense_restore(ArrivalExpenseDocument $expense): RedirectResponse

@@ -13,6 +13,7 @@ use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -139,12 +140,9 @@ class RouteServiceProvider extends ServiceProvider
 
     private function showSoftDeletes(): void
     {
-
         Route::bind('supply', function ($value) {
             return SupplyDocument::withTrashed()->find($value);
         });
-        //TODO Все AccountingDocument
-
         Route::bind('arrival', function ($value) {
             return ArrivalDocument::withTrashed()->find($value);
         });
@@ -152,7 +150,6 @@ class RouteServiceProvider extends ServiceProvider
             if (str_contains(Route::currentRouteName(), 'admin.accounting.'))
              return ArrivalExpenseDocument::withTrashed()->find($value);
             return OrderExpense::find($value);
-
         });
         Route::bind('movement', function ($value) {
             return MovementDocument::withTrashed()->find($value);
@@ -173,9 +170,9 @@ class RouteServiceProvider extends ServiceProvider
             return PaymentDocument::withTrashed()->find($value);
         });
         Route::bind('refund', function ($value) {
-            return RefundDocument::withTrashed()->find($value);
+            if (str_contains(Route::currentRouteName(), 'admin.accounting.'))
+                return RefundDocument::withTrashed()->find($value);
+            return OrderExpenseRefund::find($value);
         });
-
-
     }
 }

@@ -44,8 +44,8 @@ Route::group(
                     Route::delete('/del-item/{item}', 'ArrivalController@expense_del_item')->name('del-item'); //Доп.расходы
                     Route::delete('/destroy/{expense}', 'ArrivalController@expense_destroy')->name('destroy'); //Доп.расходы
                     //Мягкое удаление
-                    Route::delete('/full-destroy/{arrival}', 'ArrivalController@expense_full_destroy')->name('full-destroy');
-                    Route::post('/restore/{arrival}', 'ArrivalController@expense_restore')->name('restore');
+                    Route::delete('/full-destroy/{expense}', 'ArrivalController@expense_full_destroy')->name('full-destroy');
+                    Route::post('/restore/{expense}', 'ArrivalController@expense_restore')->name('restore');
                 });
 
 

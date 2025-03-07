@@ -41,7 +41,7 @@ const info = reactive({
     },
     currency: props.expense.currency,
 })
-const notEdit = computed(() => props.expense.completed);
+const notEdit = computed(() => props.expense.completed || props.expense.trashed);
 
 function setInfo() {
     iSavingInfo.value = true
