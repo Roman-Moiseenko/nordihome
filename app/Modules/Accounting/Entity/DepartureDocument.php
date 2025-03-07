@@ -116,4 +116,9 @@ class DepartureDocument extends AccountingDocument
         return $this->foundedGenerate($this->inventory);
     }
 
+    public function restore(): void
+    {
+        if (!is_null($this->inventory) && $this->inventory->trashed()) throw new \DomainException('Восстановите документ основание');
+        parent::restore();
+    }
 }
