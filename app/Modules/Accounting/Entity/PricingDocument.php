@@ -74,4 +74,10 @@ class PricingDocument extends AccountingDocument
     {
         return $this->foundedGenerate($this->arrival);
     }
+
+    public function restore(): void
+    {
+        if (!is_null($this->arrival) && $this->arrival->trashed()) throw new \DomainException('Восстановите документ основание');
+        parent::restore();
+    }
 }

@@ -2,15 +2,21 @@
     <template v-if="pricing.completed">
 
         <AccountingPrint />
-        <AccountingWork :route="route('admin.accounting.pricing.work', {pricing: props.pricing.id})" />
+        <AccountingWork :route="route('admin.accounting.pricing.work', {pricing: pricing.id})" />
     </template>
-    <template v-else>
+    <template v-else-if="!pricing.trashed">
         <SearchAddProduct
             :route="route('admin.accounting.pricing.add-product', {pricing: pricing.id})"
             :quantity="false"
         />
         <SearchAddProducts :route="route('admin.accounting.pricing.add-products', {pricing: pricing.id})" class="ml-3"/>
-        <AccountingCompleted :route="route('admin.accounting.pricing.completed', {pricing: props.pricing.id})" />
+        <AccountingCompleted :route="route('admin.accounting.pricing.completed', {pricing: pricing.id})" />
+    </template>
+    <template v-else>
+        <AccountingSoftDelete
+            :restore="route('admin.accounting.pricing.restore', {pricing: pricing.id})"
+            :destroy="route('admin.accounting.pricing.full-destroy', {pricing: pricing.id})"
+        />
     </template>
     <AccountingOnBased />
     <AccountingFilter />
@@ -26,6 +32,7 @@ import AccountingPrint from "@Comp/Accounting/Print.vue";
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     pricing: Object,
