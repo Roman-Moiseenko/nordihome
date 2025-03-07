@@ -112,7 +112,7 @@
     <DeleteEntityModal name_entity="Заказ поставщику"/>
 </template>
 <script lang="ts" setup>
-import {inject, reactive, ref, defineProps} from "vue";
+import {inject, reactive, ref} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"

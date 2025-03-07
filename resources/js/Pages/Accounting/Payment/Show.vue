@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, defineProps, computed, reactive, provide} from "vue";
+import {ref, computed, reactive, provide} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import PaymentInfo from "./Blocks/Info.vue";

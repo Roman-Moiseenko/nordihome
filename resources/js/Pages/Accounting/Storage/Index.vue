@@ -42,7 +42,7 @@
 
 <script setup>
 import {Head, router} from "@inertiajs/vue3";
-import {defineProps, ref} from "vue";
+import {ref} from "vue";
 import Active from "@Comp/Elements/Active.vue";
 
 const props = defineProps({

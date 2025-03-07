@@ -293,5 +293,6 @@ abstract class AccountingDocument extends Model
         if ($this->isCompleted()) throw new \DomainException('Документ проведен');
         parent::delete();
     }
+
     //Мягкое удаление
 }

@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import {defineProps, ref, reactive} from "vue";
+import {ref, reactive} from "vue";
 import {func} from '@Res/func.js'
 import {router} from "@inertiajs/vue3";
 

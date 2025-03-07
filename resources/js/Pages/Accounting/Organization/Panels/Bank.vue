@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import {defineProps, ref} from "vue";
+import {ref} from "vue";
 import {func} from '@Res/func.js'
 import {router} from '@inertiajs/vue3'
 import EditField from "@Comp/Elements/EditField.vue";

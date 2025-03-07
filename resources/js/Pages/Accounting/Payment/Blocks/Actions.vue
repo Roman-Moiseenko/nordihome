@@ -13,7 +13,6 @@
 </template>
 
 <script setup>
-import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
 import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
 import AccountingPrint from "@Comp/Accounting/Print.vue";

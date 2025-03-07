@@ -211,6 +211,7 @@ class ArrivalDocument extends AccountingDocument
 
     public function restore(): void
     {
+        if ($this->supply->trashed()) throw new \DomainException('Восставите документ основание');
         parent::restore();
         foreach ($this->expenses as $arrival) {
             $arrival->restore();

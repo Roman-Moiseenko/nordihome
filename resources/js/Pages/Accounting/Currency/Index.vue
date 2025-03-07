@@ -54,7 +54,7 @@
     <DeleteEntityModal name_entity="Валюту" />
 </template>
 <script lang="ts" setup>
-import {inject, reactive, ref, defineProps} from "vue";
+import {inject, ref} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 
 import {useStore} from "@Res/store.js"

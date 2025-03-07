@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import {inject, defineProps, reactive} from "vue";
+import {inject, reactive} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Accounting/OnBased.vue";

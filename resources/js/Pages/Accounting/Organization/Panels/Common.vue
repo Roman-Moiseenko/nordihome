@@ -73,7 +73,6 @@
 </template>
 
 <script setup>
-import {defineProps, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import EditField from "@Comp/Elements/EditField.vue";
 

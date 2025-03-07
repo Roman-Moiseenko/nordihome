@@ -20,7 +20,6 @@
 <script setup>
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
-import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Accounting/OnBased.vue";

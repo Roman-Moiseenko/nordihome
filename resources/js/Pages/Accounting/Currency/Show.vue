@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, defineProps, reactive} from "vue";
+import {ref, reactive} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import EditField from "@Comp/Elements/EditField.vue";
