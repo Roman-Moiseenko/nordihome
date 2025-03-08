@@ -100,7 +100,7 @@ function onDown() {
     })
 }
 function handleDeleteEntity() {
-    $delete_entity.show(route('admin.product.category.destroy', {category: props.category.id}), 'category');
+    $delete_entity.show(route('admin.product.category.destroy', {category: props.category.id}), {name: 'category'});
 
 }
 function handleChild() {
