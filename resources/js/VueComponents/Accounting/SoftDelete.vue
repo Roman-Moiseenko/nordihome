@@ -9,7 +9,6 @@
         :size="small ? 'small' : 'default'"
         :class="classBtn"
         @click.stop="onDelete">{{ textDelete}}</el-button>
-    <DeleteEntityModal name_entity="Документ" name="document"/>
 </template>
 
 <script lang="ts" setup>
@@ -36,11 +35,11 @@ const textDelete = props.small ? 'Delete' : 'Удалить'
 const textRestore = props.small ? 'Restore' : 'Восстановить'
 const classBtn = props.small ? '' : 'mr-3'
 const staff = usePage().props.auth.user
-const $delete_entity = inject("$delete_entity")
+
+const $emit = defineEmits(['restore', 'destroy'])
 
 function onDelete() {
-    $delete_entity.show(props.destroy, 'document');
-
+    $emit('destroy', true)
 }
 function onRestore() {
     const loading = ElLoading.service({
@@ -54,6 +53,7 @@ function onRestore() {
         preserveState: false,
         onSuccess: page => {
             loading.close()
+            $emit('restore', true)
         },
         onFinish: page => {
             loading.close()

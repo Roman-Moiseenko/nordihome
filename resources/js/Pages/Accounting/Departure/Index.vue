@@ -5,16 +5,20 @@
         <div class="flex">
             <el-popover :visible="visible_create" placement="bottom-start" :width="246">
                 <template #reference>
-                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
+                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create"
+                               ref="buttonRef">
                         Создать документ
-                        <el-icon class="ml-1"><ArrowDown /></el-icon>
+                        <el-icon class="ml-1">
+                            <ArrowDown/>
+                        </el-icon>
                     </el-button>
                 </template>
                 <el-select v-model="create_id" placeholder="Склад" class="mt-1">
                     <el-option v-for="item in storages" :key="item.id" :label="item.name" :value="item.id"/>
                 </el-select>
                 <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
+                    <el-button @click="visible_create = false">Отмена</el-button>
+                    <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
 
@@ -58,7 +62,7 @@
 
                 <el-table-column label="Дата" width="120">
                     <template #default="scope">
-                        {{ func.date(scope.row.created_at)}}
+                        {{ func.date(scope.row.created_at) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="number" label="№ Документа" width="160"/>
@@ -77,12 +81,20 @@
                 <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <el-button v-if="!scope.row.completed"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.departure.restore', {departure: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
+                        />
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
                             type="danger"
+                            plain
                             @click.stop="handleDeleteEntity(scope.row)"
                         >
-                            Delete
+                            For Delete
                         </el-button>
                     </template>
                 </el-table-column>
@@ -96,7 +108,7 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Заказ поставщику" />
+    <DeleteEntityModal name_entity="Заказ поставщику"/>
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref} from "vue";
@@ -108,6 +120,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 import Active from '@Comp/Elements/Active.vue'
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     departures: Object,
@@ -132,10 +145,14 @@ const filter = reactive({
     date_to: props.filters.date_to,
 })
 const create_id = ref<Number>(null)
+
 interface IRow {
-    active: number
+    completed: number,
+    trashed: boolean,
 }
+
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }
@@ -143,11 +160,16 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.departure.destroy', {departure: row.id}));
+    $delete_entity.show(route('admin.accounting.departure.destroy', {departure: row.id}), {soft: true});
 }
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.departure.full-destroy', {departure: row.id}));
+}
+
 function createButton() {
     router.post(route('admin.accounting.departure.store', {storage: create_id.value}))
 }
+
 function routeClick(row) {
     router.get(route('admin.accounting.departure.show', {departure: row.id}))
 }

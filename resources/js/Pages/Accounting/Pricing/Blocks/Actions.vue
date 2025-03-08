@@ -15,11 +15,12 @@
     <template v-else>
         <AccountingSoftDelete
             :restore="route('admin.accounting.pricing.restore', {pricing: pricing.id})"
-            :destroy="route('admin.accounting.pricing.full-destroy', {pricing: pricing.id})"
+            @destroy="onForceDelete"
         />
     </template>
     <AccountingOnBased />
     <AccountingFilter />
+    <DeleteEntityModal name_entity="Ценообразование" name="document"/>
 </template>
 
 <script setup>
@@ -33,9 +34,13 @@ import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
+import {inject} from "vue";
 
 const props = defineProps({
     pricing: Object,
 })
-
+const $delete_entity = inject("$delete_entity")
+function onForceDelete() {
+    $delete_entity.show(route('admin.accounting.pricing.full-destroy', {pricing: props.pricing.id}), {name: "document"});
+}
 </script>

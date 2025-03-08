@@ -13,7 +13,7 @@
     <template v-else>
         <AccountingSoftDelete
             :restore="route('admin.accounting.refund.restore', {refund: refund.id})"
-            :destroy="route('admin.accounting.refund.full-destroy', {refund: refund.id})"
+            @destroy="onForceDelete"
         />
     </template>
     <AccountingOnBased />
@@ -22,6 +22,7 @@
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(refund.amount, refund.currency) }}</el-tag>
     </span>
+    <DeleteEntityModal name_entity="Возврат поставщику" name="document"/>
 </template>
 
 <script setup>
@@ -35,10 +36,14 @@ import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
+import {inject} from "vue";
 
 const props = defineProps({
     refund: Object,
 })
-
+const $delete_entity = inject("$delete_entity")
+function onForceDelete() {
+    $delete_entity.show(route('admin.accounting.refund.full-destroy', {refund: props.refund.id}), {name: "document"});
+}
 
 </script>

@@ -26,7 +26,7 @@
     <template v-else>
         <AccountingSoftDelete
             :restore="route('admin.accounting.arrival.restore', {arrival: arrival.id})"
-            :destroy="route('admin.accounting.arrival.full-destroy', {arrival: arrival.id})"
+            @destroy="onForceDelete"
         />
     </template>
     <AccountingOnBased />
@@ -38,6 +38,7 @@
             Доп.расходы <el-tag type="warning" size="large">{{ func.price(arrival.expense_amount) }}</el-tag>
         </span>
     </span>
+    <DeleteEntityModal name_entity="Приходную накладную" name="document"/>
 
 </template>
 
@@ -53,11 +54,15 @@ import AccountingWork from "@Comp/Accounting/Work.vue";
 import {ElLoading} from "element-plus";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
+import {inject} from "vue";
 
 const props = defineProps({
     arrival: Object,
 })
-
+const $delete_entity = inject("$delete_entity")
+function onForceDelete() {
+    $delete_entity.show(route('admin.accounting.arrival.full-destroy', {arrival: props.arrival.id}), {name: "document"});
+}
 function onExpenses() {
     const loading = ElLoading.service({
         lock: false,

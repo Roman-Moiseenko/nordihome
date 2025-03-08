@@ -18,14 +18,14 @@
     <template v-else>
         <AccountingSoftDelete
             :restore="route('admin.accounting.arrival.expense.restore', {expense: expense.id})"
-            :destroy="route('admin.accounting.arrival.expense.full-destroy', {expense: expense.id})"
+            @destroy="onForceDelete"
         />
     </template>
     <AccountingOnBased />
     <span class="ml-auto">
         Сумма <el-tag type="danger" size="large">{{ func.price(expense.amount) }}</el-tag>
     </span>
-    <DeleteEntityModal name_entity="Доп.расходы" name="expense" />
+    <DeleteEntityModal name_entity="Доп.расходы" name="document" />
 </template>
 
 <script setup>
@@ -63,7 +63,15 @@ function onSubmit() {
     })
 }
 function onDelete() {
-    $delete_entity.show(route('admin.accounting.arrival.expense.destroy', {expense: props.expense.id}), "expense");
+    $delete_entity.show(
+        route('admin.accounting.arrival.expense.destroy', {expense: props.expense.id}),
+        {name: "document", soft: true}
+    );
 }
-
+function onForceDelete() {
+    $delete_entity.show(
+        route('admin.accounting.arrival.expense.full-destroy', {expense: props.expense.id}),
+        {name: "document"}
+    );
+}
 </script>

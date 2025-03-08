@@ -77,12 +77,20 @@
                 <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <el-button v-if="!scope.row.completed"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.surplus.restore', {surplus: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
+                        />
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
                             type="danger"
+                            plain
                             @click.stop="handleDeleteEntity(scope.row)"
                         >
-                            Delete
+                            For Delete
                         </el-button>
                     </template>
                 </el-table-column>
@@ -96,7 +104,7 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Заказ поставщику" />
+    <DeleteEntityModal name_entity="Оприходование" />
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps} from "vue";
@@ -108,6 +116,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 import Active from '@Comp/Elements/Active.vue'
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     surpluses: Object,
@@ -133,9 +142,11 @@ const filter = reactive({
 })
 const create_id = ref<Number>(null)
 interface IRow {
-    active: number
+    completed: number,
+    trashed: boolean,
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }
@@ -143,7 +154,10 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.surplus.destroy', {surplus: row.id}));
+    $delete_entity.show(route('admin.accounting.surplus.destroy', {surplus: row.id}), {soft: true});
+}
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.surplus.full-destroy', {surplus: row.id}));
 }
 function createButton() {
     router.post(route('admin.accounting.surplus.store', {storage: create_id.value}))

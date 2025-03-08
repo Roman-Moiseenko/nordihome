@@ -96,12 +96,14 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button>
-                        <AccountingSoftDelete v-if="scope.row.trashed"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
                             :restore="route('admin.accounting.supply.restore', {supply: scope.row.id})"
-                            :destroy="route('admin.accounting.supply.full-destroy', {supply: scope.row.id})"
-                                              :small="true"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
                         />
-                        <el-button v-if="!scope.row.completed && !scope.row.trashed"
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
                             type="danger" plain
                             @click.stop="handleDeleteEntity(scope.row)"
@@ -172,8 +174,12 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.supply.destroy', {supply: row.id}));
+    $delete_entity.show(route('admin.accounting.supply.destroy', {supply: row.id}), {soft: true});
 }
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.supply.full-destroy', {supply: row.id}));
+}
+
 function createButton() {
     router.get(route('admin.accounting.supply.create', {distributor: create_id.value}))
 }

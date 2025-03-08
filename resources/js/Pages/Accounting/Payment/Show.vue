@@ -3,6 +3,7 @@
     <h1 class="font-medium text-xl">
         Платежное поручение {{ payment.number }} от {{ func.date(payment.created_at) }} - {{ payment.distributor.name }}
         ({{ payment.distributor.short_name }})
+        <el-tag v-if="payment.trashed" type="danger">Удален</el-tag>
     </h1>
     <div class="mt-3 p-3 bg-white rounded-lg ">
         <PaymentInfo :payment="payment" :payers="payers"/>
@@ -59,7 +60,7 @@ const props = defineProps({
 provide('$printed', props.printed) //Для печати
 provide('$accounting', props.payment) //Для общих действий
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.payment.completed);
+const isEdit = computed<Boolean>(() => !props.payment.completed && !props.payment.trashed);
 const form = reactive({
     number: props.payment.number,
     payer_id: props.payment.payer_id,

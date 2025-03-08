@@ -5,16 +5,20 @@
         <div class="flex">
             <el-popover :visible="visible_create" placement="bottom-start" :width="246">
                 <template #reference>
-                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
+                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create"
+                               ref="buttonRef">
                         Создать документ
-                        <el-icon class="ml-1"><ArrowDown /></el-icon>
+                        <el-icon class="ml-1">
+                            <ArrowDown/>
+                        </el-icon>
                     </el-button>
                 </template>
                 <el-select v-model="create_id" placeholder="Склад" class="mt-1">
                     <el-option v-for="item in storages" :key="item.id" :label="item.name" :value="item.id"/>
                 </el-select>
                 <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
+                    <el-button @click="visible_create = false">Отмена</el-button>
+                    <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
 
@@ -58,7 +62,7 @@
 
                 <el-table-column label="Дата" width="120">
                     <template #default="scope">
-                        {{ func.date(scope.row.created_at)}}
+                        {{ func.date(scope.row.created_at) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="number" label="№ Документа" width="160"/>
@@ -84,12 +88,14 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button-->
-                        <AccountingSoftDelete v-if="scope.row.trashed"
-                                              :restore="route('admin.accounting.inventory.restore', {inventory: scope.row.id})"
-                                              :destroy="route('admin.accounting.inventory.full-destroy', {inventory: scope.row.id})"
-                                              :small="true"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.inventory.restore', {inventory: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
                         />
-                        <el-button v-if="!scope.row.completed && !scope.row.trashed"
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
                             type="danger" plain
                             @click.stop="handleDeleteEntity(scope.row)"
@@ -108,7 +114,7 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Инвентаризацию" />
+    <DeleteEntityModal name_entity="Инвентаризацию"/>
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref} from "vue";
@@ -146,10 +152,12 @@ const filter = reactive({
     date_to: props.filters.date_to,
 })
 const create_id = ref<Number>(null)
+
 interface IRow {
     completed: number,
     trashed: boolean,
 }
+
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
@@ -159,8 +167,13 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.inventory.destroy', {inventory: row.id}));
+    $delete_entity.show(route('admin.accounting.inventory.destroy', {inventory: row.id}), {soft: true});
 }
+
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.inventory.full-destroy', {inventory: row.id}));
+}
+
 function createButton() {
     const loading = ElLoading.service({
         lock: false,
@@ -178,6 +191,7 @@ function createButton() {
     })
 
 }
+
 function routeClick(row) {
     router.get(route('admin.accounting.inventory.show', {inventory: row.id}))
 }

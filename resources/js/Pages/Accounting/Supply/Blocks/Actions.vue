@@ -26,7 +26,7 @@
     <template v-else>
         <AccountingSoftDelete
             :restore="route('admin.accounting.supply.restore', {supply: supply.id})"
-            :destroy="route('admin.accounting.supply.full-destroy', {supply: supply.id})"
+            @destroy="onForceDelete"
         />
     </template>
     <AccountingOnBased />
@@ -55,12 +55,14 @@
             </div>
         </template>
     </el-dialog>
+
+    <DeleteEntityModal name_entity="Заказ поставщику" name="document"/>
 </template>
 
 <script setup>
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
-import {defineProps, ref} from "vue";
+import {defineProps, inject, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
@@ -76,7 +78,10 @@ const props = defineProps({
     print: Array,
 })
 const refundVisible = ref(false)
-
+const $delete_entity = inject("$delete_entity")
+function onForceDelete() {
+    $delete_entity.show(route('admin.accounting.supply.full-destroy', {supply: props.supply.id}), {name: "document"});
+}
 function onPayment() {
     router.visit(route('admin.accounting.supply.payment', {supply: props.supply.id}), {
         method: "post",

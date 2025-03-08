@@ -76,16 +76,18 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button-->
-                        <AccountingSoftDelete v-if="scope.row.trashed"
-                                              :restore="route('admin.accounting.refund.restore', {refund: scope.row.id})"
-                                              :destroy="route('admin.accounting.refund.full-destroy', {refund: scope.row.id})"
-                                              :small="true"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.refund.restore', {refund: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
                         />
-                        <el-button v-if="!scope.row.completed && !scope.row.trashed"
-                                   size="small"
-                                   type="danger"
-                                   plain
-                                   @click.stop="handleDeleteEntity(scope.row)"
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
+                            size="small"
+                            type="danger"
+                            plain
+                            @click.stop="handleDeleteEntity(scope.row)"
                         >
                             For Delete
                         </el-button>
@@ -138,10 +140,12 @@ const filter = reactive({
     date_to: props.filters.date_to,
 })
 const create_id = ref<Number>(null)
+
 interface IRow {
     completed: number,
     trashed: boolean,
 }
+
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
@@ -151,11 +155,15 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.refund.destroy', {refund: row.id}));
+    $delete_entity.show(route('admin.accounting.refund.destroy', {refund: row.id}), {soft: true});
+}
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.refund.full-destroy', {refund: row.id}));
 }
 function createButton() {
     router.post(route('admin.accounting.refund.store', {distributor: create_id.value}))
 }
+
 function routeClick(row) {
     router.get(route('admin.accounting.refund.show', {refund: row.id}))
 }

@@ -4,13 +4,14 @@ import {router} from "@inertiajs/vue3";
 import {ElLoading} from "element-plus";
 
 const
-    _current = reactive({name:"",resolve:null,reject:null, route: "", state: false}),
+    _current = reactive({name:"",resolve:null,reject:null, route: "", state: false, soft: false}),
     api = {
         active() {return _current.name;},
-        show(route, name = 'entity', state = false) {
+        show(route, {name = 'entity', state = false, soft = false} = {}) {
             _current.name = name;
             _current.route = route;
             _current.state = state;
+            _current.soft = soft;
             return new Promise(
                 (resolve = null, reject = null) => {
                     _current.resolve = resolve;
@@ -39,6 +40,7 @@ const
             _current.name = ""
             _current.route = ""
         },
+        soft() {return _current.soft},
         cancel() {
             if (_current.reject !== null) _current.reject();
             _current.name = ""

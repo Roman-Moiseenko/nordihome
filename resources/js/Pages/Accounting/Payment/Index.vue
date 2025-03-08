@@ -50,7 +50,7 @@
 
                 <el-table-column label="Дата" width="120">
                     <template #default="scope">
-                        {{ func.date(scope.row.created_at)}}
+                        {{ func.date(scope.row.created_at) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="number" label="№ Документа" width="160"/>
@@ -70,12 +70,20 @@
 
                 <el-table-column label="Действия" align="right" width="200">
                     <template #default="scope">
-                        <el-button v-if="!scope.row.completed"
-                                   size="small"
-                                   type="danger"
-                                   @click.stop="handleDeleteEntity(scope.row)"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.payment.restore', {payment: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
+                        />
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
+                            size="small"
+                            type="danger"
+                            plain
+                            @click.stop="handleDeleteEntity(scope.row)"
                         >
-                            Delete
+                            For Delete
                         </el-button>
                     </template>
                 </el-table-column>
@@ -87,7 +95,7 @@
             :total="payments.total"
         />
     </el-config-provider>
-    <DeleteEntityModal name_entity="Заказ поставщику" />
+    <DeleteEntityModal name_entity="Платеж"/>
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref} from "vue";
@@ -97,8 +105,9 @@ import {useStore} from "@Res/store.js"
 import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
-import type { UploadProps, UploadUserFile } from 'element-plus'
+import type {UploadProps, UploadUserFile} from 'element-plus'
 import Active from '@Comp/Elements/Active.vue'
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     payments: Object,
@@ -122,24 +131,34 @@ const filter = reactive({
     date_to: props.filters.date_to,
 })
 const create_id = ref<Number>(null)
+
 interface IRow {
-    active: number
+    completed: number,
+    trashed: boolean,
 }
+
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }
     return ''
 }
+
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.payment.destroy', {payment: row.id}));
+    $delete_entity.show(route('admin.accounting.payment.destroy', {payment: row.id}), {soft: true});
 }
+
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.payment.full-destroy', {payment: row.id}));
+}
+
 function routeClick(row) {
     router.get(route('admin.accounting.payment.show', {payment: row.id}))
 }
 
 const handleSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFiles) => {
-   // console.log(response);
+    // console.log(response);
     router.get(route('admin.accounting.payment.index'));
 }
 const handleError: UploadProps['onError'] = (error, uploadFile, uploadFiles) => {

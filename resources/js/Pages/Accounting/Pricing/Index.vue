@@ -71,16 +71,18 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button>
-                        <AccountingSoftDelete v-if="scope.row.trashed"
-                                              :restore="route('admin.accounting.pricing.restore', {pricing: scope.row.id})"
-                                              :destroy="route('admin.accounting.pricing.full-destroy', {pricing: scope.row.id})"
-                                              :small="true"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.pricing.restore', {pricing: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
                         />
-                        <el-button v-if="!scope.row.completed && !scope.row.trashed"
-                                   size="small"
-                                   type="danger"
-                                   plain
-                                   @click.stop="handleDeleteEntity(scope.row)"
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
+                            size="small"
+                            type="danger"
+                            plain
+                            @click.stop="handleDeleteEntity(scope.row)"
                         >
                             For Delete
                         </el-button>
@@ -128,10 +130,12 @@ const filter = reactive({
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
 })
+
 interface IRow {
     completed: number,
     trashed: boolean,
 }
+
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
@@ -141,14 +145,19 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.pricing.destroy', {pricing: row.id}));
+    $delete_entity.show(route('admin.accounting.pricing.destroy', {pricing: row.id}), {soft: true});
+}
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.pricing.full-destroy', {pricing: row.id}));
 }
 function createButton() {
     router.post(route('admin.accounting.pricing.store'))
 }
+
 function routeClick(row) {
     router.get(route('admin.accounting.pricing.show', {pricing: row.id}))
 }
+
 function handleCopy(row) {
     router.post(route('admin.accounting.pricing.copy', {pricing: row.id}))
 }

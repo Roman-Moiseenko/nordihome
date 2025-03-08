@@ -8,7 +8,7 @@
     <template v-else>
         <AccountingSoftDelete
             :restore="route('admin.accounting.inventory.restore', {inventory: inventory.id})"
-            :destroy="route('admin.accounting.inventory.full-destroy', {inventory: inventory.id})"
+            @destroy="onForceDelete"
         />
     </template>
     <AccountingOnBased />
@@ -20,6 +20,7 @@
     <span class="ml-2">
         Сумма факт. <el-tag type="success" size="large">{{ func.price(inventory.amount_actually ) }}</el-tag>
     </span>
+    <DeleteEntityModal name_entity="Инвентаризацию" name="document"/>
 </template>
 
 <script setup>
@@ -32,9 +33,13 @@ import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
+import {inject} from "vue";
 
 const props = defineProps({
     inventory: Object,
 })
-
+const $delete_entity = inject("$delete_entity")
+function onForceDelete() {
+    $delete_entity.show(route('admin.accounting.inventory.full-destroy', {inventory: props.inventory.id}), {name: "document"});
+}
 </script>

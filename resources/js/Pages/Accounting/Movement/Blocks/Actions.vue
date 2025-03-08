@@ -15,12 +15,14 @@
     <template v-else>
         <AccountingSoftDelete
             :restore="route('admin.accounting.movement.restore', {movement: movement.id})"
-            :destroy="route('admin.accounting.movement.full-destroy', {movement: movement.id})"
+            @destroy="onForceDelete"
         />
     </template>
     <AccountingOnBased />
     <AccountingPrint />
     <AccountingFilter />
+    <DeleteEntityModal name_entity="Перемещение" name="document"/>
+
 </template>
 
 <script setup>
@@ -35,12 +37,16 @@ import AccountingWork from "@Comp/Accounting/Work.vue";
 import {ElLoading} from "element-plus";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
+import {inject} from "vue";
 
 const props = defineProps({
     movement: Object,
     print: Array,
 })
-
+const $delete_entity = inject("$delete_entity")
+function onForceDelete() {
+    $delete_entity.show(route('admin.accounting.movement.full-destroy', {movement: props.movement.id}), {name: "document"});
+}
 //+ 2 режима. Убыл, Прибыл
 function onDeparture() {
     const loading = ElLoading.service({
