@@ -2,7 +2,10 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Дополнительные расходы {{ expense.number }} <span v-if="expense.incoming_number">({{ expense.incoming_number }})</span> от {{ func.date(expense.created_at) }}
+            Дополнительные расходы {{ expense.number }}
+            <span v-if="expense.incoming_number">({{ expense.incoming_number }})</span>
+            от {{ func.date(expense.created_at) }}
+            <el-tag v-if="expense.trashed" type="danger">Удален</el-tag>
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <ExpenseInfo :expense="expense" />
@@ -65,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref, defineProps, computed, provide} from "vue";
+import {inject, ref, computed, provide} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
@@ -83,7 +86,7 @@ const props = defineProps({
 provide('$printed', props.printed) //Для печати
 provide('$accounting', props.expense) //Для общих действий
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.expense.completed);
+const isEdit = computed<Boolean>(() => !props.expense.completed && !props.expense.trashed);
 const $delete_entity = inject("$delete_entity")
 
 function setItem(row) {

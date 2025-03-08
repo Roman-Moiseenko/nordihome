@@ -117,10 +117,10 @@ function setAddition(row) {
     })
 }
 function delItem(row) {
-    $delete_entity.show(route('admin.order.refund.del-item', {item: row.id}), 'product');
+    $delete_entity.show(route('admin.order.refund.del-item', {item: row.id}), {name: 'product'});
 }
 function delAddition(row) {
-    $delete_entity.show(route('admin.order.refund.del-addition', {item: row.id}), 'addition');
+    $delete_entity.show(route('admin.order.refund.del-addition', {item: row.id}), {name: 'addition'});
 }
 </script>
 

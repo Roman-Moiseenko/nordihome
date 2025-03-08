@@ -71,12 +71,20 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button>
-                        <el-button v-if="!scope.row.completed"
-                                   size="small"
-                                   type="danger"
-                                   @click.stop="handleDeleteEntity(scope.row)"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.pricing.restore', {pricing: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
+                        />
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
+                            size="small"
+                            type="danger"
+                            plain
+                            @click.stop="handleDeleteEntity(scope.row)"
                         >
-                            Delete
+                            For Delete
                         </el-button>
                     </template>
                 </el-table-column>
@@ -91,7 +99,7 @@
     <DeleteEntityModal name_entity="Установку цен"/>
 </template>
 <script lang="ts" setup>
-import {inject, reactive, ref, defineProps} from "vue";
+import {inject, reactive, ref} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"
@@ -99,6 +107,7 @@ import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     pricings: Object,
@@ -121,10 +130,14 @@ const filter = reactive({
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
 })
+
 interface IRow {
-    completed: number
+    completed: number,
+    trashed: boolean,
 }
+
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }
@@ -132,14 +145,19 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.pricing.destroy', {pricing: row.id}));
+    $delete_entity.show(route('admin.accounting.pricing.destroy', {pricing: row.id}), {soft: true});
+}
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.pricing.full-destroy', {pricing: row.id}));
 }
 function createButton() {
     router.post(route('admin.accounting.pricing.store'))
 }
+
 function routeClick(row) {
     router.get(route('admin.accounting.pricing.show', {pricing: row.id}))
 }
+
 function handleCopy(row) {
     router.post(route('admin.accounting.pricing.copy', {pricing: row.id}))
 }

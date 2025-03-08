@@ -81,52 +81,45 @@ class InventoryController extends Controller
 
     public function completed(InventoryDocument $inventory): RedirectResponse
     {
-        try {
-            $this->service->completed($inventory);
-            return redirect()->back()->with('success', 'Документ проведен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->completed($inventory);
+        return redirect()->back()->with('success', 'Документ проведен');
     }
 
     public function work(InventoryDocument $inventory): RedirectResponse
     {
-        try {
-            $this->service->work($inventory);
-            return redirect()->back()->with('success', 'Документ в работе');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->work($inventory);
+        return redirect()->back()->with('success', 'Документ в работе');
     }
 
     public function set_info(InventoryDocument $inventory, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setInfo($inventory, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setInfo($inventory, $request);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function destroy(InventoryDocument $inventory): RedirectResponse
     {
-        try {
-            $this->service->destroy($inventory);
-            return redirect()->back()->with('success', 'Удалено');
-        } catch (\DomainException $e) {
-            return redirect()->with('error', $e->getMessage());
-        }
+        $this->service->destroy($inventory);
+        return redirect()->route('admin.accounting.inventory.index')->with('success', 'Инвентаризация помечена на удаление');
     }
+
+    public function restore(InventoryDocument $inventory): RedirectResponse
+    {
+        $this->service->restore($inventory);
+        return redirect()->back()->with('success', 'Инвентаризация восстановлена');
+    }
+
+    public function full_destroy(InventoryDocument $inventory): RedirectResponse
+    {
+        $this->service->fullDestroy($inventory);
+        return redirect()->back()->with('success', 'Инвентаризация удалено окончательно');
+    }
+
 
     public function add_product(Request $request, InventoryDocument $inventory): RedirectResponse
     {
-        try {
-            $this->service->addProduct($inventory, $request->integer('product_id'), $request->float('quantity'));
-            return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProduct($inventory, $request->integer('product_id'), $request->float('quantity'));
+        return redirect()->back()->with('success', 'Товар добавлен');
     }
 
     public function add_products(Request $request, InventoryDocument $inventory): RedirectResponse
@@ -134,22 +127,14 @@ class InventoryController extends Controller
         $request->validate([
             'products' => 'required',
         ]);
-        try {
-            $this->service->addProducts($inventory, $request->input('products'));
-            return redirect()->back()->with('success', 'Товары добавлены');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->addProducts($inventory, $request->input('products'));
+        return redirect()->back()->with('success', 'Товары добавлены');
     }
 
     public function set_product(InventoryProduct $product, Request $request): RedirectResponse
     {
-        try {
-            $this->service->setProduct($product, $request->float('quantity'));
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->service->setProduct($product, $request->float('quantity'));
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function del_product(InventoryProduct $product): RedirectResponse

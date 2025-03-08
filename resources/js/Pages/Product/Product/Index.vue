@@ -135,6 +135,7 @@ import {Head, Link, router} from "@inertiajs/vue3";
 import {defineProps, inject, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import SelectActions from "./SelectActions.vue";
+import {ElLoading} from "element-plus";
 
 const props = defineProps({
     products: Object,
@@ -163,7 +164,22 @@ const formMass = reactive({
 })
 
 function onRestore(row) {
-    router.post(route('admin.product.restore', {product: row.id}))
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Идет восстановление',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    router.visit(route('admin.product.restore', {id: row.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            loading.close()
+        },
+        onFinish: page => {
+            loading.close()
+        },
+    })
 }
 
 function onFullDelete(row) {

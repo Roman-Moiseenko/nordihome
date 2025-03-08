@@ -62,7 +62,7 @@ const info = reactive({
     payer_id: props.payment.payer_id,
     //comment:  props.payment.comment,
 })
-const notEdit = computed(() => props.payment.completed);
+const notEdit = computed(() => props.payment.completed || props.payment.trashed);
 
 function setInfo() {
     iSavingInfo.value = true

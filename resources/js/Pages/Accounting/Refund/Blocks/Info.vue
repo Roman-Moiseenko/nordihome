@@ -44,7 +44,7 @@ const info = reactive({
     },
     storage_id: props.refund.storage_id,
 })
-const notEdit = computed(() => props.refund.completed);
+const notEdit = computed(() => props.refund.completed || props.refund.trashed);
 
 function setInfo() {
     iSavingInfo.value = true

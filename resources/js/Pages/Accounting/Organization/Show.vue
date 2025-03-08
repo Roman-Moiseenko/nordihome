@@ -30,7 +30,6 @@
 
 <script lang="ts" setup>
 import {func} from '@Res/func.js'
-import {defineProps} from "vue";
 import {Head, router, Link} from '@inertiajs/vue3'
 
 //Панели

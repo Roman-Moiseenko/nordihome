@@ -63,7 +63,7 @@ const info = reactive({
     storage_in: props.movement.storage_in.id,
 
 })
-const notEdit = computed(() => props.movement.completed);
+const notEdit = computed(() => props.movement.completed || props.movement.trashed);
 
 function onReplace() {
     let buffer = info.storage_out

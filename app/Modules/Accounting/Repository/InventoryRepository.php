@@ -11,7 +11,7 @@ class InventoryRepository extends AccountingRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = InventoryDocument::orderByDesc('created_at');
+        $query = InventoryDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if (($storage_id = $request->integer('$storage_id')) > 0) {
@@ -28,6 +28,7 @@ class InventoryRepository extends AccountingRepository
     public function InventoryToArray(InventoryDocument $document): array
     {
         return array_merge($document->toArray(), [
+            'trashed' => $document->trashed(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'storage' => $document->storage->toArray(),
         ]);

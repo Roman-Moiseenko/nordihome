@@ -18,10 +18,9 @@ class CacheCommand extends Command
 
     public function handle(CacheService $service): void
     {
-       //TODO $logger = LoggerCron::new($this->description);
         $this->info('Кешируем данные');
 
-        $service->rebuildCategories();
+        $service->rebuildCache();
     }
 
 }

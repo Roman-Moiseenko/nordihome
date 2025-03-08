@@ -14,14 +14,20 @@
         </el-dropdown>
         <AccountingWork :route="route('admin.accounting.supply.work', {supply: props.supply.id})" />
     </template>
-    <template v-else>
+    <template v-else-if="!supply.trashed">
         <SearchAddProduct
             :route="route('admin.accounting.supply.add-product', {supply: supply.id})"
             :quantity="true"
             :create="true"
         />
         <SearchAddProducts :route="route('admin.accounting.supply.add-products', {supply: supply.id})" class="ml-3"/>
-        <AccountingCompleted :route="route('admin.accounting.supply.completed', {supply: props.supply.id})" />
+        <AccountingCompleted :route="route('admin.accounting.supply.completed', {supply: supply.id})" />
+    </template>
+    <template v-else>
+        <AccountingSoftDelete
+            :restore="route('admin.accounting.supply.restore', {supply: supply.id})"
+            @destroy="onForceDelete"
+        />
     </template>
     <AccountingOnBased />
     <AccountingPrint />
@@ -49,12 +55,14 @@
             </div>
         </template>
     </el-dialog>
+
+    <DeleteEntityModal name_entity="Заказ поставщику" name="document"/>
 </template>
 
 <script setup>
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
-import {defineProps, ref} from "vue";
+import {defineProps, inject, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
@@ -62,6 +70,7 @@ import AccountingPrint from "@Comp/Accounting/Print.vue";
 import { ElLoading } from 'element-plus'
 import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 import AccountingFilter from "@Comp/Accounting/Filter.vue"
 
 const props = defineProps({
@@ -69,7 +78,10 @@ const props = defineProps({
     print: Array,
 })
 const refundVisible = ref(false)
-
+const $delete_entity = inject("$delete_entity")
+function onForceDelete() {
+    $delete_entity.show(route('admin.accounting.supply.full-destroy', {supply: props.supply.id}), {name: "document"});
+}
 function onPayment() {
     router.visit(route('admin.accounting.supply.payment', {supply: props.supply.id}), {
         method: "post",

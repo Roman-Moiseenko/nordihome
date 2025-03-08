@@ -6,6 +6,7 @@
             Заказ поставщику {{ supply.number }} <span v-if="supply.incoming_number">({{
                 supply.incoming_number
             }})</span> от {{ func.date(supply.created_at) }}
+            <el-tag v-if="supply.trashed" type="danger">Удален</el-tag>
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <SupplyInfo :supply="supply" :customers="customers"/>
@@ -131,7 +132,7 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     return ''
 }
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.supply.completed);
+const isEdit = computed<Boolean>(() => !props.supply.completed && !props.supply.trashed);
 const $delete_entity = inject("$delete_entity")
 
 function setItem(row) {

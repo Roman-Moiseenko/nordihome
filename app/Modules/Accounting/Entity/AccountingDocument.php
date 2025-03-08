@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Schema\Blueprint;
 use JetBrains\PhpStorm\Pure;
 
@@ -26,7 +27,7 @@ use JetBrains\PhpStorm\Pure;
  */
 abstract class AccountingDocument extends Model
 {
-    use HtmlInfoData;
+    use HtmlInfoData, SoftDeletes;
 
     protected string $prefix = '';
     protected string $blank = 'Документ';
@@ -257,6 +258,7 @@ abstract class AccountingDocument extends Model
         $result = [
             'label' => $document->documentName(),
             'url' => $document->documentUrl(),
+            'trashed' => $document->trashed(),
         ];
         if (!empty($document->onBased())) $result['children'] = $document->onBased();
         return $result;
@@ -271,6 +273,7 @@ abstract class AccountingDocument extends Model
                 $result[] = [
                     'label' => $item->documentName(),
                     'url' => $item->documentUrl(),
+                    'trashed' => $item->trashed(),
                 ];
             }
             return $result;
@@ -280,8 +283,18 @@ abstract class AccountingDocument extends Model
                 [
                     'label' => $document->documentName(),
                     'url' => $document->documentUrl(),
+                    'trashed' => $document->trashed(),
                 ]
             ];
         }
     }
+
+
+    public function delete(): void
+    {
+        if ($this->isCompleted()) throw new \DomainException('Документ проведен');
+        parent::delete();
+    }
+
+    //Мягкое удаление
 }

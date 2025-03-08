@@ -50,6 +50,8 @@ class HandleInertiaRequests extends Middleware
                             'id' => $request->user()->id,
                             'name' => $request->user()->name,
                         ],
+                        'is_admin' => $request->user()->isAdmin(),
+                        'is_chief' => $request->user()->isChief() || $request->user()->isAdmin(),
                     ] : null,
                 ];
             },

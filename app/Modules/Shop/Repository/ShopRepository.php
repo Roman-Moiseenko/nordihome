@@ -597,7 +597,7 @@ class ShopRepository
                 }
             }
         } catch (\DomainException $e) {
-            \Log::info('ModificationToArray: ' . $modification->name);
+            \Log::info('ModificationToArray: ' . $modification->name . ' ' . $e->getMessage());
         }
 
 

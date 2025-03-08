@@ -76,7 +76,7 @@ const info = reactive({
     customer_id: props.departure.customer_id,
 
 })
-const notEdit = computed(() => props.departure.completed);
+const notEdit = computed(() => props.departure.completed || props.departure.trashed);
 
 function setInfo() {
     iSavingInfo.value = true

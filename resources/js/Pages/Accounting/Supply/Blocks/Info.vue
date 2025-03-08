@@ -60,7 +60,7 @@ const info = reactive({
     organization_id: props.supply.organization_id,
     customer_id: props.supply.customer_id,
 })
-const notEdit = computed(() => props.supply.completed);
+const notEdit = computed(() => props.supply.completed || props.supply.trashed);
 
 function setInfo(currency = null) {
     if (currency === true) info.currency = true

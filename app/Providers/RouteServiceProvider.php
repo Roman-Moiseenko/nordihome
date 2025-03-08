@@ -2,6 +2,18 @@
 
 namespace App\Providers;
 
+use App\Modules\Accounting\Entity\ArrivalDocument;
+use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
+use App\Modules\Accounting\Entity\DepartureDocument;
+use App\Modules\Accounting\Entity\InventoryDocument;
+use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\PaymentDocument;
+use App\Modules\Accounting\Entity\PricingDocument;
+use App\Modules\Accounting\Entity\RefundDocument;
+use App\Modules\Accounting\Entity\SupplyDocument;
+use App\Modules\Accounting\Entity\SurplusDocument;
+use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -27,6 +39,8 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        $this->showSoftDeletes();
 
         $this->mapModulesRoutesAdmin();
         $this->mapModulesRoutesWeb();
@@ -118,9 +132,47 @@ class RouteServiceProvider extends ServiceProvider
                 array_filter(
                     scandir($modules_folder),
                     function ($item) use ($modules_folder) {
-                        return is_dir($modules_folder.DIRECTORY_SEPARATOR.$item) && ! in_array($item, ['.', '..']);
+                        return is_dir($modules_folder . DIRECTORY_SEPARATOR . $item) && !in_array($item, ['.', '..']);
                     }
                 )
             );
+    }
+
+    private function showSoftDeletes(): void
+    {
+        Route::bind('supply', function ($value) {
+            return SupplyDocument::withTrashed()->find($value);
+        });
+        Route::bind('arrival', function ($value) {
+            return ArrivalDocument::withTrashed()->find($value);
+        });
+        Route::bind('expense', function ($value) {
+            if (str_contains(Route::currentRouteName(), 'admin.accounting.'))
+             return ArrivalExpenseDocument::withTrashed()->find($value);
+            return OrderExpense::find($value);
+        });
+        Route::bind('movement', function ($value) {
+            return MovementDocument::withTrashed()->find($value);
+        });
+        Route::bind('inventory', function ($value) {
+            return InventoryDocument::withTrashed()->find($value);
+        });
+        Route::bind('surplus', function ($value) {
+            return SurplusDocument::withTrashed()->find($value);
+        });
+        Route::bind('departure', function ($value) {
+            return DepartureDocument::withTrashed()->find($value);
+        });
+        Route::bind('pricing', function ($value) {
+            return PricingDocument::withTrashed()->find($value);
+        });
+        Route::bind('payment', function ($value) {
+            return PaymentDocument::withTrashed()->find($value);
+        });
+        Route::bind('refund', function ($value) {
+            if (str_contains(Route::currentRouteName(), 'admin.accounting.'))
+                return RefundDocument::withTrashed()->find($value);
+            return OrderExpenseRefund::find($value);
+        });
     }
 }

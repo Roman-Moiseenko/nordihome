@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Accounting\Report\SurplusReport;
@@ -84,7 +85,19 @@ class SurplusController extends Controller
     public function destroy(SurplusDocument $surplus): RedirectResponse
     {
         $this->service->destroy($surplus);
-        return redirect()->back()->with('success', 'Документ удален');
+        return redirect()->back()->with('success', 'Оприходование помечено на удаление');
+    }
+
+    public function restore(SurplusDocument $surplus): RedirectResponse
+    {
+        $this->service->restore($surplus);
+        return redirect()->back()->with('success', 'Оприходование восстановлено');
+    }
+
+    public function full_destroy(SurplusDocument $surplus): RedirectResponse
+    {
+        $this->service->fullDestroy($surplus);
+        return redirect()->route('admin.accounting.surplus.index')->with('success', 'Оприходование удалено окончательно');
     }
 
     public function add_product(Request $request, SurplusDocument $surplus): RedirectResponse

@@ -62,6 +62,9 @@
     box-shadow: none;
 }
 //Цвета строк таблицы
+.danger-row {
+    --el-table-tr-bg-color: var(--el-color-danger-light-7);
+}
 .warning-row {
     --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }

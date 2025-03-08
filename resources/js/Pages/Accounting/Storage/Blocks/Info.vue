@@ -95,7 +95,7 @@
 
 <script setup>
 import {func} from '@Res/func.js'
-import {ref, reactive, defineProps} from "vue";
+import {ref, reactive} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
 import UploadImageFile from '@Comp/UploadImageFile.vue'

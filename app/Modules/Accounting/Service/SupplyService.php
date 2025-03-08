@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
 
-class SupplyService
+class SupplyService extends AccountingService
 {
 
     private ArrivalService $arrivalService;
@@ -101,7 +101,7 @@ class SupplyService
     public function completed(SupplyDocument $supply): void
     {
         if ($supply->products()->count() == 0) throw new \DomainException('В заказе нет позиций');
-        DB::transaction(function () use($supply) {
+        DB::transaction(function () use ($supply) {
             foreach ($supply->products as $product) {
                 if ($product->cost_currency == 0) throw new \DomainException('У товара не установлена цена поставщика');
                 $supply->distributor->addProduct($product->product, (float)$product->cost_currency);
@@ -116,7 +116,7 @@ class SupplyService
 
     public function work(SupplyDocument $supply): void
     {
-        DB::transaction(function () use($supply) {
+        DB::transaction(function () use ($supply) {
             $payments = PaymentDecryption::where('supply_id', $supply->id)->whereHas('payment', function ($query) {
                 $query->where('completed', true);
             })->getModels();
@@ -135,7 +135,7 @@ class SupplyService
      */
     public function arrival(SupplyDocument $supply): ArrivalDocument
     {
-        DB::transaction(function () use($supply, &$arrival) {
+        DB::transaction(function () use ($supply, &$arrival) {
             set_time_limit(600);
             $arrival = $this->arrivalService->create($supply->distributor->id);
             $arrival->supply_id = $supply->id;
@@ -181,11 +181,6 @@ class SupplyService
         $payment->manual();
         $payment->addDecryption($debit, $supply->id);
         return $payment;
-    }
-
-    public function destroy(SupplyDocument $supply): void
-    {
-        $supply->delete();
     }
 
     /**

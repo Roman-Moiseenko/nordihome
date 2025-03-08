@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import {defineProps, ref, reactive} from "vue";
+import {ref, reactive} from "vue";
 import {func} from '@Res/func.js'
 import EditField from "@Comp/Elements/EditField.vue";
 import {router} from "@inertiajs/vue3";

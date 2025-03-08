@@ -62,7 +62,7 @@ const info = reactive({
     operation: props.arrival.operation,
     gtd: props.arrival.gtd,
 })
-const notEdit = computed(() => props.arrival.completed);
+const notEdit = computed(() => props.arrival.completed || props.arrival.trashed);
 
 function setInfo() {
     iSavingInfo.value = true

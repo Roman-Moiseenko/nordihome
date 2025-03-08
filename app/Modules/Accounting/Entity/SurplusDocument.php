@@ -66,7 +66,7 @@ class SurplusDocument extends AccountingDocument
     }
     public function inventory(): HasOne
     {
-        return $this->hasOne(InventoryDocument::class, 'surplus_id', 'id');
+        return $this->hasOne(InventoryDocument::class, 'surplus_id', 'id')->withTrashed();
     }
 
     public function products(): HasMany
@@ -88,5 +88,12 @@ class SurplusDocument extends AccountingDocument
     {
         if (!is_null($this->inventory)) return $this->foundedGenerate($this->inventory);
         return null;
+    }
+
+    public function restore(): void
+    {
+        if (!is_null($this->inventory) && $this->inventory->trashed())
+            throw new \DomainException('Восстановите документ основание');
+        parent::restore();
     }
 }

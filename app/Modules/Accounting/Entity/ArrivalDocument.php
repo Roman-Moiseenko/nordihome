@@ -30,10 +30,10 @@ use JetBrains\PhpStorm\Deprecated;
  */
 class ArrivalDocument extends AccountingDocument
 {
-    const OPERATION_SUPPLY = 101;
-    const OPERATION_REMAINS = 102;
-    const OPERATION_OTHER = 110;
-    const OPERATIONS = [
+    const int OPERATION_SUPPLY = 101;
+    const int OPERATION_REMAINS = 102;
+    const int OPERATION_OTHER = 110;
+    const array OPERATIONS = [
         self::OPERATION_SUPPLY => 'Поступление от поставщика',
         self::OPERATION_REMAINS => 'Поступление остатков',
         self::OPERATION_OTHER => 'Другое',
@@ -81,7 +81,7 @@ class ArrivalDocument extends AccountingDocument
 
     public function getAmountVAT(): float
     {
-        $amount = 0;
+        $amount = 0.0;
         foreach ($this->products as $product) {
             if (!is_null($product->product->VAT) && !is_null($product->product->VAT->value))
                 $amount += $product->quantity * $product->cost_currency * ($product->product->VAT->value / 100);
@@ -106,17 +106,17 @@ class ArrivalDocument extends AccountingDocument
     //*** RELATION
     public function movements(): HasMany
     {
-        return $this->hasMany(MovementDocument::class, 'arrival_id', 'id');
+        return $this->hasMany(MovementDocument::class, 'arrival_id', 'id')->withTrashed();
     }
 
     public function expenses(): HasMany
     {
-        return $this->hasMany(ArrivalExpenseDocument::class, 'arrival_id', 'id');
+        return $this->hasMany(ArrivalExpenseDocument::class, 'arrival_id', 'id')->withTrashed();
     }
 
     public function supply(): BelongsTo
     {
-        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id');
+        return $this->belongsTo(SupplyDocument::class, 'supply_id', 'id')->withTrashed();
     }
 
     public function products(): HasMany
@@ -126,7 +126,7 @@ class ArrivalDocument extends AccountingDocument
 
     public function refunds(): HasMany
     {
-        return $this->hasMany(RefundDocument::class, 'arrival_id', 'id');
+        return $this->hasMany(RefundDocument::class, 'arrival_id', 'id')->withTrashed();
     }
 
     public function distributor(): BelongsTo
@@ -146,7 +146,7 @@ class ArrivalDocument extends AccountingDocument
 
     public function pricing(): HasOne
     {
-        return $this->hasOne(PricingDocument::class, 'arrival_id', 'id');
+        return $this->hasOne(PricingDocument::class, 'arrival_id', 'id')->withTrashed();
     }
 
     public function operationText(): string
@@ -191,5 +191,54 @@ class ArrivalDocument extends AccountingDocument
             $amount += $expense->getAmount();
         }
         return $amount;
+    }
+
+    public function delete(): void
+    {
+        foreach ($this->expenses as $expense) {
+            $expense->delete();
+        }
+        foreach ($this->refunds as $refund) {
+            $refund->delete();
+        }
+        foreach ($this->movements as $movement) {
+            $movement->delete();
+        }
+        if (!is_null($this->pricing)) $this->pricing->delete();
+
+        parent::delete();
+    }
+
+    public function restore(): void
+    {
+        if ($this->supply->trashed()) throw new \DomainException('Восстановите документ основание');
+        parent::restore();
+        foreach ($this->expenses as $arrival) {
+            $arrival->restore();
+        }
+        foreach ($this->refunds as $refund) {
+            $refund->restore();
+        }
+        foreach ($this->movements as $movement) {
+            $movement->restore();
+        }
+        if (!is_null($this->pricing)) $this->pricing->restore();
+
+    }
+
+    public function forceDelete(): void
+    {
+        foreach ($this->expenses as $arrival) {
+            $arrival->forceDelete();
+        }
+        foreach ($this->refunds as $refund) {
+            $refund->forceDelete();
+        }
+        foreach ($this->movements as $movement) {
+            $movement->forceDelete();
+        }
+        if (!is_null($this->pricing)) $this->pricing->forceDelete();
+
+        parent::forceDelete();
     }
 }

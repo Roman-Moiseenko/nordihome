@@ -12,6 +12,7 @@ use App\Modules\Setting\Entity\Web;
 use App\Modules\Shop\Schema;
 use Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ViewRepository
 {
@@ -74,12 +75,7 @@ class ViewRepository
         $in_stock = isset($request['in_stock']);
 
         $products = $this->category_products_cache(null, $in_stock);
-  /*      $products = $this->repository->ProductsByCategory();
-        //Убираем из коллекции товары, которые не продаем под заказ
-        $products = $products->reject(function (Product $product) use ($in_stock) {
-            return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
-        });
-*/
+
         /** @var Product $product */
         foreach ($products as $i => $product) {
             $_price_product = $product->getPrice();
@@ -97,14 +93,7 @@ class ViewRepository
                 ];
         }
         $product_ids = $products->pluck('id')->toArray();
-        $_prod_attributes = [];
-        foreach (Category::where('parent_id', null)->get() as $category) {
-            $_prod_attributes = array_merge($_prod_attributes, $this->category_attributes_cache($category, $product_ids));
-        }
-        $prod_attributes = [];
-        foreach ($_prod_attributes as $item) {
-            $prod_attributes[$item['id']] = $item;
-        }
+        $prod_attributes = $this->root_attributes_cache($product_ids);
 
         $tags = $this->repository->TagsByProducts($product_ids);  //0.0015 сек
         $tag_id = $request['tag_id'] ?? null;
@@ -289,6 +278,43 @@ class ViewRepository
             });
         } else {
             return $this->repository->AttributeCommon(array_merge($category->getParentIdAll(), $category->getChildrenIdAll()), $product_ids); //0.02 секунды
+        }
+    }
+
+    private function root_attributes_cache(array $product_ids)
+    {
+        $callback = function () use ($product_ids) {
+            $prod_attributes = [];
+
+            foreach (Category::where('parent_id', null)->get() as $category) {
+                $_arr = $this->repository->AttributeCommon(
+                    array_merge($category->getParentIdAll(), $category->getChildrenIdAll()),
+                    $product_ids);
+                foreach ($_arr as $item) {
+                    if ($item['isVariant']) {
+                        $prod_attributes[$item['id']] = [
+                            'id' => $item['id'],
+                            'name' => $item['name'],
+                            'isVariant' => $item['isVariant'],
+                        ];
+
+                        foreach ($item['variants'] as $variant) {
+                            $prod_attributes[$item['id']]['variants'][$variant['id']] = $variant;
+                        }
+
+                    } else {
+                        $prod_attributes[$item['id']] = $item;
+                    }
+                }
+            }
+            return $prod_attributes;
+        };
+
+
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::CATEGORY_ATTRIBUTES . 'root', $callback);
+        } else {
+            $callback();
         }
     }
 

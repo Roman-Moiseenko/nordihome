@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref, defineProps, provide} from "vue";
+import {inject, ref, provide} from "vue";
 import {Head, Link, router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'

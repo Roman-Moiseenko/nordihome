@@ -37,7 +37,7 @@ const info = reactive({
         comment: props.pricing.comment,
     },
 })
-const notEdit = computed(() => props.pricing.completed);
+const notEdit = computed(() => props.pricing.completed || props.pricing.trashed);
 
 function setInfo() {
     iSavingInfo.value = true

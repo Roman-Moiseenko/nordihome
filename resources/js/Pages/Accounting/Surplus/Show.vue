@@ -5,6 +5,7 @@
             Оприходование {{ surplus.number }} <span
             v-if="surplus.incoming_number">({{ surplus.incoming_number }})</span> от
             {{ func.date(surplus.created_at) }}
+            <el-tag v-if="surplus.trashed" type="danger">Удален</el-tag>
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <SurplusInfo :surplus="surplus" :storages="storages" :customers="customers"/>
@@ -103,7 +104,7 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     return ''
 }
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.surplus.completed);
+const isEdit = computed<Boolean>(() => !props.surplus.completed && !props.surplus.trashed);
 const $delete_entity = inject("$delete_entity")
 
 function setItem(row) {

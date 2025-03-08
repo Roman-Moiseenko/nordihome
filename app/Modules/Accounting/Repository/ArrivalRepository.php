@@ -21,7 +21,7 @@ class ArrivalRepository extends AccountingRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = ArrivalDocument::orderByDesc('created_at');
+        $query = ArrivalDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request);
 
@@ -33,6 +33,7 @@ class ArrivalRepository extends AccountingRepository
     public function ArrivalToArray(ArrivalDocument $document): array
     {
         return array_merge($document->toArray(), [
+            'trashed' => $document->trashed(),
             'currency' => $document->currency->sign,
             'date' => $document->htmlDate(),
             'distributor_name' => is_null($document->distributor_id) ? '<Инвентаризация>' : $document->distributor->name,
@@ -78,12 +79,13 @@ class ArrivalRepository extends AccountingRepository
             $this->commonItems($document),
             $document->toArray(),
             [
-            'currency_sign' => ($document->currency) ? $document->arrival->currency->sign : '₽',
-            'items' => $document->items()->get()->toArray(),
-            'distributor' => $this->distributors->DistributorForAccounting($document->arrival->distributor),
-            'amount' => $document->getAmount(),
-            'arrival' => $document->arrival()->first()->toArray(),
+                'trashed' => $document->trashed(),
+                'currency_sign' => ($document->currency) ? $document->arrival->currency->sign : '₽',
+                'items' => $document->items()->get()->toArray(),
+                'distributor' => $this->distributors->DistributorForAccounting($document->arrival->distributor),
+                'amount' => $document->getAmount(),
+                'arrival' => $document->arrival()->first()->toArray(),
 
-        ]);
+            ]);
     }
 }

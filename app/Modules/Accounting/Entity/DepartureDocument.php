@@ -82,7 +82,7 @@ class DepartureDocument extends AccountingDocument
 
     public function inventory(): HasOne
     {
-        return $this->hasOne(InventoryDocument::class, 'departure_id', 'id');
+        return $this->hasOne(InventoryDocument::class, 'departure_id', 'id')->withTrashed();
     }
 
     public function products(): HasMany
@@ -116,4 +116,9 @@ class DepartureDocument extends AccountingDocument
         return $this->foundedGenerate($this->inventory);
     }
 
+    public function restore(): void
+    {
+        if (!is_null($this->inventory) && $this->inventory->trashed()) throw new \DomainException('Восстановите документ основание');
+        parent::restore();
+    }
 }

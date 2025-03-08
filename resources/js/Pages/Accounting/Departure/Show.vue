@@ -5,6 +5,7 @@
             Расходная накладная {{ departure.number }} <span
             v-if="departure.incoming_number">({{ departure.incoming_number }})</span> от
             {{ func.date(departure.created_at) }}
+            <el-tag v-if="departure.trashed" type="danger">Удален</el-tag>
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <DepartureInfo :departure="departure" :storages="storages" :customers="customers"/>
@@ -61,7 +62,7 @@
 </template>
 
 <script lang="ts" setup>
-import {inject, ref, defineProps, computed, provide} from "vue";
+import {inject, ref, computed, provide} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
@@ -94,7 +95,7 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     return ''
 }
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.departure.completed);
+const isEdit = computed<Boolean>(() => !props.departure.completed && !props.departure.trashed);
 const $delete_entity = inject("$delete_entity")
 
 function setItem(row) {

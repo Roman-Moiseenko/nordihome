@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 
-class MovementService // extends AccountingService
+class MovementService extends AccountingService
 {
 
     private StorageService $storages;
@@ -108,10 +108,9 @@ class MovementService // extends AccountingService
         });
     }
 
-    public function destroy(MovementDocument $movement): void
+    protected function isDeletable(MovementDocument|AccountingDocument $document): bool
     {
-        if (!$movement->isDraft()) throw new \DomainException('Документ в работе. Удалять нельзя');
-        $movement->delete();
+        return !$document->isDraft();
     }
 
     public function addProduct(MovementDocument $movement, int $product_id, float $quantity = null): void

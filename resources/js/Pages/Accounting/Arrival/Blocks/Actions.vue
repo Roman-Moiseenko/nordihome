@@ -12,11 +12,9 @@
                 </el-dropdown-menu>
             </template>
         </el-dropdown>
-
-
         <AccountingWork v-if="arrival.distributor_id" :route="route('admin.accounting.arrival.work', {arrival: props.arrival.id})" />
     </template>
-    <template v-else>
+    <template v-else-if="!arrival.trashed">
         <SearchAddProduct
             :route="route('admin.accounting.arrival.add-product', {arrival: arrival.id})"
             :quantity="true"
@@ -24,6 +22,12 @@
         <SearchAddProducts :route="route('admin.accounting.arrival.add-products', {arrival: arrival.id})" class="ml-3"/>
         <el-button type="warning"  class="ml-3" @click="onExpenses">Доп. расходы</el-button>
         <AccountingCompleted :route="route('admin.accounting.arrival.completed', {arrival: props.arrival.id})" />
+    </template>
+    <template v-else>
+        <AccountingSoftDelete
+            :restore="route('admin.accounting.arrival.restore', {arrival: arrival.id})"
+            @destroy="onForceDelete"
+        />
     </template>
     <AccountingOnBased />
     <AccountingPrint />
@@ -34,13 +38,13 @@
             Доп.расходы <el-tag type="warning" size="large">{{ func.price(arrival.expense_amount) }}</el-tag>
         </span>
     </span>
+    <DeleteEntityModal name_entity="Приходную накладную" name="document"/>
 
 </template>
 
 <script setup>
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
-import {defineProps} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import AccountingOnBased from "@Comp/Accounting/OnBased.vue";
@@ -49,11 +53,16 @@ import AccountingCompleted from "@Comp/Accounting/Completed.vue";
 import AccountingWork from "@Comp/Accounting/Work.vue";
 import {ElLoading} from "element-plus";
 import AccountingFilter from "@Comp/Accounting/Filter.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
+import {inject} from "vue";
 
 const props = defineProps({
     arrival: Object,
 })
-
+const $delete_entity = inject("$delete_entity")
+function onForceDelete() {
+    $delete_entity.show(route('admin.accounting.arrival.full-destroy', {arrival: props.arrival.id}), {name: "document"});
+}
 function onExpenses() {
     const loading = ElLoading.service({
         lock: false,

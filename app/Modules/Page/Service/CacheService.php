@@ -60,24 +60,17 @@ class CacheService
 
     public function rebuildCategories(): int
     {
+        $this->rebuildCategory('root');
         $categories = Category::get();
         foreach ($categories as $category) {
             $this->rebuildCategory($category->slug);
         }
-        $this->rebuildCategory('root');
         return $categories->count();
     }
 
     public function rebuildCategory(string $slug): void
     {
         JobCacheCategory::dispatch($slug);
-
-        /*
-        $count_products = $this->shopRepository->ProductsByCategory($category)->count();
-        $pages = (int)ceil($count_products / $this->web->paginate);
-        for($i = 1; $i <= $pages; $i++) {
-            JobCacheCategory::dispatch($i, $category->slug);
-        } */
     }
 
     public function rebuildPages()

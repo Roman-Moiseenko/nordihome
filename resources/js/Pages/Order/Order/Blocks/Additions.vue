@@ -111,7 +111,7 @@ function setAddition(row) {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.order.del-addition', {addition: row.id}), 'addition');
+    $delete_entity.show(route('admin.order.del-addition', {addition: row.id}), {name: 'addition'});
 }
 </script>
 

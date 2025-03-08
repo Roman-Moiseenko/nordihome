@@ -32,11 +32,6 @@ class CacheRepository
     public function category(array $request, string $slug)
     {
         return $this->views->category($request, $slug);
-
-      /*  $cache_name = 'category-' . $slug . '-' . ($request['page'] ?? '1');
-        return Cache::rememberForever('category-' . $cache_name , function () use ($request, $slug) {
-            return $this->views->category($request, $slug);
-        });*/
     }
 
     public function page($slug)

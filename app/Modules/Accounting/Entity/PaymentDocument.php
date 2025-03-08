@@ -137,4 +137,14 @@ class PaymentDocument extends AccountingDocument
         }
         return $this->foundedGenerate($founded);
     }
+
+    public function restore(): void
+    {
+        $is_trashed = false;
+        foreach ($this->decryptions as $decryption) {
+            if ($decryption->supply->trashed()) $is_trashed = true;
+        }
+        if ($is_trashed) throw new \DomainException('Восстановите документ основание');
+        parent::restore();
+    }
 }

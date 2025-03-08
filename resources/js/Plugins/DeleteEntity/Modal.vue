@@ -1,10 +1,10 @@
 <template>
     <el-dialog v-model="_show" title="Удалить запись" width="400" center>
         <div class="font-medium text-md mt-2">
-            Вы уверены, что хотите удалить {{ name_entity }}?
+            Вы уверены, что хотите {{ _soft ? 'пометить на удаление' : 'удалить' }} {{ name_entity }}?
         </div>
         <div class="text-red-600 text-md mt-2">
-            Восстановить данные будет невозможно!
+            {{ _soft ? '' : 'Восстановить данные будет невозможно!' }}
         </div>
         <slot />
         <template #footer>
@@ -25,8 +25,12 @@ const
     $props = defineProps({
         name: { type: String, default: "entity" },
         name_entity: { type: String, default: "Сущность" },
+
     }),
     $delete_entity = inject("$delete_entity"),
+    _soft = computed(() => {
+        return $delete_entity.soft()
+    }),
     _show = computed(() => {
         return $delete_entity.active() == $props.name
     })

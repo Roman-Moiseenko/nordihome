@@ -13,7 +13,7 @@ class MovementRepository extends AccountingRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = MovementDocument::orderByDesc('created_at');
+        $query = MovementDocument::withTrashed()->orderByDesc('created_at');
 
         $this->filters($query, $filters, $request, function (&$query, &$filters, $request) {
             if (($storage_out = $request->integer('storage_out')) > 0) {
@@ -36,6 +36,7 @@ class MovementRepository extends AccountingRepository
     public function MovementToArray(MovementDocument $document): array
     {
         return array_merge($document->toArray(), [
+            'trashed' => $document->trashed(),
             'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
             'status_html' => $document->statusHTML(),
             'storage_in' => $document->storageIn->toArray(),

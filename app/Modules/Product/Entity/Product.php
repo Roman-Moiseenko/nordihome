@@ -192,10 +192,10 @@ class Product extends Model
     protected $hidden = [
 
     ];
-
     protected $with = [
         'brand',
     ];
+
     public function sluggable()
     {
         return ['slug' => ['source' => 'name']];
@@ -668,7 +668,6 @@ class Product extends Model
         return null;
     }
 
-
     //*** RELATIONS
 
     //ТОВАРНЫЙ УЧЕТ, ПРОДАЖИ
@@ -882,7 +881,6 @@ class Product extends Model
     {
         return !is_null($this->promotion());
     }
-
 
     public function countReviews(): string
     {

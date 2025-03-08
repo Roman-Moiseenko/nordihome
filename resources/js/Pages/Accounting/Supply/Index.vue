@@ -72,22 +72,22 @@
                         {{ func.date(scope.row.created_at)}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="number" label="№ Документа" width="160"/>
+                <el-table-column prop="number" label="№" width="80" align="center"/>
                 <el-table-column prop="distributor_name" label="Поставщик" width="260" show-overflow-tooltip/>
-                <el-table-column prop="completed" label="Проведен" width="120">
+                <el-table-column prop="completed" label="Проведен" width="120" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.completed"/>
                     </template>
                 </el-table-column>
-                <el-table-column prop="quantity" label="Кол-во" width="100"/>
+                <el-table-column prop="quantity" label="Кол-во" width="100" align="center"/>
                 <el-table-column prop="amount" label="Сумма" width="120">
                     <template #default="scope">
                         {{ func.price(scope.row.amount, scope.row.currency) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
-                <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
-                <
+                <!--el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/-->
+
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
                         <el-button
@@ -96,12 +96,19 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button>
-                        <el-button v-if="!scope.row.completed"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.supply.restore', {supply: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
+                        />
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
-                            type="danger"
+                            type="danger" plain
                             @click.stop="handleDeleteEntity(scope.row)"
                         >
-                            Delete
+                            For Delete
                         </el-button>
                     </template>
                 </el-table-column>
@@ -119,7 +126,7 @@
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps} from "vue";
-import {Head, router} from '@inertiajs/vue3'
+import {Head, router, usePage} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"
 import TableFilter from '@Comp/TableFilter.vue'
@@ -127,6 +134,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import StatusGraph from "@Comp/Elements/StatusGraph.vue";
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     supplies: Object,
@@ -140,7 +148,6 @@ const props = defineProps({
     staffs: Array,
 })
 const store = useStore();
-
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.supplies.data])
@@ -155,9 +162,11 @@ const filter = reactive({
 const create_id = ref<Number>(null)
 
 interface IRow {
-    completed: number
+    completed: number,
+    trashed: boolean,
 }
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }
@@ -165,8 +174,12 @@ const tableRowClassName = ({row}: { row: IRow }) => {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.supply.destroy', {supply: row.id}));
+    $delete_entity.show(route('admin.accounting.supply.destroy', {supply: row.id}), {soft: true});
 }
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.supply.full-destroy', {supply: row.id}));
+}
+
 function createButton() {
     router.get(route('admin.accounting.supply.create', {distributor: create_id.value}))
 }
@@ -179,9 +192,5 @@ function routeClick(row) {
 function handleCopy(row) {
     router.post(route('admin.accounting.supply.copy', {supply: row.id}))
 }
-
-
 </script>
-<style scoped>
 
-</style>

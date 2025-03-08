@@ -381,7 +381,6 @@ class ProductService
                 $storageItem->delete();
             }
             $product->delete();
-            flash('Товар удален. Возможно восстановление', 'success');
         }
         //TODO При удалении, удалять все связанные файлы Фото и Видео
     }

@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class PricingService
+class PricingService extends AccountingService
 {
 
     public function create(int $arrival_id = null): PricingDocument
@@ -31,13 +31,6 @@ class PricingService
             $pricing->save();
         }
         return $pricing;
-    }
-
-
-    public function destroy(PricingDocument $pricing): void
-    {
-        if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, удалить нельзя');
-        $pricing->delete();
     }
 
     public function addProduct(PricingDocument $pricing, int $product_id, float $price_retail = null, float $price_bulk = null): void

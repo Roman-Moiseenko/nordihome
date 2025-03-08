@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
-class ArrivalService
+class ArrivalService extends AccountingService
 {
     private StorageService $storages;
     private OrderReserveService $reserveService;
@@ -78,15 +78,6 @@ class ArrivalService
             $currency,
             $staff->id
         );
-    }
-
-    public function destroy(ArrivalDocument $arrival): void
-    {
-        if ($arrival->isCompleted()) throw new \DomainException('Документ проведен. Удалять нельзя');
-        foreach ($arrival->expenses as $expense) {
-            $expense->delete();
-        }
-        $arrival->delete();
     }
 
     /**

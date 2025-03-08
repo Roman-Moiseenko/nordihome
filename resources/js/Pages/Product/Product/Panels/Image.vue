@@ -84,8 +84,10 @@ const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('con
 const handleRemove: UploadProps['onRemove'] = (uploadFile) => {
     $delete_entity.show(
         route('admin.product.image.del', {product: props.product.id, photo_id: uploadFile.id}),
-        'product_photo',
-        true
+        {
+            name: 'product_photo',
+            state: true
+        }
     ).then(response => {
         let index = fileList.value.map(item => item.id).indexOf(uploadFile.id)
         fileList.value.splice(index, 1)

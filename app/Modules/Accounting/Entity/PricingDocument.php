@@ -8,6 +8,7 @@ use App\Modules\Base\Traits\CompletedFieldModel;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -43,9 +44,9 @@ class PricingDocument extends AccountingDocument
         return $this->staff->fullname->getFullName();
     }
 
-    public function arrival(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function arrival(): BelongsTo
     {
-        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id');
+        return $this->belongsTo(ArrivalDocument::class, 'arrival_id', 'id')->withTrashed();
     }
 
     #[Deprecated]
@@ -72,5 +73,11 @@ class PricingDocument extends AccountingDocument
     public function onFounded(): ?array
     {
         return $this->foundedGenerate($this->arrival);
+    }
+
+    public function restore(): void
+    {
+        if (!is_null($this->arrival) && $this->arrival->trashed()) throw new \DomainException('Восстановите документ основание');
+        parent::restore();
     }
 }

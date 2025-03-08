@@ -5,9 +5,12 @@
         <div class="flex">
             <el-popover :visible="visible_create" placement="bottom-start" :width="246">
                 <template #reference>
-                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
+                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create"
+                               ref="buttonRef">
                         Создать документ
-                        <el-icon class="ml-1"><ArrowDown /></el-icon>
+                        <el-icon class="ml-1">
+                            <ArrowDown/>
+                        </el-icon>
                     </el-button>
                 </template>
                 <el-select v-model="storage.out" placeholder="Склад убытия" class="mt-1">
@@ -17,7 +20,8 @@
                     <el-option v-for="item in storages" :key="item.id" :label="item.name" :value="item.id"/>
                 </el-select>
                 <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
+                    <el-button @click="visible_create = false">Отмена</el-button>
+                    <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
 
@@ -65,7 +69,7 @@
 
                 <el-table-column label="Дата" width="120">
                     <template #default="scope">
-                        {{ func.date(scope.row.created_at)}}
+                        {{ func.date(scope.row.created_at) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="number" label="№ Документа" width="160"/>
@@ -89,12 +93,20 @@
                             @click.stop="handleCopy(scope.row)">
                             Copy
                         </el-button-->
-                        <el-button v-if="!scope.row.completed"
+                        <AccountingSoftDelete
+                            v-if="scope.row.trashed"
+                            :restore="route('admin.accounting.movement.restore', {movement: scope.row.id})"
+                            :small="true"
+                            @destroy="onForceDelete(scope.row)"
+                        />
+                        <el-button
+                            v-if="!scope.row.completed && !scope.row.trashed"
                             size="small"
                             type="danger"
+                            plain
                             @click.stop="handleDeleteEntity(scope.row)"
                         >
-                            Delete
+                            For Delete
                         </el-button>
                     </template>
                 </el-table-column>
@@ -108,10 +120,10 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Перемещение" />
+    <DeleteEntityModal name_entity="Перемещение"/>
 </template>
 <script lang="ts" setup>
-import {inject, reactive, ref, defineProps} from "vue";
+import {inject, reactive, ref} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"
@@ -120,6 +132,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 import Active from '@Comp/Elements/Active.vue'
+import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 
 const props = defineProps({
     movements: Object,
@@ -151,21 +164,29 @@ const storage = reactive({
 })
 
 interface IRow {
-    completed: number
+    completed: number,
+    trashed: boolean,
 }
+
 const tableRowClassName = ({row}: { row: IRow }) => {
+    if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {
         return 'warning-row'
     }
     return ''
 }
+
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.accounting.movement.destroy', {movement: row.id}));
+    $delete_entity.show(route('admin.accounting.movement.destroy', {movement: row.id}), {soft: true});
+}
+function onForceDelete(row) {
+    $delete_entity.show(route('admin.accounting.movement.full-destroy', {movement: row.id}));
 }
 function createButton() {
     if (storage.out === null || storage.in === null) return;
     router.post(route('admin.accounting.movement.store', {storage_out: storage.out, storage_in: storage.in}))
 }
+
 function routeClick(row) {
     router.get(route('admin.accounting.movement.show', {movement: row.id}))
 }

@@ -105,7 +105,19 @@ class MovementController extends Controller
     public function destroy(MovementDocument $movement): RedirectResponse
     {
         $this->service->destroy($movement);
-        return redirect()->back()->with('success', 'Документ удален');
+        return redirect()->back()->with('success', 'Перемещение помечено на удаление');
+    }
+
+    public function restore(MovementDocument $movement): RedirectResponse
+    {
+        $this->service->restore($movement);
+        return redirect()->back()->with('success', 'Перемещение восстановлено');
+    }
+
+    public function full_destroy(MovementDocument $movement): RedirectResponse
+    {
+        $this->service->fullDestroy($movement);
+        return redirect()->route('admin.accounting.movement.index')->with('success', 'Перемещение удалено окончательно');
     }
 
     public function add_product(Request $request, MovementDocument $movement): RedirectResponse

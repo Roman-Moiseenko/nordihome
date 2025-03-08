@@ -39,12 +39,12 @@ class PaymentDecryption extends Model
 
     public function payment(): BelongsTo
     {
-        return $this->belongsTo(PaymentDocument::class, 'payment_id');
+        return $this->belongsTo(PaymentDocument::class, 'payment_id')->withTrashed();
     }
 
     public function supply(): BelongsTo
     {
-        return $this->belongsTo(SupplyDocument::class, 'supply_id');
+        return $this->belongsTo(SupplyDocument::class, 'supply_id')->withTrashed();
     }
 
     public function order(): BelongsTo

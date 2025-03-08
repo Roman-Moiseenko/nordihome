@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JetBrains\PhpStorm\Deprecated;
 
-class PaymentDocumentService
+class PaymentDocumentService extends AccountingService
 {
     public function create(int $recipient_id, int $payer_id, float $amount): PaymentDocument
     {
@@ -65,10 +65,6 @@ class PaymentDocumentService
         });
     }
 
-    public function delete(PaymentDocument $payment): void
-    {
-        if (!$payment->isCompleted()) $payment->delete();
-    }
 
     public function setAmount(PaymentDecryption $decryption, Request $request): void
     {

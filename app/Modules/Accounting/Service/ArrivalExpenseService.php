@@ -9,7 +9,7 @@ use App\Modules\Admin\Entity\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ArrivalExpenseService
+class ArrivalExpenseService extends AccountingService
 {
     public function create(ArrivalDocument $arrival): ArrivalExpenseDocument
     {

@@ -93,12 +93,12 @@ class InventoryDocument extends AccountingDocument
 
     public function surplus(): BelongsTo
     {
-        return $this->belongsTo(SurplusDocument::class, 'surplus_id', 'id');
+        return $this->belongsTo(SurplusDocument::class, 'surplus_id', 'id')->withTrashed();
     }
 
     public function departure(): BelongsTo
     {
-        return $this->belongsTo(DepartureDocument::class, 'departure_id', 'id');
+        return $this->belongsTo(DepartureDocument::class, 'departure_id', 'id')->withTrashed();
     }
 
     /** Излишки */
@@ -134,5 +134,29 @@ class InventoryDocument extends AccountingDocument
     public function onFounded(): ?array
     {
         return null;
+    }
+
+    public function delete(): void
+    {
+        if (!is_null($this->surplus)) $this->surplus->delete();
+        if (!is_null($this->departure)) $this->departure->delete();
+
+        parent::delete();
+    }
+
+    public function restore(): void
+    {
+        parent::restore();
+        if (!is_null($this->surplus)) $this->surplus->restore();
+        if (!is_null($this->departure)) $this->departure->restore();
+
+    }
+
+    public function forceDelete(): void
+    {
+        if (!is_null($this->surplus)) $this->surplus->forceDelete();
+        if (!is_null($this->departure)) $this->departure->forceDelete();
+
+        parent::forceDelete();
     }
 }
