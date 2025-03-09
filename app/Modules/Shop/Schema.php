@@ -226,6 +226,34 @@ class Schema
             "price" => $product['price'],
             "priceCurrency" => "RUB",
             "availability" => 'https://schema.org/' . ($product['quantity'] == 0 ? 'InStock' : 'PreOrder'),
+            "shippingDetails" => [
+                "@type" => "OfferShippingDetails",
+                "shippingRate" => [
+                    "@type" => "MonetaryAmount",
+                    "value" => 0.0,
+                    "currency" => "RUB"
+                ],
+                "shippingDestination" => [
+                    "@type" => "DefinedRegion",
+                    "addressCountry" => "RU",
+                ],
+                "deliveryTime" => [
+                    "@type" => "ShippingDeliveryTime",
+                    "handlingTime" => [
+                        "@type" => "QuantitativeValue",
+                        "minValue" => 5,
+                        "maxValue" => 15,
+                        "unitCode" => "DAY",
+                    ],
+                    "transitTime" => [
+                        "@type" => "QuantitativeValue",
+                        "minValue" => 5,
+                        "maxValue" => 9,
+                        "unitCode" => "DAY",
+                    ],
+
+                ],
+            ],
             //TODO Данные из настроек текущей торговой организации
             /*
             "seller" => [
