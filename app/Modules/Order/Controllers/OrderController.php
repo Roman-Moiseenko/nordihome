@@ -5,7 +5,6 @@ namespace App\Modules\Order\Controllers;
 
 
 use App\Http\Controllers\Controller;
-use App\Mail\OrderAwaiting;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Admin\Entity\Admin;
@@ -14,24 +13,17 @@ use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Order\Helpers\OrderHelper;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Order\Service\OrderService;
-use App\Modules\Order\Service\SalesService;
-use App\Modules\Product\Entity\Category;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
-use JetBrains\PhpStorm\Deprecated;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -124,23 +116,6 @@ class OrderController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
-    }
-
-    #[Deprecated]
-    public function send_invoice(Order $order)
-    {
-        Mail::to($order->user->email)->queue(new OrderAwaiting($order));
-        flash('Счет отправлен клиенту');
-        return redirect()->back();
-    }
-
-    #[Deprecated]
-    public function resend_invoice(Order $order)
-    {
-        $this->report->xlsx($order);
-        Mail::to($order->user->email)->queue(new OrderAwaiting($order));
-        flash('Счет создан заново и отправлен клиенту');
-        return redirect()->back();
     }
 
     public function copy(Order $order)

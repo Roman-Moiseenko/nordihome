@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Modules\Mail\Mailable;
 
@@ -7,7 +6,7 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use Illuminate\Mail\Mailables\Content;
 use JetBrains\PhpStorm\Pure;
 
-class ExpenseCompleted extends SystemMailable
+class ExpenseDelivery extends SystemMailable
 {
     private OrderExpense $expense;
 
@@ -15,14 +14,14 @@ class ExpenseCompleted extends SystemMailable
     {
         parent::__construct();
         $this->expense = $expense;
-        $this->subject = 'Распоряжение выполнено';
+        $this->subject = 'Отгрузке присвоен трек-номер';
     }
 
     #[Pure] public function content(): Content
     {
 
         return new Content(
-            markdown: 'mail.expense.completed',
+            markdown: 'mail.expense.delivery',
             with: [
                 'expense' => $this->expense,
                 'order' => $this->expense->order,
@@ -39,5 +38,4 @@ class ExpenseCompleted extends SystemMailable
     {
         return [];
     }
-
 }

@@ -141,7 +141,7 @@ class Schema
         ];
     }
 
-    private function _Organization()
+    private function _Organization(): array
     {
 
 

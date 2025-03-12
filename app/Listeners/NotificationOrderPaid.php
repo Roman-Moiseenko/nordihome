@@ -25,6 +25,8 @@ class NotificationOrderPaid
      */
     public function handle(OrderHasPaid $event): void
     {
+
+        //TODO
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
         foreach ($staffs as $staff) {
@@ -35,9 +37,9 @@ class NotificationOrderPaid
                     route('admin.order.show', $event->order),
                     'credit-card'
                 ));
-            } }
+            }
+        }
+
         Mail::to($event->order->user->email)->queue(new OrderPaid($event->order));
-
-
     }
 }

@@ -23,16 +23,7 @@ class OrderNew extends SystemMailable
     {
         parent::__construct();
         $this->order = $order;
-    }
-
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Новый заказ',
-        );
+        $this->subject = 'Новый заказ';
     }
 
     /**
@@ -63,8 +54,4 @@ class OrderNew extends SystemMailable
         return [];
     }
 
-    public function getName(): string
-    {
-        return 'Новый заказ';
-    }
 }

@@ -31,7 +31,6 @@ class OrderAwaitingMail extends SystemMailable
         );
     }
 
-
     public function attachments(): array
     {
         return array_map(function ($item) {

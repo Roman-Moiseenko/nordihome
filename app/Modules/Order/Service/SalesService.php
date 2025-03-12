@@ -5,15 +5,10 @@ namespace App\Modules\Order\Service;
 
 
 use App\Events\OrderHasCanceled;
-use App\Mail\OrderAwaiting;
-use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 

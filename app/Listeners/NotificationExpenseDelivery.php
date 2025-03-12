@@ -3,10 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\ExpenseHasDelivery;
-use App\Mail\ExpenseDelivery;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Mail;
+
+use App\Modules\Mail\Job\SendSystemMail;
+use App\Modules\Mail\Mailable\ExpenseDelivery;
+use App\Modules\Order\Entity\Order\Order;
 
 class NotificationExpenseDelivery
 {
@@ -17,6 +17,12 @@ class NotificationExpenseDelivery
 
     public function handle(ExpenseHasDelivery $event): void
     {
-        if ($event->expense->isRegion()) Mail::to($event->expense->order->user->email)->queue(new ExpenseDelivery($event->expense));
+        if ($event->expense->isRegion())
+            SendSystemMail::dispatch(
+                $event->expense->order->user,
+                new ExpenseDelivery($event->expense),
+                Order::class,
+                $event->expense->order->id
+            );
     }
 }

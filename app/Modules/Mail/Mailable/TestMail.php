@@ -21,7 +21,7 @@ class TestMail extends SystemMailable
             'test-01.txt' => $path . 'test-01.txt',
             'test-02.txt' => $path . 'test-02.txt',
         ];
-        $this->subject = 'Служебное письмо';
+        $this->subject = 'Служебное письмо. Тест';
     }
 
 
@@ -45,10 +45,5 @@ class TestMail extends SystemMailable
     public function getFiles(): array
     {
         return $this->files;
-    }
-
-    public function getName(): string
-    {
-        return 'Тест';
     }
 }

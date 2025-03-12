@@ -15,6 +15,7 @@ class WriteReview extends SystemMailable
     {
         parent::__construct();
         $this->expense = $expense;
+        $this->subject = 'Напишите отзыв';
     }
 
     #[Pure] public function content(): Content
@@ -37,8 +38,4 @@ class WriteReview extends SystemMailable
         return [];
     }
 
-    public function getName(): string
-    {
-        return 'Напишите отзыв';
-    }
 }

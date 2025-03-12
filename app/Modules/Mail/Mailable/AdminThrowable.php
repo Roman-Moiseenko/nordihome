@@ -14,7 +14,7 @@ class AdminThrowable extends SystemMailable
     public function __construct(\Throwable $throwable)
     {
         parent::__construct();
-        $this->subject = 'Подтверждение почты при регистрации';
+        $this->subject = 'Фатальная ошибка на сайте';
         $this->throwable = $throwable;
     }
 
@@ -39,8 +39,4 @@ class AdminThrowable extends SystemMailable
         return [];
     }
 
-    public function getName(): string
-    {
-        return 'Фатальная ошибка на сайте';
-    }
 }

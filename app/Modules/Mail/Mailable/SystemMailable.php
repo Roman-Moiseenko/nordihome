@@ -33,5 +33,8 @@ abstract class SystemMailable extends AbstractMailable
         );
     }
 
-    abstract public function getName(): string;
+    public function getName(): string
+    {
+        return $this->subject;
+    }
 }
