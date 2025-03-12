@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Product\Entity\Category;
@@ -18,10 +19,12 @@ use Illuminate\Support\Facades\Cache;
 class Schema
 {
     private string $url;
+    private Trader $trader;
 
     public function __construct()
     {
         $this->url = route('shop.home');
+        $this->trader = Trader::default();
     }
 
     public function ProductPage(array $product)
@@ -140,13 +143,14 @@ class Schema
 
     private function _Organization()
     {
-        //TODO Данные из настроек текущей торговой организации
-        return [];
+
+
+       // return [];
         return [
             "@type" => "Organization",
             "@id" => "https://nordihome.ru/#organization",
-            "name" => "ООО «Негоциант»",
-            "url" => "https://nordihome.ru",
+            "name" => $this->trader->organization->short_name,
+            "url" => route('shop.home'),
             "logo" => [
                 "@type" => "ImageObject",
                 "url" => "https://nordihome.com/wp-content/uploads/2023/07/logo-nordi-home-1.png",
@@ -159,20 +163,20 @@ class Schema
                 "@type" => "ContactPoint",
                 "contactOption" => "TollFree",
                 "contactType" => "Customer Service",
-                "telephone" => ["+7 (4012) 37-37-30", "+7 906 210-85-05"],
+                "telephone" => [$this->trader->organization->phone],//TODO несколько телефонов
             ],
             "address" => [
                 "@type" => "PostalAddress",
-                "postalCode" => "236023",
-                "addressLocality" => "Калининград",
-                "streetAddress" => "ул. Советский проспект 103А корпус 1"
+                "postalCode" => $this->trader->organization->actual_address->post,
+                "addressLocality" => $this->trader->organization->actual_address->region,
+                "streetAddress" => $this->trader->organization->actual_address->address
             ],
         ];
     }
 
     private function _Offer(array $product)
     {
-        //TODO Данные из настроек текущей торговой организации
+
         //return [];
         //"offers" =>
         return [

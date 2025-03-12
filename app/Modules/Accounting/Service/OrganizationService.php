@@ -74,14 +74,14 @@ class OrganizationService
         if (($id = $request->integer('id')) > 0) {
             $contact = $organization->getContactById($id);
             $contact->fullname = FullName::create(params: $request->input('fullname'));
-            $contact->phone = preg_replace("/[^0-9]/", "", $request->string('phone')->value());
+            $contact->phone = phoneToDB($request->string('phone')->value());
             $contact->email = $request->string('email')->value();
             $contact->post = $request->string('post')->value();
             $contact->save();
 
         } else {
             $contact = OrganizationContact::new(FullName::create(params: $request->input('fullname')));
-            $contact->phone = preg_replace("/[^0-9]/", "", $request->string('phone')->value());
+            $contact->phone = phoneToDB($request->string('phone')->value());
             $contact->email = $request->string('email')->value();
             $contact->post = $request->string('post')->value();
             $organization->contacts()->save($contact);
@@ -163,7 +163,7 @@ class OrganizationService
 
         if ($request->has('post')) $organization->post = $request->string('post')->value();
         if ($request->has('email')) $organization->email = $request->string('email')->value();
-        if ($request->has('phone')) $organization->phone = $request->string('phone')->value();
+        if ($request->has('phone')) $organization->phone = phoneToDB($request->string('phone')->value());
         if ($request->has('chief')) $organization->chief = FullName::create(
             params: $request->input('chief')
         );
