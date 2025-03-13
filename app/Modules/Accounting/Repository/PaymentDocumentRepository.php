@@ -41,7 +41,7 @@ class PaymentDocumentRepository extends AccountingRepository
     {
         $array = $payment->toArray();
         return array_merge($array, [
-                'trashed' => $document->trashed(),
+                'trashed' => $payment->trashed(),
                 'distributor_name' => $payment->recipient->distributor->name,
                 'trader' => $payment->payer->full_name,
                 'organization_id' => $payment->payer->id,
