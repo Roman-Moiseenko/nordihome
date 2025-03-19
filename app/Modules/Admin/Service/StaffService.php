@@ -18,22 +18,22 @@ class StaffService
     {
         //Основные поля
         $admin = Admin::new(
-            $request['name'],
-            $request['email'] ?? '',
-            $request['phone'],
-            $request['password']
+            $request->string('name')->trim()->value(),
+            $request->string('email')->trim()->value(),
+            $request->string('phone')->trim()->value(),
+            $request->string('password')->trim()->value()
         );
 
         //ФИО
         $admin->setFullName(new FullName(
-            $request['surname'],
-            $request['firstname'],
-            $request['secondname']
+            $request->string('surname')->trim()->value(),
+            $request->string('firstname')->trim()->value(),
+            $request->string('secondname')->trim()->value(),
         ));
 
         $admin->telegram_user_id = $request['telegram_user_id'] ?? null;
         //Должность и Роли
-        $admin->post = $request['post'];
+        $admin->post = $request->string('post')->trim()->value();
         $admin->setRole($request['role']);
         $admin->save();
 

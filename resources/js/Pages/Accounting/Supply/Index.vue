@@ -135,6 +135,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import StatusGraph from "@Comp/Elements/StatusGraph.vue";
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
+import { IRowAccounting as IRow} from "@Res/interface"
 
 const props = defineProps({
     supplies: Object,
@@ -161,10 +162,6 @@ const filter = reactive({
 })
 const create_id = ref<Number>(null)
 
-interface IRow {
-    completed: number,
-    trashed: boolean,
-}
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.trashed === true) return 'danger-row'
     if (row.completed === 0) {

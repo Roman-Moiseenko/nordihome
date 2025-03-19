@@ -108,6 +108,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
+import { IRowAccounting as IRow} from "@Res/interface"
 
 const props = defineProps({
     pricings: Object,
@@ -130,11 +131,6 @@ const filter = reactive({
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
 })
-
-interface IRow {
-    completed: number,
-    trashed: boolean,
-}
 
 const tableRowClassName = ({row}: { row: IRow }) => {
     if (row.trashed === true) return 'danger-row'
