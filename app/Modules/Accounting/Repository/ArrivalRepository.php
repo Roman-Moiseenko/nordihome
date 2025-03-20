@@ -48,16 +48,24 @@ class ArrivalRepository extends AccountingRepository
     public function ArrivalWithToArray(ArrivalDocument $document, Request $request, &$filters): array
     {
         $query = $this->productFilters($document, $request, $filters);
-
         $withData = [
             'products' => $query
                 ->with('product')
                 ->paginate($request->input('size', 20))
                 ->withQueryString()
-                ->through(fn(ArrivalProduct $arrivalProduct) => array_merge($arrivalProduct->toArray(), [
-                    'pre_cost' => is_null($document->distributor) ? null : $document->distributor->getProduct($arrivalProduct->product_id)->pivot->pre_cost,
-                    'measuring' => $arrivalProduct->product->measuring->name,
-                ])),
+                ->through(function (ArrivalProduct $arrivalProduct) use ($document) {
+                    $pre_cost = null;
+                    if (!is_null($document->distributor)
+                        && !is_null($product = $document->distributor->getProduct($arrivalProduct->product_id)))
+                        $pre_cost = $product->pivot->pre_cost;
+
+
+                    return array_merge($arrivalProduct->toArray(), [
+                        'pre_cost' => $pre_cost,
+                        'measuring' => $arrivalProduct->product->measuring->name,
+                    ]);
+                }
+                ),
             'distributor' => $this->distributors->DistributorForAccounting($document->distributor),
             'expense_amount' => $document->getExpenseAmount(),
         ];

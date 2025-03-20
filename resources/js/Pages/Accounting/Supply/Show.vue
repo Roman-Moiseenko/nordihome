@@ -19,7 +19,7 @@
         <el-table :data="tableDate"
                   header-cell-class-name="nordihome-header"
                   style="width: 100%;"
-                  :row-class-name="tableRowClassName"
+                  :row-class-name="classes.TableCostCurrency"
         >
             <el-table-column type="index" :index="indexMethod" label="п/п"/>
             <el-table-column prop="product.code" label="Артикул" width="160"/>
@@ -103,6 +103,7 @@ import SupplyInfo from './Blocks/Info.vue'
 import SupplyActions from './Blocks/Actions.vue'
 import Pagination from '@Comp/Pagination.vue'
 import ProductRename from "@Comp/Product/Rename.vue";
+import {classes} from "@Res/className"
 
 const props = defineProps({
     supply: Object,
@@ -121,16 +122,7 @@ const tableDate = [...props.supply.products.data.map(item => {
     item.amount = (item.quantity * item.cost_currency).toFixed(2)
     return item
 })]
-interface IRow {
-    cost_currency: number,
-    quantity: number,
-}
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.cost_currency === 0 || row.quantity === 0) {
-        return 'error-row'
-    }
-    return ''
-}
+
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.supply.completed && !props.supply.trashed);
 const $delete_entity = inject("$delete_entity")

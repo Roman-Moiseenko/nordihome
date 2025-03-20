@@ -8,7 +8,7 @@
                 :data="tableData"
                 style="width: 100%; cursor: pointer;"
                 header-cell-class-name="nordihome-header"
-                :row-class-name="tableRowClassName"
+                :row-class-name="classes.TableActive"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
@@ -33,6 +33,7 @@ import Pagination from '@Comp/Pagination.vue'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import { useStore } from "@Res/store.js"
 import {defineProps, ref} from "vue";
+import {classes} from "@Res/className"
 
 const props = defineProps({
     settings: Object,
@@ -42,17 +43,8 @@ const props = defineProps({
     }
 })
 const store = useStore();
-const Loading = ref(false)
 const tableData = ref([...props.settings.data])
-interface IRow {
-    active: number
-}
-const tableRowClassName = ({row, rowIndex}: {row: IRow }) => {
-    if (row.active === false) {
-        return 'warning-row'
-    }
-    return ''
-}
+
 function routeClick(row) {
     router.get(route('admin.setting.' + row.slug))
 }

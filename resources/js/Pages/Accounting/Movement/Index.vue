@@ -24,7 +24,6 @@
                     <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
-
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-date-picker
                     v-model="filter.date_from"
@@ -62,7 +61,7 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
+                :row-class-name="classes.TableAccounting"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
@@ -133,7 +132,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 
 import Active from '@Comp/Elements/Active.vue'
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
-import { IRowAccounting as IRow} from "@Res/interface"
+import {classes} from "@Res/className"
 
 const props = defineProps({
     movements: Object,
@@ -163,14 +162,6 @@ const storage = reactive({
     out: null,
     in: null,
 })
-
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.trashed === true) return 'danger-row'
-    if (row.completed === 0) {
-        return 'warning-row'
-    }
-    return ''
-}
 
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.movement.destroy', {movement: row.id}), {soft: true});

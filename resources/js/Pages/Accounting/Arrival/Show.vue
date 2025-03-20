@@ -17,7 +17,7 @@
         </el-affix>
         <el-table :data="[...arrival.products.data]"
                   header-cell-class-name="nordihome-header"
-                  :row-class-name="tableRowClassName"
+                  :row-class-name="classes.TableCostCurrency"
                   style="width: 100%;">
             <el-table-column type="index" :index="indexMethod" label="п/п"/>
             <el-table-column prop="product.code" label="Артикул" width="160" />
@@ -94,6 +94,7 @@ import Pagination from '@Comp/Pagination.vue'
 import ArrivalInfo from './Blocks/Info.vue'
 import ArrivalActions from './Blocks/Actions.vue'
 import ProductRename from "@Comp/Product/Rename.vue"
+import {classes} from "@Res/className"
 
 const props = defineProps({
     arrival: Object,
@@ -110,16 +111,7 @@ const props = defineProps({
 provide('$filters', props.filters) //Фильтр товаров в списке документа
 provide('$printed', props.printed) //Для печати
 provide('$accounting', props.arrival) //Для общих действий
-interface IRow {
-    cost_currency: number,
-    quantity: number,
-}
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.cost_currency === 0 || row.quantity === 0) {
-        return 'error-row'
-    }
-    return ''
-}
+
 const iSaving = ref(false)
 const isEdit = computed<Boolean>(() => !props.arrival.completed && !props.arrival.trashed);
 const $delete_entity = inject("$delete_entity")

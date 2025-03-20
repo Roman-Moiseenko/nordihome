@@ -8,7 +8,7 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
+                :row-class-name="classes.TableCompleted"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
@@ -100,6 +100,7 @@ import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
+import {classes} from "@Res/className"
 
 const props = defineProps({
     expenses: Object,
@@ -115,17 +116,6 @@ const tableData = ref([...props.expenses.data.map(item => {
     return item
 })])
 const worker_id = ref(null)
-
-interface IRow {
-    completed: number
-}
-
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.completed === 0) {
-        return 'warning-row'
-    }
-    return ''
-}
 
 function routeClick(row) {
     router.get(route('admin.order.expense.show', {expense: row.id}))

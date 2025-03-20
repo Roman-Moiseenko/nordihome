@@ -15,7 +15,6 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >

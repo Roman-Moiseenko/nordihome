@@ -3,6 +3,15 @@ export interface IRowAccounting {
     trashed: boolean,
 }
 
-export interface Table {
+export interface IRowActive {
+    active: any
+}
 
+export interface IRowCompleted {
+    completed: number
+}
+
+export interface IRowCostCurrency {
+    cost_currency: number,
+    quantity: number,
 }

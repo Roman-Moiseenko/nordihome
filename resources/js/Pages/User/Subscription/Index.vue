@@ -8,7 +8,7 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
+                :row-class-name="classes.TableActive"
                 @row-click="routeClick"
             >
                 <el-table-column prop="name" label="Подписка" width="" show-overflow-tooltip />
@@ -53,9 +53,10 @@ import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
+import {classes} from "@Res/className"
 
 const props = defineProps({
-    subscriptions: Object,
+    subscriptions: Array,
     title: {
         type: String,
         default: 'Список подписок',
@@ -65,17 +66,6 @@ const props = defineProps({
 })
 
 const tableData = ref([...props.subscriptions])
-
-interface IRow {
-    active: any
-}
-
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.active === 0) {
-        return 'warning-row'
-    }
-    return ''
-}
 
 function onActivated(row) {
     router.visit(route('admin.user.subscription.activated', {subscription: row.id}), {

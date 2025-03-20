@@ -53,7 +53,7 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
+                :row-class-name="classes.TableAccounting"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
@@ -135,7 +135,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import StatusGraph from "@Comp/Elements/StatusGraph.vue";
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
-import { IRowAccounting as IRow} from "@Res/interface"
+import {classes} from "@Res/className"
 
 const props = defineProps({
     supplies: Object,
@@ -161,14 +161,6 @@ const filter = reactive({
     date_to: props.filters.date_to,
 })
 const create_id = ref<Number>(null)
-
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.trashed === true) return 'danger-row'
-    if (row.completed === 0) {
-        return 'warning-row'
-    }
-    return ''
-}
 
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.accounting.supply.destroy', {supply: row.id}), {soft: true});

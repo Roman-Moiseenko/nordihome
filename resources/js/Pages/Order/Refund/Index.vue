@@ -34,7 +34,6 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
@@ -112,20 +111,7 @@ const filter = reactive({
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
 })
-/*
-const create_id = ref<Number>(null)
 
-interface IRow {
-    completed: number
-}
-
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.completed === 0) {
-        return 'warning-row'
-    }
-    return ''
-}
-*/
 
 function routeClick(row) {
     router.get(route('admin.order.refund.show', {refund: row.id}))

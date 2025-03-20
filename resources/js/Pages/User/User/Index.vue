@@ -23,7 +23,7 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
+                :row-class-name="classes.TableActive"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
@@ -91,6 +91,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import AddUser from "@Comp/User/Add.vue"
 import {ElMessage} from "element-plus";
+import {classes} from "@Res/className"
 
 const props = defineProps({
     users: Object,
@@ -112,17 +113,6 @@ const filter = reactive({
 })
 const dialogCreate = ref(false)
 
-interface IRow {
-    active: any
-}
-
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.active === 0) {
-        return 'warning-row'
-    }
-    return ''
-}
-
 function onActive(row) {
     router.visit(route('admin.user.verify', {user: row.id}), {
         method: "post",
@@ -130,11 +120,9 @@ function onActive(row) {
         preserveState: true,
     })
 }
-
 function createOrder(row) {
     router.post(route('admin.order.store', {user_id: row.id}))
 }
-
 function routeClick(row) {
     router.get(route('admin.user.show', {user: row.id}))
 }

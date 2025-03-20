@@ -26,7 +26,7 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
+                :row-class-name="classes.TableCompleted"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
@@ -75,6 +75,7 @@ import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
+import {classes} from "@Res/className"
 
 const props = defineProps({
     brands: Object,
@@ -93,15 +94,6 @@ const filter = reactive({
 
 })
 const new_brand = ref('')
-interface IRow {
-    completed: number
-}
-const tableRowClassName = ({row}: { row: IRow }) => {
-    if (row.completed === 0) {
-        return 'warning-row'
-    }
-    return ''
-}
 
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.product.brand.destroy', {brand: row.id}));

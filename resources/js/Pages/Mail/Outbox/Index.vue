@@ -14,7 +14,7 @@
                 :data="tableData"
                 :max-height="600"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="tableRowClassName"
+                :row-class-name="classes.TableActive"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
@@ -72,6 +72,7 @@ import {Head, Link, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import TableFilter from '@Comp/TableFilter.vue'
+import {classes} from "@Res/className"
 
 const props = defineProps({
     outboxes: Object,
@@ -89,15 +90,6 @@ const filter = reactive({
     email: props.filters.email,
 })
 
-interface IRow {
-    active: number
-}
-const tableRowClassName = ({row, rowIndex}: {row: IRow }) => {
-    if (row.active === false) {
-        return 'warning-row'
-    }
-    return ''
-}
 function handleEdit(row) {
     router.get(route('admin.mail.outbox.edit', {outbox: row.id}))
 }
