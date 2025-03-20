@@ -1,8 +1,8 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@use 'tailwindcss/base' as *;
+@use 'tailwindcss/components' as *;
+@use 'tailwindcss/utilities' as *;
 
-@import '/resources/sass/fontawesome/scss/fontawesome';
+@use '/resources/sass/fontawesome/scss/fontawesome' as *;
 
 
 ::-webkit-scrollbar {

@@ -1,3 +1,8 @@
+@use 'fontawesome/scss/fontawesome.scss' as *;
+@use 'nordihome/variables' as *;
+@use 'bootstrap/scss/bootstrap';
+@use "bootstrap/scss/variables";
+
 // Fonts
 @import url('https://fonts.bunny.net/css?family=Nunito');
 
@@ -5,10 +10,9 @@
 
 
 // Bootstrap
-@import 'nbrussia/variables';
 
-@use 'bootstrap/scss/bootstrap';
-@use "bootstrap/scss/variables";
+
+
 
 
 $font-sizes: (
@@ -24,7 +28,7 @@ $font-sizes: (
 
 
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
-@use 'fontawesome/scss/fontawesome.scss' as *;
+
 @import "common";
 
 @import "nbrussia/shop-l-classes";
