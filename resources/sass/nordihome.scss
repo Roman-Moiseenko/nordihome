@@ -1,19 +1,13 @@
 // Fonts
 
-@use 'fontawesome/scss/fontawesome.scss' as *;
-@use 'nordihome/variables' as *;
-@use 'bootstrap/scss/bootstrap' as *;
-@use "bootstrap/scss/variables" as *;
+@import 'fontawesome/scss/fontawesome.scss';
+@import 'nordihome/variables';
+@import 'bootstrap/scss/bootstrap';
+@import "bootstrap/scss/variables";
 
 @import url('https://fonts.bunny.net/css?family=Nunito');
-
 // Variables
-
-
 // Bootstrap
-
-
-
 
 $font-sizes: (
     1: $h1-font-size,
