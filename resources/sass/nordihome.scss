@@ -7,8 +7,8 @@
 // Bootstrap
 
 
-@import 'bootstrap/scss/bootstrap';
-@import "bootstrap/scss/variables";
+@use 'bootstrap/scss/bootstrap';
+@use "bootstrap/scss/variables";
 
 $font-sizes: (
     1: $h1-font-size,
@@ -23,7 +23,7 @@ $font-sizes: (
 
 
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
-@import './resources/sass/fontawesome/scss/fontawesome.scss';
+@use 'fontawesome/scss/fontawesome.scss' as *;
 @import "common";
 
 @import "nordihome/shop-l-classes";

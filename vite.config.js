@@ -16,7 +16,16 @@ export default defineConfig({
         commonjsOptions: {
             include: ["tailwind.config.js", "node_modules/**"],
         },
-        chunkSizeWarningLimit: 1600,
+        chunkSizeWarningLimit: 1200,
+        rollupOptions: {
+            output:{
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        return id.toString().split('node_modules/')[1].split('/')[0].toString();
+                    }
+                }
+            }
+        }
     },
     optimizeDeps: {
         include: ["tailwind-config"],
@@ -165,5 +174,13 @@ export default defineConfig({
             'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
         }*/
     },
-   publicDir: 'public/build',
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler' // or "modern"
+            }
+        }
+    },
+
+        publicDir: 'public/build',
 });
