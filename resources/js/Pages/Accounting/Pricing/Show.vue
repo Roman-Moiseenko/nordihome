@@ -151,7 +151,7 @@ const tableRowClassName = ({row}: { row: IRow }) => {
     return ''
 }
 const iSaving = ref(false)
-const isEdit = computed<Boolean>(() => !props.pricing.completed && !props.supply.trashed);
+const isEdit = computed<Boolean>(() => !props.pricing.completed && !props.pricing.trashed);
 const $delete_entity = inject("$delete_entity")
 const change_id = ref(null)
 const Blocked = ref(false)

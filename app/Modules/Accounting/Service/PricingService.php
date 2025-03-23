@@ -62,7 +62,7 @@ class PricingService extends AccountingService
             $this->addProduct($pricing,
                 $product['product_id'],
                 $product['price'],
-                $product['price2'],
+                $product['price'],
             );
         }
     }

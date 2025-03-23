@@ -943,6 +943,7 @@ class ProductService
         $array = array_values(array_filter($result));
         $brand = is_null($brand_id) ? null : Brand::find($brand_id);
         $products = [];
+        //throw new \DomainException(json_encode($array));
         foreach ($array as $item) {
             if (is_null($product = Product::whereCode($item[0])->first())) {
                 if (is_null($brand)) continue;
@@ -954,11 +955,23 @@ class ProductService
                 $products[] = [
                     'product_id' => $product->id,
                     'quantity' => isset($item[1]) ? (float)$item[1] : 1,
-                    'price' => isset($item[2]) ? (float)$item[2] : 0,
-                    'price2' => isset($item[3]) ? (float)$item[3] : 0,
+                    'price' => $this->getFloatXls($item[2]), // isset($item[2]) ? (float)str_replace(' ', '', $item[2]) : 0,
+                    'price2' => $this->getFloatXls($item[3]), //isset($item[3]) ? (float)str_replace(' ', '', $item[3]) : 0,
                 ];
         }
+
         set_time_limit(30);
         return $products;
+    }
+
+    private function getFloatXls(null|string $item): float
+    {
+        if (is_null($item)) return 0;
+        $item = str_replace(' ', '', $item);
+
+        $item = preg_replace('/(\x{202f})/u', '', $item);
+        $item = str_replace(',', '.', $item);
+        return (float)$item;
+        //\u202f
     }
 }
