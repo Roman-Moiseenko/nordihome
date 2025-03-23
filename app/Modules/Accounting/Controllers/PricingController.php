@@ -116,7 +116,6 @@ class PricingController extends Controller
 
     public function add_products(Request $request, PricingDocument $pricing): RedirectResponse
     {
-        dd($request->input('products'));
         $this->service->addProducts($pricing, $request->input('products'));
         return redirect()->back()->with('success', 'Товары добавлены');
     }
