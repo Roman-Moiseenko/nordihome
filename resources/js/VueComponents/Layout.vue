@@ -27,11 +27,13 @@
                     </div>
                     <!-- BreadCrumbs -->
                     <div
-                        class="bg-teal-950 text-white md:text-md flex items-center justify-between p-4 w-full text-sm border-b md:px-12 md:py-0">
-                        <div class="mr-4 mt-1">
+                        class="bg-teal-950 text-white md:text-md flex items-center p-4 w-full text-sm border-b md:px-12 md:py-0">
+                        <div class="ml-4 mt-1">
                             <bread-crumbs />
                         </div>
-                        <dropdown class="mt-1" placement="bottom-end">
+
+                        <!--el-button @click="goForward" type="primary" plain><i class="fa-light fa-right"></i></el-button-->
+                        <dropdown class="ml-auto mt-1" placement="bottom-end">
                             <template #default>
                                 <div class="group flex items-center cursor-pointer select-none">
                                     <div
@@ -70,6 +72,8 @@
                         <flash-messages :errors="usePage().props.errors" :flash="usePage().props.flash"/>
                         <slot/>
                         <el-backtop target=".affix-container" :visibility-height="100" :right="30" :bottom="20" />
+                        <el-button @click="goBack" type="info" dark class="mt-5  shadow shadow-slate-400">
+                            <i class="fa-light fa-left mr-2"></i>Назад</el-button>
                     </div>
                 </div>
             </div>
@@ -87,7 +91,16 @@ import Dropdown from '@Comp/Dropdown.vue'
 import MainMenu from '@Comp/Menu/MainMenu.vue'
 import FlashMessages from '@Comp/FlashMessages.vue'
 import BreadCrumbs from '@Comp/BreadCrumbs.vue';
+import {defineProps} from "vue";
 const app_name = import.meta.env.VITE_APP_NAME
+
+function goBack() {
+    window.history.back()
+}
+function goForward() {
+    window.history.forward()
+}
+
 </script>
 <style>
 .bottom-fix {
