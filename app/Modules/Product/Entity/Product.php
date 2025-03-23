@@ -532,11 +532,11 @@ class Product extends Model
     }
 
     /**
-     * Цена на предзаказ, если цена не определена, возвращаем текущую
+     * Цена на предзаказ, если цена не определена, возвращаем из парсера или текущую
      */
     public function getPricePre(bool $previous = false): float
     {
-        if ($this->pricesPre()->count() == 0) return 0;
+        if ($this->pricesPre()->count() == 0) return $this->getPriceParser($previous);
         if ($previous) {
             $model = $this->pricesPre()->skip(1)->first();
             if (empty($model)) return 0;

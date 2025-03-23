@@ -539,7 +539,6 @@ class OrderService
                 //TODO Высчитываем цену по парсеру Доп.наценка и другое
                 $parser = $product->parser;
                 if (is_null($parser)) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
-
                 $last_price = ceil($parser->price_sell * $product->brand->currency->fixed);
                 //$parser->price_sell;
                 $pre_price = $last_price;
