@@ -19,7 +19,7 @@
                         </div>
                     </template>
 
-                    <div class="flex mt-1">
+                    <div class="flex flex-wrap mt-1">
                         <div v-for="variant in item.variants" class="flex ml-1">
                             <img v-if="variant.image" :src="variant.image" width="30" height="30"/> <h2 class="font-medium ml-2">{{ variant.name }}</h2>
                         </div>
