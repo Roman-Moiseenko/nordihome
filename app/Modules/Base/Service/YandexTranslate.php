@@ -5,7 +5,7 @@ namespace App\Modules\Base\Service;
 
 class YandexTranslate
 {
-    public static function translate(string $text)
+    public static function translate(string $text, string $source_language = 'pl')
     {
         $YANDEX_API_TRANSLATE = env('YANDEX_API_TRANSLATE', null);
         $folder_id = env('IAM_FOLDER', null);
@@ -16,6 +16,7 @@ class YandexTranslate
             "Authorization: Api-Key $YANDEX_API_TRANSLATE"
         ];
         $post_data = [
+            "sourceLanguageCode" => $source_language,
             "targetLanguageCode" => $target_language,
             "texts" => $text,
             "folderId" => $folder_id,

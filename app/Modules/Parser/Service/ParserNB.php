@@ -21,6 +21,7 @@ use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Service\ModificationService;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Facades\Log;
 
 class ParserNB extends ParserAbstract
 {
@@ -84,7 +85,13 @@ class ParserNB extends ParserAbstract
         $end = strpos($text, '</script>');
         $newData = substr($text, 0, $end);
         $array = json_decode($newData, true);
-        return $array['props']['pageProps']['dehydratedState']['queries'];
+        try {
+            return $array['props']['pageProps']['dehydratedState']['queries'];
+        } catch (\Throwable $e) {
+            Log::info(json_encode($array['props']['pageProps']));
+            return [];
+        }
+
     }
 
 
