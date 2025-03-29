@@ -12,7 +12,7 @@ class MeasuringService
     {
         return Measuring::register(
             $request->string('name')->trim()->value(),
-            $request->integer('code'),
+            $request->string('code')->trim()->value(),
             $request->boolean('fractional'),
             $request->string('fractional_name')->trim()->value()
         );
