@@ -80,7 +80,7 @@ class InvoiceReport
             $activeWorksheet->setCellValue([2, $begin_row_products + $i], $item->product->name);
             $activeWorksheet->setCellValue([6, $begin_row_products + $i], $item->product->code);
             $activeWorksheet->setCellValue([7, $begin_row_products + $i], $item->quantity);
-            $activeWorksheet->setCellValue([8, $begin_row_products + $i], 'штука');
+            $activeWorksheet->setCellValue([8, $begin_row_products + $i], $item->product->measuring->name);
             $activeWorksheet->setCellValue([9, $begin_row_products + $i], price($item->sell_cost));
             $activeWorksheet->setCellValue([10, $begin_row_products + $i], price($item->sell_cost * $item->quantity));
 
