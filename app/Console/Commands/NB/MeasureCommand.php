@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\NB;
 
-use App\Livewire\NBRussia\Header\Category;
+use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
 
@@ -20,12 +20,12 @@ class MeasureCommand extends Command
 
         foreach ($categories as $category) {
             $this->info('Категория ' . $category->name, ' ID = ' . $category->id);
-            /** @var Product[] $products */
-            $products = Product::whereHas('main_category', function ($query) use ($category) {
+
+            $products = Product::whereHas('category', function ($query) use ($category) {
                 $query->where('_lft', '>=', $category->_lft)->where('_rgt', '<=', $category->_rgt);
             })->where('measuring_id', '<>', 30)->get();
             $this->info('Товаров ' . $products->count());
-
+            /** @var Product $product */
             foreach ($products as $product) {
                 $this->info($product->name);
                 $product->measuring_id = 30;
