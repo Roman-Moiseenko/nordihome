@@ -5,6 +5,7 @@ namespace App\Modules\Base\Service;
 
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Admin\Entity\Options;
+use App\Modules\Setting\Entity\Settings;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -13,9 +14,14 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ReportService
 {
-    public function template(string $name): string
+    public function template(string $name, ): string
     {
+      //  $settings = app()->make(Settings::class);
+        $theme = config('shop.theme');
         $config = (new Options())->report[$name];
+        if (isset($config[$theme]))
+            return resource_path() . $config[$theme];
+
         return resource_path() . $config['template'];
     }
 

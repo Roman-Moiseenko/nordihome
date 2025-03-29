@@ -79,13 +79,17 @@ return [
             'template' => '/template/accounting/_utd2024.xlsx',
         ],
         'base_path' => '',
-        'invoice' => [
-            'template' => '/template/_invoice.xlsx',
-            ],
         'trade12' => [
             'template' => '/template/_trade12.xlsx',
         ],
 
+
+        //документы под каждый шаблон
+        'invoice' => [
+            'template' => '/template/_invoice.xlsx',
+            'nordihome' => '/template/_invoice_nordihome.xlsx',
+            'nbrussia' => '/template/_invoice_nbrussia.xlsx',
+            ],
     ],
 
     'frontend' => [
