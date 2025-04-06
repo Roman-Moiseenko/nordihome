@@ -30,7 +30,11 @@
                 <el-table-column prop="sign" label="Обозначение" width="160" align="center"/>
                 <el-table-column prop="exchange" label="Текущий курс" width="120" align="center"/>
 
-                <el-table-column prop="extra" label="Доп.наценка (%)" width="200" align="center"/>
+                <el-table-column prop="fixed" label="Фиксированный курс" width="220" align="center">
+                    <template #default="scope">
+                        {{ func.price(scope.row.fixed)}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="default" label="По умолчанию" width="220" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.default" />

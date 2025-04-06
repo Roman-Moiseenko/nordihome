@@ -151,7 +151,7 @@ class OrderController extends Controller
     public function awaiting(Order $order, Request $request): mixed
     {
         //dd($request->input('emails', []));
-        $this->service->awaiting($order, $request->input('emails', []));
+        $this->service->awaiting($order, $request);
         return redirect()->back()->with('success', 'Заказ ожидает оплаты');
     }
 

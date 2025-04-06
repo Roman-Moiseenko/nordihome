@@ -1,0 +1,1605 @@
+{
+    "availabilities": [
+        {
+            "availableForCashCarry": true,
+            "availableForClickCollect": true,
+            "buyingOption": {
+                "cashCarry": {
+                    "availability": {
+                        "probability": {
+                            "thisDay": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            },
+                            "updateDateTime": "2025-04-01T00:10:08.642Z"
+                        },
+                        "quantity": 138,
+                        "updateDateTime": "2025-04-01T00:10:08.642Z"
+                    },
+                    "eligibleForStockNotification": false,
+                    "range": {
+                        "inRange": true
+                    },
+                    "unitOfMeasure": "PIECE",
+                    "updateDateTime": "2025-04-01T00:10:08.642Z"
+                },
+                "clickCollect": {
+                    "range": {
+                        "inRange": true
+                    }
+                },
+                "homeDelivery": {
+                    "range": {
+                        "inRange": true
+                    },
+                    "updateDateTime": "2025-04-01T00:11:52.111Z"
+                }
+            },
+            "classUnitKey": {
+                "classUnitCode": "188",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "availableForCashCarry": true,
+            "availableForClickCollect": true,
+            "buyingOption": {
+                "cashCarry": {
+                    "availability": {
+                        "probability": {
+                            "thisDay": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            },
+                            "updateDateTime": "2025-04-01T00:06:32.586Z"
+                        },
+                        "quantity": 69,
+                        "updateDateTime": "2025-04-01T00:06:32.586Z"
+                    },
+                    "eligibleForStockNotification": false,
+                    "range": {
+                        "inRange": true
+                    },
+                    "unitOfMeasure": "PIECE",
+                    "updateDateTime": "2025-04-01T00:06:32.586Z"
+                },
+                "clickCollect": {
+                    "range": {
+                        "inRange": true
+                    }
+                },
+                "homeDelivery": {
+                    "range": {
+                        "inRange": true
+                    },
+                    "updateDateTime": "2025-04-01T00:53:02.862Z"
+                }
+            },
+            "classUnitKey": {
+                "classUnitCode": "203",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "availableForCashCarry": true,
+            "availableForClickCollect": true,
+            "buyingOption": {
+                "cashCarry": {
+                    "availability": {
+                        "probability": {
+                            "thisDay": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            },
+                            "updateDateTime": "2025-03-31T22:44:33.362Z"
+                        },
+                        "quantity": 103,
+                        "updateDateTime": "2025-03-31T22:44:33.362Z"
+                    },
+                    "eligibleForStockNotification": false,
+                    "range": {
+                        "inRange": true
+                    },
+                    "unitOfMeasure": "PIECE",
+                    "updateDateTime": "2025-03-31T22:44:33.362Z"
+                },
+                "clickCollect": {
+                    "range": {
+                        "inRange": true
+                    }
+                },
+                "homeDelivery": {
+                    "range": {
+                        "inRange": true
+                    },
+                    "updateDateTime": "2025-03-31T22:45:43.314Z"
+                }
+            },
+            "classUnitKey": {
+                "classUnitCode": "204",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "availableForCashCarry": true,
+            "availableForClickCollect": true,
+            "buyingOption": {
+                "cashCarry": {
+                    "availability": {
+                        "probability": {
+                            "thisDay": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            },
+                            "updateDateTime": "2025-04-01T01:43:38.509Z"
+                        },
+                        "quantity": 49,
+                        "updateDateTime": "2025-04-01T01:43:38.509Z"
+                    },
+                    "eligibleForStockNotification": false,
+                    "range": {
+                        "inRange": true
+                    },
+                    "unitOfMeasure": "PIECE",
+                    "updateDateTime": "2025-04-01T01:43:38.509Z"
+                },
+                "clickCollect": {
+                    "range": {
+                        "inRange": true
+                    }
+                },
+                "homeDelivery": {
+                    "range": {
+                        "inRange": true
+                    },
+                    "updateDateTime": "2025-04-01T01:57:30.227Z"
+                }
+            },
+            "classUnitKey": {
+                "classUnitCode": "205",
+                "classUnitType": "STO"
+            },
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemType": "ART"
+            }
+        },
+        {
+            "availableForCashCarry": true,
+            "availableForClickCollect": true,
+            "buyingOption": {
+                "cashCarry": {
+                    "availability": {
+                        "probability": {
+                            "thisDay": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            },
+                            "updateDateTime":"2025-03-31T23: 41
+                            :
+                            09.323Z
+                            "},"
+                            quantity
+                            ":346,"
+                            updateDateTime
+                            ":"
+                            2025-03-31T23: 41
+                            :
+                            09.323Z
+                            "},"
+                            eligibleForStockNotification
+                            ":false,"
+                            range
+                            ":{"
+                            inRange
+                            ":true},"
+                            unitOfMeasure
+                            ":"
+                            PIECE
+                            ","
+                            updateDateTime
+                            ":"
+                            2025-03-31T23: 41
+                            :
+                            09.323Z
+                            "},"
+                            clickCollect
+                            ":{"
+                            range
+                            ":{"
+                            inRange
+                            ":true}},"
+                            homeDelivery
+                            ":{"
+                            range
+                            ":{"
+                            inRange
+                            ":true},"
+                            updateDateTime
+                            ":"
+                            2025-04-01T01: 48
+                            :
+                            16.873Z
+                            "}},"
+                            classUn
+                            itKey
+                            ":{"
+                            classUnitCode
+                            ":"
+                            294
+                            ","
+                            classUnitType
+                            ":"
+                            STO
+                            "},"
+                            itemKey
+                            ":{"
+                            itemNo
+                            ":"
+                            40178888
+                            ","
+                            itemType
+                            ":"
+                            ART
+                            "}},{"
+                            availableForCashCarry
+                            ":true,"
+                            availableForClickCollect
+                            ":true,"
+                            buyingOption
+                            ":{"
+                            ca
+                            shCarry
+                            ":{"
+                            availability
+                            ":{"
+                            probability
+                            ":{"
+                            thisDay
+                            ":{"
+                            colour
+                            ":{"
+                            rgbDec
+                            ":"
+                            10,
+                            138,
+                            0
+                            ","
+                            rgbHex
+                            ":"
+                            #
+                            0A8A00
+                            ","
+                            token
+                            ":"
+                            colour-positive
+                            "},"
+                            messageType
+                            ":"
+                            HIGH_IN_STOCK
+                            "},"
+                            updateDateTime
+                            ":"
+                            2025-04
+                            -01T00: 15
+                            :
+                            24.010Z
+                            "},"
+                            quantity
+                            ":119,"
+                            updateDateTime
+                            ":"
+                            2025-04-01T00: 15
+                            :
+                            24.010Z
+                            "},"
+                            eligibleForStockNotification
+                            ":false,"
+                            range
+                            ":{"
+                            inRange
+                            ":true},"
+                            unitOfMeasure
+                            ":"
+                            PIECE
+                            ","
+                            updateDateTime
+                            ":"
+                            2025-04-01T00: 15
+                            :
+                            24.010Z
+                            "},"
+                            clickCollect
+                            ":{"
+                            range
+                            ":{"
+                            inRange
+                            ":true}},"
+                            homeDelivery
+                            ":{"
+                            range
+                            ":{"
+                            inRange
+                            ":true},"
+                            updateDateTime
+                            ":"
+                            2025-04-01T00: 54
+                            :
+                            02.033Z
+                            "}},"
+                            classUnitKey
+                            ":{"
+                            classUnitCo
+                            de
+                            ":"
+                            306
+                            ","
+                            classUnitType
+                            ":"
+                            STO
+                            "},"
+                            itemKey
+                            ":{"
+                            itemNo
+                            ":"
+                            40178888
+                            ","
+                            itemType
+                            ":"
+                            ART
+                            "}},{"
+                            availableForCashCarry
+                            ":true,"
+                            availableForClickCollect
+                            ":true,"
+                            buyingOption
+                            ":{"
+                            cashCarry
+                            ":{"
+                            availabil
+                            ity
+                            ":{"
+                            probability
+                            ":{"
+                            thisDay
+                            ":{"
+                            colour
+                            ":{"
+                            rgbDec
+                            ":"
+                            10,
+                            138,
+                            0
+                            ","
+                            rgbHex
+                            ":"
+                            #
+                            0A8A00
+                            ","
+                            token
+                            ":"
+                            colour-positive
+                            "},"
+                            messageType
+                            ":"
+                            HIGH_IN_STOCK
+                            "},"
+                            updateDateTime
+                            ":"
+                            2025-03-31T23: 45
+                            :
+                            38.553Z
+                            "},
+                            "quantity": 146,
+                            "updateDateTime": "2025-03-31T23:45:38.553Z"
+                        },
+                        "eligibleForStockNotification": false,
+                        "range": {
+                            "inRange": true
+                        },
+                        "unitOfMeasure": "PIECE",
+                        "updateDateTime": "2025-03-31T23:45:38.
+                        553Z
+                        "},"
+                        clickCollect
+                        ":{"
+                        range
+                        ":{"
+                        inRange
+                        ":true}},"
+                        homeDelivery
+                        ":{"
+                        range
+                        ":{"
+                        inRange
+                        ":true},"
+                        updateDateTime
+                        ":"
+                        2025-04-01T01: 26
+                        :
+                        23.862Z
+                        "}},"
+                        classUnitKey
+                        ":{"
+                        classUnitCode
+                        ":"
+                        307
+                        ","
+                        classUnit
+                        Type
+                        ":"
+                        STO
+                        "},"
+                        itemKey
+                        ":{"
+                        itemNo
+                        ":"
+                        40178888
+                        ","
+                        itemType
+                        ":"
+                        ART
+                        "}},{"
+                        availableForCashCarry
+                        ":true,"
+                        availableForClickCollect
+                        ":true,"
+                        buyingOption
+                        ":{"
+                        cashCarry
+                        ":{"
+                        availability
+                        ":{"
+                        probability
+                        ":
+        {
+            "thisDay": {
+                "colour": {
+                    "rgbDec": "10,138,0",
+                    "rgbHex": "#0A8A00",
+                    "token": "colour-positive"
+                },
+                "messageType": "HIGH_IN_STOCK"
+            },
+            "updateDateTime": "2025-03-31T23:49:19.736Z"
+        },
+        "quantity"
+        :
+        137,
+        "upda
+        teDateTime
+        ":"
+        2025-03-31T23
+        :
+        49
+        :
+        19.736Z
+        "},"
+        eligibleForStockNotification
+        ":false,"
+        range
+        ":{"
+        inRange
+        ":true},"
+        unitOfMeasure
+        ":"
+        PIECE
+        ","
+        updateDateTime
+        ":"
+        2025-03-31T23
+        :
+        49
+        :
+        19.736Z
+        "},"
+        clickCollect
+        ":{"
+        range
+        ":{"
+        inRange
+        ":true}},"
+        homeDelivery
+        ":{"
+        range
+        ":{"
+        inRange
+        ":true},"
+        updateDateTime
+        ":"
+        2025-04-01T00
+        :
+        47
+        :
+        29.071Z
+        "}},"
+        classUnitKey
+        ":{"
+        classUnitCode
+        ":"
+        311
+        ","
+        classUnitType
+        ":"
+        STO
+        "},"
+        itemKe
+        y
+        ":{"
+        itemNo
+        ":"
+        40178888
+        ","
+        itemType
+        ":"
+        ART
+        "}},{"
+        availableForCashCarry
+        ":true,"
+        availableForClickCollect
+        ":true,"
+        buyingOption
+        ":{"
+        cashCarry
+        ":{"
+        availability
+        ":{"
+        probability
+        ":{"
+        thisDay
+        ":{"
+        colour
+        "
+        :
+        {
+            "rgbDec": "10,138,0",
+            "rgbHex": "#0A8A00",
+            "token": "colour-positive"
+        },
+        "messageType"
+        :
+        "HIGH_IN_STOCK"
+        },
+        "updateDateTime"
+        :
+        "2025-03-31T22:49:16.400Z"
+        },
+        "quantity"
+        :
+        147,
+        "updateDateTime"
+        :
+        "2025-03
+        -31T22
+        :
+        49
+        :
+        16.400Z
+        "},"
+        eligibleForStockNotification
+        ":false,"
+        range
+        ":{"
+        inRange
+        ":true},"
+        unitOfMeasure
+        ":"
+        PIECE
+        ","
+        updateDateTime
+        ":"
+        2025-03-31T22
+        :
+        49
+        :
+        16.400Z
+        "},"
+        clickCollect
+        ":{"
+        range
+        ":{"
+        inRange
+        ":true}},"
+        homeDelivery
+        ":{"
+        range
+        ":{"
+        inRange
+        ":true},"
+        updateDateTime
+        ":"
+        2025-04-01T02
+        :
+        38
+        :
+        09.856Z
+        "}},"
+        classUnitKey
+        ":{"
+        classUnitCode
+        ":"
+        329
+        ","
+        classUnitType
+        ":"
+        STO
+        "},"
+        itemKey
+        ":{"
+        itemNo
+        ":"
+        401788
+        88
+        ","
+        itemType
+        ":"
+        ART
+        "}},{"
+        availableForCashCarry
+        ":true,"
+        availableForClickCollect
+        ":true,"
+        buyingOption
+        ":{"
+        cashCarry
+        ":{"
+        availability
+        ":{"
+        probability
+        ":{"
+        thisDay
+        ":{"
+        colour
+        ":{"
+        rgbDec
+        ":"
+        10,
+        138,
+        0
+        ","
+        rgbHex
+        ":"
+        #
+        0A8A00
+        ","
+        token
+        ":"
+        colour-positive
+        "},"
+        messageType
+        ":"
+        HIGH_IN_STOCK
+        "},"
+        updateDateTime
+        ":"
+        2025-03-31T22
+        :
+        42
+        :
+        28.114Z
+        "},"
+        quantity
+        ":174,"
+        updateDateTime
+        ":"
+        2025-03-31T22
+        :
+        42
+        :
+        28.114Z
+        "},
+        "eligibleForStockNotification"
+        :
+        false,
+        "range"
+        :
+        {
+            "inRange": true
+        },
+        "unitOfMeasure"
+        :
+        "PIECE",
+        "updateDateTime"
+        :
+        "2025-03-31T22:42:28.114Z"
+        },
+        "clickCollect"
+        :
+        {
+            "range": {
+                "inRange": true
+            }
+        },
+        "homeDelive
+        ry
+        ":{"
+        range
+        ":{"
+        inRange
+        ":true},"
+        updateDateTime
+        ":"
+        2025-04-01T01
+        :
+        24
+        :
+        12.215Z
+        "}},"
+        classUnitKey
+        ":{"
+        classUnitCode
+        ":"
+        429
+        ","
+        classUnitType
+        ":"
+        STO
+        "},"
+        itemKey
+        ":{"
+        itemNo
+        ":"
+        40178888
+        ","
+        itemType
+        ":"
+        ART
+        "
+        }
+    },
+        {
+            "availableForCashCarry": true,
+            "availableForClickCollect": true,
+            "buyingOption": {
+                "cashCarry": {
+                    "availability": {
+                        "probability": {
+                            "thisDay": {
+                                "colour": {
+                                    "rgbDec": "10,138,0",
+                                    "rgbHex": "#0A8A00",
+                                    "token": "colour-positive"
+                                },
+                                "messageType": "HIGH_IN_STOCK"
+                            },
+                            "updateDateTime": "2025-03-30T00:11:32.094Z"
+                        },
+                        "quantity": 138,
+                        "updateDateTime": "2025-03-30T00:11:32.094Z"
+                    },
+                    "eligibleForStockNot
+                    ification
+                    ":false,"
+                    range
+                    ":{"
+                    inRange
+                    ":true},"
+                    unitOfMeasure
+                    ":"
+                    PIECE
+                    ","
+                    updateDateTime
+                    ":"
+                    2025-03-30T00: 11
+                    :
+                    32.094Z
+                    "},"
+                    clickCollect
+                    ":{"
+                    range
+                    ":{"
+                    inRange
+                    ":true}},"
+                    homeDelivery
+                    ":{"
+                    range
+                    ":{"
+                    inRan
+                    ge
+                    ":true},"
+                    updateDateTime
+                    ":"
+                    2025-03-31T03: 22
+                    :
+                    59.112Z
+                    "}},"
+                    classUnitKey
+                    ":{"
+                    classUnitCode
+                    ":"
+                    583
+                    ","
+                    classUnitType
+                    ":"
+                    STO
+                    "},"
+                    itemKey
+                    ":{"
+                    itemNo
+                    ":"
+                    40178888
+                    ","
+                    itemType
+                    ":"
+                    ART
+                    "}},{"
+                    availableForCli
+                    ckCollect
+                    ":true,"
+                    availableForHomeDelivery
+                    ":true,"
+                    buyingOption
+                    ":{"
+                    clickCollect
+                    ":{"
+                    range
+                    ":{"
+                    inRange
+                    ":true}},"
+                    homeDelivery
+                    ":{"
+                    availability
+                    ":{"
+                    probability
+                    ":{"
+                    thisDay
+                    ":{"
+                    colour
+                    ":{"
+                    rgbDec
+                    ":"
+                    10,
+                    138,
+                    0
+                    ","
+                    rgbHex
+                    ":"
+                    #
+                    0A8A00
+                    ","
+                    token
+                    ":"
+                    colour-positive
+                    "},"
+                    messageType
+                    ":"
+                    HIGH_IN_STOCK
+                    "},"
+                    updateDateTime
+                    ":"
+                    2022-07-08T21: 02
+                    :
+                    09.684Z
+                    "},"
+                    updateDateTime
+                    ":"
+                    2022-07-08T21: 02
+                    :
+                    09.684Z
+                    "},"
+                    range
+                    ": {
+                        "inRange": true
+                    },
+                    "updateDateTime": "2022-07-08T21:02:09.684Z"
+                }
+            },
+            "classUnitKey": {
+                "classUnitCode": "PL",
+                "classUnitType": "RU"
+            },
+            "enableQtyPicker": true,
+            "itemKey": {
+                "itemNo": "40178888",
+                "itemTy
+                pe
+                ":"
+                ART
+                "}}],"
+                salesLocations
+                ":[{"
+                classUnitKey
+                ":{"
+                classUnitCode
+                ":"
+                188
+                ","
+                classUnitType
+                ":"
+                STO
+                "},"
+                itemKey
+                ":{"
+                itemNo
+                ":"
+                40178888
+                ","
+                itemType
+                ":"
+                ART
+                "},"
+                salesLocations
+                ":[{"
+                aisleAndBin
+                ":{"
+                aisle
+                ":
+                "03",
+                "bin": "20"
+            },
+            "division": "SELF_SERVE",
+            "id": "032000",
+            "recommendationRank": 1,
+            "type": "AISLE_AND_BIN"
+        },
+        {
+            "aisleAndBin": {
+                "aisle": "00",
+                "bin": "01"
+            },
+            "division": "SELF_SERVE",
+            "id": "000100",
+            "re
+            commendationRank
+            ":2,"
+            type
+            ":"
+            AISLE_AND_BIN
+            "}]},{"
+            classUnitKey
+            ":{"
+            classUnitCode
+            ":"
+            203
+            ","
+            classUnitType
+            ":"
+            STO
+            "},"
+            itemKey
+            ":{"
+            itemNo
+            ":"
+            40178888
+            ","
+            itemType
+            ":"
+            ART
+            "},"
+            salesLocations
+            ":[{"
+            aisleAn
+            dBin
+            ":{"
+            aisle
+            ":"
+            14
+            ","
+            bin
+            ":"
+            10
+            "},"
+            division
+            ":"
+            SELF_SERVE
+            ","
+            id
+            ":"
+            141010
+            ","
+            recommendationRank
+            ":1,"
+            type
+            ":"
+            AISLE_AND_BIN
+            "}]},{"
+            classUnitKey
+            ":{"
+            classUnitCode
+            ":"
+            204
+            ","
+            classUnitType
+            ":"
+            STO
+            "},"
+            it
+            emKey
+            ":{"
+            itemNo
+            ":"
+            40178888
+            ","
+            itemType
+            ":"
+            ART
+            "},"
+            salesLocations
+            ":[{"
+            aisleAndBin
+            ":{"
+            aisle
+            ":"
+            06
+            ","
+            bin
+            ":"
+            23
+            "},"
+            division
+            ":"
+            SELF_SERVE
+            ","
+            id
+            ":"
+            062300
+            ","
+            recommendationRank
+            ":1,"
+            type
+            ":"
+            AISLE_AND_
+            BIN
+            "}]},{"
+            classUnitKey
+            ":{"
+            classUnitCode
+            ":"
+            205
+            ","
+            classUnitType
+            ":"
+            STO
+            "},"
+            itemKey
+            ":{"
+            itemNo
+            ":"
+            40178888
+            ","
+            itemType
+            ":"
+            ART
+            "},"
+            salesLocations
+            ":[{"
+            aisleAndBin
+            ":{"
+            aisle
+            ":"
+            00
+            ","
+            bin
+            ":"
+            03
+            "},"
+            divis
+            ion
+            ":"
+            SELF_SERVE
+            ","
+            id
+            ":"
+            000301
+            ","
+            recommendationRank
+            ":1,"
+            type
+            ":"
+            AISLE_AND_BIN
+            "},{"
+            aisleAndBin
+            ":{"
+            aisle
+            ":"
+            10
+            ","
+            bin
+            ":"
+            23
+            "},"
+            division
+            ":"
+            SELF_SERVE
+            ","
+            id
+            ":"
+            102300
+            ","
+            recommendationRank
+            ":2,"
+            ty
+            pe
+            ":"
+            AISLE_AND_BIN
+            "}]},{"
+            classUnitKey
+            ":{"
+            classUnitCode
+            ":"
+            294
+            ","
+            classUnitType
+            ":"
+            STO
+            "},"
+            itemKey
+            ":{"
+            itemNo
+            ":"
+            40178888
+            ","
+            itemType
+            ":"
+            ART
+            "},"
+            salesLocations
+            ":[{"
+            aisleAndBin
+            ":{"
+            aisle
+            ":"
+            27
+            ","
+            bi
+            n
+            ":"
+            00
+            "},"
+            division
+            ":"
+            SELF_SERVE
+            ","
+            id
+            ":"
+            270000
+            ","
+            recommendationRank
+            ":1,"
+            type
+            ":"
+            AISLE_AND_BIN
+            "}]},{"
+            classUnitKey
+            ":{"
+            classUnitCode
+            ":"
+            306
+            ","
+            classUnitType
+            ":"
+            STO
+            "},"
+            itemKey
+            ":{"
+            itemNo
+            ":"
+            40178
+            888
+            ","
+            itemType
+            ":"
+            ART
+            "},"
+            salesLocations
+            ":[{"
+            aisleAndBin
+            ":{"
+            aisle
+            ":"
+            32
+            ","
+            bin
+            ":"
+            02
+            "},"
+            division
+            ":"
+            SELF_SERVE
+            ","
+            id
+            ":"
+            320200
+            ","
+            recommendationRank
+            ":1,"
+            type
+            ":"
+            AISLE_AND_BIN
+            "},{"
+            aisleAndBin
+            ":{"
+            aisle
+            ":"
+            32
+            ","
+            bin
+            ":"
+            00
+            "},"
+            division
+            ":"
+            SELF_SERVE
+            ","
+            id
+            ":"
+            320000
+            ","
+            recommendationRank
+            ":2,"
+            type
+            ":"
+            AISLE_AND_BIN
+            "}]},{"
+            classUnitKey
+            ":{"
+            classUnitCode
+            ":"
+            307
+            ","
+            classUnitType
+            ":"
+            STO
+            "},"
+            itemKey
+            ":{
+            "itemNo": "40178888",
+            "itemType": "ART"
+        },
+        "salesLocations"
+        :
+        [
+            {
+                "aisleAndBin": {
+                    "aisle": "37",
+                    "bin": "16"
+                },
+                "division": "SELF_SERVE",
+                "id": "371600",
+                "recommendationRank": 1,
+                "type": "AISLE_AND_BIN"
+            },
+            {
+                "
+                aisleAndBin
+                ":{"
+                aisle
+                ":"
+                37
+                ","
+                bin
+                ":"
+                00
+                "},"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                370000
+                ","
+                recommendationRank
+                ":2,"
+                type
+                ":"
+                AISLE_AND_BIN
+                "}]},{"
+                classUnitKey
+                ":{"
+                classUnitCode
+                ":"
+                311
+                ","
+                classUnitType
+                ":"
+                ST
+                O
+                "},"
+                itemKey
+                ":{"
+                itemNo
+                ":"
+                40178888
+                ","
+                itemType
+                ":"
+                ART
+                "},"
+                salesLocations
+                ":[{"
+                aisleAndBin
+                ":{"
+                aisle
+                ":"
+                21
+                ","
+                bin
+                ":"
+                00
+                "},"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                210000
+                ","
+                recommendationRank
+                ":1,"
+                type
+                ":"
+                AIS
+                LE_AND_BIN
+                "},{"
+                aisleAndBin
+                ":{"
+                aisle
+                ":"
+                27
+                ","
+                bin
+                ":"
+                21
+                "},"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                272110
+                ","
+                recommendationRank
+                ":2,"
+                type
+                ":"
+                AISLE_AND_BIN
+                "}]},{"
+                classUnitKey
+                ":{"
+                classUnitCode
+                ":"
+                329
+                ","
+                cla
+                ssUnitType
+                ":"
+                STO
+                "},"
+                itemKey
+                ":{"
+                itemNo
+                ":"
+                40178888
+                ","
+                itemType
+                ":"
+                ART
+                "},"
+                salesLocations
+                ":[{"
+                aisleAndBin
+                ":{"
+                aisle
+                ":"
+                16
+                ","
+                bin
+                ":"
+                02
+                "},"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                160200
+                ","
+                recommendationRank
+                ":1,"
+                type
+                ":"
+                AISLE_AND_BIN
+                "},{"
+                aisleAndBin
+                ":{"
+                aisle
+                ":"
+                19
+                ","
+                bin
+                ":"
+                00
+                "},"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                190000
+                ","
+                recommendationRank
+                ":2,"
+                type
+                ":"
+                AISLE_AND_BIN
+                "}]},{"
+                classUnitKey
+                ":{"
+                classUnitC
+                ode
+                ":"
+                429
+                ","
+                classUnitType
+                ":"
+                STO
+                "},"
+                itemKey
+                ":{"
+                itemNo
+                ":"
+                40178888
+                ","
+                itemType
+                ":"
+                ART
+                "},"
+                salesLocations
+                ":[{"
+                aisleAndBin
+                ":{"
+                aisle
+                ":"
+                20
+                ","
+                bin
+                ":"
+                06
+                "},"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                200600
+                ","
+                rec
+                ommendationRank
+                ":1,"
+                type
+                ":"
+                AISLE_AND_BIN
+                "},{"
+                aisleAndBin
+                ":{"
+                aisle
+                ":"
+                22
+                ","
+                bin
+                ":"
+                00
+                "},"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                220000
+                ","
+                recommendationRank
+                ":2,"
+                type
+                ":"
+                AISLE_AND_BIN
+                "}]},{"
+                classUnitKe
+                y
+                ":{"
+                classUnitCode
+                ":"
+                583
+                ","
+                classUnitType
+                ":"
+                STO
+                "},"
+                itemKey
+                ":{"
+                itemNo
+                ":"
+                40178888
+                ","
+                itemType
+                ":"
+                ART
+                "},"
+                salesLocations
+                ":[{"
+                aisleAndBin
+                ":{"
+                aisle
+                ":"
+                20
+                ","
+                bin
+                ":"
+                17
+                "},"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                201700
+                ","
+                recommendationRank
+                ":1,"
+                type
+                ":"
+                AISLE_AND_BIN
+                "},{"
+                division
+                ":"
+                SELF_SERVE
+                ","
+                id
+                ":"
+                EP3032
+                ","
+                recommendationRank
+                ":2,"
+                type
+                ":"
+                CONTACT_STAFF
+                "}]}],"
+                timestamp
+                ":"
+                2025-04-01T02: 57
+                :
+                45.682Z
+                ","
+                traceId
+                ":"
+                15980673964666662180
+                "}

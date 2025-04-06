@@ -13,10 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
+ * Входящие платежи и продажи
  * @property int $id
  * @property int $order_id
  * @property int $staff_id
- * @property bool $completed
+ * @property bool $completed - проведен или нет
  * @property bool $manual - ручная оплата (в кассу, картой и по счету не ч/з банк)
  *
  * @property int $storage_id - склад оплаты по кассе/карте
@@ -35,6 +36,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property Organization $shopper
  * @property Organization $trader
  * @property OrderExpenseRefund $refund
+ *
+ * @property
  */
 class OrderPayment extends Model
 {

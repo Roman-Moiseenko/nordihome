@@ -13,6 +13,7 @@ use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
+use App\Modules\Bank\Service\BankService;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Delivery\Service\DeliveryService;
@@ -67,6 +68,8 @@ class OrderService
     private \App\Modules\Setting\Entity\Coupon $coupon_set;
     private Parser $parser_set;
     private InvoiceReport $invoiceReport;
+    private BankService $bankService;
+
 
     public function __construct(
         DeliveryService     $deliveries,
@@ -79,8 +82,10 @@ class OrderService
         LoggerService       $logger,
         MovementService     $movementService,
         OrderReserveService $reserveService,
-        Settings  $settings,
-        InvoiceReport       $invoiceReport, //
+        Settings            $settings,
+        InvoiceReport       $invoiceReport,
+        BankService         $bankService,
+        //
     )
     {
         $this->coupon_set = $settings->coupon;
@@ -96,6 +101,7 @@ class OrderService
         $this->reserveService = $reserveService;
         $this->parserService = $parserService;
         $this->invoiceReport = $invoiceReport;
+        $this->bankService = $bankService;
     }
 
     private function createOrder(int $user_id = null, int $type = Order::ONLINE): Order
@@ -115,8 +121,8 @@ class OrderService
             $address = $request->string('address')->trim()->value();
             $delivery = $request->string('delivery')->trim()->value();
             $type_delivery = OrderExpense::DELIVERY_STORAGE;
-            if ($delivery == 'local') $type_delivery =  OrderExpense::DELIVERY_LOCAL;
-            if ($delivery == 'region') $type_delivery =  OrderExpense::DELIVERY_REGION;
+            if ($delivery == 'local') $type_delivery = OrderExpense::DELIVERY_LOCAL;
+            if ($delivery == 'region') $type_delivery = OrderExpense::DELIVERY_REGION;
 
             if (is_null($user = User::where('email', $email)->orWhere('phone', $phone)->first())) {
                 $user = User::new($email, $phone);
@@ -412,9 +418,11 @@ class OrderService
     /**
      * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
      */
-    public function awaiting(Order $order, array $emails): void
+    public function awaiting(Order $order, Request $request): void
     {
-        DB::transaction(function () use ($order, $emails) {
+        DB::transaction(function () use ($order, $request) {
+            $emails = $request->input('emails', []);
+
             if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
             if ($order->getTotalAmount() == 0) throw new \DomainException('Сумма заказа не может быть равно нулю');
 
@@ -443,11 +451,15 @@ class OrderService
             $this->logger->logOrder($order, 'Заказ отправлен на оплату',
                 '', '', null);
 
-            //Пересоздать отчет и отправить письмо клиенту
+            //Пересоздать отчет и отправить письмо клиенту.
+            //Создаем счет на оплату
+
             $invoice = $this->invoiceReport->xlsx($order);
+            //Создаем ссылку на оплату
+            $link_payment = $this->bankService->createPaymentLink($order);
             SendSystemMail::dispatch(
                 $order->user,
-                new OrderAwaitingMail($order, $invoice),
+                new OrderAwaitingMail($order, $invoice, $link_payment),
                 Order::class,
                 $order->id,
                 $emails
@@ -456,7 +468,6 @@ class OrderService
             //TODO Или создаем событие
             // event(new OrderHasAwaiting($order));
 
-            //flash('Заказ успешно создан! Ему присвоен номер ' . $order->number, 'success');
         });
     }
 
@@ -498,7 +509,7 @@ class OrderService
     public function addProduct(
         Order $order, int $product_id,
         float $quantity, bool $preorder = false,
-        bool $assemblage = false, bool $packing = false): void
+        bool  $assemblage = false, bool $packing = false): void
     {
         /** @var Product $product */
         $product = Product::find($product_id);
@@ -968,7 +979,7 @@ class OrderService
             }
             if ($percent_item > 1) throw new \DomainException('Скидка слишком высока');
 
-           // $order->manual = $manual;
+            // $order->manual = $manual;
 
             foreach ($order->items as $item) {
                 if (is_null($item->discount_id)) {
@@ -1007,7 +1018,7 @@ class OrderService
             $order->refresh();
             $this->logger->logOrder($order, 'Изменена организация Продавец',
                 $old, $order->trader->short_name,
-            null);
+                null);
             return;
         }
 
@@ -1030,9 +1041,11 @@ class OrderService
     public function handle(TelegramHasReceived $event): void
     {
         if ($event->operation == TelegramParams::OPERATION_ORDER_TAKE) {
+            /** @var Order $order */
             $order = Order::find($event->id);
             try {
                 $order->setManager($event->user->id);
+                $order->setStatus(OrderStatus::SET_MANAGER);
                 $event->user->notify(
                     new StaffMessage(
                         NotificationHelper::EVENT_INFO,

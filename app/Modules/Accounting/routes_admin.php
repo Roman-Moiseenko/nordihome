@@ -234,6 +234,7 @@ Route::group(
                 Route::post('/restore/{payment}', 'PaymentController@restore')->name('restore');
         });
         //BANK
+        /*
         Route::group([
             'prefix' => 'bank',
             'as' => 'bank.'
@@ -242,6 +243,7 @@ Route::group(
                 Route::post('/upload', 'BankController@upload')->name('upload');
                 Route::post('/currency', 'BankController@currency')->name('currency');
             });
+        */
         //STORAGE
         Route::group([
             'prefix' => 'storage',

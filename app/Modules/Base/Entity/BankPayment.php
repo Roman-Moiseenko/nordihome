@@ -16,6 +16,8 @@ class BankPayment
     public string $account_recipient = ''; //Счет получателя
 
 
+
+
     public static function fromArray(?array $params): self
     {
         $payment = new static();

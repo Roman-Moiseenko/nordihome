@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * Исходящие платежи
  * @property float $amount
  * @property bool $manual
  * @property int $recipient_id
@@ -36,8 +37,6 @@ class PaymentDocument extends AccountingDocument
         'recipient_id',
         'payer_id',
         'manual',
-      //  'recipient_account',
-    //    'payer_account'
     ];
     protected $casts = [
         'bank_payment' => BankPaymentCast::class,

@@ -26,6 +26,8 @@ class ParserIkea extends ParserAbstract
     const string API_URL_PRODUCTS = 'https://sik.search.blue.cdtapps.com/pl/pl/product-list-page/more-products?category=%s&start=%s&end=%s';
     const string API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
 
+    const string API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks,SalesLocations,DisplayLocations,ChildItems,FoodAvailabilities';
+
     public function parserCategories(): ?string
     {
         set_time_limit(1000);
@@ -65,7 +67,7 @@ class ParserIkea extends ParserAbstract
             }
     }
 
-    protected function parserProductsByCategory(CategoryParser $categoryParser)
+    protected function parserProductsByCategory(CategoryParser $categoryParser): array
     {
         $code_category = $categoryParser->url;
         $main_category_id = $categoryParser->category_id;
@@ -86,14 +88,14 @@ class ParserIkea extends ParserAbstract
             $start += 1000;
             $end += 1000;
         } while (count($list) == 1000);
-/*
-        return array_map(function ($item) use ($main_category_id, $parser_category) {
-            $item['main_category_id'] = $main_category_id;
-            $item['parser_category_id'] = $parser_category;
-            return $item;
+        /*
+                return array_map(function ($item) use ($main_category_id, $parser_category) {
+                    $item['main_category_id'] = $main_category_id;
+                    $item['parser_category_id'] = $parser_category;
+                    return $item;
 
-        }, $products);
-        */
+                }, $products);
+                */
         // dd($products);
         //TODO Убрать когда заработает через axios
 
@@ -117,7 +119,7 @@ class ParserIkea extends ParserAbstract
         return $products;
     }
 
-    private function createProduct(mixed $product_data):? Product
+    private function createProduct(mixed $product_data): ?Product
     {
         $maker_id = $product_data['id'];
         $name = $product_data['name'] . ' ' . $product_data['typeName'];
@@ -237,6 +239,24 @@ class ParserIkea extends ParserAbstract
     public function remainsProduct(string $code): float
     {
         // TODO: Implement remainsProduct() method.
+
+        $url = sprintf(self::API_URL_QUANTITY, $code);
+        $json_product = $this->httpPage->getPage($url, '_cache');
+
+        $_array = json_decode($json_product, true);
+
+        $_result = [];
+        if ($_array == null)
+            throw new \DomainException('Неверный артикул или ссылка');
+        foreach ($_array['availabilities'] as $item) {
+            if (isset($item['availableForCashCarry'])) {
+                $_store = (int)$item['classUnitKey']['classUnitCode']; //Номер склада
+                $_quantity = (int)$item['buyingOption']['cashCarry']['availability']['quantity']; //Кол-во на складе
+                if ($_store != 0) $_result[$_store] = $_quantity;
+            }
+        }
+
+        dd($_result);
     }
 
     public function parserCost(ProductParser $parser): float

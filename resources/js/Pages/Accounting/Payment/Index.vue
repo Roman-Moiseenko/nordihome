@@ -5,7 +5,7 @@
         <div class="flex">
             <el-upload
                 class="upload-demo"
-                :action="route('admin.accounting.bank.upload')"
+                :action="route('admin.bank.upload')"
                 :on-success="handleSuccess"
                 :on-error="handleError"
             >

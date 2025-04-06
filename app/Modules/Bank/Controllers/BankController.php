@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Modules\Accounting\Controllers;
+namespace App\Modules\Bank\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Modules\Bank\Service\BankService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class BankController extends Controller
+class BankController
 {
+
     private BankService $service;
+
 
     public function __construct(BankService $service)
     {
         $this->service = $service;
     }
 
-
+    /** Загрузка файла в формате 1С */
     public function upload(Request $request): JsonResponse
     {
         try {
@@ -30,6 +31,7 @@ class BankController extends Controller
         }
     }
 
+    /** Обновление курса валют */
     public function currency(Request $request): RedirectResponse
     {
         try {
@@ -39,5 +41,17 @@ class BankController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    /** Прием данных по API из банков */
+    public function web_hook(Request $request)
+    {
+        //Проверяем, тип платежа и формируем чек, если succeed. Отправляем чек клиенту
+    }
+
+    public function redirect(Request $request): RedirectResponse
+    {
+
+    }
+
 
 }

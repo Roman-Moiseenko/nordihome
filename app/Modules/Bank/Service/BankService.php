@@ -1,23 +1,19 @@
 <?php
 
-namespace App\Modules\Accounting\Service;
-
+namespace App\Modules\Bank\Service;
 
 use App\Modules\Accounting\Entity\Currency;
-use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Service\OrganizationService;
+use App\Modules\Accounting\Service\PaymentDocumentService;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Base\Entity\BankPayment;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Service\OrderPaymentService;
-use App\Modules\Setting\Entity\Common;
-use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
-
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -25,7 +21,7 @@ use Illuminate\Support\Facades\Http;
 class BankService
 {
 
-    const CBR = 'https://www.cbr.ru/scripts/XML_daily.asp';
+    const string CBR = 'https://www.cbr.ru/scripts/XML_daily.asp';
 
     private PaymentDocumentService $paymentDocumentService;
     private mixed $date_bank;
@@ -40,7 +36,6 @@ class BankService
         Settings $settings,
         OrganizationService $organizationService,
         OrderPaymentService $orderPaymentService,
-        //Settings $settings,
         //TODO Добавить сервис платежей от клиентов
     )
     {
@@ -128,7 +123,6 @@ class BankService
      */
     private function createPaymentDocument(array $payment): void
     {
-
         $recipient = Organization::where('inn', $payment['ПолучательИНН'])->first();
         $payer = Organization::where('inn', $payment['ПлательщикИНН'])->first();
 
@@ -225,5 +219,20 @@ class BankService
             if ($item['CharCode'] == $cbr_code) return (float)str_replace(',', '.', $item['VunitRate']);
         }
         return 0;
+    }
+
+    public function createPaymentLink(Order $order, int $percent = 100): string
+    {
+        //TODO определяем класс получения оплаты
+
+        //Определяем поля для отправки в кассу
+        $name = 'Оплата ';
+
+        $link = (new YookassaService())->create_payment();
+
+        //TODO Создать OrderPayment
+
+
+        return $link;
     }
 }
