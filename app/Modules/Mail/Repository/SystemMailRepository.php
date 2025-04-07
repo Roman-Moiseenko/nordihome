@@ -33,7 +33,7 @@ class SystemMailRepository
             'mailable' => $system->getMailable(),
             'created_at' => $system->created_at->translatedFormat('j F Y H:i:s'),
             'updated_at' => $system->updated_at->translatedFormat('j F Y H:i:s'),
-            'user' => $system->user->getPublicName(),
+            'user' => !is_null($system->user) ? $system->user->getPublicName() : '',
             'title' => $system->title,
             'content' => $system->content,
             'attachments' => $system->attachments,

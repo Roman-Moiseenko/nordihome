@@ -50,6 +50,7 @@ class OrderController extends Controller
         OrderReserveService    $reserveService,
     )
     {
+
         $this->middleware(['auth:admin', 'can:order']);
         $this->staffs = $staffs;
         $this->repository = $repository;
@@ -69,10 +70,12 @@ class OrderController extends Controller
             'filters' => $filters,
             'staffs' => $staffs,
         ]);
+
     }
 
     public function show(Request $request, Order $order): Response
     {
+        //dd(2);
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
         $storages = Storage::orderBy('name')->getModels();
         $mainStorage = Storage::where('default', true)->first();

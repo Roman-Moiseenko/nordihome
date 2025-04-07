@@ -228,11 +228,11 @@ class BankService
         //Определяем поля для отправки в кассу
         $name = 'Оплата ';
 
-        $link = (new YookassaService())->create_payment();
+     //   $link = (new YookassaService())->create_payment();
 
         //TODO Создать OrderPayment
+        return '';
 
-
-        return $link;
+     //   return $link;
     }
 }
