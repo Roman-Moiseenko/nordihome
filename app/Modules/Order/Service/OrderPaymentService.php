@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
+use App\Events\OrderHasPaid;
+use App\Events\OrderHasPrepaid;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\BankPayment;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
 
+use App\Modules\Order\Entity\Order\OrderStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,13 +19,13 @@ use Illuminate\Support\Facades\DB;
 class OrderPaymentService
 {
     private LoggerService $logger;
-    private OrderService $orderService;
     private float $commission_card;
 
-    public function __construct(LoggerService $logger, OrderService $orderService)
+    public function __construct(
+        LoggerService $logger,
+    )
     {
         $this->logger = $logger;
-        $this->orderService = $orderService;
         //TODO Из Настроек
         $this->commission_card = 2.0;
     }
@@ -53,7 +56,7 @@ class OrderPaymentService
         $order->payments()->save($payment);
 
         $order->refresh();
-        $this->orderService->checkPayment($order);
+        $this->checkPayment($order);
         $payment->completed();
         $this->logger->logOrder($order, 'Внесена оплата',
             $payment->methodText(), price($payment->amount),
@@ -82,7 +85,7 @@ class OrderPaymentService
             $payment->trader_id = null;
             $payment->save();
             $order->refresh();
-            $this->orderService->checkPayment($order);
+            $this->checkPayment($order);
             $this->logger->logOrder($order, 'Разнесена оплата',
                 $payment->methodText(), price($payment->amount),
                 route('admin.order.payment.show', $payment));
@@ -152,7 +155,7 @@ class OrderPaymentService
             if (is_null($payment->storage_id)) throw new \DomainException('Не выбрана точка расчета');
         }
         $payment->completed();
-        $this->orderService->checkPayment($payment->order);
+        $this->checkPayment($payment->order);
     }
 
     public function work(OrderPayment $payment): void
@@ -160,7 +163,7 @@ class OrderPaymentService
         if (!$payment->manual) throw new \DomainException('Нельзя отменить проведение на автоматический платеж');
         $payment->work();
 
-        $this->orderService->checkPayment($payment->order);
+        $this->checkPayment($payment->order);
     }
 
     public function createByRefund(OrderExpenseRefund $refund): OrderPayment
@@ -185,5 +188,59 @@ class OrderPaymentService
         $refund->order_payment_id = $payment->id;
         $refund->save();
         return $payment;
+    }
+
+    /**
+     * Проверка Заказа после поступления/отмены оплаты, смена статуса, генерация события
+     */
+    private function checkPayment(Order $order): void
+    {
+        $payment = $order->getPaymentAmount();
+        $total = $order->getTotalAmount();
+        //Заказ в ожидании
+        if ($order->status->value == OrderStatus::AWAITING) {
+            $order->setReserve(now()->addDays(45));//Увеличиваем резерв
+            if ($payment == $total) { //Оплачен полностью
+                $order->setPaid();
+                event(new OrderHasPaid($order));
+            }
+            if ($payment < $total) { //Оплачен частично
+                $order->setStatus(OrderStatus::PREPAID);
+                event(new OrderHasPrepaid($order));
+            }
+        }
+
+        //Заказ на предоплате
+        if ($order->status->value == OrderStatus::PREPAID) {
+            if ($payment == $total) { //Оплачен полностью
+                $order->setPaid();
+                $order->setReserve(now()->addDays(45));//Увеличиваем резерв
+                event(new OrderHasPaid($order));
+            } else {
+                if ($payment == 0) { //Отмена предоплаты
+                    $order->delStatus(OrderStatus::PREPAID);
+                } else { //Новая предоплата
+                    $order->setReserve(now()->addDays(45));//Увеличиваем резерв
+                    event(new OrderHasPrepaid($order));
+                }
+
+            }
+        }
+        if ($order->status->value == OrderStatus::PAID) {
+            if ($payment == $total) throw new \DomainException('Неверный вызов checkPayment');
+            if ($payment == 0) { //Полная отмена оплаты
+                $order->delStatus(OrderStatus::PAID);
+                $order->delStatus(OrderStatus::PREPAID);
+            } else {
+                $order->delStatus(OrderStatus::PAID);
+                $order->refresh();
+                if ($order->status->value != OrderStatus::PREPAID) $order->setStatus(OrderStatus::PREPAID);
+            }
+        }
+
+        //Если купон в заказе, то завершаем его использование
+        if (!is_null($order->coupon_id) && $order->coupon->isNew()) {
+            $order->coupon->completed();
+        }
     }
 }
