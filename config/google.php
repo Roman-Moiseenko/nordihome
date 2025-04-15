@@ -59,7 +59,7 @@ return [
          * Path to service account json file. You can also pass the credentials as an array
          * instead of a file path.
          */
-        'file' => resource_path('\json\ikea\\') . 'google.json', //env('GOOGLE_SERVICE_ACCOUNT_JSON_LOCATION', ''),
+        'file' => resource_path('json/ikea/') . 'google.json', //env('GOOGLE_SERVICE_ACCOUNT_JSON_LOCATION', ''),
     ],
 
     /*

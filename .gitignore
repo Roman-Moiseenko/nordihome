@@ -26,3 +26,4 @@ yarn-error.log
 # Project exclude paths
 /bootstrap/cache/
 /storage/
+/resources/json/ikea/google.json

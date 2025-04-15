@@ -23,8 +23,8 @@ class FurnitureCommand extends Command
                 //Берем код до 1го пробела
                 $words = explode(' ', $code);
 
-                $this->info($words[0] . ' отправлен в очередь');
-                FurnitureParser::dispatch($code, $number);
+                $this->info($words[0] . ' отправлен в очередь. Задержка - ' . $number * 2 . ' с');
+                FurnitureParser::dispatch($code, $number)->delay(now()->addSeconds($number * 2));
             }
         }
 
