@@ -152,6 +152,12 @@
             </el-select>
         </div>
 
+        <div>
+            <el-radio-group v-model="">
+                <el-radio value="manual">Оплата вручную</el-radio>
+
+            </el-radio-group>
+        </div>
         <template #footer>
             <div class="dialog-footer mt-3">
                 <el-button @click="dialogAwaiting = false">Отмена</el-button>
@@ -266,11 +272,15 @@ function getInvoice() {
 //На оплату
 const dialogAwaiting = ref(false)
 const formEmails = ref([]);
+const formPayment = reactive({
+    type: null,
+    items: [],
+});
 
 function onAwaiting() {
     router.visit(route('admin.order.awaiting', {order: props.order.id}), {
         method: "post",
-        data: {emails: formEmails.value},
+        data: {emails: formEmails.value, payment: formPayment},
         preserveScroll: true,
         preserveState: false,
         onSuccess: page => {

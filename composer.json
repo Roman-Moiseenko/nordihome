@@ -25,9 +25,12 @@
         "mpdf/mpdf": "^v8.2.5",
         "nesbot/carbon": "^3.8",
         "phpoffice/phpspreadsheet": "^3.6.0",
+        "revolution/laravel-google-sheets": "^7.1",
         "tightenco/ziggy": "^v2.4.1",
         "webklex/laravel-imap": "^6.1",
-        "yoomoney/yookassa-sdk-php": "^3.8"
+        "yoomoney/yookassa-sdk-php": "^3.8",
+        "ext-dom": "*",
+        "ext-iconv": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^v3.14.7",

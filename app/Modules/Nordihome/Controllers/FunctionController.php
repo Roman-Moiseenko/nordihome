@@ -59,4 +59,10 @@ class FunctionController extends Controller
             return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
         }
     }
+
+    public function furniture()
+    {
+        $result = $this->service->furniture();
+        return response()->json($result);
+    }
 }

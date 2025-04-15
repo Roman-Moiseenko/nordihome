@@ -5,16 +5,25 @@ namespace App\Modules\Nordihome\Service;
 use App\Modules\Base\Entity\Package;
 use App\Modules\Shop\Parser\ParserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class FunctionService
 {
 
     private ParserService $parserService;
+    private GoogleSheetService $googleSheet;
+    private FurnitureService $furnitureService;
 
-    public function __construct(ParserService $parserService)
+    public function __construct(
+        ParserService $parserService,
+        GoogleSheetService $googleSheet,
+        FurnitureService $furnitureService,
+    )
     {
         $this->parserService = $parserService;
+        $this->googleSheet = $googleSheet;
+        $this->furnitureService = $furnitureService;
     }
 
     public function parser_dimensions(Request $request)
@@ -57,7 +66,6 @@ class FunctionService
         return $this->reportXLSX($array);
     }
 
-
     public function reportXLSX(array $array): string
     {
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -95,6 +103,25 @@ class FunctionService
         return $file;
     }
 
+    /** Используется для тестирования! В продакшн только через Очередь */
+    public function furniture(): bool
+    {
+        $rows = $this->googleSheet->getFurnitureRows(); //Подключаемся к листу гугл
+        foreach ($rows as $number => $row) {
+            if (!empty($code = $row['АРТИКУЛ'])) { ///Считываем артикулы
+                /// Парсим сайт 1
+                //Тестирование
+                $price_1 = $this->furnitureService->getHolzMaster($code);
+                /// Парсим сайт 2
+                $price_2 = $this->furnitureService->getBaltlaminat($code);
+                Log::info(json_encode([$code, $price_1, $price_2]));
+                /// Сохраняем на листе в той же строке данные из сайта 1 и 2
+                $this->googleSheet->setData($number + 1, $price_1, $price_2);
+            }
+        }
+        return true;
+    }
+
     private function packagesToXLSX(&$activeWorksheet, $packages, &$col, $row): void
     {
         //391.246.22
@@ -120,4 +147,6 @@ class FunctionService
             $activeWorksheet->setCellValue([$col, $row], (string)$package->length);
         } */
     }
+
+
 }
