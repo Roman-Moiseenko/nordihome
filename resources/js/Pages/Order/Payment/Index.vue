@@ -143,7 +143,7 @@ const filter = reactive({
 const create_id = ref<Number>(null)
 
 function handleDeleteEntity(row) {
-    //$delete_entity.show(route('admin.order.destroy', {order: row.id}));
+    $delete_entity.show(route('admin.order.payment.destroy', {payment: row.id}));
 }
 
 /*

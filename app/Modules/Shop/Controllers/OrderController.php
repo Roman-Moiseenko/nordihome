@@ -8,8 +8,8 @@ use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Order\Repository\PaymentRepository;
+use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;
-use App\Modules\Order\Service\PaymentService;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
 class OrderController extends ShopController
 {
     private Cart $cart;
-    private PaymentService $payments;
+    private OrderPaymentService $payments;
     private DeliveryService $deliveries;
     private OrderService $service;
 
@@ -34,7 +34,7 @@ class OrderController extends ShopController
     public function __construct(
         Cart              $cart,
         ParserCart        $parserCart,
-        PaymentService    $payments,
+        OrderPaymentService    $payments,
         PaymentRepository $paymentRepository,
         DeliveryService   $deliveries,
         OrderService      $service,

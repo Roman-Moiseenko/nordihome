@@ -38,8 +38,10 @@
                                 <div class="group flex items-center cursor-pointer select-none">
                                     <div
                                         class="mr-1 text-gray-50 group-hover:text-white focus:text-indigo-600 whitespace-nowrap">
+                                        <template v-if="usePage().props.auth">
                                         <span>{{ usePage().props.auth.user.first_name }}</span>
                                         <span class="hidden md:inline">&nbsp;{{ usePage().props.auth.user.last_name }}</span>
+                                        </template>
                                     </div>
                                     <el-icon>
                                         <ArrowDown/>

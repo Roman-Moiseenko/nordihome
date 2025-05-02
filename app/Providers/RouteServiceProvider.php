@@ -14,6 +14,7 @@ use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
+use App\Modules\Order\Entity\Order\OrderPayment;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -167,7 +168,9 @@ class RouteServiceProvider extends ServiceProvider
             return PricingDocument::withTrashed()->find($value);
         });
         Route::bind('payment', function ($value) {
-            return PaymentDocument::withTrashed()->find($value);
+            if (str_contains(Route::currentRouteName(), 'admin.accounting.'))
+                return PaymentDocument::withTrashed()->find($value);
+            return OrderPayment::find($value);
         });
         Route::bind('refund', function ($value) {
             if (str_contains(Route::currentRouteName(), 'admin.accounting.'))
