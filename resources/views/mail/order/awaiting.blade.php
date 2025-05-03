@@ -26,6 +26,9 @@
 
 Общая сумма к оплате {{ $order->getTotalAmount() }}
 
+@if(!is_null($link_payment))
+Ссылка для быстрой оплаты <a href="{{ $link_payment }}">Оплата по СБП</a>
+@endif
 
 С уважением,<br>
 {{ config('app.name') }}

@@ -33,7 +33,9 @@ class PricingService extends AccountingService
         return $pricing;
     }
 
-    public function addProduct(PricingDocument $pricing, int $product_id, float $price_retail = null, float $price_bulk = null): void
+    public function addProduct(
+        PricingDocument $pricing,
+        int $product_id, float $price_retail = null, float $price_bulk = null): void
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, менять данные нельзя');
 
@@ -50,7 +52,7 @@ class PricingService extends AccountingService
         }
         if ($product->getPriceCost() == 0) {
             $pricingProduct->price_cost = $this->calculateCost($product);
-            if ($pricingProduct->price_cost == null) return; //Не добавлять товар, если нет его поступления или оприходывания
+            if ($pricingProduct->price_cost == null) $pricingProduct->price_cost = 0;
         }
         $pricing->products()->save($pricingProduct);
         $pricing->refresh();

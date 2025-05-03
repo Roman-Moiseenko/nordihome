@@ -3,11 +3,13 @@
 namespace App\Modules\Bank\Service;
 
 use App\Modules\Order\Entity\Order\Order;
+use JetBrains\PhpStorm\Deprecated;
 use YooKassa\Client;
+use YooKassa\Request\Payments\CreatePaymentResponse;
 
 class YookassaService
 {
-    public function create_payment(): string
+    public function create_payment(Order $order): ?CreatePaymentResponse
     {
         $client = new Client();
         $client->setAuth(1062762, 'test_MAp2FTq0eut9hgOzq_sVUsHGDbRIHs9e9zFkr-JKIxQ');
@@ -15,25 +17,75 @@ class YookassaService
 
         $payment = $client->createPayment(
             [
-                'amount' => array(
-                    'value' => 100.0,
+                'customer' => [
+                    'full_name' => $order->user->fullname->getFullName(),
+                    'phone' => $order->user->phone,
+                    'email' => $order->user->email,
+                ],
+                'amount' => [
+                    'value' => $order->getTotalAmount(),
                     'currency' => 'RUB',
-                ),
-                'confirmation' => array(
+                ],
+                'confirmation' => [
                     'type' => 'redirect',
-                    'return_url' => 'https://www.example.com/return_url',
-                ),
+                    'return_url' => parse_url(url()->current(), PHP_URL_HOST),
+                ],
                 'capture' => true,
-                'description' => 'Заказ №1',
+                'description' => 'Предоплата по Заказу №' . $order->number . ' от ' . $order->htmlDate(),
+                'receipt' => [
+                    'customer' => [
+                        'email' => 'r.a.moiseenko@gmail.com',
+                    ],
+                    'items' => $this->items($order),
+                ],
+                'metadata' => [
+                    'class' => Order::class,
+                    'id' => $order->id,
+                ],
             ],
 
             uniqid('', true)
         );
 
-        return '';
+        return $payment;
     }
 
+    private function items(Order $order): array
+    {
+        $items = [];
+        foreach ($order->items as $item) {
+            $items[] = [
+                'description' => $item->product->name,
+                'quantity' => $item->quantity,
+                'amount' => [
+                    'value' => $item->sell_cost,
+                    'currency' => 'RUB'
+                ],
+                'vat_code' => 1,
+                'payment_mode' => 'full_prepayment',
+                'payment_subject' => 'commodity',
+                'measure' => 'piece',
+            ];
+        }
 
+        foreach ($order->additions as $addition) {
+            $items[] = [
+                'description' => $addition->addition->name,
+                'quantity' => $addition->quantity,
+                'amount' => [
+                    'value' => $addition->getAmount(),
+                    'currency' => 'RUB'
+                ],
+                'vat_code' => 1,
+                'payment_mode' => 'full_prepayment',
+                'payment_subject' => 'commodity',
+                'measure' => 'piece',
+            ];
+        }
+        return $items;
+    }
+
+    #[Deprecated]
     public function test()
     {
         $client = new Client();
@@ -82,7 +134,7 @@ class YookassaService
         return $payment;
     }
 
-
+    #[Deprecated]
     public function test2()
     {
         $client = new Client();
@@ -134,7 +186,7 @@ class YookassaService
 
         return $response;
     }
-
+    #[Deprecated]
     public function test3()
     {
         $client = new Client();

@@ -454,17 +454,18 @@ class OrderService
             //Пересоздать отчет и отправить письмо клиенту.
             //Создаем счет на оплату
 
-            $invoice = $this->invoiceReport->xlsx($order);
-            //Создаем ссылку на оплату
-            $link_payment = $this->bankService->createPaymentLink($order);
-            SendSystemMail::dispatch(
-                $order->user,
-                new OrderAwaitingMail($order, $invoice, $link_payment),
-                Order::class,
-                $order->id,
-                $emails
-            );
-
+            if ($request['account'] || $request['qr']) {
+                $invoice = $request['account'] ? $this->invoiceReport->xlsx($order) : null;
+                //Создаем ссылку на оплату
+                $link_payment = $request['qr'] ? $this->bankService->createPaymentLink($order) : null;
+                SendSystemMail::dispatch(
+                    $order->user,
+                    new OrderAwaitingMail($order, $invoice, $link_payment),
+                    Order::class,
+                    $order->id,
+                    $emails
+                );
+            }
             //TODO Или создаем событие
             // event(new OrderHasAwaiting($order));
 

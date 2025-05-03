@@ -12,13 +12,15 @@ class OrderAwaitingMail extends SystemMailable
 {
 
     private Order $order;
+    private string|null $link_payment;
 
-    public function __construct(Order $order, string $invoice)
+    public function __construct(Order $order, string|null $invoice, string|null $link_payment)
     {
         parent::__construct();
         $this->subject = 'Заказ подтвержден. Счет на оплату';
         $this->order = $order;
-        $this->files['Счет на оплату.xlsx'] = $invoice;
+        if (!is_null($invoice)) $this->files['Счет на оплату.xlsx'] = $invoice;
+        $this->link_payment = $link_payment;
     }
 
     #[Pure] public function content(): Content

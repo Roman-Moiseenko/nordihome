@@ -226,13 +226,13 @@ class BankService
         //TODO определяем класс получения оплаты
 
         //Определяем поля для отправки в кассу
-        $name = 'Оплата ';
 
-     //   $link = (new YookassaService())->create_payment();
-
+        $payment = (new YookassaService())->create_payment($order);
         //TODO Создать OrderPayment
-        return '';
+        return $payment['confirmation']['confirmation_url'];
 
-     //   return $link;
+
+
+    //    return $link;
     }
 }

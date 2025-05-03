@@ -153,10 +153,10 @@
         </div>
 
         <div>
-            <el-radio-group v-model="">
-                <el-radio value="manual">Оплата вручную</el-radio>
-
-            </el-radio-group>
+            <el-checkbox v-model="formPayment.account" :checked="formPayment.account">Отправить счет</el-checkbox>
+        </div>
+        <div>
+            <el-checkbox v-model="formPayment.qr" :checked="formPayment.qr">Отправить QR-код</el-checkbox>
         </div>
         <template #footer>
             <div class="dialog-footer mt-3">
@@ -273,8 +273,8 @@ function getInvoice() {
 const dialogAwaiting = ref(false)
 const formEmails = ref([]);
 const formPayment = reactive({
-    type: null,
-    items: [],
+    account: true,
+    qr: false,
 });
 
 function onAwaiting() {

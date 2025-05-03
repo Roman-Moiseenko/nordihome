@@ -15,7 +15,7 @@ class YookassaCommand extends Command
 
     public function handle(YookassaService $service)
     {
-        $payment = $service->test2();
+        $payment = $service->test();
      /*   dd([
             $payment['id'],
             $payment['status'],
