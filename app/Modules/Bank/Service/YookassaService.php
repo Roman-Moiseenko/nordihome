@@ -12,7 +12,7 @@ class YookassaService
     public function create_payment(Order $order): ?CreatePaymentResponse
     {
         $client = new Client();
-        $client->setAuth(1062762, 'test_MAp2FTq0eut9hgOzq_sVUsHGDbRIHs9e9zFkr-JKIxQ');
+        $client->setAuth(1066142, config('shop.yookassa-key'));
 
 
         $payment = $client->createPayment(

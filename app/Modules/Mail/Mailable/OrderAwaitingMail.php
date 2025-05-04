@@ -28,7 +28,8 @@ class OrderAwaitingMail extends SystemMailable
         return new Content(
             markdown: 'mail.order.awaiting',
             with: [
-                'order' => $this->order
+                'order' => $this->order,
+                'link_payment' => $this->link_payment,
             ],
         );
     }

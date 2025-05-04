@@ -3,6 +3,7 @@
 return [
     /* COMMON */
     'theme' => env('SHOP_THEME', ''),
+    'yookassa-key' => env('YOOKASSA_KEY', ''),
     'crm' => [
         'name-crm' => 'shop-L',
         'version' => '0.1',
