@@ -36,7 +36,8 @@
                         <div v-for="worker in scope.row.workers">
                             <el-tag>{{ worker.work }}</el-tag>
                             {{ func.fullName(worker.fullname) }}
-                            <el-tooltip v-if="scope.row.status.is_assembling" content="Отменить" placement="top-start" effect="dark">
+                            <el-tooltip v-if="scope.row.status.is_assembling" content="Отменить" placement="top-start"
+                                        effect="dark">
                                 <el-button type="danger" size="small" @click.stop="delLoader(scope.row, worker.id)">
                                     <i class="fa-light fa-xmark"></i>
                                 </el-button>
@@ -91,9 +92,12 @@
         />
 
         <el-dialog v-model="dialogHonest" title="Добавьте маркировку для указанных товаров">
-            <div v-for="item in honest_signs">
-                <el-tag>{{ item.name }}</el-tag>
-                <el-input v-model="item.signs" type="textarea" :rows="item.quantity" />
+            <div v-for="item in honest_signs" class="mt-2">
+                <el-tag>{{ item.name }} ({{ item.quantity }})</el-tag>
+                <el-input v-model="item.signs" type="textarea" :rows="item.quantity"/>
+            </div>
+            <div class="mt-3 text-sm">
+                Каждый код с новой строки
             </div>
             <template #footer>
                 <div class="dialog-footer">
@@ -107,14 +111,15 @@
     <DeleteEntityModal name_entity="Заказ поставщику"/>
 </template>
 <script lang="ts" setup>
-import {ref, defineProps} from "vue";
+import {ref, defineProps, reactive} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {classes} from "@Res/className"
-import { IHonestItem } from "@Res/interface"
+import {IHonestItem} from "@Res/interface"
+import axios from "axios";
 
 const props = defineProps({
     expenses: Object,
@@ -156,12 +161,17 @@ function delLoader(row, id) {
 }
 
 const honest_signs = ref<IHonestItem[]>([]);
+const formHonest = reactive({
+    id: null,
+    signs: Array<IHonestItem>
+})
 const dialogHonest = ref(false)
+
 function handleAssembled(row) {
 
     row.items.forEach(function (item) {
         if (item.is_honest === true) {
-            honest_signs.value.push({
+            formHonest.signs.push({
                 id: item.id,
                 name: item.product.name,
                 quantity: item.quantity,
@@ -169,13 +179,23 @@ function handleAssembled(row) {
             })
         }
     })
-    if (honest_signs.value.length > 0) dialogHonest.value = true;
-    console.log(honest_signs.value)
+    if (formHonest.signs.length > 0) {
+        formHonest.id = row.id
+        dialogHonest.value = true
+    }
+    console.log(formHonest)
 }
 
 function setHonest() {
-   console.log(honest_signs.value)
+  //  dialogHonest.value = false;
+    console.log(honest_signs.value)
+
+    axios.post(route('admin.order.expense.set-honest', {expense: formHonest.id}), {signs: formHonest.signs}).then(result => {
+        dialogHonest.value = false;
+        onAssembled(formHonest);
+    })
 }
+
 function onAssembled(row) {
     router.visit(route('admin.delivery.assembled', {expense: row.id}), {
         method: "post",

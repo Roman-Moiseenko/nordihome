@@ -61,6 +61,7 @@ Route::group(
                 Route::post('/issue_warehouse', 'ExpenseController@issue_warehouse')->name('issue-warehouse');
                 Route::get('/show/{expense}', 'ExpenseController@show')->name('show');
                 Route::post('/set-delivery/{expense}', 'ExpenseController@set_delivery')->name('set-delivery');
+                Route::post('/set-honest/{expense}', 'ExpenseController@set_honest')->name('set-honest');
 
                 Route::post('/canceled/{expense}', 'ExpenseController@canceled')->name('canceled');
                // Route::post('/completed/{expense}', 'ExpenseController@completed')->name('completed');

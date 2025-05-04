@@ -100,4 +100,10 @@ class ExpenseController extends Controller
         $this->service->assembly($expense);
         return redirect()->back()->with('success', 'Распоряжение отправлено на склад на сборку.');
     }
+
+    public function set_honest(OrderExpense $expense, Request $request): \Illuminate\Http\JsonResponse
+    {
+        $this->service->setHonest($expense, $request);
+        return \response()->json(true);
+    }
 }

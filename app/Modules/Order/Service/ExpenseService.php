@@ -24,6 +24,7 @@ use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Events\ExpenseHasCompleted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 class ExpenseService
@@ -383,6 +384,21 @@ class ExpenseService
         $expense->save();
     }
 
+    public function setHonest(OrderExpense $expense, Request $request): void
+    {
+        Log::info(json_encode($request->all()));
+        $signs = $request->input('signs');
+        foreach ($expense->items as $item) {
+            foreach ($signs as $sign) {
+                if ($sign['id'] === $item->id) {
+                    $array = explode("\n", $sign['signs']);
+                    $item->honest_signs = $array;
+                    $item->save();
+                }
+            }
+        }
+
+    }
 
 
 }
