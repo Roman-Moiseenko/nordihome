@@ -92,7 +92,7 @@
         />
 
         <el-dialog v-model="dialogHonest" title="Добавьте маркировку для указанных товаров">
-            <div v-for="item in honest_signs" class="mt-2">
+            <div v-for="item in formHonest.signs" class="mt-2">
                 <el-tag>{{ item.name }} ({{ item.quantity }})</el-tag>
                 <el-input v-model="item.signs" type="textarea" :rows="item.quantity"/>
             </div>
@@ -160,7 +160,6 @@ function delLoader(row, id) {
     })
 }
 
-const honest_signs = ref<IHonestItem[]>([]);
 const formHonest = reactive({
     id: null,
     signs: Array<IHonestItem>
@@ -188,7 +187,7 @@ function handleAssembled(row) {
 
 function setHonest() {
   //  dialogHonest.value = false;
-    console.log(honest_signs.value)
+    console.log(formHonest)
 
     axios.post(route('admin.order.expense.set-honest', {expense: formHonest.id}), {signs: formHonest.signs}).then(result => {
         dialogHonest.value = false;
