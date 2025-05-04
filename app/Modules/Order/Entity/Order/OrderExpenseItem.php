@@ -20,7 +20,7 @@ class OrderExpenseItem extends Model
 {
     public $timestamps = false;
     protected $table = 'order_expense_items';
-    protected $appends = [
+    protected $attributes = [
         'honest_signs' => '{}',
     ];
     public $fillable = [

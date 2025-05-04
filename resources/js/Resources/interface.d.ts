@@ -15,3 +15,9 @@ export interface IRowCostCurrency {
     cost_currency: number,
     quantity: number,
 }
+export interface IHonestItem {
+    id: number,
+    name: string,
+    quantity: number,
+    signs: string,
+}

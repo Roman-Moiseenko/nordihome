@@ -90,8 +90,17 @@
             :total="expenses.total"
         />
 
-        <el-dialog>
-
+        <el-dialog v-model="dialogHonest" title="Добавьте маркировку для указанных товаров">
+            <div v-for="item in honest_signs">
+                <el-tag>{{ item.name }}</el-tag>
+                <el-input v-model="item.signs" type="textarea" :rows="item.quantity" />
+            </div>
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="dialogHonest = false">Отмена</el-button>
+                    <el-button type="primary" @click="setHonest">Выдать</el-button>
+                </div>
+            </template>
         </el-dialog>
 
     </el-config-provider>
@@ -105,6 +114,7 @@ import {useStore} from "@Res/store.js"
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {classes} from "@Res/className"
+import { IHonestItem } from "@Res/interface"
 
 const props = defineProps({
     expenses: Object,
@@ -145,11 +155,27 @@ function delLoader(row, id) {
     })
 }
 
+const honest_signs = ref<IHonestItem[]>([]);
+const dialogHonest = ref(false)
 function handleAssembled(row) {
 
-    console.log(row)
+    row.items.forEach(function (item) {
+        if (item.is_honest === true) {
+            honest_signs.value.push({
+                id: item.id,
+                name: item.product.name,
+                quantity: item.quantity,
+                signs: null,
+            })
+        }
+    })
+    if (honest_signs.value.length > 0) dialogHonest.value = true;
+    console.log(honest_signs.value)
 }
 
+function setHonest() {
+   console.log(honest_signs.value)
+}
 function onAssembled(row) {
     router.visit(route('admin.delivery.assembled', {expense: row.id}), {
         method: "post",
