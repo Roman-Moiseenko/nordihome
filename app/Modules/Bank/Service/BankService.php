@@ -227,7 +227,7 @@ class BankService
 
         //Определяем поля для отправки в кассу
 
-        $payment = (new YookassaService())->create_payment($order);
+        $payment = (new YookassaService())->createPayment($order);
         //TODO Создать OrderPayment
         $orderPayment = $this->orderPaymentService->createYookassa($order, $payment['id']);
 

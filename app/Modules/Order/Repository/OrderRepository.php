@@ -269,6 +269,7 @@ class OrderRepository
                 'product' =>  $expenseItem->orderItem->product,
                 'quantity' => (float)$expenseItem->quantity,
                 'refund' => $expenseItem->quantityRefund(),
+                'is_honest' => $expenseItem->orderItem->product->isMarking(),
             ])),
             'additions' => $expense->additions()->get()->map(fn(OrderExpenseAddition $expenseAddition) => array_merge($expenseAddition->toArray(), [
                 'addition' => $expenseAddition->orderAddition->addition,

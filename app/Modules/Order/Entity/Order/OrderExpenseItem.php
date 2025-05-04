@@ -14,11 +14,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property OrderItem $orderItem
  * @property OrderExpense $expense
  * @property OrderExpenseRefundItem[] $refundItems
+ * @property array $honest_signs
  */
 class OrderExpenseItem extends Model
 {
     public $timestamps = false;
     protected $table = 'order_expense_items';
+    protected $appends = [
+        'honest_signs' => '{}',
+    ];
     public $fillable = [
         'expense_id',
         'order_item_id',
@@ -29,6 +33,7 @@ class OrderExpenseItem extends Model
     {
         return [
             'quantity' => 'float',
+            'honest' => 'array'
         ];
     }
     public static function new(int $order_item_id, float $quantity): self

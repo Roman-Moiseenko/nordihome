@@ -3,9 +3,12 @@
 namespace App\Modules\Bank\Service;
 
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderPayment;
 use JetBrains\PhpStorm\Deprecated;
 use YooKassa\Client;
 use YooKassa\Request\Payments\CreatePaymentResponse;
+use YooKassa\Request\Receipts\AbstractReceiptResponse;
 
 class YookassaService
 {
@@ -14,7 +17,7 @@ class YookassaService
     const string WAITING = 'waiting_for_capture';
     const string PENDING = 'pending';
 
-    public function create_payment(Order $order): ?CreatePaymentResponse
+    public function createPayment(Order $order): ?CreatePaymentResponse
     {
         $client = new Client();
         $client->setAuth(config('shop.yookassa-id'), config('shop.yookassa-key'));
@@ -59,6 +62,38 @@ class YookassaService
         return $payment;
     }
 
+    public function createReceipt(OrderExpense $expense, OrderPayment $payment): ?AbstractReceiptResponse
+    {
+        $client = new Client();
+        $client->setAuth(config('shop.yookassa-id'), config('shop.yookassa-key'));
+
+        $response = $client->createReceipt(
+            [
+                'customer' => [
+                    'full_name' => $expense->order->user->fullname->getFullName(),
+                    'phone' => $expense->order->user->phone,
+                    'email' => $expense->order->user->email,
+                ],
+                'payment_id' => $payment->yookassa_id,
+                'type' => 'payment',
+                'send' => true,
+                'items' => $this->itemsExpense($expense),
+                'settlements' => [
+                    [
+                        'type' => 'prepayment',
+                        'amount' => [
+                            'value' => $expense->getAmount(),
+                            'currency' => 'RUB',
+                        ]
+                    ],
+                ],
+            ],
+            uniqid('', true)
+        );
+
+        return $response;
+    }
+
     private function items(Order $order): array
     {
         $items = [];
@@ -89,6 +124,62 @@ class YookassaService
                 'payment_mode' => 'full_prepayment',
                 'payment_subject' => 'commodity',
                 'measure' => 'piece',
+            ];
+        }
+        return $items;
+    }
+
+    private function itemsExpense(OrderExpense $expense): array
+    {
+        $items = [];
+        foreach ($expense->items as $item) {
+
+            if (!empty($item->honest_signs)) {
+                foreach ($item->honest_signs as $sign) { //Раскидываем список qr-кодов по товарам.
+                    $items[] = [
+                        'description' => $item->orderItem->product->name,
+                        'quantity' => 1,
+                        'amount' => [
+                            'value' => $item->orderItem->sell_cost,
+                            'currency' => 'RUB'
+                        ],
+                        'vat_code' => 1,
+                        'payment_mode' => 'full_payment',
+                        'payment_subject' => 'commodity',
+
+                        'mark_mode' => 0,
+                        'mark_code_info' => [
+                            'gs_1m' => $sign,
+                        ],
+
+                    ];
+                }
+            } else {
+                $items[] = [
+                    'description' => $item->orderItem->product->name,
+                    'quantity' => $item->quantity,
+                    'amount' => [
+                        'value' => $item->orderItem->sell_cost,
+                        'currency' => 'RUB'
+                    ],
+                    'vat_code' => 1,
+                    'payment_mode' => 'full_payment',
+                    'payment_subject' => 'commodity',
+                ];
+            }
+
+        }
+        foreach ($expense->additions as $addition) {
+            $items[] = [
+                'description' => $addition->orderAddition->addition->name,
+                'quantity' => $addition->orderAddition->quantity,
+                'amount' => [
+                    'value' => $addition->amount,
+                    'currency' => 'RUB'
+                ],
+                'vat_code' => 1,
+                'payment_mode' => 'full_payment',
+                'payment_subject' => 'commodity',
             ];
         }
         return $items;
@@ -254,12 +345,6 @@ class YookassaService
         $payment = $client->getPaymentInfo($paymentId);
         return $payment['status'];
 
-    }
-
-    public function create_receipt()
-    {
-        $id = '2f8017b7-000f-5000-b000-198510c2b656';
-        $client = new Client(); //
     }
 
 }

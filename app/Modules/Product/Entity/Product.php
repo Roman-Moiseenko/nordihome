@@ -332,6 +332,12 @@ class Product extends Model
         return $this->getQuantity() < $this->balance->min;
     }
 
+
+    public function isMarking(): bool
+    {
+        return $this->marking_type_id != null;
+    }
+
     //*** SET-....
     //SET и GET
     /**
@@ -953,4 +959,5 @@ class Product extends Model
             'stock' => $this->getQuantitySell() > 0,
         ];
     }
+
 }

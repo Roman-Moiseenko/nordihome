@@ -76,7 +76,7 @@
                             Выдать
                         </el-button>
                         <el-button v-if="scope.row.status.is_assembling && scope.row.is_delivery"
-                                   @click.stop="onAssembled(scope.row)">
+                                   @click.stop="handleAssembled(scope.row)">
                             Собран
                         </el-button>
                     </template>
@@ -89,6 +89,10 @@
             :per_page="expenses.per_page"
             :total="expenses.total"
         />
+
+        <el-dialog>
+
+        </el-dialog>
 
     </el-config-provider>
     <DeleteEntityModal name_entity="Заказ поставщику"/>
@@ -139,6 +143,11 @@ function delLoader(row, id) {
         preserveState: false,
 
     })
+}
+
+function handleAssembled(row) {
+
+    console.log(row)
 }
 
 function onAssembled(row) {
