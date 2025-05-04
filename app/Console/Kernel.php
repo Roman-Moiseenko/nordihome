@@ -31,6 +31,8 @@ class Kernel extends ConsoleKernel
         //$schedule->command('cron:currency')->dailyAt('00:01');
         //Проверка доставок ТК
         $schedule->command('cron:delivery')->everySixHours();
+        //Проверка оплаты ЮКассы
+        $schedule->command('cron:yookassa')->everyFiveMinutes();
 
         //Команды для ИКЕА
         if (env('SHOP_THEME') == 'nordihome') {

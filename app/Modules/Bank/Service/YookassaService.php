@@ -9,11 +9,15 @@ use YooKassa\Request\Payments\CreatePaymentResponse;
 
 class YookassaService
 {
+    const string SUCCESS = 'succeeded';
+    const string CANCELLED = 'canceled';
+    const string WAITING = 'waiting_for_capture';
+    const string PENDING = 'pending';
+
     public function create_payment(Order $order): ?CreatePaymentResponse
     {
         $client = new Client();
-        $client->setAuth(1066142, config('shop.yookassa-key'));
-
+        $client->setAuth(config('shop.yookassa-id'), config('shop.yookassa-key'));
 
         $payment = $client->createPayment(
             [
@@ -26,6 +30,9 @@ class YookassaService
                     'value' => $order->getTotalAmount(),
                     'currency' => 'RUB',
                 ],
+                'payment_method_data' => [
+                    'type' => 'bank_card', //sbp
+                ],
                 'confirmation' => [
                     'type' => 'redirect',
                     'return_url' => parse_url(url()->current(), PHP_URL_HOST),
@@ -34,7 +41,9 @@ class YookassaService
                 'description' => 'Предоплата по Заказу №' . $order->number . ' от ' . $order->htmlDate(),
                 'receipt' => [
                     'customer' => [
-                        'email' => 'r.a.moiseenko@gmail.com',
+                        'full_name' => $order->user->fullname->getFullName(),
+                        'phone' => $order->user->phone,
+                        'email' => $order->user->email,
                     ],
                     'items' => $this->items($order),
                 ],
@@ -83,6 +92,25 @@ class YookassaService
             ];
         }
         return $items;
+    }
+
+    public function checkPayment(string $paymentId): string
+    {
+        $client = new Client();
+        $client->setAuth(config('shop.yookassa-id'), config('shop.yookassa-key'));
+        $payment = $client->getPaymentInfo($paymentId);
+        return $payment->getStatus();
+        //if ($payment['status'] == 'succeeded') return true;
+        //return false;
+    }
+
+    public function cancelPayment(string $paymentId): bool
+    {
+        $client = new Client();
+        $client->setAuth(config('shop.yookassa-id'), config('shop.yookassa-key'));
+        $payment = $client->cancelPayment($paymentId, uniqid('', true));
+        if ($payment['status'] == 'canceled') return true;
+        return false;
     }
 
     #[Deprecated]
@@ -146,7 +174,7 @@ class YookassaService
                     'full_name' => 'Ivanov Ivan Ivanovich',
                     'phone' => '+79000000000',
                     'email' => 'email@email.ru',
-                    'inn'   => '6321341814',
+                    'inn' => '6321341814',
                 ],
                 'payment_id' => '2f82cb0c-000f-5000-b000-1ccd91a643ee',
                 'type' => 'payment',
@@ -163,11 +191,11 @@ class YookassaService
                         'payment_mode' => 'full_payment',
                         'payment_subject' => 'commodity',
 
-                      /*  'mark_mode' => 0,
-                        'mark_code_info' => [
-                            'gs_1m' => 'DFGwNDY0MDE1Mzg2NDQ5MjIxNW9vY2tOelDFuUFwJh05MUVFMDYdOTJXK2ZaMy9uTjMvcVdHYzBjSVR3NFNOMWg1U2ZLV0dRMWhHL0UrZi8ydkDvPQ==',
-                        ],
-                       */
+                        /*  'mark_mode' => 0,
+                          'mark_code_info' => [
+                              'gs_1m' => 'DFGwNDY0MDE1Mzg2NDQ5MjIxNW9vY2tOelDFuUFwJh05MUVFMDYdOTJXK2ZaMy9uTjMvcVdHYzBjSVR3NFNOMWg1U2ZLV0dRMWhHL0UrZi8ydkDvPQ==',
+                          ],
+                         */
                     ],
 
                 ],
@@ -186,6 +214,7 @@ class YookassaService
 
         return $response;
     }
+
     #[Deprecated]
     public function test3()
     {
@@ -232,4 +261,5 @@ class YookassaService
         $id = '2f8017b7-000f-5000-b000-198510c2b656';
         $client = new Client(); //
     }
+
 }

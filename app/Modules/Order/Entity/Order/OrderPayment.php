@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $staff_id
  * @property bool $completed - проведен или нет
  * @property bool $manual - ручная оплата (в кассу, картой и по счету не ч/з банк)
- *
+ * @property string $yookassa_id - id по платежу Юкасса
  * @property int $storage_id - склад оплаты по кассе/карте
  * @property BankPayment $bank_payment
  * @property int $shopper_id - Получатель и
@@ -45,7 +45,7 @@ class OrderPayment extends Model
     const int METHOD_CASH = 2;
     const int METHOD_ACCOUNT = 3;
     const int METHOD_SBP = 4;
-    const int METHOD_YUKASSA = 5;
+    const int METHOD_YOOKASSA = 5;
 
     const array MANUAL_METHODS = [
         self::METHOD_CASH => 'В кассу',
@@ -57,7 +57,7 @@ class OrderPayment extends Model
         self::METHOD_CARD => 'Картой',
         self::METHOD_ACCOUNT => 'По счету',
         self::METHOD_SBP => 'По СБП',
-        self::METHOD_YUKASSA => 'ЮКасса',
+        self::METHOD_YOOKASSA => 'ЮКасса',
     ];
 
     const array ONLINE_METHODS = [
@@ -110,6 +110,12 @@ class OrderPayment extends Model
     public function isAccount(): bool
     {
         return $this->method == OrderPayment::METHOD_ACCOUNT;
+    }
+
+
+    public function isYooKassa(): bool
+    {
+        return $this->method == OrderPayment::METHOD_YOOKASSA;
     }
 
     public function isRefund(): bool
@@ -199,5 +205,6 @@ class OrderPayment extends Model
     {
         return $query->where('completed', false);
     }
+
 
 }

@@ -20,6 +20,7 @@ class OrderPaymentService
 {
     private LoggerService $logger;
     private float $commission_card;
+    private float $commission_yookassa;
 
     public function __construct(
         LoggerService $logger,
@@ -28,6 +29,7 @@ class OrderPaymentService
         $this->logger = $logger;
         //TODO Из Настроек
         $this->commission_card = 2.0;
+        $this->commission_yookassa = 2.7;
     }
 
     /**
@@ -109,9 +111,23 @@ class OrderPaymentService
         $payment->staff_id = $staff->id;
         $payment->manual = true;
         if ($payment->isCard()) $payment->commission = $this->commission_card;
+        if ($payment->isYooKassa()) $payment->commission = $this->commission_yookassa;
         $order->payments()->save($payment);
         return $payment;
     }
+
+    public function createYookassa(Order $order, string $id): OrderPayment
+    {
+        $payment = OrderPayment::new($order->getTotalAmount(), OrderPayment::METHOD_YOOKASSA);
+        $staff = Auth::guard('admin')->user();
+        $payment->staff_id = $staff->id;
+        $payment->manual = false;
+        $payment->commission = $this->commission_yookassa;
+        $payment->yookassa_id = $id;
+        $order->payments()->save($payment);
+        return $payment;
+    }
+
 
     public function setInfo(OrderPayment $payment, Request $request): void
     {

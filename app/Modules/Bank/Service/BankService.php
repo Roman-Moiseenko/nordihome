@@ -229,6 +229,11 @@ class BankService
 
         $payment = (new YookassaService())->create_payment($order);
         //TODO Создать OrderPayment
+        $orderPayment = $this->orderPaymentService->createYookassa($order, $payment['id']);
+
+
+
+
         return $payment['confirmation']['confirmation_url'];
 
 
