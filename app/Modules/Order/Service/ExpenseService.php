@@ -386,7 +386,7 @@ class ExpenseService
 
     public function setHonest(OrderExpense $expense, Request $request): void
     {
-        Log::info(json_encode($request->all()));
+        //Log::info(json_encode($request->all()));
         $signs = $request->input('signs');
         foreach ($expense->items as $item) {
             foreach ($signs as $sign) {
@@ -397,7 +397,6 @@ class ExpenseService
                 }
             }
         }
-
     }
 
 

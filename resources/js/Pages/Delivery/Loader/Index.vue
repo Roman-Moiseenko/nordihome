@@ -120,6 +120,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import {classes} from "@Res/className"
 import {IHonestItem} from "@Res/interface"
 import axios from "axios";
+import {ElLoading} from "element-plus";
 
 const props = defineProps({
     expenses: Object,
@@ -162,19 +163,18 @@ function delLoader(row, id) {
 
 const formHonest = reactive({
     id: null,
-    signs: Array<IHonestItem>
+    signs: [],
 })
 const dialogHonest = ref(false)
 
 function handleAssembled(row) {
-
     row.items.forEach(function (item) {
         if (item.is_honest === true) {
             formHonest.signs.push({
                 id: item.id,
                 name: item.product.name,
                 quantity: item.quantity,
-                signs: null,
+                signs: item.honest_signs,
             })
         }
     })
@@ -186,28 +186,48 @@ function handleAssembled(row) {
 }
 
 function setHonest() {
-  //  dialogHonest.value = false;
-    console.log(formHonest)
+    //console.log(formHonest)
 
-    axios.post(route('admin.order.expense.set-honest', {expense: formHonest.id}), {signs: formHonest.signs}).then(result => {
-        dialogHonest.value = false;
-        onAssembled(formHonest);
+    axios.post(
+        route('admin.order.expense.set-honest', {expense: formHonest.id}), {signs: formHonest.signs}
+    ).then(result => {
+        onAssembled(formHonest)
+        dialogHonest.value = false
+    }).catch(reason => {
+        console.log(reason)
     })
 }
 
 function onAssembled(row) {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Сохранение документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+
     router.visit(route('admin.delivery.assembled', {expense: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 
 function onComplete(row) {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Сохранение документа',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
     router.visit(route('admin.delivery.completed', {expense: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
+        onSuccess: page => {
+            loading.close()
+        }
     })
 }
 
