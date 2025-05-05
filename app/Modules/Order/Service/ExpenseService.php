@@ -9,6 +9,7 @@ use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Analytics\LoggerService;
+use App\Modules\Bank\Service\YookassaService;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
@@ -33,18 +34,21 @@ class ExpenseService
     private LoggerService $logger;
     private BatchSaleService $batchSaleService;
     private StaffRepository $staffs;
+    private YookassaService $yookassaService;
 
     public function __construct(
         OrderReserveService $reserveService,
         LoggerService       $logger,
         BatchSaleService    $batchSaleService,
         StaffRepository     $staffs,
+        YookassaService     $yookassaService,
     )
     {
         $this->reserveService = $reserveService;
         $this->logger = $logger;
         $this->batchSaleService = $batchSaleService;
         $this->staffs = $staffs;
+        $this->yookassaService = $yookassaService;
     }
 
     /**
@@ -145,6 +149,9 @@ class ExpenseService
     public function cancel(OrderExpense $expense): Order
     {
         DB::transaction(function () use ($expense, &$order) {
+            //TODO Если есть чек Сделать Возврат.
+
+
             $this->batchSaleService->returnByExpense($expense); //Удаляем продажи по партиям
             $order = $expense->order;
             foreach ($expense->items as $item) {
@@ -179,6 +186,7 @@ class ExpenseService
         return $order;
     }
 
+    /** Отправляем распоряжение на сборку */
     public function assembly(OrderExpense $expense): void
     {
         if (!$expense->isStorage()) {
@@ -189,9 +197,7 @@ class ExpenseService
         $expense->setNumber();
         $expense->assembly();
 
-
         //Уведомление на склад на выдачу
-
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_DELIVERY);
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
@@ -221,17 +227,14 @@ class ExpenseService
 
         /** @var Worker $worker */
         $worker = Worker::find($worker_id);
-        //$staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_DELIVERY);
 
-        //foreach ($staffs as $staff) {
-            $worker->notify(new StaffMessage(
-                event: NotificationHelper::EVENT_ASSEMBLY,
-                message: $message,
-                params: new TelegramParams(TelegramParams::OPERATION_ASSEMBLING, $expense->id)
-            ));
-        //}
+        $worker->notify(new StaffMessage(
+            event: NotificationHelper::EVENT_ASSEMBLY,
+            message: $message,
+            params: new TelegramParams(TelegramParams::OPERATION_ASSEMBLING, $expense->id)
+        ));
+
     }
-
 
     public function delLoader(OrderExpense $expense): void
     {
@@ -344,6 +347,13 @@ class ExpenseService
 
             $order = $expense->order;
             $order->refresh();
+            //Создание чеков если есть продажи по ЮКассе
+            foreach ($order->payments as $payment) {
+                if ($payment->isYooKassa()) {
+                    $this->yookassaService->createReceipt($expense, $payment);
+                    break;
+                }
+            }
 
             if (($order->getTotalAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) < 1) {
                 $check = true;
