@@ -140,7 +140,6 @@ const tableData = ref([...props.expenses.data.map(item => {
 
 const worker_id = ref(null)
 
-
 function routeClick(row) {
     router.get(route('admin.order.expense.show', {expense: row.id}))
 }
@@ -151,7 +150,6 @@ function setLoader(row) {
         data: {worker_id: worker_id.value},
         preserveScroll: true,
         preserveState: false,
-
     })
 }
 
@@ -161,7 +159,6 @@ function delLoader(row, id) {
         data: {worker_id, id},
         preserveScroll: true,
         preserveState: false,
-
     })
 }
 
@@ -189,11 +186,9 @@ function handleAssembled(row) {
     } else {
         onAssembled(row)
     }
-    console.log(formHonest)
 }
 
 function setHonest() {
-    //console.log(formHonest)
 
     axios.post(
         route('admin.order.expense.set-honest', {expense: formHonest.id}), {signs: formHonest.signs}
@@ -206,26 +201,20 @@ function setHonest() {
 }
 
 function onAssembled(row) {
-    console.log('onAssembled', 1)
     const loading = ElLoading.service({
         lock: false,
         text: 'Сохранение документа',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    console.log('onAssembled', 2)
 
     router.visit(route('admin.delivery.assembled', {expense: row.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: page => {
-            console.log('onAssembled', 3)
-
             loading.close()
         }
     })
-    console.log('onAssembled', 4)
-
 }
 
 function onComplete(row) {
@@ -237,7 +226,7 @@ function onComplete(row) {
     router.visit(route('admin.delivery.completed', {expense: row.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: true,
+        preserveState: false,
         onSuccess: page => {
             loading.close()
         }
