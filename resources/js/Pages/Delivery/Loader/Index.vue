@@ -108,9 +108,10 @@
         </el-dialog>
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Заказ поставщику"/>
+
 </template>
 <script lang="ts" setup>
+
 import {ref, defineProps, reactive} from "vue";
 import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
@@ -118,7 +119,7 @@ import {useStore} from "@Res/store.js"
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {classes} from "@Res/className"
-import {IHonestItem} from "@Res/interface"
+
 import axios from "axios";
 import {ElLoading} from "element-plus";
 
@@ -131,11 +132,14 @@ const props = defineProps({
     works: Array,
 })
 const store = useStore();
+
 const tableData = ref([...props.expenses.data.map(item => {
-    item.visible_assembly = ref(false)
+    item.visible_assembly = false
     return item
 })])
+
 const worker_id = ref(null)
+
 
 function routeClick(row) {
     router.get(route('admin.order.expense.show', {expense: row.id}))
@@ -165,6 +169,7 @@ const formHonest = reactive({
     id: null,
     signs: [],
 })
+
 const dialogHonest = ref(false)
 
 function handleAssembled(row) {
@@ -181,6 +186,8 @@ function handleAssembled(row) {
     if (formHonest.signs.length > 0) {
         formHonest.id = row.id
         dialogHonest.value = true
+    } else {
+        onAssembled(row)
     }
     console.log(formHonest)
 }
@@ -199,20 +206,26 @@ function setHonest() {
 }
 
 function onAssembled(row) {
+    console.log('onAssembled', 1)
     const loading = ElLoading.service({
         lock: false,
         text: 'Сохранение документа',
         background: 'rgba(0, 0, 0, 0.7)',
     })
+    console.log('onAssembled', 2)
 
     router.visit(route('admin.delivery.assembled', {expense: row.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
+            console.log('onAssembled', 3)
+
             loading.close()
         }
     })
+    console.log('onAssembled', 4)
+
 }
 
 function onComplete(row) {
@@ -224,7 +237,7 @@ function onComplete(row) {
     router.visit(route('admin.delivery.completed', {expense: row.id}), {
         method: "post",
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             loading.close()
         }

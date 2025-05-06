@@ -63,7 +63,7 @@ class DeliveryController extends Controller
         $expenses = $this->repository->getLoader($request);
         return Inertia::render('Delivery/Loader/Index', [
             'expenses' => $expenses,
-            'works' => Worker::where('active', true)->get(),
+            'works' => Worker::where('active', true)->getModels(),
         ]);
     }
 
