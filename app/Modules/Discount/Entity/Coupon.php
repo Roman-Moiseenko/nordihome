@@ -27,8 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Coupon extends Model
 {
-    const NEW = 501;
-    const STARTED = 502; //Можно использовать, ??? Cron задача ?
+    const int NEW = 501;
+    const int STARTED = 502; //Можно использовать, ??? Cron задача ?
     const FINISHED = 503; //Дата завершения прошла, купонном не воспользовались
     const CANCEL = 504;
     const COMPLETED = 505; //Использован
