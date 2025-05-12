@@ -25,7 +25,7 @@ class DeliveryCommand extends Command
 
         foreach ($expenses as $expense) {
             $status = $service->findTrack($expense->delivery->track_number);
-            $deliveryService->setStatus($expense, $status);
+            if (!is_null($status)) $deliveryService->setStatus($expense, $status);
         }
     }
 }

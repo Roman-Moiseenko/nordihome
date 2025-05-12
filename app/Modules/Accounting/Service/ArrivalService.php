@@ -164,6 +164,7 @@ class ArrivalService extends AccountingService
                 if ($item->cost_currency == 0) throw new \DomainException('Некоторые позиции имеют нулевую цену');
             }
             $arrival->completed();
+            $arrival->refresh();
             //TODO Проверить и ?Переработать механизм
             //У поступления есть заказ поставщику
             if (!is_null($arrival->supply)) {
