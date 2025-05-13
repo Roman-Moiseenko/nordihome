@@ -34,7 +34,7 @@ class YookassaService
                     'currency' => 'RUB',
                 ],
                 'payment_method_data' => [
-                    'type' => 'bank_card', //sbp
+                    'type' => 'sbp', //sbp bank_card
                 ],
                 'confirmation' => [
                     'type' => 'redirect',
