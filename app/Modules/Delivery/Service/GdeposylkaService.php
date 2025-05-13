@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\Http;
 class GdeposylkaService
 {
 
-    public function findTrack(string $track_number): int
+    public function findTrack(string $track_number): int|null
     {
 
-        return DeliveryCargo::STATUS_ISSUED;
+        return null;
         //TODO На тестовом подключить API https://gdeposylka.ru/
 
         $result = Http::withHeaders([
             'X-Authorization-Token' => env('GDEPOSYLKA_TOKEN', null),
             'Content-Type' => ' application/json'
         ])->get('https://gdeposylka.ru/api/v4/tracker/usps/' . $track_number)->json();
-
+        //DeliveryCargo::STATUS_ISSUED;
         //Проверка $result
 
     }

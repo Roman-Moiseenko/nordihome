@@ -68,7 +68,7 @@ class DeliveryService
     }
 
 
-    public function create(OrderExpense $expense, Request $request)
+    public function create(OrderExpense $expense, Request $request): void
     {
 
         if (!$expense->isRegion()) throw new \DomainException('Неверный тип доставки');

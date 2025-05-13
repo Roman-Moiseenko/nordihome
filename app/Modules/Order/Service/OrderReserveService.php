@@ -65,6 +65,7 @@ class OrderReserveService
     public function toReserveStorage(OrderItem $orderItem, Storage $storage, float $quantity): void
     {
         $storageItem = $storage->getItem($orderItem->product_id);
+      //  dd([$orderItem->id, $storage->id]);
         OrderReserve::register($orderItem->id, $storageItem->id, $quantity, $this->minutes);
     }
 

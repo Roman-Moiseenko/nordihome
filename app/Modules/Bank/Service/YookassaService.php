@@ -133,7 +133,6 @@ class YookassaService
     {
         $items = [];
         foreach ($expense->items as $item) {
-
             if (!empty($item->honest_signs)) {
                 foreach ($item->honest_signs as $sign) { //Раскидываем список qr-кодов по товарам.
                     $items[] = [
