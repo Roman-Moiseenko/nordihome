@@ -4,6 +4,11 @@
         <h1 class="font-medium text-xl">Заказы</h1>
         <div class="flex">
             <el-button type="primary" class="p-4 my-3" @click="handleCreate">Новый заказ</el-button>
+            <div class="my-auto">
+                <span>Показать: </span>
+                <el-checkbox v-model="filter.canceled" @click="onFilter('canceled')" :checked="filters.canceled">Отмененные</el-checkbox>
+                <el-checkbox v-model="filter.completed" @click="onFilter('completed')" :checked="filters.completed">Исполненные</el-checkbox>
+            </div>
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-date-picker
                     v-model="filter.date_from"
@@ -98,7 +103,7 @@
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps, provide} from "vue";
-import {Head, router} from '@inertiajs/vue3'
+import {Head, router, usePage} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"
 import TableFilter from '@Comp/TableFilter.vue'
@@ -127,20 +132,24 @@ const filter = reactive({
     user: props.filters.user,
     date_from: props.filters.date_from,
     date_to: props.filters.date_to,
+    canceled: props.filters.canceled,
+    completed: props.filters.completed,
 })
 
 function handleCreate() {
     router.post(route('admin.order.store'))
 }
-
 function routeClick(row) {
     router.get(route('admin.order.show', {order: row.id}))
 }
-
 function handleCopy(row) {
     router.post(route('admin.order.copy', {order: row.id}))
 }
-
+function onFilter(_check) {
+    if (_check == 'canceled') filter.canceled = !filter.canceled
+    if (_check == 'completed') filter.completed = !filter.completed
+    router.get(usePage().url.split('?')[0], filter)
+}
 
 </script>
 <style scoped>

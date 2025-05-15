@@ -18,44 +18,44 @@ use function now;
 class OrderStatus extends Model
 {
     ///Стартовые статусы
-    const DRAFT = 199; //Резерв нет --- ????
+    const int DRAFT = 199; //Резерв нет --- ????
 
-    const FORMED = 200; //Резерв 1ч
-    const SET_MANAGER = 201; //В работе у менеджера
-    const AWAITING = 202; //Ожидает оплаты - резерв 3 дня ??????
-    const PREPAID = 203;  //Предоплата
-    const PAID = 204;  //Оплачен
+    const int FORMED = 200; //Резерв 1ч
+    const int SET_MANAGER = 201; //В работе у менеджера
+    const int AWAITING = 202; //Ожидает оплаты - резерв 3 дня ??????
+    const int PREPAID = 203;  //Предоплата
+    const int PAID = 204;  //Оплачен
 
     ///Предзаказ
-    const ISSUED_SELLER = 210; //Оформлен у поставщика
-    const ON_PACKAGE = 211; //На комплектации
-    const CUSTOMS = 212; //'Проходит таможенный контроль',
-    const WAREHOUSE = 213; //'Доставлен на склад',
+    const int ISSUED_SELLER = 210; //Оформлен у поставщика
+    const int ON_PACKAGE = 211; //На комплектации
+    const int CUSTOMS = 212; //'Проходит таможенный контроль',
+    const int WAREHOUSE = 213; //'Доставлен на склад',
 
     ///Служба заказов
-    const ORDER_SERVICE = 220;//'Передан в службу заказов',
-    const ORDER_COMPLETED = 221; //'Заказ собран',
+    const int ORDER_SERVICE = 220;//'Передан в службу заказов',
+    const int ORDER_COMPLETED = 221; //'Заказ собран',
 
     ///Доставка
-    const DELIVERY_REGION = 240; //Готов для отправки ТК
-    const DELIVERY_REGION_SERVICE = 241; //Передан в службу доставки ТК
-    const DELIVERY_LOCAL = 250; //Готов для отправки по региону
-    const DELIVERY_LOCAL_SEND = 251; //Отправлен
+    const int DELIVERY_REGION = 240; //Готов для отправки ТК
+    const int DELIVERY_REGION_SERVICE = 241; //Передан в службу доставки ТК
+    const int DELIVERY_LOCAL = 250; //Готов для отправки по региону
+    const int DELIVERY_LOCAL_SEND = 251; //Отправлен
 
     ///Выдача
-    const READY = 260;// 'Готов к выдаче'
+    const int READY = 260;// 'Готов к выдаче'
 
 
     ///Отмененные статусы
-    const CANCEL = 280;//
-    const CANCEL_BY_CUSTOMER = 281;//
-    const REFUND = 282; //Возврат денег
+    const int CANCEL = 280;//
+    const int CANCEL_BY_CUSTOMER = 281;//
+    const int REFUND = 282; //Возврат денег
 
     //Завершен успешно
-    const COMPLETED = 290; //Выдан (завершен)
-    const COMPLETED_REFUND = 291; //Выдан частично, с возвратом части товара (завершен)
+    const int COMPLETED = 290; //Выдан (завершен)
+    const int COMPLETED_REFUND = 291; //Выдан частично, с возвратом части товара (завершен)
 
-    const STATUSES = [
+    const array STATUSES = [
         self::FORMED => 'Сформирован',
         self::SET_MANAGER => 'В работе у менеджера',
         self::AWAITING => 'Ожидает оплаты',
@@ -69,7 +69,7 @@ class OrderStatus extends Model
         self::REFUND => 'Возврат оплаты',
     ];
 
-    const CONDITIONS = [
+    const array CONDITIONS = [
         self::ISSUED_SELLER => 'Оформлен у поставщика',
         self::ON_PACKAGE => 'На комплектации',
         self::CUSTOMS => 'Проходит таможенный контроль',

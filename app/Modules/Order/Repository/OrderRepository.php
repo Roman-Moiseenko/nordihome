@@ -59,7 +59,7 @@ class OrderRepository
                 $q->where('phone', 'LIKE', "%$user%")
                     ->orWhere('email', 'like', "%$user%")
                     ->orWhereRaw("LOWER(fullname) like LOWER('%$user%')")
-                    ->orWhereHas('shopper', function ($query) use ($user) {
+                    ->orWhereHas('organization', function ($query) use ($user) {
                         $query->where('inn', 'like', "%$user%")
                             ->orWhereRaw("LOWER(short_name) like LOWER('%$user%')");
                     });
@@ -75,6 +75,22 @@ class OrderRepository
         }
 
         if (count($filters) > 0) $filters['count'] = count($filters);
+        if (!$request->boolean('canceled')) {
+            $filters['canceled'] = false;
+            $query->whereHas('status', function ($query) {
+                $query->whereNotIn('value', [OrderStatus::CANCEL, OrderStatus::CANCEL_BY_CUSTOMER, OrderStatus::REFUND]);
+            });
+        } else {
+            $filters['canceled'] = true;
+        }
+        if (!$request->boolean('completed')) {
+            $filters['completed'] = false;
+            $query->whereHas('status', function ($query) {
+                $query->whereNotIn('value', [OrderStatus::COMPLETED, OrderStatus::COMPLETED_REFUND]);
+            });
+        } else {
+            $filters['completed'] = true;
+        }
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()

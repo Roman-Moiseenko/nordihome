@@ -254,7 +254,7 @@ class User extends Authenticatable
         return $this->orders()->first();
     }
 
-    #[Pure] public function getAmountOrders(): float
+    public function getAmountOrders(): float
     {
         $result = 0.0;
         foreach ($this->orders as $order) {
