@@ -22,7 +22,6 @@ class FurnitureCommand extends Command
     {
 
         $rows = $googleSheet->getFurnitureRows(self::BLUM);
-        $delta = 0;
         foreach ($rows as $number => $row) {
             if (!empty($code = $row['АРТИКУЛ'])) {
                 //Берем код до 1го пробела
@@ -30,10 +29,9 @@ class FurnitureCommand extends Command
 
                 $this->info($words[0] . ' отправлен в очередь. Задержка - ' . $number * 2 . ' с');
                 FurnitureParser::dispatch($code, $number, self::BLUM, 'H')->delay(now()->addSeconds($number * 2));
-                $delta += $number * 2;
             }
         }
-        $delta++;
+        $delta = count($rows) * 2 + 2;
         $rows = $googleSheet->getFurnitureRows(self::GTV);
         foreach ($rows as $number => $row) {
             if (!empty($code = $row['АРТИКУЛ'])) {
