@@ -12,10 +12,10 @@ class GoogleSheetService
     const string sheetName = 'BLUM'; //Furniture
     const string col = 'H'; // D
    // const string user_key = '90822ced7cec397ef9cc95233910eebacff468d1';
-    public function getFurnitureRows(): array
+    public function getFurnitureRows(string $sheetName = null): array
     {
         //dd(config('google.service'));
-        $rows = Sheets::spreadsheet(self::spreadsheetId)->sheet(self::sheetName)->get();
+        $rows = Sheets::spreadsheet(self::spreadsheetId)->sheet($sheetName ?? self::sheetName)->get();
         $header = $rows->pull(1);
         $values = Sheets::collection(header: $header, rows: $rows);
         return $values->toArray();
@@ -23,13 +23,11 @@ class GoogleSheetService
 //
     }
 
-    public function setData(mixed $number, mixed $price1, mixed $price2): void
+    public function setData(mixed $number, mixed $price1, mixed $price2, string $sheetName = null, string $col = null): void
     {
-        //$rows = Sheets::spreadsheet(self::spreadsheetId)->sheet('Furniture')->get();
         Sheets::spreadsheet(self::spreadsheetId)
-            ->sheet(self::sheetName)
-            ->range(self::col . $number)
+            ->sheet($sheetName ?? self::sheetName)
+            ->range(($col ?? self::col) . $number)
             ->update([[$price1, $price2]]);
-    //    Sheets::sheet('Furniture')->range('E' . $number)->update([[$price2]]);
     }
 }

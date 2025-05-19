@@ -60,7 +60,7 @@ class FunctionController extends Controller
         }
     }
 
-    public function furniture()
+    public function furniture(): JsonResponse
     {
         $result = $this->service->furniture();
         return response()->json($result);
