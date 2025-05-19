@@ -22,16 +22,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class DeliveryCargo extends Model
 {
-    const STATUS_NEW = 1301;
-    const STATUS_SHIPPED = 1302;
+    const int STATUS_NEW = 1301;
+    const int STATUS_SHIPPED = 1302;
 
     /**
      * Добавить
      */
-    const STATUS_ISSUED = 1330;
-    const STATUS_REFUND = 1331;
+    const int STATUS_ISSUED = 1330;
+    const int STATUS_REFUND = 1331;
 
-    const STATUSES = [
+    const array STATUSES = [
         self::STATUS_NEW => 'Получено',
         self::STATUS_SHIPPED => 'Отгружено',
         /**

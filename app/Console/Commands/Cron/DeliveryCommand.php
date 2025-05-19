@@ -24,7 +24,8 @@ class DeliveryCommand extends Command
             ->getModels();
 
         foreach ($expenses as $expense) {
-            $status = $service->findTrack($expense->delivery->track_number);
+            //TODO проверяем по ТК
+            $status = $service->findPackage($expense);
             if (!is_null($status)) $deliveryService->setStatus($expense, $status);
         }
     }

@@ -23,4 +23,11 @@ class GdeposylkaService
         //Проверка $result
 
     }
+
+    public function findPackage(\App\Modules\Order\Entity\Order\OrderExpense $expense)
+    {
+        $cargo = $expense->delivery->cargo;
+
+
+    }
 }

@@ -237,10 +237,14 @@ class Photo extends Model
 
             if (is_file($this->getUploadFile()) &&
                 !is_file($thumb_file) &&
-                (in_array($this->ext(), ['jpg', 'png', 'jpeg', 'webp']))) {
+                (in_array($this->ext(), ['jpg', 'png', 'webp']))) {
                 $manager = new ImageManager(); //['driver' => 'imagick']
-                $img = $manager->make($this->getUploadFile());
-
+                try {
+                    $img = $manager->make($this->getUploadFile());
+                } catch (\Throwable $e) {
+                    return;
+                  //  dd($this->imageable_id);
+                }
                 if (isset($params['width']) && isset($params['height'])) {
                     if (isset($params['fit']) && $params['fit']) { //Если установлена обрезка фото
                         $img->fit($params['width'], $params['height']);
