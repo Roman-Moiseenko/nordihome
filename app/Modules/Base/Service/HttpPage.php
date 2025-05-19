@@ -34,7 +34,7 @@ class HttpPage
         return !is_null($this->cache);
     }
 
-    public function getPage(string $url, string $prefix = ''): ?string
+    public function getPage(string $url, string $prefix = '', bool $not_proxy = false): ?string
     {
         $result = null;
         if ($this->isUseCache()) {
@@ -45,7 +45,7 @@ class HttpPage
                 $result = $val;
             } else {
                 //$res = array("error" => null, "response" => FALSE);
-                $res = $this->request($url);
+                $res = $this->request($url, $not_proxy);
                 if ($res['http_code'] != '200') {
                     //var_dump($res);
                     return null;
@@ -56,7 +56,7 @@ class HttpPage
                 }
             }
         } else {
-            $res = $this->request($url);
+            $res = $this->request($url, $not_proxy);
             if ($res['error'] === NULL) {
                 $result = $res["response"];
             }
@@ -132,7 +132,7 @@ class HttpPage
         return $result;
     }
 
-    protected function request($url): array
+    protected function request($url, bool $not_proxy = false): array
     {
 
         $result = ["error" => null, "response" => FALSE, "http_code" => '200'];
@@ -160,13 +160,13 @@ class HttpPage
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 
-                if (!empty($this->parser->proxy_ip) && $this->parser->with_proxy) {
+                if (!$not_proxy && !empty($this->parser->proxy_ip) && $this->parser->with_proxy) {
                     curl_setopt($curl, CURLOPT_PROXY, $this->parser->proxy_ip);
                     curl_setopt($curl, CURLOPT_PROXYUSERPWD, $this->parser->proxy_user);
                 }
 
                 $result["response"] = curl_exec($curl);
-               // dd($result);
+
                 if (!curl_errno($curl)) {
                     $info = curl_getinfo($curl);
                     $result["http_code"] = $info['http_code'];

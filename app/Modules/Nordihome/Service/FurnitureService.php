@@ -20,13 +20,14 @@ class FurnitureService
 
     public function getHolzMaster(string $code): float
     {
-        $data = $this->httpPage->getPage(self::HOLZ_URL . $code);
+        $data = $this->httpPage->getPage(self::HOLZ_URL . $code, '', true);
         preg_match_all('/<a class="item" href="(.+?)">/s',$data, $result);
         if (empty($result[1])) {
             return 0.0;
         }
+
         foreach ($result[1] as $url) {
-            $data = $this->httpPage->getPage('https://holzmaster.ru' . $url);
+            $data = $this->httpPage->getPage('https://holzmaster.ru' . $url, '' , true);
             //Находим div с артикулом
             preg_match_all('~<div class="detail__data">(.+?)</div>~s', $data, $res_div);
             //Убираем лишние символы
@@ -47,7 +48,7 @@ class FurnitureService
 
     public function getBaltlaminat(string $code): float
     {
-        $data = $this->httpPage->getPage(self::BALT_URL . $code);
+        $data = $this->httpPage->getPage(self::BALT_URL . $code, '', true);
         preg_match_all('~<div class="card__title-box">(.+?)</div>~s',$data, $result);
         if (empty($result[1])) {
             return 0.0;
@@ -56,10 +57,13 @@ class FurnitureService
            // $text = $this->trim($value);
             preg_match_all('~<a href="(.+?)"~s', $value, $result);
             $url = $result[1][0];
-            $data = $this->httpPage->getPage('https://baltlaminat.ru' . $url);
+            $data = $this->httpPage->getPage('https://baltlaminat.ru' . $url, '' , true);
             if (str_contains($data, $code)) {//Ищем блок с ценой
                 preg_match_all('~<strong itemprop="price">(.+?)</strong>~s', $data, $res_price);
-                return (float)trim(str_replace(',', '.', $res_price[1][0]));
+                $data = str_replace(',', '.', $res_price[1][0]);
+                $data = str_replace(' ', '', $data);
+                return (float)trim($data);
+
             }
 /*
             preg_match_all('~<div class="product-params">(.+?)</div>~s', $data, $res_div);
