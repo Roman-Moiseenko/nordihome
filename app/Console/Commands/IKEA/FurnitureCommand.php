@@ -38,7 +38,7 @@ class FurnitureCommand extends Command
                 //Берем код до 1го пробела
                 $words = explode(' ', $code);
 
-                $this->info($words[0] . ' отправлен в очередь. Задержка - ' . $number * 2 . ' с');
+                $this->info($words[0] . ' отправлен в очередь. Задержка - ' . ($delta + $number * 2) . ' с');
                 FurnitureParser::dispatch($code, $number, self::GTV, 'G')->delay(now()->addSeconds($delta + $number * 2));
             }
         }
