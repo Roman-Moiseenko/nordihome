@@ -19,6 +19,7 @@ class VerifyCsrfToken extends Middleware
         '/admin/accounting/bank/upload',
         '/admin/product/upload',
         '/csrf-token',
+        '/product/search',
         /*'/catalog/search',
         '/cart_post/cart',
         '/cabinet/wish/get'*/
