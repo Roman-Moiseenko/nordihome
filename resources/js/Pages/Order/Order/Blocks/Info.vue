@@ -31,7 +31,7 @@
                     </el-descriptions-item>
 
                 </el-descriptions>
-                <Link type="warning" :href="route('admin.user.show', {user: order.user.id})">Карточка клиента</Link>
+                <Link type="warning" :href="route('admin.user.show', {user: order.user.id})">Перейти в Карточку клиента</Link>
             </div>
             <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})"/>
         </el-col>

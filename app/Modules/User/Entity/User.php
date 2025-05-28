@@ -217,7 +217,7 @@ class User extends Authenticatable
     public function setEmail(string $email): void
     {
         $count = User::where('id', '<>', $this->id)->where('email', $email)->count();
-        if ($count > 0) throw new \DomainException('Дублирование почты');
+        if ($count > 0 && !empty($email)) throw new \DomainException('Дублирование почты');
         $this->email = $email;
         $this->save();
     }
