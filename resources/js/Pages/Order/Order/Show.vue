@@ -1,10 +1,16 @@
 <template>
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
-        <h1 class="font-medium text-xl">
-            Заказ <span v-if="order.number">№ {{ order.number }}</span> покупателя [{{ order.status_text }}]
+        <h1 class="font-medium text-xl flex">
+            Заказ <span v-if="order.number" class="ml-1 mr-1"> № {{ order.number }}</span> покупателя [{{ order.status_text }}]
+
+            <span class="ml-2 mr-2">от</span>
+            <EditField v-if="is_new || is_awaiting" :field="order.created_at" @update:field="setCreated" :isdate="true" />
+            <span v-else>
+                {{ func.date(order.created_at)}}
+            </span>
             <el-tooltip content="История заказа" placement="right-start" effect="dark">
-                <el-button size="small" type="primary" plain @click="handleLogOrder">
+                <el-button size="small" type="primary" class="ml-2" plain @click="handleLogOrder">
                     <i class="fa-light fa-rectangle-history"></i>
                 </el-button>
             </el-tooltip>
@@ -64,6 +70,9 @@ import OrderItemsView from "./Blocks/ItemsView.vue"
 import OrderAdditions from  "./Blocks/Additions.vue"
 import OrderAdditionsIssued from  "./Blocks/AdditionsIssued.vue"
 import OrderAdditionsView from  "./Blocks/AdditionsView.vue"
+import EditField from "@Comp/Elements/EditField.vue";
+import {func} from '@Res/func.js'
+import axios from "axios";
 
 
 const props = defineProps({
@@ -87,11 +96,9 @@ const is_new = computed(() => {
 const is_awaiting = computed(() => {
     return props.order.status.is_awaiting
 })
-
 const is_issued = computed(() => {
     return props.order.status.is_prepaid || props.order.status.is_paid
 })
-
 const is_view = computed(() => {
     return !is_new.value && !is_issued.value && !is_awaiting.value
 })
@@ -104,6 +111,11 @@ provide("$status", {
 
 function handleLogOrder() {
     router.get(route('admin.order.log', {order: props.order.id}))
+}
+function setCreated(val) {
+    axios.post(route('admin.order.set-created', {order: props.order.id}), {created_at: func.datetime(val),}).then(result => {
+        props.order.created_at = result.data;
+    })
 }
 </script>
 <style scoped>

@@ -14,76 +14,7 @@
                     </el-descriptions-item>
                 </el-descriptions>
                 <EditUser :user="order.user" />
-                    <!--el-descriptions-item>
-                        <template #label>
-                            <div class="flex">
-                                <div>ФИО</div>
-                                <div class="ml-auto">
-                                    <span v-show="!showEdit">
-                                        <el-button type="warning" size="small" @click="showEdit = true"><i
-                                            class="fa-light fa-pen-to-square"></i></el-button>
-                                    </span>
-                                    <span v-show="showEdit">
-                                        <el-button type="success" size="small" @click="saveAddress">
-                                            <i class="fa-light fa-floppy-disk"></i>
-                                        </el-button>
-                                        <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
-                                            <i class="fa-light fa-xmark"></i>
-                                        </el-button>
-                                    </span>
-                                </div>
-                            </div>
-                        </template>
 
-                        <span v-show="!showEdit">
-                            {{ func.fullName(order.user.fullname) }}
-                        </span>
-                        <span v-show="showEdit">
-
-                        </span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Телефон">
-                        <span v-show="!showEdit">
-                        {{ func.phone(order.user.phone) }}
-                        </span>
-                        <span v-show="showEdit">
-
-                        </span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Email">
-                        <span v-show="!showEdit">
-                        {{ order.user.email }}
-                        </span>
-                        <span v-show="showEdit">
-
-                        </span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Доставка">
-                        <span v-show="!showEdit">
-                        {{ order.user.delivery_name }}
-                        </span>
-                        <span v-show="showEdit">
-
-                        </span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Адрес">
-                        <span v-show="!showEdit">
-                        {{ order.user.address.post }} {{ order.user.address.region }} {{ order.user.address.address }}
-                        </span>
-                        <span v-show="showEdit">
-
-                        </span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Цена">
-                        <span v-show="!showEdit">
-                        {{ order.user.pricing }}
-                        </span>
-                        <span v-show="showEdit">
-
-                        </span>
-                    </el-descriptions-item>
-
-                </el-descriptions-->
                 <el-button type="warning" plain @click="toUserInfo(order.user.id)">Перейти в Карточку</el-button>
             </div>
             <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})"/>
@@ -125,6 +56,18 @@
                                       label-class-name="bg-discount"
                                       class-name="bg-discount">
                     {{ func.price(order.amount.discount) }}
+                </el-descriptions-item>
+                <el-descriptions-item
+                    label="Итоговый вес"
+                    label-width="160"
+                    label-class-name="bg-sell"
+                    class-name="bg-sell"
+                >
+                    {{ order.weight }} кг
+                </el-descriptions-item>
+                <el-descriptions-item label="Итоговый объем" label-width="160"
+                                      label-class-name="bg-sell" class-name="bg-sell">
+                    {{ order.volume }} м3
                 </el-descriptions-item>
                 <el-descriptions-item label="Итого"
                                       label-class-name="bg-amount"
@@ -254,7 +197,6 @@ const props = defineProps({
     mainStorage: Object,
     traders: Array,
 })
-
 const iSavingInfo = ref(false)
 const info = reactive({
     trader_id: props.order.trader_id,

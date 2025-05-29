@@ -187,6 +187,8 @@ class OrderRepository
                 'is_canceled' => $expense->isCanceled(),
                 'is_completed' => $expense->isCompleted(),
             ]),
+            'weight' => $order->getWeight(),
+            'volume' => $order->getVolume(),
         ]);
     }
 

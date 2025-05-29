@@ -3,8 +3,11 @@
         <template v-if="isFIO">
             {{ func.fullName(field) }}
         </template>
-        <template v-else>
+        <template v-else-if="!isdate">
             {{ field }}
+        </template>
+        <template v-else>
+            {{ func.date(field)}}
         </template>
 
         <el-button class="ml-auto" type="warning" plain size="small" @click.stop="showEdit = true">
@@ -12,11 +15,13 @@
         </el-button>
     </div>
     <div v-show="showEdit" class="flex">
-            <el-input v-if="isFIO" v-model="field_fio.surname"  @click.stop=""/>
-            <el-input v-if="isFIO" v-model="field_fio.firstname"  @click.stop=""/>
-            <el-input v-if="isFIO" v-model="field_fio.secondname"  class="mr-2" @click.stop=""/>
+            <el-input v-if="isFIO && !isdate" v-model="field_fio.surname"  @click.stop=""/>
+            <el-input v-if="isFIO && !isdate" v-model="field_fio.firstname"  @click.stop=""/>
+            <el-input v-if="isFIO && !isdate" v-model="field_fio.secondname"  class="mr-2" @click.stop=""/>
 
-            <el-input v-if="!isFIO" v-model="field_new" class="mr-2" :formatter="formatter" @click.stop=""/>   <!--  style="width: 220px;"-->
+            <el-input v-if="!isFIO && !isdate" v-model="field_new" class="mr-2" :formatter="formatter" @click.stop=""/>   <!--  style="width: 220px;"-->
+
+        <el-date-picker v-if="isdate" v-model="field_new" type="date" />
 
         <el-button type="success" size="small" @click.stop="saveField" class="my-auto">
             <i class="fa-light fa-floppy-disk"></i>
@@ -33,6 +38,10 @@ import {func} from '@Res/func.js'
 const props = defineProps({
     field: Object,
     formatter: Function,
+    isdate: {
+        default: false,
+        type: Boolean,
+    },
     isFIO: {
         default: false,
         type: Boolean,
@@ -41,6 +50,7 @@ const props = defineProps({
 
 const showEdit = ref(false)
 const field_new = ref(props.field)
+console.log(field_new.value)
 const field_fio = reactive({
     surname: null,
     firstname: null,

@@ -30,7 +30,7 @@
         </el-select>
         <el-input-number id="quantity" v-if="props.quantity" v-model="form.quantity" @keyup.enter="onQuantity" class="ml-1" min="1" style="width: 120px;"/>
         <el-checkbox id="preorder" v-if="props.preorder" v-model="form.preorder" label="Под заказ" @change="onPreorder" class="ml-1"/>
-        <el-button id="button" type="primary" @click="onAdd" class="ml-1">
+        <el-button id="button-search-product" type="primary" @click="onAdd" class="ml-1">
             <i class="fa-light fa-box mr-2"></i>
             {{ props.caption }}
         </el-button>
@@ -165,11 +165,11 @@ function onSelect() {
         document.getElementById('quantity').focus()
         document.getElementById('quantity').select()
     } else {
-        document.getElementById('button').focus()
+        document.getElementById('button-search-product').focus()
     }
 }
 function onQuantity() {
-    document.getElementById('button').focus()
+    document.getElementById('button-search-product').focus()
 }
 function onAdd() {
     if (form.product_id === null) return;

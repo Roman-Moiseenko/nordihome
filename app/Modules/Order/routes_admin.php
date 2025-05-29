@@ -11,6 +11,7 @@ Route::group(
         //'namespace' => '',
     ],
     function () {
+        Route::post('/set-created/{order}', 'OrderController@set_created')->name('set-created');
         Route::post('/copy/{order}', 'OrderController@copy')->name('copy');
         //Route::delete('/destroy/{order}', 'OrderController@destroy')->name('destroy');
         Route::post('/movement/{order}', 'OrderController@movement')->name('movement');

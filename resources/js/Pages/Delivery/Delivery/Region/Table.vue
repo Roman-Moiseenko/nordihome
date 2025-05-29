@@ -90,6 +90,9 @@
         </el-table-column>
         <el-table-column label="Действия" align="right">
             <template #default="scope">
+                <el-button v-if="!scope.row.completed" @click.stop="SetComplete(scope.row)" type="success">
+                    Выдано
+                </el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -127,6 +130,16 @@ function setDriver(row) {
     router.visit(route('admin.delivery.set-driver', {expense: row.id}), {
         method: "post",
         data: {worker_id: worker_id.value},
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+            tableRegion.value = [...page.props.region]
+        }
+    })
+}
+function SetComplete(row) {
+    router.visit(route('admin.delivery.set-complete', {expense: row.id}), {
+        method: "post",
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {

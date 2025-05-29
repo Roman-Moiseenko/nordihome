@@ -5,6 +5,7 @@ namespace App\Modules\Delivery\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Worker;
+use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Delivery\Repository\DeliveryRepository;
 use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Delivery\Service\DeliveryService;
@@ -173,6 +174,12 @@ class DeliveryController extends Controller
     {
         $this->service->create($expense, $request);
         return redirect()->back()->with('success', 'Трек номер и ТК установлены');
+    }
+
+    public function set_complete(OrderExpense $expense): RedirectResponse
+    {
+        $this->service->setStatus($expense, DeliveryCargo::STATUS_ISSUED);
+        return redirect()->back()->with('success', 'Посылка выдана');
     }
 
     //TODO Заменить для доставки ТК на setTrackNumber

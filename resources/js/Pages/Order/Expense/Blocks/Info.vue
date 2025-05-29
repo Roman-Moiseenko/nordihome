@@ -111,7 +111,9 @@ if (props.expense.calendar) {
 }
 
 const disabledDate = (time: Date) => {
-    return time.getTime() <= Date.now()
+    const _date = new Date();
+    //console.log(time.getDate(), _date.getUTCDate());
+    return (time.getTime() <= Date.now()) && (time.getDate() != _date.getUTCDate())
 }
 
 function findPeriod() {

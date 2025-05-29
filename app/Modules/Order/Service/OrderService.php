@@ -1012,5 +1012,12 @@ class OrderService
         }
     }
 
+    public function setCreated(Order $order, $created): \Illuminate\Support\Carbon|Carbon
+    {
+        $order->created_at = $created ?? now();
+        $order->save();
+        return $order->created_at;
+    }
+
 
 }

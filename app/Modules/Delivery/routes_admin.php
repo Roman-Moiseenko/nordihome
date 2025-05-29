@@ -44,6 +44,7 @@ Route::group(
 
 
         //Отправить, сменить состояние
+        Route::post('/set-complete/{expense}', 'DeliveryController@set_complete')->name('set-complete');
         //Route::get('/assembly', 'DeliveryController@assembly')->name('assembly'); //На сборку (to-loader)
 
         //Распоряжения

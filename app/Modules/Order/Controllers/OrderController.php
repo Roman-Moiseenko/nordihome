@@ -62,7 +62,6 @@ class OrderController extends Controller
 
     public function index(Request $request): Response
     {
-  //      dd(77);
         $orders = $this->repository->getIndex($request, $filters);
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
@@ -76,7 +75,6 @@ class OrderController extends Controller
 
     public function show(Request $request, Order $order): Response
     {
-        //dd(2);
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
         $storages = Storage::orderBy('name')->getModels();
         $mainStorage = Storage::where('default', true)->first();
@@ -261,6 +259,15 @@ class OrderController extends Controller
 
     /**  НОВЫЕ ACTIONS  **/
     //AJAX
+
+    /**
+     * Смена текущей даты
+     */
+    public function set_created(Request $request, Order $order)
+    {
+        $new_date = $this->service->setCreated($order, $request->input('created_at'));
+        return response()->json($new_date);
+    }
 
     public function expense_calculate(Request $request, Order $order)
     {
