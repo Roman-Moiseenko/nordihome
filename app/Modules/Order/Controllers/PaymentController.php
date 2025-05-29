@@ -39,7 +39,7 @@ class PaymentController extends Controller
         StorageRepository   $storages
     )
     {
-        $this->middleware(['auth:admin', 'can:payment']);
+        $this->middleware(['auth:admin', 'can:payment', 'can:order']);
         $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->repository = $repository;
