@@ -540,6 +540,7 @@ class ProductService
             $product->packages->clear();
             foreach ($request->input('packages') as $array) {
                 $product->packages->create(params: $array);
+                Log::info(json_encode($array));
             }
             $product->delivery = $request->boolean('delivery');
             $product->local = $request->boolean('local');

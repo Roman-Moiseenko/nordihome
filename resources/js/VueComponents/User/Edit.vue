@@ -57,19 +57,28 @@
 
 
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {func} from '@Res/func.js'
 import {router} from "@inertiajs/vue3";
+import axios from "axios";
 
 const props = defineProps({
     user: Object,
-    deliveries: Array,
-    type_pricing: Array,
     small: {
         type: Boolean,
         default: false,
     }
 })
+const deliveries = ref([])
+const type_pricing = ref([])
+onMounted(() => {
+    axios.post(route('admin.user.user-params')).then(result => {
+        deliveries.value = [...result.data.deliveries]
+        type_pricing.value = [...result.data.type_pricing]
+
+    })
+})
+
 const editUser = ref(false)
 const form = reactive({
     phone: props.user.phone,

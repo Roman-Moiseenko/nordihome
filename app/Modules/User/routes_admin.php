@@ -8,6 +8,7 @@ Route::group([
     'as' => 'user.',
 ], function(){
 
+    Route::post('/user-params', 'UserController@user_params')->name('user-params');
     Route::post('/attach/{user}', 'UserController@attach')->name('attach');
     Route::post('/detach/{user}', 'UserController@detach')->name('detach');
     Route::post('/default/{user}', 'UserController@default')->name('default');

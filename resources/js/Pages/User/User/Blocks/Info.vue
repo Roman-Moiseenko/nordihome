@@ -2,7 +2,8 @@
     <el-row :gutter="10">
         <el-col :span="8">
 
-            <el-descriptions v-if="!editUser" :column="1" border class="mb-5">
+            <EditUser :user="user" />
+            <!--el-descriptions v-if="!editUser" :column="1" border class="mb-5">
                 <el-descriptions-item label="ФИО">
                     {{ func.fullName(user.fullname) }}
                 </el-descriptions-item>
@@ -55,7 +56,7 @@
                 </el-form-item>
                 <el-button type="info" @click="editUser = false">Отмена</el-button>
                 <el-button type="success" @click="setInfo">Сохранить</el-button>
-            </el-form>
+            </el-form-->
 
             <div v-if="!user.active" class="mt-3">
                 <el-button type="primary" @click="onActive">Активировать</el-button>

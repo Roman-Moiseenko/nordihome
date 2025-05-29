@@ -96,10 +96,10 @@ class PricingService extends AccountingService
             $pricing->refresh();
             foreach ($pricing->pricingProducts as $i => $pricingProduct) {
                 if ($pricingProduct->price_cost == 0 ||
-                    $pricingProduct->price_retail == 0 ||
-                    $pricingProduct->price_bulk == 0 ||
-                    $pricingProduct->price_special == 0 //||
-                  //  $pricingProduct->price_min == 0 ||
+                    $pricingProduct->price_retail == 0 //||
+                //    $pricingProduct->price_bulk == 0 ||
+                //    $pricingProduct->price_special == 0 ||
+                //    $pricingProduct->price_min == 0 ||
                 //    $pricingProduct->price_pre == 0
                 ) throw new \DomainException('Не все цены заполнены ' . $pricingProduct->product->code . ' (позиция ' . ($i + 1) . ')');
 

@@ -229,8 +229,9 @@ class OrderExpense extends Model
 
     public function setNumber(): void
     {
-        $count = OrderExpense::where('number', '<>', null)->count();
-        $this->number = $count + 1;
+        $max = OrderExpense::where('number', '<>', null)->max();
+        if (!is_numeric($max)) $max = 0;
+        $this->number = $max + 1;
         $this->save();
     }
 

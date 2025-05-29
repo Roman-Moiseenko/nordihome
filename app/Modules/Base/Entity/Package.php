@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Base\Entity;
 
+use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\Pure;
 
 class Package
@@ -36,11 +37,13 @@ class Package
             $package->length = (float)$params['length'];
             $package->weight = (float)$params['weight'];
             $package->quantity = (int)$params['quantity'];
+
+
         } else {
             $package->width = $width;
             $package->height = $height;
             $package->length = $length;
-            $package->weight = $weight;
+            $package->weight = (float)$weight;
             $package->quantity = $quantity;
         }
         return $package;

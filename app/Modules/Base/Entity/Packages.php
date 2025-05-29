@@ -48,7 +48,7 @@ class Packages
             $height = (int)$params['height'];
             $width = (int)$params['width'];
             $length = (int)$params['length'];
-            $weight = (int)$params['weight'];
+            $weight = (float)$params['weight'];
             $quantity = (int)$params['quantity'];
         }
         $package = Package::create($height, $width, $length, $weight, $quantity);

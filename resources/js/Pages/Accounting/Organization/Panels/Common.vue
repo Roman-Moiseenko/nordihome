@@ -74,6 +74,7 @@
 
 <script setup>
 import {router} from "@inertiajs/vue3";
+import { ref } from "vue"
 import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({

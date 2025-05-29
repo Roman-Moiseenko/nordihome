@@ -3,6 +3,7 @@
         <!-- Данные клиента -->
         <el-col :span="8">
             <div v-if="order.user_id">
+
                 <el-descriptions :column="1" border class="mb-1" size="small">
                     <el-descriptions-item v-if="order.user.organization" label="Юридическое лицо">
                         <el-select v-model="info.shopper_id" @change="setInfo" :disabled="iSavingInfo || !is_new"
@@ -11,27 +12,79 @@
                                        :label="item.short_name + ' (' + item.inn +')'"/>
                         </el-select>
                     </el-descriptions-item>
-                    <el-descriptions-item label="ФИО">
-                        {{ func.fullName(order.user.fullname) }}
+                </el-descriptions>
+                <EditUser :user="order.user" />
+                    <!--el-descriptions-item>
+                        <template #label>
+                            <div class="flex">
+                                <div>ФИО</div>
+                                <div class="ml-auto">
+                                    <span v-show="!showEdit">
+                                        <el-button type="warning" size="small" @click="showEdit = true"><i
+                                            class="fa-light fa-pen-to-square"></i></el-button>
+                                    </span>
+                                    <span v-show="showEdit">
+                                        <el-button type="success" size="small" @click="saveAddress">
+                                            <i class="fa-light fa-floppy-disk"></i>
+                                        </el-button>
+                                        <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
+                                            <i class="fa-light fa-xmark"></i>
+                                        </el-button>
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+
+                        <span v-show="!showEdit">
+                            {{ func.fullName(order.user.fullname) }}
+                        </span>
+                        <span v-show="showEdit">
+
+                        </span>
                     </el-descriptions-item>
                     <el-descriptions-item label="Телефон">
+                        <span v-show="!showEdit">
                         {{ func.phone(order.user.phone) }}
+                        </span>
+                        <span v-show="showEdit">
+
+                        </span>
                     </el-descriptions-item>
                     <el-descriptions-item label="Email">
+                        <span v-show="!showEdit">
                         {{ order.user.email }}
+                        </span>
+                        <span v-show="showEdit">
+
+                        </span>
                     </el-descriptions-item>
                     <el-descriptions-item label="Доставка">
+                        <span v-show="!showEdit">
                         {{ order.user.delivery_name }}
+                        </span>
+                        <span v-show="showEdit">
+
+                        </span>
                     </el-descriptions-item>
                     <el-descriptions-item label="Адрес">
+                        <span v-show="!showEdit">
                         {{ order.user.address.post }} {{ order.user.address.region }} {{ order.user.address.address }}
+                        </span>
+                        <span v-show="showEdit">
+
+                        </span>
                     </el-descriptions-item>
                     <el-descriptions-item label="Цена">
+                        <span v-show="!showEdit">
                         {{ order.user.pricing }}
+                        </span>
+                        <span v-show="showEdit">
+
+                        </span>
                     </el-descriptions-item>
 
-                </el-descriptions>
-                <Link type="warning" :href="route('admin.user.show', {user: order.user.id})">Перейти в Карточку клиента</Link>
+                </el-descriptions-->
+                <el-button type="warning" plain @click="toUserInfo(order.user.id)">Перейти в Карточку</el-button>
             </div>
             <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})"/>
         </el-col>
@@ -139,7 +192,6 @@
                 </el-form-item>
             </div>
         </el-col>
-
     </el-row>
 
     <el-dialog v-model="dialogAwaiting" title="Отправить заказ на оплату?" width="360">
@@ -194,6 +246,7 @@ import SearchEditUser from "@Comp/User/SearchEdit.vue"
 import SearchUser from "@Comp/User/Search.vue";
 import {ElLoading} from "element-plus";
 import axios from "axios";
+import EditUser from "@Comp/User/Edit.vue";
 
 const props = defineProps({
     order: Object,
@@ -213,6 +266,12 @@ const reserve = ref(props.order.reserve)
 const dialogCancel = ref(false)
 const cancel_comment = ref(null)
 const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
+
+const showEdit = ref(false)
+
+function toUserInfo(userId) {
+    router.get(route('admin.user.show', {user: userId}))
+}
 
 function setInfo() {
     iSavingInfo.value = true

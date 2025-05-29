@@ -140,4 +140,14 @@ class UserController extends Controller
             ];*/
         return \response()->json($this->repository->UserWithToArray($user, $request));
     }
+
+    public function user_params()
+    {
+        return \response()->json(
+            [
+                'deliveries' => array_select(OrderExpense::DELIVERIES),
+                'type_pricing' => array_select(User::TYPE_PRICING),
+            ]
+        );
+    }
 }
