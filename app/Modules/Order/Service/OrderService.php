@@ -456,7 +456,7 @@ class OrderService
 
         //    dd($request->all());
             if ($request->boolean('payment.account') || $request->boolean('payment.qr')) {
-                $invoice = $request->boolean('payment.account') ? $this->invoiceReport->xlsx($order) : null;
+                $invoice = $request->boolean('payment.account') ? $this->invoiceReport->pdf($order) : null;
                 //Создаем ссылку на оплату
                 $link_payment = $request->boolean('payment.qr') ? $this->bankService->createPaymentLink($order) : null;
                 SendSystemMail::dispatch(
