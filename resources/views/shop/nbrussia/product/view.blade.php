@@ -109,7 +109,7 @@
 
                 <div class="d-flex mt-3">
                     @if($product['is_sale'])
-                        <button id="to-cart" class="to-cart btn-nb" data-product="{{ $product['id'] }}"
+                        <button id="to-cart" class="to-cart btn-nb" data-product="{{ $product['id'] }}" disabled
                                 style="width: 100%;">В Корзину
                         </button>
                     @else

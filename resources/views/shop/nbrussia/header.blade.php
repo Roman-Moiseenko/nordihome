@@ -23,7 +23,6 @@
                     @endforeach
                 </div>
                 <div style="margin: auto 0;">
-                    <a href="tel:89812009869" style="color: #000;">8 (981) 200-98-69</a>
                 </div>
                 <div class="d-flex ms-2">
                     @foreach(\App\Modules\NBRussia\Helper\MenuHelper::getMenuContacts() as $item)

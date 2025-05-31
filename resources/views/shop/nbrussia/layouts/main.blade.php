@@ -72,7 +72,7 @@
 <!--FOOTER-->
 
 @include('shop.nbrussia.footer')
-@include('shop.nbrussia.widgets.contacts')
+<!-- @include('shop.nbrussia.widgets.contacts') -->
 <button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>
 @stack('scripts')
 
