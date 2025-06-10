@@ -74,11 +74,21 @@ class ProductService
 
     public function createByParser(int $brand_id, string $code, int $category_id = null): ?Product
     {
+
         $brand = Brand::find($brand_id);
         $parser_class = $brand->parser_class;
+
+        Log::info("Parser Class " . $parser_class);
+        try {
+            $parser = app()->make($parser_class);
+
+            $product = $parser->findProduct($code);
+        } catch (\Throwable $e) {
+            Log::info("ERROR " . $e->getMessage() . " / " . $e->getFile() . " / " . $e->getLine());
+        }
         /** @var ParserAbstract $parser */
-        $parser = app()->make($parser_class);
-        $product = $parser->findProduct($code);
+
+
         if (!is_null($category_id)) {
             $product->main_category_id = $category_id;
             $product->save();
