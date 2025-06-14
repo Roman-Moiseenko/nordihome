@@ -15,8 +15,8 @@ class FurnitureCommand extends Command
     protected $signature = 'furniture';
     protected $description = 'Парсить цены фурнитуры';
 
-    const string BLUM = 'BLUM';
-    const string GTV = 'GTV';
+    const string BLUM = 'BLUM НГЦ';
+    const string GTV = 'GTV НГЦ';
 
     public function handle(GoogleSheetService $googleSheet): void
     {
@@ -39,7 +39,7 @@ class FurnitureCommand extends Command
                 $words = explode(' ', $code);
 
                 $this->info($words[0] . ' отправлен в очередь. Задержка - ' . ($delta + $number * 2) . ' с');
-                FurnitureParser::dispatch($code, $number, self::GTV, 'G')->delay(now()->addSeconds($delta + $number * 2));
+                FurnitureParser::dispatch($code, $number, self::GTV, 'E')->delay(now()->addSeconds($delta + $number * 2));
             }
         }
 
