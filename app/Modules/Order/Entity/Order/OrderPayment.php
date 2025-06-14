@@ -206,5 +206,10 @@ class OrderPayment extends Model
         return $query->where('completed', false);
     }
 
+    public function getNumber(): int
+    {
+        return $this->id;
+    }
+
 
 }

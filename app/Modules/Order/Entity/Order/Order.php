@@ -732,7 +732,7 @@ class Order extends Model
         foreach ($this->payments as $payment) {
             if (!$payment->isRefund()) {
                 $documents[] = [
-                    'name' => 'Платеж от ' . $payment->created_at->format('d-m-y'),
+                    'name' => 'Платеж № ' . $payment->getNumber() . ' от ' . $payment->created_at->format('d-m-y'),
                     'link' => route('admin.order.payment.show', $payment, false),
                     'type' => 'primary',
                     'completed' => $payment->isCompleted(),

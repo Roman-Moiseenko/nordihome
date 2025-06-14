@@ -161,7 +161,9 @@ class OrderPaymentService
 
     public function destroy(OrderPayment $payment)
     {
-
+        if (!$payment->manual) throw new \DomainException('Нельзя удалить загруженный платеж');
+        if ($payment->isCompleted()) throw new \DomainException('Нельзя удалить проведенный документ');
+        $payment->delete();
     }
 
     public function completed(OrderPayment $payment): void

@@ -87,7 +87,7 @@ class PaymentController extends Controller
     public function destroy(OrderPayment $payment)
     {
         $this->service->destroy($payment);
-        return redirect()->route('admin.order.payment.index');
+        return redirect()->back()->with('success', 'Документ удален'); //->route('admin.order.payment.index');
     }
 
     public function completed(OrderPayment $payment): RedirectResponse

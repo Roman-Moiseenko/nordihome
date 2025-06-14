@@ -101,7 +101,7 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Заказ поставщику"/>
+    <DeleteEntityModal name_entity="Платеж по заказу"/>
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps} from "vue";

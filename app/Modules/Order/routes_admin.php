@@ -121,7 +121,7 @@ Route::group(
                 Route::post('/completed/{payment}', 'PaymentController@completed')->name('completed');
                 Route::post('/work/{payment}', 'PaymentController@work')->name('work');
                 Route::post('/create-refund/{refund}', 'PaymentController@create_refund')->name('create-refund');
-
+                Route::delete('/', 'PaymentController@destroy')->name('destroy');
                 Route::get('/', 'PaymentController@index')->name('index');
             }
         );
