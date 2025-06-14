@@ -75,6 +75,7 @@ class OrderRepository
         }
 
         if (count($filters) > 0) $filters['count'] = count($filters);
+        /*
         if (!$request->boolean('canceled')) {
             $filters['canceled'] = false;
             $query->whereHas('status', function ($query) {
@@ -91,6 +92,7 @@ class OrderRepository
         } else {
             $filters['completed'] = true;
         }
+        */
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()

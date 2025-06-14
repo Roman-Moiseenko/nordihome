@@ -4,11 +4,11 @@
         <h1 class="font-medium text-xl">Заказы</h1>
         <div class="flex">
             <el-button type="primary" class="p-4 my-3" @click="handleCreate">Новый заказ</el-button>
-            <div class="my-auto ml-5">
+            <!--div class="my-auto ml-5">
                 <el-tag type="primary" size="large" effect="plain" class="mr-2">Показать: </el-tag>
                 <el-checkbox v-model="filter.canceled" @click="onFilter('canceled')" :checked="filters.canceled">Отмененные</el-checkbox>
                 <el-checkbox v-model="filter.completed" @click="onFilter('completed')" :checked="filters.completed">Исполненные</el-checkbox>
-            </div>
+            </div-->
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-date-picker
                     v-model="filter.date_from"
