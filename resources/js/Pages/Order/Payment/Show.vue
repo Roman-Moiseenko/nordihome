@@ -3,10 +3,10 @@
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
             <span v-if="payment.is_refund">
-                Платеж за возврат № {{ payment.refund.number }} от {{ func.date(payment.refund.created_at) }}
+                Платеж {{ payment.id }} за возврат № {{ payment.refund.number }} от {{ func.date(payment.refund.created_at) }}
             </span>
             <span v-else>
-                Платеж за заказ {{ payment.order_id ? '№ ' + payment.order.number + ' от ' + func.date(payment.order.created_at) : '[Неопределен]' }}
+                Платеж {{ payment.id }} за заказ {{ payment.order_id ? '№ ' + payment.order.number + ' от ' + func.date(payment.order.created_at) : '[Неопределен]' }}
             </span>
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">

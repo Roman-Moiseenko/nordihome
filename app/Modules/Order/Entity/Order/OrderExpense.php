@@ -265,7 +265,8 @@ class OrderExpense extends Model
         foreach ($this->items as $item) {
             $result += $item->orderItem->product->weight() * $item->quantity;
         }
-        return $result;
+
+        return (ceil($result * 10000)) / 10000;
     }
 
     public function getVolume(): float
@@ -274,7 +275,8 @@ class OrderExpense extends Model
         foreach ($this->items as $item) {
             $result += $item->orderItem->product->packages->volume() * $item->quantity;
         }
-        return $result;
+
+        return (ceil($result * 10000)) / 10000;
     }
 
     public function getWorker( #[ExpectedValues(valuesFromClass: Worker::class)]int $work):? Worker

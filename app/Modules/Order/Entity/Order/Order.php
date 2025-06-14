@@ -540,9 +540,9 @@ class Order extends Model
     {
         $volume = 0;
         foreach ($this->items as $item) {
-            $volume += $item->quantity * $item->product->dimensions->volume();
+            $volume += $item->quantity * $item->product->packages->volume();
         }
-        return $volume;
+        return (ceil($volume * 1000)) / 1000;
     }
 
     /**

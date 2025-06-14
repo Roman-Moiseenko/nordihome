@@ -21,7 +21,8 @@
             <el-form label-width="auto">
             <h2 class="ml-2">Контакты</h2>
             <el-form-item label="Телефон">
-                <el-input v-model="info.phone" @change="setInfo" :disabled="disabled" :formatter="val => func.phone(val)" style="max-width: 250px;"/>
+                <el-input v-model="info.phone" @change="setInfo" :disabled="disabled"
+                          placeholder="8 (000)-000-00-00" :formatter="val => func.MaskPhone(val)" style="max-width: 250px;"/>
             </el-form-item>
             <el-form-item label="Адрес">
                 <el-input v-model="info.address" @change="setInfo" :disabled="disabled" />
