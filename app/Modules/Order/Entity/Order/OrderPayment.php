@@ -130,6 +130,11 @@ class OrderPayment extends Model
         return $this->completed == true;
     }
 
+    public function isManual(): bool
+    {
+        return $this->manual == true;
+    }
+
     /**
      * Провести документ
      */

@@ -52,7 +52,7 @@
                         {{ func.date(scope.row.created_at) }}
                     </template>
                 </el-table-column>
-                <el-table-column label="Номер" prop="id" width="40" />
+                <el-table-column label="№" prop="id" width="40" />
                 <el-table-column prop="user_name" label="Клиент" width="260" show-overflow-tooltip>
                     <template #default="scope">
                         <div class="font-medium text-sm">{{ scope.row.user_name }}</div>
