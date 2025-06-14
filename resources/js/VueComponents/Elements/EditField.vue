@@ -19,7 +19,9 @@
             <el-input v-if="isFIO && !isdate" v-model="field_fio.firstname"  @click.stop=""/>
             <el-input v-if="isFIO && !isdate" v-model="field_fio.secondname"  class="mr-2" @click.stop=""/>
 
-            <el-input v-if="!isFIO && !isdate" v-model="field_new" class="mr-2" :formatter="formatter" @click.stop=""/>   <!--  style="width: 220px;"-->
+            <el-input v-if="!isFIO && !isdate" v-model="field_new"
+                      class="mr-2" :formatter="formatter" @click.stop="" :type="isTextArea ? 'textarea' : 'text'"
+                      :rows="rows" />   <!--  style="width: 220px;"-->
 
         <el-date-picker v-if="isdate" v-model="field_new" type="date" />
 
@@ -45,6 +47,14 @@ const props = defineProps({
     isFIO: {
         default: false,
         type: Boolean,
+    },
+    isTextArea: {
+        default: false,
+        type: Boolean,
+    },
+    rows: {
+      default: 1,
+      type: Number
     },
 })
 

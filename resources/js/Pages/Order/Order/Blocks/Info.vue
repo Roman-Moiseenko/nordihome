@@ -131,6 +131,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Комментарий" size="small">
+                    <EditField :field="info.comment" :isTextArea="true" :rows="4" @update:field="val => SaveComment(val)" />
                     <el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo || !is_new"/>
                 </el-form-item>
             </div>
@@ -190,6 +191,7 @@ import SearchUser from "@Comp/User/Search.vue";
 import {ElLoading} from "element-plus";
 import axios from "axios";
 import EditUser from "@Comp/User/Edit.vue";
+import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
     order: Object,
@@ -214,7 +216,11 @@ const showEdit = ref(false)
 function toUserInfo(userId) {
     router.get(route('admin.user.show', {user: userId}))
 }
+function SaveComment(val) {
+    //Сохраняем комментарий
+    router.post(route('admin.order.set-comment', {order: props.order.id}), {comment: info.comment})
 
+}
 function setInfo() {
     iSavingInfo.value = true
     router.visit(route('admin.order.set-info', {order: props.order.id}), {

@@ -1019,5 +1019,13 @@ class OrderService
         return $order->created_at;
     }
 
+    public function setComment(Order $order, Request $request): void
+    {
+        $order->comment = $request->string('comment')->trim()->value();
+        $this->logger->logOrder($order, 'Изменен комментарий',
+            '', $order->comment, null);
+        $order->save();
+    }
+
 
 }

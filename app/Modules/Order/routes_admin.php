@@ -39,6 +39,7 @@ Route::group(
 
         Route::post('/set-manager/{order}', 'OrderController@set_manager')->name('set-manager');
         Route::post('/set-reserve/{order}', 'OrderController@set_reserve')->name('set-reserve');
+        Route::post('/set-comment/{order}', 'OrderController@set_comment')->name('set-comment');
 
         Route::post('/cancel/{order}', 'OrderController@cancel')->name('cancel');
         Route::post('/awaiting/{order}', 'OrderController@awaiting')->name('awaiting');

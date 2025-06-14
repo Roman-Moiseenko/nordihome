@@ -197,6 +197,12 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
+    public function set_comment(Request $request, Order $order): RedirectResponse
+    {
+        $this->service->setComment($order, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
     /** РАБОТА С ТОВАРОМ В ЗАКАЗЕ */
     public function add_product(Request $request, Order $order): RedirectResponse
     {
