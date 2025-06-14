@@ -43,6 +43,7 @@ abstract class AccountingReport
     /** Отчет в Excel */
     final public function reportXLSX(int $document_id): string
     {
+        set_time_limit(9000);
         $spreadsheet = $this->createSpreadSheet($document_id);
         $file = $this->generatePath($document_id, 'xlsx');
 
@@ -51,6 +52,7 @@ abstract class AccountingReport
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save($file);
+        set_time_limit(30);
         return $file;
     }
 
