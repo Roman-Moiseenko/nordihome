@@ -1,5 +1,5 @@
 <template>
-    <div v-show="!showEdit" class="flex">
+    <div v-show="!showEdit" class="flex" style="width: 100%">
         <template v-if="isFIO">
             {{ func.fullName(field) }}
         </template>
@@ -14,7 +14,7 @@
             <i class="fa-light fa-pen-to-square"></i>
         </el-button>
     </div>
-    <div v-show="showEdit" class="flex">
+    <div v-show="showEdit" class="flex" style="width: 100%">
             <el-input v-if="isFIO && !isdate" v-model="field_fio.surname"  @click.stop=""/>
             <el-input v-if="isFIO && !isdate" v-model="field_fio.firstname"  @click.stop=""/>
             <el-input v-if="isFIO && !isdate" v-model="field_fio.secondname"  class="mr-2" @click.stop=""/>

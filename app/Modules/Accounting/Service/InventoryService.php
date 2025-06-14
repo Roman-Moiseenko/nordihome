@@ -32,7 +32,7 @@ class InventoryService extends AccountingService
         $staff = Auth::guard('admin')->user();
         $storage = Storage::find($storage_id);
         $inventory = InventoryDocument::register($storage_id, $staff->id);
-
+/*
         foreach ($storage->items as $item) {
             $inventory_product = InventoryProduct::new(
                 $item->product->id,
@@ -42,6 +42,7 @@ class InventoryService extends AccountingService
             );
             $inventory->products()->save($inventory_product);
         }
+        */
         $trader = Trader::default();
         $inventory->customer_id = $trader->organization->id;
         $inventory->save();
@@ -109,7 +110,6 @@ class InventoryService extends AccountingService
         });
     }
 
-    #[Deprecated]
     public function addProduct(InventoryDocument $inventory, int $product_id, float $quantity): void
     {
         $formal = $inventory->storage->getQuantity($product_id);
@@ -118,7 +118,6 @@ class InventoryService extends AccountingService
         $inventory->products()->save($inventory_product);
     }
 
-    #[Deprecated]
     public function addProducts(InventoryDocument $inventory, array $products): void
     {
         foreach ($products as $product) {

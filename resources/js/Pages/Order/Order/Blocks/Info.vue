@@ -131,8 +131,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Комментарий" size="small">
-                    <EditField :field="info.comment" :isTextArea="true" :rows="4" @update:field="val => SaveComment(val)" />
-                    <el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo || !is_new"/>
+                    <EditField :field="order.comment" :isTextArea="true" :rows="4" @update:field="val => SaveComment(val)" />
+                    <!--el-input v-model="info.comment" @change="setInfo" :disabled="iSavingInfo || !is_new"/-->
                 </el-form-item>
             </div>
         </el-col>
@@ -218,7 +218,7 @@ function toUserInfo(userId) {
 }
 function SaveComment(val) {
     //Сохраняем комментарий
-    router.post(route('admin.order.set-comment', {order: props.order.id}), {comment: info.comment})
+    router.post(route('admin.order.set-comment', {order: props.order.id}), {comment: val})
 
 }
 function setInfo() {
