@@ -168,7 +168,7 @@ class ParserIkea extends ParserAbstract
         $data = $this->parsingDataByUrl($url);
         //Создаем товар
         if (is_null($product = Product::whereCode($code)->first())) {
-            Log::info('Создаем товар');
+          //  Log::info('Создаем товар');
             $product = Product::register($name, $this->toCode($code), $main_category_id);
             $product->barcode = '';
             $product->name_print = $product->name;
@@ -183,7 +183,7 @@ class ParserIkea extends ParserAbstract
                 $product->packages->add($item);
             }
             $product->save();
-            Log::info('Сохраняем товар');
+           // Log::info('Сохраняем товар');
             //Проверяем есть ли товары в составе
             foreach ($data['composite'] as $composite) {
                 $_prod = $this->findProduct($composite['code']);
@@ -302,6 +302,7 @@ class ParserIkea extends ParserAbstract
             return null;
         }
         $_array = json_decode($json_product, true);
+      //  Log::info($json_product);
         if ($_array == null) {
             Log::error('Икеа Парсинг ' . $search . ' null');
             return null;
@@ -323,6 +324,7 @@ class ParserIkea extends ParserAbstract
         $_res = $res[1][0];
         $_res = str_replace('&quot;', '"', $_res);
         $_data = json_decode($_res, true);
+       // Log::info($_res);
         ////Определяем есть ли составные артикулы
         $_sub = $_data['stockcheckSection']['subProducts']; //availabilityHeaderSection
 

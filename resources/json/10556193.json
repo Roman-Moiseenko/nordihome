@@ -1,0 +1,501 @@
+{
+    "buyModule": {
+        "productName": "GRÖNSPRÖT",
+        "productNumber": "10556193",
+        "productType": "ART",
+        "onlineSellable": true,
+        "isFood": false,
+        "noJavascriptLabel": "Musisz włączyć obsługę JavaScript aby robić zakupy na IKEA.com",
+        "currency": "PLN",
+        "priceExclTax": 40.64,
+        "productPrice": 49.99,
+        "ratings": 5,
+        "hydrate": true
+    },
+    "productSummary": {
+        "description": "Po włączeniu lampy dwie żarówki rzucają na ścianę ozdobne światło, dzięki czemu przed wejściem do domu lub w przestrzeni na zewnątrz jest przytulniej.",
+        "priceDisclaimersProps": null,
+        "visibleItemNo": "105.561.93",
+        "productName": "GRÖNSPRÖT",
+        "showAsNonSellableProduct": false,
+        "keyBenefitsSummaryProps": null,
+        "articleNumberLabel": "Numer artykułu",
+        "articleNumberFragmentUrl": null,
+        "hydrate": true,
+        "seriesLink": null
+    },
+    "productGallery": {
+        "productName": "GRÖNSPRÖT",
+        "mediaList": [
+            {
+                "type": "image",
+                "content": {
+                    "alt": "GRÖNSPRÖT Lampa ścienna podw, montaż stały, zewnętrzne czarny",
+                    "id": "1169408_PE892449",
+                    "imageFileName": "1169408_PE892449_S5.JPG",
+                    "url": "https://www.ikea.com/pl/pl/images/products/groensproet-lampa-scienna-podw-montaz-staly-zewnetrzne-czarny__1169408_pe892449_s5.jpg",
+                    "type": "MAIN_PRODUCT_IMAGE"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "alt": "GRÖNSPRÖT Lampa ścienna podw, montaż stały, zewnętrzne czarny",
+                    "id": "1169407_PE892434",
+                    "imageFileName": "1169407_PE892434_S5.JPG",
+                    "url": "https://www.ikea.com/pl/pl/images/products/groensproet-lampa-scienna-podw-montaz-staly-zewnetrzne-czarny__1169407_pe892434_s5.jpg",
+                    "type": "QUALITY_PRODUCT_IMAGE"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "alt": "GRÖNSPRÖT Lampa ścienna podw, montaż stały, zewnętrzne czarny",
+                    "id": "1182990_PE897383",
+                    "imageFileName": "1182990_PE897383_S5.JPG",
+                    "url": "https://www.ikea.com/pl/pl/images/products/groensproet-lampa-scienna-podw-montaz-staly-zewnetrzne-czarny__1182990_pe897383_s5.jpg",
+                    "type": "CONTEXT_PRODUCT_IMAGE"
+                }
+            }
+        ],
+        "showMediaInteractions": true,
+        "thumbnailsLimit": 6,
+        "showThumbnailsNavigation": {
+            "top": false,
+            "bottom": false
+        },
+        "badge": null,
+        "textDirection": "ltr",
+        "a11yProductGalleryImage": "Wybierz zdjęcie produktu",
+        "a11yProductGalleryImageCount": "Wybierz {thumbnailPosition} z {thumbnailCount} zdjęć produktu",
+        "a11yProductGalleryVideo": "Wybierz film o produkcie",
+        "a11yProductGalleryVideoCount": "Wybierz {thumbnailVideoPosition} z {thumbnailVideoCount} filmów o produkcie",
+        "a11yShowNextImageLabel": "Pokaż następne zdjęcie",
+        "a11yShowPreviousImageLabel": "Pokaż poprzednie zdjęcie",
+        "a11yShowAllMediaLabel": "Pokaż wszystkie zdjęcia, otwórz widok.",
+        "xrViewerOpenButtonLabel": "Zobacz w 3D",
+        "showAllMediaText": "Wszystkie media",
+        "productGalleryDescriptionText": "{counter} {productName} obrazy",
+        "skipGalleryText": "Pomiń zdjęcia",
+        "noImageText": "Wkrótce tu będzie zdjęcie",
+        "noImage": false,
+        "hydrate": true
+    },
+    "pipPricePackage": {
+        "productName": "GRÖNSPRÖT",
+        "productDescription": "Lampa ścienna podw, montaż stały, zewnętrzne czarny",
+        "siteFolder": "pl/pl",
+        "priceModuleProps": {
+            "priceOfferType": "family",
+            "currentPriceProps": {
+                "integerValue": "49",
+                "decimalValue": "99",
+                "decimalSign": ",",
+                "captionPrefix": "Cena"
+            },
+            "commercialMessage": "Oferta dla Klubowiczów IKEA Family i IKEA Business Network",
+            "comparisonPriceProps": {
+                "integerValue": "199",
+                "size": "small",
+                "decimalValue": "-",
+                "decimalSign": ",",
+                "decimalVerticalAlignment": "base"
+            },
+            "offerMessage": "Ostatnie sztuki",
+            "originalOfferMessage": "Ostatnie sztuki",
+            "omnibusDisclosureLabelProps": {
+                "message": "Najniższa cena z 30 dni przed obniżką",
+                "price": {
+                    "integerValue": "199",
+                    "size": "small",
+                    "decimalValue": "-",
+                    "decimalSign": ",",
+                    "decimalVerticalAlignment": "base",
+                    "regularFontWeight": true
+                }
+            },
+            "regularPriceLabelProps": {
+                "message": "Cena dla pozostałych klientów",
+                "price": {
+                    "integerValue": "199",
+                    "size": "small",
+                    "decimalValue": "-",
+                    "decimalSign": ",",
+                    "decimalVerticalAlignment": "base",
+                    "regularFontWeight": true
+                }
+            }
+        },
+        "dateRangeText": "Oferta obowiązuje od 02 cze, 2025 do 31 sie, 2025 lub do wyczerpania zapasów",
+        "experimentalDiscount": {
+            "amount": 149.01,
+            "percentage": 74
+        },
+        "ratingProps": {
+            "rating": 5,
+            "reviewCount": 1,
+            "reviews": true,
+            "reviewText": "(1)",
+            "ariaLabel": "Opinia: 5 na 5 gwiazdki. Recenzje ogółem: 1"
+        },
+        "commercialLabels": "family_price,last_chance",
+        "hydrate": true
+    },
+    "productInformationSection": {
+        "isClient": false,
+        "dimensionProps": {
+            "title": "Wymiary",
+            "chooseDifferentSizeLinkText": "Wybierz inny rozmiar",
+            "dimensions": [
+                {
+                    "type": "00044",
+                    "name": "Głębokość",
+                    "measure": "12.5 cm"
+                },
+                {
+                    "type": "00042",
+                    "name": "Średnica",
+                    "measure": "6 cm"
+                },
+                {
+                    "type": "00041",
+                    "name": "Wysokość",
+                    "measure": "13.5 cm"
+                }
+            ],
+            "images": [],
+            "fallbackImage": {
+                "alt": "GRÖNSPRÖT Lampa ścienna podw, montaż stały, zewnętrzne czarny",
+                "id": "1169408_PE892449",
+                "imageFileName": "1169408_PE892449_S5.JPG",
+                "url": "https://www.ikea.com/pl/pl/images/products/groensproet-lampa-scienna-podw-montaz-staly-zewnetrzne-czarny__1169408_pe892449_s5.jpg",
+                "type": "MAIN_PRODUCT_IMAGE"
+            },
+            "eventLabel": "pip_measurements",
+            "packaging": {
+                "id": "measurements-packaging",
+                "title": "Opakowanie",
+                "contentProps": {
+                    "packages": [
+                        {
+                            "name": "GRÖNSPRÖT",
+                            "typeName": "Lampa ścienna podw, montaż stały",
+                            "itemNo": "10556193",
+                            "articleNumber": {
+                                "label": "Numer artykułu",
+                                "value": "105.561.93"
+                            },
+                            "measurements": [
+                                [
+                                    {
+                                        "label": "Szerokość",
+                                        "type": "width",
+                                        "text": "14 cm",
+                                        "value": 14
+                                    },
+                                    {
+                                        "label": "Wysokość",
+                                        "type": "height",
+                                        "text": "14 cm",
+                                        "value": 14
+                                    },
+                                    {
+                                        "label": "Długość",
+                                        "type": "length",
+                                        "text": "14 cm",
+                                        "value": 14
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "0.63 kg",
+                                        "value": 0.63
+                                    }
+                                ]
+                            ],
+                            "quantity": {
+                                "label": "Paczka(i)",
+                                "value": 1
+                            },
+                            "multiPackDisclaimerText": false
+                        }
+                    ],
+                    "maxMeasurments": {
+                        "weightText": "0.63 kg",
+                        "widthText": "14 cm",
+                        "lengthText": "14 cm",
+                        "heightText": "14 cm",
+                        "diameterText": ""
+                    }
+                }
+            }
+        },
+        "includedProductsProps": null,
+        "productDetailsProps": {
+            "title": "Informacje o produkcie",
+            "eventLabel": "pip_details",
+            "section": "details",
+            "productDescriptionProps": {
+                "paragraphs": [
+                    "Lampa jest zabezpieczona przed wilgocią i wodą, więc może być używana na zewnątrz.",
+                    "Rozświetl wejście do domu - stworzy to miłą, ciepłą atmosferę zapraszającą do środka."
+                ],
+                "designerLabel": "Projektant",
+                "designerName": ""
+            },
+            "accordionObject": {
+                "certifications": null,
+                "keyBenefits": null,
+                "goodToKnow": {
+                    "id": "product-details-good-to-know",
+                    "title": "Dobrze wiedzieć",
+                    "contentProps": {
+                        "goodToKnow": [
+                            {
+                                "name": "Sold separately",
+                                "text": "Żarówki sprzedawane oddzielnie, IKEA rekomenduje żarówkę LED GU10 (2 szt.)"
+                            },
+                            {
+                                "name": "Compl. assembly information",
+                                "text": "Instalacja powinna być wykonana przez wykwalifikowanego elektryka."
+                            },
+                            {
+                                "name": "Other information",
+                                "text": "IKEA of Sweden AB SE-343 81 Älmhult, IKEA.com"
+                            }
+                        ]
+                    }
+                },
+                "materialsAndCare": {
+                    "id": "product-details-material-and-care",
+                    "title": "Materiały i pielęgnacja",
+                    "contentProps": {
+                        "materials": [
+                            {
+                                "materials": [
+                                    {
+                                        "part": "Podstawa:",
+                                        "material": "aluminium, Powłoka proszkowa"
+                                    },
+                                    {
+                                        "part": "Górna część korpusu/ Dolna część korpusu:",
+                                        "material": "stal nierdzewna, Powłoka proszkowa"
+                                    },
+                                    {
+                                        "part": "Dom:",
+                                        "material": "tworzywo poliamidowe wzmocnione"
+                                    },
+                                    {
+                                        "part": "Pierścień:",
+                                        "material": "Poliwęglan/tworzywo ABS"
+                                    }
+                                ]
+                            }
+                        ],
+                        "careInstructions": [
+                            {
+                                "texts": [
+                                    "Przecierać czystą, wilgotną szmatką."
+                                ]
+                            }
+                        ],
+                        "proposition65": [],
+                        "woodDeclarationProps": null,
+                        "detailsMaterialText": "Materiały",
+                        "detailsCareText": "Pielęgnacja",
+                        "ariaOpensInNewTabLabel": "{text} (otwiera się w nowej zakładce)",
+                        "warningText": "Uwaga"
+                    }
+                },
+                "safetyAndCompliance": {
+                    "id": "product-details-safety-and-compliance",
+                    "title": "Bezpieczeństwo i zgodność z przepisami",
+                    "contentProps": {
+                        "safetyAndCompliance": [
+                            {
+                                "name": "Test results and compliance",
+                                "text": "Oznaczenie IP44."
+                            }
+                        ]
+                    }
+                },
+                "sustainabilityAndEnvironment": null,
+                "assemblyAndDocuments": {
+                    "id": "product-details-assembly-and-documents",
+                    "title": "Montaż i dokumenty",
+                    "contentProps": {
+                        "attachments": {
+                            "assembly": {
+                                "header": "Instrukcja montażu",
+                                "attachments": []
+                            },
+                            "software": {
+                                "header": "Software",
+                                "attachments": []
+                            },
+                            "declaration": {
+                                "header": "Deklaracja Zgodności",
+                                "attachments": []
+                            },
+                            "other": {
+                                "header": "Inne dokumenty",
+                                "attachments": []
+                            },
+                            "customerDisassembly": {
+                                "header": "Instrukcja demontażu",
+                                "attachments": []
+                            },
+                            "professionalDisassembly": {
+                                "header": "Demontaż &amp; Recycling (dla profesjonalistów z branży)",
+                                "attachments": []
+                            },
+                            "manual": {
+                                "header": "Porady i wskazówki dotyczące użytkowania i pielęgnacji",
+                                "attachments": [
+                                    {
+                                        "id": "105.561.93",
+                                        "url": "https://www.ikea.com/pl/pl/manuals/groensproet-lampa-scienna-podw-montaz-staly-zewnetrzne-czarny__AA-2328816-3-2.pdf",
+                                        "label": "GRÖNSPRÖT Lampa ścienna podw, montaż stały"
+                                    }
+                                ]
+                            }
+                        },
+                        "ariaOpensInNewTabLabel": "{text} (otwiera się w nowej zakładce)"
+                    }
+                },
+                "compliance": null
+            },
+            "productId": "10556193",
+            "articleNumberLabel": "Numer artykułu"
+        },
+        "productReviewsProps": {
+            "title": "Opinie",
+            "loadingText": "Wczytywanie opinii",
+            "eventLabel": "pip_reviews_section",
+            "section": "reviews",
+            "productId": "10556193",
+            "productType": "ART",
+            "averageRatingProps": {
+                "rating": 5,
+                "reviewCount": 1,
+                "reviews": true,
+                "reviewText": "(1)",
+                "ariaLabel": "Opinia: 5 na 5 gwiazdki. Recenzje ogółem: 1"
+            },
+            "enableRatingsAndReviews": true,
+            "reviews": [
+                {
+                    "title": "Solidna o dobrym wyglądzie",
+                    "name": "Agnieszka",
+                    "text": "Solidna o dobrym wyglądzie",
+                    "ratingValue": 5
+                }
+            ]
+        },
+        "technicalInformationProps": false,
+        "questionsAndAnswersProps": null,
+        "hydrate": true
+    },
+    "stickyProductBar": {
+        "serverOnlineSellable": true,
+        "isFood": false,
+        "hydrate": true
+    },
+    "stockcheckSection": {
+        "itemNo": "10556193",
+        "itemType": "ART",
+        "itemName": "GRÖNSPRÖT",
+        "typeName": "Lampa ścienna podw, montaż stały",
+        "visibleItemNo": "105.561.93",
+        "isFood": false,
+        "numberOfPackages": 1,
+        "packagingProps": {
+            "packages": [
+                {
+                    "name": "GRÖNSPRÖT",
+                    "typeName": "Lampa ścienna podw, montaż stały",
+                    "itemNo": "10556193",
+                    "articleNumber": {
+                        "label": "Numer artykułu",
+                        "value": "105.561.93"
+                    },
+                    "measurements": [
+                        [
+                            {
+                                "label": "Szerokość",
+                                "type": "width",
+                                "text": "14 cm",
+                                "value": 14
+                            },
+                            {
+                                "label": "Wysokość",
+                                "type": "height",
+                                "text": "14 cm",
+                                "value": 14
+                            },
+                            {
+                                "label": "Długość",
+                                "type": "length",
+                                "text": "14 cm",
+                                "value": 14
+                            },
+                            {
+                                "label": "Waga",
+                                "type": "weight",
+                                "text": "0.63 kg",
+                                "value": 0.63
+                            }
+                        ]
+                    ],
+                    "quantity": {
+                        "label": "Paczka(i)",
+                        "value": 1
+                    },
+                    "multiPackDisclaimerText": false
+                }
+            ],
+            "maxMeasurments": {
+                "weightText": "0.63 kg",
+                "widthText": "14 cm",
+                "lengthText": "14 cm",
+                "heightText": "14 cm",
+                "diameterText": ""
+            }
+        },
+        "loading": true,
+        "subProducts": [],
+        "hydrate": true
+    },
+    "availabilityGroup": {
+        "isCustomMade": false,
+        "isFood": false,
+        "serverOnlineSellable": true,
+        "isOnlySoldInStore": false,
+        "header": "Możliwości zakupu",
+        "deliveryHeader": "Dostawa",
+        "storeHeader": "W magazynie",
+        "hydrate": true,
+        "loadingMessage": "Sprawdzanie dostępności..."
+    },
+    "servicesSection": {
+        "removalService": {
+            "available": false
+        },
+        "hydrate": true
+    },
+    "highlightedReviews": {
+        "highlightedReviews": [],
+        "averageRatingProps": {
+            "rating": 5,
+            "reviewCount": 1,
+            "reviews": true,
+            "reviewText": "(1)",
+            "ariaLabel": "Opinia: 5 na 5 gwiazdki. Recenzje ogółem: 1"
+        },
+        "highlightedReviewsHeading": "Opinie klientów",
+        "highlightedReviewsAverageRating": "Średnia ocena",
+        "highlightedReviewsTotal": "Opinie",
+        "highlightedReviewsShowAllReviews": "Pokaż wszystkie opinie",
+        "hydrate": true
+    }
+}
