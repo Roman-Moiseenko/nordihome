@@ -46,6 +46,8 @@ class BankController
     public function web_hook(Request $request)
     {
         //Проверяем, тип платежа и формируем чек, если succeed. Отправляем чек клиенту
+
+        return \response()->json([true]);
     }
 
     public function redirect(Request $request): RedirectResponse
