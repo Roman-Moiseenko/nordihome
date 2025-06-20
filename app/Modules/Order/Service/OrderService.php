@@ -473,7 +473,6 @@ class OrderService
         });
     }
 
-
     public function work(Order $order): void
     {
         DB::transaction(function () use ($order) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Service;
 
 use App\Modules\Accounting\Entity\Currency;
+use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
 use Illuminate\Http\Request;
@@ -36,7 +37,12 @@ class CurrencyService
         $currency->sign = $request->string('sign')->trim()->value();
         $currency->exchange = $request->float('exchange');
         $currency->cbr_code = $request->string('cbr_code')->trim()->value();
+        if ($currency->fixed != $request->float('fixed')) {
+            //TODO Событие изменения курса
+            event(new CurrencyHasUpdateFixed($currency));
+        }
         $currency->fixed = $request->float('fixed');
+
         $currency->code = $request->input('code');
         $currency->save();
         $this->update_parser_currency($currency);

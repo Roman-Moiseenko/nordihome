@@ -253,6 +253,7 @@ class OrderRepository
             'refund' => $refund == 0 ? null : $refund,
         ]);
     }
+
     /**
      * Возвращает список заказов, которые ждут оплаты, в том числе с внесенной предоплатой
      * @param int|null $order_id - id текущего заказа, для случая, когда надо поменять назначения платежа, для уже оплаченного заказа
@@ -286,7 +287,7 @@ class OrderRepository
             'status_text' => $expense->statusHTML(),
             'type_text' => $expense->typeHTML(),
             'items' => $expense->items()->get()->map(fn(OrderExpenseItem $expenseItem) => array_merge($expenseItem->toArray(), [
-                'product' =>  $expenseItem->orderItem->product,
+                'product' => $expenseItem->orderItem->product,
                 'quantity' => (float)$expenseItem->quantity,
                 'refund' => $expenseItem->quantityRefund(),
                 'is_honest' => $expenseItem->orderItem->product->isMarking(),
@@ -319,6 +320,20 @@ class OrderRepository
             'refunds' => ($expense->refunds()->count() == 0) ? null : true,
 
         ]);
+    }
+
+    /**
+     * Заказы которые в работе и есть товары под заказ
+     */
+    public function getInWorkWithPreorder()
+    {
+        $query = Order::whereHas('status', function ($query) {
+            $query->whereIn('value', [OrderStatus::FORMED, OrderStatus::SET_MANAGER]);
+        })->whereHas('items', function ($query) {
+            $query->where('preorder', true);
+        });
+
+        return $query->getModels();
     }
 
 

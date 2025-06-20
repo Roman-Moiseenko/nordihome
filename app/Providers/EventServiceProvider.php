@@ -63,12 +63,14 @@ use App\Listeners\NotificationThrowable;
 use App\Listeners\NotificationUserCreated;
 use App\Listeners\ParsingImageProduct;
 use App\Listeners\WelcomeToShop;
+use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
 use App\Modules\Admin\Listeners\NewTaskStaff;
 use App\Modules\Admin\Listeners\NotificationStaff;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Service\NotificationService;
 use App\Modules\Order\Events\ExpenseHasCompleted;
+use App\Modules\Order\Listeners\OrderPreChangeBaseCost;
 use App\Modules\Order\Listeners\UserMailExpenseCompleted;
 use App\Modules\Order\Listeners\UserWriteReview;
 use App\Modules\Order\Service\ExpenseService;
@@ -102,6 +104,12 @@ class EventServiceProvider extends ServiceProvider
             UserWriteReview::class,
             NotificationStaff::class,
             NewTaskStaff::class,
+        ],
+
+        //Изменился курс валюты
+        CurrencyHasUpdateFixed::class => [
+            OrderPreChangeBaseCost::class,
+
         ],
 
 

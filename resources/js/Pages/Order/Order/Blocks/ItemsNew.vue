@@ -4,8 +4,8 @@
         header-cell-class-name="nordihome-header"
         style="width: 100%;"
     >
-        <el-table-column type="index" label="п/п"/>
-        <el-table-column prop="product.code" label="Артикул" width="110"/>
+        <el-table-column type="index" label="п/п" align="center"/>
+        <el-table-column prop="product.code" label="Артикул" width="100" align="center"/>
         <el-table-column prop="product.name" label="Товар / Вес, Объем" width="260" show-overflow-tooltip>
             <template #default="scope">
                 {{ scope.row.product.name}}
@@ -14,7 +14,7 @@
                 </div>
             </template>
         </el-table-column>
-        <el-table-column v-if="is_new" label="Базовая" width="120" align="center">
+        <el-table-column v-if="is_new" label="Базовая" width="100" align="center">
             <template #default="scope">
                 <span :class="scope.row.percent > 0 ? 'text-red-800 font-medium' : ''">{{
                         func.price(scope.row.base_cost)
@@ -24,7 +24,7 @@
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="Продажа" width="230" align="center">
+        <el-table-column label="Продажа" width="210" align="center">
             <template #default="scope">
                 <span v-if="is_new" class="flex">
                     <el-input
@@ -32,7 +32,7 @@
                         :formatter="val => func.MaskInteger(val)"
                         @change="setProduct(scope.row)"
                         :disabled="iSaving || isProm(scope.row)"
-                        style="width: 120px;">
+                        style="width: 100px;">
                         <template #append>₽</template>
                     </el-input>
                     <el-input
@@ -71,7 +71,10 @@
         </el-table-column>
         <el-table-column v-if="is_new" prop="quantity_sell" label="Наличие" width="90" align="center" >
         </el-table-column>
-        <el-table-column prop="assemblage" label="Сборка" width="80" align="center">
+        <el-table-column prop="assemblage" width="30" align="center">
+            <template #header>
+                <el-tooltip content="Сборка у заказчика">Сб</el-tooltip>
+            </template>
             <template #default="scope">
                 <el-checkbox v-if="is_new"
                              :checked="scope.row.assemblage"
@@ -81,7 +84,10 @@
                 <Active v-else :active="scope.row.assemblage"/>
             </template>
         </el-table-column>
-        <el-table-column prop="packing" label="Упаковка" width="90" align="center">
+        <el-table-column prop="packing" width="30" align="center">
+            <template #header>
+                <el-tooltip content="Упаковка товара">Уп</el-tooltip>
+            </template>
             <template #default="scope">
                 <el-checkbox v-if="is_new"
                              :checked="scope.row.packing"
@@ -92,7 +98,7 @@
             </template>
         </el-table-column>
 
-        <el-table-column prop="comment" label="Комментарий" :width="is_new ? 260 : 120" show-overflow-tooltip>
+        <el-table-column prop="comment" label="Комментарий" :width="is_new ? 200 : 120" show-overflow-tooltip>
             <template #default="scope">
                 <el-input v-if="is_new"
                           v-model="scope.row.comment"
