@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
@@ -450,6 +451,7 @@ class Product extends Model
         //Проверяем установленные цены
         if ($price == 0) $price = $this->getPriceRetail($previous);
         //Проверяем парсер
+        //dd(1);
         if ($price == 0) $price = $this->getPriceParser($previous);
         //Проверяем модификацию
         if ($price == 0 && !is_null($this->modification) && ($this->id != $this->modification->base_product_id)) {
@@ -533,6 +535,7 @@ class Product extends Model
     {
         if (is_null($this->parser)) return 0;
       //TODO берем базовую цену  $price = $previous ? $this->parser->price_base : $this->parser->price_sell;
+      //  Log::info(json_encode([$this->code, $this->parser->price_base, $this->brand->currency->fixed]));
         $price = $this->parser->price_base;
         return ceil($price * ($this->brand->currency->fixed));
     }

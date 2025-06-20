@@ -21,9 +21,19 @@ class OrderPreChangeBaseCost
     {
 
         $orders = $this->repository->getInWorkWithPreorder();
-        dd($orders);
-        //TODO Заказы, которые в работе у менеджера или новые
 
+        //TODO Заказы, которые в работе у менеджера или новые
+        /** @var Order $order */
+        foreach ($orders as $order) {
+
+            foreach ($order->items as $item) {
+                if ($item->preorder) {
+                    $item->base_cost = $item->product->getPrice(false, $order->user);
+                    $item->sell_cost = $item->product->getPrice(false, $order->user);
+                    $item->save();
+                }
+            }
+        }
 
 
 //

@@ -8,6 +8,7 @@ use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\Deprecated;
 
 class CurrencyService
 {
@@ -28,7 +29,7 @@ class CurrencyService
 
     public function update(Request $request, Currency $currency): void
     {
-
+        $changeFixed = false;
         if ($request->float('default') && !$currency->default) {
             Currency::where('default', true)->update(['default' => false]);
             $currency->default = true;
@@ -38,14 +39,16 @@ class CurrencyService
         $currency->exchange = $request->float('exchange');
         $currency->cbr_code = $request->string('cbr_code')->trim()->value();
         if ($currency->fixed != $request->float('fixed')) {
-            //TODO Событие изменения курса
-            event(new CurrencyHasUpdateFixed($currency));
+            $changeFixed = true;
         }
         $currency->fixed = $request->float('fixed');
 
         $currency->code = $request->input('code');
         $currency->save();
-        $this->update_parser_currency($currency);
+
+        if ($changeFixed) event(new CurrencyHasUpdateFixed($currency));
+
+    //    $this->update_parser_currency($currency);
     }
 
     public function destroy(Currency $currency): void
@@ -54,7 +57,7 @@ class CurrencyService
         if ($currency->arrivals()->count() > 0 || $currency->supplies()->count() > 0) throw new \DomainException('Имеются документы, удалить нельзя');
         $currency->delete();
     }
-
+    #[Deprecated]
     private function update_parser_currency(Currency $currency): void
     {
         if ($currency->cbr_code == 'PLN') {
