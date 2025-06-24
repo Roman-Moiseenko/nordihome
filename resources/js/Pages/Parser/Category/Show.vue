@@ -112,7 +112,7 @@ function products() {
     })
 
     return;
-
+/*
     router.visit(route('admin.parser.category.parser-products', {category: props.category.id}), {
         method: "post",
         data: {
@@ -127,6 +127,7 @@ function products() {
             loading.close()
         },
     })
+    */
 }
 
 </script>

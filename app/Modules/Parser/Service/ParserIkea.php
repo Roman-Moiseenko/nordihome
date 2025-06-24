@@ -161,8 +161,9 @@ class ParserIkea extends ParserAbstract
 
         }
         if (is_null($main_category_id)) {
-            $main_category_id = Category::where('slug', 'temp')->first()->id;
-            if (is_null($main_category_id)) return null; //throw new \DomainException('Неверная главная категория');
+            $main_category = Category::where('slug', 'temp')->first();
+            if (is_null($main_category)) return null; //throw new \DomainException('Неверная главная категория');
+            $main_category_id = $main_category->id;
         } //return /*null;*/
 
         $data = $this->parsingDataByUrl($url);

@@ -941,40 +941,79 @@ class ProductService
 
     public function uploadByXlsx($file, $brand_id): array
     {
-        set_time_limit(1000);
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $spreadsheet = $reader->load($file->getPathName());
-        $sheetData = $spreadsheet->getActiveSheet()->toArray();
-        $result = [];
-        foreach ($sheetData as $row) {
-            $result[] = array_values(array_filter($row, function ($item) {
-                return $item != null;
-            }));
-        }
-        $array = array_values(array_filter($result));
-        $brand = is_null($brand_id) ? null : Brand::find($brand_id);
-        $products = [];
-        foreach ($array as $item) {
+        try {
 
-            if (is_null($product = Product::whereCode($item[0])->first())) {
-                if (is_null($brand)) continue;
 
-                $parser_class = $brand->parser_class;
-                $parser = app()->make($parser_class);
-                $product = $parser->findProduct($item[0]);
+            set_time_limit(100);
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            $spreadsheet = $reader->load($file->getPathName());
+            $sheetData = $spreadsheet->getActiveSheet()->toArray();
+            $result = [];
+            foreach ($sheetData as $row) {
+                $result[] = array_values(array_filter($row, function ($item) {
+                    return $item != null;
+                }));
             }
-            if (!is_null($product))
+            $array = array_values(array_filter($result));
+            $brand = is_null($brand_id) ? null : Brand::find($brand_id);
+            $products = [];
+            foreach ($array as $item) {
                 $products[] = [
-                    'product_id' => $product->id,
+                    'code' => $item[0],
                     'quantity' => isset($item[1]) ? (float)$item[1] : 1,
                     'price' => isset($item[2]) ? (float)str_replace(' ', '', $item[2]) : 0,
                     'price2' => isset($item[3]) ? (float)str_replace(' ', '', $item[3]) : 0,
                 ];
-        }
-       // throw new \DomainException(json_encode($products));
 
-        set_time_limit(30);
-        return $products;
+
+                /*   if (is_null($product = Product::whereCode($item[0])->first())) {
+                       if (is_null($brand)) continue;
+
+                       $parser_class = $brand->parser_class;
+                       $parser = app()->make($parser_class);
+                       $product = $parser->findProduct($item[0]);
+                   }
+                   if (!is_null($product))
+                       $products[] = [
+                           'product_id' => $product->id,
+                           'quantity' => isset($item[1]) ? (float)$item[1] : 1,
+                           'price' => isset($item[2]) ? (float)str_replace(' ', '', $item[2]) : 0,
+                           'price2' => isset($item[3]) ? (float)str_replace(' ', '', $item[3]) : 0,
+                       ];
+                   */
+            }
+            // throw new \DomainException(json_encode($products));
+
+            set_time_limit(30);
+            return ['products' => $products];
+        } catch (\Throwable $e) {
+            return [
+                'error' => $e->getMessage(),
+                'products' => [],
+            ];
+        }
+    }
+
+    public function findParser(string $code, int $brand_id)
+    {
+
+        try {
+            $brand = Brand::find($brand_id); //is_null($brand_id) ? null :
+           // return $brand_id;
+            if (is_null($product = Product::whereCode($code)->first()) && !is_null($brand)) {
+
+                $parser_class = $brand->parser_class;
+                $parser = app()->make($parser_class);
+                $product = $parser->findProduct($code);
+            }
+            if (!is_null($product)) return $product->id;
+
+            return 0;
+        } catch (\Throwable $e) {
+            return [
+                'error' => $e->getMessage() . " " . $e->getLine() . " " . $e->getFile(),
+            ];
+        }
     }
 
     private function getFloatXls(null|string $item): float

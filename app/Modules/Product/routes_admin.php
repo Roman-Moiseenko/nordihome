@@ -12,6 +12,7 @@ Route::group(
 
         Route::post('/action', 'ProductController@action')->name('action');
         Route::post('/upload', 'ProductController@upload')->name('upload');
+        Route::post('/find-parser', 'ProductController@find_parser')->name('find-parser');
         //Атрибуты
         Route::group([
             'prefix' => 'attribute',

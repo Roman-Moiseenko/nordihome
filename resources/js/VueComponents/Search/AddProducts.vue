@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, ref, defineProps, inject} from "vue";
+import {reactive, ref, defineProps, inject, watch} from "vue";
 import {router} from "@inertiajs/vue3";
 import {ElLoading, ElMessage, type UploadProps} from "element-plus";
 import axios from "axios";
@@ -93,12 +93,53 @@ function openDialog() {
 
 }
 const handleSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFiles) => {
-    textUpload.value = 'Товары считаны - ' + response.length.toString() + ' шт.'
-    disabledUnload.value = false;
-    console.log(response)
-    products.value = [...response]
+    let _products = [...response.products]
+    if (response.error !== undefined || response.error !== null) {
+        textUpload.value = 'Найдено ' + _products.length.toString() + ' позиций';
+        disabledUnload.value = false;
+        findProducts(_products)
+    } else {
+        textUpload.value = 'Ошибка загрузки. ' + response.error;
+        disabledUnload.value = true;
+    }
+}
+
+function findProducts(data) {
+    const loading = ElLoading.service({
+        lock: false,
+        text: 'Ищем/парсим товары 0 из ' + data.length.toString(),
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    const count = ref(0);
+    let count_error = 0;
+    watch(() => count.value, (newValues, oldValues) => {
+        if (newValues === data.length) loading.close();
+    });
+
+    data.forEach(function (product) {
+        axios.post(route('admin.product.find-parser'), {code: product.code, brand_id: formCreate.brand_id}).then(response => {
+            console.log('response', response.data)
+            count.value++;
+            if ((response.data.error === undefined || response.data.error === null) && response.data !== 0) {
+                products.value.push({
+                    product_id: response.data,
+                    quantity: product.quantity,
+                    price: product.price,
+                    price2: product.price2,
+                })
+            } else  {
+                console.log('response', response.data.error)
+                count_error++;
+            }
+            loading.text.value = 'Ищем/парсим товары ' + count.value + ' из ' + data.length.toString() + (count_error !== 0 ? ('. Ошибок=' + count_error) : '');
+        }).catch(resolve => {
+            console.log('resolve', resolve)
+        })
+    });
+
 
 }
+
 const handleError: UploadProps['onError'] = (error, uploadFile, uploadFiles) => {
     console.log(error, uploadFile)
 }

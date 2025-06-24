@@ -252,7 +252,12 @@ class ProductController extends Controller
         } catch (\Throwable $e) {
             return response()->json($e->getMessage());
         }
+    }
 
+    public function find_parser(Request $request)
+    {
+        $result = $this->service->findParser($request->string('code')->value(), $request->integer('brand_id'));
+        return response()->json($result);
     }
 
     public function search_add(Request $request)
