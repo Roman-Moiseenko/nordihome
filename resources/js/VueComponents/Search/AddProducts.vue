@@ -115,26 +115,33 @@ function findProducts(data) {
     watch(() => count.value, (newValues, oldValues) => {
         if (newValues === data.length) loading.close();
     });
-
+    let i = 0;
     data.forEach(function (product) {
-        axios.post(route('admin.product.find-parser'), {code: product.code, brand_id: formCreate.brand_id}).then(response => {
-            console.log('response', response.data)
-            count.value++;
-            if ((response.data.error === undefined || response.data.error === null) && response.data !== 0) {
-                products.value.push({
-                    product_id: response.data,
-                    quantity: product.quantity,
-                    price: product.price,
-                    price2: product.price2,
-                })
-            } else  {
-                console.log('response', response.data.error)
-                count_error++;
-            }
-            loading.text.value = 'Ищем/парсим товары ' + count.value + ' из ' + data.length.toString() + (count_error !== 0 ? ('. Ошибок=' + count_error) : '');
-        }).catch(resolve => {
-            console.log('resolve', resolve)
-        })
+        i++;
+        setTimeout(() => {
+            axios.post(route('admin.product.find-parser'), {code: product.code, brand_id: formCreate.brand_id}).then(response => {
+                console.log('response', response.data)
+                count.value++;
+                if ((response.data.error === undefined || response.data.error === null) && response.data !== 0) {
+                    products.value.push({
+                        product_id: response.data,
+                        quantity: product.quantity,
+                        price: product.price,
+                        price2: product.price2,
+                    })
+                } else  {
+                    console.log('response', response.data.error)
+                    count_error++;
+                }
+                loading.text.value = 'Ищем/парсим товары ' + count.value + ' из ' + data.length.toString() + (count_error !== 0 ? ('. Ошибок=' + count_error) : '');
+            }).catch(resolve => {
+                console.log('resolve', resolve)
+            })
+
+        }, i * 100);
+
+
+
     });
 
 
