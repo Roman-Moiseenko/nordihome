@@ -31,6 +31,7 @@ class HttpPage
 
     public function isUseCache(): bool
     {
+        return false;
         return !is_null($this->cache);
     }
 
