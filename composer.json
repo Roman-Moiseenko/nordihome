@@ -30,7 +30,8 @@
         "webklex/laravel-imap": "^6.1",
         "yoomoney/yookassa-sdk-php": "^3.8",
         "ext-dom": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^v3.14.7",

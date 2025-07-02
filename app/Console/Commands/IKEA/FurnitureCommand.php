@@ -25,9 +25,9 @@ class FurnitureCommand extends Command
         foreach ($rows as $number => $row) {
             if (!empty($code = $row['АРТИКУЛ'])) {
                 //Берем код до 1го пробела
-                $words = explode(' ', $code);
+               // $words = explode(' ', $code);
 
-                $this->info($words[0] . ' отправлен в очередь. Задержка - ' . $number * 2 . ' с');
+                $this->info($code . ' отправлен в очередь. Задержка - ' . $number * 2 . ' с');
                 FurnitureParser::dispatch($code, $number, self::BLUM, 'H')->delay(now()->addSeconds($number * 2));
             }
         }
@@ -36,9 +36,9 @@ class FurnitureCommand extends Command
         foreach ($rows as $number => $row) {
             if (!empty($code = $row['АРТИКУЛ'])) {
                 //Берем код до 1го пробела
-                $words = explode(' ', $code);
+                //$words = explode(' ', $code);
 
-                $this->info($words[0] . ' отправлен в очередь. Задержка - ' . ($delta + $number * 2) . ' с');
+                $this->info($code . ' отправлен в очередь. Задержка - ' . ($delta + $number * 2) . ' с');
                 FurnitureParser::dispatch($code, $number, self::GTV, 'E')->delay(now()->addSeconds($delta + $number * 2));
             }
         }

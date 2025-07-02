@@ -17,7 +17,7 @@ class GoogleSheetCommand extends Command
 
     public function handle(GoogleSheetService $service)
     {
-        $rows = $service->getFurnitureRows();
-        dd($rows);
+        //$rows = $service->getFurnitureRows();
+        //dd($rows);
     }
 }
