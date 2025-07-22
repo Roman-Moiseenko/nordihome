@@ -26,8 +26,8 @@ class GoogleSheetService
 
     public function setData(mixed $number, mixed $price1, mixed $price2, string $sheetName, string $col): void
     {
-        Log::info("******** Парсим цены ФУРНИТУРЫ  *********");
-        Log::info(json_encode([$sheetName, $col, $number, $price1, $price2]));
+    //    Log::info("******** Парсим цены ФУРНИТУРЫ  *********");
+    //    Log::info(json_encode([$sheetName, $col, $number, $price1, $price2]));
         Sheets::spreadsheet(self::spreadsheetId)
             ->sheet($sheetName)
             ->range(($col) . $number)
