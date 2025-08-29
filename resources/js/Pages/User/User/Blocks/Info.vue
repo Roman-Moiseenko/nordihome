@@ -99,10 +99,11 @@
                             <i class="fa-light fa-check"></i>
                         </el-button>
                     </el-tooltip>
-                    <el-button type="danger" size="small" @click="detachOrganization(item.id)" style="margin-left: 4px">
-                        <i class="fa-light fa-trash"></i>
-                    </el-button>
+
                 </template>
+                <el-button type="danger" size="small" @click="detachOrganization(item.id)" style="margin-left: 4px">
+                    <i class="fa-light fa-trash"></i>
+                </el-button>
                 <Link type="primary" class="ml-3" :href="route('admin.accounting.organization.show', {organization: item.id})">
                     <i class="fa-light fa-right"></i>
                 </Link>

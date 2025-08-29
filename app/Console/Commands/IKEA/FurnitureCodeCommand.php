@@ -23,10 +23,14 @@ class FurnitureCodeCommand extends Command
         $this->info("Артикул товара = " . $code);
 
         $web = $this->argument('web');
-        if ($web == 1) $price_2 = $furnitureService->getBaltlaminat($code);
-        if ($web == 2) $price_2 = $furnitureService->getHolzMaster($code);
-        $this->info($price_2);
+        if ($web == 1) {
+            $price_2 = $furnitureService->getBaltlaminat($code);
+        }
+        else {
+            $price_2 = $furnitureService->getHolzMaster($code);
+        }
 
+        $this->info($price_2);
     }
 
 }

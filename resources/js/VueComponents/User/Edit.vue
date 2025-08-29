@@ -98,9 +98,11 @@ const form = reactive({
 })
 
 function deliveryText() {
-    for (let key in props.deliveries) {
-        let item = props.deliveries[key]
-        if (item.value === props.user.delivery) return item.label
+    for (let key in deliveries.value) {
+        let item = deliveries.value[key]
+        if (item.value === props.user.delivery) {
+            return item.label
+        }
     }
 }
 function setInfo() {

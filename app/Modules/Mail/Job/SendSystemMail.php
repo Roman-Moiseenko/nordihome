@@ -58,7 +58,10 @@ class SendSystemMail implements ShouldQueue
         }
 
         try { //Отправляем письмо
-            Mail::mailer('system')->to($this->user->email)->send($this->mail);
+            if (Mail::mailer('system')->to($this->user->email)->send($this->mail) == null) {
+                Log::error('Письмо не отправлено ' . $this->user->email);
+                $system_mail->notSent(); //Письмо не отправлено, внутрення ошибка
+            };
         } catch (\Throwable $e) {
             Log::error('Письмо не отправлено - ' . json_encode([$e->getMessage(), $e->getLine(), $e->getFile()]));
             $system_mail->notSent(); //Письмо не отправлено, внутрення ошибка

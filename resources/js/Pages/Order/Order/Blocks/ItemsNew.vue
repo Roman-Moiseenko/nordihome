@@ -24,7 +24,7 @@
                 </div>
             </template>
         </el-table-column>
-        <el-table-column label="Продажа" width="210" align="center">
+        <el-table-column label="Продажа" width="90" align="center">
             <template #default="scope">
                 <span v-if="is_new" class="flex">
                     <el-input
@@ -32,16 +32,7 @@
                         :formatter="val => func.MaskInteger(val)"
                         @change="setProduct(scope.row)"
                         :disabled="iSaving || isProm(scope.row)"
-                        style="width: 100px;">
-                        <template #append>₽</template>
-                    </el-input>
-                    <el-input
-                        v-model="scope.row.percent"
-                        :formatter="val => func.MaskFloat(val, 0, 100)"
-                        @change="setProduct(scope.row)"
-                        :disabled="iSaving || isProm(scope.row)"
-                        :class="(scope.row.percent > 0 ? 'bg-red-100' : '') + ' ml-1'" style="width: 90px;">
-                        <template #append>%</template>
+                        style="width: 86px;">
                     </el-input>
                 </span>
                 <span v-else>
@@ -52,7 +43,18 @@
                 </span>
             </template>
         </el-table-column>
-        <el-table-column label="Кол-во" width="110" align="center">
+        <el-table-column v-if="is_new" label="Скид. %" width="70" align="center">
+            <template #default="scope">
+                <el-input
+                    v-model="scope.row.percent"
+                    :formatter="val => func.MaskFloat(val, 0, 100)"
+                    @change="setProduct(scope.row)"
+                    :disabled="iSaving || isProm(scope.row)"
+                    :class="(scope.row.percent > 0 ? 'bg-red-100' : '') + ' m-0'" style="width: 60px;">
+                </el-input>
+            </template>
+        </el-table-column>
+        <el-table-column label="Кол-во" width="60" align="center">
             <template #default="scope">
                 <span v-if="is_new">
                     <el-input
@@ -60,8 +62,8 @@
                         :formatter="val => func.MaskFloat(val)"
                         @change="setProduct(scope.row)"
                         :disabled="iSaving"
-                        style="width: 80px;">
-                        <template #append>{{ scope.row.product.measuring }}</template>
+                        style="width: 50px;">
+                        <!--template #append>{{ scope.row.product.measuring }}</template-->
                     </el-input>
                 </span>
                 <span v-else>
@@ -69,7 +71,13 @@
                 </span>
             </template>
         </el-table-column>
-        <el-table-column v-if="is_new" prop="quantity_sell" label="Наличие" width="90" align="center" >
+        <el-table-column v-if="is_new" label="Сумма" width="80" align="center">
+            <template #default="scope">
+                <el-tag size="large" type="success" effect="dark">{{ func.price(scope.row.quantity * scope.row.sell_cost) }}</el-tag>
+            </template>
+        </el-table-column>
+
+        <el-table-column v-if="is_new" prop="quantity_sell" label="Налич." width="80" align="center" >
         </el-table-column>
         <el-table-column prop="assemblage" width="30" align="center">
             <template #header>

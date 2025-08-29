@@ -143,8 +143,8 @@ const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
         axios.post(props.search, {search: query}).then(response => {
-            //console.log('response', response)
             if (response.data.error !== undefined) console.log(response.data.error)
+            form.product_id = response.data[0].id;
             options.value = response.data
             loading.value = false
         }).catch(reason => {

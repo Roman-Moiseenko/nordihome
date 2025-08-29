@@ -53,12 +53,13 @@ class DeliveryPolandCalculate extends CalculateAddition
         if ($weight <= 600.0) $coef = $parser->parser_delivery_9;
         if ($weight > 600.0) $coef = $parser->parser_delivery_10;
 */
+        /*
         Log::info(json_encode([
             '$weight' => $weight,
             '$coef' => $coef,
             '$fragile * $parser->cost_weight_fragile + $sanctioned' => ($fragile * $parser->cost_weight_fragile + $sanctioned),
             '$parser' => $parser,
-        ]));
+        ]));*/
         $cost = $weight * $coef + $fragile * $parser->cost_weight_fragile + $sanctioned;
 
         return $cost < 1000 ? 1000 : (int)ceil($cost);
