@@ -197,6 +197,18 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
+    public function set_assemblage(Request $request): RedirectResponse
+    {
+        $this->service->setAssemblage($request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function set_packing(Request $request): RedirectResponse
+    {
+        $this->service->setPacking($request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
     public function set_comment(Request $request, Order $order): RedirectResponse
     {
         $this->service->setComment($order, $request);

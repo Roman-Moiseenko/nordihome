@@ -232,7 +232,7 @@ class Order extends Model
         $this->save();
     }
 
-    public function setUser(int $user_id): void
+    public function setUser(int $user_id = null): void
     {
         if ($this->user_id != null) throw new \DomainException("Заказ уже привязан к клиенту");
         $this->user_id = $user_id;

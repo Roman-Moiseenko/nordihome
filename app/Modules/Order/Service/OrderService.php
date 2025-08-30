@@ -1027,5 +1027,26 @@ class OrderService
         $order->save();
     }
 
+    public function setAssemblage(Request $request): void
+    {
+        $items = $request->input('items');
+        $assemblage = $request->boolean('assemblage');
+
+        foreach ($items as $item) {
+            OrderItem::where('id', $item)->update(['assemblage' => $assemblage]);
+        }
+
+    }
+
+    public function setPacking(Request $request): void
+    {
+        $items = $request->input('items');
+        $packing = $request->boolean('packing');
+        foreach ($items as $item) {
+            OrderItem::where('id', $item)->update(['packing' => $packing]);
+        }
+
+    }
+
 
 }

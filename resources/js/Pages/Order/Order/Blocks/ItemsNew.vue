@@ -79,9 +79,10 @@
 
         <el-table-column v-if="is_new" prop="quantity_sell" label="Налич." width="80" align="center" >
         </el-table-column>
-        <el-table-column prop="assemblage" width="30" align="center">
+        <el-table-column prop="assemblage" width="50" align="center">
             <template #header>
-                <el-tooltip content="Сборка у заказчика">Сб</el-tooltip>
+                <el-tooltip content="Сборка у заказчика">Сб </el-tooltip>
+                <el-checkbox v-model="checkedAssemblage" :checked="checkedAssemblage" @change="checkAssemblage" />
             </template>
             <template #default="scope">
                 <el-checkbox v-if="is_new"
@@ -92,9 +93,11 @@
                 <Active v-else :active="scope.row.assemblage"/>
             </template>
         </el-table-column>
-        <el-table-column prop="packing" width="30" align="center">
+        <el-table-column prop="packing" width="50" align="center">
             <template #header>
-                <el-tooltip content="Упаковка товара">Уп</el-tooltip>
+                <el-tooltip content="Упаковка товара">Уп </el-tooltip>
+                <el-checkbox v-model="checkedPacking" :checked="checkedPacking" @change="checkPacking" />
+
             </template>
             <template #default="scope">
                 <el-checkbox v-if="is_new"
@@ -155,7 +158,7 @@ function setPacking(val, row) {
 }
 
 function setProduct(row) {
-    console.log('row', row)
+   // console.log('row', row)
     iSaving.value = true;
     router.visit(route('admin.order.set-item', {item: row.id}), {
         method: "post",
@@ -180,6 +183,53 @@ function handleDeleteItem(row) {
 }
 function isProm(row) {
     return row.product.has_promotion && !row.preorder
+}
+
+const checkedAssemblage = computed( () => {
+    let check = true
+    props.items.forEach(function (item) {
+        if (item.assemblage !== true) check = false
+    })
+    return check
+})
+const checkedPacking = computed( () => {
+    let check = true
+    props.items.forEach(function (item) {
+        if (item.packing !== true) check = false
+    })
+    return check
+})
+function checkAssemblage() {
+   // console.log([...props.items.map(i => i.id)])
+    iSaving.value = true;
+    router.visit(route('admin.order.set-assemblage'), {
+        method: "post",
+        data: {
+            assemblage: !checkedAssemblage.value,
+            items: [...props.items.map(i => i.id)]
+        },
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            iSaving.value = false;
+        }
+    })
+}
+function checkPacking() {
+   // console.log([...props.items.map(i => i.id)])
+    iSaving.value = true;
+    router.visit(route('admin.order.set-packing'), {
+        method: "post",
+        data: {
+            packing: !checkedPacking.value,
+            items: [...props.items.map(i => i.id)]
+        },
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            iSaving.value = false;
+        }
+    })
 }
 </script>
 

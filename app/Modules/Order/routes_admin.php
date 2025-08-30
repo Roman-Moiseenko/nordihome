@@ -29,6 +29,8 @@ Route::group(
         Route::post('/set-item/{item}', 'OrderController@set_item')->name('set-item');
         Route::delete('/del-item/{item}', 'OrderController@del_item')->name('del-item');
         Route::post('/set-user/{order}', 'OrderController@set_user')->name('set-user');
+        Route::post('/set-assemblage', 'OrderController@set_assemblage')->name('set-assemblage');
+        Route::post('/set-packing', 'OrderController@set_packing')->name('set-packing');
 
         Route::post('/set-discount/{order}', 'OrderController@set_discount')->name('set-discount');
 
