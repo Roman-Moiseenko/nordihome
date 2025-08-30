@@ -361,15 +361,16 @@ class OrderService
     /**
      * Создание пустого заказа менеджером из Продаж
      */
-    public function create_sales(): Order
+    public function create_sales(int $user_id = null): Order
     {
-        DB::transaction(function () use (&$order) {
+        DB::transaction(function () use (&$order, $user_id) {
             $order = $this->createOrder(type: Order::MANUAL); //Создаем пустой заказ
 
             /** @var Admin $staff */
             $staff = Auth::guard('admin')->user();
             $order->setStatus(OrderStatus::SET_MANAGER);
             $order->setManager($staff->id);
+            $order->setUser($user_id);
             $order->refresh();
             $this->logger->logOrder($order, 'Заказ создан менеджером',
                 '', '', null);

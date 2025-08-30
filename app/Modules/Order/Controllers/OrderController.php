@@ -92,7 +92,7 @@ class OrderController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $order = $this->service->create_sales();
+        $order = $this->service->create_sales($request->input('user_id'));
         return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
     }
 

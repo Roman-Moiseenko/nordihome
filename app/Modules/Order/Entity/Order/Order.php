@@ -232,6 +232,13 @@ class Order extends Model
         $this->save();
     }
 
+    public function setUser(int $user_id): void
+    {
+        if ($this->user_id != null) throw new \DomainException("Заказ уже привязан к клиенту");
+        $this->user_id = $user_id;
+        $this->save();
+    }
+
     public function setReserve(Carbon $addDays): void
     {
         foreach ($this->items as $item) {
