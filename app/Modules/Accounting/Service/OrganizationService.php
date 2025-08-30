@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\OrganizationHolding;
 use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
+use App\Modules\Product\Entity\Product;
 use Dadata\DadataClient;
 use Illuminate\Http\Request;
 
@@ -177,6 +178,17 @@ class OrganizationService
             if (is_string($holding_id)) {
                 $holding = $this->createHolding($holding_id);
                 $organization->holding_id = $holding->id;
+            }
+        }
+
+        $vat_id = $request->integer('vat_id');
+
+        //Обновляем НДС
+        if ($organization->vat_id != $vat_id) {
+            $organization->vat_id = $vat_id;
+            //Установка всем товарам НДС
+            if ($request->boolean('vat_all')) {
+                Product::where('id', '>', 0)->update(['vat_id' => $vat_id]);
             }
         }
 

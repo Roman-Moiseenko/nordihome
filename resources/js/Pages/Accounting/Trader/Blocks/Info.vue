@@ -1,22 +1,15 @@
 <template>
     <el-row :gutter="10">
         <el-col :span="8">
-            <el-descriptions :column="2" border class="mb-5">
+            <el-descriptions :column="1" border class="mb-5">
                 <el-descriptions-item label="Продавец">
                     <div v-show="!editTrader">
                         {{ trader.name }}
-                        <el-button class="ml-2" type="warning" size="small" @click="editTrader = true">
-                            <i class="fa-light fa-pen-to-square"></i>
-                        </el-button>
+
                     </div>
                     <div v-show="editTrader">
                         <el-input v-model="info.name"/>
-                        <el-button type="success" size="small" @click="setInfo">
-                            <i class="fa-light fa-floppy-disk"></i>
-                        </el-button>
-                        <el-button type="info" size="small" @click="editTrader = false" style="margin-left: 4px">
-                            <i class="fa-light fa-xmark"></i>
-                        </el-button>
+
                     </div>
                 </el-descriptions-item>
                 <el-descriptions-item label="По умолчанию">
@@ -28,6 +21,20 @@
                     </div>
                 </el-descriptions-item>
             </el-descriptions>
+
+            <div v-show="!editTrader">
+                <el-button class="ml-2" type="warning" size="small" @click="editTrader = true">
+                    <i class="fa-light fa-pen-to-square mr-2"></i> Изменить
+                </el-button>
+            </div>
+            <div v-show="editTrader">
+                <el-button type="success" size="small" @click="setInfo">
+                    <i class="fa-light fa-floppy-disk mr-2"></i> Сохранить
+                </el-button>
+                <el-button type="info" size="small" @click="editTrader = false" style="margin-left: 4px">
+                    <i class="fa-light fa-xmark mr-2"></i> Отмена
+                </el-button>
+            </div>
         </el-col>
         <el-col :span="8">
             <div v-for="contact in trader.contacts" class="text-sm">
@@ -77,7 +84,7 @@ import SearchAttachOrganization from "@Comp/Search/AttachOrganization.vue";
 const props = defineProps({
     trader: Object,
 })
-
+console.log(props.vat)
 const showEdit = ref(false)
 const editTrader = ref(false)
 
@@ -94,6 +101,7 @@ function defaultOrganization(id) {
 const info = reactive({
     name: props.trader.name,
     default: props.trader.default,
+
 })
 
 function setInfo() {

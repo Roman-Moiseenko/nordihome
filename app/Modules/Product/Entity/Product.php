@@ -388,6 +388,12 @@ class Product extends Model
         $this->save();
     }
 
+    public function setVAT(int $vat_id): void
+    {
+        $this->vat_id = $vat_id;
+        $this->save();
+    }
+
     //*** GET-....
 
     public function weight(): float|int

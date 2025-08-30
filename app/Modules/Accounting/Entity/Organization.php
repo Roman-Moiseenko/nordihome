@@ -8,6 +8,7 @@ use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
+use App\Modules\Guide\Entity\VAT;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\User\Entity\User;
@@ -36,6 +37,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property string $bank_name
  * @property string $corr_account
  * @property string $pay_account
+ *
+ * @property int $vat_id
+ * @property VAT $VAT
  *
  * @property string $email
  * @property string $phone
@@ -238,6 +242,11 @@ class Organization extends Model
             'user_id');
 
         //return $this->hasOne(User::class, 'organization_id', 'id');
+    }
+    //СПРАВОЧНИКИ GUIDE
+    public function VAT(): BelongsTo
+    {
+        return $this->belongsTo(VAT::class, 'vat_id', 'id')->withDefault(['name' => 'Без НДС', 'value' => null]);
     }
 
     public function scopeActive($query)

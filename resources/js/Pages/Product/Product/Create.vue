@@ -106,6 +106,7 @@ const props = defineProps({
         type: String,
         default: 'Создание нового товара',
     },
+    vat_trader: Number,
 })
 const form = reactive({
     name: null,
@@ -118,7 +119,7 @@ const form = reactive({
     brand_id: null,
     country_id: null,
     distributor_id: null,
-    vat_id: null,
+    vat_id: props.vat_trader,
     marking_type_id: null,
     measuring_id: null,
     fractional: false,

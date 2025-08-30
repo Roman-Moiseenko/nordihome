@@ -5,7 +5,7 @@
             Продавец {{ trader.name }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <TraderInfo :trader="trader" :organizations="organizations"  />
+            <TraderInfo :trader="trader" :organizations="organizations" :vat="vat" />
         </div>
     </el-config-provider>
 </template>
@@ -19,6 +19,7 @@ import TraderInfo from "./Blocks/Info.vue";
 const props = defineProps({
     trader: Object,
     organizations: Array,
+    vat: Array,
     title: {
         type: String,
         default: 'Карточка Продавца',

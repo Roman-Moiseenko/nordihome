@@ -5,6 +5,7 @@ namespace App\Modules\Product\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
@@ -89,6 +90,7 @@ class ProductController extends Controller
             'measuring' => Measuring::orderBy('name')->getModels(),
             'markingType' => MarkingType::orderBy('name')->getModels(),
             'distributors' => Distributor::orderBy('name')->getModels(),
+            'vat_trader' => Trader::default()->organization->vat_id,
         ]);
     }
 

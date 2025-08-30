@@ -569,6 +569,32 @@ class Order extends Model
         throw new \DomainException('Элемент заказа не найден item_ID = ' . $id_item);
     }
 
+    public function getVATTrader(): int
+    {
+        return $this->trader->VAT->value;
+    }
+
+    /**
+     * НДС на весь Заказ - 2 способа обсчета
+     * @param bool $simple - простой способ сумма заказа * НДС% или по-товарно
+     * @return float
+     */
+    public function getVAT(bool $simple = false): float
+    {
+        $vat_value = $this->getVATTrader();
+        if ($simple) return $this->getTotalAmount() * $vat_value / 100; //Простое решение
+
+        $vat_total = 0;
+        //Суммируем по товарам, по индивидуальным НДС
+        foreach ($this->items as $item) {
+            $vat_total += $item->sell_cost * $item->quantity * $item->product->VAT->value / 100;
+        }
+
+        $vat_total += $this->getAdditionsAmount() * $vat_value /100;
+        return $vat_total;
+
+    }
+
     ///*** Relations *************************************************************************************
 
     public function systemMails(): MorphMany

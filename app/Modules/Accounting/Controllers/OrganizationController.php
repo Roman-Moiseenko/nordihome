@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\OrganizationContact;
 use App\Modules\Accounting\Entity\OrganizationHolding;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Service\OrganizationService;
+use App\Modules\Guide\Entity\VAT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -62,6 +63,7 @@ class OrganizationController extends Controller
         return Inertia::render('Accounting/Organization/Show', [
             'organization' => $this->repository->OrganizationWithToArray($organization),
             'holdings' => $holdings,
+            'vat' => VAT::orderBy('value')->getModels(),
         ]);
     }
 

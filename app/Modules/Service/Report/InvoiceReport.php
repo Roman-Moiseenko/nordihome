@@ -41,6 +41,9 @@ class InvoiceReport
             $order->trader->inn . ', КПП ' . $order->trader->kpp . ', ' .
             $order->trader->legal_address->address() . ', ' .
             phone($order->trader->phone);
+
+        $vat_order = $order->getVAT();
+
         //...
         $replaceItems = [
             '{num-date}' => $order->htmlNumDate(),
@@ -58,8 +61,10 @@ class InvoiceReport
             '{corr_account}' => $order->trader->corr_account,
             '{pay_account}' => $order->trader->pay_account,
             '{chief}' => $order->trader->chief->getShortname(),
-
+            '{vat_caption}' => $vat_order == 0 ? 'Без налога (НДС)' : 'В том числе НДС',
+            '{vat_value}' => $vat_order == 0 ? '-' : $vat_order,
         ];
+
         $this->service->findReplaceArray($activeWorksheet, $replaceItems);
 
         //Список товара

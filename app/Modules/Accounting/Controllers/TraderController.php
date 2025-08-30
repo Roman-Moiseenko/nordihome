@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\TraderRepository;
 use App\Modules\Accounting\Service\TraderService;
+use App\Modules\Guide\Entity\VAT;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

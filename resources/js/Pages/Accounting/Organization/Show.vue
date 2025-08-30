@@ -10,6 +10,7 @@
             <BankPanel :organization="organization"/>
             <ContactPanel :organization="organization"/>
             <FilePanel :organization="organization"/>
+            <FinancePanel :organization="organization" :vat="vat" />
         </el-tabs>
 
     </div>
@@ -38,6 +39,7 @@ import AddressPanel from './Panels/Address.vue'
 import BankPanel from './Panels/Bank.vue'
 import ContactPanel from './Panels/Contact.vue'
 import FilePanel from './Panels/File.vue'
+import FinancePanel from "./Panels/Finance.vue";
 
 
 
@@ -48,6 +50,7 @@ const props = defineProps({
         default: 'Карточка контрагента',
     },
     holdings: Array,
+    vat: Array,
 })
 
 </script>

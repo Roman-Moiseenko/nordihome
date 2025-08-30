@@ -56,6 +56,7 @@ class OrganizationRepository
                 'trader' => $organization->trader,
                 'shopper' => $organization->shopper,
                 'distributor' => $organization->distributor,
+                'vat_caption' => $organization->VAT->name,
                 'contracts' => ($organization->contracts()->count() == 0)
                     ? []
                     : $organization->contracts()->get()->map(function (FileStorage $file) {
