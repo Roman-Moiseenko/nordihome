@@ -45,7 +45,7 @@
                             @if($product->isSale())
                                 @if(!$product->hasPromotion())
                                     @if($product->getPrice(true) > $product->getPrice())
-                                        <div class="comment">* Цена на товар снижена</div>
+                                        <div class="comment">* Цена на товар снижена </div>
                                         <span class="discount-price">{{ price($product->getPrice()) }}</span>
                                         <span class="base-price">{{ price($product->getPrice(true)) }}</span>
                                     @else
