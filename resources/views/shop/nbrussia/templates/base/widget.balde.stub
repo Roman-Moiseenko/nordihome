@@ -6,13 +6,29 @@
 * $widget->url
 * $widget->caption
 * $widget->description
-* $widget->items - array WidgetItem
+* $widget->items - array WidgetItem:
 * $item->slug
 * $item->name
 * $item->url
 * $item->caption
 * $item->description
 * $item-group - Group::class
+* $item-group->name
+* $item-group->slug
+* $item-group->published
+* $item-group->description
+* $item-group->products - array Product::class
+* $product->name
+* $product->slug
+* $product->code Артикул
+* $product->description
+* $product->short короткое описание
+* $product->getPrice() - текущая цена
+* $product->getPrice(true) - предыдущая цена
+
+
+Остальное см в app\Modules\Product\Entity
+
 */
 
 use App\Modules\Page\Entity\Widget;
