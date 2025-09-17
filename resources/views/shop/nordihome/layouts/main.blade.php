@@ -31,7 +31,7 @@
 @include('shop.nordihome.header')
 
 @include('shop.nordihome.widgets.flash')
-{{dd("999")}}
+
 @section('breadcrumbs')
     <div class="container-xl">
         {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nordihome.breadcrumbs') }}
@@ -41,22 +41,21 @@
 <main class="@yield('main')">
     @yield('content')
 </main>
-{{dd("999")}}
+
 <!--POP-UP ОКНА-->
 @guest
     @include('shop.nordihome.pop-up.login')
 @endguest
-{{dd("999")}}
-//ERROR
+
 @include('shop.nordihome.pop-up.buy-click')
-//ERROR
+
 @include('shop.nordihome.pop-up.notification')
 
 
 
 
 <!--FOOTER-->
-//ERROR
+
 @include('shop.nordihome.footer')
 <button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>
 @stack('scripts')

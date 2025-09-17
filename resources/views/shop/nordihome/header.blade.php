@@ -85,7 +85,7 @@
 
                     <li class="nav-item">
 
-                        <!-- livewire:shop.header.wish /-->
+                        <livewire:shop.header.wish />
                     </li>
 
                     <li class="nav-item">
@@ -101,7 +101,7 @@
 
 
                     <li class="nav-item">
-                        <!-- live wire:shop.header.cart /-->
+                        <live wire:shop.header.cart />
                     </li>
 
                 </ul>
