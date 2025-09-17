@@ -2,16 +2,16 @@
     <div class="header-mobile">
         <div>
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ $config['logo-nav'] }}" alt="{{ $config['brand-alt'] }}" class="img-fluid img-logo">
+                <img src="{{ $config["logo-nav"] }}" alt="{{ $config["brand-alt"] }}" class="img-fluid img-logo">
             </a>
         </div>
         <div>
-            <i class="fa-light fa-location-dot"></i>&nbsp;{{ $city }}
+            <i class="fa-light fa-location-dot"></i>&nbsp;Россия
         </div>
     </div>
     <div class="menu-top container-xl mt-2 hide-mobile">
         <div class="d-flex justify-content-between">
-            <div><i class="fa-light fa-location-dot"></i>&nbsp;{{ $city }}</div>
+            <div><i class="fa-light fa-location-dot"></i>&nbsp;Россия</div>
             <div class="d-flex ">
                 <div>
                     @foreach(\App\Modules\Nordihome\Helper\MenuHelper::getMenuPages() as $item)

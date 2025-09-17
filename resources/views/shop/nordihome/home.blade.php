@@ -26,5 +26,5 @@
     <div class="mt-3">
         @include('shop.nordihome.widgets.map')
     </div>
-    {!! $schema->HomePage() !!}
+    {!! '$schema->HomePage()' !!}
 @endsection

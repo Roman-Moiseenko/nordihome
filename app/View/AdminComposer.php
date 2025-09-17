@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\View;
 
 use App\Modules\Base\Helpers\AdminMenu;
+use App\Modules\Base\Helpers\CacheHelper;
+use Cache;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Repository\ShopRepository;
@@ -34,9 +36,9 @@ class AdminComposer
             }
             $activeMenu = $this->activeMenu($pageName, $layout);
             if ($layout == 'admin') {
-               // $admin = Auth::guard('admin')->user();
-              //  $view->with('admin', $admin);
-            } elseif($layout == 'livewire') {
+                // $admin = Auth::guard('admin')->user();
+                //  $view->with('admin', $admin);
+            } elseif ($layout == 'livewire') {
                 //
             } else {
 
@@ -50,36 +52,51 @@ class AdminComposer
                     $city = 'Лунапарк';
                 }*/
                 //Категории в кеше
-           /*     if (!Cache::has(CacheHelper::MENU_CATEGORIES))
-                    Cache::put(CacheHelper::MENU_CATEGORIES, $this->shopRepository->getChildren());
+                /*     if (!Cache::has(CacheHelper::MENU_CATEGORIES))
+                         Cache::put(CacheHelper::MENU_CATEGORIES, $this->shopRepository->getChildren());
 
-                if (!Cache::has(CacheHelper::MENU_TREES))
-                    Cache::put(CacheHelper::MENU_TREES, $this->shopRepository->getTree());
+                     if (!Cache::has(CacheHelper::MENU_TREES))
+                         Cache::put(CacheHelper::MENU_TREES, $this->shopRepository->getTree());
+
+
+
+                     $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
+                     $view->with('user', $user);
+                    // $view->with('config', config('shop.frontend'));
+                   //  $city = 'Россия';
+
+                     $view->with('url_page', request()->url());
+                     //$view->with('city', $city);
+
+                 } */
+             /*   $categories = Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
+                    return $this->shopRepository->getChildren();
+                });
+                $trees = Cache::rememberForever(CacheHelper::MENU_TREES, function () {
+                    return $this->shopRepository->getTree();
+                });
 
 */
 
                 $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
                 $view->with('user', $user);
-               // $view->with('config', config('shop.frontend'));
-              //  $city = 'Россия';
+                $view->with('config', config('shop.frontend'));
 
+                $categories = Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
+                    return $this->shopRepository->getChildren();
+                });
                 $view->with('url_page', request()->url());
-                //$view->with('city', $city);
-
+                $trees = Cache::rememberForever(CacheHelper::MENU_TREES, function () {
+                    return $this->shopRepository->getTree();
+                });
+           //     dd($trees);
+                $view->with('categories', $categories);
+                $view->with('tree', $trees);
+                $view->with('web', $this->settings->web);
             }
-         /*   $categories =  Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
-                return $this->shopRepository->getChildren();
-            });
-            $trees = Cache::rememberForever(CacheHelper::MENU_TREES, function () {
-                return $this->shopRepository->getTree();
-            });
-
-
-            $view->with('categories', $categories);
-            $view->with('tree', $trees);*/
-            $view->with('web', $this->settings->web);
         }
     }
+
 
     public function activeMenu($pageName, $layout): array
     {

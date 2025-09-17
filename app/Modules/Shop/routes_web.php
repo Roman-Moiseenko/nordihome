@@ -17,9 +17,9 @@ Route::group(
         });
 
         Route::get('/', 'PageController@home')->name('home');
-        Route::post('/', function () {
-            return abort(404);
-        });
+
+        Route::post('/', function () {return abort(404);});
+
         Route::post('/csrf-token', function () {
             return csrf_token();
         });
