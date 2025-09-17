@@ -16,11 +16,13 @@ class Wish extends Component
 
     public function mount()
     {
-        $this->user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
-        $this->refresh_fields();
-    }
 
-    #[On('update-header-wish')]
+      //  $this->user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
+        dd("1");
+        //$this->refresh_fields();
+    }
+/*
+    //#[ On('update-header-wish')]
     public function refresh_fields()
     {
         if (!is_null($this->user))
@@ -32,22 +34,25 @@ class Wish extends Component
                 'url' => route('shop.product.view', $wish->product->slug),
             ];
         },  $this->user->wishes()->getModels());
-
+      //  dd($this->items);
         $this->count = count($this->items);
 
     }
 
     public function remove($id)
     {
-        /** @var \App\Modules\User\Entity\Wish $wish */
+        //dd("1");
+
         $wish = \App\Modules\User\Entity\Wish::find($id);
         $this->dispatch('update-wish', product_id: $wish->product_id);
         $wish->delete();
         $this->refresh_fields();
+
     }
 
     public function remove_all()
     {
+
         foreach ($this->user->wishes as $wish) {
             $wish->delete();
         }
@@ -55,9 +60,14 @@ class Wish extends Component
         $this->count = 0;
         $this->dispatch('update-wish');
     }
-
+*/
     public function render()
     {
-        return view('livewire.shop.header.wish');
+        try {
+            return view('livewire.shop.header.wish');
+        } catch (\Throwable $e) {
+            dd($e->getMessage());
+        }
+
     }
 }

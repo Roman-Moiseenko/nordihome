@@ -85,7 +85,7 @@
 
                     <li class="nav-item">
 
-                        <livewire:shop.header.wish/>
+                        <!-- livewire:shop.header.wish /-->
                     </li>
 
                     <li class="nav-item">
@@ -99,14 +99,16 @@
                         </a>
                     </li>
 
+
                     <li class="nav-item">
-                        <livewire:shop.header.cart />
+                        <!-- live wire:shop.header.cart /-->
                     </li>
 
                 </ul>
             </div>
         </div>
     </nav>
+
 
     <nav class="menu-mobile">
         <ul class="menu-list">
@@ -159,6 +161,7 @@
             @endguest
         </ul>
     </nav>
+
 </header>
 
 

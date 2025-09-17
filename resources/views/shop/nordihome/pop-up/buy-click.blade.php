@@ -1,6 +1,8 @@
+
 <div class="modal fade" id="buy-click" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+
             <form id="buy-click-form" class="p-3 needs-validation" action="{{ route('shop.order.create-click') }}" method="post" role="form" novalidate>
                 @csrf
                 <input type="hidden" name="intended">

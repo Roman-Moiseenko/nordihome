@@ -28,14 +28,10 @@
     @stack('styles')
 </head>
 <body class="@yield('body')">
-
 @include('shop.nordihome.header')
 
-
-
 @include('shop.nordihome.widgets.flash')
-
-
+{{dd("999")}}
 @section('breadcrumbs')
     <div class="container-xl">
         {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nordihome.breadcrumbs') }}
@@ -45,12 +41,12 @@
 <main class="@yield('main')">
     @yield('content')
 </main>
-
+{{dd("999")}}
 <!--POP-UP ОКНА-->
 @guest
     @include('shop.nordihome.pop-up.login')
 @endguest
-
+{{dd("999")}}
 //ERROR
 @include('shop.nordihome.pop-up.buy-click')
 //ERROR
