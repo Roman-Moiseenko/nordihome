@@ -34,6 +34,7 @@ class Wish extends Component
         },  $this->user->wishes()->getModels());
 
         $this->count = count($this->items);
+
     }
 
     public function remove($id)

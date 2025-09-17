@@ -8,7 +8,8 @@ use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use Cache;
+
 
 class PageController extends ShopController
 {
@@ -28,14 +29,17 @@ class PageController extends ShopController
 
     public function home()
     {
+
         if (!is_null($page = Page::where('slug', 'home')->active()->first())) {
             $callback = fn() => $page->view();
         } else {
             $callback = fn() => view($this->route('home'))->render();
         }
+
         //TODO Настройка использовать кеширование
         //return $callback();
         if ($this->web->is_cache) {
+
             return Cache::rememberForever('home', $callback);
         } else {
             return $callback();

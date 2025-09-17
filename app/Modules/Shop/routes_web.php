@@ -16,6 +16,7 @@ Route::group(
             return phpinfo();
         });
 
+
         Route::get('/', 'PageController@home')->name('home');
 
         Route::post('/', function () {return abort(404);});
@@ -108,7 +109,6 @@ Route::group(
                 Route::post('/parser/{product}/set', 'ParserController@set')->name('set');
             }
         );
-
-
     }
+
 );

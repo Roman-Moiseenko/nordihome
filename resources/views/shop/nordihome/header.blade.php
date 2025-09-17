@@ -1,4 +1,5 @@
 <header>
+
     <div class="header-mobile">
         <div>
             <a class="navbar-brand" href="{{ url('/') }}">
@@ -60,6 +61,7 @@
                     <div class="presearch-overlay" style="display: none"></div>
                 </div>
             </div>
+
             <div class="menu-bottom-profile">
                 <ul class="navbar-nav ms-auto">
                     @guest
@@ -80,9 +82,12 @@
                             </a>
                         </li>
                     @endguest
+
                     <li class="nav-item">
-                        <livewire:shop.header.wish :user="$user"/>
+
+                        <livewire:shop.header.wish/>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"
                            @guest('user')

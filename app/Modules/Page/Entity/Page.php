@@ -86,16 +86,23 @@ class Page extends Model
      */
     public function view(): string
     {
-        $this->text = Template::renderClasses($this->text);
-        $url_page = route('shop.page.view', $this->slug);
 
-        //TODO На будущее
-        // $this->text = Template::renderFromText('promotion', $this->text);
 
-        return view(
-            Template::blade('page') . $this->template,
-            ['page' => $this, 'title' => $this->title, 'description' => $this->description, 'url_page' => $url_page])
-            ->render();
+        try {
+
+
+            $this->text = Template::renderClasses($this->text);
+            $url_page = route('shop.page.view', $this->slug);
+            //TODO На будущее
+            // $this->text = Template::renderFromText('promotion', $this->text);
+
+            return view(
+                Template::blade('page') . $this->template,
+                ['page' => $this, 'title' => $this->title, 'description' => $this->description, 'url_page' => $url_page])
+                ->render();
+        } catch (\Throwable $e) {
+            dd($e->getMessage());
+        }
     }
 
     public function parent(): BelongsTo

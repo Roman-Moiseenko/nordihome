@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+
     <!--base href="https://39y.ru" /-->
     <meta name="robots" content="noindex"/>
     <meta charset="utf-8">
@@ -27,34 +28,39 @@
     @stack('styles')
 </head>
 <body class="@yield('body')">
-@if(env('APP_ENV') == 'production')
 
-@else
-    @include('shop.nordihome.header')
-    @include('shop.nordihome.widgets.flash')
+@include('shop.nordihome.header')
 
-    @section('breadcrumbs')
-        <div class="container-xl">
-            {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nordihome.breadcrumbs') }}
-        </div>
-    @show
 
-    <main class="@yield('main')">
-        @yield('content')
-    </main>
 
-    <!--POP-UP ОКНА-->
-    @guest
-        @include('shop.nordihome.pop-up.login')
-    @endguest
+@include('shop.nordihome.widgets.flash')
 
-    @include('shop.nordihome.pop-up.buy-click')
-    @include('shop.nordihome.pop-up.notification')
-@endif
+
+@section('breadcrumbs')
+    <div class="container-xl">
+        {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nordihome.breadcrumbs') }}
+    </div>
+@show
+
+<main class="@yield('main')">
+    @yield('content')
+</main>
+
+<!--POP-UP ОКНА-->
+@guest
+    @include('shop.nordihome.pop-up.login')
+@endguest
+
+//ERROR
+@include('shop.nordihome.pop-up.buy-click')
+//ERROR
+@include('shop.nordihome.pop-up.notification')
+
 
 
 
 <!--FOOTER-->
+//ERROR
 @include('shop.nordihome.footer')
 <button id="upbutton" type="button" class="scrollup" aria-label="В начало"><i class="fa fa-arrow-up"></i></button>
 @stack('scripts')

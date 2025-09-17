@@ -42,6 +42,7 @@ class AdminComposer
                 //
             } else {
 
+
                 //TODO Определение местоположения
                 /*$token = env('DADATA_TOKEN', false);
                 if ($token) {
