@@ -36,6 +36,8 @@ class Page extends Model
         'template',
         'menu',
         'sort',
+        'published',
+        'text'
     ];
 
     protected $casts = [
@@ -61,24 +63,27 @@ class Page extends Model
         ]);
     }
 
-    public function setText(string $text)
+    public function setText(string $text): void
     {
         $this->text = $text;
         $this->save();
     }
 
-    public function draft()
+    public function draft(): void
     {
         $this->published = false;
         $this->save();
     }
 
-    public function published()
+    public function published(): void
     {
         $this->published = true;
         $this->save();
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function view(): string
     {
         $this->text = Template::renderClasses($this->text);

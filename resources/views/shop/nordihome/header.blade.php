@@ -37,11 +37,12 @@
 
     <nav class="menu-bottom navbar navbar-expand-md navbar-light bg-white">
         <div class="menu-container container-xl">
-            <div class="menu-bottom-catalog">
+            <div class="menu-bottom-catalog d-flex">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="/images/nordihome/logo-nordi-home-2.svg" alt="Nordi Home" class="img-fluid img-logo">
                 </a>
-                @include('shop.nordihome.widgets.header.category',['categories' => $categories])
+                <livewire:nordihome.header.category />
+
             </div>
             <div class="menu-bottom-search flex-grow-1">
                 <div class="presearch" data-route="{{ route('shop.product.search') }}">

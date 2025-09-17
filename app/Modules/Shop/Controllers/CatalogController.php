@@ -49,7 +49,9 @@ class CatalogController extends ShopController
 
     public function view(Request $request, $slug)
     {
+
         $page = $request->has('page');
+
         if ((empty($request->all()) || (count($request->all()) == 1 && $page)) && $this->web->is_cache) {
             return $this->caches->category($request->all(), $slug);
         } else {

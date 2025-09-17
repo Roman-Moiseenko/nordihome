@@ -1,19 +1,18 @@
 
-@if(!is_null($modification))
-    <div class="view-modification">
-        @foreach($modification->products as $_product)
-            <div>
-                @if($current_id == $_product->id)
-                    <img src="{{ $product->getImage('thumb') }}"
-                         alt="{{ $_product->name }}">
+<div class="modification">
+    @foreach($product['modification'] as $attribute)
+        @if(isset($attribute['products']))
+            @foreach($attribute['products'] as $value => $_product_mod)
+                @if($product['is_sale'])
+                    <span class="size {{ $product['id'] === $_product_mod[0]['id'] ? 'active' : '' }}"
+                          data-id="{{ $_product_mod[0]['id'] }}"
+                          title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</span>
                 @else
-                    <a href="{{ route('shop.product.view', $_product->slug) }}"
-                       title="{{ ($_product->isSale() ? '' : 'Снят с продажи! ') . $_product->name }}">
-                        <img src="{{ $_product->getImage('thumb') }}"
-                             alt="{{ $_product->name }}">
-                    </a>
+                    <a class="size"
+                       href="{{ route('shop.product.view', $_product_mod[0]['id']) }}"
+                       title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</a>
                 @endif
-            </div>
-        @endforeach
-    </div>
-@endif
+            @endforeach
+        @endif
+    @endforeach
+</div>

@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Repository;
 
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
@@ -16,6 +17,7 @@ use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Product\Entity\Review;
 use App\Modules\Product\Entity\Tag;
 use App\Modules\Product\Repository\ModificationRepository;
 use App\Modules\Setting\Entity\Settings;
@@ -237,10 +239,10 @@ class ShopRepository
                 $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
             });
         })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
-            $query->doesntHave('modification')->orWhere(function ($query){
-              $query->has('main_modification')->whereHas('main_modification', function ($query) {
-                  $query->where('not_sale', false);
-              });
+            $query->doesntHave('modification')->orWhere(function ($query) {
+                $query->has('main_modification')->whereHas('main_modification', function ($query) {
+                    $query->where('not_sale', false);
+                });
             });
         });
 
@@ -604,6 +606,7 @@ class ShopRepository
         return $attributes;
     }
 
+
     public function ProductToArrayView(Product $product): array
     {
         $_product = null;
@@ -636,6 +639,7 @@ class ShopRepository
             ],
             'gallery' => $product->photos()->get()->map(function (Photo $photo) {
                 return [
+                    'mini' => $photo->getThumbUrl('mini'),
                     'src' => $photo->getThumbUrl('card'),
                     'alt' => $photo->alt,
                     'title' => $photo->alt,
@@ -648,8 +652,57 @@ class ShopRepository
                 'name' => $product->category->name,
             ],
             'equivalents' => $equivalents,
+            'bonus' => $product->bonus()->get()->map(function (Product $product) {
+                $bonus = $this->ProductToListData($product);
+                $bonus['price'] = $bonus->pivot->discount; //Переписать стоимость
+                return $bonus;
+            }),
+            'series' => is_null($product->series) ? [] : [
+                'name' => $product->series->name,
+                'products' => $product->series->products()->get()->map(function (Product $product) {
+                    return $this->ProductToListData($product);
+                }),
+            ],
+
+            'related' => $product->related()->get()->map(function (Product $product) {
+                return $this->ProductToListData($product);
+            }),
+            'dimensions' => [
+                'width' => $product->dimensions->width,
+                'height' => $product->dimensions->height,
+                'depth' => $product->dimensions->depth,
+                'weight' => $product->weight(),
+                'volume' => $product->volume(),
+                'captions' => Dimensions::CAPTION_TYPES[$product->dimensions->type],
+            ],
+            'local' => $product->local,
+            'delivery' => $product->delivery,
+            'reviews' => $product->reviews()->get()->map(function (Review $review) {
+              return [
+                  'user_name' => $review->user->fullname->firstname,
+                  'rating' => $review->rating,
+                  'text' => $review->text,
+                  'date' => $review->htmlDate(),
+                  'src' => $review->photo == null ? null : $review->getImage('mini')
+              ];
+            }),
+
         ]);
 
+    }
+
+    private function ProductToListData(Product $product): array
+    {
+        return [
+            'id' => $product->id,
+            'code' => $product->code,
+            'name' => is_null($product->modification) ? $product->name : $product->modification->name,
+            'slug' => $product->slug,
+            'image' => [
+                'src' => $product->getImage('card'),
+            ],
+            'price' => $product->getPrice(false, $this->user),
+        ];
     }
 
     private function ProductToArray(Product $product): array
@@ -668,6 +721,9 @@ class ShopRepository
             'price' => $product->getPrice(false, $this->user),
             'price_previous' => $product->getPrice(true, $this->user),
             'quantity' => $product->getQuantity(),
+            'image' => [
+                'src' => $product->getImage('card'),
+            ],
 
             'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
             'promotion' => [

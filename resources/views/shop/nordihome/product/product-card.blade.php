@@ -1,16 +1,15 @@
 <div>
-    {!! dd($product) !!}
     <div class="product-card">
         <div class="product-card-image">
             <a href="{{ route('shop.product.view', $product['slug']) }}">
                 <img class="product-card-image-main"
-                     src="{{ $product['images']['catalog-watermark']['src'] }}"
-                     alt="{{ $product['images']['catalog-watermark']['alt'] }}">
+                     src="{{ $product['images']['catalog']['src'] }}"
+                     alt="{{ $product['images']['catalog']['alt'] }}">
                 <img class="product-card-image-hover"
-                     src="{{ $product['images-next']['catalog-watermark']['src'] }}"
-                     alt="{{ $product['images-next']['catalog-watermark']['alt'] }}">
+                     src="{{ $product['images-next']['catalog']['src'] }}"
+                     alt="{{ $product['images-next']['catalog']['alt'] }}">
 
-                @if($product['has_promotion'])
+                @if($product['promotion']['has'])
                     <div class="product-label promotion"><span>Акция</span></div>
                 @endif
                 @if($product['is_new'])
@@ -47,7 +46,7 @@
         </div>
         <div class="product-card-info">
             @if($product['is_sale'])
-                @if(!$product['has_promotion'])
+                @if(!$product['promotion']['has'])
                     {{ price($product['price']) }}
                 @else
                     <span class="discount-price">{{ price($product['price_promotion']) }}</span><span

@@ -5,23 +5,23 @@
             <div class="review-product-item">
                 <div class="rating-data">
                     <div class="user">
-                        <i class="fa-light fa-user-vneck fs-4"></i> <span class="fs-5 ms-2">{{ $review->user->fullname->firstname }}</span>
+                        <i class="fa-light fa-user-vneck fs-4"></i> <span class="fs-5 ms-2">{{ $review['user_name'] }}</span>
                     </div>
                     <div class="rating-date">
                         <div class="rating">
-                            @include('shop.widgets.stars', ['rating' => $review->rating])
+                            @include('shop.widgets.stars', ['rating' => $review['rating']])
                         </div>
                         <div class="date">
-                            {{ $review->htmlDate() }}
+                            {{ $review['date'] }}
                         </div>
                     </div>
                 </div>
                 <div class="info">
-                    {!! nl2br(e($review->text)) !!}
+                    {!! nl2br(e($review['text'])) !!}
                 </div>
-                @if(!is_null($review->photo))
+                @if(!is_null($review['src']))
                 <div class="photo mt-2">
-                    <img src="{{ $review->getImage('mini') }}">
+                    <img src="{{ $review['src'] }}">
                 </div>
                 @endif
             </div>

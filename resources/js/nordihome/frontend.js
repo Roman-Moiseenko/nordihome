@@ -85,12 +85,15 @@ window.$ = jQuery;
     });
 
     /** КАТАЛОГ В МЕНЮ **/
+
+
     let timer;
     let catalog = $('.catalog');
     let catalogParentItems = $('.dropdown-item');
     let catalogSubmenu = $('#catalog-submenu');
     catalogParentItems.first().addClass('active');
     _updateSubMenu(catalogParentItems.first());
+
 
     //Загрузка sub-menu при hover по пунктам меню 1го уровня
     catalogParentItems.hover(function () { //ф-ция для hoverIn
