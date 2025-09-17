@@ -133,15 +133,19 @@ class ViewRepository
         }
 
 
+
         $minPrice = 10;
         $maxPrice = 999999999;
         $brands = [];
 
         $children = $this->category_children_cache($category);
 
+
         $in_stock = isset($request['in_stock']);
+
         $products = $this->category_products_cache($category, $in_stock);
 
+      //  dd($products);
         /** @var Product $product */
         foreach ($products as $i => $product) {
             $_price_product = $product->getPrice();
@@ -231,8 +235,12 @@ class ViewRepository
         $slug = is_null($category) ? 'root' : $category->slug;
         $callback = function () use ($category, $in_stock) {
             $products = $this->repository->ProductsByCategory($category); //0.07сек
+           // return $products;
+            //dd($products);
             //Убираем из коллекции товары, которые не продаем под заказ
             return $products->reject(function (Product $product) use ($in_stock) {
+              //  if ($product->getQuantitySell() == 0) dd($product->name);
+
                 return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
             });
         };

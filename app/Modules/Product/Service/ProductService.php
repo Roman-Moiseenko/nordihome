@@ -635,6 +635,7 @@ class ProductService
     public function editManagement(Product $product, Request $request): void
     {
         $products = $this->list($product, $request->boolean('modification'));
+        /** @var Product $product */
         foreach ($products as $product) {
             if ($request->boolean('published')) {
                 $product->setPublished();
@@ -646,6 +647,7 @@ class ProductService
             } else {
                 $product->setForSale();
             }
+            $product->pre_order =$request->boolean('pre_order');
             $product->priority = $request->boolean('priority');
             $product->hide_price = $request->boolean('hide_price');
             $product->frequency = $request->integer('frequency');

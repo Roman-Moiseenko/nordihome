@@ -17,17 +17,20 @@
             <el-col :span="8">
                 <el-form label-width="auto">
                     <el-form-item label="Товар опубликован">
-                        <el-checkbox v-model="form.published" :checked="form.published" @change="onAutoSave" :disabled="isSaving"/>
+                        <el-checkbox v-model="form.published" :checked="product.published" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
 
                     <el-form-item label="Товар снят с продажи">
-                        <el-checkbox v-model="form.not_sale" :checked="form.not_sale" @change="onAutoSave" :disabled="isSaving"/>
+                        <el-checkbox v-model="form.not_sale" :checked="product.not_sale" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
                     <el-form-item label="Приоритетный показ">
-                        <el-checkbox v-model="form.priority" :checked="form.priority" @change="onAutoSave" :disabled="isSaving"/>
+                        <el-checkbox v-model="form.priority" :checked="product.priority" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
                     <el-form-item label="Скрывать в прайс-листах">
-                        <el-checkbox v-model="form.hide_price" :checked="form.hide_price" @change="onAutoSave" :disabled="isSaving"/>
+                        <el-checkbox v-model="form.hide_price" :checked="product.hide_price" @change="onAutoSave" :disabled="isSaving"/>
+                    </el-form-item>
+                    <el-form-item label="Доступен для предзаказ">
+                        <el-checkbox v-model="form.pre_order" :checked="product.pre_order" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
                     <!-- Повторить -->
 
@@ -100,6 +103,8 @@ const props = defineProps({
     errors: Object,
     frequencies: Array,
 })
+console.log(props.product)
+
 const autoSave = ref(true)
 const isSaving = ref(false)
 const form = reactive({
@@ -111,6 +116,7 @@ const form = reactive({
     balance: props.product.balance,
     frequency: props.product.frequency,
     modification: props.product.modification,
+    pre_order: props.product.pre_order,
 })
 
 function onAutoSave() {
@@ -119,6 +125,7 @@ function onAutoSave() {
 }
 function onSave() {
     isSaving.value = true;
+    console.log(form);
     router.visit(route('admin.product.edit.management', {product: props.product.id}), {
         method: "post",
         data: form,

@@ -413,6 +413,9 @@ class ProductController extends Controller
 
     public function edit_management(Request $request, Product $product): RedirectResponse
     {
+        //return redirect()->back()->with('error', $request->boolean('pre_order'));
+
+     //   dd($request->boolean('pre_order'));
         try {
             $this->service->editManagement($product, $request);
             return redirect()->back()->with('success', 'Сохранено');
