@@ -19,9 +19,9 @@ Breadcrumbs::for('admin.page.widget.product.index', function (BreadcrumbTrail $t
     $trail->push('Виджеты товаров', route('admin.page.widget.product.index'));
 });
 
-Breadcrumbs::for('admin.page.widget.product.show', function (BreadcrumbTrail $trail, ProductWidget $product) {
+Breadcrumbs::for('admin.page.widget.product.show', function (BreadcrumbTrail $trail, ProductWidget $widget) {
     $trail->parent('admin.page.widget.product.index');
-    $trail->push($product->name, route('admin.page.widget.product.show', $product));
+    $trail->push($widget->name, route('admin.page.widget.product.show', $widget));
 });
 //BANNER
 Breadcrumbs::for('admin.page.widget.banner.index', function (BreadcrumbTrail $trail) {

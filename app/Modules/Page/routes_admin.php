@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Page\Controllers\CacheController;
+use App\Modules\Page\Controllers\ProductWidgetController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -15,13 +16,13 @@ Route::group(
             'as' => 'cache.' //'CacheController@remove'
         ], function () {
             Route::post('/remove', [CacheController::class, 'clear'])->name('remove');
-            Route::post('/create', 'CacheController@create')->name('create');
-            Route::post('/categories', 'CacheController@categories')->name('categories');
-            Route::post('/products', 'CacheController@products')->name('products');
-            Route::post('/pages', 'CacheController@pages')->name('pages');
+            Route::post('/create', [CacheController::class, 'create'])->name('create');
+            Route::post('/categories', [CacheController::class, 'categories'])->name('categories');
+            Route::post('/products', [CacheController::class, 'products'])->name('products');
+            Route::post('/pages', [CacheController::class, 'pages'])->name('pages');
 
-            Route::post('/clear', 'CacheController@clear')->name('clear');
-            Route::get('/', 'CacheController@index')->name('index');
+            Route::post('/clear', [CacheController::class, 'clear'])->name('clear');
+            Route::get('/', [CacheController::class, 'index'])->name('index');
         });
 
         //Виджеты
@@ -33,16 +34,20 @@ Route::group(
                 'prefix' => 'product',
                 'as' => 'product.'
             ], function () {
-                Route::post('/set-widget/{product}', 'ProductWidgetController@set_widget')->name('set-widget');
-                Route::post('/add-item/{product}', 'ProductWidgetController@add_item')->name('add-item');
-                Route::post('/set-item/{item}', 'ProductWidgetController@set_item')->name('set-item');
-                Route::delete('/del-item/{item}', 'ProductWidgetController@del_item')->name('del-item');
-                Route::post('/toggle/{product}', 'ProductWidgetController@toggle')->name('toggle');
-                Route::post('/up-item/{item}', 'ProductWidgetController@up_item')->name('up-item');
-                Route::post('/down-item/{item}', 'ProductWidgetController@down_item')->name('down-item');
+                Route::post('/set-widget/{widget}', [ProductWidgetController::class, 'set_widget'])->name('set-widget');
+                Route::post('/add-item/{widget}', [ProductWidgetController::class, 'add_item'])->name('add-item');
+                Route::post('/set-item/{item}', [ProductWidgetController::class, 'set_item'])->name('set-item');
+                Route::delete('/del-item/{item}', [ProductWidgetController::class, 'del_item'])->name('del-item');
+                Route::post('/toggle/{widget}', [ProductWidgetController::class, 'toggle'])->name('toggle');
+                Route::post('/up-item/{item}', [ProductWidgetController::class, 'up_item'])->name('up-item');
+                Route::post('/down-item/{item}', [ProductWidgetController::class, 'down_item'])->name('down-item');
 
+                Route::get('/{widget}', [ProductWidgetController::class, 'show'])->name('show');
+                Route::post('/', [ProductWidgetController::class, 'store'])->name('store');
+                Route::delete('/{widget}', [ProductWidgetController::class, 'destroy'])->name('destroy');
+                Route::get('/', [ProductWidgetController::class, 'index'])->name('index');
             });
-            Route::resource('product', 'ProductWidgetController')->except(['create', 'edit', 'update']); //CRUD
+            //Route::resource('product', 'ProductWidgetController')->except(['create', 'edit', 'update']); //CRUD
 
             Route::group([
                 'prefix' => 'banner',

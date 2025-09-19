@@ -42,7 +42,7 @@ class ProductWidgetController extends Controller
         $templates = $this->templates->getTemplates('product');
         $widgets = $this->repository->getIndex($request);
         return Inertia::render('Page/Widget/Product/Index', [
-            'products' => $widgets,
+            'widgets' => $widgets,
             'templates' => $templates,
         ]);
     }
@@ -53,14 +53,14 @@ class ProductWidgetController extends Controller
         return redirect()->route('admin.page.widget.product.show', $widget)->with('success', 'Виджет сохранен');
     }
 
-    public function show(ProductWidget $product): Response
+    public function show(ProductWidget $widget): Response
     {
-        $groups = $this->repository->getGroups($product);
+        $groups = $this->repository->getGroups($widget);
 
         $banners = BannerWidget::orderBy('name')->getModels();
         $templates = $this->templates->getTemplates('product');
         return Inertia::render('Page/Widget/Product/Show', [
-            'product' => $this->repository->WidgetWithToArray($product),
+            'widget' => $this->repository->WidgetWithToArray($widget),
             'templates' => $templates,
             'groups' => $groups,
             'banners' => $banners,
@@ -69,32 +69,32 @@ class ProductWidgetController extends Controller
         //return view('admin.page.widget.show', compact('widget'));
     }
 
-    public function set_widget(Request $request, ProductWidget $product)
+    public function set_widget(Request $request, ProductWidget $widget)
     {
-        $this->service->setWidget($request, $product);
+        $this->service->setWidget($request, $widget);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(ProductWidget $product)
+    public function destroy(ProductWidget $widget)
     {
-        $this->service->destroy($product);
+        $this->service->destroy($widget);
         return redirect()->back()->with('success', 'Виджет удален');
     }
 
-    public function toggle(ProductWidget $product): RedirectResponse
+    public function toggle(ProductWidget $widget): RedirectResponse
     {
-        if ($product->isActive()) {
+        if ($widget->isActive()) {
             $message = 'Виджет убран из показа';
         } else {
             $message = 'Виджет добавлен в показы';
         }
-        $this->service->toggle($product);
+        $this->service->toggle($widget);
         return redirect()->back()->with('success', $message);
     }
 
-    public function add_item(ProductWidget $product, Request $request): RedirectResponse
+    public function add_item(ProductWidget $widget, Request $request): RedirectResponse
     {
-        $this->service->addItem($product, $request);
+        $this->service->addItem($widget, $request);
         return redirect()->back()->with('success', 'Элемент добавлен');
     }
 

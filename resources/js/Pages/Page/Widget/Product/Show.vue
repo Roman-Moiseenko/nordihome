@@ -2,10 +2,10 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Виджет {{ product.name }}
+            Виджет {{ widget.name }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <WidgetInfo :product="product" :templates="templates" :banners="banners"/>
+            <WidgetInfo :widget="widget" :templates="templates" :banners="banners"/>
         </div>
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <div class="flex" style="width: 450px;">
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <WidgetItems :items="product.items" />
+            <WidgetItems :items="widget.items" />
         </div>
 
     </el-config-provider>
@@ -33,7 +33,7 @@ import UploadImageFile from "@Comp/UploadImageFile.vue";
 import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
-    product: Object,
+    widget: Object,
     templates: Array,
     groups: Array,
     banners: Array,
@@ -50,7 +50,7 @@ const group_id = ref(null)
 function onAddItem(val) {
     form.clear_file = val.clear_file;
     form.file = val.file
-    router.visit(route('admin.page.widget.product.add-item', {product: props.product.id}), {
+    router.visit(route('admin.page.widget.product.add-item', {widget: props.widget.id}), {
         method: "post",
         data: {group_id: group_id.value},
         preserveScroll: true,

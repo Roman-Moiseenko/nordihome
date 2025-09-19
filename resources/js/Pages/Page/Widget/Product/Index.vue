@@ -90,7 +90,7 @@ import {route} from "ziggy-js";
 import axios from "axios";
 
 const props = defineProps({
-    products: Array,
+    widgets: Array,
     title: {
         type: String,
         default: 'Сайт. Виджеты товаров',
@@ -99,7 +99,7 @@ const props = defineProps({
 })
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.products])
+const tableData = ref([...props.widgets])
 const form = reactive({
     id: null,
     name: null,
@@ -120,17 +120,17 @@ function saveWidget() {
     })
 }
 function onToggle(row) {
-    router.visit(route('admin.page.widget.product.toggle', {product: row.id}), {
+    router.visit(route('admin.page.widget.product.toggle', {widget: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function routeClick(row) {
-   router.get(route('admin.page.widget.product.show', {product: row.id}))
+   router.get(route('admin.page.widget.product.show', {widget: row.id}))
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.page.widget.product.destroy', {product: row.id}));
+    $delete_entity.show(route('admin.page.widget.product.destroy', {widget: row.id}));
 }
 </script>

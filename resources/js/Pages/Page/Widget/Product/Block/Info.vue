@@ -4,24 +4,24 @@
             <el-tooltip content="Изображение" placement="top-start" effect="dark">
                 <el-image
                     style="width: 200px; height: 200px"
-                    :src="product.image"
+                    :src="widget.image"
                     :zoom-rate="1.2"
                     :max-scale="7"
                     :min-scale="0.2"
                     :initial-index="4"
-                    :preview-src-list="[product.image]"
+                    :preview-src-list="[widget.image]"
                     fit="cover"
                 />
             </el-tooltip>
             <el-tooltip content="Иконка" placement="top-start" effect="dark">
                 <el-image
                     style="width: 100px; height: 100px"
-                    :src="product.icon"
+                    :src="widget.icon"
                     :zoom-rate="1.2"
                     :max-scale="7"
                     :min-scale="0.2"
                     :initial-index="4"
-                    :preview-src-list="[product.icon]"
+                    :preview-src-list="[widget.icon]"
                     fit="cover"
                     class="ml-3"
                 />
@@ -30,25 +30,25 @@
         <el-col :span="12">
             <el-descriptions :column="2" border class="mb-5">
                 <el-descriptions-item label="Виджет">
-                    {{ product.name }}
+                    {{ widget.name }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Шаблон">
-                    {{ product.template }}
+                    {{ widget.template }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Ссылка">
-                    {{ product.url }}
+                    {{ widget.url }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Активен">
-                    <Active :active="product.active"/>
+                    <Active :active="widget.active"/>
                 </el-descriptions-item>
                 <el-descriptions-item label="Заголовок">
-                    {{ product.caption }}
+                    {{ widget.caption }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Описание">
-                    {{ product.description }}
+                    {{ widget.description }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Баннер">
-                    {{ (product.banner) ? product.banner.name : '' }}
+                    {{ (widget.banner) ? widget.banner.name : '' }}
                 </el-descriptions-item>
             </el-descriptions>
         </el-col>
@@ -87,12 +87,12 @@
         <el-col :span="8">
             <UploadImageFile
                 label="Изображение"
-                v-model:image="product.image"
+                v-model:image="widget.image"
                 @selectImageFile="onSelectImage"
             />
             <UploadImageFile
                 label="Иконка"
-                v-model:image="product.icon"
+                v-model:image="widget.icon"
                 @selectImageFile="onSelectIcon"
             />
         </el-col>
@@ -106,19 +106,19 @@ import Active from "@Comp/Elements/Active.vue";
 import UploadImageFile from "@Comp/UploadImageFile.vue";
 
 const props = defineProps({
-    product: Object,
+    widget: Object,
     templates: Array,
     banners: Array,
 })
-console.log(props.product)
+console.log(props.widget)
 const editWidget = ref(false)
 const form = reactive({
-    name: props.product.name,
-    template: props.product.template,
-    banner_id: props.product.banner_id,
-    url: props.product.url,
-    caption: props.product.caption,
-    description: props.product.description,
+    name: props.widget.name,
+    template: props.widget.template,
+    banner_id: props.widget.banner_id,
+    url: props.widget.url,
+    caption: props.widget.caption,
+    description: props.widget.description,
     image: null,
     clear_image: false,
     icon: null,
@@ -128,7 +128,7 @@ const form = reactive({
 
 
 function setWidget() {
-    router.visit(route('admin.page.widget.product.set-widget', {product: props.product.id}), {
+    router.visit(route('admin.page.widget.product.set-widget', {widget: props.widget.id}), {
         method: "post",
         data: form,
         preserveScroll: true,
