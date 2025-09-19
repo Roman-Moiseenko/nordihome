@@ -65,7 +65,8 @@ class Cart
                 return;
             }
         }
-        if (!$this->pre_order && $product->getQuantitySell() < $quantity) {
+
+        if (!$product->pre_order && !$this->pre_order && $product->getQuantitySell() < $quantity) {
             throw new \DomainException('Превышение остатка');
         }
 

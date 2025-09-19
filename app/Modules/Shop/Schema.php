@@ -350,7 +350,7 @@ class Schema
             "@context" => "https://schema.org",
             "@type" => "Product",
             "name" => $product['name'],
-            'description' => strip_tags($product['description']),
+            'description' => strip_tags($product['description'] ?? ''),
             'image' => $image,
 
             'url' => route('shop.product.view', $product['slug']),

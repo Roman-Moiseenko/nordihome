@@ -232,15 +232,19 @@ class ViewRepository
 
     private function category_products_cache(?Category $category, $in_stock)
     {
+
         $slug = is_null($category) ? 'root' : $category->slug;
+
         $callback = function () use ($category, $in_stock) {
             $products = $this->repository->ProductsByCategory($category); //0.07сек
-           // return $products;
+           // dd($products);
+            //return $products;
             //dd($products);
             //Убираем из коллекции товары, которые не продаем под заказ
             return $products->reject(function (Product $product) use ($in_stock) {
               //  if ($product->getQuantitySell() == 0) dd($product->name);
 
+                //if (!($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order))) {dd(json_encode([$product->name . " " . $product->getQuantitySell() . " " . !$in_stock . ' ' . $product->pre_order]));}
                 return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
             });
         };

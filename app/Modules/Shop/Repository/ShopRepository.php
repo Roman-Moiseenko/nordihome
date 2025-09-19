@@ -654,7 +654,7 @@ class ShopRepository
             'equivalents' => $equivalents,
             'bonus' => $product->bonus()->get()->map(function (Product $product) {
                 $bonus = $this->ProductToListData($product);
-                $bonus['price'] = $bonus->pivot->discount; //Переписать стоимость
+                $bonus['discount'] = $product->pivot->discount;
                 return $bonus;
             }),
             'series' => is_null($product->series) ? [] : [

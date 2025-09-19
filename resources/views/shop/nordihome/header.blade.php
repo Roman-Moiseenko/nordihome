@@ -84,7 +84,6 @@
                     @endguest
 
                     <li class="nav-item">
-
                         <livewire:shop.header.wish />
                     </li>
 
@@ -99,11 +98,9 @@
                         </a>
                     </li>
 
-
                     <li class="nav-item">
-                        <live wire:shop.header.cart />
+                        <livewire:shop.header.cart />
                     </li>
-
                 </ul>
             </div>
         </div>

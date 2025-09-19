@@ -45,7 +45,7 @@
                             @if($product['is_sale'])
                                 @if(!$product['promotion']['has'])
                                     @if($product['price_previous'] > $product['price'])
-                                        <div class="comment">* Цена на товар снижена </div>
+                                        <div class="comment">* Цена на товар снижена</div>
                                         <span class="discount-price">{{ price($product['price']) }}</span>
                                         <span class="base-price">{{ price($product['price_previous']) }}</span>
                                     @else
@@ -93,13 +93,18 @@
                             <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
                         @endif
                     </div>
-                    @include('shop.nordihome.product.__modification', ['modification' => $product['modification'], 'current_id' => $product['id']])
-                    @include('shop.nordihome.product.__related', ['related' => $product['related']])
+                    @if(!is_null($product['modification']))
+                        @include('shop.nordihome.product.__modification', ['modification' => $product['modification'], 'current_id' => $product['id']])
+                    @endif
+                    @if(!is_null($product['related']))
+                        @include('shop.nordihome.product.__related', ['related' => $product['related']])
+                    @endif
 
                     <div class="view-specifications">
                         @include('shop.nordihome.widgets.dimensions', ['dimensions' => $product['dimensions'], 'local' => $product['local'], 'region' => $product['delivery']])
                     </div>
-                    <div style="color: #ff5555">САЙТ В РАЗРАБОТКЕ! Оригинальный сайт по адресу <a href="https://nordihome.ru/" style="color: #5555ff">https://nordihome.ru/</a></div>
+                    <div style="color: #ff5555">САЙТ В РАЗРАБОТКЕ! Оригинальный сайт по адресу <a
+                            href="https://nordihome.ru/" style="color: #5555ff">https://nordihome.ru/</a></div>
                 </div>
             </div>
         </div>
@@ -112,10 +117,12 @@
 
         </div>
     </div>
-
-    @include('shop.nordihome.product._bonus', ['bonus' => $product['bonus']])
-
-    @include('shop.nordihome.product._series', ['series' => $product['series']])
+    @if(!is_null($product['bonus']))
+        @include('shop.nordihome.product._bonus', ['bonus' => $product['bonus']])
+    @endif
+    @if(!is_null($product['series']))
+        @include('shop.nordihome.product._series', ['series' => $product['series']])
+    @endif
 
     <div class="box-card">
         <h3 id="description">Описание</h3>

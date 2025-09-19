@@ -1,4 +1,3 @@
-
 <div class="modification">
     @foreach($product['modification'] as $attribute)
         @if(isset($attribute['products']))
