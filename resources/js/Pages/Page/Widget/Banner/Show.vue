@@ -2,21 +2,19 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Виджет {{ widget.name }}
+            Баннер {{ banner.name }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <WidgetInfo :widget="widget" :templates="templates" :banners="banners"/>
+            <BannerInfo :banner="banner" :templates="templates"/>
         </div>
+
+        <UploadImageFile
+            label="Новый элемент"
+            @selectImageFile="onAddItem"
+        />
+
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <div class="flex" style="width: 450px;">
-            <el-select v-model="group_id" clearable>
-                <el-option v-for="item in groups" :value="item.id" :label="item.name" />
-            </el-select>
-            <el-button type="primary" @click="onAddItem">Добавить группу</el-button>
-            </div>
-        </div>
-        <div class="mt-3 p-3 bg-white rounded-lg ">
-            <WidgetItems :items="widget.items" />
+            <BannerItems :items="banner.items" />
         </div>
 
     </el-config-provider>
@@ -27,32 +25,29 @@ import {Head, router} from "@inertiajs/vue3";
 import {defineProps, inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 
-import WidgetInfo from './Block/Info.vue'
-import WidgetItems from './Block/Items.vue'
+import BannerInfo from './Block/Info.vue'
+import BannerItems from './Block/Items.vue'
 import UploadImageFile from "@Comp/UploadImageFile.vue";
 import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
-    widget: Object,
+    banner: Object,
     templates: Array,
-    groups: Array,
-    banners: Array,
     title: {
         type: String,
-        default: 'Карточка виджета',
+        default: 'Карточка баннера',
     },
 })
 const form = reactive({
     file: null,
     clear_file: false,
 })
-const group_id = ref(null)
 function onAddItem(val) {
     form.clear_file = val.clear_file;
     form.file = val.file
-    router.visit(route('admin.page.widget.add-item', {widget: props.widget.id}), {
+    router.visit(route('admin.page.widget.banner.add-item', {banner: props.banner.id}), {
         method: "post",
-        data: {group_id: group_id.value},
+        data: form,
         preserveScroll: true,
         preserveState: false,
         onSuccess: page => {

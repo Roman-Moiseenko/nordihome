@@ -67,7 +67,7 @@ const form = reactive({
 const $delete_entity = inject("$delete_entity")
 
 function onUp(row) {
-    router.visit(route('admin.page.banner.up-item', {item: row.id}), {
+    router.visit(route('admin.page.widget.banner.up-item', {item: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -76,7 +76,7 @@ function onUp(row) {
     })
 }
 function onDown(row) {
-    router.visit(route('admin.page.banner.down-item', {item: row.id}), {
+    router.visit(route('admin.page.widget.banner.down-item', {item: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -112,7 +112,7 @@ function setDescription(row, val) {
 }
 
 function setItem(row) {
-    router.visit(route('admin.page.banner.set-item', {item: row.id}), {
+    router.visit(route('admin.page.widget.banner.set-item', {item: row.id}), {
         method: "post",
         data: form,
         preserveScroll: true,
@@ -122,6 +122,6 @@ function setItem(row) {
     })
 }
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.page.banner.del-item', {item: row.id}));
+    $delete_entity.show(route('admin.page.widget.banner.del-item', {item: row.id}));
 }
 </script>

@@ -17,13 +17,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $caption
  * @property string $description
  * @property string $url
- * @property Widget $widget
+ * @property ProductWidget $widget
  * @property Group $group
  */
-class WidgetItem extends Model
+class ProductWidgetItem extends Model
 {
     use ImageField;
 
+    //TODO Миграция переименовать
+    protected $table='widget_items';
     public $timestamps = false;
     protected $fillable = [
         'widget_id',
@@ -42,7 +44,7 @@ class WidgetItem extends Model
 
     public function widget(): BelongsTo
     {
-        return $this->belongsTo(Widget::class, 'widget_id', 'id');
+        return $this->belongsTo(ProductWidget::class, 'widget_id', 'id');
     }
 
     public function group(): BelongsTo

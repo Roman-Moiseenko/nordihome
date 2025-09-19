@@ -1,25 +1,25 @@
 <template>
     <el-descriptions v-if="!editWidget" :column="3" border class="mb-5">
         <el-descriptions-item label="Виджет">
-            {{ widget.name }}
+            {{ product.name }}
         </el-descriptions-item>
         <el-descriptions-item label="Шаблон">
-            {{ widget.template }}
+            {{ product.template }}
         </el-descriptions-item>
         <el-descriptions-item label="Ссылка">
-            {{ widget.url }}
+            {{ product.url }}
         </el-descriptions-item>
         <el-descriptions-item label="Активен">
-            <Active :active="widget.active" />
+            <Active :active="product.active" />
         </el-descriptions-item>
         <el-descriptions-item label="Заголовок">
-            {{ widget.caption }}
+            {{ product.caption }}
         </el-descriptions-item>
         <el-descriptions-item label="Описание">
-            {{ widget.description }}
+            {{ product.description }}
         </el-descriptions-item>
         <el-descriptions-item label="Баннер">
-            {{ (widget.banner) ? widget.banner.name : '' }}
+            {{ (product.banner) ? widget.banner.name : '' }}
         </el-descriptions-item>
     </el-descriptions>
     <el-button v-if="!editWidget" type="warning" @click="editWidget = true">Изменить</el-button>
@@ -57,24 +57,24 @@ import {router} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
 
 const props = defineProps({
-    widget: Object,
+    product: Object,
     templates: Array,
     banners: Array,
 })
-console.log(props.widget)
+console.log(props.product)
 const editWidget = ref(false)
 const form = reactive({
-    name: props.widget.name,
-    template: props.widget.template,
-    banner_id: props.widget.banner_id,
-    url: props.widget.url,
-    caption: props.widget.caption,
-    description: props.widget.description,
+    name: props.product.name,
+    template: props.product.template,
+    banner_id: props.product.banner_id,
+    url: props.product.url,
+    caption: props.product.caption,
+    description: props.product.description,
 })
 
 
 function setWidget() {
-    router.visit(route('admin.page.widget.set-widget', {widget: props.widget.id}), {
+    router.visit(route('admin.page.widget.product.set-widget', {product: props.product.id}), {
         method: "post",
         data: form,
         preserveScroll: true,

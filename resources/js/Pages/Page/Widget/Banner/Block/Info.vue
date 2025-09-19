@@ -55,7 +55,7 @@ const form = reactive({
 
 
 function setBanner() {
-    router.visit(route('admin.page.banner.set-banner', {banner: props.banner.id}), {
+    router.visit(route('admin.page.widget.banner.set-banner', {banner: props.banner.id}), {
         method: "post",
         data: form,
         preserveScroll: true,

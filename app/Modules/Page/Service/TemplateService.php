@@ -5,7 +5,7 @@ namespace App\Modules\Page\Service;
 
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Template;
-use App\Modules\Page\Entity\Widget;
+use App\Modules\Page\Entity\ProductWidget;
 use App\Modules\Page\Repository\TemplateRepository;
 use Illuminate\Http\Request;
 
@@ -48,7 +48,7 @@ class TemplateService
 
         $isset = null;
         if ($type == 'widget') {
-            $isset = Widget::where('template', $template)->first();
+            $isset = ProductWidget::where('template', $template)->first();
         }
         if ($type == 'page') {
             $isset = Page::where('template', $template)->first();

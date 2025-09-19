@@ -1,19 +1,20 @@
 <?php
 
+use App\Modules\Page\Controllers\CacheController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
         'prefix' => 'page',
         'as' => 'page.',
-       // 'namespace' => 'Page',
+    //    'namespace' => 'App\Modules\Page\Controllers',
     ],
     function () {
         Route::group([
             'prefix' => 'cache',
-            'as' => 'cache.'
+            'as' => 'cache.' //'CacheController@remove'
         ], function () {
-            Route::post('/remove', 'CacheController@remove')->name('remove');
+            Route::post('/remove', [CacheController::class, 'clear'])->name('remove');
             Route::post('/create', 'CacheController@create')->name('create');
             Route::post('/categories', 'CacheController@categories')->name('categories');
             Route::post('/products', 'CacheController@products')->name('products');
@@ -23,19 +24,64 @@ Route::group(
             Route::get('/', 'CacheController@index')->name('index');
         });
 
+        //Виджеты
         Route::group([
             'prefix' => 'widget',
             'as' => 'widget.'
         ], function () {
-            Route::post('/set-widget/{widget}', 'WidgetController@set_widget')->name('set-widget');
-            Route::post('/add-item/{widget}', 'WidgetController@add_item')->name('add-item');
-            Route::post('/set-item/{item}', 'WidgetController@set_item')->name('set-item');
-            Route::delete('/del-item/{item}', 'WidgetController@del_item')->name('del-item');
-            Route::post('/toggle/{widget}', 'WidgetController@toggle')->name('toggle');
-            Route::post('/up-item/{item}', 'WidgetController@up_item')->name('up-item');
-            Route::post('/down-item/{item}', 'WidgetController@down_item')->name('down-item');
+            Route::group([
+                'prefix' => 'product',
+                'as' => 'product.'
+            ], function () {
+                Route::post('/set-widget/{product}', 'ProductWidgetController@set_widget')->name('set-widget');
+                Route::post('/add-item/{product}', 'ProductWidgetController@add_item')->name('add-item');
+                Route::post('/set-item/{item}', 'ProductWidgetController@set_item')->name('set-item');
+                Route::delete('/del-item/{item}', 'ProductWidgetController@del_item')->name('del-item');
+                Route::post('/toggle/{product}', 'ProductWidgetController@toggle')->name('toggle');
+                Route::post('/up-item/{item}', 'ProductWidgetController@up_item')->name('up-item');
+                Route::post('/down-item/{item}', 'ProductWidgetController@down_item')->name('down-item');
+
+            });
+            Route::resource('product', 'ProductWidgetController')->except(['create', 'edit', 'update']); //CRUD
+
+            Route::group([
+                'prefix' => 'banner',
+                'as' => 'banner.'
+            ], function () {
+                Route::post('/set-banner/{banner}', 'BannerWidgetController@set_banner')->name('set-banner');
+                Route::post('/add-item/{banner}', 'BannerWidgetController@add_item')->name('add-item');
+                Route::post('/set-item/{item}', 'BannerWidgetController@set_item')->name('set-item');
+                Route::delete('/del-item/{item}', 'BannerWidgetController@del_item')->name('del-item');
+                Route::post('/toggle/{banner}', 'BannerWidgetController@toggle')->name('toggle');
+                Route::post('/up-item/{item}', 'BannerWidgetController@up_item')->name('up-item');
+                Route::post('/down-item/{item}', 'BannerWidgetController@down_item')->name('down-item');
+            });
+            Route::resource('banner', 'BannerWidgetController')->except(['create', 'edit', 'update']); //CRUD
+
+
+            Route::group([
+                'prefix' => 'promotion',
+                'as' => 'promotion.'
+            ], function () {
+
+            });
+            Route::resource('promotion', 'PromotionWidgetController')->except(['create', 'edit', 'update']); //CRUD
+
+            Route::group([
+                'prefix' => 'text',
+                'as' => 'text.'
+            ], function () {
+                Route::post('/set-widget/{text}', 'TextWidgetController@set_widget')->name('set-widget');
+                Route::post('/add-item/{text}', 'TextWidgetController@add_item')->name('add-item');
+                Route::post('/set-item/{item}', 'TextWidgetController@set_item')->name('set-item');
+                Route::delete('/del-item/{item}', 'TextWidgetController@del_item')->name('del-item');
+                Route::post('/toggle/{text}', 'TextWidgetController@toggle')->name('toggle');
+                Route::post('/up-item/{item}', 'TextWidgetController@up_item')->name('up-item');
+                Route::post('/down-item/{item}', 'TextWidgetController@down_item')->name('down-item');
+            });
+            Route::resource('text', 'TextWidgetController')->except(['create', 'edit', 'update']); //CRUD
         });
-        Route::resource('widget', 'WidgetController')->except(['create', 'edit', 'update']); //CRUD
+
 
 
         Route::group([
@@ -64,19 +110,7 @@ Route::group(
 
 
 
-        Route::group([
-            'prefix' => 'banner',
-            'as' => 'banner.'
-        ], function () {
-            Route::post('/set-banner/{banner}', 'BannerController@set_banner')->name('set-banner');
-            Route::post('/add-item/{banner}', 'BannerController@add_item')->name('add-item');
-            Route::post('/set-item/{item}', 'BannerController@set_item')->name('set-item');
-            Route::delete('/del-item/{item}', 'BannerController@del_item')->name('del-item');
-            Route::post('/toggle/{banner}', 'BannerController@toggle')->name('toggle');
-            Route::post('/up-item/{item}', 'BannerController@up_item')->name('up-item');
-            Route::post('/down-item/{item}', 'BannerController@down_item')->name('down-item');
-        });
 
-        Route::resource('banner', 'BannerController')->except(['create', 'edit', 'update']); //CRUD
+
     }
 );

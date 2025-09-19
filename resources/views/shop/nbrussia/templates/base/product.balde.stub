@@ -1,4 +1,4 @@
-<!--template:Виджет-->
+<!--template:Виджет Товаров по группам-->
 @php
 /**
 * $widget->banner - Banner::class
@@ -6,7 +6,7 @@
 * $widget->url
 * $widget->caption
 * $widget->description
-* $widget->items - array WidgetItem:
+* $widget->items - array ProductWidgetItem:
 * $item->slug
 * $item->name
 * $item->url
@@ -17,7 +17,7 @@
 * $item-group->slug
 * $item-group->published
 * $item-group->description
-* $item-group->products - array Product::class
+* $item-group->products - array Product::class:
 * $product->name
 * $product->slug
 * $product->code Артикул
@@ -31,8 +31,8 @@
 
 */
 
-use App\Modules\Page\Entity\Widget;
-/** @var Widget $widget  */
+use App\Modules\Page\Entity\ProductWidget;
+/** @var ProductWidget $widget  */
 @endphp
 <div>
 

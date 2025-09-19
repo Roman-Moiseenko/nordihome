@@ -1,24 +1,57 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\Page\Entity\Banner;
+use App\Modules\Page\Entity\BannerWidget;
 use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Entity\Page;
-use App\Modules\Page\Entity\Widget;
+use App\Modules\Page\Entity\ProductWidget;
+use App\Modules\Page\Entity\PromotionWidget;
+use App\Modules\Page\Entity\TextWidget;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 
-//WIDGET
-Breadcrumbs::for('admin.page.widget.index', function (BreadcrumbTrail $trail) {
+//////WIDGETS//////
+
+//PRODUCT
+Breadcrumbs::for('admin.page.widget.product.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Виджеты', route('admin.page.widget.index'));
+    $trail->push('Виджеты', route('admin.page.widget.product.index'));
 });
 
-Breadcrumbs::for('admin.page.widget.show', function (BreadcrumbTrail $trail, Widget $widget) {
-    $trail->parent('admin.page.widget.index');
-    $trail->push($widget->name, route('admin.page.widget.show', $widget));
+Breadcrumbs::for('admin.page.widget.product.show', function (BreadcrumbTrail $trail, ProductWidget $product) {
+    $trail->parent('admin.page.widget.product.index');
+    $trail->push($product->name, route('admin.page.widget.product.show', $product));
 });
+//BANNER
+Breadcrumbs::for('admin.page.widget.banner.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Баннеры', route('admin.page.widget.banner.index'));
+});
+Breadcrumbs::for('admin.page.widget.banner.show', function (BreadcrumbTrail $trail, BannerWidget $banner) {
+    $trail->parent('admin.page.widget.banner.index', $banner);
+    $trail->push($banner->name, route('admin.page.widget.banner.show', $banner));
+});
+//PROMOTION
+Breadcrumbs::for('admin.page.widget.promotion.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Акции', route('admin.page.widget.promotion.index'));
+});
+Breadcrumbs::for('admin.page.widget.promotion.show', function (BreadcrumbTrail $trail, PromotionWidget $promotion) {
+    $trail->parent('admin.page.widget.promotion.index', $promotion);
+    $trail->push($promotion->name, route('admin.page.widget.promotion.show', $promotion));
+});
+//TEXT
+Breadcrumbs::for('admin.page.widget.text.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Текстовые блоки', route('admin.page.widget.text.index'));
+});
+Breadcrumbs::for('admin.page.widget.text.show', function (BreadcrumbTrail $trail, TextWidget $text) {
+    $trail->parent('admin.page.widget.text.index', $text);
+    $trail->push($text->name, route('admin.page.widget.text.show', $text));
+});
+
+//////WIDGETS//////
 
 //CACHE
 Breadcrumbs::for('admin.page.cache.index', function (BreadcrumbTrail $trail) {
@@ -59,12 +92,3 @@ Breadcrumbs::for('admin.page.contact.edit', function (BreadcrumbTrail $trail, Co
     $trail->push($contact->name . ' - Редактировать', route('admin.page.page.edit', $contact));
 });
 
-//BANNER
-Breadcrumbs::for('admin.page.banner.index', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.home');
-    $trail->push('Баннеры', route('admin.page.banner.index'));
-});
-Breadcrumbs::for('admin.page.banner.show', function (BreadcrumbTrail $trail, Banner $banner) {
-    $trail->parent('admin.page.banner.index', $banner);
-    $trail->push($banner->name, route('admin.page.banner.show', $banner));
-});

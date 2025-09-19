@@ -3,23 +3,23 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Service;
 
-use App\Modules\Page\Entity\Banner;
-use App\Modules\Page\Entity\BannerItem;
+use App\Modules\Page\Entity\BannerWidget;
+use App\Modules\Page\Entity\BannerWidgetItem;
 use DB;
 use Illuminate\Http\Request;
 
 class BannerService
 {
 
-    public function create(Request $request): Banner
+    public function create(Request $request): BannerWidget
     {
-        return Banner::register(
+        return BannerWidget::register(
             $request->string('name')->trim()->value(),
             $request->string('template')->value()
         );
     }
 
-    public function setBanner(Banner $banner, Request $request): void
+    public function setBanner(BannerWidget $banner, Request $request): void
     {
         $banner->name = $request->string('name')->trim()->value();
         $banner->template = $request->string('template')->trim()->value();
@@ -29,7 +29,7 @@ class BannerService
         $banner->save();
     }
 
-    public function delBanner(Banner $banner): void
+    public function delBanner(BannerWidget $banner): void
     {
         if ($banner->active) throw new \DomainException('Нельзя удалить активный баннер');
         foreach ($banner->items as $item) {
@@ -38,12 +38,12 @@ class BannerService
         $banner->delete();
     }
 
-    public function addItem(Banner $banner, Request $request): void
+    public function addItem(BannerWidget $banner, Request $request): void
     {
         $file = $request->file('file');
         if (empty($file)) throw new \DomainException('Нет изображения');
         DB::transaction(function () use ($banner, $file) {
-            $item = BannerItem::register($banner->id);
+            $item = BannerWidgetItem::register($banner->id);
             $item->saveImage($file);
             $item->refresh();
             $item->image->thumb = false;
@@ -51,7 +51,7 @@ class BannerService
         });
     }
 
-    public function delItem(BannerItem $item): void
+    public function delItem(BannerWidgetItem $item): void
     {
         $item->image->delete();
         $item->delete();
@@ -62,7 +62,7 @@ class BannerService
         }
     }
 
-    public function setItem(BannerItem $item, Request $request): void
+    public function setItem(BannerWidgetItem $item, Request $request): void
     {
         $item->saveImage($request->file('file'), $request->boolean('clear_file'));
 
@@ -74,14 +74,14 @@ class BannerService
         $item->save();
     }
 
-    public function toggle(Banner $banner): void
+    public function toggle(BannerWidget $banner): void
     {
         if (!$banner->active && $banner->items()->count() == 0) throw new \DomainException('Нет элементов для показа');
         $banner->active = !$banner->active;
         $banner->save();
     }
 
-    public function upItem(BannerItem $item): void
+    public function upItem(BannerWidgetItem $item): void
     {
 
         $items = [];
@@ -98,7 +98,7 @@ class BannerService
         }
     }
 
-    public function downItem(BannerItem $item): void
+    public function downItem(BannerWidgetItem $item): void
     {
         $items = [];
         foreach ($item->banner->items as $_item) {

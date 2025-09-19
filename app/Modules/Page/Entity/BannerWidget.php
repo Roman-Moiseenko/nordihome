@@ -8,40 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
- * @property int $id
- * @property bool $active
- * @property string $name
- * @property string $template
- * @property string $caption
- * @property string $description
- * @property BannerItem[] $items
+ * @property BannerWidgetItem[] $items
  */
-class Banner extends Model
+class BannerWidget extends Widget
 {
 
-    public $timestamps = false;
+    //TODO Миграция переименовать widget_banners
+    protected $table="banners";
 
-    protected $fillable = [
-        'name',
-        'active',
-        'template',
-    ];
-
-    public static function register(string $name, string $template)
-    {
-        return self::create([
-            'name' => $name,
-            'template' => $template,
-            'active' => false,
-        ]);
-    }
-
-    public function isActive(): bool
-    {
-        return $this->active == true;
-    }
-
-    public function itemBySlug(string $slug): ?BannerItem
+    public function itemBySlug(string $slug): ?BannerWidgetItem
     {
         foreach ($this->items as $item) {
             if ($item->slug = $slug) return $item;
@@ -51,13 +26,13 @@ class Banner extends Model
 
     public function items(): HasMany
     {
-        return $this->hasMany(BannerItem::class, 'banner_id', 'id')->orderBy('sort');
+        return $this->hasMany(BannerWidgetItem::class, 'banner_id', 'id')->orderBy('sort');
     }
 
     #[Deprecated]
     public static function findView(int $id): string
     {
-        /** @var Banner $banner */
+        /** @var BannerWidget $banner */
         $banner = self::find($id);
         if (is_null($banner)) return '';
         return $banner->view();

@@ -16,12 +16,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $sort
  * @property string $slug
  *
- * @property Banner $banner
+ * @property BannerWidget $banner
  */
-class BannerItem extends Model
+class BannerWidgetItem extends Model
 {
     use ImageField;
     public $timestamps = false;
+
+    protected $table= "banner_items";
 
     protected $fillable = [
         'banner_id',
@@ -38,6 +40,6 @@ class BannerItem extends Model
 
     public function banner(): BelongsTo
     {
-        return $this->belongsTo(Banner::class, 'banner_id', 'id');
+        return $this->belongsTo(BannerWidget::class, 'banner_id', 'id');
     }
 }

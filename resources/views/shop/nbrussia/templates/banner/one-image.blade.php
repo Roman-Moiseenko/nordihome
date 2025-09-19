@@ -11,7 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Page\Entity\Banner $banner */
+    /** @var \App\Modules\Page\Entity\BannerWidget $banner */
     $item = $banner->items()->first();
 @endphp
 <div class="banner-one-image">

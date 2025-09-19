@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Entity\Page;
-use App\Modules\Page\Entity\Widget;
+use App\Modules\Page\Entity\ProductWidget;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 

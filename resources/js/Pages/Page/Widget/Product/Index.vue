@@ -1,7 +1,7 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Сайт. Виджеты</h1>
+        <h1 class="font-medium text-xl">Сайт. Виджеты товаров</h1>
         <div class="flex">
             <el-button type="primary" class="p-4 my-3" @click="dialogCreate = true" ref="buttonRef">
                 Добавить виджет
@@ -90,26 +90,26 @@ import {route} from "ziggy-js";
 import axios from "axios";
 
 const props = defineProps({
-    widgets: Array,
+    products: Array,
     title: {
         type: String,
-        default: 'Сайт. Виджеты',
+        default: 'Сайт. Виджеты товаров',
     },
     templates: Array,
 })
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.widgets])
+const tableData = ref([...props.products])
 const form = reactive({
     id: null,
     name: null,
     templates: null,
 })
 function copyBuffer(row) {
-    navigator.clipboard.writeText('[widget="' + row.id + '" name="' + row.name + '"]');
+    navigator.clipboard.writeText('[product="' + row.id + '" name="' + row.name + '"]');
 }
 function saveWidget() {
-    router.visit(route('admin.page.widget.store' ), {
+    router.visit(route('admin.page.widget.product.store' ), {
         method: "post",
         data: form,
         preserveScroll: true,
@@ -120,17 +120,17 @@ function saveWidget() {
     })
 }
 function onToggle(row) {
-    router.visit(route('admin.page.widget.toggle', {widget: row.id}), {
+    router.visit(route('admin.page.widget.product.toggle', {product: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function routeClick(row) {
-   router.get(route('admin.page.widget.show', {widget: row.id}))
+   router.get(route('admin.page.widget.product.show', {product: row.id}))
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.page.widget.destroy', {widget: row.id}));
+    $delete_entity.show(route('admin.page.widget.product.destroy', {product: row.id}));
 }
 </script>

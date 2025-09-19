@@ -118,16 +118,16 @@ function onOpenDialog() {
 }
 
 function saveBanner() {
-    router.post(route('admin.page.banner.store' ), form)
+    router.post(route('admin.page.widget.banner.store' ), form)
 }
 
 function routeClick(row) {
 
-   router.get(route('admin.page.banner.show', {banner: row.id}))
+   router.get(route('admin.page.widget.banner.show', {banner: row.id}))
 }
 
 function onToggle(row) {
-    router.visit(route('admin.page.banner.toggle', {banner: row.id}), {
+    router.visit(route('admin.page.widget.banner.toggle', {banner: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -135,6 +135,6 @@ function onToggle(row) {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.page.banner.destroy', {banner: row.id}));
+    $delete_entity.show(route('admin.page.widget.banner.destroy', {banner: row.id}));
 }
 </script>

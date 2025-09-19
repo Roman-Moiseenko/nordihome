@@ -9,14 +9,15 @@ class Template
 {
     public const TYPES = [
         'banner' => 'Баннеры',
-        'widget' => 'Виджеты с товарами',
+        'product' => 'Виджеты с товарами',
         'page' => 'Страницы',
-        'promotion' => 'Акции',
+        'promotion' => 'Виджеты акции',
+        'text' => 'Текстовые виджеты',
     ];
 
     const RENDERS = [
-        'widget' => Widget::class,
-        'banner' => Banner::class,
+        'product' => ProductWidget::class,
+        'banner' => BannerWidget::class,
         'promotion' => Promotion::class,
     ];
 
