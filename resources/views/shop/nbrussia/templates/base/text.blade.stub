@@ -6,14 +6,12 @@
 * $widget->description - string
 * $widget->image - Photo::class
 * $widget->icon - Photo::class
-* BannerItem:class
+* TextWidgetItem:class
 * $widget->items - Arraible
-* $widget->itemBySlug(string)?: Banneritem
-* $item->image - Photo::class
-* $item->url - string
-* $item->caption - string
-* $item->description - string
-* $item->slug - string
+* $widget->itemBySlug(string)?: TextWidgetItem
+* $item->caption -
+* $item->text - text (форматируемый текст)
+
 */
 /** @var \App\Modules\Page\Entity\Banner $widget */
 @endphp

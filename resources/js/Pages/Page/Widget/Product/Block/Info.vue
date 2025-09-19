@@ -44,11 +44,11 @@
                 <el-descriptions-item label="Заголовок">
                     {{ widget.caption }}
                 </el-descriptions-item>
-                <el-descriptions-item label="Описание">
-                    {{ widget.description }}
-                </el-descriptions-item>
                 <el-descriptions-item label="Баннер">
                     {{ (widget.banner) ? widget.banner.name : '' }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Описание">
+                    {{ widget.description }}
                 </el-descriptions-item>
             </el-descriptions>
         </el-col>

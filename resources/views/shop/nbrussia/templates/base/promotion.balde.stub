@@ -8,18 +8,17 @@
 * $widget->description
 * $widget->image - Photo::class
 * $widget->icon - Photo::class
-* $widget->items - array ProductWidgetItem:
-* $item->slug
-* $item->name
-* $item->url
-* $item->caption
-* $item->description
-* $item-group - Group::class
-* $item-group->name
-* $item-group->slug
-* $item-group->published
-* $item-group->description
-* $item-group->products - array Product::class:
+* $widget->banner - BannerWidget:
+* $widget->promotion  - Promotion::class
+* $widget->promotion->products - array Product::class:
+* $widget->promotion->name
+* $widget->promotion->description
+* $widget->promotion->condition_url
+* $widget->promotion->start_at
+* $widget->promotion->finish_at
+* $widget->promotion->slug
+* $widget->promotion->discount - базовая скидка
+
 * $product->name
 * $product->slug
 * $product->code Артикул
@@ -33,7 +32,7 @@
 
 */
 
-use App\Modules\Page\Entity\ProductWidget;
+use App\Modules\Page\Entity\PromotionWidget;
 /** @var ProductWidget $widget  */
 @endphp
 <div>

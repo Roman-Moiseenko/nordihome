@@ -37,55 +37,55 @@ class PromotionWidgetController extends Controller
 
     public function index(Request $request): Response
     {
-        $promotions = $this->repository->getIndex($request);
+        $widgets = $this->repository->getIndex($request);
         $templates = $this->templates->getTemplates('promotion');
 
         return Inertia::render('Page/Widget/Promotion/Index', [
-            'promotions' => $promotions,
+            'widgets' => $widgets,
             'templates' => $templates,
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $promotion = $this->service->create($request);
-        return redirect()->route('admin.page.widget.promotion.show', $promotion)->with('success', 'Виджет акции сохранен');
+        $widget = $this->service->create($request);
+        return redirect()->route('admin.page.widget.promotion.show', $widget)->with('success', 'Виджет акции сохранен');
     }
 
-    public function show(PromotionWidget $promotion): Response
+    public function show(PromotionWidget $widget): Response
     {
         $templates = $this->templates->getTemplates('promotion');
         $banners = BannerWidget::orderBy('name')->getModels();
         $promotions = Promotion::orderBy('name')->where('active', true)->getModels();
 
         return Inertia::render('Page/Widget/Promotion/Show', [
-            'promotion' => $this->repository->PromotionWithToArray($promotion),
+            'widget' => $this->repository->PromotionWithToArray($widget),
             'templates' => $templates,
             'banners' => $banners,
             'promotions' => $promotions,
         ]);
     }
 
-    public function toggle(PromotionWidget $promotion): RedirectResponse
+    public function toggle(PromotionWidget $widget): RedirectResponse
     {
-        if ($promotion->isActive()) {
+        if ($widget->isActive()) {
             $message = 'Виджет акции убран из показа';
         } else {
             $message = 'Виджет акции добавлен в показы';
         }
-        $this->service->toggle($promotion);
+        $this->service->toggle($widget);
         return redirect()->back()->with('success', $message);
     }
 
-    public function set_widget(PromotionWidget $promotion, Request $request): RedirectResponse
+    public function set_widget(PromotionWidget $widget, Request $request): RedirectResponse
     {
-        $this->service->setWidget($promotion, $request);
+        $this->service->setWidget($widget, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(PromotionWidget $promotion): RedirectResponse
+    public function destroy(PromotionWidget $widget): RedirectResponse
     {
-        $this->service->delWidget($promotion);
+        $this->service->delWidget($widget);
         return redirect()->back()->with('success', 'Виджет акции удален');
     }
 

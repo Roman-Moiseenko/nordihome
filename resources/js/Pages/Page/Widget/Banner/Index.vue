@@ -1,7 +1,7 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Сайт. Баннеры</h1>
+        <h1 class="font-medium text-xl">Сайт. Баннеры (Виджет)</h1>
         <div class="flex">
             <el-button type="primary" class="p-4 my-3" @click="onOpenDialog" ref="buttonRef">
                 Добавить баннер
@@ -90,17 +90,17 @@ import {route} from "ziggy-js";
 import axios from "axios";
 
 const props = defineProps({
-    banners: Array,
+    widgets: Array,
     templates: Array,
     title: {
         type: String,
-        default: 'Сайт. Баннеры',
+        default: 'Сайт. Баннеры (Виджет)',
     },
 })
 
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.banners])
+const tableData = ref([...props.widgets])
 const form = reactive({
     name: null,
     template: null,
@@ -123,11 +123,11 @@ function saveBanner() {
 
 function routeClick(row) {
 
-   router.get(route('admin.page.widget.banner.show', {banner: row.id}))
+   router.get(route('admin.page.widget.banner.show', {widget: row.id}))
 }
 
 function onToggle(row) {
-    router.visit(route('admin.page.widget.banner.toggle', {banner: row.id}), {
+    router.visit(route('admin.page.widget.banner.toggle', {widget: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -135,6 +135,6 @@ function onToggle(row) {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.page.widget.banner.destroy', {banner: row.id}));
+    $delete_entity.show(route('admin.page.widget.banner.destroy', {widget: row.id}));
 }
 </script>

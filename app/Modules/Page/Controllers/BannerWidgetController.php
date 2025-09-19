@@ -35,46 +35,46 @@ class BannerWidgetController extends Controller
 
     public function index(Request $request): Response
     {
-        $banners = $this->repository->getIndex($request);
+        $widgets = $this->repository->getIndex($request);
         $templates = $this->templates->getTemplates('banner');
 
         return Inertia::render('Page/Widget/Banner/Index', [
-            'banners' => $banners,
+            'widgets' => $widgets,
             'templates' => $templates,
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $banner = $this->service->create($request);
-        return redirect()->route('admin.page.widget.banner.show', $banner)->with('success', 'Баннер сохранен');
+        $widget = $this->service->create($request);
+        return redirect()->route('admin.page.widget.banner.show', $widget)->with('success', 'Баннер сохранен');
     }
 
-    public function show(BannerWidget $banner): Response
+    public function show(BannerWidget $widget): Response
     {
         $templates = $this->templates->getTemplates('banner');
 
         return Inertia::render('Page/Widget/Banner/Show', [
-            'banner' => $this->repository->BannerWithToArray($banner),
+            'widget' => $this->repository->BannerWithToArray($widget),
             'templates' => $templates,
         ]);
     }
 
-    public function set_banner(BannerWidget $banner, Request $request): RedirectResponse
+    public function set_widget(BannerWidget $widget, Request $request): RedirectResponse
     {
-        $this->service->setBanner($banner, $request);
+        $this->service->setBanner($widget, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(BannerWidget $banner): RedirectResponse
+    public function destroy(BannerWidget $widget): RedirectResponse
     {
-        $this->service->delBanner($banner);
+        $this->service->delBanner($widget);
         return redirect()->back()->with('success', 'Баннер удален');
     }
 
-    public function add_item(BannerWidget $banner, Request $request): RedirectResponse
+    public function add_item(BannerWidget $widget, Request $request): RedirectResponse
     {
-        $this->service->addItem($banner, $request);
+        $this->service->addItem($widget, $request);
         return redirect()->back()->with('success', 'Элемент добавлен');
     }
 
@@ -90,14 +90,14 @@ class BannerWidgetController extends Controller
         return redirect()->back()->with('success', 'Удалено');
     }
 
-    public function toggle(BannerWidget $banner): RedirectResponse
+    public function toggle(BannerWidget $widget): RedirectResponse
     {
-        if ($banner->isActive()) {
+        if ($widget->isActive()) {
             $message = 'Баннер убран из показа';
         } else {
             $message = 'Баннер добавлен в показы';
         }
-        $this->service->toggle($banner);
+        $this->service->toggle($widget);
         return redirect()->back()->with('success', $message);
     }
 

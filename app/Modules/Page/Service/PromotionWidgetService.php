@@ -16,14 +16,14 @@ class PromotionWidgetService extends WidgetService
         );
     }
 
-    public function setWidget(PromotionWidget $promotion, Request $request): void
+    public function setWidget(PromotionWidget $widget, Request $request): void
     {
-        $this->setBase($promotion, $request);
+        $this->setBase($widget, $request);
 
-        $promotion->promotion_id = $request->integer('promotion_id');
-        $promotion->banner_id = $request->input('banner_id');
+        $widget->promotion_id = $request->integer('promotion_id');
+        $widget->banner_id = $request->input('banner_id');
 
-        $promotion->save();
+        $widget->save();
     }
 
 

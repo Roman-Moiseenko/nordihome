@@ -1,7 +1,9 @@
 <?php
 
+use App\Modules\Page\Controllers\BannerWidgetController;
 use App\Modules\Page\Controllers\CacheController;
 use App\Modules\Page\Controllers\ProductWidgetController;
+use App\Modules\Page\Controllers\PromotionWidgetController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -53,26 +55,35 @@ Route::group(
                 'prefix' => 'banner',
                 'as' => 'banner.'
             ], function () {
-                Route::post('/set-banner/{banner}', 'BannerWidgetController@set_banner')->name('set-banner');
-                Route::post('/add-item/{banner}', 'BannerWidgetController@add_item')->name('add-item');
-                Route::post('/set-item/{item}', 'BannerWidgetController@set_item')->name('set-item');
-                Route::delete('/del-item/{item}', 'BannerWidgetController@del_item')->name('del-item');
-                Route::post('/toggle/{banner}', 'BannerWidgetController@toggle')->name('toggle');
-                Route::post('/up-item/{item}', 'BannerWidgetController@up_item')->name('up-item');
-                Route::post('/down-item/{item}', 'BannerWidgetController@down_item')->name('down-item');
+                Route::post('/set-banner/{widget}', [BannerWidgetController::class, 'set_widget'])->name('set-widget');
+                Route::post('/add-item/{widget}', [BannerWidgetController::class, 'add_item'])->name('add-item');
+                Route::post('/set-item/{item}', [BannerWidgetController::class, 'set_item'])->name('set-item');
+                Route::delete('/del-item/{item}', [BannerWidgetController::class, 'del_item'])->name('del-item');
+                Route::post('/toggle/{widget}', [BannerWidgetController::class, 'toggle'])->name('toggle');
+                Route::post('/up-item/{item}', [BannerWidgetController::class, 'up_item'])->name('up-item');
+                Route::post('/down-item/{item}', [BannerWidgetController::class, 'down_item'])->name('down-item');
+
+                Route::get('/{widget}', [BannerWidgetController::class, 'show'])->name('show');
+                Route::post('/', [BannerWidgetController::class, 'store'])->name('store');
+                Route::delete('/{widget}', [BannerWidgetController::class, 'destroy'])->name('destroy');
+                Route::get('/', [BannerWidgetController::class, 'index'])->name('index');
             });
-            Route::resource('banner', 'BannerWidgetController')->except(['create', 'edit', 'update']); //CRUD
+           // Route::resource('banner', 'BannerWidgetController')->except(['create', 'edit', 'update']); //CRUD
 
 
             Route::group([
                 'prefix' => 'promotion',
                 'as' => 'promotion.'
             ], function () {
-                Route::post('/set-widget/{promotion}', 'PromotionWidgetController@set_widget')->name('set-widget');
-                Route::post('/toggle/{promotion}', 'PromotionWidgetController@toggle')->name('toggle');
+                Route::post('/set-widget/{widget}', [PromotionWidgetController::class, 'set_widget'])->name('set-widget');
+                Route::post('/toggle/{widget}', [PromotionWidgetController::class, 'toggle'])->name('toggle');
 
+                Route::get('/{widget}', [PromotionWidgetController::class, 'show'])->name('show');
+                Route::post('/', [PromotionWidgetController::class, 'store'])->name('store');
+                Route::delete('/{widget}', [PromotionWidgetController::class, 'destroy'])->name('destroy');
+                Route::get('/', [PromotionWidgetController::class, 'index'])->name('index');
             });
-            Route::resource('promotion', 'PromotionWidgetController')->except(['create', 'edit', 'update']); //CRUD
+          //  Route::resource('promotion', 'PromotionWidgetController')->except(['create', 'edit', 'update']); //CRUD
 
             Route::group([
                 'prefix' => 'text',

@@ -2,10 +2,10 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Баннер {{ banner.name }}
+            Баннер {{ widget.name }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <BannerInfo :banner="banner" :templates="templates"/>
+            <BannerInfo :widget="widget" :templates="templates"/>
         </div>
 
         <UploadImageFile
@@ -14,7 +14,7 @@
         />
 
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <BannerItems :items="banner.items" />
+            <BannerItems :items="widget.items" />
         </div>
 
     </el-config-provider>
@@ -31,7 +31,7 @@ import UploadImageFile from "@Comp/UploadImageFile.vue";
 import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
-    banner: Object,
+    widget: Object,
     templates: Array,
     title: {
         type: String,
@@ -45,7 +45,7 @@ const form = reactive({
 function onAddItem(val) {
     form.clear_file = val.clear_file;
     form.file = val.file
-    router.visit(route('admin.page.widget.banner.add-item', {banner: props.banner.id}), {
+    router.visit(route('admin.page.widget.banner.add-item', {widget: props.widget.id}), {
         method: "post",
         data: form,
         preserveScroll: true,

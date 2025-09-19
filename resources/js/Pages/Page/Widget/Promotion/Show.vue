@@ -2,10 +2,10 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            Виджет {{ promotion.name }}
+            Виджет {{ widget.name }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <WidgetInfo :promotion="promotion" :templates="templates" :banners="banners" :promotions="promotions"/>
+            <WidgetInfo :widget="widget" :templates="templates" :banners="banners" :promotions="promotions"/>
         </div>
         <!--div class="mt-3 p-3 bg-white rounded-lg ">
             <div class="flex" style="width: 450px;">
@@ -33,7 +33,7 @@ import UploadImageFile from "@Comp/UploadImageFile.vue";
 import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
-    promotion: Object,
+    widget: Object,
     templates: Array,
     banners: Array,
     promotions: Array,
@@ -46,20 +46,6 @@ const form = reactive({
     file: null,
     clear_file: false,
 })
-const group_id = ref(null)
-/*
-function onAddItem(val) {
-    form.clear_file = val.clear_file;
-    form.file = val.file
-    router.visit(route('admin.page.widget.promotion.add-item', {promotion: props.promotion.id}), {
-        method: "post",
-        data: {group_id: group_id.value},
-        preserveScroll: true,
-        preserveState: false,
-        onSuccess: page => {
-            //editBanner.value = false;
-        }
-    })
-}
-*/
+
+
 </script>

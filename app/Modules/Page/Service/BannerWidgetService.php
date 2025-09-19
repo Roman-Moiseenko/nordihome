@@ -19,26 +19,26 @@ class BannerWidgetService extends WidgetService
         );
     }
 
-    public function setBanner(BannerWidget $banner, Request $request): void
+    public function setBanner(BannerWidget $widget, Request $request): void
     {
-        $this->setBase($banner, $request);
+        $this->setBase($widget, $request);
     }
 
-    public function delBanner(BannerWidget $banner): void
+    public function delBanner(BannerWidget $widget): void
     {
-        if ($banner->active) throw new \DomainException('Нельзя удалить активный баннер');
-        foreach ($banner->items as $item) {
+        if ($widget->active) throw new \DomainException('Нельзя удалить активный баннер');
+        foreach ($widget->items as $item) {
             $this->delItem($item);
         }
-        $banner->delete();
+        $widget->delete();
     }
 
-    public function addItem(BannerWidget $banner, Request $request): void
+    public function addItem(BannerWidget $widget, Request $request): void
     {
         $file = $request->file('file');
         if (empty($file)) throw new \DomainException('Нет изображения');
-        DB::transaction(function () use ($banner, $file) {
-            $item = BannerWidgetItem::register($banner->id);
+        DB::transaction(function () use ($widget, $file) {
+            $item = BannerWidgetItem::register($widget->id);
             $item->saveImage($file);
             $item->refresh();
             $item->image->thumb = false;
