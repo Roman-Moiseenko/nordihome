@@ -3,7 +3,10 @@
 namespace App\Modules\Page\Entity;
 
 
+use App\Modules\Base\Traits\IconField;
+use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @property int $id
@@ -15,6 +18,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class Widget extends Model
 {
+
+    use ImageField, IconField;
+
     public $timestamps = false;
 
     public function __construct(array $attributes = [])
@@ -54,5 +60,13 @@ abstract class Widget extends Model
         return $this->active == true;
     }
 
-
+    //Для создания таблиц
+    final public static function columns(Blueprint $table): void
+    {
+        $table->boolean('active')->default(false);
+        $table->string('name');
+        $table->string('template');
+        $table->string('caption')->default('');
+        $table->string('description')->default('');
+    }
 }

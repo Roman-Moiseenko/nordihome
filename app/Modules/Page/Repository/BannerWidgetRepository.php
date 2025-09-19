@@ -11,17 +11,19 @@ class BannerWidgetRepository
 {
     public function getIndex(Request $request)
     {
-        return BannerWidget::orderBy('name')->get()->map(fn(BannerWidget $banner) => array_merge($banner->toArray(), [
-            'count' => $banner->items()->count(),
+        return BannerWidget::orderBy('name')->get()->map(fn(BannerWidget $widget) => array_merge($widget->toArray(), [
+            'count' => $widget->items()->count(),
         ]));
     }
 
-    public function BannerWithToArray(BannerWidget $banner): array
+    public function BannerWithToArray(BannerWidget $widget): array
     {
-        return array_merge($banner->toArray(), [
-            'items' => $banner->items()->get()->map(fn(BannerWidgetItem $item) => array_merge($item->toArray(), [
+        return array_merge($widget->toArray(), [
+            'items' => $widget->items()->get()->map(fn(BannerWidgetItem $item) => array_merge($item->toArray(), [
                 'image_file' => $item->getImage(),
             ])),
+            'image' => $widget->getImage(),
+            'icon' => $widget->getIcon(),
         ]);
     }
 

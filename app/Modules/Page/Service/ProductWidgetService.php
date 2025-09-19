@@ -10,7 +10,7 @@ use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Service\GroupService;
 use Illuminate\Http\Request;
 
-class ProductWidgetService
+class ProductWidgetService extends WidgetService
 {
 
     public function create(Request $request): ProductWidget
@@ -23,13 +23,11 @@ class ProductWidgetService
 
     public function setWidget(Request $request, ProductWidget $widget): void
     {
-        $widget->name = $request->string('name')->trim()->value();
-        $widget->url = $request->string('url')->trim()->value();
-        $widget->caption = $request->string('caption')->trim()->value();
-        $widget->description = $request->string('description')->trim()->value();
-        $widget->template = $request->string('template')->trim()->value();
+        $this->setBase($widget, $request);
+
         $widget->banner_id = $request->input('banner_id');
         $widget->params = $request['params'] ?? [];
+
         $widget->save();
     }
 
@@ -37,12 +35,6 @@ class ProductWidgetService
     {
         if ($widget->isActive()) throw new \DomainException('Виджет активен, удалить нельзя');
         $widget->delete();
-    }
-
-    public function toggle(ProductWidget $widget): void
-    {
-        $widget->active = !$widget->active;
-        $widget->save();
     }
 
     public function addItem(ProductWidget $widget, Request $request): void

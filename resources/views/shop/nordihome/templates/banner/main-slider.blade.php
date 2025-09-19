@@ -11,11 +11,11 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Page\Entity\BannerWidget $banner */
+    /** @var \App\Modules\Page\Entity\BannerWidget $widget */
 @endphp
 <div>
     <div id="main-slider" class="owl-carousel owl-theme">
-        @foreach($banner->items as $item)
+        @foreach($widget->items as $item)
             <div>
                 <a href="{{ $item->url }}">
                     <img src="{{ $item->getImage() }}"/>

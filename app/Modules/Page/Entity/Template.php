@@ -8,7 +8,7 @@ use App\Modules\Discount\Entity\Promotion;
 class Template
 {
     public const TYPES = [
-        'banner' => 'Баннеры',
+        'banner' => 'Баннеры (Виджет)',
         'product' => 'Виджеты с товарами',
         'page' => 'Страницы',
         'promotion' => 'Виджеты акции',
@@ -18,7 +18,8 @@ class Template
     const RENDERS = [
         'product' => ProductWidget::class,
         'banner' => BannerWidget::class,
-        'promotion' => Promotion::class,
+        'promotion' => PromotionWidget::class,
+        'text' => TextWidget::class,
     ];
 
     /**
@@ -91,7 +92,7 @@ class Template
 
         $model = $class::find($id);
         if (is_null($model)) return '';
-        return view(Template::blade($code) . $model->template, [$code => $model])->render();
+        return view(Template::blade($code) . $model->template, ['widget' => $model])->render();
     }
 
 }

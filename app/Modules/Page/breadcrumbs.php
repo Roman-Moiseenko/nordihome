@@ -16,7 +16,7 @@ use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 //PRODUCT
 Breadcrumbs::for('admin.page.widget.product.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Виджеты', route('admin.page.widget.product.index'));
+    $trail->push('Виджеты товаров', route('admin.page.widget.product.index'));
 });
 
 Breadcrumbs::for('admin.page.widget.product.show', function (BreadcrumbTrail $trail, ProductWidget $product) {
@@ -26,7 +26,7 @@ Breadcrumbs::for('admin.page.widget.product.show', function (BreadcrumbTrail $tr
 //BANNER
 Breadcrumbs::for('admin.page.widget.banner.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Баннеры', route('admin.page.widget.banner.index'));
+    $trail->push('Баннеры (Виджет)', route('admin.page.widget.banner.index'));
 });
 Breadcrumbs::for('admin.page.widget.banner.show', function (BreadcrumbTrail $trail, BannerWidget $banner) {
     $trail->parent('admin.page.widget.banner.index', $banner);
@@ -35,7 +35,7 @@ Breadcrumbs::for('admin.page.widget.banner.show', function (BreadcrumbTrail $tra
 //PROMOTION
 Breadcrumbs::for('admin.page.widget.promotion.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Акции', route('admin.page.widget.promotion.index'));
+    $trail->push('Виджеты Акции', route('admin.page.widget.promotion.index'));
 });
 Breadcrumbs::for('admin.page.widget.promotion.show', function (BreadcrumbTrail $trail, PromotionWidget $promotion) {
     $trail->parent('admin.page.widget.promotion.index', $promotion);
@@ -44,7 +44,7 @@ Breadcrumbs::for('admin.page.widget.promotion.show', function (BreadcrumbTrail $
 //TEXT
 Breadcrumbs::for('admin.page.widget.text.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
-    $trail->push('Текстовые блоки', route('admin.page.widget.text.index'));
+    $trail->push('Текстовые Виджеты', route('admin.page.widget.text.index'));
 });
 Breadcrumbs::for('admin.page.widget.text.show', function (BreadcrumbTrail $trail, TextWidget $text) {
     $trail->parent('admin.page.widget.text.index', $text);

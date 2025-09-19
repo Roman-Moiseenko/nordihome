@@ -22,6 +22,8 @@ class ProductWidgetRepository
             'items' => $widget->items,
             'banner' => $widget->banner()->first(),
             'count' => $widget->items()->count(),
+            'image' => $widget->getImage(),
+            'icon' => $widget->getIcon(),
         ]);
     }
 

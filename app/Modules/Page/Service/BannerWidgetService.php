@@ -8,7 +8,7 @@ use App\Modules\Page\Entity\BannerWidgetItem;
 use DB;
 use Illuminate\Http\Request;
 
-class BannerService
+class BannerWidgetService extends WidgetService
 {
 
     public function create(Request $request): BannerWidget
@@ -21,12 +21,7 @@ class BannerService
 
     public function setBanner(BannerWidget $banner, Request $request): void
     {
-        $banner->name = $request->string('name')->trim()->value();
-        $banner->template = $request->string('template')->trim()->value();
-        $banner->caption = $request->string('caption')->trim()->value();
-        $banner->description = $request->string('description')->trim()->value();
-        $banner->name = $request->string('name')->trim()->value();
-        $banner->save();
+        $this->setBase($banner, $request);
     }
 
     public function delBanner(BannerWidget $banner): void
@@ -74,12 +69,6 @@ class BannerService
         $item->save();
     }
 
-    public function toggle(BannerWidget $banner): void
-    {
-        if (!$banner->active && $banner->items()->count() == 0) throw new \DomainException('Нет элементов для показа');
-        $banner->active = !$banner->active;
-        $banner->save();
-    }
 
     public function upItem(BannerWidgetItem $item): void
     {

@@ -16,20 +16,20 @@
     */
 
        use App\Modules\Page\Entity\ProductWidget;
-       /** @var ProductWidget $product  */
+       /** @var ProductWidget $widget  */
 @endphp
 <div class="text-center mt-5 py-4 widget-home-3-group">
-    <h2 class="fw-semibold mt-5">{{ $product->caption }}</h2>
-    <h3>{{ $product->description }}</h3>
+    <h2 class="fw-semibold mt-5">{{ $widget->caption }}</h2>
+    <h3>{{ $widget->description }}</h3>
     <ul class="caption-group">
-        @foreach($product->items as $i => $item)
+        @foreach($widget->items as $i => $item)
             <li class="{{ $i == 0 ? 'active' : '' }}" data-id="tab-item-{{$item->id}}">
                 {{ $item->caption }}
             </li>
         @endforeach
     </ul>
     <div class="slider-group">
-        @foreach($product->items as $i => $item)
+        @foreach($widget->items as $i => $item)
             <div id="tab-item-{{$item->id}}" class="{{ $i == 0 ? '' : 'hidden' }}">
                 <div class="owl-carousel owl-theme slider-best-group">
                     @foreach($item->group->products as $_product)

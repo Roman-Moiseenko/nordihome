@@ -25,4 +25,9 @@ class PromotionWidget extends Widget
     {
         return $this->belongsTo(BannerWidget::class, 'banner_id', 'id');
     }
+
+    public function promotion(): BelongsTo
+    {
+        return $this->belongsTo(Promotion::class, 'promotion_id', 'id');
+    }
 }

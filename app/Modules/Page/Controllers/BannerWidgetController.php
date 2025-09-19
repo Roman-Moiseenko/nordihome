@@ -9,7 +9,7 @@ use App\Modules\Page\Entity\BannerWidgetItem;
 use App\Modules\Page\Entity\Template;
 use App\Modules\Page\Repository\BannerWidgetRepository;
 use App\Modules\Page\Repository\TemplateRepository;
-use App\Modules\Page\Service\BannerService;
+use App\Modules\Page\Service\BannerWidgetService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,9 +19,10 @@ class BannerWidgetController extends Controller
 {
     private TemplateRepository $templates;
     private BannerWidgetRepository $repository;
+    private BannerWidgetService $service;
 
     public function __construct(
-        BannerService          $service,
+        BannerWidgetService    $service,
         TemplateRepository     $templates,
         BannerWidgetRepository $repository,
     )

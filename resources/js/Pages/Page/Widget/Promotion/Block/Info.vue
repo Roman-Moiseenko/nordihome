@@ -4,24 +4,24 @@
             <el-tooltip content="Изображение" placement="top-start" effect="dark">
                 <el-image
                     style="width: 200px; height: 200px"
-                    :src="product.image"
+                    :src="promotion.image"
                     :zoom-rate="1.2"
                     :max-scale="7"
                     :min-scale="0.2"
                     :initial-index="4"
-                    :preview-src-list="[product.image]"
+                    :preview-src-list="[promotion.image]"
                     fit="cover"
                 />
             </el-tooltip>
             <el-tooltip content="Иконка" placement="top-start" effect="dark">
                 <el-image
                     style="width: 100px; height: 100px"
-                    :src="product.icon"
+                    :src="promotion.icon"
                     :zoom-rate="1.2"
                     :max-scale="7"
                     :min-scale="0.2"
                     :initial-index="4"
-                    :preview-src-list="[product.icon]"
+                    :preview-src-list="[promotion.icon]"
                     fit="cover"
                     class="ml-3"
                 />
@@ -30,31 +30,33 @@
         <el-col :span="12">
             <el-descriptions :column="2" border class="mb-5">
                 <el-descriptions-item label="Виджет">
-                    {{ product.name }}
+                    {{ promotion.name }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Шаблон">
-                    {{ product.template }}
+                    {{ promotion.template }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Ссылка">
-                    {{ product.url }}
+                    {{ promotion.url }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Активен">
-                    <Active :active="product.active"/>
+                    <Active :active="promotion.active"/>
                 </el-descriptions-item>
                 <el-descriptions-item label="Заголовок">
-                    {{ product.caption }}
+                    {{ promotion.caption }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Описание">
-                    {{ product.description }}
+                    {{ promotion.description }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Баннер">
-                    {{ (product.banner) ? product.banner.name : '' }}
+                    {{ (promotion.banner) ? promotion.banner.name : '' }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Акция">
+                    {{ (promotion.promotion) ? promotion.promotion.name : '' }}
                 </el-descriptions-item>
             </el-descriptions>
         </el-col>
     </el-row>
     <el-button v-if="!editWidget" type="warning" @click="editWidget = true">Изменить</el-button>
-
     <el-row :gutter="10" v-if="editWidget">
         <el-col :span="8">
             <el-form label-width="auto" style="width: 500px;">
@@ -69,6 +71,11 @@
                 <el-form-item label="Банер">
                     <el-select v-model="form.banner_id" clearable>
                         <el-option v-for="item in banners" :key="item.id" :value="item.id" :label="item.name"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Акция">
+                    <el-select v-model="form.promotion_id" clearable>
+                        <el-option v-for="item in promotions" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Ссылка">
@@ -87,12 +94,12 @@
         <el-col :span="8">
             <UploadImageFile
                 label="Изображение"
-                v-model:image="product.image"
+                v-model:image="promotion.image"
                 @selectImageFile="onSelectImage"
             />
             <UploadImageFile
                 label="Иконка"
-                v-model:image="product.icon"
+                v-model:image="promotion.icon"
                 @selectImageFile="onSelectIcon"
             />
         </el-col>
@@ -106,29 +113,29 @@ import Active from "@Comp/Elements/Active.vue";
 import UploadImageFile from "@Comp/UploadImageFile.vue";
 
 const props = defineProps({
-    product: Object,
+    promotion: Object,
     templates: Array,
     banners: Array,
+    promotions: Array,
 })
-console.log(props.product)
 const editWidget = ref(false)
 const form = reactive({
-    name: props.product.name,
-    template: props.product.template,
-    banner_id: props.product.banner_id,
-    url: props.product.url,
-    caption: props.product.caption,
-    description: props.product.description,
+    name: props.promotion.name,
+    template: props.promotion.template,
+    banner_id: props.promotion.banner_id,
+    promotion_id: props.promotion.promotion_id,
+    url: props.promotion.url,
+    caption: props.promotion.caption,
+    description: props.promotion.description,
     image: null,
     clear_image: false,
     icon: null,
     clear_icon: false,
-
 })
 
 
 function setWidget() {
-    router.visit(route('admin.page.widget.product.set-widget', {product: props.product.id}), {
+    router.visit(route('admin.page.widget.promotion.set-widget', {promotion: props.promotion.id}), {
         method: "post",
         data: form,
         preserveScroll: true,

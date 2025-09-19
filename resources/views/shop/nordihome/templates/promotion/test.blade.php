@@ -11,11 +11,11 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Discount\Entity\Promotion $promotion */
+    /** @var \App\Modules\Page\Entity\PromotionWidget $widget */
 @endphp
 
 <div>
-    @foreach($promotion->products as $product)
+    @foreach($widget->promotion->products as $product)
         <div>
             <span>{{ $product->name }}</span>
         </div>

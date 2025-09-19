@@ -63,6 +63,8 @@ Route::group(
                 'prefix' => 'promotion',
                 'as' => 'promotion.'
             ], function () {
+                Route::post('/set-widget/{promotion}', 'PromotionWidgetController@set_widget')->name('set-widget');
+                Route::post('/toggle/{promotion}', 'PromotionWidgetController@toggle')->name('toggle');
 
             });
             Route::resource('promotion', 'PromotionWidgetController')->except(['create', 'edit', 'update']); //CRUD

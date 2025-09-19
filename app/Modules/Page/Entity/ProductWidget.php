@@ -28,7 +28,7 @@ class ProductWidget extends Widget
     //TODO Миграция переименовать widget_products
     protected $table="widgets";
 
-    use ImageField, IconField;
+
 
     public $timestamps = false;
     protected $attributes = [
