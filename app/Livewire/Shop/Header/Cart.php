@@ -77,6 +77,4 @@ class Cart extends Component
     {
         return view('livewire.shop.header.cart');
     }
-
-
 }

@@ -29,8 +29,6 @@
     <flash-messages :errors="usePage().props.errors" :flash="usePage().props.flash"/>
 </template>
 <script lang="ts" setup>
-
-//TODO Перенести
 import { Head } from '@inertiajs/vue3'
 import Logo from '@Comp/Logo.vue'
 import {usePage, router} from "@inertiajs/vue3";

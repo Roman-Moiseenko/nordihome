@@ -40,7 +40,7 @@ watch(() => props.user_id, (newValues, oldValues) => {
 
 
 function loadUserData() {
-    //TODO Загрузка через axios Данных о клиенте
+    //Загрузка через axios Данных о клиенте
     axios.post(route('admin.user.get-edit-data'), {user_id: props.user_id}).then(response => {
         if (response.data.error !== undefined) console.log(response.data.error)
         //console.log(response.data)

@@ -115,26 +115,7 @@ const formCreate = reactive({
 })
 function createUser() {
     dialogCreate.value = true
-    //TODO
-    /*const loading = ElLoading.service({
-        lock: false,
-        text: 'Загружаем категории',
-        background: 'rgba(0, 0, 0, 0.7)',
-    })
-    //Загружаем список брендов и категорий в диалог
-    if (brands.value.length === 0) {
-        axios.post(route('admin.product.brand.list')).then(response => {
-            brands.value = [...response.data]
-            axios.post(route('admin.product.category.list')).then(response => {
-                categories.value = [...response.data]
-                dialogCreate.value = true
-                loading.close()
-            });
 
-        });
-    } else {
-        dialogCreate.value = true
-    }*/
 }
 
 function storeUser() {

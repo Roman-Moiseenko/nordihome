@@ -49,11 +49,9 @@ const props = defineProps({
     category: Object,
 })
 function routeClick(row) {
-    //TODO
     router.get(route('admin.product.edit', {product: row.product_id}))
 }
 function onParser(row) {
-    //TODO
     router.visit(route('admin.parser.product.parser', {product: row.id}), {
         method: "post",
         preserveScroll: true,

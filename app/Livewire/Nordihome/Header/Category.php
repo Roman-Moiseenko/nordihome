@@ -13,6 +13,8 @@ class Category extends Component
     public mixed $tree;
     public string $test = "-";
 
+    //TODO Со временем сделать полностью на livewire убрать из jQuery _frontend.js
+    // учесть скорость движения по меню, если быстро, то не грузить данные
     public function mount() {
         $repository = app()->make(ShopRepository::class);
 

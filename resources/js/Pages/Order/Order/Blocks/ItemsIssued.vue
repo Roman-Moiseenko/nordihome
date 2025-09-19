@@ -129,7 +129,6 @@ function notStorage(row, storage) {
 }
 
 function toStackSupply(row) {
-    //TODO
     router.visit(route('admin.accounting.supply.add-stack', {item: row.id}), {
         method: "post",
         preserveScroll: true,

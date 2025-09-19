@@ -7,7 +7,7 @@
             <div class="catalog" data-route="{{ route('shop.category.search') }}">
                 <div class="catalog-rootmenu" wire:ignore>
                     @foreach($categories as $category)
-                        <li   wire:ignore.self>
+                        <li wire:ignore.self>
                             <a class="dropdown-item" href="{{ route('shop.category.view', $category['slug']) }}"
                                data-id="{{ $category['id'] }}" >
                                 {{ $category['name'] }}
