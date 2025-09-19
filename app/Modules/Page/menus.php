@@ -38,7 +38,7 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-percent',
             ],
-            'texts' => [
+            'text' => [
                 'title' => 'Текстовые виджеты',
                 'route_name' => 'admin.page.widget.text.index',
                 'vue' => true,

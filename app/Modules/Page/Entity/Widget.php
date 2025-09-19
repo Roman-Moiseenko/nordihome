@@ -15,6 +15,7 @@ use Illuminate\Database\Schema\Blueprint;
  * @property string $template
  * @property string $caption
  * @property string $description
+ * @property WidgetItem[] $items
  */
 abstract class Widget extends Model
 {

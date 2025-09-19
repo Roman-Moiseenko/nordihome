@@ -4,6 +4,7 @@ use App\Modules\Page\Controllers\BannerWidgetController;
 use App\Modules\Page\Controllers\CacheController;
 use App\Modules\Page\Controllers\ProductWidgetController;
 use App\Modules\Page\Controllers\PromotionWidgetController;
+use App\Modules\Page\Controllers\TextWidgetController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -89,15 +90,20 @@ Route::group(
                 'prefix' => 'text',
                 'as' => 'text.'
             ], function () {
-                Route::post('/set-widget/{text}', 'TextWidgetController@set_widget')->name('set-widget');
-                Route::post('/add-item/{text}', 'TextWidgetController@add_item')->name('add-item');
-                Route::post('/set-item/{item}', 'TextWidgetController@set_item')->name('set-item');
-                Route::delete('/del-item/{item}', 'TextWidgetController@del_item')->name('del-item');
-                Route::post('/toggle/{text}', 'TextWidgetController@toggle')->name('toggle');
-                Route::post('/up-item/{item}', 'TextWidgetController@up_item')->name('up-item');
-                Route::post('/down-item/{item}', 'TextWidgetController@down_item')->name('down-item');
+                Route::post('/set-widget/{widget}', [TextWidgetController::class, 'set_widget'])->name('set-widget');
+                Route::post('/add-item/{widget}', [TextWidgetController::class, 'add_item'])->name('add-item');
+                Route::post('/set-item/{item}', [TextWidgetController::class, 'set_item'])->name('set-item');
+                Route::delete('/del-item/{item}', [TextWidgetController::class, 'del_item'])->name('del-item');
+                Route::post('/toggle/{widget}', [TextWidgetController::class, 'toggle'])->name('toggle');
+                Route::post('/up-item/{item}', [TextWidgetController::class, 'up_item'])->name('up-item');
+                Route::post('/down-item/{item}', [TextWidgetController::class, 'down_item'])->name('down-item');
+
+                Route::get('/{widget}', [TextWidgetController::class, 'show'])->name('show');
+                Route::post('/', [TextWidgetController::class, 'store'])->name('store');
+                Route::delete('/{widget}', [TextWidgetController::class, 'destroy'])->name('destroy');
+                Route::get('/', [TextWidgetController::class, 'index'])->name('index');
             });
-            Route::resource('text', 'TextWidgetController')->except(['create', 'edit', 'update']); //CRUD
+           // Route::resource('text', 'TextWidgetController')->except(['create', 'edit', 'update']); //CRUD
         });
 
 

@@ -29,6 +29,12 @@ abstract class WidgetService
         $widget->delete();
     }
 
+    public function delWidgetWithItems(Widget $widget): void
+    {
+        if ($widget->active) throw new \DomainException('Нельзя удалить активный виджет');
+        $widget->delete();
+    }
+
     public function toggle(Widget $widget): void
     {
         $widget->active = !$widget->active;
