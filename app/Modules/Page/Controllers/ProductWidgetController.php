@@ -71,7 +71,7 @@ class ProductWidgetController extends Controller
 
     public function set_widget(Request $request, ProductWidget $widget)
     {
-        $this->service->setWidget($request, $widget);
+        $this->service->setWidget($widget, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
 

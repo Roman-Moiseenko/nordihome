@@ -3,6 +3,7 @@
 namespace App\Modules\Page\Service;
 
 use App\Modules\Page\Entity\Widget;
+use App\Modules\Page\Entity\WidgetItem;
 use Illuminate\Http\Request;
 
 abstract class WidgetService
@@ -26,13 +27,21 @@ abstract class WidgetService
     public function delWidget(Widget $widget): void
     {
         if ($widget->active) throw new \DomainException('Нельзя удалить активный виджет');
+        if (isset($widget->items) && !is_null($widget->items)) {
+            foreach ($widget->items as $item) {
+                $this->delItem($item);
+            }
+        }
         $widget->delete();
     }
 
-    public function delWidgetWithItems(Widget $widget): void
+    public function delItem(WidgetItem $item)
     {
-        if ($widget->active) throw new \DomainException('Нельзя удалить активный виджет');
-        $widget->delete();
+        $item->delete();
+        foreach ($item->widget->items as $i => $_item) {
+            $_item->sort = $i;
+            $_item->save();
+        }
     }
 
     public function toggle(Widget $widget): void
@@ -40,5 +49,36 @@ abstract class WidgetService
         $widget->active = !$widget->active;
         $widget->save();
     }
+    public function upItem(WidgetItem $item): void
+    {
 
+        $items = [];
+        foreach ($item->widget->items as $_item) {
+            $items[] = $_item;
+        }
+        for ($i = 1; $i < count($items); $i++) {
+            if ($items[$i]->id == $item->id) {
+                $prev = $items[$i - 1]->sort;
+                $next = $items[$i]->sort;
+                $items[$i]->update(['sort' => $prev]);
+                $items[$i - 1]->update(['sort' => $next]);
+            }
+        }
+    }
+
+    public function downItem(WidgetItem $item): void
+    {
+        $items = [];
+        foreach ($item->widget->items as $_item) {
+            $items[] = $_item;
+        }
+        for ($i = 0; $i < count($items) - 1; $i++) {
+            if ($items[$i]->id == $item->id) {
+                $prev = $items[$i + 1]->sort;
+                $next = $items[$i]->sort;
+                $items[$i]->update(['sort' => $prev]);
+                $items[$i + 1]->update(['sort' => $next]);
+            }
+        }
+    }
 }

@@ -13,8 +13,7 @@ use JetBrains\PhpStorm\Deprecated;
 class BannerWidget extends Widget
 {
 
-    //TODO Миграция переименовать widget_banners
-    protected $table="banners";
+    protected $table="widget_banners";
 
     public function itemBySlug(string $slug): ?BannerWidgetItem
     {
@@ -26,7 +25,7 @@ class BannerWidget extends Widget
 
     public function items(): HasMany
     {
-        return $this->hasMany(BannerWidgetItem::class, 'banner_id', 'id')->orderBy('sort');
+        return $this->hasMany(BannerWidgetItem::class, 'widget_id', 'id')->orderBy('sort');
     }
 
     #[Deprecated]

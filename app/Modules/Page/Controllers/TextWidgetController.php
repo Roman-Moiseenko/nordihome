@@ -56,12 +56,13 @@ class TextWidgetController extends Controller
         return Inertia::render('Page/Widget/Text/Show', [
             'widget' => $this->repository->TextWithToArray($widget),
             'templates' => $templates,
+            'tiny_api' => config('shop.tinymce'),
         ]);
     }
 
     public function set_widget(TextWidget $widget, Request $request): RedirectResponse
     {
-        $this->service->setText($widget, $request);
+        $this->service->setWidget($widget, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
 

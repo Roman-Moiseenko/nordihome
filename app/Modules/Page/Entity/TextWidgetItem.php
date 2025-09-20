@@ -6,38 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $id
- * @property int $text_id
- * @property string $caption
- * @property string $description
- * @property int $sort
- * @property TextWidget $textWidget
+ * @property string $text
+ * @property TextWidget $widget
  */
-class TextWidgetItem extends Model
+class TextWidgetItem extends WidgetItem
 {
-    public $timestamps = false;
+    protected $attributes = [
+        'text' => '',
+    ];
 
     protected $table= "widget_text_items";
 
-    protected $fillable = [
-        'text_id',
-        'sort',
-        'caption',
-        'description'
-    ];
+    protected $fillable = [];
 
-    public static function register(int $text_id, $caption, $description): self
+    public static function register(int $widget_id): self
     {
-        return self::create([
-            'text_id' => $text_id,
-            'sort' => self::where('text_id', $text_id)->count(),
-            'caption' => $caption,
-            'description' => $description
-        ]);
+        $item = parent::new($widget_id);
+        $item->save();
+        return $item;
     }
 
-    public function text(): BelongsTo
+    public function widget(): BelongsTo
     {
-        return $this->belongsTo(TextWidget::class, 'text_id', 'id');
+        return $this->belongsTo(TextWidget::class, 'widget_id', 'id');
     }
 }

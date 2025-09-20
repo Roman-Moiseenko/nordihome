@@ -3,16 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Product\Entity;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Page\Entity\DataWidget;
-use App\Modules\Page\Entity\DataWidgetInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -23,7 +17,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property Product[] $products
 // * @property Promotion[] $promotions
  */
-class Group extends Model implements DataWidgetInterface
+class Group extends Model
 {
     use ImageField;
 
@@ -61,21 +55,4 @@ class Group extends Model implements DataWidgetInterface
         return false;
     }
 
-    public function getDataWidget(array $params = []): DataWidget
-    {
-        $data = new DataWidget();
-        if (!empty($this->slug)) $data->url = route('shop.group.view', $this->slug);
-        $data->image = $this->image;
-        $data->title = $this->name;
-        $data->items = array_map(function (Product $product) {
-            return [
-                'image' => $product->gallery()->first(),
-                'url' => route('shop.product.view', $product->slug),
-                'title' => $product->getName(),
-                'price' => $product->getPrice(),
-                'count' => $product->getQuantitySell(),
-            ];
-        }, $this->products()->getModels());
-        return $data;
-    }
 }

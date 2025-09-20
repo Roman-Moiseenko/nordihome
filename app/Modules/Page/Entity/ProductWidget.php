@@ -25,8 +25,7 @@ use JetBrains\PhpStorm\Deprecated;
  */
 class ProductWidget extends Widget
 {
-    //TODO Миграция переименовать widget_products
-    protected $table="widgets";
+    protected $table="widget_products";
 
 
 

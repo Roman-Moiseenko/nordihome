@@ -301,3 +301,6 @@ select:disabled + div.tom-select > div.ts-control {
 .login .image-block {
     z-index: 1;
 }
+.tox-tinymce-aux {
+    z-index: 5000 !important;
+}

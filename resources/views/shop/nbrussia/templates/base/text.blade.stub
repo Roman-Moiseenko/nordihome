@@ -1,7 +1,7 @@
-<!--template:Шаблон-->
+<!--template:Шаблон текстовый-->
 @php
 /**
-* Banner::class - string
+* TextWidget::class - string
 * $widget->caption - string
 * $widget->description - string
 * $widget->image - Photo::class
@@ -10,10 +10,11 @@
 * $widget->items - Arraible
 * $widget->itemBySlug(string)?: TextWidgetItem
 * $item->caption -
+* $item->description -
 * $item->text - text (форматируемый текст)
 
 */
-/** @var \App\Modules\Page\Entity\Banner $widget */
+/** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
 <div>
 

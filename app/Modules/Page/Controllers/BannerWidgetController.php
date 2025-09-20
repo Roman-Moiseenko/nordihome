@@ -62,13 +62,13 @@ class BannerWidgetController extends Controller
 
     public function set_widget(BannerWidget $widget, Request $request): RedirectResponse
     {
-        $this->service->setBanner($widget, $request);
+        $this->service->setWidget($widget, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function destroy(BannerWidget $widget): RedirectResponse
     {
-        $this->service->delBanner($widget);
+        $this->service->delWidget($widget);
         return redirect()->back()->with('success', 'Баннер удален');
     }
 

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class TextWidget extends Widget
 {
-    protected $table="banners";
+    protected $table="widget_texts";
 
     public function itemBySlug(string $slug): ?TextWidgetItem
     {
@@ -21,6 +21,6 @@ class TextWidget extends Widget
 
     public function items(): HasMany
     {
-        return $this->hasMany(TextWidgetItem::class, 'text_id', 'id')->orderBy('sort');
+        return $this->hasMany(TextWidgetItem::class, 'widget_id', 'id')->orderBy('sort');
     }
 }

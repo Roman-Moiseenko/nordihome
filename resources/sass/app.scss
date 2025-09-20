@@ -141,9 +141,11 @@ a[type="danger"] {
 }
 
 
-
 .el-table {
     .cell {
         padding: 0 4px !important;
     }
+}
+.tox-tinymce-aux {
+    z-index: 5000 !important;
 }

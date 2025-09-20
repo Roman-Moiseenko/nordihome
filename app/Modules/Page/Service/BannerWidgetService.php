@@ -5,6 +5,7 @@ namespace App\Modules\Page\Service;
 
 use App\Modules\Page\Entity\BannerWidget;
 use App\Modules\Page\Entity\BannerWidgetItem;
+use App\Modules\Page\Entity\WidgetItem;
 use DB;
 use Illuminate\Http\Request;
 
@@ -19,18 +20,9 @@ class BannerWidgetService extends WidgetService
         );
     }
 
-    public function setBanner(BannerWidget $widget, Request $request): void
+    public function setWidget(BannerWidget $widget, Request $request): void
     {
         $this->setBase($widget, $request);
-    }
-
-    public function delBanner(BannerWidget $widget): void
-    {
-        if ($widget->active) throw new \DomainException('Нельзя удалить активный баннер');
-        foreach ($widget->items as $item) {
-            $this->delItem($item);
-        }
-        $widget->delete();
     }
 
     public function addItem(BannerWidget $widget, Request $request): void
@@ -46,15 +38,10 @@ class BannerWidgetService extends WidgetService
         });
     }
 
-    public function delItem(BannerWidgetItem $item): void
+    public function delItem(BannerWidgetItem|WidgetItem $item): void
     {
         $item->image->delete();
-        $item->delete();
-        //Пересортировка
-        foreach ($item->banner->items as $i => $_item) {
-            $_item->sort = $i;
-            $_item->save();
-        }
+        parent::delItem($item);
     }
 
     public function setItem(BannerWidgetItem $item, Request $request): void
@@ -67,40 +54,6 @@ class BannerWidgetService extends WidgetService
         $item->caption = $request->string('caption')->trim()->value();
         $item->description = $request->string('description')->trim()->value();
         $item->save();
-    }
-
-
-    public function upItem(BannerWidgetItem $item): void
-    {
-
-        $items = [];
-        foreach ($item->banner->items as $_item) {
-            $items[] = $_item;
-        }
-        for ($i = 1; $i < count($items); $i++) {
-            if ($items[$i]->id == $item->id) {
-                $prev = $items[$i - 1]->sort;
-                $next = $items[$i]->sort;
-                $items[$i]->update(['sort' => $prev]);
-                $items[$i - 1]->update(['sort' => $next]);
-            }
-        }
-    }
-
-    public function downItem(BannerWidgetItem $item): void
-    {
-        $items = [];
-        foreach ($item->banner->items as $_item) {
-            $items[] = $_item;
-        }
-        for ($i = 0; $i < count($items) - 1; $i++) {
-            if ($items[$i]->id == $item->id) {
-                $prev = $items[$i + 1]->sort;
-                $next = $items[$i]->sort;
-                $items[$i]->update(['sort' => $prev]);
-                $items[$i + 1]->update(['sort' => $next]);
-            }
-        }
     }
 
 }

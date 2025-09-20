@@ -6,9 +6,6 @@ namespace App\Modules\Discount\Entity;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Page\Entity\DataWidget;
-use App\Modules\Page\Entity\DataWidgetInterface;
-use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +31,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property int $discount
  * @property Product[] $products
  */
-class Promotion extends Model implements DataWidgetInterface
+class Promotion extends Model
 {
     use ImageField, IconField;
 
@@ -173,28 +170,5 @@ class Promotion extends Model implements DataWidgetInterface
             'promotion_id', 'product_id')->withPivot(['price']);
     }
 
-
-    public function getDataWidget(array $params = []): DataWidget
-    {
-        $data = new DataWidget();
-        $data->image = $this->image;
-        $data->title = $this->title;
-        $data->url = route('shop.promotion.view', $this->slug);
-        $data->items = $this->products()->get()->map(function (Product $product) {
-            return [
-                'image' => $product->gallery()->first(),
-                'url' => route('shop.product.view', $product->slug),
-                'title' => $product->getName(),
-                'price' => $product->getPrice(),
-                'discount' => $product->pivot->price,
-                'count' => $product->getQuantitySell(),
-            ];
-        })->toArray();
-
-
-
-
-        return $data;
-    }
 
 }
