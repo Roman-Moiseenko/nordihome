@@ -16,7 +16,8 @@
                 </el-table-column>
                 <el-table-column prop="action" label="Действие" width="260"/>
                 <el-table-column prop="object" label="Объект/Дата" width="180"/>
-                <el-table-column prop="value" label="Значение" width="260"/>
+                <el-table-column prop="value" label="Значение" width="200"/>
+                <el-table-column prop="old" label="Предыдущее" width="200"/>
                 <el-table-column prop="link" label="Ссылка на документ" >
                     <template #default="scope">
                         <Link type="primary" v-if="scope.row.link" :href="scope.row.link" >Ссылка</Link>

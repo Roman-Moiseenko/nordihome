@@ -53,8 +53,8 @@ class SendSystemMail implements ShouldQueue
 
         if ($this->systemable_type == Order::class) {
             $order = Order::find($this->systemable_id);
-            $logger->logOrder($order, 'Письмо отправлено', '', $this->mail->getName(),
-                route('admin.mail.system.show', $system_mail));
+            $logger->logOrder(order: $order, action: 'Письмо отправлено', value: $this->mail->getName(),
+                link: route('admin.mail.system.show', $system_mail));
         }
 
         try { //Отправляем письмо

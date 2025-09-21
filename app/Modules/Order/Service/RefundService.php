@@ -48,8 +48,8 @@ class RefundService
             }
 
             $order = $refund->expense->order;
-            $this->logger->logOrder($order, 'Создан документ на возврат', '', '',
-                route('admin.order.refund.show', $refund)
+            $this->logger->logOrder(order: $order, action: 'Создан документ на возврат',
+                link: route('admin.order.refund.show', $refund)
             );
         });
 

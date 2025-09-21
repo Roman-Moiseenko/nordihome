@@ -129,7 +129,7 @@ class CalendarService
             $previousCalendarPeriod = $expense->calendarPeriod;
             $expense->calendarPeriods()->detach();
             $expense->calendarPeriods()->attach($calendarPeriod->id);
-
+            $old = $previousCalendarPeriod == null ? '' : $previousCalendarPeriod->timeHtml();
             if (!is_null($previousCalendarPeriod)) {
                 $previousCalendarPeriod->refresh();
                 $this->check_full($previousCalendarPeriod);
@@ -138,8 +138,9 @@ class CalendarService
             $this->check_full($calendarPeriod);
             //Если есть Доставщик и сборщик, отменить
             OrderExpenseWorker::where('expense_id', $expense->id)->where('work', '<>', Worker::WORK_LOADER)->delete();
-            $this->logger->logOrder($expense->order, 'Установлена дата отгрузки',
-                $calendarPeriod->calendar->htmlDate(), $calendarPeriod->timeHtml(), null);
+            $this->logger->logOrder(order: $expense->order, action: 'Установлена дата отгрузки',
+                object: $calendarPeriod->calendar->htmlDate(), value: $calendarPeriod->timeHtml(),
+                old: $old);
         });
     }
 

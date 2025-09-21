@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property string $action - действие
  * @property string $object - объект изменения
+ * @property string $old - старое значение
  * @property string $value - новое значение
  * @property string $link
  * @property Admin $staff
@@ -29,6 +30,7 @@ class LoggerOrder extends Model
         'created_at',
         'action',
         'object',
+        'old',
         'value',
         'link'
     ];
@@ -39,7 +41,7 @@ class LoggerOrder extends Model
 
     public static function register(
         int $order_id, int $staff_id, string $action,
-        string $object = '', string $value = '', ?string $link = null): self
+        string $object = '', string $value = '', string $old = '', ?string $link = null):? self
     {
         return self::create([
             'order_id' => $order_id,
@@ -47,7 +49,9 @@ class LoggerOrder extends Model
             'created_at' => now(),
             'action' => $action,
             'object' => $object,
+
             'value' => $value,
+            'old' => $old,
             'link' => $link
         ]);
     }

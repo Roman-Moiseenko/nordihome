@@ -187,9 +187,9 @@ class OrderReserveService
                 }
             }
         }
-        $this->logger->logOrder($orderItem->order, 'Перемещение резерва м/у складами',
-            'Склад назначения ' . $storageIn->name,
-            $quantity . ' шт.', null);
+        $this->logger->logOrder(order: $orderItem->order, action: 'Перемещение резерва м/у складами',
+            object: 'Склад назначения ' . $storageIn->name,
+            value: $quantity . ' шт.');
     }
 
 
