@@ -714,6 +714,8 @@ class OrderService
      */
     public function addAddition(Order $order, int $addition_id): OrderAddition
     {
+        if (!is_null($order->getAddition($addition_id))) throw new \DomainException("Услуга уже добавлена");
+
         $orderAddition = OrderAddition::new($addition_id);
         $order->additions()->save($orderAddition);
         $orderAddition->refresh();

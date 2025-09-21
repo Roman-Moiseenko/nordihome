@@ -330,6 +330,13 @@ class Order extends Model
         return null;
     }
 
+    public function getAddition(int $addition_id):? OrderAddition
+    {
+        foreach ($this->additions as $addition) {
+            if ($addition->addition_id == $addition_id) return $addition;
+        }
+        return null;
+    }
     public function getManager(): ?Admin
     {
         if (is_null($this->staff_id)) return null;
