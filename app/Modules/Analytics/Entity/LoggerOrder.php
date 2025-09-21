@@ -24,6 +24,10 @@ use Illuminate\Database\Eloquent\Model;
 class LoggerOrder extends Model
 {
     public $timestamps = false;
+    public $attributes = [
+        'value' => '',
+        'old' => '',
+    ];
     protected $fillable = [
         'order_id',
         'staff_id',

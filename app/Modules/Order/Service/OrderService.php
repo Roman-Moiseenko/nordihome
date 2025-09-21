@@ -454,7 +454,7 @@ class OrderService
             //Пересоздать отчет и отправить письмо клиенту.
             //Создаем счет на оплату
 
-        //    dd($request->all());
+            //    dd($request->all());
             if ($request->boolean('payment.account') || $request->boolean('payment.qr')) {
                 $invoice = $request->boolean('payment.account') ? $this->invoiceReport->pdf($order) : null;
                 //Создаем ссылку на оплату
@@ -629,8 +629,8 @@ class OrderService
             ///*** 4. Изменилась сборка
             if ($item->assemblage != $assemblage) {
                 $item->assemblage = $assemblage;
-                $this->logger->logOrder(order:$order, action: 'Изменена сборка товара',
-                    object:$item->product->name, value: $assemblage ? 'Установлена' : 'Отменена');
+                $this->logger->logOrder(order: $order, action: 'Изменена сборка товара',
+                    object: $item->product->name, value: $assemblage ? 'Установлена' : 'Отменена');
             }
             ///*** 5. Изменилась упаковка
             if ($item->packing != $packing) {
@@ -724,23 +724,34 @@ class OrderService
 
     public function setAddition(OrderAddition $orderAddition, Request $request): void
     {
-        $old = json_encode([
-            'Сумма' => $orderAddition->amount,
-            'Кол-во' => $orderAddition->quantity,
-            'Комментарий' => $orderAddition->comment]);
-        if ($orderAddition->addition->manual) {
-            $orderAddition->amount = $request->integer('amount');
+        $new_amount = $request->integer('amount');
+        $new_quantity = $request->integer('quantity');
+        $new_comment = $request->string('comment')->trim()->value();
+        if ($orderAddition->addition->manual && $orderAddition->amount != $new_amount) {
+            $this->logger->logOrder(order: $orderAddition->order, action: 'Изменена Сумма услуги',
+                object: $orderAddition->addition->name,
+                value: $new_amount,
+                old: $orderAddition->amount);
+            $orderAddition->amount = $new_amount;
         }
-        $orderAddition->comment = $request->string('comment')->trim()->value();
-        if ($orderAddition->addition->is_quantity) $orderAddition->quantity = $request->integer('quantity');
+
+        if ($orderAddition->addition->is_quantity && $orderAddition->quantity != $new_quantity){
+            $this->logger->logOrder(order: $orderAddition->order, action: 'Изменено Кол-во услуги',
+                object: $orderAddition->addition->name,
+                value: $new_quantity,
+                old: $orderAddition->quantity);
+            $orderAddition->quantity = $new_quantity;
+        }
+
+        if ($orderAddition->comment != $new_comment){
+            $this->logger->logOrder(order: $orderAddition->order, action: 'Изменено Коментарий услуги',
+                object: $orderAddition->addition->name,
+                value: $new_comment,
+                old: $orderAddition->comment);
+            $orderAddition->comment = $new_comment;
+        }
+
         $orderAddition->save();
-        $this->logger->logOrder(order: $orderAddition->order, action: 'Изменена услуга',
-            object: $orderAddition->addition->name,
-            value: json_encode([
-                'Сумма' => $orderAddition->amount,
-                'Кол-во' => $orderAddition->quantity,
-                'Комментарий' => $orderAddition->comment]),
-            old: $old);
     }
 
     /**
@@ -914,7 +925,7 @@ class OrderService
                 $order->coupon_id = $coupon->id;
                 $this->logger->logOrder(order: $order, action: 'Скидка по купону',
                     object: 'Установлена',
-                    value:  $coupon->bonus);
+                    value: $coupon->bonus);
             }
 
             $order->save();
