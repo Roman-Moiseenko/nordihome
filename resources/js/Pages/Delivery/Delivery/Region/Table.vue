@@ -6,10 +6,16 @@
         @row-click="routeClick"
     >
         <el-table-column prop="address.address" label="Адрес"/>
-        <el-table-column label="Клиент">
+        <el-table-column label="Получатель">
             <template #default="scope">
-                {{ func.fullName(scope.row.recipient) }} <br>
-                {{ func.phone(scope.row.phone) }}
+                <div v-if="scope.row.user.name != func.fullName(scope.row.recipient)">
+                    {{ scope.row.user.name }}
+                </div>
+                <div>
+                    <el-tag v-if="scope.row.user.name != func.fullName(scope.row.recipient)">Получатель</el-tag>
+                    {{ func.fullName(scope.row.recipient) }} <br>
+                    {{ func.phone(scope.row.phone) }}
+                </div>
             </template>
         </el-table-column>
         <el-table-column label="Распоряжение" width="180">

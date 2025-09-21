@@ -136,7 +136,7 @@ class OrderReserveService
             $reserve->quantity += $add_quantity;
             $reserve->save();
         } else {
-            OrderReserve::register($orderItem->id, $storageItem->id, $add_quantity, $this->minutes);
+            OrderReserve::register($orderItem->id, $storageItem->id, (float)$add_quantity, $this->minutes);
         }
     }
 

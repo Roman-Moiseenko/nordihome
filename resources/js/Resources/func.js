@@ -66,7 +66,7 @@ export const func = {
         return val;
     },
     MaskCount: (val, min = 1, max = null) => {
-        if (val === undefined || val === null || val === '') return 0;
+        if (val === undefined || val === null || val === '') return '';
 
         let last = val.slice(-1);
         if (last.match(/\d+/g) === null) {
@@ -77,7 +77,7 @@ export const func = {
         return val;
     },
     MaskFloat: (val, rounded = 4) => {
-        if (val === undefined || val === null) return 0;
+        if (val === undefined || val === null || val === '') return '';
         let last = val.slice(-1);
         let pre_val = val.substring(0, val.length - 1);
         if (last === ',') last = '.'

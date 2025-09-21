@@ -312,6 +312,10 @@ class OrderRepository
                 'period_id' => $expense->calendarPeriod->id,
                 'periods' => $this->calendar->getDayPeriods($expense->calendarPeriod->calendar->date_at),
             ],
+            'user' => [
+                'name' => $expense->order->user->getPublicName(),
+                'phone' => $expense->order->user->phone,
+            ],
             'workers' => $expense->workers()->get()->map(function (Worker $worker) {
                 return array_merge($worker->toArray(), [
                     'work' => Worker::WORKS[$worker->pivot->work],

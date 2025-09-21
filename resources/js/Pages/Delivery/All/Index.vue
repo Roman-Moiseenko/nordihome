@@ -43,7 +43,13 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="number" label="Номер" width="80"/>
-                <el-table-column prop="recipient" label="Клиент" width="260" show-overflow-tooltip>
+                <el-table-column prop="distributor_name" label="Клиент" width="200" show-overflow-tooltip>
+                    <template #default="scope">
+                        <div class="font-medium text-sm">{{ scope.row.user.name }}</div>
+                        <div class="text-slate-700 text-xs">{{ func.phone(scope.row.user.phone) }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="recipient" label="Получатель" width="200" show-overflow-tooltip>
                     <template #default="scope">
                         <div class="font-medium text-sm">{{ func.fullName(scope.row.recipient) }}</div>
                         <div class="text-slate-700 text-xs">{{ func.phone(scope.row.phone) }}</div>

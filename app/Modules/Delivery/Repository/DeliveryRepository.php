@@ -76,6 +76,10 @@ class DeliveryRepository
             'visible_cargo' => false,
             'delivery' => $expense->delivery()->with('cargo')->first(),
             'driver' => $expense->getDriver(),
+            'user' => [
+                'name' => $expense->order->user->getPublicName(),
+                'phone' => $expense->order->user->phone,
+            ],
         ]);
     }
 
@@ -137,6 +141,10 @@ class DeliveryRepository
                                             'is_completed' => $expense->isCompleted(),
                                             'visible_assemble' => false,
                                             'visible_loader' => false,
+                                            'user' => [
+                                                'name' => $expense->order->user->getPublicName(),
+                                                'phone' => $expense->order->user->phone,
+                                            ],
                                         ]);
                                     }),
                             ]);
