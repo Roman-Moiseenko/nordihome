@@ -14,60 +14,55 @@
     </div>
 </template>
 
-<script>
-import { router } from '@inertiajs/vue3'
-import { useStore } from "@Res/store.js"
+<script lang="ts" setup>
+import {router, usePage} from '@inertiajs/vue3'
+import {useStore} from "@Res/store.js"
+import {defineProps, ref} from "vue";
 
-export default {
-    props: {
-        current_page: Number,
-        per_page: Number,
-        total: Number,
-    },
-    data() {
-        return {
-            CurrentPage: this.current_page,
-            PageSize: this.per_page,
-            Total: this.total,
-            Loading: false,
+const props = defineProps({
+    current_page: Number,
+    per_page: Number,
+    total: Number,
+    loading: Boolean,
+})
+
+const PageSize = ref(props.per_page)
+const CurrentPage = ref(props.current_page)
+const Total = ref(props.total)
+
+function handleSizeChange(val) {
+    PageSize.value = val;
+    router.visit(usePage().url,
+        {
+            method: 'get',
+            data: {page: CurrentPage.value, size: val},
+            preserveScroll: true,
+            preserveState: true,
+            onBefore: visit => {
+                useStore().beforeLoad();
+            },
+            onFinish: visit => {
+                useStore().afterLoad();
+            },
         }
-    },
-    methods: {
-        handleSizeChange(val) {
-            this.$data.Loading = true;
-            this.pageSize = val;
-            router.visit(this.$page.url,
-                {
-                    method: 'get',
-                    data: {page: this.$data.CurrentPage, size: val},
-                    preserveScroll: true,
-                    preserveState: true,
-                    onBefore: visit => {
-                        useStore().beforeLoad();
-                    },
-                    onFinish: visit => {
-                        useStore().afterLoad();
-                    },
-                }
-            );
-        },
-        handleCurrentChange(val) {
-            this.$data.CurrentPage = val;
-            router.visit(this.$page.url,
-                {
-                    method: 'get',
-                    data: {page: val, size: this.$data.PageSize},
-                    preserveScroll: true,
-                    preserveState: false,
-                    onBefore: visit => {
-                        useStore().beforeLoad();
-                    },
-                    onFinish: visit => {
-                        useStore().afterLoad();
-                    },
-                }
-                );
-        },
-    }
+    );
+}
+function handleCurrentChange(val) {
+    CurrentPage.value = val;
+    router.visit(usePage().url,
+        {
+            method: 'get',
+            data: {page: val, size: PageSize.value},
+            preserveScroll: true,
+            preserveState: false,
+            onBefore: visit => {
+                useStore().beforeLoad();
+            },
+            onFinish: visit => {
+                useStore().afterLoad();
+            },
+        }
+    );
 }
 </script>
+
