@@ -302,6 +302,8 @@ class SupplyService extends AccountingService
             $storage_id = Storage::where('default', true)->first()->id;
         }
 
+        if (!is_null($item->supply_stack_id )) throw new \DomainException('Позиция уже отправлена в заказ!');
+
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $stack = SupplyStack::register($item->product_id, $item->quantity, $staff->id, $storage_id, 'Заказ # ' . $item->order->htmlNum());

@@ -85,7 +85,7 @@ class OrderService
         Settings            $settings,
         InvoiceReport       $invoiceReport,
         BankService         $bankService,
-        //
+
     )
     {
         $this->coupon_set = $settings->coupon;

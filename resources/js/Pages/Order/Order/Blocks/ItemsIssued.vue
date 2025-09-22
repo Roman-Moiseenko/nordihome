@@ -24,15 +24,12 @@
         </el-table-column>
         <el-table-column label="Кол-во" width="110" align="center">
             <template #default="scope">
-
                 <span>
                     <span class="text-green-800">{{ scope.row.quantity }}</span>
                 </span>
             </template>
         </el-table-column>
         <el-table-column v-if="is_new" prop="product.quantity_sell" label="Наличие" width="90" align="center"/>
-
-
         <el-table-column label="Не выдано" width="220">
             <template #default="scope">
                 <div v-if="scope.row.reserves">
