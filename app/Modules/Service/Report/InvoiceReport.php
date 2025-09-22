@@ -72,7 +72,6 @@ class InvoiceReport
         $this->service->findReplaceArray($activeWorksheet, $replaceItems);
 
         //Список товара
-        $begin_row_products = 15; //TODO Перенести в настройки отчетов
         $_from = self::BEGIN_ROW;
         $_to = self::BEGIN_ROW + 1;
         $count_items = $order->items()->count();
