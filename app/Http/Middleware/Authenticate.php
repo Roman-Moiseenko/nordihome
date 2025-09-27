@@ -17,8 +17,6 @@ class Authenticate extends Middleware
             return $request->expectsJson() ? null : route('admin.login');
         } else {
 
-            //dd(route('shop.home'));
-            //dd(redirect()->route('shop.home')->with('danger', 'Доступ ограничен, Вам необходима аутентификация'));
             Session::flash('warning', 'Доступ ограничен, Вам необходима аутентификация');
             return $request->expectsJson() ? null : route('shop.home');
         }

@@ -151,42 +151,4 @@ class AdminComposer
         return $str;
     }
 
-    /*
-     public function activeMenu($pageName, $layout): array
-    {
-        $firstLevelActiveIndex = '';
-        $secondLevelActiveIndex = '';
-        $thirdLevelActiveIndex = '';
-        if ($layout == 'admin')
-        foreach (AdminMenu::menu() as $menuKey => $menu) {
-            if ($menu !== 'divider' && isset($menu['route_name']) && $menu['route_name'] == $pageName && empty($firstPageName)) {
-                $firstLevelActiveIndex = $menuKey;
-            }
-
-            if (isset($menu['sub_menu'])) {
-                foreach ($menu['sub_menu'] as $subMenuKey => $subMenu) {
-                    if (isset($subMenu['route_name']) && $subMenu['route_name'] == $pageName && $menuKey != 'menu-layout' && empty($secondPageName)) {
-                        $firstLevelActiveIndex = $menuKey;
-                        $secondLevelActiveIndex = $subMenuKey;
-                    }
-
-                    if (isset($subMenu['sub_menu'])) {
-                        foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu) {
-                            if (isset($lastSubMenu['route_name']) && $lastSubMenu['route_name'] == $pageName) {
-                                $firstLevelActiveIndex = $menuKey;
-                                $secondLevelActiveIndex = $subMenuKey;
-                                $thirdLevelActiveIndex = $lastSubMenuKey;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return [
-            'first_level_active_index' => $firstLevelActiveIndex,
-            'second_level_active_index' => $secondLevelActiveIndex,
-            'third_level_active_index' => $thirdLevelActiveIndex
-        ];
-    }
-     * */
 }
