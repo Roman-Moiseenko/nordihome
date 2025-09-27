@@ -269,6 +269,7 @@ class ArrivalService extends AccountingService
         });
     }
 
+
     public function setInfo(ArrivalDocument $arrival, Request $request): void
     {
         $arrival->baseSave($request->input('document'));
