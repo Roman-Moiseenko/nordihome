@@ -17,6 +17,7 @@ class Settings
 
     public function __construct()
     {
+
         $repository = new SettingRepository();
         $this->common = $repository->getCommon();
         $this->coupon = $repository->getCoupon();
@@ -25,5 +26,6 @@ class Settings
         $this->mail = $repository->getMail();
         $this->notification = $repository->getNotification();
         $this->image = $repository->getImage();
+
     }
 }
