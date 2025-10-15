@@ -2,7 +2,7 @@
 @extends('shop.nbrussia.layouts.main')
 
 
-@section('size', 'size container-xl')
+@section('main', 'size container-xl')
 
 @section('title', $title)
 @section('description', $description)

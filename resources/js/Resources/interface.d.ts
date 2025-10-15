@@ -1,3 +1,5 @@
+import {UploadFile} from "element-plus";
+
 export interface IRowAccounting {
     completed: number,
     trashed: boolean,
@@ -20,4 +22,13 @@ export interface IHonestItem {
     name: string,
     quantity: number,
     signs: string,
+}
+
+export interface IRowId {
+    id: number
+}
+
+export interface IUploadFile {
+    file: UploadFile,
+    clear_file: Boolean,
 }

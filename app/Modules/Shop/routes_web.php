@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Modules\Shop\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', 'SitemapXmlController@index')->name('sitemap');
@@ -26,8 +27,11 @@ Route::group(
         });
         Route::get('/shop/{old_slug}', 'ProductController@old_slug');
 
-        Route::get('/page/{slug}', 'PageController@view')->name('page.view');
+        Route::get('/page/news', [PageController::class, 'news'])->name('page.news');
+
+        Route::get('/page/{slug}', [PageController::class, 'view'])->name('page.view');
         Route::post('/page/map', 'PageController@map_data')->name('page.map');
+        //Route::get('/news', [\App\Modules\Page\Controllers\NewsController::class, ''])
 
         Route::group([
             'as' => 'product.',
@@ -83,11 +87,6 @@ Route::group(
             });
 
             Route::post('/create-click', 'OrderController@create_click')->name('create-click');
-
-
-
-
-
             Route::put('/create-parser', 'OrderController@store_parser');
 
             //ajax

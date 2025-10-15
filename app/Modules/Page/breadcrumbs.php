@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Modules\Page\Entity\BannerWidget;
 use App\Modules\Page\Entity\Contact;
+use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\ProductWidget;
 use App\Modules\Page\Entity\PromotionWidget;
@@ -92,3 +93,12 @@ Breadcrumbs::for('admin.page.contact.edit', function (BreadcrumbTrail $trail, Co
     $trail->push($contact->name . ' - Редактировать', route('admin.page.page.edit', $contact));
 });
 
+//NEWS
+Breadcrumbs::for('admin.page.news.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Новости', route('admin.page.news.index'));
+});
+Breadcrumbs::for('admin.page.news.show', function (BreadcrumbTrail $trail, News $news) {
+    $trail->parent('admin.page.news.index', $news);
+    $trail->push($news->title, route('admin.page.news.show', $news));
+});

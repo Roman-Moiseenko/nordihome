@@ -55,6 +55,15 @@ class PageController extends ShopController
         }
     }
 
+    public function news(Request $request)
+    {
+        if ($this->web->is_cache) {
+            return $this->caches->news($request);
+        } else {
+            return $this->views->news($request);
+        }
+    }
+
     public function map_data(Request $request)
     {
         $map = $this->repository->getMapData($request);

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Repository;
 
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class CacheRepository
@@ -24,22 +26,28 @@ class CacheRepository
         });*/
     }
 
-    public function root(array $request)
+    public function root(array $request): View
     {
         return $this->views->root($request);
     }
 
-    public function category(array $request, string $slug)
+    public function category(array $request, string $slug): View
     {
         return $this->views->category($request, $slug);
     }
 
-    public function page($slug)
+    public function page($slug): string
     {
         return $this->views->page($slug);
 /*
         return Cache::rememberForever('page-' . $slug, function () use ($slug) {
             return $this->views->page($slug);
         });*/
+    }
+
+    public function news(Request $request)
+    {
+        return $this->views->news($request);
+
     }
 }

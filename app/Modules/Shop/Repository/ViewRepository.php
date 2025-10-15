@@ -4,13 +4,16 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Repository;
 
 use App\Modules\Base\Helpers\CacheHelper;
+use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Entity\Template;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Shop\Schema;
-use Auth;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -35,7 +38,7 @@ class ViewRepository
         $this->schema = $schema;
     }
 
-    public function product(string $slug)
+    public function product(string $slug): View
     {
         $url_page = route('shop.product.view', $slug);
 
@@ -191,6 +194,9 @@ class ViewRepository
                 ]));
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function page($slug)
     {
         $page = $this->slugs->PageBySlug($slug);
@@ -329,6 +335,16 @@ class ViewRepository
         } else {
             $callback();
         }
+    }
+
+    public function news(Request $request)
+    {
+
+        $news = News::orderByDesc('created_at')->active()->paginate($request->input('size', 20))->get();
+        return view(
+            Template::blade('page') . 'news',
+            ['news' => $news,])
+            ->render();
     }
 
     private function categories_cache()

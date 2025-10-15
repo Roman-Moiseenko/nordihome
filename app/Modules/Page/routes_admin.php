@@ -2,6 +2,7 @@
 
 use App\Modules\Page\Controllers\BannerWidgetController;
 use App\Modules\Page\Controllers\CacheController;
+use App\Modules\Page\Controllers\NewsController;
 use App\Modules\Page\Controllers\ProductWidgetController;
 use App\Modules\Page\Controllers\PromotionWidgetController;
 use App\Modules\Page\Controllers\TextWidgetController;
@@ -56,7 +57,7 @@ Route::group(
                 'prefix' => 'banner',
                 'as' => 'banner.'
             ], function () {
-                Route::post('/set-banner/{widget}', [BannerWidgetController::class, 'set_widget'])->name('set-widget');
+                Route::post('/set-widget/{widget}', [BannerWidgetController::class, 'set_widget'])->name('set-widget');
                 Route::post('/add-item/{widget}', [BannerWidgetController::class, 'add_item'])->name('add-item');
                 Route::post('/set-item/{item}', [BannerWidgetController::class, 'set_item'])->name('set-item');
                 Route::delete('/del-item/{item}', [BannerWidgetController::class, 'del_item'])->name('del-item');
@@ -108,6 +109,7 @@ Route::group(
 
 
 
+        //Страницы
         Route::group([
             'prefix' => 'page',
             'as' => 'page.'
@@ -121,6 +123,7 @@ Route::group(
 
         Route::resource('page', 'PageController')->except(['create', 'edit', 'update']); //CRUD
 
+        //Контакты
         Route::group([
             'prefix' => 'contact',
             'as' => 'contact.'
@@ -132,9 +135,19 @@ Route::group(
         });
         Route::resource('contact', 'ContactController')->except(['show', 'create', 'edit', 'update']); //CRUD
 
+        //Новости
+        Route::group([
+            'prefix' => 'news',
+            'as' => 'news.'
+        ], function () {
+            Route::post('/toggle/{news}', [NewsController::class, 'toggle'])->name('toggle');
 
+            Route::put('/{news}', [NewsController::class, 'update'])->name('update');
+            Route::post('/', [NewsController::class, 'store'])->name('store');
+            Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
+            Route::get('/', [NewsController::class, 'index'])->name('index');
 
-
+        });
 
     }
 );
