@@ -18,7 +18,7 @@
 @endphp
 <div>
     @foreach($widget->items as $item)
-        <div class="text-center mb-1 notification-top">
+        <div class="text-center mb-4 notification-top">
             {!! $item->text !!}
         </div>
     @endforeach
