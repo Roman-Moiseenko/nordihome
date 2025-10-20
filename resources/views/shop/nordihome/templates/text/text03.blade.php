@@ -23,7 +23,7 @@
     </div>
 </div>
 <div>
-    <h2 class="page-h2">{{ $widget->caption }}</h2>
+    <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
     @foreach($widget->items as $item)
 
         @if($item->slug=='svg1')
