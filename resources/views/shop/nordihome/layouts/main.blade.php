@@ -33,7 +33,7 @@
 @include('shop.nordihome.widgets.flash')
 
 @section('breadcrumbs')
-    <div class="container-xl1">
+    <div class="container-xl">
         {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.nordihome.breadcrumbs') }}
     </div>
 @show
