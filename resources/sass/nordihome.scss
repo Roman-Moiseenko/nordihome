@@ -46,7 +46,7 @@ h3 {font-size: 28px;}
 .t-color_dark-gray {color: $dark-gray;}
 .t-color_sert-red {color: $sert-red;}
 .t-color_dark-red {color: $dark-red;}
-.t-a_center {text-align:center;}
+.t-a_center {text-align:center;} // заменяем на text-center от бутстрап 5
 .t-a_left {text-align:left;}
 .t-a_right {text-align:right;}
 .t-t_uppercase {text-transform: uppercase;}

@@ -18,7 +18,7 @@
 @endphp
 <div>
     @foreach($widget->items as $item)
-        <div class="text-center">
+        <div class="text-center mb-1">
             {!! $item->text !!}
         </div>
     @endforeach
