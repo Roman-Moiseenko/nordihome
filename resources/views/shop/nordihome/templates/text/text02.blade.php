@@ -1,4 +1,4 @@
-<!--template:Шаблон текстовый-->
+<!--template:Оповещение на главной вверху-->
 @php
     /**
     * TextWidget::class - string

@@ -21,6 +21,7 @@ $font-sizes: (
 ) !default;
 
 
+
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 
 @import "common";
@@ -38,3 +39,4 @@ $font-sizes: (
 @import "nordihome/products";
 @import "nordihome/widgets/feedback";
 @import "nordihome/old_widget";
+@import "nordihome/widgets";
