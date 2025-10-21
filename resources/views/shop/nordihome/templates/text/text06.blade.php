@@ -30,7 +30,7 @@
     <div class="row">
         <div class="col-lg-6">
             <a href="/shop/" class="c-mini-item">
-                <img src="/3b907309-9689-42f7-af88-109c9303e2c1" alt="Товары Икеа в наличии">
+                <img src="/3b907309-9689-42f7-af88-109c9303e2c1.jpg" alt="Товары Икеа в наличии">
                 <div class="heading">Каталог товаров</div>
             </a>
         </div>
