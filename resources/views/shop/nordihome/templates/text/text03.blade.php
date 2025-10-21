@@ -17,13 +17,13 @@
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
 <div class="main-advantages p-t_50 p-b_50">
-    <h2 class="page-h2">Почему нас выбирают</h2>
+    <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
     <div class="row">
 
     </div>
 </div>
 <div>
-    <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
+
     @foreach($widget->items as $item)
 
         @if($item->slug=='svg1')
@@ -44,7 +44,7 @@
 
         <h3>{{ $item->caption }}</h3>
         <div>
-            {!! $item->text !!}
+            {!! $item->text !!} / {{$item->description}}
         </div>
     @endforeach
 </div>
