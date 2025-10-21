@@ -60,7 +60,7 @@
                             </svg>
                         @endif
                     </div>
-                    <div class="item-advantages-info">
+                    <div class="item-step-info">
                         <div class="heading">{{ $item->caption }}</div>
                         <div class="text">{!! $item->text !!}</div>
                     </div>
