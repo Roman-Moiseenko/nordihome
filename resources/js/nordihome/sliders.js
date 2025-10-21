@@ -54,6 +54,7 @@ window.$ = jQuery;
     if (document.getElementById('slider-delivery-company') !== null) {
         let sliderDeliveryCompany = $('#slider-delivery-company');
         sliderDeliveryCompany.owlCarousel(optionsSliderBase);
+        optionsOldCatalog.responsive = { 0: {items: 1}};
         sliderDeliveryCompany.on('mousewheel', '.owl-stage', function (e) {
             if (e.originalEvent.deltaY > 0) {
                 sliderDeliveryCompany.trigger('next.owl');
