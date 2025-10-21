@@ -21,5 +21,8 @@
         <div class="text-center m-b_30 notification-top">
             {!! $item->text !!}
         </div>
+        <div class="container-fluid">
+            {{$item->caption}}<br><a href="/usloviya-i-tarify/" class="btn btn-white t-t_uppercase f-z_14 m-t_20">{{$item->description}}</a>
+        </div>
     @endforeach
 </div>
