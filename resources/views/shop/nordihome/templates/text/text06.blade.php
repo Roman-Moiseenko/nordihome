@@ -26,3 +26,19 @@
         </div>
     @endforeach
 </div>
+<div class="main-catalog-mini">
+    <div class="row">
+        <div class="col-lg-6">
+            <a href="/shop/" class="c-mini-item">
+                <img src="/wp-content/uploads/2023/04/t-nalichie-min.jpg" alt="Товары Икеа в наличии">
+                <div class="heading">Каталог товаров</div>
+            </a>
+        </div>
+        <div class="col-lg-6">
+            <a href="/calculate/" class="c-mini-item">
+                <img src="/wp-content/uploads/2023/04/t-zakaz-min.jpg" alt="Товары Икеа под заказ">
+                <div class="heading">Весь ассортимент под заказ</div>
+            </a>
+        </div>
+    </div>
+</div>
