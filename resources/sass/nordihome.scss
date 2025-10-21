@@ -136,6 +136,76 @@ h3 {font-size: 28px;}
 .bg-515151 {background:#515151;color:white;}
 .bg-faf7f4 {background:#FAF7F4;}
 
+.btn {
+    border-radius: 50px;
+    padding: 9px 25px 11px 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.5s;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    display: inline-block;
+    cursor: pointer;
+    text-align: center;
+    color: white;
+}
+.btn-big {
+    padding:20px 50px;
+}
+.btn-black {
+    background:var(--black);
+}
+.btn-black:hover {
+    background:var(--gray);
+    color:var(--black);
+}
+.btn-orange {
+    background:var(--orange);
+    color:white;
+    text-transform:uppercase;
+}
+.btn-orange:hover {
+    background:white;
+    color:var(--black);
+}
+.btn-b-orange {
+
+}
+.btn-white {
+    background:white;
+    color:var(--black);
+}
+.btn-white:hover {
+    background:var(--dark-gray);
+    color:white;
+}
+.btn-white-b {
+    background:white;
+    color:var(--black);
+    border:2px solid var(--black);
+}
+.btn-white-b:hover {
+    background:var(--black);
+    color:white;
+}
+.btn-back {
+    position: absolute;
+    right: 40px;
+    font-weight: 600;
+    cursor:pointer;
+    font-size: 16px;
+    z-index:98;
+}
+.btn-back:hover {
+    color: var(--light-gray);
+}
+.btn-gradient {
+    background: linear-gradient(156deg, rgb(102 101 101) 0%, rgba(60,60,60,1) 100%);
+    color:white;
+    text-transform:uppercase;
+}
+.btn-gradient:hover {background:linear-gradient(156deg, rgba(60,60,60,1) 0%, rgba(60,60,60,1) 100%);}
+
 
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 
