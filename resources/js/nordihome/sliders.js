@@ -34,7 +34,7 @@ window.$ = jQuery;
                 smartSpeed: 500
             },
             991: {
-                items: 6,
+                items: 1,
                 smartSpeed: 500
             },
         }
