@@ -21,7 +21,7 @@
     <div class="row">
         @foreach($widget->items as $item)
             <div class="col-md-6 col-lg-6">
-                <div class="item-advantages t-a_center m-b_30">
+                <div class="item-advantages t-a_center">
                     <div>
                         @if($item->slug=='svg01-item-advantages')
                             <svg fill="#ffffff" height="100px" width="100px" version="1.1" id="Layer_1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" viewBox="-92.45 -92.45 449.05 449.05" xml:space="preserve" stroke="#ffffff" stroke-width="0.0026414800000000003">
