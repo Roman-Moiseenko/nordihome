@@ -24,7 +24,20 @@ window.$ = jQuery;
         transitionStyle: "fade",
         touchDrag: true,
         mouseDrag: false,
-
+        responsive: {
+            0: {
+                items: 2,
+                smartSpeed: 500
+            },
+            576: {
+                items: 3,
+                smartSpeed: 500
+            },
+            991: {
+                items: 6,
+                smartSpeed: 500
+            },
+        }
     };
     if (document.getElementById('slider-payment') !== null) {
         let sliderPayment = $('#slider-payment');
