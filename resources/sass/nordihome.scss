@@ -153,39 +153,39 @@ h3 {font-size: 28px;}
     padding:20px 50px;
 }
 .btn-black {
-    background:var(--black);
+    background:$black;
 }
 .btn-black:hover {
-    background:var(--gray);
-    color:var(--black);
+    background:#gray;
+    color:#black;
 }
 .btn-orange {
-    background:var(--orange);
+    background:$orange;
     color:white;
     text-transform:uppercase;
 }
 .btn-orange:hover {
     background:white;
-    color:var(--black);
+    color:#black;
 }
 .btn-b-orange {
 
 }
 .btn-white {
     background:white;
-    color:var(--black);
+    color:$black;
 }
 .btn-white:hover {
-    background:var(--dark-gray);
+    background:$dark-gray;
     color:white;
 }
 .btn-white-b {
     background:white;
-    color:var(--black);
-    border:2px solid var(--black);
+    color:$black;
+    border:2px solid $black;
 }
 .btn-white-b:hover {
-    background:var(--black);
+    background:$black;
     color:white;
 }
 .btn-back {
@@ -197,7 +197,7 @@ h3 {font-size: 28px;}
     z-index:98;
 }
 .btn-back:hover {
-    color: var(--light-gray);
+    color: $light-gray;
 }
 .btn-gradient {
     background: linear-gradient(156deg, rgb(102 101 101) 0%, rgba(60,60,60,1) 100%);
