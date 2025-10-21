@@ -30,13 +30,13 @@
     <div class="row">
         <div class="col-lg-6">
             <a href="/shop/" class="c-mini-item">
-                <img src="/wp-content/uploads/2023/04/t-nalichie-min.jpg" alt="Товары Икеа в наличии">
+                <img src="/3b907309-9689-42f7-af88-109c9303e2c1" alt="Товары Икеа в наличии">
                 <div class="heading">Каталог товаров</div>
             </a>
         </div>
         <div class="col-lg-6">
             <a href="/calculate/" class="c-mini-item">
-                <img src="/wp-content/uploads/2023/04/t-zakaz-min.jpg" alt="Товары Икеа под заказ">
+                <img src="/8ad41390-77e9-4b65-be52-c2e5b2d86ec1" alt="Товары Икеа под заказ">
                 <div class="heading">Весь ассортимент под заказ</div>
             </a>
         </div>
