@@ -1,4 +1,4 @@
-<!--template:Почему нас выбираю для главной-->
+<!--template:Главная - Заказ и доставка-->
 @php
     /**
     * TextWidget::class - string
