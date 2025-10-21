@@ -42,7 +42,6 @@ window.$ = jQuery;
     if (document.getElementById('slider-payment') !== null) {
         let sliderPayment = $('#slider-payment');
         sliderPayment.owlCarousel(optionsSliderBase);
-        optionsOldCatalog.responsive = { 0: {items: 1}};
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
             if (e.originalEvent.deltaY > 0) {
                 sliderPayment.trigger('next.owl');
