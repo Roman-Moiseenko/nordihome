@@ -10,3 +10,26 @@
         text-transform: uppercase;
     }
 }
+@media (max-width: 768px) {
+    .item-advantages {
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        .item-advantages-info {
+            margin-left: 10px;
+        }
+    }
+}
+@media (max-width: 576px) {
+    .item-advantages {
+        margin-bottom: 20px;
+        svg {
+            width: 70px;
+            height: 70px;
+        }
+        .heading {
+            font-size: 18px;
+        }
+    }
+}
