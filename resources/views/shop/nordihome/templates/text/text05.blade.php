@@ -18,7 +18,7 @@
 @endphp
 <div class="main-order-stages p-t_50 p-b_50">
     <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
-    <div class="row">
+    <div class="row justify-content-center">
         @foreach($widget->items as $item)
             <div class="col-md-6 col-lg-6">
                 <div class="item-step t-a_center">
