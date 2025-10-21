@@ -14,7 +14,7 @@
     /** @var \App\Modules\Page\Entity\BannerWidget $widget */
 @endphp
 <div>
-    <div id="slider-payment" class="owl-carousel owl-theme">
+    <div id="" class="owl-carousel owl-theme slider-images-product">
         @foreach($widget->items as $item)
             <div>
                 <a href="{{ $item->url }}">
