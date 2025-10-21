@@ -23,7 +23,7 @@
             <div class="col-md-6 col-lg-6">
                 <div class="item-step t-a_center">
                     <div>
-                        @if($item->slug=='svg01-item-advantages')
+                        @if($item->slug=='svg01-item-step')
                             <svg fill="#ffffff" width="100px" height="100px" viewBox="-41.78 -41.78 206.44 206.44" version="1.1" id="Layer_1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" style="enable-background:new 0 0 122.88 102.18" xml:space="preserve" stroke="#ffffff" transform="rotate(0)" stroke-width="0.0012288">
 					<g id="SVGRepo_bgCarrier" stroke-width="0">
                         <rect x="-41.78" y="-41.78" width="206.44" height="206.44" rx="103.22" fill="#D7B56D" strokewidth="0"></rect>
