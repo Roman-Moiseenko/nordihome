@@ -19,7 +19,17 @@
 <div class="main-advantages p-t_50 p-b_50">
     <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
     <div class="row">
-
+        @foreach($widget->items as $item)
+            <div class="col-md-6 col-lg-6">
+                <div class="item-advantages t-a_center m-b_30">
+                    <div>с svg</div>
+                    <div class="item-advantages-info">
+                        <div class="heading">{{ $item->caption }}</div>
+                        <div class="text">{{$item->description}}</div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </div>
 </div>
 <div>
