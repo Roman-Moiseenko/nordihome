@@ -16,16 +16,6 @@
     */
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
-<div>
-    <h2>{{ $widget->caption }}</h2>
-    @foreach($widget->items as $item)
-
-        <h3>{{ $item->caption }}</h3>
-        <div>
-            {!! $item->text !!}
-        </div>
-    @endforeach
-</div>
 <div class="main-catalog-mini">
     <div class="row">
         <div class="col-lg-6">
