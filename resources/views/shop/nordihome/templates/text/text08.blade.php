@@ -28,7 +28,7 @@
 </div>
 <div class="block-faq p-t_50 p-b_50 bg-black" id="faq-tab">
     <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
-    <div class="accordion_1">
+    <div class="accordion accordion_1">
         @foreach($widget->items as $item)
             <div class="accordion-item">
                 <div class="accordion-heading">{{ $item->caption }}</div>
