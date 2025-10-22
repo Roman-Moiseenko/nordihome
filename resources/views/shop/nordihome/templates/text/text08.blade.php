@@ -1,4 +1,4 @@
-<!--template:Шаблон текстовый-->
+<!--template:Главная - вопросы и ответы-->
 @php
     /**
     * TextWidget::class - string
@@ -25,4 +25,17 @@
             {!! $item->text !!}
         </div>
     @endforeach
+</div>
+<div class="block-faq p-t_50 p-b_50 bg-black" id="faq-tab">
+    <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
+    <div class="accordion_1">
+        @foreach($widget->items as $item)
+            <div class="accordion-item">
+                <div class="accordion-heading">{{ $item->caption }}</div>
+                <div class="accordion-text">
+                    <p>{!! $item->text !!}</p>
+                </div>
+            </div>
+        @endforeach
+    </div>
 </div>
