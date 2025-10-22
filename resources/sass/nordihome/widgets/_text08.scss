@@ -1,0 +1,42 @@
+.accordion_1 {
+    max-width: 760px;
+    margin: 0 auto;
+    .accordion-item {
+        position: relative;
+        .accordion-heading {
+            font-size: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            padding-right: 50px;
+            &:after {
+                content: '';
+                width: 45px;
+                height: 45px;
+                text-align: center;
+                border-radius: 50%;
+                display: block;
+                position: absolute;
+                right: 0;
+                top: 16px;
+                //TODO Заменить УРЛ!!!!!
+                background: url(https://39y.ru/images/pages/home/plus.svg) center center / 27px no-repeat, white;
+            }
+        }
+        .accordion-text {
+            visibility: hidden;
+            transition: height ease-in-out 0.3s,opacity ease-in-out 0.3s;
+            opacity: 0;
+            height: 0;
+            color: #D7B56D;
+            font-weight: 500;
+            &.active {
+                opacity: 1;
+                overflow: initial;
+                height: auto;
+                visibility: visible;
+            }
+        }
+    }
+}
