@@ -16,16 +16,6 @@
     */
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
-<div>
-    <h2>{{ $widget->caption }}</h2>
-    @foreach($widget->items as $item)
-
-        <h3>{{ $item->caption }}</h3>
-        <div>
-            {!! $item->text !!}
-        </div>
-    @endforeach
-</div>
 <div class="block-faq p-t_50 p-b_50 bg-black" id="faq-tab">
     <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
     <div class="accordion accordion_1">
