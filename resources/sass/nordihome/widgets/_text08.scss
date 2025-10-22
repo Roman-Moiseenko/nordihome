@@ -1,8 +1,11 @@
 .accordion_1 {
     max-width: 760px;
     margin: 0 auto;
+}
+.accordion {
     .accordion-item {
         position: relative;
+    }
         .accordion-heading {
             font-size: 25px;
             font-weight: 600;
@@ -37,5 +40,4 @@
                 visibility: visible;
             }
         }
-    }
 }
