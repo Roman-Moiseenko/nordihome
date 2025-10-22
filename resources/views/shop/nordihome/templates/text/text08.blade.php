@@ -1,4 +1,4 @@
-<!--template:Главная - вопросы и ответы-->
+<!--template:Главная - часто задаваемые вопросы-->
 @php
     /**
     * TextWidget::class - string
