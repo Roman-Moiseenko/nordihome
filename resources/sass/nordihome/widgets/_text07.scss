@@ -26,6 +26,11 @@
     ul.star li.one {
         background: url(https://nordihome.ru/wp-content/themes/euroikea/images/ic_round-star.svg) no-repeat center center / 24px;
     }
+    ul.star li:last-child {
+        width: auto;
+        font-size: 16px;
+        margin: 0 0 0 7px;
+    }
 }
 @media (max-width: 990px) {
     .main-rating-item {
