@@ -56,7 +56,7 @@
     </div>
     <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-            <div class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+            <div class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
                 Аккордеонный элемент #3
             </div>
         </h2>
