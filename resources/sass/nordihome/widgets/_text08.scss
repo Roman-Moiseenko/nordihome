@@ -2,42 +2,20 @@
     max-width: 760px;
     margin: 0 auto;
 }
-.accordion {
+#accordion-faq {
     .accordion-item {
         position: relative;
     }
-        .accordion-heading {
+        .accordion-header {
             font-size: 25px;
             font-weight: 600;
             cursor: pointer;
             padding: 20px 0;
             margin-bottom: 20px;
             padding-right: 50px;
-            &:after {
-                content: '';
-                width: 45px;
-                height: 45px;
-                text-align: center;
-                border-radius: 50%;
-                display: block;
-                position: absolute;
-                right: 0;
-                top: 16px;
-                background: url(https://nordihome.ru/wp-content/themes/euroikea/images/plus.svg) center center / 27px no-repeat, white;
-            }
         }
-        .accordion-text {
-            visibility: hidden;
-            transition: height ease-in-out 0.3s,opacity ease-in-out 0.3s;
-            opacity: 0;
-            height: 0;
-            color: #D7B56D;
+        .accordion-body {
+            color: $orange;
             font-weight: 500;
-            &.active {
-                opacity: 1;
-                overflow: initial;
-                height: auto;
-                visibility: visible;
-            }
         }
 }
