@@ -12,7 +12,7 @@ window.$ = jQuery;
         items: 1,
         autoplay: true, //
         smartSpeed: 1500, //Время движения слайда
-        autoplayTimeout: 1000, //Время смены слайда
+        autoplayTimeout: 4000, //Время смены слайда
         animateOut: 'fadeOut',
         animateIn: 'fadeIn',
         margin: 10,
