@@ -29,7 +29,7 @@
         @endforeach
     </div>
 </div>
-<div class="accordion" id="accordion-faq">
+<div class="accordion accordion_1" id="accordion-faq">
     @foreach($widget->items as $item)
         <div class="accordion-item">
             <div class="accordion-header" id="panelsStayOpen-heading{{$item->slug}}">
