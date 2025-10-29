@@ -17,10 +17,15 @@
     <div class="container">
         <div id="slider-specials" class="owl-carousel owl-theme">
             @foreach($widget->items as $item)
-                <div>
-                    <a href="{{ $item->url }}">
-                        <img src="{{ $item->getImage() }}"/>
-                    </a>
+                <div class="row justify-content-between">
+                    <div class="col-12 col-lg-6">
+                        <div class="sl-text">
+                            <div class="heading-border">{{ $item->caption }}</div>
+                            <div class="text">{{ $item->description }}</div>
+                            <a href="{{ $item->url }}" class="btn btn-white btn-big m-t_20">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5"><img src="{{ $item->getImage() }}"/></div>
                 </div>
             @endforeach
         </div>
