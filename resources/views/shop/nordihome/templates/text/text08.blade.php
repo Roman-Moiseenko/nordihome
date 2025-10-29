@@ -17,31 +17,24 @@
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
 <div class="block-faq p-t_50 p-b_50 bg-black" id="faq-tab">
-    <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
-    <div class="accordion accordion_1">
-        @foreach($widget->items as $item)
-            <div class="accordion-item">
-                <div class="accordion-heading">{{ $item->caption }}</div>
-                <div class="accordion-text">
-                    <p>{!! $item->text !!}</p>
+    <div class="container">
+        <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
+        <div class="accordion accordion_faq" id="faq-tab">
+            @foreach($widget->items as $item)
+                <div class="accordion-item">
+                    <div class="accordion-header" id="panelsStayOpen-heading{{$item->slug}}">
+                        <div class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{$item->slug}}" aria-expanded="false" aria-controls="panelsStayOpen-collapse{{$item->slug}}">
+                            {{ $item->caption }}
+                        </div>
+                    </div>
+                    <div id="panelsStayOpen-collapse{{$item->slug}}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{$item->slug}}">
+                        <div class="accordion-body">
+                            {!! $item->text !!}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
 </div>
-<div class="accordion accordion_faq" id="faq-tab">
-    @foreach($widget->items as $item)
-        <div class="accordion-item">
-            <div class="accordion-header" id="panelsStayOpen-heading{{$item->slug}}">
-                <div class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{$item->slug}}" aria-expanded="false" aria-controls="panelsStayOpen-collapse{{$item->slug}}">
-                    {{ $item->caption }}
-                </div>
-            </div>
-            <div id="panelsStayOpen-collapse{{$item->slug}}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{$item->slug}}">
-                <div class="accordion-body">
-                    {!! $item->text !!}
-                </div>
-            </div>
-        </div>
-    @endforeach
-</div>
+
