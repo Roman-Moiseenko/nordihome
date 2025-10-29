@@ -15,7 +15,6 @@
 @endphp
 <div class="main-reviews p-t_50 p-b_50" id="reviews-tab">
     <div class="container-fluid">
-        <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
         <div class="owl-carousel owl-theme slider-images-product">
             @foreach($widget->items as $item)
                 <div>
