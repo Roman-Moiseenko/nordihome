@@ -4,7 +4,7 @@
 @section('breadcrumbs')
 @endsection
 
-@section('main', 'home container-xl')
+@section('main', 'home container-xl77')
 
 @section('title', $title)
 @section('description', $description)
