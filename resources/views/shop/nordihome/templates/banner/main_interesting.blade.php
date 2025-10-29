@@ -30,6 +30,5 @@
                 </div>
             @endforeach
         </div>
-        <div class="t-a_center m-t_30"><a href="/" class="btn btn-white-b">Посмотреть все акции</a></div>
     </div>
 </div>
