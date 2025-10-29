@@ -16,7 +16,7 @@
     */
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
-<div>
+<div class="container">
     @foreach($widget->items as $item)
         <div class="text-center m-b_30 notification-top">
             {!! $item->text !!}
