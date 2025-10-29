@@ -15,7 +15,7 @@
 @endphp
 <div class="main-slider-sale p-t_50 p-b_50">
     <div class="container">
-        <div id="slider-specials" class="owl-carousel owl-theme">
+        <div id="slider-specials" class="owl-carousel owl-theme main-slider">
             @foreach($widget->items as $item)
                 <div class="row justify-content-between">
                     <div class="col-12 col-lg-6">
