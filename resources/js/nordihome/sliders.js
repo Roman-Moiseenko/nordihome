@@ -112,9 +112,8 @@ window.$ = jQuery;
         let sliderOldReviews = $('#slider-old-reviews');
         let optionsOldReviews = optionsSliderBase;
         optionsOldReviews.mouseDrag = true;
-        optionsOldReviews.dots = true;
         optionsOldReviews.margin = 40;
-        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 4}, 991: {items: 6}};
+        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 3}, 991: {items: 6}};
         sliderOldReviews.owlCarousel(optionsOldReviews);
     }
 
