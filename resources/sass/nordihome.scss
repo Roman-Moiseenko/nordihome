@@ -240,7 +240,23 @@ h3 {font-size: 28px;}
     display: block;
     margin-top: 15px;
 }
-
+.owl-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+.owl-dot {
+    background: var(--bs-gray) !important;
+    width: 40px;
+    height: 3px;
+    display: inline-block;
+    border-radius: 0;
+    opacity: 0.2;
+    margin: 10px 4px;
+    &.active {
+        opacity: 1;
+    }
+}
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 
 @import "common";
