@@ -23,7 +23,7 @@
                         <div class="sl-text">
                             <div class="heading-border">{{ $item->caption }}</div>
                             <div class="text">{!! $item->description !!}</div>
-                            <a href="{{ $item->url }}" class="btn btn-white btn-big m-t_20">Подробнее</a>
+                            <a href="{{ $item->url }}" class="btn btn-white btn-big t-t_uppercase f-z_14 m-t_20">Посмотреть</a>
                         </div>
                     </div>
                     <div class="col-12 col-lg-6" style="background: url({{ $item->getImage() }}) center center / cover no-repeat;"></div>
