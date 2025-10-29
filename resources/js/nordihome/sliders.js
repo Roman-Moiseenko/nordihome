@@ -79,7 +79,7 @@ window.$ = jQuery;
         let optionsOldReviews = optionsSliderBase;
         optionsOldReviews.mouseDrag = true;
         optionsOldReviews.margin = 40;
-        optionsOldReviews.responsive = { 0: {items: 1}, 768: {items: 3}, 991: {items: 4}, 1200: {items: 5}, 1400: {items: 6}};
+        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 2}, 768: {items: 3}, 991: {items: 4}, 1200: {items: 5}, 1400: {items: 6}};
         sliderOldReviews.owlCarousel(optionsOldReviews);
     }
     if (document.querySelectorAll('.slider-images-product') !== null) {
