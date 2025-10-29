@@ -75,7 +75,7 @@ window.$ = jQuery;
         });
     }
     if (document.getElementById('main-slider-reviews') !== null) {
-        let sliderOldReviews = $('#slider-old-reviews');
+        let sliderOldReviews = $('#main-slider-reviews');
         let optionsOldReviews = optionsSliderBase;
         optionsOldReviews.mouseDrag = true;
         optionsOldReviews.margin = 40;
