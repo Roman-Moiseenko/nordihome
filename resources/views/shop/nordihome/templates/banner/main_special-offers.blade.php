@@ -16,12 +16,17 @@
 <div class="main-slider-sale p-t_50 p-b_50">
     <div class="container">
         <h2 class="t-t_uppercase t-a_center">{{ $banner->caption }}</h2>
-        <div id="slider-payment" class="owl-carousel owl-theme">
+        <div id="slider-payment" class="owl-carousel owl-theme main-slider">
             @foreach($widget->items as $item)
-                <div>
-                    <a href="{{ $item->url }}">
-                        <img src="{{ $item->getImage() }}"/>
-                    </a>
+                <div class="row justify-content-between">
+                    <div class="col-12 col-lg-6">
+                        <div class="sl-text">
+                            <div class="heading-border">{{ $item->caption }}</div>
+                            <div class="text">{{ $item->description }}</div>
+                            <a href="{{ $item->url }}" class="btn btn-white btn-big m-t_20">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-5" style="background: url({{ $item->getImage() }}) center center / cover no-repeat;"></div>
                 </div>
             @endforeach
         </div>
