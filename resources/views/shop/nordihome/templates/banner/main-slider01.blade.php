@@ -1,4 +1,4 @@
-<!--template:Первый слайдер на главной-->
+<!--template:Главная - первый слайдер-->
 @php
     /**
     * Banner::class - string
