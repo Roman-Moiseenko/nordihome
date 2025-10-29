@@ -23,7 +23,7 @@ window.$ = jQuery;
         singleItem: true,
         transitionStyle: "fade",
         touchDrag: true,
-        mouseDrag: false,
+        mouseDrag: true,
 
     };
     if (document.getElementById('slider-payment') !== null) {
@@ -74,6 +74,14 @@ window.$ = jQuery;
             e.preventDefault();
         });
     }
+    if (document.getElementById('main-slider-reviews') !== null) {
+        let sliderOldReviews = $('#slider-old-reviews');
+        let optionsOldReviews = optionsSliderBase;
+        optionsOldReviews.mouseDrag = true;
+        optionsOldReviews.margin = 40;
+        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 3}, 991: {items: 4}, 1200: {items: 5}, 1400: {items: 6}};
+        sliderOldReviews.owlCarousel(optionsOldReviews);
+    }
     if (document.querySelectorAll('.slider-images-product') !== null) {
         let product_optionsSliderBase = optionsSliderBase;
         let slidersImagesProduct = $('.slider-images-product');
@@ -108,14 +116,7 @@ window.$ = jQuery;
         sliderOldCatalog.owlCarousel(optionsOldCatalog);
     }
 
-    if (document.getElementById('slider-old-reviews') !== null) {
-        let sliderOldReviews = $('#slider-old-reviews');
-        let optionsOldReviews = optionsSliderBase;
-        optionsOldReviews.mouseDrag = true;
-        optionsOldReviews.margin = 40;
-        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 3}, 991: {items: 6}};
-        sliderOldReviews.owlCarousel(optionsOldReviews);
-    }
+
 
 /*
 
