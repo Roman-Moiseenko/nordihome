@@ -17,18 +17,14 @@
     <div class="container">
         <h2 class="t-t_uppercase t-a_center">{{ $banner->caption }}</h2>
         <div id="slider-payment" class="owl-carousel owl-theme main-slider">
-            @foreach($widget->items as $item)
-                <div class="row justify-content-between">
-                    <div class="col-12 col-lg-6">
-                        <div class="sl-text">
-                            <div class="heading-border">{{ $item->caption }}</div>
-                            <div class="text">{{ $item->description }}</div>
-                            <a href="{{ $item->url }}" class="btn btn-white btn-big m-t_20">Подробнее</a>
-                        </div>
+
+                @foreach($widget->items as $item)
+                    <div>
+                        <a href="{{ $item->url }}">
+                            <img src="{{ $item->getImage() }}"/>
+                        </a>
                     </div>
-                    <div class="col-12 col-lg-5"><img src="{{ $item->getImage() }}"/></div>
-                </div>
-            @endforeach
+                @endforeach
         </div>
     </div>
 </div>
