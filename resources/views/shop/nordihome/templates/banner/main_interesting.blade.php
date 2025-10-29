@@ -13,7 +13,7 @@
     */
     /** @var \App\Modules\Page\Entity\BannerWidget $widget */
 @endphp
-<div class="main-slider-interesting p-t_50 p-b_50">
+<div id="main-slider-interesting" class="p-t_50 p-b_50">
     <div class="container">
         <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
         <div id="slider-main-interesting" class="owl-carousel owl-theme main-slider">
