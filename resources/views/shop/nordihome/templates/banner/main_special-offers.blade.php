@@ -25,7 +25,7 @@
                             <a href="{{ $item->url }}" class="btn btn-white btn-big m-t_20">Подробнее</a>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-5" style="background: url({{ $item->getImage() }}) center center / cover no-repeat;"></div>
+                    <div class="col-12 col-lg-6" style="background: url({{ $item->getImage() }}) center center / cover no-repeat;"></div>
                 </div>
             @endforeach
         </div>
