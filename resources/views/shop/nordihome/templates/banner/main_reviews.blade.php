@@ -15,7 +15,7 @@
 @endphp
 <div class="main-reviews p-t_50 p-b_50" id="reviews-tab">
     <div class="container-fluid">
-        <div class="owl-carousel owl-theme slider-images-product">
+        <div id="slider-old-reviews" class="owl-carousel owl-theme">
             @foreach($widget->items as $item)
                 <div>
                     <a href="{{ $item->url }}">
