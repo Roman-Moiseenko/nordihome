@@ -260,3 +260,27 @@ h3 {font-size: 28px;}
 @import "nordihome/old_widget";
 @import "nordihome/widgets";
 
+@media (max-width: 990px) {
+    .main-slider-sale .main-slider .sl-text {
+        padding: 50px 50px 50px 30px;
+        min-height: auto;
+    }
+    #main-slider .main-slider .sl-text {padding:40px 50px 40px 30px;}
+    .main-slider-sale .main-slider .sl-text {background: var(--orange);}
+    .main-slider-sale .heading-border {color: white;}
+}
+@media (max-width: 768px) {
+    .main-slider-sale .main-slider .sl-text .text, .main-slider-sale .main-slider .sl-text .heading-border:after {display:none;}
+    .main-slider-sale .main-slider .sl-text .heading-border {margin-bottom:0px;}
+    #main-slider .main-slider .sl-text .heading-border {font-size: 20px;}
+    #main-slider .main-slider .sl-text .text {line-height: 20px;font-size: 16px;}
+    #main-slider .main-slider .sl-text .btn-big {padding: 10px 19px;font-size: 12px;}
+}
+@media (max-width: 576px) {
+    .main-slider-sale .main-slider .sl-text .heading-border { font-size: 24px;}
+    .main-slider-sale .main-slider .sl-text .btn-big {
+        font-size: 12px;
+        padding: 5px 15px;
+        margin-top: 10px;
+    }
+}
