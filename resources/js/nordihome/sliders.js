@@ -38,6 +38,18 @@ window.$ = jQuery;
             e.preventDefault();
         });
     }
+    if (document.getElementById('slider-specials') !== null) {
+        let sliderPayment = $('#slider-payment');
+        sliderPayment.owlCarousel(optionsSliderBase);
+        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
+            if (e.originalEvent.deltaY > 0) {
+                sliderPayment.trigger('next.owl');
+            } else {
+                sliderPayment.trigger('prev.owl');
+            }
+            e.preventDefault();
+        });
+    }
     if (document.getElementById('slider-delivery-company') !== null) {
         let sliderDeliveryCompany = $('#slider-delivery-company');
         sliderDeliveryCompany.owlCarousel(optionsSliderBase);
