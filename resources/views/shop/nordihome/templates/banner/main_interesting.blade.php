@@ -22,7 +22,7 @@
                     <div class="col-12 col-lg-6">
                         <div class="sl-text">
                             <div class="heading-border">{{ $item->caption }}</div>
-                            <div class="text">{{ $item->description }}</div>
+                            <div class="text">{!! $item->description !!}</div>
                             <a href="{{ $item->url }}" class="btn btn-white btn-big m-t_20">Подробнее</a>
                         </div>
                     </div>
