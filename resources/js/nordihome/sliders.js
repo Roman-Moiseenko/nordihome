@@ -53,6 +53,7 @@ window.$ = jQuery;
     if (document.getElementById('slider-main-interesting') !== null) {
         let sliderPayment = $('#slider-main-interesting');
         sliderPayment.owlCarousel(optionsSliderBase);
+        optionsOldReviews.dots = true;
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
             if (e.originalEvent.deltaY > 0) {
                 sliderPayment.trigger('next.owl');
