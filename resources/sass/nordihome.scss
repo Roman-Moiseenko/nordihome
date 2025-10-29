@@ -215,6 +215,16 @@ h3 {font-size: 28px;}
 }
 .btn-gradient:hover {background:linear-gradient(156deg, rgba(60,60,60,1) 0%, rgba(60,60,60,1) 100%);}
 
+.main-slider .sl-text {
+    background: var(--black);
+    padding: 60px;
+    min-height: 333px;
+}
+.main-slider .sl-text .text {
+    color:white;
+    line-height: 25px;
+}
+.main-slider .sl-text .text a {color:var(--orange);}
 .heading-border {
     margin-bottom: 30px;
     font-size: 28px;
