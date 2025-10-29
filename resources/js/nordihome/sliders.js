@@ -38,8 +38,20 @@ window.$ = jQuery;
             e.preventDefault();
         });
     }
-    if (document.getElementById('slider-specials') !== null) {
-        let sliderPayment = $('#slider-specials');
+    if (document.getElementById('slider-main-specials') !== null) {
+        let sliderPayment = $('#slider-main-specials');
+        sliderPayment.owlCarousel(optionsSliderBase);
+        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
+            if (e.originalEvent.deltaY > 0) {
+                sliderPayment.trigger('next.owl');
+            } else {
+                sliderPayment.trigger('prev.owl');
+            }
+            e.preventDefault();
+        });
+    }
+    if (document.getElementById('slider-main-interesting') !== null) {
+        let sliderPayment = $('#slider-main-interesting');
         sliderPayment.owlCarousel(optionsSliderBase);
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
             if (e.originalEvent.deltaY > 0) {
