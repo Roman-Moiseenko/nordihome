@@ -16,6 +16,7 @@
     */
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
+<div class="container">
 <div>
     <h2>{{ $widget->caption }}</h2>
     @foreach($widget->items as $item)
@@ -25,4 +26,5 @@
             {!! $item->text !!}
         </div>
     @endforeach
+</div>
 </div>
