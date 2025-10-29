@@ -13,14 +13,16 @@
     */
     /** @var \App\Modules\Page\Entity\BannerWidget $widget */
 @endphp
-<div class="container">
-    <div id="slider-payment" class="owl-carousel owl-theme">
-        @foreach($widget->items as $item)
-            <div>
-                <a href="{{ $item->url }}">
-                    <img src="{{ $item->getImage() }}"/>
-                </a>
-            </div>
-        @endforeach
+<div class="main-specials">
+    <div class="container">
+        <div id="slider-payment" class="owl-carousel owl-theme">
+            @foreach($widget->items as $item)
+                <div>
+                    <a href="{{ $item->url }}">
+                        <img src="{{ $item->getImage() }}"/>
+                    </a>
+                </div>
+            @endforeach
+        </div>
     </div>
 </div>
