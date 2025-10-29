@@ -17,6 +17,7 @@
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
 <div class="main-order-stages p-t_50 p-b_50">
+<div class="container">
     <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
     <div class="row justify-content-center">
         @foreach($widget->items as $item)
@@ -61,4 +62,5 @@
             </div>
         @endforeach
     </div>
+</div>
 </div>
