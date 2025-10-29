@@ -13,7 +13,7 @@
     */
     /** @var \App\Modules\Page\Entity\BannerWidget $widget */
 @endphp
-<div>
+<div class="container">
     <div id="slider-payment" class="owl-carousel owl-theme">
         @foreach($widget->items as $item)
             <div>
