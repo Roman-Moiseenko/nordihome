@@ -39,7 +39,7 @@ window.$ = jQuery;
         });
     }
     if (document.getElementById('slider-specials') !== null) {
-        let sliderPayment = $('#slider-payment');
+        let sliderPayment = $('#slider-specials');
         sliderPayment.owlCarousel(optionsSliderBase);
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
             if (e.originalEvent.deltaY > 0) {
