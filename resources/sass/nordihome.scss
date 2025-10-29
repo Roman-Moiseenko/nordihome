@@ -215,6 +215,21 @@ h3 {font-size: 28px;}
 }
 .btn-gradient:hover {background:linear-gradient(156deg, rgba(60,60,60,1) 0%, rgba(60,60,60,1) 100%);}
 
+.heading-border {
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--orange);
+    text-transform:uppercase;
+}
+.heading-border:after {
+    content: '';
+    max-width: 280px;
+    height: 3px;
+    background: var(--gray);
+    display: block;
+    margin-top: 15px;
+}
 
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 
