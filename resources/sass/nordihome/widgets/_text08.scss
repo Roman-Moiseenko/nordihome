@@ -14,6 +14,9 @@
                     font-size: 25px;
                         &:after {
                             background: url(/images/nordihome/plus.svg) center center / 27px no-repeat, white;
+                            width: 45px;
+                            height: 45px;
+                            border-radius: 50%;
                         }
                 }
                 .accordion-button:not(.collapsed) {
