@@ -9,6 +9,11 @@
                 font-size: 25px;
                 font-weight: 600;
                 cursor: pointer;
+                .accordion-button {
+                    background: transparent;
+                    color: white;
+                    font-size: 25px;
+                }
             }
             .accordion-body {
                 color: $orange;
