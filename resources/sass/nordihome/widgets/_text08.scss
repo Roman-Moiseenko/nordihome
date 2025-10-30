@@ -16,7 +16,13 @@
                             background: url(/images/nordihome/plus.svg) center center / 27px no-repeat, white;
                         }
                 }
+                .accordion-button:not(.collapsed) {
+                    &:after {
+                        background: url(/images/nordihome/plus.svg) center center / 27px no-repeat, white;
+                    }
+                }
             }
+
             .accordion-body {
                 color: $orange;
                 font-weight: 500;
