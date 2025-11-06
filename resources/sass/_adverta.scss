@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'Adverta';
+    font-style: normal;
+    font-weight: 400;
+    font-display: $fa-font-display;
+    src: local('Adverta'),
+    url('#{$fa-font-path}/AdvertaCyrillicRegular.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Adverta';
+    font-style: normal;
+    font-weight: bold;
+    font-display: $fa-font-display;
+    src: local('Adverta'),
+    url('#{$fa-font-path}/AdvertaCyrillicSemiBold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Adverta';
+    font-style: normal;
+    font-weight: 700;
+    font-display: $fa-font-display;
+    src: local('Adverta'),
+    url('#{$fa-font-path}/AdvertaCyrillicBold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Adverta';
+    font-style: normal;
+    font-weight: 800;
+    font-display: $fa-font-display;
+    src: local('Adverta'),
+    url('#{$fa-font-path}/AdvertaCyrillicExtraBold.otf') format('opentype');
+}

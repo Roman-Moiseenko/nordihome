@@ -1,0 +1,41 @@
+.accordion_faq {
+    max-width: 760px;
+    margin: 0 auto;
+    color:white;
+    .accordion-item {
+        position: relative;
+        border: none;
+            .accordion-header {
+                font-weight: 600;
+                cursor: pointer;
+                .accordion-button {
+                    background: black;
+                    color: white;
+                    font-size: 25px;
+                    box-shadow: none;
+                        &:after {
+                            background: url(/images/nordihome/plus.svg) center center / 27px no-repeat, white;
+                            width: 45px;
+                            height: 45px;
+                            border-radius: 50%;
+                        }
+                }
+                .accordion-button:not(.collapsed) {
+                    &:after {
+                        background: url(/images/nordihome/plus.svg) center center / 27px no-repeat, white;
+                        transform: rotate(135deg);
+                    }
+                }
+            }
+
+            .accordion-body {
+                color: $orange;
+                font-weight: 500;
+                background: black;
+                a {
+                    color:white;
+                }
+            }
+    }
+
+}

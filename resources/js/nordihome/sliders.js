@@ -10,37 +10,48 @@ window.$ = jQuery;
         rtl: false,
         startPosition: 0,
         items: 1,
-        autoplay: false, //
+        autoplay: true, //
         smartSpeed: 1500, //Время движения слайда
-        autoplayTimeout: 1000, //Время смены слайда
+        autoplayTimeout: 4000, //Время смены слайда
         animateOut: 'fadeOut',
         animateIn: 'fadeIn',
         margin: 10,
-        loop: false,
-        dots: false,
+        loop: true,
+        dots: true,
         nav: true,
         navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
         singleItem: true,
         transitionStyle: "fade",
         touchDrag: true,
-        mouseDrag: false,
-        responsive: {
-            0: {
-                items: 2,
-                smartSpeed: 500
-            },
-            576: {
-                items: 3,
-                smartSpeed: 500
-            },
-            991: {
-                items: 6,
-                smartSpeed: 500
-            },
-        }
+        mouseDrag: true,
+
     };
     if (document.getElementById('slider-payment') !== null) {
         let sliderPayment = $('#slider-payment');
+        sliderPayment.owlCarousel(optionsSliderBase);
+        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
+            if (e.originalEvent.deltaY > 0) {
+                sliderPayment.trigger('next.owl');
+            } else {
+                sliderPayment.trigger('prev.owl');
+            }
+            e.preventDefault();
+        });
+    }
+    if (document.getElementById('slider-main-specials') !== null) {
+        let sliderPayment = $('#slider-main-specials');
+        sliderPayment.owlCarousel(optionsSliderBase);
+        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
+            if (e.originalEvent.deltaY > 0) {
+                sliderPayment.trigger('next.owl');
+            } else {
+                sliderPayment.trigger('prev.owl');
+            }
+            e.preventDefault();
+        });
+    }
+    if (document.getElementById('slider-main-interesting') !== null) {
+        let sliderPayment = $('#slider-main-interesting');
         sliderPayment.owlCarousel(optionsSliderBase);
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
             if (e.originalEvent.deltaY > 0) {
@@ -62,6 +73,14 @@ window.$ = jQuery;
             }
             e.preventDefault();
         });
+    }
+    if (document.getElementById('main-slider-reviews') !== null) {
+        let sliderOldReviews = $('#main-slider-reviews');
+        let optionsOldReviews = optionsSliderBase;
+        optionsOldReviews.mouseDrag = true;
+        optionsOldReviews.margin = 40;
+        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 2}, 768: {items: 3}, 991: {items: 4}, 1200: {items: 5}, 1400: {items: 6}};
+        sliderOldReviews.owlCarousel(optionsOldReviews);
     }
     if (document.querySelectorAll('.slider-images-product') !== null) {
         let product_optionsSliderBase = optionsSliderBase;
@@ -97,15 +116,7 @@ window.$ = jQuery;
         sliderOldCatalog.owlCarousel(optionsOldCatalog);
     }
 
-    if (document.getElementById('slider-old-reviews') !== null) {
-        let sliderOldReviews = $('#slider-old-reviews');
-        let optionsOldReviews = optionsSliderBase;
-        optionsOldReviews.mouseDrag = true;
-        optionsOldReviews.dots = true;
-        optionsOldReviews.margin = 40;
-        optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 4}, 991: {items: 6}};
-        sliderOldReviews.owlCarousel(optionsOldReviews);
-    }
+
 
 /*
 

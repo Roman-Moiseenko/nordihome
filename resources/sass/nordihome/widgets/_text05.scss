@@ -1,0 +1,46 @@
+.item-step  {
+    .heading {
+        margin-bottom: 10px;
+        margin-top: 10px;
+        font-size: 25px;
+        font-weight: 700;
+        color: var(--orange);
+        text-transform: uppercase;
+    }
+    .text {
+        margin: 30px 0;
+    }
+    a {
+        font-weight: 600;
+    }
+}
+@media (max-width: 768px) {
+    .item-step {
+        text-align: left;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+    }
+    .item-step-info {
+        margin-left: 10px;
+        .text {
+            margin: 10px 0 0 0;
+        }
+    }
+}
+@media (max-width: 576px) {
+    .item-step {
+        .heading {
+            font-size: 18px;
+        }
+        .text {
+            font-size: 15px;
+            line-height: 18px;
+        }
+        svg {
+            width: 70px;
+            height: 70px;
+        }
+    }
+}

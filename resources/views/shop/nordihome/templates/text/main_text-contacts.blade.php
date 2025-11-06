@@ -1,4 +1,4 @@
-<!--template:Шаблон текстовый-->
+<!--template:Главная - контакты с картой-->
 @php
     /**
     * TextWidget::class - string

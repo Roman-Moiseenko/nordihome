@@ -13,8 +13,8 @@
     */
     /** @var \App\Modules\Page\Entity\BannerWidget $widget */
 @endphp
-<div class="container-xl">
-    <div id="main-slider" class="owl-carousel owl-theme">
+<div>
+    <div id="slider-payment" class="owl-carousel owl-theme">
         @foreach($widget->items as $item)
             <div>
                 <a href="{{ $item->url }}">

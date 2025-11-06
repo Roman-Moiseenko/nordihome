@@ -1,4 +1,4 @@
-<!--template:Шаблон текстовый-->
+<!--template:Оповещение на главной вверху-->
 @php
     /**
     * TextWidget::class - string
@@ -16,12 +16,9 @@
     */
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
-<div>
-    <h2>{{ $widget->caption }}</h2>
+<div class="container">
     @foreach($widget->items as $item)
-
-        <h3>{{ $item->caption }}</h3>
-        <div>
+        <div class="text-center m-b_30 notification-top">
             {!! $item->text !!}
         </div>
     @endforeach
