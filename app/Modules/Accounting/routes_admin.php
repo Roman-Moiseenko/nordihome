@@ -1,5 +1,19 @@
 <?php
 
+use App\Modules\Accounting\Controllers\ArrivalController;
+use App\Modules\Accounting\Controllers\CurrencyController;
+use App\Modules\Accounting\Controllers\DepartureController;
+use App\Modules\Accounting\Controllers\DistributorController;
+use App\Modules\Accounting\Controllers\InventoryController;
+use App\Modules\Accounting\Controllers\MovementController;
+use App\Modules\Accounting\Controllers\OrganizationController;
+use App\Modules\Accounting\Controllers\PaymentController;
+use App\Modules\Accounting\Controllers\PricingController;
+use App\Modules\Accounting\Controllers\RefundController;
+use App\Modules\Accounting\Controllers\StorageController;
+use App\Modules\Accounting\Controllers\SupplyController;
+use App\Modules\Accounting\Controllers\SurplusController;
+use App\Modules\Accounting\Controllers\TraderController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -14,22 +28,22 @@ Route::group(
             'as' => 'arrival.',
         ],
             function () {
-                Route::post('/set-product/{product}', 'ArrivalController@set_product')->name('set-product');
-                Route::delete('/del-product/{product}', 'ArrivalController@del_product')->name('del-product');
+                Route::post('/set-product/{product}', [ArrivalController::class,'set_product'])->name('set-product');
+                Route::delete('/del-product/{product}', [ArrivalController::class, 'del_product'])->name('del-product');
 
-                Route::post('/add-products/{arrival}', 'ArrivalController@add_products')->name('add-products');
-                Route::post('/add-product/{arrival}', 'ArrivalController@add_product')->name('add-product');
-                Route::post('/set-info/{arrival}', 'ArrivalController@set_info')->name('set-info');
-                Route::post('/completed/{arrival}', 'ArrivalController@completed')->name('completed');
-                Route::post('/work/{arrival}', 'ArrivalController@work')->name('work');
+                Route::post('/add-products/{arrival}', [ArrivalController::class, 'add_products'])->name('add-products');
+                Route::post('/add-product/{arrival}', [ArrivalController::class, 'add_product'])->name('add-product');
+                Route::post('/set-info/{arrival}', [ArrivalController::class, 'set_info'])->name('set-info');
+                Route::post('/completed/{arrival}', [ArrivalController::class, 'completed'])->name('completed');
+                Route::post('/work/{arrival}', [ArrivalController::class, 'work'])->name('work');
                 //На основании:
-                Route::post('/expense/{arrival}', 'ArrivalController@expense')->name('expense'); //Доп.расходы
-                Route::post('/movement/{arrival}', 'ArrivalController@movement')->name('movement'); //Перемещение
-                Route::post('/pricing/{arrival}', 'ArrivalController@pricing')->name('pricing'); //Установка цен
-                Route::post('/refund/{arrival}', 'ArrivalController@refund')->name('refund'); //Возврат
+                Route::post('/expense/{arrival}', [ArrivalController::class, 'expense'])->name('expense'); //Доп.расходы
+                Route::post('/movement/{arrival}', [ArrivalController::class, 'movement'])->name('movement'); //Перемещение
+                Route::post('/pricing/{arrival}', [ArrivalController::class, 'pricing'])->name('pricing'); //Установка цен
+                Route::post('/refund/{arrival}', [ArrivalController::class, 'refund'])->name('refund'); //Возврат
                 //Мягкое удаление
-                Route::delete('/full-destroy/{arrival}', 'ArrivalController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{arrival}', 'ArrivalController@restore')->name('restore');
+                Route::delete('/full-destroy/{arrival}', [ArrivalController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{arrival}', [ArrivalController::class, 'restore'])->name('restore');
 
 
                 //Доп.расходы
@@ -37,15 +51,15 @@ Route::group(
                     'prefix' => 'expense',
                     'as' => 'expense.',
                 ], function () {
-                    Route::get('/view/{expense}', 'ArrivalController@expense_show')->name('show'); //Доп.расходы
-                    Route::post('/set-info/{expense}', 'ArrivalController@expense_set_info')->name('set-info'); //Доп.расходы
-                    Route::post('/add-item/{expense}', 'ArrivalController@expense_add_item')->name('add-item'); //Доп.расходы
-                    Route::post('/set-item/{item}', 'ArrivalController@expense_set_item')->name('set-item'); //Доп.расходы
-                    Route::delete('/del-item/{item}', 'ArrivalController@expense_del_item')->name('del-item'); //Доп.расходы
-                    Route::delete('/destroy/{expense}', 'ArrivalController@expense_destroy')->name('destroy'); //Доп.расходы
+                    Route::get('/view/{expense}', [ArrivalController::class, 'expense_show'])->name('show'); //Доп.расходы
+                    Route::post('/set-info/{expense}', [ArrivalController::class, 'expense_set_info'])->name('set-info'); //Доп.расходы
+                    Route::post('/add-item/{expense}', [ArrivalController::class, 'expense_add_item'])->name('add-item'); //Доп.расходы
+                    Route::post('/set-item/{item}', [ArrivalController::class, 'expense_set_item'])->name('set-item'); //Доп.расходы
+                    Route::delete('/del-item/{item}', [ArrivalController::class, 'expense_del_item'])->name('del-item'); //Доп.расходы
+                    Route::delete('/destroy/{expense}', [ArrivalController::class, 'expense_destroy'])->name('destroy'); //Доп.расходы
                     //Мягкое удаление
-                    Route::delete('/full-destroy/{expense}', 'ArrivalController@expense_full_destroy')->name('full-destroy');
-                    Route::post('/restore/{expense}', 'ArrivalController@expense_restore')->name('restore');
+                    Route::delete('/full-destroy/{expense}', [ArrivalController::class, 'expense_full_destroy'])->name('full-destroy');
+                    Route::post('/restore/{expense}', [ArrivalController::class, 'expense_restore'])->name('restore');
                 });
 
 
@@ -56,20 +70,20 @@ Route::group(
             'as' => 'movement.',
         ],
             function () {
-                Route::post('/set-product/{product}', 'MovementController@set_product')->name('set-product');
-                Route::delete('/del-product/{product}', 'MovementController@del_product')->name('del-product');
+                Route::post('/set-product/{product}', [MovementController::class, 'set_product'])->name('set-product');
+                Route::delete('/del-product/{product}', [MovementController::class, 'del_product'])->name('del-product');
 
-                Route::post('/add-products/{movement}', 'MovementController@add_products')->name('add-products');
-                Route::post('/add-product/{movement}', 'MovementController@add_product')->name('add-product');
-                Route::post('/set-info/{movement}', 'MovementController@set_info')->name('set-info');
-                Route::post('/completed/{movement}', 'MovementController@completed')->name('completed');
-                Route::post('/work/{movement}', 'MovementController@work')->name('work');
+                Route::post('/add-products/{movement}', [MovementController::class, 'add_products'])->name('add-products');
+                Route::post('/add-product/{movement}', [MovementController::class, 'add_product'])->name('add-product');
+                Route::post('/set-info/{movement}', [MovementController::class, 'set_info'])->name('set-info');
+                Route::post('/completed/{movement}', [MovementController::class, 'completed'])->name('completed');
+                Route::post('/work/{movement}', [MovementController::class, 'work'])->name('work');
 
-                Route::post('/departure/{movement}', 'MovementController@departure')->name('departure');
-                Route::post('/arrival/{movement}', 'MovementController@arrival')->name('arrival');
+                Route::post('/departure/{movement}', [MovementController::class, 'departure'])->name('departure');
+                Route::post('/arrival/{movement}', [MovementController::class, 'arrival'])->name('arrival');
                 //Мягкое удаление
-                Route::delete('/full-destroy/{movement}', 'MovementController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{movement}', 'MovementController@restore')->name('restore');
+                Route::delete('/full-destroy/{movement}', [MovementController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{movement}', [MovementController::class, 'restore'])->name('restore');
             });
         //INVENTORY
         Route::group([
@@ -77,17 +91,17 @@ Route::group(
             'as' => 'inventory.',
         ],
             function () {
-                Route::post('/set-product/{product}', 'InventoryController@set_product')->name('set-product');
-                Route::delete('/del-product/{product}', 'InventoryController@del_product')->name('del-product');
+                Route::post('/set-product/{product}', [InventoryController::class, 'set_product'])->name('set-product');
+                Route::delete('/del-product/{product}', [InventoryController::class, 'del_product'])->name('del-product');
 
-                Route::post('/add-products/{inventory}', 'InventoryController@add_products')->name('add-products');
-                Route::post('/add-product/{inventory}', 'InventoryController@add_product')->name('add-product');
-                Route::post('/set-info/{inventory}', 'InventoryController@set_info')->name('set-info');
-                Route::post('/completed/{inventory}', 'InventoryController@completed')->name('completed');
-                Route::post('/work/{inventory}', 'InventoryController@work')->name('work');
+                Route::post('/add-products/{inventory}', [InventoryController::class, 'add_products'])->name('add-products');
+                Route::post('/add-product/{inventory}', [InventoryController::class, 'add_product'])->name('add-product');
+                Route::post('/set-info/{inventory}', [InventoryController::class, 'set_info'])->name('set-info');
+                Route::post('/completed/{inventory}', [InventoryController::class, 'completed'])->name('completed');
+                Route::post('/work/{inventory}', [InventoryController::class, 'work'])->name('work');
                 //Мягкое удаление
-                Route::delete('/full-destroy/{inventory}', 'InventoryController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{inventory}', 'InventoryController@restore')->name('restore');
+                Route::delete('/full-destroy/{inventory}', [InventoryController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{inventory}', [InventoryController::class, 'restore'])->name('restore');
             });
         //SURPLUS
         Route::group([
@@ -95,21 +109,21 @@ Route::group(
             'as' => 'surplus.',
         ],
             function () {
-                Route::post('/add-product/{surplus}', 'SurplusController@add_product')->name('add-product');
-                Route::post('/add-products/{surplus}', 'SurplusController@add_products')->name('add-products');
-                Route::post('/completed/{surplus}', 'SurplusController@completed')->name('completed');
-                Route::post('/work/{surplus}', 'SurplusController@work')->name('work');
+                Route::post('/add-product/{surplus}', [SurplusController::class, 'add_product'])->name('add-product');
+                Route::post('/add-products/{surplus}', [SurplusController::class, 'add_products'])->name('add-products');
+                Route::post('/completed/{surplus}', [SurplusController::class, 'completed'])->name('completed');
+                Route::post('/work/{surplus}', [SurplusController::class, 'work'])->name('work');
 
-                Route::post('/set-product/{product}', 'SurplusController@set_product')->name('set-product');
-                Route::delete('/del-product/{product}', 'SurplusController@del_product')->name('del-product');
-                Route::post('/set-info/{surplus}', 'SurplusController@set_info')->name('set-info');
-                Route::get('/', 'SurplusController@index')->name('index');
-                Route::post('/', 'SurplusController@store')->name('store');
-                Route::get('/{surplus}', 'SurplusController@show')->name('show');
-                Route::delete('/destroy/{surplus}', 'SurplusController@destroy')->name('destroy');
+                Route::post('/set-product/{product}', [SurplusController::class, 'set_product'])->name('set-product');
+                Route::delete('/del-product/{product}', [SurplusController::class, 'del_product'])->name('del-product');
+                Route::post('/set-info/{surplus}', [SurplusController::class, 'set_info'])->name('set-info');
+                Route::get('/', [SurplusController::class, 'index'])->name('index');
+                Route::post('/', [SurplusController::class, 'store'])->name('store');
+                Route::get('/{surplus}', [SurplusController::class, 'show'])->name('show');
+                Route::delete('/destroy/{surplus}', [SurplusController::class, 'destroy'])->name('destroy');
                 //Мягкое удаление
-                Route::delete('/full-destroy/{surplus}', 'SurplusController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{surplus}', 'SurplusController@restore')->name('restore');
+                Route::delete('/full-destroy/{surplus}', [SurplusController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{surplus}', [SurplusController::class, 'restore'])->name('restore');
 
             });
         //DEPARTURE
@@ -118,18 +132,18 @@ Route::group(
             'as' => 'departure.',
         ],
             function () {
-                Route::post('/add-product/{departure}', 'DepartureController@add_product')->name('add-product');
-                Route::post('/add-products/{departure}', 'DepartureController@add_products')->name('add-products');
-                Route::post('/completed/{departure}', 'DepartureController@completed')->name('completed');
-                Route::post('/work/{departure}', 'DepartureController@work')->name('work');
-                Route::post('/set-product/{product}', 'DepartureController@set_product')->name('set-product');
-                Route::delete('/del-product/{product}', 'DepartureController@del_product')->name('del-product');
-                Route::post('/set-info/{departure}', 'DepartureController@set_info')->name('set-info');
-                Route::post('/upload/{departure}', 'DepartureController@upload')->name('upload');
-                Route::post('/delete-photo/{departure}', 'DepartureController@delete_photo')->name('delete-photo');
+                Route::post('/add-product/{departure}', [DepartureController::class, 'add_product'])->name('add-product');
+                Route::post('/add-products/{departure}', [DepartureController::class, 'add_products'])->name('add-products');
+                Route::post('/completed/{departure}', [DepartureController::class, 'completed'])->name('completed');
+                Route::post('/work/{departure}', [DepartureController::class, 'work'])->name('work');
+                Route::post('/set-product/{product}', [DepartureController::class, 'set_product'])->name('set-product');
+                Route::delete('/del-product/{product}', [DepartureController::class, 'del_product'])->name('del-product');
+                Route::post('/set-info/{departure}', [DepartureController::class, 'set_info'])->name('set-info');
+                Route::post('/upload/{departure}', [DepartureController::class, 'upload'])->name('upload');
+                Route::post('/delete-photo/{departure}', [DepartureController::class, 'delete_photo'])->name('delete-photo');
                 //Мягкое удаление
-                Route::delete('/full-destroy/{departure}', 'DepartureController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{departure}', 'DepartureController@restore')->name('restore');
+                Route::delete('/full-destroy/{departure}', [DepartureController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{departure}', [DepartureController::class, 'restore'])->name('restore');
         });
         //DISTRIBUTION
         Route::group([
@@ -137,11 +151,11 @@ Route::group(
             'as' => 'distributor.',
         ],
             function () {
-                Route::post('/supply/{distributor}', 'DistributorController@supply')->name('supply');
-                Route::post('/attach/{distributor}', 'DistributorController@attach')->name('attach');
-                Route::post('/detach/{distributor}', 'DistributorController@detach')->name('detach');
-                Route::post('/default/{distributor}', 'DistributorController@default')->name('default');
-                Route::post('/set-info/{distributor}', 'DistributorController@set_info')->name('set-info');
+                Route::post('/supply/{distributor}', [DistributorController::class, 'supply'])->name('supply');
+                Route::post('/attach/{distributor}', [DistributorController::class, 'attach'])->name('attach');
+                Route::post('/detach/{distributor}', [DistributorController::class, 'detach'])->name('detach');
+                Route::post('/default/{distributor}', [DistributorController::class, 'default'])->name('default');
+                Route::post('/set-info/{distributor}', [DistributorController::class, 'set_info'])->name('set-info');
             });
         //TRADER
         Route::group([
@@ -149,10 +163,10 @@ Route::group(
             'as' => 'trader.',
         ],
             function () {
-                Route::post('/attach/{trader}', 'TraderController@attach')->name('attach');
-                Route::post('/detach/{trader}', 'TraderController@detach')->name('detach');
-                Route::post('/default/{trader}', 'TraderController@default')->name('default');
-                Route::post('/set-info/{trader}', 'TraderController@set_info')->name('set-info');
+                Route::post('/attach/{trader}', [TraderController::class, 'attach'])->name('attach');
+                Route::post('/detach/{trader}', [TraderController::class, 'detach'])->name('detach');
+                Route::post('/default/{trader}', [TraderController::class, 'default'])->name('default');
+                Route::post('/set-info/{trader}', [TraderController::class, 'set_info'])->name('set-info');
             });
         //SUPPLY
         Route::group([
@@ -161,24 +175,24 @@ Route::group(
         ],
             function () {
                 //На основании:
-                Route::post('/arrival/{supply}', 'SupplyController@arrival')->name('arrival');
-                Route::post('/payment/{supply}', 'SupplyController@payment')->name('payment');
+                Route::post('/arrival/{supply}', [SupplyController::class, 'arrival'])->name('arrival');
+                Route::post('/payment/{supply}', [SupplyController::class, 'payment'])->name('payment');
 
-                Route::get('/stack', 'SupplyController@stack')->name('stack');
-                Route::delete('/del-stack/{stack}', 'SupplyController@del_stack')->name('del-stack');
-                Route::post('/add-stack/{item}', 'SupplyController@add_stack')->name('add-stack');
-                Route::post('/add-product/{supply}', 'SupplyController@add_product')->name('add-product');
-                Route::post('/add-products/{supply}', 'SupplyController@add_products')->name('add-products');
-                Route::post('/set-product/{product}', 'SupplyController@set_product')->name('set-product');
-                Route::delete('/del-product/{product}', 'SupplyController@del_product')->name('del-product');
+                Route::get('/stack', [SupplyController::class, 'stack'])->name('stack');
+                Route::delete('/del-stack/{stack}', [SupplyController::class, 'del_stack'])->name('del-stack');
+                Route::post('/add-stack/{item}', [SupplyController::class, 'add_stack'])->name('add-stack');
+                Route::post('/add-product/{supply}', [SupplyController::class, 'add_product'])->name('add-product');
+                Route::post('/add-products/{supply}', [SupplyController::class, 'add_products'])->name('add-products');
+                Route::post('/set-product/{product}', [SupplyController::class, 'set_product'])->name('set-product');
+                Route::delete('/del-product/{product}', [SupplyController::class, 'del_product'])->name('del-product');
 
-                Route::post('/copy/{supply}', 'SupplyController@copy')->name('copy');
-                Route::post('/completed/{supply}', 'SupplyController@completed')->name('completed');
-                Route::post('/work/{supply}', 'SupplyController@work')->name('work');
-                Route::post('/set-info/{supply}', 'SupplyController@set_info')->name('set-info');
+                Route::post('/copy/{supply}', [SupplyController::class, 'copy'])->name('copy');
+                Route::post('/completed/{supply}', [SupplyController::class, 'completed'])->name('completed');
+                Route::post('/work/{supply}', [SupplyController::class, 'work'])->name('work');
+                Route::post('/set-info/{supply}', [SupplyController::class, 'set_info'])->name('set-info');
                 //Мягкое удаление
-                Route::delete('/full-destroy/{supply}', 'SupplyController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{supply}', 'SupplyController@restore')->name('restore');
+                Route::delete('/full-destroy/{supply}', [SupplyController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{supply}', [SupplyController::class, 'restore'])->name('restore');
 
 
             });
@@ -188,18 +202,18 @@ Route::group(
             'as' => 'pricing.',
         ],
             function () {
-                Route::post('/set-product/{product}', 'PricingController@set_product')->name('set-product');
-                Route::delete('/del-product/{product}', 'PricingController@del_product')->name('del-product');
+                Route::post('/set-product/{product}', [PricingController::class, 'set_product'])->name('set-product');
+                Route::delete('/del-product/{product}', [PricingController::class, 'del_product'])->name('del-product');
 
-                Route::post('/add-products/{pricing}', 'PricingController@add_products')->name('add-products');
-                Route::post('/add-product/{pricing}', 'PricingController@add_product')->name('add-product');
-                Route::post('/set-info/{pricing}', 'PricingController@set_info')->name('set-info');
-                Route::post('/completed/{pricing}', 'PricingController@completed')->name('completed');
-                Route::post('/work/{pricing}', 'PricingController@work')->name('work');
-                Route::post('/copy/{pricing}', 'PricingController@copy')->name('copy');
+                Route::post('/add-products/{pricing}', [PricingController::class, 'add_products'])->name('add-products');
+                Route::post('/add-product/{pricing}', [PricingController::class, 'add_product'])->name('add-product');
+                Route::post('/set-info/{pricing}', [PricingController::class, 'set_info'])->name('set-info');
+                Route::post('/completed/{pricing}', [PricingController::class, 'completed'])->name('completed');
+                Route::post('/work/{pricing}', [PricingController::class, 'work'])->name('work');
+                Route::post('/copy/{pricing}', [PricingController::class, 'copy'])->name('copy');
                 //Мягкое удаление
-                Route::delete('/full-destroy/{pricing}', 'PricingController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{pricing}', 'PricingController@restore')->name('restore');
+                Route::delete('/full-destroy/{pricing}', [PricingController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{pricing}', [PricingController::class, 'restore'])->name('restore');
             });
         //ORGANIZATION
         Route::group([
@@ -207,13 +221,13 @@ Route::group(
             'as' => 'organization.',
         ],
             function () {
-                Route::delete('/del-contact/{contact}', 'OrganizationController@del_contact')->name('del-contact');
-                Route::post('/set-contact/{organization}', 'OrganizationController@set_contact')->name('set-contact');
-                Route::post('/update/{organization}', 'OrganizationController@update')->name('update');
-                Route::post('/set-info/{organization}', 'OrganizationController@set_info')->name('set-info');
-                Route::post('/search-add', 'OrganizationController@search_add')->name('search-add');
-                Route::post('/find', 'OrganizationController@find')->name('find');
-                Route::post('/upload/{organization}', 'OrganizationController@upload')->name('upload');
+                Route::delete('/del-contact/{contact}', [OrganizationController::class, 'del_contact'])->name('del-contact');
+                Route::post('/set-contact/{organization}', [OrganizationController::class, 'set_contact'])->name('set-contact');
+                Route::post('/update/{organization}', [OrganizationController::class, 'update'])->name('update');
+                Route::post('/set-info/{organization}', [OrganizationController::class, 'set_info'])->name('set-info');
+                Route::post('/search-add', [OrganizationController::class, 'search_add'])->name('search-add');
+                Route::post('/find', [OrganizationController::class, 'find'])->name('find');
+                Route::post('/upload/{organization}', [OrganizationController::class, 'upload'])->name('upload');
             });
         //PAYMENT
         Route::group([
@@ -221,17 +235,17 @@ Route::group(
             'as' => 'payment.'
         ],
             function () {
-                Route::post('/create', 'PaymentController@create')->name('create');
-                Route::post('/completed/{payment}', 'PaymentController@completed')->name('completed');
-                Route::post('/work/{payment}', 'PaymentController@work')->name('work');
-                Route::post('/upload', 'PaymentController@upload')->name('upload');
+                //Route::post('/create', [PaymentController::class, 'create'])->name('create');
+                Route::post('/completed/{payment}', [PaymentController::class, 'completed'])->name('completed');
+                Route::post('/work/{payment}', [PaymentController::class, 'work'])->name('work');
+                //Route::post('/upload', [PaymentController::class, 'upload'])->name('upload');
 
-                Route::post('/set-info/{payment}', 'PaymentController@set_info')->name('set-info');
-                Route::post('/not-paid/{payment}', 'PaymentController@not_paid')->name('not-paid');
-                Route::post('/set-amount/{decryption}', 'PaymentController@set_amount')->name('set-amount');
+                Route::post('/set-info/{payment}', [PaymentController::class, 'set_info'])->name('set-info');
+                Route::post('/not-paid/{payment}', [PaymentController::class, 'not_paid'])->name('not-paid');
+                Route::post('/set-amount/{decryption}', [PaymentController::class, 'set_amount'])->name('set-amount');
                 //Мягкое удаление
-                Route::delete('/full-destroy/{payment}', 'PaymentController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{payment}', 'PaymentController@restore')->name('restore');
+                Route::delete('/full-destroy/{payment}', [PaymentController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{payment}', [PaymentController::class, 'restore'])->name('restore');
         });
         //BANK
         /*
@@ -250,7 +264,7 @@ Route::group(
             'as' => 'storage.'
         ],
             function () {
-                Route::post('/set-info/{storage}', 'StorageController@set_info')->name('set-info');
+                Route::post('/set-info/{storage}', [StorageController::class, 'set_info'])->name('set-info');
             });
         //REFUND
         Route::group([
@@ -258,18 +272,18 @@ Route::group(
             'as' => 'refund.',
         ],
             function () {
-                Route::post('/set-product/{product}', 'RefundController@set_product')->name('set-product');
-                Route::delete('/del-product/{product}', 'RefundController@del_product')->name('del-product');
+                Route::post('/set-product/{product}', [RefundController::class, 'set_product'])->name('set-product');
+                Route::delete('/del-product/{product}', [RefundController::class, 'del_product'])->name('del-product');
 
-                Route::post('/add-products/{refund}', 'RefundController@add_products')->name('add-products');
-                Route::post('/add-product/{refund}', 'RefundController@add_product')->name('add-product');
-                Route::post('/set-info/{refund}', 'RefundController@set_info')->name('set-info');
-                Route::post('/completed/{refund}', 'RefundController@completed')->name('completed');
-                Route::post('/work/{refund}', 'RefundController@work')->name('work');
+                Route::post('/add-products/{refund}', [RefundController::class, 'add_products'])->name('add-products');
+                Route::post('/add-product/{refund}', [RefundController::class, 'add_product'])->name('add-product');
+                Route::post('/set-info/{refund}', [RefundController::class, 'set_info'])->name('set-info');
+                Route::post('/completed/{refund}', [RefundController::class, 'completed'])->name('completed');
+                Route::post('/work/{refund}', [RefundController::class, 'work'])->name('work');
                 //На основании:
                 //Мягкое удаление
-                Route::delete('/full-destroy/{refund}', 'RefundController@full_destroy')->name('full-destroy');
-                Route::post('/restore/{refund}', 'RefundController@restore')->name('restore');
+                Route::delete('/full-destroy/{refund}', [RefundController::class, 'full_destroy'])->name('full-destroy');
+                Route::post('/restore/{refund}', [RefundController::class, 'restore'])->name('restore');
             });
 
 

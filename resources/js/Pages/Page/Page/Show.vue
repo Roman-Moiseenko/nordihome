@@ -26,7 +26,7 @@ import {Head, router} from "@inertiajs/vue3";
 import PageInfo from "./Block/Info.vue";
 import {useStore} from '@Res/store.js'
 import axios from "axios";
-import {resolve} from "chart.js/helpers";
+import ru from 'element-plus/dist/locale/ru.mjs'
 
 const store = useStore();
 
@@ -43,9 +43,7 @@ const props = defineProps({
 const text = ref(props.page.text)
 
 function saveText() {
-    //console.log(text.value)
     axios.post(route('admin.page.page.set-text', {page: props.page.id}), {text: text.value}).then(resolve => {
-      //  console.log(resolve)
     }).catch(reason => {
         console.log(reason)
     })

@@ -25,7 +25,8 @@ class PageRepository
     public function PageWithToArray(Page $page): array
     {
         return array_merge($this->PageToArray($page), [
-
+            'image' => $page->getImage(),
+            'icon' => $page->getIcon(),
         ]);
     }
 }

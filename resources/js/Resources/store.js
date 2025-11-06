@@ -9,10 +9,11 @@ export const useStore = defineStore('table_data', {
             resize: true,
             plugins: 'quickbars image anchor link autolink autoresize charmap directionality emoticons ' +
                 'fullscreen importcss insertdatetime lists advlist media nonbreaking pagebreak preview ' +
-                'searchreplace table visualblocks',
+                'searchreplace table visualblocks code',
             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough ' +
                 '| link image anchor media table mergetags | numlist bullist nonbreaking pagebreak ' +
-                '| align lineheight | checklist numlist bullist indent outdent | emoticons charmap | | removeformat ltr rtl fullscreen preview visualblocks',
+                '| align lineheight | checklist numlist bullist indent outdent | emoticons charmap |' +
+                '| removeformat ltr rtl fullscreen preview visualblocks | code',
         }
     }),
     getters: {

@@ -2,7 +2,12 @@
 
 use App\Modules\Page\Controllers\BannerWidgetController;
 use App\Modules\Page\Controllers\CacheController;
+use App\Modules\Page\Controllers\ContactController;
+use App\Modules\Page\Controllers\GalleryController;
+use App\Modules\Page\Controllers\MenuController;
 use App\Modules\Page\Controllers\NewsController;
+use App\Modules\Page\Controllers\PageController;
+use App\Modules\Page\Controllers\PostController;
 use App\Modules\Page\Controllers\ProductWidgetController;
 use App\Modules\Page\Controllers\PromotionWidgetController;
 use App\Modules\Page\Controllers\TextWidgetController;
@@ -107,18 +112,16 @@ Route::group(
            // Route::resource('text', 'TextWidgetController')->except(['create', 'edit', 'update']); //CRUD
         });
 
-
-
         //Страницы
         Route::group([
             'prefix' => 'page',
             'as' => 'page.'
         ], function () {
-            Route::post('/toggle/{page}', 'PageController@toggle')->name('toggle');
-            Route::post('/set-info/{page}', 'PageController@set_info')->name('set-info');
-            Route::post('/set-text/{page}', 'PageController@set_text')->name('set-text');
-            Route::post('/up/{page}', 'PageController@up')->name('up');
-            Route::post('/down/{page}', 'PageController@down')->name('down');
+            Route::post('/toggle/{page}', [PageController::class, 'toggle'])->name('toggle');
+            Route::post('/set-info/{page}', [PageController::class, 'set_info'])->name('set-info');
+            Route::post('/set-text/{page}', [PageController::class, 'set_text'])->name('set-text');
+            Route::post('/up/{page}', [PageController::class, 'up'])->name('up');
+            Route::post('/down/{page}', [PageController::class, 'down'])->name('down');
         });
 
         Route::resource('page', 'PageController')->except(['create', 'edit', 'update']); //CRUD
@@ -128,10 +131,10 @@ Route::group(
             'prefix' => 'contact',
             'as' => 'contact.'
         ], function () {
-            Route::post('/toggle/{contact}', 'ContactController@toggle')->name('toggle');
-            Route::post('/up/{contact}', 'ContactController@up')->name('up');
-            Route::post('/down/{contact}', 'ContactController@down')->name('down');
-            Route::post('/set-info/{contact}', 'ContactController@set_info')->name('set-info');
+            Route::post('/toggle/{contact}', [ContactController::class, 'toggle'])->name('toggle');
+            Route::post('/up/{contact}', [ContactController::class, 'up'])->name('up');
+            Route::post('/down/{contact}', [ContactController::class, 'down'])->name('down');
+            Route::post('/set-info/{contact}', [ContactController::class, 'set_info'])->name('set-info');
         });
         Route::resource('contact', 'ContactController')->except(['show', 'create', 'edit', 'update']); //CRUD
 
@@ -147,6 +150,65 @@ Route::group(
             Route::delete('/{news}', [NewsController::class, 'destroy'])->name('destroy');
             Route::get('/', [NewsController::class, 'index'])->name('index');
 
+        });
+
+        //Рубрики
+        Route::group([
+            'prefix' => 'post-category',
+            'as' => 'post-category.'
+        ], function () {
+            Route::post('/set-info/{category}', [PostController::class, 'category_set_info'])->name('set-info');
+            Route::get('/{category}', [PostController::class, 'category'])->name('show');
+            Route::delete('/{category}', [PostController::class, 'category_destroy'])->name('destroy');
+            Route::post('/', [PostController::class, 'category_create'])->name('store');
+            Route::get('/', [PostController::class, 'categories'])->name('index');
+        });
+
+        //Записи
+        Route::group([
+            'prefix' => 'post',
+            'as' => 'post.'
+        ], function () {
+            Route::post('/set-info/{post}', [PostController::class, 'post_set_info'])->name('set-info');
+            Route::post('/toggle/{post}', [PostController::class, 'post_toggle'])->name('toggle');
+            Route::post('/set-text/{post}', [PostController::class, 'post_set_text'])->name('set-text');
+            Route::get('/{post}', [PostController::class, 'post'])->name('show');
+            Route::delete('/{post}', [PostController::class, 'post_destroy'])->name('destroy');
+            Route::post('/', [PostController::class, 'post_create'])->name('store');
+
+            Route::get('/', [PostController::class, 'posts'])->name('index');
+        });
+        //Меню
+        Route::group([
+            'prefix' => 'menu',
+            'as' => 'menu.'
+        ], function () {
+
+            Route::post('/set-info/{menu}', [MenuController::class, 'set_info'])->name('set-info');
+            Route::post('/get-items/{menu}', [MenuController::class, 'get_items'])->name('get-items');
+            Route::post('/get-urls/{menu}', [MenuController::class, 'get_urls'])->name('get-urls');
+            Route::delete('/{menu}', [MenuController::class, 'destroy'])->name('destroy');
+            Route::post('/', [MenuController::class, 'store'])->name('store');
+            Route::get('/', [MenuController::class, 'index'])->name('index');
+            Route::post('/add-item/{menu}', [MenuController::class, 'item_add'])->name('add-item');
+            Route::post('/move-item/{menu}', [MenuController::class, 'item_move'])->name('move-item');
+            Route::post('/delete-item/{item}', [MenuController::class, 'item_delete'])->name('delete-item');
+        });
+
+        //Галерея
+        Route::group([
+            'prefix' => 'gallery',
+            'as' => 'gallery.'
+        ], function () {
+            Route::post('/set-info/{gallery}', [GalleryController::class, 'set_info'])->name('set-info');
+            Route::get('/{gallery}', [GalleryController::class, 'show'])->name('show');
+            Route::post('/image-del/{photo}', [GalleryController::class, 'image_del'])->name('image-del');
+            Route::post('/image-set/{photo}', [GalleryController::class, 'image_set'])->name('image-set');
+            Route::post('/image-add/{gallery}', [GalleryController::class, 'image_add'])->name('image-add');
+
+            Route::delete('/{gallery}', [GalleryController::class, 'destroy'])->name('destroy');
+            Route::get('/', [GalleryController::class, 'index'])->name('index');
+            Route::post('/', [GalleryController::class, 'store'])->name('store');
         });
 
     }

@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use App\Modules\Base\Entity\Photo;
+
 if (!function_exists('price')) {
     function price($value): string
     {
@@ -118,6 +120,42 @@ if (!function_exists('array_select')) {
                 'label' => $value,
             ];
         }
+        return $result;
+    }
+}
+
+if (!function_exists('photo')) {
+    /**
+     * Получение ссылки на изображение для клиентской части (используется в шаблонах)
+     * @param int|string $id
+     * @param string|null $thumb
+     * @return string
+     */
+    function photo(int|string $id, string|null $thumb = null): string
+    {
+        return Photo::get_photo($id, $thumb);
+    }
+}
+
+if (!function_exists('photo_std')) {
+    /**
+     * Получение объекта на изображение для клиентской части (используется в шаблонах)
+     * @param int|string $id
+     * @param string|null $thumb
+     * @return stdClass
+     */
+    function photo_std(int|string $id, string|null $thumb = null): stdClass
+    {
+        /** @var Photo $photo */
+        if (is_numeric($id)) $photo = Photo::find($id);
+        if (is_string($id)) $photo = Photo::where('slug', $id)->first();
+        $result = new stdClass();
+        $result->url = is_null($photo)
+            ? ''
+            : (is_null($thumb) ? $photo->getUploadFile() : $photo->getThumbUrl($thumb));
+        $result->alt = is_null($photo) ? '' : $photo->alt;
+        $result->title = is_null($photo) ? '' : $photo->title;
+        $result->description = is_null($photo) ? '' : $photo->description;
         return $result;
     }
 }

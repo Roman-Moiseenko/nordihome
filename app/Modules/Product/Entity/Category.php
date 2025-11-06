@@ -56,6 +56,7 @@ class Category extends Model
         'icon',
         ];
 
+    //TODO убрать $title = '', $description = '' заменить на Meta
     public static function register($name, $parent_id = null, $slug = '', $title = '', $description = ''): self
     {
         $slug = empty($slug) ? Str::slug($name) : $slug;
@@ -81,7 +82,7 @@ class Category extends Model
         return $this->id == $id;
     }
 
-    public function equilParent(Category $category): bool
+    public function equalParent(Category $category): bool
     {
         if ($category->parent->id == null) return false;
         if ($this->parent->id == null) return false;

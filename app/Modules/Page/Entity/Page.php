@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Entity;
 
+use App\Modules\Base\Casts\MetaCast;
+use App\Modules\Base\Entity\Meta;
+use App\Modules\Base\Traits\IconField;
+use App\Modules\Base\Traits\ImageField;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,11 +26,16 @@ use Illuminate\Support\Str;
  * @property int $sort
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Meta $meta
  * @property Page $parent
  */
 class Page extends Model
 {
+    use ImageField, IconField;
 
+    protected $attributes = [
+        'meta' => '{}',
+    ];
     protected $fillable = [
         'parent_id',
         'name',
@@ -43,6 +52,7 @@ class Page extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'meta' => MetaCast::class,
     ];
 
     public static function register(string $name, string $slug,
@@ -93,7 +103,7 @@ class Page extends Model
 
             return view(
                 Template::blade('page') . $this->template,
-                ['page' => $this, 'title' => $this->title, 'description' => $this->description, 'url_page' => $url_page])
+                ['page' => $this, 'title' => $this->meta->title, 'description' => $this->meta->description, 'url_page' => $url_page])
                 ->render();
 
     }

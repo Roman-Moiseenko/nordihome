@@ -39,6 +39,7 @@ class CacheRepository
     public function page($slug): string
     {
         return $this->views->page($slug);
+        //TODO Включить кеширование
 /*
         return Cache::rememberForever('page-' . $slug, function () use ($slug) {
             return $this->views->page($slug);
@@ -49,5 +50,15 @@ class CacheRepository
     {
         return $this->views->news($request);
 
+    }
+
+    public function posts($slug)
+    {
+        return $this->views->posts($slug);
+    }
+
+    public function post($slug)
+    {
+        return $this->views->post($slug);
     }
 }

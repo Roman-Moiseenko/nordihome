@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Feedback\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -7,8 +8,14 @@ Route::group([
     'as' => 'feedback.',
     //'namespace' => 'Feedback',
 ], function() {
-    Route::get('/review', 'ReviewController@index')->name('review.index');
-    Route::get('/review/{review}', 'ReviewController@show')->name('review.show');
-    Route::post('/review/{review}/published', 'ReviewController@published')->name('review.published');
-    Route::post('/review/{review}/blocked', 'ReviewController@blocked')->name('review.blocked');
+    Route::group([
+        'prefix' => 'review',
+        'as' => 'review.',
+    ], function () {
+        Route::get('/', [ReviewController::class, 'index'])->name('index');
+        Route::get('/{review}', [ReviewController::class, 'show'])->name('show');
+        Route::post('/published/{review}', [ReviewController::class, 'published'])->name('published');
+        Route::post('/blocked/{review}', [ReviewController::class, 'blocked'])->name('blocked');
+    });
+
 });

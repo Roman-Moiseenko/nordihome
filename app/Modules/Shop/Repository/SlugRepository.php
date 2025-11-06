@@ -5,6 +5,8 @@ namespace App\Modules\Shop\Repository;
 
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Entity\Post;
+use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
@@ -42,5 +44,15 @@ class SlugRepository
     public function getGroupBySlug(string $slug): Group
     {
         return Group::where('slug', $slug)->firstOrFail();
+    }
+
+    public function PostCategoryBySlug($slug)
+    {
+        return PostCategory::where('slug', $slug)->first();
+    }
+
+    public function PostBySlug($slug)
+    {
+        return Post::where('slug', $slug)->where('published', true)->first();
     }
 }

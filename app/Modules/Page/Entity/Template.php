@@ -13,6 +13,8 @@ class Template
         'page' => 'Страницы',
         'promotion' => 'Виджеты акции',
         'text' => 'Текстовые виджеты',
+        'posts' => 'Страница записей',
+        'post' => 'Страница записи',
     ];
 
     const RENDERS = [
@@ -20,6 +22,8 @@ class Template
         'banner' => BannerWidget::class,
         'promotion' => PromotionWidget::class,
         'text' => TextWidget::class,
+        'posts' => PostCategory::class,
+        'post' => Post::class,
     ];
 
     /**

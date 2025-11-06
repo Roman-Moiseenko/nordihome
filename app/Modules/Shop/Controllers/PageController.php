@@ -18,8 +18,10 @@ class PageController extends ShopController
     private CacheRepository $caches;
     private ViewRepository $views;
 
-    public function __construct(ShopRepository $repository,         CacheRepository $caches,
-                                ViewRepository $views,)
+    public function __construct(ShopRepository $repository,
+                                CacheRepository $caches,
+                                ViewRepository $views,
+    )
     {
         parent::__construct();
         $this->repository = $repository;

@@ -8,6 +8,7 @@ use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Repository\PageRepository;
 use App\Modules\Page\Repository\TemplateRepository;
 use App\Modules\Page\Service\PageService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -76,7 +77,7 @@ class PageController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function set_text(Page $page, Request $request): \Illuminate\Http\JsonResponse
+    public function set_text(Page $page, Request $request): JsonResponse
     {
         $this->service->setText($page, $request->string('text')->trim()->value());
         return \response()->json(true);

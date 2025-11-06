@@ -5,6 +5,7 @@ namespace App\View;
 
 use App\Modules\Base\Helpers\AdminMenu;
 use App\Modules\Base\Helpers\CacheHelper;
+use App\Modules\Shop\Repository\MenuRepository;
 use Cache;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Setting\Entity\Settings;
@@ -17,12 +18,14 @@ class AdminComposer
     private CategoryRepository $categories;
     private ShopRepository $shopRepository;
     private Settings $settings;
+    private MenuRepository $menuRepository;
 
-    public function __construct(CategoryRepository $categories, ShopRepository $shopRepository, Settings $settings)
+    public function __construct(CategoryRepository $categories, ShopRepository $shopRepository, Settings $settings, MenuRepository $menuRepository)
     {
         $this->categories = $categories;
         $this->shopRepository = $shopRepository;
         $this->settings = $settings;
+        $this->menuRepository = $menuRepository;
     }
 
     public function compose(View $view): void
@@ -79,9 +82,16 @@ class AdminComposer
 
 */
 
+                /**
+                 * Глобальные данные для клиентской части
+                 */
+
                 $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
                 $view->with('user', $user);
                 $view->with('config', config('shop.frontend'));
+
+                $view->with('contacts', $this->menuRepository->contacts());
+                $view->with('menus', $this->menuRepository->menus());
 
                 $categories = Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
                     return $this->shopRepository->getChildren();
@@ -90,7 +100,7 @@ class AdminComposer
                 $trees = Cache::rememberForever(CacheHelper::MENU_TREES, function () {
                     return $this->shopRepository->getTree();
                 });
-           //     dd($trees);
+
                 $view->with('categories', $categories);
                 $view->with('tree', $trees);
                 $view->with('web', $this->settings->web);

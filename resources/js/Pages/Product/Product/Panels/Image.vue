@@ -129,4 +129,11 @@ function initDragSort() {
         }
     });
 }
+function copyBuffer(val) {
+    dialogCopy.value = true;
+    setTimeout(() => {
+        dialogCopy.value = false;
+    }, 2000);
+    navigator.clipboard.writeText(dialogImageUrl.value);
+}
 </script>

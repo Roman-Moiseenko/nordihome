@@ -15,6 +15,8 @@ use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Page\Entity\PostCategory;
+use App\Modules\Product\Entity\Category;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -176,6 +178,13 @@ class RouteServiceProvider extends ServiceProvider
             if (str_contains(Route::currentRouteName(), 'admin.accounting.'))
                 return RefundDocument::withTrashed()->find($value);
             return OrderExpenseRefund::find($value);
+        });
+
+        Route::bind('category', function ($value) {
+            if (str_contains(Route::currentRouteName(), 'admin.page.post-category'))
+                return PostCategory::find($value);
+            if (str_contains(Route::currentRouteName(), 'admin.product.category'))
+            return Category::find($value);
         });
     }
 }

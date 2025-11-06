@@ -15,7 +15,8 @@
                 @row-click="routeClick"
             >
                 <el-table-column prop="name" label="Название" width="280" show-overflow-tooltip/>
-                <el-table-column prop="icon" label="Иконка" width="180" >
+                <el-table-column prop="slug" label="Slug" width="120" align="center"/>
+                <el-table-column prop="icon" label="Иконка" width="180">
                     <template #default="scope">
                         <i :class="scope.row.icon"/>
                     </template>
@@ -60,11 +61,13 @@
 
         <DeleteEntityModal name_entity="Контакт"/>
 
-
         <el-dialog v-model="dialogCreate" title="Контакт" width="500">
             <el-form label-width="auto">
                 <el-form-item label="Название" label-position="top" class="mt-3">
                     <el-input v-model="form.name" placeholder="Подпись, ALT"/>
+                </el-form-item>
+                <el-form-item label="Slug" label-position="top" class="mt-3">
+                    <el-input v-model="form.slug" placeholder="Slug"/>
                 </el-form-item>
                 <el-form-item label="Класс иконки" label-position="top" class="mt-3">
                     <el-input v-model="form.icon" placeholder="fontawesome 6.0"/>
@@ -124,6 +127,7 @@ const form = reactive({
     url: null,
     type: null,
     color: null,
+    slug: null,
 })
 
 function onOpenDialog() {
@@ -133,6 +137,7 @@ function onOpenDialog() {
     form.url = null
     form.type = null
     form.color = null
+    form.slug = null
     dialogCreate.value = true
 }
 
@@ -165,6 +170,7 @@ function routeClick(row) {
     form.url = row.url
     form.type = row.type
     form.color = row.color
+    form.slug = row.slug
     dialogCreate.value = true
 }
 

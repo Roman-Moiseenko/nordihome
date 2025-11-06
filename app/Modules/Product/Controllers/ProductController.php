@@ -297,27 +297,13 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Удалено');
     }
 
-    public function up_image(Request $request, Product $product)
-    {
-        dd('Ошибка');
-        $this->service->upPhoto($request->integer('photo_id'), $product);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-
-    public function down_image(Request $request, Product $product)
-    {
-        dd('Ошибка');
-        $this->service->downPhoto($request->integer('photo_id'), $product);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-
     public function set_image(Request $request, Product $product)
     {
         $this->service->setPhoto($request, $product);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function move_image(Request $request, Product $product)
+    public function move_image(Request $request, Product $product): RedirectResponse
     {
         try {
             $this->service->movePhoto($request, $product);

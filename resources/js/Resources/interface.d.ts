@@ -32,3 +32,7 @@ export interface IUploadFile {
     file: UploadFile,
     clear_file: Boolean,
 }
+export interface ISelectItem {
+    value: any,
+    label: string
+}

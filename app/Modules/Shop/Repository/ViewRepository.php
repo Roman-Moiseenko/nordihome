@@ -6,6 +6,8 @@ namespace App\Modules\Shop\Repository;
 use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Entity\Post;
+use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Page\Entity\Template;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
@@ -33,7 +35,7 @@ class ViewRepository
         $this->slugs = $slugs;
         $settings = app()->make(Settings::class);
         $this->web = $settings->web;
-        $this->theme = config('shop.theme'); // $options->shop->theme;
+        $this->theme = config('shop.theme');
 
         $this->schema = $schema;
     }
@@ -135,20 +137,13 @@ class ViewRepository
             return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description', 'url_page'));
         }
 
-
-
         $minPrice = 10;
         $maxPrice = 999999999;
         $brands = [];
-
         $children = $this->category_children_cache($category);
-
-
         $in_stock = isset($request['in_stock']);
-
         $products = $this->category_products_cache($category, $in_stock);
 
-      //  dd($products);
         /** @var Product $product */
         foreach ($products as $i => $product) {
             $_price_product = $product->getPrice();
@@ -197,22 +192,18 @@ class ViewRepository
     /**
      * @throws \Throwable
      */
-    public function page($slug)
+    public function page($slug): string
     {
         $page = $this->slugs->PageBySlug($slug);
 
-        \Log::info('PageBySlug ' . $slug);
-        // Page::where('slug', $slug)->where('published', true)->firstOrFail();
         if (is_null($page)) abort(404, 'Страница не найдена');
         return $page->view();
     }
-
 
     final public function route(string $blade): string
     {
         return 'shop.' . $this->theme . '.' . $blade;
     }
-
 
     private function product_card_cache(Product $product)
     {
@@ -238,14 +229,9 @@ class ViewRepository
 
     private function category_products_cache(?Category $category, $in_stock)
     {
-
         $slug = is_null($category) ? 'root' : $category->slug;
-
         $callback = function () use ($category, $in_stock) {
             $products = $this->repository->ProductsByCategory($category); //0.07сек
-           // dd($products);
-            //return $products;
-            //dd($products);
             //Убираем из коллекции товары, которые не продаем под заказ
             return $products->reject(function (Product $product) use ($in_stock) {
               //  if ($product->getQuantitySell() == 0) dd($product->name);
@@ -346,6 +332,29 @@ class ViewRepository
             ['news' => $news,])
             ->render();
     }
+
+    /**
+     * @throws \Throwable
+     */
+    public function posts($slug): string
+    {
+        /** @var PostCategory $posts */
+        $posts = $this->slugs->PostCategoryBySlug($slug);
+        if (is_null($posts)) abort(404, 'Страница не найдена');
+        return $posts->view();
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function post($slug): string
+    {
+        /** @var Post $post */
+        $post = $this->slugs->PostBySlug($slug);
+        if (is_null($post)) abort(404, 'Страница не найдена');
+        return $post->view();
+    }
+
 
     private function categories_cache()
     {

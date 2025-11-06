@@ -1,5 +1,10 @@
 <?php
 //Cabinet - функции кабинета клиента
+use App\Modules\User\Controllers\Cabinet\CabinetController;
+use App\Modules\User\Controllers\Cabinet\OptionsController;
+use App\Modules\User\Controllers\Cabinet\OrderController;
+use App\Modules\User\Controllers\Cabinet\ReviewController;
+use App\Modules\User\Controllers\Cabinet\WishController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -11,19 +16,19 @@ Route::group([
     'middleware' => ['user_cookie_id'],
 ],
     function () {
-        Route::get('/', 'CabinetController@view')->name('view');
-        Route::get('/profile', 'CabinetController@profile')->name('profile');
-        Route::post('/fullname/{user}', 'CabinetController@fullname')->name('fullname');
-        Route::post('/phone/{user}', 'CabinetController@phone')->name('phone');
-        Route::post('/email/{user}', 'CabinetController@email')->name('email');
-        Route::post('/password/{user}', 'CabinetController@password')->name('password');
+        Route::get('/', [CabinetController::class, 'view'])->name('view');
+        Route::get('/profile', [CabinetController::class, 'profile'])->name('profile');
+        Route::post('/fullname/{user}', [CabinetController::class, 'fullname'])->name('fullname');
+        Route::post('/phone/{user}', [CabinetController::class, 'phone'])->name('phone');
+        Route::post('/email/{user}', [CabinetController::class, 'email'])->name('email');
+        Route::post('/password/{user}', [CabinetController::class, 'password'])->name('password');
 
         Route::group([
             'as' => 'options.',
             'prefix' => 'options',
         ], function () {
-            Route::get('/', 'OptionsController@index')->name('index');
-            Route::post('/subscription/{subscription}', 'OptionsController@subscription')->name('subscription');
+            Route::get('/', [OptionsController::class, 'index'])->name('index');
+            Route::post('/subscription/{subscription}', [OptionsController::class, 'subscription'])->name('subscription');
 
         });
 
@@ -31,26 +36,26 @@ Route::group([
             'as' => 'wish.',
             'prefix' => 'wish'
         ], function () {
-            Route::get('/', 'WishController@index')->name('index');
-            Route::post('/clear', 'WishController@clear')->name('clear');
-            Route::post('/get', 'WishController@get')->name('get');
-            Route::post('/toggle/{product}', 'WishController@toggle')->name('toggle');
+            Route::get('/', [WishController::class, 'index'])->name('index');
+            Route::post('/clear', [WishController::class, 'clear'])->name('clear');
+            Route::post('/get', [WishController::class, 'get'])->name('get');
+            Route::post('/toggle/{product}', [WishController::class, 'toggle'])->name('toggle');
         });
 
         Route::group([
             'as' => 'order.',
             'prefix' => 'order'
         ], function () {
-            Route::get('/', 'OrderController@index')->name('index');
-            Route::get('/{order}', 'OrderController@view')->name('view');
+            Route::get('/', [OrderController::class, 'index'])->name('index');
+            Route::get('/{order}', [OrderController::class, 'view'])->name('view');
 
         });
         Route::group([
             'as' => 'review.',
             'prefix' => 'review',
         ], function() {
-            Route::get('/', 'ReviewController@index')->name('index');
-            Route::get('/show/{review}', 'ReviewController@show')->name('show');
+            Route::get('/', [ReviewController::class, 'index'])->name('index');
+            Route::get('/show/{review}', [ReviewController::class, 'show'])->name('show');
 
         });
     }

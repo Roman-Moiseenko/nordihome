@@ -1,5 +1,7 @@
 <?php
 
+use App\Modules\Base\Controllers\FileController;
+use App\Modules\Base\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -8,10 +10,10 @@ Route::group(
         'as' => 'file.',
     ],
     function () {
-        Route::any('/download', 'FileController@download')->name('download');
-        Route::post('/remove-file', 'FileController@remove_file')->name('remove-file');
+        Route::any('/download', [FileController::class, 'download'])->name('download');
+        Route::post('/remove-file', [FileController::class, 'remove_file'])->name('remove-file');
     }
 );
 
-Route::post('/report', 'ReportController@report')->name('report');
-Route::get('/test', 'FileController@test')->name('test');
+Route::post('/report', [ReportController::class, 'report'])->name('report');
+Route::get('/test', [FileController::class, 'test'])->name('test');

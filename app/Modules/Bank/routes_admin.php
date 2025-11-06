@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Bank\Controllers\BankController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -9,7 +10,7 @@ Route::group(
     ],
     function () {
 
-        Route::post('/upload', 'BankController@upload')->name('upload');
-        Route::post('/currency', 'BankController@currency')->name('currency');
+        Route::post('/upload', [BankController::class, 'upload'])->name('upload');
+        Route::post('/currency', [BankController::class, 'currency'])->name('currency');
 
     });

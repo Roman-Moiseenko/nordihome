@@ -29,13 +29,13 @@ abstract class WidgetItem extends Model
             'caption',
             'description'
         ];
-        $attributes = [
+        $_attributes = [
 
         ];
 
         $this->casts = array_merge($this->casts, $casts);
         $this->fillable = array_merge($this->fillable, $fillable);
-        $this->attributes = array_merge($this->attributes, $attributes);
+        $this->attributes = array_merge($this->attributes, $_attributes);
     }
 
 

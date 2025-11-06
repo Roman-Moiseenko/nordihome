@@ -247,3 +247,5 @@
         @include('shop.nordihome.widgets.map')
     </div>
 @endsection
+
+

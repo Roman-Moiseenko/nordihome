@@ -5,11 +5,15 @@ namespace App\Modules\Base\Helpers;
 
 class Version
 {
-    const VERSION = '0.8.8.0';
+    const VERSION = '0.8.9.0';
 
     public static function updated(): array
     {
         return [
+            '05.11.2025' => [
+                'Добавлен раздел Записи с Рубриками для Сайта',
+                '- Добавлен раздел Меню для Сайта'
+            ],
             '21.09.2025' => [
                 'Проработаны Виджет для сайта, добавлены новые - Акция, Текстовые блоки',
                 'Версия PHP 8.4',

@@ -5,11 +5,13 @@ namespace App\Modules\Nordihome\Helper;
 
 use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Entity\PostCategory;
 
 class MenuHelper
 {
     public static function getMenuPages(): array
     {
+        $posts = PostCategory::find(1);
         $pages = Page::where('published', true)
             ->where('parent_id', null)
             ->where('menu', true)
@@ -20,8 +22,16 @@ class MenuHelper
                 'name' => 'Заказ товаров из ИКЕА',
                 'icon' => '',
                 'route' => route('shop.parser.view'),
-            ],
-        ];
+            ],];
+        if ($posts != null) {
+            $add_items[] = [
+                'name' => $posts->name,
+                'icon' => '',
+                'route' => route('shop.posts.view', $posts->slug),
+            ];
+        }
+
+
 
         return array_merge(array_map(function (Page $page) {
             return [
@@ -32,6 +42,18 @@ class MenuHelper
 
         }, $pages), $add_items);
 
+    }
+
+    public static function getMenuContact(string $slug): array
+    {
+        $contact = Contact::where('slug', $slug)->first();
+        return [
+            'name' => $contact->name,
+            'icon' => $contact->icon,
+            'color' => $contact->color,
+            'url' => $contact->url,
+            'data-type' => $contact->type,
+        ];
     }
 
     public static function getMenuContacts(): array
@@ -49,6 +71,8 @@ class MenuHelper
 
         }, $contacts);
     }
+
+
 
     public static function getFooterMenu(): array
     {

@@ -69,6 +69,17 @@ Breadcrumbs::for('shop.page.view', function (BreadcrumbTrail $trail, $slug) {
     $trail->parent('shop.home');
     $trail->push($page->name, route('shop.page.view', $slug));
 });
+Breadcrumbs::for('shop.posts.view', function (BreadcrumbTrail $trail, $slug) {
+    $posts = (new SlugRepository())->PostCategoryBySlug($slug);
+    $trail->parent('shop.home');
+    $trail->push($posts->name, route('shop.posts.view', $slug));
+});
+Breadcrumbs::for('shop.post.view', function (BreadcrumbTrail $trail, $slug) {
+    /** @var \App\Modules\Page\Entity\Post $post */
+    $post = (new SlugRepository())->PostBySlug($slug);
+    $trail->parent('shop.posts.view', $post->category->slug);
+    $trail->push($post->name, route('shop.post.view', $slug));
+});
 
 Breadcrumbs::for('shop.parser.view', function (BreadcrumbTrail $trail) {
     $trail->parent('shop.home');

@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 use App\Modules\Page\Entity\BannerWidget;
 use App\Modules\Page\Entity\Contact;
+use App\Modules\Page\Entity\Gallery;
 use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Entity\Post;
+use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Page\Entity\ProductWidget;
 use App\Modules\Page\Entity\PromotionWidget;
 use App\Modules\Page\Entity\TextWidget;
@@ -101,4 +104,36 @@ Breadcrumbs::for('admin.page.news.index', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('admin.page.news.show', function (BreadcrumbTrail $trail, News $news) {
     $trail->parent('admin.page.news.index', $news);
     $trail->push($news->title, route('admin.page.news.show', $news));
+});
+//POST CATEGORIES
+Breadcrumbs::for('admin.page.post-category.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Рубрики', route('admin.page.post-category.index'));
+});
+Breadcrumbs::for('admin.page.post-category.show', function (BreadcrumbTrail $trail, PostCategory $category) {
+    $trail->parent('admin.page.post-category.index', $category);
+    $trail->push($category->name, route('admin.page.post-category.show', $category));
+});
+//POSTS
+Breadcrumbs::for('admin.page.post.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Записи', route('admin.page.post.index'));
+});
+Breadcrumbs::for('admin.page.post.show', function (BreadcrumbTrail $trail, Post $post) {
+    $trail->parent('admin.page.post-category.show', $post->category);
+    $trail->push($post->name, route('admin.page.post.show', $post));
+});
+//MENUS
+Breadcrumbs::for('admin.page.menu.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Меню', route('admin.page.menu.index'));
+});
+//GALLERY
+Breadcrumbs::for('admin.page.gallery.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Галерея', route('admin.page.gallery.index'));
+});
+Breadcrumbs::for('admin.page.gallery.show', function (BreadcrumbTrail $trail, Gallery $gallery) {
+    $trail->parent('admin.page.gallery.index');
+    $trail->push($gallery->name, route('admin.page.gallery.show', $gallery));
 });

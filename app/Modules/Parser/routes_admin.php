@@ -1,4 +1,7 @@
 <?php
+
+use App\Modules\Parser\Controllers\CategoryParserController;
+use App\Modules\Parser\Controllers\ProductParserController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -14,17 +17,17 @@ Route::group(
             'as' => 'category.',
         ], function () {
 
-            Route::post('/add-category', 'CategoryParserController@add_category')->name('add-category');
-            Route::post('/toggle/{category}', 'CategoryParserController@toggle')->name('toggle');
-            Route::get('/child/{category}', 'CategoryParserController@child')->name('child');
-            Route::get('/{category}', 'CategoryParserController@show')->name('show');
-            Route::delete('/{category}', 'CategoryParserController@destroy')->name('destroy');
-            Route::post('/set-category/{category}', 'CategoryParserController@set_category')->name('set-category');
-            Route::post('/', 'CategoryParserController@store')->name('store');
-            Route::post('/parser-products/{category}', 'CategoryParserController@parser_products')->name('parser-products');
-            Route::post('/parser-product/{category}', 'CategoryParserController@parser_product')->name('parser-product');
+            Route::post('/add-category', [CategoryParserController::class, 'add_category'])->name('add-category');
+            Route::post('/toggle/{category}', [CategoryParserController::class, 'toggle'])->name('toggle');
+            //Route::get('/child/{category}', [CategoryParserController::class, 'child'])->name('child');
+            Route::get('/{category}', [CategoryParserController::class, 'show'])->name('show');
+            Route::delete('/{category}', [CategoryParserController::class, 'destroy'])->name('destroy');
+            Route::post('/set-category/{category}', [CategoryParserController::class, 'set_category'])->name('set-category');
+            //Route::post('/', [CategoryParserController::class, 'store'])->name('store');
+            Route::post('/parser-products/{category}', [CategoryParserController::class, 'parser_products'])->name('parser-products');
+            Route::post('/parser-product/{category}', [CategoryParserController::class, 'parser_product'])->name('parser-product');
 
-            Route::get('/', 'CategoryParserController@index')->name('index');
+            Route::get('/', [CategoryParserController::class, 'index'])->name('index');
 
          //   Route::post('/list', 'CategoryParserController@list')->name('list');
         //    Route::post('/set-info/{category}', 'CategoryParserController@set_info')->name('set-info');
@@ -34,8 +37,8 @@ Route::group(
             'prefix' => 'product',
             'as' => 'product.',
         ], function () {
-            Route::post('/parser/{product}', 'ProductParserController@parser')->name('parser');
-            Route::post('/by-list/', 'ProductParserController@by_list')->name('by-list');
+            Route::post('/parser/{product}', [ProductParserController::class, 'parser'])->name('parser');
+            Route::post('/by-list/', [ProductParserController::class, 'by_list'])->name('by-list');
 
         });
         //PRODUCT

@@ -59,7 +59,11 @@ class PageService
         $page->parent_id = $request->input('parent_id');
         $page->menu = $request->boolean('menu');
         $page->template = $request->string('template')->value();
+        $page->meta->fromRequest($request);
         $page->save();
+
+        $page->saveImage($request->file('image'), $request->boolean('clear_image'));
+        $page->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
     }
 
     public function up(Page $page): void

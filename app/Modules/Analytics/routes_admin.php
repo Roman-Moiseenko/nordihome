@@ -1,5 +1,7 @@
 <?php
 
+use App\Modules\Analytics\Controllers\ActivityController;
+use App\Modules\Analytics\Controllers\CronController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(

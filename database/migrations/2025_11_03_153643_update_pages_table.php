@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('news', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('title')->default('');
-            $table->text('text');
-            $table->boolean('published')->default(false);
-            $table->timestamp('published_at')->nullable();
+        Schema::table('pages', function (Blueprint $table) {
+            $table->json('meta');
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('news');
+        Schema::table('pages', function (Blueprint $table) {
+            $table->dropColumn('meta');
+        });
     }
 };

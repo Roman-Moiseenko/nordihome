@@ -8,12 +8,12 @@ return [
         'vue' => true,
         'font_awesome' => 'fa-light fa-desktop',
         'sub_menu' => [
-            'news' => [
+            /*'news' => [
                 'title' => 'Новости',
                 'route_name' => 'admin.page.news.index',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-files',
-            ],
+            ],*/
             'pages' => [
                 'title' => 'Страницы',
                 'route_name' => 'admin.page.page.index',
@@ -56,6 +56,24 @@ return [
                 'route_name' => 'admin.page.contact.index',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-address-book',
+            ],
+            'post-categories' => [
+                'title' => 'Записи',
+                'route_name' => 'admin.page.post-category.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-folder-tree',
+            ],
+            'menus-list' => [
+                'title' => 'Меню',
+                'route_name' => 'admin.page.menu.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-memo',
+            ],
+            'gallery' => [
+                'title' => 'Галерея',
+                'route_name' => 'admin.page.gallery.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-images',
             ],
             'cache' => [
                 'title' => 'Кеш страниц',

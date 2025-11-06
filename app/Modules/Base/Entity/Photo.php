@@ -23,6 +23,7 @@ use function public_path;
  * @property string $imageable_type
  * @property string $file
  * @property string $alt
+ * @property string $slug
  * @property string $title
  * @property string $description
  * @property int $sort
@@ -366,5 +367,15 @@ class Photo extends Model
             \Log::info('Ошибка  ' . $e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getFile());
         }
 
+    }
+
+    public static function get_photo(int|string $id, string $thumb = null): string
+    {
+        /** @var Photo $photo */
+        if (is_numeric($id)) $photo = Photo::find($id);
+        if (is_string($id)) $photo = Photo::where('slug', $id)->first();
+
+        if (is_null($photo)) return '';
+        return (is_null($thumb)) ? $photo->getUploadFile() : $photo->getThumbUrl($thumb);
     }
 }

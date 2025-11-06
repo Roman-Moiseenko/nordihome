@@ -16,19 +16,20 @@ class ContactService
             icon: $request->string('icon')->trim()->value(),
             color: $request->string('color')->trim()->value(),
             url: $request->string('url')->trim()->value(),
-            type: $request->integer('type')
+            type: $request->integer('type'),
+            slug:  $request->string('slug')->trim()->value(),
         );
     }
 
     public function setInfo(Request $request, Contact $contact): void
     {
-
         $contact->update([
             'name' => $request->string('name')->trim()->value(),
             'icon' => $request->string('icon')->trim()->value(),
             'color' => $request->string('color')->trim()->value(),
             'url' => $request->string('url')->trim()->value(),
-            'type' => $request->integer('type')
+            'type' => $request->integer('type'),
+            'slug' => $request->string('slug')->trim()->value(),
         ]);
     }
 
@@ -52,7 +53,6 @@ class ContactService
 
         $contact->sort = $new_sort;
         $contact->save();
-
     }
 
     public function down(Contact $contact): void
