@@ -202,7 +202,7 @@ Route::group(
         Route::post('/sale/{product}', [ProductController::class, 'sale'])->name('sale');
         Route::post('/restore/{id}', [ProductController::class, 'restore'])->name('restore');
         Route::delete('/full-delete/{id}', [ProductController::class, 'full_delete'])->name('full-delete');
-        Route::post('/fast-create', [ProductController::class, ])->name('fast-create');
+        Route::post('/fast-create', [ProductController::class, 'fast_create'])->name('fast-create');
 
     }
 );
