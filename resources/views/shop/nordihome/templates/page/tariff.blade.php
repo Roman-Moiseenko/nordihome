@@ -36,7 +36,7 @@
                         </div>
 
                 </div>
-                <div class="col-lg-4 pe-4">
+                <div class="col-lg-4">
                     <img src="/images/pages/tariff.jpg" style="width: 100%" alt="Условия интернет магазина NORDI HOME">
                 </div>
             </div>
