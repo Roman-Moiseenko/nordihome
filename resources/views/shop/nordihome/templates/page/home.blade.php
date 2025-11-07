@@ -10,7 +10,6 @@
 @section('description', $description)
 
 @section('content')
-    *****
     {!! $page->text !!}
 @endsection
 
