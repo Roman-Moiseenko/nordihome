@@ -13,9 +13,9 @@
         <h1>{{ $page->name }}</h1>
     </div>
     <div class="tariff-block">
-        <div class="container-xl pt-4">
+        <div class="container-xl">
             <div class="row">
-                <div class="col-lg-8 ps-4" style="display: grid">
+                <div class="col-lg-8>
                         <div class="heading-border">Условия доставки</div>
                         <p>
                             Заказ формируется на основе артикулов из каталога ИКЕА
