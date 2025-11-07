@@ -23,7 +23,7 @@
                         <p class="m-b_20">Срок доставки от 10 дней</p>
                         <p class="m-b_20">Оплата 100% на банковский счет организации по договору<br>Предоставляем кассовый чек об оплате с товарами и услугами</p>
                     </div>
-                    <a href="/calculate/" class="btn btn-big btn-orange f-z_14">Сделать заказ</a>
+                    <a href="/calculate/" class="btn btn-big btn-orange f-z_14 m-b_20">Сделать заказ</a>
                 </div>
                 <div class="col-lg-6">
                     <img src="/images/pages/tariff.jpg" alt="Условия доставки">
