@@ -26,7 +26,7 @@
                     <a href="/calculate/" class="btn btn-big btn-orange f-z_14">Сделать заказ</a>
                 </div>
                 <div class="col-lg-6">
-                    <img src="/wp-content/themes/euroikea/images/poster-with-vertical.jpg" alt="Условия доставки">
+                    <img src="/images/pages/tariff.jpg" alt="Условия доставки">
                 </div>
             </div>
         </div>
