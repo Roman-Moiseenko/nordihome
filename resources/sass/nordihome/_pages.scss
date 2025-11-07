@@ -5,24 +5,11 @@
 
 ///// Тарифы
 
-.tariff-block {
-    background: #000;
-    padding-top: 60px;
-    padding-bottom: 60px;
-    p {
-        color: var(--bs-gray-100);
-        font-size: 18px;
-    }
-}
 
-.condition-data {
-  //  padding-top: 60px;
-}
 .tariffs-items {
     .item {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        color: var(--bs-gray-100);
     }
 }

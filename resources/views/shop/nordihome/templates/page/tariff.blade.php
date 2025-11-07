@@ -12,7 +12,7 @@
     <div class="container-xl my-3">
         <h1>{{ $page->name }}</h1>
     </div>
-    <div class="tariff-block">
+    <div class="block-delivery-terms p-t_50 p-b_50 bg-black">
         <div class="container-xl">
             <div class="row">
                 <div class="col-lg-8>
@@ -40,8 +40,8 @@
                     <img src="/images/pages/tariff.jpg" style="width: 100%" alt="Условия интернет магазина NORDI HOME">
                 </div>
             </div>
-
-            <div class="text-center w-100 text-white fs-4 mt-5 pt-4 mb-2">ТАРИФЫ</div>
+        <div class="block-tariffs p-t_50 p-b_30 bg-black t-a_center">
+            <div class="page-h2">ТАРИФЫ</div>
             <div class="row">
                 <div class="col-lg-4 px-3">
                     <div class="heading">ТАРИФЫ НА ДОСТАВКУ ИЗ ПОЛЬШИ</div>
@@ -240,7 +240,7 @@
             </div>
         </div>
     </div>
-
+    </div>
     <livewire:shop.widget.feedback />
 
     <div class="mt-5">
