@@ -10,6 +10,10 @@
 
 @section('content')
     <div class="container-xl"><h1 class="my-4">{{ $page->name }}</h1></div>
+    <div class="row">
+        <div class="col-lg-6">66</div>
+        <div class="col-lg-6">66</div>
+    </div>
     <div class="container-xl">
         <div class="mt-4">
             {!! $page->text !!}
