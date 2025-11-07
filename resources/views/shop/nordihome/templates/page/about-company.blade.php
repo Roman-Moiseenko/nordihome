@@ -2,7 +2,7 @@
 @extends('shop.nordihome.layouts.main')
 
 @section('main')
-    pages container-xl
+    pages
 @endsection
 
 @section('title', $title)
