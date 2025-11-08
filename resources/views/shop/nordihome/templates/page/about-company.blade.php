@@ -27,7 +27,5 @@
         <div class="mt-4">
             {!! $page->text !!}
         </div>
-
-        @include('shop.nordihome.widgets.map')
     </div>
 @endsection
