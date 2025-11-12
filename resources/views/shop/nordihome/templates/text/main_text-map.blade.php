@@ -1,4 +1,4 @@
-<!--template:Главная - контакты блок-->
+<!--template:Главная - яндекс карта-->
 @php
     /**
     * TextWidget::class - string
