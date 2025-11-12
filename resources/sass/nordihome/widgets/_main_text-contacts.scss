@@ -43,6 +43,14 @@
         }
     }
 }
+@media (max-width: 576px) {
+    .contacts-items {
+        .item {
+            justify-content: space-around;
+            padding: 19px 0;
+        }
+    }
+}
 .contacts-items .item:last-child {
 
 }
