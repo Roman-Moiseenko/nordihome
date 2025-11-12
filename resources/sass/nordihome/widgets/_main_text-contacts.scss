@@ -4,7 +4,7 @@
         flex-wrap: wrap;
         justify-content: space-between;
         padding: 19px 50px 19px 50px;
-        border-bottom: 3px solid #dark-gray;
+        border-bottom: 3px solid $dark-gray;
         align-items: center;
          &:last-child {
             border-bottom: 0px solid $dark-gray;
