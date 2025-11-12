@@ -52,7 +52,7 @@
                         <div class="item-text">
                             <div class="f-w_300 f-z_16 t-a_center">По общим вопросам</div>
                             <div class="item-mail">
-                                <a href="mailto:info@nordihome.ru" class="counter" data-type="5">info@nordihome.ru</a>
+                                <a href="mailto:info@nordihome.ru" data-type="5">info@nordihome.ru</a>
                                 <div class="f-z_16">По вопросам сотрудничества</div>
                                 <a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a>
                             </div>
