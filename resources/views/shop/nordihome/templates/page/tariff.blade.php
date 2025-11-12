@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="block-tariffs p-t_50 p-b_30 bg-black t-a_center">
-        <div class="container">
+        <div class="container-xl">
             <h2 class="page-h2">Тарифы</h2>
             <div class="row">
                 <div class="col-lg-4">
@@ -265,7 +265,7 @@
         </div>
     </div>
     <div class="block-tariffs p-t_30 p-b_50 bg-black">
-        <div class="container">
+        <div class="container-xl">
             <h2 class="page-h2 t-a_center">ГРУЗОВЫЕ АВТОПЕРЕВОЗКИ (без покупки)</h2>
             <div class="row">
                 <div class="col-lg-4">
@@ -470,12 +470,8 @@
             </div>
         </div>
     </div>
-
-
-    <livewire:shop.widget.feedback />
-
-    <div class="mt-5">
-        @include('shop.nordihome.widgets.map')
+    <div>
+            {!! $page->text !!}
     </div>
 @endsection
 

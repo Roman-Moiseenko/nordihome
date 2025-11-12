@@ -17,7 +17,7 @@
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
 <div class="block-contacts p-t_50 p-b_50" id="contacts-tab">
-    <div class="container">
+    <div class="container-xl">
         <div class="row">
             <div class="col-lg-6">
                 <div class="heading f-w_600 f-z_23 m-b_20">КОНТАКТЫ</div>
