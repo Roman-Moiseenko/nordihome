@@ -84,4 +84,10 @@ class GalleryController extends Controller
             'url' => $photo->getUploadUrl(),
         ]);
     }
+
+    public function all_images(Request $request): JsonResponse
+    {
+        $images = $this->repository->AllImages($request);
+        return \response()->json($images);
+    }
 }

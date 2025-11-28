@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use App\Modules\Page\Entity\BannerWidget;
 use App\Modules\Page\Entity\Contact;
+use App\Modules\Page\Entity\FormWidget;
 use App\Modules\Page\Entity\Gallery;
 use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Page;
@@ -53,6 +54,16 @@ Breadcrumbs::for('admin.page.widget.text.index', function (BreadcrumbTrail $trai
 Breadcrumbs::for('admin.page.widget.text.show', function (BreadcrumbTrail $trail, TextWidget $widget) {
     $trail->parent('admin.page.widget.text.index', $widget);
     $trail->push($widget->name, route('admin.page.widget.text.show', $widget));
+});
+
+//TEXT
+Breadcrumbs::for('admin.page.widget.form.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Виджеты обратной связи', route('admin.page.widget.form.index'));
+});
+Breadcrumbs::for('admin.page.widget.form.show', function (BreadcrumbTrail $trail, FormWidget $widget) {
+    $trail->parent('admin.page.widget.form.index', $widget);
+    $trail->push($widget->name, route('admin.page.widget.form.show', $widget));
 });
 
 //////WIDGETS//////
@@ -136,4 +147,9 @@ Breadcrumbs::for('admin.page.gallery.index', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('admin.page.gallery.show', function (BreadcrumbTrail $trail, Gallery $gallery) {
     $trail->parent('admin.page.gallery.index');
     $trail->push($gallery->name, route('admin.page.gallery.show', $gallery));
+});
+//SEO META
+Breadcrumbs::for('admin.page.seo-meta.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('SEO META', route('admin.page.seo-meta.index'));
 });

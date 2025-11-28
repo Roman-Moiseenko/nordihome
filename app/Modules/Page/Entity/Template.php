@@ -15,6 +15,7 @@ class Template
         'text' => 'Текстовые виджеты',
         'posts' => 'Страница записей',
         'post' => 'Страница записи',
+        'form' => 'Форма обратной связи',
     ];
 
     const RENDERS = [
@@ -24,6 +25,7 @@ class Template
         'text' => TextWidget::class,
         'posts' => PostCategory::class,
         'post' => Post::class,
+        'form' => FormWidget::class,
     ];
 
     /**

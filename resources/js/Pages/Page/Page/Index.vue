@@ -17,11 +17,6 @@
                 <el-table-column prop="name" label="Страница" width="280" show-overflow-tooltip/>
                 <el-table-column prop="title" label="Заголовок" width="" />
                 <el-table-column prop="template" label="Шаблон" width="120" show-overflow-tooltip/>
-                <el-table-column prop="menu" label="Меню" width="100" align="center">
-                    <template #default="scope">
-                        <Active :active="scope.row.menu" />
-                    </template>
-                </el-table-column>
                 <el-table-column prop="published" label="Опубликована" width="130" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.published" />
@@ -60,20 +55,24 @@
             <el-form label-width="auto">
                 <el-form-item label="Имя страницы" label-position="top" class="mt-3">
                     <el-input v-model="form.name" placeholder="Внутреннее"/>
+                    <div v-if="errors.name" class="text-red-700">{{ errors.name }}</div>
                 </el-form-item>
                 <el-form-item label="Ссылка" label-position="top" class="mt-3">
                     <el-input v-model="form.slug" placeholder="Заполнится автоматически" clearable/>
+                    <div v-if="errors.slug" class="text-red-700">{{ errors.slug }}</div>
                 </el-form-item>
                 <el-form-item label="Родительская страница" label-position="top" class="mt-3">
                     <el-select v-model="form.parent_id" filterable clearable>
                         <el-option v-for="item in parent_pages" :value="item.id" :label="item.name" />
                     </el-select>
+                    <div v-if="errors.parent_id" class="text-red-700">{{ errors.parent_id }}</div>
                 </el-form-item>
 
                 <el-form-item label="Шаблон" label-position="top" class="mt-3">
                     <el-select v-model="form.template" filterable clearable>
                         <el-option v-for="item in templates" :value="item.value" :label="item.label" />
                     </el-select>
+                    <div v-if="errors.template" class="text-red-700">{{ errors.template }}</div>
                 </el-form-item>
 
             </el-form>
@@ -101,6 +100,7 @@ import axios from "axios";
 
 const props = defineProps({
     pages: Array,
+    errors: Object,
     title: {
         type: String,
         default: 'Сайт. Страницы',
@@ -124,9 +124,10 @@ function savePage() {
         method: "post",
         data: form,
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             dialogCreate.value = false;
+            console.log(page.props)
         }
     })
 }

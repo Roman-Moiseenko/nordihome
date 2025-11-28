@@ -55,7 +55,7 @@
         "concurrently": "^9.1.2",
         "dayjs": "^1.11.10",
         "delayed-stream": "^1.0.0",
-        "element-plus": "^2.9.0",
+        "element-plus": "^2.11.8",
         "esbuild": "^0.18.20",
         "fill-range": "^7.0.1",
         "flat": "^5.0.2",

@@ -71,6 +71,7 @@ class TraderService
     public function setInfo(Trader $trader, Request $request): void
     {
         $trader->name = $request->string('name')->value();
+        $trader->description = $request->string('description')->value();
 
         if (!$trader->default && $request->boolean('default')) {
             Trader::where('default', true)->update(['default' => true]);

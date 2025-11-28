@@ -24,7 +24,7 @@ class SitemapXmlController extends Controller
             $this->static(),
             $this->promotions(),
         );
-        $content = view('shop.sitemap', compact('pages'))->render();
+        $content = view('shop.unload.sitemap', compact('pages'))->render();
         ob_end_clean();
         return response($content)->header('Content-Type','text/xml');
     }

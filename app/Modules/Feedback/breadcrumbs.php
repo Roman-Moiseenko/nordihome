@@ -14,3 +14,8 @@ Breadcrumbs::for('admin.feedback.review.show', function (BreadcrumbTrail $trail,
     $trail->parent('admin.feedback.review.index');
     $trail->push($review->product->name . ': ' . $review->user->fullname->firstname, route('admin.feedback.review.show', $review));
 });
+
+Breadcrumbs::for('admin.feedback.form.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Формы обратной связи', route('admin.feedback.form.index'));
+});

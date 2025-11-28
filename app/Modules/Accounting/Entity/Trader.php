@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 /**
  * @property int $id
  * @property string $name
+ * @property string $description
  * @property bool $default
  * @property bool $active
  * @property Organization $organization

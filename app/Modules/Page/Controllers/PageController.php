@@ -85,13 +85,7 @@ class PageController extends Controller
 
     public function toggle(Page $page): RedirectResponse
     {
-        if ($page->published) {
-            $message = 'Страница убрана из публикации';
-            $page->draft();
-        } else {
-            $message = 'Страница опубликована';
-            $page->published();
-        }
+        $message = $this->service->toggle($page);
         return redirect()->back()->with('success', $message);
     }
 

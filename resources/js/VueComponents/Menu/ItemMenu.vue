@@ -1,11 +1,8 @@
 <template>
     <template v-if="route_name">
-        <Link v-if="vue" :href="route(route_name, undefined, false)" class="flex items-center w-full">
+        <Link :href="route(route_name, undefined, false)" class="flex items-center w-full">
             <ItemText :font_awesome="font_awesome" :title="title"/>
         </Link>
-        <a v-else :href="route(route_name, undefined, false)" class="flex items-center w-full">
-            <ItemText :font_awesome="font_awesome" :title="title"/>
-        </a>
     </template>
     <template v-else>
         <ItemText :font_awesome="font_awesome" :title="title"/>

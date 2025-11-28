@@ -32,8 +32,8 @@ class PageController extends ShopController
     public function home()
     {
 
-        if (!is_null($page = Page::where('slug', 'home')->active()->first())) {
-            $callback = fn() => $page->view();
+        if (!is_null(Page::where('slug', 'home')->active()->first())) {
+            $callback = fn() => $this->views->page('home'); //$page->view();
         } else {
             $callback = fn() => view($this->route('home'))->render();
         }

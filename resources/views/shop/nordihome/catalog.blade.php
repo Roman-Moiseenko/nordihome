@@ -17,6 +17,6 @@
     </div>
 
 <script type="application/ld+json" class="schemantra.com">
-    {{ json_encode($schema->CategoryPage($category['id'])) }}
+
 </script>
 @endsection

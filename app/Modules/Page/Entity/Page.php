@@ -7,6 +7,7 @@ use App\Modules\Base\Casts\MetaCast;
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
+use App\Modules\Page\Entity\Renders\RenderPage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,22 +21,17 @@ use Illuminate\Support\Str;
  * @property string $title
  * @property string $description
  * @property string $template
- * @property string $text
- * @property bool $menu
- * @property bool $published
  * @property int $sort
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property Meta $meta
  * @property Page $parent
  */
-class Page extends Model
+class Page extends RenderPage
 {
     use ImageField, IconField;
 
-    protected $attributes = [
+/*    protected $attributes = [
         'meta' => '{}',
     ];
+    */
     protected $fillable = [
         'parent_id',
         'name',
@@ -43,20 +39,20 @@ class Page extends Model
         'title',
         'description',
         'template',
-        'menu',
         'sort',
         'published',
         'text'
     ];
-
+/*
     protected $casts = [
+        'published_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'meta' => MetaCast::class,
     ];
-
+*/
     public static function register(string $name, string $slug,
-                                    string $title, string $description, string $template, bool $menu, int $parent_id = null): self
+                                    string $title, string $description, string $template, int $parent_id = null): self
     {
         $sort = Page::where('parent_id', $parent_id)->count();
         return self::create([
@@ -67,7 +63,6 @@ class Page extends Model
             'description' => $description,
             'template' => $template,
             'sort' => $sort,
-            'menu' => $menu,
             'published' => false,
             'text' => '',
         ]);
@@ -78,43 +73,40 @@ class Page extends Model
         $this->text = $text;
         $this->save();
     }
-
+/*
     public function draft(): void
     {
         $this->published = false;
-        $this->save();
     }
 
     public function published(): void
     {
         $this->published = true;
-        $this->save();
     }
-
+*/
     /**
      * @throws \Throwable
      */
+/*
     public function view(): string
     {
-            $this->text = Template::renderClasses($this->text);
-            $url_page = route('shop.page.view', $this->slug);
-            //TODO На будущее
-            // $this->text = Template::renderFromText('promotion', $this->text);
+        $this->text = Template::renderClasses($this->text);
+        $url_page = route('shop.page.view', $this->slug);
 
-            return view(
-                Template::blade('page') . $this->template,
-                ['page' => $this, 'title' => $this->meta->title, 'description' => $this->meta->description, 'url_page' => $url_page])
-                ->render();
-
+        return view(
+            Template::blade('page') . $this->template,
+            ['page' => $this, 'title' => $this->meta->title, 'description' => $this->meta->description, 'url_page' => $url_page])
+            ->render();
     }
-
+*/
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Page::class, 'parent_id', 'id');
     }
-
+/*
     public function scopeActive($query)
     {
         return $query->where('published', true);
     }
+    */
 }

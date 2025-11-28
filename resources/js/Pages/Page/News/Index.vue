@@ -101,6 +101,7 @@ import UploadImageFile from "@Comp/UploadImageFile.vue";
 import {IRowId, IUploadFile} from "@Res/interface"
 
 const store = useStore();
+
 const props = defineProps({
     news: Array,
     tiny_api: String,
@@ -109,7 +110,7 @@ const props = defineProps({
         default: 'Сайт. Новости',
     },
 })
-console.log(props.news)
+
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.news.data])

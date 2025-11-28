@@ -18,7 +18,6 @@ class PageService
             $request->string('title')->trim()->value(),
             $request->string('description')->trim()->value(),
             $request->string('template')->trim()->value(),
-            $request->has('menu'),
             $request['parent_id'],
         );
     }
@@ -31,7 +30,6 @@ class PageService
             'title' => $request->string('title')->trim()->value(),
             'description' => $request->string('description')->trim()->value(),
             'template' => $request->string('template')->trim()->value(),
-            'menu' => $request->has('menu'),
             'parent_id' => $request['parent_id'],
         ]);
     }
@@ -57,7 +55,6 @@ class PageService
         $page->title = $request->string('title')->trim()->value();
         $page->description = $request->string('description')->trim()->value();
         $page->parent_id = $request->input('parent_id');
-        $page->menu = $request->boolean('menu');
         $page->template = $request->string('template')->value();
         $page->meta->fromRequest($request);
         $page->save();
@@ -90,5 +87,18 @@ class PageService
                 $pages[$i + 1]->update(['sort' => $next]);
             }
         }
+    }
+
+    public function toggle(Page $page): string
+    {
+        if ($page->published) {
+            $message = 'Страница убрана из публикации';
+            $page->draft();
+        } else {
+            $message = 'Страница опубликована';
+            $page->published();
+        }
+        $page->save();
+        return $message;
     }
 }

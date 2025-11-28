@@ -7,6 +7,12 @@ return [
         'title' => '* Обратная связь (в разр.)',
         'can' => ['feedback', 'review'],
         'sub_menu' => [
+            'forms' => [
+                'title' => 'Формы (ответы)',
+                'route_name' => 'admin.feedback.form.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-pen-field',
+            ],
             'review' => [
                 'icon' => 'message-square-warning',
                 'title' => 'Отзывы',

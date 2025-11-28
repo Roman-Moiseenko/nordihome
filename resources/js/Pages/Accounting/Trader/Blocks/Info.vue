@@ -9,7 +9,15 @@
                     </div>
                     <div v-show="editTrader">
                         <el-input v-model="info.name"/>
+                    </div>
+                </el-descriptions-item>
+                <el-descriptions-item label="Описание">
+                    <div v-show="!editTrader">
+                        {{ trader.description }}
 
+                    </div>
+                    <div v-show="editTrader">
+                        <el-input v-model="info.description" type="textarea" rows="3"/>
                     </div>
                 </el-descriptions-item>
                 <el-descriptions-item label="По умолчанию">
@@ -101,7 +109,7 @@ function defaultOrganization(id) {
 const info = reactive({
     name: props.trader.name,
     default: props.trader.default,
-
+    description: props.trader.description,
 })
 
 function setInfo() {

@@ -3,6 +3,10 @@
 namespace App\Console\Commands\Test;
 
 use App\Modules\Bank\Service\YookassaService;
+use App\Modules\Lead\Entity\Lead;
+use App\Modules\Lead\Entity\LeadStatus;
+use App\Modules\Unload\Entity\Feed;
+use App\Modules\Unload\Repository\FeedRepository;
 use Illuminate\Console\Command;
 use Tests\CreatesApplication;
 
@@ -10,19 +14,20 @@ class YookassaCommand extends Command
 {
     use CreatesApplication;
 
-    protected $signature = 'kassa:test';
-    protected $description = 'Тестируем касса';
+    protected $signature = 'test:test';
+    protected $description = 'Тестируем';
 
-    public function handle(YookassaService $service)
+    public function handle(FeedRepository $repository)
     {
-        $payment = $service->test();
-     /*   dd([
-            $payment['id'],
-            $payment['status'],
-            $payment['confirmation']['confirmation_url'],
-            $payment['metadata']
-        ]); */
+        $feed = Feed::find(1);
+        $repository->GetProducts($feed);
 
-        dd($payment);
+/*
+        $leads = Lead::get();
+        foreach ($leads as $lead) {
+            $data = $lead->data;
+            $this->info($lead->id);
+        }
+*/
     }
 }

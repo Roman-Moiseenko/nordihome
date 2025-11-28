@@ -10,6 +10,8 @@ import 'owl.carousel';
 import.meta.glob(["../images/**"]);
 
 import './_common.js';
+import './_feedback.js';
+
 /* Собственные */
 import './nordihome/frontend';
 import './nordihome/maps';

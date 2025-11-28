@@ -92,12 +92,7 @@ class BannerWidgetController extends Controller
 
     public function toggle(BannerWidget $widget): RedirectResponse
     {
-        if ($widget->isActive()) {
-            $message = 'Баннер убран из показа';
-        } else {
-            $message = 'Баннер добавлен в показы';
-        }
-        $this->service->toggle($widget);
+        $message = $this->service->toggle($widget);
         return redirect()->back()->with('success', $message);
     }
 

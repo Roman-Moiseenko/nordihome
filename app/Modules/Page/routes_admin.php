@@ -3,8 +3,10 @@
 use App\Modules\Page\Controllers\BannerWidgetController;
 use App\Modules\Page\Controllers\CacheController;
 use App\Modules\Page\Controllers\ContactController;
+use App\Modules\Page\Controllers\FormWidgetController;
 use App\Modules\Page\Controllers\GalleryController;
 use App\Modules\Page\Controllers\MenuController;
+use App\Modules\Page\Controllers\MetaTemplateController;
 use App\Modules\Page\Controllers\NewsController;
 use App\Modules\Page\Controllers\PageController;
 use App\Modules\Page\Controllers\PostController;
@@ -77,7 +79,6 @@ Route::group(
             });
            // Route::resource('banner', 'BannerWidgetController')->except(['create', 'edit', 'update']); //CRUD
 
-
             Route::group([
                 'prefix' => 'promotion',
                 'as' => 'promotion.'
@@ -108,6 +109,21 @@ Route::group(
                 Route::post('/', [TextWidgetController::class, 'store'])->name('store');
                 Route::delete('/{widget}', [TextWidgetController::class, 'destroy'])->name('destroy');
                 Route::get('/', [TextWidgetController::class, 'index'])->name('index');
+            });
+
+            Route::group([
+                'prefix' => 'form',
+                'as' => 'form.'
+            ], function () {
+                Route::post('/set-widget/{widget}', [FormWidgetController::class, 'set_widget'])->name('set-widget');
+                Route::post('/toggle/{widget}', [FormWidgetController::class, 'toggle'])->name('toggle');
+                Route::post('/set-fields/{widget}', [FormWidgetController::class, 'set_fields'])->name('set-fields');
+                Route::post('/set-lists/{widget}', [FormWidgetController::class, 'set_lists'])->name('set-lists');
+
+                Route::get('/{widget}', [FormWidgetController::class, 'show'])->name('show');
+                Route::post('/', [FormWidgetController::class, 'store'])->name('store');
+                Route::delete('/{widget}', [FormWidgetController::class, 'destroy'])->name('destroy');
+                Route::get('/', [FormWidgetController::class, 'index'])->name('index');
             });
            // Route::resource('text', 'TextWidgetController')->except(['create', 'edit', 'update']); //CRUD
         });
@@ -205,11 +221,20 @@ Route::group(
             Route::post('/image-del/{photo}', [GalleryController::class, 'image_del'])->name('image-del');
             Route::post('/image-set/{photo}', [GalleryController::class, 'image_set'])->name('image-set');
             Route::post('/image-add/{gallery}', [GalleryController::class, 'image_add'])->name('image-add');
+            Route::post('/images', [GalleryController::class, 'all_images'])->name('images');
 
             Route::delete('/{gallery}', [GalleryController::class, 'destroy'])->name('destroy');
             Route::get('/', [GalleryController::class, 'index'])->name('index');
             Route::post('/', [GalleryController::class, 'store'])->name('store');
         });
+        //SEO
+        Route::group([
+            'prefix' => 'seo-meta',
+            'as' => 'seo-meta.'
+        ], function () {
 
+            Route::get('/', [MetaTemplateController::class, 'index'])->name('index');
+            Route::post('/set-data', [MetaTemplateController::class, 'set_data'])->name('set-data');
+        });
     }
 );

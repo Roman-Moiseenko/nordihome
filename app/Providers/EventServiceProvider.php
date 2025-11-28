@@ -67,6 +67,7 @@ use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
 use App\Modules\Admin\Listeners\NewTaskStaff;
 use App\Modules\Admin\Listeners\NotificationStaff;
 use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Lead\Listeners\LeadEventListener;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Service\NotificationService;
 use App\Modules\Order\Events\ExpenseHasCompleted;
@@ -227,7 +228,11 @@ class EventServiceProvider extends ServiceProvider
             NotificationProductFastCreat::class,
         ],
     ];
-
+    /*
+    protected $subscribe = [
+        LeadEventListener::class,
+    ];
+*/
     /**
      * Register any events for your application.
      */

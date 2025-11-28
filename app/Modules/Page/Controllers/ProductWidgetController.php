@@ -47,7 +47,7 @@ class ProductWidgetController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $widget = $this->service->create($request);
         return redirect()->route('admin.page.widget.product.show', $widget)->with('success', 'Виджет сохранен');
@@ -69,26 +69,21 @@ class ProductWidgetController extends Controller
         //return view('admin.page.widget.show', compact('widget'));
     }
 
-    public function set_widget(Request $request, ProductWidget $widget)
+    public function set_widget(Request $request, ProductWidget $widget): RedirectResponse
     {
         $this->service->setWidget($widget, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(ProductWidget $widget)
+    public function destroy(ProductWidget $widget): RedirectResponse
     {
-        $this->service->destroy($widget);
+        $this->service->delWidget($widget);
         return redirect()->back()->with('success', 'Виджет удален');
     }
 
     public function toggle(ProductWidget $widget): RedirectResponse
     {
-        if ($widget->isActive()) {
-            $message = 'Виджет убран из показа';
-        } else {
-            $message = 'Виджет добавлен в показы';
-        }
-        $this->service->toggle($widget);
+        $message = $this->service->toggle($widget);
         return redirect()->back()->with('success', $message);
     }
 
