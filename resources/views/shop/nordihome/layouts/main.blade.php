@@ -26,6 +26,48 @@
     <!-- Scripts -->
     @vite(['resources/sass/nordihome.scss', 'resources/js/nordihome.js'])
     @stack('styles')
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        var fired = false;
+        window.addEventListener('scroll', () => {
+            if (fired === false) {
+                fired = true;
+                setTimeout(() => {
+                    //Если метрика задана, запускаем
+                    @if(!empty($web->metrika))
+
+                    (function (m, e, t, r, i, k, a) {
+                        m[i] = m[i] || function () {
+                            (m[i].a = m[i].a || []).push(arguments)
+                        };
+                        m[i].l = 1 * new Date();
+                        k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+                    })
+                    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+                    ym("{{ $web->metrika }}", "init", {
+                        clickmap: true,
+                        trackLinks: true,
+                        accurateTrackBounce: true,
+                        ecommerce: "dataLayer"
+                    });
+
+                    console.log('metrika', {{ $web->metrika }});
+                    @endif
+                    @if(!empty($web->google))
+                        function gtag() {
+                            dataLayer.push(arguments);
+                        }
+                        gtag('js', new Date());
+                        gtag('config', '{{ $web->google }}');
+                    console.log('google', '{{ $web->google }}')
+                    @endif
+                    //document.head.appendChild("//code.jivosite.com/widget/IWidqpXM0K");
+                }, 4000)
+            }
+        });
+    </script>
+
 </head>
 <body class="@yield('body')">
 @include('shop.nordihome.header')
@@ -47,8 +89,8 @@
     @include('shop.nordihome.pop-up.login')
 @endguest
 
+<!--livewire:shop.popup.buy-click :user="$user" /-->
 @include('shop.nordihome.pop-up.buy-click')
-
 @include('shop.nordihome.pop-up.notification')
 
 

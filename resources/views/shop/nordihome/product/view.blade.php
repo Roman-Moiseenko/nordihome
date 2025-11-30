@@ -6,6 +6,7 @@
 @section('description', $description)
 
 @section('content')
+    <span class="e-detail" data-product="{{ $product['id'] }}"></span>
 
     <div class="title-page">
         <h1>{{ $product['name'] }}</h1>
@@ -82,11 +83,14 @@
                     </div>
                     <div class="product-card-to-cart">
                         @if($product['is_sale'])
-                            <button class="to-cart btn btn-dark" data-product="{{ $product['id'] }}">В Корзину</button>
+                            <button class="to-cart btn btn-dark e-add" data-product="{{ $product['id'] }}">В Корзину</button>
+
+
                             <button class="one-click btn btn-outline-dark"
-                                    data-product="{{ $product['id'] }}" type="button" data-bs-toggle="modal"
+                                    type="button" data-bs-toggle="modal"
                                     data-bs-target="#buy-click"
-                                    onclick="document.getElementById('one-click-product-id').value={{$product['id']}};"
+                                    onclick="document.getElementById('one-click-product-id').value={{$product['id']}};
+                                    document.getElementById('button-buy-click').setAttribute('data-product', {{$product['id']}});"
                             >В 1 Клик!
                             </button>
                         @else

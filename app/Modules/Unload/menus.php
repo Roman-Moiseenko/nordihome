@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'settings' => [
+    'unloads' => [
         'sort' => 96,
         'icon' => 'settings',
         'title' => 'Выгрузки',

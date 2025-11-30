@@ -18,3 +18,4 @@ import './nordihome/maps';
 import './nordihome/parser';
 import './nordihome/sliders';
 import './functions.js';
+import './nordihome/e-commerce.js';

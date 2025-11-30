@@ -1,6 +1,6 @@
 ## CRM Nordi Home
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Будет текст ......
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
 - [Powerful dependency injection container](https://laravel.com/docs/container).
@@ -10,48 +10,91 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - [Robust background job processing](https://laravel.com/docs/queues).
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+...... 
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# Описание внутреннего API
+## E-Commerce
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Принцип работы, элементы DOM должны содержать соответствующий класс учета e-commerce и атрибут **data-product** с id товара
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. impressions - просмотр списка товаров
 
-## Laravel Sponsors
+Элементы каталога (карточка товара) должны содержать класс [e-impressions]() и тег [data-product]() с id товара
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**Например**
 
-### Premium Partners
+    <div class="product-card e-impressions" data-product="{{ $product['id'] }}">
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+    ... здесь карточка Товара ...
 
-## Contributing
+    </div>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. click - клик по товару в списке
 
-## Code of Conduct
+Каждый тег \<a> отвечающий за переход на карточку товара, должен содержать класс [e-click]() и тег [data-product]() с id товара
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    <a class="e-click" data-product="{{ $product['id'] }}" href="{{ route('shop.product.view', $product['slug']) }}">
 
-## Security Vulnerabilities
+    текст или изображение
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    </a>
+Встречается 3 раза.
 
-## License
+### 3. detail - просмотр товара
+Подключение происходит в любом месте карточки товара через любой невидимый тег, например:
+    
+    <span class="e-detail" data-product="{{ $product['id'] }}"></span>
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Срабатывает при скроллинге экрана
+
+### 4. add - добавление товара в корзину
+Для отправки в корзину параллельно с классом to-cart необходимо использовать e-add. На текущий момент в корзину можно отправить товар только из карточки товара, для отправки из списка, необходимо повторить код кнопки
+    
+    <button class="to-cart e-add" data-product="{{ $product['id'] }}">В Корзину</button>
+
+### 5. remove - удаление товара из корзины
+Удаление товаров из корзины производится в компоненте Livewire: livewire.shop.header.cart
+Если удаление, очистка и покупка используется без **livewire**, то использовать следующий код:
+В случае **livewire** компонент сам вызывает нужные события
+Принцип учета в e-commerce такой же, только добавляется кол-во (см. пример), для тега \<a> прописываем:
+
+    <a class="e-remove" 
+        data-product="{{ $item['product_id'] }}" 
+        data-quantity="{{ $item['quantity'] }}" ... />    
+
+_add и remove_ используются в двух местах: виджет корзина в header и на странице Корзина в кабинете пользователя. Оба случая - компоненты **livewire**
+
+#### 5.1. clear - очистка корзины
+При очистке корзины надо списком передать все id, для этого используем вспомогательное событие e-clear
+тег data-product содержит массив id товаров
+
+    <button class="e-clear"  
+        data-product="[@foreach($items as $item){{$item['product_id']}},@endforeach 0]"
+        wire:click="clear_cart">
+        Очистить корзину
+    </button>
+
+### 6. purchase - покупка
+Аналогично предыдущему подпункту, необходимо указать перечень всех id товаров и использовать класс **e-purchase** 
+
+## Купить в 1 клик 
+Необходимо разместить следующую кнопку, передав ей id товара
+Кнопка открывает модальное окно (через bootstrap) и передает компоненту Livewire id товара
+
+    <button class="btn btn-outline-dark"
+        type="button" data-bs-toggle="modal"
+        data-bs-target="#buy-click"
+        onclick="Livewire.dispatch('buy-click', {id: {{$product['id']}} });"
+    >В 1 Клик!
+    </button>
+
+Текущий вариант, без Livewire
+
+    <button class="one-click btn btn-outline-dark"
+        type="button" data-bs-toggle="modal"
+        data-bs-target="#buy-click"
+        onclick="document.getElementById('one-click-product-id').value={{$product['id']}};
+        document.getElementById('button-buy-click').setAttribute('data-product', {{$product['id']}});"
+    >В 1 Клик!
+    </button>

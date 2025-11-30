@@ -1,7 +1,7 @@
 <div>
-    <div class="product-card">
+    <div class="product-card e-impressions" data-product="{{ $product['id'] }}">
         <div class="product-card-image">
-            <a href="{{ route('shop.product.view', $product['slug']) }}">
+            <a class="e-click" data-product="{{ $product['id'] }}" href="{{ route('shop.product.view', $product['slug']) }}">
                 <img class="product-card-image-main"
                      src="{{ $product['images']['catalog']['src'] }}"
                      alt="{{ $product['images']['catalog']['alt'] }}">
@@ -19,7 +19,7 @@
         </div>
         <div class="product-card-review">
             <div>
-                <a href="{{ route('shop.product.view', $product['slug']) }}/#review"
+                <a class="e-click" data-product="{{ $product['id'] }}" href="{{ route('shop.product.view', $product['slug']) }}/#review"
                    title="Отзывы реальных покупателей на {{ $product['name'] }}">
                     <i class="fa-solid fa-star"></i>{{ $product['rating'] }} <span
                         class="">{{ $product['count_reviews'] }}</span>
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="product-card-name fs-6">
-            <a class="product-trunc" href="{{ route('shop.product.view', $product['slug']) }}"
+            <a class="product-trunc e-click" data-product="{{ $product['id'] }}" href="{{ route('shop.product.view', $product['slug']) }}"
                title="{{ $product['name'] }}">{{ $product['name'] }}</a>
         </div>
         <div class="product-card-info">
@@ -49,7 +49,7 @@
                 @if(!$product['promotion']['has'])
                     {{ price($product['price']) }}
                 @else
-                    <span class="discount-price">{{ price($product['price_promotion']) }}</span><span
+                    <span class="discount-price">{{ price($product['promotion']['price']) }}</span><span
                         class="base-price">{{ price($product['price']) }}</span>
                 @endif
             @else

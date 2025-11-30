@@ -20,13 +20,13 @@ class Cart extends Component
 
     public array $items;
 
-    public function boot()
+    public function boot(): void
     {
         $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
     }
 
 
-    public function mount()
+    public function mount(): void
     {
         $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
         $this->refresh_fields();
@@ -59,18 +59,26 @@ class Cart extends Component
         $this->count = $this->cart->info->all->count;
     }
 
-    public function del_item($id)
+    public function del_item($id): void
     {
+        $item = $this->cart->getItem($id);
+        $this->dispatch('e-cart',
+            product_id: $id, e_type: 'remove', quantity: $item->quantity);
         $this->cart->remove($id);
         $this->dispatch('update-header-cart');
-
-        //return redirect(request()->header('Referer'));
     }
 
-    public function clear_cart()
+    public function clear_cart(): void
     {
+        $items = $this->cart->getItems();
+        foreach ($items as $item) {
+            $this->dispatch('e-cart',
+                product_id: $item->product->id, e_type: 'remove', quantity: $item->quantity);
+        }
+
         $this->cart->clear();
         $this->refresh_fields();
+        $this->dispatch('update-header-cart');
     }
 
     public function render()

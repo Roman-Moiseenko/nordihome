@@ -232,6 +232,8 @@ window.$ = jQuery;
                     errorBlock.html('Товар не в наличии! Оформите предзаказ!');
                     return false;
                 } else {
+                    formBuyClick.attr('method', 'post')
+                    formBuyClick.attr('action', '/order/create-click')
                     formBuyClick.submit();
                 }
             });
