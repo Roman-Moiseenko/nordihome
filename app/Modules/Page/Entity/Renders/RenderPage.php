@@ -7,6 +7,7 @@ use App\Modules\Base\Entity\Meta;
 use App\Modules\Page\Entity\Template;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use function Termwind\render;
 
 /**
  * @property string $text
@@ -59,6 +60,8 @@ abstract class RenderPage extends Model
         $this->field = empty($this->field) ? $this->getField() : $this->field;
 
         $this->text = Template::renderClasses($this->text);
+        $this->text = $this->renderTags($this->text);
+
         $url_page = route('shop.' . $this->field . '.view', $this->slug);
         if ($fn != null) $this->meta = $fn($this, $this->meta);
 
@@ -66,6 +69,26 @@ abstract class RenderPage extends Model
             Template::blade($this->field) . $this->template,
             [$this->field => $this, 'title' => $this->meta->title, 'description' => $this->meta->description, 'url_page' => $url_page])
             ->render();
+    }
+
+    private function renderTags(string $text): string
+    {
+        //<div>
+        $pattern = '/\[div=\"(.+)\"\]/';
+        preg_match_all($pattern, $text, $matches);
+        $replaces = $matches[0]; //шот-коды вида [div="class"] (массив)
+        $classes = $matches[1]; //значение classes
+        foreach ($classes as $key => $class) {
+            $text = str_replace(
+                $replaces[$key],
+                '<div class="' . $class . '">',
+                $text);
+        }
+        //</div>
+
+        $text = str_replace('[/div]', '</div>', $text);
+
+        return $text;
     }
 
     public function scopeActive($query)
