@@ -7,6 +7,7 @@ use App\Events\ThrowableHasAppeared;
 use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;
@@ -136,16 +137,9 @@ class OrderController extends ShopController
     public function store(Request $request)
     {
         $order = $this->service->create($request);
-        //Для eCommerce - Вынести в
-        $e_array = [];
-        foreach ($order->items as $item) {
-            $e_array[] = [
-                'id' => $item->product->id,
-                'quantity' => $item->quantity,
-            ];
-        }
-        return redirect()->route('cabinet.order.view', $order)->with('success', 'Ваш заказ успешно создан!');
+        return redirect()->route('cabinet.order.new_order', ['order' => $order, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
     }
+
     /*
         public function view(Request $request, Order $order)
         {

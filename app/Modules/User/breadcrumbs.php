@@ -36,7 +36,10 @@ Breadcrumbs::for('cabinet.order.view', function (BreadcrumbTrail $trail, Order $
     $trail->parent('cabinet.order.index');
     $trail->push('Заказ ' . $order->htmlNum(), route('cabinet.order.view', $order));
 });
-
+Breadcrumbs::for('cabinet.order.new_order', function (BreadcrumbTrail $trail, Order $order) {
+    $trail->parent('cabinet.order.view', $order);
+    $trail->push('Новый', route('cabinet.order.new_order', $order));
+});
 Breadcrumbs::for('cabinet.review.index', function (BreadcrumbTrail $trail) {
     $trail->parent('cabinet.view');
     $trail->push('Мои Отзывы', route('cabinet.review.index'));

@@ -250,6 +250,10 @@ class OrderService
      */
     public function create(Request $request): Order
     {
+
+      //  $items = ($request['preorder'] == 0) ? $this->cart->getItems() : $this->cart->getOrderItems();
+       //dd($this->cart->getItems());
+
         DB::transaction(function () use ($request, &$order) {
             if (Auth::guard('user')->check()) {
                 /** @var User $user */
@@ -265,9 +269,14 @@ class OrderService
                 $order->save();
             }
 
-            $items = ($request['preorder'] == 1) ? $this->cart->getItems() : $this->cart->getOrderItems();
+
+            //TODO Для учета предзаказа, возможно не понадобится $items = ($request['preorder'] == 0) ? $this->cart->getItems() : $this->cart->getOrderItems();
+            $items = $this->cart->getItems();
             foreach ($items as $item) {
-                if ($item->check) $this->addProduct($order, $item->product->id, $item->quantity);
+                if ($item->check) {
+
+                    $this->addProduct($order, $item->product->id, $item->quantity, $item->preorder());
+                }
             }
             $this->cart->clearOrder();
             if ($request['preorder'] == 1) $this->cart->clearPreOrder();
@@ -515,21 +524,32 @@ class OrderService
         float $quantity, bool $preorder = false,
         bool  $assemblage = false, bool $packing = false): void
     {
+        \Log::info('$quantity = ' . $quantity);
+        \Log::info('$product_id = ' .$product_id);
         /** @var Product $product */
         $product = Product::find($product_id);
         $quantity_preorder = 0;
+        \Log::info('$preorder = ' .$preorder);
         //По предзаказу
         if ($preorder) {
             $quantity_preorder = $quantity;
             $quantity = 0;
+            \Log::info('1');
+
         }
+        \Log::info('getQuantitySell = ' . $product->getQuantitySell());
+
         if ($quantity > 0 && $product->getQuantitySell() <= $quantity) {
             $quantity_preorder = $quantity - $product->getQuantitySell(); //По предзаказу
             $quantity = $product->getQuantitySell(); //в наличии
+            \Log::info('2');
         }
 
         $last_price = $product->getPrice(false, $order->user);
+        \Log::info('$quantity = ' . $quantity);
+        \Log::info('$quantity_preorder = ' . $quantity_preorder);
         if ($quantity > 0) {
+            \Log::info('3');
             $orderItem = OrderItem::new($product, $quantity, false);
             if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);
             $orderItem->setCost($last_price, $last_price);
@@ -548,6 +568,7 @@ class OrderService
         }
 
         if ($quantity_preorder > 0) {
+            \Log::info('4');
             $orderItemPre = OrderItem::new($product, $quantity_preorder, true);
             $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
             if ($last_price == 0) {
@@ -562,12 +583,13 @@ class OrderService
             $orderItemPre->assemblage = $assemblage;
             $orderItemPre->packing = $packing;
             $order->items()->save($orderItemPre);
+            \Log::info('4-end');
         }
 
         $order->refresh();
         $this->recalculation($order);
         $this->logger->logOrder(order: $order, action: 'Добавлен товар',
-            object: $product->name, value: $quantity . ' шт.',);
+            object: $product->name, value: $quantity . ' шт.');
     }
 
     public function addProducts(Order $order, array $products): void

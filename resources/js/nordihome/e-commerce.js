@@ -90,24 +90,24 @@ window.$ = jQuery;
         }
     });
 
+    document.addEventListener('e-order', event => {
+        let data = event.detail
+        console.log('e-order222', data)
+    })
     window.addEventListener('e-cart', event => {
         let data = event.detail
         eCommerceAjax(data.e_type, data.product_id, null, data.quantity)
     })
     window.addEventListener('e-order', event => {
-
         let data = event.detail
-        console.log('e-order', data)
         eCommerceAjax('purchase', data)
     })
     function eCommerceAjax(eType, eId, href = null, quantity = 1) {
-
         $.post('/e-commerce', {e_id: eId, e_type: eType, quantity: quantity}, function (data) {
             console.log(data)
             window.dataLayer.push(data)
             if (href !== null) window.location = href
         });
-
     }
 
 })();

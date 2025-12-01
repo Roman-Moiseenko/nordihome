@@ -53,7 +53,7 @@ Route::group([
         ], function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
             Route::get('/{order}', [OrderController::class, 'view'])->name('view');
-
+            Route::get('/new/{order}', [OrderController::class, 'new_order'])->name('new_order');
         });
         Route::group([
             'as' => 'review.',

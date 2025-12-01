@@ -10,24 +10,23 @@
     </div>
     <div class="screen-action">
         <div class="left-list-block">
-
+            Менеджер свяжется с вами в течении .... минут, для обсуждения деталей
         </div>
         <div class="right-action-block">
             <div class="sticky-block">
+
 
             </div>
         </div>
     </div>
 
     <script>
-
-        console.log({{$e_array}})
-        console.log({{ json_encode($e_array) }})
-        // Create the event
-        let event = new CustomEvent("e-order", { "detail": {{ json_encode($e_array) }} });
-
-        // Dispatch/Trigger/Fire the event
-        window.dispatchEvent(event);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Диспатчим кастомное событие, когда Blade-скрипт готов
+            window.dispatchEvent(new CustomEvent('e-order', {
+                detail: {!! json_encode($e_array) !!}
+            }));
+        });
 
     </script>
 @endsection
