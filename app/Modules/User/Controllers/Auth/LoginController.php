@@ -104,45 +104,51 @@ class LoginController extends Controller
         throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
     }
 
-    public function login_registration(Request $request)
+    public function login_registration(Request $request): JsonResponse
     {
-        if (!empty($verify_token = $request['verify_token'])) {
-            if (!$user = User::where('verify_token', $verify_token)->first()) {
-                return \response()->json(['token' => true]); //Неверный токен
+        try {
+            if (!empty($verify_token = $request['verify_token'])) {
+                if (!$user = User::where('verify_token', $verify_token)->first()) {
+                    return \response()->json(['token' => true]); //Неверный токен
+                }
+                $this->service->verify($user->id);
+                $this->guard()->attempt($request->only(['email', 'password']), true);
+                return \response()->json(['login' => true]);
             }
-            $this->service->verify($user->id);
-            $this->guard()->attempt($request->only(['email', 'password']), true);
-            return \response()->json(['login' => true]);
-        }
 
-        //Проверяем Зарегистрирован или нет
-        if (empty(User::where('email', $request['email'])->first())) {
-            try {
-                $this->service->register($request);
-                return \response()->json(['register' => true]);
-            } catch (\Throwable $e) {
-                \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
+
+            //Проверяем Зарегистрирован или нет
+            if (empty(User::where('email', $request['email'])->first())) {
+
+                try {
+                    $this->service->register($request);
+                    return \response()->json(['register' => true]);
+                } catch (\Throwable $e) {
+                    return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
+                }
             }
-        }
-        //Такой email есть
-        $authenticate = $this->guard()->attempt(
-            $request->only(['email', 'password']),
-            true
-        );
-        if ($authenticate) {
-            /** @var User $user */
-            $user = Auth::user(); //Auth::guard('user')->user();
+            //Такой email есть
+            $authenticate = $this->guard()->attempt(
+                $request->only(['email', 'password']),
+                true
+            );
+            if ($authenticate) {
+                /** @var User $user */
+                $user = Auth::user(); //Auth::guard('user')->user();
 
-            if ($user->isWait()) {
-                Auth::logout();
-                return \response()->json(['verification' => true]);
+                if ($user->isWait()) {
+                    Auth::logout();
+                    return \response()->json(['verification' => true]);
+                }
+                return \response()->json(['login' => true]);
+
+            } else { //Неверный пароль
+                return \response()->json(['password' => true]);
             }
-            return \response()->json(['login' => true]);
-
-        } else { //Неверный пароль
-            return \response()->json(['password' => true]);
+            //Нет =>
+        } catch (\Throwable $e) {
+            return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
-        //Нет =>
     }
 
     /**

@@ -79,6 +79,8 @@ import {useStore} from '@Res/store.js'
 import Editor from '@tinymce/tinymce-vue'
 
 const store = useStore();
+
+
 const props = defineProps({
     errors: Object,
     outbox: Object,

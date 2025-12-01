@@ -68,12 +68,7 @@ class PromotionWidgetController extends Controller
 
     public function toggle(PromotionWidget $widget): RedirectResponse
     {
-        if ($widget->isActive()) {
-            $message = 'Виджет акции убран из показа';
-        } else {
-            $message = 'Виджет акции добавлен в показы';
-        }
-        $this->service->toggle($widget);
+        $message = $this->service->toggle($widget);
         return redirect()->back()->with('success', $message);
     }
 

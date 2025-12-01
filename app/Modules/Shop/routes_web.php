@@ -1,8 +1,9 @@
 <?php
 
-
 use App\Modules\Shop\Controllers\CartController;
 use App\Modules\Shop\Controllers\CatalogController;
+use App\Modules\Shop\Controllers\ECommerceController;
+use App\Modules\Shop\Controllers\FeedXMLController;
 use App\Modules\Shop\Controllers\GroupController;
 use App\Modules\Shop\Controllers\OrderController;
 use App\Modules\Shop\Controllers\PageController;
@@ -14,6 +15,12 @@ use App\Modules\Shop\Controllers\SitemapXmlController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', [SitemapXmlController::class, 'index'])->name('sitemap');
+
+Route::get('/feed/{feed}/feed-google.xml', [FeedXMLController::class, 'google'])->name('google');
+Route::get('/feed/{feed}/feed-yandex.yml', [FeedXMLController::class, 'yandex'])->name('yandex');
+Route::post('/e-commerce/', [ECommerceController::class, 'e_commerce'])->name('e-commerce');
+
+
 
 Route::group(
     [

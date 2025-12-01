@@ -63,8 +63,13 @@ class CartPage extends Component
         $this->dispatch('update-item-cart');
     }
 
-    public function del_select()
+    public function del_select(): void
     {
+        $items = $this->cart->get_check_items();
+        foreach ($items as $item) {
+            $this->dispatch('e-cart', product_id: $item['product_id'], e_type: 'remove', quantity: $item['quantity']);
+        }
+
         $this->cart->clear_check();
         $this->dispatch('update-header-cart');
     }

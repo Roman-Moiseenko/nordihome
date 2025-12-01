@@ -17,6 +17,7 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
+        //TODO Возможно удалить
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
@@ -25,8 +26,9 @@ class RedirectIfAuthenticated
                 return redirect('/admin');
             }
 
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+            if (Auth::guard('user')->check()) {
+
+                //return redirect(RouteServiceProvider::HOME);
             }
         }
 

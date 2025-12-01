@@ -77,6 +77,8 @@ import {useStore} from '@Res/store.js'
 import { ElMessageBox } from 'element-plus'
 
 const store = useStore();
+
+
 const props = defineProps({
     items: Array,
     tiny_api: String,

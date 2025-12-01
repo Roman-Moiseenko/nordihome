@@ -7,6 +7,7 @@ use App\Modules\Base\Casts\MetaCast;
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
+use App\Modules\Page\Entity\Renders\RenderPage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,23 +21,13 @@ use Illuminate\Support\Str;
  * @property string $title
  * @property string $template
  * @property string $description
- * @property string $text
- * @property bool $published
- * @property Carbon $published_at
- * @property Meta $meta
  * @property PostCategory $category
  *
  */
-class Post extends Model
+class Post extends RenderPage
 {
     use ImageField, IconField;
-    protected $attributes = [
-        'text' => '',
-        'meta' => '{}',
-    ];
-    protected $casts = [
-        'meta' => MetaCast::class,
-    ];
+
     protected $fillable = [
         'name',
         'slug',
@@ -51,7 +42,7 @@ class Post extends Model
             'slug' => Str::slug($name),
         ]);
     }
-
+/*
     public function published(): void
     {
         if ($this->published_at == null) $this->published_at = now();
@@ -62,15 +53,14 @@ class Post extends Model
     {
         $this->published = false;
     }
-
+*/
     public function category(): BelongsTo
     {
         return $this->belongsTo(PostCategory::class, 'category_id', 'id');
     }
 
-    /**
-     * @throws \Throwable
-     */
+
+    /*
     public function view(): string
     {
         $this->text = Template::renderClasses($this->text);
@@ -88,4 +78,5 @@ class Post extends Model
     {
         return $query->where('published', true);
     }
+*/
 }

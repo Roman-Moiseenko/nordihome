@@ -38,9 +38,6 @@
                 <el-descriptions-item label="Родительская">
                     {{ page.parent_name }}
                 </el-descriptions-item>
-                <el-descriptions-item label="Показывать в меню">
-                    <Active :active="page.menu"/>
-                </el-descriptions-item>
                 <el-descriptions-item label="Шаблон">
                     {{ page.template }}
                 </el-descriptions-item>
@@ -60,6 +57,13 @@
         </el-col>
     </el-row>
     <el-button v-if="!editPage" type="warning" @click="editPage = true">Изменить</el-button>
+
+    <el-link v-if="!editPage" type="info" :underline="false" class="ml-2"
+             :href="route('shop.page.view', {slug: page.slug})"
+             target="_blank">
+        Просмотр
+    </el-link>
+
     <el-row v-if="editPage" :gutter="10">
         <el-col :span="8">
             <el-form v-if="editPage" label-width="auto">
@@ -73,9 +77,6 @@
                     <el-select v-model="form.parent_id" clearable filterable>
                         <el-option v-for="item in pages" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="Показывать в меню">
-                    <el-checkbox v-model="form.menu" :checked="form.menu"/>
                 </el-form-item>
                 <el-form-item label="Шаблон">
                     <el-select v-model="form.template">
@@ -126,6 +127,12 @@
 </template>
 
 <script setup lang="ts">
+/*
+scope.row.published
+             ? route('shop.product.view', {slug: scope.row.slug})
+             : route('shop.product.view-draft', {product: scope.row.id})
+ */
+
 import {defineProps, reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
@@ -133,6 +140,7 @@ import Active from "@Comp/Elements/Active.vue";
 import {ISelectItem} from '@Res/interface.d.ts'
 import UploadImageFile from "@Comp/UploadImageFile.vue";
 import HelpBlock from "@Comp/HelpBlock.vue";
+import {route} from "ziggy-js";
 
 const props = defineProps({
     page: Object,
@@ -145,7 +153,6 @@ const form = reactive({
     name: props.page.name,
     slug: props.page.slug,
     parent_id: props.page.parent_id,
-    menu: props.page.menu,
     template: props.page.template,
     title: props.page.title,
     description: props.page.description,
@@ -180,5 +187,9 @@ function onSelectImage(val: any) {
 function onSelectIcon(val: any) {
     form.clear_icon = val.clear_file
     form.icon = val.file
+}
+
+function onShow() {
+
 }
 </script>

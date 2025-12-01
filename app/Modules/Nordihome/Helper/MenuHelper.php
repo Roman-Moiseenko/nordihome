@@ -14,7 +14,6 @@ class MenuHelper
         $posts = PostCategory::find(1);
         $pages = Page::where('published', true)
             ->where('parent_id', null)
-            ->where('menu', true)
             ->orderBy('sort')
             ->getModels();
         $add_items = [
@@ -30,8 +29,6 @@ class MenuHelper
                 'route' => route('shop.posts.view', $posts->slug),
             ];
         }
-
-
 
         return array_merge(array_map(function (Page $page) {
             return [

@@ -35,4 +35,27 @@ class GalleryRepository
                 ->toArray(),
         ]);
     }
+
+    public function AllImages(Request $request)
+    {
+        /** @var Gallery[] $galleries */
+        $galleries = Gallery::orderBy('name')->getModels();
+        $images = [];
+        foreach ($galleries as $gallery) {
+            $prefix = count($galleries) == 1 ? '' : $gallery->name . '.';
+
+            foreach ($gallery->photos as $photo) {
+
+                $name = !empty($photo->slug)
+                    ? $photo->slug
+                    : (!empty($photo->title) ? $photo->title : $photo->id);
+                $images[] = [
+                    'title' => $prefix . $name,
+                    'value' => $photo->getUploadUrl(),
+                ];
+            }
+
+        }
+        return $images;
+    }
 }

@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import Editor from '@tinymce/tinymce-vue'
-import {defineProps, ref} from "vue";
+import {defineProps, onMounted, ref} from "vue";
 import {Head, router} from "@inertiajs/vue3";
 import PageInfo from "./Block/Info.vue";
 import {useStore} from '@Res/store.js'

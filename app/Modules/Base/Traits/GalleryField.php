@@ -64,7 +64,7 @@ trait GalleryField
         return $this->ImageToData($image, $thumb);
     }
 
-    private function ImageToData(Photo $image, string $thumb = null): array
+    private function ImageToData(Photo|null $image, string $thumb = null): array
     {
         if (is_null($image)) return [
             'src' => '/images/no-image.jpg',

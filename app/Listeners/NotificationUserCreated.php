@@ -3,7 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\UserHasCreated;
-use App\Mail\VerifyMail;
+
+use App\Modules\Mail\Job\SendSystemMail;
+use App\Modules\Mail\Mailable\VerifyMail;
 use Illuminate\Support\Facades\Mail;
 
 class NotificationUserCreated
@@ -21,6 +23,10 @@ class NotificationUserCreated
      */
     public function handle(UserHasCreated $event): void
     {
-        Mail::to($event->user->email)->send(new VerifyMail($event->user));
+
+        SendSystemMail::dispatch($event->user, new VerifyMail($event->user), null, null);
+
+
+        //Mail::to($event->user->email)->send(new VerifyMail($event->user));
     }
 }

@@ -79,6 +79,7 @@ import {UploadUserFile, UploadInstance} from "element-plus";
 import Editor from '@tinymce/tinymce-vue'
 
 const store = useStore();
+
 const props = defineProps({
     errors: Object,
     title: {

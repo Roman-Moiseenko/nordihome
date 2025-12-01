@@ -57,6 +57,7 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-address-book',
             ],
+
             'post-categories' => [
                 'title' => 'Записи',
                 'route_name' => 'admin.page.post-category.index',
@@ -74,6 +75,18 @@ return [
                 'route_name' => 'admin.page.gallery.index',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-images',
+            ],
+            'forms' => [
+                'title' => 'Обратная связь',
+                'route_name' => 'admin.page.widget.form.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-pen-field',
+            ],
+            'seo' => [
+                'title' => 'SEO мета',
+                'route_name' => 'admin.page.seo-meta.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-fill',
             ],
             'cache' => [
                 'title' => 'Кеш страниц',

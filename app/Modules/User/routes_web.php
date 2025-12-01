@@ -1,5 +1,6 @@
 <?php
 //Cabinet - функции кабинета клиента
+use App\Modules\User\Controllers\Auth\LoginController;
 use App\Modules\User\Controllers\Cabinet\CabinetController;
 use App\Modules\User\Controllers\Cabinet\OptionsController;
 use App\Modules\User\Controllers\Cabinet\OrderController;
@@ -73,7 +74,7 @@ Route::group(
         Route::get('/login', function () {
             abort(404);
         });
-        Route::post('/login_register', 'LoginController@login_registration')->name('login_register');
+        Route::any('/login_register', [LoginController::class, 'login_registration'])->name('login_register');
         Route::any('/logout', 'LoginController@logout')->name('logout');
 
         Route::get('/register/verify', 'RegisterController@verify')->name('register.verify');

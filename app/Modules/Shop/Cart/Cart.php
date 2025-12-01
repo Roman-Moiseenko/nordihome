@@ -169,7 +169,7 @@ class Cart
         }
     }
 
-    public function getQuantity(int $product_id): int
+    public function getQuantity(int $product_id): float
     {
         $this->loadItems();
         foreach ($this->items as $current) {
@@ -336,6 +336,21 @@ class Cart
                 $this->remove($item->product->id);
             }
         }
+    }
+    public function get_check_items(): array
+    {
+        $result = [];
+        $this->loadItems();
+        foreach ($this->items as $item) {
+            if ($item->check) {
+                $result[] = [
+                    'product_id' => $item->product->id,
+                    'quantity' => $item->quantity,
+                ];
+
+            }
+        }
+        return $result;
     }
 
     public function check_all(bool $all)

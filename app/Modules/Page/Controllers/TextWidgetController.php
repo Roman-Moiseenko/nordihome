@@ -68,7 +68,7 @@ class TextWidgetController extends Controller
 
     public function destroy(TextWidget $widget): RedirectResponse
     {
-        $this->service->delText($widget);
+        $this->service->delWidget($widget);
         return redirect()->back()->with('success', 'Текстовый виджет удален');
     }
 
@@ -92,12 +92,7 @@ class TextWidgetController extends Controller
 
     public function toggle(TextWidget $widget): RedirectResponse
     {
-        if ($widget->isActive()) {
-            $message = 'Текстовый виджет убран из показа';
-        } else {
-            $message = 'Текстовый виджет добавлен в показы';
-        }
-        $this->service->toggle($widget);
+        $message = $this->service->toggle($widget);
         return redirect()->back()->with('success', $message);
     }
 

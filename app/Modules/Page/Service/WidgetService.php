@@ -35,7 +35,7 @@ abstract class WidgetService
         $widget->delete();
     }
 
-    public function delItem(WidgetItem $item)
+    public function delItem(WidgetItem $item): void
     {
         $item->delete();
         foreach ($item->widget->items as $i => $_item) {
@@ -44,11 +44,15 @@ abstract class WidgetService
         }
     }
 
-    public function toggle(Widget $widget): void
+    public function toggle(Widget $widget): string
     {
+        $message = $widget->isActive() ? 'Виджет убран из показа' : 'Виджет добавлен в показы';
         $widget->active = !$widget->active;
         $widget->save();
+        return $message;
     }
+
+
     public function upItem(WidgetItem $item): void
     {
 

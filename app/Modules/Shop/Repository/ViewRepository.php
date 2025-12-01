@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Repository;
 
 use App\Modules\Base\Helpers\CacheHelper;
+use App\Modules\Page\Entity\MetaTemplate;
 use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Page\Entity\Template;
+use App\Modules\Page\Repository\MetaTemplateRepository;
+use App\Modules\Page\Service\MetaTemplateService;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
@@ -26,10 +29,11 @@ class ViewRepository
     protected string $theme;
     public Web $web;
     private Schema $schema;
+    private MetaTemplateRepository $seo;
 
 
     public function __construct(ShopRepository $repository,
-                                SlugRepository $slugs, Schema $schema)
+                                SlugRepository $slugs, Schema $schema, MetaTemplateRepository $seo)
     {
         $this->repository = $repository;
         $this->slugs = $slugs;
@@ -38,6 +42,7 @@ class ViewRepository
         $this->theme = config('shop.theme');
 
         $this->schema = $schema;
+        $this->seo = $seo;
     }
 
     public function product(string $slug): View
@@ -46,8 +51,10 @@ class ViewRepository
 
         $product = $this->slugs->getProductBySlug($slug);
         if (empty($product) || !$product->isPublished()) abort(404);
-        $title = '';
-        $description = '';
+
+        $meta = $this->seo->seo($product);
+        $title = $meta->title;
+        $description = $meta->description;
 
         $productAttributes = $this->repository->getProdAttributes($product);
         $product = $this->product_view_cache($product);
@@ -128,8 +135,11 @@ class ViewRepository
         $category = $this->slugs->CategoryBySlug($slug);
         $page = $request['page'] ?? 1;
         if (is_null($category)) return abort(404);
-        $title = $category->title;
-        $description = $category->description;
+
+        $meta = $this->seo->seo($category);
+        $title = $meta->title;
+        $description = $meta->description;
+
         $schema = $this->schema_category_cache($category);
 
         if ($this->web->is_category && count($category->children) > 0) {
@@ -197,7 +207,7 @@ class ViewRepository
         $page = $this->slugs->PageBySlug($slug);
 
         if (is_null($page)) abort(404, 'Страница не найдена');
-        return $page->view();
+        return $page->view($this->seo->seoFn());
     }
 
     final public function route(string $blade): string
@@ -341,7 +351,7 @@ class ViewRepository
         /** @var PostCategory $posts */
         $posts = $this->slugs->PostCategoryBySlug($slug);
         if (is_null($posts)) abort(404, 'Страница не найдена');
-        return $posts->view();
+        return $posts->view($this->seo->seoFn());
     }
 
     /**
@@ -352,7 +362,7 @@ class ViewRepository
         /** @var Post $post */
         $post = $this->slugs->PostBySlug($slug);
         if (is_null($post)) abort(404, 'Страница не найдена');
-        return $post->view();
+        return $post->view($this->seo->seoFn());
     }
 
 

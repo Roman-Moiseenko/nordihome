@@ -36,6 +36,7 @@ class RegisterService
             $request['email'],
             $request['password']
         );
+
         event(new UserHasCreated($user));
     }
 
