@@ -22,7 +22,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Диспатчим кастомное событие, когда Blade-скрипт готов
+            // Передаем список товаров из заказа в событие e-commerce
             window.dispatchEvent(new CustomEvent('e-order', {
                 detail: {!! json_encode($e_array) !!}
             }));
