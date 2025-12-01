@@ -179,13 +179,13 @@ window.$ = jQuery;
                 form.addClass('was-validated');
                 return true;
             }
-            $.post(
-                '/login_register',
+            $.post('/login_register',
                 {
                     email: inputEmail.val(),
                     password: inputPassword.val(),
                     verify_token: inputVerify.val()
                 }, function (data) {
+                    console.log(data)
                     common.error(data);
                     $('#token-error').hide();
                     $('#password-error').hide();

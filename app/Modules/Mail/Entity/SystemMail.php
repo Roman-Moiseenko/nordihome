@@ -34,7 +34,6 @@ use Illuminate\Support\Facades\Log;
  */
 class SystemMail extends Model
 {
-    use HasFactory;
 
     protected $attributes = [
         'attachments' => '{}',

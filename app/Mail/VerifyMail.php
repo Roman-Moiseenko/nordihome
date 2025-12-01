@@ -25,6 +25,7 @@ class VerifyMail extends Mailable
     public function __construct(User $user)
     {
         $this->user = $user;
+
     }
 
     /**
@@ -42,8 +43,13 @@ class VerifyMail extends Mailable
      */
     public function content(): Content
     {
+        \Log::info('VerifyMail  Content  ' . $this->user->id);
         return new Content(
             markdown: 'mail.user.verify',
+            with: [
+                'user' => $this->user,
+                'verify_token' => $this->user->verify_token,
+                ]
         );
     }
 
@@ -57,7 +63,7 @@ class VerifyMail extends Mailable
         return [];
     }
 
-    public function build()
+    public function build(): VerifyMail
     {
         //$s = new DkimSigner();
         return $this->subject('Подтверждение')
