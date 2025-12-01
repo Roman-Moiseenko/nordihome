@@ -7,20 +7,16 @@ use App\Http\Controllers\Controller;
 use App\Modules\Product\Entity\Review;
 use Illuminate\Support\Facades\Auth;
 
-class ReviewController extends Controller
+class ReviewController extends AuthCabinetController
 {
-    public function __construct()
-    {
-        $this->middleware(['auth:user']);
-    }
 
     public function index()
     {
-        return view('cabinet.review.index');
+        return view($this->route('cabinet.review.index'));
     }
 
     public function show(Review $review)
     {
-        return view('cabinet.review.show', compact('review'));
+        return view($this->route('cabinet.review.show'), compact('review'));
     }
 }

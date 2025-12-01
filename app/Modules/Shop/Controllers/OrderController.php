@@ -53,9 +53,8 @@ class OrderController extends ShopController
         $this->paymentRepository = $paymentRepository;
     }
 
-    public function create(Request $request)
+    public function create(Request $request): \Illuminate\View\View
     {
-
 
         if (Auth::guard('user')->check()) {
             $user_id = Auth::guard('user')->user()->id;
@@ -78,14 +77,23 @@ class OrderController extends ShopController
         return view($this->route('order.create'), compact('cart', 'payments',
             'storages', 'companies', 'delivery_cost', 'preorder'));
 
-
     }
 
     public function create_cart(Request $request)
     {
+        $order = $this->service->create_cart($request);
+        //Для eCommerce - Вынести в
+        $e_array = [];
+        foreach ($order->items as $item) {
+            $e_array[] = [
+                'id' => $item->product->id,
+                'quantity' => $item->quantity,
+            ];
+        }
 
-        $this->service->create_cart($request);
-        return redirect()->route('shop.home')->with('success', 'Ваш заказ успешно создан!');
+        return view($this->route('order.new'), compact('order', 'e_array'))->with('success', 'Ваш заказ успешно создан!');
+
+       // return redirect()->route('order.new', compact('array'))->with('success', 'Ваш заказ успешно создан!');
     }
 
     public function create_parser(Request $request)
@@ -107,9 +115,8 @@ class OrderController extends ShopController
 
     public function create_click(Request $request)
     {
-
-
         $order = $this->service->create_click($request);
+
         //->route('cabinet.order.view', $order)
         return redirect()->back()->with('success', 'Ваш заказ успешно создан!');
     }
@@ -129,7 +136,14 @@ class OrderController extends ShopController
     public function store(Request $request)
     {
         $order = $this->service->create($request);
-
+        //Для eCommerce - Вынести в
+        $e_array = [];
+        foreach ($order->items as $item) {
+            $e_array[] = [
+                'id' => $item->product->id,
+                'quantity' => $item->quantity,
+            ];
+        }
         return redirect()->route('cabinet.order.view', $order)->with('success', 'Ваш заказ успешно создан!');
     }
     /*

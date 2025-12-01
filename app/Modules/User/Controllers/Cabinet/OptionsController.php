@@ -13,21 +13,21 @@ use Illuminate\Support\Facades\Auth;
 use function response;
 use function view;
 
-class OptionsController extends Controller
+class OptionsController extends AuthCabinetController
 {
 
     private SubscriptionService $service;
 
     public function __construct(SubscriptionService $service)
     {
-        $this->middleware('auth:user');
+        parent::__construct();
         $this->service = $service;
     }
 
     public function index(Request $request)
     {
         $subscriptions = Subscription::where('published', true)->get();
-        return view('cabinet.options', compact('subscriptions'));
+        return view($this->route('cabinet.options'), compact('subscriptions'));
     }
 
     //AJAX

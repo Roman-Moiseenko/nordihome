@@ -11,20 +11,20 @@ use Illuminate\Http\Request;
 use function response;
 use function view;
 
-class CabinetController extends Controller
+class CabinetController extends AuthCabinetController
 {
 
     private UserService $service;
 
     public function __construct(UserService $service)
     {
-        $this->middleware('auth:user');
+        parent::__construct();
         $this->service = $service;
     }
 
     public function view(User $user)
     {
-        return view('cabinet.view');
+        return view($this->route('cabinet.view'));
     }
 
     public function profile(User $user)

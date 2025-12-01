@@ -110,9 +110,9 @@ class OrderService
         return Order::register($user_id, $type, $trader_id);
     }
 
-    public function create_cart(Request $request): void
+    public function create_cart(Request $request): Order
     {
-        DB::transaction(function () use ($request) {
+        DB::transaction(function () use ($request, &$order) {
             $items = $this->cart->getItems();
             if (count($items) == 0) throw new \DomainException('Нет товаров в корзине!');
             $email = $request->string('email')->trim()->value();
@@ -145,6 +145,7 @@ class OrderService
 
             event(new OrderHasCreated($order));
         });
+        return $order;
     }
 
 

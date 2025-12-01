@@ -1,6 +1,10 @@
 <?php
 //Cabinet - функции кабинета клиента
+use App\Modules\User\Controllers\Auth\ConfirmPasswordController;
+use App\Modules\User\Controllers\Auth\ForgotPasswordController;
 use App\Modules\User\Controllers\Auth\LoginController;
+use App\Modules\User\Controllers\Auth\RegisterController;
+use App\Modules\User\Controllers\Auth\ResetPasswordController;
 use App\Modules\User\Controllers\Cabinet\CabinetController;
 use App\Modules\User\Controllers\Cabinet\OptionsController;
 use App\Modules\User\Controllers\Cabinet\OrderController;
@@ -70,23 +74,23 @@ Route::group(
     ],
     function () {
         //Route::get('/login', 'LoginController@showLoginForm')->name('login');
-        Route::post('/login', 'LoginController@login')->name('login');
+        Route::post('/login', [LoginController::class, 'login'])->name('login');
         Route::get('/login', function () {
             abort(404);
         });
         Route::any('/login_register', [LoginController::class, 'login_registration'])->name('login_register');
-        Route::any('/logout', 'LoginController@logout')->name('logout');
+        Route::any('/logout', [LoginController::class, 'logout'])->name('logout');
 
-        Route::get('/register/verify', 'RegisterController@verify')->name('register.verify');
-        Route::get('/register', 'RegisterController@showRegistrationForm')->name('register');
-        Route::post('/register', 'RegisterController@register');
+        Route::get('/register/verify', [RegisterController::class, 'verify'])->name('register.verify');
+        Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+        Route::post('/register', [RegisterController::class, 'register']);
 
 
-        Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
-        Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
-        Route::any('/password/request', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
-        Route::get('/password/confirm', 'ConfirmPasswordController@showConfirmForm')->name('password.confirm');
-        Route::post('/password/confirm', 'ConfirmPasswordController@confirm');
-        Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+        Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+        Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+        Route::any('/password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+        Route::get('/password/confirm', [ConfirmPasswordController::class, 'showConfirmForm'])->name('password.confirm');
+        Route::post('/password/confirm', [ConfirmPasswordController::class, 'confirm']);
+        Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     }
 );

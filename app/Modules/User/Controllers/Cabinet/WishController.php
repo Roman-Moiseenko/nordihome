@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Auth;
 use function response;
 use function view;
 
-class WishController extends Controller
+class WishController extends AuthCabinetController
 {
     private WishService $service;
     private UserRepository $repository;
 
     public function __construct(WishService $service, UserRepository $repository)
     {
+        parent::__construct();
         $this->middleware(['auth:user'])->except('get');
         $this->service = $service;
         $this->repository = $repository;
@@ -30,7 +31,7 @@ class WishController extends Controller
         $products = Product::whereHas('wishes', function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
         })->get();
-        return view('cabinet.wish', compact('products'));
+        return view($this->route('cabinet.wish'), compact('products'));
     }
 
     //Ajax
