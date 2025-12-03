@@ -60,11 +60,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="heading f-w_600 f-z_23 m-b_20">ФОРМА ОБРАТНОЙ СВЯЗИ</div>
-                <div>По вопросам сотрудничества: <a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a></div>
-                <div class="m-t_30"><b>тут форма обратной связи</b></div>
-            </div>
         </div>
     </div>
 </div>
