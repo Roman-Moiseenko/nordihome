@@ -16,10 +16,7 @@
     */
     /** @var \App\Modules\Page\Entity\TextWidget $widget */
 @endphp
-<div class="block-contacts p-t_50 p-b_50" id="contacts-tab">
-    <div class="container-xl">
-        <div class="row">
-            <div class="col-lg-6">
+<div id="contacts-tab"></div>
                 <div class="heading f-w_600 f-z_23 m-b_20">КОНТАКТЫ</div>
                 <div class="m-b_30">Мы всегда рады ответить на все Ваши вопросы,<br>принять пожелания и предложения по работе нашего сервиса</div>
                 <div class="contacts-items">
@@ -59,8 +56,5 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
