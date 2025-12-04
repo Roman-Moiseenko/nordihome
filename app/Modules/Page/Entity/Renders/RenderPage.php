@@ -74,14 +74,18 @@ abstract class RenderPage extends Model
     private function renderTags(string $text): string
     {
         //<div>
-        $pattern = '/\[div=\"(.+)\"\]/';
+        //$pattern = '/\[div=\"(.+?)\"\]/su';
+        $pattern = '/\[div=\"(.+?)\"(.*?)\]/su';
         preg_match_all($pattern, $text, $matches);
+
         $replaces = $matches[0]; //шот-коды вида [div="class"] (массив)
         $classes = $matches[1]; //значение classes
+        $add = $matches[2];
+
         foreach ($classes as $key => $class) {
             $text = str_replace(
                 $replaces[$key],
-                '<div class="' . $class . '">',
+                '<div class="' . $class . '"' . $add[$key] . '>',
                 $text);
         }
         //</div>

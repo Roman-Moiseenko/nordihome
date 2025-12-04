@@ -22,7 +22,10 @@ class ParserCommand extends Command
     public function handle(ParserIkea $parserIkea): void
     {
 
-        $code = $this->ask('Артикул товара');
+        //$code = $this->ask('Артикул товара');
+
+        $code = '194.948.41';
+    //    $code = '40178888';
 
         $product = $parserIkea->findProduct($code);
         $this->info(json_encode($product));

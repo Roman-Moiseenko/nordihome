@@ -6,6 +6,7 @@ namespace App\Modules\Parser\Service;
 use App\Jobs\LoadingImageProduct;
 use App\Modules\Base\Entity\Package;
 use App\Modules\Base\Service\GoogleTranslateForFree;
+use App\Modules\Base\Service\YandexTranslate;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
@@ -169,7 +170,7 @@ class ParserIkea extends ParserAbstract
         $data = $this->parsingDataByUrl($url);
         //Создаем товар
         if (is_null($product = Product::whereCode($code)->first())) {
-          //  Log::info('Создаем товар');
+            //  Log::info('Создаем товар');
             $product = Product::register($name, $this->toCode($code), $main_category_id);
             $product->barcode = '';
             $product->name_print = $product->name;
@@ -184,7 +185,7 @@ class ParserIkea extends ParserAbstract
                 $product->packages->add($item);
             }
             $product->save();
-           // Log::info('Сохраняем товар');
+            // Log::info('Сохраняем товар');
             //Проверяем есть ли товары в составе
             foreach ($data['composite'] as $composite) {
                 $_prod = $this->findProduct($composite['code']);
@@ -245,14 +246,19 @@ class ParserIkea extends ParserAbstract
         $json_product = $this->httpPage->getPage($url, '_cache');
 
         $_array = json_decode($json_product, true);
-
+        //dd($_array);
         $_result = [];
         if ($_array == null)
             throw new \DomainException('Неверный артикул или ссылка');
         foreach ($_array['availabilities'] as $item) {
             if (isset($item['availableForCashCarry'])) {
                 $_store = (int)$item['classUnitKey']['classUnitCode']; //Номер склада
-                $_quantity = (int)$item['buyingOption']['cashCarry']['availability']['quantity']; //Кол-во на складе
+                //dd($item);
+                if (isset($item['buyingOption']['cashCarry']['availability'])) {
+                    $_quantity = (int)$item['buyingOption']['cashCarry']['availability']['quantity']; //Кол-во на складе
+                } else {
+                    $_quantity = 0;
+                }
                 if ($_store != 0) $_result[$_store] = $_quantity;
             }
         }
@@ -303,7 +309,7 @@ class ParserIkea extends ParserAbstract
             return null;
         }
         $_array = json_decode($json_product, true);
-      //  Log::info($json_product);
+        //  Log::info($json_product);
         if ($_array == null) {
             Log::error('Икеа Парсинг ' . $search . ' null');
             return null;
@@ -317,18 +323,18 @@ class ParserIkea extends ParserAbstract
         return $this->createProduct($item);
     }
 
-    public function parsingDataByUrl(string $url): array|null
+    public function parsingDataByUrlOld(string $url): array|null
     {
         //Сканируем страницу для остальных параметров
         $pageProduct = $this->httpPage->getPage($url);
         preg_match_all('#data-hydration-props="(.+?)"#su', $pageProduct, $res);
+
         $_res = $res[1][0];
         $_res = str_replace('&quot;', '"', $_res);
         $_data = json_decode($_res, true);
-       // Log::info($_res);
+
         ////Определяем есть ли составные артикулы
         $_sub = $_data['stockcheckSection']['subProducts']; //availabilityHeaderSection
-
         $composite = [];
         if (count($_sub) != 0) {
             foreach ($_sub as $_item) {
@@ -373,6 +379,62 @@ class ParserIkea extends ParserAbstract
             'packages' => $packages,
             'pack' => $pack,
             'composite' => $composite,
+        ];
+    }
+
+    public function parsingDataByUrl(string $url): array|null
+    {
+        $pageProduct = $this->httpPage->getPage($url);
+        preg_match_all('#<script type="text\/hydrate">(.+?)<\/script>#su', $pageProduct, $res);
+        $_res = $res[1][0];
+        $_data = json_decode($_res, true);
+        $dataProduct = $_data["pageProps"]["clientProduct"];
+        //Составные товары
+        $composite = array_map(function ($subProduct) {
+            return [
+                'code' => $this->toCode($subProduct['itemNo']),
+                'quantity' => $subProduct['quantity'],
+            ];
+        }, $dataProduct['subProducts'] ?? []);
+
+        //Пачки товара
+        $packaging = $dataProduct['packaging'];
+        $pack = $packaging['numberOfPackages'];
+        $_packages = $packaging['packages'];
+        $packages = [];
+        foreach ($_packages as $_package) {
+            if(!empty($measurements = $_package['measurements'])) {
+                $_quantity = $_package['quantity']['value'];
+                foreach ($measurements as $measurement) { //Если товар в 1 пачке разбит на несколько
+                    $packages[] = Package::create(
+                        $this->toHeight($measurement),
+                        $this->toWidth($measurement),
+                        $this->toLength($measurement),
+                        $this->toWeight($measurement),
+                        $_quantity,
+                    );
+                }
+            }
+        }
+
+        $description = $dataProduct['description'] .
+            (empty($dataProduct['itemMeasureReferenceText']) ? '' : ', ' . $dataProduct['itemMeasureReferenceText']);
+        //$description = YandexTranslate::translate($description);
+
+        $images = [];
+        $_list_images = $dataProduct['mediaList']; //$_data['mediaGrid']['fullMediaList']
+        foreach ($_list_images as $item) {
+            if ($item['type'] == 'image' /* && $item['content']['type'] != 'MAIN_PRODUCT_IMAGE'*/ ) //Возможно разблокировать
+                $images[] = $item['content']['url'];
+        }
+
+
+        return [
+            'description' => $description,
+            'images' => $images,
+            'packages' => $packages,
+            'pack' => $pack, //
+            'composite' => $composite, //
         ];
     }
 
