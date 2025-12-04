@@ -1,0 +1,1072 @@
+{
+    "pageProps": {
+        "clientConfig": {
+            "apiCountry": "pl",
+            "apiLanguage": "pl",
+            "ciaApiBaseUrl": "https://api.salesitem.ingka.com",
+            "ciaApiClientKey": "ef382663-a2a5-40d4-8afe-f0634821c0ed",
+            "cmaApiBaseUrl": "https://cma.ingka.com/cma",
+            "cmaApiClientKey": "GnJEuqjAnY3vEeZQvaoCudpJewgGq00D",
+            "contactUsUrl": "https://www.ikea.com/pl/pl/customer-service/contact-us/",
+            "country": "pl",
+            "dateFormat": {
+                "customDateFormat": "dd mmm, yyyy",
+                "customTimeFormat": "HH:MM",
+                "customStockCheckDateFormat": "dd.mm.yyyy",
+                "customStockCheckTimeFormat": "'o godzinie' HH:MM",
+                "translations": {
+                    "dayNames": [
+                        "niedz.",
+                        "pon.",
+                        "wt.",
+                        "śr.",
+                        "czw.",
+                        "pt.",
+                        "sob.",
+                        "niedziela",
+                        "poniedziałek",
+                        "wtorek",
+                        "środa",
+                        "czwartek",
+                        "piątek",
+                        "sobota"
+                    ],
+                    "monthNames": [
+                        "sty",
+                        "lut",
+                        "mar",
+                        "kwi",
+                        "maj",
+                        "cze",
+                        "lip",
+                        "sie",
+                        "wrz",
+                        "paź",
+                        "lis",
+                        "gru",
+                        "stycznia",
+                        "lutego",
+                        "marca",
+                        "kwietnia",
+                        "maja",
+                        "czerwca",
+                        "lipca",
+                        "sierpnia",
+                        "września",
+                        "października",
+                        "listopada",
+                        "grudnia"
+                    ],
+                    "timeNames": [
+                        "AM",
+                        "PM"
+                    ]
+                }
+            },
+            "decimalSeparator": ".",
+            "disableECommerce": false,
+            "disableStockCheckSection": false,
+            "enableAsIsOnline": true,
+            "enableClickAndCollectPrice": false,
+            "enableDeliveryPrice": false,
+            "enableDeliveryTime": false,
+            "enableFinancialServiceFragment": false,
+            "enableFoodAvailability": true,
+            "enableImperialDistance": false,
+            "enableMovInformation": false,
+            "enableMoreWaysToPay": false,
+            "enableProductCardApi": false,
+            "enableQuestionsAndAnswers": false,
+            "enableRegionalAvailability": true,
+            "enableZipIn": true,
+            "favouritesClientId": "46673edd-4370-40db-a2cd-c307e6055029",
+            "homeSmartPolicyUrl": "",
+            "locale": "pl-PL",
+            "priceFormat": {
+                "priceFormatter": "0[ ]0[,]?00",
+                "currencySuffix": "",
+                "currencyPrefix": "",
+                "currencySuffixZeroDecimals": ",-"
+            },
+            "privacyPolicyUrl": "https://www.ikea.com/pl/pl/customer-service/privacy-policy/",
+            "shortDateFormat": "dd mmm, yyyy",
+            "siteBaseUrl": "https://www.ikea.com",
+            "siteFolder": "pl/pl",
+            "stockNotificationApiBaseUrl": "https://api.salesitem.ingka.com/notifications/signup",
+            "useNewFinancialFragments": false,
+            "useSentry": true,
+            "useSuggestedStoresResource": false,
+            "textDirection": "ltr"
+        },
+        "clientProduct": {
+            "currencyCode": "PLN",
+            "description": "Taboret ze schodkiem, biały",
+            "isCustomMade": false,
+            "isFood": false,
+            "isServerOnlineSellable": true,
+            "itemMeasureReferenceText": "50 cm",
+            "itemNo": "40178888",
+            "mediaList": [
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "To zdjęcie przedstawia stołek BEKVĘM, w kolorze białym, wykonany z litego drewna osikowego, o prostokątnym kształcie z dwoma stopniami i płaskim blatem.",
+                        "id": "0122140_PE278505",
+                        "imageFileName": "0122140_PE278505_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg",
+                        "type": "MAIN_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Biały stołek BEKVÄM obok szarych szafek. Zwarte, stabilne drewno osikowe, łatwo się porusza.",
+                        "id": "1214005_PE911460",
+                        "imageFileName": "1214005_PE911460_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1214005_pe911460_s5.jpg",
+                        "type": "CONTEXT_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                        "id": "1514758_PH199894",
+                        "imageFileName": "1514758_PH199894_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514758_ph199894_s5.jpg",
+                        "type": "IMPORTED_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                        "id": "1514756_PH206391",
+                        "imageFileName": "1514756_PH206391_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514756_ph206391_s5.jpg",
+                        "type": "IMPORTED_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                        "id": "1514757_PH206695",
+                        "imageFileName": "1514757_PH206695_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514757_ph206695_s5.jpg",
+                        "type": "IMPORTED_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                        "id": "1514769_PH203418",
+                        "imageFileName": "1514769_PH203418_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514769_ph203418_s5.jpg",
+                        "type": "IMPORTED_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                        "id": "1514762_PH206684",
+                        "imageFileName": "1514762_PH206684_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514762_ph206684_s5.jpg",
+                        "type": "IMPORTED_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                        "id": "0810583_PH148737",
+                        "imageFileName": "0810583_PH148737_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0810583_ph148737_s5.jpg",
+                        "type": "IMPORTED_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
+                        "id": "1214004_PE911461",
+                        "imageFileName": "1214004_PE911461_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1214004_pe911461_s5.jpg",
+                        "type": "CONTEXT_PRODUCT_IMAGE"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Ilustracja z wymiarami dla produktu: BEKVÄM.",
+                        "id": "1439317_PE985274",
+                        "imageFileName": "1439317_PE985274_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1439317_pe985274_s5.jpg",
+                        "type": "MEASUREMENT_ILLUSTRATION"
+                    }
+                }
+            ],
+            "name": "BEKVÄM",
+            "prefixedProductId": "40178888",
+            "price": 79.99,
+            "showAsNonSellableProduct": false,
+            "type": "ART",
+            "visibleItemNo": "401.788.88",
+            "ratingProps": {
+                "rating": 4.8,
+                "label": "(276)",
+                "ariaLabel": "Opinia: 4.8 na 5 gwiazdki. Recenzje ogółem: 276"
+            },
+            "reviewCount": 276,
+            "packaging": {
+                "numberOfPackages": 1,
+                "packages": [
+                    {
+                        "name": "BEKVÄM",
+                        "typeName": "Taboret ze schodkiem",
+                        "itemNo": "40178888",
+                        "articleNumber": {
+                            "label": "Numer artykułu",
+                            "value": "401.788.88"
+                        },
+                        "measurements": [
+                            [
+                                {
+                                    "label": "Szerokość",
+                                    "type": "width",
+                                    "text": "39 cm",
+                                    "value": 39
+                                },
+                                {
+                                    "label": "Wysokość",
+                                    "type": "height",
+                                    "text": "7 cm",
+                                    "value": 7
+                                },
+                                {
+                                    "label": "Długość",
+                                    "type": "length",
+                                    "text": "50 cm",
+                                    "value": 50
+                                },
+                                {
+                                    "label": "Waga",
+                                    "type": "weight",
+                                    "text": "3.37 kg",
+                                    "value": 3.37
+                                }
+                            ]
+                        ],
+                        "quantity": {
+                            "label": "Paczka(i)",
+                            "value": 1
+                        },
+                        "multiPackDisclaimerText": null
+                    }
+                ],
+                "maxMeasurements": {
+                    "weightText": "3.37 kg",
+                    "widthText": "39 cm",
+                    "lengthText": "50 cm",
+                    "heightText": "7 cm",
+                    "diameterText": ""
+                }
+            },
+            "rating": 4.8
+        },
+        "clientTranslations": {
+            "A11Y_GALLERY_VIDEO_TRANSCRIPT_BUTTON": "Pokaż transkrypcję",
+            "AVAILABILITY_LOADING_PLACEHOLDER": "Sprawdzanie dostępności...",
+            "CHANGE_STORE_BUTTON_LABEL": "Zmień sklep",
+            "CLICK_AND_COLLECT_AVAILABLE_BASIC": "Dostępne",
+            "CLICK_AND_COLLECT_NOT_SOLD_BASIC": "Produkt niedostępny",
+            "CLICK_AND_COLLECT_UNAVAILABLE_BASIC": "Chwilowo niedostępne",
+            "COMMON_SEE_OPTIONS_AT_CHECKOUT": "Zobacz opcje dostępne przy składaniu zamówienia",
+            "CUSTOM_MADE_ALTERNATIVE_OPTIONS_MODAL_MESSAGE": "Wykonaj stosowne pomiary powierzchni lub przygotuj swój projekt kuchni i odwiedź wybrany sklep IKEA, gdzie nasz specjalista pomoże Ci złożyć zamówienie.",
+            "CUSTOM_MADE_MODAL_BUTTON_LABEL": "Skontaktuj się z nami",
+            "CUSTOM_MADE_MODAL_MESSAGE": "Ten produkt jest wykonywany na zamówienie zgodnie z dostarczonymi wymiarami.",
+            "CUSTOM_MADE_SECONDARY_TEXT": "Ten produkt jest wykonywany na zamówienie. Kliknij, aby dowiedzieć się więcej.",
+            "CUSTOM_MADE": "Skontaktuj się z nami",
+            "DELIVERY_AVAILABLE_BASIC": "Dostępne",
+            "DELIVERY_CHECK_AVAILABILITY_BASIC": "Sprawdź dostępność",
+            "DELIVERY_CURRENTLY_LIMITED_LARGE_ORDERS_BASIC": "Chwilowe ograniczenia w dostawie",
+            "DELIVERY_CURRENTLY_NOT_SOLD_BASIC": "Obecnie niesprzedawane",
+            "DELIVERY_CURRENTLY_UNAVAILABLE_BASIC": "Chwilowo niedostępne",
+            "DELIVERY_NO_INFO_BASIC": "Informacja obecnie niedostępna. Zweryfikuj poprawność kodu pocztowego.",
+            "DELIVERY_NOT_POSSIBLE_BASIC": "Niedostępna",
+            "DELIVERY_NOT_SOLD_BASIC": "Produkt niedostępny",
+            "DELIVERY_PARTS_OF_SPR_BASIC": "Dostępne: {countInStock} z {countAll} części",
+            "FIND_ALL_OPTIONS_AT_CHECKOUT_SECONDARY_TEXT": "Zobacz opcje dostępne przy składaniu zamówienia",
+            "FOOD_ITEMS": "Naszych produktów spożywczych nie można kupić online. Zapraszamy do naszych sklepów w celu sprawdzenia dostępności.",
+            "GALLERY_VIDEO_TRANSCRIPT_HIDE_BUTTON": "Ukryj transkrypcję",
+            "GALLERY_VIDEO_TRANSCRIPT_TITLE": "Transkrypcja filmu",
+            "KEY_FACTS_ARIA_LABEL": "Cechy produktu",
+            "MEDIA_GRID_DESCRIPTION": "{counter} {productName} obrazy",
+            "MEDIA_GRID_SKIP_IMAGES": "Pomiń zdjęcia",
+            "MOV_DELIVERY_DISCLAIMER": "Wysyłki z zamówieniem {movThreshold}",
+            "MOV_TERMSCONDITIONS_MODAL_CONTENT_1": "Aby skorzystać z dostawy, w Twoim koszyku muszą znaleźć się produkty o wartości co najmniej {movThreshold}, już po zastosowaniu zniżek, kredytów lub ofert promocyjnych. Zakupy kart podarunkowych, podatki, opłaty za wysyłkę i dostawę, opłaty za montaż lub inne opłaty serwisowe nie wliczają się do minimalnej kwoty zamówienia ({movThreshold}).",
+            "MOV_TERMSCONDITIONS_MODAL_CONTENT_2": "Niewiele Ci brakuje, aby spełnić warunki? Po prostu dodaj więcej produktów lub zwiększ ich liczbę w koszyku. Możesz też nie zwracać uwagi na minimalną kwotę i zdecydować się na odbiór osobisty (jeśli jest dostępny).",
+            "MOV_TERMSCONDITIONS_MODAL_LINK": "Warunki i postanowienia",
+            "MOV_TERMSCONDITIONS_MODAL_TITLE": "Minimalna kwota zamówienia: {movThreshold}​",
+            "PIP_A11Y_PRODUCT_GALLERY_IMAGE_COUNT": "Wybierz {thumbnailPosition} z {thumbnailCount} zdjęć produktu",
+            "PIP_A11Y_PRODUCT_GALLERY_IMAGE": "Wybierz zdjęcie produktu",
+            "PIP_A11Y_PRODUCT_GALLERY_SHOW_3D": "Pokaż widok 3D",
+            "PIP_A11Y_PRODUCT_GALLERY_SHOW_ALL_MEDIA": "Pokaż wszystkie zdjęcia, otwórz widok.",
+            "PIP_A11Y_PRODUCT_GALLERY_SHOW_NEXT_IMAGE": "Pokaż następne zdjęcie",
+            "PIP_A11Y_PRODUCT_GALLERY_SHOW_PREVIOUS_IMAGE": "Pokaż poprzednie zdjęcie",
+            "PIP_A11Y_PRODUCT_GALLERY_VIDEO_COUNT": "Wybierz {thumbnailVideoPosition} z {thumbnailVideoCount} filmów o produkcie",
+            "PIP_A11Y_PRODUCT_GALLERY_VIDEO": "Wybierz film o produkcie",
+            "PIP_A11Y_STORE_LIST_CLEAR_SEARCH": "Wyczyść pole",
+            "PIP_A11Y_STORE_LIST_SEARCH_STORE": "Wyszukaj sklepy",
+            "PIP_ADD_TO_CART_CURRENTLY_NOT_SOLD_ONLINE": "Obecnie nie jest sprzedawany online",
+            "PIP_ADD_TO_CART_NOT_SOLD": "Produkt wycofany ze sprzedaży",
+            "PIP_ADD_TO_CART_ONLY_SOLD_IN_STORE": "Dostępne tylko stacjonarnie",
+            "PIP_ADD_TO_CART_SOLD_OUT_ONLINE": "Wyprzedane online",
+            "PIP_ADD_TO_CART_SOLD_OUT": "Wyprzedane",
+            "PIP_ADD_TO_CART_UNAVAILABLE_ONLINE_FOR_SELECTED_AREAS": "Niedostępne online w wybranych lokalizacjach",
+            "PIP_ADD_TO_CART": "Dodaj do koszyka",
+            "PIP_ADD_TO_IGIFT": "Dodaj do listy prezentów",
+            "PIP_ADD_X_TO_CART": "Dodaj {productCount} szt. do koszyka",
+            "PIP_ADDED_TO_CART": "Dodano",
+            "PIP_ARIA_LABEL_TEXT_OPENS_IN_A_NEW_TAB": "{text} (otwiera się w nowej zakładce)",
+            "PIP_BUY_MODULE_ON_DISPLAY": "Na ekspozycji w sklepie",
+            "PIP_COLLECT_FROM_PRICE_MODAL": "Od {price}",
+            "PIP_COLLECT_PRICE_FREE_MODAL": "Bezpłatne",
+            "PIP_DELIVERY_HEADING_REGIONAL": "Dostawa do twojej okolicy",
+            "PIP_DELIVERY_HEADING_ZIP_CODE": "Dostawa na adres z kodem pocztowym {zipCode}",
+            "PIP_DELIVERY_HEADING": "Dostawa",
+            "PIP_DELIVERY_PRICE_FREE": "Bezpłatnie",
+            "PIP_DELIVERY_PRICE_PARCEL_FROM_PUP": "Od {price} w najbliższym punkcie odbioru",
+            "PIP_DELIVERY_PRICE": "Od {price}",
+            "PIP_DELIVERY_REGIONAL_DISCLOSURE_CTA": "wpisz swój kod pocztowy",
+            "PIP_DELIVERY_REGIONAL_DISCLOSURE": "Możliwość dostawy została określona na podstawie twojej lokalizacji. Aby uzyskać dokładniejsze informacje, {enterPostcodeLinkText}",
+            "PIP_DELIVERY_TIME": "Przewidywana dostępność w okresie od {fromDate} do {toDate}",
+            "PIP_ECO_WEEE_FEE_EXCLUDE": "",
+            "PIP_ECO_WEEE_FEE_LINK_TEXT": "",
+            "PIP_HIGHLIGHTED_REVIEWS_AVERAGE_RATING": "Średnia ocena",
+            "PIP_HIGHLIGHTED_REVIEWS_CTA": "Pokaż wszystkie opinie",
+            "PIP_HIGHLIGHTED_REVIEWS_HEADING": "Opinie klientów",
+            "PIP_HIGHLIGHTED_REVIEWS_TOTAL": "Opinie",
+            "PIP_HOME_SMART_POLICY_LINK_ARIA_LABEL": "Zasady Inteligentnego Domu",
+            "PIP_HOW_TO_GET_IT": "Możliwości zakupu",
+            "PIP_KEY_FACT_MODAL_TITLE": "Najważniejsze informacje",
+            "PIP_MOQ_DISCLOSURE": "Minimalna liczba zamawianych sztuk: {moQuantity}",
+            "PIP_MOQ_PRICE_LABEL": "Minimalna liczba zamawianych sztuk: {moQuantity}",
+            "PIP_MORE_WAYS_TO_PAY_CHECKING_STATUS": "Sprawdzanie sposobów płatności...",
+            "PIP_MORE_WAYS_TO_PAY": "Więcej metod płatności",
+            "PIP_MULTIPLE_PACKAGES": "{numberOfPackages} szt.",
+            "PIP_NEAREST_STORES_LABEL_NO_DISTANCE_SINGLE": "Produkt {productName} jest dostępny w jednym sklepie w twojej okolicy",
+            "PIP_NEAREST_STORES_LABEL_NO_DISTANCE": "Produkt {productName} jest dostępny w {storeCount} sklepach w twojej okolicy",
+            "PIP_NO_JAVASCRIPT": "Musisz włączyć obsługę JavaScript aby robić zakupy na IKEA.com",
+            "PIP_ONE_PACKAGE": "1 paczka",
+            "PIP_PLACE_ORDER_MODAL_MESSAGE": "Odwiedź nasz sklep, by wypróbować ten lub podobny produkt. Pracownik IKEA może pomóc Ci złożyć zamówienie.",
+            "PIP_PRODUCT_DETAILS_MATERIAL": "Materiały",
+            "PIP_PRODUCT_GALLERY_MODAL_TAB_ALL_MEDIA": "Wszystkie media",
+            "PIP_PRODUCT_GALLERY_MODAL_TAB_MEASUREMENT": "Wymiar",
+            "PIP_PRODUCT_GALLERY_MODAL_TAB_VIDEO": "Wideo",
+            "PIP_PRODUCT_GALLERY_NO_IMAGE": "Wkrótce tu będzie zdjęcie",
+            "PIP_PRODUCT_GALLERY_VIDEO_HEADING_ASSEMBLY_INSTRUCTIONS": "Instrukcja montażu",
+            "PIP_PRODUCT_GALLERY_VIDEO_HEADING_FEATURES_AND_USAGE": "Cechy i użytkowanie",
+            "PIP_QUESTIONS_AND_ANSWERS": "Pytania i odpowiedzi",
+            "PIP_RECOMMEND_MUST_BE_COMPLETED_WITH": "Pamiętaj o",
+            "PIP_REMOVE_FROM_IGIFT": "Usuń z listy prezentów",
+            "PIP_REMOVE_FROM_SHOPPING_LIST": "Usuń z listy zakupowej",
+            "PIP_SAVE_TO_SHOPPING_LIST": "Dodaj do listy zakupów",
+            "PIP_SAVED_TO_SHOPPING_LIST": "Zapisane",
+            "PIP_SERVICES_SHELF_GENERIC_LINK": "Dowiedz się więcej",
+            "PIP_SOLDOUT_SIMILAR_PRODUCTS_PROMOTING": "Poznaj produkty podobne do {productName} ",
+            "PIP_STOCK_CHECK_HEADING": "W magazynie",
+            "PIP_STOCK_LINK_CHECK_OTHER_IKEA_STORES": "Sprawdź w innych sklepach IKEA",
+            "PIP_STOCK_NOTIFICATION_BUTTON_TEXT": "Wyślij mi powiadomienie",
+            "PIP_STOCK_NOTIFICATION_CONTACT_TYPE_LABEL": "Jak mamy cię powiadomić?",
+            "PIP_STOCK_NOTIFICATION_EMAIL_LABEL": "Wpisz swój adres e-mail",
+            "PIP_STOCK_NOTIFICATION_ENTER_VALID_EMAIL": "Podaj swój adres e-mail",
+            "PIP_STOCK_NOTIFICATION_ENTER_VALID_PHONE_NUMBER": "Podaj swój numer telefonu",
+            "PIP_STOCK_NOTIFICATION_ERROR_HEADING": "Coś poszło nie tak",
+            "PIP_STOCK_NOTIFICATION_ERROR_MESSAGE": "Nie udało nam się połączyć z serwerem. Spróbuj ponownie za kilka minut.",
+            "PIP_STOCK_NOTIFICATION_ERROR_UNSUPPORTED_CLASS_UNIT": "Przepraszamy, powiadamianie o zapasach jest teraz niedostępne.",
+            "PIP_STOCK_NOTIFICATION_ERROR_UNSUPPORTED_CONTACT_TYPE": "Przepraszamy, wybrana metoda kontaktu jest niedostępna. Spróbuj innej metody.",
+            "PIP_STOCK_NOTIFICATION_MESSAGE_SUCCESS_CONTENT": "Powiadomimy cię, kiedy produkt {productName} będzie z powrotem dostępny! Jeśli po 45 dniach wciąż nie będzie dostępny, skontaktujemy się z tobą, aby odnowić twoje powiadomienia.",
+            "PIP_STOCK_NOTIFICATION_MESSAGE_SUCCESS_TITLE": "Udało ci się zapisać!",
+            "PIP_STOCK_NOTIFICATION_OPTION_EMAIL": "E-mail",
+            "PIP_STOCK_NOTIFICATION_OPTION_SMS": "SMS",
+            "PIP_STOCK_NOTIFICATION_PHONE_NUMBER_SAVE_CONFIRMATION": "Numer telefonu {phoneNumber} został dodany do Twojego profilu IKEA Family",
+            "PIP_STOCK_NOTIFICATION_PHONE_NUMBER_SAVE": "Zapisz numer telefonu w moim profilu IKEA Family",
+            "PIP_STOCK_NOTIFICATION_PHONE_NUMBER_UPDATE_CONFIRMATION": "Numer telefonu w Twoim profilu IKEA Family został zmieniony na {phoneNumber}",
+            "PIP_STOCK_NOTIFICATION_PHONE_NUMBER_UPDATE": "Zaktualizuj numer telefonu w moim profilu IKEA Family",
+            "PIP_STOCK_NOTIFICATION_PRIVACY_POLICY_LINK_TEXT": "Polityka IKEA",
+            "PIP_STOCK_NOTIFICATION_PRIVACY_POLICY": "Potwierdzam, że zapoznałam/em się z",
+            "PIP_STOCK_NOTIFICATION_SMS_LABEL_HINT": " Pamiętaj o kodzie kraju, jeśli Twój numer telefonu komórkowego jest zarejestrowany za granicą.",
+            "PIP_STOCK_NOTIFICATION_SMS_LABEL": "Podaj swój numer telefonu komórkowego",
+            "PIP_STOCK_NOTIFICATION_SUBTITLE": "Zapisz się teraz, aby otrzymywać powiadomienia o stanach magazynowych i dowiedzieć się od razu, gdy produkt {productName} będzie ponownie dostępny.",
+            "PIP_STOCK_NOTIFICATION_TITLE": "Powiadomienie o dostępności",
+            "PIP_STOCK_NOTIFICATION_VALIDATION_IKEA_POLICY": "Aby kontynuować, musisz wyrazić zgodę na zasady IKEA.",
+            "PIP_STORE_DETAILS_LINK_TEXT": "Szczegóły sklepu",
+            "PIP_STORE_MODAL_LAST_CHECKED": "Stan na: {lastCheckedDate}, godz. {lastCheckedTime}",
+            "PIP_STORE_MODAL_ON_DISPLAY_A_VARIANT": "Podobny produkt jest wystawiony w tym sklepie",
+            "PIP_STORE_MODAL_ON_DISPLAY_SEVERAL_VARIANTS": "Podobne produkty są wystawione w tym sklepie",
+            "PIP_STORE_MODAL_ON_DISPLAY_THE_PRODUCT": "Produkt {productName} jest wystawiony w tym sklepie",
+            "PIP_STORE_MODAL_PARTS_OF_SPR_AVAILABLE_WHERE_TO_FIND_IT": "Gdzie znaleźć dostępne części",
+            "PIP_STORE_MODAL_PARTS_OF_SPR_UNAVAILABLE_DESCRIPTION": "Poproś współpracownika o pomoc w znalezieniu odpowiednich alternatyw.",
+            "PIP_STORE_MODAL_PARTS_OF_SPR_UNAVAILABLE_TITLE": "Niektóre części są niedostępne",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_FACT_COUNT": "Liczba opakowań do odebrania: {packageCount}.",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_FACT_DIMENSION": "Najdłuższy bok ma {packageMaxLength}, a najszerszy – {packageMaxWidth}.",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_FACT_WEIGHT_SINGLE": "Waga opakowania wynosi {packageMaxWeight}",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_FACT_WEIGHT": "Najcięższe opakowanie waży {packageMaxWeight}.",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_LOCATION_FS": "Zamów w Punkcie Samoobsługowym lub zapytaj pracownika IKEA.",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_LOCATION_SS": "Magazyn Samoobsługowy",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_TITLE": "Informacje o pakowaniu",
+            "PIP_STORE_MODAL_TITLE": "IKEA {storeName}",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_MARKET_HALL": "Strefa zakupowa",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_SECTION": "Dział",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_SHOWROOM": "Strefa wystawowa",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_TITLE": "Lokalizacja produktu",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_WITH_FLOOR_INFO": "{storeLocation}, poziom {storeFloor}",
+            "PIP_TOTAL_PRICE": "",
+            "PIP_USP_GUARANTEE_MESSAGE": "Pewność każdego zakupu",
+            "PIP_USP_SLEEPTRIAL_DAYS": "Wypróbuj w domu przez {sleepTrialDays} dni.",
+            "PIP_USP_SLEEPTRIAL_MESSAGE": "Nie podoba ci się? Wymień go na inny.",
+            "PIP_ZIP_IN_MODAL_SUBTITLE": "Otrzymaj produkty IKEA z dostawą prosto do domu.",
+            "QUANTITY_PICKER_ARIA_DESCRIBED_BY": "Wpisz liczbę lub zmień jej wartość za pomocą znaku plus i minus.",
+            "QUANTITY_PICKER_ARIA_LABEL_DECREASE": "Zmniejsz ilość",
+            "QUANTITY_PICKER_ARIA_LABEL_INCREASE": "Zwiększ ilość",
+            "QUANTITY_PICKER_ARIA_LABEL_INPUT": "Wprowadzona ilość",
+            "READ_MORE_LINK_TEXT": "Dowiedz się więcej",
+            "STOCK_DISCLAIMER": "Stany magazynowe i ceny na stronie mogą się różnić od tych w sklepie",
+            "STOCK_FIND_AISLE": "Regał",
+            "STOCK_FIND_SHELF": "Półka",
+            "STORE_CHECK_STOCK": "Sprawdź dostępność w sklepie",
+            "STORE_IN_STOCK_BASIC": "Dostępny",
+            "STORE_IN_STOCK_QUANTITY_DETAILED": "W magazynie. Dostępnych: {quantity}",
+            "STORE_LIST_CLICK_AND_COLLECT_STATUS_PREFIX": "Zamów i odbierz",
+            "STORE_LIST_CURRENT_LOCATION_FAIL_HEADING": "Nie wiemy, gdzie jesteś",
+            "STORE_LIST_CURRENT_LOCATION_FAIL_TEXT": "Upewnij się, że przeglądarka ma dostęp do bieżącej lokalizacji i spróbuj ponownie.",
+            "STORE_LIST_CURRENT_LOCATION_QUERY": "Bieżąca lokalizacja",
+            "STORE_LIST_CURRENT_LOCATION": "Użyj obecnej lokalizacji",
+            "STORE_LIST_DISTANCE_AWAY": "{distance} od Ciebie",
+            "STORE_LIST_FILTER_BY_AVAILABILITY_FAIL_HEADING": "Nie znaleziono sklepów",
+            "STORE_LIST_FILTER_BY_AVAILABILITY_FAIL_TEXT": "Niestety żaden ze sklepów nie ma dostępnych produktów.",
+            "STORE_LIST_FILTER_BY_AVAILABILITY": "Tylko sklepy z dostępnymi produktami",
+            "STORE_LIST_SEARCH_FAIL_HEADING": "Nie znaleziono lokalizacji",
+            "STORE_LIST_SEARCH_FAIL_TEXT": "Wprowadź prawidłową lokalizację w swoim kraju/regionie i spróbuj ponownie.",
+            "STORE_LIST_SEARCH_PLACEHOLDER": "Szukaj według lokalizacji",
+            "STORE_LIST_SELECT_STORE": "Wybierz sklep",
+            "STORE_LIST_SORT_BY_DISTANCE_TO_LOCATION": "Lista uporządkowana wg odległości sklepów od strefy {location}",
+            "STORE_LIST_STORE_STATUS_PREFIX": "Sklep",
+            "STORE_NOT_SOLD_BASIC": "Produkt niedostępny",
+            "STORE_OUT_OF_STOCK_BASIC": "Produkt niedostępny",
+            "STORE_OUT_OF_STOCK_RESTOCK_DATES_BASIC": "Powraca: {fromDate}–{toDate}",
+            "STORE_OUT_OF_STOCK_RESTOCK_DATES_DETAILED": "Brak w magazynie. Przewidywany powrót: {fromDate}–{toDate}",
+            "STORE_PARTS_OF_SPR_BASIC": "{countInStock} z {countAll} części w magazynie",
+            "STORE_PLACE_ORDER_BASIC": "Zamów z dostawą",
+            "STORE_PLACE_ORDER_SECONDARY_TEXT": "Znajdź ten lub podobny produkt na ekspozycji w sklepie",
+            "STORE_RUNNING_LOW_BASIC": "Ograniczona dostępność",
+            "STORE_RUNNING_LOW_QUANTITY_DETAILED": "Ograniczona dostępność. Zostało: {quantity}",
+            "STORE_STOCK_NO_INFO_BASIC": "Usługa niedostępna w wybranej lokalizacji.",
+            "STORE_STOCK_NO_INFO_SECONDARY_TEXT": "Spróbuj ponownie później",
+            "XR_VIEWER_AR_BUTTON_LABEL": "Wypróbuj to w swoim domu",
+            "XR_VIEWER_HEADING": "{productName} Widok 3D",
+            "XR_VIEWER_LOADING_LABEL": "Ładowanie...",
+            "XR_VIEWER_OPEN_BUTTON_LABEL": "Zobacz w 3D",
+            "XR_VIEWER_TOUCH_PROMPT_LABEL": "Dotknij i przeciągnij, aby obrócić",
+            "ZIP_IN_CHANGE_OR_FORGET_POST_CODE": "{changePostCodeLinkText} lub {forgetPostCodeLinkText}.",
+            "ZIP_IN_CHANGE_ZIP_TEXT": "Sprawdź dla innego kodu pocztowego",
+            "ZIP_IN_DELIVERY_INFORMATION_UNAVAILABLE_DESCRIPTION": "Przepraszamy, wygląda na to, że coś poszło nie tak po naszej stronie. Sprawdź przy realizacji zamówienia, czy produkt może być dostarczony na Twój adres lub spróbuj ponownie później.",
+            "ZIP_IN_DELIVERY_NOT_OFFERED_DESCRIPTION": "Niestety, wygląda na to, że nie dostarczamy do tego rejonu. ",
+            "ZIP_IN_FORGET_POST_CODE_LINK_TEXT": "zapomnij kod pocztowy",
+            "ZIP_IN_LIMITED_DELIVERY_MODAL_MESSAGE": "Przykro nam, ale ten produkt możemy dostarczyć pod adres z wybranym kodem pocztowym tylko wtedy, gdy wchodzi on w skład większego zamówienia. Możesz robić dalej zakupy i dodać do koszyka inne produkty albo kontynuować składanie zamówienia, aby dowiedzieć się, czy Twoje zamówienie jest już dostatecznie duże."
+        },
+        "viewItem": {
+            "id": "40178888",
+            "product_buyable_online": 1,
+            "ratings_value": 48,
+            "number_of_ratings": 276,
+            "ratings_views": 1,
+            "assembly_availability_hit": 0
+        },
+        "modalProps": {
+            "ariaLabelBack": "Powrót do poprzedniego ekranu",
+            "ariaLabelClose": "Zamknij modal"
+        },
+        "pipPriceModuleProps": {
+            "priceModuleProps": {
+                "currentPriceProps": {
+                    "integerValue": "79",
+                    "decimalValue": "99",
+                    "decimalSign": ",",
+                    "captionPrefix": "Cena"
+                },
+                "productName": "BEKVÄM"
+            },
+            "productDescriptionProps": {
+                "descriptionText": "Taboret ze schodkiem, biały",
+                "measurementLinkProps": {
+                    "text": "50 cm",
+                    "aria-label": "50 cm. Pokaż wymiary"
+                }
+            }
+        },
+        "productSummaryProps": {
+            "articleNumberLabel": "Numer artykułu",
+            "description": "Przechowywanie rzeczy wysoko to sprytne rozwiązanie, ale czasem trudno do nich dosiegnąć. Stołek ze stopniem ułatwia dotarcie do rzeczy położonych w szafkach najwyżej - i ładnie też wygląda.",
+            "productName": "BEKVÄM",
+            "showAsNonSellableProduct": false,
+            "visibleItemNo": "401.788.88",
+            "locateInStoreLinkText": "Znajdź produkt w sklepie"
+        },
+        "contentRecFragmentUrls": {
+            "imc": "/pl/pl/content-rec/fragments/dynamic/skeleton/compact-feed-imc/compact-feed-imc-fragment.html?productId=40178888",
+            "vugc": "/pl/pl/content-rec/fragments/dynamic/skeleton/compact-feed-vugc/compact-feed-vugc-fragment.html?productId=40178888"
+        },
+        "breadcrumbsSource": "/pl/pl/navigation/breadcrumbs/20611.html?page-title=~BEKV%C3%84M~%20Taboret%20ze%20schodkiem&page-url=https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-bialy-40178888/",
+        "highlightedReviews": [
+            {
+                "name": "Tamara",
+                "ratingValue": 5,
+                "title": "Jest bardzo przydatny.",
+                "text": "Jest bardzo przydatny i poręczny. Lekki, łatwo go przenieść. Długo namawiałam męża na zakup - nie chciał kolejnego mebla - teraz sam przyznał, że to była dobra decyzja.",
+                "countryCode": "pl",
+                "countryName": "Polska"
+            },
+            {
+                "name": "Sylwia",
+                "ratingValue": 5,
+                "title": "Super stołkodrabinka do zadań specjalnych",
+                "text": "W kuchni zabudowanej pod sufit ten stołeczek sprawdza się idealnie. Przydaje sie w wielu sytuacjach i wyglada elegancko. Ogólnie lubimy na nim przesiadywać.",
+                "countryCode": "pl",
+                "countryName": "Polska"
+            },
+            {
+                "name": "Anonimowy recenzent",
+                "ratingValue": 5,
+                "title": "Stolek",
+                "text": "Bardzo łatwo składa się. Mega wygodny i przydatny w użytkowaniu.  Solidny. Ładny. Polecam ",
+                "countryCode": "pl",
+                "countryName": "Polska"
+            }
+        ],
+        "listingRecFragments": {
+            "similarProducts": {
+                "src": "/pl/pl/listing/fragments/product-rec-carousel/similar-products/?baseProduct=40178888",
+                "header": "Produkty pokrewne"
+            },
+            "recommendedForYou": {
+                "src": "/pl/pl/listing/fragments/product-rec-carousel/recommended-for-you/?baseProduct=40178888",
+                "header": "Wybrane dla Ciebie"
+            },
+            "moreFrom": {
+                "src": "/pl/pl/listing/fragments/product-rec-carousel/more-from/?baseProduct=40178888",
+                "header": "Więcej z "
+            },
+            "accessories": {
+                "src": "/pl/pl/listing/fragments/product-rec-carousel/accessories/?baseProduct=40178888",
+                "header": "Akcesoria do BEKVÄM"
+            }
+        },
+        "plannerProps": {
+            "headUrl": "https://www.ikea.com/pl/pl/planners/v1/fragments/head/?fragments=banner-large",
+            "url": "https://www.ikea.com/pl/pl/planners/v1/fragments/banner-large/40178888/"
+        },
+        "productInformationSectionProps": {
+            "productDetailsProps": {
+                "accordionObject": {
+                    "goodToKnow": {
+                        "id": "product-details-good-to-know",
+                        "title": "Dobrze wiedzieć",
+                        "contentProps": {
+                            "goodToKnow": [
+                                {
+                                    "name": "Purchase-/Other information",
+                                    "text": "W zależności od lokalnych uwarunkowań, produkt po zużyciu może być przeznaczony do recyklingu lub odzysku energetycznego."
+                                },
+                                {
+                                    "name": "Purchase-/Other information",
+                                    "text": "Do użytku w pomieszczeniach"
+                                },
+                                {
+                                    "name": "Purchase-/Other information",
+                                    "text": "Maks. obciążenie: 100 kg"
+                                },
+                                {
+                                    "name": "Other information",
+                                    "text": "IKEA of Sweden AB SE-343 81 Älmhult, IKEA.com"
+                                }
+                            ]
+                        }
+                    },
+                    "materialsAndCare": {
+                        "id": "product-details-material-and-care",
+                        "title": "Materiały i pielęgnacja",
+                        "contentProps": {
+                            "materials": [
+                                {
+                                    "materials": [
+                                        {
+                                            "material": "lita osika, Klej, Bejca, Bezbarwny lakier akrylowy"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "careInstructions": [
+                                {
+                                    "texts": [
+                                        "Wycierać szmatką zwilżoną delikatnym środkiem do czyszczenia.",
+                                        "Wycierać czystą, suchą szmatką.",
+                                        "Dla zapewnienia najwyższej jakości, w razie potrzeby dokręć śruby."
+                                    ]
+                                }
+                            ],
+                            "proposition65": [],
+                            "detailsMaterialText": "Materiały",
+                            "detailsCareText": "Pielęgnacja",
+                            "ariaOpensInNewTabLabel": "{text} (otwiera się w nowej zakładce)",
+                            "warningText": "Uwaga"
+                        }
+                    },
+                    "safetyAndCompliance": {
+                        "id": "product-details-safety-and-compliance",
+                        "title": "Bezpieczeństwo i zgodność z przepisami",
+                        "contentProps": {
+                            "safetyAndCompliance": [
+                                {
+                                    "name": "Test results and compliance",
+                                    "text": "Ten mebel został przetestowany do użytku domowego i spełnia wymogi wytrzymałości i bezpieczeństwa określone w następujących normach: EN 12520."
+                                }
+                            ],
+                            "safetyAndComplianceLinks": [],
+                            "ariaOpensInNewTabLabel": "{text} (otwiera się w nowej zakładce)"
+                        }
+                    },
+                    "assemblyAndDocuments": {
+                        "id": "product-details-assembly-and-documents",
+                        "title": "Montaż i dokumenty",
+                        "contentProps": {
+                            "ariaOpensInNewTabLabel": "{text} (otwiera się w nowej zakładce)",
+                            "assemblyVideos": [],
+                            "attachments": {
+                                "assembly": {
+                                    "header": "Instrukcja montażu",
+                                    "attachments": [
+                                        {
+                                            "id": "401.788.88",
+                                            "url": "https://www.ikea.com/pl/pl/assembly_instructions/bekvaem-taboret-ze-schodkiem-bialy__AA-323406-8-2.pdf",
+                                            "label": "BEKVÄM Taboret ze schodkiem"
+                                        }
+                                    ]
+                                },
+                                "software": {
+                                    "header": "Software",
+                                    "attachments": []
+                                },
+                                "declaration": {
+                                    "header": "Deklaracja Zgodności",
+                                    "attachments": []
+                                },
+                                "other": {
+                                    "header": "Inne dokumenty",
+                                    "attachments": []
+                                },
+                                "customerDisassembly": {
+                                    "header": "Instrukcja demontażu",
+                                    "attachments": []
+                                },
+                                "professionalDisassembly": {
+                                    "header": "Demontaż & Recycling (dla profesjonalistów z branży)",
+                                    "attachments": []
+                                },
+                                "manual": {
+                                    "header": "Porady i wskazówki dotyczące użytkowania i pielęgnacji",
+                                    "attachments": [
+                                        {
+                                            "id": "401.788.88",
+                                            "url": "https://www.ikea.com/pl/pl/manuals/bekvaem-taboret-ze-schodkiem-bialy__AA-2568059-2-2.pdf",
+                                            "label": "BEKVÄM Taboret ze schodkiem"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "articleNumberLabel": "Numer artykułu",
+                "productDescriptionProps": {
+                    "paragraphs": [
+                        "Stołek ze stopniem ułatwia sięganie po wysoko przechowywane przedmioty.",
+                        "Poręczny otwór w górnym stopniu pozwala łatwo przenosić taboret",
+                        "Lite drewno to wytrzymały, naturalny materiał."
+                    ],
+                    "designerLabel": "Projektant",
+                    "designerName": "Nike Karlsson"
+                },
+                "productId": "40178888",
+                "title": "Informacje o produkcie"
+            },
+            "measurementsProps": {
+                "chooseDifferentSizeLinkText": "Wybierz inny rozmiar",
+                "eventLabel": "pip_measurements",
+                "fallbackImage": {
+                    "alt": "To zdjęcie przedstawia stołek BEKVĘM, w kolorze białym, wykonany z litego drewna osikowego, o prostokątnym kształcie z dwoma stopniami i płaskim blatem.",
+                    "id": "0122140_PE278505",
+                    "imageFileName": "0122140_PE278505_S5.JPG",
+                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg",
+                    "type": "MAIN_PRODUCT_IMAGE"
+                },
+                "images": [
+                    {
+                        "alt": "Ilustracja z wymiarami dla produktu: BEKVÄM.",
+                        "id": "1439317_PE985274",
+                        "imageFileName": "1439317_PE985274_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1439317_pe985274_s5.jpg",
+                        "type": "MEASUREMENT_ILLUSTRATION"
+                    }
+                ],
+                "measurements": [
+                    {
+                        "type": "00047",
+                        "name": "Szerokość",
+                        "measure": "43 cm"
+                    },
+                    {
+                        "type": "00044",
+                        "name": "Głębokość",
+                        "measure": "39 cm"
+                    },
+                    {
+                        "type": "00041",
+                        "name": "Wysokość",
+                        "measure": "50 cm"
+                    },
+                    {
+                        "type": "00012",
+                        "name": "Maksymalne obciążenie",
+                        "measure": "100 kg"
+                    }
+                ],
+                "packaging": {
+                    "id": "measurements-packaging",
+                    "title": "Opakowanie",
+                    "contentProps": {
+                        "numberOfPackages": 1,
+                        "packages": [
+                            {
+                                "name": "BEKVÄM",
+                                "typeName": "Taboret ze schodkiem",
+                                "itemNo": "40178888",
+                                "articleNumber": {
+                                    "label": "Numer artykułu",
+                                    "value": "401.788.88"
+                                },
+                                "measurements": [
+                                    [
+                                        {
+                                            "label": "Szerokość",
+                                            "type": "width",
+                                            "text": "39 cm",
+                                            "value": 39
+                                        },
+                                        {
+                                            "label": "Wysokość",
+                                            "type": "height",
+                                            "text": "7 cm",
+                                            "value": 7
+                                        },
+                                        {
+                                            "label": "Długość",
+                                            "type": "length",
+                                            "text": "50 cm",
+                                            "value": 50
+                                        },
+                                        {
+                                            "label": "Waga",
+                                            "type": "weight",
+                                            "text": "3.37 kg",
+                                            "value": 3.37
+                                        }
+                                    ]
+                                ],
+                                "quantity": {
+                                    "label": "Paczka(i)",
+                                    "value": 1
+                                },
+                                "multiPackDisclaimerText": null
+                            }
+                        ],
+                        "maxMeasurements": {
+                            "weightText": "3.37 kg",
+                            "widthText": "39 cm",
+                            "lengthText": "50 cm",
+                            "heightText": "7 cm",
+                            "diameterText": ""
+                        }
+                    }
+                },
+                "title": "Wymiary"
+            },
+            "seoReviewsProps": {
+                "reviews": [
+                    {
+                        "title": "Jest bardzo przydatny.",
+                        "name": "Tamara",
+                        "text": "Jest bardzo przydatny i poręczny. Lekki, łatwo go przenieść. Długo namawiałam męża na zakup - nie chciał kolejnego mebla - teraz sam przyznał, że to była dobra decyzja.",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Pomocny",
+                        "name": "Agnieszka",
+                        "text": "Taboret bardzo przydaje się w kuchni. To już mój drugi- poprzedni miałam przez 17 lat i zniszczyłam go przy remoncie. Musiałam kupić drugi bo nie wyobrażam sobie funkcjonowania bez niego- bardzo pomaga zwłaszcza w kuchni, gdzie zwykle mamy wysoko zawieszone szafki. Kosztuje niewiele a ułatwia życie bardzo.",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "👍",
+                        "name": "Ela",
+                        "text": "Bardzo przydatny przedmiot i bardzo łatwy do złożenia.",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Ładny stołeczek",
+                        "name": "Maja",
+                        "text": "Ładny stołeczek do sięgania po przedmioty na wyższych poziomach. Dolny stopień mógłby być trochę szerszy, ale i tak jest ok.",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "OK",
+                        "name": "Michał",
+                        "text": "Wydaje się być solidny",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Super polecam",
+                        "name": "Joanna",
+                        "text": "Produkt spełnienia wymagania.",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Ok",
+                        "name": "Dorota",
+                        "text": "Przydaje się ",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Super!",
+                        "name": "Sławomir",
+                        "text": "Super, mega, cool!",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Elegancki ",
+                        "name": "Beata",
+                        "text": "Fajny i łatwy w montażu ",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Praktyczny taboret drabinka ",
+                        "name": "Ewa",
+                        "text": "Super produkt praktyczny można łatwo dostać się do najwyższych półek ",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Schodki kuchenne.",
+                        "name": "Marek",
+                        "text": "Spełniają swoje zadanie.",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Super stołkodrabinka do zadań specjalnych",
+                        "name": "Sylwia",
+                        "text": "W kuchni zabudowanej pod sufit ten stołeczek sprawdza się idealnie. Przydaje sie w wielu sytuacjach i wyglada elegancko. Ogólnie lubimy na nim przesiadywać.",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Super taboret-schodki",
+                        "name": "Anna",
+                        "text": "Taboret jest bardzo stabilny, całkowicie spełnia moje oczekiwania. ",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "ok",
+                        "name": "Agnieszka",
+                        "text": "ok",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Przydatny, ale elementy miały uszkodzenia.",
+                        "name": "Anonimowy recenzent",
+                        "text": "Ogólnie szybko się składa i korzystamy, ale kilka elementów było poobijanych czy z uszczerbkiem farby. Jedna noga jest minimalnie krótsza, delikatnie się gibie na płaskiej powierzchni, więc używamy na miękkim dywaniku, który niweluje krzywiznę.",
+                        "ratingValue": 4
+                    },
+                    {
+                        "title": "OK",
+                        "name": "Przemyslaw",
+                        "text": "Stabilny a to najważniejsze. Montaż nie jest kompletny bez naklejenia w odpowiednim miejscu fiszki z ostrzeżeniami ;)",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Stolek",
+                        "name": "Anonimowy recenzent",
+                        "text": "Bardzo łatwo składa się. Mega wygodny i przydatny w użytkowaniu.  Solidny. Ładny. Polecam ",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Krzesło do ściągania  rzeczy z wysokich półek ",
+                        "name": "Malgorzata.",
+                        "text": "Krzeslo sparwdza się w kuchni.  Służy do ściągnięcia rzeczy z wysokich  półek. Solidne,  proste  ale funkcjonalne.",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Konieczny mebel w każdym mieszkaniu ",
+                        "name": "Beata",
+                        "text": "Dzięki Bekvam nie muszę wyjmować drabiny i każda rzecz sięgnę z wyższej półki. ",
+                        "ratingValue": 5
+                    },
+                    {
+                        "title": "Bekvam ",
+                        "name": "Łukasz",
+                        "text": "Ok",
+                        "ratingValue": 5
+                    }
+                ],
+                "title": "Opinie"
+            }
+        },
+        "productStylePickerProps": {
+            "variationStyles": [
+                {
+                    "title": "Wybierz kolor",
+                    "selectedOption": "Biały",
+                    "code": "COLOUR",
+                    "allOptions": [
+                        {
+                            "title": "Biały",
+                            "url": "https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-bialy-40178888/",
+                            "isSelected": true,
+                            "linkId": "40178888",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg",
+                                "alt": "To zdjęcie przedstawia stołek BEKVĘM, w kolorze białym, wykonany z litego drewna osikowego, o prostokątnym kształcie z dwoma stopniami i płaskim blatem."
+                            }
+                        },
+                        {
+                            "title": "Buk",
+                            "url": "https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-buk-60178887/",
+                            "isSelected": false,
+                            "linkId": "60178887",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-buk__0108612_pe258294_s5.jpg",
+                                "alt": "Taboret BEKVÄM: jasne drewno, dwa stopnie, prosty design, solidny."
+                            }
+                        }
+                    ],
+                    "options": [
+                        {
+                            "title": "Biały",
+                            "url": "https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-bialy-40178888/",
+                            "isSelected": true,
+                            "linkId": "40178888",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg",
+                                "alt": "To zdjęcie przedstawia stołek BEKVĘM, w kolorze białym, wykonany z litego drewna osikowego, o prostokątnym kształcie z dwoma stopniami i płaskim blatem."
+                            }
+                        },
+                        {
+                            "title": "Buk",
+                            "url": "https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-buk-60178887/",
+                            "isSelected": false,
+                            "linkId": "60178887",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-buk__0108612_pe258294_s5.jpg",
+                                "alt": "Taboret BEKVÄM: jasne drewno, dwa stopnie, prosty design, solidny."
+                            }
+                        }
+                    ],
+                    "hiddenCount": 0,
+                    "ariaLabel": "kolor warianty dla BEKVÄM"
+                }
+            ]
+        },
+        "recommendations": {
+            "bottomFragmentPath": "/pl/pl/recommendations/panels/pages/pip/container-bottom-recursive.html?className=pip-recommendations-wrapper&product=40178888",
+            "productFragmentPath": "/pl/pl/recommendations/panels/pages/pip/product-bottom-recursive.html?className=pip-recommendations-wrapper&product=40178888"
+        },
+        "serviceSectionProps": {
+            "apiCountry": "pl",
+            "assemblyServiceApiClientId": "4d5d8c53-c2e7-4e3d-b791-a21eecc49ddc",
+            "assemblyServiceBaseUrl": "https://api.serviceoffers.ingka.com/public/graphql",
+            "enableAssemblyServicePrice": false,
+            "enableRemovalService": false,
+            "itemNo": "40178888",
+            "locale": "pl-PL",
+            "productName": "BEKVÄM",
+            "serviceId": "",
+            "siteBaseUrl": "https://www.ikea.com",
+            "siteFolder": "pl/pl",
+            "translations": {
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_1_CONTENT": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_2_CONTENT": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_3_CONTENT": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_4_CONTENT": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_5_CONTENT": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_1_TITLE": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_2_TITLE": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_3_TITLE": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_4_TITLE": null,
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_5_TITLE": null,
+                "PIP_SERVICES_ASSEMBLY_TITLE": "Usługa montażu",
+                "PIP_SERVICES_ASSEMBLY_MODAL_INTRO": "Usługa montażu produktu {productName} jest dostępna dla kodu pocztowego {zipCode}.",
+                "PIP_SERVICES_ASSEMBLY_MODAL_MIN_FEE": "Usługi montażu wymagają minimalnej opłaty w wysokości {assemblyServiceFee}. Ostateczny koszt zależy od konkretnych produktów wybranych do montażu. Usługę tę można dodać do poszczególnych produktów z koszyka podczas realizacji zakupu. Za wybraną usługę montażu zapłacisz z góry podczas finalizacji transakcji.",
+                "PIP_SERVICES_ASSEMBLY_MODAL_BASE_FEE": "Usługi montażu wymagają opłaty ryczałtowej w wysokości {assemblyServiceFee} za zamówienie. Ta jednorazowa kwota jest naliczana przy realizacji zakupu, niezależnie od liczby produktów wybranych do montażu. Ostateczna cena będzie widoczna przy finalizacji transakcji",
+                "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_TITLE": "Najczęściej zadawane pytania",
+                "PIP_SERVICES_ASSEMBLY_MODAL_LINK": "Dowiedz się więcej o usłudze montażu",
+                "PIP_SERVICES_ASSEMBLY_MODAL_INTRODUCTION": "Usługa montażu {productName} jest dostępna dla kodu pocztowego {zipCode}. Możesz dodać tę usługę do koszyka i zaplanować preferowany czas realizacji podczas składania zamówienia.",
+                "PIP_SERVICES_ASSEMBLY_MODAL_PARTNER_INTRODUCTION": "This service will be fulfilled by {assemblyProvider}",
+                "PIP_SERVICES_REMOVAL_MODAL_TITLE": "Usługa odbioru",
+                "PIP_SERVICES_REMOVAL_MODAL_LINK": "Dowiedz się więcej o usłudze odbioru",
+                "PIP_SERVICES_REMOVAL_P2": "Możesz dodać tę usługę do koszyka i wskazać preferowaną godzinę podczas składania zamówienia.",
+                "PIP_SERVICES_REMOVAL_P1_GENERIC": "Wyniesiemy Twój stary produkt, dzięki czemu zyskasz miejsce na ten właśnie zakupiony.",
+                "PIP_SERVICES_REMOVAL_P1_SOFA": "Wyniesiemy Twoją starą sofę, dzięki czemu zyskasz miejsce na tę właśnie zakupioną.",
+                "PIP_SERVICES_REMOVAL_P1_MATTRESS": "Wyniesiemy Twój stary materac, dzięki czemu zyskasz miejsce na ten właśnie zakupiony.",
+                "PIP_SERVICES_REMOVAL_P1_WHITEGOODS": "Wyniesiemy Twoje stare sprzęty AGD, dzięki czemu zyskasz miejsce na te właśnie zakupione.",
+                "PIP_SERVICES_SHELF_REMOVAL": "Bezproblemowy odbiór:",
+                "PIP_SERVICES_SHELF_ASSEMBLY_MIN_FEE": "Umów się na profesjonalny montaż {productName} w cenie {assemblyPrice}.",
+                "PIP_SERVICES_SHELF_ASSEMBLY_BASE_FEE": "Zamów profesjonalny montaż {productName} za {assemblyPrice} + jednorazowa opłata.",
+                "PIP_SERVICES_SHELF_ASSEMBLY_MIN_FEE_DISCLOSURE": "* Najniższa cena za usługę montażu to {assemblyServiceMinFee}",
+                "PIP_SERVICES_SHELF_GENERIC_LINK": "Dowiedz się więcej",
+                "PIP_SERVICES_SHELF_TITLE": "Dostępne usługi",
+                "PIP_SERVICES_SHELF_ASSEMBLY": "Zleć profesjonalny montaż produktu {productName}."
+            }
+        },
+        "sustainabilityProps": {
+            "longBenefitsProps": {
+                "greenItems": [],
+                "ordinaryItems": [
+                    {
+                        "i": 1,
+                        "subject": "Material",
+                        "header": "Czym jest lite drewno?",
+                        "name": "Czym jest lite drewno_general/cross-HFB text",
+                        "text": "Lite drewno jest jednym z naszych ulubionych materiałów i stanowi część skandynawskiego dziedzictwa. To także ponadczasowy materiał o szerokim zastosowaniu. Bez względu na gatunek drewno jest trwałe, piękne i odnawialne. Staramy się używać tego surowca mądrze i wydajnie, aby uniknąć marnotrawstwa, a do tego inwestujemy w infrastrukturę i logistykę, by zwiększyć wykorzystanie drewna pochodzącego z recyklingu.",
+                        "assetName": "material",
+                        "badge": "Materiał"
+                    },
+                    {
+                        "i": 0,
+                        "subject": "Function/solution",
+                        "header": "Kuchenny stołek i schodki w jednym",
+                        "name": "BEKVÄM stołek ze stopniami_cza/bia",
+                        "text": "Kiedy musisz dosięgnąć czegoś umieszczonego wysoko, możesz stanąć na stołku BEKVÄM. Otwór w kształcie rączki ułatwia przenoszenie stołka z miejsca na miejsce.",
+                        "assetName": "functionSolution",
+                        "badge": "Funkcja"
+                    }
+                ]
+            },
+            "productStoryProps": null,
+            "sustainabilityLabel": "Zrównoważony rozwój",
+            "sustainabilityTitle": "Dla ludzi + planety"
+        },
+        "serverExperiments": {
+            "recommendation_panel": null
+        },
+        "version": "2.13.0"
+    }
+}
