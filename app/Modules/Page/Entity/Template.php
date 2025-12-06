@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Page\Entity;
 
 use App\Modules\Discount\Entity\Promotion;
+use Illuminate\Support\Facades\Log;
 
 class Template
 {
@@ -79,7 +80,7 @@ class Template
     {
 
         if (is_null($text)) return '';
-        $pattern = '/\[' . $code . '=\"(.+)\"\]/';
+        $pattern = '/\[' . $code . '=\"(.+?)\"(.*?)\]/';
         preg_match_all($pattern, $text, $matches);
         $replaces = $matches[0]; //шот-коды вида [widget="7"] (массив)
         $ids = $matches[1]; //значение id виджета (массив)

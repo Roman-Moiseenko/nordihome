@@ -57,10 +57,11 @@ abstract class RenderPage extends Model
      */
     public function view(callable $fn): string
     {
+
         $this->field = empty($this->field) ? $this->getField() : $this->field;
 
-        $this->text = Template::renderClasses($this->text);
         $this->text = $this->renderTags($this->text);
+        $this->text = Template::renderClasses($this->text);
 
         $url_page = route('shop.' . $this->field . '.view', $this->slug);
         if ($fn != null) $this->meta = $fn($this, $this->meta);
@@ -74,7 +75,6 @@ abstract class RenderPage extends Model
     private function renderTags(string $text): string
     {
         //<div>
-        //$pattern = '/\[div=\"(.+?)\"\]/su';
         $pattern = '/\[div=\"(.+?)\"(.*?)\]/su';
         preg_match_all($pattern, $text, $matches);
 
@@ -90,9 +90,7 @@ abstract class RenderPage extends Model
         }
         //</div>
 
-        $text = str_replace('[/div]', '</div>', $text);
-
-        return $text;
+        return str_replace('[/div]', '</div>', $text);
     }
 
     public function scopeActive($query)
