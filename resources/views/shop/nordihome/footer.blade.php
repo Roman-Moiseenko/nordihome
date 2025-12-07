@@ -43,7 +43,14 @@
                     @endforeach
                 </ul>
             </div>
-            <div class="col-12 col-sm-6 col-md-6 col-lg-2">второе меню</div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-2">
+                <div class="heading f-w_600 m-b_20">ДЛЯ КЛИЕНТА</div>
+                <ul class="footer-menu">
+                    @foreach($menus['menu-footer01']['items'] as $item)
+                        <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
     </div>
     <div class="about pt-4 pb-3 text-center">
