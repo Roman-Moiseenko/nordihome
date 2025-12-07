@@ -40,7 +40,7 @@
                     @foreach(\App\Modules\Nordihome\Helper\MenuHelper::getFooterMenu() as $column)
                         <div class="col-lg-6 px-2">
                             <div class="menu-column">
-                                <div class="heading">{{ $column['title'] }}</div>
+                                <div class="heading">МЕНЮ</div>
                                 <ul class="menu">
                                 @foreach($column['items'] as $item)
                                         <li><a href="{{ $item['route'] }}">{{ $item['name'] }}</a></li>
