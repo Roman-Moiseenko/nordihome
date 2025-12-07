@@ -1,7 +1,7 @@
-<footer class="footer">
-    <div class="container-xl pb-4">
-        <div class="row">
-            <div class="col-lg-6">
+<footer id="footer" class="p-t_50 p-b_50 bg-black">
+    <div class="container-xl">
+        <div class="row justify-content-between">
+            <div class="col-12 col-md-6 col-lg-5">
                 <div class="heading">NORDI HOME</div>
                 <div style="color: #ff5555">САЙТ В РАЗРАБОТКЕ! Оригинальный сайт по адресу <a href="https://nordihome.ru/" style="color: #5555ff">https://nordihome.ru/</a></div>
                 <div class="description">
@@ -34,6 +34,18 @@
                         ООО «Негоциант».</p>
                 </div>
             </div>
+            <div class="col-12 col-md-6 col-lg-3">888</div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-2">
+                <div class="heading f-w_600 m-b_20">МЕНЮ</div>
+                <ul class="footer-menu">
+                    @foreach($menus['menu-footer01']['items'] as $item)
+                        <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-2">второе меню</div>
+
+
             <div class="col-lg-1"></div>
             <div class="col-lg-5">
                 <div class="row">
