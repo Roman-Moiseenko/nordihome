@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Parser\Controllers\CategoryParserController;
+use App\Modules\Parser\Controllers\ParserLogController;
 use App\Modules\Parser\Controllers\ProductParserController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,20 +43,16 @@ Route::group(
             Route::post('/by-list/', [ProductParserController::class, 'by_list'])->name('by-list');
 
         });
-        //PRODUCT
- /*       Route::group([
-            'prefix' => 'image',
-            'as' => 'image.',
+        //LOG
+        Route::group([
+            'prefix' => 'log',
+            'as' => 'log.',
         ], function (){
-            Route::post('/add/{product}', 'ProductController@add_image')->name('add');
-            Route::post('/get/{product}', 'ProductController@get_images')->name('get');
-            Route::delete('/del/{product}', 'ProductController@del_image')->name('del');
-            Route::post('/up/{product}', 'ProductController@up_image')->name('up');
-            Route::post('/down/{product}', 'ProductController@down_image')->name('down');
-            Route::post('/set/{product}', 'ProductController@set_image')->name('set');
-            Route::post('/move/{product}', 'ProductController@move_image')->name('move');
+            Route::get('/', [ParserLogController::class, 'index'])->name('index');
+            Route::get('/{parser_log}', [ParserLogController::class, 'show'])->name('show');
+            Route::post('/read/{parser_log}', [ParserLogController::class, 'read'])->name('read');
         });
-        */
+
 
     }
 );

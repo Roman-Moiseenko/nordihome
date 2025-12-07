@@ -91,7 +91,7 @@ class ParserNB extends ParserAbstract
     }
 
 
-    public function parserCost(ProductParser $parser): float
+    public function parserCost(ProductParser $parser): float|bool
     {
         $price_sell = $parser->price_sell;
         $url = $parser->product->brand->url . '/' . $parser->url;

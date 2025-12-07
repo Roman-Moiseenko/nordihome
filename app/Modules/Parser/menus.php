@@ -24,6 +24,14 @@ return [
                 'font_awesome' => 'fa-light fa-folder-tree',
             ],
 
+
+
+            'logs' => [
+                'title' => 'История',
+                'route_name' => 'admin.parser.log.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-book',
+            ],
         ],
     ],
 ];

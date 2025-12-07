@@ -8,16 +8,19 @@ use App\Modules\Base\Entity\Package;
 use App\Modules\Base\Job\LoadingImageCatalog;
 use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Base\Service\GoogleTranslateForFree;
+use App\Modules\Base\Service\TranslateService;
 use App\Modules\Base\Service\YandexTranslate;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
 use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ParserLogItem;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Job\CreateParserProduct;
 use App\Modules\Parser\Job\ParserCategory;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Parser;
 use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -31,7 +34,15 @@ class ParserIkea extends ParserAbstract
     const string API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
 
     const string API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks,SalesLocations,DisplayLocations,ChildItems,FoodAvailabilities';
+    private ParserLogService $logService;
 
+    public function __construct(        CategoryParserService $categoryParserService,
+                                        TranslateService      $translate, ParserLogService $logService)
+    {
+        parent::__construct($categoryParserService, $translate);
+
+        $this->logService = $logService;
+    }
 
     /**
      * Процедура для Job - На Икеа получаем список всех корневых категорий для запуска Job по их созданию (addProduct)
@@ -173,6 +184,7 @@ class ParserIkea extends ParserAbstract
             //Данные о наличии
             $product_parser->save();
 
+
             if (isset($product_data['parser_category_id'])) $product_parser->categories()->attach($product_data['parser_category_id']);
             if (isset($product_data['categoryPath'])) {
                 $code_categories = array_map(function ($item) {
@@ -186,11 +198,14 @@ class ParserIkea extends ParserAbstract
                 foreach ($parser_categories as $category) //Назначаем категории
                     $product_parser->categories()->attach($category);
             }
+            $this->logService->addLog($product_parser->id, ParserLogItem::STATUS_NEW);
         } else {
             $product_parser->product_id = $product->id;
             $product_parser->save();
         }
-        Log::debug('ParserIkea->createProductJob: Товар аолностью создан ' . $name);
+        $product_parser->refresh();
+
+        Log::debug('ParserIkea->createProductJob: Товар полностью создан ' . $name);
         return $product;
     }
 
@@ -428,7 +443,7 @@ class ParserIkea extends ParserAbstract
         dd($_result);
     }
 
-    public function parserCost(ProductParser $parser): float
+    public function parserCost(ProductParser $parser): float|bool
     {
         $code = $parser->product->code;
         $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
@@ -439,7 +454,7 @@ class ParserIkea extends ParserAbstract
         if ($_array == null || empty($_array['searchResultPage']['products']['main']['items'])) {
             $parser->availability = false;
             $parser->save();
-            return 0;
+            $this->logService->addLog($parser->id, ParserLogItem::STATUS_DEL);
         }
 
         $item = $_array['searchResultPage']['products']['main']['items'][0]['product']['salesPrice'];
@@ -448,9 +463,17 @@ class ParserIkea extends ParserAbstract
             $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
             if ($_previous > (float)$price) $price = $_previous;
         }
-        $parser->price_sell = $price;
-        $parser->save();
-        return $price;
+        if ($parser->price_sell != $price) {
+            $this->logService->addLog(
+                $parser->id,
+                ParserLogItem::STATUS_CHANGE,
+                ['price_old' => $parser->price_sell, 'price_new' => $price]
+            );
+            $parser->price_sell = $price;
+            $parser->save();
+            return true;
+        }
+        return false;
     }
 
     public function availablePrice(string $code): bool

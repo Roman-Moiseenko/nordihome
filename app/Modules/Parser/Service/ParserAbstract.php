@@ -38,7 +38,7 @@ abstract class ParserAbstract
 
     abstract public function remainsProduct(string $code): float;
 
-    abstract public function parserCost(ProductParser $parser): float;
+    abstract public function parserCost(ProductParser $parser): float|bool;
 
     abstract public function availablePrice(string $code): bool;
 

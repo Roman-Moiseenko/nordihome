@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ParserLog;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -38,3 +39,11 @@ Breadcrumbs::for('admin.parser.category.show', function (BreadcrumbTrail $trail,
     $trail->push($category_parser->name, route('admin.parser.category.show', $category_parser));
 });
 
+Breadcrumbs::for('admin.parser.log.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('История Парсера', route('admin.parser.log.index'));
+});
+Breadcrumbs::for('admin.parser.log.show', function (BreadcrumbTrail $trail, ParserLog $parser_log) {
+    $trail->parent('admin.parser.log.index');
+    $trail->push($parser_log->date, route('admin.parser.log.show', $parser_log));
+});
