@@ -38,10 +38,4 @@
             </div>
         </div>
     </div>
-
-    <livewire:shop.widget.feedback />
-
-    <div class="mt-5">
-        @include('shop.nordihome.widgets.map')
-    </div>
 @endsection
