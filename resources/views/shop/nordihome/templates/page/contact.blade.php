@@ -9,7 +9,7 @@
 @section('description', $description)
 
 @section('content')
-        <div class="container-xl"><h1 class="my-4 7">{{ $page->name }}</h1></div>
+        <div class="container-xl"><h1 class="my-4">{{ $page->name }}</h1></div>
         <div class="mt-4">
             {!! $page->text !!}
         </div>
