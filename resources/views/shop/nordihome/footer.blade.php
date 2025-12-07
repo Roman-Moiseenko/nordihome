@@ -44,26 +44,6 @@
                 </ul>
             </div>
             <div class="col-12 col-sm-6 col-md-6 col-lg-2">второе меню</div>
-
-
-            <div class="col-lg-1"></div>
-            <div class="col-lg-5">
-                <div class="row">
-                    @foreach(\App\Modules\Nordihome\Helper\MenuHelper::getFooterMenu() as $column)
-                        <div class="col-lg-6 px-2">
-                            <div class="menu-column">
-                                <div class="heading">МЕНЮ</div>
-                                <ul class="menu">
-                                @foreach($column['items'] as $item)
-                                        <li><a href="{{ $item['route'] }}">{{ $item['name'] }}</a></li>
-                                @endforeach
-
-                                </ul>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
         </div>
     </div>
     <div class="about pt-4 pb-3 text-center">
