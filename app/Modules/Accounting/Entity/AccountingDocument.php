@@ -296,5 +296,11 @@ abstract class AccountingDocument extends Model
         parent::delete();
     }
 
+    public function superDelete(): void
+    {
+        $this->completed = false;
+        $this->delete();
+        $this->forceDelete();
+    }
     //Мягкое удаление
 }

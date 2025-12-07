@@ -37,6 +37,8 @@ class Kernel extends ConsoleKernel
         //Команды для ИКЕА
         if (env('SHOP_THEME') == 'nordihome') {
             $schedule->command('furniture')->dailyAt('00:05');
+            $schedule->command('cron:parser-category')->dailyAt('01:00');
+
         }
         //Команды для NB
         if (env('SHOP_THEME') == 'nbrussia') {

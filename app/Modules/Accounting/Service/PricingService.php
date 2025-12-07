@@ -86,6 +86,9 @@ class PricingService extends AccountingService
         $item->delete();
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function completed(PricingDocument $pricing): void
     {
         if ($pricing->isCompleted()) throw new \DomainException('Документ уже проведен');

@@ -25,7 +25,7 @@ class ClearCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): bool
     {
         if (! $this->confirmToProceed()) {
             return false;
@@ -38,7 +38,7 @@ class ClearCommand extends Command
         return true;
     }
 
-    private function clear_category($catalog_id)
+    private function clear_category($catalog_id): void
     {
         $this->warn('Очистка каталогов');
         Category::where('id', '>', $catalog_id)->update(['parent_id' => null]);
@@ -52,7 +52,7 @@ class ClearCommand extends Command
     }
 
 
-    private function clear_product($product_id)
+    private function clear_product($product_id): void
     {
         $this->warn('Очистка товаров');
         $products = Product::where('id', '>', $product_id)->getModels();

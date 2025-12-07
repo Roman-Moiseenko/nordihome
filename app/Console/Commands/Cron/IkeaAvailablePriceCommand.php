@@ -8,12 +8,15 @@ use App\Modules\Parser\Job\ParserPriceProduct;
 use Illuminate\Console\Command;
 use Tests\CreatesApplication;
 
-class ParserCommand extends Command
+/**
+ * Проверяем на Икеа доступность товара и новую цену
+ */
+class IkeaAvailablePriceCommand extends Command
 {
     use CreatesApplication;
 
     protected $signature = 'cron:parser-price';
-    protected $description = 'Парсим цены товаров';
+    protected $description = 'Парсим цены и доступность товаров';
 
     public function handle(): void
     {

@@ -32,4 +32,13 @@ trait PhotoField
         if (empty($thumb)) return $this->photo->getUploadUrl();
         return $this->photo->getThumbUrl($thumb);
     }
+
+    public function addImageByUrl(string $url): ?Photo
+    {
+        if (empty($url)) return null;
+        $photo = Photo::uploadByUrl(url: $url, thumb: $this->is_thumb);
+        $this->photo()->save($photo);
+        $photo->refresh();
+        return $photo;
+    }
 }

@@ -55,5 +55,20 @@ class CategoryParserService
         $category->save();
     }
 
+    public function toggle(CategoryParser $categoryParser): string
+    {
+        $categories = CategoryParser::where('_lft', '>=', $categoryParser->_lft)
+            ->where('_rgt', '<=', $categoryParser->_rgt)
+            ->get();
+
+        $message = $categoryParser->active ? 'Категория(и) убрана(ы) из парсинга' : 'Категория(и) добавлена(ы) в парсинг';
+
+        foreach ($categories as $category) {
+            $category->active = !$categoryParser->active;
+            $category->save();
+        }
+        return $message;
+    }
+
 
 }

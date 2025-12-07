@@ -29,12 +29,12 @@ Breadcrumbs::for('admin.parser.category.index', function (BreadcrumbTrail $trail
 });
 
 
-Breadcrumbs::for('admin.parser.category.show', function (BreadcrumbTrail $trail, CategoryParser $category) {
-    if ($category->parent) {
-        $trail->parent('admin.parser.category.show', $category->parent);
+Breadcrumbs::for('admin.parser.category.show', function (BreadcrumbTrail $trail, CategoryParser $category_parser) {
+    if ($category_parser->parent) {
+        $trail->parent('admin.parser.category.show', $category_parser->parent);
     } else {
         $trail->parent('admin.parser.category.index');
     }
-    $trail->push($category->name, route('admin.parser.category.show', $category));
+    $trail->push($category_parser->name, route('admin.parser.category.show', $category_parser));
 });
 

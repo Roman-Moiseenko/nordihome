@@ -2,13 +2,12 @@
 
 namespace App\Modules\Parser\Entity;
 
+use App\Modules\Base\Traits\PhotoField;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 
 /**
@@ -17,7 +16,6 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property string $url уникальный для исключения двойного парсинга
  * @property bool $active
  * @property int $parent_id
- * @property int $category_id
  * @property int $brand_id Привязка к бренду
  *
  * @property int $_lft
@@ -29,7 +27,7 @@ use Kalnoy\Nestedset\NodeTrait;
  */
 class CategoryParser extends Model
 {
-    use NodeTrait, HasFactory;
+    use NodeTrait, PhotoField;
 
     public $timestamps = false;
     protected $table = 'parser_categories';

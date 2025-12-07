@@ -30,6 +30,8 @@ class ParserPriceProduct implements ShouldQueue
         $this->parser_product_id = $parser_product_id;
     }
 
+    //TODO Переделать под икеа ParserIkea
+
     public function handle(): void
     {
         $logger = LoggerCron::find($this->logger_id);

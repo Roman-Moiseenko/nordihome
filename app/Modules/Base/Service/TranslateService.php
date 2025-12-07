@@ -10,7 +10,15 @@ class TranslateService
     public function translate(string $foreign, string $lang = 'pl'): string
     {
         if (is_null($translate = Translate::where('foreign', $foreign)->first())) {
-            $value = GoogleTranslateForFree::translate($lang,'ru', $foreign);
+            try {
+                $value = YandexTranslate::translate($foreign);
+            } catch (\Throwable) {
+                try {
+                    $value = GoogleTranslateForFree::translate($lang, 'ru', $foreign);
+                } catch (\Throwable) {
+                    return $foreign;
+                }
+            }
             $translate = Translate::register($foreign, $value);
         }
         return $translate->value;

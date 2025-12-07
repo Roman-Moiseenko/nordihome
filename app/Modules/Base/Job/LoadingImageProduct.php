@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Modules\Base\Job;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -36,6 +36,7 @@ class Category extends Model
 {
     use NodeTrait, HasFactory, ImageField, IconField;
 
+    const string NO_PARSE = 'no_parse';
     protected $attributes = [
         'top_title' => '',
         'top_description' => '',
@@ -93,6 +94,11 @@ class Category extends Model
     {
         if ($this->parent_id == null) return false;
         return $this->parent_id == $category->id;
+    }
+
+    public static function noParseCategory(): self
+    {
+        return Category::where('slug', 'no_parse')->first();
     }
 
     public function getChildrenIdAll(): array
