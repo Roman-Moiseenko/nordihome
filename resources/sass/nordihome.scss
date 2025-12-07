@@ -259,8 +259,22 @@ h3 {font-size: 28px;}
         opacity: 1;
     }
 }
-
 .owl-carousel .owl-item img {width:100%;}
+#footer {
+    a {
+        color:white;
+    }
+}
+.footer-menu {
+    li {
+        list-style: none;
+        margin-bottom: 20px;
+    }
+    a {
+        text-decoration: none;
+    }
+}
+
 //@import "node_modules/font-awesome/scss/font-awesome.scss";
 
 @import "common";
