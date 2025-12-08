@@ -37,7 +37,7 @@ class CategoryParserController extends Controller
         //$product_categories = $this->categoryRepository->forFilters();
         return Inertia::render('Parser/Category/Index', [
             'categories' => $categories,
-            'brands' => Brand::where('parser_class', '<>', null)->getModels(),
+           // 'brands' => Brand::where('parser_class', '<>', null)->getModels(),
         //    'product_categories' => $product_categories,
         ]);
     }

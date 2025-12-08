@@ -39,7 +39,12 @@ Route::group(
             'prefix' => 'product',
             'as' => 'product.',
         ], function () {
-            Route::post('/parser/{product}', [ProductParserController::class, 'parser'])->name('parser');
+            Route::get('/', [ProductParserController::class, 'index'])->name('index');
+            Route::get('/{product_parser}', [ProductParserController::class, 'show'])->name('show');
+            Route::post('/parser/{product_parser}', [ProductParserController::class, 'parser'])->name('parser');
+            Route::post('/available/{product_parser}', [ProductParserController::class, 'available'])->name('available');
+            Route::post('/fragile/{product_parser}', [ProductParserController::class, 'fragile'])->name('fragile');
+            Route::post('/sanctioned/{product_parser}', [ProductParserController::class, 'sanctioned'])->name('sanctioned');
             Route::post('/by-list/', [ProductParserController::class, 'by_list'])->name('by-list');
 
         });

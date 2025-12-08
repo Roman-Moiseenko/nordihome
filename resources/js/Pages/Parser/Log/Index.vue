@@ -6,6 +6,7 @@
             :data="tableData"
             header-cell-class-name="nordihome-header"
             style="width: 100%; cursor: pointer;"
+            :row-class-name="classes.TableRead"
             row-key="id"
             @row-click="rowClick"
         >
@@ -16,9 +17,9 @@
             <el-table-column prop="del" label="Удаленные" width="120"/>
             <el-table-column label="Действия" align="right">
                 <template #default="scope">
-                    <el-button v-if="!scope.row.completed"
+                    <el-button v-if="!scope.row.read"
                                size="small"
-                               type="danger"
+                               type="success"
                                @click.stop="onRead(scope.row)"
                     >
                         Read
@@ -45,6 +46,7 @@ import {route} from "ziggy-js";
 import Active from "@Comp/Elements/Active.vue";
 import {ref} from "vue";
 import TableFilter from "@Comp/TableFilter.vue";
+import {classes} from "@Res/className";
 
 
 const props = defineProps({
@@ -60,6 +62,6 @@ function rowClick(row) {
     router.get(route('admin.parser.log.show', {parser_log: row.id}))
 }
 function onRead(row) {
-    router.get(route('admin.parser.log.read', {parser_log: row.id}))
+    router.post(route('admin.parser.log.read', {parser_log: row.id}))
 }
 </script>

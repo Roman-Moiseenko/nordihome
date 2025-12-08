@@ -9,7 +9,7 @@ use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Page\Service\CacheService;
 use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Parser\Job\ParserPriceProduct;
+use App\Modules\Parser\Job\ParserAvailablePriceProduct;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Tests\CreatesApplication;

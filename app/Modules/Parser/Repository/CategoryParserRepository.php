@@ -45,4 +45,19 @@ class CategoryParserRepository
             }),
         ]);
     }
+
+    public function forFilters(): array
+    {
+        return array_map(function (CategoryParser $category) {
+            $_depth = str_repeat('-', $category->depth);
+            return [
+                'id' => $category->id,
+                'name' => trim($_depth . ' ' . $category->name),
+            ];
+        }, $this->withDepth());
+    }
+    public function withDepth(): array
+    {
+        return CategoryParser::defaultOrder()->withDepth()->getModels();
+    }
 }

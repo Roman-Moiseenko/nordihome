@@ -445,7 +445,8 @@ class ParserIkea extends ParserAbstract
 
     public function parserCost(ProductParser $parser): float|bool
     {
-        $code = $parser->product->code;
+        $code = $parser->maker_id; //product->code;
+
         $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
         $json_product = $this->httpPage->getPage($url, '_cache');
         $_array = json_decode($json_product, true);
@@ -463,6 +464,7 @@ class ParserIkea extends ParserAbstract
             $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
             if ($_previous > (float)$price) $price = $_previous;
         }
+        //Изменилась цена
         if ($parser->price_sell != $price) {
             $this->logService->addLog(
                 $parser->id,

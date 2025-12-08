@@ -32,7 +32,7 @@ class ParserLog extends Model
     }
 
 
-    public static function findDate(string $date): self
+    public static function findDate(string $date): self|null
     {
         return ParserLog::where('date', $date)->first();
     }

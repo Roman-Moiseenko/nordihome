@@ -72,4 +72,19 @@ class CategoryParser extends Model
     {
         return $this->belongsToMany(ProductParser::class, 'parser_categories_products', 'category_id', 'product_id');
     }
+
+    public function getParentAll()
+    {
+        return CategoryParser::orderBy('_lft')->where('_lft', '<=', $this->_lft)->where('_rgt', '>=', $this->_rgt)->get();
+    }
+
+    public function getParentNames(): string
+    {
+        $categories = $this->getParentAll();
+        $name = '';
+        foreach ($categories as $category) {
+            $name .= $category->name . "\\";
+        }
+        return $name;// .= $this->name;
+    }
 }

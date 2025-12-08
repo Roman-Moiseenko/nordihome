@@ -2,6 +2,7 @@
 
 namespace App\Modules\Parser\Repository;
 
+use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ParserLog;
 use App\Modules\Parser\Entity\ParserLogItem;
 use Illuminate\Http\Request;
@@ -33,12 +34,39 @@ class ParserLogRepository
     public function LogWithToArray(ParserLog $log): array
     {
         return array_merge($log->toArray(), [
-            'new' => $log->items()->where('status', ParserLogItem::STATUS_NEW)->get()->toArray(),
-            'change' => $log->items()->where('status', ParserLogItem::STATUS_CHANGE)->get()->toArray(),
-            'del' => $log->items()->where('status', ParserLogItem::STATUS_DEL)->get()->toArray(),
+            'new' => $this->getItems($log, ParserLogItem::STATUS_NEW),
+            'change' => $this->getItems($log, ParserLogItem::STATUS_CHANGE),
+            'del' => $this->getItems($log, ParserLogItem::STATUS_DEL),
         ]);
     }
 
+    private function getItems(ParserLog $log, int $status): array
+    {
+        return $log->items()->where('status', $status)
+            ->get()
+            ->map(fn(ParserLogItem $item) => $this->ItemToArray($item))->toArray();
+    }
+
+    private function ItemToArray(ParserLogItem $item): array
+    {
+
+        $data = [
+            'product_id' => $item->parser->product_id,
+            'code' => $item->parser->maker_id,
+            'category' => $item->parser->product->category->getParentNames(),
+            'category_parser' => array_map(function (CategoryParser $category) {
+                return $category->getParentNames();
+            }, $item->parser->categories()->getModels()),
+
+        ];
+        foreach ($item->data as $key => $value) {
+            $data[$key] = $value;
+        }
+
+
+
+        return $data;
+    }
 
     private function getBy()
     {

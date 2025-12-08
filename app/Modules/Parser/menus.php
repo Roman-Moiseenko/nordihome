@@ -9,21 +9,21 @@ return [
         'vue' => true,
         'font_awesome' => 'fa-light fa-folder-magnifying-glass',
         'sub_menu' => [
-          /*  'product' => [
-                'icon' => 'package-open',
-                'title' => 'Все Товары',
-                'route_name' => 'admin.parser.product.index',
-                'vue' => true,
-                'font_awesome' => 'fa-light fa-box-open',
-            ],*/
+
             'category' => [
                 'icon' => 'file-box',
-                'title' => 'Категории',
+                'title' => 'Категории Икеа',
                 'route_name' => 'admin.parser.category.index',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-folder-tree',
             ],
-
+              'product' => [
+                  'icon' => 'package-open',
+                  'title' => 'Товары Икеа',
+                  'route_name' => 'admin.parser.product.index',
+                  'vue' => true,
+                  'font_awesome' => 'fa-light fa-box-open',
+              ],
 
 
             'logs' => [

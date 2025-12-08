@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Cache;
 /**
  * Повторное спарисание товара уже имеющегося в БД (прлверка цены и доступности)
  */
-class ParserPriceProduct implements ShouldQueue
+class ParserAvailablePriceProduct implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,19 +31,15 @@ class ParserPriceProduct implements ShouldQueue
         $this->parser_product_id = $parser_product_id;
     }
 
-    //TODO Переделать под икеа ParserIkea
 
     public function handle(ParserIkea $parserIkea): void
     {
-
         try {
-            /** @var ProductParser $product_parser */
             $product_parser = ProductParser::find($this->parser_product_id);
 
             if ($parserIkea->parserCost($product_parser)) {
                 JobCacheProduct::dispatch($product_parser->product_id);
             }
-
         } catch (\Throwable $e) {
             $logger = LoggerCron::find($this->logger_id);
             $logger->items()->create([
@@ -52,9 +48,5 @@ class ParserPriceProduct implements ShouldQueue
                 'value' => json_encode([$e->getMessage(), $e->getFile(), $e->getLine()]),
             ]);
         }
-
-
-
-
     }
 }

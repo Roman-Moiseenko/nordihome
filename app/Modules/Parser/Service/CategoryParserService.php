@@ -3,6 +3,7 @@
 namespace App\Modules\Parser\Service;
 
 use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use Illuminate\Http\Request;
 
 class CategoryParserService
@@ -57,18 +58,29 @@ class CategoryParserService
 
     public function toggle(CategoryParser $categoryParser): string
     {
+        $active = !$categoryParser->active; //Новое состояние
         $categories = CategoryParser::where('_lft', '>=', $categoryParser->_lft)
             ->where('_rgt', '<=', $categoryParser->_rgt)
             ->get();
 
-        $message = $categoryParser->active ? 'Категория(и) убрана(ы) из парсинга' : 'Категория(и) добавлена(ы) в парсинг';
+        $message = $active ? 'Категория(и) добавлена(ы) в парсинг' : 'Категория(и) убрана(ы) из парсинга';
 
         foreach ($categories as $category) {
-            $category->active = !$categoryParser->active;
+            $category->active = $active; //Меняем состояние для всех дочерних категорий и текущей
             $category->save();
+            $parser_products = ProductParser::whereHas('categories', function ($query) use ($category){
+                $query->where('id', $category->id);
+            })->get();
+
+            foreach ($parser_products as $parser_product) {
+                $parser_product->availability = $active; //Меняем состояние для всех товаров из дочерних категорий
+                $parser_product->save();
+            }
         }
         return $message;
     }
+
+
 
 
 }

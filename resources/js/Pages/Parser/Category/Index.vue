@@ -16,7 +16,6 @@ import {inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import CategoryRow from "./Row.vue";
 import CategoryChildren from "./Children.vue";
-import SearchAddProducts from "@Comp/Search/AddProducts.vue";
 
 const props = defineProps({
     categories: Object,
@@ -24,26 +23,27 @@ const props = defineProps({
         type: String,
         default: 'Категории парсера',
     },
-    brands: Array,
+   // brands: Array,
 })
 
-const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
-console.log(props.categories)
 
+/*
 const form = reactive({
     name: null,
     parent_id: null,
     brand_id: null,
 })
+
 function createButton() {
     router.post(route('admin.parser.category.store', form))
 }
-
+*/
 function handleDeleteEntity(id) {
     $delete_entity.show(route('admin.parser.category.destroy', {category_parser: id}));
 }
+/*
 function routeClick(row) {
     router.get(route('admin.parser.category.show', {category_parser: row.id}))
-}
+}*/
 </script>

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $status
  * @property ParserLog $log
  * @property array $data
+ * @property ProductParser $parser
  */
 class ParserLogItem extends Model
 {
@@ -44,5 +45,10 @@ class ParserLogItem extends Model
     public function log(): BelongsTo
     {
         return $this->belongsTo(ParserLog::class, 'log_id', 'id');
+    }
+
+    public function parser()
+    {
+        return $this->belongsTo(ProductParser::class, 'parser_id', 'id');
     }
 }
