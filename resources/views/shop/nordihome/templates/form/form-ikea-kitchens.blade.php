@@ -142,4 +142,5 @@ use App\Modules\Page\Entity\FormWidget;
 <div class="t-a_center t-color_orange t-t_uppercase m-b_10 f-z_28 f-w_600">Одна система - тысячи возможностей!</div>
 <div class="t-a_center m-b_30">Вы можете собрать свой вариант кухни из отдельных элементов, или выбрать готовую комплектацию в нашем каталоге. ИКЕА предлагает несколько линеек готовых модульных кухонь, которые различаются по дизайну, функциональности и стоимости.</div>
 <div class="m-b_20">тут слайдер с товарами</div>
+<div class="t-a_center"><a href="/kuhni-pod-zakaz/" class="btn btn-black">СМОТРЕТЬ ВСЕ КУХНИ</a></div>
 
