@@ -246,7 +246,7 @@ h3 {font-size: 28px;}
 .h-menu li a:hover {color:var(--dark-gray);}
 .h-menu li a {padding-top:5px;padding-bottom:5px;}
 .h-menu li:first-child a {background:url(/wp-content/themes/euroikea/images/svg-hot-50.svg) no-repeat center left / 17px;padding-left: 20px;}
-.h-menu li:first-child a:after {content:'РґРѕ -50%';background:var(--orange);text-transform:none;color:white;border-radius: 13px;padding: 2px 9px 4px 9px;margin-left: 5px;font-weight: 500;}
+.h-menu li:first-child a:after {content:'до -50%';background:var(--orange);text-transform:none;color:white;border-radius: 13px;padding: 2px 9px 4px 9px;margin-left: 5px;font-weight: 500;}
 .h-menu li .sub-menu, #menu-menyu-katalog .sub-menu {display:none;}
 .h-menu li:hover .sub-menu, #menu-menyu-katalog li:hover .sub-menu {
     display:block;
