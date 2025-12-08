@@ -19,6 +19,18 @@
 use App\Modules\Page\Entity\FormWidget;
        /** @var FormWidget $widget  */
 @endphp
+<div class="main-kitchen">
+    <img src="/wp-content/themes/euroikea/images/main-kuhni-min.jpg" alt="Кухни икеа под заказ">
+    <div class="main-kitchen-form bg-white">
+        <div class="t-t_uppercase f-w_600 t-a_center f-z_23 m-b_10">Получите <span class="t-color_orange">дизайн-проект в подарок!*</span></div>
+        <div class="t-a_center m-b_10">Наш дизайнер с опытом работы более 10 лет в ИКЕА разработает дизайн-проект вашей кухни!</div>
+        <div class="m-b_10">форма</div>
+    </div>
+    <div class="f-z_12">*Услуга по разработке дизайн-проекта предоставляется бесплатно при 100% оплате кухни под заказ (базовая стоимость составляет 4 000 рублей). Подробности у менеджеров.</div>
+</div>
+
+
+
 
 <div class="heading f-w_600 f-z_23 m-b_20">ФОРМА ОБРАТНОЙ СВЯЗИ</div>
 <div>По вопросам сотрудничества: <a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a></div>
