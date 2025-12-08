@@ -1,4 +1,4 @@
-<!--template:-->
+<!--template:Страница Кухни Икеа под заказ-->
 @extends('shop.nordihome.layouts.main')
 
 @section('main')
