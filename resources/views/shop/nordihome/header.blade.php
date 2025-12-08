@@ -15,12 +15,11 @@
             <div><i class="fa-light fa-location-dot"></i>&nbsp;Россия</div>
             <div class="d-flex ">
                 <div>
-                    @foreach(\App\Modules\Nordihome\Helper\MenuHelper::getMenuPages() as $item)
-                        <a href="{{ $item['route'] }}"
-                           class="fs-6 ms-1 link-dark link-underline-opacity-0 link-underline-opacity-0-hover fw-bolder link-opacity-75-hover">
-                            {{ $item['name'] }}
-                        </a>
-                    @endforeach
+                    <ul id="menu-menyu-v-shapke" class="h-menu">
+                        @foreach($menus['menu-header01']['items'] as $item)
+                            <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
+                        @endforeach
+                    </ul>
                 </div>
                 <div class="d-flex ms-2">
 

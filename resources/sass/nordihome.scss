@@ -220,6 +220,74 @@ h3 {font-size: 28px;}
 }
 .btn-gradient:hover {background:linear-gradient(156deg, rgba(60,60,60,1) 0%, rgba(60,60,60,1) 100%);}
 
+.h-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+.h-menu li, #menu-menyu-katalog li {
+    list-style: none;
+    font-size: 18px;
+    font-weight: 600;
+    padding-right: 15px;
+}
+#menu-menyu-v-shapke li {
+    font-size: 13px;
+    text-transform: uppercase;
+}
+#menu-menyu-v-shapke li:last-child {padding-right: 0;}
+#menu-menyu-v-shapke li:nth-child(2) a{}
+.h-menu li:hover {
+    color:var(--light-gray);
+}
+.h-menu li a, #menu-menyu-katalog li a {text-decoration:none;}
+.h-menu li a:hover {color:var(--dark-gray);}
+.h-menu li a {padding-top:5px;padding-bottom:5px;}
+.h-menu li:first-child a {background:url(/wp-content/themes/euroikea/images/svg-hot-50.svg) no-repeat center left / 17px;padding-left: 20px;}
+.h-menu li:first-child a:after {content:'РґРѕ -50%';background:var(--orange);text-transform:none;color:white;border-radius: 13px;padding: 2px 9px 4px 9px;margin-left: 5px;font-weight: 500;}
+.h-menu li .sub-menu, #menu-menyu-katalog .sub-menu {display:none;}
+.h-menu li:hover .sub-menu, #menu-menyu-katalog li:hover .sub-menu {
+    display:block;
+    position: absolute;
+    background: white;
+    padding: 10px;
+    counter-reset: li;
+    columns: 2;
+    column-gap: 15px;
+    box-shadow: 0px 10px 40px rgb(0 0 0 / 50%);
+    border: 1px solid var(--gray);
+    z-index: 99;
+    top: 35px;
+}
+.h-menu li:hover .sub-menu li a, #menu-menyu-katalog li:hover .sub-menu li a {
+    display: block;
+}
+.h-menu li .sub-menu li a, #menu-menyu-katalog li .sub-menu li a {
+    display: block;
+    border-bottom: 1px solid var(--gray);
+    font-weight: 400;
+    padding: 2px 10px 2px 10px;
+    font-size: 15px;
+}
+.h-menu li .sub-menu li .sub-menu li a {font-size: 16px;}
+/* .h-menu li:hover .sub-menu li:last-child a { */
+/* border-bottom: 0px solid var(--gray);} */
+.h-menu li:hover .sub-menu li {padding-right: 0;}
+.h-menu li:hover .sub-menu li a:hover, #menu-menyu-katalog li:hover .sub-menu li a:hover {
+    background:var(--gray);
+    color:black;
+}
+.h-menu li .sub-menu li .sub-menu {
+    display:none;
+    position: absolute;
+    left: 195px;
+    width: 330px;
+    top: 0;
+}
+.h-menu li .sub-menu li:hover .sub-menu {display:block;}
+
 .main-slider .sl-text {
     background: $black;
     padding: 60px;
