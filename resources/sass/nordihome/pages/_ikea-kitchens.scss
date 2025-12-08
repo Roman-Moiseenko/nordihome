@@ -1,0 +1,22 @@
+.main-kitchen {
+    position:relative;
+    .main-kitchen-form {
+        position:absolute;
+        z-index:98;
+        right:20px;
+        padding:20px;
+        border-radius:8px;
+        max-width:500px;
+        top: 50%;
+        transform: translateY(-50%);
+        input {
+            width:100%;
+        }
+        input[type="submit"] {
+            background:$orange;
+            color:black;
+            border:1px solid $orange;
+            font-weight:600;
+        }
+    }
+}
