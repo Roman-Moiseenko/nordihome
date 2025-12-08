@@ -43,7 +43,15 @@
         }
     }
 }
-.advantages-kitchen-item > div {}
+.quality-kitchens {
+    img {
+    max-width:100%;
+    display:block;
+    }
+    .row {
+        align-items: end;
+    }
+}
 @media (max-width: 1200px) {
     .main-kitchen {
         .main-kitchen-form {
@@ -61,6 +69,22 @@
             right:auto;
             margin-top: 20px;
             transform: none;
+        }
+    }
+    .quality-kitchens {
+        h2 {
+        margin: 10px 0;
+        }
+        .row {
+            align-items: flex-start;
+        }
+        .quality-kitchens-text {
+            .m-b_50 {
+                margin-bottom: 20px;
+            }
+        }
+        img {
+            margin-bottom:10px;
         }
     }
 }
@@ -93,6 +117,13 @@
             .heading {
                 margin-bottom: 0px;
                 font-size: 16px;
+            }
+        }
+    }
+    .quality-kitchens {
+        .quality-kitchens-text {
+            h3 {
+                font-size: 23px;
             }
         }
     }
