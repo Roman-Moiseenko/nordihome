@@ -1,3 +1,4 @@
+<!--template:Страница Тарифы и условия доставки-->
 @extends('shop.nordihome.layouts.main')
 
 @section('main')
