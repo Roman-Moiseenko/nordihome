@@ -20,7 +20,7 @@ use App\Modules\Page\Entity\FormWidget;
        /** @var FormWidget $widget  */
 @endphp
 <div class="main-kitchen">
-    <img src="/uploads/gallery/1/main-kuhni-min.jpg" alt="Кухни икеа под заказ">
+    <img src="/uploads/gallery/1/main-kuhni-min.jpg" class="width_100" alt="Кухни икеа под заказ">
     <div class="main-kitchen-form bg-white">
         <div class="t-t_uppercase f-w_600 t-a_center f-z_23 m-b_10">Получите <span class="t-color_orange">дизайн-проект в подарок!*</span></div>
         <div class="t-a_center m-b_10">Наш дизайнер с опытом работы более 10 лет в ИКЕА разработает дизайн-проект вашей кухни!</div>
