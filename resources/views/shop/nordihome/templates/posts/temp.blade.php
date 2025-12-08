@@ -22,7 +22,6 @@
     @foreach($posts as $post)
         <div>
             {{ $post->title }}
-            {{ $widget->getImage() }}
             <a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->name }}</a>
         </div>
     @endforeach
