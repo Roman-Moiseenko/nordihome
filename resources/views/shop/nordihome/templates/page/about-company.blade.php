@@ -1,4 +1,4 @@
-<!--template:О компании-->
+<!--template:Страница О компании-->
 @extends('shop.nordihome.layouts.main')
 
 @section('main')
