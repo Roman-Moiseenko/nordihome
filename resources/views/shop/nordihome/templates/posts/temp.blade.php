@@ -21,7 +21,7 @@
 
     @foreach($posts as $post)
         <div>
-            {{ $post->title }} {{ $post->image }}
+            {{ $post->title }}
             <a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->name }}</a>
         </div>
     @endforeach
