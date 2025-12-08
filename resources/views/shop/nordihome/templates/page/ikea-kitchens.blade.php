@@ -95,7 +95,7 @@
         </div>
         <div class="t-a_center t-color_orange t-t_uppercase m-b_10 f-z_28 f-w_600">Одна система - тысячи возможностей!</div>
         <div class="t-a_center m-b_30">Вы можете собрать свой вариант кухни из отдельных элементов, или выбрать готовую комплектацию в нашем каталоге. ИКЕА предлагает несколько линеек готовых модульных кухонь, которые различаются по дизайну, функциональности и стоимости.</div>
-        <div class="m-b_20">тут слайдер с товарами</div>
+        <div class="m-b_20"><b>тут слайдер с товарами</b></div>
         <div class="t-a_center m-b_20"><a href="/" class="btn btn-black">СМОТРЕТЬ ВСЕ КУХНИ</a></div>
         <div class="quality-kitchens">
             <h2 class="page-h2"><span class="t-color_orange">Преимущества кухонь</span> от ИКЕА:</h2>
