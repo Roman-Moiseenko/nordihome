@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Repository;
 
-use App\Modules\Page\Entity\BannerWidget;
-use App\Modules\Page\Entity\BannerWidgetItem;
+use App\Modules\Page\Entity\Widgets\BannerWidget;
+use App\Modules\Page\Entity\Widgets\BannerWidgetItem;
 use Illuminate\Http\Request;
 
 class BannerWidgetRepository

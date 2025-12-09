@@ -1,17 +1,18 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\Page\Entity\BannerWidget;
 use App\Modules\Page\Entity\Contact;
-use App\Modules\Page\Entity\FormWidget;
 use App\Modules\Page\Entity\Gallery;
 use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
-use App\Modules\Page\Entity\ProductWidget;
-use App\Modules\Page\Entity\PromotionWidget;
-use App\Modules\Page\Entity\TextWidget;
+use App\Modules\Page\Entity\Widgets\BannerWidget;
+use App\Modules\Page\Entity\Widgets\FormWidget;
+use App\Modules\Page\Entity\Widgets\PostWidget;
+use App\Modules\Page\Entity\Widgets\ProductWidget;
+use App\Modules\Page\Entity\Widgets\PromotionWidget;
+use App\Modules\Page\Entity\Widgets\TextWidget;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -56,7 +57,7 @@ Breadcrumbs::for('admin.page.widget.text.show', function (BreadcrumbTrail $trail
     $trail->push($widget->name, route('admin.page.widget.text.show', $widget));
 });
 
-//TEXT
+//FORM
 Breadcrumbs::for('admin.page.widget.form.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Виджеты обратной связи', route('admin.page.widget.form.index'));
@@ -66,6 +67,15 @@ Breadcrumbs::for('admin.page.widget.form.show', function (BreadcrumbTrail $trail
     $trail->push($widget->name, route('admin.page.widget.form.show', $widget));
 });
 
+//POST
+Breadcrumbs::for('admin.page.widget.post.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Виджеты записей', route('admin.page.widget.post.index'));
+});
+Breadcrumbs::for('admin.page.widget.post.show', function (BreadcrumbTrail $trail, PostWidget $widget) {
+    $trail->parent('admin.page.widget.post.index', $widget);
+    $trail->push($widget->name, route('admin.page.widget.post.show', $widget));
+});
 //////WIDGETS//////
 
 //CACHE

@@ -571,11 +571,14 @@ class ParserIkea extends ParserAbstract
 
     public function parsingDataByUrl(string $url): array|null
     {
+
+
         $pageProduct = $this->httpPage->getPage($url);
         preg_match_all('#<script type="text\/hydrate">(.+?)<\/script>#su', $pageProduct, $res);
         $_res = $res[1][0];
         $_data = json_decode($_res, true);
-        $dataProduct = $_data["pageProps"]["clientProduct"];
+        //dd($_data["pageProps"]);
+        $dataProduct = $_data["pageProps"]["product"]; //clientProduct
         //Составные товары
         $composite = array_map(function ($subProduct) {
             return [

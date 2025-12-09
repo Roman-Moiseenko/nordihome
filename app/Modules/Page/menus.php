@@ -50,7 +50,12 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-text-size',
             ],
-
+            'posts' => [
+                'title' => 'Виджеты записей',
+                'route_name' => 'admin.page.widget.post.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-square-list',
+            ],
             'contacts' => [
                 'title' => 'Контакты',
                 'route_name' => 'admin.page.contact.index',

@@ -3,7 +3,7 @@
 namespace App\Modules\Page\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Page\Entity\FormWidget;
+use App\Modules\Page\Entity\Widgets\FormWidget;
 use App\Modules\Page\Repository\FormWidgetRepository;
 use App\Modules\Page\Repository\TemplateRepository;
 use App\Modules\Page\Service\FormWidgetService;

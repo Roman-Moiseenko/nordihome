@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Page\Service;
 
 use App\Modules\Page\Entity\Page;
-use App\Modules\Page\Entity\Template;
-use App\Modules\Page\Entity\ProductWidget;
+use App\Modules\Page\Entity\Widgets\ProductWidget;
+use App\Modules\Page\Entity\Widgets\Template;
 use App\Modules\Page\Repository\TemplateRepository;
 use Illuminate\Http\Request;
 

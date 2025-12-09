@@ -2,8 +2,8 @@
 
 namespace App\Modules\Page\Repository;
 
-use App\Modules\Page\Entity\TextWidget;
-use App\Modules\Page\Entity\TextWidgetItem;
+use App\Modules\Page\Entity\Widgets\TextWidget;
+use App\Modules\Page\Entity\Widgets\TextWidgetItem;
 
 class TextWidgetRepository
 {

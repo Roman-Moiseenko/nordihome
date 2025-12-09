@@ -16,7 +16,7 @@
      * <div id="{{ $widget->id }}-callback" style="display: none"> -
      * блок, который показывается, после отправки сообщения
      */
-use App\Modules\Page\Entity\FormWidget;
+use App\Modules\Page\Entity\Widgets\FormWidget;
        /** @var FormWidget $widget  */
 @endphp
 <div class="text-center mt-5 py-4 widget-home-3-group">

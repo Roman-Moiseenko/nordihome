@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Entity\Widgets;
 
 use Illuminate\Database\Eloquent\Model;
 

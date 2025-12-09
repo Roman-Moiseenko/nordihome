@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Page\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Page\Entity\BannerWidget;
-use App\Modules\Page\Entity\BannerWidgetItem;
-use App\Modules\Page\Entity\Template;
+use App\Modules\Page\Entity\Widgets\BannerWidget;
+use App\Modules\Page\Entity\Widgets\BannerWidgetItem;
 use App\Modules\Page\Repository\BannerWidgetRepository;
 use App\Modules\Page\Repository\TemplateRepository;
 use App\Modules\Page\Service\BannerWidgetService;

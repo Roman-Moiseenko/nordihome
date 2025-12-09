@@ -3,8 +3,8 @@
 namespace App\Modules\Page\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Page\Entity\TextWidget;
-use App\Modules\Page\Entity\TextWidgetItem;
+use App\Modules\Page\Entity\Widgets\TextWidget;
+use App\Modules\Page\Entity\Widgets\TextWidgetItem;
 use App\Modules\Page\Repository\TemplateRepository;
 use App\Modules\Page\Repository\TextWidgetRepository;
 use App\Modules\Page\Service\TextWidgetService;

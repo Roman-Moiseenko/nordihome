@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Controllers;
 
-use App\Modules\Page\Entity\ProductWidget;
+use App\Modules\Page\Entity\Widgets\ProductWidget;
 
 class HomeController extends ShopController
 {

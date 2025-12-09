@@ -11,7 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Page\Entity\BannerWidget $widget */
+    /** @var \App\Modules\Page\Entity\Widgets\BannerWidget $widget */
 @endphp
 <div class="main-reviews p-t_50 p-b_50" id="reviews-tab">
     <div class="container-fluid">

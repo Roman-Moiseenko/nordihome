@@ -15,7 +15,7 @@
     * $item-group - Group::class
     */
 
-       use App\Modules\Page\Entity\ProductWidget;
+       use App\Modules\Page\Entity\Widgets\ProductWidget;
        /** @var ProductWidget $product  */
 @endphp
 <div class="text-center mt-5 py-4 widget-home-3-group">

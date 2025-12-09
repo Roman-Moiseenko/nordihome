@@ -4,10 +4,9 @@ namespace App\Modules\Page\Entity\Renders;
 
 use App\Modules\Base\Casts\MetaCast;
 use App\Modules\Base\Entity\Meta;
-use App\Modules\Page\Entity\Template;
+use App\Modules\Page\Entity\Widgets\Template;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use function Termwind\render;
 
 /**
  * @property string $text

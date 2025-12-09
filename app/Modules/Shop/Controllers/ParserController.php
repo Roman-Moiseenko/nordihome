@@ -84,7 +84,7 @@ class ParserController extends ShopController
     public function set(Request $request, Product $product) //Product $product
     {
         $this->cart->load();
-        $this->cart->set($product, $request->float('quantity'));
+        $this->cart->set($product, (int)$request->float('quantity'));
         $this->cart->reload();
         return \response()->json($this->cart);
     }

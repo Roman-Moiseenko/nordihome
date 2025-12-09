@@ -15,9 +15,13 @@ class StoreCommand extends Command
     public function handle(ParserIkea $parser)
     {
 
-        $code = '40178888';
-        $parser->remainsProduct($code);
+        $code = '903.927.63';
+        //$parser->remainsProduct($code);
 
+        $product = $parser->findProduct($code);
+        $this->info($product->name);
         return true;
+        
+
     }
 }

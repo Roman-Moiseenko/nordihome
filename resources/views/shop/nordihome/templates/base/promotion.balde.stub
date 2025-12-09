@@ -1,0 +1,40 @@
+<!--template:Виджет Товаров по группам-->
+@php
+/**
+* $widget->banner - Banner::class
+* $widget->name
+* $widget->url
+* $widget->caption
+* $widget->description
+* $widget->image - Photo::class
+* $widget->icon - Photo::class
+* $widget->banner - BannerWidget:
+* $widget->promotion  - Promotion::class
+* $widget->promotion->products - array Product::class:
+* $widget->promotion->name
+* $widget->promotion->description
+* $widget->promotion->condition_url
+* $widget->promotion->start_at
+* $widget->promotion->finish_at
+* $widget->promotion->slug
+* $widget->promotion->discount - базовая скидка
+
+* $product->name
+* $product->slug
+* $product->code Артикул
+* $product->description
+* $product->short короткое описание
+* $product->getPrice() - текущая цена
+* $product->getPrice(true) - предыдущая цена
+
+
+Остальное см в app\Modules\Product\Entity
+
+*/
+
+use App\Modules\Page\Entity\PromotionWidget;
+/** @var ProductWidget $widget  */
+@endphp
+<div>
+
+</div>

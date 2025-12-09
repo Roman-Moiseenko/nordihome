@@ -4,11 +4,10 @@ namespace App\Modules\Feedback\Entity;
 
 use App\Modules\Feedback\Classes\DataFieldFeedback;
 use App\Modules\Lead\Traits\LeadField;
-use App\Modules\Page\Entity\FormWidget;
+use App\Modules\Page\Entity\Widgets\FormWidget;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Log;
 
 
 /**

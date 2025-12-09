@@ -12,9 +12,8 @@
     * $item->caption -
     * $item->description -
     * $item->text - text (форматируемый текст)
-
-    */
-    /** @var \App\Modules\Page\Entity\TextWidget $widget */
+ */
+    /** @var \App\Modules\Page\Entity\Widgets\TextWidget $widget */
 @endphp
 <div>
     <h2>{{ $widget->caption }}</h2>

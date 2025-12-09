@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Page\Entity\Widget;
+use App\Modules\Page\Entity\Widgets\Widget;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

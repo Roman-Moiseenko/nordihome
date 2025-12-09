@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Entity\Widgets;
 
-use App\Modules\Discount\Entity\Promotion;
-use Illuminate\Support\Facades\Log;
+use App\Modules\Page\Entity\Post;
+use App\Modules\Page\Entity\PostCategory;
 
 class Template
 {
@@ -17,6 +17,7 @@ class Template
         'posts' => 'Страница записей',
         'post' => 'Страница записи',
         'form' => 'Форма обратной связи',
+        'post_widget' => 'Виджет записей',
     ];
 
     const RENDERS = [
@@ -27,6 +28,7 @@ class Template
         'posts' => PostCategory::class,
         'post' => Post::class,
         'form' => FormWidget::class,
+        'post_widget' => PostWidget::class,
     ];
 
     /**

@@ -1,0 +1,22 @@
+<!--template:Шаблон-->
+@php
+/**
+* Banner::class - string
+* $widget->caption - string
+* $widget->description - string
+* $widget->image - Photo::class
+* $widget->icon - Photo::class
+* BannerItem:class
+* $widget->items - Arraible
+* $widget->itemBySlug(string)?: Banneritem
+* $item->image - Photo::class
+* $item->url - string
+* $item->caption - string
+* $item->description - string
+* $item->slug - string
+*/
+/** @var \App\Modules\Page\Entity\Banner $widget */
+@endphp
+<div>
+
+</div>

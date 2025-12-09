@@ -10,6 +10,7 @@ use App\Modules\Page\Controllers\MetaTemplateController;
 use App\Modules\Page\Controllers\NewsController;
 use App\Modules\Page\Controllers\PageController;
 use App\Modules\Page\Controllers\PostController;
+use App\Modules\Page\Controllers\PostWidgetController;
 use App\Modules\Page\Controllers\ProductWidgetController;
 use App\Modules\Page\Controllers\PromotionWidgetController;
 use App\Modules\Page\Controllers\TextWidgetController;
@@ -124,6 +125,19 @@ Route::group(
                 Route::post('/', [FormWidgetController::class, 'store'])->name('store');
                 Route::delete('/{widget}', [FormWidgetController::class, 'destroy'])->name('destroy');
                 Route::get('/', [FormWidgetController::class, 'index'])->name('index');
+            });
+
+            Route::group([
+                'prefix' => 'post',
+                'as' => 'post.'
+            ], function () {
+                Route::post('/set-widget/{widget}', [PostWidgetController::class, 'set_widget'])->name('set-widget');
+                Route::post('/toggle/{widget}', [PostWidgetController::class, 'toggle'])->name('toggle');
+
+                Route::get('/{widget}', [PostWidgetController::class, 'show'])->name('show');
+                Route::post('/', [PostWidgetController::class, 'store'])->name('store');
+                Route::delete('/{widget}', [PostWidgetController::class, 'destroy'])->name('destroy');
+                Route::get('/', [PostWidgetController::class, 'index'])->name('index');
             });
            // Route::resource('text', 'TextWidgetController')->except(['create', 'edit', 'update']); //CRUD
         });

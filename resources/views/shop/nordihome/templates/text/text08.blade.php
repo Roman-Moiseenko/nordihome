@@ -12,9 +12,8 @@
     * $item->caption -
     * $item->description -
     * $item->text - text (форматируемый текст)
-
-    */
-    /** @var \App\Modules\Page\Entity\TextWidget $widget */
+ */
+    /** @var \App\Modules\Page\Entity\Widgets\TextWidget $widget */
 @endphp
 <div class="block-faq p-t_50 p-b_50 bg-black" id="faq-tab">
     <div class="container">
@@ -23,11 +22,14 @@
             @foreach($widget->items as $item)
                 <div class="accordion-item">
                     <div class="accordion-header" id="panelsStayOpen-heading{{$item->slug}}">
-                        <div class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{$item->slug}}" aria-expanded="false" aria-controls="panelsStayOpen-collapse{{$item->slug}}">
+                        <div class="accordion-button collapsed" data-bs-toggle="collapse"
+                             data-bs-target="#panelsStayOpen-collapse{{$item->slug}}" aria-expanded="false"
+                             aria-controls="panelsStayOpen-collapse{{$item->slug}}">
                             {{ $item->caption }}
                         </div>
                     </div>
-                    <div id="panelsStayOpen-collapse{{$item->slug}}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{$item->slug}}">
+                    <div id="panelsStayOpen-collapse{{$item->slug}}" class="accordion-collapse collapse"
+                         aria-labelledby="panelsStayOpen-heading{{$item->slug}}">
                         <div class="accordion-body">
                             {!! $item->text !!}
                         </div>

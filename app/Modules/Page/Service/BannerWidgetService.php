@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Service;
 
-use App\Modules\Page\Entity\BannerWidget;
-use App\Modules\Page\Entity\BannerWidgetItem;
-use App\Modules\Page\Entity\WidgetItem;
+use App\Modules\Page\Entity\Widgets\BannerWidget;
+use App\Modules\Page\Entity\Widgets\BannerWidgetItem;
+use App\Modules\Page\Entity\Widgets\WidgetItem;
 use DB;
 use Illuminate\Http\Request;
 
