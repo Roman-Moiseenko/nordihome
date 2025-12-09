@@ -56,6 +56,12 @@ class MenuController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
+    public function item_set(MenuItem $item, Request $request): RedirectResponse
+    {
+        $this->service->setItem($item, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
     public function item_delete(MenuItem $item): RedirectResponse
     {
         $this->service->deleteItem($item);
@@ -86,4 +92,5 @@ class MenuController extends Controller
         $items = $this->repository->getItems($menu);
         return \response()->json($items);
     }
+
 }

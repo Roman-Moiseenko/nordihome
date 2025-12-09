@@ -208,6 +208,7 @@ Route::group(
 
             Route::get('/', [PostController::class, 'posts'])->name('index');
         });
+
         //Меню
         Route::group([
             'prefix' => 'menu',
@@ -223,6 +224,7 @@ Route::group(
             Route::post('/add-item/{menu}', [MenuController::class, 'item_add'])->name('add-item');
             Route::post('/move-item/{menu}', [MenuController::class, 'item_move'])->name('move-item');
             Route::post('/delete-item/{item}', [MenuController::class, 'item_delete'])->name('delete-item');
+            Route::post('/set-item/{item}', [MenuController::class, 'item_set'])->name('set-item');
         });
 
         //Галерея
