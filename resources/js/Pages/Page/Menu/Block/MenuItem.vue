@@ -3,12 +3,8 @@
         <el-tag class="mx-2">{{ index }}</el-tag>
         <el-tag v-if="!isEdit" type="info" effect="dark">{{ item.name }}</el-tag>
         <el-form v-if="isEdit" label-width="auto">
-
-                <el-input v-model="form.url" />
-
-
-                <el-input v-model="form.name" />
-
+            <el-input v-model="form.name" />
+            <el-input v-model="form.url" />
         </el-form>
         <el-button v-if="!isEdit" type="success" plain size="small" @click="isEdit = true" class="ml-auto"><el-icon><i class="fa-light fa-pen-to-square"></i></el-icon></el-button>
         <div v-if="isEdit">
