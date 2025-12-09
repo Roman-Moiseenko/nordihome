@@ -2,8 +2,8 @@
 
 namespace App\Modules\Page\Service;
 
-use App\Modules\Page\Entity\Widget;
-use App\Modules\Page\Entity\WidgetItem;
+use App\Modules\Page\Entity\Widgets\Widget;
+use App\Modules\Page\Entity\Widgets\WidgetItem;
 use Illuminate\Http\Request;
 
 abstract class WidgetService

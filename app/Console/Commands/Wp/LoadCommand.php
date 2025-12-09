@@ -3,20 +3,18 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Wp;
 
-use App\Jobs\LoadingImageProduct;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Service\PricingService;
 use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Photo;
+use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use function public_path;
@@ -39,7 +37,7 @@ class LoadCommand extends Command
     protected $description = 'Загрузка данных';
     private Common $common;
 
-    public function handle()
+    public function handle(): bool
     {
         if (! $this->confirmToProceed()) {
             return false;
@@ -70,7 +68,7 @@ class LoadCommand extends Command
         return true;
     }
 
-    private function loadCatalog()
+    private function loadCatalog(): void
     {
         $this->warn('Начало загрузки каталога');
         $filename = public_path() . '/temp/catalog.txt';
@@ -85,11 +83,11 @@ class LoadCommand extends Command
         $this->info('Каталоги загружены - ' . $this->count_categories);
     }
 
-    private function loadProduct()
+    private function loadProduct(): void
     {
-        $brand = Brand::where('name', 'Икеа')->first();
+        $brand = Brand::whereIn('name', ['Икеа', 'Ikea', 'IKEA', 'ИКЕА'])->first();
         if ($brand == null) {
-            $brand = Brand::register('NONAME');
+            $brand = Brand::register('Икеа');
         }
         $this->warn('Начало загрузки товаров');
         $filename = public_path() . '/temp/product.txt';
@@ -148,8 +146,8 @@ class LoadCommand extends Command
 
         $product->pre_order = $this->common->pre_order;
         $product->only_offline = false;
-        $product->not_local = !$this->common->delivery_local;
-        $product->not_delivery = !$this->common->delivery_all;
+        $product->local = $this->common->delivery_local;
+        $product->delivery = $this->common->delivery_all;
         $product->save();
         $product->setPublished();
         $this->storageService->add_product($product);
@@ -168,7 +166,7 @@ class LoadCommand extends Command
         }
     }
 
-    private function create_category($category)
+    private function create_category($category): string
     {
         $name = $category['name'];
         $parent = $category['parent'];
@@ -177,26 +175,26 @@ class LoadCommand extends Command
         if (!empty(Category::where('name', $name)->first())) return $name . ' * уже создана *';
         $this->count_categories++;
         if (empty($parent) || is_array($parent)) {
-            $result = Category::register($name);
+            $newCategory = Category::register($name);
         } elseif(is_string($parent)) {
             $cat_parent = Category::where('name', $parent)->first();
 
-            $result = Category::register($name, $cat_parent->id);
+            $newCategory = Category::register($name, $cat_parent->id);
         } else {
             return ' еrror - ' . json_encode($parent);
         }
         //Загрузка изображения
-        $result->image()->save(Photo::uploadByUrl($file, 'image'));
+        $newCategory->image()->save(Photo::uploadByUrl($file, 'image'));
+        $newCategory->description = $category['description'];
+        $newCategory->refresh();
 
-        $result->refresh();
-
-        return $result->slug;
+        return $newCategory->slug;
     }
 
-    private function add_pricing(int $product_id, float $retail)
+    private function add_pricing(int $product_id, float $retail): void
     {
         $this->pricing->pricingProducts()->save(
-            PricingProduct::new($product_id, 0, $retail, 0, 0, 0, 0)
+            PricingProduct::new($product_id, $retail / 2, $retail, 0, 0, $retail / 2, $retail)
         );
     }
 

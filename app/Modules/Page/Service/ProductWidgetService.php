@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Service;
 
-use App\Modules\Page\Entity\ProductWidget;
-use App\Modules\Page\Entity\ProductWidgetItem;
+use App\Modules\Page\Entity\Widgets\ProductWidget;
+use App\Modules\Page\Entity\Widgets\ProductWidgetItem;
 use Illuminate\Http\Request;
 
 class ProductWidgetService extends WidgetService

@@ -42,41 +42,35 @@ class Post extends RenderPage
             'slug' => Str::slug($name),
         ]);
     }
-/*
-    public function published(): void
-    {
-        if ($this->published_at == null) $this->published_at = now();
-        $this->published = true;
-    }
 
-    public function draft(): void
-    {
-        $this->published = false;
-    }
-*/
     public function category(): BelongsTo
     {
         return $this->belongsTo(PostCategory::class, 'category_id', 'id');
     }
 
 
-    /*
-    public function view(): string
+    public function getParagraphs(int $numParagraphs = 1): string
     {
-        $this->text = Template::renderClasses($this->text);
-        $url_page = route('shop.post.view', $this->slug);
+        // Проверка на корректное значение numParagraphs
+        if ($numParagraphs < 1) {
+            return ''; // Или можно выбросить исключение, если это некорректная ситуация
+        }
 
+        // Разделяем текст на абзацы.
+        // Используем комбинации \r\n, \n или \r для разных ОС.
+        // PREG_SPLIT_NO_EMPTY удаляет пустые строки, которые могут возникнуть от двойных переносов.
+        $paragraphs = preg_split("/\r\n|\n|\r/", $this->text, -1, PREG_SPLIT_NO_EMPTY);
 
-        return view(
-            Template::blade('post') . $this->template,
-            ['post' => $this, 'title' => $this->meta->title, 'description' => $this->meta->description, 'url_page' => $url_page])
-            ->render();
+        // Если текста нет или он не содержит абзацев, возвращаем пустую строку.
+        if (empty($paragraphs)) {
+            return '';
+        }
 
+        // Выбираем только первые необходимые абзацы.
+        $selectedParagraphs = array_slice($paragraphs, 0, $numParagraphs);
+
+        // Объединяем выбранные абзацы обратно в строку, разделяя их двойным переносом строки
+        // для сохранения визуального разделения.
+        return implode("\n\n", $selectedParagraphs);
     }
-
-    public function scopeActive($query)
-    {
-        return $query->where('published', true);
-    }
-*/
 }

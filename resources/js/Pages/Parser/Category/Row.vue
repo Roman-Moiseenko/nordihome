@@ -7,7 +7,7 @@
             <Active :active="category.active"/>
         </div>
         <div class="ml-4" style="width: 300px;">
-            <Link type="primary" :href="route('admin.parser.category.show', {category: category.id})">{{
+            <Link type="primary" :href="route('admin.parser.category.show', {category_parser: category.id})">{{
                     category.name
                 }}
             </Link>
@@ -16,21 +16,7 @@
         <div class="ml-4" style="width: 350px;">
             <span class="text-cyan-800">{{ category.url }}</span>
         </div>
-        <i class="fa-light fa-chevrons-right"></i>
-        <div class="ml-4" style="width: 350px;">
-            <Link v-if="category.category_id" type="success"
-                  :href="route('admin.product.category.show', {category: category.category_id})">
-                {{ category.category_name }}
-            </Link>
-            <div v-else class="flex">
-                <el-select v-model="category_id" placeholder="Связанная категория" filterable>
-                    <el-option v-for="item in product_categories" :key="item.id" :value="item.id" :label="item.name"/>
-                </el-select>
-                <el-button type="success" size="" @click="onSetCategory">
-                    <i class="fa-light fa-floppy-disk"></i>
-                </el-button>
-            </div>
-        </div>
+
         <div class="ml-5 text-center" style="width: 150px;">
             <span v-if="isChildren">
                 {{ category.children.length }}
@@ -40,7 +26,7 @@
                 </el-button>
             </span>
         </div>
-        <div class="flex ml-5">
+        <div class="flex ml-auto">
             <el-button v-if="category.active" size="small"
                        type="warning"
                        @click.stop="onToggle()"
@@ -53,21 +39,7 @@
             >
                 To Parse
             </el-button>
-            <el-popover :visible="visible_create" placement="bottom-start" :width="246">
-                <template #reference>
-                    <el-button size="small"
-                               type="success"
-                               @click="visible_create = !visible_create" ref="buttonRef"
-                    >
-                        <i class="fa-light fa-folder-plus"></i>
-                    </el-button>
-                </template>
-                <el-input v-model="form.name" placeholder="Дочерняя категория"/>
-                <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button>
-                    <el-button @click="handleChild" type="primary">Создать</el-button>
-                </div>
-            </el-popover>
+
             <el-button size="small"
                        type="danger"
                        @click.stop="handleDeleteEntity"
@@ -107,23 +79,8 @@ const showChildren = computed(() => {
 })
 const category_id = ref(null)
 
-function onSetCategory() {
-    router.visit(
-        route('admin.parser.category.set-category', {category: props.category.id}), {
-            method: "post",
-            data: {category_id: category_id.value},
-            preserveScroll: true,
-            preserveState: true,
-            onSuccess: page => {
-//                console.log(page)
-              //  props.category.category_id = page.props.category.category_id;
-            }
-        }
-    );
-}
-
 function onToggle() {
-    router.visit(route('admin.parser.category.toggle', {category: props.category.id}), {
+    router.visit(route('admin.parser.category.toggle', {category_parser: props.category.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
@@ -137,10 +94,6 @@ function handleDeleteEntity() {
     $emit('delete:category', props.category.id)
 }
 
-function handleChild() {
-    //console.log(form)
-    router.post(route('admin.product.category.store', form))
-}
 
 
 </script>

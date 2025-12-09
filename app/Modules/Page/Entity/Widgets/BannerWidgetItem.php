@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Entity\Widgets;
 
 use App\Modules\Base\Traits\ImageField;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**

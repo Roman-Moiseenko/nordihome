@@ -11,7 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Page\Entity\BannerWidget $banner */
+    /** @var \App\Modules\Page\Entity\Widgets\BannerWidget $banner */
 @endphp
 <div>
     <div id="main-slider" class="owl-carousel owl-theme">

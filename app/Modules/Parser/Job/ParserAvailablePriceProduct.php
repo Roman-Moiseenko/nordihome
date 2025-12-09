@@ -7,6 +7,7 @@ use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Service\ParserAbstract;
+use App\Modules\Parser\Service\ParserIkea;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Cache;
 /**
  * Повторное спарисание товара уже имеющегося в БД (прлверка цены и доступности)
  */
-class ParserPriceProduct implements ShouldQueue
+class ParserAvailablePriceProduct implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,42 +31,22 @@ class ParserPriceProduct implements ShouldQueue
         $this->parser_product_id = $parser_product_id;
     }
 
-    public function handle(): void
-    {
-        $logger = LoggerCron::find($this->logger_id);
-        try {
-            /** @var ProductParser $product_parser */
-            $product_parser = ProductParser::find($this->parser_product_id);
-            $brand = $product_parser->product->brand;
-            $parser_class = $brand->parser_class;
-            /** @var ParserAbstract $parser */
-            $parser = app()->make($parser_class);
 
-            $price = $parser->parserCost($product_parser);
-            if ($price > 0) {
-                $logger->items()->create([
-                    'object' => $product_parser->product->code,
-                    'action' => 'Цена спарсилась',
-                    'value' => $price,
-                ]);
-            } elseif ($price < 0 ) {
-                $logger->items()->create([
-                    'object' => $product_parser->product->code,
-                    'action' => 'Товар не доступен больше',
-                ]);
+    public function handle(ParserIkea $parserIkea): void
+    {
+        try {
+            $product_parser = ProductParser::find($this->parser_product_id);
+
+            if ($parserIkea->parserCost($product_parser)) {
+                JobCacheProduct::dispatch($product_parser->product_id);
             }
-            //Если данные спарсились, то пересоздаем кэш
-            if ($price != 0) JobCacheProduct::dispatch($product_parser->product_id);
         } catch (\Throwable $e) {
+            $logger = LoggerCron::find($this->logger_id);
             $logger->items()->create([
                 'object' => $this->parser_product_id,
                 'action' => 'Не спарсился',
                 'value' => json_encode([$e->getMessage(), $e->getFile(), $e->getLine()]),
             ]);
         }
-
-
-
-
     }
 }

@@ -12,9 +12,8 @@
     * $item->caption -
     * $item->description -
     * $item->text - text (форматируемый текст)
-
-    */
-    /** @var \App\Modules\Page\Entity\TextWidget $widget */
+ */
+    /** @var \App\Modules\Page\Entity\Widgets\TextWidget $widget */
 @endphp
 <div class="main-reviews p-t_50 p-b_50" id="reviews-tab">
     <div class="container">
@@ -30,7 +29,8 @@
                         <li class="one"></li>
                         <li>4.7 из 5</li>
                     </ul>
-                    <img src="https://nordihome.ru/wp-content/themes/euroikea/images/logo-yandex.svg" alt="Яндекс каталог Nordihome">
+                    <img src="https://nordihome.ru/wp-content/themes/euroikea/images/logo-yandex.svg"
+                         alt="Яндекс каталог Nordihome">
                 </a>
             </div>
             <!-- <div class="col-sm-6 col-md-6 col-lg-3">
@@ -60,7 +60,8 @@
                 </div>
             </div> -->
             <div class="col-sm-6 col-md-6 col-lg-4">
-                <a href="https://www.avito.ru/brands/nordihome.ru/all?sellerId=77c3371d8da225e083f29aea5b416174" target="_blank" class="main-rating-item">
+                <a href="https://www.avito.ru/brands/nordihome.ru/all?sellerId=77c3371d8da225e083f29aea5b416174"
+                   target="_blank" class="main-rating-item">
                     <ul class="star">
                         <li class="one"></li>
                         <li class="one"></li>
@@ -69,7 +70,8 @@
                         <li class="one"></li>
                         <li>1025 отзывов</li>
                     </ul>
-                    <img src="https://nordihome.ru/wp-content/themes/euroikea/images/avito_logo.svg" alt="Лого Авито Nordihome">
+                    <img src="https://nordihome.ru/wp-content/themes/euroikea/images/avito_logo.svg"
+                         alt="Лого Авито Nordihome">
                 </a>
             </div>
         </div>

@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Repository;
 
 use App\Modules\Base\Helpers\CacheHelper;
-use App\Modules\Page\Entity\MetaTemplate;
 use App\Modules\Page\Entity\News;
-use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
-use App\Modules\Page\Entity\Template;
+use App\Modules\Page\Entity\Widgets\Template;
 use App\Modules\Page\Repository\MetaTemplateRepository;
-use App\Modules\Page\Service\MetaTemplateService;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
@@ -20,7 +17,6 @@ use App\Modules\Shop\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class ViewRepository
 {
@@ -361,6 +357,7 @@ class ViewRepository
     {
         /** @var Post $post */
         $post = $this->slugs->PostBySlug($slug);
+        //dd($post);
         if (is_null($post)) abort(404, 'Страница не найдена');
         return $post->view($this->seo->seoFn());
     }

@@ -11,7 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Page\Entity\BannerWidget $widget */
+    /** @var \App\Modules\Page\Entity\Widgets\BannerWidget $widget */
 @endphp
 <div>
     <div id="slider-payment" class="owl-carousel owl-theme">

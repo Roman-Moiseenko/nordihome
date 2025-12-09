@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Entity\Widgets;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\Deprecated;
 

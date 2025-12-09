@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Entity\Widgets;
 
 
 use App\Modules\Base\Traits\IconField;

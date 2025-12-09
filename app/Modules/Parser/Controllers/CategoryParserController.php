@@ -11,6 +11,7 @@ use App\Modules\Product\Repository\CategoryRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class CategoryParserController extends Controller
 {
@@ -30,59 +31,49 @@ class CategoryParserController extends Controller
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
         $categories = $this->repository->getTree();
-        $product_categories = $this->categoryRepository->forFilters();
+        //$product_categories = $this->categoryRepository->forFilters();
         return Inertia::render('Parser/Category/Index', [
             'categories' => $categories,
-            'brands' => Brand::where('parser_class', '<>', null)->getModels(),
-            'product_categories' => $product_categories,
+           // 'brands' => Brand::where('parser_class', '<>', null)->getModels(),
+        //    'product_categories' => $product_categories,
         ]);
     }
 
-    public function show(CategoryParser $category): \Inertia\Response
+    public function show(CategoryParser $category_parser): Response
     {
         $product_categories = $this->categoryRepository->forFilters();
         return Inertia::render('Parser/Category/Show', [
-            'category' => $this->repository->CategoryWithToArray($category),
+            'category' => $this->repository->CategoryWithToArray($category_parser),
             'product_categories' => $product_categories,
         ]);
     }
-    public function set_category(CategoryParser $category, Request $request)
+    public function set_category(CategoryParser $category_parser, Request $request): RedirectResponse
     {
-        $this->service->setCategory($category, $request);
+        $this->service->setCategory($category_parser, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function toggle(CategoryParser $category): RedirectResponse
+    public function toggle(CategoryParser $category_parser): RedirectResponse
     {
-        if ($category->active) {
-            $category->draft();
-            return redirect()->back()->with('success', 'Категория убрана из парсинга');
-        } else {
-            $category->active();
-            return redirect()->back()->with('success', 'Категория добавлена в парсинг');
-        }
+        $message = $this->service->toggle($category_parser);
+
+        return redirect()->back()->with('success', $message);
     }
 
-    public function parser_products(CategoryParser $category): \Illuminate\Http\JsonResponse
+    public function parser_products(CategoryParser $category_parser): \Illuminate\Http\JsonResponse
     {
-        $products = $this->service->parserProducts($category);
+        $products = $this->service->parserProducts($category_parser);
         return response()->json($products);// redirect()->back()->with('success', 'Спарсено');
     }
 
 
-    public function parser_product(CategoryParser $category, Request $request)
+    public function parser_product(CategoryParser $category_parser, Request $request): \Illuminate\Http\JsonResponse
     {
-        try {
-            $this->service->parserProduct($category, $request);
-           // return redirect()->back();
+            $this->service->parserProduct($category_parser, $request);
             return response()->json(true);
-        } catch (\Throwable $e) {
-            return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
-        }
-
     }
 
     public function add_category(Request $request): RedirectResponse
@@ -92,9 +83,9 @@ class CategoryParserController extends Controller
 
     }
 
-    public function destroy(CategoryParser $category)
+    public function destroy(CategoryParser $category_parser): RedirectResponse
     {
-        $category->delete();
+        $category_parser->delete();
         return redirect()->back()->with('success', 'Удалено');
     }
 }

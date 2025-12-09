@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Base\Entity;
 
-use App\Jobs\ClearTempFile;
+use App\Modules\Base\Job\ClearTempFile;
 use App\Modules\Base\Service\HttpPage;
 use App\Modules\Setting\Entity\Settings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use JetBrains\PhpStorm\Deprecated;

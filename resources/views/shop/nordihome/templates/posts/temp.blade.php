@@ -3,6 +3,12 @@
 
     /** @var \App\Modules\Page\Entity\PostCategory $category */
     /** @var \App\Modules\Page\Entity\Post[] $posts */
+    /**
+    * $category->getImage();
+    * $category->getIcon();
+    * $post->getParagraphs() - первые абзацы из текста
+    *
+ */
 @endphp
 @extends('shop.nordihome.layouts.main')
 
@@ -23,6 +29,9 @@
         <div>
             {{ $post->title }}
             <a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->name }}</a>
+            <div class="content">
+                {!! $post->getParagraphs(2) !!}}
+            </div>
         </div>
     @endforeach
     <div class="products-page-list--bottom">

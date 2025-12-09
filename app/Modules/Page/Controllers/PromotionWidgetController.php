@@ -4,8 +4,8 @@ namespace App\Modules\Page\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Page\Entity\BannerWidget;
-use App\Modules\Page\Entity\PromotionWidget;
+use App\Modules\Page\Entity\Widgets\BannerWidget;
+use App\Modules\Page\Entity\Widgets\PromotionWidget;
 use App\Modules\Page\Repository\PromotionWidgetRepository;
 use App\Modules\Page\Repository\TemplateRepository;
 use App\Modules\Page\Service\PromotionWidgetService;

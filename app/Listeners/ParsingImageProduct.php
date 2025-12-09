@@ -3,8 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ProductHasParsed;
-use App\Jobs\LoadingImageProduct;
-
+use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Parser\ProductParser;
 

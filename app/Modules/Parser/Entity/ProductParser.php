@@ -41,7 +41,7 @@ class ProductParser extends Model
         'quantity' => '{}',
         'data' => '{}',
     ];
-    protected $casts =[
+    protected $casts = [
         'data' => 'json',
         'composite' => 'json',
         'quantity' => 'json',

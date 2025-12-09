@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Repository;
 
-use App\Modules\Page\Entity\Template;
+use App\Modules\Page\Entity\Widgets\Template;
 use Illuminate\Http\Request;
 
 class TemplateRepository

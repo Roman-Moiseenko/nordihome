@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Repository;
 
-use App\Modules\Page\Entity\ProductWidget;
-use App\Modules\Page\Entity\ProductWidgetItem;
+use App\Modules\Page\Entity\Widgets\ProductWidget;
+use App\Modules\Page\Entity\Widgets\ProductWidgetItem;
 use App\Modules\Product\Entity\Group;
 use Illuminate\Contracts\Support\Arrayable;
 

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Page\Repository;
 
-use App\Modules\Page\Entity\FormWidget;
+use App\Modules\Page\Entity\Widgets\FormWidget;
 
 class FormWidgetRepository
 {

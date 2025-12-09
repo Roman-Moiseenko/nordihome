@@ -48,11 +48,9 @@ class ClearCommand extends Command
 
     public function handle(): bool
     {
-
         if (! $this->confirmToProceed()) {
             return false;
         }
-
 
         $storage_items = StorageItem::get();
         foreach ($storage_items as $item) {
@@ -60,9 +58,8 @@ class ClearCommand extends Command
         }
         $this->info('Склады очищены');
 
-        $products = Product::where('published', true)->get();
 
-        $this->info('Кол-во товаров обнулено');
+
 
         $this->clearDocument(Order::get(), 'Заказы удалены');
         $this->clearDocument(OrderReserve::get(), 'Резерв очищен');
@@ -118,6 +115,7 @@ class ClearCommand extends Command
         $distributors = Distributor::get();
 
         $staff = Admin::where('role', Admin::ROLE_ADMIN)->first();
+        return true;
 
         foreach ($distributors as $distributor) {
 
@@ -153,7 +151,7 @@ class ClearCommand extends Command
 
     private function clearDocument($documents, $caption): void
     {
-        foreach ($documents as $item) $item->delete();
+        foreach ($documents as $item) $item->superDelete();
         $this->info($caption);
     }
 }

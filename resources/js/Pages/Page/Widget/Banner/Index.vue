@@ -69,7 +69,7 @@
             <template #footer>
                 <div class="dialog-footer">
                     <el-button @click="dialogCreate = false">Отмена</el-button>
-                    <el-button type="primary" @click="saveBanner">Сохранить</el-button>
+                    <el-button type="primary" @click="saveWidget">Сохранить</el-button>
                 </div>
             </template>
         </el-dialog>
@@ -117,7 +117,7 @@ function onOpenDialog() {
     dialogCreate.value = true
 }
 
-function saveBanner() {
+function saveWidget() {
     router.post(route('admin.page.widget.banner.store' ), form)
 }
 

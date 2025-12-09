@@ -6,9 +6,11 @@ namespace App\Modules\Nordihome\Helper;
 use App\Modules\Page\Entity\Contact;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\PostCategory;
+use JetBrains\PhpStorm\Deprecated;
 
 class MenuHelper
 {
+    #[Deprecated]
     public static function getMenuPages(): array
     {
         $posts = PostCategory::find(1);
@@ -71,6 +73,7 @@ class MenuHelper
 
 
 
+    #[Deprecated]
     public static function getFooterMenu(): array
     {
         return [
@@ -106,6 +109,7 @@ class MenuHelper
         ];
     }
 
+    #[Deprecated]
     public static function getCabinetMenu(): array
     {
         return [

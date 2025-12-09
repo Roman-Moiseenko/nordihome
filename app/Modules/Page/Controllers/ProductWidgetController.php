@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Page\Entity\BannerWidget;
-use App\Modules\Page\Entity\ProductWidget;
-use App\Modules\Page\Entity\ProductWidgetItem;
-use App\Modules\Page\Repository\TemplateRepository;
+use App\Modules\Page\Entity\Widgets\BannerWidget;
+use App\Modules\Page\Entity\Widgets\ProductWidget;
+use App\Modules\Page\Entity\Widgets\ProductWidgetItem;
 use App\Modules\Page\Repository\ProductWidgetRepository;
+use App\Modules\Page\Repository\TemplateRepository;
 use App\Modules\Page\Service\ProductWidgetService;
-use App\Modules\Product\Entity\Group;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

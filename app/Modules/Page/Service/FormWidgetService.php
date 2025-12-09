@@ -3,9 +3,8 @@
 namespace App\Modules\Page\Service;
 
 use App\Modules\Page\Classes\ListForm;
-use App\Modules\Page\Classes\ListItem;
 use App\Modules\Page\Classes\ListsForm;
-use App\Modules\Page\Entity\FormWidget;
+use App\Modules\Page\Entity\Widgets\FormWidget;
 use Illuminate\Http\Request;
 
 class FormWidgetService extends WidgetService

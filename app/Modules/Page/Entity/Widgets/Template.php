@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Entity\Widgets;
 
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Page\Entity\Post;
+use App\Modules\Page\Entity\PostCategory;
 
 class Template
 {
@@ -16,6 +17,7 @@ class Template
         'posts' => 'Страница записей',
         'post' => 'Страница записи',
         'form' => 'Форма обратной связи',
+        'post_widget' => 'Виджет записей',
     ];
 
     const RENDERS = [
@@ -26,6 +28,7 @@ class Template
         'posts' => PostCategory::class,
         'post' => Post::class,
         'form' => FormWidget::class,
+        'post_widget' => PostWidget::class,
     ];
 
     /**
@@ -79,7 +82,7 @@ class Template
     {
 
         if (is_null($text)) return '';
-        $pattern = '/\[' . $code . '=\"(.+)\"\]/';
+        $pattern = '/\[' . $code . '=\"(.+?)\"(.*?)\]/';
         preg_match_all($pattern, $text, $matches);
         $replaces = $matches[0]; //шот-коды вида [widget="7"] (массив)
         $ids = $matches[1]; //значение id виджета (массив)

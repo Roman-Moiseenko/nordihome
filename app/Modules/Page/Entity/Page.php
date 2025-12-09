@@ -28,10 +28,6 @@ class Page extends RenderPage
 {
     use ImageField, IconField;
 
-/*    protected $attributes = [
-        'meta' => '{}',
-    ];
-    */
     protected $fillable = [
         'parent_id',
         'name',
@@ -43,14 +39,7 @@ class Page extends RenderPage
         'published',
         'text'
     ];
-/*
-    protected $casts = [
-        'published_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'meta' => MetaCast::class,
-    ];
-*/
+
     public static function register(string $name, string $slug,
                                     string $title, string $description, string $template, int $parent_id = null): self
     {
@@ -73,40 +62,10 @@ class Page extends RenderPage
         $this->text = $text;
         $this->save();
     }
-/*
-    public function draft(): void
-    {
-        $this->published = false;
-    }
 
-    public function published(): void
-    {
-        $this->published = true;
-    }
-*/
-    /**
-     * @throws \Throwable
-     */
-/*
-    public function view(): string
-    {
-        $this->text = Template::renderClasses($this->text);
-        $url_page = route('shop.page.view', $this->slug);
-
-        return view(
-            Template::blade('page') . $this->template,
-            ['page' => $this, 'title' => $this->meta->title, 'description' => $this->meta->description, 'url_page' => $url_page])
-            ->render();
-    }
-*/
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Page::class, 'parent_id', 'id');
     }
-/*
-    public function scopeActive($query)
-    {
-        return $query->where('published', true);
-    }
-    */
+
 }

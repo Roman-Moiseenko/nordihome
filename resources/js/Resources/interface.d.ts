@@ -12,7 +12,9 @@ export interface IRowActive {
 export interface IRowCompleted {
     completed: number
 }
-
+export interface IRowRead {
+    read: number
+}
 export interface IRowCostCurrency {
     cost_currency: number,
     quantity: number,

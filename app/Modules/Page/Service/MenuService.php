@@ -72,4 +72,12 @@ class MenuService
         $menu->slug = empty($slug) ? Str::slug($name) : $slug;
         $menu->save();
     }
+
+    public function setItem(MenuItem $item, Request $request): void
+    {
+        $item->name = $request->string('name')->trim()->value();
+        $item->url = $request->string('url')->trim()->value();
+        $item->save();
+        $item->refresh();
+    }
 }

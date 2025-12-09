@@ -2,7 +2,7 @@
 
 namespace App\Modules\Page\Repository;
 
-use App\Modules\Page\Entity\PromotionWidget;
+use App\Modules\Page\Entity\Widgets\PromotionWidget;
 use Illuminate\Http\Request;
 
 class PromotionWidgetRepository

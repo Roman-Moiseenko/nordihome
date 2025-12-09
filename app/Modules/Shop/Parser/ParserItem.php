@@ -66,7 +66,7 @@ class ParserItem implements CartItemInterface
 
     public function setSellCost(float $discount_cost): void
     {
-        //TODO на будущее, вдруг будут скидки
+        //на будущее, вдруг будут скидки
     }
 
     public function setDiscountName(string $discount_name): void

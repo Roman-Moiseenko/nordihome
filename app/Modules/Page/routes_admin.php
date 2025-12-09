@@ -10,6 +10,7 @@ use App\Modules\Page\Controllers\MetaTemplateController;
 use App\Modules\Page\Controllers\NewsController;
 use App\Modules\Page\Controllers\PageController;
 use App\Modules\Page\Controllers\PostController;
+use App\Modules\Page\Controllers\PostWidgetController;
 use App\Modules\Page\Controllers\ProductWidgetController;
 use App\Modules\Page\Controllers\PromotionWidgetController;
 use App\Modules\Page\Controllers\TextWidgetController;
@@ -125,6 +126,19 @@ Route::group(
                 Route::delete('/{widget}', [FormWidgetController::class, 'destroy'])->name('destroy');
                 Route::get('/', [FormWidgetController::class, 'index'])->name('index');
             });
+
+            Route::group([
+                'prefix' => 'post',
+                'as' => 'post.'
+            ], function () {
+                Route::post('/set-widget/{widget}', [PostWidgetController::class, 'set_widget'])->name('set-widget');
+                Route::post('/toggle/{widget}', [PostWidgetController::class, 'toggle'])->name('toggle');
+
+                Route::get('/{widget}', [PostWidgetController::class, 'show'])->name('show');
+                Route::post('/', [PostWidgetController::class, 'store'])->name('store');
+                Route::delete('/{widget}', [PostWidgetController::class, 'destroy'])->name('destroy');
+                Route::get('/', [PostWidgetController::class, 'index'])->name('index');
+            });
            // Route::resource('text', 'TextWidgetController')->except(['create', 'edit', 'update']); //CRUD
         });
 
@@ -194,6 +208,7 @@ Route::group(
 
             Route::get('/', [PostController::class, 'posts'])->name('index');
         });
+
         //Меню
         Route::group([
             'prefix' => 'menu',
@@ -209,6 +224,7 @@ Route::group(
             Route::post('/add-item/{menu}', [MenuController::class, 'item_add'])->name('add-item');
             Route::post('/move-item/{menu}', [MenuController::class, 'item_move'])->name('move-item');
             Route::post('/delete-item/{item}', [MenuController::class, 'item_delete'])->name('delete-item');
+            Route::post('/set-item/{item}', [MenuController::class, 'item_set'])->name('set-item');
         });
 
         //Галерея

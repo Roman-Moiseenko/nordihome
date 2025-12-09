@@ -98,3 +98,16 @@ _add и remove_ используются в двух местах: виджет 
         document.getElementById('button-buy-click').setAttribute('data-product', {{$product['id']}});"
     >В 1 Клик!
     </button>
+
+# Меню
+
+Меню создается в админке в разделе Фронтенд
+
+В коде шаблона - в хедере и в футере ищем по слагу нужное меню в глобальной перменной **$menus**: 
+
+    <div>{{ $menus['footer'] }}</div>
+    <ul class="menu">
+    @foreach($menus['footer']['items'] as $item)
+        <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
+    @endforeach
+    </ul>

@@ -11,7 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Page\Entity\PromotionWidget $widget */
+    /** @var \App\Modules\Page\Entity\Widgets\PromotionWidget $widget */
 @endphp
 
 <div>

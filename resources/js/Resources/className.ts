@@ -1,4 +1,4 @@
-import { IRowAccounting, IRowActive, IRowCompleted, IRowCostCurrency } from "@Res/interface"
+import { IRowAccounting, IRowActive, IRowCompleted, IRowCostCurrency, IRowRead } from "@Res/interface"
 
 export const classes = {
     TableAccounting: ({row}: { row: IRowAccounting }) => {
@@ -19,5 +19,8 @@ export const classes = {
         if (row.cost_currency === 0 || row.quantity === 0) return 'error-row'
         return ''
     },
-
+    TableRead: ({row}: { row: IRowRead }) => {
+        if (row.read === 0) return 'warning-row'
+        return ''
+    },
 }

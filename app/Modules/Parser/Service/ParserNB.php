@@ -2,9 +2,8 @@
 
 namespace App\Modules\Parser\Service;
 
-use App\Jobs\LoadingImageProduct;
+use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Base\Service\GoogleTranslateForFree;
-use App\Modules\Base\Service\HttpPage;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
@@ -12,15 +11,12 @@ use App\Modules\Guide\Entity\VAT;
 use App\Modules\NBRussia\Helper\MenuListing;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Parser\Service\CategoryParserService;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeVariant;
-use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Modification;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Service\ModificationService;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Log;
 
 class ParserNB extends ParserAbstract
@@ -68,7 +64,7 @@ class ParserNB extends ParserAbstract
                 $parent,
             );
             $cat_parser->brand_id = $this->brand->id;
-            $cat_parser->category_id = $cat->id;
+           // $cat_parser->category_id = $cat->id;
             $cat_parser->save();
         }
         //Дочерние категории
@@ -95,7 +91,7 @@ class ParserNB extends ParserAbstract
     }
 
 
-    public function parserCost(ProductParser $parser): float
+    public function parserCost(ProductParser $parser): float|bool
     {
         $price_sell = $parser->price_sell;
         $url = $parser->product->brand->url . '/' . $parser->url;

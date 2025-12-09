@@ -2,10 +2,9 @@
 
 namespace App\Modules\Page\Service;
 
-use App\Modules\Page\Entity\TextWidget;
-use App\Modules\Page\Entity\TextWidgetItem;
+use App\Modules\Page\Entity\Widgets\TextWidget;
+use App\Modules\Page\Entity\Widgets\TextWidgetItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class TextWidgetService extends WidgetService
 {

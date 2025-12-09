@@ -1,22 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Entity\Widgets;
 
-use App\Modules\Base\Traits\IconField;
-use App\Modules\Base\Traits\ImageField;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use JetBrains\PhpStorm\Deprecated;
 
 /**
- * @property int $id
- * @property string $name
- * @property bool $active
- * @property string $template
- * @property string $caption
- * @property string $description
  * @property string $url
  * @property array $params -?
  * @property int $banner_id
@@ -25,11 +15,8 @@ use JetBrains\PhpStorm\Deprecated;
  */
 class ProductWidget extends Widget
 {
-    protected $table="widget_products";
+    protected $table = "widget_products";
 
-
-
-    public $timestamps = false;
     protected $attributes = [
         'params' => '{}',
     ];

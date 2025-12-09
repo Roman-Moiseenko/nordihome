@@ -11,7 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Page\Entity\BannerWidget $banner */
+    /** @var \App\Modules\Page\Entity\Widgets\BannerWidget $banner */
 @endphp
 <div class="banner-2-image-button my-5 py-3">
     @foreach($banner->items as $item)

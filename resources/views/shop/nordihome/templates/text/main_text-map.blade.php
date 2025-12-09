@@ -12,19 +12,20 @@
     * $item->caption -
     * $item->description -
     * $item->text - text (форматируемый текст)
-
-    */
-    /** @var \App\Modules\Page\Entity\TextWidget $widget */
+ */
+    /** @var \App\Modules\Page\Entity\Widgets\TextWidget $widget */
 @endphp
-<div class="container f-w_600 t-a_center m-b_10">Мы находимся по адресу: г. Калининград, Советский проспект 103 А, корпус 1.</div>
+<div class="container f-w_600 t-a_center m-b_10">Мы находимся по адресу: г. Калининград, Советский проспект 103 А,
+    корпус 1.
+</div>
 <div class="block-map">
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 padding_0">
-                <div class="map-yandex" id="map-yandex"> </div>
+                <div class="map-yandex" id="map-yandex"></div>
                 <script>
                     let ok = false;
-                    window.addEventListener('scroll', function() {
+                    window.addEventListener('scroll', function () {
                         if (ok === false) {
                             ok = true;
                             setTimeout(() => {

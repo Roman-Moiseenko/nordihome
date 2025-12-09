@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Entity\Widgets;
 
 use App\Modules\Page\Casts\ListsFormCasts;
 use App\Modules\Page\Classes\ListsForm;
@@ -11,7 +11,6 @@ use App\Modules\Page\Classes\ListsForm;
  */
 class FormWidget extends Widget
 {
-    public $timestamps = false;
 
     protected $attributes = [
         'fields' => '[]',
