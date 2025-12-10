@@ -10,6 +10,7 @@ use App\Modules\Base\Entity\Photo;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
+use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeProduct;
 use App\Modules\Product\Entity\AttributeVariant;
@@ -252,19 +253,36 @@ class ShopRepository
     ////КАТЕГОРИИ
     ///
 
-
     public function getChildren(int $parent_id = null): Arrayable
     {
-
-        return Category::defaultOrder()->where('parent_id', $parent_id)->get()->map(function (Category $category) {
-            return [
-                'id' => $category->id,
-                'name' => $category->name,
-                'slug' => $category->slug,
-                'image' => $category->getImage(),
-            ];
-        });
+        return Category::defaultOrder()->where('parent_id', $parent_id)
+            ->where('slug', '<>', Category::NO_PARSE)
+            ->get()
+            ->map(function (Category $category) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'image' => $category->getImage(),
+                ];
+            });
     }
+
+    public function getChildrenParser(int $parent_id = null): Arrayable
+    {
+        return CategoryParser::defaultOrder()->where('parent_id', $parent_id)
+            ->where('active', true)
+            ->get()
+            ->map(function (CategoryParser $category) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'image' => $category->getImage(),
+                ];
+            });
+    }
+
 
     public function getTree(int $parent_id = null)
     {
@@ -678,13 +696,13 @@ class ShopRepository
             'local' => $product->local,
             'delivery' => $product->delivery,
             'reviews' => $product->reviews()->get()->map(function (Review $review) {
-              return [
-                  'user_name' => $review->user->fullname->firstname,
-                  'rating' => $review->rating,
-                  'text' => $review->text,
-                  'date' => $review->htmlDate(),
-                  'src' => $review->photo == null ? null : $review->getImage('mini')
-              ];
+                return [
+                    'user_name' => $review->user->fullname->firstname,
+                    'rating' => $review->rating,
+                    'text' => $review->text,
+                    'date' => $review->htmlDate(),
+                    'src' => $review->photo == null ? null : $review->getImage('mini')
+                ];
             }),
 
         ]);

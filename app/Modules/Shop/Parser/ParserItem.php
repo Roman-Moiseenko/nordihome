@@ -5,7 +5,9 @@ namespace App\Modules\Shop\Parser;
 
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class ParserItem implements CartItemInterface
 {
     public Product $product;

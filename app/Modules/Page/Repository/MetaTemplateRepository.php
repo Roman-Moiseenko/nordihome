@@ -8,13 +8,23 @@ use App\Modules\Page\Entity\MetaTemplate;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
+use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
+use App\Modules\Setting\Entity\Settings;
 use Illuminate\Http\Request;
 
 class MetaTemplateRepository
 {
+
+    private Settings $settings;
+
+    public function __construct(Settings $settings)
+    {
+        $this->settings = $settings;
+    }
 
     public function getIndex(Request $request)
     {
@@ -39,11 +49,26 @@ class MetaTemplateRepository
                 '{price}',
             ];
         }
+        if ($class == ProductParser::class) {
+            return [
+                '{name}',
+                '{code}',
+           //     '{category}',
+                '{price}',
+            ];
+        }
         if ($class == Category::class) {
             return [
                 '{name}',
                 '{description}',
                 '{title}'
+            ];
+        }
+        if ($class == CategoryParser::class) {
+            return [
+                '{name}',
+             //   '{description}',
+              //  '{title}'
             ];
         }
         if ($class == Page::class) {
@@ -104,7 +129,23 @@ class MetaTemplateRepository
                 '{title}' => $object->title,
             };
         }
+        if ($object instanceof ProductParser) {
+            return match ($var) {
+                '{name}' => $object->product->name,
+                '{code}' => $object->product->code,
+                //'{category}' => $object->category->name,
+                //TODO parser_coefficient - или из Валюты или обновлять сразу два поля
+                '{price}' => price($object->price_sell * $this->settings->parser->parser_coefficient),
+            };
+        }
 
+        if ($object instanceof CategoryParser) {
+            return match ($var) {
+                '{name}' => $object->name,
+               // '{description}' => $object->description,
+               // '{title}' => $object->title,
+            };
+        }
         if ($object instanceof Page) {
             return match ($var) {
                 '{name}' => $object->name,

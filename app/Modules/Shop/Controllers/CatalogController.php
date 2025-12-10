@@ -37,7 +37,6 @@ class CatalogController extends ShopController
 
     public function index(Request $request): Factory|View|Application|null
     {
-
         return $this->views->root($request->all());
 /*
         $url_page = $this->route('shop.category.index');

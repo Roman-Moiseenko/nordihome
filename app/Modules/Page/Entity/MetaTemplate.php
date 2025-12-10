@@ -3,6 +3,8 @@
 namespace App\Modules\Page\Entity;
 
 use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
@@ -19,6 +21,8 @@ class MetaTemplate extends Model
     const array TEMPLATES = [
         Product::class => 'Товар',
         Category::class => 'Категория',
+        ProductParser::class => 'Товар Икеа',
+        CategoryParser::class => 'Категория Икеа',
         Page::class => 'Страница',
         Post::class => 'Запись',
         PostCategory::class => 'Рубрика',

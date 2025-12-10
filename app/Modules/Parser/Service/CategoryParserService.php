@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class CategoryParserService
 {
+    #[\Deprecated]
     public function create(string $name, string $url, int $parent_id = null): CategoryParser
     {
         return CategoryParser::register($name, $url, $parent_id);

@@ -7,6 +7,8 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
+use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Group;
 use App\Modules\Product\Entity\Product;
@@ -14,6 +16,18 @@ use JetBrains\PhpStorm\Deprecated;
 
 class SlugRepository
 {
+
+    public function getProductParserBySlug($slug): ProductParser
+    {
+        if (is_numeric($slug)) return ProductParser::findOrFail($slug);
+        return ProductParser::where('slug', $slug)->first();
+    }
+
+    public function CategoryParserBySlug($slug): CategoryParser
+    {
+        if (is_numeric($slug)) return CategoryParser::findOrFail($slug);
+        return CategoryParser::where('slug', $slug)->first();
+    }
 
     public function getProductBySlug($slug): ?Product
     {

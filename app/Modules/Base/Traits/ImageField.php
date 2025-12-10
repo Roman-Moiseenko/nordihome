@@ -34,6 +34,14 @@ trait ImageField
         return $this->image->getThumbUrl($thumb);
     }
 
+    public function addImageByUrl(string $image_url): ?Photo
+    {
+        if (empty($url)) return null;
+        $photo = Photo::uploadByUrl(url: $url, thumb: $this->is_thumb);
+        $this->image()->save($photo);
+        $photo->refresh();
+        return $photo;
+    }
  /*   protected function imageUrl(): Attribute
     {
         return Attribute::make(

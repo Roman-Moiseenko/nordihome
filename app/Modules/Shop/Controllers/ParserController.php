@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Events\ThrowableHasAppeared;
+use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\Parser\ParserService;
+use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -16,13 +19,31 @@ class ParserController extends ShopController
 {
     private ParserService $service;
     private ParserCart $cart;
+    private ViewRepository $views;
 
-    public function __construct(ParserService $service, ParserCart $cart)
+    public function __construct(ParserService $service, ParserCart $cart, ViewRepository $views)
     {
         parent::__construct();
         $this->service = $service;
         $this->cart = $cart;
+        $this->views = $views;
     }
+
+    public function index(Request $request)
+    {
+        return $this->views->rootParser();
+    }
+
+    public function catalog(Request $request, $slug)
+    {
+        return $this->views->categoryParser($request, $slug);
+    }
+
+    public function product(Request $request, $slug)
+    {
+        return $this->views->productParser($slug);
+    }
+
 
     public function view(Request $request)
     {
@@ -37,6 +58,7 @@ class ParserController extends ShopController
         return view($this->route('parser.show'), compact('cart', 'title', 'description'));
     }
 
+/*
     public function search(Request $request)
     {
         $user_ui = $request->attributes->get('user_ui');
@@ -88,5 +110,5 @@ class ParserController extends ShopController
         $this->cart->reload();
         return \response()->json($this->cart);
     }
-
+*/
 }

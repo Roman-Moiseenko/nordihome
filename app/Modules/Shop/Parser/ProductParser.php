@@ -7,6 +7,7 @@ namespace App\Modules\Shop\Parser;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Class ProductParser
@@ -25,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $updated_at
  * @property Product $product
  */
+
+#[Deprecated]
 class ProductParser extends Model
 {
     protected $table = 'product_parser';

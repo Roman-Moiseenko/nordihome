@@ -113,16 +113,22 @@ Route::group(
         });
 
         Route::group([
-            'as' => 'parser.'
+            'as' => 'parser.',
+            'prefix' => 'parser',
         ],
             function () {
-                Route::get('/calculate', [ParserController::class, 'view'])->name('view');
+                Route::get('/catalog', [ParserController::class, 'index'])->name('view');
+                Route::get('/catalog/{slug}', [ParserController::class, 'catalog'])->name('catalog');
+                Route::get('/product/{slug}', [ParserController::class, 'product'])->name('product');
+
+            /*    Route::get('/calculate', [ParserController::class, 'view'])->name('view');
                 Route::post('/parser/search', [ParserController::class, 'search'])->name('search');
                 Route::post('/parser/clear', [ParserController::class, 'clear'])->name('clear');
                 Route::post('/parser/{product}/remove', [ParserController::class, 'remove'])->name('remove');
                 Route::post('/parser/{product}/add', [ParserController::class, 'add'])->name('add');
                 Route::post('/parser/{product}/sub', [ParserController::class, 'sub'])->name('sub');
                 Route::post('/parser/{product}/set', [ParserController::class, 'set'])->name('set');
+                */
             }
         );
     }
