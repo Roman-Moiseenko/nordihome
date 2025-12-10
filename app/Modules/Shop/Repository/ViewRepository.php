@@ -66,9 +66,9 @@ class ViewRepository
         $description = $this->web->categories_desc;
         $page = $request['page'] ?? 1;
         $schema = '';
-        if ($this->web->is_category ) {
+        if ($this->web->is_category) {
             $categories = $this->repository->getChildren();
-            return view($this->route('catalog'), compact( 'title', 'description', 'categories', 'url_page'));
+            return view($this->route('catalog'), compact('title', 'description', 'categories', 'url_page'));
         }
         $minPrice = 10;
         $maxPrice = 999999999;
@@ -115,18 +115,14 @@ class ViewRepository
             ->through(fn(Product $product) => $this->product_card_cache($product));
         return view(
             $this->route('product.index'),
-            array_merge(
-                compact( 'products', 'prod_attributes', 'tags',
+                compact('products', 'prod_attributes', 'tags',
                     'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                    'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'),
-                [
-                    'web' => $this->web,
-                ]));
+                    'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'));
     }
 
     public function category(array $request, string $slug)
     {
-       // $begin = now();
+        // $begin = now();
         $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
         $page = $request['page'] ?? 1;
@@ -182,17 +178,13 @@ class ViewRepository
             ->through(fn(Product $product) => $this->product_card_cache($product));
 
 
-      //  $end = now();
-   //     \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
+        //  $end = now();
+        //     \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
         return view(
             $this->route('product.index'),
-            array_merge(
                 compact('category', 'products', 'prod_attributes', 'tags',
                     'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                    'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'),
-                [
-                    'web' => $this->web,
-                ]));
+                    'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'));
     }
 
     /**
@@ -240,7 +232,7 @@ class ViewRepository
             $products = $this->repository->ProductsByCategory($category); //0.07сек
             //Убираем из коллекции товары, которые не продаем под заказ
             return $products->reject(function (Product $product) use ($in_stock) {
-              //  if ($product->getQuantitySell() == 0) dd($product->name);
+                //  if ($product->getQuantitySell() == 0) dd($product->name);
 
                 //if (!($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order))) {dd(json_encode([$product->name . " " . $product->getQuantitySell() . " " . !$in_stock . ' ' . $product->pre_order]));}
                 return !($product->getQuantitySell() > 0 || (!$in_stock && $product->pre_order));
@@ -262,7 +254,8 @@ class ViewRepository
             } else {
                 $_category = $category;
             }
-
+            if (is_null($_category)) return [];
+            if ($_category->children()->count() == 0) return [];
             $children = $_category->children()->defaultOrder()->get()->map(function (Category $category) {
                 if ($category->allProducts()->count() == 0) return null;
                 return [
@@ -360,6 +353,32 @@ class ViewRepository
         //dd($post);
         if (is_null($post)) abort(404, 'Страница не найдена');
         return $post->view($this->seo->seoFn());
+    }
+
+    /// =====PARSER===== ///
+    public function rootParser()
+    {
+        $url_page = route('shop.parser.view');
+        $title = $this->web->categories_title;
+        $description = $this->web->categories_desc;
+       // $page = $request['page'] ?? 1;
+       // $schema = '';
+
+        $categories = $this->repository->getChildrenParser();
+        return view($this->route('parser.catalog'), compact('title', 'description', 'categories', 'url_page'));
+
+    }
+
+    public function categoryParser(Request $request, $slug)
+    {
+        $category = $this->slugs->CategoryParserBySlug($slug);
+        $page = $request['page'] ?? 1;
+        if (is_null($category)) return abort(404);
+    }
+
+    public function productParser($slug)
+    {
+
     }
 
 

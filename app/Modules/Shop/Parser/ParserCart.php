@@ -11,7 +11,9 @@ use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\User\Entity\ParserStorage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class ParserCart //Repository
 {
     /** @var ParserItem[] $items */

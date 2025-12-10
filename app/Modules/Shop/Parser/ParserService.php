@@ -16,7 +16,9 @@ use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class ParserService
 {
     const STORE = 203; //Код магазина в стране

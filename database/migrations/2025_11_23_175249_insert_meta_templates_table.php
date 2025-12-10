@@ -23,7 +23,6 @@ return new class extends Migration
         MetaTemplate::register(PostCategory::class);
         MetaTemplate::register(Group::class);
         MetaTemplate::register(Promotion::class);
-
     }
 
     /**

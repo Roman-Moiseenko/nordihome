@@ -2,17 +2,20 @@
 
 namespace App\Modules\Parser\Entity;
 
+use App\Modules\Base\Traits\ImageField;
 use App\Modules\Base\Traits\PhotoField;
 use App\Modules\Product\Entity\Brand;
 use App\Modules\Product\Entity\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 
 /**
  * @property int $id
  * @property string $name
+ * @property string $slug
  * @property string $url уникальный для исключения двойного парсинга
  * @property bool $active
  * @property int $parent_id
@@ -27,7 +30,7 @@ use Kalnoy\Nestedset\NodeTrait;
  */
 class CategoryParser extends Model
 {
-    use NodeTrait, PhotoField;
+    use NodeTrait, ImageField;
 
     public $timestamps = false;
     protected $table = 'parser_categories';
@@ -36,17 +39,24 @@ class CategoryParser extends Model
         'parent_id',
         'url',
         'active',
+        'slug',
     ];
 
     public static function register(string $name, string $url, ?int $parent_id): self
     {
+        $slug = Str::slug($name);
+        if (!is_null(self::where('slug', $slug)->first())) {
+            $slug .= '-' . $url;
+        }
         return self::create([
             'name' => $name,
             'parent_id' => $parent_id,
             'url' => $url,
             'active' => true,
+            'slug' => $slug
         ]);
     }
+
     public function draft(): void
     {
         $this->active = false;
@@ -87,4 +97,6 @@ class CategoryParser extends Model
         }
         return $name;// .= $this->name;
     }
+
+
 }

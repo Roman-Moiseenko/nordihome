@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
+ * @property string $slug
  * @property string $maker_id id в магазине Бренда
  * @property int $product_id
  * @property string $url

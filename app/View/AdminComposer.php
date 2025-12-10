@@ -101,7 +101,7 @@ class AdminComposer
                     return $this->shopRepository->getTree();
                 });
 
-                $view->with('categories', $categories);
+               // $view->with('categories', $categories);
                 $view->with('tree', $trees);
                 $view->with('web', $this->settings->web);
             }

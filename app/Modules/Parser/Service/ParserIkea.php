@@ -172,6 +172,7 @@ class ParserIkea extends ParserAbstract
             $product_parser->maker_id = $maker_id;
             $product_parser->price_base = $price_base;
             $product_parser->price_sell = $price_sell;
+            $product_parser->slug = $product->slug;
 
             //цвет товара
             $colors = array_map(function ($item) {
