@@ -9,15 +9,18 @@ class CacheHelper
     const string MENU_TREES = 'menu_trees';
 
     const string CATEGORY = 'category-';
+    const string PARSER_CATEGORY = 'parser-category-';
     const string CATEGORY_ATTRIBUTES = 'category-attributes-';
     const string CATEGORY_CHILDREN = 'category-children-';
+    const string PARSER_CATEGORY_CHILDREN = 'parser-category-children-';
     const string CATEGORY_SCHEMA = 'category-schema-';
     const string CATEGORY_PRODUCTS = 'category-products-';
+    const string PARSER_CATEGORY_PRODUCTS = 'parser-category-products-';
 
     const string PRODUCT_SCHEMA = 'product-scheme-';
     const string PRODUCT_CARD = 'product-card-';
     const string PRODUCT_VIEW = 'product-view-';
-
+    const string PARSER_PRODUCT_CARD = 'parser-product-card-';
 
     const array CATEGORIES = [
         self::CATEGORY,
@@ -32,4 +35,5 @@ class CacheHelper
         self::PRODUCT_SCHEMA,
         self::PRODUCT_VIEW,
     ];
+
 }

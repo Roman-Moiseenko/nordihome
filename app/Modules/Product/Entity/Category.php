@@ -138,7 +138,6 @@ class Category extends Model
         return $this->hasMany(Product::class, 'main_category_id', 'id');
     }
 
-
     public function allProducts(int $pagination = null)
     {
 

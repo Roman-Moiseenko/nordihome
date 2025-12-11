@@ -9,6 +9,8 @@ use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Page\Entity\Widgets\Template;
 use App\Modules\Page\Repository\MetaTemplateRepository;
+use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
@@ -123,7 +125,7 @@ class ViewRepository
     public function category(array $request, string $slug)
     {
         // $begin = now();
-        $url_page = route('shop.category.view', $slug);
+       // $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
         $page = $request['page'] ?? 1;
         if (is_null($category)) return abort(404);
@@ -132,11 +134,12 @@ class ViewRepository
         $title = $meta->title;
         $description = $meta->description;
 
-        $schema = $this->schema_category_cache($category);
+        //TODO Schema для парсер категории
+        //$schema = $this->schema_category_cache($category);
 
         if ($this->web->is_category && count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
-            return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description', 'url_page'));
+            return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description'));
         }
 
         $minPrice = 10;
@@ -171,7 +174,7 @@ class ViewRepository
         $query = $this->repository->filter($request, $product_ids); //0.0015 сек
         $count_in_category = $query->count();
         $products = $query->paginate($this->web->paginate);
-        $title = $category->title;
+       // $title = $category->title;
 
 
         $products = $products->withQueryString()
@@ -184,7 +187,7 @@ class ViewRepository
             $this->route('product.index'),
                 compact('category', 'products', 'prod_attributes', 'tags',
                     'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                    'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'));
+                    'order', 'children', 'count_in_category'/*, 'schema'*/, 'page'));
     }
 
     /**
@@ -374,6 +377,41 @@ class ViewRepository
         $category = $this->slugs->CategoryParserBySlug($slug);
         $page = $request['page'] ?? 1;
         if (is_null($category)) return abort(404);
+
+        $meta = $this->seo->seo($category);
+        $title = $meta->title;
+        $description = $meta->description;
+
+        //$schema = $this->schema_category_cache($category);
+
+        if ($this->web->is_category && $category->children()->count() > 0) {
+            $children = $this->repository->getChildrenParser($category->id);
+
+            return view($this->route('parser.subcatalog'), compact('category', 'children', 'title', 'description'));
+        }
+
+
+        $children = $this->parser_category_children_cache($category);
+        //$in_stock = isset($request['in_stock']);
+        $query = $this->parser_category_products_cache($category);
+
+
+        $count_in_category = $query->count();
+        $products = $query->paginate($this->web->paginate);
+        //$title = $category->title;
+
+
+        $products = $products->withQueryString()
+            ->through(fn(ProductParser $product) => $this->parser_product_card_cache($product));
+
+
+        //  $end = now();
+        //     \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
+        return view(
+            $this->route('parser.product.index'),
+            compact('category', 'products', 'request', 'title', 'description',
+                'children', 'count_in_category',/* 'schema',*/ 'page'));
+
     }
 
     public function productParser($slug)
@@ -381,7 +419,60 @@ class ViewRepository
 
     }
 
+    private function parser_category_children_cache(CategoryParser $category)
+    {
+        $callback = function () use ($category) {
+            if ($category->children()->count() == 0) {
+                $_category = $category->parent;
+            } else {
+                $_category = $category;
+            }
+            if (is_null($_category)) return [];
+            if ($_category->children()->count() == 0) return [];
+            $children = $_category->children()
+                ->where('active', true)->defaultOrder()
+                ->get()->map(function (CategoryParser $category) {
+                    if ($category->allProducts()->count() == 0) return null;
+                    return [
+                        'id' => $category->id,
+                        'name' => $category->name,
+                        'slug' => $category->slug,
+                    ];
+                });
 
+            return array_filter($children->toArray());
+        };
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::PARSER_CATEGORY_CHILDREN . $category->slug, $callback);
+        } else {
+            return $callback();
+        }
+    }
+
+    private function parser_category_products_cache(?CategoryParser $category)
+    {
+        $slug = is_null($category) ? 'root' : $category->slug;
+        $callback = function () use ($category) {
+            return $this->repository->ParserProductsByCategory($category);
+        };
+
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::PARSER_CATEGORY_PRODUCTS . $slug, $callback);
+        } else {
+            return $callback();
+        }
+    }
+
+    private function parser_product_card_cache(ProductParser $product)
+    {
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::PARSER_PRODUCT_CARD . $product->id, function () use ($product) {
+                return $this->repository->ParserProductToArrayCard($product);
+            });
+        } else {
+            return $this->repository->ParserProductToArrayCard($product);
+        }
+    }
     private function categories_cache()
     {
         return Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
