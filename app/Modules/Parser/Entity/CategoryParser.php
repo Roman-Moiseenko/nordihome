@@ -98,5 +98,15 @@ class CategoryParser extends Model
         return $name;// .= $this->name;
     }
 
+    public function allProducts(int $pagination = null)
+    {
+        return ProductParser::where('availability', true) //Опубликован AND
+        ->where(function ($query) { //Категории входят в выбранную AND
+            $query->whereHas('categories', function ($query) {
+                $query->where('_lft', '>=', $this->_lft)->where('_rgt', '<=', $this->_rgt);
+            });
+        })->get();
+    }
+
 
 }

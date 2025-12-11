@@ -11,6 +11,7 @@ use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\AttributeProduct;
 use App\Modules\Product\Entity\AttributeVariant;
@@ -308,6 +309,53 @@ class ShopRepository
             'children' => $children,
         ];
     }
+    ///PARSER
+
+    public function ParserProductsByCategory(CategoryParser $category = null)
+    {
+        if (is_null($category)) {
+            $lft = Category::get()->min('_lft');
+            $rgt = Category::get()->max('_rgt');
+
+        } else {
+            $lft = $category->_lft;
+            $rgt = $category->_rgt;
+        }
+
+        return ProductParser::where('availability', true) //Опубликован AND
+        ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND
+            $query->whereHas('categories', function ($query) use ($lft, $rgt) {
+                $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
+            });
+        });
+    }
+    public function ParserProductToArrayCard(ProductParser $product): array
+    {
+        return array_merge($this->ParserProductToArray($product), [
+            'images' => [
+                'catalog' => $product->product->getImageData('catalog'),
+            ],
+            'images-next' => [
+                'catalog' => $product->product->getImageNextData('catalog'),
+            ],
+        ]);
+    }
+    private function ParserProductToArray(ProductParser $product): array
+    {
+        return [
+            'id' => $product->id,
+            'code' => $product->product->code,
+            'name' => $product->product->name,
+            'slug' => $product->slug,
+            'price' => $product->price_sell * $this->settings->parser->parser_coefficient,
+            'image' => [
+                'src' => $product->product->getImage('card'),
+            ],
+
+
+        ];
+    }
+    /// <=====
 
     ////АТРИБУТЫ
     ///

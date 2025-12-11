@@ -86,6 +86,27 @@ Breadcrumbs::for('shop.parser.view', function (BreadcrumbTrail $trail) {
     $trail->push('Заказ товаров с каталога IKEA.PL', route('shop.parser.view'));
 });
 
+Breadcrumbs::for('shop.parser.catalog', function (BreadcrumbTrail $trail, $slug) use ($settings) { //Без указания главной - home
+    // \Log::info('shop.category.view ' .$slug);
+    $category = (new SlugRepository())->CategoryParserBySlug($slug);
+    if (is_null($category)) {
+        if ($settings->web->is_category) $trail->parent('shop.parser.view');
+        $trail->push('Категория не найдена');
+    } else {
+        if ($category->parent) {
+            $trail->parent('shop.parser.catalog', $category->parent_id);
+        } else {
+            if ($settings->web->is_category) {
+                $trail->parent('shop.parser.view');
+            } else {
+                $trail->parent('shop.home');
+            }
+        }
+        $trail->push($category->name, route('shop.parser.catalog', $category->slug));
+    }
+});
+
+
 Breadcrumbs::for('shop.promotion.view', function (BreadcrumbTrail $trail, $slug) {
     $promotion = (new SlugRepository())->getPromotionBySlug($slug);
     $trail->parent('shop.home');
