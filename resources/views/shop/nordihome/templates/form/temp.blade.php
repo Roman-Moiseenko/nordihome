@@ -28,12 +28,12 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
             <input name="email" class="form-control" required placeholder="{{ $widget->fields["email"] }}"/>
         </div>
         <div>
-            <input name="user" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
+            <input name="name" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
         </div>
         <div>
             <select name="ask" class="form-control">
-                @foreach($widget->lists->get('ask') as $key => $label)
-                    <option value="{{ $key }}">{{ $label }}</option>
+                @foreach($widget->lists->get('ask') as $label)
+                    <option value="{{ $label }}">{{ $label }}</option>
                 @endforeach
             </select>
         </div>

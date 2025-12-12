@@ -9,6 +9,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
+use App\Modules\Lead\Entity\Lead;
 use App\Modules\Mail\Entity\SystemMail;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
@@ -65,6 +66,7 @@ use JetBrains\PhpStorm\Pure;
  * @property LoggerOrder[] $logs
  * @property Report $invoice
  * @property SystemMail[] $systemMails
+ * @property Lead $lead
  */
 
 class Order extends Model
@@ -715,6 +717,11 @@ class Order extends Model
     public function logs(): HasMany
     {
         return $this->hasMany(LoggerOrder::class, 'order_id', 'id')->orderByDesc('created_at');
+    }
+
+    public function lead(): HasOne
+    {
+        return $this->hasOne(Lead::class, 'order_id', 'id');
     }
 
     /**
