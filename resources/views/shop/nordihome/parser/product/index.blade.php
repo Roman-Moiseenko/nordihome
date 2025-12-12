@@ -44,10 +44,10 @@
     </div>
 
     <script>
-        let clearFilter = document.getElementById('clear-filter');
+     /*   let clearFilter = document.getElementById('clear-filter');
         clearFilter.addEventListener('click', function () {
             window.location.href = window.location.href.split("?")[0];
-        });
+        });*/
     </script>
 
 @endsection

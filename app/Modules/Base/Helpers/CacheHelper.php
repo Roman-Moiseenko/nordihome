@@ -21,6 +21,7 @@ class CacheHelper
     const string PRODUCT_CARD = 'product-card-';
     const string PRODUCT_VIEW = 'product-view-';
     const string PARSER_PRODUCT_CARD = 'parser-product-card-';
+    const string PARSER_PRODUCT_CARD_VIEW = 'parser-product-view-';
 
     const array CATEGORIES = [
         self::CATEGORY,
@@ -35,5 +36,6 @@ class CacheHelper
         self::PRODUCT_SCHEMA,
         self::PRODUCT_VIEW,
     ];
+
 
 }

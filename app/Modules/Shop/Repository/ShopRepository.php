@@ -355,6 +355,46 @@ class ShopRepository
 
         ];
     }
+
+    public function ParserProductToArrayView(ProductParser $product): array
+    {
+        return array_merge($this->ParserProductToArray($product), [
+            'created_at' => $product->created_at,
+            'updated_at' => $product->updated_at,
+            'description' => $product->product->description,
+            'short' => $product->product->short,
+
+            'gallery' => $product->product->photos()->get()->map(function (Photo $photo) {
+                return [
+                    'mini' => $photo->getThumbUrl('mini'),
+                    'src' => $photo->getThumbUrl('card'),
+                    'alt' => $photo->alt,
+                    'title' => $photo->alt,
+                    'description' => $photo->description,
+                ];
+            }),
+            'categories' => $product->categories()->get()->map(fn(CategoryParser $category) => [
+                'id' => $category->id,
+                'slug' => $category->slug,
+                'name' => $category->name,
+            ])->toArray(),
+
+
+            'dimensions' => [
+                'width' => $product->product->dimensions->width,
+                'height' => $product->product->dimensions->height,
+                'depth' => $product->product->dimensions->depth,
+                'weight' => $product->product->weight(),
+                'volume' => $product->product->volume(),
+                'captions' => Dimensions::CAPTION_TYPES[$product->product->dimensions->type],
+            ],
+            'local' => $product->product->local,
+            'delivery' => $product->product->delivery,
+
+        ]);
+
+    }
+
     /// <=====
 
     ////АТРИБУТЫ

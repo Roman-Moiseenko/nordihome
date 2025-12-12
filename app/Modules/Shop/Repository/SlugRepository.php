@@ -17,21 +17,21 @@ use JetBrains\PhpStorm\Deprecated;
 class SlugRepository
 {
 
-    public function getProductParserBySlug($slug): ProductParser
+    public function getProductParserBySlug($slug):? ProductParser
     {
-        if (is_numeric($slug)) return ProductParser::findOrFail($slug);
+        if (is_numeric($slug)) return ProductParser::find($slug);
         return ProductParser::where('slug', $slug)->first();
     }
 
-    public function CategoryParserBySlug($slug): CategoryParser
+    public function CategoryParserBySlug($slug):? CategoryParser
     {
-        if (is_numeric($slug)) return CategoryParser::findOrFail($slug);
+        if (is_numeric($slug)) return CategoryParser::find($slug);
         return CategoryParser::where('slug', $slug)->first();
     }
 
     public function getProductBySlug($slug): ?Product
     {
-        if (is_numeric($slug)) return Product::findOrFail($slug);
+        if (is_numeric($slug)) return Product::find($slug);
         return Product::where('slug', '=', $slug)->first();
     }
 
