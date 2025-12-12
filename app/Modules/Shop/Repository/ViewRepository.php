@@ -45,7 +45,7 @@ class ViewRepository
 
     public function product(string $slug): View
     {
-        $url_page = route('shop.product.view', $slug);
+        //$url_page = route('shop.product.view', $slug);
 
         $product = $this->slugs->getProductBySlug($slug);
         if (empty($product) || !$product->isPublished()) abort(404);
@@ -58,7 +58,7 @@ class ViewRepository
         $product = $this->product_view_cache($product);
         $schema = $this->schema_category_product($product);
         return view($this->route('product.view'),
-            compact('product', 'title', 'description', 'productAttributes', 'schema', 'url_page'));
+            compact('product', 'title', 'description', 'productAttributes', 'schema'/*, 'url_page'*/));
     }
 
     public function root(array $request)
@@ -416,9 +416,30 @@ class ViewRepository
 
     public function productParser($slug)
     {
+        $product = $this->slugs->getProductParserBySlug($slug);
+        if (is_null($product) || !$product->availability) abort(404);
 
+        $meta = $this->seo->seo($product);
+        $title = $meta->title;
+        $description = $meta->description;
+
+        //$productAttributes = $this->repository->getProdAttributes($product);
+        $product = $this->parser_product_view_cache($product);
+        //$schema = $this->schema_category_product($product);
+        return view($this->route('parser.product.view'),
+            compact('product', 'title', 'description'/*, 'schema'*/));
     }
 
+    private function parser_product_view_cache(ProductParser $product)
+    {
+        if ($this->web->is_cache) {
+            return Cache::rememberForever(CacheHelper::PARSER_PRODUCT_CARD_VIEW . $product->id, function () use ($product) {
+                return $this->repository->ParserProductToArrayView($product);
+            });
+        } else {
+            return $this->repository->ParserProductToArrayView($product);
+        }
+    }
     private function parser_category_children_cache(CategoryParser $category)
     {
         $callback = function () use ($category) {

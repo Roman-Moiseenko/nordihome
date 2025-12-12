@@ -89,6 +89,6 @@
         });
     </script>
 
-        {!! $schema !!}
+
 
 @endsection

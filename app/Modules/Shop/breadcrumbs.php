@@ -105,7 +105,19 @@ Breadcrumbs::for('shop.parser.catalog', function (BreadcrumbTrail $trail, $slug)
         $trail->push($category->name, route('shop.parser.catalog', $category->slug));
     }
 });
+//Для товара собираем из предыдущих
+Breadcrumbs::for('shop.parser.product', function (BreadcrumbTrail $trail, $slug) {
+    $product = (new SlugRepository())->getProductParserBySlug($slug);
+    //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
+    if (is_null($product)) {
+        $trail->parent('shop.parser.view');
+        $trail->push('Товар не найден'); // Крошка - Товар
 
+    } else {
+        $trail->parent('shop.parser.catalog', $product->category()->id); //Крошка - Категория > Подкатегория >
+        $trail->push($product->product->name, route('shop.parser.product', $product->slug)); // Крошка - Товар
+    }
+});
 
 Breadcrumbs::for('shop.promotion.view', function (BreadcrumbTrail $trail, $slug) {
     $promotion = (new SlugRepository())->getPromotionBySlug($slug);

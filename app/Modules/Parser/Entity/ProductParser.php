@@ -55,12 +55,17 @@ class ProductParser extends Model
         'product_id',
     ];
 
-    public static function register(string $url, int $product_id, ): self
+    public static function register(string $url, int $product_id): self
     {
         return self::create([
             'url' => $url,
             'product_id' => $product_id,
         ]);
+    }
+
+    public function category():? CategoryParser
+    {
+        return $this->categories()->first();
     }
 
     public function categories(): BelongsToMany
