@@ -28,7 +28,7 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
             <input name="email" class="form-control" required placeholder="{{ $widget->fields["email"] }}"/>
         </div>
         <div>
-            <input name="user" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
+            <input name="name" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
         </div>
         <div>
             <select name="ask" class="form-control">

@@ -17,6 +17,7 @@ const useStore = defineStore('table_data', () => {
             '| align lineheight | checklist numlist bullist indent outdent | emoticons charmap |' +
             '| removeformat ltr rtl fullscreen preview visualblocks | code',
         image_list: [],
+        //tinymceScriptSrc: '/js/tinymce/tinymce.min.js',
     })
     const tiny = computed(() => _tiny)
     loadImageListTiny()

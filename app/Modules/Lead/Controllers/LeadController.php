@@ -7,6 +7,7 @@ use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Entity\LeadStatus;
 use App\Modules\Lead\Repository\LeadRepository;
 use App\Modules\Lead\Service\LeadService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -38,10 +39,28 @@ class LeadController extends Controller
         ]);
     }
 
-    public function set_status(Lead $lead, Request $request): \Illuminate\Http\RedirectResponse
+    public function set_status(Lead $lead, Request $request): RedirectResponse
     {
         $result = $this->service->setStatus($lead, $request);
 
+        return redirect()->back()->with('success', 'Обновлено!');
+    }
+
+    public function set_name(Lead $lead, Request $request): RedirectResponse
+    {
+        $this->service->setName($lead, $request);
+        return redirect()->back()->with('success', 'Обновлено!');
+    }
+
+    public function set_comment(Lead $lead, Request $request): RedirectResponse
+    {
+        $this->service->setComment($lead, $request);
+        return redirect()->back()->with('success', 'Обновлено!');
+    }
+
+    public function set_finished(Lead $lead, Request $request): RedirectResponse
+    {
+        $this->service->setFinished($lead, $request);
         return redirect()->back()->with('success', 'Обновлено!');
     }
 }

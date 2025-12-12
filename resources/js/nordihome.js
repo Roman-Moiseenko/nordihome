@@ -3,7 +3,7 @@ import 'bootstrap';
 import jQuery from 'jquery';
 window.$ = jQuery;
 
-
+//import 'tinymce';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel';
 

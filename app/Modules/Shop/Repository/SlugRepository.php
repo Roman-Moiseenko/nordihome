@@ -29,13 +29,13 @@ class SlugRepository
         return CategoryParser::where('slug', $slug)->first();
     }
 
-    public function getProductBySlug($slug): ?Product
+    public function getProductBySlug($slug):? Product
     {
         if (is_numeric($slug)) return Product::find($slug);
         return Product::where('slug', '=', $slug)->first();
     }
 
-    public function CategoryBySlug($slug): ?Category
+    public function CategoryBySlug($slug):? Category
     {
         if (is_numeric($slug)) {
             $category = Category::find($slug);

@@ -10,6 +10,7 @@ use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
+use App\Modules\Lead\Entity\Lead;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -51,6 +53,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Organization $organization Если не null, то Юридическое лицо
  * @property Organization[] $organizations
  * @property FileStorage[] $files
+ * @property Lead[] $leads
  */
 
 //TODO Задачи по клиентам - настройка в админке, $client  - какие цены
@@ -58,7 +61,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, Notifiable;
 
     protected string $guard = 'user';
     public string $uploads = 'uploads/users/';
@@ -198,7 +201,7 @@ class User extends Authenticatable
     public function setPhone(string $phone): void
     {
         //$phone = preg_replace("/[^0-9]/", "", $phone);
-
+        if (empty($phone)) return;
         $count = User::where('id', '<>', $this->id)->where('phone', $phone)->count();
         if ($count > 0) throw new \DomainException('Дублирование Телефона');
         $this->phone = $phone;
@@ -344,6 +347,11 @@ class User extends Authenticatable
         return $this->
         belongsToMany(Organization::class, 'shopper_organizations', 'user_id', 'organization_id', 'id', 'id')
             ->withPivot(['default']);
+    }
+
+    public function leads(): HasMany
+    {
+        return $this->hasMany(Lead::class, 'user_id', 'id');
     }
 
     //*** Хелперы

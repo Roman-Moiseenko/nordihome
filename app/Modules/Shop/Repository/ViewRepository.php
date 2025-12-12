@@ -379,6 +379,7 @@ class ViewRepository
         if (is_null($category)) return abort(404);
 
         $meta = $this->seo->seo($category);
+        //dd($meta);
         $title = $meta->title;
         $description = $meta->description;
 

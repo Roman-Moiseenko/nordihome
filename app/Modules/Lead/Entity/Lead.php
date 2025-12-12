@@ -5,8 +5,11 @@ namespace App\Modules\Lead\Entity;
 use App\Modules\Feedback\Casts\DataFieldFeedbackCasts;
 use App\Modules\Feedback\Classes\DataFieldFeedback;
 use App\Modules\Feedback\Entity\FormBack;
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -15,6 +18,8 @@ use JetBrains\PhpStorm\ExpectedValues;
 /**
  * @property int $id
  * @property int $staff_id
+ * @property int $user_id
+ * @property int $order_id
  * @property int $leadable_id
  * @property string $leadable_type
  * @property Carbon $created_at
@@ -22,6 +27,11 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property LeadStatus[] $statuses
  * @property LeadStatus $status
  * @property DataFieldFeedback[] $data
+ * @property User $user
+ * @property Order $order
+ * @property string $comment
+ * @property string $name
+ * @property Carbon $finished_at
  */
 class Lead extends Model
 {
@@ -37,7 +47,6 @@ class Lead extends Model
         FormBack::class => 'form',
     ];
 
-
     public function getType(): string
     {
         return self::TYPES[$this->leadable_type];
@@ -46,7 +55,6 @@ class Lead extends Model
     public static function register(): static
     {
         throw new \DomainException('Неверный вызов');
-
     }
 
     public function leadable(): MorphTo
@@ -57,7 +65,6 @@ class Lead extends Model
     public function setStatus(
         #[ExpectedValues(valuesFromClass: LeadStatus::class)] int $value): void
     {
-
         $this->statuses()->create(['value' => $value, 'created_at' => now()]);
     }
 
@@ -71,6 +78,15 @@ class Lead extends Model
         return $this->hasMany(LeadStatus::class, 'lead_id', 'id');
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'user_id', 'id');
+    }
 
     /**
      * @param DataFieldFeedback[] $data

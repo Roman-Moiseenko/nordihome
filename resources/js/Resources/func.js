@@ -93,7 +93,8 @@ export const func = {
     },
     fullName: (val) => {
         if (val === undefined || val === null) return '';
-        return val.surname + ' ' + val.firstname + ' ' + val.secondname;
+        let result = val.surname + ' ' + val.firstname + ' ' + val.secondname;
+        return result === '' ? 'Не определено' : result;
     },
     price: (val, currency = '₽') => {
         if (val === null || val === '' || val === 0 || val === undefined) return '0 ' + currency;
@@ -138,6 +139,17 @@ export const func = {
         if (day < 10) day = '0' + day;
         let days = _date_.getFullYear() + '-' + month + '-' + day;
         return days + ' ' + _date_.getHours() + ':' + _date_.getMinutes() + ':' + _date_.getSeconds();
+    },
+    shortdate: (val) => {
+        if (val === undefined || val === null) return null;
+        const _date_ = new Date(val);
+        let month = _date_.getMonth() + 1;
+        if (month < 10) month = '0' + month;
+        let day = _date_.getDate();
+        if (day < 10) day = '0' + day;
+        const monthName = _date_.toLocaleString('default', { month: 'short' })
+        let days =  month + '-' + day;
+        return _date_.getHours() + ':' + _date_.getMinutes() + ' ' + day + ' ' + monthName;
     },
 
     displayedInfo: (model = null, image = null, icon = null) => {

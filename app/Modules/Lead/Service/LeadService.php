@@ -5,6 +5,7 @@ namespace App\Modules\Lead\Service;
 use App\Modules\Feedback\Entity\FormBack;
 use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Entity\LeadStatus;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -45,5 +46,23 @@ class LeadService
             return true;
         }
 
+    }
+
+    public function setName(Lead $lead, Request $request): void
+    {
+        $lead->name = $request->string('name')->trim()->value();
+        $lead->save();
+    }
+
+    public function setComment(Lead $lead, Request $request): void
+    {
+        $lead->comment = $request->string('comment')->trim()->value();
+        $lead->save();
+    }
+
+    public function setFinished(Lead $lead, Request $request): void
+    {
+        $lead->finished_at = Carbon::parse($request->input('finished_at'));
+        $lead->save();
     }
 }

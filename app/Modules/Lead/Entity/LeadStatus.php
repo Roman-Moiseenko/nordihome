@@ -18,13 +18,38 @@ class LeadStatus extends Model
 {
     const int STATUS_NEW = 1;
     const int STATUS_IN_WORK = 2;
-    //TODO
+    const int STATUS_NOT_DECIDED = 3;
+    const int STATUS_INVOICE = 4;
+    const int STATUS_PAID = 5;
+    const int STATUS_ASSEMBLY = 6;
+    const int STATUS_DELIVERY = 7;
+    const int STATUS_CANCELED = 8;
+
     const int STATUS_COMPLETED = 9;
 
     const array STATUSES = [
         self::STATUS_NEW => 'Новый',
         self::STATUS_IN_WORK => 'В работе',
+        self::STATUS_NOT_DECIDED => 'Клиент думает',
+        self::STATUS_INVOICE => 'Выставлен счет',
+        self::STATUS_PAID => 'Оплачен',
+        self::STATUS_ASSEMBLY => 'На сборке',
+        self::STATUS_DELIVERY => 'На доставке',
+        self::STATUS_CANCELED => 'Отменен',
+
         self::STATUS_COMPLETED => 'Завершен',
+    ];
+
+    const array SHOT = [
+        self::STATUS_NEW => 'new_leads',
+        self::STATUS_IN_WORK => 'in_work',
+        self::STATUS_NOT_DECIDED => 'not_decide',
+        self::STATUS_INVOICE => 'invoice',
+        self::STATUS_PAID => 'paid',
+        self::STATUS_ASSEMBLY => 'assembly',
+        self::STATUS_DELIVERY => 'delivery',
+        self::STATUS_CANCELED => 'canceled',
+        self::STATUS_COMPLETED => 'completed',
     ];
 
     public $timestamps = false;

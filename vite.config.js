@@ -88,7 +88,7 @@ export default defineConfig({
         }),
         Icons({
             autoInstall: true,
-        }),
+        })
     ],
     resolve: {
         alias: [

@@ -1,5 +1,5 @@
 <template>
-    <div v-show="!showEdit" class="flex" style="width: 100%">
+    <div v-show="!showEdit" :class="'flex ' + props.class" style="width: 100%">
         <template v-if="isFIO">
             {{ func.fullName(field) }}
         </template>
@@ -56,6 +56,10 @@ const props = defineProps({
       default: 1,
       type: Number
     },
+    class: {
+        default: '',
+        type: String
+    }
 })
 
 const showEdit = ref(false)
