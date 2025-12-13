@@ -18,13 +18,15 @@ class OrderHasCreated
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public Order $order;
+    private string $action;
 
     /**
      * Слушатели - уведомления, доставка и платежи (сервисы)
      */
-    public function __construct(Order $order)
+    public function __construct(Order $order, string $action = '')
     {
         $this->order = $order;
+        $this->action = $action;
     }
 
     /**

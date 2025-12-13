@@ -10,6 +10,7 @@ use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Lead\Entity\Lead;
+use App\Modules\Lead\Traits\LeadField;
 use App\Modules\Mail\Entity\SystemMail;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
@@ -71,7 +72,7 @@ use JetBrains\PhpStorm\Pure;
 
 class Order extends Model
 {
-    use HtmlInfoData;
+    use HtmlInfoData, LeadField;
 
     const int ONLINE = 701;
     const int MANUAL = 702;
