@@ -64,7 +64,7 @@ const props = defineProps({
 
 const showEdit = ref(false)
 const field_new = ref(props.field)
-console.log(field_new.value)
+//console.log(field_new.value)
 const field_fio = reactive({
     surname: null,
     firstname: null,
