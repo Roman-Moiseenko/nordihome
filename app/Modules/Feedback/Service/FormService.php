@@ -17,7 +17,9 @@ class FormService
         $form->data_form = $request->all();
         $form->save();
         $form->refresh();
-        $form->createLead(); //Создаем Лид
+        //TODO Сделать через event, как Order
+
+        $form->createLead($form->data()); //Создаем Лид
         if ($request->has('email')) {
             //TODO Влозможно перенести в сервис Lead
             $email = $request->string('email')->trim()->value();

@@ -36,6 +36,10 @@ use JetBrains\PhpStorm\ExpectedValues;
 class Lead extends Model
 {
 
+    protected $fillable = [
+        'user_id',
+        'order_id',
+    ];
     protected $attributes = [
         'data' => '[]',
     ];
@@ -45,6 +49,7 @@ class Lead extends Model
 
     const array TYPES = [
         FormBack::class => 'form',
+        Order::class => 'order',
     ];
 
     public function getType(): string
@@ -52,7 +57,7 @@ class Lead extends Model
         return self::TYPES[$this->leadable_type];
     }
 
-    public static function register(): static
+    public static function register($object): static
     {
         throw new \DomainException('Неверный вызов');
     }
@@ -92,7 +97,7 @@ class Lead extends Model
      * @param DataFieldFeedback[] $data
      * @return void
      */
-    public function create_feedback(array $data): void
+    public function create_lead(array $data): void
     {
         $this->data = $data;
         $this->save();

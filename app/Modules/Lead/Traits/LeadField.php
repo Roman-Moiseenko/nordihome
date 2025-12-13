@@ -16,8 +16,8 @@ trait LeadField
         return $this->morphOne(Lead::class, 'leadable')->withDefault();
     }
 
-    public function createLead(): void
+    public function createLead($data): void
     {
-        $this->lead->create_feedback($this->data());
+        $this->lead->create_lead($data);
     }
 }

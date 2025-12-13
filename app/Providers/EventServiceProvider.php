@@ -68,6 +68,7 @@ use App\Modules\Admin\Listeners\NewTaskStaff;
 use App\Modules\Admin\Listeners\NotificationStaff;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Lead\Listeners\LeadEventListener;
+use App\Modules\Lead\Listeners\LeadNewFromOrder;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Service\NotificationService;
 use App\Modules\Order\Events\ExpenseHasCompleted;
@@ -132,6 +133,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasCreated::class => [
             NotificationOrderNew::class,
+            LeadNewFromOrder::class,
             //TODO Возможно добавить создание лидов
 
 
