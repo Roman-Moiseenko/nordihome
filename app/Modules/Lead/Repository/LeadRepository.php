@@ -12,7 +12,21 @@ class LeadRepository
 
     public function getIndex(Request $request): array
     {
-        return Lead::get()->map(fn(Lead $lead) => $this->LeadToArray($lead))->toArray();
+        $staff = \Auth::guard('admin')->user();
+        $query = Lead::where('staff_id', $staff->id);
+        $query_new = Lead::where('staff_id', null);
+
+        return [
+            LeadStatus::STATUS_NEW => $this->getLeadsByStatus($query_new, LeadStatus::STATUS_NEW),
+            LeadStatus::STATUS_IN_WORK => $this->getLeadsByStatus($query, LeadStatus::STATUS_IN_WORK), //'in_work'
+            LeadStatus::STATUS_NOT_DECIDED => $this->getLeadsByStatus($query, LeadStatus::STATUS_NOT_DECIDED), //'not_decide'
+            LeadStatus::STATUS_INVOICE => $this->getLeadsByStatus($query, LeadStatus::STATUS_INVOICE), //'invoice'
+            LeadStatus::STATUS_PAID => $this->getLeadsByStatus($query, LeadStatus::STATUS_PAID), //'paid'
+            LeadStatus::STATUS_ASSEMBLY => $this->getLeadsByStatus($query, LeadStatus::STATUS_ASSEMBLY), //'assembly'
+            LeadStatus::STATUS_DELIVERY => $this->getLeadsByStatus($query, LeadStatus::STATUS_DELIVERY), //'delivery'
+        ];
+
+        //return Lead::get()->map(fn(Lead $lead) => $this->LeadToArray($lead))->toArray();
     }
 
     public function getFreeLeads(): array
@@ -33,12 +47,12 @@ class LeadRepository
         $query = Lead::where('staff_id', $staff->id);
 
         return [
-            'in_work' => $this->getLeadsByStatus($query, LeadStatus::STATUS_IN_WORK),
-            'not_decide' => $this->getLeadsByStatus($query, LeadStatus::STATUS_NOT_DECIDED),
-            'invoice' => $this->getLeadsByStatus($query, LeadStatus::STATUS_INVOICE),
-            'paid' => $this->getLeadsByStatus($query, LeadStatus::STATUS_PAID),
-            'assembly' => $this->getLeadsByStatus($query, LeadStatus::STATUS_ASSEMBLY),
-            'delivery' => $this->getLeadsByStatus($query, LeadStatus::STATUS_DELIVERY),
+            LeadStatus::STATUS_IN_WORK => $this->getLeadsByStatus($query, LeadStatus::STATUS_IN_WORK), //'in_work'
+            LeadStatus::STATUS_NOT_DECIDED => $this->getLeadsByStatus($query, LeadStatus::STATUS_NOT_DECIDED), //'not_decide'
+            LeadStatus::STATUS_INVOICE => $this->getLeadsByStatus($query, LeadStatus::STATUS_INVOICE), //'invoice'
+            LeadStatus::STATUS_PAID => $this->getLeadsByStatus($query, LeadStatus::STATUS_PAID), //'paid'
+            LeadStatus::STATUS_ASSEMBLY => $this->getLeadsByStatus($query, LeadStatus::STATUS_ASSEMBLY), //'assembly'
+            LeadStatus::STATUS_DELIVERY => $this->getLeadsByStatus($query, LeadStatus::STATUS_DELIVERY), //'delivery'
         ];
     }
     private function getLeadsByStatus($query, #[ExpectedValues(valuesFromClass: LeadStatus::class)] int $status)
@@ -68,6 +82,18 @@ class LeadRepository
         ]);
     }
 
+    public function getBoards(): array
+    {
+        $result = [];
+        foreach (LeadStatus::STATUSES as $key => $label)
+        {
+            if ($key < LeadStatus::STATUS_CANCELED) {
+                $result[$key] = $label;
+            }
+        }
+
+        return $result;
+    }
 
 
 }

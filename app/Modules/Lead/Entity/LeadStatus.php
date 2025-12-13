@@ -36,7 +36,6 @@ class LeadStatus extends Model
         self::STATUS_ASSEMBLY => 'На сборке',
         self::STATUS_DELIVERY => 'На доставке',
         self::STATUS_CANCELED => 'Отменен',
-
         self::STATUS_COMPLETED => 'Завершен',
     ];
 

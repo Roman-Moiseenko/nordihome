@@ -27,13 +27,10 @@ class LeadController extends Controller
     public function index(Request $request): Response
     {
         $leads = $this->repository->getIndex($request);
-        $new_leads = $this->repository->getFreeLeads();
-        $my_leads = $this->repository->getMyLeads();
+        $boards = $this->repository->getBoards();
         return Inertia::render('Lead/Dashboard', [
-            'new_leads' => $new_leads,
-            'my_leads' => $my_leads,
-            //   'my_leads' => $my_leads,
-            'boards' => LeadStatus::STATUSES
+            'leads' => $leads,
+            'boards' => $boards,
 
             //TODO Справочники, состояния и др.
         ]);
@@ -43,7 +40,7 @@ class LeadController extends Controller
     {
         $result = $this->service->setStatus($lead, $request);
 
-        return redirect()->back()->with('success', 'Обновлено!');
+        return redirect()->back()->with($result ? 'success' : 'error', $result ? 'Обновлено!' : 'Недопустимо!');
     }
 
     public function set_name(Lead $lead, Request $request): RedirectResponse
@@ -63,4 +60,28 @@ class LeadController extends Controller
         $this->service->setFinished($lead, $request);
         return redirect()->back()->with('success', 'Обновлено!');
     }
+
+    public function canceled(Lead $lead, Request $request): RedirectResponse
+    {
+        $this->service->canceled($lead, $request);
+        return redirect()->back()->with('success', 'Заявка отменена!');
+    }
+    public function completed(Lead $lead, Request $request): RedirectResponse
+    {
+        $this->service->completed($lead, $request);
+        return redirect()->back()->with('success', 'Заявка завершена!');
+    }
+
+    public function create_user(Lead $lead, Request $request): RedirectResponse
+    {
+        $this->service->createUser($lead, $request);
+        return redirect()->back()->with('success', 'Обновлено!');
+    }
+
+    public function create_order(Lead $lead, Request $request): RedirectResponse
+    {
+        $order = $this->service->createOrder($lead, $request);
+        return redirect()->route('admin.order.show', $order)->with('success', 'Обновлено!');
+    }
+
 }
