@@ -2,11 +2,9 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderHasRefund;
 use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Order\Events\OrderHasRefund;
 use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class NotificationRefundNew
 {

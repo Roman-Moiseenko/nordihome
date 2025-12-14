@@ -2,9 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderHasLogger;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Modules\Order\Events\OrderHasLogger;
 
 class NotificationNewLogger
 {

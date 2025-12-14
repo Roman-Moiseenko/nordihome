@@ -130,12 +130,14 @@ class OrderController extends Controller
         /** @var Admin $staff */
         $staff = Auth::guard('admin')->user();
         $this->service->setManager($order, $staff->id);
+
         return redirect()->back()->with('success', 'Вы взяли заказ в работу');
     }
 
     public function set_manager(Request $request, Order $order): RedirectResponse
     {
         $this->service->setManager($order, (int)$request['staff_id']);
+
         return redirect()->back()->with('success', 'Менеджер назначен');
     }
 

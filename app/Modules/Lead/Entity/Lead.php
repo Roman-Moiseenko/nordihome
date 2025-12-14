@@ -32,6 +32,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property string $comment
  * @property string $name
  * @property Carbon $finished_at
+ * @property LeadItem[] $items
  */
 class Lead extends Model
 {
@@ -78,6 +79,11 @@ class Lead extends Model
         return $this->hasOne(LeadStatus::class, 'lead_id', 'id')->latestOfMany();
     }
 
+    public function items(): HasMany
+    {
+        return $this->hasMany(LeadItem::class, 'lead_id', 'id')->orderByDesc('created_at');
+    }
+
     public function statuses(): HasMany
     {
         return $this->hasMany(LeadStatus::class, 'lead_id', 'id');
@@ -90,7 +96,7 @@ class Lead extends Model
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class, 'user_id', 'id');
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     /**
@@ -114,6 +120,7 @@ class Lead extends Model
     {
         return $this->status->value == LeadStatus::STATUS_NEW && $this->staff_id == null;
     }
+
 
 
 }

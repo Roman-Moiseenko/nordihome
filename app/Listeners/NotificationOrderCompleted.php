@@ -2,14 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderHasCompleted;
 use App\Jobs\RequestReview;
 use App\Mail\OrderCompleted;
-use App\Modules\Admin\Entity\Options;
+use App\Modules\Order\Events\OrderHasCompleted;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class NotificationOrderCompleted

@@ -49,6 +49,12 @@ class LeadController extends Controller
         return redirect()->back()->with('success', 'Обновлено!');
     }
 
+    public function add_item(Lead $lead, Request $request): RedirectResponse
+    {
+        $this->service->addItem($lead, $request);
+        return redirect()->back()->with('success', 'Обновлено!');
+    }
+
     public function set_comment(Lead $lead, Request $request): RedirectResponse
     {
         $this->service->setComment($lead, $request);

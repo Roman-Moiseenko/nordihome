@@ -8,13 +8,6 @@ use App\Events\DepartureHasCompleted;
 use App\Events\ExpenseHasDelivery;
 use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
-use App\Events\OrderHasCanceled;
-use App\Events\OrderHasCompleted;
-use App\Events\OrderHasCreated;
-use App\Events\OrderHasLogger;
-use App\Events\OrderHasPaid;
-use App\Events\OrderHasPrepaid;
-use App\Events\OrderHasRefund;
 use App\Events\ParserPriceHasChange;
 use App\Events\PaymentHasPaid;
 use App\Events\PriceHasMinimum;
@@ -67,11 +60,19 @@ use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
 use App\Modules\Admin\Listeners\NewTaskStaff;
 use App\Modules\Admin\Listeners\NotificationStaff;
 use App\Modules\Delivery\Service\DeliveryService;
-use App\Modules\Lead\Listeners\LeadEventListener;
 use App\Modules\Lead\Listeners\LeadNewFromOrder;
+use App\Modules\Lead\Listeners\LeadSetManager;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Service\NotificationService;
 use App\Modules\Order\Events\ExpenseHasCompleted;
+use App\Modules\Order\Events\OrderHasCanceled;
+use App\Modules\Order\Events\OrderHasCompleted;
+use App\Modules\Order\Events\OrderHasCreated;
+use App\Modules\Order\Events\OrderHasLogger;
+use App\Modules\Order\Events\OrderHasPaid;
+use App\Modules\Order\Events\OrderHasPrepaid;
+use App\Modules\Order\Events\OrderHasRefund;
+use App\Modules\Order\Events\OrderHasSetManager;
 use App\Modules\Order\Listeners\OrderPreChangeBaseCost;
 use App\Modules\Order\Listeners\UserMailExpenseCompleted;
 use App\Modules\Order\Listeners\UserWriteReview;
@@ -148,6 +149,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderHasCanceled::class => [
             NotificationOrderCanceled::class,
+        ],
+        OrderHasSetManager::class => [
+            LeadSetManager::class,
         ],
         MovementHasCompleted::class => [
             NotificationMovementCompleted::class

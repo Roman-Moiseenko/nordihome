@@ -76,9 +76,11 @@ class LeadRepository
             ],
             'order' => is_null($lead->order) ? null : [
                 'id' => $lead->order->id,
+                'number' => $lead->order->number,
                 'status' => $lead->order->status->value(),
                 'amount' => $lead->order->getTotalAmount(),
             ],
+            'items' => $lead->items()->get()->toArray(),
         ]);
     }
 

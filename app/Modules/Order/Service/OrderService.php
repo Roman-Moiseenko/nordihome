@@ -3,10 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Events\OrderHasCanceled;
-use App\Events\OrderHasCreated;
-use App\Events\OrderHasPaid;
-use App\Events\OrderHasPrepaid;
 use App\Events\PriceHasMinimum;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Trader;
@@ -32,11 +28,13 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Events\OrderHasCanceled;
+use App\Modules\Order\Events\OrderHasCreated;
+use App\Modules\Order\Events\OrderHasSetManager;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
@@ -384,6 +382,8 @@ class OrderService
             $order->refresh();
             $this->logger->logOrder(order: $order, action: 'Заказ создан менеджером');
         });
+
+        event(new OrderHasCreated($order));
         return $order;
     }
 
@@ -400,6 +400,11 @@ class OrderService
         $order->setManager($staff->id);
         $this->logger->logOrder(order: $order, action: 'Назначен менеджер',
             value: $staff->fullname->getFullName(), old: $old);
+        //if (is_null($order->lead->staff_id)) {
+
+        event(new OrderHasSetManager($order));
+        //}
+
     }
 
     /**
@@ -419,7 +424,7 @@ class OrderService
                 $payment->trader_id = $order->trader_id;
                 $payment->save();
             }
-            event(new OrderHasCanceled($order));
+            event(new OrderHasCanceled($order)); //TODO event Отменить Lead
             $this->logger->logOrder(order: $order, action: 'Заказ отменен менеджером',
                 object: $comment);
 
@@ -477,7 +482,7 @@ class OrderService
                     $emails
                 );
             }
-            //TODO Или создаем событие
+            //TODO Или создаем событие //TODO event Отменить Lead
             // event(new OrderHasAwaiting($order));
 
         });
