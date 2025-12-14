@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Service;
 
-use App\Events\OrderHasPaid;
-use App\Events\OrderHasPrepaid;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\BankPayment;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
-
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Events\OrderHasPaid;
+use App\Modules\Order\Events\OrderHasPrepaid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

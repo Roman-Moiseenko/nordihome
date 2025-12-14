@@ -2,8 +2,8 @@
 
 namespace App\Modules\Lead\Listeners;
 
-use App\Events\OrderHasCreated;
 use App\Modules\Lead\Service\LeadService;
+use App\Modules\Order\Events\OrderHasCreated;
 
 
 class LeadNewFromOrder

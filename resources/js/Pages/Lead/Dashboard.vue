@@ -14,10 +14,10 @@
                            :class="'shadow-sm ' + background[index]"
         >
             <el-tag effect="dark" :type="button_color[index]" size="large">{{ key }}</el-tag>
-            <template v-for="item in leads[index]">
-                <LeadInfo :item="item"
-                          draggable="true" @dragstart="onDragStart(item, index)"
-                          @create:user="onDialogUser" @create:order="onDialogOrder"/>
+            <template v-for="lead in leads[index]">
+                <LeadInfo :lead="lead"
+                          draggable="true" @dragstart="onDragStart(lead, index)"
+                          @create:user="onDialogUser" @create:order="onDialogOrder" @add:item="onDialogItem"/>
             </template>
         </el-splitter-panel>
     </el-splitter>
@@ -68,6 +68,28 @@
         </template>
     </el-dialog>
 
+    <el-dialog v-model="dialogItem" title="Добавить Комментарий" width="400">
+        <el-form label-width="auto">
+            <el-form-item label="Комментарий">
+                <el-input v-model="formItem.comment" type="textarea" :rows="4"/>
+            </el-form-item>
+            <el-form-item label="Дата ограничения">
+                <el-date-picker v-model="formItem.finished_at" type="date" />
+            </el-form-item>
+
+
+        </el-form>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button type="info" class="" @click="dialogItem = false">
+                    Отмена
+                </el-button>
+                <el-button type="primary" class="" @click="onAddItem">
+                    Создать
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -109,6 +131,7 @@ const dragFrom = ref(null);
 
 const dialogUser = ref(false)
 const dialogOrder = ref(false)
+const dialogItem = ref(false)
 const formUser = reactive({
     lead: null,
     surname: null,
@@ -120,6 +143,12 @@ const formUser = reactive({
 const formOrder = reactive({
     lead: null,
 })
+const formItem = reactive({
+    lead: null,
+    type: null,
+    finished_at: null,
+    comment: null,
+})
 
 function onDialogUser(val) {
     formUser.lead = val.id
@@ -128,7 +157,6 @@ function onDialogUser(val) {
     formUser.phone = val.phone
     dialogUser.value = true
 }
-
 function onCreateUser() {
     router.visit(route('admin.lead.create-user', {lead: formUser.lead}), {
         method: "post",
@@ -136,24 +164,41 @@ function onCreateUser() {
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
-            dialogUser.value = true
+            dialogUser.value = false
         }
     })
 }
 
 function onDialogOrder(val) {
-    console.log(val)
     formOrder.lead = val
     dialogOrder.value = true
 }
-
 function onCreateOrder() {
     router.visit(route('admin.lead.create-order', {lead: formOrder.lead}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
-            dialogUser.value = true
+            dialogUser.value = false
+        }
+    })
+}
+function onDialogItem(val) {
+    formItem.lead = val
+    formItem.comment = null
+    formItem.finished_at = null
+    formItem.type = null
+    dialogItem.value = true
+}
+function onAddItem() {
+    if (formItem.finished_at !== null) formItem.finished_at = func.date(formItem.finished_at)
+    router.visit(route('admin.lead.add-item', {lead: formItem.lead}), {
+        method: "post",
+        data: formItem,
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: page => {
+            dialogItem.value = false
         }
     })
 }

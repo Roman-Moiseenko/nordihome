@@ -4,10 +4,10 @@
 namespace App\Modules\Order\Service;
 
 
-use App\Events\OrderHasCanceled;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Events\OrderHasCanceled;
 use Carbon\Carbon;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;

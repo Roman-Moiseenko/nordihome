@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Service;
 
 use App\Events\ExpenseHasDelivery;
-use App\Events\OrderHasCreated;
-use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Delivery\Entity\Local\Tariff;

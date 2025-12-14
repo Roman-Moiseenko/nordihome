@@ -2,13 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderHasPrepaid;
 use App\Mail\OrderPrepaid;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Order\Events\OrderHasPrepaid;
 use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class NotificationOrderPrepaid

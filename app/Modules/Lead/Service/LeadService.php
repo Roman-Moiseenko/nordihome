@@ -5,18 +5,24 @@ namespace App\Modules\Lead\Service;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Feedback\Entity\FormBack;
 use App\Modules\Lead\Entity\Lead;
+use App\Modules\Lead\Entity\LeadItem;
 use App\Modules\Lead\Entity\LeadStatus;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Service\OrderService;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use JetBrains\PhpStorm\Deprecated;
 
 class LeadService
 {
 
-    public function __construct()
+    private OrderService $orderService;
+
+    public function __construct(OrderService $orderService)
     {
+        $this->orderService = $orderService;
     }
 
     public function createLeadFromForm(FormBack $form): void
@@ -49,6 +55,12 @@ class LeadService
         $order->lead->user_id = $order->user_id;
         $order->lead->save();
 
+        //Если есть менеджер ф-ция create_sales()
+        if (!is_null($order->staff_id)) {
+            $order->lead->staff_id = $order->staff_id;
+            $order->lead->setStatus(LeadStatus::STATUS_IN_WORK);
+            $order->lead->save();
+        }
 
     }
 
@@ -60,14 +72,17 @@ class LeadService
         if (!$this->checkStatus($lead, $newStatus)) return false;
 
         if ($lead->isNew()) {
-            if ($newStatus != LeadStatus::STATUS_NEW) {
-                $lead->staff_id = \Auth::guard('admin')->user()->id;
-                $lead->setStatus($newStatus);
-                $lead->save();
-                return true;
-            } else {
-                return false;
+                //$lead->setStaff(\Auth::guard('admin')->user()->id);
+            $lead->staff_id = \Auth::guard('admin')->user()->id;
+            $lead->setStatus($newStatus);
+            $lead->save();
+            $lead->refresh();
+            //Если заявка уже является заказом
+            if (!is_null($lead->order)) { //Установить менеджера
+                $this->orderService->setManager($lead->order, $lead->staff_id);
             }
+            return true;
+
         } else {
             if ($newStatus == LeadStatus::STATUS_NEW) {
                 $lead->staff_id = null;
@@ -111,15 +126,29 @@ class LeadService
         $lead->save();
     }
 
+    #[Deprecated]
     public function setComment(Lead $lead, Request $request): void
     {
         $lead->comment = $request->string('comment')->trim()->value();
         $lead->save();
     }
 
+    #[Deprecated]
     public function setFinished(Lead $lead, Request $request): void
     {
         $lead->finished_at = is_null($request->input('finished_at')) ? null : Carbon::parse($request->input('finished_at'));
+        $lead->save();
+    }
+
+    public function addItem(Lead $lead, Request $request): void
+    {
+        $finished = $request->input('finished_at');
+        $comment = $request->string('comment')->trim()->value();
+        $item = LeadItem::new($comment, $finished);
+        $item->staff_id = $lead->staff_id;
+        $lead->items()->save($item);
+        $lead->finished_at = $finished;
+        $lead->comment = $comment;
         $lead->save();
     }
 

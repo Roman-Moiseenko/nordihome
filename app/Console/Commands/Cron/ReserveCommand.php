@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Cron;
 
-use App\Events\OrderHasCanceled;
 use App\Events\ReserveHasTimeOut;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\OrderReserve;
-use App\Modules\Order\Service\OrderReserveService;
+use App\Modules\Order\Events\OrderHasCanceled;
 use Illuminate\Console\Command;
 
 class ReserveCommand extends Command

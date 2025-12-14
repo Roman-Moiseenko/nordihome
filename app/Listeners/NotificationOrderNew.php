@@ -2,8 +2,6 @@
 
 namespace App\Listeners;
 
-use App\Events\OrderHasCreated;
-//use App\Mail\OrderNew;
 use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Mail\Job\SendSystemMail;
@@ -12,7 +10,9 @@ use App\Modules\Notification\Helpers\NotificationHelper;
 use App\Modules\Notification\Helpers\TelegramParams;
 use App\Modules\Notification\Message\StaffMessage;
 use App\Modules\Order\Entity\Order\Order;
-use Illuminate\Support\Facades\Mail;
+use App\Modules\Order\Events\OrderHasCreated;
+
+//use App\Mail\OrderNew;
 
 class NotificationOrderNew
 {
