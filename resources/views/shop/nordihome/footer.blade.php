@@ -26,15 +26,11 @@
             <div class="col-12 col-md-6 col-lg-2">888</div>
             <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                 <div class="heading f-w_600 m-b_20">МЕНЮ</div>
-                @if (isset($menus['menu-footer01']))
                 <ul class="footer-menu">
                     @foreach($menus['menu-footer01']['items'] as $item)
                         <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
                     @endforeach
                 </ul>
-                @elseif
-                Меню не найдено
-                @endif
             </div>
             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                 <div class="heading f-w_600 m-b_20">ДЛЯ КЛИЕНТА</div>
