@@ -232,22 +232,22 @@ textarea {
     min-height: 219px;
 }
 label {margin-bottom:5px;}
-button[type="submit"] {
+button[type="submit"], .btn-form {
     background:black;
     color:white;
 }
-button[type="submit"]:hover {
+button[type="submit"]:hover, .btn-form:hover {
     background:black;
 }
 .form-send-message {border: 3px solid $red;}
-input[type="submit"], button[type="submit"] {
+input[type="submit"], button[type="submit"], button[type="button"] {
     border-radius: 50px;
     padding: 9px 25px 11px 25px;
     background:black;
     color:white;
     cursor:pointer;
 }
-input[type="submit"]:hover {
+input[type="submit"]:hover, button[type="button"]:hover {
     background:white;
     color:black;
 }
