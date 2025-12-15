@@ -106,7 +106,7 @@
                         <p>Главный критерий, который уже много лет заставляет людей вновь и вновь выбирать ИКЕА.</p>
                         <h3 class="t-color_orange">2. ФУНКЦИОНАЛЬНОСТЬ</h3>
                         <p class="m-b_50">Умные модульные решения помогут обустроить каждый сантиметр кухни. Это делает кухни ИКЕА отличной альтернативой мебели на заказ.</p>
-                        <img src="/uploads/gallery/1/kitchen01-min.jpg" class="width_100" alt="Кухни под заказ" class="m-b_10">
+                        <img src="/uploads/gallery/1/kitchen01-min.jpg" class="width_100 m-b_10" alt="Кухни под заказ">
                         <img src="/uploads/gallery/1/kitchen03-min.jpg" class="width_100" alt="Кухни под заказ">
                     </div>
                 </div>

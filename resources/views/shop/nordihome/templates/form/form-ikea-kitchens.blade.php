@@ -62,27 +62,3 @@ use App\Modules\Page\Entity\FormWidget;
 
 
 
-
-<div class="heading f-w_600 f-z_23 m-b_20">ФОРМА ОБРАТНОЙ СВЯЗИ</div>
-<div>По вопросам сотрудничества: <a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a></div>
-<div class="m-t_30">
-    <div id="{{ $widget->id }}" class="feedback" not-hide>
-        <h2 class="fw-semibold mt-5">{{ $widget->caption }}</h2>
-        <h3>{{ $widget->description }}</h3>
-
-        <div>
-            <input name="user" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
-        </div>
-        <div>
-            <input name="wish" class="form-control" placeholder="Пожелания"/>
-        </div>
-        <hr/>
-        <textarea name="message" class="form-control" placeholder="Сообщение"></textarea>
-        <button class="btn btn-success" type="button">Ответить</button>
-    </div>
-    <div id="{{ $widget->id }}-callback" style="display: none">
-        *** Спасибо за ваше обращение ***
-    </div>
-</div>
-
-
