@@ -42,7 +42,7 @@ use App\Modules\Page\Entity\FormWidget;
                     <div class="col-12"></div>
                 </div>
             </div>
-            <div id="{{ $widget->id }}-callback" class="form-send-message">
+            <div id="{{ $widget->id }}-callback" class="form-send-message" style="display: none">
                 *** Спасибо за ваше обращение ***
             </div>
         </div>
