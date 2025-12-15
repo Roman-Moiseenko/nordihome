@@ -32,7 +32,7 @@
                         <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
                     @endforeach
                 </ul>
-                @elseif
+                @else
                 Меню не найдено
                 @endif
             </div>
