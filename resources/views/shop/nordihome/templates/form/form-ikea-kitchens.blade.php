@@ -63,9 +63,7 @@ use App\Modules\Page\Entity\FormWidget;
     <div id="{{ $widget->id }}" class="feedback" not-hide>
         <h2 class="fw-semibold mt-5">{{ $widget->caption }}</h2>
         <h3>{{ $widget->description }}</h3>
-        <div>
-            <input name="email" class="form-control" required placeholder="{{ $widget->fields["email"] }}"/>
-        </div>
+
         <div>
             <input name="user" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
         </div>
