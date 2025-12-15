@@ -24,7 +24,21 @@ use App\Modules\Page\Entity\FormWidget;
     <div class="main-kitchen-form bg-white">
         <div class="t-t_uppercase f-w_600 t-a_center f-z_23 m-b_10">Получите <span class="t-color_orange">дизайн-проект в подарок!*</span></div>
         <div class="t-a_center m-b_10">Наш дизайнер с опытом работы более 10 лет в ИКЕА разработает дизайн-проект вашей кухни!</div>
-        <div class="m-b_10">форма</div>
+        <div class="m-b_10">
+            <div id="{{ $widget->id }}" class="feedback" not-hide>
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 m-b_5">
+                        <label>
+                            <input name="name" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
+                        </label>
+                    </div>
+                    <div class="col-md-6 col-lg-6 m-b_5"></div>
+                    <div class="col-md-6 col-lg-6 m-b_5"></div>
+                    <div class="col-md-6 col-lg-6 m-b_5"></div>
+                    <div class="col-12"></div>
+                </div>
+            </div>
+        </div>
         <div class="f-z_12">*Услуга по разработке дизайн-проекта предоставляется бесплатно при 100% оплате кухни под заказ (базовая стоимость составляет 4 000 рублей). Подробности у менеджеров.</div>
     </div>
 </div>
