@@ -1,4 +1,4 @@
-<!--template:Вопрос от клиента-->
+<!--template:Тестовый шаблон формы-->
 @php
     /**
     * $widget->name
@@ -32,8 +32,8 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
         </div>
         <div>
             <select name="ask" class="form-control">
-                @foreach($widget->lists->get('ask') as $key => $label)
-                    <option value="{{ $key }}">{{ $label }}</option>
+                @foreach($widget->lists->get('ask') as $label)
+                    <option value="{{ $label }}">{{ $label }}</option>
                 @endforeach
             </select>
         </div>
