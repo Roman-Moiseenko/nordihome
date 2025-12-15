@@ -38,6 +38,9 @@ use App\Modules\Page\Entity\FormWidget;
                     <div class="col-12"></div>
                 </div>
             </div>
+            <div id="{{ $widget->id }}-callback" class="form-send-message">
+                *** Спасибо за ваше обращение ***
+            </div>
         </div>
         <div class="f-z_12">*Услуга по разработке дизайн-проекта предоставляется бесплатно при 100% оплате кухни под заказ (базовая стоимость составляет 4 000 рублей). Подробности у менеджеров.</div>
     </div>

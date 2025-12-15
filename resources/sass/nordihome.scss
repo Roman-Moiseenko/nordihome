@@ -221,6 +221,40 @@ h3 {font-size: 28px;font-weight: bold;}
 }
 .btn-gradient:hover {background:linear-gradient(156deg, rgba(60,60,60,1) 0%, rgba(60,60,60,1) 100%);}
 
+input, button[type="submit"], textarea, select {
+    border: 1px solid black;
+    padding: 11px;
+    font-size: 14px;
+    font-family: $base-font;
+    border-radius: 12px;
+}
+textarea {
+    min-height: 219px;
+}
+label {margin-bottom:5px;}
+button[type="submit"] {
+    background:black;
+    color:white;
+}
+button[type="submit"]:hover {
+    background:black;
+}
+.form-send-message {border: 3px solid $red;}
+input[type="submit"], button[type="submit"] {
+    border-radius: 50px;
+    padding: 9px 25px 11px 25px;
+    background:black;
+    color:white;
+    cursor:pointer;
+}
+input[type="submit"]:hover {
+    background:white;
+    color:black;
+}
+input[type="checkbox"] {
+    width:auto!important;
+}
+
 .h-menu {
     display: flex;
     flex-wrap: wrap;
