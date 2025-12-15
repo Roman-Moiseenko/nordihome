@@ -33,13 +33,6 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
             <input name="user" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
         </div>
         <div>
-            <select name="ask" class="form-control">
-                @foreach($widget->lists->get('ask') as $key => $label)
-                    <option value="{{ $key }}">{{ $label }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div>
             <input name="wish" class="form-control" placeholder="Пожелания"/>
         </div>
         <hr/>
