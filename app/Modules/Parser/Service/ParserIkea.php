@@ -580,6 +580,8 @@ class ParserIkea extends ParserAbstract
         $_data = json_decode($_res, true);
         //dd($_data["pageProps"]);
         $dataProduct = $_data["pageProps"]["product"]; //clientProduct
+        Log::info($_res);
+        //dd($_data);
         //Составные товары
         $composite = array_map(function ($subProduct) {
             return [

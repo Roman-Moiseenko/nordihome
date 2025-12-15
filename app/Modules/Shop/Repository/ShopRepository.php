@@ -314,8 +314,8 @@ class ShopRepository
     public function ParserProductsByCategory(CategoryParser $category = null)
     {
         if (is_null($category)) {
-            $lft = Category::get()->min('_lft');
-            $rgt = Category::get()->max('_rgt');
+            $lft = CategoryParser::get()->min('_lft');
+            $rgt = CategoryParser::get()->max('_rgt');
 
         } else {
             $lft = $category->_lft;

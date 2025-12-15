@@ -1,6 +1,6 @@
 {
     "pageProps": {
-        "clientConfig": {
+        "config": {
             "apiCountry": "pl",
             "apiLanguage": "pl",
             "ciaApiBaseUrl": "https://api.salesitem.ingka.com",
@@ -78,6 +78,7 @@
             "enableProductCardApi": false,
             "enableQuestionsAndAnswers": false,
             "enableRegionalAvailability": true,
+            "enableSchemaRegionalAvailabilityOnServer": false,
             "enableZipIn": true,
             "favouritesClientId": "46673edd-4370-40db-a2cd-c307e6055029",
             "homeSmartPolicyUrl": "",
@@ -98,164 +99,198 @@
             "useSuggestedStoresResource": false,
             "textDirection": "ltr"
         },
-        "clientProduct": {
+        "product": {
             "currencyCode": "PLN",
-            "description": "Taboret ze schodkiem, biały",
+            "description": "Sofa 3-osobowa, Kilanda jasnobeżowy",
             "isCustomMade": false,
             "isFood": false,
             "isServerOnlineSellable": true,
-            "itemMeasureReferenceText": "50 cm",
-            "itemNo": "40178888",
+            "itemMeasureReferenceText": "",
+            "itemNo": "69509010",
             "mediaList": [
                 {
                     "type": "image",
                     "content": {
-                        "alt": "To zdjęcie przedstawia stołek BEKVĘM, w kolorze białym, wykonany z litego drewna osikowego, o prostokątnym kształcie z dwoma stopniami i płaskim blatem.",
-                        "id": "0122140_PE278505",
-                        "imageFileName": "0122140_PE278505_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg",
+                        "alt": "Sofa EKTORP, beżowa, podwinięte ramiona, pluszowe poduszki.",
+                        "id": "1194853_PE902103",
+                        "imageFileName": "1194853_PE902103_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__1194853_pe902103_s5.jpg",
                         "type": "MAIN_PRODUCT_IMAGE"
                     }
                 },
                 {
                     "type": "image",
                     "content": {
-                        "alt": "Biały stołek BEKVÄM obok szarych szafek. Zwarte, stabilne drewno osikowe, łatwo się porusza.",
-                        "id": "1214005_PE911460",
-                        "imageFileName": "1214005_PE911460_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1214005_pe911460_s5.jpg",
+                        "alt": "Przytulny niebieski salon z beżową sofą EKTORP, białym stolikiem bocznym i wysoką rośliną.",
+                        "id": "1194852_PE902102",
+                        "imageFileName": "1194852_PE902102_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__1194852_pe902102_s5.jpg",
                         "type": "CONTEXT_PRODUCT_IMAGE"
                     }
                 },
                 {
                     "type": "image",
                     "content": {
-                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
-                        "id": "1514758_PH199894",
-                        "imageFileName": "1514758_PH199894_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514758_ph199894_s5.jpg",
-                        "type": "IMPORTED_PRODUCT_IMAGE"
+                        "alt": "Beżowa tapicerowana sofa segmentowa przy oknie z roślinami doniczkowymi.",
+                        "id": "1194830_PE902079",
+                        "imageFileName": "1194830_PE902079_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__1194830_pe902079_s5.jpg",
+                        "type": "FUNCTIONAL_PRODUCT_IMAGE"
                     }
                 },
                 {
                     "type": "image",
                     "content": {
-                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
-                        "id": "1514756_PH206391",
-                        "imageFileName": "1514756_PH206391_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514756_ph206391_s5.jpg",
-                        "type": "IMPORTED_PRODUCT_IMAGE"
+                        "alt": "Beżowa sofa tapicerowana z wysokiej jakości, miękkiej tkaniny, zgrabne przeszycia.",
+                        "id": "1194831_PE902080",
+                        "imageFileName": "1194831_PE902080_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__1194831_pe902080_s5.jpg",
+                        "type": "QUALITY_PRODUCT_IMAGE"
                     }
                 },
                 {
                     "type": "image",
                     "content": {
-                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
-                        "id": "1514757_PH206695",
-                        "imageFileName": "1514757_PH206695_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514757_ph206695_s5.jpg",
-                        "type": "IMPORTED_PRODUCT_IMAGE"
+                        "alt": "Przekrój poprzeczny kanapy z warstwami: tapicerką na piance i włóknie, drewnianą ramą, wyściółką i konstrukcjami wsporczymi.",
+                        "id": "0717901_PE731384",
+                        "imageFileName": "0717901_PE731384_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__0717901_pe731384_s5.jpg",
+                        "type": "CUT_THROUGH_PRODUCT_IMAGE"
                     }
                 },
                 {
                     "type": "image",
                     "content": {
-                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
-                        "id": "1514769_PH203418",
-                        "imageFileName": "1514769_PH203418_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514769_ph203418_s5.jpg",
-                        "type": "IMPORTED_PRODUCT_IMAGE"
-                    }
-                },
-                {
-                    "type": "image",
-                    "content": {
-                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
-                        "id": "1514762_PH206684",
-                        "imageFileName": "1514762_PH206684_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1514762_ph206684_s5.jpg",
-                        "type": "IMPORTED_PRODUCT_IMAGE"
-                    }
-                },
-                {
-                    "type": "image",
-                    "content": {
-                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
-                        "id": "0810583_PH148737",
-                        "imageFileName": "0810583_PH148737_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0810583_ph148737_s5.jpg",
-                        "type": "IMPORTED_PRODUCT_IMAGE"
-                    }
-                },
-                {
-                    "type": "image",
-                    "content": {
-                        "alt": "BEKVÄM Taboret ze schodkiem, biały, 50 cm",
-                        "id": "1214004_PE911461",
-                        "imageFileName": "1214004_PE911461_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1214004_pe911461_s5.jpg",
-                        "type": "CONTEXT_PRODUCT_IMAGE"
-                    }
-                },
-                {
-                    "type": "image",
-                    "content": {
-                        "alt": "Ilustracja z wymiarami dla produktu: BEKVÄM.",
-                        "id": "1439317_PE985274",
-                        "imageFileName": "1439317_PE985274_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1439317_pe985274_s5.jpg",
+                        "alt": "Ilustracja z wymiarami dla produktu: EKTORP.",
+                        "id": "0733160_PE738876",
+                        "imageFileName": "0733160_PE738876_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__0733160_pe738876_s5.jpg",
                         "type": "MEASUREMENT_ILLUSTRATION"
                     }
                 }
             ],
-            "name": "BEKVÄM",
-            "prefixedProductId": "40178888",
-            "price": 79.99,
+            "name": "EKTORP",
+            "prefixedProductId": "S69509010",
+            "price": 1999,
             "showAsNonSellableProduct": false,
-            "type": "ART",
-            "visibleItemNo": "401.788.88",
+            "type": "SPR",
+            "visibleItemNo": "695.090.10",
             "ratingProps": {
                 "rating": 4.8,
-                "label": "(276)",
-                "ariaLabel": "Opinia: 4.8 na 5 gwiazdki. Recenzje ogółem: 276"
+                "label": "(16)",
+                "ariaLabel": "Opinia: 4.8 na 5 gwiazdki. Recenzje ogółem: 16"
             },
-            "reviewCount": 276,
+            "reviewCount": 16,
+            "commercialLabel": "top-seller",
+            "guarantee": {
+                "description": "Rest easy with our guarantee - bringing you years of worry-free living at home with lasting quality and dependable performance.",
+                "guarantees": [
+                    "10"
+                ],
+                "text": "10-letnia gwarancja"
+            },
+            "keyFacts": [
+                {
+                    "type": "FIRMNESS",
+                    "name": "Twardość",
+                    "id": "EXTRA_SOFT",
+                    "icon": "extra-soft",
+                    "label": "Bardzo miękki"
+                }
+            ],
             "packaging": {
-                "numberOfPackages": 1,
+                "numberOfPackages": 2,
                 "packages": [
                     {
-                        "name": "BEKVÄM",
-                        "typeName": "Taboret ze schodkiem",
-                        "itemNo": "40178888",
+                        "name": "EKTORP",
+                        "typeName": "Sofa 3-osobowa",
+                        "itemNo": "69509010",
                         "articleNumber": {
                             "label": "Numer artykułu",
-                            "value": "401.788.88"
+                            "value": "695.090.10"
+                        },
+                        "measurements": [],
+                        "quantity": {
+                            "label": "Paczka(i)",
+                            "value": 1
+                        },
+                        "multiPackDisclaimerText": "Ten produkt składa się kilku paczek"
+                    },
+                    {
+                        "name": "EKTORP",
+                        "typeName": "Rama sofy 3-osobowej",
+                        "itemNo": "20185031",
+                        "articleNumber": {
+                            "label": "Numer artykułu",
+                            "value": "201.850.31"
                         },
                         "measurements": [
                             [
                                 {
                                     "label": "Szerokość",
                                     "type": "width",
-                                    "text": "39 cm",
-                                    "value": 39
+                                    "text": "88 cm",
+                                    "value": 88
                                 },
                                 {
                                     "label": "Wysokość",
                                     "type": "height",
-                                    "text": "7 cm",
-                                    "value": 7
+                                    "text": "43 cm",
+                                    "value": 43
                                 },
                                 {
                                     "label": "Długość",
                                     "type": "length",
-                                    "text": "50 cm",
-                                    "value": 50
+                                    "text": "203 cm",
+                                    "value": 203
                                 },
                                 {
                                     "label": "Waga",
                                     "type": "weight",
-                                    "text": "3.37 kg",
-                                    "value": 3.37
+                                    "text": "68.00 kg",
+                                    "value": 68
+                                }
+                            ]
+                        ],
+                        "quantity": {
+                            "label": "Paczka(i)",
+                            "value": 1
+                        },
+                        "multiPackDisclaimerText": null
+                    },
+                    {
+                        "name": "EKTORP",
+                        "typeName": "Pokrycie sofy 3 osobowej",
+                        "itemNo": "30565262",
+                        "articleNumber": {
+                            "label": "Numer artykułu",
+                            "value": "305.652.62"
+                        },
+                        "measurements": [
+                            [
+                                {
+                                    "label": "Szerokość",
+                                    "type": "width",
+                                    "text": "38 cm",
+                                    "value": 38
+                                },
+                                {
+                                    "label": "Wysokość",
+                                    "type": "height",
+                                    "text": "10 cm",
+                                    "value": 10
+                                },
+                                {
+                                    "label": "Długość",
+                                    "type": "length",
+                                    "text": "57 cm",
+                                    "value": 57
+                                },
+                                {
+                                    "label": "Waga",
+                                    "type": "weight",
+                                    "text": "4.78 kg",
+                                    "value": 4.78
                                 }
                             ]
                         ],
@@ -266,17 +301,45 @@
                         "multiPackDisclaimerText": null
                     }
                 ],
+                "totalNoOfPackagesText": "Ten produkt składa się z 2 paczek.",
                 "maxMeasurements": {
-                    "weightText": "3.37 kg",
-                    "widthText": "39 cm",
-                    "lengthText": "50 cm",
-                    "heightText": "7 cm",
+                    "weightText": "68.00 kg",
+                    "widthText": "88 cm",
+                    "lengthText": "203 cm",
+                    "heightText": "43 cm",
                     "diameterText": ""
                 }
             },
-            "rating": 4.8
+            "rating": 4.8,
+            "subProducts": [
+                {
+                    "itemNo": "20185031",
+                    "itemType": "ART",
+                    "name": "EKTORP",
+                    "quantity": 1,
+                    "typeName": "rama sofy 3-osobowej",
+                    "pipUrl": "https://www.ikea.com/pl/pl/p/ektorp-rama-sofy-3-osobowej-20185031/",
+                    "itemMeasureReferenceText": ""
+                },
+                {
+                    "itemNo": "30565262",
+                    "itemType": "ART",
+                    "name": "EKTORP",
+                    "quantity": 1,
+                    "typeName": "pokrycie sofy 3 osobowej",
+                    "mainImage": {
+                        "alt": "Miękka, luksusowa tkanina w kolorze beżowym o subtelnej fakturze i efekcie melanżu.",
+                        "id": "1194798_PE902057",
+                        "imageFileName": "1194798_PE902057_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/ektorp-pokrycie-sofy-3-osobowej-kilanda-jasnobezowy__1194798_pe902057_s5.jpg",
+                        "type": "QUALITY_PRODUCT_IMAGE"
+                    },
+                    "pipUrl": "https://www.ikea.com/pl/pl/p/ektorp-pokrycie-sofy-3-osobowej-kilanda-jasnobezowy-30565262/",
+                    "itemMeasureReferenceText": ""
+                }
+            ]
         },
-        "clientTranslations": {
+        "translations": {
             "A11Y_GALLERY_VIDEO_TRANSCRIPT_BUTTON": "Pokaż transkrypcję",
             "AVAILABILITY_LOADING_PLACEHOLDER": "Sprawdzanie dostępności...",
             "CHANGE_STORE_BUTTON_LABEL": "Zmień sklep",
@@ -330,6 +393,9 @@
             "PIP_ADD_TO_IGIFT": "Dodaj do listy prezentów",
             "PIP_ADD_X_TO_CART": "Dodaj {productCount} szt. do koszyka",
             "PIP_ADDED_TO_CART": "Dodano",
+            "PIP_ADDONS_CTA_BUTTON": "Pokaż wszystkie akcesoria",
+            "PIP_ADDONS_MODAL_DESCRIPTION": "Uzupełnij wygląd tymi starannie dobranymi produktami, które idealnie pasują do {productName}.",
+            "PIP_ADDONS_TITLE": "Akcesoria do {productName}",
             "PIP_ARIA_LABEL_TEXT_OPENS_IN_A_NEW_TAB": "{text} (otwiera się w nowej zakładce)",
             "PIP_BUY_MODULE_ON_DISPLAY": "Na ekspozycji w sklepie",
             "PIP_COLLECT_FROM_PRICE_MODAL": "Od {price}",
@@ -357,6 +423,7 @@
             "PIP_MORE_WAYS_TO_PAY_CHECKING_STATUS": "Sprawdzanie sposobów płatności...",
             "PIP_MORE_WAYS_TO_PAY": "Więcej metod płatności",
             "PIP_MULTIPLE_PACKAGES": "{numberOfPackages} szt.",
+            "PIP_MUST_BE_COMPLETED_A11Y_QTY_LABEL": "Wybierz wymaganą ilość",
             "PIP_NEAREST_STORES_LABEL_NO_DISTANCE_SINGLE": "Produkt {productName} jest dostępny w jednym sklepie w twojej okolicy",
             "PIP_NEAREST_STORES_LABEL_NO_DISTANCE": "Produkt {productName} jest dostępny w {storeCount} sklepach w twojej okolicy",
             "PIP_NO_JAVASCRIPT": "Musisz włączyć obsługę JavaScript aby robić zakupy na IKEA.com",
@@ -425,6 +492,8 @@
             "PIP_STORE_MODAL_WHERE_TO_GET_IT_TITLE": "Lokalizacja produktu",
             "PIP_STORE_MODAL_WHERE_TO_GET_IT_WITH_FLOOR_INFO": "{storeLocation}, poziom {storeFloor}",
             "PIP_TOTAL_PRICE": "",
+            "PIP_UPSELL_COMPLETE_WITH_MODAL_TEXT": "Wybierz idealną kombinację, aby stworzyć {productName}",
+            "PIP_UPSELL_COMPLETE_WITH": "Uzupełnij o",
             "PIP_USP_GUARANTEE_MESSAGE": "Pewność każdego zakupu",
             "PIP_USP_SLEEPTRIAL_DAYS": "Wypróbuj w domu przez {sleepTrialDays} dni.",
             "PIP_USP_SLEEPTRIAL_MESSAGE": "Nie podoba ci się? Wymień go na inny.",
@@ -479,12 +548,13 @@
             "ZIP_IN_LIMITED_DELIVERY_MODAL_MESSAGE": "Przykro nam, ale ten produkt możemy dostarczyć pod adres z wybranym kodem pocztowym tylko wtedy, gdy wchodzi on w skład większego zamówienia. Możesz robić dalej zakupy i dodać do koszyka inne produkty albo kontynuować składanie zamówienia, aby dowiedzieć się, czy Twoje zamówienie jest już dostatecznie duże."
         },
         "viewItem": {
-            "id": "40178888",
+            "id": "69509010",
             "product_buyable_online": 1,
             "ratings_value": 48,
-            "number_of_ratings": 276,
+            "number_of_ratings": 16,
             "ratings_views": 1,
-            "assembly_availability_hit": 0
+            "assembly_availability_hit": 1,
+            "commercial_label": "top-seller"
         },
         "modalProps": {
             "ariaLabelBack": "Powrót do poprzedniego ekranu",
@@ -493,81 +563,198 @@
         "pipPriceModuleProps": {
             "priceModuleProps": {
                 "currentPriceProps": {
-                    "integerValue": "79",
-                    "decimalValue": "99",
+                    "integerValue": "1 999",
+                    "decimalValue": "-",
                     "decimalSign": ",",
+                    "decimalVerticalAlignment": "base",
                     "captionPrefix": "Cena"
                 },
-                "productName": "BEKVÄM"
+                "productName": "EKTORP"
             },
             "productDescriptionProps": {
-                "descriptionText": "Taboret ze schodkiem, biały",
-                "measurementLinkProps": {
-                    "text": "50 cm",
-                    "aria-label": "50 cm. Pokaż wymiary"
-                }
+                "descriptionText": "Sofa 3-osobowa, Kilanda jasnobeżowy"
             }
         },
         "productSummaryProps": {
             "articleNumberLabel": "Numer artykułu",
-            "description": "Przechowywanie rzeczy wysoko to sprytne rozwiązanie, ale czasem trudno do nich dosiegnąć. Stołek ze stopniem ułatwia dotarcie do rzeczy położonych w szafkach najwyżej - i ładnie też wygląda.",
-            "productName": "BEKVÄM",
+            "description": "Nasz ulubiony mebel EKTORP to ponadczasowe wzornictwo i cudownie grube, wygodne poduchy. Pokrycia można łatwo zmienić, więc lepiej kupić jedno lub dwa zapasowe i zmieniać je w zależności od nastroju lub pory roku.",
+            "productName": "EKTORP",
             "showAsNonSellableProduct": false,
-            "visibleItemNo": "401.788.88",
+            "visibleItemNo": "695.090.10",
             "locateInStoreLinkText": "Znajdź produkt w sklepie"
         },
         "contentRecFragmentUrls": {
-            "imc": "/pl/pl/content-rec/fragments/dynamic/skeleton/compact-feed-imc/compact-feed-imc-fragment.html?productId=40178888",
-            "vugc": "/pl/pl/content-rec/fragments/dynamic/skeleton/compact-feed-vugc/compact-feed-vugc-fragment.html?productId=40178888"
+            "imc": "/pl/pl/content-rec/fragments/dynamic/skeleton/compact-feed-imc/compact-feed-imc-fragment.html?productId=69509010",
+            "vugc": "/pl/pl/content-rec/fragments/dynamic/skeleton/compact-feed-vugc/compact-feed-vugc-fragment.html?productId=69509010"
         },
-        "breadcrumbsSource": "/pl/pl/navigation/breadcrumbs/20611.html?page-title=~BEKV%C3%84M~%20Taboret%20ze%20schodkiem&page-url=https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-bialy-40178888/",
+        "addOns": [
+            {
+                "catalogName": "Poduszki dekoracyjne",
+                "items": [
+                    {
+                        "itemNo": "90517782",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "10607890",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "00450818",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "60510697",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "50471700",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "90614207",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "80614203",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "80598627",
+                        "itemType": "ART"
+                    }
+                ]
+            },
+            {
+                "catalogName": "Pledy i koce",
+                "items": [
+                    {
+                        "itemNo": "60620276",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "10515466",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "60623213",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "60623208",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "90617606",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "80549547",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "70570940",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "40618142",
+                        "itemType": "ART"
+                    }
+                ]
+            },
+            {
+                "catalogName": "Śruby i mocowania",
+                "items": [
+                    {
+                        "itemNo": "80573226",
+                        "itemType": "ART"
+                    }
+                ]
+            },
+            {
+                "catalogName": "Podstawki i stoliki pod laptopa",
+                "items": [
+                    {
+                        "itemNo": "30384822",
+                        "itemType": "ART"
+                    },
+                    {
+                        "itemNo": "60556322",
+                        "itemType": "ART"
+                    }
+                ]
+            },
+            {
+                "catalogName": "Tekstylia świąteczne",
+                "items": [
+                    {
+                        "itemNo": "90603968",
+                        "itemType": "ART"
+                    }
+                ]
+            },
+            {
+                "catalogName": "Akcesoria do sprzątania",
+                "items": [
+                    {
+                        "itemNo": "90425626",
+                        "itemType": "ART"
+                    }
+                ]
+            }
+        ],
+        "badge": {
+            "label": "Top Seller",
+            "variant": "top-seller"
+        },
+        "breadcrumbsSource": "/pl/pl/navigation/breadcrumbs/10670.html?page-title=~EKTORP~%20Sofa%203-osobowa&page-url=https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-kilanda-jasnobezowy-s69509010/",
         "highlightedReviews": [
             {
-                "name": "Tamara",
+                "name": "Magdalena",
                 "ratingValue": 5,
-                "title": "Jest bardzo przydatny.",
-                "text": "Jest bardzo przydatny i poręczny. Lekki, łatwo go przenieść. Długo namawiałam męża na zakup - nie chciał kolejnego mebla - teraz sam przyznał, że to była dobra decyzja.",
+                "title": "Wygodna",
+                "text": "Kanapa jest wygodna, ergonomiczna, łatwo się składa i obleka poduszki.",
                 "countryCode": "pl",
                 "countryName": "Polska"
             },
             {
-                "name": "Sylwia",
+                "name": "Marcin",
                 "ratingValue": 5,
-                "title": "Super stołkodrabinka do zadań specjalnych",
-                "text": "W kuchni zabudowanej pod sufit ten stołeczek sprawdza się idealnie. Przydaje sie w wielu sytuacjach i wyglada elegancko. Ogólnie lubimy na nim przesiadywać.",
+                "title": "pozytywnie",
+                "text": "bardzo wygodna, bardzo dobrze się ją czyści, jeśli lubisz kolor oliwkowy (ten jest świetny)",
                 "countryCode": "pl",
                 "countryName": "Polska"
             },
             {
-                "name": "Anonimowy recenzent",
+                "name": "Mira",
                 "ratingValue": 5,
-                "title": "Stolek",
-                "text": "Bardzo łatwo składa się. Mega wygodny i przydatny w użytkowaniu.  Solidny. Ładny. Polecam ",
+                "title": "Super wygodna sofa",
+                "text": "Jest bardzo wygodna, a przy tym wygląda elegancko. Szybki montaż, łatwy i bezproblemowy. Jestem bardzo zadowolona.",
                 "countryCode": "pl",
                 "countryName": "Polska"
             }
         ],
         "listingRecFragments": {
             "similarProducts": {
-                "src": "/pl/pl/listing/fragments/product-rec-carousel/similar-products/?baseProduct=40178888",
+                "src": "/pl/pl/listing/fragments/product-rec-carousel/similar-products/?baseProduct=69509010",
                 "header": "Produkty pokrewne"
             },
             "recommendedForYou": {
-                "src": "/pl/pl/listing/fragments/product-rec-carousel/recommended-for-you/?baseProduct=40178888",
+                "src": "/pl/pl/listing/fragments/product-rec-carousel/recommended-for-you/?baseProduct=69509010",
                 "header": "Wybrane dla Ciebie"
             },
             "moreFrom": {
-                "src": "/pl/pl/listing/fragments/product-rec-carousel/more-from/?baseProduct=40178888",
-                "header": "Więcej z "
+                "src": "/pl/pl/listing/fragments/product-rec-carousel/more-from/?baseProduct=69509010",
+                "header": "Więcej z Seria EKTORP"
             },
             "accessories": {
-                "src": "/pl/pl/listing/fragments/product-rec-carousel/accessories/?baseProduct=40178888",
-                "header": "Akcesoria do BEKVÄM"
+                "src": "/pl/pl/listing/fragments/product-rec-carousel/accessories/?baseProduct=69509010",
+                "header": "Akcesoria do EKTORP"
             }
         },
         "plannerProps": {
             "headUrl": "https://www.ikea.com/pl/pl/planners/v1/fragments/head/?fragments=banner-large",
-            "url": "https://www.ikea.com/pl/pl/planners/v1/fragments/banner-large/40178888/"
+            "url": "https://www.ikea.com/pl/pl/planners/v1/fragments/banner-large/69509010/"
         },
         "productInformationSectionProps": {
             "productDetailsProps": {
@@ -577,18 +764,6 @@
                         "title": "Dobrze wiedzieć",
                         "contentProps": {
                             "goodToKnow": [
-                                {
-                                    "name": "Purchase-/Other information",
-                                    "text": "W zależności od lokalnych uwarunkowań, produkt po zużyciu może być przeznaczony do recyklingu lub odzysku energetycznego."
-                                },
-                                {
-                                    "name": "Purchase-/Other information",
-                                    "text": "Do użytku w pomieszczeniach"
-                                },
-                                {
-                                    "name": "Purchase-/Other information",
-                                    "text": "Maks. obciążenie: 100 kg"
-                                },
                                 {
                                     "name": "Other information",
                                     "text": "IKEA of Sweden AB SE-343 81 Älmhult, IKEA.com"
@@ -602,19 +777,79 @@
                         "contentProps": {
                             "materials": [
                                 {
+                                    "productType": "Rama sofy 3-osobowej",
                                     "materials": [
                                         {
-                                            "material": "lita osika, Klej, Bejca, Bezbarwny lakier akrylowy"
+                                            "part": "Rama oparcia i siedziska:",
+                                            "material": "sklejka, Pianka poliuretanowa 20 kg/m3, Płyta pilśniowa, Płyta wiórowa, lite drewno"
+                                        },
+                                        {
+                                            "part": "Oparcie:",
+                                            "material": "Pianka poliuretanowa 20 kg/m3, Pianka poliuretanowa 25 kg/m3, lite drewno, Płyta wiórowa, Płyta pilśniowa"
+                                        },
+                                        {
+                                            "part": "Poduszka siedziska:",
+                                            "material": "Pianka poliuretanowa o wysokiej sprężystości (zimna pianka) 35 kg/m3, włókna poliestrowe"
+                                        },
+                                        {
+                                            "part": "Poduszka tylna:",
+                                            "material": "włókna poliestrowe"
+                                        },
+                                        {
+                                            "part": "Podszewka:",
+                                            "material": "100% polipropylen"
+                                        },
+                                        {
+                                            "part": "Okucie:",
+                                            "material": "Tworzywo polipropylenowe"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "productType": "Pokrycie sofy 3 osobowej",
+                                    "materials": [
+                                        {
+                                            "part": "Tkanina, tył:",
+                                            "material": "100 % poliester (100% z recyklingu)"
+                                        },
+                                        {
+                                            "part": "Tkanina:",
+                                            "material": "100% poliester (min. 90% z recyklingu)"
+                                        },
+                                        {
+                                            "part": "Sznurek:",
+                                            "material": "100% poliester"
                                         }
                                     ]
                                 }
                             ],
                             "careInstructions": [
                                 {
+                                    "productType": "Pokrycie sofy 3 osobowej",
+                                    "header": "Zdejmowane  pokrycie",
+                                    "texts": [
+                                        "Prać w pralce maks. 40°C program normalny.",
+                                        "Prać osobno",
+                                        "Nie wybielać.",
+                                        "Nie suszyć w suszarce bębnowej.",
+                                        "Prasować, maks. 150°C.",
+                                        "Prasować po lewej stronie.",
+                                        "Profesjonalne czyszczenie na sucho w tetrachloroetenie i węglowodorach, normalny proces."
+                                    ]
+                                },
+                                {
+                                    "productType": "Rama sofy 3-osobowej",
+                                    "header": "Rama",
                                     "texts": [
                                         "Wycierać szmatką zwilżoną delikatnym środkiem do czyszczenia.",
-                                        "Wycierać czystą, suchą szmatką.",
-                                        "Dla zapewnienia najwyższej jakości, w razie potrzeby dokręć śruby."
+                                        "Wycierać czystą, suchą szmatką."
+                                    ]
+                                },
+                                {
+                                    "productType": "Rama sofy 3-osobowej",
+                                    "header": "Wkładka",
+                                    "texts": [
+                                        "Czyść szczotką do kurzu lub delikatnie odkurzaczem przy użyciu ssawki z miękką szczotką."
                                     ]
                                 }
                             ],
@@ -632,7 +867,15 @@
                             "safetyAndCompliance": [
                                 {
                                     "name": "Test results and compliance",
-                                    "text": "Ten mebel został przetestowany do użytku domowego i spełnia wymogi wytrzymałości i bezpieczeństwa określone w następujących normach: EN 12520."
+                                    "text": "Pokrycie ma poziom odporności na światło 6 (odporności na blaknięcie kolorów) w skali od 1 do 8. Zgodnie ze standardami branżowymi poziom odporności na światło 4 lub wyższy jest odpowiedni do użytku domowego."
+                                },
+                                {
+                                    "name": "Test results and compliance",
+                                    "text": "Wytrzymałość tego pokrycia na ścieranie została przetestowana dla 55 000 cykli. 15 000 cykli lub więcej jest odpowiednie dla mebli domowych do użytku codziennego. Wynik powyżej 30 000 cykli oznacza dobrą odporność na ścieranie."
+                                },
+                                {
+                                    "name": "Test results and compliance",
+                                    "text": "Ten mebel do siedzenia został przetestowany i spełnia wymogi odpowiednich norm w zakresie wytrzymałości i trwałości. Testy symulują typowe użytkowanie produktu przez osoby ważące do 110 kg."
                                 }
                             ],
                             "safetyAndComplianceLinks": [],
@@ -650,9 +893,14 @@
                                     "header": "Instrukcja montażu",
                                     "attachments": [
                                         {
-                                            "id": "401.788.88",
-                                            "url": "https://www.ikea.com/pl/pl/assembly_instructions/bekvaem-taboret-ze-schodkiem-bialy__AA-323406-8-2.pdf",
-                                            "label": "BEKVÄM Taboret ze schodkiem"
+                                            "id": "201.850.31",
+                                            "url": "https://www.ikea.com/pl/pl/assembly_instructions/ektorp-rama-sofy-3-osobowej__AA-1116842-2-2.pdf",
+                                            "label": "EKTORP Rama sofy 3-osobowej"
+                                        },
+                                        {
+                                            "id": "305.652.62",
+                                            "url": "https://www.ikea.com/pl/pl/assembly_instructions/ektorp-pokrycie-sofy-3-osobowej-kilanda-jasnobezowy__AA-21585-9-2.pdf",
+                                            "label": "EKTORP Pokrycie sofy 3 osobowej"
                                         }
                                     ]
                                 },
@@ -680,9 +928,19 @@
                                     "header": "Porady i wskazówki dotyczące użytkowania i pielęgnacji",
                                     "attachments": [
                                         {
-                                            "id": "401.788.88",
-                                            "url": "https://www.ikea.com/pl/pl/manuals/bekvaem-taboret-ze-schodkiem-bialy__AA-2568059-2-2.pdf",
-                                            "label": "BEKVÄM Taboret ze schodkiem"
+                                            "id": "201.850.31",
+                                            "url": "https://www.ikea.com/pl/pl/manuals/ektorp-rama-sofy-3-osobowej__AA-1344880-2-2.pdf",
+                                            "label": "EKTORP Rama sofy 3-osobowej"
+                                        },
+                                        {
+                                            "id": "201.850.31",
+                                            "url": "https://www.ikea.com/pl/pl/manuals/ektorp-rama-sofy-3-osobowej__AA-2314490-1-2.pdf",
+                                            "label": "EKTORP Rama sofy 3-osobowej"
+                                        },
+                                        {
+                                            "id": "201.850.31",
+                                            "url": "https://www.ikea.com/pl/pl/manuals/ektorp-rama-sofy-3-osobowej__AA-2666808-2-2.pdf",
+                                            "label": "EKTORP Rama sofy 3-osobowej"
                                         }
                                     ]
                                 }
@@ -693,96 +951,195 @@
                 "articleNumberLabel": "Numer artykułu",
                 "productDescriptionProps": {
                     "paragraphs": [
-                        "Stołek ze stopniem ułatwia sięganie po wysoko przechowywane przedmioty.",
-                        "Poręczny otwór w górnym stopniu pozwala łatwo przenosić taboret",
-                        "Lite drewno to wytrzymały, naturalny materiał."
+                        "Dwustronne poduszki oparcia wypełnione włóknami poliestrowymi zapewniają miękkie wsparcie plecom.",
+                        "Poduszki siedziska wypełnione wysoce sprężystą pianką i watoliną poliestrową zapewniają wygodne oparcie dla twojego ciała i szybko odzyskują kształt, kiedy wstaniesz.",
+                        "Tkanina Kilanda z efektem melanżu jest wykonana co najmniej w 90 procentach z poliestru z recyklingu i ma delikatną powierzchnię.",
+                        "Pokrycie jest łatwe do utrzymania w czystości, gdyż można je zdejmować i prać w pralce.",
+                        "Możesz wybierać spośród wielu różnych pokryć i znaleźć takie, które Ci się podoba i pasuje do Twojego domu.",
+                        "Gwarancja 10 lat. Zapoznaj się z warunkami w broszurze gwarancyjnej."
                     ],
                     "designerLabel": "Projektant",
-                    "designerName": "Nike Karlsson"
+                    "designerName": ""
                 },
-                "productId": "40178888",
+                "productId": "69509010",
                 "title": "Informacje o produkcie"
+            },
+            "includedProductsProps": {
+                "eventLabel": "pip_whats_included",
+                "includedProductCardsProps": [
+                    {
+                        "additionalText": "",
+                        "subtitle": "EKTORP",
+                        "title": "1 x Rama sofy 3-osobowej",
+                        "url": "https://www.ikea.com/pl/pl/p/ektorp-rama-sofy-3-osobowej-20185031/",
+                        "visibleItemNo": "201.850.31"
+                    },
+                    {
+                        "additionalText": "",
+                        "image": {
+                            "alt": "Miękka, luksusowa tkanina w kolorze beżowym o subtelnej fakturze i efekcie melanżu.",
+                            "id": "1194798_PE902057",
+                            "imageFileName": "1194798_PE902057_S5.JPG",
+                            "url": "https://www.ikea.com/pl/pl/images/products/ektorp-pokrycie-sofy-3-osobowej-kilanda-jasnobezowy__1194798_pe902057_s5.jpg",
+                            "type": "QUALITY_PRODUCT_IMAGE"
+                        },
+                        "subtitle": "EKTORP",
+                        "title": "1 x Pokrycie sofy 3 osobowej",
+                        "url": "https://www.ikea.com/pl/pl/p/ektorp-pokrycie-sofy-3-osobowej-kilanda-jasnobezowy-30565262/",
+                        "visibleItemNo": "305.652.62"
+                    }
+                ],
+                "section": "included-products",
+                "subTitle": "Ten produkt składa się z kilku części. Poniżej możesz zobaczyć szczegóły na ich temat.",
+                "title": "Elementy w zestawie"
             },
             "measurementsProps": {
                 "chooseDifferentSizeLinkText": "Wybierz inny rozmiar",
                 "eventLabel": "pip_measurements",
                 "fallbackImage": {
-                    "alt": "To zdjęcie przedstawia stołek BEKVĘM, w kolorze białym, wykonany z litego drewna osikowego, o prostokątnym kształcie z dwoma stopniami i płaskim blatem.",
-                    "id": "0122140_PE278505",
-                    "imageFileName": "0122140_PE278505_S5.JPG",
-                    "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg",
+                    "alt": "Sofa EKTORP, beżowa, podwinięte ramiona, pluszowe poduszki.",
+                    "id": "1194853_PE902103",
+                    "imageFileName": "1194853_PE902103_S5.JPG",
+                    "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__1194853_pe902103_s5.jpg",
                     "type": "MAIN_PRODUCT_IMAGE"
                 },
                 "images": [
                     {
-                        "alt": "Ilustracja z wymiarami dla produktu: BEKVÄM.",
-                        "id": "1439317_PE985274",
-                        "imageFileName": "1439317_PE985274_S5.JPG",
-                        "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__1439317_pe985274_s5.jpg",
+                        "alt": "Ilustracja z wymiarami dla produktu: EKTORP.",
+                        "id": "0733160_PE738876",
+                        "imageFileName": "0733160_PE738876_S5.JPG",
+                        "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__0733160_pe738876_s5.jpg",
                         "type": "MEASUREMENT_ILLUSTRATION"
                     }
                 ],
                 "measurements": [
                     {
-                        "type": "00047",
-                        "name": "Szerokość",
-                        "measure": "43 cm"
+                        "type": "00449",
+                        "name": "Podłokietnik szerokość",
+                        "measure": "24 cm"
                     },
                     {
                         "type": "00044",
                         "name": "Głębokość",
-                        "measure": "39 cm"
+                        "measure": "88 cm"
                     },
                     {
-                        "type": "00041",
-                        "name": "Wysokość",
-                        "measure": "50 cm"
+                        "type": "00414",
+                        "name": "Wysokość z poduchami oparcia",
+                        "measure": "88 cm"
                     },
                     {
-                        "type": "00012",
-                        "name": "Maksymalne obciążenie",
-                        "measure": "100 kg"
+                        "type": "00036",
+                        "name": "Głębokość siedziska",
+                        "measure": "49 cm"
+                    },
+                    {
+                        "type": "00039",
+                        "name": "Wysokość siedziska",
+                        "measure": "45 cm"
+                    },
+                    {
+                        "type": "00047",
+                        "name": "Szerokość",
+                        "measure": "218 cm"
                     }
                 ],
                 "packaging": {
                     "id": "measurements-packaging",
                     "title": "Opakowanie",
                     "contentProps": {
-                        "numberOfPackages": 1,
+                        "numberOfPackages": 2,
                         "packages": [
                             {
-                                "name": "BEKVÄM",
-                                "typeName": "Taboret ze schodkiem",
-                                "itemNo": "40178888",
+                                "name": "EKTORP",
+                                "typeName": "Sofa 3-osobowa",
+                                "itemNo": "69509010",
                                 "articleNumber": {
                                     "label": "Numer artykułu",
-                                    "value": "401.788.88"
+                                    "value": "695.090.10"
+                                },
+                                "measurements": [],
+                                "quantity": {
+                                    "label": "Paczka(i)",
+                                    "value": 1
+                                },
+                                "multiPackDisclaimerText": "Ten produkt składa się kilku paczek"
+                            },
+                            {
+                                "name": "EKTORP",
+                                "typeName": "Rama sofy 3-osobowej",
+                                "itemNo": "20185031",
+                                "articleNumber": {
+                                    "label": "Numer artykułu",
+                                    "value": "201.850.31"
                                 },
                                 "measurements": [
                                     [
                                         {
                                             "label": "Szerokość",
                                             "type": "width",
-                                            "text": "39 cm",
-                                            "value": 39
+                                            "text": "88 cm",
+                                            "value": 88
                                         },
                                         {
                                             "label": "Wysokość",
                                             "type": "height",
-                                            "text": "7 cm",
-                                            "value": 7
+                                            "text": "43 cm",
+                                            "value": 43
                                         },
                                         {
                                             "label": "Długość",
                                             "type": "length",
-                                            "text": "50 cm",
-                                            "value": 50
+                                            "text": "203 cm",
+                                            "value": 203
                                         },
                                         {
                                             "label": "Waga",
                                             "type": "weight",
-                                            "text": "3.37 kg",
-                                            "value": 3.37
+                                            "text": "68.00 kg",
+                                            "value": 68
+                                        }
+                                    ]
+                                ],
+                                "quantity": {
+                                    "label": "Paczka(i)",
+                                    "value": 1
+                                },
+                                "multiPackDisclaimerText": null
+                            },
+                            {
+                                "name": "EKTORP",
+                                "typeName": "Pokrycie sofy 3 osobowej",
+                                "itemNo": "30565262",
+                                "articleNumber": {
+                                    "label": "Numer artykułu",
+                                    "value": "305.652.62"
+                                },
+                                "measurements": [
+                                    [
+                                        {
+                                            "label": "Szerokość",
+                                            "type": "width",
+                                            "text": "38 cm",
+                                            "value": 38
+                                        },
+                                        {
+                                            "label": "Wysokość",
+                                            "type": "height",
+                                            "text": "10 cm",
+                                            "value": 10
+                                        },
+                                        {
+                                            "label": "Długość",
+                                            "type": "length",
+                                            "text": "57 cm",
+                                            "value": 57
+                                        },
+                                        {
+                                            "label": "Waga",
+                                            "type": "weight",
+                                            "text": "4.78 kg",
+                                            "value": 4.78
                                         }
                                     ]
                                 ],
@@ -793,201 +1150,417 @@
                                 "multiPackDisclaimerText": null
                             }
                         ],
+                        "totalNoOfPackagesText": "Ten produkt składa się z 2 paczek.",
                         "maxMeasurements": {
-                            "weightText": "3.37 kg",
-                            "widthText": "39 cm",
-                            "lengthText": "50 cm",
-                            "heightText": "7 cm",
+                            "weightText": "68.00 kg",
+                            "widthText": "88 cm",
+                            "lengthText": "203 cm",
+                            "heightText": "43 cm",
                             "diameterText": ""
                         }
                     }
                 },
                 "title": "Wymiary"
-            },
-            "seoReviewsProps": {
-                "reviews": [
-                    {
-                        "title": "Jest bardzo przydatny.",
-                        "name": "Tamara",
-                        "text": "Jest bardzo przydatny i poręczny. Lekki, łatwo go przenieść. Długo namawiałam męża na zakup - nie chciał kolejnego mebla - teraz sam przyznał, że to była dobra decyzja.",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Pomocny",
-                        "name": "Agnieszka",
-                        "text": "Taboret bardzo przydaje się w kuchni. To już mój drugi- poprzedni miałam przez 17 lat i zniszczyłam go przy remoncie. Musiałam kupić drugi bo nie wyobrażam sobie funkcjonowania bez niego- bardzo pomaga zwłaszcza w kuchni, gdzie zwykle mamy wysoko zawieszone szafki. Kosztuje niewiele a ułatwia życie bardzo.",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "👍",
-                        "name": "Ela",
-                        "text": "Bardzo przydatny przedmiot i bardzo łatwy do złożenia.",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Ładny stołeczek",
-                        "name": "Maja",
-                        "text": "Ładny stołeczek do sięgania po przedmioty na wyższych poziomach. Dolny stopień mógłby być trochę szerszy, ale i tak jest ok.",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "OK",
-                        "name": "Michał",
-                        "text": "Wydaje się być solidny",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Super polecam",
-                        "name": "Joanna",
-                        "text": "Produkt spełnienia wymagania.",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Ok",
-                        "name": "Dorota",
-                        "text": "Przydaje się ",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Super!",
-                        "name": "Sławomir",
-                        "text": "Super, mega, cool!",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Elegancki ",
-                        "name": "Beata",
-                        "text": "Fajny i łatwy w montażu ",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Praktyczny taboret drabinka ",
-                        "name": "Ewa",
-                        "text": "Super produkt praktyczny można łatwo dostać się do najwyższych półek ",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Schodki kuchenne.",
-                        "name": "Marek",
-                        "text": "Spełniają swoje zadanie.",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Super stołkodrabinka do zadań specjalnych",
-                        "name": "Sylwia",
-                        "text": "W kuchni zabudowanej pod sufit ten stołeczek sprawdza się idealnie. Przydaje sie w wielu sytuacjach i wyglada elegancko. Ogólnie lubimy na nim przesiadywać.",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Super taboret-schodki",
-                        "name": "Anna",
-                        "text": "Taboret jest bardzo stabilny, całkowicie spełnia moje oczekiwania. ",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "ok",
-                        "name": "Agnieszka",
-                        "text": "ok",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Przydatny, ale elementy miały uszkodzenia.",
-                        "name": "Anonimowy recenzent",
-                        "text": "Ogólnie szybko się składa i korzystamy, ale kilka elementów było poobijanych czy z uszczerbkiem farby. Jedna noga jest minimalnie krótsza, delikatnie się gibie na płaskiej powierzchni, więc używamy na miękkim dywaniku, który niweluje krzywiznę.",
-                        "ratingValue": 4
-                    },
-                    {
-                        "title": "OK",
-                        "name": "Przemyslaw",
-                        "text": "Stabilny a to najważniejsze. Montaż nie jest kompletny bez naklejenia w odpowiednim miejscu fiszki z ostrzeżeniami ;)",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Stolek",
-                        "name": "Anonimowy recenzent",
-                        "text": "Bardzo łatwo składa się. Mega wygodny i przydatny w użytkowaniu.  Solidny. Ładny. Polecam ",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Krzesło do ściągania  rzeczy z wysokich półek ",
-                        "name": "Malgorzata.",
-                        "text": "Krzeslo sparwdza się w kuchni.  Służy do ściągnięcia rzeczy z wysokich  półek. Solidne,  proste  ale funkcjonalne.",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Konieczny mebel w każdym mieszkaniu ",
-                        "name": "Beata",
-                        "text": "Dzięki Bekvam nie muszę wyjmować drabiny i każda rzecz sięgnę z wyższej półki. ",
-                        "ratingValue": 5
-                    },
-                    {
-                        "title": "Bekvam ",
-                        "name": "Łukasz",
-                        "text": "Ok",
-                        "ratingValue": 5
-                    }
-                ],
-                "title": "Opinie"
             }
         },
         "productStylePickerProps": {
             "variationStyles": [
                 {
-                    "title": "Wybierz kolor",
-                    "selectedOption": "Biały",
-                    "code": "COLOUR",
+                    "title": "Wybierz pokrycie",
+                    "selectedOption": "Kilanda jasnobeżowy",
+                    "code": "COVER",
                     "allOptions": [
                         {
-                            "title": "Biały",
-                            "url": "https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-bialy-40178888/",
-                            "isSelected": true,
-                            "linkId": "40178888",
+                            "title": "Hakebo ciemnoszary",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hakebo-ciemnoszary-s39508998/",
+                            "isSelected": false,
+                            "linkId": "s39508998",
                             "image": {
-                                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg",
-                                "alt": "To zdjęcie przedstawia stołek BEKVĘM, w kolorze białym, wykonany z litego drewna osikowego, o prostokątnym kształcie z dwoma stopniami i płaskim blatem."
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hakebo-ciemnoszary__1194847_pe902097_s5.jpg",
+                                "alt": "Sofa trzyosobowa szara EKTORP; Pluszowe, zwijane ramiona, z wygodnymi poduszkami."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "−",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
                             }
                         },
                         {
-                            "title": "Buk",
-                            "url": "https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-buk-60178887/",
+                            "title": "Hakebo szarozielony",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hakebo-szarozielony-s59509001/",
                             "isSelected": false,
-                            "linkId": "60178887",
+                            "linkId": "s59509001",
                             "image": {
-                                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-buk__0108612_pe258294_s5.jpg",
-                                "alt": "Taboret BEKVÄM: jasne drewno, dwa stopnie, prosty design, solidny."
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hakebo-szarozielony__1194851_pe902101_s5.jpg",
+                                "alt": "Jasnozielona sofa EKTORP, trzyosobowa z podłokietnikami, miękkie poduszki."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "−",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Kilanda granatowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-kilanda-granatowy-s29509007/",
+                            "isSelected": false,
+                            "linkId": "s29509007",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-granatowy__1194843_pe902111_s5.jpg",
+                                "alt": "Niebieska sofa EKTORP, trzyosobowa, zwijane podłokietniki, grube poduszki, nowoczesny klasyczny design."
+                            }
+                        },
+                        {
+                            "title": "Kilanda jasnobeżowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-kilanda-jasnobezowy-s69509010/",
+                            "isSelected": true,
+                            "linkId": "s69509010",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__1194853_pe902103_s5.jpg",
+                                "alt": "Sofa EKTORP, beżowa, podwinięte ramiona, pluszowe poduszki."
+                            }
+                        },
+                        {
+                            "title": "Hillared antracyt",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hillared-antracyt-s79430530/",
+                            "isSelected": false,
+                            "linkId": "s79430530",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hillared-antracyt__0779488_pe759532_s5.jpg",
+                                "alt": "Ciemnoszara sofa EKTORP, trzyosobowa z podłokietnikami, grube poduszki, zdejmowany pokrowiec."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Hillared beżowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hillared-bezowy-s59430531/",
+                            "isSelected": false,
+                            "linkId": "s59430531",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hillared-bezowy__0779493_pe759535_s5.jpg",
+                                "alt": "Beżowa sofa EKTORP: klasyczny design, podwinięte ramiona, grube poduszki, pokrowiec z tkaniny."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Hillared granatowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hillared-granatowy-s39430532/",
+                            "isSelected": false,
+                            "linkId": "s39430532",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hillared-granatowy__0779496_pe759538_s5.jpg",
+                                "alt": "Niebieska sofa 3-osobowa EKTORP, głębokie poduszki, zwijane podłokietniki, zdejmowany pokrowiec nadający się do prania."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Karlshov beżowy/wielokolorowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-karlshov-bezowy-wielokolorowy-s99509004/",
+                            "isSelected": false,
+                            "linkId": "s99509004",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-karlshov-bezowy-wielokolorowy__1194859_pe902109_s5.jpg",
+                                "alt": "3-osobowa sofa EKTORP z szarą tkaniną w paski, grubymi poduszkami i klasycznym designem."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Tallmyra beżowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-tallmyra-bezowy-s69430535/",
+                            "isSelected": false,
+                            "linkId": "s69430535",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-tallmyra-bezowy__0779512_pe759553_s5.jpg",
+                                "alt": "Beżowa sofa 3-osobowa EKTORP z miękkimi, podłokietnikami i grubymi poduszkami, pokryta bawełną i poliestrem."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "300",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Tallmyra biały/czarny",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-tallmyra-bialy-czarny-s69430540/",
+                            "isSelected": false,
+                            "linkId": "s69430540",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-tallmyra-bialy-czarny__0779533_pe759603_s5.jpg",
+                                "alt": "Jasnoszara sofa EKTORP z pluszowymi poduszkami i ponadczasowym designem, idealna dla wygody i łatwego czyszczenia dzięki zdejmowanym pokrowcom."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "300",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Tallmyra ciemnozielony",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-tallmyra-ciemnozielony-s29430537/",
+                            "isSelected": false,
+                            "linkId": "s29430537",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-tallmyra-ciemnozielony__0779519_pe759594_s5.jpg",
+                                "alt": "Na zdjęciu ciemnozielona, trzyosobowa sofa EKTORP o klasycznym designie i wygodnych, wyjmowanych poduszkach."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "300",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Tallmyra jasnozielony",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-tallmyra-jasnozielony-s09430538/",
+                            "isSelected": false,
+                            "linkId": "s09430538",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-tallmyra-jasnozielony__0779522_pe759597_s5.jpg",
+                                "alt": "Sofa 3-osobowa EKTORP w kolorze turkusowym; wygodne, zdejmowane pokrowce; Solidna, zakrzywiona konstrukcja"
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "300",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Tallmyra niebieski",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-tallmyra-niebieski-s49430536/",
+                            "isSelected": false,
+                            "linkId": "s49430536",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-tallmyra-niebieski__0779515_pe759556_s5.jpg",
+                                "alt": "Niebieska sofa EKTORP, klasyczny design z rolowanymi podłokietnikami, zdejmowany pokrowiec."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "300",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Tallmyra średnioszary",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-tallmyra-srednioszary-s89430539/",
+                            "isSelected": false,
+                            "linkId": "s89430539",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-tallmyra-srednioszary__0779529_pe759600_s5.jpg",
+                                "alt": "Nowoczesna szara sofa, wygodne poduszki, zwijane podłokietniki, zdejmowany pokrowiec."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "300",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
                             }
                         }
                     ],
                     "options": [
                         {
-                            "title": "Biały",
-                            "url": "https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-bialy-40178888/",
-                            "isSelected": true,
-                            "linkId": "40178888",
+                            "title": "Hakebo ciemnoszary",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hakebo-ciemnoszary-s39508998/",
+                            "isSelected": false,
+                            "linkId": "s39508998",
                             "image": {
-                                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-bialy__0122140_pe278505_s5.jpg",
-                                "alt": "To zdjęcie przedstawia stołek BEKVĘM, w kolorze białym, wykonany z litego drewna osikowego, o prostokątnym kształcie z dwoma stopniami i płaskim blatem."
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hakebo-ciemnoszary__1194847_pe902097_s5.jpg",
+                                "alt": "Sofa trzyosobowa szara EKTORP; Pluszowe, zwijane ramiona, z wygodnymi poduszkami."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "−",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
                             }
                         },
                         {
-                            "title": "Buk",
-                            "url": "https://www.ikea.com/pl/pl/p/bekvaem-taboret-ze-schodkiem-buk-60178887/",
+                            "title": "Hakebo szarozielony",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hakebo-szarozielony-s59509001/",
                             "isSelected": false,
-                            "linkId": "60178887",
+                            "linkId": "s59509001",
                             "image": {
-                                "url": "https://www.ikea.com/pl/pl/images/products/bekvaem-taboret-ze-schodkiem-buk__0108612_pe258294_s5.jpg",
-                                "alt": "Taboret BEKVÄM: jasne drewno, dwa stopnie, prosty design, solidny."
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hakebo-szarozielony__1194851_pe902101_s5.jpg",
+                                "alt": "Jasnozielona sofa EKTORP, trzyosobowa z podłokietnikami, miękkie poduszki."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "−",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Kilanda granatowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-kilanda-granatowy-s29509007/",
+                            "isSelected": false,
+                            "linkId": "s29509007",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-granatowy__1194843_pe902111_s5.jpg",
+                                "alt": "Niebieska sofa EKTORP, trzyosobowa, zwijane podłokietniki, grube poduszki, nowoczesny klasyczny design."
+                            }
+                        },
+                        {
+                            "title": "Kilanda jasnobeżowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-kilanda-jasnobezowy-s69509010/",
+                            "isSelected": true,
+                            "linkId": "s69509010",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-kilanda-jasnobezowy__1194853_pe902103_s5.jpg",
+                                "alt": "Sofa EKTORP, beżowa, podwinięte ramiona, pluszowe poduszki."
+                            }
+                        },
+                        {
+                            "title": "Hillared antracyt",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hillared-antracyt-s79430530/",
+                            "isSelected": false,
+                            "linkId": "s79430530",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hillared-antracyt__0779488_pe759532_s5.jpg",
+                                "alt": "Ciemnoszara sofa EKTORP, trzyosobowa z podłokietnikami, grube poduszki, zdejmowany pokrowiec."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Hillared beżowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hillared-bezowy-s59430531/",
+                            "isSelected": false,
+                            "linkId": "s59430531",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hillared-bezowy__0779493_pe759535_s5.jpg",
+                                "alt": "Beżowa sofa EKTORP: klasyczny design, podwinięte ramiona, grube poduszki, pokrowiec z tkaniny."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "Hillared granatowy",
+                            "url": "https://www.ikea.com/pl/pl/p/ektorp-sofa-3-osobowa-hillared-granatowy-s39430532/",
+                            "isSelected": false,
+                            "linkId": "s39430532",
+                            "image": {
+                                "url": "https://www.ikea.com/pl/pl/images/products/ektorp-sofa-3-osobowa-hillared-granatowy__0779496_pe759538_s5.jpg",
+                                "alt": "Niebieska sofa 3-osobowa EKTORP, głębokie poduszki, zwijane podłokietniki, zdejmowany pokrowiec nadający się do prania."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "+",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
                             }
                         }
                     ],
-                    "hiddenCount": 0,
-                    "ariaLabel": "kolor warianty dla BEKVÄM"
+                    "hiddenCount": 7,
+                    "ariaLabel": "pokrycie warianty dla EKTORP"
                 }
             ]
         },
         "recommendations": {
-            "bottomFragmentPath": "/pl/pl/recommendations/panels/pages/pip/container-bottom-recursive.html?className=pip-recommendations-wrapper&product=40178888",
-            "productFragmentPath": "/pl/pl/recommendations/panels/pages/pip/product-bottom-recursive.html?className=pip-recommendations-wrapper&product=40178888"
+            "bottomFragmentPath": "/pl/pl/recommendations/panels/pages/pip/container-bottom-recursive.html?className=pip-recommendations-wrapper&product=S69509010&seriesTitle=Więcej z Seria EKTORP&seriesUrl=https://www.ikea.com/pl/pl/cat/seria-ektorp-07488/",
+            "productFragmentPath": "/pl/pl/recommendations/panels/pages/pip/product-bottom-recursive.html?className=pip-recommendations-wrapper&product=S69509010&seriesTitle=Więcej z Seria EKTORP&seriesUrl=https://www.ikea.com/pl/pl/cat/seria-ektorp-07488/"
         },
         "serviceSectionProps": {
             "apiCountry": "pl",
@@ -995,9 +1568,9 @@
             "assemblyServiceBaseUrl": "https://api.serviceoffers.ingka.com/public/graphql",
             "enableAssemblyServicePrice": false,
             "enableRemovalService": false,
-            "itemNo": "40178888",
+            "itemNo": "69509010",
             "locale": "pl-PL",
-            "productName": "BEKVÄM",
+            "productName": "EKTORP",
             "serviceId": "",
             "siteBaseUrl": "https://www.ikea.com",
             "siteFolder": "pl/pl",
@@ -1036,37 +1609,11 @@
                 "PIP_SERVICES_SHELF_ASSEMBLY": "Zleć profesjonalny montaż produktu {productName}."
             }
         },
-        "sustainabilityProps": {
-            "longBenefitsProps": {
-                "greenItems": [],
-                "ordinaryItems": [
-                    {
-                        "i": 1,
-                        "subject": "Material",
-                        "header": "Czym jest lite drewno?",
-                        "name": "Czym jest lite drewno_general/cross-HFB text",
-                        "text": "Lite drewno jest jednym z naszych ulubionych materiałów i stanowi część skandynawskiego dziedzictwa. To także ponadczasowy materiał o szerokim zastosowaniu. Bez względu na gatunek drewno jest trwałe, piękne i odnawialne. Staramy się używać tego surowca mądrze i wydajnie, aby uniknąć marnotrawstwa, a do tego inwestujemy w infrastrukturę i logistykę, by zwiększyć wykorzystanie drewna pochodzącego z recyklingu.",
-                        "assetName": "material",
-                        "badge": "Materiał"
-                    },
-                    {
-                        "i": 0,
-                        "subject": "Function/solution",
-                        "header": "Kuchenny stołek i schodki w jednym",
-                        "name": "BEKVÄM stołek ze stopniami_cza/bia",
-                        "text": "Kiedy musisz dosięgnąć czegoś umieszczonego wysoko, możesz stanąć na stołku BEKVÄM. Otwór w kształcie rączki ułatwia przenoszenie stołka z miejsca na miejsce.",
-                        "assetName": "functionSolution",
-                        "badge": "Funkcja"
-                    }
-                ]
-            },
-            "productStoryProps": null,
-            "sustainabilityLabel": "Zrównoważony rozwój",
-            "sustainabilityTitle": "Dla ludzi + planety"
-        },
         "serverExperiments": {
-            "recommendation_panel": null
+            "recommendation_panel": null,
+            "upsell_single_v2": "a",
+            "remove_white_space": "b"
         },
-        "version": "2.13.0"
+        "version": "2.17.1"
     }
 }

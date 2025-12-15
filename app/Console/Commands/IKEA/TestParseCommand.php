@@ -26,7 +26,7 @@ class TestParseCommand extends Command
         //Получить список товаров в категории
         Log::debug('IkeaProductCommand: Парсим категорию ' . $category->name . ' ' . $category->url);
         ParserProductsByCategory::dispatch($category);
-*/
+
         $categories = CategoryParser::where('slug', null)->get();
         foreach ($categories as $category) {
 
@@ -38,6 +38,8 @@ class TestParseCommand extends Command
             $product->slug = $product->product->slug;
             $product->save();
         }
+
+        */
     }
 
     private function getSlug(CategoryParser $category): string
