@@ -29,12 +29,12 @@ use App\Modules\Page\Entity\FormWidget;
                 <div class="row">
                     <div class="col-md-6 col-lg-6 m-b_5">
                         <label>
-                            <input name="name" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
+                            <input name="name" required placeholder="{{ $widget->fields["name"] }}"/>
                         </label>
                     </div>
                     <div class="col-md-6 col-lg-6 m-b_5">
                         <label>
-                            <input name="phone" class="form-control" required placeholder="{{ $widget->fields["phone"] }}"/>
+                            <input name="phone" required placeholder="{{ $widget->fields["phone"] }}"/>
                         </label>
                     </div>
                     <div class="col-md-6 col-lg-6 m-b_5"></div>
