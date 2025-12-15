@@ -45,7 +45,11 @@ use App\Modules\Page\Entity\FormWidget;
                     <div class="col-md-6 col-lg-6 m-b_5">
                         <label><button class="btn-form" type="button">ОСТАВИТЬ ЗАЯВКУ</button></label>
                     </div>
-                    <div class="col-12"></div>
+                    <div class="col-12">
+                        <label class="f-z_14">
+                            <input type="checkbox" name="checkbox-538[]" value="Я"> <a href="/soglasie-na-obrabotku-personalnyh-dannyh/" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/politika-obrabotki-personalnyh-dannyh/" target="_blank">политике конфиденциальности</a>
+                        </label>
+                    </div>
                 </div>
             </div>
             <div id="{{ $widget->id }}-callback" class="form-send-message" style="display: none">
