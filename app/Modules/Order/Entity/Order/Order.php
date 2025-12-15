@@ -109,11 +109,13 @@ class Order extends Model
 
     public static function register(int|null $user_id, int $type, int $trader_id): self
     {
+        $number = self::get()->count();
         $order = self::create([
             'user_id' => $user_id,
             'type' => $type,
             'paid' => false,
             'trader_id' => $trader_id,
+            'number' => $number,
         ]);
         $order->statuses()->create(['value' => OrderStatus::FORMED]);
         return $order;

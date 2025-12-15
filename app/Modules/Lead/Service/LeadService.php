@@ -170,8 +170,7 @@ class LeadService
 
     public function createOrder(Lead $lead, Request $request): Order
     {
-        $trader_id = Trader::default()->organization->id;
-        $order = Order::register($lead->user_id, Order::ONLINE, $trader_id);
+        $order = $this->orderService->createOrder($lead->user_id);
 
         $lead->order_id = $order->id;
         $lead->save();

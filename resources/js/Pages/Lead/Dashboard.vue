@@ -16,7 +16,7 @@
             <el-tag effect="dark" :type="button_color[index]" size="large">{{ key }}</el-tag>
             <template v-for="lead in leads[index]">
                 <LeadInfo :lead="lead"
-                          draggable="true" @dragstart="onDragStart(lead, index)"
+                          :draggable="index < 4" @dragstart="onDragStart(lead, index)"
                           @create:user="onDialogUser" @create:order="onDialogOrder" @add:item="onDialogItem"/>
             </template>
         </el-splitter-panel>
@@ -210,6 +210,7 @@ function onDropOver(b) {
 
 function onDropList(key) {
     if (dragFrom.value === key) return;
+    if (key > 3) return;
     router.visit(route('admin.lead.set-status', {lead: dragItem.value.id}), {
         method: "post",
         data: {status: key},
