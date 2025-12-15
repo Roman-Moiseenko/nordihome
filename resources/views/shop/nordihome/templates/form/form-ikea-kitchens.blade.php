@@ -47,7 +47,7 @@ use App\Modules\Page\Entity\FormWidget;
                     </div>
                     <div class="col-12">
                         <label class="f-z_14">
-                            <input type="checkbox" name="checkbox-538[]" value="Я"> <a href="/soglasie-na-obrabotku-personalnyh-dannyh/" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/politika-obrabotki-personalnyh-dannyh/" target="_blank">политике конфиденциальности</a>
+                            <input type="checkbox" name="checkbox" value="Я"> <a href="/soglasie-na-obrabotku-personalnyh-dannyh/" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/politika-obrabotki-personalnyh-dannyh/" target="_blank">политике конфиденциальности</a>
                         </label>
                     </div>
                 </div>
