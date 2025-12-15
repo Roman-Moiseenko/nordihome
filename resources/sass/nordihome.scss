@@ -221,7 +221,7 @@ h3 {font-size: 28px;font-weight: bold;}
 }
 .btn-gradient:hover {background:linear-gradient(156deg, rgba(60,60,60,1) 0%, rgba(60,60,60,1) 100%);}
 
-input, button[type="submit"], textarea, select {
+input, button[type="submit"], textarea, select, button[type="button"]  {
     border: 1px solid black;
     padding: 11px;
     font-size: 14px;
@@ -232,11 +232,11 @@ textarea {
     min-height: 219px;
 }
 label {margin-bottom:5px;}
-button[type="submit"], .btn-form {
+button[type="submit"], button[type="button"] {
     background:black;
     color:white;
 }
-button[type="submit"]:hover, .btn-form:hover {
+button[type="submit"]:hover, button[type="button"]:hover {
     background:black;
 }
 .form-send-message {border: 3px solid $red;}

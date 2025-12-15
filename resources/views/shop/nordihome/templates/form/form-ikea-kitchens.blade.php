@@ -43,7 +43,7 @@ use App\Modules\Page\Entity\FormWidget;
                         </label>
                     </div>
                     <div class="col-md-6 col-lg-6 m-b_5">
-                        <label><button class="btn-form" type="button">Ответить</button></label>
+                        <label><button class="btn-form" type="button">ОСТАВИТЬ ЗАЯВКУ</button></label>
                     </div>
                     <div class="col-12"></div>
                 </div>
