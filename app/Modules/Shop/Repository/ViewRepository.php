@@ -392,9 +392,11 @@ class ViewRepository
         }
 
 
+
         $children = $this->parser_category_children_cache($category);
+
         //$in_stock = isset($request['in_stock']);
-        $query = $this->parser_category_products_cache($category);
+        $query = $this->repository->ParserProductsByCategory($category);//$this->parser_category_products_cache($category);
 
 
         $count_in_category = $query->count();
