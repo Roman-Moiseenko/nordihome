@@ -15,11 +15,15 @@
             <div><i class="fa-light fa-location-dot"></i>&nbsp;Россия</div>
             <div class="d-flex ">
                 <div>
+                    @if(isset($menus['menu-header01']))
                     <ul id="menu-menyu-v-shapke" class="h-menu">
                         @foreach($menus['menu-header01']['items'] as $item)
                             <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
                         @endforeach
                     </ul>
+                    @else
+                        Меню не найдено
+                    @endif
                 </div>
                 <div class="d-flex ms-2">
 
