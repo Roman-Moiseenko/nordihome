@@ -387,11 +387,8 @@ class ViewRepository
 
         if ($this->web->is_category && $category->children()->count() > 0) {
             $children = $this->repository->getChildrenParser($category->id);
-
             return view($this->route('parser.subcatalog'), compact('category', 'children', 'title', 'description'));
         }
-
-
 
         $children = $this->parser_category_children_cache($category);
 

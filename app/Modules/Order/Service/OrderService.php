@@ -102,7 +102,7 @@ class OrderService
         $this->bankService = $bankService;
     }
 
-    private function createOrder(int $user_id = null, int $type = Order::ONLINE): Order
+    public function createOrder(int $user_id = null, int $type = Order::ONLINE): Order
     {
         $trader_id = Trader::default()->organization->id;
         return Order::register($user_id, $type, $trader_id);

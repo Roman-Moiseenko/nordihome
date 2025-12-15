@@ -81,6 +81,7 @@ class LeadRepository
                 'amount' => $lead->order->getTotalAmount(),
             ],
             'items' => $lead->items()->get()->toArray(),
+            'leads' => $this->getRelatedLeads($lead),
         ]);
     }
 
@@ -95,6 +96,35 @@ class LeadRepository
         }
 
         return $result;
+    }
+
+    private function getRelatedLeads(Lead $lead): array
+    {
+        $data = $lead->data;
+        if (!is_array($data)) return [];
+        $email = null;
+        $phone = null;
+
+        foreach ($lead->data as $item) {
+            if ($item->slug == 'email') $email = $item->value;
+            if ($item->slug == 'phone') $phone = $item->value;
+        }
+        if (empty($email) && empty($phone)) return [];
+
+        return Lead::where('user_id', null)->where(function ($query) use ($email, $phone) {
+            if (empty($email)) {
+                $query->where('data', 'LIKE', "%$phone%");
+            } else {
+                $query->where('data', 'LIKE', "%$email%");
+                if (!empty($phone)) $query->orWhere('data', 'LIKE', "%$phone%");
+            }
+
+        })->where('id', '<>', $lead->id)->get()->map(fn(Lead $lead) => [
+            'id' => $lead->id,
+            'created_at' => $lead->created_at,
+            'status' => $lead->status->getName(),
+        ])->toArray();
+
     }
 
 
