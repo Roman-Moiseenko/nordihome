@@ -39,7 +39,7 @@ use App\Modules\Page\Entity\FormWidget;
                     </div>
                     <div class="col-md-6 col-lg-6 m-b_5">
                         <label>
-                            <input name="city" placeholder="{{ $widget->fields["city"] }}"/>
+                            <input name="city" required placeholder="{{ $widget->fields["city"] }}"/>
                         </label>
                     </div>
                     <div class="col-md-6 col-lg-6 m-b_5"></div>
