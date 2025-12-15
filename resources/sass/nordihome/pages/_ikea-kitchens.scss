@@ -52,6 +52,19 @@
         align-items: end;
     }
 }
+.main-kitchen {
+    .main-kitchen-form input[type="submit"] {
+        background: $orange;
+        color: black;
+        border: 1px solid $orange;
+        font-weight: 600;
+    }
+}
+.main-kitchen {
+    .main-kitchen-form input {
+        width: 100%;
+    }
+}
 @media (max-width: 1200px) {
     .main-kitchen {
         .main-kitchen-form {
