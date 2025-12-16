@@ -221,7 +221,7 @@ h3 {font-size: 28px;font-weight: bold;}
 }
 .btn-gradient:hover {background:linear-gradient(156deg, rgba(60,60,60,1) 0%, rgba(60,60,60,1) 100%);}
 
-input, button[type="submit"], textarea, select, button[type="button"]  {
+input, button[type="submit"], textarea, select, .feedback button[type="button"]  {
     border: 1px solid black;
     padding: 11px;
     font-size: 14px;
