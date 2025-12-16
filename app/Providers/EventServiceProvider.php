@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Events\ArrivalHasCompleted;
 use App\Events\CouponHasCreated;
 use App\Events\DepartureHasCompleted;
-use App\Events\ExpenseHasDelivery;
 use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
 use App\Events\ParserPriceHasChange;
@@ -60,11 +59,24 @@ use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
 use App\Modules\Admin\Listeners\NewTaskStaff;
 use App\Modules\Admin\Listeners\NotificationStaff;
 use App\Modules\Delivery\Service\DeliveryService;
+use App\Modules\Lead\Listeners\LeadCanceled;
+use App\Modules\Lead\Listeners\LeadCompleted;
 use App\Modules\Lead\Listeners\LeadNewFromOrder;
+use App\Modules\Lead\Listeners\LeadReturnPaid;
+use App\Modules\Lead\Listeners\LeadSetAssembling;
+use App\Modules\Lead\Listeners\LeadSetAwaiting;
+use App\Modules\Lead\Listeners\LeadSetDelivery;
+use App\Modules\Lead\Listeners\LeadSetInWork;
 use App\Modules\Lead\Listeners\LeadSetManager;
+use App\Modules\Lead\Listeners\LeadSetPaid;
+use App\Modules\Lead\Listeners\LeadSetStatus;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Service\NotificationService;
+use App\Modules\Order\Events\ExpenseHasAssembling;
+use App\Modules\Order\Events\ExpenseHasCanceled;
 use App\Modules\Order\Events\ExpenseHasCompleted;
+use App\Modules\Order\Events\ExpenseHasDelivery;
+use App\Modules\Order\Events\OrderHasAwaiting;
 use App\Modules\Order\Events\OrderHasCanceled;
 use App\Modules\Order\Events\OrderHasCompleted;
 use App\Modules\Order\Events\OrderHasCreated;
@@ -73,6 +85,7 @@ use App\Modules\Order\Events\OrderHasPaid;
 use App\Modules\Order\Events\OrderHasPrepaid;
 use App\Modules\Order\Events\OrderHasRefund;
 use App\Modules\Order\Events\OrderHasSetManager;
+use App\Modules\Order\Events\OrderHasWork;
 use App\Modules\Order\Listeners\OrderPreChangeBaseCost;
 use App\Modules\Order\Listeners\UserMailExpenseCompleted;
 use App\Modules\Order\Listeners\UserWriteReview;
@@ -108,6 +121,53 @@ class EventServiceProvider extends ServiceProvider
             NotificationStaff::class,
             NewTaskStaff::class,
         ],
+        ExpenseHasCanceled::class => [
+            LeadReturnPaid::class,
+        ],
+        ExpenseHasAssembling::class => [
+            LeadSetAssembling::class,
+        ],
+        ExpenseHasDelivery::class => [
+            NotificationExpenseDelivery::class,
+            LeadSetDelivery::class,
+        ],
+
+        OrderHasCreated::class => [
+            NotificationOrderNew::class,
+            LeadNewFromOrder::class,
+        ],
+        OrderHasCanceled::class => [
+            NotificationOrderCanceled::class,
+            LeadCanceled::class,
+        ],
+        OrderHasAwaiting::class => [
+            LeadSetAwaiting::class,
+        ],
+        OrderHasWork::class => [
+            LeadSetInWork::class,
+        ],
+        OrderHasSetManager::class => [
+            LeadSetManager::class,
+        ],
+
+        OrderHasLogger::class => [
+            NotificationNewLogger::class,
+        ],
+        OrderHasRefund::class => [
+            NotificationRefundNew::class,
+        ],
+        OrderHasPrepaid::class => [
+            NotificationOrderPrepaid::class,
+        ],
+        OrderHasPaid::class => [
+            NotificationOrderPaid::class,
+            LeadSetPaid::class,
+        ],
+        OrderHasCompleted::class => [
+            NotificationOrderCompleted::class,
+            LeadCompleted::class,
+        ],
+
 
         //Изменился курс валюты
         CurrencyHasUpdateFixed::class => [
@@ -116,48 +176,39 @@ class EventServiceProvider extends ServiceProvider
         ],
 
 
+
+
         //TODO Остальные проработать
 
         /* Registered::class => [
              SendEmailVerificationNotification::class,
          ],*/
         UserHasRegistered::class => [
-            WelcomeToShop::class
+            WelcomeToShop::class,
         ],
         PromotionHasMoved::class => [
-            NotificationPromotionMoved::class
+            NotificationPromotionMoved::class,
         ],
         ProductHasParsed::class => [
             NotificationProductParserNew::class,
             ParsingImageProduct::class,
 
         ],
-        OrderHasCreated::class => [
-            NotificationOrderNew::class,
-            LeadNewFromOrder::class,
-            //TODO Возможно добавить создание лидов
-
-
-            /* DeliveryService::class,
-             PaymentService::class,*/
-        ],
         ArrivalHasCompleted::class => [
             NotificationArrivalCompleted::class,
         ],
         ThrowableHasAppeared::class => [
-            NotificationThrowable::class
+            NotificationThrowable::class,
         ],
-        OrderHasCanceled::class => [
-            NotificationOrderCanceled::class,
-        ],
-        OrderHasSetManager::class => [
-            LeadSetManager::class,
-        ],
+
+
+
+
         MovementHasCompleted::class => [
-            NotificationMovementCompleted::class
+            NotificationMovementCompleted::class,
         ],
         MovementHasCreated::class => [
-            NotificationMovementNew::class
+            NotificationMovementNew::class,
         ],
         /*PointHasEstablished::class => [
             NotificationNewPointStorage::class
@@ -165,19 +216,7 @@ class EventServiceProvider extends ServiceProvider
         PaymentHasPaid::class => [
             NotificationPaymentNew::class,
         ],
-        OrderHasLogger::class => [
-            NotificationNewLogger::class,
-        ],
-        OrderHasRefund::class => [
-            NotificationRefundNew::class
-        ],
 
-        OrderHasPrepaid::class => [
-            NotificationOrderPrepaid::class,
-        ],
-        OrderHasPaid::class => [
-            NotificationOrderPaid::class
-        ],
         DepartureHasCompleted::class => [
             NotificationDepartureNew::class,
         ],
@@ -189,7 +228,7 @@ class EventServiceProvider extends ServiceProvider
             NotificationUserCreated::class,
         ],
         SupplyHasSent::class => [
-            NotificationSupplySent::class
+            NotificationSupplySent::class,
         ],
         SupplyHasCompleted::class => [
             NotificationSupplyCompleted::class,
@@ -204,21 +243,11 @@ class EventServiceProvider extends ServiceProvider
             NotificationProductPublished::class,
             ],
 
-        //Удалить
-        OrderHasCompleted::class => [
-            NotificationOrderCompleted::class
-        ],
-
-
-        ExpenseHasDelivery::class => [
-            NotificationExpenseDelivery::class
-        ],
-
         PriceHasMinimum::class => [
             NotificationPriceMinimum::class,
         ],
         CouponHasCreated::class => [
-            NotificationCouponCreated::class
+            NotificationCouponCreated::class,
         ],
         ReviewHasEdit::class => [
             NotificationReviewEdit::class,

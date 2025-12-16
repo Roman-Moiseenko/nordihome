@@ -69,14 +69,15 @@ class LeadController extends Controller
 
     public function canceled(Lead $lead, Request $request): RedirectResponse
     {
-        $this->service->canceled($lead, $request);
+        $this->service->canceled($lead, $request->integer('reason'));
         return redirect()->back()->with('success', 'Заявка отменена!');
     }
-    public function completed(Lead $lead, Request $request): RedirectResponse
+
+   /* public function completed(Lead $lead, Request $request): RedirectResponse
     {
         $this->service->completed($lead, $request);
         return redirect()->back()->with('success', 'Заявка завершена!');
-    }
+    }*/
 
     public function create_user(Lead $lead, Request $request): RedirectResponse
     {

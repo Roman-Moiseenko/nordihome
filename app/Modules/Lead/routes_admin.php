@@ -17,7 +17,7 @@ Route::group(
     Route::post('/set-comment/{lead}', [LeadController::class, 'set_comment'])->name('set-comment');
     Route::post('/set-finished/{lead}', [LeadController::class, 'set_finished'])->name('set-finished');
     Route::post('/canceled/{lead}', [LeadController::class, 'canceled'])->name('canceled');
-    Route::post('/completed/{lead}', [LeadController::class, 'completed'])->name('completed');
+    //Route::post('/completed/{lead}', [LeadController::class, 'completed'])->name('completed');
 
     Route::post('/create-user/{lead}', [LeadController::class, 'create_user'])->name('create-user');
     Route::post('/create-order/{lead}', [LeadController::class, 'create_order'])->name('create-order');

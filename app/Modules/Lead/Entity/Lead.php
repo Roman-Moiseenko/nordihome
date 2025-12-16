@@ -33,9 +33,15 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property string $name
  * @property Carbon $finished_at
  * @property LeadItem[] $items
+ * @property int $canceled - Причина отмены, по умолчанию 0 для быстрой фильтрации
+ * @property bool $completed - для быстрой фильтрации
+ * @property bool $assembly
+ * @property bool $delivery
  */
 class Lead extends Model
 {
+
+    const int CANCELED_ORDER_MANAGER = 101;
 
     protected $fillable = [
         'user_id',
@@ -43,6 +49,8 @@ class Lead extends Model
     ];
     protected $attributes = [
         'data' => '[]',
+        'canceled' => 0,
+        'completed' => false,
     ];
     protected $casts = [
         'data' => DataFieldFeedbackCasts::class,

@@ -8,6 +8,8 @@ use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Entity\LeadItem;
 use App\Modules\Lead\Entity\LeadStatus;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -32,17 +34,17 @@ class LeadService
         $form->createLead($form->data());
         //TODO Вытащить из $form->data()  email и name
 
-       /*
-        if ($request->has('email')) {
-            $email = $request->string('email')->trim()->value();
-            $user = User::where('email', $email)->first();
-            $form->lead->user_id = $user->id;
-            $form->lead->save();
-        } else if ($request->has('name')) {
-            $form->lead->name = $request->string('name')->trim()->value();
-            $form->lead->save();
-        }
-        */
+        /*
+         if ($request->has('email')) {
+             $email = $request->string('email')->trim()->value();
+             $user = User::where('email', $email)->first();
+             $form->lead->user_id = $user->id;
+             $form->lead->save();
+         } else if ($request->has('name')) {
+             $form->lead->name = $request->string('name')->trim()->value();
+             $form->lead->save();
+         }
+         */
 
     }
 
@@ -72,7 +74,7 @@ class LeadService
         if (!$this->checkStatus($lead, $newStatus)) return false;
 
         if ($lead->isNew()) {
-                //$lead->setStaff(\Auth::guard('admin')->user()->id);
+            //$lead->setStaff(\Auth::guard('admin')->user()->id);
             $lead->staff_id = \Auth::guard('admin')->user()->id;
             $lead->setStatus($newStatus);
             $lead->save();
@@ -104,19 +106,102 @@ class LeadService
         return true;
     }
 
-    public function canceled(Lead $lead, Request $request): void
+    //// Для событий по заказу ///
+
+    /**
+     * Отмена заказа - как вручную, так из события OrderHasCanceled
+     */
+    public function canceled(Lead $lead, int $reason): void
     {
+        $lead->canceled = $reason;
         $lead->setStatus(LeadStatus::STATUS_CANCELED);
-        $lead->comment = $request->string('comment')->trim()->value();
         $lead->finished_at = null;
         $lead->save();
     }
 
-    public function completed(Lead $lead, Request $request): void
+    /**
+     * Заказ завершен из события OrderHasCompleted
+     */
+    public function completed(Lead $lead): void
     {
+        $lead->completed = true;
         $lead->setStatus(LeadStatus::STATUS_COMPLETED);
-        //$lead->comment = $request->string('comment')->trim()->value();
         $lead->finished_at = null;
+        $lead->save();
+    }
+
+    /**
+     * Заказ ожидает оплаты из события OrderHasAwaiting
+     */
+    public function awaiting(Lead $lead): void
+    {
+        $lead->setStatus(LeadStatus::STATUS_INVOICE);
+        $lead->save();
+    }
+
+    /**
+     * Заказ вернули в работу из события OrderHasWork
+     */
+    public function work(Lead $lead): void
+    {
+        $lead->setStatus(LeadStatus::STATUS_IN_WORK);
+        $staff = \Auth::guard('admin')->user();
+        if (!is_null($staff)) $lead->staff_id = $staff->id;
+        $lead->save();
+    }
+
+    /**
+     * Заказ оплачен из события OrderHasPaid
+     */
+    public function paid(Lead $lead): void
+    {
+        $lead->setStatus(LeadStatus::STATUS_PAID);
+        $lead->save();
+    }
+    /**
+     * ExpenseHasCanceled
+     */
+    public function returnPaid(Lead $lead): void
+    {
+        $result = true;
+        //Если хотя бы одно из распоряжений не отменено
+        foreach ($lead->order->expenses as $expense) {
+            if (!$expense->isCanceled()) $result = false;
+        }
+        if ($result) {
+            $lead->assembly = false;
+            $lead->save();
+        }
+        $this->paid($lead);
+    }
+
+    /**
+     * Заказ на сборке из события ExpenseHasAssembling
+     */
+    public function assembly(Lead $lead): void
+    {
+        $lead->assembly = true;
+        if ($lead->order->getQuantityRemains() == 0) {
+            $lead->setStatus(LeadStatus::STATUS_ASSEMBLY);
+            $lead->assembly = false;
+        }
+        $lead->save();
+    }
+
+    /**
+     * Заказ на доставке из события ExpenseHasDelivery
+     */
+    public function delivery(Lead $lead): void
+    {
+        $result = true;
+        $lead->delivery = true;
+        foreach ($lead->order->expenses as $expense) {
+            if ($expense->status < OrderExpense::STATUS_DELIVERY) $result = false;
+        }
+        if ($lead->order->getQuantityRemains() == 0 && $result) {
+            $lead->setStatus(LeadStatus::STATUS_DELIVERY);
+            $lead->assembly = false;
+        }
         $lead->save();
     }
 
@@ -171,9 +256,11 @@ class LeadService
     public function createOrder(Lead $lead, Request $request): Order
     {
         $order = $this->orderService->createOrder($lead->user_id);
-
+        $order->setStatus(OrderStatus::SET_MANAGER);
+        $order->setManager($lead->staff_id);
         $lead->order_id = $order->id;
         $lead->save();
         return $order;
     }
+
 }
